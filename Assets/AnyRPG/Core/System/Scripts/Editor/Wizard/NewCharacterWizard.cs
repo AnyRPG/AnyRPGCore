@@ -571,6 +571,20 @@ namespace AnyRPG {
             return null;
         }
 
+        
+        protected override bool DrawWizardGUI() {
+
+            if (attachmentProfile == string.Empty) {
+                EditorGUILayout.HelpBox("The attachment profile is not set.  If this character is a humanoid, it will not be able to equip weapon models.", MessageType.Warning);
+            }
+
+            bool returnResult = base.DrawWizardGUI();
+
+
+            return returnResult;
+        }
+        
+
     }
 
 }
