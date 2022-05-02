@@ -36,7 +36,7 @@ MonoBehaviour:
     useUnitCastAnimations: 0
     animationHitAudioProfileName: Chop
     castingAudioClip: {fileID: 0}
-    castingAudioProfileName: Logging
+    castingAudioProfileName: 
     requiredLevel: 1
     characterClassRequirements: []
     classSpecializationRequirements: []
