@@ -38,7 +38,7 @@ namespace AnyRPG {
         private string[] defaultHeadBones = { "Head" };
         private string[] defaultLeftHandBones = { "LeftHand", "palm_L", "Hand_L", "Hand.L", "LPalm", "Right wrist" };
         private string[] defaultRightHandBones = { "RightHand", "palm_R", "Hand_R", "Hand.R", "RPalm", "Left wrist" };
-        private string[] defaultLeftArmBones = { "arm_lower_L", "LeftForeArm", "ForeArm_L", "Forearm.L", "LlowArm", "LeftRadius", "Left elbow" };
+        private string[] defaultLeftArmBones = { "arm_lower_L", "LeftForeArm", "ForeArm_L", "Forearm.L", "LlowArm", "LeftRadius", "Left elbow", "LowerArm.L" };
         private string[] defaultHipBones = { "Hips", "LowerSpine", "LowerBack", "spine1", "Pelvis" };
         private string[] defaultSpineBones = { "chest", "UpperSpine", "Spine4", "Spine3", "Spine2", "Spine1", "Spine", "Torso2", "Torso", "UpperBack" };
 
