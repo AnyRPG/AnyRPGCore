@@ -18,7 +18,7 @@ http://www.anyrpg.org/
 
 ### Documentation
 
-https://docs.anyrpg.org/
+Documentation hosting is provided by Gitbook at https://docs.anyrpg.org/
 
 ### Patreon
 
