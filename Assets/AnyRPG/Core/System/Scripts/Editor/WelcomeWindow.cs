@@ -235,10 +235,10 @@ namespace AnyRPG {
             GUILayout.Space(10);
 
             GUILayout.BeginVertical("box");
-            if (GUILayout.Button("Wiki and Documentation")) {
-                Application.OpenURL("https://wiki.anyrpg.org");
+            if (GUILayout.Button("Documentation")) {
+                Application.OpenURL("https://docs.anyrpg.org");
             }
-            EditorGUILayout.HelpBox("Contribute to AnyRPG by writing documentation/tutorials or reading official and user contributed guides", MessageType.None);
+            EditorGUILayout.HelpBox("Full documentation of every feature included in AnyRPG", MessageType.None);
             GUILayout.EndVertical();
             GUILayout.Space(10);
 
