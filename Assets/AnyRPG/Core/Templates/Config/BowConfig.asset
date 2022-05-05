@@ -28,5 +28,5 @@ MonoBehaviour:
       - equipmentSlotProfileName: Main Hand
         holdableObjectName: Quiver
         useUniversalAttachment: 1
-        primaryAttachmentName: Quiver Sheathed
+        primaryAttachmentName: Quiver
         unsheathedAttachmentName: 
