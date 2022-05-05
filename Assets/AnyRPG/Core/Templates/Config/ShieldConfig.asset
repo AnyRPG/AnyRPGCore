@@ -23,4 +23,4 @@ MonoBehaviour:
         holdableObjectName: Shield
         useUniversalAttachment: 1
         primaryAttachmentName: Shield Sheathed
-        unsheathedAttachmentName: Shield Unsheathed
+        unsheathedAttachmentName: Shield
