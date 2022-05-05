@@ -359,6 +359,15 @@ namespace AnyRPG {
                 }
             }
 
+            if (abilityAnimationObjectList != null) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in abilityAnimationObjectList) {
+                    if (abilityAttachmentNode != null) {
+                        abilityAttachmentNode.SetupScriptableObjects(DisplayName, systemGameManager);
+                    }
+                }
+            }
+
+
         }
 
     }
