@@ -21,6 +21,10 @@ namespace AnyRPG {
         [SerializeField]
         private ScriptableContentTemplate weaponSkillContentTemplate = null;
 
+        [Tooltip("If true, the new weapon wizard will display additional fields for the projectiles")]
+        [SerializeField]
+        private bool rangedWeapon = false;
+
         [Tooltip("A list of config templates for each weapon slot type")]
         [SerializeField]
         private List<WeaponSlotConfig> weaponSlotConfigs = new List<WeaponSlotConfig>();
@@ -28,6 +32,7 @@ namespace AnyRPG {
         public List<WeaponSlotConfig> WeaponSlotConfigs { get => weaponSlotConfigs; set => weaponSlotConfigs = value; }
         public ScriptableContentTemplate WeaponSkillContentTemplate { get => weaponSkillContentTemplate; set => weaponSkillContentTemplate = value; }
         public string WeaponType { get => weaponType; set => weaponType = value; }
+        public bool RangedWeapon { get => rangedWeapon; set => rangedWeapon = value; }
     }
 
     [System.Serializable]

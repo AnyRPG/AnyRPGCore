@@ -119,7 +119,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveClosedWindowNotification() {
-            //Debug.Log("LoadGamePanel.OnCloseWindow()");
+            //Debug.Log("NewGamePanel.ReceiveClosedWindowNotification()");
             base.ReceiveClosedWindowNotification();
 
             newGameManager.OnSetPlayerName -= HandleSetPlayerName;
@@ -178,14 +178,6 @@ namespace AnyRPG {
 
             newGameManager.SetupSaveData();
 
-            // testing move above SetupSaveData() to prevent clearing selected button
-            /*
-            factionPanel.ReceiveOpenWindowNotification();
-            // class goes before specialization because it acts as a filter for it
-            classPanel.ReceiveOpenWindowNotification();
-            specializationPanel.ReceiveOpenWindowNotification();
-            */
-            
             // now that faction is set, and character panel is opened (which caused the first available unit to be selected), it's time to render the unit
             // inform the preview panel so the character can be rendered
             characterPreviewPanel.OnTargetReady += HandleTargetReady;
@@ -294,6 +286,7 @@ namespace AnyRPG {
         }
 
         private void ClearData() {
+            //Debug.Log("NewGamePanel.ClearData()");
             newGameManager.ClearData();
             detailsPanel.ResetInputText(newGameManager.PlayerName);
         }
@@ -484,6 +477,8 @@ namespace AnyRPG {
         }
 
         public void HandleTargetCreated() {
+            //Debug.Log("NewGamePanel.HandleTargetCreated()");
+            
             // just a reminder
             EquipCharacter();
         }

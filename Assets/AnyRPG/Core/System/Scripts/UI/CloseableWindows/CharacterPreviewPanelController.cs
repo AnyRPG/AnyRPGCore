@@ -49,6 +49,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterPreviewPanelController.RecieveClosedWindowNotification()");
             base.ReceiveClosedWindowNotification();
             characterReady = false;
+            windowOpened = false;
             characterCreatorManager.OnTargetCreated -= HandleTargetCreated;
             characterCreatorManager.HandleCloseWindow();
             previewCameraController.ClearTarget();

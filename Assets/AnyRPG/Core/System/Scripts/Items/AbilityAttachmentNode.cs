@@ -25,6 +25,7 @@ namespace AnyRPG {
         public PrefabProfile HoldableObject { get => holdableObject; set => holdableObject = value; }
         public bool UseUniversalAttachment { get => useUniversalAttachment; set => useUniversalAttachment = value; }
         public string AttachmentName { get => attachmentName; set => attachmentName = value; }
+        public string HoldableObjectName { get => holdableObjectName; set => holdableObjectName = value; }
 
         public void SetupScriptableObjects(string ownerName, SystemGameManager systemGameManager) {
             Configure(systemGameManager);

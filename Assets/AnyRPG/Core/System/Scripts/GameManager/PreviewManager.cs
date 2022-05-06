@@ -60,6 +60,8 @@ namespace AnyRPG {
         }
 
         protected virtual void SpawnUnit() {
+            //Debug.Log("PreviewManager.SpawnUnit()");
+
             unitController = cloneSource.SpawnUnitPrefab(transform, transform.position, transform.forward, UnitControllerMode.Preview);
             if (unitController != null) {
                 if (unitController.UnitModelController != null) {
@@ -71,6 +73,7 @@ namespace AnyRPG {
         }
 
         protected virtual void BroadcastTargetCreated() {
+            //Debug.Log("PreviewManager.BroadcastTargetCreated()");
             OnTargetCreated();
         }
 

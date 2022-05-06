@@ -131,6 +131,15 @@ namespace AnyRPG {
 
         }
 
+        public static void SetLayerRecursive(GameObject objectName, int newLayer) {
+            // set the preview unit layer to the PlayerPreview layer so the preview camera can see it and all other cameras will ignore it
+            objectName.layer = newLayer;
+            foreach (Transform childTransform in objectName.gameObject.GetComponentsInChildren<Transform>(true)) {
+                childTransform.gameObject.layer = newLayer;
+            }
+
+        }
+
 
     }
 }

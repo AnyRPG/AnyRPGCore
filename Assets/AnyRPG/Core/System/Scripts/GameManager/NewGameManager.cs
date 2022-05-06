@@ -76,6 +76,7 @@ namespace AnyRPG {
         }
 
         public void ClearData() {
+            //Debug.Log("NewGameManager.ClearData()");
             playerName = "Player Name";
             unitProfile = null;
             unitType = null;

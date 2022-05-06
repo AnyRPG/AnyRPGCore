@@ -15,6 +15,7 @@ MonoBehaviour:
   weaponType: Crossbow
   weaponSkillContentTemplate: {fileID: 11400000, guid: 33c40366fdc4a3c4bbf81e7cf2bb5e02,
     type: 2}
+  rangedWeapon: 1
   weaponSlotConfigs:
   - weaponSlotType: 3
     holdableObjectList:
@@ -26,7 +27,7 @@ MonoBehaviour:
         unsheathedAttachmentName: Left Hand
     - attachmentNodes:
       - equipmentSlotProfileName: Main Hand
-        holdableObjectName: Quiver
+        holdableObjectName: Medieval Quiver
         useUniversalAttachment: 1
-        primaryAttachmentName: Quiver Sheathed
+        primaryAttachmentName: Quiver
         unsheathedAttachmentName: 
