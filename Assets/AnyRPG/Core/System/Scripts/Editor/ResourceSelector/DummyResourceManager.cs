@@ -64,6 +64,8 @@ namespace AnyRPG {
                     mappedClassNames.Add("Item/Accessory");
                     mappedClassNames.Add("Item/Armor");
                     mappedClassNames.Add("Item/Weapon");
+                } else if (resourceClassName == "StatusEffect") {
+                    mappedClassNames.Add("AbilityEffect/StatusEffect");
                 } else {
                     mappedClassNames.Add(resourceClassName);
                 }
