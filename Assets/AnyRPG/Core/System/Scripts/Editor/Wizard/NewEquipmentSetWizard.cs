@@ -16,12 +16,7 @@ namespace AnyRPG {
         // Will be a subfolder of Application.dataPath and should start with "/"
         private string gameParentFolder = "/Games/";
 
-        /*
-        // path to weapon handle prefab template
-        private const string weaponHandleTemplatePath = "/AnyRPG/Core/Templates/Prefabs/WeaponHandle/WeaponHandleTemplate.prefab";
-        private const string projectileHandleTemplatePath = "/AnyRPG/Core/Templates/Prefabs/WeaponHandle/ProjectileHandleTemplate.prefab";
-        private const string projectileTemplatePath = "/AnyRPG/Core/Templates/Prefabs/WeaponHandle/ProjectileTemplate.prefab";
-        */
+        // paths to default equipment images
         private const string headDefaultImagePath = "/AnyRPG/Core/System/Images/UI/Pixel/UISlotHead.png";
         private const string shouldersDefaultImagePath = "/AnyRPG/Core/System/Images/UI/Pixel/UISlotShoulder.png";
         private const string wristsDefaultImagePath = "/AnyRPG/Core/System/Images/UI/Pixel/UISlotWrist.png";
