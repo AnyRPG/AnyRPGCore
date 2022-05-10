@@ -448,13 +448,13 @@ namespace AnyRPG {
             //maleButton.HighlightBackground();
             if (maleRecipe != string.Empty) {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): maleRecipe != string.Empty");
-                characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanMaleDCS");
+                characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanMale");
                 //characterCreatorManager.PreviewUnitController.UnitModelController.LoadSavedAppearanceSettings(maleRecipe, true);
                 characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.SetAppearance(maleRecipe);
             } else {
                 //Debug.Log("CharacterCreatorPanel.SetMale(): maleRecipe == string.Empty");
-                //characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanMaleDCS");
-                characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.SetAvatarDefinitionRace("HumanMaleDCS");
+                //characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanMale");
+                characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.SetAvatarDefinitionRace("HumanMale");
                 characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.PreloadEquipmentModels(true);
                 characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.ReloadAvatarDefinition();
             }
@@ -475,13 +475,13 @@ namespace AnyRPG {
             //femaleButton.Select();
             if (femaleRecipe != string.Empty) {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): femaleRecipe != string.Empty");
-                characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanFemaleDCS");
+                characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanFemale");
                 //characterCreatorManager.PreviewUnitController.UnitModelController.LoadSavedAppearanceSettings(femaleRecipe, true);
                 characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.SetAppearance(femaleRecipe);
             } else {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): femaleRecipe == string.Empty");
-                //characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanFemaleDCS");
-                characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.SetAvatarDefinitionRace("HumanFemaleDCS");
+                //characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanFemale");
+                characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.SetAvatarDefinitionRace("HumanFemale");
                 characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.PreloadEquipmentModels(true);
                 characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.ReloadAvatarDefinition();
             }

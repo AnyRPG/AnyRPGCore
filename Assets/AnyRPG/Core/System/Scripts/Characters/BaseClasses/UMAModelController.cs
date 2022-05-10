@@ -91,7 +91,7 @@ namespace AnyRPG {
                 avatarDefinition = new AvatarDefinition();
 
                 // avatarDefintion is a struct so needs to have its properties set to something other than null
-                avatarDefinition.RaceName = "HumanMaleDCS";
+                avatarDefinition.RaceName = "HumanMale";
                 avatarDefinition.Wardrobe = new string[0];
                 avatarDefinition.Dna = new DnaDef[0];
                 avatarDefinition.Colors = new SharedColorDef[0];

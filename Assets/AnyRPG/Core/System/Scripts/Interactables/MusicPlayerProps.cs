@@ -47,7 +47,7 @@ namespace AnyRPG {
                     if (tmpAudioProfile != null) {
                         audioProfileList.Add(tmpAudioProfile);
                     } else {
-                        Debug.LogError("MusicPlayerCompoennt.SetupScriptableObjects(): COULD NOT FIND AUDIO PROFILE: " + audioProfileName + " while initializing");
+                        Debug.LogError("MusicPlayerComponent.SetupScriptableObjects(): COULD NOT FIND AUDIO PROFILE: " + audioProfileName + " while initializing");
                     }
                 }
             }
