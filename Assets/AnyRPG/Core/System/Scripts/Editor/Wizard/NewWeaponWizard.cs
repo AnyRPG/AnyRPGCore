@@ -87,7 +87,7 @@ namespace AnyRPG {
             // do nothing
             Debug.LogWarning("An error was detected while running wizard.  See console log for details");
             EditorUtility.ClearProgressBar();
-            EditorUtility.DisplayDialog("Template Content Wizard",
+            EditorUtility.DisplayDialog("New Weapon Wizard",
                 "Error!  See console log for details",
                 "OK");
         }

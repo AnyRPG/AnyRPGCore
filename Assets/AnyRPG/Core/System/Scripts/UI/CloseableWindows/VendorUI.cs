@@ -196,7 +196,7 @@ namespace AnyRPG {
             ClearButtons();
             ClearPages();
             this.dropDownIndex = dropDownIndex;
-            CreatePages(vendorCollections[dropDownIndex].MyVendorItems);
+            CreatePages(vendorCollections[dropDownIndex].VendorItems);
             LoadPage(0);
             OnPageCountUpdate(false);
         }
@@ -206,7 +206,7 @@ namespace AnyRPG {
             VendorItem newVendorItem = new VendorItem();
             newVendorItem.Quantity = 1;
             newVendorItem.Item = newItem;
-            buyBackCollection.MyVendorItems.Add(newVendorItem);
+            buyBackCollection.VendorItems.Add(newVendorItem);
         }
         
 
@@ -241,7 +241,7 @@ namespace AnyRPG {
 
         public void RefreshPage() {
             Debug.Log("VendorUI.RefreshPage()");
-            CreatePages(vendorCollections[dropDownIndex].MyVendorItems, false);
+            CreatePages(vendorCollections[dropDownIndex].VendorItems, false);
             //Debug.Log("VendorUI.RefreshPage() count: " + pages.Count + "; index: " + pageIndex);
             LoadPage(pageIndex);
             OnPageCountUpdate(false);

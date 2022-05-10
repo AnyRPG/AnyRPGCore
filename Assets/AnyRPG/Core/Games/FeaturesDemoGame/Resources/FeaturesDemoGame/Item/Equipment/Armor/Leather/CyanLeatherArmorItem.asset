@@ -36,8 +36,11 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Armor
   equipmentSetName: 
-  useUMARecipe: 1
-  umaRecipeProfileName: 
+  deprecatedUseUMARecipe: 1
+  umaRecipeProfileName: Cyan Leather Armor
+  uMARecipeProfileProperties:
+    uMARecipes: []
+    sharedColors: []
   holdableObjectList: []
   useArmorModifier: 1
   useManualArmor: 0

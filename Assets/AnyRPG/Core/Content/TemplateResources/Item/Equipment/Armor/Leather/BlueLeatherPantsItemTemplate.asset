@@ -36,8 +36,11 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Pants
   equipmentSetName: 
-  useUMARecipe: 1
-  umaRecipeProfileName: 
+  deprecatedUseUMARecipe: 1
+  umaRecipeProfileName: Blue Leather Pants
+  uMARecipeProfileProperties:
+    uMARecipes: []
+    sharedColors: []
   holdableObjectList: []
   useArmorModifier: 1
   useManualArmor: 0

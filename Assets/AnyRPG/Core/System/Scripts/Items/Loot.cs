@@ -32,8 +32,9 @@ namespace AnyRPG {
         [SerializeField]
         protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
+        public string ItemName { get => itemName; set => itemName = value; }
         public Item Item { get => item; }
-        public float DropChance { get => dropChance; }
+        public float DropChance { get => dropChance; set => dropChance = value; }
         public int MinDrops { get => minDrops; set => minDrops = value; }
         public int MaxDrops { get => maxDrops; set => maxDrops = value; }
 

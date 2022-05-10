@@ -216,33 +216,6 @@ namespace AnyRPG {
         [SerializeField]
         private float interactionMaxRange = 3f;
 
-        [Header("Deprecated Builtin Interactables")]
-
-        [Tooltip("Inline behavior configuration.  Useful if no other unit will need to re-use this configuration.")]
-        [FormerlySerializedAs("behaviorConfig")]
-        [SerializeField]
-        private BehaviorProps deprecatedBehaviorConfig = new BehaviorProps();
-
-        [Tooltip("Inline loot configuration.  Useful if no other unit will need to re-use this configuration.")]
-        [FormerlySerializedAs("lootableCharacter")]
-        [SerializeField]
-        private LootableCharacterProps deprecatedLootableCharacter = new LootableCharacterProps();
-
-        [Tooltip("Inline dialog configuration.  Useful if no other unit will need to re-use this configuration.")]
-        [FormerlySerializedAs("dialogConfig")]
-        [SerializeField]
-        private DialogProps deprecatedDialogConfig = new DialogProps();
-
-        [Tooltip("Inline questGiver configuration.  Useful if no other unit will need to re-use this configuration.")]
-        [FormerlySerializedAs("questGiverConfig")]
-        [SerializeField]
-        private QuestGiverProps deprecatedQuestGiverConfig = new QuestGiverProps();
-
-        [Tooltip("Inline vendor configuration.  Useful if no other unit will need to re-use this configuration.")]
-        [FormerlySerializedAs("vendorConfig")]
-        [SerializeField]
-        private VendorProps deprecatedVendorConfig = new VendorProps();
-
         [Header("Named Interactables")]
 
         [Tooltip("The names of the interactable options available on this character")]

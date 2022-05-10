@@ -23,6 +23,7 @@ namespace AnyRPG {
 
         public ArmorClass ArmorClass { get => armorClass; set => armorClass = value; }
         public bool RequireArmorClass { get => requireArmorClass; set => requireArmorClass = value; }
+        public string ArmorClassName { get => armorClassName; set => armorClassName = value; }
 
         public override float GetArmorModifier(int characterLevel, ItemQuality usedItemQuality) {
             float returnValue = base.GetArmorModifier(characterLevel, usedItemQuality);

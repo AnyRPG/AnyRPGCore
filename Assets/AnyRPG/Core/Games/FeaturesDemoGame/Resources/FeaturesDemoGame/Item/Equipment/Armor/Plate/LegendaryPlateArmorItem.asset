@@ -36,8 +36,11 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Armor
   equipmentSetName: Legendary Plate
-  useUMARecipe: 0
+  deprecatedUseUMARecipe: 0
   umaRecipeProfileName: Gold Plate Armor
+  uMARecipeProfileProperties:
+    uMARecipes: []
+    sharedColors: []
   holdableObjectList: []
   useArmorModifier: 1
   useManualArmor: 0

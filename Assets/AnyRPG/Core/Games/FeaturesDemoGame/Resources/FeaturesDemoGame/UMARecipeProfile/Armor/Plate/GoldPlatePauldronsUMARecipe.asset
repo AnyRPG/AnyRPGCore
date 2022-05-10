@@ -20,11 +20,20 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  uMARecipes:
+  deprecatedUMARecipes:
   - {fileID: 11400000, guid: c07eccd290eb2f32fae733325b07305d, type: 2}
   - {fileID: 11400000, guid: 93f180a648440a778b07b8a2cbe3a887, type: 2}
-  sharedColors:
+  deprecatedSharedColors:
   - sharedColorname: Shoulder Equipment Color 1
     color: {r: 1, g: 0.84313726, b: 0, a: 1}
   - sharedColorname: Shoulder Equipment Color 2
     color: {r: 1, g: 1, b: 1, a: 1}
+  uMARecipeProfileProperties:
+    uMARecipes:
+    - {fileID: 11400000, guid: c07eccd290eb2f32fae733325b07305d, type: 2}
+    - {fileID: 11400000, guid: 93f180a648440a778b07b8a2cbe3a887, type: 2}
+    sharedColors:
+    - sharedColorname: Shoulder Equipment Color 1
+      color: {r: 1, g: 0.84313726, b: 0, a: 1}
+    - sharedColorname: Shoulder Equipment Color 2
+      color: {r: 1, g: 1, b: 1, a: 1}

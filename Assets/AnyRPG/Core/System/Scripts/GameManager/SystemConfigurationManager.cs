@@ -354,12 +354,6 @@ namespace AnyRPG {
         [SerializeField]
         private float statBudgetPerLevel = 0f;
 
-        [Tooltip("Global Primary Stat properties have been moved to CharacterStat Scriptable Objects.")]
-        [FormerlySerializedAs("primaryStats")]
-        [FormerlySerializedAs("statScaling")]
-        [SerializeField]
-        private List<StatScalingNode> deprecatedPrimaryStats = new List<StatScalingNode>();
-
         private List<StatScalingNode> statScalingNodes = new List<StatScalingNode>();
 
         [Header("Power Resources")]

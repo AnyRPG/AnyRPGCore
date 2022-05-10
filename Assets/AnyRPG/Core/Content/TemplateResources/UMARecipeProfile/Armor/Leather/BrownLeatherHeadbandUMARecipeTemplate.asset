@@ -19,11 +19,21 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  uMARecipes:
+  optionalOverride: 0
+  deprecatedUMARecipes:
   - {fileID: 11400000, guid: ab2a7b204ea6e70db8f798f5a9f0eeed, type: 2}
   - {fileID: 11400000, guid: e65a21f4c5fb8fdc5bdd9675d2feedc5, type: 2}
-  sharedColors:
+  deprecatedSharedColors:
   - sharedColorname: Head Equipment Color 1
     color: {r: 0.21960784, g: 0.11764706, b: 0.03137255, a: 1}
   - sharedColorname: Head Equipment Color 2
     color: {r: 0.78431374, g: 0.6627451, b: 0.34509805, a: 1}
+  uMARecipeProfileProperties:
+    uMARecipes:
+    - {fileID: 11400000, guid: ab2a7b204ea6e70db8f798f5a9f0eeed, type: 2}
+    - {fileID: 11400000, guid: e65a21f4c5fb8fdc5bdd9675d2feedc5, type: 2}
+    sharedColors:
+    - sharedColorname: Head Equipment Color 1
+      color: {r: 0.21960784, g: 0.11764706, b: 0.03137255, a: 1}
+    - sharedColorname: Head Equipment Color 2
+      color: {r: 0.78431374, g: 0.6627451, b: 0.34509805, a: 1}

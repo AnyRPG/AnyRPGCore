@@ -19,9 +19,17 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  uMARecipes:
+  optionalOverride: 0
+  deprecatedUMARecipes:
   - {fileID: 11400000, guid: 1c35999d05bf37c0ba44721da9975e89, type: 2}
   - {fileID: 11400000, guid: a56175991970ee8ec84f3fa3bdeba4de, type: 2}
-  sharedColors:
+  deprecatedSharedColors:
   - sharedColorname: Hand Equipment Color 1
     color: {r: 0.89411765, g: 0.83137256, b: 0.12156863, a: 1}
+  uMARecipeProfileProperties:
+    uMARecipes:
+    - {fileID: 11400000, guid: 1c35999d05bf37c0ba44721da9975e89, type: 2}
+    - {fileID: 11400000, guid: a56175991970ee8ec84f3fa3bdeba4de, type: 2}
+    sharedColors:
+    - sharedColorname: Hand Equipment Color 1
+      color: {r: 0.89411765, g: 0.83137256, b: 0.12156863, a: 1}

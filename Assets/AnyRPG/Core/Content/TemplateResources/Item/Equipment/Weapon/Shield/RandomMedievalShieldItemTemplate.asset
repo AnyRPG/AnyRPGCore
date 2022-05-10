@@ -36,8 +36,11 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Off Hand
   equipmentSetName: 
-  useUMARecipe: 0
+  deprecatedUseUMARecipe: 0
   umaRecipeProfileName: 
+  uMARecipeProfileProperties:
+    uMARecipes: []
+    sharedColors: []
   holdableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Off Hand

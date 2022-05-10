@@ -20,9 +20,16 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  uMARecipes:
+  deprecatedUMARecipes:
   - {fileID: 11400000, guid: 35a223b69bc374aed8f521886bb04923, type: 2}
   - {fileID: 11400000, guid: 70e8e9035932c6f449c3416f3fa6600e, type: 2}
-  sharedColors:
+  deprecatedSharedColors:
   - sharedColorname: Foot Equipment Color 1
     color: {r: 0, g: 0.83137256, b: 0.83137256, a: 1}
+  uMARecipeProfileProperties:
+    uMARecipes:
+    - {fileID: 11400000, guid: 35a223b69bc374aed8f521886bb04923, type: 2}
+    - {fileID: 11400000, guid: 70e8e9035932c6f449c3416f3fa6600e, type: 2}
+    sharedColors:
+    - sharedColorname: Foot Equipment Color 1
+      color: {r: 0, g: 0.83137256, b: 0.83137256, a: 1}

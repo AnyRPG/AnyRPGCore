@@ -20,11 +20,20 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  uMARecipes:
+  deprecatedUMARecipes:
   - {fileID: 11400000, guid: 7f42feeb0692fecf984e232c918da3b1, type: 2}
   - {fileID: 11400000, guid: a5586e6dfb800c152ba216faa2645a4a, type: 2}
-  sharedColors:
+  deprecatedSharedColors:
   - sharedColorname: Leg Equipment Color 1
     color: {r: 1, g: 0.84313726, b: 0, a: 1}
   - sharedColorname: Leg Equipment Color 2
     color: {r: 1, g: 1, b: 1, a: 1}
+  uMARecipeProfileProperties:
+    uMARecipes:
+    - {fileID: 11400000, guid: 7f42feeb0692fecf984e232c918da3b1, type: 2}
+    - {fileID: 11400000, guid: a5586e6dfb800c152ba216faa2645a4a, type: 2}
+    sharedColors:
+    - sharedColorname: Leg Equipment Color 1
+      color: {r: 1, g: 0.84313726, b: 0, a: 1}
+    - sharedColorname: Leg Equipment Color 2
+      color: {r: 1, g: 1, b: 1, a: 1}

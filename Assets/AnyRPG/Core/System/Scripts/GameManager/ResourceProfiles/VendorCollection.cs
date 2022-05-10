@@ -17,7 +17,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<VendorItem> vendorItems = new List<VendorItem>();
 
-        public List<VendorItem> MyVendorItems { get => vendorItems; set => vendorItems = value; }
+        public List<VendorItem> VendorItems { get => vendorItems; set => vendorItems = value; }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);

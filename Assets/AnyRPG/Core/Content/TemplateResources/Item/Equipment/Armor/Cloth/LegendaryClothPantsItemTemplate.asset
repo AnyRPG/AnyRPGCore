@@ -36,8 +36,11 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Pants
   equipmentSetName: Legendary Cloth
-  useUMARecipe: 0
+  deprecatedUseUMARecipe: 0
   umaRecipeProfileName: Yellow Cloth Pants
+  uMARecipeProfileProperties:
+    uMARecipes: []
+    sharedColors: []
   holdableObjectList: []
   useArmorModifier: 1
   useManualArmor: 0

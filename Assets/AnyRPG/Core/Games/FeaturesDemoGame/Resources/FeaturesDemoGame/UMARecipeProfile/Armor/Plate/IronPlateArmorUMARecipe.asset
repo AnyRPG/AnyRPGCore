@@ -20,11 +20,20 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  uMARecipes:
+  deprecatedUMARecipes:
   - {fileID: 11400000, guid: a65921d16fb80a9358ddecf221c3c893, type: 2}
   - {fileID: 11400000, guid: 70da2360ebb16df51a6f95334f1d3524, type: 2}
-  sharedColors:
+  deprecatedSharedColors:
   - sharedColorname: Chest Equipment Color 1
     color: {r: 0.6313726, g: 0.6156863, b: 0.5803922, a: 1}
   - sharedColorname: Chest Equipment Color 2
     color: {r: 1, g: 1, b: 1, a: 1}
+  uMARecipeProfileProperties:
+    uMARecipes:
+    - {fileID: 11400000, guid: a65921d16fb80a9358ddecf221c3c893, type: 2}
+    - {fileID: 11400000, guid: 70da2360ebb16df51a6f95334f1d3524, type: 2}
+    sharedColors:
+    - sharedColorname: Chest Equipment Color 1
+      color: {r: 0.6313726, g: 0.6156863, b: 0.5803922, a: 1}
+    - sharedColorname: Chest Equipment Color 2
+      color: {r: 1, g: 1, b: 1, a: 1}

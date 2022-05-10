@@ -151,17 +151,6 @@ namespace AnyRPG {
         protected MessageFeedManager messageFeedManager = null;
         protected QuestLog questLog = null;
 
-        /*
-        public virtual CollectObjective[] MyCollectObjectives { get => deprecatedCollectObjectives; set => deprecatedCollectObjectives = value; }
-        public virtual KillObjective[] MyKillObjectives { get => deprecatedKillObjectives; set => deprecatedKillObjectives = value; }
-        public virtual TradeSkillObjective[] MyTradeSkillObjectives { get => deprecatedTradeSkillObjectives; set => deprecatedTradeSkillObjectives = value; }
-        public virtual AbilityObjective[] MyAbilityObjectives { get => deprecatedAbilityObjectives; set => deprecatedAbilityObjectives = value; }
-        public virtual UseInteractableObjective[] MyUseInteractableObjectives { get => deprecatedUseInteractableObjectives; set => deprecatedUseInteractableObjectives = value; }
-        public virtual QuestQuestObjective[] MyQuestQuestObjectives { get => deprecatedQuestQuestObjectives; set => deprecatedQuestQuestObjectives = value; }
-        public virtual DialogObjective[] MyDialogObjectives { get => deprecatedDialogObjectives; set => deprecatedDialogObjectives = value; }
-        public virtual VisitZoneObjective[] VisitZoneObjectives { get => deprecatedVisitZoneObjectives; set => deprecatedVisitZoneObjectives = value; }
-        */
-
         public virtual bool IsComplete {
             get {
                 //Debug.Log("Quest.IsComplete: " + MyTitle);

@@ -36,8 +36,11 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Bracers
   equipmentSetName: 
-  useUMARecipe: 1
-  umaRecipeProfileName: 
+  deprecatedUseUMARecipe: 1
+  umaRecipeProfileName: Red Cloth Bracers
+  uMARecipeProfileProperties:
+    uMARecipes: []
+    sharedColors: []
   holdableObjectList: []
   useArmorModifier: 1
   useManualArmor: 0

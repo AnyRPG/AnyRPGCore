@@ -36,8 +36,11 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Pauldrons
   equipmentSetName: 
-  useUMARecipe: 0
+  deprecatedUseUMARecipe: 0
   umaRecipeProfileName: Brown Cloth Mantle
+  uMARecipeProfileProperties:
+    uMARecipes: []
+    sharedColors: []
   holdableObjectList: []
   useArmorModifier: 1
   useManualArmor: 0

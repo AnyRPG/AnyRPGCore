@@ -28,6 +28,8 @@ namespace AnyRPG {
         private SystemItemManager systemItemManager = null;
         private LootManager lootManager = null;
 
+        public List<LootGroup> LootGroups { get => lootGroups; set => lootGroups = value; }
+
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             //inventoryManager = systemGameManager.InventoryManager;

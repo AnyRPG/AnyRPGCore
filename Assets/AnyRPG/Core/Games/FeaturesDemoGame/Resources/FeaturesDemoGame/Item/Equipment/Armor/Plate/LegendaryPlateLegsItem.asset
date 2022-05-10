@@ -36,8 +36,11 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Pants
   equipmentSetName: Legendary Plate
-  useUMARecipe: 0
+  deprecatedUseUMARecipe: 0
   umaRecipeProfileName: Gold Plate Legs
+  uMARecipeProfileProperties:
+    uMARecipes: []
+    sharedColors: []
   holdableObjectList: []
   useArmorModifier: 1
   useManualArmor: 0

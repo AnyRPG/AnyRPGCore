@@ -36,8 +36,11 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Boots
   equipmentSetName: 
-  useUMARecipe: 1
-  umaRecipeProfileName: 
+  deprecatedUseUMARecipe: 1
+  umaRecipeProfileName: Yellow Leather Boots
+  uMARecipeProfileProperties:
+    uMARecipes: []
+    sharedColors: []
   holdableObjectList: []
   useArmorModifier: 1
   useManualArmor: 0

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UMA;
 
 namespace AnyRPG {
@@ -28,16 +29,19 @@ namespace AnyRPG {
 
         [Header("UMA Equipment Models")]
 
-        [Tooltip("If true, the item will look for an UMA recipe with the same name as the item")]
+        [Tooltip("Use the convert equipment wizard to update this field to 0.14.2a compatible")]
+        [FormerlySerializedAs("useUMARecipe")]
         [SerializeField]
-        private bool useUMARecipe = false;
+        private bool deprecatedUseUMARecipe = false;
 
         [Tooltip("The name of an UMA recipe to manually search for")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(UMARecipeProfile))]
         private string umaRecipeProfileName = string.Empty;
 
-        private UMARecipeProfile uMARecipeProfile = null;
+        [Tooltip("Inline UMA recipe profile properties")]
+        [SerializeField]
+        private UMARecipeProfileProperties uMARecipeProfileProperties = new UMARecipeProfileProperties();
 
         // The next 5 fields are meant for weapons.  They are being left in the base equipment class for now in case we want to do something like attach a cape to the spine
 
@@ -168,7 +172,7 @@ namespace AnyRPG {
         public List<HoldableObjectAttachment> HoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
         public EquipmentSet EquipmentSet { get => equipmentSet; set => equipmentSet = value; }
         public List<ItemPrimaryStatNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
-
+        public bool RandomSecondaryStats { get => randomSecondaryStats; set => randomSecondaryStats = value; }
         public List<ItemSecondaryStatNode> SecondaryStats {
             get {
                 if (randomSecondaryStats == true) {
@@ -176,11 +180,18 @@ namespace AnyRPG {
                 }
                 return secondaryStats;
             }
+            set {
+                secondaryStats = value;
+            }
         }
 
         public List<ItemSecondaryStatNode> ChosenSecondaryStats { get => chosenSecondaryStats; set => chosenSecondaryStats = value; }
         public List<int> RandomStatIndexes { get => randomStatIndexes; set => randomStatIndexes = value; }
-        public UMARecipeProfile UMARecipeProfile { get => uMARecipeProfile; set => uMARecipeProfile = value; }
+        public UMARecipeProfileProperties UMARecipeProfileProperties { get => uMARecipeProfileProperties; set => uMARecipeProfileProperties = value; }
+        public bool DeprecatedUseUMARecipe { get => deprecatedUseUMARecipe; set => deprecatedUseUMARecipe = value; }
+        public string UmaRecipeProfileName { get => umaRecipeProfileName; set => umaRecipeProfileName = value; }
+        public string EquipmentSetName { get => equipmentSetName; set => equipmentSetName = value; }
+        public bool UseArmorModifier { get => useArmorModifier; set => useArmorModifier = value; }
 
         public float GetTotalSlotWeights() {
             float returnValue = 0f;
@@ -394,13 +405,15 @@ namespace AnyRPG {
                 }
             }
 
-            if (useUMARecipe == true && (umaRecipeProfileName == null || umaRecipeProfileName == string.Empty)) {
+            /*
+            if (deprecatedUseUMARecipe == true && (umaRecipeProfileName == null || umaRecipeProfileName == string.Empty)) {
                 umaRecipeProfileName = ResourceName;
             }
+            */
             if (umaRecipeProfileName != null && umaRecipeProfileName != string.Empty) {
                 UMARecipeProfile tmpUMARecipeProfile = systemDataFactory.GetResource<UMARecipeProfile>(umaRecipeProfileName);
                 if (tmpUMARecipeProfile != null) {
-                    uMARecipeProfile = tmpUMARecipeProfile;
+                    uMARecipeProfileProperties = tmpUMARecipeProfile.Properties;
                 } else {
                     Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find uma recipe profile : " + umaRecipeProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }

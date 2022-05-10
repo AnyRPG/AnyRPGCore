@@ -20,11 +20,20 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  uMARecipes:
+  deprecatedUMARecipes:
   - {fileID: 11400000, guid: f2491f2ec58c4ce088ecc5e90d905237, type: 2}
   - {fileID: 11400000, guid: fa74157b87cce7b86adc802c91f2427d, type: 2}
-  sharedColors:
+  deprecatedSharedColors:
   - sharedColorname: Wrist Equipment Color 1
     color: {r: 0.34509805, g: 0.43137255, b: 0.9019608, a: 1}
   - sharedColorname: Wrist Equipment Color 2
     color: {r: 0.78431374, g: 0.6627451, b: 0.34509805, a: 1}
+  uMARecipeProfileProperties:
+    uMARecipes:
+    - {fileID: 11400000, guid: f2491f2ec58c4ce088ecc5e90d905237, type: 2}
+    - {fileID: 11400000, guid: fa74157b87cce7b86adc802c91f2427d, type: 2}
+    sharedColors:
+    - sharedColorname: Wrist Equipment Color 1
+      color: {r: 0.34509805, g: 0.43137255, b: 0.9019608, a: 1}
+    - sharedColorname: Wrist Equipment Color 2
+      color: {r: 0.78431374, g: 0.6627451, b: 0.34509805, a: 1}

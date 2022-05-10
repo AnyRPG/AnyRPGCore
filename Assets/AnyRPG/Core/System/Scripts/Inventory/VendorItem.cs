@@ -50,6 +50,9 @@ namespace AnyRPG {
             get {
                 return unlimited;
             }
+            set {
+                unlimited = value;
+            }
         }
 
         Sprite IDescribable.Icon => item.Icon;
@@ -57,6 +60,8 @@ namespace AnyRPG {
         string IDescribable.DisplayName => item.DisplayName;
 
         string IDescribable.Description => item.Description;
+
+        public string ItemName { get => itemName; set => itemName = value; }
 
         public ItemQuality GetItemQuality() {
             if (itemQuality != null) {

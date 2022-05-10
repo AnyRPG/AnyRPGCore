@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -30,6 +31,11 @@ namespace AnyRPG {
 
         [Header("Item Level")]
 
+        /*
+        [SerializeField]
+        protected ItemLevelProperties itemLevelProperties = new ItemLevelProperties();
+        */
+
         [Tooltip("If true, this item level will scale to match the character level")]
         [SerializeField]
         protected bool dynamicLevel = false;
@@ -50,7 +56,7 @@ namespace AnyRPG {
 
         [Tooltip("The level the character must be to use this item")]
         [SerializeField]
-        private int useLevel = 1;
+        protected int useLevel = 1;
 
         [Header("Price")]
 
@@ -126,7 +132,7 @@ namespace AnyRPG {
         public ItemQuality ItemQuality { get => realItemQuality; set => realItemQuality = value; }
         public int GetItemLevel(int characterLevel) {
             int returnLevel = (int)Mathf.Clamp(itemLevel, 1, Mathf.Infinity);
-            
+
             // frozen drop level overrides all other calculations
             if (freezeDropLevel == true) {
                 return (int)Mathf.Clamp(dropLevel, 1, Mathf.Infinity);
@@ -196,7 +202,7 @@ namespace AnyRPG {
 
         public void AssignToHandScript(Image backgroundImage) {
             //Debug.Log("the useable is an item");
-            
+
             uIManager.SetItemBackground(this, backgroundImage, new Color32(0, 0, 0, 255));
         }
 
@@ -211,11 +217,11 @@ namespace AnyRPG {
             */
             uIManager.UpdateStackSize(actionButton, count, true);
 
-            
+
             if (count == 0) {
                 actionButton.EnableFullCoolDownIcon();
             } else {
-            
+
                 // check for ability cooldown here and only disable if no cooldown exists
                 if (!HadSpecialIcon(actionButton)) {
                     actionButton.DisableCoolDownIcon();
@@ -298,7 +304,7 @@ namespace AnyRPG {
             }
 
             sellPrice = (int)Mathf.Clamp(sellPrice * (realItemQuality == null ? 1f : realItemQuality.SellPriceMultiplier) * systemConfigurationManager.VendorPriceMultiplier, 1f, Mathf.Infinity);
-            
+
             return new KeyValuePair<Currency, int>(currency, sellPrice);
         }
 
@@ -311,6 +317,11 @@ namespace AnyRPG {
                 dropLevel = (int)Mathf.Clamp(Mathf.Min(value, (levelCap > 0 ? levelCap : value)), 1, Mathf.Infinity);
             }
         }
+        public string ItemQualityName { get => itemQuality; set => itemQuality = value; }
+        public bool DynamicLevel { get => dynamicLevel; set => dynamicLevel = value; }
+        public int LevelCap { get => levelCap; set => levelCap = value; }
+        public int ItemLevel { set => itemLevel = value; }
+        public int UseLevel { get => useLevel; set => useLevel = value; }
 
         public IUseable GetFactoryUseable() {
             return systemDataFactory.GetResource<Item>(DisplayName);
@@ -522,11 +533,8 @@ namespace AnyRPG {
                 }
             }
 
-
         }
-
-
 
     }
 
-}
+ }

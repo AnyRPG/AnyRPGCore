@@ -19,8 +19,15 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  uMARecipes:
+  optionalOverride: 0
+  deprecatedUMARecipes:
   - {fileID: 11400000, guid: 1f3c53ee1e03efc4c9c64edbe9f68c2c, type: 2}
-  sharedColors:
+  deprecatedSharedColors:
   - sharedColorname: Wrist Equipment Color 1
     color: {r: 0, g: 0.8301887, b: 0.8301887, a: 1}
+  uMARecipeProfileProperties:
+    uMARecipes:
+    - {fileID: 11400000, guid: 1f3c53ee1e03efc4c9c64edbe9f68c2c, type: 2}
+    sharedColors:
+    - sharedColorname: Wrist Equipment Color 1
+      color: {r: 0, g: 0.8301887, b: 0.8301887, a: 1}

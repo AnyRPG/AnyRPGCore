@@ -31,6 +31,8 @@ namespace AnyRPG {
 
         public List<StatusEffectProperties> TraitList { get => traitList; set => traitList = value; }
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
+        public List<string> EquipmentNames { get => equipmentNames; set => equipmentNames = value; }
+        public List<string> TraitNames { get => traitNames; set => traitNames = value; }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);

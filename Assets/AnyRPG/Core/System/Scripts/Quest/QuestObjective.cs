@@ -14,10 +14,6 @@ namespace AnyRPG {
 
         protected Quest quest;
 
-        [SerializeField]
-        [FormerlySerializedAs("type")]
-        private string deprecatedType = string.Empty;
-
         [Tooltip("Set this if you want to override the name shown in the quest log objective to be something other than the type")]
         [SerializeField]
         private string overrideDisplayName = string.Empty;

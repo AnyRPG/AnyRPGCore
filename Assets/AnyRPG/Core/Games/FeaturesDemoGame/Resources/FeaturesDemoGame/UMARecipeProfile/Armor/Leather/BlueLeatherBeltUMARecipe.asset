@@ -19,9 +19,17 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  uMARecipes:
+  optionalOverride: 0
+  deprecatedUMARecipes:
   - {fileID: 11400000, guid: c9838d08053968d6a8a94d156203adc4, type: 2}
   - {fileID: 11400000, guid: c305cefdcee3987c488bea4ffb60f010, type: 2}
-  sharedColors:
+  deprecatedSharedColors:
   - sharedColorname: Waist Equipment Color 1
     color: {r: 0.34509805, g: 0.43137255, b: 0.9019608, a: 1}
+  uMARecipeProfileProperties:
+    uMARecipes:
+    - {fileID: 11400000, guid: c9838d08053968d6a8a94d156203adc4, type: 2}
+    - {fileID: 11400000, guid: c305cefdcee3987c488bea4ffb60f010, type: 2}
+    sharedColors:
+    - sharedColorname: Waist Equipment Color 1
+      color: {r: 0.34509805, g: 0.43137255, b: 0.9019608, a: 1}
