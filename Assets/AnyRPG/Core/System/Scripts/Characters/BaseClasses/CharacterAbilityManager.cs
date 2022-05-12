@@ -138,8 +138,8 @@ namespace AnyRPG {
         }
         public bool WaitingForAnimatedAbility { get => waitingForAnimatedAbility; set => waitingForAnimatedAbility = value; }
         public bool IsCasting { get => isCasting; set => isCasting = value; }
-        public Dictionary<string, AbilityCoolDownNode> MyAbilityCoolDownDictionary { get => abilityCoolDownDictionary; set => abilityCoolDownDictionary = value; }
-        public Coroutine MyCurrentCastCoroutine { get => currentCastCoroutine; }
+        public Dictionary<string, AbilityCoolDownNode> AbilityCoolDownDictionary { get => abilityCoolDownDictionary; set => abilityCoolDownDictionary = value; }
+        public Coroutine CurrentCastCoroutine { get => currentCastCoroutine; }
         public BaseAbilityProperties AutoAttackAbility { get => autoAttackAbility; set => autoAttackAbility = value; }
 
         // direct access for save manager so we don't miss saving abilities we know but belong to another class
@@ -959,17 +959,20 @@ namespace AnyRPG {
         }
 
         public IEnumerator PerformAbilityCoolDown(string abilityName) {
-            //Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") IENUMERATOR");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") IENUMERATOR");
 
             //Debug.Log(gameObject + ".BaseAbility.BeginAbilityCoolDown(): about to enter loop  IENUMERATOR");
 
             while (abilityCoolDownDictionary.ContainsKey(abilityName) && abilityCoolDownDictionary[abilityName].RemainingCoolDown > 0f) {
                 yield return null;
-                abilityCoolDownDictionary[abilityName].RemainingCoolDown -= Time.deltaTime;
+                if (abilityCoolDownDictionary.ContainsKey(abilityName)) {
+                    // in case ability is somehow accidentally cast while on cooldown, this will prevent null reference when other coroutine removes it from the dictionary
+                    abilityCoolDownDictionary[abilityName].RemainingCoolDown -= Time.deltaTime;
+                }
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCooldown():  IENUMERATOR: " + abilityCoolDownDictionary[abilityName].MyRemainingCoolDown);
             }
             if (abilityCoolDownDictionary.ContainsKey(abilityName)) {
-                //Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") REMOVING FROM DICTIONARY");
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") REMOVING FROM DICTIONARY");
                 abilityCoolDownDictionary.Remove(abilityName);
             } else {
                 //Debug.Log(gameObject + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") WAS NOT IN DICTIONARY");

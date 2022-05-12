@@ -651,7 +651,7 @@ namespace AnyRPG {
 
             //unitController.BaseCharacter.MyCharacterAbilityManager.StopCasting();
             if (unitController?.CharacterUnit?.BaseCharacter != null
-                && (unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.MyCurrentCastCoroutine != null || stoppedCast)) {
+                && (unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.CurrentCastCoroutine != null || stoppedCast)) {
                 if (unitController != null) {
                     unitController.SetUseRootMotion(false);
                 }

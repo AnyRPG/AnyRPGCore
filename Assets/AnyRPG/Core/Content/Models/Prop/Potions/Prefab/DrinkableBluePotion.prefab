@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interval: 1.5
+  keepLastVisible: 1
 --- !u!1001 &3895235500903489681
 PrefabInstance:
   m_ObjectHideFlags: 0

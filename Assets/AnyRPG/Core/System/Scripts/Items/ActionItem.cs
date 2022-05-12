@@ -56,11 +56,16 @@ namespace AnyRPG {
                 return false;
             }
             */
+
             bool returnValue = base.Use();
             if (returnValue == false) {
                 return false;
             }
             if (playerManager.MyCharacter.AbilityManager.ControlLocked) {
+                return false;
+            }
+            if (playerManager.MyCharacter.AbilityManager.IsOnCoolDown(DisplayName)) {
+                messageFeedManager.WriteMessage("Item is on cooldown");
                 return false;
             }
 
@@ -125,10 +130,10 @@ namespace AnyRPG {
         public string GetCooldownTimeString() {
             string coolDownString = string.Empty;
             if (playerManager?.MyCharacter?.CharacterAbilityManager != null
-                && playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
+                && playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName)) {
                 float dictionaryCooldown = 0f;
-                if (playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
-                    dictionaryCooldown = playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].RemainingCoolDown;
+                if (playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName)) {
+                    dictionaryCooldown = playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary[DisplayName].RemainingCoolDown;
                 }
                 coolDownString = "\n\nCooldown Remaining: " + SystemAbilityController.GetTimeText(dictionaryCooldown);
             }
@@ -146,7 +151,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
+            if (playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName)) {
                 //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): Ability is on cooldown");
                 if (actionButton.CoolDownIcon.isActiveAndEnabled != true) {
                     //Debug.Log("ActionButton.UpdateVisual(): coolDownIcon is not enabled: " + (useable == null ? "null" : useable.DisplayName));
@@ -160,9 +165,9 @@ namespace AnyRPG {
                 }
                 float remainingAbilityCoolDown = 0f;
                 float initialCoolDown = 0f;
-                if (playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
-                    remainingAbilityCoolDown = playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].RemainingCoolDown;
-                    initialCoolDown = playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].InitialCoolDown;
+                if (playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName)) {
+                    remainingAbilityCoolDown = playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary[DisplayName].RemainingCoolDown;
+                    initialCoolDown = playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary[DisplayName].InitialCoolDown;
                 } else {
                     initialCoolDown = coolDown;
                 }

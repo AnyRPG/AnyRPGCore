@@ -337,7 +337,7 @@ namespace AnyRPG {
         public IEnumerator MonitorCooldown(IUseable useable) {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + ")");
             while (Useable != null
-                && playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(useable.DisplayName)) {
+                && playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(useable.DisplayName)) {
                 UpdateVisual();
                 yield return null;
             }
@@ -355,7 +355,7 @@ namespace AnyRPG {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + ")");
             while (Useable != null
                 && (playerManager.MyCharacter.CharacterAbilityManager.RemainingGlobalCoolDown > 0f
-                || playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(abilityName))) {
+                || playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(abilityName))) {
                 UpdateVisual();
                 yield return null;
             }

@@ -511,7 +511,7 @@ namespace AnyRPG {
 
 
             if (playerManager.MyCharacter.CharacterAbilityManager.RemainingGlobalCoolDown > 0f
-                || playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
+                || playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName)) {
                 //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): Ability is on cooldown");
                 if (actionButton.CoolDownIcon.isActiveAndEnabled != true) {
                     //Debug.Log("ActionButton.UpdateVisual(): coolDownIcon is not enabled: " + (useable == null ? "null" : useable.DisplayName));
@@ -525,9 +525,9 @@ namespace AnyRPG {
                 }
                 float remainingAbilityCoolDown = 0f;
                 float initialCoolDown = 0f;
-                if (playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
-                    remainingAbilityCoolDown = playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].RemainingCoolDown;
-                    initialCoolDown = playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].InitialCoolDown;
+                if (playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName)) {
+                    remainingAbilityCoolDown = playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary[DisplayName].RemainingCoolDown;
+                    initialCoolDown = playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary[DisplayName].InitialCoolDown;
                 } else {
                     initialCoolDown = abilityCoolDown;
                 }
@@ -654,10 +654,10 @@ namespace AnyRPG {
             string coolDownString = string.Empty;
             if (playerManager?.MyCharacter?.CharacterAbilityManager != null
                 && (playerManager.MyCharacter.CharacterAbilityManager.RemainingGlobalCoolDown > 0f
-                || playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName))) {
+                || playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName))) {
                 float dictionaryCooldown = 0f;
-                if (playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
-                    dictionaryCooldown = playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].RemainingCoolDown;
+                if (playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName)) {
+                    dictionaryCooldown = playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary[DisplayName].RemainingCoolDown;
                 }
                 coolDownString = "\n\nCooldown Remaining: " + SystemAbilityController.GetTimeText(Mathf.Max(dictionaryCooldown, playerManager.MyCharacter.CharacterAbilityManager.RemainingGlobalCoolDown)); ;
             }

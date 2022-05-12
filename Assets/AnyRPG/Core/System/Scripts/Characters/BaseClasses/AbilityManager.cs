@@ -29,6 +29,10 @@ namespace AnyRPG {
             }
         }
 
+        public virtual bool IsOnCoolDown(string abilityName) {
+            return abilityCoolDownDictionary.ContainsKey(abilityName);
+        }
+
         public virtual void AddAbilityObject(AbilityAttachmentNode abilityAttachmentNode, GameObject go) {
             // do nothing
         }
