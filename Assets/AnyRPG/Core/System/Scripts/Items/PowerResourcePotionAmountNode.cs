@@ -9,6 +9,7 @@ namespace AnyRPG {
     public class PowerResourcePotionAmountNode {
 
         [Tooltip("The resource to add to or remove from")]
+        [ResourceSelector(resourceType = typeof(PowerResource))]
         [SerializeField]
         private string resourceName = string.Empty;
 
