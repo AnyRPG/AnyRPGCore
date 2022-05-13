@@ -72,6 +72,7 @@ namespace AnyRPG {
         [Header("Primary Stat Buffs and Debuffs")]
 
         [Tooltip("The values in this section will be applied to all of the following stats")]
+        [ResourceSelector(resourceType = typeof(CharacterStat))]
         [SerializeField]
         protected List<string> statBuffTypeNames = new List<string>();
 
