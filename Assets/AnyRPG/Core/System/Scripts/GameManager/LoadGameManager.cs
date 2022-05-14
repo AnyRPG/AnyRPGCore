@@ -68,7 +68,7 @@ namespace AnyRPG {
             capabilityConsumerSnapshot = saveManager.GetCapabilityConsumerSnapshot(anyRPGSaveData);
 
             unitProfile = capabilityConsumerSnapshot.UnitProfile;
-            UnitType = capabilityConsumerSnapshot.UnitProfile.UnitType;
+            UnitType = capabilityConsumerSnapshot.UnitProfile?.UnitType;
             characterRace = capabilityConsumerSnapshot.CharacterRace;
             characterClass = capabilityConsumerSnapshot.CharacterClass;
             classSpecialization = capabilityConsumerSnapshot.ClassSpecialization;
