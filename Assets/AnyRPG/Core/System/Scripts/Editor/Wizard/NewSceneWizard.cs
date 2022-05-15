@@ -41,6 +41,8 @@ namespace AnyRPG {
             SystemConfigurationManager systemConfigurationManager = WizardUtilities.GetSystemConfigurationManager();
             gameName = WizardUtilities.GetGameName(systemConfigurationManager);
             gameParentFolder = WizardUtilities.GetGameParentFolder(systemConfigurationManager, gameName);
+
+            sceneName = GetNewSceneTitle(sceneName);
         }
 
         void OnWizardCreate() {
@@ -84,6 +86,39 @@ namespace AnyRPG {
             }
 
             return true;
+        }
+
+        public static string GetNewSceneTitle(string sceneName) {
+
+            // attempt to create a unique scene name if the default is already used
+            string testSceneName = sceneName;
+            string filesystemSceneName = WizardUtilities.GetFilesystemSceneName(testSceneName);
+
+            if (SceneExists(filesystemSceneName)) {
+                for (int i = 2; i < 100; i++) {
+                    testSceneName = sceneName + " " + i.ToString();
+                    filesystemSceneName = WizardUtilities.GetFilesystemSceneName(testSceneName);
+                    if (SceneExists(filesystemSceneName) == false) {
+                        sceneName = testSceneName;
+                        break;
+                    }
+                }
+            }
+
+            return sceneName;
+        }
+
+        public static bool SceneExists(string filesystemSceneName) {
+
+            EditorBuildSettingsScene[] editorBuildSettingsScenes = EditorBuildSettings.scenes;
+            foreach (EditorBuildSettingsScene editorBuildSettingsScene in editorBuildSettingsScenes) {
+                //Debug.Log(Path.GetFileName(editorBuildSettingsScene.path).Replace(".unity", ""));
+                if (Path.GetFileName(editorBuildSettingsScene.path).Replace(".unity", "") == filesystemSceneName) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static string CreateScene(string gameParentFolder, string gameName, string sceneName, bool copyExistingScene, SceneAsset existingScene, AudioClip newSceneAmbientSounds, AudioClip newSceneMusic) {

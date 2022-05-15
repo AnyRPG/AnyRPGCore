@@ -90,7 +90,7 @@ namespace AnyRPG {
         // USER MODIFIED VARIABLES
         // #######################
 
-        public string gameName = "";
+        public string gameName = "New Game";
         public string gameVersion = "0.1a";
 
         // main menu options
@@ -100,7 +100,7 @@ namespace AnyRPG {
 
         // first scene options
         public bool copyExistingScene = false;
-        public string firstSceneName = "First Scene";
+        public string firstSceneName = "New Scene";
 
         public SceneAsset existingScene = null;
 
@@ -140,6 +140,9 @@ namespace AnyRPG {
 
         void OnEnable() {
             thirdPartyCharacterUnit = Selection.activeGameObject;
+
+            SetNewGameTitle();
+            firstSceneName = NewSceneWizard.GetNewSceneTitle(firstSceneName);
         }
 
         void OnWizardCreate() {
@@ -159,6 +162,24 @@ namespace AnyRPG {
             EditorUtility.ClearProgressBar();
             EditorUtility.DisplayDialog("New Game Wizard", "New Game Wizard Complete! The game loading scene can be found at " + gameLoadScenePath, "OK");
 
+        }
+
+        private void SetNewGameTitle() {
+
+            // attempt to create unique game name if the default is already used
+            string testGameName = gameName;
+            string newGameFolder = WizardUtilities.GetGameFileSystemFolder(gameParentFolder, WizardUtilities.GetFileSystemGameName(testGameName));
+
+            if (GameFolderExists(newGameFolder)) {
+                for (int i = 2; i < 100; i++) {
+                    testGameName = gameName + " " + i.ToString();
+                    newGameFolder = WizardUtilities.GetGameFileSystemFolder(gameParentFolder, WizardUtilities.GetFileSystemGameName(testGameName));
+                    if (GameFolderExists(newGameFolder) == false) {
+                        gameName = testGameName;
+                        break;
+                    }
+                }
+            }
         }
 
         private string CreateNewGame() {
@@ -631,7 +652,7 @@ namespace AnyRPG {
 
             // check that game with same name doesn't already exist
             string newGameFolder = WizardUtilities.GetGameFileSystemFolder(gameParentFolder, fileSystemGameName);
-            if (System.IO.Directory.Exists(newGameFolder)) {
+            if (GameFolderExists(newGameFolder)) {
                 return "Folder " + newGameFolder + " already exists.  Please delete this directory or choose a new game name";
             }
 
@@ -647,15 +668,19 @@ namespace AnyRPG {
             }
 
             // check that scene with same name doesn't already exist in build settings
-            EditorBuildSettingsScene[] editorBuildSettingsScenes = EditorBuildSettings.scenes;
-            foreach (EditorBuildSettingsScene editorBuildSettingsScene in editorBuildSettingsScenes) {
-                //Debug.Log(Path.GetFileName(editorBuildSettingsScene.path).Replace(".unity", ""));
-                if (Path.GetFileName(editorBuildSettingsScene.path).Replace(".unity", "") == filesystemSceneName) {
-                    return "A scene with the name " + filesystemSceneName + " already exists in the build settings. Please choose a unique first scene name.";
-                }
+            if (NewSceneWizard.SceneExists(filesystemSceneName)) {
+                return "A scene with the name " + filesystemSceneName + " already exists in the build settings. Please choose a unique first scene name.";
             }
 
             return null;
+        }
+
+        private bool GameFolderExists(string newGameFolder) {
+            if (System.IO.Directory.Exists(newGameFolder)) {
+                return true;
+            }
+
+            return false;
         }
 
 
