@@ -21,6 +21,8 @@ namespace AnyRPG {
         private const string sceneTemplatePath = "/AnyRPG/Core/Templates/Game/Scenes/FirstScene/FirstScene.unity";
         private const string lightingSettingsTemplatePath = "/AnyRPG/Core/Templates/Game/Scenes/FirstScene/FirstSceneSettings.lighting";
         private const string portalTemplatePath = "/AnyRPG/Core/Templates/Prefabs/Portal/StonePortal.prefab";
+        private const string defaultSpawnLocationPath = "/AnyRPG/Core/Templates/Prefabs/SpawnPoints/DefaultSpawnLocation.prefab";
+        private const string zoneCollidersPath = "/AnyRPG/Core/Templates/Prefabs/Colliders/ZoneColliders.prefab";
 
         // first scene options
         public bool copyExistingScene = false;
@@ -84,6 +86,17 @@ namespace AnyRPG {
             if (WizardUtilities.CheckFileExists(portalTemplatePath, "portal template") == false) {
                 return false;
             }
+
+            // Check for presence of default spawn location prefab
+            if (WizardUtilities.CheckFileExists(defaultSpawnLocationPath, "default spawn location prefab") == false) {
+                return false;
+            }
+
+            // Check for presence of zone colliders prefab
+            if (WizardUtilities.CheckFileExists(zoneCollidersPath, "zone colliders prefab") == false) {
+                return false;
+            }
+
 
             return true;
         }
@@ -166,13 +179,28 @@ namespace AnyRPG {
             currentSceneList.Add(new EditorBuildSettingsScene(newSceneAssetPath, true));
             EditorBuildSettings.scenes = currentSceneList.ToArray();
 
+            // add zonecolliders to scene
+            EditorUtility.DisplayProgressBar("New Scene Wizard", "Adding Zone Colliders to Scene...", 0.85f);
+            string zoneCollidersPrefabAssetPath = "Assets" + zoneCollidersPath;
+            GameObject zoneCollidersGameObject = (GameObject)AssetDatabase.LoadMainAssetAtPath(zoneCollidersPrefabAssetPath);
+            Scene firstScene = EditorSceneManager.OpenScene(newSceneAssetPath);
+            GameObject instantiatedCollidersGO = (GameObject)PrefabUtility.InstantiatePrefab(zoneCollidersGameObject);
+            instantiatedCollidersGO.transform.SetAsFirstSibling();
+
+            // add defaultSpawnLocation to scene
+            EditorUtility.DisplayProgressBar("New Scene Wizard", "Adding Default Spawn Location to Scene...", 0.9f);
+            string defaultSpawnLocationPrefabAssetPath = "Assets" + defaultSpawnLocationPath;
+            GameObject defaultSpawnLocationGameObject = (GameObject)AssetDatabase.LoadMainAssetAtPath(defaultSpawnLocationPrefabAssetPath);
+            GameObject instantiatedSpawnLocationGO = (GameObject)PrefabUtility.InstantiatePrefab(defaultSpawnLocationGameObject);
+            instantiatedSpawnLocationGO.transform.SetAsFirstSibling();
+
             // add sceneconfig to scene
             EditorUtility.DisplayProgressBar("New Scene Wizard", "Adding SceneConfig to Scene...", 0.97f);
             string sceneConfigPrefabAssetPath = "Assets" + gameParentFolder + fileSystemGameName + "/Prefab/GameManager/" + fileSystemGameName + "SceneConfig.prefab";
             GameObject sceneConfigGameObject = (GameObject)AssetDatabase.LoadMainAssetAtPath(sceneConfigPrefabAssetPath);
-            Scene firstScene = EditorSceneManager.OpenScene(newSceneAssetPath);
             GameObject instantiatedGO = (GameObject)PrefabUtility.InstantiatePrefab(sceneConfigGameObject);
             instantiatedGO.transform.SetAsFirstSibling();
+
 
             // assign lighting settings
             LightingSettings lightingSettings = (LightingSettings)AssetDatabase.LoadMainAssetAtPath(newLightingSettingsAssetPath);
