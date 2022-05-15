@@ -26,14 +26,14 @@ MonoBehaviour:
     weaponAffinityNames: []
     holdableObjectList:
     - holdableObjectName: Dragon Flame
-      useUniversalAttachment: 0
-      attachmentName: 
+      useUniversalAttachment: 1
+      attachmentName: SpellSource
     abilityPrefabSource: 0
     animatorCreatePrefabs: 0
     prefabDestroyDelay: 0
     animationClip: {fileID: 0}
     animationProfileName: 
-    useUnitCastAnimations: 0
+    useUnitCastAnimations: 1
     animationHitAudioProfileName: 
     castingAudioClip: {fileID: 0}
     castingAudioProfileName: Fire Spell
@@ -69,6 +69,7 @@ MonoBehaviour:
       canCastOnNeutral: 0
       canCastOnFriendly: 0
       autoSelfCast: 0
+      unitTypeRestrictions: []
       useMeleeRange: 0
       maxRange: 0
       requireFacingTarget: 1
@@ -100,6 +101,7 @@ MonoBehaviour:
             canCastOnNeutral: 0
             canCastOnFriendly: 0
             autoSelfCast: 0
+            unitTypeRestrictions: []
             useMeleeRange: 0
             maxRange: 0
             lineOfSightSourceLocation: 0

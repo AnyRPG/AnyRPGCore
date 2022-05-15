@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: ccab25b46d3775445a1820d216903970, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: 
+  description: A fire breathing dragon
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -28,27 +28,20 @@ MonoBehaviour:
       type: 3}
     modelPrefab: {fileID: 943068409625311753, guid: 022ab4d98a489344283da6d08ddec94c,
       type: 3}
-    animationProfileName: 
-    useInlineAnimationProps: 1
+    animationProfileName: Dragon
+    useInlineAnimationProps: 0
     animationProps:
       useRootMotion: 0
       suppressAdjustAnimatorSpeed: 0
-      attackClips:
-      - {fileID: 6720303635017113406, guid: 2e952da64afbbdd409ebe5dd14356653, type: 3}
+      attackClips: []
       castClips: []
       takeDamageClips: []
-      idleClip: {fileID: -3100369314251171874, guid: 2e952da64afbbdd409ebe5dd14356653,
-        type: 3}
-      jumpClip: {fileID: 2667949614841947897, guid: 2e952da64afbbdd409ebe5dd14356653,
-        type: 3}
-      fallClip: {fileID: 2667949614841947897, guid: 2e952da64afbbdd409ebe5dd14356653,
-        type: 3}
-      landClip: {fileID: 2667949614841947897, guid: 2e952da64afbbdd409ebe5dd14356653,
-        type: 3}
-      moveForwardClip: {fileID: 2667949614841947897, guid: 2e952da64afbbdd409ebe5dd14356653,
-        type: 3}
-      moveForwardFastClip: {fileID: 2667949614841947897, guid: 2e952da64afbbdd409ebe5dd14356653,
-        type: 3}
+      idleClip: {fileID: 0}
+      jumpClip: {fileID: 0}
+      fallClip: {fileID: 0}
+      landClip: {fileID: 0}
+      moveForwardClip: {fileID: 0}
+      moveForwardFastClip: {fileID: 0}
       moveBackClip: {fileID: 0}
       moveBackFastClip: {fileID: 0}
       turnLeftClip: {fileID: 0}
@@ -66,7 +59,7 @@ MonoBehaviour:
       strafeBackRightClip: {fileID: 0}
       jogStrafeBackRightClip: {fileID: 0}
       stunnedClip: {fileID: 0}
-      fullCombatMirror: 1
+      fullCombatMirror: 0
       combatIdleMirror: 0
       combatIdleClip: {fileID: 0}
       combatJumpMirror: 0
@@ -113,18 +106,13 @@ MonoBehaviour:
       combatJogStrafeBackRightClip: {fileID: 0}
       combatStunnedMirror: 0
       combatStunnedClip: {fileID: 0}
-      deathClip: {fileID: -4630339522487117836, guid: 2e952da64afbbdd409ebe5dd14356653,
-        type: 3}
+      deathClip: {fileID: 0}
       reviveClip: {fileID: 0}
       levitatedClip: {fileID: 0}
-      swimIdleClip: {fileID: -3100369314251171874, guid: 2e952da64afbbdd409ebe5dd14356653,
-        type: 3}
-      swimMoveClip: {fileID: 2667949614841947897, guid: 2e952da64afbbdd409ebe5dd14356653,
-        type: 3}
-      flyIdleClip: {fileID: -3100369314251171874, guid: 2e952da64afbbdd409ebe5dd14356653,
-        type: 3}
-      flyMoveClip: {fileID: 2667949614841947897, guid: 2e952da64afbbdd409ebe5dd14356653,
-        type: 3}
+      swimIdleClip: {fileID: 0}
+      swimMoveClip: {fileID: 0}
+      flyIdleClip: {fileID: 0}
+      flyMoveClip: {fileID: 0}
     rotateModel: 1
     namePlateProps:
       displayName: 
@@ -143,18 +131,18 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
     targetBone: MountPoint
-    attachmentProfileName: 
+    attachmentProfileName: Dragon
     floatHeight: 1.4
     addFloatHeightToTransform: 0
-    floatTransform: Spine1
+    floatTransform: back1
   isUMAUnit: 0
-  isPet: 0
-  flightCapable: 0
+  isPet: 1
+  flightCapable: 1
   glideCapable: 0
   characterName: Dragon
   title: 
-  factionName: 
-  unitTypeName: 
+  factionName: Enemy
+  unitTypeName: Beast
   characterRaceName: 
   characterClassName: 
   classSpecializationName: 
@@ -162,12 +150,13 @@ MonoBehaviour:
   preventAutoDespawn: 0
   defaultToughness: 
   capabilities:
-    abilityNames: []
+    abilityNames:
+    - Dragon Breath
     traitNames: []
     armorClassList: []
     weaponSkills: []
-  isAggressive: 0
-  aggroRadius: 0
+  isAggressive: 1
+  aggroRadius: 20
   automaticCombatStrategy: 0
   combatStrategyName: 
   primaryStats: []
@@ -195,44 +184,12 @@ MonoBehaviour:
     savePositionAtDestination: 0
   patrolNames: []
   interactionMaxRange: 3
-  deprecatedBehaviorConfig:
-    interactionPanelTitle: 
-    interactionPanelImage: {fileID: 0}
-    namePlateImage: {fileID: 0}
-    prerequisiteConditions: []
-    behaviorNames: []
-  deprecatedLootableCharacter:
-    interactionPanelTitle: 
-    interactionPanelImage: {fileID: 0}
-    namePlateImage: {fileID: 0}
-    prerequisiteConditions: []
-    automaticCurrency: 1
-    lootTableNames: []
-  deprecatedDialogConfig:
-    interactionPanelTitle: 
-    interactionPanelImage: {fileID: 0}
-    namePlateImage: {fileID: 0}
-    prerequisiteConditions: []
-    dialogNames: []
-  deprecatedQuestGiverConfig:
-    interactionPanelTitle: 
-    interactionPanelImage: {fileID: 0}
-    namePlateImage: {fileID: 0}
-    prerequisiteConditions: []
-    quests: []
-    questGiverProfileNames: []
-  deprecatedVendorConfig:
-    interactionPanelTitle: 
-    interactionPanelImage: {fileID: 0}
-    namePlateImage: {fileID: 0}
-    prerequisiteConditions: []
-    vendorCollectionNames: []
   interactableOptions: []
   inlineInteractableOptions: []
   persistObjectPosition: 0
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: fcfaf5b2-fab8-494b-a246-07fcb258d671
+  m_UUID: 0c4469aa-ec9f-491c-bdc8-68d3586271dc
   references:
     version: 1

@@ -19,12 +19,14 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   animationProps:
     useRootMotion: 0
     suppressAdjustAnimatorSpeed: 0
     attackClips:
     - {fileID: 6720303635017113406, guid: 2e952da64afbbdd409ebe5dd14356653, type: 3}
-    castClips: []
+    castClips:
+    - {fileID: -3100369314251171874, guid: 2e952da64afbbdd409ebe5dd14356653, type: 3}
     takeDamageClips: []
     idleClip: {fileID: -3100369314251171874, guid: 2e952da64afbbdd409ebe5dd14356653,
       type: 3}

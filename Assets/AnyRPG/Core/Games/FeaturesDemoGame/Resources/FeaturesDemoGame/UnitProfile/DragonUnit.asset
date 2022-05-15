@@ -122,7 +122,7 @@ MonoBehaviour:
       namePlatePosition: {x: 0, y: 6, z: 0}
       unitFrameTarget: jaw_upper_end
       unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
-      unitFrameCameraPositionOffset: {x: 0, y: 1.5, z: 0}
+      unitFrameCameraPositionOffset: {x: 0, y: 0, z: 1.5}
       unitPreviewTarget: 
       unitPreviewCameraLookOffset: {x: 0, y: 3.5, z: 0}
       unitPreviewCameraPositionOffset: {x: 0, y: 3.5, z: 10}
@@ -131,7 +131,7 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
     targetBone: MountPoint
-    attachmentProfileName: 
+    attachmentProfileName: Dragon
     floatHeight: 1.4
     addFloatHeightToTransform: 0
     floatTransform: back1
@@ -163,6 +163,7 @@ MonoBehaviour:
   powerResources: []
   useProviderEquipment: 0
   equipmentNameList: []
+  faceInteractionTarget: 1
   isMobile: 1
   playOnFootstep: 0
   movementAudioProfileNames:
@@ -183,38 +184,6 @@ MonoBehaviour:
     savePositionAtDestination: 0
   patrolNames: []
   interactionMaxRange: 3
-  deprecatedBehaviorConfig:
-    interactionPanelTitle: 
-    interactionPanelImage: {fileID: 0}
-    namePlateImage: {fileID: 0}
-    prerequisiteConditions: []
-    behaviorNames: []
-  deprecatedLootableCharacter:
-    interactionPanelTitle: 
-    interactionPanelImage: {fileID: 0}
-    namePlateImage: {fileID: 0}
-    prerequisiteConditions: []
-    automaticCurrency: 0
-    lootTableNames: []
-  deprecatedDialogConfig:
-    interactionPanelTitle: 
-    interactionPanelImage: {fileID: 0}
-    namePlateImage: {fileID: 0}
-    prerequisiteConditions: []
-    dialogNames: []
-  deprecatedQuestGiverConfig:
-    interactionPanelTitle: 
-    interactionPanelImage: {fileID: 0}
-    namePlateImage: {fileID: 0}
-    prerequisiteConditions: []
-    quests: []
-    questGiverProfileNames: []
-  deprecatedVendorConfig:
-    interactionPanelTitle: 
-    interactionPanelImage: {fileID: 0}
-    namePlateImage: {fileID: 0}
-    prerequisiteConditions: []
-    vendorCollectionNames: []
   interactableOptions: []
   inlineInteractableOptions: []
   persistObjectPosition: 0
