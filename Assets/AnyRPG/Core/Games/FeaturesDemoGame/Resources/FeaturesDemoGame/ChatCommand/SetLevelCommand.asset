@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff2c3fb57e539d14ea75574ceef820f6, type: 3}
   m_Name: SetLevelCommand
   m_EditorClassIdentifier: 
-  resourceName: 
+  resourceName: Set Level
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
