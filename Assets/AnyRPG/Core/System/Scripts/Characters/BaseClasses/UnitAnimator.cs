@@ -148,10 +148,10 @@ namespace AnyRPG {
             defaultAnimationProps = systemConfigurationManager.DefaultAnimationProfile.AnimationProps;
 
             // out of combat animations
-            animationSpeeds.Add("MoveForwardClip", 1f);
-            animationSpeeds.Add("MoveForwardFastClip", 3.4f);
-            animationSpeeds.Add("MoveBackClip", 1.6f);
-            animationSpeeds.Add("MoveBackFastClip", 3.4f);
+            animationSpeeds.Add("WalkClip", 1f);
+            animationSpeeds.Add("RunClip", 3.4f);
+            animationSpeeds.Add("WalkBackClip", 1.6f);
+            animationSpeeds.Add("RunBackClip", 3.4f);
             animationSpeeds.Add("StrafeLeftClip", 1f);
             animationSpeeds.Add("StrafeRightClip", 1f);
             animationSpeeds.Add("StrafeForwardLeftClip", 1f);
@@ -166,10 +166,10 @@ namespace AnyRPG {
             animationSpeeds.Add("JogStrafeBackRightClip", 1f);
 
             // in combat animations
-            animationSpeeds.Add("CombatMoveForwardClip", 1f);
-            animationSpeeds.Add("CombatMoveForwardFastClip", 3.4f);
-            animationSpeeds.Add("CombatMoveBackClip", 1.6f);
-            animationSpeeds.Add("CombatMoveBackFastClip", 3.4f);
+            animationSpeeds.Add("CombatWalkClip", 1f);
+            animationSpeeds.Add("CombatRunClip", 3.4f);
+            animationSpeeds.Add("CombatWalkBackClip", 1.6f);
+            animationSpeeds.Add("CombatRunBackClip", 3.4f);
             animationSpeeds.Add("CombatStrafeLeftClip", 1f);
             animationSpeeds.Add("CombatJogStrafeLeftClip", 2.4f);
             animationSpeeds.Add("CombatStrafeRightClip", 1f);
@@ -184,14 +184,14 @@ namespace AnyRPG {
             animationSpeeds.Add("CombatJogStrafeBackRightClip", 2.67f);
 
             // animation speeds
-            zList.Add("MoveForwardClip");
-            zList.Add("MoveForwardFastClip");
-            zList.Add("CombatMoveForwardClip");
-            zList.Add("CombatMoveForwardFastClip");
-            zList.Add("MoveBackClip");
-            zList.Add("MoveBackFastClip");
-            zList.Add("CombatMoveBackClip");
-            zList.Add("CombatMoveBackFastClip");
+            zList.Add("WalkClip");
+            zList.Add("RunClip");
+            zList.Add("CombatWalkClip");
+            zList.Add("CombatRunClip");
+            zList.Add("WalkBackClip");
+            zList.Add("RunBackClip");
+            zList.Add("CombatWalkBackClip");
+            zList.Add("CombatRunBackClip");
             xList.Add("StrafeLeftClip");
             xList.Add("StrafeRightClip");
             xList.Add("JogStrafeLeftClip");

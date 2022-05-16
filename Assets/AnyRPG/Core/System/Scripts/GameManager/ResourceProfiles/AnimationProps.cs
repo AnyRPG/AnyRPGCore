@@ -38,14 +38,23 @@ namespace AnyRPG {
         private AnimationClip fallClip;
         [SerializeField]
         private AnimationClip landClip;
+        
+        [FormerlySerializedAs("moveForwardClip")]
         [SerializeField]
-        private AnimationClip moveForwardClip;
+        private AnimationClip walkClip;
+
+        [FormerlySerializedAs("moveForwardFastClip")]
         [SerializeField]
-        private AnimationClip moveForwardFastClip;
+        private AnimationClip runClip;
+
+        [FormerlySerializedAs("moveBackClip")]
         [SerializeField]
-        private AnimationClip moveBackClip;
+        private AnimationClip walkBackClip;
+
+        [FormerlySerializedAs("moveBackFastClip")]
         [SerializeField]
-        private AnimationClip moveBackFastClip;
+        private AnimationClip runBackClip;
+
         [SerializeField]
         private AnimationClip turnLeftClip;
         [SerializeField]
@@ -113,31 +122,35 @@ namespace AnyRPG {
 
         [Tooltip("If true, the combat move forward clip will use the non combat move forward clip")]
         [SerializeField]
-        private bool combatMoveForwardMirror = false;
+        private bool combatWalkMirror = false;
 
+        [FormerlySerializedAs("combatMoveForwardClip")]
         [SerializeField]
-        private AnimationClip combatMoveForwardClip;
+        private AnimationClip combatWalkClip;
 
         [Tooltip("If true, the combat move forward fast clip will use the non combat move forward fast clip")]
         [SerializeField]
-        private bool combatMoveForwardFastMirror = false;
+        private bool combatRunMirror = false;
 
+        [FormerlySerializedAs("combatMoveForwardFastClip")]
         [SerializeField]
-        private AnimationClip combatMoveForwardFastClip;
+        private AnimationClip combatRunClip;
 
         [Tooltip("If true, the combat move back clip will use the non combat move back clip")]
         [SerializeField]
-        private bool combatMoveBackMirror = false;
+        private bool combatWalkBackMirror = false;
 
+        [FormerlySerializedAs("combatMoveBackClip")]
         [SerializeField]
-        private AnimationClip combatMoveBackClip;
+        private AnimationClip combatWalkBackClip;
 
         [Tooltip("If true, the combat move back fast clip will use the non combat move back fast clip")]
         [SerializeField]
-        private bool combatMoveBackFastMirror = false;
+        private bool combatRunBackMirror = false;
 
+        [FormerlySerializedAs("combatMoveBackFastClip")]
         [SerializeField]
-        private AnimationClip combatMoveBackFastClip;
+        private AnimationClip combatRunBackClip;
 
         [Tooltip("If true, the combat turn left clip will use the non combat turn left clip")]
         [SerializeField]
@@ -286,10 +299,10 @@ namespace AnyRPG {
         public AnimationClip StrafeForwardRightClip { get => strafeForwardRightClip; set => strafeForwardRightClip = value; }
         public AnimationClip StrafeBackLeftClip { get => strafeBackLeftClip; set => strafeBackLeftClip = value; }
         public AnimationClip StrafeBackRightClip { get => strafeBackRightClip; set => strafeBackRightClip = value; }
-        public AnimationClip MoveForwardClip { get => moveForwardClip; set => moveForwardClip = value; }
-        public AnimationClip MoveForwardFastClip { get => moveForwardFastClip; set => moveForwardFastClip = value; }
-        public AnimationClip MoveBackClip { get => moveBackClip; set => moveBackClip = value; }
-        public AnimationClip MoveBackFastClip { get => moveBackFastClip; set => moveBackFastClip = value; }
+        public AnimationClip WalkClip { get => walkClip; set => walkClip = value; }
+        public AnimationClip RunClip { get => runClip; set => runClip = value; }
+        public AnimationClip WalkBackClip { get => walkBackClip; set => walkBackClip = value; }
+        public AnimationClip RunBackClip { get => runBackClip; set => runBackClip = value; }
         public AnimationClip StunnedClip { get => stunnedClip; set => stunnedClip = value; }
         public AnimationClip JogStrafeLeftClip { get => jogStrafeLeftClip; set => jogStrafeLeftClip = value; }
         public AnimationClip JogStrafeRightClip { get => jogStrafeRightClip; set => jogStrafeRightClip = value; }
@@ -334,41 +347,41 @@ namespace AnyRPG {
             }
             set => combatLandClip = value;
         }
-        public AnimationClip CombatMoveForwardClip {
+        public AnimationClip CombatWalkClip {
             get {
-                if (fullCombatMirror == true || combatMoveForwardMirror == true) {
-                    return moveForwardClip;
+                if (fullCombatMirror == true || combatWalkMirror == true) {
+                    return walkClip;
                 }
-                return combatMoveForwardClip;
+                return combatWalkClip;
             }
-            set => combatMoveForwardClip = value;
+            set => combatWalkClip = value;
         }
-        public AnimationClip CombatMoveForwardFastClip {
+        public AnimationClip CombatRunClip {
             get {
-                if (fullCombatMirror == true || combatMoveForwardFastMirror == true) {
-                    return moveForwardFastClip;
+                if (fullCombatMirror == true || combatRunMirror == true) {
+                    return runClip;
                 }
-                return combatMoveForwardFastClip;
+                return combatRunClip;
             }
-            set => combatMoveForwardFastClip = value;
+            set => combatRunClip = value;
         }
-        public AnimationClip CombatMoveBackClip {
+        public AnimationClip CombatWalkBackClip {
             get {
-                if (fullCombatMirror == true || combatMoveBackMirror) {
-                    return moveBackClip;
+                if (fullCombatMirror == true || combatWalkBackMirror) {
+                    return walkBackClip;
                 }
-                return combatMoveBackClip;
+                return combatWalkBackClip;
             }
-            set => combatMoveBackClip = value;
+            set => combatWalkBackClip = value;
         }
-        public AnimationClip CombatMoveBackFastClip {
+        public AnimationClip CombatRunBackClip {
             get {
-                if (fullCombatMirror == true || combatMoveBackFastMirror) {
-                    return moveBackFastClip;
+                if (fullCombatMirror == true || combatRunBackMirror) {
+                    return runBackClip;
                 }
-                return combatMoveBackFastClip;
+                return combatRunBackClip;
             }
-            set => combatMoveBackFastClip = value;
+            set => combatRunBackClip = value;
         }
         public AnimationClip CombatTurnLeftClip {
             get {
@@ -526,10 +539,10 @@ namespace AnyRPG {
             animationClips.Add("LandClip", LandClip);
             animationClips.Add("TurnLeftClip", TurnLeftClip);
             animationClips.Add("TurnRightClip", TurnRightClip);
-            animationClips.Add("MoveForwardClip", MoveForwardClip);
-            animationClips.Add("MoveForwardFastClip", MoveForwardFastClip);
-            animationClips.Add("MoveBackClip", MoveBackClip);
-            animationClips.Add("MoveBackFastClip", MoveBackFastClip);
+            animationClips.Add("WalkClip", WalkClip);
+            animationClips.Add("RunClip", RunClip);
+            animationClips.Add("WalkBackClip", WalkBackClip);
+            animationClips.Add("RunBackClip", RunBackClip);
             animationClips.Add("StrafeLeftClip", StrafeLeftClip);
             animationClips.Add("StrafeRightClip", StrafeRightClip);
             animationClips.Add("StrafeForwardLeftClip", StrafeForwardLeftClip);
@@ -547,10 +560,10 @@ namespace AnyRPG {
             animationClips.Add("CombatJumpClip", CombatJumpClip);
             animationClips.Add("CombatFallClip", CombatFallClip);
             animationClips.Add("CombatLandClip", CombatLandClip);
-            animationClips.Add("CombatMoveForwardClip", CombatMoveForwardClip);
-            animationClips.Add("CombatMoveForwardFastClip", CombatMoveForwardFastClip);
-            animationClips.Add("CombatMoveBackClip", CombatMoveBackClip);
-            animationClips.Add("CombatMoveBackFastClip", CombatMoveBackFastClip);
+            animationClips.Add("CombatWalkClip", CombatWalkClip);
+            animationClips.Add("CombatRunClip", CombatRunClip);
+            animationClips.Add("CombatWalkBackClip", CombatWalkBackClip);
+            animationClips.Add("CombatRunBackClip", CombatRunBackClip);
             animationClips.Add("CombatTurnLeftClip", CombatTurnLeftClip);
             animationClips.Add("CombatTurnRightClip", CombatTurnRightClip);
             animationClips.Add("CombatStrafeLeftClip", CombatStrafeLeftClip);
