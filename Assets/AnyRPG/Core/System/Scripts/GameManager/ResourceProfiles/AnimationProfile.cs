@@ -2,7 +2,7 @@ using AnyRPG;
 using UnityEngine;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New Animation Profile", menuName = "AnyRPG/Animation/Profile")]
+    [CreateAssetMenu(fileName = "New Animation Profile", menuName = "AnyRPG/Animation Profile")]
     public class AnimationProfile : DescribableResource {
 
         [SerializeField]
