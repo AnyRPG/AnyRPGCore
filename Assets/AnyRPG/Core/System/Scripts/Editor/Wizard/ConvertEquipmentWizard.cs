@@ -11,7 +11,7 @@ namespace AnyRPG {
 
         public List<Equipment> equipmentList = new List<Equipment>();
 
-        [MenuItem("Tools/AnyRPG/Wizard/Convert/Convert Equipment to 0.14.2a")]
+        //[MenuItem("Tools/AnyRPG/Wizard/Convert/Convert Equipment to 0.14.2a")]
         public static void CreateWizard() {
             ScriptableWizard.DisplayWizard<ConvertEquipmentWizard>("New Convert Equipment Wizard", "Convert");
         }
@@ -34,10 +34,11 @@ namespace AnyRPG {
                 i++;
                 EditorUtility.DisplayProgressBar("Convert Equipment Wizard", "Beginning Conversion...", (float)i / (float)equipmentList.Count);
 
-
+                /*
                 if (equipment.DeprecatedUseUMARecipe == true) {
                     equipment.UmaRecipeProfileName = equipment.ResourceName;
                 }
+                */
 
                 EditorUtility.SetDirty(equipment);
                 AssetDatabase.SaveAssets();

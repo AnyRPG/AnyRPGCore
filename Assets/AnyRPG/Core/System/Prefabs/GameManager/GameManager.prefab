@@ -5989,7 +5989,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameName: AnyRPG Engine
-  gameVersion: v0.14a
+  gameVersion: v0.14.3a
   loadResourcesFolders: []
   initializationScene: 
   mainMenuScene: 
@@ -6052,7 +6052,6 @@ MonoBehaviour:
   killXPMultiplierLevelCap: 20
   weaponDPSBudgetPerLevel: 2.5
   statBudgetPerLevel: 0
-  deprecatedPrimaryStats: []
   powerResources: []
   capabilities:
     abilityNames: []

@@ -12,22 +12,10 @@ namespace AnyRPG {
 
         [Header("UMA Recipes")]
 
-        [Tooltip("Use the ConvertUMARecipeProfile wizard to convert this field to 0.14.2a compatible")]
-        [FormerlySerializedAs("uMARecipes")]
-        [SerializeField]
-        private List<UMA.UMATextRecipe> deprecatedUMARecipes = new List<UMATextRecipe>();
-
-        [Tooltip("Use the ConvertUMARecipeProfile wizard to convert this field to 0.14.2a compatible")]
-        [FormerlySerializedAs("sharedColors")]
-        [SerializeField]
-        private List<SharedColorNode> deprecatedSharedColors = new List<SharedColorNode>();
-
         [SerializeField]
         private UMARecipeProfileProperties uMARecipeProfileProperties = new UMARecipeProfileProperties();
 
         public UMARecipeProfileProperties Properties { get => uMARecipeProfileProperties; set => uMARecipeProfileProperties = value; }
-        public List<UMATextRecipe> DeprecatedUMARecipes { get => deprecatedUMARecipes; set => deprecatedUMARecipes = value; }
-        public List<SharedColorNode> DeprecatedSharedColors { get => deprecatedSharedColors; set => deprecatedSharedColors = value; }
     }
 
     [System.Serializable]

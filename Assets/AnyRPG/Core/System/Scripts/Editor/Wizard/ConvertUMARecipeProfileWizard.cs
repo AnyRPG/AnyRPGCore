@@ -11,7 +11,7 @@ namespace AnyRPG {
 
         public List<UMARecipeProfile> convertList = new List<UMARecipeProfile>();
 
-        [MenuItem("Tools/AnyRPG/Wizard/Convert/Convert UMARecipeProfile to 0.14.2a")]
+        //[MenuItem("Tools/AnyRPG/Wizard/Convert/Convert UMARecipeProfile to 0.14.2a")]
         public static void CreateWizard() {
             ScriptableWizard.DisplayWizard<ConvertUMARecipeProfileWizard>("New Convert UMARecipeProfile Wizard", "Convert");
         }
@@ -34,8 +34,8 @@ namespace AnyRPG {
                 i++;
                 EditorUtility.DisplayProgressBar("Convert UMARecipeProfile Wizard", "Beginning Conversion...", (float)i / (float)convertList.Count);
 
-                convertItem.Properties.SharedColors = convertItem.DeprecatedSharedColors;
-                convertItem.Properties.UMARecipes = convertItem.DeprecatedUMARecipes;
+                //convertItem.Properties.SharedColors = convertItem.DeprecatedSharedColors;
+                //convertItem.Properties.UMARecipes = convertItem.DeprecatedUMARecipes;
 
                 EditorUtility.SetDirty(convertItem);
                 AssetDatabase.SaveAssets();

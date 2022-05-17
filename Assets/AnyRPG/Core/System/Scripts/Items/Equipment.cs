@@ -29,11 +29,6 @@ namespace AnyRPG {
 
         [Header("UMA Equipment Models")]
 
-        [Tooltip("Use the convert equipment wizard to update this field to 0.14.2a compatible")]
-        [FormerlySerializedAs("useUMARecipe")]
-        [SerializeField]
-        private bool deprecatedUseUMARecipe = false;
-
         [Tooltip("The name of an UMA recipe to manually search for")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(UMARecipeProfile))]
@@ -188,7 +183,6 @@ namespace AnyRPG {
         public List<ItemSecondaryStatNode> ChosenSecondaryStats { get => chosenSecondaryStats; set => chosenSecondaryStats = value; }
         public List<int> RandomStatIndexes { get => randomStatIndexes; set => randomStatIndexes = value; }
         public UMARecipeProfileProperties UMARecipeProfileProperties { get => uMARecipeProfileProperties; set => uMARecipeProfileProperties = value; }
-        public bool DeprecatedUseUMARecipe { get => deprecatedUseUMARecipe; set => deprecatedUseUMARecipe = value; }
         public string UmaRecipeProfileName { get => umaRecipeProfileName; set => umaRecipeProfileName = value; }
         public string EquipmentSetName { get => equipmentSetName; set => equipmentSetName = value; }
         public bool UseArmorModifier { get => useArmorModifier; set => useArmorModifier = value; }
