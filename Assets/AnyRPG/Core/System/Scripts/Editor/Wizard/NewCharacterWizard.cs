@@ -110,6 +110,9 @@ namespace AnyRPG {
 
         [Header("Animation Auto Assign")]
 
+        [Tooltip("Idle, jump loop, and movement animations will be assigned to this section")]
+        public AssignAnimationType assignPriority = AssignAnimationType.OutOfCombat;
+
         [Tooltip("Drag clips here and the wizard will attempt to auto-assign them to the animation properties below based on their names.")]
         public List<AnimationClip> assignClips = new List<AnimationClip>();
         
@@ -251,91 +254,12 @@ namespace AnyRPG {
             }
 
             // add hit events
+            EditorUtility.DisplayProgressBar("New Character Wizard", "Optionally adding hit events to attack animations...", 0.8f);
             if (addHitEvents == true) {
-                EditorUtility.DisplayProgressBar("New Character Wizard", "Optionally adding hit events to attack animations...", 0.8f);
-                bool hitEventExists = false;
-                foreach (AnimationClip animationClip in animations.AttackClips) {
-                    hitEventExists = false;
-                    /*
-                    foreach (AnimationEvent animationEvent in animationClip.events) {
-                        if (animationEvent.functionName == "Hit") {
-                            hitEventExists = true;
-                            Debug.Log("Hit() event exists on animation clip named " + animationClip.name + " at " + animationEvent.time);
-                        }
-                    }
-                    */
-                    ModelImporter modelImporter = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(animationClip)) as ModelImporter;
-                    SerializedObject serializedObject = new SerializedObject(modelImporter);
-                    SerializedProperty clipAnimations = serializedObject.FindProperty("m_ClipAnimations");
-                    AnimationClipInfoProperties clipInfoProperties = GetClipInfoProperties(clipAnimations, animationClip.name);
-                    AnimationEvent[] animationEvents = null;
-                    if (clipInfoProperties != null) {
-                        // this should never be null because we actually got the name of the animation clip from a serialized property in the first place
-                        animationEvents = clipInfoProperties.GetEvents();
-                        Debug.Log("Event array for the animation clip named " + animationClip.name + " has " + animationEvents.Length + " events");
-                        foreach (AnimationEvent animationEvent in animationEvents) {
-                            if (animationEvent.functionName == "Hit") {
-                                hitEventExists = true;
-                                Debug.Log("Hit() event exists on animation clip named " + animationClip.name + " at " + animationEvent.time);
-                                break;
-                            }
-                        }
-                    }
-                    /*
-                    for (int i = 0; i < clipAnimations.arraySize; i++) {
-                        clipInfoProperties = new AnimationClipInfoProperties(clipAnimations.GetArrayElementAtIndex(i));
-                        if (clipInfoProperties.name == animationClip.name) {
-                            //clipInfoProperties.SetEvents(events);
-                            AnimationEvent[] animationEvents = clipInfoProperties.GetEvents();
-                            Debug.Log("event array is of length " + animationEvents.Length);
-                            foreach (AnimationEvent animationEvent in animationEvents) {
-                                if (animationEvent.functionName == "Hit") {
-                                    hitEventExists = true;
-                                    Debug.Log("Hit() event exists on animation clip named " + animationClip.name + " at " + animationEvent.time);
-                                    break;
-                                }
-                            }
-                            //serializedObject.ApplyModifiedProperties();
-                            //AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(animationClip));
-                            break;
-                        }
-                    }
-                    */
-
-                    if (hitEventExists == false) {
-                        AnimationEvent newEvent = new AnimationEvent();
-                        // by default, put the hit in the middle of the animation
-                        //newEvent.time = animationClip.length / 2f;
-                        newEvent.time = 0.5f;
-                        newEvent.functionName = "Hit";
-                        Debug.Log("Adding Hit() event to animation clip named " + animationClip.name + " at " + newEvent.time);
-                        animationEvents = animationEvents.Append(newEvent).ToArray();
-                        clipInfoProperties.SetEvents(animationEvents);
-                        serializedObject.ApplyModifiedProperties();
-                        AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(animationClip));
-
-                        AssetDatabase.Refresh();
-                        /*
-                        EditorUtility.SetDirty(animationClip);
-                        AssetDatabase.SaveAssets();
-                        AssetDatabase.Refresh();
-                        */
-                    }
-                }
+                AnimationProfileWizard.AddHitEvents(animations);
             }
         }
 
-        private AnimationClipInfoProperties GetClipInfoProperties(SerializedProperty clipAnimations, string animationClipName) {
-            for (int i = 0; i < clipAnimations.arraySize; i++) {
-                AnimationClipInfoProperties clipInfoProperties = new AnimationClipInfoProperties(clipAnimations.GetArrayElementAtIndex(i));
-                if (clipInfoProperties.name == animationClipName) {
-                    return clipInfoProperties;
-                }
-            }
-            return null;
-        }
-
-        //private AnimationEvent[] GetAnimationEvents();
 
         private GameObject AddAttachmentsToModel() {
 
@@ -482,99 +406,10 @@ namespace AnyRPG {
             DetermineModelScale();
             SetAttachmentProfileName();
             CheckHighestPoint();
-            AutoAssignAnimations();
+            AnimationProfileWizard.AutoAssignAnimations(assignPriority, animations, assignClips);
 
             errorString = Validate();
             isValid = (errorString == null || errorString == "");
-        }
-
-        private void AutoAssignAnimations() {
-            if (assignClips.Count > 0) {
-                while (assignClips.Count > 0) {
-                    AssignAnimation(assignClips[0]);
-                    assignClips.RemoveAt(0);
-                }
-            }
-        }
-
-        private void AssignAnimation(AnimationClip animationClip) {
-            
-            // attempt attack clips
-            if (animationClip.name.ToLowerInvariant().Contains("attack") == true) {
-                if (animations.AttackClips.Contains(animationClip) == false) {
-                    animations.AttackClips.Add(animationClip);
-                    return;
-                }
-            }
-
-            // attempt death clip
-            if (animations.DeathClip == null
-                && (animationClip.name.ToLowerInvariant().Contains("death") || animationClip.name.ToLowerInvariant().Contains("die"))) {
-                animations.DeathClip = animationClip;
-                return;
-            }
-
-            // attemp jump clip
-            if (animations.JumpClip == null
-                && animationClip.name.ToLowerInvariant().Contains("jump")) {
-                animations.JumpClip = animationClip;
-                return;
-            }
-
-            // attemp fall clip
-            if (animations.FallClip == null
-                && animationClip.name.ToLowerInvariant().Contains("fall")) {
-                animations.FallClip = animationClip;
-                return;
-            }
-
-            // attemp land clip
-            if (animations.LandClip == null
-                && animationClip.name.ToLowerInvariant().Contains("land")) {
-                animations.LandClip = animationClip;
-                return;
-            }
-
-            // attemp idle clip
-            if (animations.IdleClip == null
-                && animationClip.name.ToLowerInvariant().Contains("idle")) {
-                animations.IdleClip = animationClip;
-                return;
-            }
-
-            // attemp walk clip
-            if (animations.WalkClip == null
-                && animationClip.name.ToLowerInvariant().Contains("walk") == true
-                && animationClip.name.ToLowerInvariant().Contains("back") == false) {
-                animations.WalkClip = animationClip;
-                return;
-            }
-
-            // attemp walk back clip
-            if (animations.WalkBackClip == null
-                && animationClip.name.ToLowerInvariant().Contains("walk") == true
-                && animationClip.name.ToLowerInvariant().Contains("back") == true) {
-                animations.WalkBackClip = animationClip;
-                return;
-            }
-
-            // attemp run clip
-            if (animations.RunClip == null
-                && animationClip.name.ToLowerInvariant().Contains("run") == true
-                && animationClip.name.ToLowerInvariant().Contains("back") == false) {
-                animations.RunClip = animationClip;
-                return;
-            }
-
-            // attemp run back clip
-            if (animations.RunBackClip == null
-                && animationClip.name.ToLowerInvariant().Contains("run") == true
-                && animationClip.name.ToLowerInvariant().Contains("back") == true) {
-                animations.RunBackClip = animationClip;
-                return;
-            }
-
-
         }
 
         private void CheckHighestPoint() {
