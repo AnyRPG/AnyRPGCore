@@ -202,6 +202,7 @@ namespace AnyRPG {
     public class UnitTypeCapabilityNode {
 
         [Tooltip("The unit types that will have these capabilities")]
+        [ResourceSelector(resourceType = typeof(UnitType))]
         [SerializeField]
         private List<string> unitTypes = new List<string>();
 
