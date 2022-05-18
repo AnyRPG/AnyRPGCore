@@ -139,6 +139,7 @@ namespace AnyRPG {
     public class CharacterStatToResourceNode {
 
         [Tooltip("The name of the resource that will receive points from the stat")]
+        [ResourceSelector(resourceType = typeof(PowerResource))]
         [SerializeField]
         private string resourceName = string.Empty;
 
