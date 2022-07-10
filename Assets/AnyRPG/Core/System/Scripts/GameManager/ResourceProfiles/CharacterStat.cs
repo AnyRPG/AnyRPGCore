@@ -29,10 +29,15 @@ namespace AnyRPG {
         [SerializeField]
         private List<CharacterStatToResourceNode> primaryToResourceConversion = new List<CharacterStatToResourceNode>();
 
+        [Tooltip("Convert primary stats to resource regen")]
+        [SerializeField]
+        private List<PowerResourceRegenProperty> regen = new List<PowerResourceRegenProperty>();
+
         public string StatName { get => DisplayName; }
         public float BudgetPerLevel { get => budgetPerLevel; set => budgetPerLevel = value; }
         public List<PrimaryToSecondaryStatNode> PrimaryToSecondaryConversion { get => primaryToSecondaryConversion; set => primaryToSecondaryConversion = value; }
         public List<CharacterStatToResourceNode> PrimaryToResourceConversion { get => primaryToResourceConversion; set => primaryToResourceConversion = value; }
+        public List<PowerResourceRegenProperty> Regen { get => regen; set => regen = value; }
         public bool GlobalStat { get => globalStat; set => globalStat = value; }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {

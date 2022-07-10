@@ -971,6 +971,7 @@ namespace AnyRPG {
                     statScalingNode.BudgetPerLevel = characterStat.BudgetPerLevel;
                     statScalingNode.PrimaryToSecondaryConversion = characterStat.PrimaryToSecondaryConversion;
                     statScalingNode.PrimaryToResourceConversion = characterStat.PrimaryToResourceConversion;
+                    statScalingNode.Regen = characterStat.Regen;
                     statScalingNodes.Add(statScalingNode);
                 }
             }
