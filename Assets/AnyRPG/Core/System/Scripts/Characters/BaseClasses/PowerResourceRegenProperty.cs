@@ -16,21 +16,21 @@ namespace AnyRPG {
 
         [Header("Out Of Combat")]
 
-        [Tooltip("The percentage of the resource to regenerate per tick while out of combat")]
+        [Tooltip("The percentage of the resource to regenerate per point of character stat per tick while out of combat")]
         [SerializeField]
         private float percentPerTick = 0f;
 
-        [Tooltip("The amount of the resource to regenerate per tick while out of combat")]
+        [Tooltip("The amount of the resource to regenerate point of character stat per tick while out of combat")]
         [SerializeField]
         private float amountPerTick = 0f;
 
         [Header("In Combat")]
 
-        [Tooltip("The percentage of the resource to regenerate per tick while in combat")]
+        [Tooltip("The percentage of the resource to regenerate point of character stat per tick while in combat")]
         [SerializeField]
         private float combatPercentPerTick = 0f;
 
-        [Tooltip("The percentage of the resource to regenerate per tick while in combat")]
+        [Tooltip("The percentage of the resource to regenerate point of character stat per tick while in combat")]
         [SerializeField]
         private float combatAmountPerTick = 0f;
 
