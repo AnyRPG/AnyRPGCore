@@ -36,6 +36,9 @@ namespace AnyRPG {
         // secondary stats for this character, and their values
         protected Dictionary<SecondaryStatType, Stat> secondaryStats = new Dictionary<SecondaryStatType, Stat>();
 
+        // power resource regen
+        protected Dictionary<string, PowerResourceRegenProperty> powerResourceRegenDictionary = new Dictionary<string, PowerResourceRegenProperty>();
+
         // power resources for this character, and their values
         protected Dictionary<PowerResource, PowerResourceNode> powerResourceDictionary = new Dictionary<PowerResource, PowerResourceNode>();
 
@@ -278,11 +281,69 @@ namespace AnyRPG {
         }
 
         public void CalculatePrimaryStats() {
-            CalculateRunSpeed();
             foreach (string statName in primaryStats.Keys) {
                 CalculateStat(statName);
             }
             CalculateSecondaryStats();
+            CalculateRunSpeed();
+            CalculateRegen();
+        }
+
+        public void CalculateRegen() {
+            // clear dictionary before recalculation
+            powerResourceRegenDictionary.Clear();
+
+            // add base power resource regen amounts
+            foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
+                if (powerResourceRegenDictionary.ContainsKey(powerResource.DisplayName) == false) {
+                    powerResourceRegenDictionary.Add(powerResource.DisplayName, new PowerResourceRegenProperty());
+                }
+                if (powerResource.RegenIsPercent == true) {
+                    powerResourceRegenDictionary[powerResource.DisplayName].PercentPerTick += powerResource.RegenPerTick;
+                } else {
+                    powerResourceRegenDictionary[powerResource.DisplayName].AmountPerTick += powerResource.RegenPerTick;
+                }
+                if (powerResource.CombatRegenIsPercent == true) {
+                    powerResourceRegenDictionary[powerResource.DisplayName].CombatPercentPerTick += powerResource.CombatRegenPerTick;
+                } else {
+                    powerResourceRegenDictionary[powerResource.DisplayName].CombatAmountPerTick += powerResource.CombatRegenPerTick;
+                }
+            }
+
+            // loop through all stat providers
+            foreach (IStatProvider statProvider in baseCharacter.StatProviders) {
+
+                if (statProvider != null && statProvider.PrimaryStats != null) {
+
+                    // loop through all stats
+                    foreach (StatScalingNode statScalingNode in statProvider.PrimaryStats) {
+                        foreach (PowerResourceRegenProperty powerResourceRegenProperty in statScalingNode.Regen) {
+
+                            // add a resource regen key if one does not exist
+                            if (powerResourceRegenDictionary.ContainsKey(powerResourceRegenProperty.PowerResource) == false) {
+                                powerResourceRegenDictionary.Add(powerResourceRegenProperty.PowerResource, new PowerResourceRegenProperty());
+                            }
+
+                            // ensure the character actually has the stat before trying to access it
+                            if (primaryStats.ContainsKey(statScalingNode.StatName)) {
+
+                                // add out of combat amount per tick multiplied by stat total to total
+                                powerResourceRegenDictionary[powerResourceRegenProperty.PowerResource].AmountPerTick += (powerResourceRegenProperty.AmountPerTick * primaryStats[statScalingNode.StatName].CurrentValue);
+                                
+                                // add out of combat percent per tick multiplied by stat total to total
+                                powerResourceRegenDictionary[powerResourceRegenProperty.PowerResource].PercentPerTick += (powerResourceRegenProperty.PercentPerTick * primaryStats[statScalingNode.StatName].CurrentValue);
+
+                                // add out of combat amount per tick multiplied by stat total to total
+                                powerResourceRegenDictionary[powerResourceRegenProperty.PowerResource].CombatAmountPerTick += (powerResourceRegenProperty.CombatAmountPerTick * primaryStats[statScalingNode.StatName].CurrentValue);
+
+                                // add out of combat percent per tick multiplied by stat total to total
+                                powerResourceRegenDictionary[powerResourceRegenProperty.PowerResource].CombatPercentPerTick += (powerResourceRegenProperty.CombatPercentPerTick * primaryStats[statScalingNode.StatName].CurrentValue);
+
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public void CalculateSecondaryStats() {
@@ -333,7 +394,7 @@ namespace AnyRPG {
                     if (!primaryStats.ContainsKey(statScalingNode.StatName)) {
                         //Debug.Log(gameObject.name + ".CharacterStats.AddUnitProfileModifiers(): adding stat: " + statScalingNode.StatName);
                         primaryStats.Add(statScalingNode.StatName, new Stat(statScalingNode.StatName));
-                        primaryStats[statScalingNode.StatName].OnModifierUpdate += HandleStatUpdateCommon;
+                        //primaryStats[statScalingNode.StatName].OnModifierUpdate += HandleStatUpdateCommon;
                     }
                 }
             }
@@ -433,7 +494,11 @@ namespace AnyRPG {
             CalculateRunSpeed();
         }
 
-        public void HandleStatUpdateCommon(string statName) {
+        /// <summary>
+        /// Notify for power resource recalculation if a primary stat change affected any power resources
+        /// </summary>
+        /// <param name="statName"></param>
+        public void NotifyResourceAmountsChanged(string statName) {
             //Debug.Log(gameObject.name + ".CharacterStats.HandleStatUpdateCommon(" + statName + ")");
 
             // check if the stat that was just updated contributes to any resource in any way
@@ -469,13 +534,16 @@ namespace AnyRPG {
                 CalculateStat(statName);
 
                 // in the future, loop and only calculate secondary stats that this primary stat affects
-                CalculateSecondaryStats();
+
+                //CalculateSecondaryStats();
             }
-            HandleStatUpdateCommon(statName);
+            NotifyResourceAmountsChanged(statName);
         }
 
-        private void CalculateEquipmentChanged(Equipment newItem, Equipment oldItem, bool recalculate = true) {
+        private void CalculateEquipmentChanged(Equipment newItem, Equipment oldItem) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.CalculateEquipmentChanged(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (oldItem != null ? oldItem.DisplayName : "null") + ", " + recalculate + ")");
+
+            // add modifiers for new item
             if (newItem != null) {
 
                 foreach (ItemPrimaryStatNode itemPrimaryStatNode in newItem.PrimaryStats) {
@@ -495,11 +563,7 @@ namespace AnyRPG {
 
             }
 
-            // theres a bug here ?
-            // if you equip an item at one level, then remove it at another level, it will remove the higher level value for the stat, leaving you with
-            // less stats than you should have
-            // to fix this, we need to recalculate the modifiers for equipment, every time you level up
-
+            // remove modifiers for old item
             if (oldItem != null) {
                 secondaryStats[SecondaryStatType.Armor].RemoveModifier(oldItem.GetArmorModifier(Level));
 
@@ -515,19 +579,18 @@ namespace AnyRPG {
                 }
             }
 
-            if (recalculate == true) {
-                CalculatePrimaryStats();
-
-                foreach (PowerResource _powerResource in PowerResourceDictionary.Keys) {
-                    ResourceAmountChangedNotificationHandler(_powerResource);
-                }
-            }
         }
 
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
             //Debug.Log(gameObject.name + ".CharacterStats.OnEquipmentChanged(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (oldItem != null ? oldItem.DisplayName : "null") + ")");
 
             CalculateEquipmentChanged(newItem, oldItem);
+
+            CalculatePrimaryStats();
+
+            foreach (PowerResource _powerResource in PowerResourceDictionary.Keys) {
+                ResourceAmountChangedNotificationHandler(_powerResource);
+            }
         }
 
         public void CalculateStat(string statName) {
@@ -547,11 +610,15 @@ namespace AnyRPG {
         public float GetSecondaryAddModifiers(SecondaryStatType secondaryStatType) {
             //Debug.Log(gameObject.name + ".CharacterStats.GetAddModifiers(" + statBuffType.ToString() + ")");
             float returnValue = 0;
+
+            // get modifiers from status effects
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.StatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
                     returnValue += statusEffectNode.CurrentStacks * statusEffectNode.StatusEffect.SecondaryStatAmount;
                 }
             }
+
+            // get modifiers from equipment
             if (secondaryStats.ContainsKey(secondaryStatType)) {
                 returnValue += secondaryStats[secondaryStatType].GetAddValue();
             }
@@ -561,12 +628,16 @@ namespace AnyRPG {
         public float GetSecondaryMultiplyModifiers(SecondaryStatType secondaryStatType) {
             //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + secondaryStatType.ToString() + ")");
             float returnValue = 1f;
+
+            // get modifiers from status effects
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.StatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
                     returnValue *= (float)statusEffectNode.CurrentStacks * statusEffectNode.StatusEffect.SecondaryStatMultiplier;
                     //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + secondaryStatType.ToString() + "): return: " + returnValue + "; stack: " + statusEffectNode.MyStatusEffect.MyCurrentStacks + "; multiplier: " + statusEffectNode.MyStatusEffect.MyStatMultiplier);
                 }
             }
+            
+            // get modifiers from equipment
             //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + secondaryStatType.ToString() + "): return: " + returnValue);
             if (secondaryStats.ContainsKey(secondaryStatType)) {
                 returnValue *= secondaryStats[secondaryStatType].GetMultiplyValue();
@@ -856,7 +927,7 @@ namespace AnyRPG {
                     //Debug.Log("Could not apply " + statusEffect.MyAbilityEffectName + ".  Max stack reached");
                 } else {
                     //AddStatusEffectModifiers(statusEffect);
-                    HandleChangedNotifications(comparedStatusEffect);
+                    ProcessStatusEffectChanges(comparedStatusEffect);
                 }
                 return null;
             } else {
@@ -916,13 +987,13 @@ namespace AnyRPG {
         private void HandleAddNotifications(StatusEffectNode statusEffectNode) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.HandleChangedNotifications(" + statusEffectNode.StatusEffect.DisplayName + "): NOTIFYING STATUS EFFECT UPDATE");
             OnStatusEffectAdd(statusEffectNode);
-            HandleChangedNotifications(statusEffectNode.StatusEffect);
+            ProcessStatusEffectChanges(statusEffectNode.StatusEffect);
             if (baseCharacter.UnitController != null) {
                 baseCharacter.UnitController.NotifyOnStatusEffectAdd(statusEffectNode);
             }
         }
 
-        public void HandleChangedNotifications(StatusEffectProperties statusEffect) {
+        public void ProcessStatusEffectChanges(StatusEffectProperties statusEffect) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.HandleChangedNotifications(" + (statusEffect == null ? "null" : statusEffect.DisplayName) + ")");
 
             //statusEffect.StatBuffTypeNames
@@ -931,16 +1002,22 @@ namespace AnyRPG {
                     //HandleStatUpdate(statName, false);
                     HandleStatUpdate(statName, true);
                 }
+                //StatChangedNotificationHandler();
+                
+                CalculateRegen();
+            }
+
+            
+            if (statusEffect.SecondaryStatBuffsTypes.Count > 0 || statusEffect.StatBuffTypeNames.Count > 0) {
+                CalculateSecondaryStats();
                 StatChangedNotificationHandler();
+
+
             }
 
             if (statusEffect.SecondaryStatBuffsTypes.Contains(SecondaryStatType.MovementSpeed)) {
                 CalculateRunSpeed();
                 // if unit is currently moving, the motor must be informed of any movement speed change as it is usually only informed on state change
-            }
-            if (statusEffect.SecondaryStatBuffsTypes.Count > 0) {
-                CalculateSecondaryStats();
-                StatChangedNotificationHandler();
             }
 
             if (statusEffect.CanFly == true) {
@@ -981,7 +1058,7 @@ namespace AnyRPG {
             }
 
             // should reset resources back down after buff expires
-            HandleChangedNotifications(statusEffect);
+            ProcessStatusEffectChanges(statusEffect);
         }
 
         public void GainXP(int xp) {
@@ -1051,7 +1128,7 @@ namespace AnyRPG {
             // calculate current values that include modifiers
             CalculatePrimaryStats();
 
-            ResetResourceAmounts();
+            SetResourceAmountsToMaximum();
         }
 
         public void CalculateEquipmentStats() {
@@ -1070,7 +1147,8 @@ namespace AnyRPG {
 
             if (baseCharacter.CharacterEquipmentManager != null) {
                 foreach (Equipment equipment in baseCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
-                    CalculateEquipmentChanged(equipment, null, false);
+                    //CalculateEquipmentChanged(equipment, null, false);
+                    CalculateEquipmentChanged(equipment, null);
                 }
             }
         }
@@ -1227,7 +1305,7 @@ namespace AnyRPG {
         /// <summary>
         /// Set resources to maximum
         /// </summary>
-        public void ResetResourceAmounts() {
+        public void SetResourceAmountsToMaximum() {
             //Debug.Log(gameObject.name + ".CharacterStats.ResetResourceAmounts()");
 
             if (PowerResourceList == null) {
@@ -1314,7 +1392,7 @@ namespace AnyRPG {
             isAlive = true;
             ClearInvalidStatusEffects();
 
-            ResetResourceAmounts();
+            SetResourceAmountsToMaximum();
         }
 
         /// <summary>
@@ -1482,24 +1560,29 @@ namespace AnyRPG {
                 if (powerResourceDictionary[powerResource].elapsedTime >= powerResource.TickRate) {
                     powerResourceDictionary[powerResource].elapsedTime -= powerResource.TickRate;
                     if (
-                        ((powerResource.RegenPerTick > 0f || powerResource.CombatRegenPerTick > 0f) && (powerResourceDictionary[powerResource].currentValue < GetPowerResourceMaxAmount(powerResource)))
-                        || ((powerResource.RegenPerTick < 0f || powerResource.CombatRegenPerTick < 0f) && (powerResourceDictionary[powerResource].currentValue > 0f))
-                        ) {
+                        (
+                         (powerResourceRegenDictionary[powerResource.DisplayName].AmountPerTick > 0f
+                            || powerResourceRegenDictionary[powerResource.DisplayName].PercentPerTick > 0f
+                            || powerResourceRegenDictionary[powerResource.DisplayName].CombatAmountPerTick > 0f
+                            || powerResourceRegenDictionary[powerResource.DisplayName].CombatPercentPerTick > 0f)
+                         && (powerResourceDictionary[powerResource].currentValue < GetPowerResourceMaxAmount(powerResource))
+                        )
+                        || (
+                         (powerResourceRegenDictionary[powerResource.DisplayName].AmountPerTick < 0f
+                         || powerResourceRegenDictionary[powerResource.DisplayName].PercentPerTick < 0f
+                         || powerResourceRegenDictionary[powerResource.DisplayName].CombatAmountPerTick < 0f
+                         || powerResourceRegenDictionary[powerResource.DisplayName].CombatPercentPerTick < 0f)
+                        && (powerResourceDictionary[powerResource].currentValue > 0f))
+                       ) {
                         float usedRegenAmount = 0f;
-                        if (baseCharacter != null && baseCharacter.CharacterCombat != null && baseCharacter.CharacterCombat.GetInCombat() == true) {
+                        if (baseCharacter?.CharacterCombat != null && baseCharacter.CharacterCombat.GetInCombat() == true) {
                             // perform combat regen
-                            if (powerResource.CombatRegenIsPercent) {
-                                usedRegenAmount = GetPowerResourceMaxAmount(powerResource) * (powerResource.CombatRegenPerTick / 100);
-                            } else {
-                                usedRegenAmount = powerResource.CombatRegenPerTick;
-                            }
+                            usedRegenAmount += GetPowerResourceMaxAmount(powerResource) * (powerResourceRegenDictionary[powerResource.DisplayName].CombatPercentPerTick / 100f);
+                            usedRegenAmount += powerResourceRegenDictionary[powerResource.DisplayName].CombatAmountPerTick;
                         } else {
                             // perform out of combat regen
-                            if (powerResource.RegenIsPercent) {
-                                usedRegenAmount = GetPowerResourceMaxAmount(powerResource) * (powerResource.RegenPerTick / 100);
-                            } else {
-                                usedRegenAmount = powerResource.RegenPerTick;
-                            }
+                            usedRegenAmount += GetPowerResourceMaxAmount(powerResource) * (powerResourceRegenDictionary[powerResource.DisplayName].PercentPerTick / 100f);
+                            usedRegenAmount += powerResourceRegenDictionary[powerResource.DisplayName].AmountPerTick;
                         }
                         powerResourceDictionary[powerResource].currentValue += usedRegenAmount;
                         powerResourceDictionary[powerResource].currentValue = Mathf.Clamp(
