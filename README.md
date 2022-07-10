@@ -53,7 +53,7 @@ A Unity package that includes this repository (and a complex sample game) is ava
 ### Github Installation
 Video tutorial for version 0.10.1a install can be watched here: https://www.youtube.com/watch?v=oMeWWgNYrYI
 
-1. Install the correct Unity version to open this project.  The current project Unity version is 2020.3.33f1
+1. Install the correct Unity version to open this project.  The current project Unity version is 2021.3.5f1
 1. Clone this repository into a directory on your computer
 1. Open the Unity Hub and add the project
 1. Open the project and install the following Unity packages:
