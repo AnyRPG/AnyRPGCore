@@ -1,21 +1,16 @@
 using AnyRPG;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.Serialization;
-using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New Character Stat", menuName = "AnyRPG/CharacterStat")]
+
     [System.Serializable]
-    public class CharacterStat : DescribableResource {
+    public class StatScalingNode {
 
-        [Header("Character Stat")]
-
-        [Tooltip("If true, all characters will receive this stat, using the budget and conversions below.")]
+        [Tooltip("The stat")]
         [SerializeField]
-        private bool globalStat = true;
+        [ResourceSelector(resourceType = typeof(CharacterStat))]
+        private string statName = string.Empty;
 
         [Tooltip("The amount of this stat that a character will receive for every level.")]
         [SerializeField]
@@ -33,22 +28,19 @@ namespace AnyRPG {
         [SerializeField]
         private List<PowerResourceRegenProperty> regen = new List<PowerResourceRegenProperty>();
 
-        public string StatName { get => DisplayName; }
+        public string StatName { get => statName; set => statName = value; }
         public float BudgetPerLevel { get => budgetPerLevel; set => budgetPerLevel = value; }
         public List<PrimaryToSecondaryStatNode> PrimaryToSecondaryConversion { get => primaryToSecondaryConversion; set => primaryToSecondaryConversion = value; }
         public List<CharacterStatToResourceNode> PrimaryToResourceConversion { get => primaryToResourceConversion; set => primaryToResourceConversion = value; }
         public List<PowerResourceRegenProperty> Regen { get => regen; set => regen = value; }
-        public bool GlobalStat { get => globalStat; set => globalStat = value; }
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
-            base.SetupScriptableObjects(systemGameManager);
+        public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
 
             foreach (CharacterStatToResourceNode characterStatToResourceNode in primaryToResourceConversion) {
                 characterStatToResourceNode.SetupScriptableObjects(systemDataFactory);
             }
+
         }
-
     }
-
 
 }

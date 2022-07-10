@@ -1262,7 +1262,7 @@ namespace AnyRPG {
             // testing - comment out below.  is there any time we ever expand or reduce it?  if not, then below line is not necessary ?
             //AggroRadius = initialAggroRange;
             if (characterUnit.BaseCharacter != null) {
-                characterUnit.BaseCharacter.CharacterStats.ResetResourceAmounts();
+                characterUnit.BaseCharacter.CharacterStats.SetResourceAmountsToMaximum();
                 if (UnitMotor != null) {
                     UnitMotor.MovementSpeed = MovementSpeed;
                     UnitMotor.ResetPath();

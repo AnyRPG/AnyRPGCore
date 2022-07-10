@@ -97,19 +97,19 @@ public class ResourceSelector : EditorWindow
     void ReloadList() {
         listElements.Clear();
         InitializeList();
-        listView.Refresh();
+        listView.Rebuild();
     }
 
     void ApplyFilter(string namePattern) {
         this.namePattern = namePattern;
         InitializeList();
-        listView.Refresh();
+        listView.Rebuild();
     }
 
     void ApplyClassFilter(Type classPattern) {
         this.classPattern = classPattern;
         InitializeList();
-        listView.Refresh();
+        listView.Rebuild();
     }
 
     public void OnGUI() {
@@ -126,7 +126,7 @@ public class ResourceSelector : EditorWindow
         }
         if (!listInitialized  && resourceType != null) {
             InitializeList();
-            listView.Refresh();
+            listView.Rebuild();
             listInitialized = true;
             ClearBusyLabel();
             int idx = -1;
