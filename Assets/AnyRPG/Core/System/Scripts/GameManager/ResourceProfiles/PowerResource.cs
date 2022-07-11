@@ -34,21 +34,23 @@ namespace AnyRPG {
         [SerializeField]
         private float tickRate = 1f;
 
-        [Tooltip("The amount of this resource to regenerate per second while out of combat")]
+        [Tooltip("The amount of this resource to regenerate per tick while out of combat")]
+        [FormerlySerializedAs("regenPerTick")]
         [SerializeField]
-        private float regenPerTick = 0f;
+        private float amountPerTick = 0f;
 
-        [Tooltip("If true, the regen per tick is a percentage of the maximum resource amount")]
+        [Tooltip("The percent of this resource to regenerate per tick while out of combat")]
         [SerializeField]
-        private bool regenIsPercent = false;
+        private float percentPerTick = 0f;
 
-        [Tooltip("The amount of this resource to regenerate per second while in combat")]
+        [Tooltip("The amount of this resource to regenerate per tick while in combat")]
+        [FormerlySerializedAs("combatRegenPerTick")]
         [SerializeField]
-        private float combatRegenPerTick = 0f;
+        private float combatAmountPerTick = 0f;
 
-        [Tooltip("If true, the combat regen per tick is a percentage of the maximum resource amount")]
+        [Tooltip("The percent of this resource to regenerate per tick while in combat")]
         [SerializeField]
-        private bool combatRegenIsPercent = false;
+        private float combatPercentPerTick = 0f;
 
         [Header("Limits")]
 
@@ -70,12 +72,12 @@ namespace AnyRPG {
 
 
         public Color DisplayColor { get => displayColor; set => displayColor = value; }
-        public float RegenPerTick { get => regenPerTick; set => regenPerTick = value; }
-        public float CombatRegenPerTick { get => combatRegenPerTick; set => combatRegenPerTick = value; }
+        public float AmountPerTick { get => amountPerTick; set => amountPerTick = value; }
+        public float CombatAmountPerTick { get => combatAmountPerTick; set => combatAmountPerTick = value; }
+        public float PercentPerTick { get => percentPerTick; set => percentPerTick = value; }
+        public float CombatPercentPerTick { get => combatPercentPerTick; set => combatPercentPerTick = value; }
         public float MaximumAmount { get => maximumAmount; set => maximumAmount = value; }
         public float TickRate { get => tickRate; set => tickRate = value; }
-        public bool RegenIsPercent { get => regenIsPercent; set => regenIsPercent = value; }
-        public bool CombatRegenIsPercent { get => combatRegenIsPercent; set => combatRegenIsPercent = value; }
         public bool IsHealth { get => isHealth; set => isHealth = value; }
         public bool FillOnReset { get => fillOnReset; set => fillOnReset = value; }
         public float BaseAmount { get => baseAmount; set => baseAmount = value; }

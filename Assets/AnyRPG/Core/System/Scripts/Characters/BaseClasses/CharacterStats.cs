@@ -298,16 +298,10 @@ namespace AnyRPG {
                 if (powerResourceRegenDictionary.ContainsKey(powerResource.DisplayName) == false) {
                     powerResourceRegenDictionary.Add(powerResource.DisplayName, new PowerResourceRegenProperty());
                 }
-                if (powerResource.RegenIsPercent == true) {
-                    powerResourceRegenDictionary[powerResource.DisplayName].PercentPerTick += powerResource.RegenPerTick;
-                } else {
-                    powerResourceRegenDictionary[powerResource.DisplayName].AmountPerTick += powerResource.RegenPerTick;
-                }
-                if (powerResource.CombatRegenIsPercent == true) {
-                    powerResourceRegenDictionary[powerResource.DisplayName].CombatPercentPerTick += powerResource.CombatRegenPerTick;
-                } else {
-                    powerResourceRegenDictionary[powerResource.DisplayName].CombatAmountPerTick += powerResource.CombatRegenPerTick;
-                }
+                powerResourceRegenDictionary[powerResource.DisplayName].PercentPerTick += powerResource.PercentPerTick;
+                powerResourceRegenDictionary[powerResource.DisplayName].AmountPerTick += powerResource.AmountPerTick;
+                powerResourceRegenDictionary[powerResource.DisplayName].CombatPercentPerTick += powerResource.CombatPercentPerTick;
+                powerResourceRegenDictionary[powerResource.DisplayName].CombatAmountPerTick += powerResource.CombatAmountPerTick;
             }
 
             // loop through all stat providers

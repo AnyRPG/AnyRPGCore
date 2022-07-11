@@ -19,13 +19,16 @@ MonoBehaviour:
   description: Used by almost everything
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   displayColor: {r: 0, g: 0.7254902, b: 0.09019608, a: 1}
   baseAmount: 0
   amountPerLevel: 100
   tickRate: 1
-  regenPerTick: 1
-  regenIsPercent: 1
-  combatRegenPerTick: 0
+  amountPerTick: 0
+  percentPerTick: 1
+  regenIsPercent: 0
+  combatAmountPerTick: 0
+  combatPercentPerTick: 0
   combatRegenIsPercent: 0
   maximumAmount: 0
   isHealth: 1
