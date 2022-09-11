@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New Combat Strategy", menuName = "AnyRPG/Combat/CombatStrategy")]
+    [CreateAssetMenu(fileName = "New Combat Strategy", menuName = "AnyRPG/CombatStrategy")]
     [System.Serializable]
     public class CombatStrategy : DescribableResource {
 

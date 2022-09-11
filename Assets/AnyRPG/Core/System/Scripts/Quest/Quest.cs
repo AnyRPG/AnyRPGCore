@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     //[System.Serializable]
-    [CreateAssetMenu(fileName = "New Quest", menuName = "AnyRPG/Quests/Quest")]
+    [CreateAssetMenu(fileName = "New Quest", menuName = "AnyRPG/Quest")]
     public class Quest : DescribableResource, IPrerequisiteOwner {
 
         public event System.Action OnQuestStatusUpdated = delegate { };

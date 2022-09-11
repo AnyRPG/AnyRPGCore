@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New Faction", menuName = "AnyRPG/Factions/Faction")]
+    [CreateAssetMenu(fileName = "New Faction", menuName = "AnyRPG/Faction")]
     public class Faction : DescribableResource, ICapabilityProvider {
 
         [Header("NewGame")]

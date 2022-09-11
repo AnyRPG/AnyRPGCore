@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New SceneNode", menuName = "AnyRPG/SceneNodes/SceneNode")]
+    [CreateAssetMenu(fileName = "New SceneNode", menuName = "AnyRPG/SceneNode")]
     [System.Serializable]
     public class SceneNode : DescribableResource {
 

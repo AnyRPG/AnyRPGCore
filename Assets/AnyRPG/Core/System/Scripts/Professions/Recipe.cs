@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New Recipe", menuName = "AnyRPG/Recipes/Recipe")]
+    [CreateAssetMenu(fileName = "New Recipe", menuName = "AnyRPG/Recipe")]
     public class Recipe : DescribableResource {
 
         [Header("Recipe")]
