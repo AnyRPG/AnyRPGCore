@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 
 namespace AnyRPG {
     //[System.Serializable]
-    [CreateAssetMenu(fileName = "New Dialog", menuName = "AnyRPG/Dialog/Dialog")]
+    [CreateAssetMenu(fileName = "New Dialog", menuName = "AnyRPG/Dialog")]
     public class Dialog : DescribableResource, IPrerequisiteOwner {
 
         public event System.Action OnDialogCompleted = delegate { };
