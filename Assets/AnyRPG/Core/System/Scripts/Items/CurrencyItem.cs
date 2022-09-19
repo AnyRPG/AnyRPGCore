@@ -7,6 +7,8 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "CurrencyItem", menuName = "AnyRPG/Inventory/Items/CurrencyItem", order = 1)]
     public class CurrencyItem : Item, IUseable {
 
+        [Header("Currency")]
+
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Currency))]
         private string gainCurrencyName = string.Empty;

@@ -8,6 +8,8 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "Bag", menuName = "AnyRPG/Inventory/Items/Bag", order = 1)]
     public class Bag : Item, IUseable {
 
+        [Header("Bag")]
+
         [SerializeField]
         private int slots;
 
