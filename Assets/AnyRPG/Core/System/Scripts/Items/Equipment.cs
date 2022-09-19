@@ -83,6 +83,7 @@ namespace AnyRPG {
 
         [Tooltip("This ability will be cast when the item is equipped")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(BaseAbility))]
         private string onEquipAbilityName = string.Empty;
 
         private BaseAbility onEquipAbility;
