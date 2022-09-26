@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AnyRPG {
 
-    [CreateAssetMenu(fileName = "New AbilityEffect", menuName = "AnyRPG/Abilities/Effects/AbilityEffect")]
+    //[CreateAssetMenu(fileName = "New AbilityEffect", menuName = "AnyRPG/Abilities/Effects/AbilityEffect")]
     public class AbilityEffect : DescribableResource {
 
         public virtual AbilityEffectProperties AbilityEffectProperties { get => null; }
