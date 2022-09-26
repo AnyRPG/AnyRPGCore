@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New Gather Ability",menuName = "AnyRPG/Abilities/Effects/GatherAbility")]
+    [CreateAssetMenu(fileName = "New Gather Ability",menuName = "AnyRPG/Abilities/GatherAbility")]
     public class GatherAbility : BaseAbility {
 
         [SerializeField]
