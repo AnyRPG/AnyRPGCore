@@ -9,13 +9,15 @@ namespace AnyRPG {
     [System.Serializable]
     public class RemoveEffectProperties : InstantEffectProperties {
 
-        // 0 is unlimited
+        [Header("Remove Effect")]
+
+        [Tooltip("The maximum amount of effects to remove.  0 is unlimited.")]
         [SerializeField]
         private int maxClearEffects = 0;
 
         // default will only clear harmful effects
 
-        // effect types that this ability can clear
+        [Tooltip("Effect types that this ability can clear")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(StatusEffectType))]
         private List<string> effectTypeNames = new List<string>();
