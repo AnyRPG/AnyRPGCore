@@ -9,7 +9,9 @@ namespace AnyRPG {
     [System.Serializable]
     public class TeleportEffectProperties : InstantEffectProperties {
 
-        // The name of the scene to load
+        [Header("Teleport")]
+
+        [Tooltip("The name of the scene to load")]
         [SerializeField]
         private string levelName = string.Empty;
 

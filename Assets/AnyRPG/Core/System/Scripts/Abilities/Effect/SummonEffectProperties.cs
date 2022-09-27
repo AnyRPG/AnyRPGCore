@@ -12,7 +12,7 @@ namespace AnyRPG {
 
         [Header("Summon")]
 
-        [Tooltip("Unit Prefab Profile to use for the summon pet")]
+        [Tooltip("Unit Profile to use for the summon pet")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(UnitProfile))]
         private string unitProfileName = string.Empty;
