@@ -100,7 +100,7 @@ namespace AnyRPG {
 
         [Header("In Game Character Creator")]
 
-        [Tooltip("If true, when the character creator is used in-game, the character will be forced to use the first character creator profile, rather than their current model")]
+        [Tooltip("If true, when the character creator is used in-game, the character will be forced to use the first character creator profile, rather than their current model.")]
         [SerializeField]
         private bool useFirstCreatorProfile = false;
 
@@ -128,6 +128,7 @@ namespace AnyRPG {
         [SerializeField]
         private int maxBankBags = 8;
 
+        [Tooltip("If this field is not null, the player will have this item equipped as their backpack when starting a new game.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Bag))]
         private string defaultBackpackItem = "Backpack";
@@ -155,47 +156,47 @@ namespace AnyRPG {
         [SerializeField]
         private DefaultControllerConfiguration defaultControllerConfiguration;
 
-        [Tooltip("The maximum turn speed in degrees per second")]
+        [Tooltip("The maximum turn speed in degrees per second.")]
         [SerializeField]
         private float maxTurnSpeed = 360f;
 
-        [Tooltip("The default character walk speed in meters per second")]
+        [Tooltip("The default character walk speed in meters per second.")]
         [SerializeField]
         private float walkSpeed = 1f;
 
-        [Tooltip("The default character run speed in meters per second")]
+        [Tooltip("The default character run speed in meters per second.")]
         [SerializeField]
         private float runSpeed = 7f;
 
-        [Tooltip("The default character swim speed in meters per second")]
+        [Tooltip("The default character swim speed in meters per second.")]
         [SerializeField]
         private float swimSpeed = 2f;
 
-        [Tooltip("The default character fly speed in meters per second")]
+        [Tooltip("The default character fly speed in meters per second.")]
         [SerializeField]
         private float flySpeed = 20f;
 
-        [Tooltip("The default character glide speed in meters per second")]
+        [Tooltip("The default character glide speed in meters per second.")]
         [SerializeField]
         private float glideSpeed = 5f;
 
-        [Tooltip("The speed the character will fall while gliding in meters per second")]
+        [Tooltip("The speed the character will fall while gliding in meters per second.")]
         [SerializeField]
         private float glideFallSpeed = 2f;
 
-        [Tooltip("If true, the player will take damage when falling from heights")]
+        [Tooltip("If true, the player will take damage when falling from heights.")]
         [SerializeField]
         private bool useFallDamage = false;
 
-        [Tooltip("If fall damage is used, the amount of damage per meter fallen the player will take")]
+        [Tooltip("If fall damage is used, the amount of damage per meter fallen the player will take.")]
         [SerializeField]
         private float fallDamagePerMeter = 2f;
 
-        [Tooltip("If fall damage is used, the minimum distance the player must fall before damage is taken")]
+        [Tooltip("If fall damage is used, the minimum distance the player must fall before damage is taken.")]
         [SerializeField]
         private float fallDamageMinDistance = 10f;
 
-        [Tooltip("The audio clip to play when fall damage is taken")]
+        [Tooltip("The audio clip to play when fall damage is taken.")]
         [SerializeField]
         private AudioClip fallDamageAudioClip = null;
 
@@ -210,7 +211,7 @@ namespace AnyRPG {
         [SerializeField]
         private bool useThirdPartyMovementControl = false;
 
-        [Tooltip("If a third party movement controller is used, disable this to prevent movement lock in combat")]
+        [Tooltip("If a third party movement controller is used, disable this to prevent movement lock in combat.")]
         [SerializeField]
         private bool allowAutoAttack = true;
        
@@ -225,46 +226,48 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject thirdPartyCamera = null;
 
-       
 
         [Header("ANIMATION")]
-        /*
-        [Tooltip("This profile should contain references to all the default animations that are on the default animation controller so the system knows which animations to replace when overriding them.")]
-        [SerializeField]
-        */
-        private AnimationProfile systemAnimationProfile;
 
         [Tooltip("This profile should contain references to all the default animations that are on the default animation controller so the system knows which animations to replace when overriding them.")]
         [ResourceSelector(resourceType = typeof(AnimationProfile))]
         [SerializeField]
         private string systemAnimationProfileName = string.Empty;
 
+        /*
+                [Tooltip("This profile should contain references to all the default animations that are on the default animation controller so the system knows which animations to replace when overriding them.")]
+                [SerializeField]
+                */
+        private AnimationProfile systemAnimationProfile;
+
         [Tooltip("If true, movement animations will be sped up or slowed down to match the actual speed (in m/s) the character is moving at.  This will reduce foot sliding, but may result in more jerky looking movement.")]
         [SerializeField]
         private bool syncMovementAnimationSpeed;
 
-        [Header("CHARACTER ANIMATION CONFIGURATION")]
-        /*
-        [FormerlySerializedAs("defaultAttackAnimationProfile")]
-        [SerializeField]
-        */
-        private AnimationProfile defaultAnimationProfile;
 
-        [Tooltip("This profile will override the system animations included in the engine when no other unit or weapon specific animations are in use")]
+        [Header("CHARACTER ANIMATION CONFIGURATION")]
+
+        [Tooltip("This profile will override the system animations included in the engine when no other unit or weapon specific animations are in use.")]
         [ResourceSelector(resourceType = typeof(AnimationProfile))]
         [SerializeField]
         private string defaultAnimationProfileName = string.Empty;
+
+        /*
+                [FormerlySerializedAs("defaultAttackAnimationProfile")]
+                [SerializeField]
+                */
+        private AnimationProfile defaultAnimationProfile;
 
         [SerializeField]
         private RuntimeAnimatorController defaultAnimatorController;
 
         [Header("Level Values")]
 
-        [Tooltip("The character cannot level up past this level")]
+        [Tooltip("The character cannot level up past this level.")]
         [SerializeField]
         private int maxLevel = 50;
 
-        [Tooltip("Every level, the amount of experience you need for the next level is increased by this amount")]
+        [Tooltip("Every level, the amount of experience you need for the next level is increased by this amount.")]
         [SerializeField]
         private int xpRequiredPerLevel = 100;
 
@@ -284,79 +287,86 @@ namespace AnyRPG {
 
         [Header("Currency Scaling")]
 
-        [Tooltip("If automatic currency is enabled for a lootable character, this currency will be dropped")]
+        [Tooltip("If automatic currency is enabled for a lootable character, this currency will be dropped.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Currency))]
         private string killCurrencyName = string.Empty;
 
         private Currency killCurrency = null;
 
-        [Tooltip("If automatic currency is enabled for a lootable character, this currency amount will be multiplied by the character level")]
+        [Tooltip("If automatic currency is enabled for a lootable character, this currency amount will be multiplied by the character level.")]
         [SerializeField]
         private int killCurrencyAmountPerLevel = 1;
 
-        [Tooltip("If automatic currency is enabled for a quest, this currency will be rewarded")]
+        [Tooltip("If automatic currency is enabled for a quest, this currency will be rewarded.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Currency))]
         private string questCurrencyName = string.Empty;
 
         private Currency questCurrency;
 
-        [Tooltip("If automatic currency is enabled for a quest, this currency amount will be multiplied by the quest level")]
+        [Tooltip("If automatic currency is enabled for a quest, this currency amount will be multiplied by the quest level.")]
         [SerializeField]
         private int questCurrencyAmountPerLevel = 1;
 
+
         [Header("Quest Experience Scaling")]
 
-        [Tooltip("A flat experience amount to add to all quests that does not scale with level")]
+        [Tooltip("A flat experience amount to add to all quests that does not scale with level.")]
         [SerializeField]
         private int baseQuestXP = 0;
 
-        [Tooltip("A flat experience amount to add to all quests that does not scale with level")]
+        [Tooltip("A flat experience amount to add to all quests that does scale with level.")]
         [SerializeField]
         private int questXPPerLevel = 100;
 
-        [Tooltip("If true, the experience per level will be multiplied by (1 / level)")]
+        [Tooltip("If true, the experience per level will be multiplied by (1 / level).")]
         [SerializeField]
         private bool useQuestXPLevelMultiplierDemoninator = true;
 
-        [Tooltip("If the above option is true, and this value is more than 0, the experience per level will be multiplied by (1 / level)")]
+        [Tooltip("If the above option is true, and this value is more than 0, the experience per level will be multiplied by (1 / level).")]
         [SerializeField]
         private int questXPMultiplierLevelCap = 5;
 
-        [Header("Kill Experience Scaling")]
 
-        [Tooltip("A flat experience amount to add to all quests that does not scale with level")]
+        [Header("Kills")]
+
+        [Tooltip("A flat experience amount to add to all kills that does not scale with level.")]
         [SerializeField]
         private int baseKillXP = 0;
 
-        [Tooltip("A flat experience amount to add to all quests that does not scale with level")]
+        [Tooltip("A flat experience amount to add to all kills that does scale with level.")]
         [SerializeField]
         private int killXPPerLevel = 100;
 
-        [Tooltip("If true, the experience per level will be multiplied by (1 / level)")]
+        [Tooltip("If true, the experience per level will be multiplied by (1 / level).")]
         [SerializeField]
         private bool useKillXPLevelMultiplierDemoninator = true;
 
-        [Tooltip("If the above option is true, and this value is more than 0, the experience per level will be multiplied by (1 / level)")]
+        [Tooltip("If the above option is true, and this value is more than 0, the experience per level will be multiplied by (1 / level).")]
         [SerializeField]
         private int killXPMultiplierLevelCap = 10;
+
+        [Tooltip("The default amount of time before a unit despawns after killed and looted.")]
+        [SerializeField]
+        private float defaultDespawnTimer = 0f;
 
 
         [Header("DPS Scaling")]
 
+        [Tooltip("Weapons with Dynamic Level set to true will get this amount of DPS per level.")]
         [SerializeField]
         private float weaponDPSBudgetPerLevel = 2.5f;
 
         [Header("Primary Stats and Scaling")]
 
-        [Tooltip("A Per level stat budget that will be applied to all stats, in addition to their individual budgets")]
+        [Tooltip("A Per level stat budget that will be applied to all stats, in addition to their individual budgets.")]
         [SerializeField]
         private float statBudgetPerLevel = 0f;
 
         private List<StatScalingNode> statScalingNodes = new List<StatScalingNode>();
 
-        [Header("Power Resources")]
+        [Header("Power Resources and Capabilities")]
 
         [Tooltip("Power Resources used by all characters.  The first resource is considered primary and will show on the unit frame.")]
         [SerializeField]
@@ -366,25 +376,23 @@ namespace AnyRPG {
         // reference to the actual power resources
         private List<PowerResource> powerResourceList = new List<PowerResource>();
 
-        [Header("Capabilities")]
-
         [Tooltip("Capabilities that apply to all units")]
         [SerializeField]
         private CapabilityProps capabilities = new CapabilityProps();
 
         [Header("Layer")]
 
-        [Tooltip("character units will automatically be set to this layer so they can respond to AOE / looting and other things that filter by this layer.")]
+        [Tooltip("Character units will automatically be set to this layer so they can respond to AOE / looting and other things that filter by this layer.")]
         [SerializeField]
         private string defaultCharacterUnitLayer = "CharacterUnit";
 
-        [Tooltip("player units will automatically be set to this layer.")]
+        [Tooltip("Player units will automatically be set to this layer.")]
         [SerializeField]
         private string defaultPlayerUnitLayer = "Player";
 
         [Header("SYSTEM ABILITIES")]
 
-        [Tooltip("The ability effect to cast on a player when they level up")]
+        [Tooltip("The ability effect to cast on a player when they level up.")]
         [FormerlySerializedAs("levelUpAbilityName")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
@@ -392,7 +400,7 @@ namespace AnyRPG {
 
         private AbilityEffect levelUpEffect = null;
 
-        [Tooltip("The ability effect to cast on a player when they die")]
+        [Tooltip("The ability effect to cast on a player when they die.")]
         [FormerlySerializedAs("deathAbilityName")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
@@ -400,7 +408,7 @@ namespace AnyRPG {
 
         private AbilityEffect deathEffect = null;
 
-        [Tooltip("The ability effect to cast on any character when it has loot that can be collected")]
+        [Tooltip("The ability effect to cast on any character when it has loot that can be collected.")]
         [FormerlySerializedAs("lootSparkleAbilityName")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
@@ -410,12 +418,12 @@ namespace AnyRPG {
 
         [Header("SYSTEM AUDIO")]
 
-        [Tooltip("This audio will play whenever buying from or selling to a vendor")]
+        [Tooltip("This audio clip will play whenever buying from or selling to a vendor.")]
         [SerializeField]
         private AudioClip vendorAudioClip = null;
 
 
-        [Tooltip("This audio will play whenever buying from or selling to a vendor.  If this value is set, it will override the audio clip above.")]
+        [Tooltip("This audio profile will play whenever buying from or selling to a vendor.  If this value is set, it will override the audio clip above.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string vendorAudioProfileName = string.Empty;
@@ -437,23 +445,24 @@ namespace AnyRPG {
         [SerializeField]
         private int autoPixelsPerMeter = 10;
 
-        [Tooltip("The faction icon to show on the load game screen when the player has no faction.")]
+        [Tooltip("The icon to show on the mini map to represent the player.")]
         [SerializeField]
         private Sprite playerMiniMapIcon = null;
 
-        [Tooltip("If the icon does not face up on the screen, enter the number of clockwise degrees the image is naturally rotated.  This will be subtracted from the player angle at run-time")]
+        [Tooltip("If the icon does not face up on the screen, enter the number of clockwise degrees the image is naturally rotated.  This will be subtracted from the player angle at run-time.")]
         [SerializeField]
         private float playerMiniMapIconRotation = 0f;
 
 
         [Header("UNIT FRAMES")]
 
-        [Tooltip("Using a real time camera will reduce performance")]
+        [Tooltip("Using a real time camera will reduce performance.")]
         [SerializeField]
         private bool realTimeUnitFrameCamera = false;
 
         [Header("UI")]
 
+        [Tooltip("The material that will be used to display the cast target on the ground when casting ground targeted spells.")]
         [SerializeField]
         private Material defaultCastTargetCircle;
 
@@ -461,7 +470,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<ProjectorColorMapNode> highlightCircleColorMap = new List<ProjectorColorMapNode>();
 
-        [Tooltip("default UI color for static elements that have no additional transparency applied to them")]
+        [Tooltip("Default UI color for static elements that have no additional transparency applied to them.")]
         [SerializeField]
         private Color defaultUIColor;
 
@@ -471,39 +480,45 @@ namespace AnyRPG {
         private Color defaultUISolidColor;
         */
 
-        [Tooltip("default UI color for background of UI sliders")]
+        [Tooltip("Default UI color for background of UI sliders.")]
         [SerializeField]
         private Color defaultUIFillColor;
 
-        [Tooltip("default UI color for outline image")]
+        [Tooltip("Default UI color for outline image, when the mouse is hovering over an image.")]
         [SerializeField]
         private Color highlightOutlineColor;
 
-        [Tooltip("default UI color for background highlight image")]
+        [Tooltip("Default UI color for background highlight image, when a UI element has been clicked on and is the active image from a group of images.")]
         [SerializeField]
         private Color highlightImageColor;
 
-        [Tooltip("default UI color for the button image on highlight buttons")]
+        [Tooltip("Default UI color for the button image on highlight buttons.")]
         [SerializeField]
         private Color highlightButtonColor;
 
 
+        [Tooltip("The normal color for button UI elements.")]
         [SerializeField]
         private Color buttonNormalColor = new Color32(163, 163, 163, 82);
 
+        [Tooltip("The highlight color for button UI elements.")]
         [SerializeField]
         private Color buttonHighlightedColor = new Color32(165, 165, 165, 166);
 
+        [Tooltip("The pressed color for button UI elements.")]
         [SerializeField]
         private Color buttonPressedColor = new Color32(120, 120, 120, 71);
 
+        [Tooltip("The selected color for button UI elements.")]
         [SerializeField]
         private Color buttonSelectedColor = new Color32(165, 165, 165, 166);
 
+        [Tooltip("The disabled color for button UI elements.")]
         [SerializeField]
         private Color buttonDisabledColor = new Color32(82, 82, 82, 17);
 
 
+        [Tooltip("The image to use for the frame of UI panel elements.")]
         [SerializeField]
         private Sprite defaultUIPanelFrame;
 
@@ -513,33 +528,43 @@ namespace AnyRPG {
 
         [Header("SYSTEM BAR")]
 
+        [Tooltip("The main menu icon to show on the UI system bar.")]
         [SerializeField]
         private Sprite systemBarMainMenu;
 
+        [Tooltip("The ability book icon to show on the UI system bar.")]
         [SerializeField]
         private Sprite systemBarAbilityBook;
 
+        [Tooltip("The character icon to show on the UI system bar.")]
         [SerializeField]
         private Sprite systemBarCharacter;
 
+        [Tooltip("The quest log icon to show on the UI system bar.")]
         [SerializeField]
         private Sprite systemBarQuestLog;
 
+        [Tooltip("The map icon to show on the UI system bar.")]
         [SerializeField]
         private Sprite systemBarMap;
 
+        [Tooltip("The skills icon to show on the UI system bar.")]
         [SerializeField]
         private Sprite systemBarSkills;
 
+        [Tooltip("The reputations icon to show on the UI system bar.")]
         [SerializeField]
         private Sprite systemBarReputations;
 
+        [Tooltip("The currencies icon to show on the UI system bar.")]
         [SerializeField]
         private Sprite systemBarCurrencies;
 
+        [Tooltip("The achievements icon to show on the UI system bar.")]
         [SerializeField]
         private Sprite systemBarAchievements;
 
+        [Tooltip("The inventory icon to show on the UI system bar.")]
         [SerializeField]
         private Sprite systemBarInventory;
 
@@ -548,106 +573,130 @@ namespace AnyRPG {
         [SerializeField]
         private Material temporaryMaterial = null;
 
-        // an image to use if there is more than 1 valid interactable option
+        [Tooltip("An image to use on a nameplate if there is more than 1 valid interactable option.")]
         [SerializeField]
         private Sprite multipleInteractionNamePlateImage = null;
 
-        // a separate image if only crafting is available, but more than 1 craft skill can be shown
+        [Tooltip("An image to use on a nameplate if only crafting is available, but more than 1 craft skill can be shown.")]
         [SerializeField]
         private Sprite multipleCraftNamePlateImage = null;
 
+        [Tooltip("An image to use beside a bank option in the interaction UI window.")]
         [SerializeField]
         private Sprite bankInteractionPanelImage = null;
 
+        [Tooltip("An image to for a bank option on a nameplate.")]
         [SerializeField]
         private Sprite bankNamePlateImage = null;
 
+        [Tooltip("An image to use beside a quest giver option in the interaction UI window.")]
         [SerializeField]
         private Sprite questGiverInteractionPanelImage = null;
 
+        [Tooltip("An image to for a quest giver option on a nameplate.")]
         [SerializeField]
         private Sprite questGiverNamePlateImage = null;
 
+        [Tooltip("An image to use beside a dialog option in the interaction UI window.")]
         [SerializeField]
         private Sprite dialogInteractionPanelImage = null;
 
+        [Tooltip("An image to for a dialog option on a nameplate.")]
         [SerializeField]
         private Sprite dialogNamePlateImage = null;
 
+        [Tooltip("An image to use beside a name change option in the interaction UI window.")]
         [SerializeField]
         private Sprite nameChangeInteractionPanelImage = null;
 
+        [Tooltip("An image to for a name change option on a nameplate.")]
         [SerializeField]
         private Sprite nameChangeNamePlateImage = null;
 
+        [Tooltip("An image to use beside a cutscene option in the interaction UI window.")]
         [SerializeField]
         private Sprite cutSceneInteractionPanelImage = null;
 
+        [Tooltip("An image to for a cutscene option on a nameplate.")]
         [SerializeField]
         private Sprite cutSceneNamePlateImage = null;
 
+        [Tooltip("An image to use beside a lootable character option in the interaction UI window.")]
         [SerializeField]
         private Sprite lootableCharacterInteractionPanelImage = null;
 
+        [Tooltip("An image to for a lootable character option on a nameplate.")]
         [SerializeField]
         private Sprite lootableCharacterNamePlateImage = null;
 
+        [Tooltip("An image to use beside a character creator option in the interaction UI window.")]
         [SerializeField]
         private Sprite characterCreatorInteractionPanelImage = null;
 
+        [Tooltip("An image to for a character creator option on a nameplate.")]
         [SerializeField]
         private Sprite characterCreatorNamePlateImage = null;
 
+        [Tooltip("An image to use beside a unit spawn controller option in the interaction UI window.")]
         [SerializeField]
         private Sprite unitSpawnControllerInteractionPanelImage = null;
 
+        [Tooltip("An image to for a unit spawn controller option on a nameplate.")]
         [SerializeField]
         private Sprite unitSpawnControllerNamePlateImage = null;
 
+        [Tooltip("An image to use beside a faction change option in the interaction UI window.")]
         [SerializeField]
         private Sprite factionChangeInteractionPanelImage = null;
 
+        [Tooltip("An image to for a faction change option on a nameplate.")]
         [SerializeField]
         private Sprite factionChangeNamePlateImage = null;
 
+        [Tooltip("An image to use beside a class change option in the interaction UI window.")]
         [SerializeField]
         private Sprite classChangeInteractionPanelImage = null;
 
+        [Tooltip("An image to for a class change option on a nameplate.")]
         [SerializeField]
         private Sprite classChangeNamePlateImage = null;
 
+        [Tooltip("An image to use beside a vendor option in the interaction UI window.")]
         [SerializeField]
         private Sprite vendorInteractionPanelImage = null;
 
+        [Tooltip("An image to for a vendor option on a nameplate.")]
         [SerializeField]
         private Sprite vendorNamePlateImage = null;
 
+        [Tooltip("An image to use beside a portal option in the interaction UI window.")]
         [SerializeField]
         private Sprite portalInteractionPanelImage = null;
 
+        [Tooltip("An image to for a portal option on a nameplate.")]
         [SerializeField]
         private Sprite portalNamePlateImage = null;
 
+        [Tooltip("An image to use beside a skill trainer option in the interaction UI window.")]
         [SerializeField]
         private Sprite skillTrainerInteractionPanelImage = null;
 
+        [Tooltip("An image to for a skill trainer option on a nameplate.")]
         [SerializeField]
         private Sprite skillTrainerNamePlateImage = null;
 
+        [Tooltip("An image to use beside a music player option in the interaction UI window.")]
         [SerializeField]
         private Sprite musicPlayerInteractionPanelImage = null;
 
+        [Tooltip("An image to for a music player option on a nameplate.")]
         [SerializeField]
         private Sprite musicPlayerNamePlateImage = null;
-
-        // the default amount of time before a unit despawns after killed and looted
-        [SerializeField]
-        private float defaultDespawnTimer = 0f;
 
         [Header("Quest Configuration")]
 
         [SerializeField]
-        [Tooltip("The maximum number of quests in the quest log")]
+        [Tooltip("The maximum number of quests in the quest log.")]
         private int questLogSize = 25;
 
         protected bool eventSubscriptionsInitialized = false;

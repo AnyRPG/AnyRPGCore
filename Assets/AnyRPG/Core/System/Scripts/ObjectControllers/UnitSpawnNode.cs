@@ -37,11 +37,11 @@ namespace AnyRPG {
 
         [Header("Timers")]
 
-        [Tooltip("spawn time for regular mob spawns, such as when prerequisites are updated, or the spawner supports multiple units and they should not all spawn at once")]
+        [Tooltip("Spawn time for regular mob spawns, such as when prerequisites are updated, or the spawner supports multiple units and they should not all spawn at once.")]
         [SerializeField]
         private int spawnTimer = 0;
 
-        [Tooltip("an additional delay to add to the timer.  meant to allow an offset for multiple spawners of the same type")]
+        [Tooltip("An additional delay to add to the timer.  meant to allow an offset for multiple spawners of the same type.")]
         [SerializeField]
         private int spawnDelay = 0;
 
@@ -49,7 +49,7 @@ namespace AnyRPG {
         [SerializeField]
         private float despawnDelay = 0f;
 
-        [Tooltip("a separate spawn timer for when mob despawns are detected to give players longer to move away being a mob attacks them again, -1 disables respawning of despawned units")]
+        [Tooltip("A separate spawn timer for when mob despawns are detected to give players longer to move away being a mob attacks them again. -1 disables respawning of despawned units.")]
         [FormerlySerializedAs("despawnTimer")]
         [SerializeField]
         private int respawnTimer = 60;
@@ -60,19 +60,19 @@ namespace AnyRPG {
 
         [Header("Options")]
 
-        [Tooltip("The maximum number of units that can be active at once.  Once this limit is reached, spawns will be paused until a unit dies. set to -1 to do infinite spawns")]
+        [Tooltip("The maximum number of units that can be active at once.  Once this limit is reached, spawns will be paused until a unit dies. Set to -1 to do infinite spawns.")]
         [SerializeField]
         private int maxUnits = 1;
 
-        [Tooltip("to allow for unit spawn control panels to use this node")]
+        [Tooltip("Set to true to allow for unit spawn control panels to use this node.")]
         [SerializeField]
         private bool suppressAutoSpawn = false;
 
-        [Tooltip("ignore spawn timers and use trigger instead")]
+        [Tooltip("If true, ignore spawn timers and use trigger instead.")]
         [SerializeField]
         private bool triggerBased = false;
 
-        [Tooltip("The number of times this object can be triggered.  0 is unlimited")]
+        [Tooltip("The number of times this object can be triggered.  0 is unlimited.")]
         [SerializeField]
         private int triggerLimit = 0;
 
@@ -83,15 +83,15 @@ namespace AnyRPG {
         //[SerializeField]
         //private bool areaBased = false;
 
-        [Tooltip("in area mode, the number of mobs per square meter to spawn")]
+        [Tooltip("In area mode, the number of mobs per square meter to spawn.")]
         [SerializeField]
         private float spawnDensity = 0.01f;
 
-        [Tooltip("Spawn at the pivot of the UnitSpawnNode")]
+        [Tooltip("If true, units will spawn at the pivot of the Unit Spawn Node.")]
         [SerializeField]
         private bool pointBased = true;
 
-        [Tooltip("if there are units spawned, and the prerequisite conditions are no longer met, despawn them")]
+        [Tooltip("If true, and there are units spawned, and the prerequisite conditions are no longer met, despawn them.")]
         [SerializeField]
         private bool forceDespawnUnits = false;
 

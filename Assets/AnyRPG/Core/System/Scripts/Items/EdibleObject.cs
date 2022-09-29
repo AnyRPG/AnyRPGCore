@@ -10,11 +10,11 @@ namespace AnyRPG {
         int currentIndex;
         float lastChange;
 
-        [Tooltip("The time in seconds between changing to the next object")]
+        [Tooltip("The time in seconds between changing to the next object.")]
         [SerializeField]
         private float interval = 1f;
 
-        [Tooltip("If true, the last object will stay visible after its interval")]
+        [Tooltip("If true, the last object will stay visible after its interval.")]
         [SerializeField]
         private bool keepLastVisible = false;
 

@@ -24,17 +24,17 @@ namespace AnyRPG {
 
         [Header("Sound")]
 
-        [Tooltip("A sound to play when a character enters the water")]
+        [Tooltip("A sound to play when a character enters the water.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string enterWaterAudioProfileName = string.Empty;
 
-        [Tooltip("A looping sound to play while a character is swimming")]
+        [Tooltip("A looping sound to play while a character is swimming.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string swimLoopAudioProfileName = string.Empty;
 
-        [Tooltip("A sound to play whenever a character splashes while swimming")]
+        [Tooltip("A sound to play whenever a character splashes while swimming.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string swimHitsAudioProfileName = string.Empty;

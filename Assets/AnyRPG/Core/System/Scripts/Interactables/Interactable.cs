@@ -17,7 +17,7 @@ namespace AnyRPG {
 
         [Header("Mouse Over")]
 
-        [Tooltip("Show a tooltip when the mouse is over the object")]
+        [Tooltip("Show a tooltip when the mouse is over the object.")]
         [SerializeField]
         protected bool showTooltip = true;
 
@@ -25,7 +25,7 @@ namespace AnyRPG {
         [SerializeField]
         protected string interactableName = string.Empty;
 
-        [Tooltip("Should the object glow when the mouse is over it or its nameplate")]
+        [Tooltip("Should the object glow when the mouse is over it or its nameplate.")]
         [SerializeField]
         protected bool glowOnMouseOver = true;
 
@@ -33,29 +33,29 @@ namespace AnyRPG {
         [SerializeField]
         protected bool lightEmission = false;
 
-        [Tooltip("The time period in seconds between high and low intensity of the glow strength")]
+        [Tooltip("The time period in seconds between high and low intensity of the glow strength.")]
         [SerializeField]
         protected float glowFlashSpeed = 1.5f;
 
-        [Tooltip("The minimum intensity the object should glow with")]
+        [Tooltip("The minimum intensity the object should glow with.")]
         [SerializeField]
         protected float glowMinIntensity = 4.5f;
 
-        [Tooltip("The maximum intensity the object should glow with")]
+        [Tooltip("The maximum intensity the object should glow with.")]
         [SerializeField]
         protected float glowMaxIntensity = 6f;
 
-        [Tooltip("The color of light to emit when glowing")]
+        [Tooltip("The color of light to emit when glowing.")]
         [SerializeField]
         protected Color glowColor = Color.yellow;
 
-        [Tooltip("The glow material that should replace any normal materials on this object while glowing")]
+        [Tooltip("The glow material that should replace any normal materials on this object while glowing.")]
         [SerializeField]
         protected Material temporaryMaterial = null;
 
         [Header("Interaction Options")]
 
-        [Tooltip("Set this value to override the default 'Interact' option for the gamepad interaction tooltip")]
+        [Tooltip("Set this value to override the default 'Interact' option for the gamepad interaction tooltip.")]
         [SerializeField]
         protected string interactionTooltipText = string.Empty;
 
@@ -71,7 +71,7 @@ namespace AnyRPG {
         [SerializeField]
         protected bool interactOnExit = false;
 
-        [Tooltip("If true, interaction is triggered by a collider, and not by clicking with the mouse")]
+        [Tooltip("If true, interaction is triggered by a collider, and not by clicking with the mouse.")]
         [SerializeField]
         protected bool isTrigger = false;
 
@@ -93,15 +93,15 @@ namespace AnyRPG {
         [SerializeField]
         protected bool spawnRequiresValidOption = false;
 
-        [Tooltip("require no valid interactable options in addition to any preqrequisites. For example, quests on a questgiver, a class changer, and dialogs.")]
+        [Tooltip("Require no valid interactable options in addition to any preqrequisites. For example, quests on a questgiver, a class changer, and dialogs.")]
         [SerializeField]
         protected bool despawnRequiresNoValidOption = false;
 
-        [Tooltip("Reference to local component controller prefab with nameplate target, speakers, etc")]
+        [Tooltip("Reference to local component controller prefab with nameplate target, speakers, etc.")]
         [SerializeField]
         protected ComponentController componentController = null;
 
-        [Tooltip("Reference to local component controller prefab with nameplate target, speakers, etc")]
+        [Tooltip("Reference to local component controller prefab with nameplate target, speakers, etc.")]
         [SerializeField]
         protected UnitComponentController unitComponentController = null;
 
