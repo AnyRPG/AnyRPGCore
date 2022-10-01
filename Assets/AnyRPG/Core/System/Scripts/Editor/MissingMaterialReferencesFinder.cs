@@ -6,11 +6,11 @@ using UnityEngine;
 
 namespace AnyRPG.Editor {
 
-    public class MissingScriptableReferencesFinder : MonoBehaviour {
+    public class MissingMaterialReferencesFinder : MonoBehaviour {
 
-        [MenuItem("Tools/AnyRPG/Find Missing References In Scriptable Objects", false, 52)]
-        public static void FindMissingReferencesInScriptableObjects() {
-            showInitialProgressBar("scriptable objects");
+        [MenuItem("Tools/AnyRPG/Find Missing References In Materials", false, 52)]
+        public static void FindMissingReferencesInMaterials() {
+            showInitialProgressBar("Materials");
             string[] allAssetPaths = AssetDatabase.GetAllAssetPaths();
 
             string[] objs = allAssetPaths
@@ -18,7 +18,7 @@ namespace AnyRPG.Editor {
                        .ToArray();
 
             bool wasCancelled = false;
-            int missingCount = findMissingScriptableReferences(objs, () => { wasCancelled = false; }, () => { wasCancelled = true; });
+            int missingCount = findMissingMaterialReferences(objs, () => { wasCancelled = false; }, () => { wasCancelled = true; });
             showFinishDialog(wasCancelled, missingCount, allAssetPaths.Length);
         }
 
@@ -30,16 +30,16 @@ namespace AnyRPG.Editor {
 #endif
         }
 
-        private static int findMissingScriptableReferences(string[] paths, Action onFinished, Action onCanceled, float initialProgress = 0f, float progressWeight = 1f) {
+        private static int findMissingMaterialReferences(string[] paths, Action onFinished, Action onCanceled, float initialProgress = 0f, float progressWeight = 1f) {
             int missingCount = 0;
-            int scriptableObjectCount = 0;
+            int materialCount = 0;
             bool wasCancelled = false;
             for (int i = 0; i < paths.Length; i++) {
-                ScriptableObject scriptableObject = AssetDatabase.LoadAssetAtPath(paths[i], typeof(ScriptableObject)) as ScriptableObject;
-                if (scriptableObject == null || !scriptableObject) {
+                Material material = AssetDatabase.LoadAssetAtPath(paths[i], typeof(Material)) as Material;
+                if (material == null || !material) {
                     continue;
                 }
-                scriptableObjectCount++;
+                materialCount++;
 
                 if (wasCancelled || EditorUtility.DisplayCancelableProgressBar("Searching missing references in assets.",
                                                                                $"{paths[i]}",
@@ -48,19 +48,19 @@ namespace AnyRPG.Editor {
                     return missingCount;
                 }
 
-                missingCount += findMissingScriptableReferences(paths[i], scriptableObject);
+                missingCount += findMissingMaterialReferences(paths[i], material);
             }
 
-            Debug.Log($"Found {scriptableObjectCount} ScriptableObjects");
+            Debug.Log($"Found {materialCount} Materials");
 
             onFinished.Invoke();
             return missingCount;
         }
 
-        private static int findMissingScriptableReferences(string assetPath, ScriptableObject scriptableObject) {
+        private static int findMissingMaterialReferences(string assetPath, Material material) {
             int missingCount = 0;
 
-            var serializedObject = new SerializedObject(scriptableObject);
+            var serializedObject = new SerializedObject(material);
             var serializedProperty = serializedObject.GetIterator();
 
             while (serializedProperty.NextVisible(true)) {
