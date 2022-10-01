@@ -142,7 +142,6 @@ namespace AnyRPG {
         public static void DemoGamesTabContent() {
             GUILayout.BeginVertical("window");
 
-#if ANYRPG_ENGINE
             if (System.IO.File.Exists(Application.dataPath + storyDemoGameScenePath)) {
                 GUILayout.BeginVertical("box");
                 if (GUILayout.Button("A Lost Soul Story Demo Game")) {
@@ -173,7 +172,6 @@ namespace AnyRPG {
                 GUILayout.Space(10);
             }
 
-#endif
             if (System.IO.File.Exists(Application.dataPath + featuresDemoGameScenePath)) {
                 GUILayout.BeginVertical("box");
                 if (GUILayout.Button("Features Demo Game")) {
