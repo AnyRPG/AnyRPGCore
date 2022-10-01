@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Red
   displayName: 
-  icon: {fileID: 21300000, guid: 46552b92847675944b9e69621e19461b, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   equipmentNames: []
   defaultHitEffects: []
   onHitEffects: []

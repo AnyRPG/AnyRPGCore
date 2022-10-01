@@ -14,169 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Healing Explosion Heal
   displayName: 
-  icon: {fileID: 21300000, guid: d816099ac60642e42ad491a31f38ea8b, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  targetOptions:
-    requireTarget: 1
-    requireLineOfSight: 0
-    requireLiveTarget: 1
-    requireDeadTarget: 0
-    canCastOnSelf: 1
-    canCastOnOthers: 1
-    canCastOnEnemy: 0
-    canCastOnNeutral: 0
-    canCastOnFriendly: 1
-    autoSelfCast: 1
-    useMeleeRange: 0
-    maxRange: 0
-    lineOfSightSourceLocation: 0
-    targetRangeSourceLocation: 0
-  chanceToCast: 100
-  effectMaterialName: 
-  materialChangeDuration: 2
-  onHitAudioProfileNames: []
-  randomAudioProfiles: 0
-  hitAbilityEffectNames: []
-  inputMultiplier: 1
-  threatMultiplier: 1
-  abilityPrefabSource: 1
-  randomPrefabs: 0
-  abilityObjectList: []
-  prefabSpawnLocation: 0
-  prefabDestroyDelay: 0
-  destroyOnEndCast: 0
-  tickRate: 0
-  castZeroTick: 0
-  tickAbilityEffectNames: []
-  onTickAudioProfileNames: []
-  randomTickAudioProfiles: 0
-  completeAbilityEffectNames: []
-  lengthEffectProperties:
-    targetOptions:
-      requireTarget: 0
-      requireLineOfSight: 0
-      requireLiveTarget: 1
-      requireDeadTarget: 0
-      canCastOnSelf: 0
-      canCastOnOthers: 0
-      canCastOnEnemy: 0
-      canCastOnNeutral: 0
-      canCastOnFriendly: 0
-      autoSelfCast: 0
-      useMeleeRange: 0
-      maxRange: 0
-      lineOfSightSourceLocation: 0
-      targetRangeSourceLocation: 0
-    chanceToCast: 100
-    effectMaterialName: 
-    materialChangeDuration: 2
-    onHitAudioProfileNames: []
-    randomAudioProfiles: 0
-    hitAbilityEffectNames: []
-    inputMultiplier: 0
-    threatMultiplier: 1
-    abilityPrefabSource: 1
-    randomPrefabs: 0
-    abilityObjectList: []
-    prefabSpawnLocation: 0
-    prefabDestroyDelay: 0
-    destroyOnEndCast: 0
-    tickRate: 0
-    castZeroTick: 0
-    tickAbilityEffectNames: []
-    onTickAudioProfileNames: []
-    randomTickAudioProfiles: 0
-    completeAbilityEffectNames: []
-  defaultPrefabLifetime: 10
-  directEffectProperties:
-    targetOptions:
-      requireTarget: 0
-      requireLineOfSight: 0
-      requireLiveTarget: 1
-      requireDeadTarget: 0
-      canCastOnSelf: 0
-      canCastOnOthers: 0
-      canCastOnEnemy: 0
-      canCastOnNeutral: 0
-      canCastOnFriendly: 0
-      autoSelfCast: 0
-      useMeleeRange: 0
-      maxRange: 0
-      lineOfSightSourceLocation: 0
-      targetRangeSourceLocation: 0
-    chanceToCast: 100
-    effectMaterialName: 
-    materialChangeDuration: 2
-    onHitAudioProfileNames: []
-    randomAudioProfiles: 0
-    hitAbilityEffectNames: []
-    inputMultiplier: 0
-    threatMultiplier: 1
-    abilityPrefabSource: 1
-    randomPrefabs: 0
-    abilityObjectList: []
-    prefabSpawnLocation: 0
-    prefabDestroyDelay: 0
-    destroyOnEndCast: 0
-    tickRate: 0
-    castZeroTick: 0
-    tickAbilityEffectNames: []
-    onTickAudioProfileNames: []
-    randomTickAudioProfiles: 0
-    completeAbilityEffectNames: []
-    defaultPrefabLifetime: 10
-  instantEffectProperties:
-    targetOptions:
-      requireTarget: 0
-      requireLineOfSight: 0
-      requireLiveTarget: 1
-      requireDeadTarget: 0
-      canCastOnSelf: 0
-      canCastOnOthers: 0
-      canCastOnEnemy: 0
-      canCastOnNeutral: 0
-      canCastOnFriendly: 0
-      autoSelfCast: 0
-      useMeleeRange: 0
-      maxRange: 0
-      lineOfSightSourceLocation: 0
-      targetRangeSourceLocation: 0
-    chanceToCast: 100
-    effectMaterialName: 
-    materialChangeDuration: 2
-    onHitAudioProfileNames: []
-    randomAudioProfiles: 0
-    hitAbilityEffectNames: []
-    inputMultiplier: 0
-    threatMultiplier: 1
-    abilityPrefabSource: 1
-    randomPrefabs: 0
-    abilityObjectList: []
-    prefabSpawnLocation: 0
-    prefabDestroyDelay: 0
-    destroyOnEndCast: 0
-    tickRate: 0
-    castZeroTick: 0
-    tickAbilityEffectNames: []
-    onTickAudioProfileNames: []
-    randomTickAudioProfiles: 0
-    completeAbilityEffectNames: []
-    defaultPrefabLifetime: 10
-  allowCriticalStrike: 0
-  resourceAmounts:
-  - resourceName: Health
-    inputRemap: 
-    addPower: 0
-    minAmount: 0
-    baseAmount: 0
-    amountPerLevel: 0
-    maxAmount: 0
-  damageType: 0
-  ignoreAccuracy: 0
   healEffectProperties:
     targetOptions:
       requireTarget: 1
@@ -189,6 +32,7 @@ MonoBehaviour:
       canCastOnNeutral: 0
       canCastOnFriendly: 1
       autoSelfCast: 1
+      unitTypeRestrictions: []
       useMeleeRange: 0
       maxRange: 0
       lineOfSightSourceLocation: 0
@@ -223,5 +67,5 @@ MonoBehaviour:
       baseAmount: 0
       amountPerLevel: 0
       maxAmount: 0
-    damageType: 0
+      ignoreCastTime: 0
     ignoreAccuracy: 0

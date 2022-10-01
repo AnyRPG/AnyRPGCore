@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Blue
   displayName: 
-  icon: {fileID: 21300000, guid: 355bb54616ae2474a8039f7a6416f65d, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   equipmentNames: []
   defaultHitEffects: []
   onHitEffects: []

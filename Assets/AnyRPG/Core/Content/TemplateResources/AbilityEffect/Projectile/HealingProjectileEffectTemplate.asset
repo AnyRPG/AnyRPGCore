@@ -14,128 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Healing Projectile
   displayName: 
-  icon: {fileID: 21300000, guid: 9544d85ce7a4da64d90d376dc637b5c9, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  targetOptions:
-    requireTarget: 1
-    requireLineOfSight: 0
-    requireLiveTarget: 1
-    requireDeadTarget: 0
-    canCastOnSelf: 1
-    canCastOnOthers: 1
-    canCastOnEnemy: 0
-    canCastOnNeutral: 0
-    canCastOnFriendly: 1
-    autoSelfCast: 0
-    useMeleeRange: 0
-    maxRange: 40
-    lineOfSightSourceLocation: 0
-    targetRangeSourceLocation: 0
-  chanceToCast: 100
-  effectMaterialName: 
-  materialChangeDuration: 2
-  onHitAudioProfileNames: []
-  randomAudioProfiles: 0
-  hitAbilityEffectNames:
-  - Heal
-  inputMultiplier: 0
-  threatMultiplier: 1
-  abilityPrefabSource: 1
-  randomPrefabs: 0
-  abilityObjectList:
-  - holdableObjectName: Green Projectile
-    useUniversalAttachment: 0
-    attachmentName: 
-  prefabSpawnLocation: 1
-  prefabDestroyDelay: 0
-  destroyOnEndCast: 0
-  tickRate: 0
-  castZeroTick: 0
-  tickAbilityEffectNames: []
-  onTickAudioProfileNames: []
-  randomTickAudioProfiles: 0
-  completeAbilityEffectNames: []
-  lengthEffectProperties:
-    targetOptions:
-      requireTarget: 0
-      requireLineOfSight: 0
-      requireLiveTarget: 1
-      requireDeadTarget: 0
-      canCastOnSelf: 0
-      canCastOnOthers: 0
-      canCastOnEnemy: 0
-      canCastOnNeutral: 0
-      canCastOnFriendly: 0
-      autoSelfCast: 0
-      useMeleeRange: 0
-      maxRange: 0
-      lineOfSightSourceLocation: 0
-      targetRangeSourceLocation: 0
-    chanceToCast: 100
-    effectMaterialName: 
-    materialChangeDuration: 2
-    onHitAudioProfileNames: []
-    randomAudioProfiles: 0
-    hitAbilityEffectNames: []
-    inputMultiplier: 0
-    threatMultiplier: 1
-    abilityPrefabSource: 1
-    randomPrefabs: 0
-    abilityObjectList: []
-    prefabSpawnLocation: 0
-    prefabDestroyDelay: 0
-    destroyOnEndCast: 0
-    tickRate: 0
-    castZeroTick: 0
-    tickAbilityEffectNames: []
-    onTickAudioProfileNames: []
-    randomTickAudioProfiles: 0
-    completeAbilityEffectNames: []
-  defaultPrefabLifetime: 10
-  directEffectProperties:
-    targetOptions:
-      requireTarget: 0
-      requireLineOfSight: 0
-      requireLiveTarget: 1
-      requireDeadTarget: 0
-      canCastOnSelf: 0
-      canCastOnOthers: 0
-      canCastOnEnemy: 0
-      canCastOnNeutral: 0
-      canCastOnFriendly: 0
-      autoSelfCast: 0
-      useMeleeRange: 0
-      maxRange: 0
-      lineOfSightSourceLocation: 0
-      targetRangeSourceLocation: 0
-    chanceToCast: 100
-    effectMaterialName: 
-    materialChangeDuration: 2
-    onHitAudioProfileNames: []
-    randomAudioProfiles: 0
-    hitAbilityEffectNames: []
-    inputMultiplier: 0
-    threatMultiplier: 1
-    abilityPrefabSource: 1
-    randomPrefabs: 0
-    abilityObjectList: []
-    prefabSpawnLocation: 0
-    prefabDestroyDelay: 0
-    destroyOnEndCast: 0
-    tickRate: 0
-    castZeroTick: 0
-    tickAbilityEffectNames: []
-    onTickAudioProfileNames: []
-    randomTickAudioProfiles: 0
-    completeAbilityEffectNames: []
-    defaultPrefabLifetime: 10
-  projectileSpeed: 10
-  flightAudioProfileNames: []
-  randomFlightAudioProfiles: 0
   projectileEffectProperties:
     targetOptions:
       requireTarget: 1
@@ -148,6 +32,7 @@ MonoBehaviour:
       canCastOnNeutral: 0
       canCastOnFriendly: 1
       autoSelfCast: 0
+      unitTypeRestrictions: []
       useMeleeRange: 0
       maxRange: 40
       lineOfSightSourceLocation: 0
