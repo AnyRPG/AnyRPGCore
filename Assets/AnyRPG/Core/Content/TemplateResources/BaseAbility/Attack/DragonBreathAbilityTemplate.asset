@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Dragon Breath
   displayName: 
-  icon: {fileID: 21300000, guid: b031b2f450159ba41967d6d8d82d108c, type: 3}
+  icon: {fileID: 21300000, guid: f7220ae174bcfb748bb7cc725dad4238, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Engulf your enemy in fire
   useRegionalDescription: 0
@@ -82,11 +82,12 @@ MonoBehaviour:
     abilityEffectNames: []
     tickRate: 0.5
     inlineChannelingEffects:
-    - id: 0
+    - rid: 0
     channeledAbilityEffectnames: []
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: 0
       type: {class: AOEEffectConfig, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         effectProperties:
