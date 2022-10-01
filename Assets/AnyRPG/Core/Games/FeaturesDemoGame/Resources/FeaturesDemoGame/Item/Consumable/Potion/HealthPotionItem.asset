@@ -39,8 +39,7 @@ MonoBehaviour:
   actionType: 2
   actionName: 
   actionProperties:
-    animationClip: {fileID: 8470527233915736748, guid: 450eb787fc9651045befe2e0ceb1dff8,
-      type: 3}
+    animationClip: {fileID: 7400000, guid: 9057664a7d024c041aa282529c8e3ff0, type: 2}
     animationProfileName: 
     castingAudioProfileName: 
     holdableObjectList:
