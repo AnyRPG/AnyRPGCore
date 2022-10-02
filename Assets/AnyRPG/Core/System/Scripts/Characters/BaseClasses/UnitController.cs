@@ -1360,7 +1360,7 @@ namespace AnyRPG {
 
         public void SetUseRootMotion(bool useRootMotion) {
             if (UnitMotor != null) {
-                UnitMotor.UseRootMotion = false;
+                UnitMotor.UseRootMotion = useRootMotion;
             }
         }
 

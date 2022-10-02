@@ -21,8 +21,7 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   actionProperties:
-    animationClip: {fileID: -4728291316872518602, guid: f88ba0cfb104dad4ab7d071fe4cde560,
-      type: 3}
+    animationClip: {fileID: 7400000, guid: d334fddc69f20214e9b1e924e4739624, type: 2}
     animationProfileName: 
     castingAudioProfileName: 
     holdableObjectList: []

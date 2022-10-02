@@ -40,8 +40,7 @@ MonoBehaviour:
   - holdableObjectName: Edible Fish
     useUniversalAttachment: 1
     attachmentName: Right Hand
-  animationClip: {fileID: -9041575014022231517, guid: 003bf02e12734e24eab414935705c101,
-    type: 3}
+  animationClip: {fileID: 7400000, guid: 5c76ef72ca820e345a43481e32356f8e, type: 2}
   animationProfileName: 
   castingAudioClip: {fileID: 8300000, guid: 8534e705f3997f34abeef573b6d39551, type: 3}
   castingAudioProfileName: 
