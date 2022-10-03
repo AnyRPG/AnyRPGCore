@@ -5,22 +5,22 @@ ModelImporter:
   internalIDToNameTable:
   - first:
       74: 2667949614841947897
-    second: Walk
+    second: DragonWalk
   - first:
       74: -3403223495440316006
     second: Walk.001
   - first:
       74: -3100369314251171874
-    second: Idle
+    second: DragonIdle
   - first:
       74: 6720303635017113406
-    second: Attack
+    second: DragonAttack
   - first:
       74: 5824586129586528265
     second: Attack.001
   - first:
       74: -4630339522487117836
-    second: Die
+    second: DragonDie
   - first:
       74: 4723146814002874508
     second: Armature|Attack
@@ -63,7 +63,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Walk
+      name: DragonWalk
       takeName: Walk
       internalID: 0
       firstFrame: 0
@@ -106,7 +106,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Idle
+      name: DragonIdle
       takeName: Idle
       internalID: 0
       firstFrame: 2
@@ -135,7 +135,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Attack
+      name: DragonAttack
       takeName: Attack
       internalID: 0
       firstFrame: 1
@@ -171,7 +171,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Die
+      name: DragonDie
       takeName: Die
       internalID: 0
       firstFrame: 1
