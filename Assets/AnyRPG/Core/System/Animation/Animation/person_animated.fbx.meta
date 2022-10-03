@@ -1,68 +1,68 @@
 fileFormatVersion: 2
 guid: 32c6e6949afed4743a3ba121be976ce9
 ModelImporter:
-  serializedVersion: 20200
+  serializedVersion: 21300
   internalIDToNameTable:
   - first:
       74: 3829431870330799705
-    second: Armature|_Default
+    second: Default
   - first:
       74: -4093065601841865100
-    second: Armature|CrouchDefault
+    second: CrouchDefault
   - first:
       74: -4701415721766691894
-    second: Armature|CrouchIdle
+    second: CrouchIdle
   - first:
       74: 7448423373816200739
-    second: Armature|CrouchPunch
+    second: CrouchPunch
   - first:
       74: -282550490967005007
-    second: Armature|CrouchRun
+    second: CrouchRun
   - first:
       74: 8563073577016731302
-    second: Armature|CrouchShootPistol
+    second: CrouchShootPistol
   - first:
       74: -6029897530297755256
-    second: Armature|CrouchShootRifle
+    second: CrouchShootRifle
   - first:
       74: 144868715081798822
-    second: Armature|CrouchSwing
+    second: CrouchSwing
   - first:
       74: 873266580911482080
-    second: Armature|CrouchWalk
+    second: CrouchWalk
   - first:
       74: 7549088838577149333
-    second: Armature|Punch
+    second: Punch
   - first:
       74: -7551964380084998518
-    second: Armature|Run
+    second: Run
   - first:
       74: 5344145919593692012
-    second: Armature|ShootPistol
+    second: ShootPistol
   - first:
       74: 2041397707592655547
-    second: Armature|ShootRifle
+    second: ShootRifle
   - first:
       74: -4728361552675377119
-    second: Armature|Standing
+    second: Standing
   - first:
       74: 3263702291011598974
-    second: Armature|SwimIdle
+    second: SwimIdle
   - first:
       74: 5798268768999571946
-    second: Armature|SwimMove
+    second: SwimMove
   - first:
       74: 6336031161177774121
-    second: Armature|Swing
+    second: Swing
   - first:
       74: 8349542763059015795
-    second: Armature|Walk
+    second: Walk
   - first:
       74: 5154044263299310189
-    second: Armature|FlyIdle
+    second: FlyIdle
   - first:
       74: -3018306227676826368
-    second: Armature|FlyMove
+    second: FlyMove
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -74,6 +74,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -116,7 +117,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Armature|_Default
+      name: Default
       takeName: Armature|_Default
       internalID: 0
       firstFrame: 0
@@ -145,7 +146,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|CrouchDefault
+      name: CrouchDefault
       takeName: Armature|CrouchDefault
       internalID: 0
       firstFrame: 0
@@ -174,7 +175,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|CrouchIdle
+      name: CrouchIdle
       takeName: Armature|CrouchIdle
       internalID: 0
       firstFrame: 0
@@ -203,7 +204,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|CrouchPunch
+      name: CrouchPunch
       takeName: Armature|CrouchPunch
       internalID: 0
       firstFrame: 0
@@ -232,7 +233,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|CrouchRun
+      name: CrouchRun
       takeName: Armature|CrouchRun
       internalID: 0
       firstFrame: 0
@@ -261,7 +262,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|CrouchShootPistol
+      name: CrouchShootPistol
       takeName: Armature|CrouchShootPistol
       internalID: 0
       firstFrame: 0
@@ -290,7 +291,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|CrouchShootRifle
+      name: CrouchShootRifle
       takeName: Armature|CrouchShootRifle
       internalID: 0
       firstFrame: 0
@@ -319,7 +320,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|CrouchSwing
+      name: CrouchSwing
       takeName: Armature|CrouchSwing
       internalID: 0
       firstFrame: 0
@@ -348,7 +349,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|CrouchWalk
+      name: CrouchWalk
       takeName: Armature|CrouchWalk
       internalID: 0
       firstFrame: 0
@@ -377,7 +378,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Punch
+      name: Punch
       takeName: Armature|Punch
       internalID: 0
       firstFrame: 0
@@ -406,7 +407,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Run
+      name: Run
       takeName: Armature|Run
       internalID: 0
       firstFrame: 0
@@ -435,7 +436,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|ShootPistol
+      name: ShootPistol
       takeName: Armature|ShootPistol
       internalID: 0
       firstFrame: 0
@@ -464,7 +465,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|ShootRifle
+      name: ShootRifle
       takeName: Armature|ShootRifle
       internalID: 0
       firstFrame: 0
@@ -493,7 +494,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Standing
+      name: Standing
       takeName: Armature|Standing
       internalID: 0
       firstFrame: 0
@@ -522,7 +523,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|SwimIdle
+      name: SwimIdle
       takeName: Armature|SwimIdle
       internalID: 0
       firstFrame: 0
@@ -551,7 +552,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|SwimMove
+      name: SwimMove
       takeName: Armature|SwimMove
       internalID: 0
       firstFrame: 0
@@ -594,7 +595,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Swing
+      name: Swing
       takeName: Armature|Swing
       internalID: 0
       firstFrame: 0
@@ -623,7 +624,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Walk
+      name: Walk
       takeName: Armature|Walk
       internalID: 0
       firstFrame: 0
@@ -652,7 +653,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|FlyIdle
+      name: FlyIdle
       takeName: Armature|SwimIdle
       internalID: 0
       firstFrame: 0
@@ -681,7 +682,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|FlyMove
+      name: FlyMove
       takeName: Armature|SwimMove
       internalID: 0
       firstFrame: 0
@@ -721,6 +722,7 @@ ModelImporter:
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
     fileIdsGeneration: 2
     swapUVChannels: 0
     generateSecondaryUV: 0
@@ -732,6 +734,7 @@ ModelImporter:
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
+    optimizeBones: 1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
@@ -1484,6 +1487,7 @@ ModelImporter:
   humanoidOversampling: 1
   avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

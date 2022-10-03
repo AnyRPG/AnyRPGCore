@@ -1,149 +1,149 @@
 fileFormatVersion: 2
 guid: 6397dc4217362a642821d38659e201d8
 ModelImporter:
-  serializedVersion: 20200
+  serializedVersion: 21300
   internalIDToNameTable:
   - first:
       74: -5720986223270723880
-    second: human_male|human_male_cast_dual_wield_melee
+    second: human_male_cast_dual_wield_melee
   - first:
       74: 7937697668418649239
-    second: human_male|human_male_cast_dual_wield_melee_2
+    second: human_male_cast_dual_wield_melee_2
   - first:
       74: 8335888519874292932
-    second: human_male|human_male_cast_dual_wield_melee_3
+    second: human_male_cast_dual_wield_melee_3
   - first:
       74: -2241484985141308991
-    second: human_male|human_male_cast_dual_wield_melee_4
+    second: human_male_cast_dual_wield_melee_4
   - first:
       74: -8689245776419061593
-    second: human_male|human_male_cast_main_hand_melee
+    second: human_male_cast_main_hand_melee
   - first:
       74: 2971391668709343673
-    second: human_male|human_male_cast_main_hand_melee_2
+    second: human_male_cast_main_hand_melee_2
   - first:
       74: 6819617924072693847
-    second: human_male|human_male_cast_main_hand_melee_3
+    second: human_male_cast_main_hand_melee_3
   - first:
       74: -9201602090712341906
-    second: human_male|human_male_cast_main_hand_wand
+    second: human_male_cast_main_hand_wand
   - first:
       74: -6375903343899067323
-    second: human_male|human_male_cast_off_hand_shield
+    second: human_male_cast_off_hand_shield
   - first:
       74: 386944495548037306
-    second: human_male|human_male_cast_two_handed_bow
+    second: human_male_cast_two_handed_bow
   - first:
       74: -7313973829857752917
-    second: human_male|human_male_cast_two_handed_bow_2
+    second: human_male_cast_two_handed_bow_2
   - first:
       74: -8574990708080832155
-    second: human_male|human_male_cast_two_handed_crossbow
+    second: human_male_cast_two_handed_crossbow
   - first:
       74: 1937410164100282348
-    second: human_male|human_male_cast_two_handed_melee
+    second: human_male_cast_two_handed_melee
   - first:
       74: -238389799600577976
-    second: human_male|human_male_cast_two_handed_melee_2
+    second: human_male_cast_two_handed_melee_2
   - first:
       74: -2023217349467674421
-    second: human_male|human_male_cast_two_handed_melee_3
+    second: human_male_cast_two_handed_melee_3
   - first:
       74: -9047419005696394661
-    second: human_male|human_male_cast_two_handed_melee_4
+    second: human_male_cast_two_handed_melee_4
   - first:
       74: 5409997650068989421
-    second: human_male|human_male_cast_two_handed_melee_5
+    second: human_male_cast_two_handed_melee_5
   - first:
       74: -7948809043644055135
-    second: human_male|human_male_cast_two_handed_staff
+    second: human_male_cast_two_handed_staff
   - first:
       74: -8750293576465285269
-    second: human_male|human_male_cast_unarmed_magic
+    second: human_male_cast_unarmed_magic
   - first:
       74: 8803585156392968480
-    second: human_male|human_male_cast_unarmed_magic_2
+    second: human_male_cast_unarmed_magic_2
   - first:
       74: 1066573180157879246
-    second: human_male|human_male_channel_dual_wield_melee
+    second: human_male_channel_dual_wield_melee
   - first:
       74: 8392583758712442205
-    second: human_male|human_male_channel_main_hand_melee
+    second: human_male_channel_main_hand_melee
   - first:
       74: 4328220063694459940
-    second: human_male|human_male_channel_main_hand_wand
+    second: human_male_channel_main_hand_wand
   - first:
       74: 4734872725754422408
-    second: human_male|human_male_channel_two_handed_bow
+    second: human_male_channel_two_handed_bow
   - first:
       74: -1755518358208721889
-    second: human_male|human_male_channel_two_handed_bow_2
+    second: human_male_channel_two_handed_bow_2
   - first:
       74: 3304545495387511099
-    second: human_male|human_male_channel_two_handed_crossbow
+    second: human_male_channel_two_handed_crossbow
   - first:
       74: 3894753889253881943
-    second: human_male|human_male_channel_two_handed_melee
+    second: human_male_channel_two_handed_melee
   - first:
       74: -3062620807227406115
-    second: human_male|human_male_channel_two_handed_staff
+    second: human_male_channel_two_handed_staff
   - first:
       74: 3944608136195505577
-    second: human_male|human_male_channel_unarmed_magic
+    second: human_male_channel_unarmed_magic
   - first:
       74: 3561607709533772755
-    second: human_male|human_male_death
+    second: human_male_death
   - first:
       74: 3025931160700679105
-    second: human_male|human_male_drink_potion
+    second: human_male_drink_potion
   - first:
       74: 8986022285138539083
-    second: human_male|human_male_gathering
+    second: human_male_gathering
   - first:
       74: 8395340075712130349
-    second: human_male|human_male_idle
+    second: human_male_idle
   - first:
       74: 1384918016799819241
-    second: human_male|human_male_idle_combat_dual_wield_melee
+    second: human_male_idle_combat_dual_wield_melee
   - first:
       74: 7171283253521367826
-    second: human_male|human_male_idle_combat_main_hand_melee
+    second: human_male_idle_combat_main_hand_melee
   - first:
       74: 5413719107907482255
-    second: human_male|human_male_idle_combat_main_hand_wand
+    second: human_male_idle_combat_main_hand_wand
   - first:
       74: -7850565254900480357
-    second: human_male|human_male_idle_combat_two_handed_bow
+    second: human_male_idle_combat_two_handed_bow
   - first:
       74: 6782489544199740023
-    second: human_male|human_male_idle_combat_two_handed_crossbow
+    second: human_male_idle_combat_two_handed_crossbow
   - first:
       74: 7410813653800393974
-    second: human_male|human_male_idle_combat_two_handed_melee
+    second: human_male_idle_combat_two_handed_melee
   - first:
       74: 2217236397397110431
-    second: human_male|human_male_idle_combat_two_handed_staff
+    second: human_male_idle_combat_two_handed_staff
   - first:
       74: -5580852460829405635
-    second: human_male|human_male_idle_combat_unarmed
+    second: human_male_idle_combat_unarmed
   - first:
       74: 1726248507462656463
-    second: human_male|human_male_jump
+    second: human_male_jump
   - first:
       74: -871236342318560452
-    second: human_male|human_male_power_up
+    second: human_male_power_up
   - first:
       74: 4277457350776200534
-    second: human_male|human_male_power_up_2
+    second: human_male_power_up_2
   - first:
       74: 6071529231681790280
-    second: human_male|human_male_power_up_3
+    second: human_male_power_up_3
   - first:
       74: 8832562902461122385
-    second: human_male|human_male_pray
+    second: human_male_pray
   - first:
       74: 7224424586193594900
-    second: human_male|human_male_run
+    second: human_male_run
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -335,6 +335,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -353,7 +354,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: human_male|human_male_cast_dual_wield_melee
+      name: human_male_cast_dual_wield_melee
       takeName: human_male|human_male_cast_dual_wield_melee
       internalID: 0
       firstFrame: 0
@@ -382,7 +383,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_dual_wield_melee_2
+      name: human_male_cast_dual_wield_melee_2
       takeName: human_male|human_male_cast_dual_wield_melee_2
       internalID: 0
       firstFrame: 0
@@ -411,7 +412,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_dual_wield_melee_3
+      name: human_male_cast_dual_wield_melee_3
       takeName: human_male|human_male_cast_dual_wield_melee_3
       internalID: 0
       firstFrame: 0
@@ -440,7 +441,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_dual_wield_melee_4
+      name: human_male_cast_dual_wield_melee_4
       takeName: human_male|human_male_cast_dual_wield_melee_4
       internalID: 0
       firstFrame: 0
@@ -469,7 +470,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_main_hand_melee
+      name: human_male_cast_main_hand_melee
       takeName: human_male|human_male_cast_main_hand_melee
       internalID: 0
       firstFrame: 0
@@ -505,7 +506,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_main_hand_melee_2
+      name: human_male_cast_main_hand_melee_2
       takeName: human_male|human_male_cast_main_hand_melee_2
       internalID: 0
       firstFrame: 0
@@ -534,7 +535,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_main_hand_melee_3
+      name: human_male_cast_main_hand_melee_3
       takeName: human_male|human_male_cast_main_hand_melee_3
       internalID: 0
       firstFrame: 0
@@ -563,7 +564,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_main_hand_wand
+      name: human_male_cast_main_hand_wand
       takeName: human_male|human_male_cast_main_hand_wand
       internalID: 0
       firstFrame: 0
@@ -592,7 +593,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_off_hand_shield
+      name: human_male_cast_off_hand_shield
       takeName: human_male|human_male_cast_off_hand_shield
       internalID: 0
       firstFrame: 0
@@ -628,7 +629,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_two_handed_bow
+      name: human_male_cast_two_handed_bow
       takeName: human_male|human_male_cast_two_handed_bow
       internalID: 0
       firstFrame: 0
@@ -657,7 +658,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_two_handed_bow_2
+      name: human_male_cast_two_handed_bow_2
       takeName: human_male|human_male_cast_two_handed_bow_2
       internalID: 0
       firstFrame: 0
@@ -686,7 +687,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_two_handed_crossbow
+      name: human_male_cast_two_handed_crossbow
       takeName: human_male|human_male_cast_two_handed_crossbow
       internalID: 0
       firstFrame: 0
@@ -722,7 +723,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_two_handed_melee
+      name: human_male_cast_two_handed_melee
       takeName: human_male|human_male_cast_two_handed_melee
       internalID: 0
       firstFrame: 0
@@ -751,7 +752,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_two_handed_melee_2
+      name: human_male_cast_two_handed_melee_2
       takeName: human_male|human_male_cast_two_handed_melee_2
       internalID: 0
       firstFrame: 0
@@ -780,7 +781,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_two_handed_melee_3
+      name: human_male_cast_two_handed_melee_3
       takeName: human_male|human_male_cast_two_handed_melee_3
       internalID: 0
       firstFrame: 0
@@ -809,7 +810,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_two_handed_melee_4
+      name: human_male_cast_two_handed_melee_4
       takeName: human_male|human_male_cast_two_handed_melee_4
       internalID: 0
       firstFrame: 0
@@ -838,7 +839,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_two_handed_melee_5
+      name: human_male_cast_two_handed_melee_5
       takeName: human_male|human_male_cast_two_handed_melee_5
       internalID: 0
       firstFrame: 0
@@ -867,7 +868,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_two_handed_staff
+      name: human_male_cast_two_handed_staff
       takeName: human_male|human_male_cast_two_handed_staff
       internalID: 0
       firstFrame: 0
@@ -896,7 +897,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_unarmed_magic
+      name: human_male_cast_unarmed_magic
       takeName: human_male|human_male_cast_unarmed_magic
       internalID: 0
       firstFrame: 0
@@ -925,7 +926,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_cast_unarmed_magic_2
+      name: human_male_cast_unarmed_magic_2
       takeName: human_male|human_male_cast_unarmed_magic_2
       internalID: 0
       firstFrame: 0
@@ -954,7 +955,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_channel_dual_wield_melee
+      name: human_male_channel_dual_wield_melee
       takeName: human_male|human_male_channel_dual_wield_melee
       internalID: 0
       firstFrame: 0
@@ -983,7 +984,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_channel_main_hand_melee
+      name: human_male_channel_main_hand_melee
       takeName: human_male|human_male_channel_main_hand_melee
       internalID: 0
       firstFrame: 0
@@ -1012,7 +1013,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_channel_main_hand_wand
+      name: human_male_channel_main_hand_wand
       takeName: human_male|human_male_channel_main_hand_wand
       internalID: 0
       firstFrame: 0
@@ -1041,7 +1042,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_channel_two_handed_bow
+      name: human_male_channel_two_handed_bow
       takeName: human_male|human_male_channel_two_handed_bow
       internalID: 0
       firstFrame: 0
@@ -1070,7 +1071,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_channel_two_handed_bow_2
+      name: human_male_channel_two_handed_bow_2
       takeName: human_male|human_male_channel_two_handed_bow_2
       internalID: 0
       firstFrame: 0
@@ -1099,7 +1100,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_channel_two_handed_crossbow
+      name: human_male_channel_two_handed_crossbow
       takeName: human_male|human_male_channel_two_handed_crossbow
       internalID: 0
       firstFrame: 0
@@ -1128,7 +1129,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_channel_two_handed_melee
+      name: human_male_channel_two_handed_melee
       takeName: human_male|human_male_channel_two_handed_melee
       internalID: 0
       firstFrame: 0
@@ -1157,7 +1158,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_channel_two_handed_staff
+      name: human_male_channel_two_handed_staff
       takeName: human_male|human_male_channel_two_handed_staff
       internalID: 0
       firstFrame: 0
@@ -1186,7 +1187,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_channel_unarmed_magic
+      name: human_male_channel_unarmed_magic
       takeName: human_male|human_male_channel_unarmed_magic
       internalID: 0
       firstFrame: 0
@@ -1215,7 +1216,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_death
+      name: human_male_death
       takeName: human_male|human_male_death
       internalID: 0
       firstFrame: 0
@@ -1244,7 +1245,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_drink_potion
+      name: human_male_drink_potion
       takeName: human_male|human_male_drink_potion
       internalID: 0
       firstFrame: 0
@@ -1273,7 +1274,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_gathering
+      name: human_male_gathering
       takeName: human_male|human_male_gathering
       internalID: 0
       firstFrame: 0
@@ -1302,7 +1303,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_idle
+      name: human_male_idle
       takeName: human_male|human_male_idle
       internalID: 0
       firstFrame: 0
@@ -1331,7 +1332,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_idle_combat_dual_wield_melee
+      name: human_male_idle_combat_dual_wield_melee
       takeName: human_male|human_male_idle_combat_dual_wield_melee
       internalID: 0
       firstFrame: 0
@@ -1360,7 +1361,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_idle_combat_main_hand_melee
+      name: human_male_idle_combat_main_hand_melee
       takeName: human_male|human_male_idle_combat_main_hand_melee
       internalID: 0
       firstFrame: 0
@@ -1389,7 +1390,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_idle_combat_main_hand_wand
+      name: human_male_idle_combat_main_hand_wand
       takeName: human_male|human_male_idle_combat_main_hand_wand
       internalID: 0
       firstFrame: 0
@@ -1418,7 +1419,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_idle_combat_two_handed_bow
+      name: human_male_idle_combat_two_handed_bow
       takeName: human_male|human_male_idle_combat_two_handed_bow
       internalID: 0
       firstFrame: 0
@@ -1447,7 +1448,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_idle_combat_two_handed_crossbow
+      name: human_male_idle_combat_two_handed_crossbow
       takeName: human_male|human_male_idle_combat_two_handed_crossbow
       internalID: 0
       firstFrame: 0
@@ -1476,7 +1477,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_idle_combat_two_handed_melee
+      name: human_male_idle_combat_two_handed_melee
       takeName: human_male|human_male_idle_combat_two_handed_melee
       internalID: 0
       firstFrame: 0
@@ -1505,7 +1506,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_idle_combat_two_handed_staff
+      name: human_male_idle_combat_two_handed_staff
       takeName: human_male|human_male_idle_combat_two_handed_staff
       internalID: 0
       firstFrame: 0
@@ -1534,7 +1535,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_idle_combat_unarmed
+      name: human_male_idle_combat_unarmed
       takeName: human_male|human_male_idle_combat_unarmed
       internalID: 0
       firstFrame: 0
@@ -1563,7 +1564,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_jump
+      name: human_male_jump
       takeName: human_male|human_male_jump
       internalID: 0
       firstFrame: 0
@@ -1592,7 +1593,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_power_up
+      name: human_male_power_up
       takeName: human_male|human_male_power_up
       internalID: 0
       firstFrame: 0
@@ -1621,7 +1622,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_power_up_2
+      name: human_male_power_up_2
       takeName: human_male|human_male_power_up_2
       internalID: 0
       firstFrame: 0
@@ -1650,7 +1651,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_power_up_3
+      name: human_male_power_up_3
       takeName: human_male|human_male_power_up_3
       internalID: 0
       firstFrame: 0
@@ -1679,7 +1680,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_pray
+      name: human_male_pray
       takeName: human_male|human_male_pray
       internalID: 0
       firstFrame: 0
@@ -1708,7 +1709,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: human_male|human_male_run
+      name: human_male_run
       takeName: human_male|human_male_run
       internalID: 0
       firstFrame: 0
@@ -1748,6 +1749,7 @@ ModelImporter:
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
     fileIdsGeneration: 2
     swapUVChannels: 0
     generateSecondaryUV: 0
@@ -1759,6 +1761,7 @@ ModelImporter:
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
+    optimizeBones: 1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
@@ -2583,6 +2586,7 @@ ModelImporter:
   humanoidOversampling: 1
   avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
