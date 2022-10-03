@@ -29,7 +29,7 @@ MonoBehaviour:
     attackClips:
     - {fileID: 7400000, guid: 39ef618c31212f54a84b976f2fdc9637, type: 2}
     castClips:
-    - {fileID: 6355024905058065234, guid: a4a9e2ea5917aad44986937bf10c0b48, type: 3}
+    - {fileID: 7400000, guid: 7dcc341125f091a4c8132274da300cbc, type: 2}
     takeDamageClips: []
     idleClip: {fileID: 7400000, guid: 987fd3ff86cadf049aeba1e6d622aac8, type: 2}
     jumpClip: {fileID: 5539831331247536789, guid: d4eca31749363e44da997a0b48022861,
@@ -64,12 +64,10 @@ MonoBehaviour:
       type: 2}
     jogStrafeBackRightClip: {fileID: 7400000, guid: 7d14df5598c73c44a9bb84b418ec130e,
       type: 2}
-    stunnedClip: {fileID: 5268444608904133969, guid: 7ad55fd1b862fd04cbde4ace5942ffa5,
-      type: 3}
+    stunnedClip: {fileID: 7400000, guid: 269abbdd2d21df749815d5bc092e202b, type: 2}
     fullCombatMirror: 0
     combatIdleMirror: 0
-    combatIdleClip: {fileID: -1126330120260416201, guid: cfa4975c24eb41649b8d95e1620cf3d9,
-      type: 3}
+    combatIdleClip: {fileID: 7400000, guid: 51beb88cd04050b43aec1abafc37171d, type: 2}
     combatJumpMirror: 0
     combatJumpClip: {fileID: 2333413601598592880, guid: d4eca31749363e44da997a0b48022861,
       type: 3}
@@ -129,8 +127,7 @@ MonoBehaviour:
     combatJogStrafeBackRightClip: {fileID: 7400000, guid: d4c3f944d6699e648a74fa626caee421,
       type: 2}
     combatStunnedMirror: 0
-    combatStunnedClip: {fileID: 2342052905833142417, guid: 7ad55fd1b862fd04cbde4ace5942ffa5,
-      type: 3}
+    combatStunnedClip: {fileID: 7400000, guid: 1ee66b9c568436a4f885ba85cac82f56, type: 2}
     deathClip: {fileID: 7400000, guid: 55ed5f04a5c59b543b1c18abed399145, type: 2}
     reviveClip: {fileID: 7400000, guid: 5a53e7d553784f84893ed7158952fdd2, type: 2}
     levitatedClip: {fileID: 7400000, guid: 47710b3894e88534889170d0541c53cd, type: 2}
