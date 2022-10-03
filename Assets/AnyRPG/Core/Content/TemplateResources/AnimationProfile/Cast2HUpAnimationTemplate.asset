@@ -19,21 +19,22 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   animationProps:
     useRootMotion: 0
     suppressAdjustAnimatorSpeed: 0
     attackClips: []
     castClips:
-    - {fileID: -8023718567060388578, guid: d00dbcf596c51a64da2aace6ba32e129, type: 3}
+    - {fileID: 7400000, guid: ffcf6900dcdf01d4caa7cedbbe3fc643, type: 2}
     takeDamageClips: []
     idleClip: {fileID: 0}
     jumpClip: {fileID: 0}
     fallClip: {fileID: 0}
     landClip: {fileID: 0}
-    moveForwardClip: {fileID: 0}
-    moveForwardFastClip: {fileID: 0}
-    moveBackClip: {fileID: 0}
-    moveBackFastClip: {fileID: 0}
+    walkClip: {fileID: 0}
+    runClip: {fileID: 0}
+    walkBackClip: {fileID: 0}
+    runBackClip: {fileID: 0}
     turnLeftClip: {fileID: 0}
     turnRightClip: {fileID: 0}
     strafeLeftClip: {fileID: 0}
@@ -58,14 +59,14 @@ MonoBehaviour:
     combatFallClip: {fileID: 0}
     combatLandMirror: 0
     combatLandClip: {fileID: 0}
-    combatMoveForwardMirror: 0
-    combatMoveForwardClip: {fileID: 0}
-    combatMoveForwardFastMirror: 0
-    combatMoveForwardFastClip: {fileID: 0}
-    combatMoveBackMirror: 0
-    combatMoveBackClip: {fileID: 0}
-    combatMoveBackFastMirror: 0
-    combatMoveBackFastClip: {fileID: 0}
+    combatWalkMirror: 0
+    combatWalkClip: {fileID: 0}
+    combatRunMirror: 0
+    combatRunClip: {fileID: 0}
+    combatWalkBackMirror: 0
+    combatWalkBackClip: {fileID: 0}
+    combatRunBackMirror: 0
+    combatRunBackClip: {fileID: 0}
     combatTurnLeftMirror: 0
     combatTurnLeftClip: {fileID: 0}
     combatTurnRightMirror: 0
@@ -99,3 +100,7 @@ MonoBehaviour:
     deathClip: {fileID: 0}
     reviveClip: {fileID: 0}
     levitatedClip: {fileID: 0}
+    swimIdleClip: {fileID: 0}
+    swimMoveClip: {fileID: 0}
+    flyIdleClip: {fileID: 0}
+    flyMoveClip: {fileID: 0}

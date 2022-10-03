@@ -1,11 +1,11 @@
 fileFormatVersion: 2
 guid: 28f4ab189e42cc44ebfe970f7669d618
 ModelImporter:
-  serializedVersion: 19301
+  serializedVersion: 21300
   internalIDToNameTable:
   - first:
       74: 1989289236423521904
-    second: Dead00
+    second: Dead.00
   - first:
       74: -6749239648525907536
     second: Die1
@@ -20,20 +20,19 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: "\nClip 'Default Take' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'ORG-chest' is inbetween humanoid transforms
-      and has rotation animation that will be discarded.\n\t'ORG-head' has translation
-      animation that will be discarded.\n\t'ORG-jaw' has translation animation that
-      will be discarded.\n\t'ORG-thigh_L' has scale animation that will be discarded.\n\t'ORG-shin_L'
-      has scale animation that will be discarded.\n\t'ORG-foot_L' has scale animation
-      that will be discarded.\n\t'ORG-thigh_R' has scale animation that will be discarded.\n\t'ORG-shin_R'
-      has scale animation that will be discarded.\n\t'ORG-foot_R' has scale animation
-      that will be discarded.\n"
+      that might lower retargeting quality:\n\t'ORG-chest' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\t'ORG-jaw'
+      has translation animation that will be discarded.\n\t'ORG-thigh_L' has scale
+      animation that will be discarded.\n\t'ORG-shin_L' has scale animation that
+      will be discarded.\n\t'ORG-foot_L' has scale animation that will be discarded.\n\t'ORG-thigh_R'
+      has scale animation that will be discarded.\n\t'ORG-shin_R' has scale animation
+      that will be discarded.\n\t'ORG-foot_R' has scale animation that will be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -47,7 +46,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Dead00
+      name: Dead.00
       takeName: Default Take
       internalID: 0
       firstFrame: 0
@@ -116,21 +115,27 @@ ModelImporter:
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
     fileIdsGeneration: 2
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
+    optimizeBones: 1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
@@ -912,6 +917,8 @@ ModelImporter:
   animationType: 3
   humanoidOversampling: 1
   avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
