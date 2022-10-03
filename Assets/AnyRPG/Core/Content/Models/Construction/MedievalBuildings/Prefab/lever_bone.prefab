@@ -26,6 +26,7 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: -0, y: 0.20131108, z: 0}
   m_LocalScale: {x: 100, y: 100, z: 100}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2881511863030931058}
   - {fileID: 967407315769823948}
@@ -60,6 +61,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: -0.0020131113}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5925863991610126708}
   m_RootOrder: 1
@@ -83,6 +85,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -140,6 +143,7 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: -0, y: -0.000000044703484, z: 0}
   m_LocalScale: {x: 100, y: 100, z: 100}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4395878677390589681}
   m_RootOrder: 0
@@ -155,6 +159,7 @@ SkinnedMeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -223,6 +228,7 @@ Transform:
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071067}
   m_LocalPosition: {x: -0, y: 0, z: -0.0007547435}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3968126828924260560}
   m_Father: {fileID: 5925863991610126708}
@@ -256,8 +262,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3912111787291714635}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5678873, y: 0.00000011920929, z: 2.121626}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3915894499269518357}
   - {fileID: 5925863991610126708}
@@ -387,6 +394,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0.0061895107, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2881511863030931058}
   m_RootOrder: 0
@@ -485,12 +493,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37f353160369b234b89e9214e5695cf7, type: 3}
---- !u!4 &8547983641812116386 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
-    type: 3}
-  m_PrefabInstance: {fileID: 278288322174549663}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5071005117550486432 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5008980836957199679, guid: 37f353160369b234b89e9214e5695cf7,
@@ -503,6 +505,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbfd1210233fbdf4384ee537a76e5a2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &8547983641812116386 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+    type: 3}
+  m_PrefabInstance: {fileID: 278288322174549663}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4509214192472101892
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -572,12 +580,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ffef65e2e170bd54a9b915f85d943c90, type: 3}
---- !u!4 &5471827911720225081 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8465681069618093373, guid: ffef65e2e170bd54a9b915f85d943c90,
-    type: 3}
-  m_PrefabInstance: {fileID: 4509214192472101892}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4516939991816250553 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 17054075724345533, guid: ffef65e2e170bd54a9b915f85d943c90,
@@ -590,3 +592,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff66cd4c225276a429c7ebf4774567da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &5471827911720225081 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8465681069618093373, guid: ffef65e2e170bd54a9b915f85d943c90,
+    type: 3}
+  m_PrefabInstance: {fileID: 4509214192472101892}
+  m_PrefabAsset: {fileID: 0}
