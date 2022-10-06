@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &247972908418382188
+--- !u!1 &6294039730110083715
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,49 +8,51 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3583310307587934913}
-  - component: {fileID: 1309412455900939834}
-  - component: {fileID: 6086729794771515860}
-  m_Layer: 17
-  m_Name: ToolPickaxeModel
+  - component: {fileID: 1330106455588523437}
+  - component: {fileID: 6127913792644756422}
+  - component: {fileID: 3452569457567739169}
+  m_Layer: 0
+  m_Name: MedievalToolBroom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3583310307587934913
+--- !u!4 &1330106455588523437
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 247972908418382188}
+  m_GameObject: {fileID: 6294039730110083715}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &1309412455900939834
+--- !u!33 &6127913792644756422
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 247972908418382188}
-  m_Mesh: {fileID: 1616382711435183797, guid: 0bcfbec99a1d5c4418623497d3db0ad6, type: 3}
---- !u!23 &6086729794771515860
+  m_GameObject: {fileID: 6294039730110083715}
+  m_Mesh: {fileID: 6169928966953541961, guid: 36685183e57c3e747a8860b44e6348fb, type: 3}
+--- !u!23 &3452569457567739169
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 247972908418382188}
+  m_GameObject: {fileID: 6294039730110083715}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -59,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bfc3e5d9bb5b49b45bdb9279870091f8, type: 2}
+  - {fileID: 2100000, guid: 308758bcb1d0b8a4c843c4013a0fd724, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
