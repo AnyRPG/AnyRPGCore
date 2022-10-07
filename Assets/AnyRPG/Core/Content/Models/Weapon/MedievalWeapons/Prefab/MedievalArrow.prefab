@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3902445716766942527}
   - component: {fileID: 1282596797435580917}
   m_Layer: 0
-  m_Name: arrow_1
+  m_Name: MedievalArrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,9 +25,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 778083206675836960}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.000000021855694, y: -0.00000004371139, z: 1.0165751e-15,
+    w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -39,7 +41,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 778083206675836960}
-  m_Mesh: {fileID: 7538587454160117101, guid: f23f26fc4ffbfd743ada4eaa7feecb77, type: 3}
+  m_Mesh: {fileID: -4355120405792203102, guid: 12f28953c5df73042b48fcd097833430, type: 3}
 --- !u!23 &1282596797435580917
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -51,6 +53,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
