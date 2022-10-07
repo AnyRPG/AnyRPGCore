@@ -36,21 +36,45 @@ using UnityEditor;
 using System.IO;
 
 namespace AnyRPG.Editor {
-    public class ReverseAnimationClip : ScriptableWizard {
+    public class ReverseAnimationClipWizard : ScriptableWizard {
+        
+        public AnimationClip sourceAnimationClip = null;
         public string NewFileName = "";
 
-        [MenuItem("Tools/AnyRPG/Reverse Animation Clip...")]
-        private static void ReverseAnimationClipWizard() {
-            ScriptableWizard.DisplayWizard<ReverseAnimationClip>("Reverse Animation Clip...", "Reverse");
+        private const string wizardTitle = "Reverse Animation Clip Wizard";
+
+
+        [MenuItem("Tools/AnyRPG/Reverse Animation Clip")]
+        private static void CreateWizard() {
+            ScriptableWizard.DisplayWizard<ReverseAnimationClipWizard>("Reverse Animation Clip", "Reverse");
         }
 
         private void OnWizardCreate() {
+
+            EditorUtility.DisplayProgressBar(wizardTitle, "Beginning Operation...", 0.2f);
+
+            string filePath = ReverseAnimationClip();
+
+            EditorUtility.ClearProgressBar();
+
+            if (filePath != null) {
+                EditorUtility.DisplayDialog(wizardTitle, wizardTitle + " Complete!\nThe new animation clip can be found at " + filePath, "OK");
+            } else {
+                EditorUtility.DisplayDialog(wizardTitle, wizardTitle + " Failed! There was an error!", "OK");
+            }
+
+        }
+
+        private string ReverseAnimationClip() {
+
+            EditorUtility.DisplayProgressBar(wizardTitle, "Getting Animation Clip Path...", 0.4f);
+
             string directoryPath =
-                Path.GetDirectoryName(AssetDatabase.GetAssetPath(Selection.activeObject));
+                Path.GetDirectoryName(AssetDatabase.GetAssetPath(sourceAnimationClip));
             string fileName =
-                Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject));
+                Path.GetFileName(AssetDatabase.GetAssetPath(sourceAnimationClip));
             string fileExtension =
-                Path.GetExtension(AssetDatabase.GetAssetPath(Selection.activeObject));
+                Path.GetExtension(AssetDatabase.GetAssetPath(sourceAnimationClip));
             fileName = fileName.Split('.')[0];
 
             string copiedFilePath = "";
@@ -62,17 +86,21 @@ namespace AnyRPG.Editor {
 
             AnimationClip originalClip = GetSelectedClip();
 
+            EditorUtility.DisplayProgressBar(wizardTitle, "Copying Animation Clip...", 0.6f);
+
             AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(Selection.activeObject), copiedFilePath);
 
             AnimationClip reversedClip = (AnimationClip)AssetDatabase.LoadAssetAtPath(copiedFilePath, typeof(AnimationClip));
 
             if (originalClip == null) {
-                return;
+                return null;
             }
+
+            EditorUtility.DisplayProgressBar(wizardTitle, "Reversing Animation Clip...", 0.8f);
 
             float clipLength = originalClip.length;
             EditorCurveBinding[] curveBindings = AnimationUtility.GetCurveBindings(originalClip);
-            Debug.Log(curveBindings.Length);
+            //Debug.Log(curveBindings.Length);
             reversedClip.ClearCurves();
             foreach (EditorCurveBinding binding in curveBindings) {
                 AnimationCurve curve = AnimationUtility.GetEditorCurve(originalClip, binding);
@@ -93,6 +121,9 @@ namespace AnyRPG.Editor {
                 reversedClip.SetCurve(binding.path, binding.type, binding.propertyName, curve);
             }
 
+            EditorUtility.DisplayProgressBar(wizardTitle, "Setting Animation Events...", 1.0f);
+
+
             AnimationEvent[] events = AnimationUtility.GetAnimationEvents(originalClip);
             if (events.Length > 0) {
                 for (int i = 0; i < events.Length; i++) {
@@ -101,8 +132,9 @@ namespace AnyRPG.Editor {
                 AnimationUtility.SetAnimationEvents(reversedClip, events);
             }
 
-            Debug.Log("[[ReverseAnimationClip.cs]] Successfully reversed " +
-            "animation clip " + fileName + ".");
+            Debug.Log("Successfully reversed animation clip " + fileName + ".");
+
+            return reversedClip.name;
         }
 
         private AnimationClip GetSelectedClip() {
@@ -110,6 +142,34 @@ namespace AnyRPG.Editor {
             if (clips.Length > 0) {
                 return clips[0] as AnimationClip;
             }
+            return null;
+        }
+        private void OnEnable() {
+            SetSelection();
+            Selection.selectionChanged += SetSelection;
+        }
+
+        private void OnDisable() {
+            Selection.selectionChanged -= SetSelection;
+        }
+
+        public void SetSelection() {
+            sourceAnimationClip = (AnimationClip)Selection.activeObject;
+            OnWizardUpdate();
+        }
+
+
+        void OnWizardUpdate() {
+            helpString = "Reverses an animation clip";
+            errorString = Validate();
+            isValid = (errorString == null || errorString == "");
+        }
+
+        string Validate() {
+            if (sourceAnimationClip == null) {
+                return "An animation clip must be selected";
+            }
+
             return null;
         }
     }

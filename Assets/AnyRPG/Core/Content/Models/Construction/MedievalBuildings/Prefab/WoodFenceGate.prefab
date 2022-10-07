@@ -74,21 +74,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b209d8fd0c498d4f841bcfeaee37de0, type: 3}
---- !u!1 &900500698004401609 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3394051578586993834, guid: 0b209d8fd0c498d4f841bcfeaee37de0,
-    type: 3}
-  m_PrefabInstance: {fileID: 2550496924264511843}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &7590289430970203792 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5346634178758854643, guid: 0b209d8fd0c498d4f841bcfeaee37de0,
-    type: 3}
-  m_PrefabInstance: {fileID: 2550496924264511843}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &620155607257770563 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3169992412228735776, guid: 0b209d8fd0c498d4f841bcfeaee37de0,
+    type: 3}
+  m_PrefabInstance: {fileID: 2550496924264511843}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &900500698004401609 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3394051578586993834, guid: 0b209d8fd0c498d4f841bcfeaee37de0,
     type: 3}
   m_PrefabInstance: {fileID: 2550496924264511843}
   m_PrefabAsset: {fileID: 0}
@@ -103,12 +97,18 @@ Animation:
   serializedVersion: 3
   m_Animation: {fileID: 0}
   m_Animations:
-  - {fileID: -7327283686885576249, guid: db1f01a8e9704614f831eb98e126050f, type: 3}
-  - {fileID: 7400000, guid: 5c91b2f0dba769d41a291df1ebf0c287, type: 2}
+  - {fileID: -7327283686885576249, guid: c5a01de34c122504aa39f4c9497157f2, type: 3}
+  - {fileID: 7400000, guid: 05e53a66b7c09c44faa736728074a8a5, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!1 &7590289430970203792 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5346634178758854643, guid: 0b209d8fd0c498d4f841bcfeaee37de0,
+    type: 3}
+  m_PrefabInstance: {fileID: 2550496924264511843}
+  m_PrefabAsset: {fileID: 0}
 --- !u!65 &4752511168450373041
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -120,8 +120,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.01763382, y: 0.013428, z: 0.001078009}
-  m_Center: {x: 0, y: 0.006, z: 0}
+  m_Size: {x: 1.763382, y: 1.342801, z: 0.1078016}
+  m_Center: {x: -0.04, y: 0.61, z: -0.00023972988}
 --- !u!114 &5808050142584798552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,11 +179,11 @@ MonoBehaviour:
     prerequisiteConditions: []
     switchOnly: 0
     animationComponent: {fileID: 1509314207710661954}
-    openAnimationClip: {fileID: -7327283686885576249, guid: db1f01a8e9704614f831eb98e126050f,
+    openAnimationClip: {fileID: -7327283686885576249, guid: c5a01de34c122504aa39f4c9497157f2,
       type: 3}
     openAudioClip: {fileID: 8300000, guid: f131d43dcc18ca549b7a878d5e1c9138, type: 3}
     openAudioProfile: 
-    closeAnimationClip: {fileID: 7400000, guid: 5c91b2f0dba769d41a291df1ebf0c287,
+    closeAnimationClip: {fileID: 7400000, guid: 05e53a66b7c09c44faa736728074a8a5,
       type: 2}
     closeAudioClip: {fileID: 8300000, guid: 0689bc336842fd941a458ef0e5a3cc99, type: 3}
     closeAudioProfile: 
