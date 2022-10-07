@@ -154,13 +154,15 @@ namespace AnyRPG.Editor {
         }
 
         public void SetSelection() {
-            sourceAnimationClip = (AnimationClip)Selection.activeObject;
+            if (Selection.activeObject != null) {
+                sourceAnimationClip = (AnimationClip)Selection.activeObject;
+            }
             OnWizardUpdate();
         }
 
 
         void OnWizardUpdate() {
-            helpString = "Reverses an animation clip";
+            helpString = "Creates a reversed copy of an animation clip";
             errorString = Validate();
             isValid = (errorString == null || errorString == "");
         }
