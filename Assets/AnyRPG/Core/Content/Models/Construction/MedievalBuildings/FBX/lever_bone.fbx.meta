@@ -5,7 +5,7 @@ ModelImporter:
   internalIDToNameTable:
   - first:
       74: -862385965564717406
-    second: leverActionOpen
+    second: lever_bone_open
   - first:
       74: 1487363572116119017
     second: lever_bone|anim_lever
@@ -44,7 +44,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: leverActionOpen
+      name: lever_bone_open
       takeName: leverAction
       internalID: 0
       firstFrame: 0

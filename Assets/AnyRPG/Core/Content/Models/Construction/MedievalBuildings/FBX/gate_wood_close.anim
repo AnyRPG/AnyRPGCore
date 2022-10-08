@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: wood_gate_close
+  m_Name: gate_wood_close
   serializedVersion: 6
   m_Legacy: 1
   m_Compressed: 0

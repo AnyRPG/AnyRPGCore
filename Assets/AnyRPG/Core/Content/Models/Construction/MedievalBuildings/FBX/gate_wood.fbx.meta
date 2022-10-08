@@ -5,7 +5,7 @@ ModelImporter:
   internalIDToNameTable:
   - first:
       74: -8091027984389603180
-    second: wood_gate_open
+    second: gate_wood_open
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -41,7 +41,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: wood_gate_open
+      name: gate_wood_open
       takeName: anim_gate_open
       internalID: 0
       firstFrame: 0
