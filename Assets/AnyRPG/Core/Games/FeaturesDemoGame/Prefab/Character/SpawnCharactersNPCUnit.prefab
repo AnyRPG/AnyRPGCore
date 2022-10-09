@@ -15,7 +15,7 @@ PrefabInstance:
     - target: {fileID: 1244625267202862565, guid: 84795616a4ed3404cbf6220d6f9091ff,
         type: 3}
       propertyPath: m_Name
-      value: SpawnCharactersNPCUnitTemplate
+      value: SpawnCharactersNPCUnit
       objectReference: {fileID: 0}
     - target: {fileID: 1244625267202862568, guid: 84795616a4ed3404cbf6220d6f9091ff,
         type: 3}
@@ -25,17 +25,17 @@ PrefabInstance:
     - target: {fileID: 1244625267202862568, guid: 84795616a4ed3404cbf6220d6f9091ff,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.9197147
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1244625267202862568, guid: 84795616a4ed3404cbf6220d6f9091ff,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.4680686
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1244625267202862568, guid: 84795616a4ed3404cbf6220d6f9091ff,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.142847
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1244625267202862568, guid: 84795616a4ed3404cbf6220d6f9091ff,
         type: 3}
@@ -45,17 +45,17 @@ PrefabInstance:
     - target: {fileID: 1244625267202862568, guid: 84795616a4ed3404cbf6220d6f9091ff,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1244625267202862568, guid: 84795616a4ed3404cbf6220d6f9091ff,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1244625267202862568, guid: 84795616a4ed3404cbf6220d6f9091ff,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1244625267202862568, guid: 84795616a4ed3404cbf6220d6f9091ff,
         type: 3}
@@ -100,7 +100,7 @@ PrefabInstance:
     - target: {fileID: 6541387636808619407, guid: 84795616a4ed3404cbf6220d6f9091ff,
         type: 3}
       propertyPath: m_UUID
-      value: fc4a4d0d-413d-46e5-9677-2857c40d8ea4
+      value: 634c195e-6fee-45a2-895a-5dfa01fa3b9b
       objectReference: {fileID: 0}
     - target: {fileID: 7831613615132644804, guid: 84795616a4ed3404cbf6220d6f9091ff,
         type: 3}
