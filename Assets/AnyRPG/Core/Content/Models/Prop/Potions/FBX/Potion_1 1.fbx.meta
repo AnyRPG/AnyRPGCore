@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4cda5daa68e2f424abb4069c769fa3aa
+guid: a6abe40de6e116b4a963d15562b96443
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
@@ -7,13 +7,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: CorkMat
-    second: {fileID: 2100000, guid: 127bcd28a5c0d9745a24eb64d271597c, type: 2}
+      name: Cork
+    second: {fileID: 2100000, guid: 7bb499dde1f1b484b883be336545c2e0, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: InkMat
-    second: {fileID: 2100000, guid: 17f16a84b47c6e041b78273553d8fd28, type: 2}
+      name: Potion1_Mat
+    second: {fileID: 2100000, guid: 37123e1391896804f9bf9594ef55a569, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
