@@ -30,6 +30,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.000017136334}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2528571425001709153}
   m_Father: {fileID: 1577600902358939125}
@@ -173,6 +174,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseClickSound: 1
   mouseHoverSound: 1
 --- !u!1 &1595193919759911717
 GameObject:
@@ -204,6 +206,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.000017136334}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1595193921225400488}
   m_Father: {fileID: 1577600902358939125}
@@ -347,6 +350,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseClickSound: 1
   mouseHoverSound: 1
 --- !u!1 &1595193921225400489
 GameObject:
@@ -357,7 +361,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1595193921225400488}
-  - component: {fileID: 1595193921225400492}
   - component: {fileID: 1595193921225400490}
   - component: {fileID: 4018803533102851719}
   m_Layer: 0
@@ -377,6 +380,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1595193919759911716}
   m_RootOrder: 0
@@ -386,14 +390,6 @@ RectTransform:
   m_AnchoredPosition: {x: 18.5, y: 0}
   m_SizeDelta: {x: -37, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!33 &1595193921225400492
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1595193921225400489}
-  m_Mesh: {fileID: 0}
 --- !u!222 &1595193921225400490
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -521,6 +517,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.000017136334}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6496074307349777344}
   m_Father: {fileID: 1577600902358939125}
@@ -664,6 +661,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseClickSound: 1
   mouseHoverSound: 1
 --- !u!1 &3983013924557802447
 GameObject:
@@ -695,6 +693,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4801597268921291658}
   - {fileID: 4279339243118316418}
@@ -761,6 +760,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  captureCamera: 0
   coloredUIElements: []
   addToWindowStack: 1
   userCloseable: 1
@@ -812,7 +812,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4279339241899778062}
-  - component: {fileID: 4279339241899778058}
   - component: {fileID: 4279339241899778060}
   - component: {fileID: 4995705017193691106}
   m_Layer: 0
@@ -832,6 +831,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4279339243118316418}
   m_RootOrder: 0
@@ -841,14 +841,6 @@ RectTransform:
   m_AnchoredPosition: {x: 18.5, y: 0}
   m_SizeDelta: {x: -37, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!33 &4279339241899778058
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4279339241899778063}
-  m_Mesh: {fileID: 0}
 --- !u!222 &4279339241899778060
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -976,6 +968,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.000017136334}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4279339241899778062}
   m_Father: {fileID: 1577600902358939125}
@@ -1119,6 +1112,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseClickSound: 1
   mouseHoverSound: 1
 --- !u!1 &4801597268921291659
 GameObject:
@@ -1150,6 +1144,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.000017136334}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4801597269334669318}
   m_Father: {fileID: 1577600902358939125}
@@ -1293,6 +1288,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseClickSound: 1
   mouseHoverSound: 1
 --- !u!1 &4801597269334669319
 GameObject:
@@ -1303,7 +1299,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4801597269334669318}
-  - component: {fileID: 4801597269334669314}
   - component: {fileID: 4801597269334669316}
   - component: {fileID: 8553854438288943389}
   m_Layer: 0
@@ -1323,6 +1318,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4801597268921291658}
   m_RootOrder: 0
@@ -1332,14 +1328,6 @@ RectTransform:
   m_AnchoredPosition: {x: 18.5, y: 0}
   m_SizeDelta: {x: -37, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!33 &4801597269334669314
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4801597269334669319}
-  m_Mesh: {fileID: 0}
 --- !u!222 &4801597269334669316
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1467,6 +1455,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.000017136334}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7087903793617240288}
   m_Father: {fileID: 1577600902358939125}
@@ -1610,6 +1599,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseClickSound: 1
   mouseHoverSound: 1
 --- !u!1 &6518110236966454446
 GameObject:
@@ -1620,7 +1610,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6496074307349777344}
-  - component: {fileID: 5295281877539221306}
   - component: {fileID: 1083606059203152338}
   - component: {fileID: 9220440787269219937}
   m_Layer: 0
@@ -1640,6 +1629,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4738124247059918460}
   m_RootOrder: 0
@@ -1649,14 +1639,6 @@ RectTransform:
   m_AnchoredPosition: {x: 18.5, y: 0}
   m_SizeDelta: {x: -37, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!33 &5295281877539221306
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6518110236966454446}
-  m_Mesh: {fileID: 0}
 --- !u!222 &1083606059203152338
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1763,7 +1745,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7087903793617240288}
-  - component: {fileID: 7343903019254557632}
   - component: {fileID: 8040305334085242376}
   - component: {fileID: 256255049884808386}
   m_Layer: 0
@@ -1783,6 +1764,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4532857046383876245}
   m_RootOrder: 0
@@ -1792,14 +1774,6 @@ RectTransform:
   m_AnchoredPosition: {x: 18.5, y: 0}
   m_SizeDelta: {x: -37, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!33 &7343903019254557632
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7582968315458777374}
-  m_Mesh: {fileID: 0}
 --- !u!222 &8040305334085242376
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1906,7 +1880,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2528571425001709153}
-  - component: {fileID: 5254709138622889680}
   - component: {fileID: 7836597577192880406}
   - component: {fileID: 6904881389538135838}
   m_Layer: 0
@@ -1926,6 +1899,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7890113713170977768}
   m_RootOrder: 0
@@ -1935,14 +1909,6 @@ RectTransform:
   m_AnchoredPosition: {x: 18.5, y: 0}
   m_SizeDelta: {x: -37, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!33 &5254709138622889680
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8951892965320982850}
-  m_Mesh: {fileID: 0}
 --- !u!222 &7836597577192880406
 CanvasRenderer:
   m_ObjectHideFlags: 0

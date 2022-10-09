@@ -30,6 +30,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4456449893282694923}
   m_Father: {fileID: 0}
@@ -91,6 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  captureCamera: 0
   coloredUIElements: []
   addToWindowStack: 1
   userCloseable: 1
@@ -138,7 +140,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4279339241899778062}
-  - component: {fileID: 4279339241899778058}
   - component: {fileID: 4279339241899778060}
   - component: {fileID: 4995705017193691106}
   m_Layer: 0
@@ -158,6 +159,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4279339243118316418}
   m_RootOrder: 0
@@ -167,14 +169,6 @@ RectTransform:
   m_AnchoredPosition: {x: 18.5, y: 0}
   m_SizeDelta: {x: -37, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!33 &4279339241899778058
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4279339241899778063}
-  m_Mesh: {fileID: 0}
 --- !u!222 &4279339241899778060
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -302,6 +296,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4279339241899778062}
   m_Father: {fileID: 4456449893282694923}
@@ -445,6 +440,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseClickSound: 1
   mouseHoverSound: 1
 --- !u!1 &4801597268921291659
 GameObject:
@@ -476,6 +472,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4801597269334669318}
   m_Father: {fileID: 4456449893282694923}
@@ -619,6 +616,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseClickSound: 1
   mouseHoverSound: 1
 --- !u!1 &4801597269334669319
 GameObject:
@@ -629,7 +627,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4801597269334669318}
-  - component: {fileID: 4801597269334669314}
   - component: {fileID: 4801597269334669316}
   - component: {fileID: 8553854438288943389}
   m_Layer: 0
@@ -649,6 +646,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4801597268921291658}
   m_RootOrder: 0
@@ -658,14 +656,6 @@ RectTransform:
   m_AnchoredPosition: {x: 18.5, y: 0}
   m_SizeDelta: {x: -37, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!33 &4801597269334669314
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4801597269334669319}
-  m_Mesh: {fileID: 0}
 --- !u!222 &4801597269334669316
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -789,6 +779,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4801597268921291658}
   - {fileID: 4279339243118316418}
@@ -831,6 +822,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7087903793617240288}
   m_Father: {fileID: 4456449893282694923}
@@ -974,6 +966,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseClickSound: 1
   mouseHoverSound: 1
 --- !u!1 &7582968315458777374
 GameObject:
@@ -984,7 +977,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7087903793617240288}
-  - component: {fileID: 7343903019254557632}
   - component: {fileID: 8040305334085242376}
   - component: {fileID: 256255049884808386}
   m_Layer: 0
@@ -1004,6 +996,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4532857046383876245}
   m_RootOrder: 0
@@ -1013,14 +1006,6 @@ RectTransform:
   m_AnchoredPosition: {x: 18.5, y: 0}
   m_SizeDelta: {x: -37, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!33 &7343903019254557632
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7582968315458777374}
-  m_Mesh: {fileID: 0}
 --- !u!222 &8040305334085242376
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5639455642202334476}
-  - component: {fileID: 5639455642202334472}
   - component: {fileID: 5639455642202334474}
   - component: {fileID: 8848467953369085684}
   m_Layer: 0
@@ -29,6 +28,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5639455643195110259}
   m_RootOrder: 0
@@ -38,14 +38,6 @@ RectTransform:
   m_AnchoredPosition: {x: 18.499994, y: 0}
   m_SizeDelta: {x: -37.00001, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!33 &5639455642202334472
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5639455642202334479}
-  m_Mesh: {fileID: 0}
 --- !u!222 &5639455642202334474
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -152,7 +144,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5639455642326266358}
-  - component: {fileID: 5639455642326266354}
   - component: {fileID: 5639455642326266356}
   - component: {fileID: 5406278537795764886}
   m_Layer: 0
@@ -172,6 +163,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.0000040977993}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5639455643467715893}
   m_RootOrder: 0
@@ -181,14 +173,6 @@ RectTransform:
   m_AnchoredPosition: {x: 18.5, y: 0}
   m_SizeDelta: {x: -37, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!33 &5639455642326266354
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5639455642326266345}
-  m_Mesh: {fileID: 0}
 --- !u!222 &5639455642326266356
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -318,6 +302,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5639455643982228844}
   m_Father: {fileID: 5639455643776056598}
@@ -470,6 +455,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -494,6 +480,8 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseClickSound: 1
+  mouseHoverSound: 1
 --- !u!1 &5639455643195110248
 GameObject:
   m_ObjectHideFlags: 0
@@ -526,6 +514,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.000042095777}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5639455642202334476}
   m_Father: {fileID: 5639455643776056598}
@@ -678,6 +667,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -702,6 +692,8 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseClickSound: 1
+  mouseHoverSound: 1
 --- !u!1 &5639455643467715882
 GameObject:
   m_ObjectHideFlags: 0
@@ -734,6 +726,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.000021979211}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5639455642326266358}
   m_Father: {fileID: 5639455643776056598}
@@ -886,6 +879,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -910,6 +904,8 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseClickSound: 1
+  mouseHoverSound: 1
 --- !u!1 &5639455643776056585
 GameObject:
   m_ObjectHideFlags: 0
@@ -940,6 +936,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5639455643467715893}
   - {fileID: 5639455643195110259}
@@ -965,10 +962,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  captureCamera: 0
   coloredUIElements: []
   addToWindowStack: 1
   userCloseable: 1
   focusFirstButtonOnOpen: 1
+  focusCurrentButtonOnOpen: 0
   focusActiveSubPanel: 0
   uINavigationControllers:
   - {fileID: 6017155025091070826}
@@ -1045,7 +1044,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5639455643982228844}
-  - component: {fileID: 5639455643982228840}
   - component: {fileID: 5639455643982228842}
   - component: {fileID: 8381756797354483383}
   m_Layer: 0
@@ -1065,6 +1063,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5639455642352982214}
   m_RootOrder: 0
@@ -1074,14 +1073,6 @@ RectTransform:
   m_AnchoredPosition: {x: 18.5, y: 0}
   m_SizeDelta: {x: -37, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!33 &5639455643982228840
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5639455643982228847}
-  m_Mesh: {fileID: 0}
 --- !u!222 &5639455643982228842
 CanvasRenderer:
   m_ObjectHideFlags: 0
