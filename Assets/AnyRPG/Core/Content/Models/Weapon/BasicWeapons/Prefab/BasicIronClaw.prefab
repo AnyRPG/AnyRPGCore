@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3298794487711402249}
   - component: {fileID: 1902902296967186092}
   - component: {fileID: 4435061327237608038}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: BasicIronClaw
   m_TagString: Untagged
   m_Icon: {fileID: 0}

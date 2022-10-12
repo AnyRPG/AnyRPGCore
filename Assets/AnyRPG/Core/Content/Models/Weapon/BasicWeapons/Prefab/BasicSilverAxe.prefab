@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5042242612785056532}
   - component: {fileID: 1071424063158930849}
   - component: {fileID: 458008676556151032}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: BasicSilverAxe
   m_TagString: Untagged
   m_Icon: {fileID: 0}

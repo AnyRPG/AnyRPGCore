@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3624492114586816033}
   - component: {fileID: 6660974714198323791}
   - component: {fileID: 247696364034936738}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: MedievalOneHandAxe
   m_TagString: Untagged
   m_Icon: {fileID: 0}

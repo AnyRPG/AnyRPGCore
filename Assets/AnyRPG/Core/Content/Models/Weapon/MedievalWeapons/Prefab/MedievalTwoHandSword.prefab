@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1810514597584638593}
   - component: {fileID: 5672626131568298576}
   - component: {fileID: 367121121240593924}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: MedievalTwoHandSword
   m_TagString: Untagged
   m_Icon: {fileID: 0}

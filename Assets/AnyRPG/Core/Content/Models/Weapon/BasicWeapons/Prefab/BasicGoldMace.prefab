@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7830326347393511717}
   - component: {fileID: 5992894150982594936}
   - component: {fileID: 3312483187274114459}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: BasicGoldMace
   m_TagString: Untagged
   m_Icon: {fileID: 0}

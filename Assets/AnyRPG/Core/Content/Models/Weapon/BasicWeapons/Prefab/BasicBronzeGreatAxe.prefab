@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5351998525342965149}
   - component: {fileID: 7015044741382828959}
   - component: {fileID: 2084248079896848596}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: BasicBronzeGreatAxe
   m_TagString: Untagged
   m_Icon: {fileID: 0}

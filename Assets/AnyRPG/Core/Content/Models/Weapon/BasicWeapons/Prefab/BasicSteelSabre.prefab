@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8298633539838815574}
   - component: {fileID: 4856108575357632703}
   - component: {fileID: 3913853968640099070}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: BasicSteelSabre
   m_TagString: Untagged
   m_Icon: {fileID: 0}

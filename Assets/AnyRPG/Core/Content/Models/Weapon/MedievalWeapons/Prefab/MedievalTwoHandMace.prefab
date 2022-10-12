@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3622883207094603226}
   - component: {fileID: 5786717463895369493}
   - component: {fileID: 9196324348555806703}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: MedievalTwoHandMace
   m_TagString: Untagged
   m_Icon: {fileID: 0}

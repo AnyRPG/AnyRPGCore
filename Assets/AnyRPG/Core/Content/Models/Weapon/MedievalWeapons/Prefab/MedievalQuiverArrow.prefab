@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 428247772495107128}
   - component: {fileID: 4630473475626055951}
   - component: {fileID: 535113555647546967}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: MedievalQuiverArrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}

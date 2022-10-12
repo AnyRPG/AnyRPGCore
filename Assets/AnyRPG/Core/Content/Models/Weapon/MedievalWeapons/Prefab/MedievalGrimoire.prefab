@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4994317645370608786}
   - component: {fileID: 3676570196674749482}
   - component: {fileID: 3440744481873307563}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: MedievalGrimoire
   m_TagString: Untagged
   m_Icon: {fileID: 0}

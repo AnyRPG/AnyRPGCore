@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7739603667486454968}
   - component: {fileID: 4048667988823704902}
   - component: {fileID: 7196186902819562877}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: MedievalShield
   m_TagString: Untagged
   m_Icon: {fileID: 0}

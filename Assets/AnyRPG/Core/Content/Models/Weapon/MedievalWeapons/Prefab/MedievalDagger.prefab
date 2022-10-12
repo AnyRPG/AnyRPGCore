@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6536020715163204305}
   - component: {fileID: 5270947322543732142}
   - component: {fileID: 3606923251442924860}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: MedievalDagger
   m_TagString: Untagged
   m_Icon: {fileID: 0}

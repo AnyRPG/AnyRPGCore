@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 218086579372339376}
   - component: {fileID: 7404815199392779356}
   - component: {fileID: 8034217706744646216}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: MedievalCrossbow
   m_TagString: Untagged
   m_Icon: {fileID: 0}

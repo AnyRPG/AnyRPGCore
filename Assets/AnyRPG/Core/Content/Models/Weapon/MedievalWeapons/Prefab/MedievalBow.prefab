@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3078836038791854797}
   - component: {fileID: 1082210146798475767}
   - component: {fileID: 318243843740622720}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: MedievalBow
   m_TagString: Untagged
   m_Icon: {fileID: 0}

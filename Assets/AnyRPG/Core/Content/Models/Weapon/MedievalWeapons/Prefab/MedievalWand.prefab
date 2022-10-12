@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4725669887834920916}
   - component: {fileID: 7334647460499288500}
   - component: {fileID: 779611449692506139}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: MedievalWand
   m_TagString: Untagged
   m_Icon: {fileID: 0}

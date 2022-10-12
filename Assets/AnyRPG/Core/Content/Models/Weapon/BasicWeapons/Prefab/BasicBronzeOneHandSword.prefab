@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1042428588209980787}
   - component: {fileID: 7514031149224009457}
   - component: {fileID: 4618999710161569847}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: BasicBronzeOneHandSword
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8778894288503392758}
   - component: {fileID: 4381732113925944052}
   - component: {fileID: 4298063161821461637}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: BasicGoldTwoHandSword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
