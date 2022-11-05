@@ -1,8 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-[AttributeUsage(AttributeTargets.Field)]
-public class SerializeReferenceMenuAttribute : PropertyAttribute
-{
-    
+namespace AnyRPG {
+
+    [AttributeUsage(AttributeTargets.Field)]
+    public class SerializeReferenceMenuAttribute : PropertyAttribute {
+
+    }
 }
+

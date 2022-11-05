@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEditor;
 
-namespace AnyRPG {
+namespace AnyRPG.Editor {
     public class AnimationProfileWizard : ScriptableWizard {
 
         // a reference to the systemConfigurationManager found in the currently open scene, for automatic determination of the game name

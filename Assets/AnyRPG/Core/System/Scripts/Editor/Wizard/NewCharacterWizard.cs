@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
-namespace AnyRPG {
+namespace AnyRPG.Editor {
     public class NewCharacterWizard : ScriptableWizard {
 
         private const string pathToDefaultCharacterUnitPrefab = "/AnyRPG/Core/System/Prefabs/Character/Unit/DefaultCharacterUnit.prefab";
