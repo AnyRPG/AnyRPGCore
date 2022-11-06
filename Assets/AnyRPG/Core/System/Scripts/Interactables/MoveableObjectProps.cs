@@ -29,7 +29,7 @@ namespace AnyRPG {
 
         [Tooltip("Degrees Per Second")]
         [SerializeField]
-        private float rotationSpeed = 45f;
+        private float rotationSpeed = 90f;
 
         [Tooltip("Amount of time to delay inbetween open and close actions when looping")]
         [SerializeField]
