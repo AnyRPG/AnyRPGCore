@@ -123,6 +123,12 @@ namespace AnyRPG {
                 }
             }
             if (returnValue != null) {
+                // reset rect transform scale if one exists to prevent bug of removed rect transforms keeping UI scale and infinitely shrinking or expanding
+                RectTransform rectTransform = returnValue.GetComponent<RectTransform>();
+                if (rectTransform != null) {
+                    rectTransform.localScale = Vector3.one;
+                }
+
                 returnValue.SendMessage("OnGetObjectFromPool", SendMessageOptions.DontRequireReceiver);
             }
             return returnValue;
