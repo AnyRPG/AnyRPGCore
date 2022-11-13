@@ -94,6 +94,8 @@ namespace AnyRPG {
 
                 Handles.BeginGUI();
 
+                // all dimension calculations below are scaled by EditorGUIUtility.pixelsPerPoint
+                // this takes windows display scaling into account (eg, scaling everything by 150% on a 4k laptop monitor so things aren't too tiny)
                 int sourceX = (int)(((SceneView.currentDrawingSceneView.camera.pixelWidth / 2f) - (width / 2f) - borderWidth) / EditorGUIUtility.pixelsPerPoint);
                 int sourceY = (int)(((SceneView.currentDrawingSceneView.camera.pixelHeight / 2f) - (height / 2f) - borderWidth) / EditorGUIUtility.pixelsPerPoint);
                 //Debug.Log("sourceX: " + sourceX + " sourceY: " + sourceY + " screenWidth: " + Screen.width + " screenHeight: " + Screen.height + " pixelHeight: " + SceneView.currentDrawingSceneView.camera.pixelHeight + " pixelWidth: " + SceneView.currentDrawingSceneView.camera.pixelWidth);
