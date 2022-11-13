@@ -94,17 +94,17 @@ namespace AnyRPG {
 
                 Handles.BeginGUI();
 
-                int sourceX = (SceneView.currentDrawingSceneView.camera.pixelWidth / 2) - (width / 2) - borderWidth;
-                int sourceY = (SceneView.currentDrawingSceneView.camera.pixelHeight / 2) - (height / 2) - borderWidth;
+                int sourceX = (int)(((SceneView.currentDrawingSceneView.camera.pixelWidth / 2f) - (width / 2f) - borderWidth) / EditorGUIUtility.pixelsPerPoint);
+                int sourceY = (int)(((SceneView.currentDrawingSceneView.camera.pixelHeight / 2f) - (height / 2f) - borderWidth) / EditorGUIUtility.pixelsPerPoint);
                 //Debug.Log("sourceX: " + sourceX + " sourceY: " + sourceY + " screenWidth: " + Screen.width + " screenHeight: " + Screen.height + " pixelHeight: " + SceneView.currentDrawingSceneView.camera.pixelHeight + " pixelWidth: " + SceneView.currentDrawingSceneView.camera.pixelWidth);
-                GUILayout.BeginArea(new Rect(sourceX, sourceY, width + (borderWidth * 2), height + (borderWidth * 2)), GUIStyle.none);
+                GUILayout.BeginArea(new Rect(sourceX, sourceY, (width + (borderWidth * 2)) / EditorGUIUtility.pixelsPerPoint, (height + (borderWidth * 2)) / EditorGUIUtility.pixelsPerPoint), GUIStyle.none);
                 GUIStyle gUIStyle = new GUIStyle();
                 gUIStyle.normal.background = (Texture2D)frameTexture;
                 gUIStyle.border.left = borderWidth;
                 gUIStyle.border.right = borderWidth;
                 gUIStyle.border.top = borderWidth;
                 gUIStyle.border.bottom = borderWidth;
-                GUILayout.Box(GUIContent.none, gUIStyle, GUILayout.MinWidth(width + (borderWidth * 2)), GUILayout.MinHeight(height + (borderWidth * 2)));
+                GUILayout.Box(GUIContent.none, gUIStyle, GUILayout.MinWidth((width + (borderWidth * 2)) / EditorGUIUtility.pixelsPerPoint), GUILayout.MinHeight((height + (borderWidth * 2)) / EditorGUIUtility.pixelsPerPoint));
 
                 GUILayout.EndArea();
 
