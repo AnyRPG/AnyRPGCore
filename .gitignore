@@ -85,6 +85,8 @@ Assets/TextMesh*
 Assets/UMA*
 Assets/UnusedExternalContent*
 AssetBundles/
+*.wav
+*.wav.meta
 
 # AnyRPG User Created Game Content
 Assets/Games*
