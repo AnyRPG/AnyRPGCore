@@ -34,5 +34,5 @@ MonoBehaviour:
   craftAbilityName: Blacksmithing
   holdableObjectList:
   - holdableObjectName: Steel Ingot
-    useUniversalAttachment: 0
-    attachmentName: 
+    useUniversalAttachment: 1
+    attachmentName: Left Hand
