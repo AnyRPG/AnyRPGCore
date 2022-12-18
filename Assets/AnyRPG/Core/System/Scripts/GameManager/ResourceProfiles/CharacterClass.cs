@@ -51,7 +51,7 @@ namespace AnyRPG {
 
         [Header("Pet Management")]
 
-        [Tooltip("The names of the equipment that will be worn by this class when a new game is started")]
+        [Tooltip("Unit types that this character class is able to have as pets.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(UnitType))]
         private List<string> validPetTypes = new List<string>();
