@@ -170,6 +170,7 @@ namespace AnyRPG {
             unitController.RigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             unitController.RigidBody.isKinematic = false;
             unitController.RigidBody.useGravity = true;
+            unitController.RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
             unitController.FreezeRotation();
 
             // testing - this used to disable the collider

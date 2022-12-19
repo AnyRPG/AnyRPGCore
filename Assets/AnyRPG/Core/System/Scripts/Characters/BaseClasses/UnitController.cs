@@ -513,6 +513,7 @@ namespace AnyRPG {
 
             // prevent preview unit from moving around
             if (rigidBody != null) {
+                rigidBody.interpolation = RigidbodyInterpolation.None;
                 rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
                 rigidBody.isKinematic = true;
                 rigidBody.constraints = RigidbodyConstraints.FreezeAll;
@@ -587,6 +588,7 @@ namespace AnyRPG {
             if (myCollider != null) {
                 myCollider.isTrigger = false;
             }
+            rigidBody.interpolation = RigidbodyInterpolation.Interpolate;
             rigidBody.isKinematic = false;
             rigidBody.useGravity = true;
             rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
@@ -608,6 +610,7 @@ namespace AnyRPG {
             rigidBody.isKinematic = false;
             rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+            rigidBody.interpolation = RigidbodyInterpolation.Interpolate;
 
             myCollider.isTrigger = false;
 
@@ -655,6 +658,7 @@ namespace AnyRPG {
             }
             EnableAgent();
 
+            rigidBody.interpolation = RigidbodyInterpolation.None;
             if (unitProfile != null && unitProfile.IsMobile == true) {
                 // ensure player cannot physically push AI units around
                 // first set collision mode to avoid unity errors about dynamic detection not supported for kinematic rigidbodies
