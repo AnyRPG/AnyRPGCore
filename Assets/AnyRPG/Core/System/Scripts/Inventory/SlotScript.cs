@@ -516,6 +516,11 @@ namespace AnyRPG {
         /// </summary>
         private void UpdateSlot() {
             //Debug.Log("SlotScript.UpdateSlot(): Update Slot called on slot " + GetInstanceID().ToString() + "; MyItem: " + (MyItem != null ? MyItem.DisplayName : "null"));
+            if (inventorySlot == null) {
+                // the inventory slot that this script was referencing no longer exists
+                return;
+            }
+
             SetDescribable(inventorySlot.Item);
             uIManager.UpdateStackSize(this, Count);
             SetBackGroundColor();

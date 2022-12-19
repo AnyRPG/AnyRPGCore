@@ -294,7 +294,7 @@ namespace AnyRPG {
             //Debug.Log("InventoryManager.RemoveBag(" + bag.DisplayName + ", " + clearOnly + ")");
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.Bag == bag) {
-                    ProcessRemovebag(bagNode, bag, true, clearOnly);
+                    ProcessRemovebag(bagNode, bag, false, clearOnly);
                     return;
                 }
             }
@@ -338,23 +338,52 @@ namespace AnyRPG {
         public void SwapBags(Bag oldBag, Bag newBag) {
             int newSlotCount = (TotalSlotCount - oldBag.Slots) + newBag.Slots;
 
-            if (newSlotCount - FullSlotCount >= 0) {
-                // do swap
-                //List<Item> bagItems = oldBag.MyBagPanel.GetItems();
-                List<Item> bagItems = oldBag.BagNode.GetItems();
-
-                newBag.BagNode = oldBag.BagNode;
-                RemoveBag(oldBag);
-                newBag.Use();
-                foreach (Item item in bagItems) {
-                    if (item != newBag) {
-                        AddItem(item, newBag.BagNode.IsBankNode);
-                    }
-                }
-                AddItem(oldBag, oldBag.BagNode.IsBankNode);
-                handScript.Drop();
-                fromSlot = null;
+            // if there will not be enough space in the inventory after the bag swap, don't swap
+            if (newSlotCount - FullSlotCount < 0) {
+                return;
             }
+
+            // check if the new bag is in the old bag
+            bool bagInBag = false;
+            if (oldBag.BagNode.InventorySlots.Contains(newBag.Slot)) {
+                bagInBag = true;
+            }
+
+            // do swap
+            //List<Item> bagItems = oldBag.MyBagPanel.GetItems();
+            List<Item> bagItems = oldBag.BagNode.GetItems();
+
+            BagNode oldBagNode = oldBag.BagNode;
+            InventorySlot oldSlot = newBag.Slot;
+            //newBag.BagNode = oldBag.BagNode;
+            bool isBankNode = oldBag.BagNode.IsBankNode;
+
+            // remove bag and do not add items back since the new bag hasn't been added yet and the inventory may not have the space
+            RemoveBag(oldBag, true);
+
+            // clear the slot the new bag is in so the bag doesn't get duplicated
+            newBag.Slot.Clear();
+
+            // make space by adding the new bag
+            AddBag(newBag, oldBagNode);
+
+            if (bagInBag == false) {
+                // add the old bag into the same inventory slot
+                oldSlot.AddItem(oldBag);
+            } else {
+                // add the old bag into any available inventory slot
+                AddItem(oldBag, isBankNode);
+            }
+
+            // add items back now that the space exists
+            foreach (Item item in bagItems) {
+                if (item != newBag) {
+                    AddItem(item, newBag.BagNode.IsBankNode);
+                }
+            }
+
+            handScript.Drop();
+            fromSlot = null;
         }
 
         /// <summary>
@@ -377,6 +406,10 @@ namespace AnyRPG {
             }
             //Debug.Log("About to attempt placeInEmpty");
             return PlaceInEmpty(item, addToBank);
+        }
+
+        public bool AddInventoryItem(Item item, InventorySlot inventorySlot) {
+            return inventorySlot.AddItem(item);
         }
 
         public bool AddInventoryItem(Item item, int slotIndex) {

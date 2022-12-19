@@ -103,7 +103,7 @@ namespace AnyRPG {
 
         private void ClearMoveable() {
             //Debug.Log("HandScript.ClearMoveable()");
-            if (playerManager.MyCharacter.CharacterInventoryManager.FromSlot != null) {
+            if (playerManager.MyCharacter.CharacterInventoryManager.FromSlot?.InventorySlot != null) {
                 playerManager.MyCharacter.CharacterInventoryManager.FromSlot.PutItemBack();
             }
             Moveable = null;
