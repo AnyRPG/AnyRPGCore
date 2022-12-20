@@ -23,7 +23,6 @@ MonoBehaviour:
   resources:
   - {fileID: 11400000, guid: 439533eb5fcde1f4cbe1b74967e3edf6, type: 2}
   - {fileID: 11400000, guid: e492a1acf56bffc4e91b61f635f5c04b, type: 2}
-  - {fileID: 11400000, guid: 9df17ac729efe6345b9bfb45404d3780, type: 2}
   prefabs:
   - {fileID: 5392010216800778309, guid: 171a07a0bedf5c64194e8b1a4bdc288f, type: 3}
   dependencies:

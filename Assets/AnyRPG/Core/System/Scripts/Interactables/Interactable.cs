@@ -430,10 +430,11 @@ namespace AnyRPG {
                 return;
             }
             //if ((spawnReference == null || spawnReference.activeSelf == false) && SpawnPrerequisitesMet == false) {
-            if (spawnReference == null || spawnReference.activeSelf == false) {
-                DisableInteraction();
-            } else {
+            if ((spawnReference != null && spawnReference.activeSelf == true)
+                || (spawnReference == null && prefabProfile == null)) {
                 EnableInteraction();
+            } else {
+                DisableInteraction();
             }
 
             // give interaction panel a chance to update or close
@@ -447,7 +448,7 @@ namespace AnyRPG {
         }
 
         public override void Spawn() {
-            Debug.Log(gameObject.name + ".Interactable.Spawn()");
+            //Debug.Log(gameObject.name + ".Interactable.Spawn()");
             base.Spawn();
 
             EnableInteraction();

@@ -12275,7 +12275,7 @@ MonoBehaviour:
   spawnDelay: 0
   spawnReference: {fileID: 0}
   despawnObject: 0
-  prerequisiteConditions: []
+  spawnPrerequisites: []
   showTooltip: 0
   interactableName: 
   glowOnMouseOver: 0
@@ -15157,11 +15157,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: HerbalismRedFlowerNode
       objectReference: {fileID: 0}
-    - target: {fileID: 5713609159632931334, guid: 9522d6676a75adf4c8177b145188629b,
-        type: 3}
-      propertyPath: checkOptionsToSpawn
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9522d6676a75adf4c8177b145188629b, type: 3}
 --- !u!4 &493848865 stripped
@@ -15841,11 +15836,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HerbalismOrangeFlowerNode
-      objectReference: {fileID: 0}
-    - target: {fileID: 5713609159632931334, guid: 945314a320f252c4699153992f0db174,
-        type: 3}
-      propertyPath: checkOptionsToSpawn
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 945314a320f252c4699153992f0db174, type: 3}
@@ -23853,11 +23843,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: HerbalismVioletFlowerNode
       objectReference: {fileID: 0}
-    - target: {fileID: 5713609159632931334, guid: 6a9cb46018d501f4684f583560296aa9,
-        type: 3}
-      propertyPath: checkOptionsToSpawn
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6a9cb46018d501f4684f583560296aa9, type: 3}
 --- !u!4 &617687097 stripped
@@ -24166,7 +24151,7 @@ MonoBehaviour:
   spawnDelay: 0
   spawnReference: {fileID: 0}
   despawnObject: 0
-  prerequisiteConditions: []
+  spawnPrerequisites: []
   showTooltip: 0
   interactableName: 
   glowOnMouseOver: 0
@@ -26853,11 +26838,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HerbalismYellowFlowerNode
-      objectReference: {fileID: 0}
-    - target: {fileID: 5713609159632931334, guid: f503d42e4c357c2489dcc0241fa15a2d,
-        type: 3}
-      propertyPath: checkOptionsToSpawn
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f503d42e4c357c2489dcc0241fa15a2d, type: 3}
@@ -33158,7 +33138,7 @@ MonoBehaviour:
   spawnDelay: 0
   spawnReference: {fileID: 0}
   despawnObject: 0
-  prerequisiteConditions: []
+  spawnPrerequisites: []
   showTooltip: 0
   interactableName: 
   glowOnMouseOver: 0
@@ -38860,16 +38840,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: HerbalismFlaxNode
       objectReference: {fileID: 0}
-    - target: {fileID: 5713609159632931334, guid: 58e44fb37efa40745b40c90d8a375352,
-        type: 3}
-      propertyPath: checkOptionsToSpawn
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5713609159632931334, guid: 58e44fb37efa40745b40c90d8a375352,
-        type: 3}
-      propertyPath: despawnRequiresNoValidOption
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 58e44fb37efa40745b40c90d8a375352, type: 3}
 --- !u!4 &1088027021 stripped
@@ -42514,11 +42484,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: HerbalismBrownFlowerNode
       objectReference: {fileID: 0}
-    - target: {fileID: 5713609159632931334, guid: 83a8c33b8ed57bd4ebcacadc7ed95af2,
-        type: 3}
-      propertyPath: checkOptionsToSpawn
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 83a8c33b8ed57bd4ebcacadc7ed95af2, type: 3}
 --- !u!4 &1205030897 stripped
@@ -42823,11 +42788,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HerbalismGreenFlowerNode
-      objectReference: {fileID: 0}
-    - target: {fileID: 5713609159632931334, guid: a9e4dcdbe3e03c74e8925392d62b72e3,
-        type: 3}
-      propertyPath: checkOptionsToSpawn
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a9e4dcdbe3e03c74e8925392d62b72e3, type: 3}
@@ -47052,7 +47012,7 @@ MonoBehaviour:
   spawnDelay: 0
   spawnReference: {fileID: 0}
   despawnObject: 0
-  prerequisiteConditions: []
+  spawnPrerequisites: []
   showTooltip: 1
   interactableName: Pressure Switch 2
   glowOnMouseOver: 1
@@ -47353,11 +47313,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HerbalismCyanFlowerNode
-      objectReference: {fileID: 0}
-    - target: {fileID: 5713609159632931334, guid: 85bd7b33a2a43354a9210ad1284cdc51,
-        type: 3}
-      propertyPath: checkOptionsToSpawn
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 85bd7b33a2a43354a9210ad1284cdc51, type: 3}
@@ -59235,7 +59190,7 @@ MonoBehaviour:
   spawnDelay: 0
   spawnReference: {fileID: 0}
   despawnObject: 0
-  prerequisiteConditions: []
+  spawnPrerequisites: []
   showTooltip: 1
   interactableName: Pressure Switch 1
   glowOnMouseOver: 1
@@ -61951,11 +61906,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: HerbalismHempNode
       objectReference: {fileID: 0}
-    - target: {fileID: 5713609159632931334, guid: bc3006c58c920c5468fd3b5b45667197,
-        type: 3}
-      propertyPath: checkOptionsToSpawn
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc3006c58c920c5468fd3b5b45667197, type: 3}
 --- !u!4 &1814583425 stripped
@@ -64293,11 +64243,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HerbalismWhiteFlowerNode
-      objectReference: {fileID: 0}
-    - target: {fileID: 5713609159632931334, guid: 1eca2f53a6f5396489d0d2376b3406fd,
-        type: 3}
-      propertyPath: checkOptionsToSpawn
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1eca2f53a6f5396489d0d2376b3406fd, type: 3}
@@ -67076,11 +67021,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: HerbalismBlueFlowerNode
       objectReference: {fileID: 0}
-    - target: {fileID: 5713609159632931334, guid: c3025c080be733f488f8d0bf5a305a55,
-        type: 3}
-      propertyPath: checkOptionsToSpawn
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3025c080be733f488f8d0bf5a305a55, type: 3}
 --- !u!4 &1989975784 stripped
@@ -68360,11 +68300,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HerbalismGrayFlowerNode
-      objectReference: {fileID: 0}
-    - target: {fileID: 5713609159632931334, guid: e47298eecb4d0a94ab3f91587ba5ce02,
-        type: 3}
-      propertyPath: checkOptionsToSpawn
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e47298eecb4d0a94ab3f91587ba5ce02, type: 3}
