@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AnyRPG {
     public class Spawnable : AutoConfiguredMonoBehaviour, IPrerequisiteOwner {
@@ -30,7 +31,8 @@ namespace AnyRPG {
 
         [Tooltip("Game conditions that must be satisfied for the object to spawn")]
         [SerializeField]
-        protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
+        [FormerlySerializedAs("prerequisiteConditions")]
+        protected List<PrerequisiteConditions> spawnPrerequisites = new List<PrerequisiteConditions>();
 
         // state management
         protected bool startHasRun = false;
@@ -53,10 +55,10 @@ namespace AnyRPG {
         public GameObject SpawnReference { get => spawnReference; set => spawnReference = value; }
         public PrefabProfile PrefabProfile { get => prefabProfile; set => prefabProfile = value; }
 
-        public virtual bool PrerequisitesMet {
+        public virtual bool SpawnPrerequisitesMet {
             get {
                 //Debug.Log(gameObject.name + ".Spawnable.MyPrerequisitesMet");
-                foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
+                foreach (PrerequisiteConditions prerequisiteCondition in spawnPrerequisites) {
                     if (!prerequisiteCondition.IsMet()) {
                         return false;
                     }
@@ -221,7 +223,7 @@ namespace AnyRPG {
 
         protected virtual bool CanDespawn() {
             //Debug.Log(gameObject.name + ".Spawnable.CanDespawn()");
-            if (!PrerequisitesMet) {
+            if (!SpawnPrerequisitesMet) {
                 return true;
             }
             return false;
@@ -229,7 +231,7 @@ namespace AnyRPG {
 
         public virtual bool CanSpawn() {
             //Debug.Log(gameObject.name + ".Spawnable.CanSpawn()");
-            if (PrerequisitesMet && prefabProfile?.Prefab != null) {
+            if (SpawnPrerequisitesMet && (prefabProfile?.Prefab != null || spawnReference != null)) {
                 return true;
             }
             return false;
@@ -271,8 +273,8 @@ namespace AnyRPG {
                 //spawnReference.transform.Rotate(usedRotation);
                 spawnReference.transform.localRotation = Quaternion.Euler(usedRotation);
             } else {
-                if (spawnReference != null) {
-                    //Debug.Log(gameObject.name + ".Spawnable.Spawn(): Already spawned");
+                if (spawnReference != null && spawnReference.activeSelf == false) {
+                    spawnReference.SetActive(true);
                 }
                 if (prefabProfile == null) {
                     //Debug.Log(gameObject.name + ".Spawnable.Spawn(): PrefabProfile is null");
@@ -290,8 +292,12 @@ namespace AnyRPG {
 
             if (spawnReference != null) {
                 //Debug.Log(gameObject.name + ".Spawnable.DestroySpawn(): destroying spawn");
-                objectPooler.ReturnObjectToPool(spawnReference);
-                spawnReference = null;
+
+                // this code has been replaced with just deactivating the gameobject
+                //objectPooler.ReturnObjectToPool(spawnReference);
+                //spawnReference = null;
+
+                spawnReference.SetActive(false);
             }
         }
 
@@ -300,18 +306,18 @@ namespace AnyRPG {
         }
 
         public bool PrerequisiteCheck() {
-            if (prerequisiteConditions != null && prerequisiteConditions.Count > 0) {
-                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+            if (spawnPrerequisites != null && spawnPrerequisites.Count > 0) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in spawnPrerequisites) {
                     if (tmpPrerequisiteConditions != null) {
                         tmpPrerequisiteConditions.UpdatePrerequisites(false);
                     }
                 }
-                if (PrerequisitesMet) {
+                if (SpawnPrerequisitesMet) {
                     HandlePrerequisiteUpdates();
                     return true;
                 }
             } else {
-                if (PrerequisitesMet) {
+                if (SpawnPrerequisitesMet) {
                     HandlePrerequisiteUpdates();
                     return true;
                 }
@@ -337,8 +343,8 @@ namespace AnyRPG {
                 }
             }
 
-            if (prerequisiteConditions != null) {
-                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+            if (spawnPrerequisites != null) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in spawnPrerequisites) {
                     if (tmpPrerequisiteConditions != null) {
                         tmpPrerequisiteConditions.SetupScriptableObjects(systemGameManager, this);
                     }
@@ -348,8 +354,8 @@ namespace AnyRPG {
         }
 
         public virtual void CleanupScriptableObjects() {
-            if (prerequisiteConditions != null) {
-                foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
+            if (spawnPrerequisites != null) {
+                foreach (PrerequisiteConditions tmpPrerequisiteConditions in spawnPrerequisites) {
                     if (tmpPrerequisiteConditions != null) {
                         tmpPrerequisiteConditions.CleanupScriptableObjects(this);
                     }

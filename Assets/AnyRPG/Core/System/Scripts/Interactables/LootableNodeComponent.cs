@@ -75,7 +75,7 @@ namespace AnyRPG {
         }
 
         protected IEnumerator StartSpawnCountdown() {
-            //Debug.Log(gameObject.name + ".LootableNode.StartSpawnCountdown()");
+            //Debug.Log(interactable.gameObject.name + ".LootableNode.StartSpawnCountdown()");
 
             // DISABLE MINIMAP ICON WHILE ITEM IS NOT SPAWNED
             // this next line is already done outside the loop so should not be needed here ?

@@ -181,9 +181,9 @@ namespace AnyRPG {
         public virtual bool CombatOnly { get => false; }
         public virtual bool NonCombatOptionsAvailable { get => true; }
 
-        public override bool PrerequisitesMet {
+        public override bool SpawnPrerequisitesMet {
             get {
-                bool returnResult = base.PrerequisitesMet;
+                bool returnResult = base.SpawnPrerequisitesMet;
                 if (returnResult != true) {
                     return returnResult;
                 }
@@ -429,7 +429,8 @@ namespace AnyRPG {
             if (!playerManager.PlayerUnitSpawned) {
                 return;
             }
-            if (spawnReference == null && PrerequisitesMet == false) {
+            //if ((spawnReference == null || spawnReference.activeSelf == false) && SpawnPrerequisitesMet == false) {
+            if (spawnReference == null || spawnReference.activeSelf == false) {
                 DisableInteraction();
             } else {
                 EnableInteraction();
@@ -446,7 +447,7 @@ namespace AnyRPG {
         }
 
         public override void Spawn() {
-            //Debug.Log(gameObject.name + ".Interactable.Spawn()");
+            Debug.Log(gameObject.name + ".Interactable.Spawn()");
             base.Spawn();
 
             EnableInteraction();
@@ -780,7 +781,7 @@ namespace AnyRPG {
             */
            
 
-            if (PrerequisitesMet == false) {
+            if (SpawnPrerequisitesMet == false) {
                 return;
             }
 
@@ -852,7 +853,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (PrerequisitesMet == false) {
+            if (SpawnPrerequisitesMet == false) {
                 return;
             }
 

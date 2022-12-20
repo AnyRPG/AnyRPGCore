@@ -60,7 +60,7 @@ namespace AnyRPG {
             if (collider.gameObject == playerManager.ActiveUnitController.gameObject && inRangeColliders.Contains(collider.gameObject) == false) {
                 inRangeColliders.Add(collider.gameObject);
 
-                if (interactable.PrerequisitesMet == false || interactable.GetCurrentInteractables().Count == 0) {
+                if (interactable.SpawnPrerequisitesMet == false || interactable.GetCurrentInteractables().Count == 0) {
                     return;
                 }
 
@@ -88,7 +88,7 @@ namespace AnyRPG {
             //Debug.Log("InteractableRange.UpdateStatus()");
 
             foreach (GameObject go in inRangeColliders) {
-                if (interactable.PrerequisitesMet == false || interactable.GetCurrentInteractables().Count == 0) {
+                if (interactable.SpawnPrerequisitesMet == false || interactable.GetCurrentInteractables().Count == 0) {
                     playerManager.PlayerController.RemoveInteractable(interactable);
                 } else {
                     playerManager.PlayerController.AddInteractable(interactable);
