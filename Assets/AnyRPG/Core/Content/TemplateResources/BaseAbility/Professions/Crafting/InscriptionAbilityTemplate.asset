@@ -37,7 +37,7 @@ MonoBehaviour:
     animationClip: {fileID: 0}
     animationProfileName: Inscription
     useUnitCastAnimations: 0
-    animationHitAudioProfileName: Inscription
+    animationHitAudioProfileName: 
     castingAudioClip: {fileID: 0}
     castingAudioProfileName: Inscription
     requiredLevel: 1
@@ -87,4 +87,5 @@ MonoBehaviour:
     inlineChannelingEffects: []
     channeledAbilityEffectnames: []
   references:
-    version: 1
+    version: 2
+    RefIds: []
