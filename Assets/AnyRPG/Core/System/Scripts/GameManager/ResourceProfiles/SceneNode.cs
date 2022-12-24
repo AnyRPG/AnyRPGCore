@@ -55,6 +55,14 @@ namespace AnyRPG {
 
         private AudioProfile movementHitProfile;
 
+        [Tooltip("A list of audio profiles containing footstep sounds to play depending on what terrain layer the character is moving on.  The list index is matched to the terrain layers index.  Eg, list item one will be played when the character is over terrain layer one.")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
+        private List<string> footStepProfiles = new List<string>();
+
+        private List<AudioProfile> footStepProfileReferences = new List<AudioProfile>();
+
+
         [Header("Scene Options")]
 
         [Tooltip("If false, mounts cannot be used in this scene")]
@@ -121,6 +129,7 @@ namespace AnyRPG {
         public bool AllowMount { get => allowMount; set => allowMount = value; }
         public string BackgroundMusicProfileName { set => backgroundMusicProfile = value; }
         public string AmbientMusicProfileName { set => ambientMusicProfile = value; }
+        public int FootStepProfilesCount { get => footStepProfileReferences.Count; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -154,7 +163,25 @@ namespace AnyRPG {
             if (Visited == false) {
                 Visited = true;
             }
+            PreloadFootStepAudio();
             OnVisitZone();
+        }
+
+        private void PreloadFootStepAudio() {
+            foreach (AudioProfile audioProfile in footStepProfileReferences) {
+                if (audioProfile != null) {
+                    audioProfile.PreloadAudioClips();
+                }
+            }
+        }
+
+        public AudioProfile GetFootStepAudioProfile(int terrainTextureIndex) {
+            //Debug.Log($"{DisplayName}.SceneNode.GetFootStepAudioProfile({terrainTextureIndex})");
+            if (terrainTextureIndex >= footStepProfileReferences.Count) {
+                return null;
+            }
+
+            return footStepProfileReferences[terrainTextureIndex];
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
@@ -177,6 +204,19 @@ namespace AnyRPG {
                     Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find audio profile : " + movementHitProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
+
+            foreach (string audioProfileName in footStepProfiles) {
+                if (audioProfileName != null && audioProfileName != string.Empty) {
+                    AudioProfile tmpMovementHit = systemDataFactory.GetResource<AudioProfile>(audioProfileName);
+                    if (tmpMovementHit == null) {
+                        Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find audio profile : " + audioProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    }
+                    footStepProfileReferences.Add(tmpMovementHit);
+                } else {
+                    footStepProfileReferences.Add(null);
+                }
+            }
+            //Debug.Log($"{DisplayName} has {footStepProfileReferences.Count} audio profiles");
 
             realAmbientMusicProfile = null;
             if (ambientMusicProfile != null && ambientMusicProfile != string.Empty) {

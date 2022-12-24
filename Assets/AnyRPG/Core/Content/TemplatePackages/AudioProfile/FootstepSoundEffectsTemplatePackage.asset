@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: FootstepSoundEffectsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: RPG Sound Effects
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 7d817398166133a4c9ce4f36d5d438d8, type: 2}
+  - {fileID: 11400000, guid: 08e6c40f7e68ebd4b85bed239df23e03, type: 2}
+  - {fileID: 11400000, guid: de10c7b9320dbaa48a6bd91a8cdbcb4d, type: 2}
+  - {fileID: 11400000, guid: bcb6683c1905edd41a31c7e8e7e5ca0a, type: 2}
+  - {fileID: 11400000, guid: 0977b8e5162c32747b48b356f03991c6, type: 2}
+  - {fileID: 11400000, guid: d8f30ff5b77e745428476c9a7b7b5f41, type: 2}
+  - {fileID: 11400000, guid: d57946b058edabc4e93dff7cdf8472b5, type: 2}
+  - {fileID: 11400000, guid: 8bdd05de3a09f284990c549a3f204147, type: 2}
+  - {fileID: 11400000, guid: 2d7c491db23a8dd4f92f6dc444977dee, type: 2}
+  - {fileID: 11400000, guid: 96b86c6d27cdc104f95ac566796bf4ef, type: 2}
+  - {fileID: 11400000, guid: 2a1b03fd07c64a642a6666d830687912, type: 2}
+  - {fileID: 11400000, guid: 03a9f4dd0072c9f4d954abeded1be7f1, type: 2}
+  - {fileID: 11400000, guid: 808a38bba91c95e408e38eb0ec0a6cba, type: 2}
+  - {fileID: 11400000, guid: 75bcd89b0d5e3ec4fbe0237f88627b31, type: 2}
+  - {fileID: 11400000, guid: 6c82f86b783729d438e2d6a33af32691, type: 2}
+  - {fileID: 11400000, guid: a224bd8ef3f09c144b2249d35c7b9dd0, type: 2}
+  - {fileID: 11400000, guid: 9c23363aee859b14eaa48e9efb2e1ee1, type: 2}
+  - {fileID: 11400000, guid: bbc5a4ca1d081f94ba9e2c93c9a93714, type: 2}
+  - {fileID: 11400000, guid: b2f7d065458fee14cba1e38a673b8c6e, type: 2}
+  - {fileID: 11400000, guid: 9b4443f3b40d1ad47ae8d4ca0ddc5bba, type: 2}
+  - {fileID: 11400000, guid: 353a20e74b36edf4f833a819b17182a0, type: 2}
+  - {fileID: 11400000, guid: 35ce90f4192aa8c4caee000855ba5462, type: 2}
+  - {fileID: 11400000, guid: 66efd40b2c2ad79418bc441cb7c6194e, type: 2}
+  - {fileID: 11400000, guid: 529c354fe9af4ae4c8b4e98becd0072f, type: 2}
+  prefabs: []
+  dependencies: []

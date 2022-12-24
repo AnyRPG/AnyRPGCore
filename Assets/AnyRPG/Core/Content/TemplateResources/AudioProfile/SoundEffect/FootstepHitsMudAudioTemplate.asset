@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: FootstepHitsMudAudioTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Footstep Hits Mud
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: 38ca6f28966c60a4bb75d637e844fb77, type: 3}
+  - {fileID: 8300000, guid: eaffcd1c7ee445b4c9d4dbcbbb091b71, type: 3}
+  - {fileID: 8300000, guid: 67d0687b6b4a0344dac0a88bc8b5d50f, type: 3}
+  - {fileID: 8300000, guid: cd84731ccf9f0234a8a4333f589f9f5f, type: 3}
+  - {fileID: 8300000, guid: cb3f1a082794cc7478dde709d195f5d1, type: 3}
+  - {fileID: 8300000, guid: c5981b88a2f7e384e8f52be78983545c, type: 3}
+  - {fileID: 8300000, guid: 3ec230d66c2bcd74387630f0083977f7, type: 3}
+  - {fileID: 8300000, guid: 4e890840d9ddbb3439483a137e62a80a, type: 3}

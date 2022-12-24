@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: FootstepHitsLeavesAudioTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Footstep Hits Leaves
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: 94ee9c52863083447bb2f328c60d3ece, type: 3}
+  - {fileID: 8300000, guid: 67e2c5bbd248ea541b4e6e6c32e34944, type: 3}

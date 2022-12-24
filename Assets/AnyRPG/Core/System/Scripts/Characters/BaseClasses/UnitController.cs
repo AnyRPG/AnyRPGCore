@@ -126,9 +126,14 @@ namespace AnyRPG {
         private float maxDistanceFromMasterOnMove = 3f;
         private float maxCombatDistanceFromMasterOnMove = 15f;
 
+        // track the current movement sound overrides
+        private MovementSoundArea movementSoundArea = null;
+
         // movement tracking
         private float apparentVelocity = 0f;
         private Vector3 lastPosition = Vector3.zero;
+        private AudioProfile footStepAudioProfile = null;
+        private int stepIndex = 0;
 
         // is this unit under the control of a master unit
         private bool underControl = false;
@@ -137,8 +142,6 @@ namespace AnyRPG {
         // rider information
         private UnitController riderUnitController = null;
 
-        // track the current movement sound overrides
-        private MovementSoundArea movementSoundArea = null;
 
         // game manager references
         protected LevelManager levelManager = null;
@@ -264,21 +267,33 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public AudioProfile MovementHitProfile {
             get {
+                // movement sound areas override everything
                 if (movementSoundArea != null && movementSoundArea.MovementHitProfile != null) {
                     //Debug.Log(gameObject.name + ".CharacterUnit.GetMovementHitProfile: return movementSoundArea.MovementHitProfile");
                     return movementSoundArea.MovementHitProfile;
                 }
+
+                // try the terrain layer based movement profile of the active scene node
+                if (levelManager.GetTerrainFootStepProfile(transform.position) != null) {
+                    return levelManager.GetTerrainFootStepProfile(transform.position);
+                }
+
+                // try the default footstep profile of the active scene node
                 if (levelManager.GetActiveSceneNode()?.MovementHitProfile != null) {
                     return levelManager.GetActiveSceneNode().MovementHitProfile;
                 }
+
+                // default to the character movement audio profile
                 if (characterUnit.BaseCharacter != null && unitProfile != null && unitProfile.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
                     return unitProfile.MovementAudioProfiles[0];
                 }
                 return null;
             }
         }
+        */
 
         public List<string> PatrolNames { get => patrolNames; set => patrolNames = value; }
         public bool Mounted { get => mounted; set => mounted = value; }
@@ -454,6 +469,32 @@ namespace AnyRPG {
             // mounts and preview units shouldn't have a namePlateController active
             if (unitControllerMode != UnitControllerMode.Mount && unitControllerMode != UnitControllerMode.Preview) {
                 base.InitializeNamePlateController();
+            }
+        }
+
+        private void SetFootStepAudioProfile() {
+            // movement sound areas override everything
+            if (movementSoundArea != null && movementSoundArea.MovementHitProfile != null) {
+                //Debug.Log(gameObject.name + ".CharacterUnit.GetMovementHitProfile: return movementSoundArea.MovementHitProfile");
+                footStepAudioProfile = movementSoundArea.MovementHitProfile;
+                return;
+            }
+
+            // try the terrain layer based movement profile of the active scene node
+            footStepAudioProfile = levelManager.GetTerrainFootStepProfile(transform.position);
+            if (footStepAudioProfile != null) {
+                return;
+            }
+
+            // try the default footstep profile of the active scene node
+            footStepAudioProfile = levelManager.GetActiveSceneNode()?.MovementHitProfile;
+            if (footStepAudioProfile != null) {
+                return;
+            }
+
+            // default to the character movement audio profile
+            if (characterUnit.BaseCharacter != null && unitProfile != null && unitProfile.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
+                footStepAudioProfile = unitProfile.MovementAudioProfiles[0];
             }
         }
 
@@ -1420,6 +1461,36 @@ namespace AnyRPG {
 
         public void PlayMovementSound(AudioClip audioClip, bool loop) {
             unitComponentController.PlayMovementSound(audioClip, loop);
+        }
+
+        public void PlayFootStep() {
+
+            if (unitProfile.PlayOnFootstep == false) {
+                return;
+            }
+
+            SetFootStepAudioProfile();
+
+            if ((footStepAudioProfile == null ||
+                            footStepAudioProfile?.AudioClips == null ||
+                            footStepAudioProfile.AudioClips.Count == 0)
+                            //&& unitController?.MovementSoundArea?.MovementLoopProfile == null
+                            //&& MovementSoundArea?.MovementHitProfile == null
+                            ) {
+                //Debug.Log(gameObject.name + ".HandleMovementAudio(): nothing to do, returning");
+                return;
+            }
+
+            if (stepIndex >= footStepAudioProfile.AudioClips.Count) {
+                stepIndex = 0;
+            }
+
+            PlayMovementSound(footStepAudioProfile.AudioClips[stepIndex], false);
+
+            stepIndex++;
+            if (stepIndex >= footStepAudioProfile.AudioClips.Count) {
+                stepIndex = 0;
+            }
         }
 
         public void PlaySwimSound() {

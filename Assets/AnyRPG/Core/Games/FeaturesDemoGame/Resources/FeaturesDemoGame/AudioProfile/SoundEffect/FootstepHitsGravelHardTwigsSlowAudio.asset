@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: FootstepHitsGravelHardTwigsSlowAudio
+  m_EditorClassIdentifier: 
+  resourceName: Footstep Hits Gravel Hard Twigs Slow
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: b4a93087c074ed24ab79e799b8b89099, type: 3}
+  - {fileID: 8300000, guid: 43eba252e8e98b14ca94f17aa45c2f9a, type: 3}
+  - {fileID: 8300000, guid: 0571521cc77783540ac6c0160db7a8ab, type: 3}
+  - {fileID: 8300000, guid: 3ce2a6e6d015c53409344c37128b07c0, type: 3}
+  - {fileID: 8300000, guid: 508272890574b1f429fc1b74eff78626, type: 3}
+  - {fileID: 8300000, guid: 21060f22be8e7084e8d481dbfc1dd06e, type: 3}

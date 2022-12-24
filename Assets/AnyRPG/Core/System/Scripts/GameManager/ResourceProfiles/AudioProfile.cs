@@ -31,6 +31,12 @@ namespace AnyRPG {
         }
 
         public List<AudioClip> AudioClips { get => audioClips; set => audioClips = value; }
+
+        public void PreloadAudioClips() {
+            foreach (AudioClip audioClip in audioClips) {
+                audioClip.LoadAudioData();
+            }
+        }
     }
 
 }

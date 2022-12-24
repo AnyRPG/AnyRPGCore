@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: FootstepHitsWetAudioTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Footstep Hits Wet
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: 3ce179cb3b4019d49b86474969f82c01, type: 3}
+  - {fileID: 8300000, guid: f9b6c81b7232e1c49883ffa8da5ebae6, type: 3}
+  - {fileID: 8300000, guid: 944a2effbf8410f4da6c8b25a5fc027b, type: 3}

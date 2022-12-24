@@ -29,6 +29,8 @@ namespace AnyRPG {
         private SceneNode activeSceneNode = null;
         private string activeSceneName = string.Empty;
 
+        private TerrainDetector terrainDetector = null;
+
         private string defaultSpawnLocationTag = "DefaultSpawnLocation";
 
         private string overrideSpawnLocationTag = string.Empty;
@@ -81,6 +83,7 @@ namespace AnyRPG {
             //DontDestroyOnLoad(this.gameObject);
             //Debug.Log("LevelManager.InitializeLevelManager(): setting scenemanager onloadlevel");
             SceneManager.sceneLoaded += OnLoadLevel;
+            terrainDetector = new TerrainDetector();
             levelManagerInitialized = true;
 
             // initialize the scene dictionary
@@ -267,6 +270,7 @@ namespace AnyRPG {
             if (activeSceneNode != null) {
                 activeSceneNode.Visit();
             }
+            terrainDetector.LoadSceneSettings();
             systemGameManager.AutoConfigureMonoBehaviours();
             cameraManager.CheckForCutsceneCamera();
             if (IsInitializationScene()) {
@@ -305,6 +309,14 @@ namespace AnyRPG {
 
             // activate the correct camera
             ActivateSceneCamera();
+        }
+
+        public AudioProfile GetTerrainFootStepProfile(Vector3 transformPosition) {
+            if (activeSceneNode != null && activeSceneNode.FootStepProfilesCount > 0) {
+                return activeSceneNode.GetFootStepAudioProfile(terrainDetector.GetActiveTerrainTextureIdx(transformPosition));
+            }
+
+            return null;
         }
 
         public void PlayLevelSounds() {

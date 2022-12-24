@@ -6,8 +6,6 @@ namespace AnyRPG {
 
         private UnitController unitController = null;
 
-        private int stepIndex = 0;
-
         public void Setup(UnitController unitController) {
             //Debug.Log(gameObject.name + ".UnitAnimationEventReceiver.Setup(" + (unitController == null ? "null" : unitController.gameObject.name) + ")");
             this.unitController = unitController;
@@ -83,25 +81,7 @@ namespace AnyRPG {
                 Debug.Log(gameObject.name + ".UnitAnimationEventReceiver.PlayFootStep() unitController is null!!!");
             }
 
-            if ((unitController?.MovementHitProfile  == null ||
-                unitController.MovementHitProfile?.AudioClips == null || 
-                unitController?.MovementHitProfile.AudioClips.Count == 0 ||
-                unitController?.UnitProfile.PlayOnFootstep == false)
-                //&& unitController?.MovementSoundArea?.MovementLoopProfile == null
-                && unitController?.MovementSoundArea?.MovementHitProfile == null) {
-                //Debug.Log(gameObject.name + ".HandleMovementAudio(): nothing to do, returning");
-                return;
-            }
-
-            //Debug.Log(gameObject.name + ".HandleMovementAudio(): up to run speed");
-            if (stepIndex >= unitController.MovementHitProfile.AudioClips.Count) {
-                stepIndex = 0;
-            }
-            unitController.PlayMovementSound(unitController.MovementHitProfile.AudioClips[stepIndex], false);
-            stepIndex++;
-            if (stepIndex >= unitController.MovementHitProfile.AudioClips.Count) {
-                stepIndex = 0;
-            }
+            unitController.PlayFootStep();
         }
 
         public void PlaySwimSound() {

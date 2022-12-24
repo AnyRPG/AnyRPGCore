@@ -19,12 +19,25 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   useRegionalFile: 0
   sceneFile: FeaturesDemoZone
   ambientMusicProfile: Features Demo Zone
   backgroundMusicProfile: 
   movementLoopProfileName: 
   movementHitProfileName: 
+  footStepProfiles:
+  - Footstep Hits Grass
+  - Footstep Hits Sand Fast
+  - Footstep Hits Stone
+  - Footstep Hits Mud
+  - Footstep Hits Sand Slow
+  - Footstep Hits Leaves
+  - Footstep Hits Wet
+  - Footstep Hits Snow Wet Fast
+  - Footstep Hits Wet
+  - Footstep Hits Cobblestone
+  - Footstep Hits Gravel Soft Slow
   allowMount: 1
   suppressCharacterSpawn: 0
   suppressMainCamera: 0

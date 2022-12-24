@@ -19,12 +19,15 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   useRegionalFile: 0
   sceneFile: FeaturesDemoCutsceneZone
   ambientMusicProfile: 
   backgroundMusicProfile: 
   movementLoopProfileName: 
   movementHitProfileName: 
+  footStepProfiles:
+  - Footstep Hits Leaves
   allowMount: 0
   suppressCharacterSpawn: 1
   suppressMainCamera: 1
