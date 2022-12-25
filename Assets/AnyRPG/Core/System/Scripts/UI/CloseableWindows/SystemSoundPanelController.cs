@@ -69,7 +69,7 @@ namespace AnyRPG {
             if (configureCount == 0) {
                 return;
             }
-            Debug.Log("SystemSoundPanelController.MasterSlider() instanceID: " + GetInstanceID());
+            //Debug.Log("SystemSoundPanelController.MasterSlider() instanceID: " + GetInstanceID());
             if (audioManager == null) {
                 Debug.Log("SystemSoundPanelController.MasterSlider() audiomanager is null");
             }

@@ -61,6 +61,10 @@ namespace AnyRPG {
             PlayFootStep();
         }
 
+        public void FootStep() {
+            PlayFootStep();
+        }
+
         public void Shoot() {
         }
 

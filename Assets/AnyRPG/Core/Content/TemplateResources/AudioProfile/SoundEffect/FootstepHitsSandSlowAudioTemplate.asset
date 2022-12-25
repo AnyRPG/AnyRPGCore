@@ -22,5 +22,5 @@ MonoBehaviour:
   optionalOverride: 0
   artistName: 
   audioClips:
-  - {fileID: 8300000, guid: 989ee36d6deef42469b58dbf0aa2a2f1, type: 3}
+  - {fileID: 8300000, guid: 0f6b473f769e5984f925eab2271dc2eb, type: 3}
   - {fileID: 8300000, guid: 37df43f074fac0644a04ca71550e06fc, type: 3}

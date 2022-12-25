@@ -40,10 +40,10 @@ MonoBehaviour:
       jumpClip: {fileID: 0}
       fallClip: {fileID: 0}
       landClip: {fileID: 0}
-      moveForwardClip: {fileID: 0}
-      moveForwardFastClip: {fileID: 0}
-      moveBackClip: {fileID: 0}
-      moveBackFastClip: {fileID: 0}
+      walkClip: {fileID: 0}
+      runClip: {fileID: 0}
+      walkBackClip: {fileID: 0}
+      runBackClip: {fileID: 0}
       turnLeftClip: {fileID: 0}
       turnRightClip: {fileID: 0}
       strafeLeftClip: {fileID: 0}
@@ -68,14 +68,14 @@ MonoBehaviour:
       combatFallClip: {fileID: 0}
       combatLandMirror: 0
       combatLandClip: {fileID: 0}
-      combatMoveForwardMirror: 0
-      combatMoveForwardClip: {fileID: 0}
-      combatMoveForwardFastMirror: 0
-      combatMoveForwardFastClip: {fileID: 0}
-      combatMoveBackMirror: 0
-      combatMoveBackClip: {fileID: 0}
-      combatMoveBackFastMirror: 0
-      combatMoveBackFastClip: {fileID: 0}
+      combatWalkMirror: 0
+      combatWalkClip: {fileID: 0}
+      combatRunMirror: 0
+      combatRunClip: {fileID: 0}
+      combatWalkBackMirror: 0
+      combatWalkBackClip: {fileID: 0}
+      combatRunBackMirror: 0
+      combatRunBackClip: {fileID: 0}
       combatTurnLeftMirror: 0
       combatTurnLeftClip: {fileID: 0}
       combatTurnRightMirror: 0
@@ -162,10 +162,11 @@ MonoBehaviour:
   powerResources: []
   useProviderEquipment: 0
   equipmentNameList: []
+  faceInteractionTarget: 1
   isMobile: 1
-  playOnFootstep: 0
+  playOnFootstep: 1
   movementAudioProfileNames:
-  - Default Footstep Loop
+  - Default Footstep Hits
   useInlinePatrol: 0
   patrolConfig:
     autoStart: 0
@@ -182,49 +183,18 @@ MonoBehaviour:
     savePositionAtDestination: 0
   patrolNames: []
   interactionMaxRange: 3
-  deprecatedBehaviorConfig:
-    interactionPanelTitle: 
-    interactionPanelImage: {fileID: 0}
-    namePlateImage: {fileID: 0}
-    prerequisiteConditions: []
-    behaviorNames: []
-  deprecatedLootableCharacter:
-    interactionPanelTitle: 
-    interactionPanelImage: {fileID: 0}
-    namePlateImage: {fileID: 0}
-    prerequisiteConditions: []
-    automaticCurrency: 0
-    lootTableNames: []
-  deprecatedDialogConfig:
-    interactionPanelTitle: 
-    interactionPanelImage: {fileID: 0}
-    namePlateImage: {fileID: 0}
-    prerequisiteConditions: []
-    dialogNames: []
-  deprecatedQuestGiverConfig:
-    interactionPanelTitle: 
-    interactionPanelImage: {fileID: 0}
-    namePlateImage: {fileID: 0}
-    prerequisiteConditions: []
-    quests: []
-    questGiverProfileNames: []
-  deprecatedVendorConfig:
-    interactionPanelTitle: 
-    interactionPanelImage: {fileID: 0}
-    namePlateImage: {fileID: 0}
-    prerequisiteConditions: []
-    vendorCollectionNames: []
   interactableOptions: []
   inlineInteractableOptions:
-  - id: 0
+  - rid: 0
   persistObjectPosition: 0
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
   m_UUID: a2782730-32ca-4e97-9469-065d9c1e8645
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: 0
       type: {class: SkillTrainerProps, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         interactionPanelTitle: 
