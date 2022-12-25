@@ -62,10 +62,10 @@ namespace AnyRPG {
         }
 
         public void PlayCastSound(AudioClip audioClip) {
+            //Debug.Log(gameObject.name + ".UnitComponentController.PlayCastSound(" + (audioClip == null ? "null" : audioClip.name) + ")");
             if (audioClip == null) {
                 return;
             }
-            //Debug.Log(gameObject.name + "UnitAudio.PlayEffect(" + audioClip.name + ")");
 
             if (unitAudioEmitter != null) {
                 unitAudioEmitter.PlayCast(audioClip);
@@ -73,6 +73,7 @@ namespace AnyRPG {
         }
 
         public void PlayEffectSound(AudioClip audioClip) {
+            //Debug.Log(gameObject.name + ".UnitComponentController.PlayEffectSound(" + (audioClip == null ? "null" : audioClip.name) + ")");
             if (audioClip == null) {
                 return;
             }

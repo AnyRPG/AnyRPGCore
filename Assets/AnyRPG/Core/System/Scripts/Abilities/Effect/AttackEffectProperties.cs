@@ -42,7 +42,7 @@ namespace AnyRPG {
         /// <param name="source"></param>
         /// <param name="target"></param>
         public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(DisplayName + ".AttackAbility.PerformAbilityEffect(" + source.AbilityManager.Name + ", " + target.name + ")");
+            //Debug.Log(DisplayName + ".AttackEffect.PerformAbilityEffect(" + source.AbilityManager.Name + ", " + target.name + ")");
 
             // handle regular effects
             base.PerformAbilityHit(source, target, abilityEffectContext);
@@ -53,6 +53,7 @@ namespace AnyRPG {
         }
 
         public override AbilityEffectContext ProcessAbilityEffectContext(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log(DisplayName + ".AttackEffect.ProcessAbilityEffectContext(" + source.AbilityManager.Name + ", " + target.name + ")");
 
             if (abilityEffectContext.weaponHitHasCast == true) {
                 // can't cast weapon hit effects more than once

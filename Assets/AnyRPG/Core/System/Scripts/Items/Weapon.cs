@@ -95,9 +95,11 @@ namespace AnyRPG {
         public List<AudioClip> DefaultHitSoundEffects {
             get {
                 if (defaultHitSoundEffects != null && defaultHitSoundEffects.Count > 0) {
+                    //Debug.Log(DisplayName + " using weapon sound effects");
                     return defaultHitSoundEffects;
                 }
                 if (weaponSkill != null) {
+                    //Debug.Log(DisplayName + " using weapon skill sound effects");
                     return weaponSkill.WeaponSkillProps.DefaultHitSoundEffects;
                 }
                 return new List<AudioClip>();
@@ -209,6 +211,7 @@ namespace AnyRPG {
         */
 
         public override void HandleEquip(CharacterCombat characterCombat, EquipmentSlotProfile equipmentSlotProfile) {
+            //Debug.Log(DisplayName + ".Weapon.HandleEquip(" + characterCombat.BaseCharacter.CharacterName + ", " + equipmentSlotProfile.DisplayName + ")");
             base.HandleEquip(characterCombat, equipmentSlotProfile);
 
             if (OnHitEffectList != null && OnHitEffectList.Count > 0) {

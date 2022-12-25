@@ -74,6 +74,7 @@ MonoBehaviour:
       canCastOnNeutral: 0
       canCastOnFriendly: 0
       autoSelfCast: 0
+      unitTypeRestrictions: []
       useMeleeRange: 1
       maxRange: 5
       requireFacingTarget: 0
@@ -83,7 +84,7 @@ MonoBehaviour:
       groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
       groundTargetRadius: 0
     inlineAbilityEffects:
-    - id: 0
+    - rid: 0
     abilityEffectNames: []
     tickRate: 1
     inlineChannelingEffects: []
@@ -93,8 +94,9 @@ MonoBehaviour:
     useAutoAttackAnimations: 0
     useWeaponHitSound: 1
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: 0
       type: {class: AttackEffectConfig, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         effectProperties:
@@ -109,6 +111,7 @@ MonoBehaviour:
             canCastOnNeutral: 0
             canCastOnFriendly: 0
             autoSelfCast: 0
+            unitTypeRestrictions: []
             useMeleeRange: 1
             maxRange: 0
             lineOfSightSourceLocation: 0
@@ -146,6 +149,8 @@ MonoBehaviour:
             baseAmount: 0
             amountPerLevel: 1
             maxAmount: 0
-          damageType: 1
+            ignoreCastTime: 0
           ignoreAccuracy: 0
+          weaponAttack: 1
+          damageType: 1
           ignoreArmorPercent: 0

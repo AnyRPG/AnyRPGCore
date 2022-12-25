@@ -39,11 +39,10 @@ namespace AnyRPG {
         }
 
         public void PlayEffect(AudioClip audioClip) {
+            //Debug.Log(gameObject.name + ".UnitAudioEmitter.PlayEffect(" + (audioClip == null ? "null" : audioClip.name) + ")");
             if (audioClip == null) {
                 return;
             }
-            //Debug.Log(gameObject.name + ".UnitAudioEmitter.PlayEffect(" + audioClip.name + ")");
-
             if (effectSource != null) {
                 effectSource.PlayOneShot(audioClip);
             }

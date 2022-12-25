@@ -123,7 +123,7 @@ namespace AnyRPG {
                     if (defaultHitAudioProfile != null && defaultHitAudioProfile != string.Empty) {
                         AudioProfile audioProfile = systemDataFactory.GetResource<AudioProfile>(defaultHitAudioProfile);
                         if (audioProfile != null) {
-                            onHitSoundEffects.Add(audioProfile.AudioClip);
+                            onHitSoundEffects.AddRange(audioProfile.AudioClips);
                         } else {
                             Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): Could not find audio profile : " + defaultHitAudioProfile + " while inititalizing.  CHECK INSPECTOR");
                         }
