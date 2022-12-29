@@ -8,55 +8,55 @@ namespace AnyRPG {
 
         [Header("Character")]
 
-        [Tooltip("List of sound files to choose from when NPC aggros other characters.")]
+        [Tooltip("List of audio clips to choose from when an NPC that is not in combat aggros other characters.")]
         [SerializeField]
         private List<AudioClip> aggro = new List<AudioClip>();
 
-        [Tooltip("List of sound files to choose from when NPC performs an attack on other characters.")]
+        [Tooltip("List of audio clips to choose from when character performs an attack on other characters.")]
         [SerializeField]
         private List<AudioClip> attack = new List<AudioClip>();
 
-        [Tooltip("List of sound files to choose from when character takes damage.")]
+        [Tooltip("List of audio clips to choose from when character takes damage.")]
         [SerializeField]
         private List<AudioClip> damage = new List<AudioClip>();
 
-        [Tooltip("List of sound files to choose from when character jumps.")]
+        [Tooltip("List of audio clips to choose from when character jumps.")]
         [SerializeField]
         private List<AudioClip> jump = new List<AudioClip>();
 
-        [Tooltip("List of sound files to choose from when character takes fall damage.")]
+        [Tooltip("List of audio clips to choose from when character takes fall damage.")]
         [SerializeField]
         private List<AudioClip> fallDamage = new List<AudioClip>();
 
-        [Tooltip("List of sound files to choose from when character dies.")]
+        [Tooltip("List of audio clips to choose from when character dies.")]
         [SerializeField]
         private List<AudioClip> death = new List<AudioClip>();
 
-        [Tooltip("List of sound files to choose from when the character kills another character.")]
+        [Tooltip("List of audio clips to choose from when the character kills another character.")]
         [SerializeField]
         private List<AudioClip> victory = new List<AudioClip>();
 
         [Header("Interactions")]
 
-        [Tooltip("List of sound files to choose from when the character starts interacting.")]
+        [Tooltip("List of audio clips to choose from when the character starts interacting.")]
         [SerializeField]
         private List<AudioClip> startInteract = new List<AudioClip>();
 
-        [Tooltip("List of sound files to choose from when the character starts interacting with a vendor.")]
+        [Tooltip("List of audio clips to choose from when the character starts interacting with a vendor.")]
         [SerializeField]
         private List<AudioClip> startVendorInteract = new List<AudioClip>();
 
         /*
-        [Tooltip("List of sound files to choose from when the character makes a purchase.")]
+        [Tooltip("List of audio clips to choose from when the character makes a purchase.")]
         [SerializeField]
         private List<AudioClip> purchase = new List<AudioClip>();
         */
 
-        [Tooltip("List of sound files to choose from when the character stops interacting.")]
+        [Tooltip("List of audio clips to choose from when the character stops interacting (closes an interaction window).")]
         [SerializeField]
         private List<AudioClip> stopInteract = new List<AudioClip>();
 
-        [Tooltip("List of sound files to choose from when the character stops interacting with a vendor.")]
+        [Tooltip("List of audio clips to choose from when the character stops interacting with a vendor (closes the vendor window).")]
         [SerializeField]
         private List<AudioClip> stopVendorInteract = new List<AudioClip>();
 

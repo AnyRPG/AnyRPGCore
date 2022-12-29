@@ -53,7 +53,7 @@ A Unity package that includes this repository (and a complex sample game) is ava
 ### Github Installation
 Video tutorial for version 0.10.1a install can be watched here: https://www.youtube.com/watch?v=oMeWWgNYrYI
 
-1. Install the correct Unity version to open this project.  The current project Unity version is 2021.3.11f1
+1. Install the correct Unity version to open this project.  The current project Unity version is 2021.3.12f1
 1. Clone this repository into a directory on your computer
 1. Open the Unity Hub and add the project
 1. Open the project and install the following Unity packages:
@@ -61,6 +61,11 @@ Video tutorial for version 0.10.1a install can be watched here: https://www.yout
 	* UMA 2 from the Unity Asset Store (https://assetstore.unity.com/packages/3d/characters/uma-2-unity-multipurpose-avatar-35611) or github (https://github.com/umasteeringgroup/UMA/tree/master/UMAProject)
 1. Open the Window menu in Unity and choose 'TextMeshPro' > 'Import TMP Essential Resources'
 1. Open the UMA menu in Unity and choose Global Library.  In the Global Library window, choose File > Rebuild From Project
+
+### Unity Asset Store Package Installation
+Video tutorial for installing from the Unity Asset Store can be watched here: https://youtu.be/syI3ohFWVck
+
+A PDF file with instructions for installing AnyRPG Core from the Unity Asset Store can be found at [Unity Asset Store Package Setup Guide](Assets/AnyRPG/Unity Asset Store package Setup Guide.pdf)
 
 ## Getting Started
 
