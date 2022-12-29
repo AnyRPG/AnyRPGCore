@@ -67,6 +67,30 @@ namespace AnyRPG {
             //capabilityProviders.Add(systemConfigurationManager);
         }
 
+        public List<UnitType> GetValidPetTypeList() {
+            List<UnitType> returnList = new List<UnitType>();
+
+            foreach (ICapabilityProvider capabilityProvider in capabilityProviders) {
+                if (capabilityProvider != null) {
+                    returnList.AddRange(capabilityProvider.GetFilteredCapabilities(this).ValidPetTypeList);
+                }
+            }
+
+            return returnList;
+        }
+
+        public List<UnitProfile> GetStartingPetList() {
+            List<UnitProfile> returnList = new List<UnitProfile>();
+
+            foreach (ICapabilityProvider capabilityProvider in capabilityProviders) {
+                if (capabilityProvider != null) {
+                    returnList.AddRange(capabilityProvider.GetFilteredCapabilities(this).StartingPetList);
+                }
+            }
+
+            return returnList;
+        }
+
         public List<StatusEffect> GetTraitList() {
             List<StatusEffect> returnList = new List<StatusEffect>();
 

@@ -622,6 +622,7 @@ namespace AnyRPG {
                 characterEquipmentManager.HandleCapabilityConsumerChange();
             }
             characterAbilityManager.HandleCapabilityProviderChange(oldSnapshot, newSnapshot);
+            characterPetManager.ProcessCapabilityProviderChange(newSnapshot);
         }
 
         public void HandleCharacterUnitSpawn() {

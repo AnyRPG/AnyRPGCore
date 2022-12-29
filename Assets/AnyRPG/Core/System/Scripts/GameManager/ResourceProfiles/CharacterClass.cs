@@ -49,16 +49,6 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(PowerResource))]
         private List<string> powerResources = new List<string>();
 
-        [Header("Pet Management")]
-
-        [Tooltip("Unit types that this character class is able to have as pets.")]
-        [SerializeField]
-        [ResourceSelector(resourceType = typeof(UnitType))]
-        private List<string> validPetTypes = new List<string>();
-
-        private List<UnitType> validPetTypeList = new List<UnitType>();
-
-
         // reference to the actual power resources
         private List<PowerResource> powerResourceList = new List<PowerResource>();
 
@@ -67,7 +57,6 @@ namespace AnyRPG {
         public bool NewGameOption { get => newGameOption; set => newGameOption = value; }
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
         public CapabilityProps Capabilities { get => capabilities; set => capabilities = value; }
-        public List<UnitType> ValidPetTypeList { get => validPetTypeList; set => validPetTypeList = value; }
 
         public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
             CapabilityProps returnValue = new CapabilityProps();
@@ -96,18 +85,6 @@ namespace AnyRPG {
                     }
                 }
             }
-
-            if (validPetTypes != null) {
-                foreach (string petType in validPetTypes) {
-                    UnitType tmpUnitType = systemDataFactory.GetResource<UnitType>(petType);
-                    if (tmpUnitType != null) {
-                        validPetTypeList.Add(tmpUnitType);
-                    } else {
-                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find pet type : " + petType + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
-
 
             powerResourceList = new List<PowerResource>();
             if (powerResources != null) {

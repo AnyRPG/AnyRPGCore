@@ -18,7 +18,7 @@ namespace AnyRPG {
 
         protected List<BaseAbilityProperties> abilityList = new List<BaseAbilityProperties>();
 
-        [Tooltip("Traits are status effects which are automatically active at all times if the level requirement is met.")]
+        [Tooltip("Traits are status effects which are automatically active at all times if the level requirement is met")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(StatusEffect))]
         protected List<string> traitNames = new List<string>();
@@ -27,12 +27,12 @@ namespace AnyRPG {
 
         [Header("Equipment")]
 
-        [Tooltip("Armor classes that can be equipped by this class")]
+        [Tooltip("Armor classes that can be equipped")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(ArmorClass))]
         private List<string> armorClassList = new List<string>();
 
-        [Tooltip("Weapon skills known by this class")]
+        [Tooltip("Weapon skills known")]
         [FormerlySerializedAs("weaponSkillList")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(WeaponSkill))]
@@ -41,11 +41,30 @@ namespace AnyRPG {
         // reference to the actual weapon skills
         private List<WeaponSkill> weaponSkillList = new List<WeaponSkill>();
 
+        [Header("Pet Management")]
+
+        [Tooltip("Unit types that the character can capture as pets")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitType))]
+        private List<string> validPetTypes = new List<string>();
+
+        private List<UnitType> validPetTypeList = new List<UnitType>();
+
+        [Tooltip("The pets that the character will start with")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitProfile))]
+        private List<string> startingPets = new List<string>();
+
+        private List<UnitProfile> startingPetList = new List<UnitProfile>();
+
+
         public List<string> AbilityNames { get => abilityNames; set => abilityNames = value; }
         public List<BaseAbilityProperties> AbilityList { get => abilityList; set => abilityList = value; }
         public List<StatusEffect> TraitList { get => traitList; set => traitList = value; }
         public List<string> ArmorClassList { get => armorClassList; set => armorClassList = value; }
         public List<WeaponSkill> WeaponSkillList { get => weaponSkillList; set => weaponSkillList = value; }
+        public List<UnitType> ValidPetTypeList { get => validPetTypeList; set => validPetTypeList = value; }
+        public List<UnitProfile> StartingPetList { get => startingPetList; set => startingPetList = value; }
 
         public CapabilityProps Join(CapabilityProps capabilityProps) {
             CapabilityProps returnValue = new CapabilityProps();
@@ -57,6 +76,10 @@ namespace AnyRPG {
             returnValue.WeaponSkillList.AddRange(capabilityProps.WeaponSkillList);
             returnValue.ArmorClassList.AddRange(armorClassList);
             returnValue.ArmorClassList.AddRange(capabilityProps.ArmorClassList);
+            returnValue.ValidPetTypeList.AddRange(validPetTypeList);
+            returnValue.ValidPetTypeList.AddRange(capabilityProps.ValidPetTypeList);
+            returnValue.StartingPetList.AddRange(startingPetList);
+            returnValue.StartingPetList.AddRange(capabilityProps.StartingPetList);
             return returnValue;
         }
 
@@ -103,6 +126,28 @@ namespace AnyRPG {
                         }
                     } else {
                         Debug.LogError("CapabilityProps.SetupScriptableObjects(): null or empty weapon Skill found while inititalizing capabilityProps.  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            if (validPetTypes != null) {
+                foreach (string petType in validPetTypes) {
+                    UnitType tmpUnitType = systemDataFactory.GetResource<UnitType>(petType);
+                    if (tmpUnitType != null) {
+                        validPetTypeList.Add(tmpUnitType);
+                    } else {
+                        Debug.LogError("CapabilityProps.SetupScriptableObjects(): Could not find pet type : " + petType + " while inititalizing capabilityProps.  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            if (startingPets != null) {
+                foreach (string startingPet in startingPets) {
+                    UnitProfile tmpStartingPet = systemDataFactory.GetResource<UnitProfile>(startingPet);
+                    if (tmpStartingPet != null) {
+                        startingPetList.Add(tmpStartingPet);
+                    } else {
+                        Debug.LogError("CapabilityProps.SetupScriptableObjects(): Could not find pet type : " + startingPet + " while inititalizing capabilityProps.  CHECK INSPECTOR");
                     }
                 }
             }

@@ -31,8 +31,10 @@ MonoBehaviour:
     traitNames: []
     armorClassList: []
     weaponSkills: []
+    validPetTypes:
+    - Beast
+    startingPets:
+    - Dragon
   primaryStats: []
   powerResources: []
   powerEnhancerStats: []
-  validPetTypes:
-  - Beast

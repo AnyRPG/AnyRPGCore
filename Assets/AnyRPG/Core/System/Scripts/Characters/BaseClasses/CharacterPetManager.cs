@@ -15,6 +15,8 @@ namespace AnyRPG {
 
         protected BaseCharacter baseCharacter;
 
+        private List<UnitType> validPetTypeList = new List<UnitType>();
+
         protected bool eventSubscriptionsInitialized = false;
 
         public BaseCharacter BaseCharacter {
@@ -24,12 +26,21 @@ namespace AnyRPG {
 
         public List<UnitProfile> UnitProfiles { get => unitProfiles; set => unitProfiles = value; }
         public Dictionary<UnitProfile, UnitController> ActiveUnitProfiles { get => activeUnitProfiles; set => activeUnitProfiles = value; }
+        public List<UnitType> ValidPetTypeList { get => validPetTypeList; set => validPetTypeList = value; }
 
         public CharacterPetManager(BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
             this.baseCharacter = baseCharacter;
             Configure(systemGameManager);
         }
 
+        public void ProcessCapabilityProviderChange(CapabilityConsumerSnapshot newSnapshot) {
+            validPetTypeList.Clear();
+            validPetTypeList.AddRange(newSnapshot.GetValidPetTypeList());
+
+            foreach (UnitProfile unitProfile in newSnapshot.GetStartingPetList()) {
+                AddPet(unitProfile);
+            }
+        }
 
         public void AddTemporaryPet(UnitProfile unitProfile, UnitController unitController) {
 

@@ -40,8 +40,9 @@ MonoBehaviour:
     - Soul Of The Ranger
     armorClassList: []
     weaponSkills: []
+    validPetTypes:
+    - Beast
+    startingPets: []
   primaryStats: []
   powerResources: []
   powerEnhancerStats: []
-  validPetTypes:
-  - Beast
