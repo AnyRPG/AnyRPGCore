@@ -46,12 +46,12 @@ https://twitter.com/AnyRPGEngine
 
 ## Setup
 
-### Unity Package
+### AnyRPG Engine Unity Package Installation
 
 A Unity package that includes this repository (and a complex sample game) is available for download at http://www.anyrpg.org/downloads/
 
-### Github Installation
-Video tutorial for version 0.10.1a install can be watched here: https://www.youtube.com/watch?v=oMeWWgNYrYI
+### AnyRPG Core Github Installation
+Video tutorial for installing AnyRPG Core version 0.10.1a (and higher) from github can be watched here: https://www.youtube.com/watch?v=oMeWWgNYrYI
 
 1. Install the correct Unity version to open this project.  The current project Unity version is 2021.3.12f1
 1. Clone this repository into a directory on your computer
@@ -62,8 +62,8 @@ Video tutorial for version 0.10.1a install can be watched here: https://www.yout
 1. Open the Window menu in Unity and choose 'TextMeshPro' > 'Import TMP Essential Resources'
 1. Open the UMA menu in Unity and choose Global Library.  In the Global Library window, choose File > Rebuild From Project
 
-### Unity Asset Store Package Installation
-Video tutorial for installing from the Unity Asset Store can be watched here: https://youtu.be/syI3ohFWVck
+### AnyRPG Core Unity Asset Store Package Installation
+Video tutorial for installing AnyRPG Core version 0.14.5 (and higher) from the Unity Asset Store can be watched here: https://youtu.be/syI3ohFWVck
 
 A PDF file with instructions for installing AnyRPG Core from the Unity Asset Store can be found at [Unity Asset Store Package Setup Guide](Assets/AnyRPG/Unity%20Asset%20Store%20Package%20Setup%20Guide.pdf)
 
