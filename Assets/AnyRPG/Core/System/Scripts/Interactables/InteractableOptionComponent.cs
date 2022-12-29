@@ -166,6 +166,18 @@ namespace AnyRPG {
             playerManager.PlayerController.StopInteract();
         }
 
+        public virtual void ProcessStartInteract() {
+            interactable.ProcessStartInteract(this);
+        }
+
+        public virtual bool PlayInteractionSound() {
+            return false;
+        }
+
+        public virtual void ProcessStopInteract() {
+            interactable.ProcessStopInteract(this);
+        }
+
         public virtual bool HasMiniMapText() {
             return false;
         }

@@ -87,6 +87,11 @@ namespace AnyRPG {
             return CanInteract(false, false, relationValue);
         }
 
+        public override bool PlayInteractionSound() {
+            return true;
+        }
+
+
     }
 
 }

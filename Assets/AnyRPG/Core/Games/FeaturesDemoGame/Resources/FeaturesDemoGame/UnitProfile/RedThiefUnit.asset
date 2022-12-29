@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Red Thief
   displayName: 
-  icon: {fileID: 21300000, guid: 12c08866d8df8c04b97eb8e8ad039df9, type: 3}
+  icon: {fileID: 21300000, guid: c7a81cc530c9336489e7f6dbe5c8ecda, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -26,7 +26,7 @@ MonoBehaviour:
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 6954704190252621995, guid: 38536fa0ac6efae4294792d88706772a,
+    modelPrefab: {fileID: 7270982331284104345, guid: 6c8d24814c43bc848aeeec96fa686953,
       type: 3}
     animationProfileName: 
     useInlineAnimationProps: 0
@@ -149,6 +149,20 @@ MonoBehaviour:
   spawnDead: 0
   preventAutoDespawn: 0
   defaultToughness: 
+  voiceProfile: Male Townsperson
+  useInlineVoiceProps: 0
+  voiceProps:
+    aggro: []
+    attack: []
+    damage: []
+    jump: []
+    fallDamage: []
+    death: []
+    victory: []
+    startInteract: []
+    startVendorInteract: []
+    stopInteract: []
+    stopVendorInteract: []
   capabilities:
     abilityNames: []
     traitNames: []

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Red Fire Mage
   displayName: 
-  icon: {fileID: 21300000, guid: 33abda5674ae35a4dbc082fddd9e2c17, type: 3}
+  icon: {fileID: 21300000, guid: 553136f0c14887d4698e06f883a2d26d, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -26,7 +26,7 @@ MonoBehaviour:
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 6954704190252621995, guid: f346280ac1e9a9749aa3e6295181bc2b,
+    modelPrefab: {fileID: 2786600217745055141, guid: 0a38ce85c3293254ca0bd725cc3d1091,
       type: 3}
     animationProfileName: 
     useInlineAnimationProps: 0
@@ -149,6 +149,20 @@ MonoBehaviour:
   spawnDead: 0
   preventAutoDespawn: 0
   defaultToughness: 
+  voiceProfile: Male Wizard
+  useInlineVoiceProps: 0
+  voiceProps:
+    aggro: []
+    attack: []
+    damage: []
+    jump: []
+    fallDamage: []
+    death: []
+    victory: []
+    startInteract: []
+    startVendorInteract: []
+    stopInteract: []
+    stopVendorInteract: []
   capabilities:
     abilityNames: []
     traitNames: []

@@ -8,29 +8,7 @@ using UnityEngine.AI;
 namespace AnyRPG {
     public class UnitController : NamePlateUnit, IPersistentObjectOwner {
 
-        public event System.Action<Interactable> OnSetTarget = delegate { };
-        public event System.Action<Interactable> OnClearTarget = delegate { };
-        public event System.Action OnManualMovement = delegate { };
-        public event System.Action OnReputationChange = delegate { };
-        public event System.Action OnReviveComplete = delegate { };
-        public event System.Action<CharacterStats> OnBeforeDie = delegate { };
-        public event System.Action<int> OnLevelChanged = delegate { };
-        public event System.Action<UnitType, UnitType> OnUnitTypeChange = delegate { };
-        public event System.Action<CharacterRace, CharacterRace> OnRaceChange = delegate { };
-        public event System.Action<CharacterClass, CharacterClass> OnClassChange = delegate { };
-        public event System.Action<ClassSpecialization, ClassSpecialization> OnSpecializationChange = delegate { };
-        public event System.Action<Faction, Faction> OnFactionChange = delegate { };
-        public event System.Action<string> OnNameChange = delegate { };
-        public event System.Action<string> OnTitleChange = delegate { };
-        public event System.Action<PowerResource, int, int> OnResourceAmountChanged = delegate { };
-        public event System.Action<StatusEffectNode> OnStatusEffectAdd = delegate { };
-        public event System.Action<IAbilityCaster, BaseAbilityProperties, float> OnCastTimeChanged = delegate { };
-        public event System.Action<BaseCharacter> OnCastComplete = delegate { };
-        public event System.Action<BaseCharacter> OnCastCancel = delegate { };
-        public event System.Action<UnitProfile> OnUnitDestroy = delegate { };
-        public event System.Action<UnitController> OnActivateMountedState = delegate { };
-        public event System.Action OnDeActivateMountedState = delegate { };
-        public event System.Action<string> OnMessageFeed = delegate { };
+
         public override event System.Action OnCameraTargetReady = delegate { };
         //public event System.Action OnDespawn = delegate { };
 
@@ -70,6 +48,7 @@ namespace AnyRPG {
         private UnitProfile unitProfile = null;
 
         // components
+        private UnitEventController unitEventController = null;
         private NavMeshAgent agent = null;
         private Rigidbody rigidBody = null;
         private UnitMotor unitMotor = null;
@@ -80,6 +59,7 @@ namespace AnyRPG {
         private UnitModelController unitModelController = null;
         private UnitMountManager unitMountManager = null;
         private UnitMaterialController unitMaterialController = null;
+        private UnitVoiceController unitVoiceController = null;
         private UnitActionManager unitActionManager = null;
         private UUID uuid = null;
 
@@ -320,6 +300,7 @@ namespace AnyRPG {
 
         public UnitMountManager UnitMountManager { get => unitMountManager; set => unitMountManager = value; }
         public UnitMaterialController UnitMaterialController { get => unitMaterialController; set => unitMaterialController = value; }
+        public UnitEventController UnitEventController { get => unitEventController; }
         public UnitActionManager UnitActionManager { get => unitActionManager; set => unitActionManager = value; }
         public BehaviorController BehaviorController { get => behaviorController; set => behaviorController = value; }
 
@@ -407,6 +388,7 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             // create components here instead?  which ones rely on other things like unit profile being set before start?
+            unitEventController = new UnitEventController(this, systemGameManager);
             namePlateController = new UnitNamePlateController(this, systemGameManager);
             unitMotor = new UnitMotor(this, systemGameManager);
             unitAnimator = new UnitAnimator(this, systemGameManager);
@@ -414,6 +396,7 @@ namespace AnyRPG {
             behaviorController = new BehaviorController(this, systemGameManager);
             unitModelController = new UnitModelController(this, systemGameManager);
             unitMaterialController = new UnitMaterialController(this, systemGameManager);
+            unitVoiceController = new UnitVoiceController(this, systemGameManager);
             unitMountManager = new UnitMountManager(this, systemGameManager);
             unitActionManager = new UnitActionManager(this, systemGameManager);
             persistentObjectComponent.Setup(this, systemGameManager);
@@ -504,15 +487,30 @@ namespace AnyRPG {
             bool returnValue = base.Interact(source, processRangeCheck);
 
             if (returnValue == true
-                && unitProfile?.FaceInteractionTarget == true
-                && source == playerManager.UnitController.CharacterUnit
-                && characterUnit.BaseCharacter.CharacterStats.IsAlive == true
                 && Faction.RelationWith(source.BaseCharacter, characterUnit.BaseCharacter) >= 0f
+                && characterUnit.BaseCharacter.CharacterStats.IsAlive == true
+                && source == playerManager.UnitController.CharacterUnit
                 && unitControllerMode == UnitControllerMode.AI) {
-                unitMotor.FaceTarget(source.Interactable);
+
+                // notify on interact
+                UnitEventController.NotifyOnInteract();
+
+                if (unitProfile != null && unitProfile.FaceInteractionTarget == true) {
+                    unitMotor.FaceTarget(source.Interactable);
+                }
             }
 
             return returnValue;
+        }
+
+        public override void ProcessStartInteract(InteractableOptionComponent interactableOptionComponent) {
+            base.ProcessStartInteract(interactableOptionComponent);
+            unitEventController.NotifyOnStartInteract(interactableOptionComponent);
+        }
+
+        public override void ProcessStopInteract(InteractableOptionComponent interactableOptionComponent) {
+            base.ProcessStopInteract(interactableOptionComponent);
+            unitEventController.NotifyOnStopInteract(interactableOptionComponent);
         }
 
         public void HandleReputationChange(string eventName, EventParamProperties eventParamProperties) {
@@ -792,7 +790,7 @@ namespace AnyRPG {
             if (behaviorController != null) {
                 behaviorController.Cleanup();
             }
-            OnUnitDestroy(unitProfile);
+            UnitEventController.NotifyOnUnitDestroy(unitProfile);
             ResetSettings();
             objectPooler.ReturnObjectToPool(gameObject);
         }
@@ -810,6 +808,7 @@ namespace AnyRPG {
             unitModelController.ResetSettings();
 
             unitAnimator.ResetSettings();
+            unitVoiceController.ResetSettings();
 
             unitProfile = null;
 
@@ -824,6 +823,8 @@ namespace AnyRPG {
             unitModelController = null;
             unitActionManager = null;
             unitMountManager = null;
+            unitVoiceController = null;
+
             uuid = null;
 
             currentState = null;
@@ -1158,10 +1159,10 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".AIController.ApplyControlEffects(): masterUnit is null, returning");
                     return;
                 }
-                masterUnit.UnitController.OnClearTarget += HandleClearTarget;
+                masterUnit.UnitController.UnitEventController.OnClearTarget += HandleClearTarget;
                 masterUnit.CharacterAbilityManager.OnAttack += HandleMasterAttack;
                 masterUnit.CharacterCombat.OnDropCombat += HandleMasterDropCombat;
-                masterUnit.UnitController.OnManualMovement += HandleMasterMovement;
+                masterUnit.UnitController.UnitEventController.OnManualMovement += HandleMasterMovement;
 
                 // CLEAR AGRO TABLE OR NOTIFY REPUTATION CHANGE - THIS SHOULD PREVENT ATTACKING SOMETHING THAT SUDDENLY IS UNDER CONTROL AND NOW YOUR FACTION WHILE YOU ARE INCOMBAT WITH IT
                 characterUnit.BaseCharacter.CharacterCombat.AggroTable.ClearTable();
@@ -1174,10 +1175,10 @@ namespace AnyRPG {
         public void RemoveControlEffects() {
             if (underControl && masterUnit != null) {
                 //masterUnit.MyCharacterController.OnSetTarget -= SetTarget;
-                masterUnit.UnitController.OnClearTarget -= HandleClearTarget;
+                masterUnit.UnitController.UnitEventController.OnClearTarget -= HandleClearTarget;
                 masterUnit.CharacterAbilityManager.OnAttack -= HandleMasterAttack;
                 masterUnit.CharacterCombat.OnDropCombat -= HandleMasterDropCombat;
-                masterUnit.UnitController.OnManualMovement -= HandleMasterMovement;
+                masterUnit.UnitController.UnitEventController.OnManualMovement -= HandleMasterMovement;
             }
             masterUnit = null;
             underControl = false;
@@ -1540,33 +1541,52 @@ namespace AnyRPG {
             Despawn();
         }
 
-        public void Agro(CharacterUnit agroTarget) {
-            //Debug.Log(gameObject.name + ".UnitController.Agro(" + agroTarget.DisplayName + ")");
+        /// <summary>
+        /// This function is called only by entry into an aggro range collider
+        /// </summary>
+        /// <param name="aggroTarget"></param>
+        public void ProximityAggro(CharacterUnit aggroTarget) {
+            //Debug.Log(gameObject.name + ".UnitController.ProximityAggro()");
+            if (characterUnit.BaseCharacter.CharacterCombat.GetInCombat() == true) {
+                //Debug.Log(gameObject.name + ".UnitController.ProximityAggro(): already in combat");
+                // already fighting this target or another target
+                // just aggro without out of combat aggro notification
+                Aggro(aggroTarget);
+            } else {
+                //Debug.Log(gameObject.name + ".UnitController.ProximityAggro(): not in combat yet");
+                if (Aggro(aggroTarget) == true) {
+                    // was out of combat and this unit was not already in the aggro table
+                    unitEventController.NotifyOnAggroTarget();
+                }
+            }
+
+        }
+
+        public bool Aggro(CharacterUnit aggroTarget) {
+            //Debug.Log(gameObject.name + ".UnitController.Aggro(" + aggroTarget.DisplayName + ")");
             // at this level, we are just pulling both parties into combat.
 
             if (currentState is DeathState) {
                 // can't be in combat when dead
-                return;
+                return false;
             }
 
-            if (agroTarget == null) {
-                //Debug.Log("no character unit on target");
-            } else if (agroTarget.BaseCharacter == null) {
-                // nothing for now
-            } else if (agroTarget.BaseCharacter.CharacterCombat == null) {
+            if (aggroTarget?.BaseCharacter?.CharacterCombat == null) {
                 //Debug.Log("no character combat on target");
-            } else {
-                if (characterUnit.BaseCharacter.CharacterCombat == null) {
-                    //Debug.Log("for some strange reason, combat is null????");
-                    // like inanimate units
-                } else {
-                    // moved liveness check into EnterCombat to centralize logic because there are multiple entry points to EnterCombat
-                    agroTarget.BaseCharacter.CharacterCombat.PullIntoCombat(characterUnit.BaseCharacter);
-                    characterUnit.BaseCharacter.CharacterCombat.PullIntoCombat(agroTarget.BaseCharacter);
-                }
-                //Debug.Log("combat is " + combat.ToString());
-                //Debug.Log("mytarget is " + MyTarget.ToString());
+                return false;
             }
+
+            if (characterUnit.BaseCharacter.CharacterCombat == null) {
+                //Debug.Log("combat is null, this is an inanimate unit?");
+                return false;
+            }
+
+            // moved liveness check into EnterCombat to centralize logic because there are multiple entry points to EnterCombat
+            aggroTarget.BaseCharacter.CharacterCombat.PullIntoCombat(characterUnit.BaseCharacter);
+
+            return characterUnit.BaseCharacter.CharacterCombat.PullIntoCombat(aggroTarget.BaseCharacter);
+
+            //return false;
         }
 
         private void ApplyControlLock() {
@@ -1672,17 +1692,21 @@ namespace AnyRPG {
                 //Debug.Log("my target is " + MyTarget.ToString());
 
                 // moved this whole block inside the evade check because it doesn't make sense to agro anything while you are evading
+                // this next block is disabled for testing because when a player moves into a collider, the aggro call is already called
+                // and we don't want it called twice because it causes an incorrect return value in the first call.
+                /*
                 CharacterUnit targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
                 if (targetCharacterUnit != null) {
-                    Agro(targetCharacterUnit);
+                    Aggro(targetCharacterUnit);
                 }
+                */
             } else {
                 if (target != null) {
                     ClearTarget();
                 }
                 target = newTarget;
             }
-            OnSetTarget(target);
+            UnitEventController.NotifyOnSetTarget(target);
             target.OnInteractableDisable += HandleTargetDisable;
         }
 
@@ -1706,7 +1730,7 @@ namespace AnyRPG {
             if (UnitMotor != null) {
                 UnitMotor.StopFollowingTarget();
             }
-            OnClearTarget(oldTarget);
+            UnitEventController.NotifyOnClearTarget(oldTarget);
         }
 
         private Vector3 GetHitBoxCenter() {
@@ -1779,7 +1803,7 @@ namespace AnyRPG {
             if ((currentState is DeathState) == true || characterUnit?.BaseCharacter?.CharacterStats?.IsReviving == true) {
                 return;
             }
-            OnManualMovement();
+            UnitEventController.NotifyOnManualMovement();
         }
 
         public bool CanGetValidAttack(bool beginAttack = false) {
@@ -1924,7 +1948,7 @@ namespace AnyRPG {
         }
 
         public override void OnSendObjectToPool() {
-            //Debug.Log(gameObject.name + ".UnitController.OnSendObjectToPool()");
+            //Debug.Log(gameObject.name + ".UnitController.UnitEventController.OnSendObjectToPool()");
             // recevied a message from the object pooler
             // this object is about to be pooled.  Re-enable all monobehaviors in case it was in preview mode
 
@@ -1936,93 +1960,6 @@ namespace AnyRPG {
                 monoBehaviour.enabled = true;
             }
         }
-
-        #region EventNotifications
-
-        public void NotifyOnReputationChange() {
-            // minimap indicator can change color if reputation changed
-            if (unitControllerMode == UnitControllerMode.Preview) {
-                return;
-            }
-            characterUnit.CallMiniMapStatusUpdateHandler();
-            OnReputationChange();
-            unitComponentController.HighlightController.UpdateColors();
-        }
-
-        public void NotifyOnBeforeDie(CharacterStats characterStats) {
-            unitComponentController.StopMovementSound();
-            unitComponentController.HighlightController.UpdateColors();
-            OnBeforeDie(characterStats);
-
-        }
-
-        public void NotifyOnAfterDie(CharacterStats characterStats) {
-            if (GetCurrentInteractables().Count == 0) {
-                RevertMaterialChange();
-            }
-        }
-
-        public void NotifyOnReviveComplete() {
-            FreezeRotation();
-            InitializeNamePlate();
-            CharacterUnit.HandleReviveComplete();
-            unitComponentController.HighlightController.UpdateColors();
-            OnReviveComplete();
-        }
-
-        public void NotifyOnLevelChanged(int newLevel) {
-            OnLevelChanged(newLevel);
-        }
-
-        public void NotifyOnUnitTypeChange(UnitType newUnitType, UnitType oldUnitType) {
-            OnUnitTypeChange(newUnitType, oldUnitType);
-        }
-        public void NotifyOnRaceChange(CharacterRace newCharacterRace, CharacterRace oldCharacterRace) {
-            OnRaceChange(newCharacterRace, oldCharacterRace);
-        }
-        public void NotifyOnClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
-            OnClassChange(newCharacterClass, oldCharacterClass);
-        }
-        public void NotifyOnSpecializationChange(ClassSpecialization newClassSpecialization, ClassSpecialization oldClassSpecialization) {
-            OnSpecializationChange(newClassSpecialization, oldClassSpecialization);
-        }
-        public void NotifyOnFactionChange(Faction newFaction, Faction oldFaction) {
-            OnFactionChange(newFaction, oldFaction);
-        }
-        public void NotifyOnNameChange(string newName) {
-            OnNameChange(newName);
-        }
-        public void NotifyOnTitleChange(string newTitle) {
-            OnTitleChange(newTitle);
-        }
-        public void NotifyOnResourceAmountChanged(PowerResource powerResource, int maxAmount, int currentAmount) {
-            OnResourceAmountChanged(powerResource, maxAmount, currentAmount);
-        }
-        public void NotifyOnStatusEffectAdd(StatusEffectNode statusEffectNode) {
-            //Debug.Log(gameObject.name + ".NotifyOnStatusEffectAdd()");
-            OnStatusEffectAdd(statusEffectNode);
-        }
-        public void NotifyOnCastTimeChanged(IAbilityCaster source, BaseAbilityProperties baseAbility, float castPercent) {
-            OnCastTimeChanged(source, baseAbility, castPercent);
-        }
-        public void NotifyOnCastComplete(BaseCharacter baseCharacter) {
-            OnCastComplete(baseCharacter);
-        }
-        public void NotifyOnCastCancel(BaseCharacter baseCharacter) {
-            OnCastCancel(baseCharacter);
-        }
-        public void NotifyOnActivateMountedState(UnitController mountUnitController) {
-            OnActivateMountedState(mountUnitController);
-        }
-        public void NotifyOnDeActivateMountedState() {
-            OnDeActivateMountedState();
-        }
-        public void NotifyOnMessageFeed(string message) {
-            //Debug.Log(gameObject.name + ".NotifyOnMessageFeed(" + message + ")");
-            OnMessageFeed(message);
-        }
-
-        #endregion
 
         #region MessagePassthroughs
 

@@ -30,7 +30,8 @@ MonoBehaviour:
     - {fileID: 7400000, guid: 39ef618c31212f54a84b976f2fdc9637, type: 2}
     castClips:
     - {fileID: 7400000, guid: 7dcc341125f091a4c8132274da300cbc, type: 2}
-    takeDamageClips: []
+    takeDamageClips:
+    - {fileID: -660191200820960166, guid: 148dcbe7ee9e43d42bf052516ed28f95, type: 3}
     idleClip: {fileID: 7400000, guid: 987fd3ff86cadf049aeba1e6d622aac8, type: 2}
     jumpClip: {fileID: 5539831331247536789, guid: d4eca31749363e44da997a0b48022861,
       type: 3}

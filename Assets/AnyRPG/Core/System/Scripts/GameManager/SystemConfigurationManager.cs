@@ -196,17 +196,6 @@ namespace AnyRPG {
         [SerializeField]
         private float fallDamageMinDistance = 10f;
 
-        [Tooltip("The audio clip to play when fall damage is taken.")]
-        [SerializeField]
-        private AudioClip fallDamageAudioClip = null;
-
-        [Tooltip("The audio profile to play when fall damage is taken.  If this value is set, it will override the audio clip above.")]
-        [SerializeField]
-        [ResourceSelector(resourceType = typeof(AudioProfile))]
-        private string fallDamageAudio = string.Empty;
-
-        private AudioProfile fallDamageAudioProfile = null;
-
         [Tooltip("When not mounted, disable native movement input to allow a third party controller (such as Invector) to move the character")]
         [SerializeField]
         private bool useThirdPartyMovementControl = false;
@@ -857,15 +846,6 @@ namespace AnyRPG {
         public bool UseFallDamage { get => useFallDamage; set => useFallDamage = value; }
         public float FallDamagePerMeter { get => fallDamagePerMeter; set => fallDamagePerMeter = value; }
         public float FallDamageMinDistance { get => fallDamageMinDistance; set => fallDamageMinDistance = value; }
-        public AudioClip FallDamageAudioClip {
-            get {
-                if (fallDamageAudioProfile != null) {
-                    return fallDamageAudioProfile.AudioClip;
-                }
-                return fallDamageAudioClip;
-            }
-            set => fallDamageAudioClip = value;
-        }
         public DefaultControllerConfiguration DefaultControllerConfiguration { get => defaultControllerConfiguration; set => defaultControllerConfiguration = value; }
         public Color ButtonNormalColor { get => buttonNormalColor; set => buttonNormalColor = value; }
         public Color ButtonHighlightedColor { get => buttonHighlightedColor; set => buttonHighlightedColor = value; }
@@ -1042,15 +1022,6 @@ namespace AnyRPG {
                     newGameAudioProfile = tmpAudioProfile;
                 } else {
                     Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): Could not find audio profile : " + newGameAudio + " while inititalizing " + gameObject.name + ".  CHECK INSPECTOR");
-                }
-            }
-
-            if (fallDamageAudio != null && fallDamageAudio != string.Empty) {
-                AudioProfile tmpAudioProfile = systemDataFactory.GetResource<AudioProfile>(fallDamageAudio);
-                if (tmpAudioProfile != null) {
-                    fallDamageAudioProfile = tmpAudioProfile;
-                } else {
-                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): Could not find audio profile : " + fallDamageAudio + " while inititalizing " + gameObject.name + ".  CHECK INSPECTOR");
                 }
             }
 

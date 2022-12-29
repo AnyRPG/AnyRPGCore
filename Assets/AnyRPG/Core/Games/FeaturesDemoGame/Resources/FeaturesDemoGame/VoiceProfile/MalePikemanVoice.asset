@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9919e93b6dbcc294c82debc9e9adf546, type: 3}
+  m_Name: MalePikemanVoice
+  m_EditorClassIdentifier: 
+  resourceName: Male Pikeman
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  voiceProps:
+    aggro:
+    - {fileID: 8300000, guid: 8ea0960478ec78c40aed6d2f974bb9ff, type: 3}
+    - {fileID: 8300000, guid: 9d79040e2cc42f44d9e3abfd3a8c2fbd, type: 3}
+    damage: []
+    jump: []
+    fallDamage: []
+    death:
+    - {fileID: 8300000, guid: 4279ad4998bcab546b4f69025ba25cf8, type: 3}
+    victory:
+    - {fileID: 8300000, guid: 3f085612d040917468a386ee190d1b34, type: 3}
+    startInteract: []
+    purchase: []
+    stopInteract: []

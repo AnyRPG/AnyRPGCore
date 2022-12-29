@@ -78,7 +78,7 @@ namespace AnyRPG {
             }
             if (targetUnitController != null && targetSubscriptionActive == false) {
                 //Debug.Log("StatusEffectPanelController.CreateEventSubscriptions(): characterStats is not null.");
-                targetUnitController.OnStatusEffectAdd += HandleStatusEffectAdd;
+                targetUnitController.UnitEventController.OnStatusEffectAdd += HandleStatusEffectAdd;
                 targetSubscriptionActive = true;
             }
         }
@@ -86,7 +86,7 @@ namespace AnyRPG {
         public void CleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".StatusEffectPanelController.CleanupEventSubscriptions()");
             if (targetUnitController != null) {
-                targetUnitController.OnStatusEffectAdd -= HandleStatusEffectAdd;
+                targetUnitController.UnitEventController.OnStatusEffectAdd -= HandleStatusEffectAdd;
             }
             targetSubscriptionActive = false;
         }

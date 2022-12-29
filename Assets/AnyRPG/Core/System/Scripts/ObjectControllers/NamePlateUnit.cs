@@ -52,7 +52,7 @@ namespace AnyRPG {
         /// <summary>
         /// directly initialize a nameplate
         /// </summary>
-        protected bool InitializeNamePlate() {
+        public bool InitializeNamePlate() {
             //Debug.Log(gameObject.name + ".NamePlateUnit.InitializenamePlate() namePlateReady: " + namePlateReady);
             // account for characters that spawn dead 
             if (namePlateReady == true) {

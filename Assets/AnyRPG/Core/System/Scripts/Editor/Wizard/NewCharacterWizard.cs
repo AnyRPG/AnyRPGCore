@@ -187,6 +187,7 @@ namespace AnyRPG.Editor {
             asset.CharacterName = characterName;
             asset.AutomaticPrefabProfile = false;
             asset.UseInlinePrefabProps = true;
+            asset.UseInlineVoiceProps = true;
 
             // setup unit prefab properties
             GameObject unitPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets" + pathToDefaultCharacterUnitPrefab);

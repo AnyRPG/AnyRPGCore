@@ -149,6 +149,17 @@ MonoBehaviour:
   spawnDead: 0
   preventAutoDespawn: 0
   defaultToughness: 
+  voiceProfile: Female Low Fire Mage
+  useInlineVoiceProps: 0
+  voiceProps:
+    aggro: []
+    damage: []
+    jump: []
+    fallDamage: []
+    death: []
+    victory: []
+    startInteract: []
+    stopInteract: []
   capabilities:
     abilityNames: []
     traitNames: []

@@ -295,6 +295,11 @@ namespace AnyRPG {
             return false;
         }
 
+        public override bool PlayInteractionSound() {
+            return true;
+        }
+
+
         public override void CleanupScriptableObjects() {
             base.CleanupScriptableObjects();
             foreach (QuestNode questNode in Props.Quests) {

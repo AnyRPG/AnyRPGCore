@@ -210,6 +210,10 @@ namespace AnyRPG {
             factoryDataAccess.Setup<ChatCommand>("ChatCommand", systemGameManager);
             dataDictionary.Add(typeof(ChatCommand), factoryDataAccess);
 
+            factoryDataAccess = new FactoryDataAccess();
+            factoryDataAccess.Setup<VoiceProfile>("VoiceProfile", systemGameManager);
+            dataDictionary.Add(typeof(VoiceProfile), factoryDataAccess);
+
             //setup scriptable objects
             foreach (FactoryDataAccess dataAccess in dataDictionary.Values) {
                 dataAccess.SetupScriptableObjects(systemGameManager);

@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9919e93b6dbcc294c82debc9e9adf546, type: 3}
+  m_Name: MaleGuardVoice
+  m_EditorClassIdentifier: 
+  resourceName: Male Guard
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  voiceProps:
+    aggro:
+    - {fileID: 8300000, guid: d27d5375e0f091b40963cfb6a0352ba0, type: 3}
+    - {fileID: 8300000, guid: 1fa4e4c1934d5cd4db9bac16a3e6f57f, type: 3}
+    - {fileID: 8300000, guid: a42a9c9b8e214e5439261ab6c4ebd508, type: 3}
+    attack: []
+    damage: []
+    jump: []
+    fallDamage: []
+    death:
+    - {fileID: 8300000, guid: 5f9da92376ebb774a98070246e5c810e, type: 3}
+    victory:
+    - {fileID: 8300000, guid: 761f236b0889ffe418bd8dc26a365fdc, type: 3}
+    startInteract: []
+    startVendorInteract: []
+    stopInteract: []
+    stopVendorInteract: []

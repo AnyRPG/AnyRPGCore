@@ -442,6 +442,13 @@ namespace AnyRPG {
                 currentAnimations.CastClips = defaultAnimationProps.CastClips;
             }
 
+            // take damage
+            if (currentAnimationProps.TakeDamageClips != null && currentAnimationProps.TakeDamageClips.Count > 0) {
+                currentAnimations.TakeDamageClips = currentAnimationProps.TakeDamageClips;
+            } else {
+                currentAnimations.TakeDamageClips = defaultAnimationProps.TakeDamageClips;
+            }
+
             //overrideController = tempOverrideController;
             //Debug.Log(gameObject.name + ": setting override controller to: " + overrideController.name);
             //SetOverrideController(overrideController);
@@ -460,6 +467,14 @@ namespace AnyRPG {
         }
 
         // special melee attack
+        /// <summary>
+        /// begin an animated attack and return the speed normalized animation length in seconds
+        /// </summary>
+        /// <param name="animationClip"></param>
+        /// <param name="baseAbility"></param>
+        /// <param name="targetCharacterUnit"></param>
+        /// <param name="abilityEffectContext"></param>
+        /// <returns></returns>
         public float HandleAbility(AnimationClip animationClip, BaseAbilityProperties baseAbility, BaseCharacter targetCharacterUnit, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(unitController.gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.DisplayName + ")");
             if (animator == null) {
@@ -537,7 +552,7 @@ namespace AnyRPG {
             // attackCoroutine = StartCoroutine(WaitForAnimation(baseAbility, animationLength, false, false, true));
         }
 
-        // non melee ability (spell) cast
+        // non combat action
         public void HandleAction(AnimationClip animationClip, AnimatedActionProperties animatedActionProperties) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility()");
             if (animator == null) {
@@ -566,6 +581,16 @@ namespace AnyRPG {
 
         public bool WaitingForAnimation() {
             if (attackCoroutine != null) {
+                return true;
+            }
+            return false;
+        }
+
+        public bool WaitingForCastOrAttackAnimation() {
+            if (WaitingForAnimation() == true) {
+                return true;
+            }
+            if (ParameterExists("Casting") && animator.GetBool("Casting") == true) {
                 return true;
             }
             return false;
@@ -704,7 +729,7 @@ namespace AnyRPG {
         }
 
         public void HandleDie(CharacterStats characterStats) {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.HandleDeath()");
+            //Debug.Log(unitController.gameObject.name + ".UnitAnimator.HandleDie()");
 
             OnDeath();
 
@@ -751,6 +776,16 @@ namespace AnyRPG {
                 float animationLength = overrideController[systemConfigurationManager.SystemAnimationProfile.AnimationProps.ReviveClip.name].length + 2;
                 resurrectionCoroutine = unitController.StartCoroutine(WaitForResurrectionAnimation(animationLength));
             }
+        }
+
+        public void HandleTakeDamage() {
+            //Debug.Log(unitController.gameObject.name + ".UnitAnimation.HandleTakeDamage()");
+
+            if (WaitingForCastOrAttackAnimation() == true) {
+                // only activate the take damage animation if not in the middle of a swing / cast
+                return;
+            }
+            SetTrigger("TakeDamageTrigger");
         }
 
         public void HandleLevitated() {

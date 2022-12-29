@@ -97,7 +97,8 @@ namespace AnyRPG {
                 if (Faction.RelationWith(otherBaseCharacter, BaseCharacter) <= -1) {
                     //baseCharacter.CharacterCombat.MyAggroTable.AddToAggroTable(_characterUnit, -1);
                     //baseCharacter.CharacterCombat.EnterCombat(targetInteractable);
-                    baseCharacter.UnitController.Agro(_characterUnit);
+                    baseCharacter.UnitController.ProximityAggro(_characterUnit);
+
                 }
             }
         }

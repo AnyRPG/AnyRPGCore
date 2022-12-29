@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9919e93b6dbcc294c82debc9e9adf546, type: 3}
+  m_Name: FemaleHighFireMageVoice
+  m_EditorClassIdentifier: 
+  resourceName: Female High Fire Mage
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  voiceProps:
+    aggro:
+    - {fileID: 8300000, guid: 41942c059e13191498404070cfebf2de, type: 3}
+    attack:
+    - {fileID: 8300000, guid: c3d42923b957c2c4a9f34db7bd8b2170, type: 3}
+    - {fileID: 8300000, guid: a57503b5c2701c84b8938480a0f17d31, type: 3}
+    - {fileID: 8300000, guid: eb9f1e75fbdbde74ebd2d6ee780bc159, type: 3}
+    damage:
+    - {fileID: 8300000, guid: 871464cc5d61efa4a88e194cffe1a82e, type: 3}
+    - {fileID: 8300000, guid: 2b371b2f5a75c0c44baeb4709ad2991d, type: 3}
+    - {fileID: 8300000, guid: 62cc59813d1ecab43a2f84305113dd2e, type: 3}
+    jump:
+    - {fileID: 8300000, guid: 6e8e9d1145f9dd74eb1bf37f809294d0, type: 3}
+    - {fileID: 8300000, guid: e11fa2ae822a2944da8ddecd1b6faafd, type: 3}
+    - {fileID: 8300000, guid: 6ba818a326768fa44a50834c6becc884, type: 3}
+    fallDamage:
+    - {fileID: 8300000, guid: 871464cc5d61efa4a88e194cffe1a82e, type: 3}
+    - {fileID: 8300000, guid: 2b371b2f5a75c0c44baeb4709ad2991d, type: 3}
+    - {fileID: 8300000, guid: 62cc59813d1ecab43a2f84305113dd2e, type: 3}
+    death:
+    - {fileID: 8300000, guid: d3a64c24f764ecb4d84198b479a1b383, type: 3}
+    - {fileID: 8300000, guid: 9385d82cc39101a439b6441551da3134, type: 3}
+    - {fileID: 8300000, guid: 371f9bfc87cd97f4393b741034759a2d, type: 3}
+    - {fileID: 8300000, guid: 400e3b183adba0743843c8e21dd95035, type: 3}
+    - {fileID: 8300000, guid: 59a9fe277630d744bbdb17e79149d0c5, type: 3}
+    victory: []
+    startInteract: []
+    startVendorInteract: []
+    stopInteract: []
+    stopVendorInteract: []

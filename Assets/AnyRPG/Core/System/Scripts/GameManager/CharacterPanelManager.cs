@@ -57,12 +57,12 @@ namespace AnyRPG {
             cloneSource = playerManager.ActiveUnitController.UnitProfile;
             SpawnUnit();
             systemEventManager.OnEquipmentChanged += HandleEquipmentChanged;
-            playerManager.ActiveUnitController.OnUnitTypeChange += HandleUnitTypeChange;
-            playerManager.ActiveUnitController.OnRaceChange += HandleRaceChange;
-            playerManager.ActiveUnitController.OnFactionChange += HandleFactionChange;
-            playerManager.ActiveUnitController.OnClassChange += HandleClassChange;
-            playerManager.ActiveUnitController.OnSpecializationChange += HandleSpecializationChange;
-            playerManager.ActiveUnitController.OnLevelChanged += HandleLevelChanged;
+            playerManager.ActiveUnitController.UnitEventController.OnUnitTypeChange += HandleUnitTypeChange;
+            playerManager.ActiveUnitController.UnitEventController.OnRaceChange += HandleRaceChange;
+            playerManager.ActiveUnitController.UnitEventController.OnFactionChange += HandleFactionChange;
+            playerManager.ActiveUnitController.UnitEventController.OnClassChange += HandleClassChange;
+            playerManager.ActiveUnitController.UnitEventController.OnSpecializationChange += HandleSpecializationChange;
+            playerManager.ActiveUnitController.UnitEventController.OnLevelChanged += HandleLevelChanged;
         }
 
         public void HandleUnitTypeChange(UnitType newUnitType, UnitType oldUnitType) {
@@ -93,12 +93,12 @@ namespace AnyRPG {
         public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("CharacterPanel.HandlePlayerUnitDespawn()");
             systemEventManager.OnEquipmentChanged -= HandleEquipmentChanged;
-            playerManager.ActiveUnitController.OnUnitTypeChange -= HandleUnitTypeChange;
-            playerManager.ActiveUnitController.OnRaceChange -= HandleRaceChange;
-            playerManager.ActiveUnitController.OnFactionChange -= HandleFactionChange;
-            playerManager.ActiveUnitController.OnClassChange -= HandleClassChange;
-            playerManager.ActiveUnitController.OnSpecializationChange -= HandleSpecializationChange;
-            playerManager.ActiveUnitController.OnLevelChanged -= HandleLevelChanged;
+            playerManager.ActiveUnitController.UnitEventController.OnUnitTypeChange -= HandleUnitTypeChange;
+            playerManager.ActiveUnitController.UnitEventController.OnRaceChange -= HandleRaceChange;
+            playerManager.ActiveUnitController.UnitEventController.OnFactionChange -= HandleFactionChange;
+            playerManager.ActiveUnitController.UnitEventController.OnClassChange -= HandleClassChange;
+            playerManager.ActiveUnitController.UnitEventController.OnSpecializationChange -= HandleSpecializationChange;
+            playerManager.ActiveUnitController.UnitEventController.OnLevelChanged -= HandleLevelChanged;
 
             DespawnUnit();
         }

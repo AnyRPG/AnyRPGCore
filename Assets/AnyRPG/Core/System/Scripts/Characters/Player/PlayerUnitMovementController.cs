@@ -840,6 +840,7 @@ namespace AnyRPG {
             playerManager.ActiveUnitController.UnitAnimator.SetJumping(1);
             playerManager.ActiveUnitController.UnitAnimator.SetTrigger("JumpTrigger");
             lastJumpFrame = Time.frameCount;
+            playerManager.ActiveUnitController.UnitEventController.NotifyOnJump();
             MoveRelative();
         }
 

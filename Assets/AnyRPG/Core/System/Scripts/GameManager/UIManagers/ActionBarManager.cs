@@ -255,8 +255,8 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("ActionBarmanager.HandlePlayerUnitSpawn()");
-            playerManager.UnitController.OnSetTarget += HandleSetTarget;
-            playerManager.UnitController.OnClearTarget += HandleClearTarget;
+            playerManager.UnitController.UnitEventController.OnSetTarget += HandleSetTarget;
+            playerManager.UnitController.UnitEventController.OnClearTarget += HandleClearTarget;
         }
 
         public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
@@ -265,8 +265,8 @@ namespace AnyRPG {
             // this needs to be called manually here because if the character controller processes the player unit despawn after us, we will miss the event
             HandleClearTarget(null);
 
-            playerManager.UnitController.OnSetTarget -= HandleSetTarget;
-            playerManager.UnitController.OnClearTarget -= HandleClearTarget;
+            playerManager.UnitController.UnitEventController.OnSetTarget -= HandleSetTarget;
+            playerManager.UnitController.UnitEventController.OnClearTarget -= HandleClearTarget;
         }
 
         public void HandleSetTarget(Interactable target) {

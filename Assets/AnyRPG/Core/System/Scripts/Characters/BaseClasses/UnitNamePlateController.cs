@@ -100,10 +100,10 @@ namespace AnyRPG {
         }
 
         public override void RemoveNamePlate() {
-            unitController.OnResourceAmountChanged -= HandleResourceAmountChanged;
-            unitController.OnTitleChange -= HandleTitleChange;
-            unitController.OnNameChange -= HandleNameChange;
-            unitController.OnReputationChange -= HandleReputationChange;
+            unitController.UnitEventController.OnResourceAmountChanged -= HandleResourceAmountChanged;
+            unitController.UnitEventController.OnTitleChange -= HandleTitleChange;
+            unitController.UnitEventController.OnNameChange -= HandleNameChange;
+            unitController.UnitEventController.OnReputationChange -= HandleReputationChange;
 
             base.RemoveNamePlate();
         }
@@ -114,10 +114,10 @@ namespace AnyRPG {
             if (HasHealth() == true) {
                 namePlate.ProcessHealthChanged(MaxHealth(), CurrentHealth());
             }
-            unitController.OnResourceAmountChanged += HandleResourceAmountChanged;
-            unitController.OnTitleChange += HandleTitleChange;
-            unitController.OnNameChange += HandleNameChange;
-            unitController.OnReputationChange += HandleReputationChange;
+            unitController.UnitEventController.OnResourceAmountChanged += HandleResourceAmountChanged;
+            unitController.UnitEventController.OnTitleChange += HandleTitleChange;
+            unitController.UnitEventController.OnNameChange += HandleNameChange;
+            unitController.UnitEventController.OnReputationChange += HandleReputationChange;
         }
 
         public void HandleReputationChange() {

@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9919e93b6dbcc294c82debc9e9adf546, type: 3}
+  m_Name: MaleWizardVoice
+  m_EditorClassIdentifier: 
+  resourceName: Male Wizard
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  voiceProps:
+    aggro:
+    - {fileID: 8300000, guid: 91ed59677a345864bb9ce5a3e7720d2d, type: 3}
+    - {fileID: 8300000, guid: c720e2a4b73c6b544aea9cc6acd78cd1, type: 3}
+    damage: []
+    jump: []
+    fallDamage: []
+    death:
+    - {fileID: 8300000, guid: 1f83b6a11d53db2419dd65534ebf1a48, type: 3}
+    victory:
+    - {fileID: 8300000, guid: 35e7766fe02885c44b402ab2d1d08b70, type: 3}
+    startInteract: []
+    purchase: []
+    stopInteract: []

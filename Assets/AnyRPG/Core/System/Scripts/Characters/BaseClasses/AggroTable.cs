@@ -95,7 +95,7 @@ namespace AnyRPG {
         /// <param name="aggroAmount"></param>
         /// return true if new entry to the table
         public bool AddToAggroTable(CharacterUnit targetCharacterUnit, int aggroAmount) {
-            //Debug.Log(baseCharacter.gameObject.name + ".AggroTable.AddToAggroTable(): target: " + targetCharacterUnit.name + "; amount: " + aggroAmount);
+            //Debug.Log(baseCharacter.gameObject.name + ".AggroTable.AddToAggroTable(): target: " + targetCharacterUnit.DisplayName + "; amount: " + aggroAmount);
 
             if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == false) {
                 return false;
@@ -119,7 +119,7 @@ namespace AnyRPG {
             }
 
             if (!isAlreadyInAggroTable) {
-                //Debug.Log(baseCharacter.gameObject.name + " adding new entry " + targetCharacterUnit.name + " to aggro table with amount: " + aggroAmount);
+                //Debug.Log(baseCharacter.gameObject.name + " adding new entry " + targetCharacterUnit.DisplayName + " to aggro table with amount: " + aggroAmount);
                 AggroNode aggroNode = new AggroNode();
                 aggroNode.aggroTarget = targetCharacterUnit;
                 aggroNode.aggroValue = aggroAmount;
@@ -127,7 +127,7 @@ namespace AnyRPG {
             }
             //if he is, add the damage amount to the agro.
             //if not, add him to the table with the damage amount.
-
+            //Debug.Log(baseCharacter.gameObject.name + ".AddToAggroTable() isAlreadyInAggroTable: " + isAlreadyInAggroTable);
             return !isAlreadyInAggroTable;
         }
 

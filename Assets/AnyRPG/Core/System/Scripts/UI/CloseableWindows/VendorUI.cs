@@ -28,6 +28,9 @@ namespace AnyRPG {
 
         VendorCollection buyBackCollection = null;
 
+        // track the interactable to send a message back when the window closes
+        InteractableOptionComponent interactableOptionComponent = null;
+
         // game manager references
         protected PlayerManager playerManager = null;
         protected UIManager uIManager = null;
@@ -43,10 +46,7 @@ namespace AnyRPG {
             messageFeedManager = uIManager.MessageFeedManager;
             currencyConverter = systemGameManager.CurrencyConverter;
 
-            //vendorUI.CreatePages(items);
             CreateEventSubscriptions();
-            //InitializeBuyBackList();
-            //buyBackCollection = new VendorCollection();
             buyBackCollection = ScriptableObject.CreateInstance(typeof(VendorCollection)) as VendorCollection;
 
             currencyBarController.Configure(systemGameManager);
@@ -134,6 +134,8 @@ namespace AnyRPG {
             ClearButtons();
             ClearPages();
             ClearVendorCollections();
+            interactableOptionComponent?.ProcessStopInteract();
+            interactableOptionComponent = null;
         }
 
         public override void ProcessOpenWindowNotification() {
@@ -161,7 +163,9 @@ namespace AnyRPG {
             }
         }
 
-        public void PopulateDropDownList(List<VendorCollection> vendorCollections) {
+        public void PopulateDropDownList(List<VendorCollection> vendorCollections, InteractableOptionComponent interactableOptionComponent) {
+            this.interactableOptionComponent = interactableOptionComponent;
+            interactableOptionComponent.ProcessStartInteract();
             UpdateCurrencyAmount();
             dropDownIndex = 1;
             this.vendorCollections = new List<VendorCollection>(1 + vendorCollections.Count);

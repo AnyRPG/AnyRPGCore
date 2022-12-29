@@ -79,16 +79,16 @@ namespace AnyRPG {
             // have to set this here instead of constructor because the base constructor will call this before the local constructor runs
             characterUnit = CharacterUnit.GetCharacterUnit(interactable);
 
-            (characterUnit.Interactable as UnitController).OnBeforeDie += HandleDeath;
-            (characterUnit.Interactable as UnitController).OnReviveComplete += HandleRevive;
+            (characterUnit.Interactable as UnitController).UnitEventController.OnBeforeDie += HandleDeath;
+            (characterUnit.Interactable as UnitController).UnitEventController.OnReviveComplete += HandleRevive;
         }
 
         public override void ProcessCleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".LootableCharacter.CleanupEventSubscriptions()");
             base.ProcessCleanupEventSubscriptions();
             if (characterUnit != null && characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.CharacterStats != null) {
-                (characterUnit.Interactable as UnitController).OnBeforeDie -= HandleDeath;
-                (characterUnit.Interactable as UnitController).OnReviveComplete -= HandleRevive;
+                (characterUnit.Interactable as UnitController).UnitEventController.OnBeforeDie -= HandleDeath;
+                (characterUnit.Interactable as UnitController).UnitEventController.OnReviveComplete -= HandleRevive;
             }
             if (monitoringTakeLoot) {
                 SystemEventManager.StopListening("OnTakeLoot", HandleTakeLoot);

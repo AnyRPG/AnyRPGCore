@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Red Knight
   displayName: 
-  icon: {fileID: 21300000, guid: ddc11cfd0bc3b22489ffaba76d4aaa30, type: 3}
+  icon: {fileID: 21300000, guid: 048eefc2e1d37234f8e1ac94eb1c7594, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -26,7 +26,7 @@ MonoBehaviour:
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 6954704190252621995, guid: bdfcb96e9ecf4f941a66092ee55778ab,
+    modelPrefab: {fileID: 8136326391836591863, guid: 03dde8d2ccb7b0142998737a9f56396d,
       type: 3}
     animationProfileName: 
     useInlineAnimationProps: 0
@@ -149,6 +149,20 @@ MonoBehaviour:
   spawnDead: 0
   preventAutoDespawn: 0
   defaultToughness: 
+  voiceProfile: Male Pikeman
+  useInlineVoiceProps: 0
+  voiceProps:
+    aggro: []
+    attack: []
+    damage: []
+    jump: []
+    fallDamage: []
+    death: []
+    victory: []
+    startInteract: []
+    startVendorInteract: []
+    stopInteract: []
+    stopVendorInteract: []
   capabilities:
     abilityNames: []
     traitNames: []

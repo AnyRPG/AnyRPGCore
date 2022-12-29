@@ -26,6 +26,10 @@ namespace AnyRPG {
             uIManager.bankWindow.CloseWindow();
         }
 
+        public override bool PlayInteractionSound() {
+            return true;
+        }
+
     }
 
 }

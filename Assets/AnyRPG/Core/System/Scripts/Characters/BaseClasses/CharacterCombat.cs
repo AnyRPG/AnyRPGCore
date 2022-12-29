@@ -175,7 +175,7 @@ namespace AnyRPG {
         }
 
         public bool WaitingForAction() {
-            if (baseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility == true || baseCharacter.CharacterCombat.WaitingForAutoAttack == true || baseCharacter.CharacterAbilityManager.IsCasting == true) {
+            if (baseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility == true || WaitingForAutoAttack == true || baseCharacter.CharacterAbilityManager.IsCasting == true) {
                 // can't auto-attack during auto-attack, animated attack, or cast
                 return true;
             }
@@ -219,7 +219,7 @@ namespace AnyRPG {
                 swingTarget = characterTarget;
 
                 // Perform the attack. OnAttack should have been populated by the animator to begin an attack animation and send us an AttackHitEvent to respond to
-                if (WaitingForAction() == false && waitingForAutoAttack == false) {
+                if (WaitingForAction() == false) {
                     // in order to support attacks from bows (or wands in the future), the weapon needs to be unsheathed
                     baseCharacter.CharacterAbilityManager.AttemptAutoAttack(playerInitiated);
                 }
@@ -296,6 +296,8 @@ namespace AnyRPG {
                     //EnterCombat(_interactable);
                 }
             }
+
+            baseCharacter.UnitController?.UnitEventController.NotifyOnTakeDamage();
 
         }
 
@@ -434,15 +436,15 @@ namespace AnyRPG {
             return (Time.time - lastAttackBegin < attackSpeed);
         }
 
-        public virtual bool PullIntoCombat(BaseCharacter baseCharacter) {
-            //return PullIntoCombat(baseCharacter.UnitController);
+        public virtual bool PullIntoCombat(BaseCharacter targetBaseCharacter) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.PullIntoCombat()");
 
             // cancel things like stealth
             if (inCombat == false) {
-                baseCharacter?.CharacterStats.CancelNonCombatEffects();
+                targetBaseCharacter?.CharacterStats.CancelNonCombatEffects();
             }
 
-            return EnterCombat(baseCharacter.UnitController);
+            return EnterCombat(targetBaseCharacter.UnitController);
         }
 
         /*
@@ -459,6 +461,8 @@ namespace AnyRPG {
         /// <param name="target"></param>
         /// return true if this is a new entry, false if not
         public virtual bool EnterCombat(Interactable target) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.EnterCombat()");
+
             CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(target);
             if (_characterUnit == null || _characterUnit.BaseCharacter.CharacterStats.IsAlive == false || BaseCharacter.CharacterStats.IsAlive == false) {
                 return false;
@@ -671,6 +675,8 @@ namespace AnyRPG {
             ProcessTakeDamage(abilityEffectContext, powerResource, damage, source, combatMagnitude, abilityEffect);
             //Debug.Log(gameObject.name + " sending " + damage.ToString() + " to character stats");
             baseCharacter.CharacterStats.ReducePowerResource(powerResource, damage);
+            
+            // check if dead.  if alive, then play take damage animation
             return true;
         }
 
@@ -687,7 +693,7 @@ namespace AnyRPG {
 
                 CharacterUnit _characterUnit = sourceCharacter.AbilityManager.GetCharacterUnit();
                 if (_characterUnit != null) {
-                    baseCharacter.UnitController.Agro(_characterUnit);
+                    baseCharacter.UnitController.Aggro(_characterUnit);
                 }
                 //Debug.Log(gameObject.name + " about to take " + damage.ToString() + " damage. Character is alive");
                 //float distance = Vector3.Distance(transform.position, sourcePosition);
@@ -723,6 +729,7 @@ namespace AnyRPG {
             }
             aggroTable.ClearSingleTarget(sourceCharacter.UnitController.CharacterUnit);
             TryToDropCombat();
+            baseCharacter.UnitController?.UnitEventController.NotifyOnKillTarget();
         }
 
         public virtual void BroadcastCharacterDeath() {

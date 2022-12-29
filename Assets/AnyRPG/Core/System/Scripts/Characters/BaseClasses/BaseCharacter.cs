@@ -411,7 +411,7 @@ namespace AnyRPG {
                 characterName = newName;
                 //OnNameChange(newName);
                 if (unitController != null && notify == true) {
-                    UnitController.NotifyOnNameChange(newName);
+                    UnitController.UnitEventController.NotifyOnNameChange(newName);
                 }
             }
         }
@@ -422,7 +422,7 @@ namespace AnyRPG {
                 title = newTitle;
                 //OnTitleChange(newTitle);
                 if (unitController != null && notify == true) {
-                    unitController.NotifyOnTitleChange(newTitle);
+                    unitController.UnitEventController.NotifyOnTitleChange(newTitle);
                 }
             }
         }
@@ -452,7 +452,7 @@ namespace AnyRPG {
                     ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot, processEquipmentRestrictions);
 
                     if (unitController != null) {
-                        unitController.NotifyOnFactionChange(newFaction, oldFaction);
+                        unitController.UnitEventController.NotifyOnFactionChange(newFaction, oldFaction);
                     }
                 }
                 characterFactionManager.SetReputation(newFaction);
@@ -490,7 +490,7 @@ namespace AnyRPG {
                     ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot, processEquipmentRestrictions);
 
                     if (unitController != null) {
-                        unitController.NotifyOnSpecializationChange(newClassSpecialization, oldClassSpecialization);
+                        unitController.UnitEventController.NotifyOnSpecializationChange(newClassSpecialization, oldClassSpecialization);
                     }
                 }
 
@@ -525,7 +525,7 @@ namespace AnyRPG {
                     ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot, processEquipmentRestrictions);
 
                     if (unitController != null) {
-                        unitController.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
+                        unitController.UnitEventController.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
                     }
                 }
 
@@ -569,7 +569,7 @@ namespace AnyRPG {
                     ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot, processEquipmentRestrictions);
 
                     if (unitController != null) {
-                        unitController.NotifyOnRaceChange(newCharacterRace, oldCharacterRace);
+                        unitController.UnitEventController.NotifyOnRaceChange(newCharacterRace, oldCharacterRace);
                     }
                 }
 
@@ -605,7 +605,7 @@ namespace AnyRPG {
                     ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot, processEquipmentRestrictions);
 
                     if (unitController != null) {
-                        unitController.NotifyOnUnitTypeChange(newUnitType, oldUnitType);
+                        unitController.UnitEventController.NotifyOnUnitTypeChange(newUnitType, oldUnitType);
                     }
                 }
 

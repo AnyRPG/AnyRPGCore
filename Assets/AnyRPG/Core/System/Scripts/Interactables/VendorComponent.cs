@@ -27,8 +27,9 @@ namespace AnyRPG {
             //Debug.Log(source + " attempting to interact with " + gameObject.name);
             if (!uIManager.vendorWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
+
                 uIManager.vendorWindow.OpenWindow();
-                (uIManager.vendorWindow.CloseableWindowContents as VendorUI).PopulateDropDownList(Props.VendorCollections);
+                (uIManager.vendorWindow.CloseableWindowContents as VendorUI).PopulateDropDownList(Props.VendorCollections, this);
                 return true;
             }
             return false;
@@ -38,6 +39,11 @@ namespace AnyRPG {
             base.StopInteract();
             uIManager.vendorWindow.CloseWindow();
         }
+
+        public override bool PlayInteractionSound() {
+            return true;
+        }
+
 
     }
 

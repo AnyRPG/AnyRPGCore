@@ -332,12 +332,12 @@ namespace AnyRPG {
 
             if (namePlateController != null && namePlateController.Interactable.CharacterUnit != null) {
                 //Debug.Log(gameObject.name + ".UnitFrameController.ClearTarget(" + closeWindowOnClear + "). Unsubscribing from " + namePlateController.Interactable?.gameObject.name);
-                (namePlateController as UnitNamePlateController).UnitController.OnResourceAmountChanged -= HandleResourceAmountChanged;
-                (namePlateController as UnitNamePlateController).UnitController.OnNameChange -= HandleNameChange;
-                (namePlateController as UnitNamePlateController).UnitController.OnClassChange -= HandleClassChange;
-                (namePlateController as UnitNamePlateController).UnitController.OnLevelChanged -= HandleLevelChanged;
-                (namePlateController as UnitNamePlateController).UnitController.OnReviveComplete -= HandleReviveComplete;
-                (namePlateController as UnitNamePlateController).UnitController.OnReputationChange -= HandleReputationChange;
+                (namePlateController as UnitNamePlateController).UnitController.UnitEventController.OnResourceAmountChanged -= HandleResourceAmountChanged;
+                (namePlateController as UnitNamePlateController).UnitController.UnitEventController.OnNameChange -= HandleNameChange;
+                (namePlateController as UnitNamePlateController).UnitController.UnitEventController.OnClassChange -= HandleClassChange;
+                (namePlateController as UnitNamePlateController).UnitController.UnitEventController.OnLevelChanged -= HandleLevelChanged;
+                (namePlateController as UnitNamePlateController).UnitController.UnitEventController.OnReviveComplete -= HandleReviveComplete;
+                (namePlateController as UnitNamePlateController).UnitController.UnitEventController.OnReputationChange -= HandleReputationChange;
             }
             namePlateController = null;
             targetInitialized = false;
@@ -382,12 +382,12 @@ namespace AnyRPG {
 
             // allow the character to send us events whenever the hp, mana, or cast time has changed so we can update the windows that display those values
             if ((namePlateController as UnitNamePlateController) is UnitNamePlateController) {
-                (namePlateController as UnitNamePlateController).UnitController.OnResourceAmountChanged += HandleResourceAmountChanged;
-                (namePlateController as UnitNamePlateController).UnitController.OnNameChange += HandleNameChange;
-                (namePlateController as UnitNamePlateController).UnitController.OnLevelChanged += HandleLevelChanged;
-                (namePlateController as UnitNamePlateController).UnitController.OnReviveComplete += HandleReviveComplete;
-                (namePlateController as UnitNamePlateController).UnitController.OnClassChange += HandleClassChange;
-                (namePlateController as UnitNamePlateController).UnitController.OnReputationChange += HandleReputationChange;
+                (namePlateController as UnitNamePlateController).UnitController.UnitEventController.OnResourceAmountChanged += HandleResourceAmountChanged;
+                (namePlateController as UnitNamePlateController).UnitController.UnitEventController.OnNameChange += HandleNameChange;
+                (namePlateController as UnitNamePlateController).UnitController.UnitEventController.OnLevelChanged += HandleLevelChanged;
+                (namePlateController as UnitNamePlateController).UnitController.UnitEventController.OnReviveComplete += HandleReviveComplete;
+                (namePlateController as UnitNamePlateController).UnitController.UnitEventController.OnClassChange += HandleClassChange;
+                (namePlateController as UnitNamePlateController).UnitController.UnitEventController.OnReputationChange += HandleReputationChange;
             }
 
             HandleLevelChanged(namePlateController.Level);

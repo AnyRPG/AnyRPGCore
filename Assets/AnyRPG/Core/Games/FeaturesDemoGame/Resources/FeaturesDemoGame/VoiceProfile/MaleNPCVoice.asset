@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9919e93b6dbcc294c82debc9e9adf546, type: 3}
+  m_Name: MaleNPCVoice
+  m_EditorClassIdentifier: 
+  resourceName: Male NPC
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  voiceProps:
+    aggro: []
+    attack: []
+    damage: []
+    jump: []
+    fallDamage: []
+    death: []
+    victory: []
+    startInteract:
+    - {fileID: 8300000, guid: 1430870eaeabf6d4b92a3358307ba4e3, type: 3}
+    startVendorInteract:
+    - {fileID: 8300000, guid: 2d505a5fee8475c4190e378085575626, type: 3}
+    - {fileID: 8300000, guid: 1430870eaeabf6d4b92a3358307ba4e3, type: 3}
+    - {fileID: 8300000, guid: 371cb9231a1d08b4980f3f1fee4f4c1b, type: 3}
+    - {fileID: 8300000, guid: 4c4ce7bf75a9c5d40ba3b46268e9651c, type: 3}
+    stopInteract: []
+    stopVendorInteract: []

@@ -94,7 +94,7 @@ namespace AnyRPG {
             // this will allow the character to be attacked while mounted.
             mountUnitController.CharacterUnit = unitController.CharacterUnit;
 
-            unitController.NotifyOnActivateMountedState(mountUnitController);
+            unitController.UnitEventController.NotifyOnActivateMountedState(mountUnitController);
         }
 
         public void ConfigureCharacterMountedPhysics() {
@@ -147,7 +147,7 @@ namespace AnyRPG {
                 unitController.UnitAnimator.SetRiding(false);
                 //playerManager.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);
 
-                unitController.NotifyOnDeActivateMountedState();
+                unitController.UnitEventController.NotifyOnDeActivateMountedState();
             }
             if (mountUnitController != null) {
                 // reset the character unit before despawn so the mount doesn't send despawn events to the player that was riding it

@@ -113,6 +113,11 @@ namespace AnyRPG {
             }
         }
 
+        public override bool PlayInteractionSound() {
+            return true;
+        }
+
+
     }
 
 }

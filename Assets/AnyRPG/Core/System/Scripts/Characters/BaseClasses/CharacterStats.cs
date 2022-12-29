@@ -795,7 +795,7 @@ namespace AnyRPG {
                     if (Faction.RelationWith(target.BaseCharacter, (sourceCharacter.AbilityManager as CharacterAbilityManager).BaseCharacter) <= -1) {
                         if (target.BaseCharacter.CharacterCombat != null) {
                             // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
-                            target.BaseCharacter.UnitController.Agro((sourceCharacter.AbilityManager as CharacterAbilityManager).BaseCharacter.UnitController.CharacterUnit);
+                            target.BaseCharacter.UnitController.Aggro((sourceCharacter.AbilityManager as CharacterAbilityManager).BaseCharacter.UnitController.CharacterUnit);
                         }
                     }
                 }
@@ -983,7 +983,7 @@ namespace AnyRPG {
             OnStatusEffectAdd(statusEffectNode);
             ProcessStatusEffectChanges(statusEffectNode.StatusEffect);
             if (baseCharacter.UnitController != null) {
-                baseCharacter.UnitController.NotifyOnStatusEffectAdd(statusEffectNode);
+                baseCharacter.UnitController.UnitEventController.NotifyOnStatusEffectAdd(statusEffectNode);
             }
         }
 
@@ -1075,7 +1075,7 @@ namespace AnyRPG {
             baseCharacter.CharacterAbilityManager.UpdateAbilityList(currentLevel);
             baseCharacter.CharacterRecipeManager.UpdateRecipeList(currentLevel);
             if (baseCharacter.UnitController != null) {
-                baseCharacter.UnitController.NotifyOnLevelChanged(currentLevel);
+                baseCharacter.UnitController.UnitEventController.NotifyOnLevelChanged(currentLevel);
             }
         }
 
@@ -1157,9 +1157,7 @@ namespace AnyRPG {
                     ReducePowerResource(powerResource, (int)((damagePercent / 100f) * GetPowerResourceMaxAmount(powerResource)));
                 }
             }
-            if (systemConfigurationManager.FallDamageAudioClip != null) {
-                baseCharacter.UnitController.UnitComponentController.PlayEffectSound(systemConfigurationManager.FallDamageAudioClip);
-            }
+            baseCharacter.UnitController?.UnitEventController.NotifyOnTakeFallDamage();
         }
 
         public void PerformDeathCheck() {
@@ -1190,7 +1188,7 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.NotifyOnResourceAmountChanged(" + powerResource.DisplayName + ", " + maxValue + ", " + currentValue + ")");
             OnResourceAmountChanged(powerResource, maxValue, currentValue);
             if (baseCharacter.UnitController != null) {
-                baseCharacter.UnitController.NotifyOnResourceAmountChanged(powerResource, maxValue, currentValue);
+                baseCharacter.UnitController.UnitEventController.NotifyOnResourceAmountChanged(powerResource, maxValue, currentValue);
             }
 
         }
@@ -1339,7 +1337,7 @@ namespace AnyRPG {
                 ClearStatusEffects(false);
                 ClearPowerAmounts();
                 BeforeDie(this);
-                baseCharacter.UnitController.NotifyOnBeforeDie(this);
+                baseCharacter.UnitController.UnitEventController.NotifyOnBeforeDie(this);
                 OnDie(this);
                 baseCharacter.CharacterPetManager.HandleDie();
                 baseCharacter.CharacterCombat.HandleDie();
@@ -1348,7 +1346,7 @@ namespace AnyRPG {
                 baseCharacter.UnitController.UnitAnimator.HandleDie(this);
                 baseCharacter.UnitController.RemoveNamePlate();
                 baseCharacter.UnitController.CharacterUnit.HandleDie(this);
-                baseCharacter.UnitController.NotifyOnAfterDie(this);
+                baseCharacter.UnitController.UnitEventController.NotifyOnAfterDie(this);
             }
         }
 
@@ -1374,7 +1372,7 @@ namespace AnyRPG {
             ReviveRaw();
             OnReviveComplete();
             if (baseCharacter.UnitController != null) {
-                baseCharacter.UnitController.NotifyOnReviveComplete();
+                baseCharacter.UnitController.UnitEventController.NotifyOnReviveComplete();
             }
         }
 

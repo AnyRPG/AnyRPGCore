@@ -1090,12 +1090,12 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PlayerController.SubscribeToUnitEvents()");
             
             // if player was agrod at spawn, they may have a target already since we subscribe on model ready
-            playerManager.ActiveUnitController.OnSetTarget += HandleSetTarget;
+            playerManager.ActiveUnitController.UnitEventController.OnSetTarget += HandleSetTarget;
             if (playerManager.ActiveUnitController.Target != null) {
                 HandleSetTarget(playerManager.ActiveUnitController.Target);
             }
 
-            playerManager.ActiveUnitController.OnClearTarget += HandleClearTarget;
+            playerManager.ActiveUnitController.UnitEventController.OnClearTarget += HandleClearTarget;
             playerManager.ActiveUnitController.UnitAnimator.OnStartCasting += HandleStartCasting;
             playerManager.ActiveUnitController.UnitAnimator.OnEndCasting += HandleEndCasting;
             playerManager.ActiveUnitController.UnitAnimator.OnStartAttacking += HandleStartAttacking;
@@ -1106,14 +1106,14 @@ namespace AnyRPG {
             playerManager.ActiveUnitController.UnitAnimator.OnEndStunned += HandleEndStunned;
             playerManager.ActiveUnitController.UnitAnimator.OnStartRevive += HandleStartRevive;
             playerManager.ActiveUnitController.UnitAnimator.OnDeath += HandleDeath;
-            playerManager.ActiveUnitController.OnClassChange += HandleClassChange;
-            playerManager.ActiveUnitController.OnFactionChange += HandleFactionChange;
-            playerManager.ActiveUnitController.OnSpecializationChange += HandleSpecializationChange;
-            playerManager.ActiveUnitController.OnActivateMountedState += HandleActivateMountedState;
-            playerManager.ActiveUnitController.OnDeActivateMountedState += HandleDeActivateMountedState;
-            playerManager.ActiveUnitController.OnMessageFeed += HandleMessageFeed;
-            playerManager.ActiveUnitController.OnUnitDestroy += HandleUnitDestroy;
-            playerManager.ActiveUnitController.OnCastCancel += HandleCastCancel;
+            playerManager.ActiveUnitController.UnitEventController.OnClassChange += HandleClassChange;
+            playerManager.ActiveUnitController.UnitEventController.OnFactionChange += HandleFactionChange;
+            playerManager.ActiveUnitController.UnitEventController.OnSpecializationChange += HandleSpecializationChange;
+            playerManager.ActiveUnitController.UnitEventController.OnActivateMountedState += HandleActivateMountedState;
+            playerManager.ActiveUnitController.UnitEventController.OnDeActivateMountedState += HandleDeActivateMountedState;
+            playerManager.ActiveUnitController.UnitEventController.OnMessageFeed += HandleMessageFeed;
+            playerManager.ActiveUnitController.UnitEventController.OnUnitDestroy += HandleUnitDestroy;
+            playerManager.ActiveUnitController.UnitEventController.OnCastCancel += HandleCastCancel;
 
             // subscribe and call in case the namePlate is already spawned
             playerManager.ActiveUnitController.OnInitializeNamePlate += HandleInitializeNamePlate;
@@ -1122,8 +1122,8 @@ namespace AnyRPG {
 
         public void UnsubscribeFromUnitEvents() {
             //Debug.Log(gameObject.name + ".PlayerController.UnsubscribeFromUnitEvents()");
-            playerManager.ActiveUnitController.OnSetTarget -= HandleSetTarget;
-            playerManager.ActiveUnitController.OnClearTarget -= HandleClearTarget;
+            playerManager.ActiveUnitController.UnitEventController.OnSetTarget -= HandleSetTarget;
+            playerManager.ActiveUnitController.UnitEventController.OnClearTarget -= HandleClearTarget;
             playerManager.ActiveUnitController.UnitAnimator.OnStartCasting -= HandleStartCasting;
             playerManager.ActiveUnitController.UnitAnimator.OnEndCasting -= HandleEndCasting;
             playerManager.ActiveUnitController.UnitAnimator.OnStartAttacking -= HandleStartAttacking;
@@ -1134,15 +1134,15 @@ namespace AnyRPG {
             playerManager.ActiveUnitController.UnitAnimator.OnEndStunned -= HandleEndStunned;
             playerManager.ActiveUnitController.UnitAnimator.OnStartRevive -= HandleStartRevive;
             playerManager.ActiveUnitController.UnitAnimator.OnDeath -= HandleDeath;
-            playerManager.ActiveUnitController.OnClassChange -= HandleClassChange;
-            playerManager.ActiveUnitController.OnFactionChange -= HandleFactionChange;
-            playerManager.ActiveUnitController.OnSpecializationChange -= HandleSpecializationChange;
-            playerManager.ActiveUnitController.OnActivateMountedState -= HandleActivateMountedState;
-            playerManager.ActiveUnitController.OnDeActivateMountedState -= HandleDeActivateMountedState;
-            playerManager.ActiveUnitController.OnMessageFeed -= HandleMessageFeed;
+            playerManager.ActiveUnitController.UnitEventController.OnClassChange -= HandleClassChange;
+            playerManager.ActiveUnitController.UnitEventController.OnFactionChange -= HandleFactionChange;
+            playerManager.ActiveUnitController.UnitEventController.OnSpecializationChange -= HandleSpecializationChange;
+            playerManager.ActiveUnitController.UnitEventController.OnActivateMountedState -= HandleActivateMountedState;
+            playerManager.ActiveUnitController.UnitEventController.OnDeActivateMountedState -= HandleDeActivateMountedState;
+            playerManager.ActiveUnitController.UnitEventController.OnMessageFeed -= HandleMessageFeed;
             playerManager.ActiveUnitController.OnInitializeNamePlate -= HandleInitializeNamePlate;
-            playerManager.ActiveUnitController.OnUnitDestroy -= HandleUnitDestroy;
-            playerManager.ActiveUnitController.OnCastCancel -= HandleCastCancel;
+            playerManager.ActiveUnitController.UnitEventController.OnUnitDestroy -= HandleUnitDestroy;
+            playerManager.ActiveUnitController.UnitEventController.OnCastCancel -= HandleCastCancel;
 
         }
 

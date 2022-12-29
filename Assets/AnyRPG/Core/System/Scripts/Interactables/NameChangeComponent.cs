@@ -90,6 +90,11 @@ namespace AnyRPG {
             return GetValidOptionCount();
         }
 
+        public override bool PlayInteractionSound() {
+            return true;
+        }
+
+
     }
 
 }

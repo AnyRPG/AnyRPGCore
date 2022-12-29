@@ -570,6 +570,7 @@ namespace AnyRPG {
 
             // reset animated ability timer
             baseCharacter.CharacterCombat.RegisterAnimatedAbilityBegin();
+            baseCharacter.UnitController?.UnitEventController.NotifyOnAttack();
 
             return baseCharacter.UnitController.UnitAnimator.HandleAbility(animationClip, animatedAbility, targetBaseCharacter, abilityEffectContext);
         }
@@ -1222,7 +1223,7 @@ namespace AnyRPG {
                         //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastPercent + "; MyAbilityCastingTime: " + ability.GetAbilityCastingTime(baseCharacter) + "; calling OnCastTimeChanged()");
                         OnCastTimeChanged(baseCharacter, ability, currentCastPercent);
                         if (baseCharacter.UnitController != null) {
-                            baseCharacter.UnitController.NotifyOnCastTimeChanged(baseCharacter, ability, currentCastPercent);
+                            baseCharacter.UnitController.UnitEventController.NotifyOnCastTimeChanged(baseCharacter, ability, currentCastPercent);
                         }
 
                         // now call the ability on casttime changed (really only here for channeled stuff to do damage)
@@ -1251,14 +1252,14 @@ namespace AnyRPG {
         public void NotifyOnCastCancel() {
             OnCastCancel(baseCharacter);
             if (baseCharacter.UnitController != null) {
-                baseCharacter.UnitController.NotifyOnCastCancel(baseCharacter);
+                baseCharacter.UnitController.UnitEventController.NotifyOnCastCancel(baseCharacter);
             }
         }
 
         public void NotifyOnCastComplete() {
             OnCastComplete(baseCharacter);
             if (baseCharacter.UnitController != null) {
-                baseCharacter.UnitController.NotifyOnCastComplete(baseCharacter);
+                baseCharacter.UnitController.UnitEventController.NotifyOnCastComplete(baseCharacter);
             }
         }
 

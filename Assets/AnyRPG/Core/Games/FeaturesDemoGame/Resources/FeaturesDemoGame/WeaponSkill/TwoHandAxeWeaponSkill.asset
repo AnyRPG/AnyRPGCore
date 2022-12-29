@@ -19,12 +19,15 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   weaponSkillProps:
     defaultWeaponSkill: 0
+    attackSpeed: 2
     defaultHitEffects:
     - Two Hand Axe Attack
     onHitEffects: []
     animationProfileName: Melee Weapon
     onHitAudioProfiles:
-    - Metal Hit
+    - Sword Hit
+    abilityAnimationObjectList: []
     abilityObjectList: []

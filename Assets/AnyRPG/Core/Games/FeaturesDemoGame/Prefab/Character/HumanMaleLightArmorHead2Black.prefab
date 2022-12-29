@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8155002837363321325
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3921236451402320224, guid: a08198b12b6a5504d81d0fb9bc96e49c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5180728836433971653, guid: a08198b12b6a5504d81d0fb9bc96e49c,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6d8a2c19d40b1964e8718767a2b09fec, type: 2}
+    - target: {fileID: 5501605616241682626, guid: a08198b12b6a5504d81d0fb9bc96e49c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6242698076077267890, guid: a08198b12b6a5504d81d0fb9bc96e49c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6307183516646880328, guid: a08198b12b6a5504d81d0fb9bc96e49c,
+        type: 3}
+      propertyPath: m_Name
+      value: HumanMaleLightArmorHead2Black
+      objectReference: {fileID: 0}
+    - target: {fileID: 6321914210949928993, guid: a08198b12b6a5504d81d0fb9bc96e49c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6686804558240280306, guid: a08198b12b6a5504d81d0fb9bc96e49c,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6686804558240280306, guid: a08198b12b6a5504d81d0fb9bc96e49c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6686804558240280306, guid: a08198b12b6a5504d81d0fb9bc96e49c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6686804558240280306, guid: a08198b12b6a5504d81d0fb9bc96e49c,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6686804558240280306, guid: a08198b12b6a5504d81d0fb9bc96e49c,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6686804558240280306, guid: a08198b12b6a5504d81d0fb9bc96e49c,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6686804558240280306, guid: a08198b12b6a5504d81d0fb9bc96e49c,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6686804558240280306, guid: a08198b12b6a5504d81d0fb9bc96e49c,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6686804558240280306, guid: a08198b12b6a5504d81d0fb9bc96e49c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6686804558240280306, guid: a08198b12b6a5504d81d0fb9bc96e49c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6686804558240280306, guid: a08198b12b6a5504d81d0fb9bc96e49c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a08198b12b6a5504d81d0fb9bc96e49c, type: 3}

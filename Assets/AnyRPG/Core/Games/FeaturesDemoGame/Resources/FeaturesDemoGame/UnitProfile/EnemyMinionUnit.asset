@@ -26,7 +26,7 @@ MonoBehaviour:
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 6954704190252621995, guid: 51ca60a801a611b48ab9c6fa7b1d37d1,
+    modelPrefab: {fileID: 7270982331284104345, guid: 385458e9db12c0d4ba25148d285f3ac1,
       type: 3}
     animationProfileName: 
     useInlineAnimationProps: 0
@@ -149,6 +149,17 @@ MonoBehaviour:
   spawnDead: 0
   preventAutoDespawn: 0
   defaultToughness: Solo Dungeon Minion
+  voiceProfile: Male Guard
+  useInlineVoiceProps: 0
+  voiceProps:
+    aggro: []
+    damage: []
+    jump: []
+    fallDamage: []
+    death: []
+    victory: []
+    startInteract: []
+    stopInteract: []
   capabilities:
     abilityNames: []
     traitNames: []

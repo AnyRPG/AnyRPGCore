@@ -111,6 +111,25 @@ namespace AnyRPG {
         [SerializeField]
         private string defaultAutoAttackAbilityName = string.Empty;
         */
+
+        [Header("Voice")]
+
+        [Tooltip("The name of the voice profile that contains voice files to play.")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(VoiceProfile))]
+        private string voiceProfile = string.Empty;
+
+        [Tooltip("If true, the voice profile is loaded from the inline settings below, instead of the shared voice profile above.")]
+        [SerializeField]
+        private bool useInlineVoiceProps = false;
+
+        [Tooltip("If useInlineVoiceProps is true, these values will be used instead of the shared voice profile above")]
+        [SerializeField]
+        private VoiceProps voiceProps = new VoiceProps();
+
+        private VoiceProps voiceProfileProps = new VoiceProps();
+
+
         [Header("Capabilities")]
 
         [Tooltip("Capabilities that apply to this unit")]
@@ -318,6 +337,15 @@ namespace AnyRPG {
                 return unitPrefabProfileProps;
             }
         }
+        public VoiceProps VoiceProps {
+            get {
+                if (useInlineVoiceProps) {
+                    return voiceProps;
+                }
+                return voiceProfileProps;
+            }
+        }
+
 
         public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
             return capabilities;
@@ -341,6 +369,7 @@ namespace AnyRPG {
         public bool FlightCapable { get => flightCapable; }
         public bool GlideCapable { get => glideCapable; }
         public bool UseInlinePrefabProps { get => useInlinePrefabProps; set => useInlinePrefabProps = value; }
+        public bool UseInlineVoiceProps { get => useInlineVoiceProps; set => useInlineVoiceProps = value; }
         public bool AutomaticPrefabProfile { get => automaticPrefabProfile; set => automaticPrefabProfile = value; }
         public List<string> MovementAudioProfileNames { get => movementAudioProfileNames; set => movementAudioProfileNames = value; }
         public bool FaceInteractionTarget { get => faceInteractionTarget; set => faceInteractionTarget = value; }
@@ -542,6 +571,15 @@ namespace AnyRPG {
                     unitPrefabProfileProps = tmpPrefabProfile.UnitPrefabProps;
                 } else {
                     Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find prefab profile : " + prefabProfileName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                }
+            }
+
+            if (voiceProfile != null && voiceProfile != string.Empty) {
+                VoiceProfile tmpVoiceProfile = systemDataFactory.GetResource<VoiceProfile>(voiceProfile);
+                if (tmpVoiceProfile != null) {
+                    voiceProfileProps = tmpVoiceProfile.VoiceProps;
+                } else {
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find voice profile : " + voiceProfile + " while inititalizing " + name + ".  CHECK INSPECTOR");
                 }
             }
 

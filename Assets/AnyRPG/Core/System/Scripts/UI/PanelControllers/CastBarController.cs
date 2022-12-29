@@ -83,9 +83,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CastBarController.ClearTarget()");
             if (unitNamePlateController != null
                 && unitNamePlateController.UnitController != null) {
-                unitNamePlateController.UnitController.OnCastTimeChanged -= OnCastTimeChanged;
-                unitNamePlateController.UnitController.OnCastComplete -= OnCastStop;
-                unitNamePlateController.UnitController.OnCastCancel -= OnCastStop;
+                unitNamePlateController.UnitController.UnitEventController.OnCastTimeChanged -= OnCastTimeChanged;
+                unitNamePlateController.UnitController.UnitEventController.OnCastComplete -= OnCastStop;
+                unitNamePlateController.UnitController.UnitEventController.OnCastCancel -= OnCastStop;
             }
             unitNamePlateController = null;
             targetInitialized = false;
@@ -97,9 +97,9 @@ namespace AnyRPG {
 
             if (unitNamePlateController != null
                 && unitNamePlateController.UnitController != null) {
-                unitNamePlateController.UnitController.OnCastTimeChanged += OnCastTimeChanged;
-                unitNamePlateController.UnitController.OnCastComplete += OnCastStop;
-                unitNamePlateController.UnitController.OnCastCancel += OnCastStop;
+                unitNamePlateController.UnitController.UnitEventController.OnCastTimeChanged += OnCastTimeChanged;
+                unitNamePlateController.UnitController.UnitEventController.OnCastComplete += OnCastStop;
+                unitNamePlateController.UnitController.UnitEventController.OnCastCancel += OnCastStop;
             }
 
         }

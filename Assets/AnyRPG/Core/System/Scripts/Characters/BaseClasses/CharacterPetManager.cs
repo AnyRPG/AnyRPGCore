@@ -40,7 +40,7 @@ namespace AnyRPG {
             if (activeUnitProfiles.ContainsKey(unitProfile) == false) {
                 activeUnitProfiles.Add(unitProfile, unitController);
                 unitController.SetPetMode(baseCharacter, true);
-                unitController.OnUnitDestroy += HandleUnitDestroy;
+                unitController.UnitEventController.OnUnitDestroy += HandleUnitDestroy;
             }
         }
 
@@ -55,7 +55,7 @@ namespace AnyRPG {
             if (activeUnitProfiles.ContainsKey(unitProfile) == false) {
                 activeUnitProfiles.Add(unitProfile, unitController);
                 unitController.SetPetMode(baseCharacter, true);
-                unitController.OnUnitDestroy += HandleUnitDestroy;
+                unitController.UnitEventController.OnUnitDestroy += HandleUnitDestroy;
             }
 
             AddPet(unitProfile);
@@ -103,7 +103,7 @@ namespace AnyRPG {
         public virtual void HandleUnitDestroy(UnitProfile unitProfile) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.HandleUnitDestroy(" + unitProfile.DisplayName + ")");
             if (activeUnitProfiles.ContainsKey(unitProfile)) {
-                activeUnitProfiles[unitProfile].OnUnitDestroy -= HandleUnitDestroy;
+                activeUnitProfiles[unitProfile].UnitEventController.OnUnitDestroy -= HandleUnitDestroy;
                 activeUnitProfiles.Remove(unitProfile);
             }
         }
@@ -118,7 +118,7 @@ namespace AnyRPG {
             if (unitController != null) {
                 unitController.SetPetMode(baseCharacter);
                 unitController.Init();
-                unitController.OnUnitDestroy += HandleUnitDestroy;
+                unitController.UnitEventController.OnUnitDestroy += HandleUnitDestroy;
                 activeUnitProfiles.Add(unitProfile, unitController);
             }
         }

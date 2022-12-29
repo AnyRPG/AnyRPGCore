@@ -641,10 +641,18 @@ namespace AnyRPG {
             }
             if (validInteractables.Count > 0 && finalInteractables.Count == 0) {
                 if (processRangeCheck == true && passedRangeCheck == false) {
-                    source.BaseCharacter.UnitController.NotifyOnMessageFeed(DisplayName + " is out of range");
+                    source.BaseCharacter.UnitController.UnitEventController.NotifyOnMessageFeed(DisplayName + " is out of range");
                 }
             }
             return false;
+        }
+
+        public virtual void ProcessStartInteract(InteractableOptionComponent interactableOptionComponent) {
+            // do something in inherited class
+        }
+
+        public virtual void ProcessStopInteract(InteractableOptionComponent interactableOptionComponent) {
+            // do something in inherited class
         }
 
         public List<InteractableOptionComponent> GetValidInteractables() {

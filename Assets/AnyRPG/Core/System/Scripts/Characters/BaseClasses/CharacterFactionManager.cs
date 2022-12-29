@@ -28,7 +28,7 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterFactionmanager.NotifyOnReputationChange()");
             OnReputationChange();
             if (baseCharacter.UnitController != null) {
-                baseCharacter.UnitController.NotifyOnReputationChange();
+                baseCharacter.UnitController.UnitEventController.NotifyOnReputationChange();
             }
         }
 
