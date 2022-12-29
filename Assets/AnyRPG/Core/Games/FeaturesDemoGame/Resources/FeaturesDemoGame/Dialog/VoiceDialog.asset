@@ -12,23 +12,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd3ecde65e0933d4d8e78e24e9ae3820, type: 3}
   m_Name: VoiceDialog
   m_EditorClassIdentifier: 
-  resourceName: Repeatable Dialog
+  resourceName: Voice Dialog
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   automatic: 0
   repeatable: 1
   audioProfileName: 
   dialogNodes:
   - startTime: 0
     showTime: 0
-    description: This is a repeatable dialog.
-    nextOption: Repeatable?
+    description: How can I help you?
+    audioClip: {fileID: 8300000, guid: 1430870eaeabf6d4b92a3358307ba4e3, type: 3}
+    nextOption: How can you help me?
   - startTime: 0
     showTime: 0
-    description: Yes, you can repeat it as many times as you want
-    nextOption: I'm getting a sense of deja vu here
+    description: Looking to buy something?
+    audioClip: {fileID: 8300000, guid: 2d505a5fee8475c4190e378085575626, type: 3}
+    nextOption: I might be
+  - startTime: 0
+    showTime: 0
+    description: Lets trade
+    audioClip: {fileID: 8300000, guid: 371cb9231a1d08b4980f3f1fee4f4c1b, type: 3}
+    nextOption: What do you have for sale?
+  - startTime: 0
+    showTime: 0
+    description: Take a look around
+    audioClip: {fileID: 8300000, guid: 4c4ce7bf75a9c5d40ba3b46268e9651c, type: 3}
+    nextOption: OK
   prerequisiteConditions: []

@@ -177,8 +177,8 @@ namespace AnyRPG {
             }
 
             logManager.WriteChatMessage(Dialog.DialogNodes[dialogIndex].Description);
-            if (Dialog.AudioProfile != null && Dialog.AudioProfile.AudioClips != null && Dialog.AudioProfile.AudioClips.Count > dialogIndex) {
-                audioManager.PlayVoice(Dialog.AudioProfile.AudioClips[dialogIndex]);
+            if (Dialog.DialogNodes[dialogIndex].AudioClip != null) {
+                audioManager.PlayVoice(Dialog.DialogNodes[dialogIndex].AudioClip);
             }
 
             if (buttonText != null) {

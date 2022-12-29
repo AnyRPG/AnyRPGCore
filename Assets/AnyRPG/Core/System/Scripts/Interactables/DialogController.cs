@@ -84,8 +84,8 @@ namespace AnyRPG {
                     if (dialogNode.StartTime <= elapsedTime && dialogNode.Shown == false) {
                         currentdialogNode = dialogNode;
                         interactable.ProcessDialogTextUpdate(dialogNode.Description);
-                        if (interactable != null && dialog.AudioProfile != null && dialog.AudioProfile.AudioClips != null && dialog.AudioProfile.AudioClips.Count > dialogIndex) {
-                            interactable.UnitComponentController.PlayVoiceSound(dialog.AudioProfile.AudioClips[dialogIndex]);
+                        if (interactable != null && dialogNode.AudioClip != null) {
+                            interactable.UnitComponentController.PlayVoiceSound(dialogNode.AudioClip);
                         }
                         bool writeMessage = true;
                         if (playerManager != null && playerManager.ActiveUnitController != null) {

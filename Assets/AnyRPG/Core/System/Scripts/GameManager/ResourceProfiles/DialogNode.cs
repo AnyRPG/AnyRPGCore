@@ -20,6 +20,10 @@ namespace AnyRPG {
         [TextArea(10, 20)]
         private string description;
 
+        [Tooltip("Audio file to play when this dialog option is displayed or played")]
+        [SerializeField]
+        private AudioClip audioClip;
+
         [Tooltip("If this dialog is manually driven, this text will show on the next button.")]
         [SerializeField]
         private string nextOption;
@@ -32,6 +36,7 @@ namespace AnyRPG {
         public float StartTime { get => startTime; set => startTime = value; }
         public bool Shown { get => shown; set => shown = value; }
         public float ShowTime { get => showTime; set => showTime = value; }
+        public AudioClip AudioClip { get => audioClip; set => audioClip = value; }
 
         /// <summary>
         /// Set the shown value to false

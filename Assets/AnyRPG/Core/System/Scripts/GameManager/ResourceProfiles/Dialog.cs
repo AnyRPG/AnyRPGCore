@@ -116,11 +116,9 @@ namespace AnyRPG {
             }
         }
 
-
-
         public List<DialogNode> DialogNodes { get => dialogNodes; set => dialogNodes = value; }
         public bool Automatic { get => automatic; set => automatic = value; }
-        public AudioProfile AudioProfile { get => audioProfile; set => audioProfile = value; }
+        //public AudioProfile AudioProfile { get => audioProfile; set => audioProfile = value; }
         public bool Repeatable { get => repeatable; set => repeatable = value; }
 
         /// <summary>
@@ -151,6 +149,11 @@ namespace AnyRPG {
                 AudioProfile tmpAudioProfile = systemDataFactory.GetResource<AudioProfile>(audioProfileName);
                 if (tmpAudioProfile != null) {
                     audioProfile = tmpAudioProfile;
+                    for (int i = 0; i < dialogNodes.Count; i++) {
+                        if (audioProfile.AudioClips != null && audioProfile.AudioClips.Count > i && dialogNodes[i].AudioClip == null) {
+                            dialogNodes[i].AudioClip = audioProfile.AudioClips[i];
+                        }
+                    }
                 } else {
                     Debug.LogError("Dialog.SetupScriptableObjects(): Could not find audioProfile " + audioProfileName + " while initializing " + DisplayName);
                 }

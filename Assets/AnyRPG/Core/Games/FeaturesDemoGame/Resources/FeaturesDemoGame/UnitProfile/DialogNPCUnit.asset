@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Dialog NPC
   displayName: 
-  icon: {fileID: 21300000, guid: aca674fea32f9014db080ff9f9e78d95, type: 3}
+  icon: {fileID: 21300000, guid: 74198731b99b8bc488d0a6d20a5bcf32, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -26,7 +26,7 @@ MonoBehaviour:
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 6954704190252621995, guid: c7fa83c5e457d3d4d9d3edbb5409249c,
+    modelPrefab: {fileID: 6307183516646880328, guid: d8058a52a2f60174b903d2db76503c0b,
       type: 3}
     animationProfileName: 
     useInlineAnimationProps: 0
@@ -149,6 +149,20 @@ MonoBehaviour:
   spawnDead: 0
   preventAutoDespawn: 0
   defaultToughness: 
+  voiceProfile: Male NPC
+  useInlineVoiceProps: 0
+  voiceProps:
+    aggro: []
+    attack: []
+    damage: []
+    jump: []
+    fallDamage: []
+    death: []
+    victory: []
+    startInteract: []
+    startVendorInteract: []
+    stopInteract: []
+    stopVendorInteract: []
   capabilities:
     abilityNames: []
     traitNames: []
@@ -206,3 +220,4 @@ MonoBehaviour:
         - RepeatableDialog
         - SpeechBubbleDialog
         - PrerequisiteDialog
+        - Voice Dialog
