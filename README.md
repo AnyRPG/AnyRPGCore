@@ -65,7 +65,7 @@ Video tutorial for version 0.10.1a install can be watched here: https://www.yout
 ### Unity Asset Store Package Installation
 Video tutorial for installing from the Unity Asset Store can be watched here: https://youtu.be/syI3ohFWVck
 
-A PDF file with instructions for installing AnyRPG Core from the Unity Asset Store can be found at [Unity Asset Store Package Setup Guide](Assets/AnyRPG/Unity Asset Store package Setup Guide.pdf)
+A PDF file with instructions for installing AnyRPG Core from the Unity Asset Store can be found at [Unity Asset Store Package Setup Guide](Assets/AnyRPG/Unity%20Asset%20Store%20Package%20Setup%20Guide.pdf)
 
 ## Getting Started
 
