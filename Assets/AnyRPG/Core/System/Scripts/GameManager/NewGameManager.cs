@@ -20,6 +20,7 @@ namespace AnyRPG {
         public event System.Action OnUpdateClassSpecializationList = delegate { };
         public event System.Action OnUpdateUnitProfileList = delegate { };
 
+        private string defaultPlayerName = "Player Name";
         private string playerName = "Player Name";
         private UnitProfile unitProfile = null;
         private UnitType unitType = null;
@@ -73,11 +74,14 @@ namespace AnyRPG {
             levelManager = systemGameManager.LevelManager;
 
             equipmentManager = new EquipmentManager(systemGameManager);
+            if (systemConfigurationManager.DefaultPlayerName != null && systemConfigurationManager.DefaultPlayerName != string.Empty) {
+                defaultPlayerName = systemConfigurationManager.DefaultPlayerName;
+            }
         }
 
         public void ClearData() {
             //Debug.Log("NewGameManager.ClearData()");
-            playerName = "Player Name";
+            playerName = defaultPlayerName;
             unitProfile = null;
             unitType = null;
             characterRace = null;
@@ -93,7 +97,8 @@ namespace AnyRPG {
 
             saveData = new AnyRPGSaveData();
             saveData = saveManager.InitializeResourceLists(saveData, false);
-            saveData.playerName = playerName;
+            //saveData.playerName = playerName;
+            SetPlayerName(defaultPlayerName);
             saveData.PlayerLevel = 1;
             saveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
             unitProfile = systemConfigurationManager.CharacterCreatorUnitProfile;
