@@ -30,7 +30,9 @@ namespace AnyRPG {
 
         public SceneAsset existingScene = null;
 
-        public AudioClip newSceneAmbientSounds = null;
+        public AudioClip newSceneDayAmbientSounds = null;
+
+        public AudioClip newSceneNightAmbientSounds = null;
 
         public AudioClip newSceneMusic = null;
 
@@ -63,7 +65,7 @@ namespace AnyRPG {
                 return;
             }
 
-            string newSceneAssetPath = CreateScene(gameParentFolder, gameName, sceneName, copyExistingScene, existingScene, newSceneAmbientSounds, newSceneMusic);
+            string newSceneAssetPath = CreateScene(gameParentFolder, gameName, sceneName, copyExistingScene, existingScene, newSceneDayAmbientSounds, newSceneNightAmbientSounds, newSceneMusic);
 
             EditorUtility.ClearProgressBar();
             EditorUtility.DisplayDialog("New Scene Wizard", "New Scene Wizard Complete! The scene can be found at " + newSceneAssetPath, "OK");
@@ -134,7 +136,14 @@ namespace AnyRPG {
             return false;
         }
 
-        public static string CreateScene(string gameParentFolder, string gameName, string sceneName, bool copyExistingScene, SceneAsset existingScene, AudioClip newSceneAmbientSounds, AudioClip newSceneMusic) {
+        public static string CreateScene(string gameParentFolder,
+            string gameName,
+            string sceneName,
+            bool copyExistingScene,
+            SceneAsset existingScene,
+            AudioClip newSceneDayAmbientSounds,
+            AudioClip newSceneNightAmbientSounds,
+            AudioClip newSceneMusic) {
 
             string fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
             string fileSystemSceneName = WizardUtilities.GetFilesystemSceneName(sceneName);
@@ -214,7 +223,7 @@ namespace AnyRPG {
 
             // create scenenode and audio profiles
             EditorUtility.DisplayProgressBar("New Scene Wizard", "Configuring Scene...", 0.99f);
-            ConfigureSceneScriptableObjects(gameParentFolder, sceneName, fileSystemGameName, fileSystemSceneName, newSceneAmbientSounds, newSceneMusic);
+            ConfigureSceneScriptableObjects(gameParentFolder, sceneName, fileSystemGameName, fileSystemSceneName, newSceneDayAmbientSounds, newSceneNightAmbientSounds, newSceneMusic);
 
             AssetDatabase.Refresh();
 
@@ -255,9 +264,16 @@ namespace AnyRPG {
 
         }
 
-        private static void ConfigureSceneScriptableObjects(string gameParentFolder, string sceneName, string fileSystemGameName, string fileSystemSceneName, AudioClip newSceneAmbientSounds, AudioClip newSceneMusic) {
+        private static void ConfigureSceneScriptableObjects(string gameParentFolder,
+            string sceneName,
+            string fileSystemGameName,
+            string fileSystemSceneName,
+            AudioClip newSceneDayAmbientSounds,
+            AudioClip newSceneNightAmbientSounds,
+            AudioClip newSceneMusic) {
 
             // create ambient audio profile
+            /*
             if (newSceneAmbientSounds != null) {
                 AudioProfile audioProfile = ScriptableObject.CreateInstance("AudioProfile") as AudioProfile;
                 audioProfile.ResourceName = sceneName + " Ambient";
@@ -266,6 +282,7 @@ namespace AnyRPG {
                 string scriptableObjectPath = "Assets" + gameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/AudioProfile/" + fileSystemSceneName + "Ambient.asset";
                 AssetDatabase.CreateAsset(audioProfile, scriptableObjectPath);
             }
+            */
 
             // create background music profile
             if (newSceneMusic != null) {
@@ -283,8 +300,13 @@ namespace AnyRPG {
             sceneNode.SuppressCharacterSpawn = false;
             sceneNode.SuppressMainCamera = false;
             sceneNode.SceneFile = fileSystemSceneName;
-            if (newSceneAmbientSounds != null) {
-                sceneNode.AmbientMusicProfileName = sceneName + " Ambient";
+            if (newSceneDayAmbientSounds != null) {
+                //sceneNode.AmbientMusicProfileName = sceneName + " Ambient";
+                sceneNode.DayAmbientSound = newSceneDayAmbientSounds;
+            }
+            if (newSceneNightAmbientSounds != null) {
+                //sceneNode.AmbientMusicProfileName = sceneName + " Ambient";
+                sceneNode.NightAmbientSound = newSceneNightAmbientSounds;
             }
             if (newSceneMusic != null) {
                 sceneNode.BackgroundMusicProfileName = sceneName + " Music";
@@ -357,7 +379,8 @@ namespace AnyRPG {
                 existingScene = EditorGUILayout.ObjectField("Existing Scene", existingScene, typeof(SceneAsset), false) as SceneAsset;
             }
 
-            newSceneAmbientSounds = EditorGUILayout.ObjectField("New Scene Ambient Sounds", newSceneAmbientSounds, typeof(AudioClip), false) as AudioClip;
+            newSceneDayAmbientSounds = EditorGUILayout.ObjectField("New Scene Day Ambient Sounds", newSceneDayAmbientSounds, typeof(AudioClip), false) as AudioClip;
+            newSceneNightAmbientSounds = EditorGUILayout.ObjectField("New Scene Night Ambient Sounds", newSceneNightAmbientSounds, typeof(AudioClip), false) as AudioClip;
             newSceneMusic = EditorGUILayout.ObjectField("New Scene Music", newSceneMusic, typeof(AudioClip), false) as AudioClip;
 
             return true;

@@ -89,6 +89,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
         type: 3}
+      propertyPath: timeOfDaySpeed
+      value: 1440
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
       propertyPath: deathEffectName
       value: Death
       objectReference: {fileID: 0}

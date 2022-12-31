@@ -1384,12 +1384,12 @@ namespace AnyRPG {
             if (CombatStrategy != null) {
                 if (CombatStrategy.HasMusic() == true) {
                     //Debug.Log(gameObject.name + ".AIController.ResetCombat(): attempting to turn off fight music");
-                    AudioProfile musicProfile = levelManager.GetActiveSceneNode().BackgroundMusicProfile;
-                    if (musicProfile != null) {
+                    AudioClip musicClip = levelManager.GetActiveSceneNode().BackgroundMusicAudio;
+                    if (musicClip != null) {
                         //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): music profile was set");
-                        if (musicProfile.AudioClip != null && audioManager.MusicAudioSource.clip != musicProfile.AudioClip) {
+                        if (audioManager.MusicAudioSource.clip != musicClip) {
                             //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): playing default music");
-                            audioManager.PlayMusic(musicProfile.AudioClip);
+                            audioManager.PlayMusic(musicClip);
                         }
                     } else {
                         // There was no music, turn it off instead

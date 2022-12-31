@@ -31,7 +31,10 @@ namespace AnyRPG {
         private AudioSource effectsAudioSource = null;
 
         [SerializeField]
-        private AudioSource ambientAudioSource = null;
+        private AudioSource ambientAudioSource1 = null;
+
+        [SerializeField]
+        private AudioSource ambientAudioSource2 = null;
 
         [SerializeField]
         private AudioSource uiAudioSource = null;
@@ -44,6 +47,9 @@ namespace AnyRPG {
 
         private bool musicPaused = false;
         private bool ambientPaused = false;
+        private AudioSource currentAmbientAudioSource = null;
+        private AudioSource secondaryAmbientAudioSource = null;
+        private Coroutine fadeCoroutine = null;
 
         public string MasterVolume { get => masterVolume; }
         public string MusicVolume { get => musicVolume; }
@@ -54,7 +60,7 @@ namespace AnyRPG {
         public AudioClip UIClickSound { get => uiClickSound; set => uiClickSound = value; }
         public AudioSource MusicAudioSource { get => musicAudioSource; set => musicAudioSource = value; }
         public AudioSource EffectsAudioSource { get => effectsAudioSource; set => effectsAudioSource = value; }
-        public AudioSource AmbientAudioSource { get => ambientAudioSource; set => ambientAudioSource = value; }
+        public AudioSource AmbientAudioSource { get => currentAmbientAudioSource; set => currentAmbientAudioSource = value; }
         public AudioSource UiAudioSource { get => uiAudioSource; set => uiAudioSource = value; }
         public AudioSource VoiceAudioSource { get => voiceAudioSource; set => voiceAudioSource = value; }
 
@@ -63,6 +69,8 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             InitializeVolume();
+            currentAmbientAudioSource = ambientAudioSource1;
+            secondaryAmbientAudioSource = ambientAudioSource2;
         }
 
         private void InitializeVolume() {
@@ -177,14 +185,50 @@ namespace AnyRPG {
         }
 
         public void PlayAmbient(AudioClip audioClip) {
-            if (ambientAudioSource.clip == audioClip && ambientPaused == true) {
+            if (currentAmbientAudioSource.clip == audioClip && ambientPaused == true) {
                 UnPauseAmbient();
                 return;
             }
             ambientPaused = false;
-            ambientAudioSource.clip = audioClip;
-            ambientAudioSource.loop = true;
-            ambientAudioSource.Play();
+            currentAmbientAudioSource.clip = audioClip;
+            currentAmbientAudioSource.loop = true;
+            currentAmbientAudioSource.volume = 1f;
+            currentAmbientAudioSource.Play();
+        }
+
+        public void CrossFadeAmbient(AudioClip audioClip, float seconds) {
+            ambientPaused = false;
+            if (currentAmbientAudioSource == ambientAudioSource1) {
+                currentAmbientAudioSource = ambientAudioSource2;
+                secondaryAmbientAudioSource = ambientAudioSource1;
+            } else {
+                currentAmbientAudioSource = ambientAudioSource1;
+                secondaryAmbientAudioSource = ambientAudioSource2;
+            }
+            currentAmbientAudioSource.clip = audioClip;
+            currentAmbientAudioSource.loop = true;
+            currentAmbientAudioSource.volume = 0f;
+            currentAmbientAudioSource.Play();
+
+            if (fadeCoroutine != null) {
+                StopCoroutine(fadeCoroutine);
+            }
+            fadeCoroutine = StartCoroutine(FadeAmbientAudio(seconds));
+        }
+
+        private IEnumerator FadeAmbientAudio(float seconds) {
+            if (seconds == 0f) {
+                // avoid division by zero
+                seconds = 0.1f;
+            }
+            float elapsedTime = 0f;
+            while (elapsedTime < seconds) {
+                currentAmbientAudioSource.volume = Mathf.Clamp(elapsedTime / seconds, 0f, 1f);
+                secondaryAmbientAudioSource.volume = Mathf.Clamp(((elapsedTime / seconds) * -1) + 1, 0f, 1f);
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+            secondaryAmbientAudioSource.Stop();
         }
 
         public void PlayMusic(AudioClip audioClip) {
@@ -237,7 +281,7 @@ namespace AnyRPG {
         }
 
         public void StopAmbient() {
-            ambientAudioSource.Stop();
+            currentAmbientAudioSource.Stop();
             ambientPaused = false;
         }
 
@@ -257,7 +301,7 @@ namespace AnyRPG {
 
         public void PauseAmbient() {
             if (ambientPaused == false) {
-                ambientAudioSource.Pause();
+                currentAmbientAudioSource.Pause();
                 ambientPaused = true;
             } else {
                 UnPauseAmbient();
@@ -270,7 +314,7 @@ namespace AnyRPG {
         }
 
         private void UnPauseAmbient() {
-            ambientAudioSource.UnPause();
+            currentAmbientAudioSource.UnPause();
             ambientPaused = false;
         }
 

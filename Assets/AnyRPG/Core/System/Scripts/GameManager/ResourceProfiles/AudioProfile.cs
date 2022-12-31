@@ -29,6 +29,14 @@ namespace AnyRPG {
                 return null;
             }
         }
+        public AudioClip RandomAudioClip {
+            get {
+                if (audioClips.Count > 0) {
+                    return audioClips[Random.Range(0, audioClips.Count)];
+                }
+                return null;
+            }
+        }
 
         public List<AudioClip> AudioClips { get => audioClips; set => audioClips = value; }
 

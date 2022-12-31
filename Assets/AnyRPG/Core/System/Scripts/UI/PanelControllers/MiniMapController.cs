@@ -51,6 +51,11 @@ namespace AnyRPG {
         [SerializeField]
         protected GameObject followGameObject = null;
 
+        [Header("Clock")]
+
+        [SerializeField]
+        protected TextMeshProUGUI clockText = null;
+
         // the diameter in game meters that should be shown on the map
         protected float cameraSize = 0f;
 
@@ -88,6 +93,7 @@ namespace AnyRPG {
         protected ObjectPooler objectPooler = null;
         protected MapManager mapManager = null;
         protected UIManager uIManager = null;
+        protected TimeOfDayManager timeOfDayManager = null;
 
         // map indicators
         protected Dictionary<Interactable, MiniMapIndicatorController> mapIndicatorControllers = new Dictionary<Interactable, MiniMapIndicatorController>();
@@ -128,6 +134,7 @@ namespace AnyRPG {
             miniMapManager = uIManager.MiniMapManager;
             objectPooler = systemGameManager.ObjectPooler;
             mapManager = systemGameManager.UIManager.MapManager;
+            timeOfDayManager = systemGameManager.TimeOfDayManager;
         }
 
         protected override void ProcessCreateEventSubscriptions() {
@@ -196,6 +203,8 @@ namespace AnyRPG {
                 && playerManager.PlayerUnitSpawned == true) {
                 UpdateMiniMap();
             }
+
+            clockText.text = timeOfDayManager.InGameTime.ToShortTimeString();
         }
 
         void UpdateMiniMap() {

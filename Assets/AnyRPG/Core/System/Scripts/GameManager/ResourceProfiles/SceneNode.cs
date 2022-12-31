@@ -25,19 +25,39 @@ namespace AnyRPG {
 
         [Header("Scene Audio")]
 
+        [Tooltip("Ambient sounds to play in the background during the day while this scene is active")]
+        [SerializeField]
+        [FormerlySerializedAs("ambientMusicProfile")]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
+        private string dayAmbientSoundsProfile = string.Empty;
+
+        [Tooltip("Ambient sounds to play in the background during the day while this scene is active.  This will override any audio profile chosen")]
+        [SerializeField]
+        private AudioClip dayAmbientSoundsAudio = null;
+
+        private AudioProfile dayAmbientSoundsProfileReference;
+
         [Tooltip("Ambient sounds to play in the background while this scene is active")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AudioProfile))]
-        private string ambientMusicProfile = string.Empty;
+        private string nightAmbientSoundsProfile = string.Empty;
 
-        private AudioProfile realAmbientMusicProfile;
+        [Tooltip("Ambient sounds to play in the background at night while this scene is active.  This will override any audio profile chosen")]
+        [SerializeField]
+        private AudioClip nightAmbientSoundsAudio = null;
+
+        private AudioProfile nightAmbientSoundsProfileReference;
 
         [Tooltip("Music to play in the background while this scene is active")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string backgroundMusicProfile = string.Empty;
 
-        private AudioProfile realBackgroundMusicProfile;
+        [Tooltip("Music to play in the background while this scene is active.  This will override any audio profile chosen")]
+        [SerializeField]
+        private AudioClip backgroundMusicAudio = null;
+
+        private AudioProfile backgroundMusicProfileReference;
 
         [Header("Movement Audio")]
 
@@ -93,6 +113,50 @@ namespace AnyRPG {
 
         private List<EnvironmentStateProfile> environmentStates = new List<EnvironmentStateProfile>();
 
+        [Header("Time Of Day Settings")]
+
+        [Tooltip("If true, the sun source in the scene will be rotated according to the time of day.")]
+        [SerializeField]
+        private bool rotateSunDirection = false;
+
+        [Tooltip("If true, the default sun angle from the System Configuration Manager will be used instead of the value below.")]
+        [SerializeField]
+        private bool useDefaultSunAngle = false;
+
+        [Tooltip("The angle of the sun as an offset from straight down. -90 is pointing directly North, +90 is pointing directly south.")]
+        [SerializeField]
+        private float sunAngle = 0f;
+
+        [Tooltip("If true, the color of light the sun emits will be changed over time.")]
+        [SerializeField]
+        private bool rotateSunColor = false;
+
+        [Tooltip("If true, the Sun Gradient from the System Configuration Manager will be used instead of the gradient below.")]
+        [SerializeField]
+        private bool useDefaultSunGradient = false;
+
+        [Tooltip("A color gradient to use for the sun color.  The ends represent midnight, and the center is noon.")]
+        [SerializeField]
+        private Gradient sunGradient;
+
+        [Tooltip("If true, the skybox is assumed to be using the BlendedSkybox shader, and will change based on the alpha property of the sunGradient over time.")]
+        [SerializeField]
+        private bool blendedSkybox = false;
+
+        [Tooltip("If true, the skybox will be rotated as time passes.")]
+        [SerializeField]
+        private bool rotateSkybox = false;
+
+        [Tooltip("The offset rotation required to position the skybox so the sun is in the correct position at midnight.")]
+        [SerializeField]
+        [Range(0, 360)]
+        private float skyboxRotationOffset = 0f;
+
+        [Tooltip("If true, the skybox will be rotated in the opposite of the default direction")]
+        [SerializeField]
+        private bool reverseSkyboxRotation = false;
+
+
         // game manager referenes
         private SaveManager saveManager = null;
 
@@ -101,8 +165,50 @@ namespace AnyRPG {
         public string SceneName { get => resourceName; set => resourceName = value; }
         public bool SuppressCharacterSpawn { get => suppressCharacterSpawn; set => suppressCharacterSpawn = value; }
         public bool SuppressMainCamera { get => suppressMainCamera; set => suppressMainCamera = value; }
-        public AudioProfile AmbientMusicProfile { get => realAmbientMusicProfile; set => realAmbientMusicProfile = value; }
-        public AudioProfile BackgroundMusicProfile { get => realBackgroundMusicProfile; set => realBackgroundMusicProfile = value; }
+        //public AudioProfile AmbientMusicProfile { get => dayAmbientSoundsProfileReference; set => dayAmbientSoundsProfileReference = value; }
+        public AudioClip DayAmbientSound {
+            get {
+                if (dayAmbientSoundsAudio != null) {
+                    return dayAmbientSoundsAudio;
+                }
+                if (dayAmbientSoundsProfileReference != null) {
+                    return dayAmbientSoundsProfileReference.RandomAudioClip;
+                }
+                return null;
+            }
+            set {
+                dayAmbientSoundsAudio = value;
+            }
+        }
+        public AudioClip NightAmbientSound {
+            get {
+                if (nightAmbientSoundsAudio != null) {
+                    return nightAmbientSoundsAudio;
+                }
+                if (nightAmbientSoundsProfileReference != null) {
+                    return nightAmbientSoundsProfileReference.RandomAudioClip;
+                }
+                return null;
+            }
+            set {
+                nightAmbientSoundsAudio = value;
+            }
+        }
+        public AudioClip BackgroundMusicAudio {
+            get {
+                if (backgroundMusicAudio != null) {
+                    return backgroundMusicAudio;
+                }
+                if (backgroundMusicProfileReference != null) {
+                    return backgroundMusicProfileReference.RandomAudioClip;
+                }
+                return null;
+            }
+            set {
+                backgroundMusicAudio = value;
+            }
+        }
+
         public List<PersistentObjectSaveData> PersistentObjects {
             get {
                 return saveManager.GetSceneNodeSaveData(this).persistentObjects;
@@ -128,8 +234,21 @@ namespace AnyRPG {
 
         public bool AllowMount { get => allowMount; set => allowMount = value; }
         public string BackgroundMusicProfileName { set => backgroundMusicProfile = value; }
-        public string AmbientMusicProfileName { set => ambientMusicProfile = value; }
+        public string DayAmbientSoundsProfileName { set => dayAmbientSoundsProfile = value; }
+        public string NightAmbientSoundsProfileName { set => nightAmbientSoundsProfile = value; }
         public int FootStepProfilesCount { get => footStepProfileReferences.Count; }
+        public bool RotateSunDirection { get => rotateSunDirection; set => rotateSunDirection = value; }
+        public float SunAngle { get => sunAngle; set => sunAngle = value; }
+        public bool RotateSunColor { get => rotateSunColor; set => rotateSunColor = value; }
+        public Gradient SunGradient { get => sunGradient; set => sunGradient = value; }
+        public bool BlendedSkybox { get => blendedSkybox; set => blendedSkybox = value; }
+        public bool UseDefaultSunAngle { get => useDefaultSunAngle; set => useDefaultSunAngle = value; }
+        public bool UseDefaultSunGradient { get => useDefaultSunGradient; set => useDefaultSunGradient = value; }
+        public bool RotateSkybox { get => rotateSkybox; set => rotateSkybox = value; }
+        public float SkyboxRotationOffset { get => skyboxRotationOffset; set => skyboxRotationOffset = value; }
+        public bool ReverseSkyboxRotation { get => reverseSkyboxRotation; set => reverseSkyboxRotation = value; }
+        //public AudioClip BackgroundMusicAudio { get => backgroundMusicAudio; set => backgroundMusicAudio = value; }
+        //public AudioClip NightAmbientSoundsAudio { get => nightAmbientSoundsAudio; set => nightAmbientSoundsAudio = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -218,22 +337,32 @@ namespace AnyRPG {
             }
             //Debug.Log($"{DisplayName} has {footStepProfileReferences.Count} audio profiles");
 
-            realAmbientMusicProfile = null;
-            if (ambientMusicProfile != null && ambientMusicProfile != string.Empty) {
-                AudioProfile tmpAmbientMusicProfile = systemDataFactory.GetResource<AudioProfile>(ambientMusicProfile);
+            dayAmbientSoundsProfileReference = null;
+            if (dayAmbientSoundsProfile != null && dayAmbientSoundsProfile != string.Empty) {
+                AudioProfile tmpAmbientMusicProfile = systemDataFactory.GetResource<AudioProfile>(dayAmbientSoundsProfile);
                 if (tmpAmbientMusicProfile != null) {
-                    realAmbientMusicProfile = tmpAmbientMusicProfile;
+                    dayAmbientSoundsProfileReference = tmpAmbientMusicProfile;
                 } else {
-                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find music profile : " + ambientMusicProfile + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find audio profile : " + dayAmbientSoundsProfile + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            nightAmbientSoundsProfileReference = null;
+            if (nightAmbientSoundsProfile != null && nightAmbientSoundsProfile != string.Empty) {
+                AudioProfile tmpAmbientMusicProfile = systemDataFactory.GetResource<AudioProfile>(nightAmbientSoundsProfile);
+                if (tmpAmbientMusicProfile != null) {
+                    nightAmbientSoundsProfileReference = tmpAmbientMusicProfile;
+                } else {
+                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find audio profile : " + nightAmbientSoundsProfile + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
 
-            realBackgroundMusicProfile = null;
+            backgroundMusicProfileReference = null;
             if (backgroundMusicProfile != null && backgroundMusicProfile != string.Empty) {
                 AudioProfile tmpBackgroundMusicProfile = systemDataFactory.GetResource<AudioProfile>(backgroundMusicProfile);
                 if (tmpBackgroundMusicProfile != null) {
-                    realBackgroundMusicProfile = tmpBackgroundMusicProfile;
+                    backgroundMusicProfileReference = tmpBackgroundMusicProfile;
                 } else {
                     Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find music profile : " + backgroundMusicProfile + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }

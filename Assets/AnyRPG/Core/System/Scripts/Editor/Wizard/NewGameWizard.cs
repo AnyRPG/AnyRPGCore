@@ -104,7 +104,9 @@ namespace AnyRPG {
 
         public SceneAsset existingScene = null;
 
-        public AudioClip firstSceneAmbientSounds = null;
+        public AudioClip firstSceneDayAmbientSounds = null;
+
+        public AudioClip firstSceneNightAmbientSounds = null;
 
         public AudioClip firstSceneMusic = null;
 
@@ -276,7 +278,7 @@ namespace AnyRPG {
             ConfigureMainMenuScriptableObjects(fileSystemGameName);
 
             // create first scene
-            NewSceneWizard.CreateScene(gameParentFolder, gameName, firstSceneName, copyExistingScene, existingScene, firstSceneAmbientSounds, firstSceneMusic);
+            NewSceneWizard.CreateScene(gameParentFolder, gameName, firstSceneName, copyExistingScene, existingScene, firstSceneDayAmbientSounds, firstSceneNightAmbientSounds, firstSceneMusic);
 
             AssetDatabase.Refresh();
 
@@ -714,7 +716,8 @@ namespace AnyRPG {
                 existingScene = EditorGUILayout.ObjectField("Existing Scene", existingScene, typeof(SceneAsset), false) as SceneAsset;
             }
 
-            firstSceneAmbientSounds = EditorGUILayout.ObjectField("First Scene Ambient Sounds", firstSceneAmbientSounds, typeof(AudioClip), false) as AudioClip;
+            firstSceneDayAmbientSounds = EditorGUILayout.ObjectField("First Scene Day Ambient Sounds", firstSceneDayAmbientSounds, typeof(AudioClip), false) as AudioClip;
+            firstSceneNightAmbientSounds = EditorGUILayout.ObjectField("First Scene Night Ambient Sounds", firstSceneNightAmbientSounds, typeof(AudioClip), false) as AudioClip;
             firstSceneMusic = EditorGUILayout.ObjectField("First Scene Music", firstSceneMusic, typeof(AudioClip), false) as AudioClip;
 
             EditorGUILayout.LabelField("Common RPG Building Blocks", EditorStyles.boldLabel);

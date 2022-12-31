@@ -118,6 +118,9 @@ namespace AnyRPG {
         [SerializeField]
         private ChatCommandManager chatCommandManager = null;
 
+        [SerializeField]
+        private TimeOfDayManager timeOfDayManager = null;
+
         // system scripts
         private SystemEventManager systemEventManager = null;
 
@@ -162,6 +165,7 @@ namespace AnyRPG {
         public LoadGameManager LoadGameManager { get => loadGameManager; set => loadGameManager = value; }
         public CurrencyConverter CurrencyConverter { get => currencyConverter; set => currencyConverter = value; }
         public ChatCommandManager ChatCommandManager { get => chatCommandManager; set => chatCommandManager = value; }
+        public TimeOfDayManager TimeOfDayManager { get => timeOfDayManager; set => timeOfDayManager = value; }
 
         private void Init() {
             //Debug.Log("SystemGameManager.Init()");
@@ -212,7 +216,7 @@ namespace AnyRPG {
             uIManager.Configure(this);
             currencyConverter.Configure(this);
             chatCommandManager.Configure(this);
-
+            timeOfDayManager.Configure(this);
         }
 
         private void SetupPermanentObjects() {

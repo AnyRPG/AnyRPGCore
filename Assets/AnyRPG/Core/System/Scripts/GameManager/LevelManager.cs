@@ -299,6 +299,10 @@ namespace AnyRPG {
             // determine if a navmesh is available
             DetectNavMesh();
 
+            // bug fix for unity making shadows too dark on realtime lighting with no lightmaps baked and using skybox as environment lightning source
+            // doesn't work too well :(
+            //DynamicGI.UpdateEnvironment();
+
             // do things that can only be done if we have information about this scene in the scene nodes database
             PlayLevelSounds();
 
@@ -322,14 +326,16 @@ namespace AnyRPG {
         public void PlayLevelSounds() {
             //Debug.Log("Levelmanager.PlayLevelSounds()");
             if (activeSceneNode != null) {
+                /*
                 if (activeSceneNode.AmbientMusicProfile != null && activeSceneNode.AmbientMusicProfile.AudioClip != null) {
                     audioManager.PlayAmbient(activeSceneNode.AmbientMusicProfile.AudioClip);
                 } else {
                     audioManager.StopAmbient();
                 }
-                if (activeSceneNode.BackgroundMusicProfile != null && activeSceneNode.BackgroundMusicProfile.AudioClip != null) {
+                */
+                if (activeSceneNode.BackgroundMusicAudio != null) {
                     //Debug.Log("Levelmanager.PlayLevelSounds(): PLAYING MUSIC");
-                    audioManager.PlayMusic(activeSceneNode.BackgroundMusicProfile.AudioClip);
+                    audioManager.PlayMusic(activeSceneNode.BackgroundMusicAudio);
                 } else {
                     //Debug.Log("Levelmanager.PlayLevelSounds(): STOPPING MUSIC");
                     audioManager.StopMusic();

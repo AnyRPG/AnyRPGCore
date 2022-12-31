@@ -690,6 +690,20 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        [Header("TIME OF DAY")]
+
+        [Tooltip("This value is a multiplier. For every 1 seconds of real-world time that passes, x seconds of in-game time will pass.")]
+        [SerializeField]
+        private float timeOfDaySpeed = 1f;
+
+        [Tooltip("The angle of the sun as an offset from straight down. -90 is pointing directly North, +90 is pointing directly south.")]
+        [SerializeField]
+        private float defaultSunAngle = 30f;
+
+        [Tooltip("A color gradient to use for the sun color.  The ends represent midnight, and the center is noon.")]
+        [SerializeField]
+        private Gradient defaultSunGradient;
+
         // game manager references
         SystemDataFactory systemDataFactory = null;
 
@@ -866,6 +880,9 @@ namespace AnyRPG {
         public string LootSparkleEffectName { get => lootSparkleEffectName; set => lootSparkleEffectName = value; }
         public string CurrencyGroupName { get => currencyGroupName; set => currencyGroupName = value; }
         public CapabilityProps Capabilities { get => capabilities; }
+        public float TimeOfDaySpeed { get => timeOfDaySpeed; set => timeOfDaySpeed = value; }
+        public float DefaultSunAngle { get => defaultSunAngle; set => defaultSunAngle = value; }
+        public Gradient DefaultSunGradient { get => defaultSunGradient; set => defaultSunGradient = value; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }
 
