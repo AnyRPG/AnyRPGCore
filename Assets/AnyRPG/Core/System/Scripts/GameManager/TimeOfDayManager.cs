@@ -112,9 +112,12 @@ namespace AnyRPG {
                     defaultSunIntensity = sunLight.intensity;
 
                     if (RenderSettings.skybox != null) {
+                        // make copy of material so the original skybox material on disk is not changed
+                        skyboxMaterial = new Material(RenderSettings.skybox);
+                        RenderSettings.skybox = skyboxMaterial;
+
                         if (levelManager.GetActiveSceneNode().BlendedSkybox == true) {
                             blendSkybox = true;
-                            skyboxMaterial = RenderSettings.skybox;
                         }
                         if (levelManager.GetActiveSceneNode().RotateSkybox == true) {
                             rotateSkybox = true;
