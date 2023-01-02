@@ -233,9 +233,10 @@ namespace AnyRPG {
                 seconds = 0.1f;
             }
             float elapsedTime = 0f;
+            float secondaryDelta = secondaryAmbientAudioSource.volume;
             while (elapsedTime < seconds) {
                 currentAmbientAudioSource.volume = Mathf.Clamp(elapsedTime / seconds, 0f, 1f);
-                secondaryAmbientAudioSource.volume = Mathf.Clamp(((elapsedTime / seconds) * -1) + 1, 0f, 1f);
+                secondaryAmbientAudioSource.volume = Mathf.Clamp(secondaryDelta - (elapsedTime / seconds), 0f, 1f);
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }

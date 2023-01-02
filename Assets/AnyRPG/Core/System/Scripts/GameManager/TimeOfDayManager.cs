@@ -79,7 +79,7 @@ namespace AnyRPG {
 
         public void SuppressAmbientSounds() {
             playAmbientSounds = false;
-            audioManager.CrossFadeAmbient(null, 3f);
+            //audioManager.CrossFadeAmbient(null, 3f);
         }
 
         public void AllowAmbientSounds() {
@@ -87,7 +87,7 @@ namespace AnyRPG {
             if (levelLoaded == false) {
                 return;
             }
-            PlayAmbientSounds(3f);
+            //PlayAmbientSounds(3f);
         }
 
         public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
@@ -234,30 +234,37 @@ namespace AnyRPG {
         }
 
         public void PlayAmbientSounds(float fadeTime) {
-            if (playAmbientSounds == false) {
-                return;
-            }
             if (levelManager.GetActiveSceneNode() != null) {
                 previousAudioClip = currentAudioClip;
-                if (weatherManager.CurrentAmbientSound != null) {
-                    currentAudioClip = weatherManager.CurrentAmbientSound;
+
+                if (playAmbientSounds == false) {
+                    currentAudioClip = null;
                 } else {
-                    if (nightSounds == true) {
-                        currentAudioClip = levelManager.GetActiveSceneNode().NightAmbientSound;
+                    if (weatherManager.CurrentAmbientSound != null) {
+                        currentAudioClip = weatherManager.CurrentAmbientSound;
                     } else {
-                        currentAudioClip = levelManager.GetActiveSceneNode().DayAmbientSound;
+                        if (nightSounds == true) {
+                            currentAudioClip = levelManager.GetActiveSceneNode().NightAmbientSound;
+                        } else {
+                            currentAudioClip = levelManager.GetActiveSceneNode().DayAmbientSound;
+                        }
                     }
                 }
+
                 if (currentAudioClip == previousAudioClip
                     && audioManager.AmbientAudioSource.clip == currentAudioClip
                     && audioManager.AmbientAudioSource.isPlaying == true) {
                     return;
                 }
-                if (currentAudioClip != null) {
-                    audioManager.CrossFadeAmbient(currentAudioClip, fadeTime);
-                } else {
-                    audioManager.StopAmbient();
+                //if (currentAudioClip != null) {
+                if (previousAudioClip == null && currentAudioClip == null) {
+                    // no need to crossfade since nothing was playing and nothing will be playing
+                    return;
                 }
+                    audioManager.CrossFadeAmbient(currentAudioClip, fadeTime);
+                //} else {
+                //    audioManager.StopAmbient();
+                //}
 
             }
 

@@ -19,6 +19,7 @@ namespace AnyRPG {
         private FogSettings weatherFogSettings = new FogSettings();
         private FogSettings waterFogSettings = new FogSettings();
         private FogSettings currentFogSettings = null;
+        private List<WeatherEffectController> fadingControllers = new List<WeatherEffectController>();
         // keep a list of fog settings for overrides
         private List<FogSettings> fogList = new List<FogSettings>();
 
@@ -57,7 +58,7 @@ namespace AnyRPG {
             //Debug.Log("WeatherManager.HandleLevelUnload()");
 
             EndWeather(currentWeather, true);
-            weatherEffectController = null;
+            CleanupWeatherEffectControllers();
             previousWeather = null;
             currentWeather = null;
             fogList.Clear();
@@ -221,7 +222,11 @@ namespace AnyRPG {
             }
             currentWeather = weatherWeights[usedIndex].Weather;
 
-            
+            // always get ambient sound even if current weather is null
+            // because the sound needs to be set to null or it will keep playing
+            // the old weather sound when switched to clear weather
+            // this is done here rather than in startWeather to avoid a crossfade to the wrong sound between EndWeather() and StartWeather()
+            //currentAmbientSound = currentWeather?.AmbientSound;
 
             //Debug.Log("WeatherManager.ChooseWeather() picked: " + (currentWeather == null ? "clear" : currentWeather.DisplayName));
 
@@ -253,13 +258,12 @@ namespace AnyRPG {
                 }
 
                 ActivateWeatherFogSettings(currentWeather.FogSettings);
-            }/* else {
-                ActivateWeatherFogSettings(new FogSettings(false, new Color32(128, 128, 128, 255), 0f);
-            }*/
+            }
 
             // always get ambient sound even if current weather is null
             // because the sound needs to be set to null or it will keep playing
             // the old weather sound when switched to clear weather
+            // MOVED TO CHOOSEWEATHER
             currentAmbientSound = currentWeather?.AmbientSound;
 
             // always play ambient sounds
@@ -292,15 +296,37 @@ namespace AnyRPG {
                     weatherEffectController.StopPlaying(immediate);
                     objectPooler.ReturnObjectToPool(weatherEffectController.gameObject);
                 } else {
-                    weatherEffectController.StopPlaying();
-                    objectPooler.ReturnObjectToPool(weatherEffectController.gameObject, weatherEffectController.FadeTime);
+                    StartCoroutine(WeatherFade(weatherEffectController, weatherEffectController.FadeTime));
                 }
+                weatherEffectController = null;
             }
         }
 
         private void EndWeather(WeatherProfile previousWeather) {
 
             EndWeather(previousWeather, false);
+        }
+
+        private IEnumerator WeatherFade(WeatherEffectController weatherEffectController, float fadeTime) {
+            float elapsedTime = 0f;
+            fadingControllers.Add(weatherEffectController);
+            weatherEffectController.StopPlaying();
+
+            while (elapsedTime < fadeTime) {
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+            fadingControllers.Remove(weatherEffectController);
+            objectPooler.ReturnObjectToPool(weatherEffectController.gameObject);
+        }
+
+        private void CleanupWeatherEffectControllers() {
+            StopAllCoroutines();
+            foreach (WeatherEffectController weatherEffectController in fadingControllers) {
+                weatherEffectController.StopPlaying(true);
+                objectPooler.ReturnObjectToPool(weatherEffectController.gameObject);
+            }
+            fadingControllers.Clear();
         }
 
         private void StartWeatherMonitoring() {
