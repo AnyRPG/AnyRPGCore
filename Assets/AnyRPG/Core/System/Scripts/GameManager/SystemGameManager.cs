@@ -121,6 +121,9 @@ namespace AnyRPG {
         [SerializeField]
         private TimeOfDayManager timeOfDayManager = null;
 
+        [SerializeField]
+        private WeatherManager weatherManager = null;
+
         // system scripts
         private SystemEventManager systemEventManager = null;
 
@@ -166,6 +169,7 @@ namespace AnyRPG {
         public CurrencyConverter CurrencyConverter { get => currencyConverter; set => currencyConverter = value; }
         public ChatCommandManager ChatCommandManager { get => chatCommandManager; set => chatCommandManager = value; }
         public TimeOfDayManager TimeOfDayManager { get => timeOfDayManager; set => timeOfDayManager = value; }
+        public WeatherManager WeatherManager { get => weatherManager; set => weatherManager = value; }
 
         private void Init() {
             //Debug.Log("SystemGameManager.Init()");
@@ -217,6 +221,7 @@ namespace AnyRPG {
             currencyConverter.Configure(this);
             chatCommandManager.Configure(this);
             timeOfDayManager.Configure(this);
+            weatherManager.Configure(this);
         }
 
         private void SetupPermanentObjects() {

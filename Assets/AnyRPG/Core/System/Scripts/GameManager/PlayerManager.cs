@@ -228,7 +228,10 @@ namespace AnyRPG {
                     || activeSceneNode.SuppressCharacterSpawn) {
                     //Debug.Log("PlayerManager.OnLevelLoad(): character spawn is suppressed");
                     loadCharacter = false;
-                    cameraManager.DeactivateMainCamera();
+
+                    // testing - remove all camera activation code from here
+                    //cameraManager.DeactivateMainCamera();
+
                     //cameraManager.MyCharacterCreatorCamera.gameObject.SetActive(true);
                 }
             } else {
@@ -239,7 +242,8 @@ namespace AnyRPG {
             if (autoSpawnPlayerOnLevelLoad == true && loadCharacter) {
                 //cameraManager.MyCharacterCreatorCamera.gameObject.SetActive(false);
                 Vector3 spawnLocation = SpawnPlayerUnit();
-                cameraManager.ActivateMainCamera(true);
+                // testing - remove all camera code from here
+                //cameraManager.ActivateMainCamera(true);
                 cameraManager.MainCameraController.SetTargetPositionRaw(spawnLocation, activeUnitController.transform.forward);
             }
         }

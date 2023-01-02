@@ -12,6 +12,7 @@ namespace AnyRPG {
 
         // track the passage of in-game time
         //protected int secondsSinceMidnight = 0;
+        private DateTime startTime;
         private DateTime realCurrentTime;
         private DateTime inGameTime;
         private bool nightSounds = true;
@@ -33,6 +34,10 @@ namespace AnyRPG {
         private float currentSkyboxRotation = 0f;
 
         // state tracking
+        private bool playAmbientSounds = true;
+        private bool levelLoaded = false;
+        private AudioClip previousAudioClip = null;
+        private AudioClip currentAudioClip = null;
 
         // the number of seconds elapsed since the last time calculation
         //private float elapsedSeconds = 0f;
@@ -41,6 +46,7 @@ namespace AnyRPG {
         protected SystemDataFactory systemDataFactory = null;
         protected LevelManager levelManager = null;
         protected AudioManager audioManager = null;
+        protected WeatherManager weatherManager = null;
 
         public DateTime InGameTime { get => inGameTime; }
 
@@ -49,6 +55,7 @@ namespace AnyRPG {
 
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
+            GetStartTime();
             CalculateRelativeTime();
         }
 
@@ -58,17 +65,29 @@ namespace AnyRPG {
             systemDataFactory = systemGameManager.SystemDataFactory;
             levelManager = systemGameManager.LevelManager;
             audioManager = systemGameManager.AudioManager;
+            weatherManager = systemGameManager.WeatherManager;
         }
 
         private void Update() {
-            //elapsedSeconds += Time.deltaTime;
-            
-            // only calculate time every second
-            //if (elapsedSeconds > tickLength) {
-                //elapsedSeconds -= tickLength;
-                CalculateRelativeTime();
-                PerformTimeOfDayOperations();
-            //}
+            CalculateRelativeTime();
+            PerformTimeOfDayOperations();
+        }
+
+        private void GetStartTime() {
+            startTime = DateTime.Now;
+        }
+
+        public void SuppressAmbientSounds() {
+            playAmbientSounds = false;
+            audioManager.CrossFadeAmbient(null, 3f);
+        }
+
+        public void AllowAmbientSounds() {
+            playAmbientSounds = true;
+            if (levelLoaded == false) {
+                return;
+            }
+            PlayAmbientSounds(3f);
         }
 
         public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
@@ -84,10 +103,15 @@ namespace AnyRPG {
             rotateSkybox = false;
             skyboxRotationOffset = 0f;
             skyboxRotationDirection = 1f;
-    }
+            levelLoaded = false;
 
-    public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
+            audioManager.StopAmbient();
+        }
+
+        public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("TimeOfDayManager.HandleLevelLoad()");
+
+            levelLoaded = true;
 
             if (levelManager.GetActiveSceneNode() != null) {
                 sunLight = RenderSettings.sun;
@@ -137,9 +161,13 @@ namespace AnyRPG {
         /// calculate in-game time relative to real world time
         /// </summary>
         private void CalculateRelativeTime() {
+            /*
             realCurrentTime = DateTime.Now;
             inGameTime = DateTime.Now;
             inGameTime = realCurrentTime.AddSeconds((realCurrentTime.TimeOfDay.TotalSeconds * systemConfigurationManager.TimeOfDaySpeed) - realCurrentTime.TimeOfDay.TotalSeconds);
+            */
+            // new calculation to always have start time set to actual current time
+            inGameTime = startTime.AddSeconds((DateTime.Now - startTime).TotalSeconds * systemConfigurationManager.TimeOfDaySpeed);
             //Debug.Log("Time is " + inGameTime.ToShortTimeString());
 
             if (nightSounds == true && inGameTime.TimeOfDay.TotalSeconds >= 10800 && inGameTime.TimeOfDay.TotalSeconds < 61800) {
@@ -200,17 +228,33 @@ namespace AnyRPG {
             skyboxMaterial.SetFloat("_Rotation", currentSkyboxRotation);
         }
 
-        private void PlayAmbientSounds() {
+        public void PlayAmbientSounds() {
+            // 10800 = 3 hours
+            PlayAmbientSounds(10800 / systemConfigurationManager.TimeOfDaySpeed);
+        }
+
+        public void PlayAmbientSounds(float fadeTime) {
+            if (playAmbientSounds == false) {
+                return;
+            }
             if (levelManager.GetActiveSceneNode() != null) {
-                AudioClip audioClip = null;
-                if (nightSounds == true) {
-                    audioClip = levelManager.GetActiveSceneNode().NightAmbientSound;
+                previousAudioClip = currentAudioClip;
+                if (weatherManager.CurrentAmbientSound != null) {
+                    currentAudioClip = weatherManager.CurrentAmbientSound;
                 } else {
-                    audioClip = levelManager.GetActiveSceneNode().DayAmbientSound;
+                    if (nightSounds == true) {
+                        currentAudioClip = levelManager.GetActiveSceneNode().NightAmbientSound;
+                    } else {
+                        currentAudioClip = levelManager.GetActiveSceneNode().DayAmbientSound;
+                    }
                 }
-                if (audioClip != null) {
-                    // 10800 = 3 hours
-                    audioManager.CrossFadeAmbient(audioClip, 10800 / systemConfigurationManager.TimeOfDaySpeed);
+                if (currentAudioClip == previousAudioClip
+                    && audioManager.AmbientAudioSource.clip == currentAudioClip
+                    && audioManager.AmbientAudioSource.isPlaying == true) {
+                    return;
+                }
+                if (currentAudioClip != null) {
+                    audioManager.CrossFadeAmbient(currentAudioClip, fadeTime);
                 } else {
                     audioManager.StopAmbient();
                 }

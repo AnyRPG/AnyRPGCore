@@ -214,6 +214,10 @@ namespace AnyRPG {
             factoryDataAccess.Setup<VoiceProfile>("VoiceProfile", systemGameManager);
             dataDictionary.Add(typeof(VoiceProfile), factoryDataAccess);
 
+            factoryDataAccess = new FactoryDataAccess();
+            factoryDataAccess.Setup<WeatherProfile>("WeatherProfile", systemGameManager);
+            dataDictionary.Add(typeof(WeatherProfile), factoryDataAccess);
+
             //setup scriptable objects
             foreach (FactoryDataAccess dataAccess in dataDictionary.Values) {
                 dataAccess.SetupScriptableObjects(systemGameManager);

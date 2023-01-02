@@ -87,3 +87,13 @@ MonoBehaviour:
   rotateSkybox: 1
   skyboxRotationOffset: 302
   reverseSkyboxRotation: 1
+  minWeatherLength: 10800
+  maxWeatherLength: 21600
+  noWeatherWeight: 10
+  weatherWeights:
+  - weather: Fog
+    weight: 10
+  - weather: Rain
+    weight: 10
+  - weather: Snow
+    weight: 10

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d72f1e5d78910b48a97c2678c823432, type: 3}
+  m_Name: FogWeather
+  m_EditorClassIdentifier: 
+  resourceName: Fog
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  prefabProfile: Fog
+  suppressAmbientSounds: 1
+  ambientSoundsProfile: 
+  ambientSoundsAudio: {fileID: 0}
+  fogSettings:
+    useFog: 1
+    fogColor: {r: 0.509434, g: 0.509434, b: 0.509434, a: 1}
+    fogDensity: 0.05

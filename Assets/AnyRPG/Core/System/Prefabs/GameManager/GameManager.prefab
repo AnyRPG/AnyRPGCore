@@ -6158,6 +6158,7 @@ GameObject:
   - component: {fileID: 6961095826997836342}
   - component: {fileID: 3319926267122627146}
   - component: {fileID: 327801564803084641}
+  - component: {fileID: 2170718474153991019}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -6471,6 +6472,7 @@ MonoBehaviour:
   currencyConverter: {fileID: 6757116812437241114}
   chatCommandManager: {fileID: 3319926267122627146}
   timeOfDayManager: {fileID: 327801564803084641}
+  weatherManager: {fileID: 2170718474153991019}
 --- !u!114 &5684895214070870786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6817,6 +6819,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7b815b36a0ef8143bf94813796e72ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2170718474153991019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5684895214070870814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 671af5bb94c8a17419146306ccd846d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5742173228335772782

@@ -307,12 +307,20 @@ namespace AnyRPG {
             PlayLevelSounds();
 
             // send messages to subscribers
+            // testing moving this to after activating scene camera
+            /*
             EventParamProperties eventParamProperties = new EventParamProperties();
             eventParamProperties.simpleParams.StringParam = (activeSceneNode == null ? activeSceneName : activeSceneNode.DisplayName);
             SystemEventManager.TriggerEvent("OnLevelLoad", eventParamProperties);
+            */
 
             // activate the correct camera
             ActivateSceneCamera();
+
+            // send messages to subscribers
+            EventParamProperties eventParamProperties = new EventParamProperties();
+            eventParamProperties.simpleParams.StringParam = (activeSceneNode == null ? activeSceneName : activeSceneNode.DisplayName);
+            SystemEventManager.TriggerEvent("OnLevelLoad", eventParamProperties);
         }
 
         public AudioProfile GetTerrainFootStepProfile(Vector3 transformPosition) {
@@ -346,23 +354,16 @@ namespace AnyRPG {
         private void ActivateSceneCamera() {
             //Debug.Log("Levelmanager.ActivateSceneCamera()");
 
-            if (activeSceneNode != null) {
-                //Debug.Log("Levelmanager.ActivateSceneCamera(): GetActiveSceneNode is not null");
-                if (activeSceneNode.AutoPlayCutscene != null) {
-                    if (activeSceneNode.AutoPlayCutscene.Viewed == true && activeSceneNode.AutoPlayCutscene.Repeatable == false) {
-                        // this is just an intro scene, not a full cutscene, and we have already viewed it, just go straight to main camera
-                        cameraManager.ActivateMainCamera();
-                        return;
-                    }
-                    //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene camera");
-                    //if (GetActiveSceneNode().MyIsCutScene == true || GetActiveSceneNode().MySuppressMainCamera == true) {
-                    //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene bars");
-                    uIManager.CutSceneBarController.StartCutScene(activeSceneNode.AutoPlayCutscene);
-                    //}
-                } else {
-                    cameraManager.ActivateMainCamera();
-                }
+            if (activeSceneNode?.AutoPlayCutscene != null
+                && (activeSceneNode.AutoPlayCutscene.Repeatable == true || activeSceneNode.AutoPlayCutscene.Viewed == false)) {
+                // a scene that is only a cutscene, or a cutscene that has not been viewed yet is active
+                // load the cutscene
+                uIManager.CutSceneBarController.StartCutScene(activeSceneNode.AutoPlayCutscene);
+                return;
             }
+
+            // no cutscene to be played, activate the main camera
+            cameraManager.ActivateMainCamera();
         }
 
         public void LoadCutSceneWithDelay(Cutscene cutscene) {

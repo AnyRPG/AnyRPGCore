@@ -185,6 +185,8 @@ namespace AnyRPG {
         }
 
         public void PlayAmbient(AudioClip audioClip) {
+            Debug.Log("AudioManager.PlayAmbient(" + (audioClip == null ? "null" : audioClip.name) + ")");
+
             if (currentAmbientAudioSource.clip == audioClip && ambientPaused == true) {
                 UnPauseAmbient();
                 return;
@@ -197,6 +199,13 @@ namespace AnyRPG {
         }
 
         public void CrossFadeAmbient(AudioClip audioClip, float seconds) {
+            //Debug.Log("AudioManager.CrossFadeAmbient(" + (audioClip == null ? "null" : audioClip.name) + ", " + seconds + ")");
+
+            if (ambientPaused == false
+                && currentAmbientAudioSource.clip == audioClip
+                && currentAmbientAudioSource.isPlaying == true) {
+                return;
+            }
             ambientPaused = false;
             if (currentAmbientAudioSource == ambientAudioSource1) {
                 currentAmbientAudioSource = ambientAudioSource2;
@@ -208,7 +217,9 @@ namespace AnyRPG {
             currentAmbientAudioSource.clip = audioClip;
             currentAmbientAudioSource.loop = true;
             currentAmbientAudioSource.volume = 0f;
-            currentAmbientAudioSource.Play();
+            if (audioClip != null) {
+                currentAmbientAudioSource.Play();
+            }
 
             if (fadeCoroutine != null) {
                 StopCoroutine(fadeCoroutine);
@@ -281,7 +292,12 @@ namespace AnyRPG {
         }
 
         public void StopAmbient() {
-            currentAmbientAudioSource.Stop();
+            if (fadeCoroutine != null) {
+                StopCoroutine(fadeCoroutine);
+            }
+            ambientAudioSource1.Stop();
+            ambientAudioSource2.Stop();
+
             ambientPaused = false;
         }
 

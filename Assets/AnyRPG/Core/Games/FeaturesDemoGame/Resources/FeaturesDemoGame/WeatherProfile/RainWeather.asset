@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d72f1e5d78910b48a97c2678c823432, type: 3}
+  m_Name: RainWeather
+  m_EditorClassIdentifier: 
+  resourceName: Rain
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  prefabProfile: Rain
+  suppressAmbientSounds: 0
+  ambientSoundsProfile: 
+  ambientSoundsAudio: {fileID: 8300000, guid: e8e51e2ff272dc14d974c59ad71b67c4, type: 3}
+  fogSettings:
+    useFog: 1
+    fogColor: {r: 0.5283019, g: 0.5283019, b: 0.5283019, a: 1}
+    fogDensity: 0.03

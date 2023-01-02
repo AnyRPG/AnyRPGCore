@@ -37,7 +37,7 @@ namespace AnyRPG {
 
         private AudioProfile dayAmbientSoundsProfileReference;
 
-        [Tooltip("Ambient sounds to play in the background while this scene is active")]
+        [Tooltip("Ambient sounds to play in the background at night while this scene is active")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string nightAmbientSoundsProfile = string.Empty;
@@ -152,10 +152,27 @@ namespace AnyRPG {
         [Range(0, 360)]
         private float skyboxRotationOffset = 0f;
 
-        [Tooltip("If true, the skybox will be rotated in the opposite of the default direction")]
+        [Tooltip("If true, the skybox will be rotated in the opposite of the default direction.")]
         [SerializeField]
         private bool reverseSkyboxRotation = false;
 
+        [Header("Weather Settings")]
+
+        [Tooltip("The minimum number of in-game seconds a certain weather type should last for.")]
+        [SerializeField]
+        private int minWeatherLength = 3600;
+
+        [Tooltip("The maximum number of in-game seconds a certain weather type should last for.")]
+        [SerializeField]
+        private int maxWeatherLength = 10800;
+
+        [Tooltip("A weighted value the chance that clear weather will be chosen when weather is selected.")]
+        [SerializeField]
+        private int noWeatherWeight = 100;
+
+        [Tooltip("A list of weather types and their weights.")]
+        [SerializeField]
+        private List<WeatherWeightNode> weatherWeights = new List<WeatherWeightNode>();
 
         // game manager referenes
         private SaveManager saveManager = null;
@@ -165,7 +182,6 @@ namespace AnyRPG {
         public string SceneName { get => resourceName; set => resourceName = value; }
         public bool SuppressCharacterSpawn { get => suppressCharacterSpawn; set => suppressCharacterSpawn = value; }
         public bool SuppressMainCamera { get => suppressMainCamera; set => suppressMainCamera = value; }
-        //public AudioProfile AmbientMusicProfile { get => dayAmbientSoundsProfileReference; set => dayAmbientSoundsProfileReference = value; }
         public AudioClip DayAmbientSound {
             get {
                 if (dayAmbientSoundsAudio != null) {
@@ -247,8 +263,15 @@ namespace AnyRPG {
         public bool RotateSkybox { get => rotateSkybox; set => rotateSkybox = value; }
         public float SkyboxRotationOffset { get => skyboxRotationOffset; set => skyboxRotationOffset = value; }
         public bool ReverseSkyboxRotation { get => reverseSkyboxRotation; set => reverseSkyboxRotation = value; }
-        //public AudioClip BackgroundMusicAudio { get => backgroundMusicAudio; set => backgroundMusicAudio = value; }
-        //public AudioClip NightAmbientSoundsAudio { get => nightAmbientSoundsAudio; set => nightAmbientSoundsAudio = value; }
+        public int NoWeatherWeight { get => noWeatherWeight; set => noWeatherWeight = value; }
+        public List<WeatherWeightNode> WeatherWeights { get => weatherWeights; set => weatherWeights = value; }
+        public int MinWeatherLength { get => minWeatherLength; set => minWeatherLength = value; }
+        public int MaxWeatherLength { get => maxWeatherLength; set => maxWeatherLength = value; }
+        public int RandomWeatherLength {
+            get {
+                return Random.Range(minWeatherLength, maxWeatherLength);
+            }
+        }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -397,7 +420,9 @@ namespace AnyRPG {
                 }
             }
 
-
+            foreach (WeatherWeightNode weatherWeightNode in weatherWeights) {
+                weatherWeightNode.SetupScriptableObjects(systemGameManager);
+            }
         }
 
     }
