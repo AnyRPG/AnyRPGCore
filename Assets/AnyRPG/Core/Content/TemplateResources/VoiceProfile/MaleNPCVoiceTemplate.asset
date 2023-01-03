@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9919e93b6dbcc294c82debc9e9adf546, type: 3}
-  m_Name: MalePikemanVoice
+  m_Name: MaleNPCVoiceTemplate
   m_EditorClassIdentifier: 
-  resourceName: Male Pikeman
+  resourceName: Male NPC
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -21,20 +21,19 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   voiceProps:
-    aggro:
-    - {fileID: 8300000, guid: 8ea0960478ec78c40aed6d2f974bb9ff, type: 3}
-    - {fileID: 8300000, guid: 9d79040e2cc42f44d9e3abfd3a8c2fbd, type: 3}
-    attack:
-    - {fileID: 8300000, guid: 7dbba4e0b1a2a5449b7c0999d633691b, type: 3}
-    - {fileID: 8300000, guid: f969dab9c4260da4087f006fbfca3859, type: 3}
+    aggro: []
+    attack: []
     damage: []
     jump: []
     fallDamage: []
-    death:
-    - {fileID: 8300000, guid: 4279ad4998bcab546b4f69025ba25cf8, type: 3}
-    victory:
-    - {fileID: 8300000, guid: 3f085612d040917468a386ee190d1b34, type: 3}
-    startInteract: []
-    startVendorInteract: []
+    death: []
+    victory: []
+    startInteract:
+    - {fileID: 8300000, guid: 1430870eaeabf6d4b92a3358307ba4e3, type: 3}
+    startVendorInteract:
+    - {fileID: 8300000, guid: 2d505a5fee8475c4190e378085575626, type: 3}
+    - {fileID: 8300000, guid: 1430870eaeabf6d4b92a3358307ba4e3, type: 3}
+    - {fileID: 8300000, guid: 371cb9231a1d08b4980f3f1fee4f4c1b, type: 3}
+    - {fileID: 8300000, guid: 4c4ce7bf75a9c5d40ba3b46268e9651c, type: 3}
     stopInteract: []
     stopVendorInteract: []

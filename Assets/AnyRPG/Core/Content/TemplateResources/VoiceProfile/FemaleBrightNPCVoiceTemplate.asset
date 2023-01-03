@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9919e93b6dbcc294c82debc9e9adf546, type: 3}
+  m_Name: FemaleBrightNPCVoiceTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Female Bright NPC
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  voiceProps:
+    aggro: []
+    attack: []
+    damage: []
+    jump: []
+    fallDamage: []
+    death: []
+    victory: []
+    startInteract:
+    - {fileID: 8300000, guid: f4fee3a5f6734ac46b94fcd47a7b3354, type: 3}
+    - {fileID: 8300000, guid: 519eb77c3615efb409aa9b02775d5ede, type: 3}
+    - {fileID: 8300000, guid: 22171cf5aa206784bbb74075ff12c1d3, type: 3}
+    startVendorInteract:
+    - {fileID: 8300000, guid: f4fee3a5f6734ac46b94fcd47a7b3354, type: 3}
+    - {fileID: 8300000, guid: 519eb77c3615efb409aa9b02775d5ede, type: 3}
+    - {fileID: 8300000, guid: 22171cf5aa206784bbb74075ff12c1d3, type: 3}
+    stopInteract:
+    - {fileID: 8300000, guid: 4fd53b50f7e9a434295dc79d484f2532, type: 3}
+    - {fileID: 8300000, guid: 8755cabff339a8c4db70f2391904e7ed, type: 3}
+    - {fileID: 8300000, guid: 854dc1c43feb40f46a12adc34a2a74d0, type: 3}
+    - {fileID: 8300000, guid: 89f17fdf15798ef4799fc83a159f3a0c, type: 3}
+    - {fileID: 8300000, guid: 50e9fd739feca00449849e0ca3b28296, type: 3}
+    - {fileID: 8300000, guid: bf0633522abc35b4b9bbefd6a9043de2, type: 3}
+    stopVendorInteract:
+    - {fileID: 8300000, guid: 4fd53b50f7e9a434295dc79d484f2532, type: 3}
+    - {fileID: 8300000, guid: 8755cabff339a8c4db70f2391904e7ed, type: 3}
+    - {fileID: 8300000, guid: 854dc1c43feb40f46a12adc34a2a74d0, type: 3}
+    - {fileID: 8300000, guid: 89f17fdf15798ef4799fc83a159f3a0c, type: 3}
+    - {fileID: 8300000, guid: 50e9fd739feca00449849e0ca3b28296, type: 3}
+    - {fileID: 8300000, guid: bf0633522abc35b4b9bbefd6a9043de2, type: 3}
+    - {fileID: 8300000, guid: a13a2eb55202b8e47b41bfb8d8167864, type: 3}
+    - {fileID: 8300000, guid: 2f91cdd423e89ee45a7b61c31bbdd1b6, type: 3}
+    - {fileID: 8300000, guid: 3d733e2b10352eb4e9c778f3c2ab8b89, type: 3}

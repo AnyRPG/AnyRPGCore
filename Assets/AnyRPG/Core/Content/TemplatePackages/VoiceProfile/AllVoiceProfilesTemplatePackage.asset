@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllVoiceProfilesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: All Weather Profiles
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 6ef6cc16a3c2ae243a21a2b4919c92b6, type: 2}
+  - {fileID: 11400000, guid: b3b2640b47a77fe4c8b171449854ce29, type: 2}
+  - {fileID: 11400000, guid: 2ba474342b2f6ff4e85f3e0421b6f8a0, type: 2}

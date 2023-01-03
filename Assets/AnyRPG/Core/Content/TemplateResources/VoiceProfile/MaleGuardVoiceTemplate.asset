@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9919e93b6dbcc294c82debc9e9adf546, type: 3}
-  m_Name: MaleKnightVoice
+  m_Name: MaleGuardVoiceTemplate
   m_EditorClassIdentifier: 
-  resourceName: Male Knight
+  resourceName: Male Guard
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -22,20 +22,19 @@ MonoBehaviour:
   optionalOverride: 0
   voiceProps:
     aggro:
-    - {fileID: 8300000, guid: c50cd3aff67225644992c7516f809e4d, type: 3}
-    - {fileID: 8300000, guid: c1936d03a174ea2459a493c4026ac0be, type: 3}
-    - {fileID: 8300000, guid: e4451be6f0d312f4e9f4dd93ca9f6437, type: 3}
+    - {fileID: 8300000, guid: d27d5375e0f091b40963cfb6a0352ba0, type: 3}
+    - {fileID: 8300000, guid: 1fa4e4c1934d5cd4db9bac16a3e6f57f, type: 3}
+    - {fileID: 8300000, guid: a42a9c9b8e214e5439261ab6c4ebd508, type: 3}
     attack:
-    - {fileID: 8300000, guid: b474946e73248b94ea24af0f9a3152c0, type: 3}
     - {fileID: 8300000, guid: 7dbba4e0b1a2a5449b7c0999d633691b, type: 3}
     - {fileID: 8300000, guid: f969dab9c4260da4087f006fbfca3859, type: 3}
     damage: []
     jump: []
     fallDamage: []
     death:
-    - {fileID: 8300000, guid: 396646aa1386ed345ba0f964184b868a, type: 3}
+    - {fileID: 8300000, guid: 5f9da92376ebb774a98070246e5c810e, type: 3}
     victory:
-    - {fileID: 8300000, guid: 2c776d2d2c14fc643bfeae297272df2f, type: 3}
+    - {fileID: 8300000, guid: 761f236b0889ffe418bd8dc26a365fdc, type: 3}
     startInteract: []
     startVendorInteract: []
     stopInteract: []

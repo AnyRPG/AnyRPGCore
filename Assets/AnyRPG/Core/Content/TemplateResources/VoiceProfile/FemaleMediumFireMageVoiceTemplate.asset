@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9919e93b6dbcc294c82debc9e9adf546, type: 3}
+  m_Name: FemaleMediumFireMageVoiceTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Female Medium Fire Mage
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  voiceProps:
+    aggro:
+    - {fileID: 8300000, guid: 8d624ed3dc04e2a45b23ad5aed30b7c7, type: 3}
+    damage: []
+    jump:
+    - {fileID: 8300000, guid: 1e226c328a4bcee4788483cc450a5517, type: 3}
+    - {fileID: 8300000, guid: 462ee157cab4e9844ac984a6c5b3dd2a, type: 3}
+    - {fileID: 8300000, guid: adda5acdd21a2474ba1006b4d00515b6, type: 3}
+    fallDamage:
+    - {fileID: 8300000, guid: f58e0b62e237b6946a9d5f28187a2484, type: 3}
+    - {fileID: 8300000, guid: fc403ac911e7a51468c864c05a1d6859, type: 3}
+    - {fileID: 8300000, guid: a58a61fcca3afea4ea75d9bd15d68bbd, type: 3}
+    death:
+    - {fileID: 8300000, guid: 3604a548372177548a2018af5a2d51c4, type: 3}
+    victory: []
+    startInteract: []
+    stopInteract: []
