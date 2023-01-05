@@ -21,7 +21,6 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   resources:
-  - {fileID: 11400000, guid: 7d817398166133a4c9ce4f36d5d438d8, type: 2}
   - {fileID: 11400000, guid: 08e6c40f7e68ebd4b85bed239df23e03, type: 2}
   - {fileID: 11400000, guid: de10c7b9320dbaa48a6bd91a8cdbcb4d, type: 2}
   - {fileID: 11400000, guid: bcb6683c1905edd41a31c7e8e7e5ca0a, type: 2}
@@ -44,6 +43,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 353a20e74b36edf4f833a819b17182a0, type: 2}
   - {fileID: 11400000, guid: 35ce90f4192aa8c4caee000855ba5462, type: 2}
   - {fileID: 11400000, guid: 66efd40b2c2ad79418bc441cb7c6194e, type: 2}
-  - {fileID: 11400000, guid: 529c354fe9af4ae4c8b4e98becd0072f, type: 2}
   prefabs: []
   dependencies: []

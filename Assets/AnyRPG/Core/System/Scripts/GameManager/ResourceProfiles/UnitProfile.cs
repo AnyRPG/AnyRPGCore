@@ -203,6 +203,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool isMobile = true;
 
+        [Tooltip("None = Do not play footsteps.  Unit = Play the footsteps configured below.  Environment = Play the footsteps based on the terrain. UnitFallback = Try environment, then fallback to Unit if no environment sound available.")]
+        [SerializeField]
+        private FootstepType footstepType = FootstepType.UnitFallback;
+
         [Tooltip("If true, the movement sounds are played on footstep hit instead of in a continuous track.")]
         [SerializeField]
         private bool playOnFootstep = false;
@@ -312,6 +316,7 @@ namespace AnyRPG {
         public BaseAbilityProperties DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
         public bool IsUMAUnit { get => isUMAUnit; set => isUMAUnit = value; }
         public bool IsPet { get => isPet; set => isPet = value; }
+        public FootstepType FootstepType { get => footstepType; set => footstepType = value; }
         public bool PlayOnFootstep { get => playOnFootstep; set => playOnFootstep = value; }
         public List<AudioProfile> MovementAudioProfiles { get => movementAudioProfiles; set => movementAudioProfiles = value; }
         public List<StatScalingNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
@@ -617,4 +622,6 @@ namespace AnyRPG {
         }
 
     }
+
+    public enum FootstepType { None, Unit, Environment, UnitFallback }
 }

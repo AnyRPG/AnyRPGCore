@@ -9,10 +9,6 @@ namespace AnyRPG {
 
     public class CharacterCreatorWindowPanel : CloseableWindowContents, ICapabilityConsumer {
 
-        public event System.Action OnConfirmAction = delegate { };
-        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
-        public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
-
         [SerializeField]
         private CharacterPreviewPanelController characterPreviewPanel = null;
 
@@ -113,7 +109,7 @@ namespace AnyRPG {
             characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.ReceiveClosedWindowNotification();
             umaCharacterPanel.ReceiveClosedWindowNotification();
-            OnCloseWindow(this);
+            characterCreatorManager.EndInteraction();
             // close interaction window too for smoother experience
             uIManager.interactionWindow.CloseWindow();
         }
@@ -174,7 +170,7 @@ namespace AnyRPG {
             //saveManager.LoadUMASettings();
             //ClosePanel();
 
-            OnConfirmAction();
+            characterCreatorManager.ConfirmAction();
         }
 
         public void HandleTargetCreated() {

@@ -8,6 +8,9 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class NameChangeComponent : InteractableOptionComponent {
 
+        // game manager references
+        NameChangeManager nameChangeManager = null;
+
         public NameChangeProps Props { get => interactableOptionProps as NameChangeProps; }
 
         private bool windowEventSubscriptionsInitialized = false;
@@ -15,17 +18,17 @@ namespace AnyRPG {
         public NameChangeComponent(Interactable interactable, NameChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
-        //public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
-        public void CleanupEventSubscriptions(CloseableWindowContents windowContents) {
-            //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
-            CleanupWindowEventSubscriptions();
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            nameChangeManager = systemGameManager.NameChangeManager;
         }
 
+
         public void CleanupWindowEventSubscriptions() {
-            if (uIManager.nameChangeWindow.CloseableWindowContents != null) {
-                (uIManager.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (uIManager.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
-            }
+            nameChangeManager.OnConfirmAction -= HandleConfirmAction;
+            nameChangeManager.OnEndInteraction -= CleanupWindowEventSubscriptions;
+
             windowEventSubscriptionsInitialized = false;
         }
 
@@ -52,8 +55,8 @@ namespace AnyRPG {
             base.Interact(source, optionIndex);
 
             uIManager.nameChangeWindow.OpenWindow();
-            (uIManager.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnConfirmAction += HandleConfirmAction;
-            (uIManager.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
+            nameChangeManager.OnConfirmAction += HandleConfirmAction;
+            nameChangeManager.OnEndInteraction += CleanupWindowEventSubscriptions;
             windowEventSubscriptionsInitialized = true;
             return true;
         }

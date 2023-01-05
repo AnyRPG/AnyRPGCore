@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class MusicPlayerUI : WindowContentController {
 
-        private MusicPlayerComponent musicPlayer = null;
+        //private MusicPlayerComponent musicPlayer = null;
 
         [SerializeField]
         private HighlightButton playButton = null;
@@ -29,13 +29,9 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI musicDescription = null;
 
-        //[SerializeField]
-        //private GameObject availableHeading = null;
-
         [SerializeField]
         private GameObject availableArea = null;
 
-        //private List<GameObject> Skills = new List<GameObject>();
         private List<AudioProfile> audioProfileList = new List<AudioProfile>();
 
         private List<MusicPlayerHighlightButton> musicPlayerHighlightButtons = new List<MusicPlayerHighlightButton>();
@@ -49,6 +45,7 @@ namespace AnyRPG {
         // game manager references
         private ObjectPooler objectPooler = null;
         private UIManager uIManager = null;
+        private MusicPlayerManager musicPlayerManager = null;
 
         //public MusicPlayerHighlightButton SelectedMusicPlayerHighlightButton { get => selectedMusicPlayerHighlightButton; set => selectedMusicPlayerHighlightButton = value; }
 
@@ -63,6 +60,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
             uIManager = systemGameManager.UIManager;
+            musicPlayerManager = systemGameManager.MusicPlayerManager;
         }
 
         public void DeactivateButtons() {
@@ -77,14 +75,14 @@ namespace AnyRPG {
             }
         }
 
-        public void ShowAudioProfilesCommon(MusicPlayerComponent musicPlayer) {
+        public void ShowAudioProfilesCommon() {
             //Debug.Log("MusicPlayerUI.ShowAudioProfilesCommon()");
 
             ClearMusicProfiles();
 
             MusicPlayerHighlightButton firstAvailableAudioProfile = null;
 
-            foreach (AudioProfile audioProfile in musicPlayer.Props.AudioProfileList) {
+            foreach (AudioProfile audioProfile in musicPlayerManager.MusicPlayerProps.AudioProfileList) {
                 GameObject go = objectPooler.GetPooledObject(highlightButtonPrefab, availableArea.transform);
                 MusicPlayerHighlightButton qs = go.GetComponent<MusicPlayerHighlightButton>();
                 qs.Configure(systemGameManager);
@@ -118,11 +116,11 @@ namespace AnyRPG {
         }
         */
 
-        public void ShowAudioProfiles(MusicPlayerComponent musicPlayer) {
+        public void ShowAudioProfiles() {
             //Debug.Log("SkillTrainerUI.ShowSkills(" + skillTrainer.name + ")");
-            this.musicPlayer = musicPlayer;
-            audioType = musicPlayer.Props.AudioType;
-            ShowAudioProfilesCommon(this.musicPlayer);
+            //this.musicPlayer = musicPlayer;
+            audioType = musicPlayerManager.MusicPlayerProps.AudioType;
+            ShowAudioProfilesCommon();
         }
 
         /*
@@ -270,6 +268,8 @@ namespace AnyRPG {
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             DeactivateButtons();
             ClearDescription();
+            ShowAudioProfiles();
+
         }
     }
 

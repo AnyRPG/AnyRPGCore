@@ -9,24 +9,19 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class DialogComponent : InteractableOptionComponent {
 
+        // game manager references
+        private DialogManager dialogManager = null;
+
         public DialogProps Props { get => interactableOptionProps as DialogProps; }
 
         public DialogComponent(Interactable interactable, DialogProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             //AddUnitProfileSettings();
         }
 
-        /*
-        protected override void AddUnitProfileSettings() {
-            base.AddUnitProfileSettings();
-            if (unitProfile != null) {
-                interactableOptionProps = unitProfile.DialogProps;
-            }
-
-            // testing - add handle prerequisiteupdates here
-            // this is necessary because addUnitProfileSettings is called late in startup order
-            HandlePrerequisiteUpdates();
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            dialogManager = systemGameManager.DialogManager;
         }
-        */
 
         public override void Cleanup() {
             base.Cleanup();
@@ -49,16 +44,16 @@ namespace AnyRPG {
         }
 
         public void CleanupConfirm() {
-            if (uIManager.dialogWindow.CloseableWindowContents != null) {
-                (uIManager.dialogWindow.CloseableWindowContents as DialogPanelController).OnConfirmAction -= HandleConfirmAction;
-                (uIManager.dialogWindow.CloseableWindowContents as DialogPanelController).OnCloseWindow -= CleanupConfirm;
-            }
+            dialogManager.OnConfirmAction -= HandleConfirmAction;
+            dialogManager.OnEndInteraction -= CleanupConfirm;
         }
 
+        /*
         //public void CleanupConfirm(ICloseableWindowContents contents) {
         public void CleanupConfirm(CloseableWindowContents contents) {
                 CleanupConfirm();
         }
+        */
 
         public List<Dialog> GetCurrentOptionList() {
             //Debug.Log(gameObject.name + ".DialogInteractable.GetCurrentOptionList()");
@@ -84,9 +79,9 @@ namespace AnyRPG {
                 if (currentList[optionIndex].Automatic) {
                     interactable.DialogController.BeginDialog(currentList[optionIndex]);
                 } else {
-                    (uIManager.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(currentList[optionIndex], this.interactable);
-                    (uIManager.dialogWindow.CloseableWindowContents as DialogPanelController).OnConfirmAction += HandleConfirmAction;
-                    (uIManager.dialogWindow.CloseableWindowContents as DialogPanelController).OnCloseWindow += CleanupConfirm;
+                    dialogManager.ViewDialog(currentList[optionIndex], this.interactable);
+                    dialogManager.OnConfirmAction += HandleConfirmAction;
+                    dialogManager.OnEndInteraction += CleanupConfirm;
                 }
             }/* else {
                 interactable.OpenInteractionWindow();

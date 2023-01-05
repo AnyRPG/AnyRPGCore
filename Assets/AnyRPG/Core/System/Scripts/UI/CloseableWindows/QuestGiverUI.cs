@@ -80,6 +80,7 @@ namespace AnyRPG {
         //private InventoryManager inventoryManager = null;
         private SystemItemManager systemItemManager = null;
         private CurrencyConverter currencyConverter = null;
+        private DialogManager dialogManager = null;
 
         public QuestGiverQuestScript SelectedQuestGiverQuestScript { get => selectedQuestGiverQuestScript; set => selectedQuestGiverQuestScript = value; }
         //public Interactable MyInteractable { get => interactable; set => interactable = value; }
@@ -107,6 +108,7 @@ namespace AnyRPG {
             //inventoryManager = systemGameManager.InventoryManager;
             systemItemManager = systemGameManager.SystemItemManager;
             currencyConverter = systemGameManager.CurrencyConverter;
+            dialogManager = systemGameManager.DialogManager;
         }
 
         public void ToggleShowAllQuests(bool showAllQuests) {
@@ -300,7 +302,7 @@ namespace AnyRPG {
             if (quest.HasOpeningDialog == true) {
                 if (quest.OpeningDialog != null && quest.OpeningDialog.TurnedIn == false) {
                     //Debug.Log("QuestGiverUI.ShowDescription(): opening dialog is not complete, showing dialog");
-                    (uIManager.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(quest, interactable);
+                    dialogManager.ViewQuestDialog(quest, interactable);
                     //Debug.Log("QuestGiverUI.ShowDescription(): about to close window because of dialog");
                     if (uIManager.questGiverWindow.IsOpen) {
                         uIManager.questGiverWindow.CloseWindow();

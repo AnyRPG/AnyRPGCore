@@ -8,21 +8,22 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class CharacterCreatorComponent : InteractableOptionComponent {
 
+        private CharacterCreatorManager characterCreatorManager = null;
+
         public CharacterCreatorProps Props { get => interactableOptionProps as CharacterCreatorProps; }
 
         public CharacterCreatorComponent(Interactable interactable, CharacterCreatorProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
-        //public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
-        public void CleanupEventSubscriptions(CloseableWindowContents windowContents) {
-            CleanupWindowEventSubscriptions();
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            characterCreatorManager = systemGameManager.CharacterCreatorManager;
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (uIManager != null && uIManager.characterCreatorWindow != null && uIManager.characterCreatorWindow.CloseableWindowContents != null) {
-                (uIManager.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnConfirmAction -= HandleConfirmAction;
-                (uIManager.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnCloseWindow -= CleanupEventSubscriptions;
-            }
+            characterCreatorManager.OnConfirmAction -= HandleConfirmAction;
+            characterCreatorManager.OnEndInteraction -= CleanupWindowEventSubscriptions;
         }
 
         public override void ProcessCleanupEventSubscriptions() {
@@ -35,11 +36,7 @@ namespace AnyRPG {
             base.Interact(source, optionIndex);
             // moved to coroutine because UMA will crash here due to its use of DestroyImmediate in the case where an UMAData was attached to the model.
             interactable.StartCoroutine(OpenWindowWait());
-            /*
-            uIManager.characterCreatorWindow.OpenWindow();
-            (uIManager.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnConfirmAction += HandleConfirmAction;
-            (uIManager.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnCloseWindow += CleanupEventSubscriptions;
-            */
+            
             return true;
         }
 
@@ -50,8 +47,8 @@ namespace AnyRPG {
 
         public void OpenWindow() {
             uIManager.characterCreatorWindow.OpenWindow();
-            (uIManager.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnConfirmAction += HandleConfirmAction;
-            (uIManager.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnCloseWindow += CleanupEventSubscriptions;
+            characterCreatorManager.OnConfirmAction += HandleConfirmAction;
+            characterCreatorManager.OnEndInteraction += CleanupWindowEventSubscriptions;
         }
 
         /// <summary>

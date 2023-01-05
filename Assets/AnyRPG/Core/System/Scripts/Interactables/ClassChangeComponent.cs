@@ -8,6 +8,9 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class ClassChangeComponent : InteractableOptionComponent {
 
+        // game manager references
+        private ClassChangeManager classChangeManager = null;
+
         public ClassChangeProps Props { get => interactableOptionProps as ClassChangeProps; }
 
         private bool windowEventSubscriptionsInitialized = false;
@@ -18,17 +21,16 @@ namespace AnyRPG {
             }
         }
 
-        //public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
-        public void CleanupEventSubscriptions(CloseableWindowContents windowContents) {
-            //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
-            CleanupWindowEventSubscriptions();
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            classChangeManager = systemGameManager.ClassChangeManager;
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (uIManager != null && uIManager.classChangeWindow != null && uIManager.classChangeWindow.CloseableWindowContents != null && (uIManager.classChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
-                (uIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (uIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
-            }
+            classChangeManager.OnConfirmAction -= HandleConfirmAction;
+            classChangeManager.OnEndInteraction -= CleanupWindowEventSubscriptions;
+
             windowEventSubscriptionsInitialized = false;
         }
 
@@ -65,9 +67,11 @@ namespace AnyRPG {
             }
             base.Interact(source, optionIndex);
 
-            (uIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).Setup(Props.CharacterClass);
-            (uIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnConfirmAction += HandleConfirmAction;
-            (uIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
+            classChangeManager.SetDisplayClass(Props.CharacterClass);
+            uIManager.classChangeWindow.OpenWindow();
+
+            classChangeManager.OnConfirmAction += HandleConfirmAction;
+            classChangeManager.OnEndInteraction += CleanupWindowEventSubscriptions;
             windowEventSubscriptionsInitialized = true;
             return true;
         }

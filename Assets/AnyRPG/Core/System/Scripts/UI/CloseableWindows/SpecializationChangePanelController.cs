@@ -8,10 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class SpecializationChangePanelController : WindowContentController {
 
-        public event System.Action OnConfirmAction = delegate { };
-        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
-        public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
-
         [SerializeField]
         private GameObject rewardIconPrefab = null;
 
@@ -37,14 +33,11 @@ namespace AnyRPG {
 
         private List<RewardButton> traitRewardIcons = new List<RewardButton>();
 
-        //private string characterClassName;
-
-        private ClassSpecialization classSpecialization;
-
         // game manager references
         private UIManager uIManager = null;
         private PlayerManager playerManager = null;
         private ObjectPooler objectPooler = null;
+        private SpecializationChangeManager specializationChangeManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -58,16 +51,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
-        }
-
-        public void Setup(ClassSpecialization newClassSpecialization) {
-            //Debug.Log("ClassChangePanelController.Setup(" + newClassName + ")");
-            classSpecialization = newClassSpecialization;
-            classSpecializationButton.AddClassSpecialization(classSpecialization);
-            uIManager.specializationChangeWindow.SetWindowTitle(classSpecialization.DisplayName);
-            ShowAbilityRewards();
-            ShowTraitRewards();
-            uIManager.specializationChangeWindow.OpenWindow();
+            specializationChangeManager = systemGameManager.SpecializationChangeManager;
         }
 
         public void ShowTraitRewards() {
@@ -75,7 +59,7 @@ namespace AnyRPG {
 
             ClearTraitRewardIcons();
             // show trait rewards
-            CapabilityProps capabilityProps = classSpecialization.GetFilteredCapabilities(playerManager.ActiveCharacter);
+            CapabilityProps capabilityProps = specializationChangeManager.ClassSpecialization.GetFilteredCapabilities(playerManager.ActiveCharacter);
             if (capabilityProps.TraitList.Count > 0) {
                 traitsArea.gameObject.SetActive(true);
             } else {
@@ -102,7 +86,7 @@ namespace AnyRPG {
 
             ClearRewardIcons();
             // show ability rewards
-            CapabilityProps capabilityProps = classSpecialization.GetFilteredCapabilities(playerManager.ActiveCharacter);
+            CapabilityProps capabilityProps = specializationChangeManager.ClassSpecialization.GetFilteredCapabilities(playerManager.ActiveCharacter);
             if (capabilityProps.AbilityList.Count > 0) {
                 abilitiesArea.gameObject.SetActive(true);
             } else {
@@ -149,14 +133,18 @@ namespace AnyRPG {
 
         public void ConfirmAction() {
             //Debug.Log("ClassChangePanelController.ConfirmAction()");
-            playerManager.SetPlayerCharacterSpecialization(classSpecialization);
-            OnConfirmAction();
+            specializationChangeManager.ChangeClassSpecialization();
             uIManager.specializationChangeWindow.CloseWindow();
         }
 
         public override void ProcessOpenWindowNotification() {
             //Debug.Log("ClassChangePanelController.OnOpenWindow()");
             base.ProcessOpenWindowNotification();
+            uIManager.specializationChangeWindow.SetWindowTitle(specializationChangeManager.ClassSpecialization.DisplayName);
+            classSpecializationButton.AddClassSpecialization(specializationChangeManager.ClassSpecialization);
+            ShowAbilityRewards();
+            ShowTraitRewards();
+
             LayoutRebuilder.ForceRebuildLayoutImmediate(abilityIconsArea.GetComponent<RectTransform>());
             LayoutRebuilder.ForceRebuildLayoutImmediate(traitIconsArea.GetComponent<RectTransform>());
 
@@ -165,7 +153,7 @@ namespace AnyRPG {
         public override void ReceiveClosedWindowNotification() {
             //Debug.Log("ClassChangePanelController.OnCloseWindow()");
             base.ReceiveClosedWindowNotification();
-            OnCloseWindow(this);
+            specializationChangeManager.EndInteraction();
         }
     }
 

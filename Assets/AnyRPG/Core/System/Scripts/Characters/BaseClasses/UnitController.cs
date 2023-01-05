@@ -234,14 +234,21 @@ namespace AnyRPG {
         public bool Walking { get => walking; set => walking = value; }
         public AudioProfile MovementLoopProfile {
             get {
-                if (movementSoundArea != null && movementSoundArea.MovementLoopProfile != null) {
-                    return movementSoundArea.MovementLoopProfile;
+                if (unitProfile != null && unitProfile.FootstepType == FootstepType.None) {
+                    return null;
                 }
-                if (levelManager.GetActiveSceneNode()?.MovementLoopProfile != null) {
-                    return levelManager.GetActiveSceneNode().MovementLoopProfile;
+                if (unitProfile == null || unitProfile.FootstepType == FootstepType.Environment || unitProfile.FootstepType == FootstepType.UnitFallback) {
+                    if (movementSoundArea != null && movementSoundArea.MovementLoopProfile != null) {
+                        return movementSoundArea.MovementLoopProfile;
+                    }
+                    if (levelManager.GetActiveSceneNode()?.MovementLoopProfile != null) {
+                        return levelManager.GetActiveSceneNode().MovementLoopProfile;
+                    }
                 }
-                if (characterUnit?.BaseCharacter != null && unitProfile?.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
-                    return unitProfile.MovementAudioProfiles[0];
+                if (unitProfile != null && (unitProfile.FootstepType == FootstepType.Unit || unitProfile.FootstepType == FootstepType.UnitFallback)) {
+                    if (characterUnit?.BaseCharacter != null && unitProfile?.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
+                        return unitProfile.MovementAudioProfiles[0];
+                    }
                 }
                 return null;
             }
@@ -456,28 +463,39 @@ namespace AnyRPG {
         }
 
         private void SetFootStepAudioProfile() {
-            // movement sound areas override everything
-            if (movementSoundArea != null && movementSoundArea.MovementHitProfile != null) {
-                //Debug.Log(gameObject.name + ".CharacterUnit.GetMovementHitProfile: return movementSoundArea.MovementHitProfile");
-                footStepAudioProfile = movementSoundArea.MovementHitProfile;
+
+            footStepAudioProfile = null;
+
+            if (unitProfile != null && unitProfile.FootstepType == FootstepType.None) {
                 return;
             }
 
-            // try the terrain layer based movement profile of the active scene node
-            footStepAudioProfile = levelManager.GetTerrainFootStepProfile(transform.position);
-            if (footStepAudioProfile != null) {
-                return;
+            if (unitProfile == null || unitProfile.FootstepType == FootstepType.Environment || unitProfile.FootstepType == FootstepType.UnitFallback) {
+                // movement sound areas override everything
+                if (movementSoundArea != null && movementSoundArea.MovementHitProfile != null) {
+                    //Debug.Log(gameObject.name + ".CharacterUnit.GetMovementHitProfile: return movementSoundArea.MovementHitProfile");
+                    footStepAudioProfile = movementSoundArea.MovementHitProfile;
+                    return;
+                }
+
+                // try the terrain layer based movement profile of the active scene node
+                footStepAudioProfile = levelManager.GetTerrainFootStepProfile(transform.position);
+                if (footStepAudioProfile != null) {
+                    return;
+                }
+
+                // try the default footstep profile of the active scene node
+                footStepAudioProfile = levelManager.GetActiveSceneNode()?.MovementHitProfile;
+                if (footStepAudioProfile != null) {
+                    return;
+                }
             }
 
-            // try the default footstep profile of the active scene node
-            footStepAudioProfile = levelManager.GetActiveSceneNode()?.MovementHitProfile;
-            if (footStepAudioProfile != null) {
-                return;
-            }
-
-            // default to the character movement audio profile
-            if (characterUnit.BaseCharacter != null && unitProfile != null && unitProfile.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
-                footStepAudioProfile = unitProfile.MovementAudioProfiles[0];
+            if (unitProfile != null || unitProfile.FootstepType == FootstepType.Unit || unitProfile.FootstepType == FootstepType.UnitFallback) {
+                // default to the character movement audio profile
+                if (characterUnit.BaseCharacter != null && unitProfile?.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
+                    footStepAudioProfile = unitProfile.MovementAudioProfiles[0];
+                }
             }
         }
 
@@ -1414,7 +1432,7 @@ namespace AnyRPG {
         /// play or stop movement loop
         /// </summary>
         private void HandleMovementAudio() {
-            //Debug.Log(gameObject.name + ".HandleMovementAudio(): " + apparentVelocity);
+            //Debug.Log(gameObject.name + ".HandleMovementAudio() velocity: " + apparentVelocity);
 
             // if this unit has no configured audio, or is set to use footstep events and is not in a movement area with no footstep events do nothing
             if (unitProfile?.MovementAudioProfiles == null
@@ -1461,11 +1479,17 @@ namespace AnyRPG {
         }
 
         public void PlayMovementSound(AudioClip audioClip, bool loop) {
+            //Debug.Log(gameObject.name + ".PlayMovementSound(" + (audioClip == null ? "null" : audioClip.name) + ", " + loop + ")");
+
             unitComponentController.PlayMovementSound(audioClip, loop);
         }
 
         public void PlayFootStep() {
 
+            if (unitProfile != null && UnitProfile.FootstepType == FootstepType.None) {
+                // do not play any footsteps
+                return;
+            }
             if (unitProfile.PlayOnFootstep == false) {
                 return;
             }

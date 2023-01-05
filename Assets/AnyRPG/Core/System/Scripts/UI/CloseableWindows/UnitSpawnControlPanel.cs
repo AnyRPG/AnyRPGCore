@@ -9,10 +9,6 @@ namespace AnyRPG {
 
     public class UnitSpawnControlPanel : WindowContentController {
 
-        public event System.Action OnConfirmAction = delegate { };
-        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
-        public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
-
         private UnitSpawnButton selectedUnitSpawnButton;
 
         [SerializeField]
@@ -45,17 +41,9 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI nameText = null;
 
-        /*
-        [SerializeField]
-        private HighlightButton returnButton = null;
+        //private List<UnitProfile> unitProfileList = new List<UnitProfile>();
 
-        [SerializeField]
-        private HighlightButton spawnButton = null;
-        */
-
-        private List<UnitProfile> unitProfileList = new List<UnitProfile>();
-
-        private List<UnitSpawnNode> unitSpawnNodeList = new List<UnitSpawnNode>();
+        //private List<UnitSpawnNode> unitSpawnNodeList = new List<UnitSpawnNode>();
 
         private List<UnitSpawnButton> unitSpawnButtons = new List<UnitSpawnButton>();
 
@@ -72,17 +60,16 @@ namespace AnyRPG {
         private CameraManager cameraManager = null;
         private UIManager uIManager = null;
         private ObjectPooler objectPooler = null;
+        private UnitSpawnManager unitSpawnManager = null;
 
         public UnitPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
         public UnitSpawnButton SelectedUnitSpawnButton { get => selectedUnitSpawnButton; set => selectedUnitSpawnButton = value; }
-        public List<UnitProfile> UnitProfileList { get => unitProfileList; set => unitProfileList = value; }
-        public List<UnitSpawnNode> UnitSpawnNodeList { get => unitSpawnNodeList; set => unitSpawnNodeList = value; }
+        //public List<UnitProfile> UnitProfileList { get => unitProfileList; set => unitProfileList = value; }
+        //public List<UnitSpawnNode> UnitSpawnNodeList { get => unitSpawnNodeList; set => unitSpawnNodeList = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            //returnButton.Configure(systemGameManager);
-            //spawnButton.Configure(systemGameManager);
             previewCameraController.Configure(systemGameManager);
         }
 
@@ -94,13 +81,8 @@ namespace AnyRPG {
             cameraManager = systemGameManager.CameraManager;
             uIManager = systemGameManager.UIManager;
             objectPooler = systemGameManager.ObjectPooler;
+            unitSpawnManager = systemGameManager.UnitSpawnManager;
         }
-
-        /*
-        protected void Start() {
-            CloseExtraLevelsOptionsArea();
-        }
-        */
 
         public void PopulateDropDownValues() {
             //Debug.Log("UnitSpawnControlPanel.PopulateDropDownValues()");
@@ -221,7 +203,7 @@ namespace AnyRPG {
             base.ReceiveClosedWindowNotification();
             previewCameraController.ClearTarget();
             unitPreviewManager.HandleCloseWindow();
-            OnCloseWindow(this);
+            unitSpawnManager.EndInteraction();
         }
 
         public override void ProcessOpenWindowNotification() {
@@ -241,7 +223,7 @@ namespace AnyRPG {
             ClearPreviewTarget();
             ClearPreviewButtons();
 
-            foreach (UnitProfile unitProfile in unitProfileList) {
+            foreach (UnitProfile unitProfile in unitSpawnManager.UnitSpawnControllerProps.UnitProfileList) {
                 //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
                 GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
                 UnitSpawnButton unitSpawnButton = go.GetComponent<UnitSpawnButton>();
@@ -338,12 +320,8 @@ namespace AnyRPG {
         }
 
         public void SpawnUnit() {
-            foreach (UnitSpawnNode unitSpawnNode in unitSpawnNodeList) {
-                bool useDynamicLevel = (levelTypeDropdown.options[levelTypeDropdown.value].text == "Fixed" ? false : true);
-                if (unitSpawnNode != null) {
-                    unitSpawnNode.ManualSpawn(unitLevel, extraLevels, useDynamicLevel, SelectedUnitSpawnButton.UnitProfile, unitToughness);
-                }
-            }
+            bool useDynamicLevel = (levelTypeDropdown.options[levelTypeDropdown.value].text == "Fixed" ? false : true);
+            unitSpawnManager.SpawnUnit(unitLevel, extraLevels, useDynamicLevel, SelectedUnitSpawnButton.UnitProfile, unitToughness);
             ClosePanel();
         }
 

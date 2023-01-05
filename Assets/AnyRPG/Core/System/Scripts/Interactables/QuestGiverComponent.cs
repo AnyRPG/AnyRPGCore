@@ -14,6 +14,7 @@ namespace AnyRPG {
 
         // game manager references
         private QuestLog questLog = null;
+        private DialogManager dialogManager = null;
 
         public QuestGiverProps Props { get => interactableOptionProps as QuestGiverProps; }
 
@@ -29,7 +30,9 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
+            
             questLog = systemGameManager.QuestLog;
+            dialogManager = systemGameManager.DialogManager;
         }
 
         /*
@@ -116,7 +119,7 @@ namespace AnyRPG {
                 return true;
             } else if (questLog.GetAvailableQuests(Props.Quests).Count == 1 && questLog.GetCompleteQuests(Props.Quests).Count == 0) {
                 if (questLog.GetAvailableQuests(Props.Quests)[0].HasOpeningDialog == true && questLog.GetAvailableQuests(Props.Quests)[0].OpeningDialog.TurnedIn == false) {
-                    (uIManager.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(questLog.GetAvailableQuests(Props.Quests)[0], interactable);
+                    dialogManager.ViewQuestDialog(questLog.GetAvailableQuests(Props.Quests)[0], interactable);
                     return true;
                 } else {
                     // do nothing will skip to below and open questlog to the available quest

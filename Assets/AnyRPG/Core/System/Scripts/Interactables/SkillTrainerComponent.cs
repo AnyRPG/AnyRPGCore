@@ -7,6 +7,9 @@ using UnityEngine;
 namespace AnyRPG {
     public class SkillTrainerComponent : InteractableOptionComponent {
 
+        // game manager references
+        private SkillTrainerManager skillTrainerManager = null;
+
         public SkillTrainerProps Props { get => interactableOptionProps as SkillTrainerProps; }
 
         public SkillTrainerComponent(Interactable interactable, SkillTrainerProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
@@ -16,14 +19,17 @@ namespace AnyRPG {
             systemEventManager.OnSkillListChanged += HandleSkillListChanged;
         }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            skillTrainerManager = systemGameManager.SkillTrainerManager;
+        }
+
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".SkillTrainer.Interact(" + source + ")");
             base.Interact(source, optionIndex);
             if (!uIManager.skillTrainerWindow.IsOpen) {
-                //Debug.Log(source + " interacting with " + gameObject.name);
-                //vendorWindow.MyVendorUI.CreatePages(items);
+                skillTrainerManager.SetSkillTrainer(this);
                 uIManager.skillTrainerWindow.OpenWindow();
-                (uIManager.skillTrainerWindow.CloseableWindowContents as SkillTrainerUI).ShowSkills(this);
                 return true;
             }
             return false;
@@ -32,7 +38,6 @@ namespace AnyRPG {
         public override void StopInteract() {
             //Debug.Log(gameObject.name + ".SkillTrainer.StopInteract()");
             base.StopInteract();
-            //vendorUI.ClearPages();
             uIManager.skillTrainerWindow.CloseWindow();
         }
 

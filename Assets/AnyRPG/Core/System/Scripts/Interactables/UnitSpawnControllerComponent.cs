@@ -9,6 +9,9 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class UnitSpawnControllerComponent : InteractableOptionComponent {
 
+        // game manager references
+        private UnitSpawnManager unitSpawnManager = null;
+
         public UnitSpawnControllerProps Props { get => interactableOptionProps as UnitSpawnControllerProps; }
 
         public UnitSpawnControllerComponent(Interactable interactable, UnitSpawnControllerProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
@@ -17,16 +20,16 @@ namespace AnyRPG {
             }
         }
 
-        //public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
-        public void CleanupEventSubscriptions(CloseableWindowContents windowContents) {
-            CleanupWindowEventSubscriptions();
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            unitSpawnManager = systemGameManager.UnitSpawnManager;
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (uIManager.unitSpawnWindow.CloseableWindowContents != null) {
-                (uIManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnConfirmAction -= HandleConfirmAction;
-                (uIManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnCloseWindow -= CleanupEventSubscriptions;
-            }
+
+            unitSpawnManager.OnConfirmAction -= HandleConfirmAction;
+            unitSpawnManager.OnEndInteraction -= CleanupWindowEventSubscriptions;
         }
 
         public override void ProcessCleanupEventSubscriptions() {
@@ -36,11 +39,10 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             base.Interact(source, optionIndex);
-            (uIManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).UnitProfileList = Props.UnitProfileList;
-            (uIManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).UnitSpawnNodeList = Props.UnitSpawnNodeList;
+            unitSpawnManager.SetProps(Props);
             uIManager.unitSpawnWindow.OpenWindow();
-            (uIManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnConfirmAction += HandleConfirmAction;
-            (uIManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnCloseWindow += CleanupEventSubscriptions;
+            unitSpawnManager.OnConfirmAction += HandleConfirmAction;
+            unitSpawnManager.OnEndInteraction += CleanupWindowEventSubscriptions;
             return true;
         }
 

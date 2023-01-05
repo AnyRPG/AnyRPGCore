@@ -9,8 +9,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class SkillTrainerUI : WindowContentController {
 
-        private SkillTrainerComponent skillTrainer = null;
-
         [SerializeField]
         private HighlightButton learnButton = null;
 
@@ -20,42 +18,27 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject skillPrefab = null;
 
-        //[SerializeField]
-        //private Transform skillParent = null;
-
         [SerializeField]
         private TextMeshProUGUI skillDescription = null;
-
-        //[SerializeField]
-        //private GameObject availableHeading = null;
 
         [SerializeField]
         private GameObject availableArea = null;
 
-        //[SerializeField]
-        //private GameObject learnedHeading = null;
-
-        //[SerializeField]
-        //private GameObject learnedArea = null;
-
         [SerializeField]
         private List<DescribableIcon> rewardButtons = new List<DescribableIcon>();
 
-        //private List<GameObject> Skills = new List<GameObject>();
         private List<Skill> skills = new List<Skill>();
 
         private List<SkillTrainerSkillScript> skillScripts = new List<SkillTrainerSkillScript>();
 
         private SkillTrainerSkillScript selectedSkillTrainerSkillScript;
 
-        //private string currentSkillName = null;
-
         private Skill currentSkill = null;
 
         // game manager references
         private ObjectPooler objectPooler = null;
-        private PlayerManager playerManager = null;
         private UIManager uIManager = null;
+        private SkillTrainerManager skillTrainerManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -64,7 +47,6 @@ namespace AnyRPG {
             unlearnButton.Configure(systemGameManager);
 
             foreach (DescribableIcon describableIcon in rewardButtons) {
-                //describableIcon.Configure(systemGameManager);
                 describableIcon.SetToolTipTransform(rectTransform);
             }
         }
@@ -72,8 +54,8 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
-            playerManager = systemGameManager.PlayerManager;
             uIManager = systemGameManager.UIManager;
+            skillTrainerManager = systemGameManager.SkillTrainerManager;
         }
 
         public void SetSelectedButton(SkillTrainerSkillScript selectedSkillTrainerSkillScript) {
@@ -86,27 +68,25 @@ namespace AnyRPG {
             unlearnButton.Button.enabled = false;
         }
 
-        public void ShowSkillsCommon(SkillTrainerComponent skillTrainer) {
-            //Debug.Log("SkillTrainerUI.ShowSkillsCommon(" + skillTrainer.name + ")");
+        public void ShowSkills() {
+            //Debug.Log("SkillTrainerUI.ShowSkills()");
 
             ClearSkills();
 
             SkillTrainerSkillScript firstAvailableSkill = null;
 
-            foreach (Skill skill in skillTrainer.Props.Skills) {
-                if (!playerManager.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
-                    GameObject go = objectPooler.GetPooledObject(skillPrefab, availableArea.transform);
-                    SkillTrainerSkillScript qs = go.GetComponent<SkillTrainerSkillScript>();
-                    qs.Configure(systemGameManager);
-                    qs.Text.text = skill.DisplayName;
-                    qs.Text.color = Color.white;
-                    qs.SetSkill(this, skill);
-                    skillScripts.Add(qs);
-                    skills.Add(skill);
-                    uINavigationControllers[0].AddActiveButton(qs);
-                    if (firstAvailableSkill == null) {
-                        firstAvailableSkill = qs;
-                    }
+            foreach (Skill skill in skillTrainerManager.GetAvailableSkillList()) {
+                GameObject go = objectPooler.GetPooledObject(skillPrefab, availableArea.transform);
+                SkillTrainerSkillScript qs = go.GetComponent<SkillTrainerSkillScript>();
+                qs.Configure(systemGameManager);
+                qs.Text.text = skill.DisplayName;
+                qs.Text.color = Color.white;
+                qs.SetSkill(this, skill);
+                skillScripts.Add(qs);
+                skills.Add(skill);
+                uINavigationControllers[0].AddActiveButton(qs);
+                if (firstAvailableSkill == null) {
+                    firstAvailableSkill = qs;
                 }
             }
 
@@ -122,18 +102,6 @@ namespace AnyRPG {
             SetNavigationController(uINavigationControllers[0]);
         }
 
-
-        public void ShowSkills() {
-            //Debug.Log("SkillTrainerUI.ShowSkills()");
-            ShowSkillsCommon(skillTrainer);
-        }
-
-        public void ShowSkills(SkillTrainerComponent skillTrainer) {
-            //Debug.Log("SkillTrainerUI.ShowSkills(" + skillTrainer.name + ")");
-            this.skillTrainer = skillTrainer;
-            ShowSkillsCommon(this.skillTrainer);
-        }
-
         public void UpdateSelected() {
             //Debug.Log("SkillTrainerUI.UpdateSelected()");
             if (selectedSkillTrainerSkillScript != null) {
@@ -144,7 +112,7 @@ namespace AnyRPG {
         // Enable or disable learn and unlearn buttons based on what is selected
         private void UpdateButtons(Skill newSkill) {
             //Debug.Log("SkillTrainerUI.UpdateButtons(" + skillName + ")");
-            if (playerManager.MyCharacter.CharacterSkillManager.HasSkill(newSkill)) {
+            if (skillTrainerManager.SkillIsKnown(newSkill)) {
                 learnButton.gameObject.SetActive(false);
                 learnButton.Button.enabled = false;
                 unlearnButton.gameObject.SetActive(true);
@@ -219,19 +187,12 @@ namespace AnyRPG {
             uINavigationControllers[0].ClearActiveButtons();
         }
 
-        public override void ReceiveClosedWindowNotification() {
-            //Debug.Log("SkillTrainerUI.OnCloseWindow()");
-            base.ReceiveClosedWindowNotification();
-            DeactivateButtons();
-            selectedSkillTrainerSkillScript = null;
-        }
+       
 
         public void LearnSkill() {
             //Debug.Log("SkillTrainerUI.LearnSkill()");
             if (currentSkill != null) {
-                //if (MySelectedSkillTrainerSkillScript != null && MySelectedSkillTrainerSkillScript.MySkillName != null) {
-                playerManager.MyCharacter.CharacterSkillManager.LearnSkill(selectedSkillTrainerSkillScript.Skill);
-                //UpdateButtons(MySelectedSkillTrainerSkillScript.MySkillName);
+                skillTrainerManager.LearnSkill(selectedSkillTrainerSkillScript.Skill);
                 selectedSkillTrainerSkillScript = null;
                 ClearDescription();
                 ShowSkills();
@@ -241,7 +202,7 @@ namespace AnyRPG {
         public void UnlearnSkill() {
             //Debug.Log("SkillTrainerUI.UnlearnSkill()");
             if (selectedSkillTrainerSkillScript != null && selectedSkillTrainerSkillScript.Skill != null) {
-                playerManager.MyCharacter.CharacterSkillManager.UnlearnSkill(selectedSkillTrainerSkillScript.Skill);
+                skillTrainerManager.UnlearnSkill(selectedSkillTrainerSkillScript.Skill);
                 UpdateButtons(selectedSkillTrainerSkillScript.Skill);
                 ShowSkills();
             }
@@ -258,6 +219,17 @@ namespace AnyRPG {
 
             // clear description from last window open
             ClearDescription();
+
+            ShowSkills();
+
+        }
+
+        public override void ReceiveClosedWindowNotification() {
+            //Debug.Log("SkillTrainerUI.OnCloseWindow()");
+            base.ReceiveClosedWindowNotification();
+            DeactivateButtons();
+            selectedSkillTrainerSkillScript = null;
+            skillTrainerManager.EndInteraction();
         }
     }
 

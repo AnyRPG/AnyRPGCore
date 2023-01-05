@@ -8,10 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class FactionChangePanelController : WindowContentController {
 
-        public event System.Action OnConfirmAction = delegate { };
-        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
-        public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
-
         [Header("Faction Change Panel")]
 
         [SerializeField]
@@ -34,13 +30,12 @@ namespace AnyRPG {
 
         private List<RewardButton> abilityRewardIcons = new List<RewardButton>();
 
-        private Faction faction = null;
-
         // game manager references
         private UIManager uIManager = null;
         private PlayerManager playerManager = null;
         private ObjectPooler objectPooler = null;
         private NewGameManager newGameManager = null;
+        private FactionChangeManager factionChangeManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -55,15 +50,7 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
             newGameManager = systemGameManager.NewGameManager;
-        }
-
-        public void Setup(Faction newFaction) {
-            //Debug.Log("FactionChangePanelController.Setup(" + newFaction.DisplayName + ")");
-            faction = newFaction;
-            factionButton.AddFaction(faction);
-            uIManager.factionChangeWindow.SetWindowTitle(faction.DisplayName);
-            ShowAbilityRewards();
-            uIManager.factionChangeWindow.OpenWindow();
+            factionChangeManager = systemGameManager.FactionChangeManager;
         }
 
         public void ShowAbilityRewards() {
@@ -72,7 +59,7 @@ namespace AnyRPG {
             ClearRewardIcons();
             // show ability rewards
             // new game manager ? isn't this only in-game ?
-            CapabilityProps capabilityProps = faction.GetFilteredCapabilities(newGameManager);
+            CapabilityProps capabilityProps = factionChangeManager.Faction.GetFilteredCapabilities(newGameManager);
             if (capabilityProps.AbilityList.Count > 0) {
                 abilitiesArea.gameObject.SetActive(true);
             } else {
@@ -110,15 +97,21 @@ namespace AnyRPG {
 
         public void ConfirmAction() {
             //Debug.Log("FactionChangePanelController.ConfirmAction()");
-            playerManager.SetPlayerFaction(faction);
-            OnConfirmAction();
+            factionChangeManager.ChangePlayerFaction();
             uIManager.factionChangeWindow.CloseWindow();
+        }
+
+        public override void ProcessOpenWindowNotification() {
+            base.ProcessOpenWindowNotification();
+            uIManager.factionChangeWindow.SetWindowTitle(factionChangeManager.Faction.DisplayName);
+            factionButton.AddFaction(factionChangeManager.Faction);
+            ShowAbilityRewards();
         }
 
         public override void ReceiveClosedWindowNotification() {
             //Debug.Log("FactionChangePanelController.OnCloseWindow()");
             base.ReceiveClosedWindowNotification();
-            OnCloseWindow(this);
+            factionChangeManager.EndInteraction();
         }
     }
 

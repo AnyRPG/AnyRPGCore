@@ -8,6 +8,9 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class FactionChangeComponent : InteractableOptionComponent {
 
+        // game manager references
+        private FactionChangeManager factionChangeManager = null;
+
         public FactionChangeProps Props { get => interactableOptionProps as FactionChangeProps; }
 
         private bool windowEventSubscriptionsInitialized = false;
@@ -16,6 +19,12 @@ namespace AnyRPG {
             if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
                 interactableOptionProps.InteractionPanelTitle = Props.Faction.DisplayName + " Faction";
             }
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            factionChangeManager = systemGameManager.FactionChangeManager;
         }
 
         public override void ProcessCreateEventSubscriptions() {
@@ -32,13 +41,10 @@ namespace AnyRPG {
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (uIManager != null
-                && uIManager.factionChangeWindow != null
-                && uIManager.factionChangeWindow.CloseableWindowContents != null
-                && (uIManager.factionChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
-                (uIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (uIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
-            }
+
+            factionChangeManager.OnConfirmAction -= HandleConfirmAction;
+            factionChangeManager.OnEndInteraction -= CleanupWindowEventSubscriptions;
+
             windowEventSubscriptionsInitialized = false;
         }
 
@@ -67,16 +73,13 @@ namespace AnyRPG {
                 return false;
             }
             base.Interact(source, optionIndex);
-            (uIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).Setup(Props.Faction);
-            (uIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnConfirmAction += HandleConfirmAction;
-            (uIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
+            factionChangeManager.SetDisplayFaction(Props.Faction);
+            uIManager.factionChangeWindow.OpenWindow();
+            factionChangeManager.OnConfirmAction += HandleConfirmAction;
+            factionChangeManager.OnEndInteraction += CleanupWindowEventSubscriptions;
             windowEventSubscriptionsInitialized = true;
             return true;
         }
-
-        /// <summary>
-        /// Pick an item up off the ground and put it in the inventory
-        /// </summary>
 
         public override void StopInteract() {
             base.StopInteract();
