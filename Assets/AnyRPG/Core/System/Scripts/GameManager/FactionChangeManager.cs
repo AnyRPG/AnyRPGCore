@@ -6,10 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class FactionChangeManager : ConfiguredMonoBehaviour {
-
-        public event System.Action OnConfirmAction = delegate { };
-        public event System.Action OnEndInteraction = delegate { };
+    public class FactionChangeManager : InteractableOptionManager {
 
         private Faction faction = null;
 
@@ -20,23 +17,29 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
+
             playerManager = systemGameManager.PlayerManager;
+        }
+
+        public void SetDisplayFaction(Faction faction, InteractableOptionComponent interactableOptionComponent) {
+            //Debug.Log("FactionChangeChangeManager.SetDisplayFaction(" + faction.DisplayName + ")");
+
+            this.faction = faction;
+
+            BeginInteraction(interactableOptionComponent);
         }
 
         public void ChangePlayerFaction() {
             playerManager.SetPlayerFaction(faction);
-            OnConfirmAction();
+            
+            ConfirmAction();
         }
 
-        public void EndInteraction() {
-            OnEndInteraction();
-        }
+        public override void EndInteraction() {
+            base.EndInteraction();
 
-        public void SetDisplayFaction(Faction faction) {
-            //Debug.Log("FactionChangeChangeManager.SetDisplayFaction(" + faction + ")");
-            this.faction = faction;
+            faction = null;
         }
-
 
     }
 

@@ -11,6 +11,7 @@ namespace AnyRPG {
         QuestGiverProps Props { get; }
         void UpdateQuestStatus();
         Interactable Interactable { get; }
+        InteractableOptionComponent InteractableOptionComponent { get; }
         bool Interact(CharacterUnit source, int optionIndex = 0);
         void HandleCompleteQuest();
         void HandleAcceptQuest();

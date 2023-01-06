@@ -302,7 +302,8 @@ namespace AnyRPG {
             if (quest.HasOpeningDialog == true) {
                 if (quest.OpeningDialog != null && quest.OpeningDialog.TurnedIn == false) {
                     //Debug.Log("QuestGiverUI.ShowDescription(): opening dialog is not complete, showing dialog");
-                    dialogManager.ViewQuestDialog(quest, interactable);
+                    dialogManager.SetQuestDialog(quest, interactable, questGiver.InteractableOptionComponent);
+                    uIManager.dialogWindow.OpenWindow();
                     //Debug.Log("QuestGiverUI.ShowDescription(): about to close window because of dialog");
                     if (uIManager.questGiverWindow.IsOpen) {
                         uIManager.questGiverWindow.CloseWindow();

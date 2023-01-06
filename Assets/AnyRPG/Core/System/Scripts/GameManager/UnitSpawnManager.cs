@@ -6,17 +6,18 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class UnitSpawnManager : ConfiguredMonoBehaviour {
-
-        public event System.Action OnConfirmAction = delegate { };
-        public event System.Action OnEndInteraction = delegate { };
+    public class UnitSpawnManager : InteractableOptionManager {
 
         private UnitSpawnControllerProps unitSpawnControllerProps = null;
 
         public UnitSpawnControllerProps UnitSpawnControllerProps { get => unitSpawnControllerProps; set => unitSpawnControllerProps = value; }
 
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
+
+        public void SetProps(UnitSpawnControllerProps unitSpawnControllerProps, InteractableOptionComponent interactableOptionComponent) {
+            //Debug.Log("UnitSpawnManager.SetProps()");
+
+            this.unitSpawnControllerProps = unitSpawnControllerProps;
+            BeginInteraction(interactableOptionComponent);
         }
 
         public void SpawnUnit(int unitLevel, int extraLevels, bool useDynamicLevel, UnitProfile unitProfile, UnitToughness unitToughness) {
@@ -25,16 +26,13 @@ namespace AnyRPG {
                     unitSpawnNode.ManualSpawn(unitLevel, extraLevels, useDynamicLevel, unitProfile, unitToughness);
                 }
             }
-            OnConfirmAction();
+            ConfirmAction();
         }
 
-        public void EndInteraction() {
-            OnEndInteraction();
-        }
+        public override void EndInteraction() {
+            base.EndInteraction();
 
-        public void SetProps(UnitSpawnControllerProps unitSpawnControllerProps) {
-            //Debug.Log("UnitSpawnManager.SetProps()");
-            this.unitSpawnControllerProps = unitSpawnControllerProps;
+            unitSpawnControllerProps = null;
         }
 
 

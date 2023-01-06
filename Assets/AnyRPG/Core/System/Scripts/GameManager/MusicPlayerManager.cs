@@ -6,37 +6,23 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class MusicPlayerManager : ConfiguredMonoBehaviour {
-
-        public event System.Action OnConfirmAction = delegate { };
-        public event System.Action OnEndInteraction = delegate { };
+    public class MusicPlayerManager : InteractableOptionManager {
 
         private MusicPlayerProps musicPlayerProps = null;
 
-        // game manager references
-        private PlayerManager playerManager = null;
-
         public MusicPlayerProps MusicPlayerProps { get => musicPlayerProps; set => musicPlayerProps = value; }
 
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
-        }
-
-        public void SetMusicPlayerProps(MusicPlayerProps musicPlayerProps) {
+        public void SetMusicPlayerProps(MusicPlayerProps musicPlayerProps, InteractableOptionComponent interactableOptionComponent) {
             this.musicPlayerProps = musicPlayerProps;
+
+            BeginInteraction(interactableOptionComponent);
         }
 
-        public void PlayMusic() {
+        public override void EndInteraction() {
+            base.EndInteraction();
 
-            OnConfirmAction();
+            musicPlayerProps = null;
         }
-
-        public void EndInteraction() {
-            OnEndInteraction();
-        }
-
-
 
     }
 

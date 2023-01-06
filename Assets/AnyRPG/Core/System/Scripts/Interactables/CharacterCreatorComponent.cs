@@ -9,6 +9,7 @@ namespace AnyRPG {
     public class CharacterCreatorComponent : InteractableOptionComponent {
 
         private CharacterCreatorManager characterCreatorManager = null;
+        private CharacterCreatorInteractableManager characterCreatorInteractableManager = null;
 
         public CharacterCreatorProps Props { get => interactableOptionProps as CharacterCreatorProps; }
 
@@ -19,22 +20,14 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
-        }
-
-        public void CleanupWindowEventSubscriptions() {
-            characterCreatorManager.OnConfirmAction -= HandleConfirmAction;
-            characterCreatorManager.OnEndInteraction -= CleanupWindowEventSubscriptions;
-        }
-
-        public override void ProcessCleanupEventSubscriptions() {
-            base.ProcessCleanupEventSubscriptions();
-            CleanupWindowEventSubscriptions();
+            characterCreatorInteractableManager = systemGameManager.CharacterCreatorInteractableManager;
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             // was there a reason why we didn't have base.Interact here before or just an oversight?
             base.Interact(source, optionIndex);
             // moved to coroutine because UMA will crash here due to its use of DestroyImmediate in the case where an UMAData was attached to the model.
+            characterCreatorInteractableManager.BeginInteraction(this);
             interactable.StartCoroutine(OpenWindowWait());
             
             return true;
@@ -47,13 +40,7 @@ namespace AnyRPG {
 
         public void OpenWindow() {
             uIManager.characterCreatorWindow.OpenWindow();
-            characterCreatorManager.OnConfirmAction += HandleConfirmAction;
-            characterCreatorManager.OnEndInteraction += CleanupWindowEventSubscriptions;
         }
-
-        /// <summary>
-        /// Pick an item up off the ground and put it in the inventory
-        /// </summary>
 
         public override void StopInteract() {
             base.StopInteract();

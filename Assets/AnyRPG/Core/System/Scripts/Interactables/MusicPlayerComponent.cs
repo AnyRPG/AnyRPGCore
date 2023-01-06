@@ -26,7 +26,7 @@ namespace AnyRPG {
             base.Interact(source, optionIndex);
             if (!uIManager.musicPlayerWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
-                musicPlayerManager.SetMusicPlayerProps(Props);
+                musicPlayerManager.SetMusicPlayerProps(Props, this);
                 uIManager.musicPlayerWindow.OpenWindow();
                 return true;
             }

@@ -66,6 +66,7 @@ namespace AnyRPG {
         private CharacterCreatorManager characterCreatorManager = null;
         private SaveManager saveManager = null;
         private LevelManager levelManager = null;
+        private CharacterCreatorInteractableManager characterCreatorInteractableManager = null;
 
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
         public UnitType UnitType { get => unitType; set => unitType = value; }
@@ -100,6 +101,7 @@ namespace AnyRPG {
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
             saveManager = systemGameManager.SaveManager;
             levelManager = systemGameManager.LevelManager;
+            characterCreatorInteractableManager = systemGameManager.CharacterCreatorInteractableManager;
         }
 
         public override void ReceiveClosedWindowNotification() {
@@ -109,7 +111,7 @@ namespace AnyRPG {
             characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.ReceiveClosedWindowNotification();
             umaCharacterPanel.ReceiveClosedWindowNotification();
-            characterCreatorManager.EndInteraction();
+            characterCreatorInteractableManager.EndInteraction();
             // close interaction window too for smoother experience
             uIManager.interactionWindow.CloseWindow();
         }
@@ -170,7 +172,7 @@ namespace AnyRPG {
             //saveManager.LoadUMASettings();
             //ClosePanel();
 
-            characterCreatorManager.ConfirmAction();
+            characterCreatorInteractableManager.ConfirmAction();
         }
 
         public void HandleTargetCreated() {

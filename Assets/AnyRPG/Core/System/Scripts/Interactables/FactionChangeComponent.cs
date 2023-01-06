@@ -13,8 +13,6 @@ namespace AnyRPG {
 
         public FactionChangeProps Props { get => interactableOptionProps as FactionChangeProps; }
 
-        private bool windowEventSubscriptionsInitialized = false;
-
         public FactionChangeComponent(Interactable interactable, FactionChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
                 interactableOptionProps.InteractionPanelTitle = Props.Faction.DisplayName + " Faction";
@@ -34,33 +32,11 @@ namespace AnyRPG {
             SystemEventManager.StartListening("OnFactionChange", HandleFactionChange);
         }
 
-        //public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
-        public void CleanupEventSubscriptions(CloseableWindowContents windowContents) {
-            //Debug.Log(gameObject.name + ".FactionChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
-            CleanupWindowEventSubscriptions();
-        }
-
-        public void CleanupWindowEventSubscriptions() {
-
-            factionChangeManager.OnConfirmAction -= HandleConfirmAction;
-            factionChangeManager.OnEndInteraction -= CleanupWindowEventSubscriptions;
-
-            windowEventSubscriptionsInitialized = false;
-        }
-
         public override void ProcessCleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".FactionChangeInteractable.CleanupEventSubscriptions()");
             base.ProcessCleanupEventSubscriptions();
-            CleanupWindowEventSubscriptions();
+
             SystemEventManager.StopListening("OnFactionChange", HandleFactionChange);
-        }
-
-        public override void HandleConfirmAction() {
-            //Debug.Log(gameObject.name + ".FactionChangeInteractable.HandleConfirmAction()");
-            base.HandleConfirmAction();
-
-            // just to be safe
-            CleanupWindowEventSubscriptions();
         }
 
         public void HandleFactionChange(string eventName, EventParamProperties eventParamProperties) {
@@ -69,15 +45,12 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(interactable.gameObject.name + ".FactionChangeInteractable.Interact()");
-            if (windowEventSubscriptionsInitialized == true) {
-                return false;
-            }
+
             base.Interact(source, optionIndex);
-            factionChangeManager.SetDisplayFaction(Props.Faction);
+
+            factionChangeManager.SetDisplayFaction(Props.Faction, this);
             uIManager.factionChangeWindow.OpenWindow();
-            factionChangeManager.OnConfirmAction += HandleConfirmAction;
-            factionChangeManager.OnEndInteraction += CleanupWindowEventSubscriptions;
-            windowEventSubscriptionsInitialized = true;
+
             return true;
         }
 

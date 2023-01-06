@@ -13,8 +13,6 @@ namespace AnyRPG {
 
         public ClassChangeProps Props { get => interactableOptionProps as ClassChangeProps; }
 
-        private bool windowEventSubscriptionsInitialized = false;
-
         public ClassChangeComponent(Interactable interactable, ClassChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
                 interactableOptionProps.InteractionPanelTitle = Props.CharacterClass.DisplayName + " Class";
@@ -27,13 +25,6 @@ namespace AnyRPG {
             classChangeManager = systemGameManager.ClassChangeManager;
         }
 
-        public void CleanupWindowEventSubscriptions() {
-            classChangeManager.OnConfirmAction -= HandleConfirmAction;
-            classChangeManager.OnEndInteraction -= CleanupWindowEventSubscriptions;
-
-            windowEventSubscriptionsInitialized = false;
-        }
-
         public override void ProcessCreateEventSubscriptions() {
             //Debug.Log("GatheringNode.CreateEventSubscriptions()");
             base.ProcessCreateEventSubscriptions();
@@ -44,7 +35,6 @@ namespace AnyRPG {
         public override void ProcessCleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions()");
             base.ProcessCleanupEventSubscriptions();
-            CleanupWindowEventSubscriptions();
             systemEventManager.OnClassChange -= HandleClassChange;
         }
 
@@ -52,33 +42,15 @@ namespace AnyRPG {
             HandlePrerequisiteUpdates();
         }
 
-        public override void HandleConfirmAction() {
-            //Debug.Log(gameObject.name + ".ClassChangeInteractable.HandleConfirmAction()");
-            base.HandleConfirmAction();
-
-            // just to be safe
-            CleanupWindowEventSubscriptions();
-        }
-
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.Interact()");
-            if (windowEventSubscriptionsInitialized == true) {
-                return false;
-            }
             base.Interact(source, optionIndex);
 
-            classChangeManager.SetDisplayClass(Props.CharacterClass);
+            classChangeManager.SetDisplayClass(Props.CharacterClass, this);
             uIManager.classChangeWindow.OpenWindow();
 
-            classChangeManager.OnConfirmAction += HandleConfirmAction;
-            classChangeManager.OnEndInteraction += CleanupWindowEventSubscriptions;
-            windowEventSubscriptionsInitialized = true;
             return true;
         }
-
-        /// <summary>
-        /// Pick an item up off the ground and put it in the inventory
-        /// </summary>
 
         public override void StopInteract() {
             base.StopInteract();

@@ -11,10 +11,7 @@ namespace AnyRPG {
         // game manager references
         private SpecializationChangeManager specializationChangeManager = null;
 
-        private bool windowEventSubscriptionsInitialized = false;
-
         public SpecializationChangeProps Props { get => interactableOptionProps as SpecializationChangeProps; }
-
 
         public SpecializationChangeComponent(Interactable interactable, SpecializationChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
@@ -35,54 +32,27 @@ namespace AnyRPG {
             // because the class is a special type of prerequisite, we need to be notified when it changes
             SystemEventManager.StartListening("OnSpecializationChange", HandleSpecializationChange);
             systemEventManager.OnClassChange += HandleClassChange;
-
-        }
-
-        public void CleanupWindowEventSubscriptions() {
-
-            specializationChangeManager.OnConfirmAction -= HandleConfirmAction;
-            specializationChangeManager.OnEndInteraction -= CleanupWindowEventSubscriptions;
-
-            windowEventSubscriptionsInitialized = false;
         }
 
         public override void ProcessCleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions()");
             base.ProcessCleanupEventSubscriptions();
-            CleanupWindowEventSubscriptions();
+
             SystemEventManager.StopListening("OnSpecializationChange", HandleSpecializationChange);
             if (systemEventManager != null) {
                 systemEventManager.OnClassChange -= HandleClassChange;
             }
         }
 
-        public override void HandleConfirmAction() {
-            //Debug.Log(gameObject.name + ".ClassChangeInteractable.HandleConfirmAction()");
-            base.HandleConfirmAction();
-
-            // just to be safe
-            CleanupWindowEventSubscriptions();
-        }
-
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.Interact()");
-            if (windowEventSubscriptionsInitialized == true) {
-                return false;
-            }
             base.Interact(source, optionIndex);
 
-            specializationChangeManager.SetDisplaySpecialization(Props.ClassSpecialization);
+            specializationChangeManager.SetDisplaySpecialization(Props.ClassSpecialization, this);
             uIManager.specializationChangeWindow.OpenWindow();
-            specializationChangeManager.OnConfirmAction += HandleConfirmAction;
-            specializationChangeManager.OnEndInteraction += CleanupWindowEventSubscriptions;
 
-            windowEventSubscriptionsInitialized = true;
             return true;
         }
-
-        /// <summary>
-        /// Pick an item up off the ground and put it in the inventory
-        /// </summary>
 
         public override void StopInteract() {
             base.StopInteract();

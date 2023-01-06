@@ -6,10 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class SkillTrainerManager : ConfiguredMonoBehaviour {
-
-        public event System.Action OnConfirmAction = delegate { };
-        public event System.Action OnEndInteraction = delegate { };
+    public class SkillTrainerManager : InteractableOptionManager {
 
         private SkillTrainerComponent skillTrainer = null;
 
@@ -20,6 +17,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
+
             playerManager = systemGameManager.PlayerManager;
         }
 
@@ -38,7 +36,7 @@ namespace AnyRPG {
         public void LearnSkill(Skill skill) {
             playerManager.MyCharacter.CharacterSkillManager.LearnSkill(skill);
 
-            OnConfirmAction();
+            ConfirmAction();
         }
 
         public void UnlearnSkill(Skill skill) {
@@ -49,13 +47,17 @@ namespace AnyRPG {
             return playerManager.MyCharacter.CharacterSkillManager.HasSkill(skill);
         }
 
-        public void EndInteraction() {
-            OnEndInteraction();
+        public override void EndInteraction() {
+            base.EndInteraction();
+
+            skillTrainer = null;
         }
 
         public void SetSkillTrainer(SkillTrainerComponent skillTrainerComponent) {
             //Debug.Log("ClassChangeManager.SetDisplayClass(" + characterClass + ")");
             this.skillTrainer = skillTrainerComponent;
+            
+            BeginInteraction(skillTrainerComponent);
         }
 
 

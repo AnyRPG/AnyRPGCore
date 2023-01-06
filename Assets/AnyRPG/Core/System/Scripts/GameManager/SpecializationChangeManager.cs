@@ -6,10 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class SpecializationChangeManager : ConfiguredMonoBehaviour {
-
-        public event System.Action OnConfirmAction = delegate { };
-        public event System.Action OnEndInteraction = delegate { };
+    public class SpecializationChangeManager : InteractableOptionManager {
 
         private ClassSpecialization classSpecialization = null;
 
@@ -20,24 +17,29 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
+
             playerManager = systemGameManager.PlayerManager;
+        }
+
+        public void SetDisplaySpecialization(ClassSpecialization classSpecialization, InteractableOptionComponent interactableOptionComponent) {
+            //Debug.Log("SpecializationChangeManager.SetDisplaySpecialization(" + classSpecialization + ")");
+
+            this.classSpecialization = classSpecialization;
+
+            BeginInteraction(interactableOptionComponent);
         }
 
         public void ChangeClassSpecialization() {
             playerManager.SetPlayerCharacterSpecialization(classSpecialization);
 
-            OnConfirmAction();
+            ConfirmAction();
         }
 
-        public void EndInteraction() {
-            OnEndInteraction();
-        }
+        public override void EndInteraction() {
+            base.EndInteraction();
 
-        public void SetDisplaySpecialization(ClassSpecialization classSpecialization) {
-            //Debug.Log("SpecializationChangeManager.SetDisplaySpecialization(" + classSpecialization + ")");
-            this.classSpecialization = classSpecialization;
+            classSpecialization = null;
         }
-
 
     }
 

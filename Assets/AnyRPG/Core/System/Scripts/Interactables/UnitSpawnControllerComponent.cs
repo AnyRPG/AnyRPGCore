@@ -26,29 +26,12 @@ namespace AnyRPG {
             unitSpawnManager = systemGameManager.UnitSpawnManager;
         }
 
-        public void CleanupWindowEventSubscriptions() {
-
-            unitSpawnManager.OnConfirmAction -= HandleConfirmAction;
-            unitSpawnManager.OnEndInteraction -= CleanupWindowEventSubscriptions;
-        }
-
-        public override void ProcessCleanupEventSubscriptions() {
-            base.ProcessCleanupEventSubscriptions();
-            CleanupWindowEventSubscriptions();
-        }
-
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             base.Interact(source, optionIndex);
-            unitSpawnManager.SetProps(Props);
+            unitSpawnManager.SetProps(Props, this);
             uIManager.unitSpawnWindow.OpenWindow();
-            unitSpawnManager.OnConfirmAction += HandleConfirmAction;
-            unitSpawnManager.OnEndInteraction += CleanupWindowEventSubscriptions;
             return true;
         }
-
-        /// <summary>
-        /// Pick an item up off the ground and put it in the inventory
-        /// </summary>
 
         public override void StopInteract() {
             base.StopInteract();

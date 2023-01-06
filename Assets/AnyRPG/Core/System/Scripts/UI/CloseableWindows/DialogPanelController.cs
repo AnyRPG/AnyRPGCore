@@ -21,11 +21,6 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI dialogText = null;
 
-        /*
-        [SerializeField]
-        private Button nextButton;
-        */
-
         [SerializeField]
         private TextMeshProUGUI buttonText = null;
 
@@ -51,12 +46,6 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            dialogManager.OnClearSettings += HandleClearSettings;
-            /*
-            continueButton.Configure(systemGameManager);
-            viewQuestButton.Configure(systemGameManager);
-            acceptQuestButton.Configure(systemGameManager);
-            */
         }
 
         public override void SetGameManagerReferences() {
@@ -65,10 +54,6 @@ namespace AnyRPG {
             questLog = systemGameManager.QuestLog;
             logManager = systemGameManager.LogManager;
             dialogManager = systemGameManager.DialogManager;
-        }
-
-        public void HandleClearSettings() {
-            dialogIndex = 0;
         }
 
         public void CancelAction() {

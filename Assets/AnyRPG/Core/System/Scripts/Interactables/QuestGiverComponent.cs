@@ -18,6 +18,8 @@ namespace AnyRPG {
 
         public QuestGiverProps Props { get => interactableOptionProps as QuestGiverProps; }
 
+        public InteractableOptionComponent InteractableOptionComponent { get => this; }
+
         public QuestGiverComponent(Interactable interactable, QuestGiverProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             foreach (QuestNode questNode in Props.Quests) {
                 questNode.Quest.OnQuestStatusUpdated += HandlePrerequisiteUpdates;
@@ -119,7 +121,8 @@ namespace AnyRPG {
                 return true;
             } else if (questLog.GetAvailableQuests(Props.Quests).Count == 1 && questLog.GetCompleteQuests(Props.Quests).Count == 0) {
                 if (questLog.GetAvailableQuests(Props.Quests)[0].HasOpeningDialog == true && questLog.GetAvailableQuests(Props.Quests)[0].OpeningDialog.TurnedIn == false) {
-                    dialogManager.ViewQuestDialog(questLog.GetAvailableQuests(Props.Quests)[0], interactable);
+                    dialogManager.SetQuestDialog(questLog.GetAvailableQuests(Props.Quests)[0], interactable, this);
+                    uIManager.dialogWindow.OpenWindow();
                     return true;
                 } else {
                     // do nothing will skip to below and open questlog to the available quest

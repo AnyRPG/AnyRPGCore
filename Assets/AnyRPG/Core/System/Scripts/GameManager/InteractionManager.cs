@@ -11,6 +11,7 @@ namespace AnyRPG {
         public event System.Action<Interactable> OnSetInteractable = delegate { };
 
         private Interactable currentInteractable = null;
+        private InteractableOptionComponent currentInteractableOptionComponent = null;
 
         public Interactable CurrentInteractable {
             get => currentInteractable;
@@ -19,6 +20,16 @@ namespace AnyRPG {
                 currentInteractable = value;
                 OnSetInteractable(currentInteractable);
             }
+        }
+
+        public void SetInteractable(Interactable interactable) {
+            currentInteractable = interactable;
+            OnSetInteractable(currentInteractable);
+        }
+
+        public void SetInteractableOptionComponent(InteractableOptionComponent interactableOptionComponent) {
+            currentInteractableOptionComponent = interactableOptionComponent;
+            SetInteractable(interactableOptionComponent.Interactable);
         }
 
     }

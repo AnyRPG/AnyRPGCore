@@ -104,7 +104,7 @@ namespace AnyRPG {
                 if (dialogIndex >= dialog.DialogNodes.Count) {
                     dialog.TurnedIn = true;
                     if (caller != null) {
-                        caller.HandleConfirmAction();
+                        caller.NotifyOnConfirmAction();
                     }
                 }
                 elapsedTime += Time.deltaTime;

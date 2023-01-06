@@ -107,7 +107,7 @@ namespace AnyRPG {
         public virtual void ProcessCleanupEventSubscriptions() {
         }
 
-        public virtual void HandleConfirmAction() {
+        public virtual void NotifyOnConfirmAction() {
             systemEventManager.NotifyOnInteractionWithOptionCompleted(this);
         }
 

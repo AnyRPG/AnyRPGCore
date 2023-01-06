@@ -6,11 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class DialogManager : ConfiguredMonoBehaviour {
+    public class DialogManager : InteractableOptionManager {
 
-        public event System.Action OnClearSettings = delegate { };
-        public event System.Action OnConfirmAction = delegate { };
-        public event System.Action OnEndInteraction = delegate { };
+        //public event System.Action OnClearSettings = delegate { };
 
         private Interactable interactable = null;
         private Dialog dialog = null;
@@ -20,44 +18,29 @@ namespace AnyRPG {
         public Interactable Interactable { get => interactable; set => interactable = value; }
         public Quest Quest { get => quest; set => quest = value; }
 
-        // game manager references
-        private UIManager uIManager = null;
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            uIManager = systemGameManager.UIManager;
-        }
-
-        public void ConfirmAction() {
-            OnConfirmAction();
-        }
-
-        public void EndInteraction() {
-            OnEndInteraction();
-        }
-
-        public void ClearSettings() {
-            interactable = null;
-            quest = null;
-            dialog = null;
-            OnClearSettings();
-        }
-
-        public void ViewQuestDialog(Quest quest, Interactable interactable) {
+        public void SetQuestDialog(Quest quest, Interactable interactable, InteractableOptionComponent interactableOptionComponent) {
             //Debug.Log("DialogPanelController.Setup(" + (quest == null ? "null" : quest.DisplayName) + ", " + (interactable == null ? "null" : interactable.DisplayName) + ")");
-            ClearSettings();
             this.quest = quest;
             this.interactable = interactable;
             dialog = quest.OpeningDialog;
-            uIManager.dialogWindow.OpenWindow();
+
+            BeginInteraction(interactableOptionComponent);
         }
 
-        public void ViewDialog(Dialog dialog, Interactable interactable) {
+        public void SetDialog(Dialog dialog, Interactable interactable, InteractableOptionComponent interactableOptionComponent) {
             //Debug.Log("DialogPanelController.Setup(" + dialog.DisplayName + ", " + interactable.DisplayName + ")");
-            ClearSettings();
             this.interactable = interactable;
             this.dialog = dialog;
-            uIManager.dialogWindow.OpenWindow();
+
+            BeginInteraction(interactableOptionComponent);
+        }
+
+        public override void EndInteraction() {
+            base.EndInteraction();
+
+            interactable = null;
+            quest = null;
+            dialog = null;
         }
 
     }

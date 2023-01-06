@@ -151,6 +151,9 @@ namespace AnyRPG {
         [SerializeField]
         private VendorManager vendorManager = null;
 
+        [SerializeField]
+        private CharacterCreatorInteractableManager characterCreatorInteractableManager = null;
+
         // system scripts
         private SystemEventManager systemEventManager = null;
 
@@ -206,6 +209,7 @@ namespace AnyRPG {
         public SkillTrainerManager SkillTrainerManager { get => skillTrainerManager; set => skillTrainerManager = value; }
         public UnitSpawnManager UnitSpawnManager { get => unitSpawnManager; set => unitSpawnManager = value; }
         public VendorManager VendorManager { get => vendorManager; set => vendorManager = value; }
+        public CharacterCreatorInteractableManager CharacterCreatorInteractableManager { get => characterCreatorInteractableManager; set => characterCreatorInteractableManager = value; }
 
         private void Init() {
             //Debug.Log("SystemGameManager.Init()");
@@ -267,6 +271,7 @@ namespace AnyRPG {
             skillTrainerManager.Configure(this);
             unitSpawnManager.Configure(this);
             vendorManager.Configure(this);
+            characterCreatorInteractableManager.Configure(this);
         }
 
         private void SetupPermanentObjects() {

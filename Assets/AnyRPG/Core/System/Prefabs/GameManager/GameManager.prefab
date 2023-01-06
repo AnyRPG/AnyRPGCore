@@ -6168,6 +6168,7 @@ GameObject:
   - component: {fileID: 2267228578513555923}
   - component: {fileID: 3190184857422777412}
   - component: {fileID: 959829967936156170}
+  - component: {fileID: 2881472931833898085}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -6491,6 +6492,7 @@ MonoBehaviour:
   skillTrainerManager: {fileID: 2267228578513555923}
   unitSpawnManager: {fileID: 3190184857422777412}
   vendorManager: {fileID: 959829967936156170}
+  characterCreatorInteractableManager: {fileID: 2881472931833898085}
 --- !u!114 &5684895214070870786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6957,6 +6959,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71b00f65454946b44ada0af37020e54f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2881472931833898085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5684895214070870814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8ced67d99beff443929863efdac37c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5742173228335772782
