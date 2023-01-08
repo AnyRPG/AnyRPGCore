@@ -301,9 +301,9 @@ namespace AnyRPG {
             return false;
         }
 
-        public override bool PlayInteractionSound() {
-            return true;
-        }
+        //public override bool PlayInteractionSound() {
+        //    return true;
+        //}
 
 
         public override void CleanupScriptableObjects() {

@@ -12,7 +12,9 @@ namespace AnyRPG {
 
         private Interactable currentInteractable = null;
         private InteractableOptionComponent currentInteractableOptionComponent = null;
+        private InteractableOptionManager interactableOptionManager = null;
 
+        /*
         public Interactable CurrentInteractable {
             get => currentInteractable;
             set {
@@ -21,16 +23,23 @@ namespace AnyRPG {
                 OnSetInteractable(currentInteractable);
             }
         }
+        */
 
         public void SetInteractable(Interactable interactable) {
             currentInteractable = interactable;
             OnSetInteractable(currentInteractable);
         }
 
-        public void SetInteractableOptionComponent(InteractableOptionComponent interactableOptionComponent) {
+        public void BeginInteraction(InteractableOptionComponent interactableOptionComponent, InteractableOptionManager interactableOptionManager) {
+            this.interactableOptionManager = interactableOptionManager;
             currentInteractableOptionComponent = interactableOptionComponent;
             SetInteractable(interactableOptionComponent.Interactable);
         }
+
+        //public void SetInteractableOptionManager(InteractableOptionManager interactableOptionManager) {
+        //}
+
+
 
     }
 

@@ -24,7 +24,7 @@ namespace AnyRPG {
             this.interactable = interactable;
             dialog = quest.OpeningDialog;
 
-            BeginInteraction(interactableOptionComponent);
+            BeginInteraction(interactableOptionComponent, false);
         }
 
         public void SetDialog(Dialog dialog, Interactable interactable, InteractableOptionComponent interactableOptionComponent) {

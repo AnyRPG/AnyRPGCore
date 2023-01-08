@@ -34,8 +34,15 @@ namespace AnyRPG {
         }
 
         public virtual void BeginInteraction(InteractableOptionComponent interactableOptionComponent) {
+            BeginInteraction(interactableOptionComponent, true);
+        }
+
+        public virtual void BeginInteraction(InteractableOptionComponent interactableOptionComponent, bool notify) {
             this.interactableOptionComponent = interactableOptionComponent;
-            interactableOptionComponent?.ProcessStartInteract();
+            interactionManager.BeginInteraction(interactableOptionComponent, this);
+            if (notify == true) {
+                interactableOptionComponent?.ProcessStartInteract();
+            }
             //OnBeginInteraction();
         }
 

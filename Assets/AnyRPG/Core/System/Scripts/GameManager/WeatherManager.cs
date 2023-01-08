@@ -14,6 +14,7 @@ namespace AnyRPG {
         private List<WeatherWeightNode> weatherWeights = new List<WeatherWeightNode>();
         private Coroutine weatherCoroutine = null;
         private Coroutine fogCoroutine = null;
+        private Coroutine shadowCoroutine = null;
         private AudioClip currentAmbientSound = null;
         private FogSettings defaultFogSettings = new FogSettings();
         private FogSettings weatherFogSettings = new FogSettings();
@@ -22,6 +23,8 @@ namespace AnyRPG {
         private List<WeatherEffectController> fadingControllers = new List<WeatherEffectController>();
         // keep a list of fog settings for overrides
         private List<FogSettings> fogList = new List<FogSettings>();
+        private float defaultShadowStrength = 1f;
+        private Light sunLight = null;
 
         // game manager references
         protected SystemDataFactory systemDataFactory = null;
@@ -61,6 +64,8 @@ namespace AnyRPG {
             CleanupWeatherEffectControllers();
             previousWeather = null;
             currentWeather = null;
+            defaultShadowStrength = 1f;
+            sunLight = null;
             fogList.Clear();
         }
 
@@ -68,6 +73,7 @@ namespace AnyRPG {
             //Debug.Log("WeatherManager.HandleLevelLoad()");
 
             GetSceneFogSettings();
+            GetSceneShadowSettings();
             if (levelManager.GetActiveSceneNode() != null) {
                 SetupWeatherList();
                 ChooseWeather();
@@ -83,6 +89,13 @@ namespace AnyRPG {
             }
 
             FollowPlayer();
+        }
+
+        private void GetSceneShadowSettings() {
+            if (RenderSettings.sun != null) {
+                sunLight = RenderSettings.sun;
+                defaultShadowStrength = sunLight.shadowStrength;
+            }
         }
 
         private void GetSceneFogSettings() {
@@ -125,6 +138,41 @@ namespace AnyRPG {
                 StopCoroutine(fogCoroutine);
             }
             fogCoroutine = StartCoroutine(FogFade(3f));
+        }
+
+        private void FadeToShadowSettings() {
+
+            if (sunLight == null) {
+                // there is no sun so sun shadows cannot be faded
+                return;
+            }
+
+            if (shadowCoroutine != null) {
+                StopCoroutine(shadowCoroutine);
+            }
+            shadowCoroutine = StartCoroutine(ShadowFade(3f));
+        }
+
+        private IEnumerator ShadowFade(float fadeTime) {
+
+            float elapsedTime = 0f;
+            float originalShadowStrength = sunLight.shadowStrength;
+            float targetShadowStrength = 1f;
+            if (currentWeather == null) {
+                targetShadowStrength = defaultShadowStrength;
+            } else {
+                targetShadowStrength = defaultShadowStrength * currentWeather.ShadowStrength;
+            }
+
+            float shadowDelta = targetShadowStrength - originalShadowStrength;
+
+            while (elapsedTime <= fadeTime) {
+                sunLight.shadowStrength = originalShadowStrength + ((elapsedTime / fadeTime) * shadowDelta);
+
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+            shadowCoroutine = null;
         }
 
         private IEnumerator FogFade(float fadeTime) {
@@ -260,6 +308,9 @@ namespace AnyRPG {
                 ActivateWeatherFogSettings(currentWeather.FogSettings);
             }
 
+            // always perform shadow fade because the weather could have changed from something to clear
+            FadeToShadowSettings();
+
             // always get ambient sound even if current weather is null
             // because the sound needs to be set to null or it will keep playing
             // the old weather sound when switched to clear weather
@@ -277,6 +328,14 @@ namespace AnyRPG {
         private void EndWeather(WeatherProfile previousWeather, bool immediate) {
             
             currentAmbientSound = null;
+
+            if (immediate == true) {
+                // this is only done on level unload because shadow fading is normally done in StartWeather()
+                if (shadowCoroutine != null) {
+                    StopCoroutine(shadowCoroutine);
+                    shadowCoroutine = null;
+                }
+            }
 
             EndWeatherMonitoring();
 

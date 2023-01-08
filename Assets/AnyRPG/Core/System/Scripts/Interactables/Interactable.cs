@@ -546,13 +546,13 @@ namespace AnyRPG {
 
         public void OpenInteractionWindow() {
             //Debug.Log(gameObject.name + ".Interactable.OpenInteractionWindow");
-            interactionManager.CurrentInteractable = this;
+            interactionManager.SetInteractable(this);
             uIManager.craftingWindow.CloseWindow();
             uIManager.interactionWindow.OpenWindow();
         }
 
         public void CloseInteractionWindow() {
-            interactionManager.CurrentInteractable = null;
+            interactionManager.SetInteractable(null);
             uIManager.interactionWindow.CloseWindow();
         }
 

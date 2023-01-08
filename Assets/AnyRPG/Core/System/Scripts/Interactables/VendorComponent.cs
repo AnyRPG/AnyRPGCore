@@ -54,6 +54,10 @@ namespace AnyRPG {
             return true;
         }
 
+        public override AudioClip GetInteractionSound(VoiceProps voiceProps) {
+            return voiceProps.RandomStartVendorInteract;
+        }
+
 
     }
 

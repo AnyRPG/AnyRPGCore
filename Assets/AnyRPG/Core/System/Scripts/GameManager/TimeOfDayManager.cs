@@ -153,7 +153,8 @@ namespace AnyRPG {
                     }
                 }
 
-                PlayAmbientSounds();
+                // since this is a level load, set fade-in to 3 seconds, instead of using time of day speed
+                PlayAmbientSounds(3f);
             }
         }
 

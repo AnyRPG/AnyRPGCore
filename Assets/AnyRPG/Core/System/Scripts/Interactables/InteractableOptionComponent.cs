@@ -174,6 +174,10 @@ namespace AnyRPG {
             return false;
         }
 
+        public virtual AudioClip GetInteractionSound(VoiceProps voiceProps) {
+            return voiceProps.RandomStartInteract;
+        }
+
         public virtual void ProcessStopInteract() {
             interactable.ProcessStopInteract(this);
         }

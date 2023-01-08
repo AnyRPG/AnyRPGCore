@@ -112,10 +112,12 @@ namespace AnyRPG {
 
         public void AcceptQuest() {
             //Debug.Log("DialogPanelController.AcceptQuest()");
+            Quest quest = dialogManager.Quest;
+
             // CLOSE THIS FIRST SO OTHER WINDOWS AREN'T BLOCKED FROM POPPING
             uIManager.dialogWindow.CloseWindow();
 
-            questLog.AcceptQuest(dialogManager.Quest);
+            questLog.AcceptQuest(quest);
             //interactable.CheckForInteractableObjectives(MyQuest.DisplayName);
         }
 

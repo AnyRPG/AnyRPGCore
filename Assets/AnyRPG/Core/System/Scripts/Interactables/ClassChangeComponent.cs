@@ -87,9 +87,9 @@ namespace AnyRPG {
             }
         }
 
-        public override bool PlayInteractionSound() {
-            return true;
-        }
+        //public override bool PlayInteractionSound() {
+        //    return true;
+        //}
 
 
     }

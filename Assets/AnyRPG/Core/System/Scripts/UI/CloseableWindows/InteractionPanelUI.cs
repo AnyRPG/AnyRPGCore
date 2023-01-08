@@ -251,7 +251,7 @@ namespace AnyRPG {
 
         public void ShowInteractables(Interactable interactable) {
             //Debug.Log("InteractionPanelUI.ShowInteractables(" + interactable.name + ")");
-            interactionManager.CurrentInteractable = interactable;
+            interactionManager.SetInteractable(interactable);
             ShowInteractablesCommon(this.interactable);
         }
 
@@ -278,7 +278,7 @@ namespace AnyRPG {
             //ClearButtons();
             base.ReceiveClosedWindowNotification();
             // clear this so window doesn't pop open again when it's closed
-            interactionManager.CurrentInteractable = null;
+            interactionManager.SetInteractable(null);
         }
 
         public override void ProcessOpenWindowNotification() {

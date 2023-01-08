@@ -48,12 +48,8 @@ namespace AnyRPG {
                 return;
             }
 
-            if (interactableOptionComponent.GetType() == typeof(VendorComponent)) {
-                unitComponentController.PlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomStartVendorInteract);
-            } else {
-                if (interactableOptionComponent.PlayInteractionSound() == true) {
-                    unitComponentController.PlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomStartInteract);
-                }
+            if (interactableOptionComponent.PlayInteractionSound() == true) {
+                unitComponentController.PlayVoiceSound(interactableOptionComponent.GetInteractionSound(unitController.UnitProfile.VoiceProps));
             }
         }
 
