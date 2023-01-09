@@ -85,7 +85,7 @@ namespace AnyRPG {
 
             if (craftingMaterials != null) {
                 foreach (CraftingMaterial craftingMaterial in craftingMaterials) {
-                    craftingMaterial.SetupScriptableObjects(systemGameManager);
+                    craftingMaterial.SetupScriptableObjects(systemGameManager, this);
                 }
             }
         }

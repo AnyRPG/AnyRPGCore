@@ -17,12 +17,16 @@ namespace AnyRPG {
         [SerializeField]
         private int count = 1;
 
+        private IDescribable describable = null;
+
         public Item Item { get => item; }
         public int Count { get => count; }
 
 
-        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+        public void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
             Configure(systemGameManager);
+
+            this.describable = describable;
 
             item = null;
             if (itemName != null) {
@@ -30,7 +34,7 @@ namespace AnyRPG {
                 if (tmpItem != null) {
                     item = tmpItem;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing a crafting material.  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing a crafting material for " + describable.DisplayName + ".  CHECK INSPECTOR");
                 }
             }
         }
