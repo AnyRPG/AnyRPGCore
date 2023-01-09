@@ -6294,6 +6294,7 @@ MonoBehaviour:
   levelUpEffectName: 
   deathEffectName: 
   lootSparkleEffectName: 
+  weaponMissAudioClip: {fileID: 8300000, guid: 1989786f256f80e41b6cd51fa96f3d53, type: 3}
   vendorAudioClip: {fileID: 8300000, guid: bc929a28bb601b242b58a3581dfcc667, type: 3}
   vendorAudioProfileName: 
   maxChatTextDistance: 25

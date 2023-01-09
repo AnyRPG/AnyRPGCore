@@ -167,7 +167,11 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessStartInteract() {
-            interactable.ProcessStartInteract(this);
+            interactable.ProcessStartInteractWithOption(this);
+        }
+
+        public virtual void ProcessStopInteract() {
+            interactable.ProcessStopInteractWithOption(this);
         }
 
         public virtual bool PlayInteractionSound() {
@@ -178,9 +182,6 @@ namespace AnyRPG {
             return voiceProps.RandomStartInteract;
         }
 
-        public virtual void ProcessStopInteract() {
-            interactable.ProcessStopInteract(this);
-        }
 
         public virtual bool HasMiniMapText() {
             return false;

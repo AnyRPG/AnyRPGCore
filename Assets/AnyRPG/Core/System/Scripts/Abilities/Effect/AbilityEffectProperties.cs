@@ -264,12 +264,12 @@ namespace AnyRPG {
                         usedAudioProfiles = audioProfiles;
                     }
                     foreach (AudioProfile audioProfile in usedAudioProfiles) {
-                        if (audioProfile.AudioClip != null) {
+                        if (audioProfile.AudioClips.Count > 0) {
                             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.AudioClip.name);
                             if (target != null && target.UnitComponentController != null) {
-                                target.UnitComponentController.PlayEffectSound(audioProfile.AudioClip);
+                                target.UnitComponentController.PlayEffectSound(audioProfile.RandomAudioClip);
                             } else {
-                                audioSource.PlayOneShot(audioProfile.AudioClip);
+                                audioSource.PlayOneShot(audioProfile.RandomAudioClip);
                             }
                         }
                     }

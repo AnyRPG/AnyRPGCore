@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
-  m_Name: LeatherWorkingAudio
+  m_Name: SmackHitsAudioTemplate
   m_EditorClassIdentifier: 
-  resourceName: LeatherWorking
+  resourceName: Smack Hits
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -22,4 +22,5 @@ MonoBehaviour:
   optionalOverride: 0
   artistName: 
   audioClips:
-  - {fileID: 8300000, guid: 5d0d42dedc50ae94088a3342b024bf75, type: 3}
+  - {fileID: 8300000, guid: 3aa051fded123d549b224dbe3d3f615b, type: 3}
+  - {fileID: 8300000, guid: 6017991d1f934f64da4aff2dc0a552e2, type: 3}

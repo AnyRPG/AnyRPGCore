@@ -511,7 +511,7 @@ namespace AnyRPG {
                 && unitControllerMode == UnitControllerMode.AI) {
 
                 // notify on interact
-                UnitEventController.NotifyOnInteract();
+                //UnitEventController.NotifyOnStartInteract();
 
                 if (unitProfile != null && unitProfile.FaceInteractionTarget == true) {
                     unitMotor.FaceTarget(source.Interactable);
@@ -521,14 +521,24 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override void ProcessStartInteract(InteractableOptionComponent interactableOptionComponent) {
-            base.ProcessStartInteract(interactableOptionComponent);
-            unitEventController.NotifyOnStartInteract(interactableOptionComponent);
+        public override void ProcessStartInteract() {
+            base.ProcessStartInteract();
+            unitEventController.NotifyOnStartInteract();
         }
 
-        public override void ProcessStopInteract(InteractableOptionComponent interactableOptionComponent) {
-            base.ProcessStopInteract(interactableOptionComponent);
-            unitEventController.NotifyOnStopInteract(interactableOptionComponent);
+        public override void ProcessStopInteract() {
+            base.ProcessStopInteract();
+            unitEventController.NotifyOnStopInteract();
+        }
+
+        public override void ProcessStartInteractWithOption(InteractableOptionComponent interactableOptionComponent) {
+            base.ProcessStartInteractWithOption(interactableOptionComponent);
+            unitEventController.NotifyOnStartInteractWithOption(interactableOptionComponent);
+        }
+
+        public override void ProcessStopInteractWithOption(InteractableOptionComponent interactableOptionComponent) {
+            base.ProcessStopInteractWithOption(interactableOptionComponent);
+            unitEventController.NotifyOnStopInteractWithOption(interactableOptionComponent);
         }
 
         public void HandleReputationChange(string eventName, EventParamProperties eventParamProperties) {

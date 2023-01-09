@@ -199,7 +199,7 @@ namespace AnyRPG {
         }
 
         public void CrossFadeAmbient(AudioClip audioClip, float seconds) {
-            Debug.Log("AudioManager.CrossFadeAmbient(" + (audioClip == null ? "null" : audioClip.name) + ", " + seconds + ")");
+            //Debug.Log("AudioManager.CrossFadeAmbient(" + (audioClip == null ? "null" : audioClip.name) + ", " + seconds + ")");
 
             if (ambientPaused == false
                 && currentAmbientAudioSource.clip == audioClip

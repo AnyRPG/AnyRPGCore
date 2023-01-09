@@ -39,7 +39,7 @@ namespace AnyRPG {
 
         public virtual void BeginInteraction(InteractableOptionComponent interactableOptionComponent, bool notify) {
             this.interactableOptionComponent = interactableOptionComponent;
-            interactionManager.BeginInteraction(interactableOptionComponent, this);
+            interactionManager.BeginInteractionWithOption(interactableOptionComponent, this);
             if (notify == true) {
                 interactableOptionComponent?.ProcessStartInteract();
             }

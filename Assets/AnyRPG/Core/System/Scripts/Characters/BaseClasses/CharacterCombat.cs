@@ -639,6 +639,11 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterCombat.ReceiveCombatMiss()");
             lastCombatEvent = Time.time;
             OnReceiveCombatMiss(targetObject, abilityEffectContext);
+            
+            // miss sound should only be played on attacking unit
+            if (targetObject != baseCharacter.UnitController) {
+                baseCharacter.UnitController.UnitEventController.NotifyOnCombatMiss();
+            }
         }
 
         public bool DidAttackMiss() {
