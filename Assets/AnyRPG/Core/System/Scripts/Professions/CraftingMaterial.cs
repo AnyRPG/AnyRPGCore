@@ -17,16 +17,12 @@ namespace AnyRPG {
         [SerializeField]
         private int count = 1;
 
-        private IDescribable describable = null;
-
         public Item Item { get => item; }
         public int Count { get => count; }
 
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
             Configure(systemGameManager);
-
-            this.describable = describable;
 
             item = null;
             if (itemName != null) {

@@ -25,7 +25,7 @@ namespace AnyRPG {
             if (vendorItems != null) {
                 foreach (VendorItem vendorItem in vendorItems) {
                     if (vendorItem != null) {
-                        vendorItem.SetupScriptableObjects(systemDataFactory);
+                        vendorItem.SetupScriptableObjects(systemDataFactory, this);
                     }
 
                 }
