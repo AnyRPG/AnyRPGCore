@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eef7edd6ae524264485cbe22d310dd60, type: 3}
-  m_Name: TwoHandMaceWeaponSkillTemplate
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: CrumbleHitsAudioTemplate
   m_EditorClassIdentifier: 
-  resourceName: Two Hand Mace
+  resourceName: Crumble Hits
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -20,14 +20,7 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  weaponSkillProps:
-    defaultWeaponSkill: 0
-    attackSpeed: 2
-    defaultHitEffects:
-    - Two Hand Mace Attack
-    onHitEffects: []
-    animationProfileName: Melee Weapon
-    onHitAudioProfiles:
-    - Bash Hits
-    abilityAnimationObjectList: []
-    abilityObjectList: []
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: 5f0c3c7efed79584782d04326a6e15a6, type: 3}
+  - {fileID: 8300000, guid: fe34421ff36353e49932353beccf869b, type: 3}

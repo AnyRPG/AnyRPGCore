@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eef7edd6ae524264485cbe22d310dd60, type: 3}
-  m_Name: TwoHandMaceWeaponSkillTemplate
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: SpecialHitsAudioTemplate
   m_EditorClassIdentifier: 
-  resourceName: Two Hand Mace
+  resourceName: Special Hits
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -20,14 +20,6 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  weaponSkillProps:
-    defaultWeaponSkill: 0
-    attackSpeed: 2
-    defaultHitEffects:
-    - Two Hand Mace Attack
-    onHitEffects: []
-    animationProfileName: Melee Weapon
-    onHitAudioProfiles:
-    - Bash Hits
-    abilityAnimationObjectList: []
-    abilityObjectList: []
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: 88d4ce6994124444cb0d6973e0810d09, type: 3}

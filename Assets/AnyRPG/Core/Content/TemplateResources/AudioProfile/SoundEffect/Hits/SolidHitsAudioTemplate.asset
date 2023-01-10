@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
-  m_Name: MetalHitAudio
+  m_Name: SolidHitsAudioTemplate
   m_EditorClassIdentifier: 
-  resourceName: Metal Hit
+  resourceName: Solid Hits
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   artistName: 
   audioClips:
-  - {fileID: 8300000, guid: 62f2e1fe83db61b4cbed8d2c35d2ae23, type: 3}
+  - {fileID: 8300000, guid: 7efc2025754d0834b9c18a7871590b9b, type: 3}

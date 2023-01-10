@@ -34,7 +34,7 @@ MonoBehaviour:
     animationClip: {fileID: 0}
     animationProfileName: Mining
     useUnitCastAnimations: 0
-    animationHitAudioProfileName: Metal Hit
+    animationHitAudioProfileName: Metal Hits
     castingAudioClip: {fileID: 0}
     castingAudioProfileName: 
     requiredLevel: 1
@@ -84,4 +84,5 @@ MonoBehaviour:
     inlineChannelingEffects: []
     channeledAbilityEffectnames: []
   references:
-    version: 1
+    version: 2
+    RefIds: []

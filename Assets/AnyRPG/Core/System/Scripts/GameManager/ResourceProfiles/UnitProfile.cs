@@ -623,5 +623,5 @@ namespace AnyRPG {
 
     }
 
-    public enum FootstepType { None, Unit, Environment, UnitFallback }
+    public enum FootstepType { None, Unit, Environment, UnitFallback, Both }
 }
