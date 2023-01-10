@@ -65,13 +65,13 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             if (target == null) {
                 //Debug.Log(DisplayName + ".CapturePetEffect.Cast(): target is null, returning");
                 return null;
             }
 
-            Dictionary<PrefabProfile, GameObject> returnValue = base.Cast(source, target, originalTarget, abilityEffectInput);
+            Dictionary<PrefabProfile, List<GameObject>> returnValue = base.Cast(source, target, originalTarget, abilityEffectInput);
 
             UnitController targetUnitController = target.GetComponent<UnitController>();
             if (targetUnitController != null) {

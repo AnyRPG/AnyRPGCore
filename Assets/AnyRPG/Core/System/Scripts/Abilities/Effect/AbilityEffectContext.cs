@@ -37,9 +37,9 @@ namespace AnyRPG {
         private Quaternion abilityCasterRotation;
 
         // these are intentionally not copied as we want them associated only with the ability effect that cast them
-        private Dictionary<PrefabProfile, GameObject> prefabObjects = new Dictionary<PrefabProfile, GameObject>();
+        private Dictionary<PrefabProfile, List<GameObject>> prefabObjects = new Dictionary<PrefabProfile, List<GameObject>>();
 
-        public Dictionary<PrefabProfile, GameObject> PrefabObjects { get => prefabObjects; set => prefabObjects = value; }
+        public Dictionary<PrefabProfile, List<GameObject>> PrefabObjects { get => prefabObjects; set => prefabObjects = value; }
         public IAbilityCaster AbilityCaster { get => abilityCaster; set => abilityCaster = value; }
         public Vector3 AbilityCasterLocation { get => abilityCasterLocation; set => abilityCasterLocation = value; }
         public Quaternion AbilityCasterRotation { get => abilityCasterRotation; set => abilityCasterRotation = value; }

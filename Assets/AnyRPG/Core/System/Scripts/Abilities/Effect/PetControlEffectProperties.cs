@@ -58,7 +58,9 @@ namespace AnyRPG {
             }
             if (castList.Count > 0) {
                 //Debug.Log(DisplayName + ".PetEffect.CheckPetSpawn(): castlist.count: " + castList.Count);
-                Dictionary<PrefabProfile, GameObject> rawObjectList = PerformAbilityEffects(source, target, abilityEffectInput, castList);
+                // commented next line because it appeared to have no references
+                //Dictionary<PrefabProfile, GameObject> rawObjectList = PerformAbilityEffects(source, target, abilityEffectInput, castList);
+                PerformAbilityEffects(source, target, abilityEffectInput, castList);
             }
 
         }

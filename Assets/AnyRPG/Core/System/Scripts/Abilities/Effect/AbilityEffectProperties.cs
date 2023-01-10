@@ -121,14 +121,14 @@ namespace AnyRPG {
             return targetOptions.CanUseOn(this, target, sourceCharacter, abilityEffectContext, playerInitiated, performRangeCheck);
         }
 
-        public virtual Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
+        public virtual Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AbilityEffect.Cast(" + source.AbilityManager.Name + ", " + (target? target.name : "null") + ")");
             /*
             if (abilityEffectInput != null) {
                 this.abilityEffectInput = abilityEffectInput;
             }
             */
-            return new Dictionary<PrefabProfile, GameObject>();
+            return new Dictionary<PrefabProfile, List<GameObject>>();
         }
 
 
@@ -165,9 +165,9 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public Dictionary<PrefabProfile, GameObject> PerformAbilityEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, List<AbilityEffectProperties> abilityEffectList) {
+        public Dictionary<PrefabProfile, List<GameObject>> PerformAbilityEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, List<AbilityEffectProperties> abilityEffectList) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffects(" + source.AbilityManager.Name + ", " + (target ? target.name : "null") + ")");
-            Dictionary<PrefabProfile, GameObject> returnList = new Dictionary<PrefabProfile, GameObject>();
+            Dictionary<PrefabProfile, List<GameObject>> returnList = new Dictionary<PrefabProfile, List<GameObject>>();
 
             AbilityEffectContext abilityEffectOutput = abilityEffectContext.GetCopy();
 
@@ -184,10 +184,10 @@ namespace AnyRPG {
                         if (!(abilityEffect is AmountEffectProperties)) {
                             abilityEffectOutput.spellDamageMultiplier = 1f;
                         }
-                        Dictionary<PrefabProfile, GameObject> tmpObjects = PerformAbilityEffect(source, target, abilityEffectOutput, abilityEffect);
+                        Dictionary<PrefabProfile, List<GameObject>> tmpObjects = PerformAbilityEffect(source, target, abilityEffectOutput, abilityEffect);
                         if (tmpObjects != null) {
                             //Debug.Log(DisplayName + ".PerformAbilityEffects(): ADDING GAMEOBJECT TO RETURN LIST");
-                            foreach (KeyValuePair<PrefabProfile, GameObject> tmpPair in tmpObjects) {
+                            foreach (KeyValuePair<PrefabProfile, List<GameObject>> tmpPair in tmpObjects) {
                                 returnList[tmpPair.Key] = tmpPair.Value;
                             }
                         }
@@ -209,9 +209,9 @@ namespace AnyRPG {
         /// <param name="abilityEffectContext"></param>
         /// <param name="abilityEffect"></param>
         /// <returns></returns>
-        protected Dictionary<PrefabProfile, GameObject> PerformAbilityEffect(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, AbilityEffectProperties abilityEffect) {
+        protected Dictionary<PrefabProfile, List<GameObject>> PerformAbilityEffect(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, AbilityEffectProperties abilityEffect) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffect(" + source.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ", " + abilityEffect.DisplayName + ")");
-            Dictionary<PrefabProfile, GameObject> returnObjects = null;
+            Dictionary<PrefabProfile, List<GameObject>> returnObjects = null;
             // give the ability a chance to auto-selfcast if the original target was null
 
             // perform ability dependent target check
@@ -235,7 +235,7 @@ namespace AnyRPG {
             return returnObjects;
         }
 
-        public virtual Dictionary<PrefabProfile, GameObject> PerformAbilityHitEffects(IAbilityCaster source, Interactable target, AbilityEffectContext effectOutput) {
+        public virtual Dictionary<PrefabProfile, List<GameObject>> PerformAbilityHitEffects(IAbilityCaster source, Interactable target, AbilityEffectContext effectOutput) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityHitEffects(" + source.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ")");
             return PerformAbilityEffects(source, target, effectOutput, hitAbilityEffectList);
         }
@@ -246,9 +246,11 @@ namespace AnyRPG {
                 AudioSource audioSource = null;
                 if (target?.UnitComponentController == null) {
 
-                    if (abilityEffectContext.PrefabObjects != null && abilityEffectContext.PrefabObjects.Count > 0) {
+                    if (abilityEffectContext.PrefabObjects != null
+                        && abilityEffectContext.PrefabObjects.Count > 0
+                        && abilityEffectContext.PrefabObjects.First().Value.Count > 0) {
                         //prefabObjects.First();
-                        audioSource = abilityEffectContext.PrefabObjects.First().Value.GetComponent<AudioSource>();
+                        audioSource = abilityEffectContext.PrefabObjects.First().Value.First().GetComponent<AudioSource>();
                         /*
                         if (audioSource != null) {
                             Debug.Log("Found Audio Source on " + abilityEffectContext.PrefabObjects.First().Value.name);

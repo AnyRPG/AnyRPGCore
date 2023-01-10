@@ -17,7 +17,7 @@ namespace AnyRPG {
         }
         */
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".DirectEffect.Cast()");
             return base.Cast(source, target, originalTarget, abilityEffectInput);
         }
