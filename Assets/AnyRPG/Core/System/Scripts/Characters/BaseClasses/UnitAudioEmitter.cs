@@ -28,23 +28,43 @@ namespace AnyRPG {
         private AudioSource movementHitSource = null;
 
         public void PlayCast(AudioClip audioClip) {
+            PlayCast(audioClip, false);
+        }
+
+        public void PlayCast(AudioClip audioClip, bool loop) {
             if (audioClip == null) {
                 return;
             }
             //Debug.Log(gameObject.name + ".UnitAudioEmitter.PlayCast(" + audioClip.name + ")");
 
             if (castSource != null) {
-                castSource.PlayOneShot(audioClip);
+                if (loop == true) {
+                    castSource.loop = true;
+                    castSource.clip = audioClip;
+                    castSource.Play();
+                } else {
+                    castSource.PlayOneShot(audioClip);
+                }
             }
         }
 
         public void PlayEffect(AudioClip audioClip) {
+            PlayEffect(audioClip, false);
+        }
+
+        public void PlayEffect(AudioClip audioClip, bool loop) {
             //Debug.Log(gameObject.name + ".UnitAudioEmitter.PlayEffect(" + (audioClip == null ? "null" : audioClip.name) + ")");
             if (audioClip == null) {
                 return;
             }
             if (effectSource != null) {
-                effectSource.PlayOneShot(audioClip);
+                if (loop == true) {
+                    effectSource.loop = true;
+                    effectSource.clip = audioClip;
+                    effectSource.Play();
+                } else {
+                    effectSource.PlayOneShot(audioClip);
+                }
             }
         }
 
@@ -81,6 +101,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UnitAudioEmitter.StopCast()");
             if (castSource != null) {
                 castSource.Stop();
+                castSource.loop = false;
             }
         }
 
@@ -88,6 +109,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UnitAudioEmitter.StopEffect()");
             if (effectSource != null) {
                 effectSource.Stop();
+                effectSource.loop = false;
             }
         }
 

@@ -34,9 +34,10 @@ MonoBehaviour:
     animationClip: {fileID: 0}
     animationProfileName: BlackSmithing
     useUnitCastAnimations: 0
-    animationHitAudioProfileName: Metal Hit Quiet
+    animationHitAudioProfileName: BlackSmithing
     castingAudioClip: {fileID: 0}
-    castingAudioProfileName: Metal Hit Quiet
+    castingAudioProfileName: 
+    loopAudio: 0
     requiredLevel: 1
     characterClassRequirements: []
     classSpecializationRequirements: []
@@ -84,4 +85,5 @@ MonoBehaviour:
     inlineChannelingEffects: []
     channeledAbilityEffectnames: []
   references:
-    version: 1
+    version: 2
+    RefIds: []

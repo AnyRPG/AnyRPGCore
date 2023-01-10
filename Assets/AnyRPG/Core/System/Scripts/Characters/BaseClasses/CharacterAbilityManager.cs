@@ -1203,7 +1203,7 @@ namespace AnyRPG {
                     }
                 }
                 if (ability.CastingAudioClip != null) {
-                    baseCharacter.UnitController.UnitComponentController.PlayCastSound(ability.CastingAudioClip);
+                    baseCharacter.UnitController.UnitComponentController.PlayCastSound(ability.CastingAudioClip, ability.LoopAudio);
                 }
                 if (ability.CoolDownOnCast == true) {
                     ability.BeginAbilityCoolDown(baseCharacter);
@@ -1855,6 +1855,30 @@ namespace AnyRPG {
                 }
             }
         }
+
+        /// <summary>
+        /// Play audio in response to the StartAudio() animation event
+        /// </summary>
+        public void StartAudioAnimationEvent() {
+            //Debug.Log(gameObject.name + ".CharacterAbilitymanager.StartAudioAnimationEvent()");
+
+            if (currentCastAbility != null) {
+                AudioClip audioClip = currentCastAbility.GetAnimationHitSound();
+                if (audioClip != null) {
+                    baseCharacter.UnitController.UnitComponentController.PlayEffectSound(audioClip, currentCastAbility.LoopAudio);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Stops playing audio in response to the StopAudio() animation event
+        /// </summary>
+        public void StopAudioAnimationEvent() {
+            //Debug.Log(gameObject.name + ".CharacterAbilitymanager.StopAudioAnimationEvent()");
+
+            baseCharacter.UnitController.UnitComponentController.StopEffectSound();
+        }
+
 
         public override void InitiateGlobalCooldown(float coolDownToUse = 0f) {
             //Debug.Log(gameObject.name + ".CharacterAbilitymanager.InitiateGlobalCooldown(" + coolDownToUse + ")");

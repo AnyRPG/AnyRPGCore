@@ -29,6 +29,18 @@ namespace AnyRPG {
             }
         }
 
+        public void StartAudio() {
+            if (unitController?.CharacterUnit?.BaseCharacter?.CharacterAbilityManager != null) {
+                unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.StartAudioAnimationEvent();
+            }
+        }
+
+        public void StopAudio() {
+            if (unitController?.CharacterUnit?.BaseCharacter?.CharacterAbilityManager != null) {
+                unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.StopAudioAnimationEvent();
+            }
+        }
+
         public void AnimationPrefabCreate() {
             //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AnimationPrefabCreate()");
             if (unitController?.CharacterUnit?.BaseCharacter?.CharacterAbilityManager != null) {

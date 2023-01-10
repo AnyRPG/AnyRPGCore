@@ -62,24 +62,32 @@ namespace AnyRPG {
         }
 
         public void PlayCastSound(AudioClip audioClip) {
+            PlayCastSound(audioClip, false);
+        }
+
+        public void PlayCastSound(AudioClip audioClip, bool loop) {
             //Debug.Log(gameObject.name + ".UnitComponentController.PlayCastSound(" + (audioClip == null ? "null" : audioClip.name) + ")");
             if (audioClip == null) {
                 return;
             }
 
             if (unitAudioEmitter != null) {
-                unitAudioEmitter.PlayCast(audioClip);
+                unitAudioEmitter.PlayCast(audioClip, loop);
             }
         }
 
         public void PlayEffectSound(AudioClip audioClip) {
+            PlayEffectSound(audioClip, false);
+        }
+
+        public void PlayEffectSound(AudioClip audioClip, bool loop) {
             //Debug.Log(gameObject.name + ".UnitComponentController.PlayEffectSound(" + (audioClip == null ? "null" : audioClip.name) + ")");
             if (audioClip == null) {
                 return;
             }
 
             if (unitAudioEmitter != null) {
-                unitAudioEmitter.PlayEffect(audioClip);
+                unitAudioEmitter.PlayEffect(audioClip, loop);
             }
         }
 
