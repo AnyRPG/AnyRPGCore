@@ -107,6 +107,7 @@ namespace AnyRPG {
         private float maxCombatDistanceFromMasterOnMove = 15f;
 
         // track the current movement sound overrides
+        private List<MovementSoundArea> movementSoundAreas = new List<MovementSoundArea>();
         private MovementSoundArea movementSoundArea = null;
 
         // movement tracking
@@ -1063,15 +1064,21 @@ namespace AnyRPG {
 
         public void SetMovementSoundArea(MovementSoundArea movementSoundArea) {
             //Debug.Log(gameObject.name + ".CharacterUnit.SetMovementSoundArea()");
-            if (movementSoundArea != this.movementSoundArea) {
+            if (movementSoundAreas.Contains(movementSoundArea) == false) {
+                movementSoundAreas.Add(movementSoundArea);
                 this.movementSoundArea = movementSoundArea;
             }
         }
 
         public void UnsetMovementSoundArea(MovementSoundArea movementSoundArea) {
             //Debug.Log(gameObject.name + ".CharacterUnit.UnsetMovementSoundArea()");
-            if (movementSoundArea == this.movementSoundArea) {
-                this.movementSoundArea = null;
+            if (movementSoundAreas.Contains(movementSoundArea) == true) {
+                movementSoundAreas.Remove(movementSoundArea);
+                if (movementSoundAreas.Count == 0) {
+                    this.movementSoundArea = null;
+                } else {
+                    this.movementSoundArea = movementSoundAreas[movementSoundAreas.Count - 1];
+                }
             }
             if (unitControllerMode == UnitControllerMode.Mount && riderUnitController != null) {
                 riderUnitController.UnsetMovementSoundArea(movementSoundArea);
