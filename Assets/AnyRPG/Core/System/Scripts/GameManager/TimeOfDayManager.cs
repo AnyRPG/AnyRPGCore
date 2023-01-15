@@ -15,10 +15,11 @@ namespace AnyRPG {
         private DateTime startTime;
         private DateTime realCurrentTime;
         private DateTime inGameTime;
-        private bool nightSounds = true;
+        private bool nightTime = true;
 
         protected Light sunLight = null;
         protected GameObject sunObject = null;
+        protected ParticleSystem sunParticle = null;
 
         // settings from the scene node
         protected bool rotateSunDirection = false;
@@ -34,6 +35,7 @@ namespace AnyRPG {
         private float currentSkyboxRotation = 0f;
 
         // state tracking
+        private SceneNode activeSceneNode = null;
         private bool playAmbientSounds = true;
         private bool levelLoaded = false;
         private AudioClip previousAudioClip = null;
@@ -104,6 +106,8 @@ namespace AnyRPG {
             skyboxRotationOffset = 0f;
             skyboxRotationDirection = 1f;
             levelLoaded = false;
+            activeSceneNode = null;
+            sunParticle = null;
 
             audioManager.StopAmbient();
         }
@@ -112,25 +116,30 @@ namespace AnyRPG {
             //Debug.Log("TimeOfDayManager.HandleLevelLoad()");
 
             levelLoaded = true;
-
-            if (levelManager.GetActiveSceneNode() != null) {
+            activeSceneNode = levelManager.GetActiveSceneNode();
+            if (activeSceneNode != null) {
                 sunLight = RenderSettings.sun;
                 if (sunLight != null) {
-                    sunObject = RenderSettings.sun.gameObject;
-                    if (levelManager.GetActiveSceneNode().RotateSunDirection == true) {
+                    if (activeSceneNode.SunRotationMode != SunRotationMode.None) {
                         rotateSunDirection = true;
-                        if (levelManager.GetActiveSceneNode().UseDefaultSunAngle == true) {
+                        if (activeSceneNode.UseDefaultSunAngle == true) {
                             sunAngle = systemConfigurationManager.DefaultSunAngle;
                         } else {
-                            sunAngle = levelManager.GetActiveSceneNode().SunAngle;
+                            sunAngle = activeSceneNode.SunAngle;
                         }
                     }
-                    if (levelManager.GetActiveSceneNode().RotateSunColor == true) {
+                    if (activeSceneNode.SunRotationMode == SunRotationMode.Parent) {
+                        sunObject = RenderSettings.sun.transform.parent.gameObject;
+                        sunParticle = sunLight.GetComponent<ParticleSystem>();
+                    } else if (activeSceneNode.SunRotationMode == SunRotationMode.Sun) {
+                        sunObject = RenderSettings.sun.gameObject;
+                    }
+                    if (activeSceneNode.RotateSunColor == true) {
                         rotateSunColor = true;
-                        if (levelManager.GetActiveSceneNode().UseDefaultSunGradient == true) {
+                        if (activeSceneNode.UseDefaultSunGradient == true) {
                             sunGradient = systemConfigurationManager.DefaultSunGradient;
                         } else {
-                            sunGradient = levelManager.GetActiveSceneNode().SunGradient;
+                            sunGradient = activeSceneNode.SunGradient;
                         }
                     }
                     defaultSunIntensity = sunLight.intensity;
@@ -140,13 +149,13 @@ namespace AnyRPG {
                         skyboxMaterial = new Material(RenderSettings.skybox);
                         RenderSettings.skybox = skyboxMaterial;
 
-                        if (levelManager.GetActiveSceneNode().BlendedSkybox == true) {
+                        if (activeSceneNode.BlendedSkybox == true) {
                             blendSkybox = true;
                         }
-                        if (levelManager.GetActiveSceneNode().RotateSkybox == true) {
+                        if (activeSceneNode.RotateSkybox == true) {
                             rotateSkybox = true;
-                            skyboxRotationOffset = levelManager.GetActiveSceneNode().SkyboxRotationOffset;
-                            if (levelManager.GetActiveSceneNode().ReverseSkyboxRotation == true) {
+                            skyboxRotationOffset = activeSceneNode.SkyboxRotationOffset;
+                            if (activeSceneNode.ReverseSkyboxRotation == true) {
                                 skyboxRotationDirection = -1f;
                             }
                         }
@@ -171,12 +180,26 @@ namespace AnyRPG {
             inGameTime = startTime.AddSeconds((DateTime.Now - startTime).TotalSeconds * systemConfigurationManager.TimeOfDaySpeed);
             //Debug.Log("Time is " + inGameTime.ToShortTimeString());
 
-            if (nightSounds == true && inGameTime.TimeOfDay.TotalSeconds >= 10800 && inGameTime.TimeOfDay.TotalSeconds < 61800) {
-                nightSounds = false;
+            if (nightTime == true && inGameTime.TimeOfDay.TotalSeconds >= 10800 && inGameTime.TimeOfDay.TotalSeconds < 61800) {
+                nightTime = false;
+                ActivateDay();
                 PlayAmbientSounds();
-            } else if (nightSounds == false && (inGameTime.TimeOfDay.TotalSeconds < 10800 || inGameTime.TimeOfDay.TotalSeconds >= 61800)) {
-                nightSounds = true;
+            } else if (nightTime == false && (inGameTime.TimeOfDay.TotalSeconds < 10800 || inGameTime.TimeOfDay.TotalSeconds >= 61800)) {
+                nightTime = true;
+                ActivateNight();
                 PlayAmbientSounds();
+            }
+        }
+
+        private void ActivateDay() {
+            if (sunParticle != null) {
+                sunParticle.Play();
+            }
+        }
+
+        private void ActivateNight() {
+            if (sunParticle != null) {
+                sunParticle.Stop();
             }
         }
 
@@ -206,7 +229,9 @@ namespace AnyRPG {
             //sunSource.transform.localRotation = Quaternion.Euler(90f, ((float)inGameTime.TimeOfDay.TotalSeconds / 86400f) * 360f, 0f);
             //sunSource.transform.RotateAround(Vector3.zero, Vector3.right, ((float)inGameTime.TimeOfDay.TotalSeconds / 86400f) * 360f);
 
+            // adding 90 degrees to sun angle so 0 is directly down instead of directly forward on the z axis
             sunObject.transform.localRotation = Quaternion.Euler(sunAngle + 90f, 0f, 0f);
+
             sunObject.transform.localRotation *= Quaternion.AngleAxis(Mathf.Clamp((((float)inGameTime.TimeOfDay.TotalSeconds / 86400f) * 360f) -180f, -91f, 91f), Vector3.up);
         }
 
@@ -235,7 +260,7 @@ namespace AnyRPG {
         }
 
         public void PlayAmbientSounds(float fadeTime) {
-            if (levelManager.GetActiveSceneNode() != null) {
+            if (activeSceneNode != null) {
                 previousAudioClip = currentAudioClip;
 
                 if (playAmbientSounds == false) {
@@ -244,10 +269,10 @@ namespace AnyRPG {
                     if (weatherManager.CurrentAmbientSound != null) {
                         currentAudioClip = weatherManager.CurrentAmbientSound;
                     } else {
-                        if (nightSounds == true) {
-                            currentAudioClip = levelManager.GetActiveSceneNode().NightAmbientSound;
+                        if (nightTime == true) {
+                            currentAudioClip = activeSceneNode.NightAmbientSound;
                         } else {
-                            currentAudioClip = levelManager.GetActiveSceneNode().DayAmbientSound;
+                            currentAudioClip = activeSceneNode.DayAmbientSound;
                         }
                     }
                 }

@@ -50,6 +50,7 @@ MonoBehaviour:
   autoPlayCutsceneName: 
   environmentStateNames: []
   rotateSunDirection: 1
+  sunRotationMode: 1
   useDefaultSunAngle: 0
   sunAngle: -30
   rotateSunColor: 1

@@ -115,9 +115,9 @@ namespace AnyRPG {
 
         [Header("Time Of Day Settings")]
 
-        [Tooltip("If true, the sun source in the scene will be rotated according to the time of day.")]
+        [Tooltip("None = Do not rotate the sun.  Sun = Rotate the sun. Best if the skybox already includes a sun.  Parent = Rotate the gameobject that is the parent of the sun.  Best if the sun is a physical object in the scene.")]
         [SerializeField]
-        private bool rotateSunDirection = false;
+        private SunRotationMode sunRotationMode = SunRotationMode.None;
 
         [Tooltip("If true, the default sun angle from the System Configuration Manager will be used instead of the value below.")]
         [SerializeField]
@@ -152,7 +152,7 @@ namespace AnyRPG {
         [Range(0, 360)]
         private float skyboxRotationOffset = 0f;
 
-        [Tooltip("If true, the skybox will be rotated in the opposite of the default direction.")]
+        [Tooltip("If true, the skybox will be rotated in the opposite of the default direction.  This should be used for negative sun angles.")]
         [SerializeField]
         private bool reverseSkyboxRotation = false;
 
@@ -253,7 +253,6 @@ namespace AnyRPG {
         public string DayAmbientSoundsProfileName { set => dayAmbientSoundsProfile = value; }
         public string NightAmbientSoundsProfileName { set => nightAmbientSoundsProfile = value; }
         public int FootStepProfilesCount { get => footStepProfileReferences.Count; }
-        public bool RotateSunDirection { get => rotateSunDirection; set => rotateSunDirection = value; }
         public float SunAngle { get => sunAngle; set => sunAngle = value; }
         public bool RotateSunColor { get => rotateSunColor; set => rotateSunColor = value; }
         public Gradient SunGradient { get => sunGradient; set => sunGradient = value; }
@@ -272,6 +271,8 @@ namespace AnyRPG {
                 return Random.Range(minWeatherLength, maxWeatherLength);
             }
         }
+
+        public SunRotationMode SunRotationMode { get => sunRotationMode; set => sunRotationMode = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -426,5 +427,7 @@ namespace AnyRPG {
         }
 
     }
+
+    public enum SunRotationMode { None, Sun, Parent }
 
 }
