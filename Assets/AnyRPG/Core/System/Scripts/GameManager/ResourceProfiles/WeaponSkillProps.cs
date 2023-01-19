@@ -21,6 +21,13 @@ namespace AnyRPG {
         [SerializeField]
         private float attackSpeed = 2f;
 
+        [Tooltip("These abilities will be learned when the item is equipped")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(BaseAbility))]
+        private string autoAttackOverride = string.Empty;
+
+        private BaseAbilityProperties autoAttackOverrideReference = null;
+
         [Header("Weapon Effect Defaults")]
 
         [Tooltip("Ability effects to cast on the target when the weapon does damage from a standard (auto) attack")]
@@ -73,11 +80,21 @@ namespace AnyRPG {
         public List<AbilityAttachmentNode> AbilityAnimationObjectList { get => abilityAnimationObjectList; set => abilityAnimationObjectList = value; }
         public List<AbilityAttachmentNode> AbilityObjectList { get => abilityObjectList; set => abilityObjectList = value; }
         public float AttackSpeed { get => attackSpeed; set => attackSpeed = value; }
+        public BaseAbilityProperties AutoAttackOverride { get => autoAttackOverrideReference; set => autoAttackOverrideReference = value; }
 
         // methods
 
         public void SetupScriptableObjects(string ownerName, SystemGameManager systemGameManager) {
             Configure(systemGameManager);
+
+            if (autoAttackOverride != null && autoAttackOverride != string.Empty) {
+                BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(autoAttackOverride);
+                if (baseAbility != null) {
+                    autoAttackOverrideReference = baseAbility.AbilityProperties;
+                } else {
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + autoAttackOverride + " while inititalizing " + ownerName + ".  CHECK INSPECTOR");
+                }
+            }
 
             if (onHitEffects != null) {
                 foreach (string onHitEffectName in onHitEffects) {

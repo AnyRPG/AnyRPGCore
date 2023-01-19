@@ -206,24 +206,18 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public void CleanupCoroutines() {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.CleanupCoroutines()");
-            if (currentActionCoroutine != null) {
-                StopAction();
-                //unitController.StopCoroutine(currentActionCoroutine);
-                //EndActionCleanup();
-            }
 
-            //abilityCaster.StopAllCoroutines();
+            TryToStopAction();
         }
-
+        */
 
         public void HandleDie(CharacterStats _characterStats) {
             //Debug.Log(baseCharacter.gameObject.name + ".HandleDie()");
 
-            if (currentActionCoroutine != null) {
-                StopAction();
-            }
+            TryToStopAction();
         }
 
 
@@ -258,15 +252,6 @@ namespace AnyRPG {
                     currentCastPercent += (Time.deltaTime / animatedActionProperties.ActionCastingTime);
                 }
             }
-
-            /*
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(" + ability.DisplayName + "). nulling tag: " + startTime);
-            // set currentCast to null because it isn't automatically null until the next frame and we are about to do stuff which requires it to be null immediately
-            EndActionCleanup();
-
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast(): Cast Complete and can cast");
-            unitController.UnitAnimator.ClearAction();
-            */
 
             StopAction();
         }
@@ -378,17 +363,17 @@ namespace AnyRPG {
             */
 
             // actions cannot be performed while mounted
-            if (!PerformMountedCheck()) {
+            if (!NotMounted()) {
                 return false;
             }
 
             // actions cannot be performed while any cast is in progress
-            if (!PerformCastingCheck()) {
+            if (!NotCasting()) {
                 return false;
             }
 
             // actions cannot be performed while dead
-            if (!PerformLivenessCheck()) {
+            if (!NotDead()) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): cannot cast while dead!");
                 if (playerInitiated) {
                     OnCombatMessage("Cannot perform action " + animatedAction.DisplayName + " while dead!");
@@ -411,23 +396,21 @@ namespace AnyRPG {
             return true;
         }
 
-        private bool PerformMountedCheck() {
+        private bool NotMounted() {
             if (unitController.Mounted == true) {
                 return false;
             }
             return true;
         }
 
-        private bool PerformCastingCheck() {
-            if (unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility == true
-                || unitController.CharacterUnit.BaseCharacter.CharacterCombat.WaitingForAutoAttack == true
-                || unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.IsCasting) {
+        private bool NotCasting() {
+            if (unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.PerformingAnyAbility() == true) {
                 return false;
             }
             return true;
         }
 
-        private bool PerformLivenessCheck() {
+        private bool NotDead() {
             if (!unitController.CharacterUnit.BaseCharacter.CharacterStats.IsAlive) {
                 return false;
             }
@@ -467,35 +450,35 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleManualMovement()");
             
             // require some movement distance to prevent gravity while standing still from triggering this
-            if (unitController.ApparentVelocity > 0.1f && currentActionCoroutine != null) {
-                StopAction();
+            if (unitController.ApparentVelocity <= 0.1f) {
+                return;
             }
+
+            TryToStopAction();
         }
 
-        public void StopAction() {
-            //Debug.Log(unitController.gameObject.name + ".UnitActionManager.StopAction()");
-            bool stoppedAction = false;
-            if (currentActionCoroutine != null) {
-                unitController.StopCoroutine(currentActionCoroutine);
-                currentActionCoroutine = null;
-                EndActionCleanup();
-                stoppedAction = true;
-            }
-            if (stoppedAction) {
-                if (unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager != null) {
-                    DespawnActionObjects();
-                }
-                if (unitController.UnitAnimator != null) {
-                    unitController.UnitAnimator.ClearAction();
-                }
+        public void TryToStopAction() {
+            if (currentActionCoroutine == null) {
+                return;
             }
 
+            StopAction();
+        }
+
+        private void StopAction() {
+            //Debug.Log(unitController.gameObject.name + ".UnitActionManager.StopAction()");
+
+            unitController.StopCoroutine(currentActionCoroutine);
+            currentActionCoroutine = null;
+
+            EndActionCleanup();
+            DespawnActionObjects();
+
+            unitController.UnitAnimator?.ClearAction();
         }
 
         public void HandleCharacterUnitDespawn() {
-            if (currentActionCoroutine != null) {
-                StopAction();
-            }
+            TryToStopAction();
         }
 
 

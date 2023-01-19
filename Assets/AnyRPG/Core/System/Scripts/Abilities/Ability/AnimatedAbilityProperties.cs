@@ -28,9 +28,14 @@ namespace AnyRPG {
         [SerializeField]
         private bool useWeaponHitSound = false;
 
+        [Tooltip("If true, the character will play their attack voice clip when this ability is used.")]
+        [SerializeField]
+        private bool playAttackVoice = true;
+
 
         public bool IsAutoAttack { get => isAutoAttack; set => isAutoAttack = value; }
         public bool UseWeaponHitSound { get => useWeaponHitSound; set => useWeaponHitSound = value; }
+        public bool PlayAttackVoice { get => playAttackVoice; set => playAttackVoice = value; }
 
         /*
         public void GetAnimatedAbilityProperties(AnimatedAbility effect) {
@@ -239,7 +244,7 @@ namespace AnyRPG {
                     }
 
                 } else {
-                    Debug.LogError(DisplayName + "AnimatedAbility.Cast(): no animation clips returned");
+                    Debug.LogError(DisplayName + ".AnimatedAbility.Cast(): no animation clips returned");
                 }
                 return true;
             } else {
@@ -258,9 +263,6 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".AnimatedAbility.ProcessAbilityPrefabs()");
             //base.ProcessAbilityPrefabs(sourceCharacter);
             // do nothing intentionally, we will clean these up at the end of the ability
-        }
-
-        public void CleanupEventSubscriptions(BaseCharacter source) {
         }
 
         public bool HandleAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {

@@ -179,7 +179,7 @@ namespace AnyRPG {
         public void CancelCrafting() {
             //Debug.Log("CraftingUI.CancelCrafting()");
             craftingQueue.Clear();
-            playerManager.MyCharacter.CharacterAbilityManager.StopCasting();
+            playerManager.MyCharacter.CharacterAbilityManager.TryToStopCasting();
         }
 
     }

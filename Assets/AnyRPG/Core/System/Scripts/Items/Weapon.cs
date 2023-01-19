@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -80,6 +81,15 @@ namespace AnyRPG {
         [FormerlySerializedAs("damagePerSecond")]
         [SerializeField]
         protected float baseDamagePerSecond = 0f;
+
+        public BaseAbilityProperties AutoAttackOverride {
+            get {
+                if (weaponSkill != null) {
+                    return weaponSkill.WeaponSkillProps.AutoAttackOverride;
+                }
+                return null;
+            }
+        }
 
         public AnimationProfile AnimationProfile {
             get {
@@ -214,6 +224,8 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".Weapon.HandleEquip(" + characterCombat.BaseCharacter.CharacterName + ", " + equipmentSlotProfile.DisplayName + ")");
             base.HandleEquip(characterCombat, equipmentSlotProfile);
 
+            characterCombat.WeaponEquipped(this);
+
             if (OnHitEffectList != null && OnHitEffectList.Count > 0) {
                 characterCombat.AddOnHitEffects(OnHitEffectList);
             }
@@ -231,6 +243,8 @@ namespace AnyRPG {
 
         public override void HandleUnequip(CharacterCombat characterCombat, EquipmentSlotProfile equipmentSlotProfile) {
             base.HandleUnequip(characterCombat, equipmentSlotProfile);
+
+            characterCombat.WeaponUnequipped(this);
 
             if (OnHitEffectList != null && OnHitEffectList.Count > 0) {
                 foreach (AbilityEffectProperties abilityEffect in OnHitEffectList) {

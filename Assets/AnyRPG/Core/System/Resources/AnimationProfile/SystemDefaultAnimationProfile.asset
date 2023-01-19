@@ -32,6 +32,8 @@ MonoBehaviour:
     - {fileID: 7400000, guid: 7dcc341125f091a4c8132274da300cbc, type: 2}
     takeDamageClips:
     - {fileID: -660191200820960166, guid: 148dcbe7ee9e43d42bf052516ed28f95, type: 3}
+    actionClips:
+    - {fileID: 7400000, guid: 50804ba980f40b1489da06252969aea7, type: 2}
     idleClip: {fileID: 7400000, guid: 987fd3ff86cadf049aeba1e6d622aac8, type: 2}
     jumpClip: {fileID: 5539831331247536789, guid: d4eca31749363e44da997a0b48022861,
       type: 3}

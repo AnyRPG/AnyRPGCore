@@ -14,7 +14,7 @@ namespace AnyRPG {
         public void AttackHitEvent() {
             //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AttackHitEvent()");
             if (unitController?.CharacterUnit?.BaseCharacter?.CharacterCombat != null) {
-                unitController.CharacterUnit.BaseCharacter.CharacterCombat.AttackHit_AnimationEvent();
+                unitController.CharacterUnit.BaseCharacter.CharacterCombat.AttackHitAnimationEvent();
             }
         }
 

@@ -28,6 +28,9 @@ namespace AnyRPG {
         [SerializeField]
         private List<AnimationClip> takeDamageClips = new List<AnimationClip>();
 
+        [SerializeField]
+        private List<AnimationClip> actionClips = new List<AnimationClip>();
+
         [Header("Out Of Combat Movement")]
 
         [SerializeField]
@@ -287,6 +290,7 @@ namespace AnyRPG {
         public List<AnimationClip> AttackClips { get => attackClips; set => attackClips = value; }
         public List<AnimationClip> CastClips { get => castClips; set => castClips = value; }
         public List<AnimationClip> TakeDamageClips { get => takeDamageClips; set => takeDamageClips = value; }
+        public List<AnimationClip> ActionClips { get => actionClips; set => actionClips = value; }
         public AnimationClip IdleClip { get => idleClip; set => idleClip = value; }
         public AnimationClip JumpClip { get => jumpClip; set => jumpClip = value; }
         public AnimationClip FallClip { get => fallClip; set => fallClip = value; }

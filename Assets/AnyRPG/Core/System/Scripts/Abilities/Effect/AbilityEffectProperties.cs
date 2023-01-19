@@ -94,6 +94,8 @@ namespace AnyRPG {
         */
 
         public TargetProps GetTargetOptions(IAbilityCaster abilityCaster) {
+            //Debug.Log(DisplayName + ".AbilityEffectProperties.GetTargetOptions()");
+
             return targetOptions;
         }
 

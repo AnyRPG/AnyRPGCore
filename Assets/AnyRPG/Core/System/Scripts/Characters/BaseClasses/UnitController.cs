@@ -1682,10 +1682,8 @@ namespace AnyRPG {
         }
 
         private void ApplyControlLock() {
-            if (characterUnit?.BaseCharacter?.CharacterAbilityManager != null) {
-                characterUnit.BaseCharacter.CharacterAbilityManager.StopCasting();
-            }
-            unitActionManager.StopAction();
+            characterUnit?.BaseCharacter?.CharacterAbilityManager?.TryToStopAnyAbility();
+            unitActionManager.TryToStopAction();
         }
 
         public void FreezeCharacter() {

@@ -603,6 +603,8 @@ namespace AnyRPG {
         }
 
         public virtual string GetSummary() {
+            Debug.Log(DisplayName + ".BaseAbilityProperties.GetSummary()");
+
             return string.Format("{0}\n{1}", GetName(), GetDescription());
         }
 
@@ -797,9 +799,7 @@ namespace AnyRPG {
         }
 
         public virtual bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
-            if (playerInitiated) {
-                //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (sourceCharacter != null ? sourceCharacter.AbilityManager.Name : "null") + ")");
-            }
+            //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (sourceCharacter != null ? sourceCharacter.AbilityManager.Name : "null") + ")");
 
             if (useAbilityEffectTargetting == true
                 && GetAbilityEffects(sourceCharacter).Count > 0) {

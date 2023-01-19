@@ -258,8 +258,8 @@ namespace AnyRPG {
 
         public AudioClip CastingAudioClip { get => (castingAudioProfile == null ? null : castingAudioProfile.AudioClip); }
         //public bool AnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
-        public List<AnimationClip> AttackClips { get => (animationProfile != null ? animationProfile.AnimationProps.AttackClips : null); }
-        public List<AnimationClip> CastClips { get => (animationProfile != null ? animationProfile.AnimationProps.CastClips : new List<AnimationClip>()); }
+        //public List<AnimationClip> AttackClips { get => (animationProfile != null ? animationProfile.AnimationProps.AttackClips : null); }
+        //public List<AnimationClip> CastClips { get => (animationProfile != null ? animationProfile.AnimationProps.CastClips : new List<AnimationClip>()); }
         //public bool RequireOutOfCombat { get => requireOutOfCombat; set => requireOutOfCombat = value; }
         //public LineOfSightSourceLocation LineOfSightSourceLocation { get => LineOfSightSourceLocation.Caster; }
         //public TargetRangeSourceLocation TargetRangeSourceLocation { get => TargetRangeSourceLocation.Caster; }
@@ -273,9 +273,9 @@ namespace AnyRPG {
                 if (animationClip != null) {
                     return animationClip;
                 }
-                if (animationProfile?.AnimationProps?.CastClips != null
-                                    && animationProfile.AnimationProps.CastClips.Count > 0) {
-                    return animationProfile.AnimationProps.CastClips[0];
+                if (animationProfile?.AnimationProps?.ActionClips != null
+                                    && animationProfile.AnimationProps.ActionClips.Count > 0) {
+                    return animationProfile.AnimationProps.ActionClips[0];
                 }
                 return null;
             }
@@ -318,7 +318,7 @@ namespace AnyRPG {
                 if (audioProfile != null) {
                     castingAudioProfile = audioProfile;
                 } else {
-                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + castingAudioProfileName + " while inititalizing " + ownerName + ".  CHECK INSPECTOR");
+                    Debug.LogError("AnimatedAction.SetupScriptableObjects(): Could not find audio profile: " + castingAudioProfileName + " while inititalizing " + ownerName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -328,7 +328,7 @@ namespace AnyRPG {
                 if (tmpAnimationProfile != null) {
                     animationProfile = tmpAnimationProfile;
                 } else {
-                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find animation profile: " + animationProfileName + " while inititalizing " + ownerName + ".  CHECK INSPECTOR");
+                    Debug.LogError("AnimatedAction.SetupScriptableObjects(): Could not find animation profile: " + animationProfileName + " while inititalizing " + ownerName + ".  CHECK INSPECTOR");
                 }
             }
 

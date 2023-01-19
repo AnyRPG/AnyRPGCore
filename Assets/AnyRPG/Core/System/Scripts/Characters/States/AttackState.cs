@@ -28,21 +28,9 @@ namespace AnyRPG {
                 return;
             }
 
-            if (baseController.CharacterUnit.BaseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility == true) {
+            if (baseController.CharacterUnit.BaseCharacter.CharacterAbilityManager.PerformingAnyAbility() == true) {
                 //Debug.Log(baseController.gameObject.name + ".AttackState.Update() WaitingForAnimatedAbility is true");
-                // nothing to do, animated ability in progress
-                return;
-            }
-
-            if (baseController.CharacterUnit.BaseCharacter.CharacterCombat.WaitingForAutoAttack == true) {
-                //Debug.Log(baseController.gameObject.name + ".AttackState.Update() WaitingForAutoAttack == true");
-                // nothing to do, auto-attack in progress
-                return;
-            }
-
-            if (baseController.CharacterUnit.BaseCharacter.CharacterAbilityManager.IsCasting == true || baseController.CharacterUnit.BaseCharacter.CharacterAbilityManager.CurrentCastCoroutine != null) {
-                //Debug.Log(baseController.gameObject.name + ".AttackState.Update() CurrentCast != null || IsCasting == true");
-                // nothing to do, cast in progress
+                // nothing to do, other attack or ability in progress
                 return;
             }
 
