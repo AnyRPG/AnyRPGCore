@@ -28,6 +28,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool useWeaponHitSound = false;
 
+        [Tooltip("If true, the choice of whether or not to play the attack voice is controlled by the weapon skill.")]
+        [SerializeField]
+        private bool useWeaponSkillAttackVoiceSetting = true;
+
         [Tooltip("If true, the character will play their attack voice clip when this ability is used.")]
         [SerializeField]
         private bool playAttackVoice = true;
@@ -35,7 +39,7 @@ namespace AnyRPG {
 
         public bool IsAutoAttack { get => isAutoAttack; set => isAutoAttack = value; }
         public bool UseWeaponHitSound { get => useWeaponHitSound; set => useWeaponHitSound = value; }
-        public bool PlayAttackVoice { get => playAttackVoice; set => playAttackVoice = value; }
+        public bool UseWeaponSkillAttackVoiceSetting { get => useWeaponSkillAttackVoiceSetting; set => useWeaponSkillAttackVoiceSetting = value; }
 
         /*
         public void GetAnimatedAbilityProperties(AnimatedAbility effect) {
@@ -191,6 +195,13 @@ namespace AnyRPG {
             return base.GetHoldableObjectList(abilityCaster);
         }
 
+        public bool PlayAttackVoice(CharacterCombat characterCombat) {
+            if (useWeaponSkillAttackVoiceSetting == true) {
+                return characterCombat.GetWeaponSkillAttackVoiceSetting();
+            }
+
+            return playAttackVoice;
+        }
 
         /// <summary>
         /// weapon hit sound

@@ -232,9 +232,14 @@ namespace AnyRPG {
             if (DefaultHitEffectList != null && DefaultHitEffectList.Count > 0) {
                 characterCombat.AddDefaultHitEffects(DefaultHitEffectList);
             }
-            if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
-                if (DefaultHitSoundEffects != null) {
-                    characterCombat.AddDefaultHitSoundEffects(DefaultHitSoundEffects);
+            if (equipmentSlotProfile != null) {
+                if (equipmentSlotProfile.MainWeaponSlot == true) {
+                    characterCombat.SetMainWeaponSkill(weaponSkill);
+                }
+                if (equipmentSlotProfile.SetOnHitAudio == true) {
+                    if (DefaultHitSoundEffects != null) {
+                        characterCombat.AddDefaultHitSoundEffects(DefaultHitSoundEffects);
+                    }
                 }
             }
 
@@ -256,9 +261,14 @@ namespace AnyRPG {
                     characterCombat.RemoveDefaultHitEffect(abilityEffect);
                 }
             }
-            if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
-                //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): clearing default hit effects");
-                characterCombat.ClearDefaultHitSoundEffects();
+            if (equipmentSlotProfile != null) {
+                if (equipmentSlotProfile.MainWeaponSlot == true) {
+                    characterCombat.SetMainWeaponSkill(null);
+                }
+                if (equipmentSlotProfile.SetOnHitAudio == true) {
+                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): clearing default hit effects");
+                    characterCombat.ClearDefaultHitSoundEffects();
+                }
             }
             characterCombat.SetAttackSpeed();
         }

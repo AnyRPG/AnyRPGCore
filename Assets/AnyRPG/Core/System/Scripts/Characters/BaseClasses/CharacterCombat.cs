@@ -41,6 +41,9 @@ namespace AnyRPG {
         // list of on hit effects to cast on weapon hit from currently equipped weapons
         protected List<AbilityEffectProperties> onHitEffects = new List<AbilityEffectProperties>();
 
+        // the weapon skill from the weapon equipped in the main weapon slot
+        protected WeaponSkill mainWeaponSkill = null;
+
         protected AggroTable aggroTable = null;
 
         // this is what the current weapon defaults to
@@ -738,6 +741,21 @@ namespace AnyRPG {
                 aggroTable.ClearTable();
                 DropCombat();
             }
+        }
+
+        public virtual bool GetWeaponSkillAttackVoiceSetting() {
+            if (mainWeaponSkill != null) {
+                return mainWeaponSkill.WeaponSkillProps.PlayAttackVoice;
+            }
+            return false;
+        }
+
+        public virtual AudioClip GetWeaponSkillAnimationHitSound() {
+            return mainWeaponSkill?.WeaponSkillProps.AnimationEventAudioProfile?.RandomAudioClip;
+        }
+
+        public virtual void SetMainWeaponSkill(WeaponSkill weaponSkill) {
+            this.mainWeaponSkill = weaponSkill;
         }
 
         public virtual void AddOnHitEffects(List<AbilityEffectProperties> abilityEffectProperties) {

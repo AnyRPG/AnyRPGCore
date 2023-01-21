@@ -73,7 +73,7 @@ namespace AnyRPG {
         }
 
         public void NotifyOnAttack() {
-            Debug.Log(unitController.gameObject.name + ".UnitEventController.NotifyOnAttack()");
+            //Debug.Log(unitController.gameObject.name + ".UnitEventController.NotifyOnAttack()");
             OnAttack();
         }
 

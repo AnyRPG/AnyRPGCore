@@ -603,7 +603,7 @@ namespace AnyRPG {
         }
 
         public virtual string GetSummary() {
-            Debug.Log(DisplayName + ".BaseAbilityProperties.GetSummary()");
+            //Debug.Log(DisplayName + ".BaseAbilityProperties.GetSummary()");
 
             return string.Format("{0}\n{1}", GetName(), GetDescription());
         }
@@ -692,7 +692,15 @@ namespace AnyRPG {
             return baseResourceCost;
         }
 
-        public virtual AudioClip GetAnimationHitSound() {
+        public virtual AudioClip GetAnimationEventSound(CharacterCombat characterCombat) {
+            AudioClip characterClip = characterCombat.GetWeaponSkillAnimationHitSound();
+            if (characterClip != null) {
+                return characterClip;
+            }
+            return GetAnimationEventSound();
+        }
+
+        public virtual AudioClip GetAnimationEventSound() {
             return AnimationHitAudioClip;
         }
 

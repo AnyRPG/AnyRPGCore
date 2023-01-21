@@ -60,6 +60,18 @@ namespace AnyRPG {
 
         private List<AudioClip> onHitSoundEffects = new List<AudioClip>();
 
+        [Tooltip("If the animation has StartAudio() events while it is playing, this audio profile will be played in response to those events.")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
+        protected string animationEventAudioProfile;
+
+        protected AudioProfile animationEventAudioProfileRef;
+
+        [Tooltip("If true, the character will play their attack voice clip when animated abilities are used.")]
+        [SerializeField]
+        private bool playAttackVoice = true;
+
+
         [Header("Ability Prefab Defaults")]
 
         [Tooltip("Physical prefabs to attach to bones on the character unit when this weapon is being animated during an attack.  This could be arrows, special spell or glow effects, etc")]
@@ -77,10 +89,12 @@ namespace AnyRPG {
         public List<AbilityEffectProperties> OnHitEffectList { get => onHitEffectList; set => onHitEffectList = value; }
         public AnimationProfile AnimationProfile { get => animationProfile; set => animationProfile = value; }
         public List<AudioClip> DefaultHitSoundEffects { get => onHitSoundEffects; set => onHitSoundEffects = value; }
+        public bool PlayAttackVoice { get => playAttackVoice; set => playAttackVoice = value; }
         public List<AbilityAttachmentNode> AbilityAnimationObjectList { get => abilityAnimationObjectList; set => abilityAnimationObjectList = value; }
         public List<AbilityAttachmentNode> AbilityObjectList { get => abilityObjectList; set => abilityObjectList = value; }
         public float AttackSpeed { get => attackSpeed; set => attackSpeed = value; }
         public BaseAbilityProperties AutoAttackOverride { get => autoAttackOverrideReference; set => autoAttackOverrideReference = value; }
+        public AudioProfile AnimationEventAudioProfile { get => animationEventAudioProfileRef; set => animationEventAudioProfileRef = value; }
 
         // methods
 
@@ -103,7 +117,7 @@ namespace AnyRPG {
                         if (abilityEffect != null) {
                             onHitEffectList.Add(abilityEffect.AbilityEffectProperties);
                         } else {
-                            Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): Could not find ability effect : " + onHitEffectName + " while inititalizing.  CHECK INSPECTOR");
+                            Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): Could not find ability effect : " + onHitEffectName + " while inititalizing " + ownerName + ".  CHECK INSPECTOR");
                         }
                     } else {
                         Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): null or empty on hit effect found while inititalizing.  CHECK INSPECTOR");
@@ -118,7 +132,7 @@ namespace AnyRPG {
                         if (abilityEffect != null) {
                             defaultHitEffectList.Add(abilityEffect.AbilityEffectProperties);
                         } else {
-                            Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): Could not find ability effect : " + defaultHitEffectName + " while inititalizing.  CHECK INSPECTOR");
+                            Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): Could not find ability effect : " + defaultHitEffectName + " while inititalizing " + ownerName + ".  CHECK INSPECTOR");
                         }
                     } else {
                         Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): null or empty default hit effect found while inititalizing.  CHECK INSPECTOR");
@@ -131,7 +145,7 @@ namespace AnyRPG {
                 if (tmpAnimationProfile != null) {
                     animationProfile = tmpAnimationProfile;
                 } else {
-                    Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): Could not find attack animation profile : " + animationProfileName + " while inititalizing.  CHECK INSPECTOR");
+                    Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): Could not find attack animation profile : " + animationProfileName + " while inititalizing " + ownerName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -142,11 +156,20 @@ namespace AnyRPG {
                         if (audioProfile != null) {
                             onHitSoundEffects.AddRange(audioProfile.AudioClips);
                         } else {
-                            Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): Could not find audio profile : " + defaultHitAudioProfile + " while inititalizing.  CHECK INSPECTOR");
+                            Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): Could not find audio profile : " + defaultHitAudioProfile + " while inititalizing " + ownerName + ".  CHECK INSPECTOR");
                         }
                     } else {
                         Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): null or empty default audio hit profile found while inititalizing.  CHECK INSPECTOR");
                     }
+                }
+            }
+
+            if (animationEventAudioProfile != null && animationEventAudioProfile != string.Empty) {
+                AudioProfile audioProfile = systemDataFactory.GetResource<AudioProfile>(animationEventAudioProfile);
+                if (audioProfile != null) {
+                    animationEventAudioProfileRef = audioProfile;
+                } else {
+                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + animationEventAudioProfile + " while inititalizing " + ownerName + ".  CHECK INSPECTOR");
                 }
             }
 
