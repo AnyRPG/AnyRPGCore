@@ -81,7 +81,8 @@ namespace AnyRPG {
         [FormerlySerializedAs("damagePerSecond")]
         [SerializeField]
         protected float baseDamagePerSecond = 0f;
-
+        
+        /*
         public BaseAbilityProperties AutoAttackOverride {
             get {
                 if (weaponSkill != null) {
@@ -90,6 +91,7 @@ namespace AnyRPG {
                 return null;
             }
         }
+        */
 
         public AnimationProfile AnimationProfile {
             get {

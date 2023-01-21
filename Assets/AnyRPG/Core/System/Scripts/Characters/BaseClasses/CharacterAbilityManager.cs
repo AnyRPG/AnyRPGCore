@@ -48,7 +48,7 @@ namespace AnyRPG {
         protected BaseAbilityProperties autoAttackAbility = null;
 
         // an auto-attack override provided by the currently equipped weapon
-        protected BaseAbilityProperties autoAttackOverride = null;
+        //protected BaseAbilityProperties autoAttackOverride = null;
 
         // waiting for the animator to let us know we can hit again
         protected bool performingAutoAttack = false;
@@ -823,16 +823,21 @@ namespace AnyRPG {
             UpdateEquipmentTraits(newItem);
         }
 
+
         public void WeaponEquipped(Weapon weapon) {
+            /*
             if (weapon != null && weapon.AutoAttackOverride != null) {
                 autoAttackOverride = weapon.AutoAttackOverride;
             }
+            */
         }
 
         public void WeaponUnequipped(Weapon weapon) {
+            /*
             if (weapon != null && weapon.AutoAttackOverride != null) {
                 autoAttackOverride = null;
             }
+            */
         }
 
         public void UpdateEquipmentTraits(Equipment equipment) {

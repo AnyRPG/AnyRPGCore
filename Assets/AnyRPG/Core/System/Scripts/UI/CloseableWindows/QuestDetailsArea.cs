@@ -95,6 +95,8 @@ namespace AnyRPG {
         }
 
         public void SetOwner(CloseableWindowContents closeableWindowContents) {
+            Debug.Log("QuestDetailsArea.SetOwner()");
+
             owner = closeableWindowContents;
         }
 
@@ -191,7 +193,7 @@ namespace AnyRPG {
 
 
         public void ShowDescription(Quest quest) {
-            //Debug.Log("QuestDetailsArea.ShowDescription()");
+            Debug.Log("QuestDetailsArea.ShowDescription(" + (quest == null ? "null" : quest.DisplayName) + ")");
 
             ClearDescription();
 
