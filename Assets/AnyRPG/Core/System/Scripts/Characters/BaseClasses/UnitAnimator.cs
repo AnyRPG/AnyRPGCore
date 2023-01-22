@@ -533,7 +533,8 @@ namespace AnyRPG {
 
         // non combat action
         public void HandleAction(AnimationClip animationClip, AnimatedActionProperties animatedActionProperties) {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility()");
+            //Debug.Log(unitController.gameObject.name + ".UnitAnimator.HandleAction()");
+
             if (animator == null) {
                 return;
             }
@@ -694,7 +695,8 @@ namespace AnyRPG {
         }
 
         public void SetActing(bool varValue, bool swapAnimator = true, float animationSpeed = 1f) {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.SetCasting(" + varValue + ")");
+            //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetActing(" + varValue + ")");
+
             if (animator == null) {
                 return;
             }
@@ -708,7 +710,7 @@ namespace AnyRPG {
             }
 
             if (varValue == true) {
-                SetTrigger("ActingTrigger");
+                SetTrigger("ActionTrigger");
             }
             if (varValue == false) {
                 OnEndCasting(swapAnimator);

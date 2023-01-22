@@ -201,9 +201,13 @@ namespace AnyRPG {
         */
 
         public void PerformActionAnimation(AnimationClip animationClip, AnimatedActionProperties animatedActionProperties) {
-            if (animationClip != null) {
-                unitController.UnitAnimator.HandleAction(animationClip, animatedActionProperties);
+            //Debug.Log(unitController.gameObject.name + ".PerformActionAnimation(" + (animationClip == null ? "null" : animationClip.name) + ")");
+
+            if (animationClip == null) {
+                return;
             }
+
+            unitController.UnitAnimator.HandleAction(animationClip, animatedActionProperties);
         }
 
         /*
@@ -290,7 +294,8 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="animatedAction"></param>
         public bool BeginAction(AnimatedActionProperties animatedActionProperties, bool playerInitiated = false) {
-            //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (ability == null ? "null" : ability.DisplayName) + ")");
+            //Debug.Log(unitController.gameObject.name + ".UnitActionManager.BeginAction(" + (animatedActionProperties == null ? "null" : animatedActionProperties.DisplayName) + ")");
+
             if (animatedActionProperties == null) {
                 //Debug.Log("CharacterAbilityManager.BeginAbility(): ability is null! Exiting!");
                 return false;
