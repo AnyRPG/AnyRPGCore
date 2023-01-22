@@ -1328,7 +1328,11 @@ namespace AnyRPG {
             //Debug.Log(abilityCaster.gameObject.name + ".CharacterAbilitymanager.EndCastCleanup()");
             base.EndCastCleanup();
             if (baseCharacter.UnitController != null) {
+                // stop any casting audio clip
                 baseCharacter.UnitController.UnitComponentController.StopCastSound();
+
+                //stop any animation event audio clip
+                baseCharacter.UnitController.UnitComponentController.StopEffectSound();
             }
         }
 

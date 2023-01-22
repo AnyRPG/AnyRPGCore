@@ -53,7 +53,7 @@ namespace AnyRPG {
         }
 
         public void PlayEffect(AudioClip audioClip, bool loop) {
-            //Debug.Log(gameObject.name + ".UnitAudioEmitter.PlayEffect(" + (audioClip == null ? "null" : audioClip.name) + ")");
+            //Debug.Log(gameObject.name + ".UnitAudioEmitter.PlayEffect(" + (audioClip == null ? "null" : audioClip.name) + ", " + loop + ")");
             if (audioClip == null) {
                 return;
             }
