@@ -57,6 +57,10 @@ namespace AnyRPG {
         private void OnTriggerEnter(Collider collider) {
             //Debug.Log(interactable.gameObject.name + ".InteractableRange.OnTriggerEnter(" + collider.gameObject.name + ") count : " + inRangeColliders.Count);
 
+            if (playerManager.ActiveUnitController == null) {
+                return;
+            }
+
             if (collider.gameObject == playerManager.ActiveUnitController.gameObject && inRangeColliders.Contains(collider.gameObject) == false) {
                 inRangeColliders.Add(collider.gameObject);
 
