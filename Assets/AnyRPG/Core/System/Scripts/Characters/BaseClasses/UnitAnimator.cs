@@ -562,7 +562,7 @@ namespace AnyRPG {
             if (ParameterExists("Casting") && animator.GetBool("Casting") == true) {
                 return true;
             }
-            if (ParameterExists("Casting") && animator.GetBool("Casting") == true) {
+            if (ParameterExists("Attacking") && animator.GetBool("Attacking") == true) {
                 return true;
             }
             return false;
