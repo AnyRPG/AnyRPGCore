@@ -24,7 +24,7 @@ namespace AnyRPG {
         [SerializeField]
         private bool randomPrefabs = false;
 
-        [Tooltip("Physical prefabs to attach to bones on the character unit when this weapon is being used during an attack.  This could be arrows, special spell or glow effects, etc")]
+        [Tooltip("Prefabs to spawn when this effect is cast")]
         [SerializeField]
         private List<AbilityAttachmentNode> abilityObjectList = new List<AbilityAttachmentNode>();
 

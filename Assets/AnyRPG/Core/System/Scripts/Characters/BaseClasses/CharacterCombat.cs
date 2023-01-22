@@ -35,6 +35,9 @@ namespace AnyRPG {
         // components
         protected BaseCharacter baseCharacter;
 
+        // track equipped weapons for managing default hit effects
+        protected List<Weapon> equippedWeapons = new List<Weapon>();
+
         // list of on hit effects to cast on weapon hit if the weapon hit is an auto attack
         private List<AbilityEffectProperties> defaultHitEffects = new List<AbilityEffectProperties>();
 
@@ -773,6 +776,14 @@ namespace AnyRPG {
             defaultHitEffects.AddRange(abilityEffectProperties);
         }
 
+        public virtual void ClearUnitDefaultHitEffects() {
+            if (baseCharacter.UnitController?.UnitProfile != null) {
+                foreach (AbilityEffectProperties abilityEffectProperties in baseCharacter.UnitController?.UnitProfile.DefaultHitEffectList) {
+                    RemoveDefaultHitEffect(abilityEffectProperties);
+                }
+            }
+        }
+
         public virtual void RemoveDefaultHitEffect(AbilityEffectProperties abilityEffect) {
             if (defaultHitEffects.Contains(abilityEffect)) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): olditem (" + oldItem.DisplayName + ") was weapon and removing hit effect: " + abilityEffect.DisplayName);
@@ -807,12 +818,66 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void WeaponEquipped(Weapon weapon) {
+        public virtual void WeaponEquipped(Weapon weapon, EquipmentSlotProfile equipmentSlotProfile) {
+            
+            equippedWeapons.Add(weapon);
+            ClearUnitDefaultHitEffects();
             baseCharacter.CharacterAbilityManager.WeaponEquipped(weapon);
+
+            if (weapon.OnHitEffectList.Count > 0) {
+                AddOnHitEffects(weapon.OnHitEffectList);
+            }
+            if (weapon.DefaultHitEffectList.Count > 0) {
+                AddDefaultHitEffects(weapon.DefaultHitEffectList);
+            }
+            if (equipmentSlotProfile != null) {
+                if (equipmentSlotProfile.MainWeaponSlot == true) {
+                    SetMainWeaponSkill(weapon.WeaponSkill);
+                }
+                if (equipmentSlotProfile.SetOnHitAudio == true) {
+                    if (weapon.DefaultHitSoundEffects != null) {
+                        AddDefaultHitSoundEffects(weapon.DefaultHitSoundEffects);
+                    }
+                }
+            }
+
+            SetAttackSpeed();
         }
 
-        public virtual void WeaponUnequipped(Weapon weapon) {
+        public virtual void AddUnitProfileHitEffects() {
+            if (equippedWeapons.Count == 0 && baseCharacter.UnitProfile != null) {
+                AddDefaultHitEffects(baseCharacter.UnitProfile.DefaultHitEffectList);
+            }
+        }
+
+        public virtual void WeaponUnequipped(Weapon weapon, EquipmentSlotProfile equipmentSlotProfile) {
+            if (equippedWeapons.Contains(weapon)) {
+                equippedWeapons.Remove(weapon);
+            }
+            AddUnitProfileHitEffects();
             baseCharacter.CharacterAbilityManager.WeaponUnequipped(weapon);
+
+            if (weapon.OnHitEffectList != null && weapon.OnHitEffectList.Count > 0) {
+                foreach (AbilityEffectProperties abilityEffect in weapon.OnHitEffectList) {
+                    RemoveOnHitEffect(abilityEffect);
+                }
+            }
+            if (weapon.DefaultHitEffectList != null && weapon.DefaultHitEffectList.Count > 0) {
+                foreach (AbilityEffectProperties abilityEffect in weapon.DefaultHitEffectList) {
+                    RemoveDefaultHitEffect(abilityEffect);
+                }
+            }
+            if (equipmentSlotProfile != null) {
+                if (equipmentSlotProfile.MainWeaponSlot == true) {
+                    SetMainWeaponSkill(null);
+                }
+                if (equipmentSlotProfile.SetOnHitAudio == true) {
+                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): clearing default hit effects");
+                    ClearDefaultHitSoundEffects();
+                }
+            }
+
+            SetAttackSpeed();
         }
 
         public virtual void SetAttackSpeed() {

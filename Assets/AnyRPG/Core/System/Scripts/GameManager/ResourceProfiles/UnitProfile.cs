@@ -163,6 +163,13 @@ namespace AnyRPG {
         // reference to the actual combat strategy
         private CombatStrategy combatStrategy;
 
+        [Tooltip("Ability effects to cast on the target when the performing an unarmed standard (auto) attack")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
+        private List<string> defaultHitEffects = new List<string>();
+
+        private List<AbilityEffectProperties> defaultHitEffectList = new List<AbilityEffectProperties>();
+
         [Header("Stats and Scaling")]
 
         [Tooltip("Stats available to this unit, in addition to the stats defined at the system level that all character use")]
@@ -378,6 +385,7 @@ namespace AnyRPG {
         public bool AutomaticPrefabProfile { get => automaticPrefabProfile; set => automaticPrefabProfile = value; }
         public List<string> MovementAudioProfileNames { get => movementAudioProfileNames; set => movementAudioProfileNames = value; }
         public bool FaceInteractionTarget { get => faceInteractionTarget; set => faceInteractionTarget = value; }
+        public List<AbilityEffectProperties> DefaultHitEffectList { get => defaultHitEffectList; set => defaultHitEffectList = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -519,7 +527,21 @@ namespace AnyRPG {
                 } else {
                     Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find combat strategy : " + combatStrategyName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
+            }
 
+            if (defaultHitEffects != null) {
+                foreach (string defaultHitEffectName in defaultHitEffects) {
+                    if (defaultHitEffectName != null && defaultHitEffectName != string.Empty) {
+                        AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(defaultHitEffectName);
+                        if (abilityEffect != null) {
+                            defaultHitEffectList.Add(abilityEffect.AbilityEffectProperties);
+                        } else {
+                            Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find ability effect : " + defaultHitEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        }
+                    } else {
+                        Debug.LogError("UnitProfile.SetupScriptableObjects(): null or empty default hit effect found while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    }
+                }
             }
 
             if (faction == null && factionName != null && factionName != string.Empty) {

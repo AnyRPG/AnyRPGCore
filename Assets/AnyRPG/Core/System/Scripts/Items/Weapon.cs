@@ -226,53 +226,13 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".Weapon.HandleEquip(" + characterCombat.BaseCharacter.CharacterName + ", " + equipmentSlotProfile.DisplayName + ")");
             base.HandleEquip(characterCombat, equipmentSlotProfile);
 
-            characterCombat.WeaponEquipped(this);
-
-            if (OnHitEffectList != null && OnHitEffectList.Count > 0) {
-                characterCombat.AddOnHitEffects(OnHitEffectList);
-            }
-            if (DefaultHitEffectList != null && DefaultHitEffectList.Count > 0) {
-                characterCombat.AddDefaultHitEffects(DefaultHitEffectList);
-            }
-            if (equipmentSlotProfile != null) {
-                if (equipmentSlotProfile.MainWeaponSlot == true) {
-                    characterCombat.SetMainWeaponSkill(weaponSkill);
-                }
-                if (equipmentSlotProfile.SetOnHitAudio == true) {
-                    if (DefaultHitSoundEffects != null) {
-                        characterCombat.AddDefaultHitSoundEffects(DefaultHitSoundEffects);
-                    }
-                }
-            }
-
-            characterCombat.SetAttackSpeed();
+            characterCombat.WeaponEquipped(this, equipmentSlotProfile);
         }
 
         public override void HandleUnequip(CharacterCombat characterCombat, EquipmentSlotProfile equipmentSlotProfile) {
             base.HandleUnequip(characterCombat, equipmentSlotProfile);
 
-            characterCombat.WeaponUnequipped(this);
-
-            if (OnHitEffectList != null && OnHitEffectList.Count > 0) {
-                foreach (AbilityEffectProperties abilityEffect in OnHitEffectList) {
-                    characterCombat.RemoveOnHitEffect(abilityEffect);
-                }
-            }
-            if (DefaultHitEffectList != null && DefaultHitEffectList.Count > 0) {
-                foreach (AbilityEffectProperties abilityEffect in DefaultHitEffectList) {
-                    characterCombat.RemoveDefaultHitEffect(abilityEffect);
-                }
-            }
-            if (equipmentSlotProfile != null) {
-                if (equipmentSlotProfile.MainWeaponSlot == true) {
-                    characterCombat.SetMainWeaponSkill(null);
-                }
-                if (equipmentSlotProfile.SetOnHitAudio == true) {
-                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): clearing default hit effects");
-                    characterCombat.ClearDefaultHitSoundEffects();
-                }
-            }
-            characterCombat.SetAttackSpeed();
+            characterCombat.WeaponUnequipped(this, equipmentSlotProfile);
         }
 
         public override void HandleEquip(CharacterEquipmentManager characterEquipmentManager) {
