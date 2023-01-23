@@ -10,6 +10,8 @@ namespace AnyRPG {
     [System.Serializable]
     public class StatusEffectProperties : LengthEffectProperties, ILearnable {
 
+        public event System.Action OnApply = delegate { };
+
         [Header("Status Effect")]
 
         [SerializeField]
@@ -519,6 +521,10 @@ namespace AnyRPG {
             }
             */
 
+        }
+
+        public void NotifyOnApply() {
+            OnApply();
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {

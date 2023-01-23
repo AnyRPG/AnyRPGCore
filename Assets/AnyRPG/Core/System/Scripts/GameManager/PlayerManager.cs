@@ -724,7 +724,6 @@ namespace AnyRPG {
         public void HandlePerformAbility(BaseAbilityProperties ability) {
             systemEventManager.NotifyOnAbilityUsed(ability);
             ability.NotifyOnAbilityUsed();
-
         }
 
         public void HandleCombatCheckFail(BaseAbilityProperties ability) {
@@ -802,13 +801,19 @@ namespace AnyRPG {
         }
 
         public void HandleStatusEffectAdd(StatusEffectNode statusEffectNode) {
-            if (statusEffectNode != null && statusEffectNode.StatusEffect.ClassTrait == false && activeUnitController != null) {
+            if (statusEffectNode == null) {
+                return;
+            }
+
+            if (statusEffectNode.StatusEffect.ClassTrait == false && activeUnitController != null) {
                 if (statusEffectNode.AbilityEffectContext.savedEffect == false) {
                     if (activeUnitController.CharacterUnit != null) {
                         combatTextManager.SpawnCombatText(activeUnitController, statusEffectNode.StatusEffect, true);
                     }
                 }
             }
+
+            statusEffectNode.StatusEffect.NotifyOnApply();
         }
 
         public void HandleGainXP(int xp) {
