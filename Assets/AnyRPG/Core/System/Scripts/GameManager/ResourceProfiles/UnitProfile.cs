@@ -163,6 +163,13 @@ namespace AnyRPG {
         // reference to the actual combat strategy
         private CombatStrategy combatStrategy;
 
+        [Tooltip("Ability effects to cast on the target when the performing an unarmed standard (auto) attack")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
+        private List<string> defaultHitEffects = new List<string>();
+
+        private List<AbilityEffectProperties> defaultHitEffectList = new List<AbilityEffectProperties>();
+
         [Header("Stats and Scaling")]
 
         [Tooltip("Stats available to this unit, in addition to the stats defined at the system level that all character use")]
@@ -202,6 +209,10 @@ namespace AnyRPG {
         [Tooltip("If false, the unit will not have the Nav Mesh Agent enabled, and gravity will be disabled.")]
         [SerializeField]
         private bool isMobile = true;
+
+        [Tooltip("None = Do not play footsteps.  Unit = Play the footsteps configured below.  Environment = Play the footsteps based on the terrain. UnitFallback = Try environment, then fallback to Unit if no environment sound available.")]
+        [SerializeField]
+        private FootstepType footstepType = FootstepType.UnitFallback;
 
         [Tooltip("If true, the movement sounds are played on footstep hit instead of in a continuous track.")]
         [SerializeField]
@@ -312,6 +323,7 @@ namespace AnyRPG {
         public BaseAbilityProperties DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
         public bool IsUMAUnit { get => isUMAUnit; set => isUMAUnit = value; }
         public bool IsPet { get => isPet; set => isPet = value; }
+        public FootstepType FootstepType { get => footstepType; set => footstepType = value; }
         public bool PlayOnFootstep { get => playOnFootstep; set => playOnFootstep = value; }
         public List<AudioProfile> MovementAudioProfiles { get => movementAudioProfiles; set => movementAudioProfiles = value; }
         public List<StatScalingNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
@@ -373,6 +385,7 @@ namespace AnyRPG {
         public bool AutomaticPrefabProfile { get => automaticPrefabProfile; set => automaticPrefabProfile = value; }
         public List<string> MovementAudioProfileNames { get => movementAudioProfileNames; set => movementAudioProfileNames = value; }
         public bool FaceInteractionTarget { get => faceInteractionTarget; set => faceInteractionTarget = value; }
+        public List<AbilityEffectProperties> DefaultHitEffectList { get => defaultHitEffectList; set => defaultHitEffectList = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -514,7 +527,21 @@ namespace AnyRPG {
                 } else {
                     Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find combat strategy : " + combatStrategyName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
+            }
 
+            if (defaultHitEffects != null) {
+                foreach (string defaultHitEffectName in defaultHitEffects) {
+                    if (defaultHitEffectName != null && defaultHitEffectName != string.Empty) {
+                        AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(defaultHitEffectName);
+                        if (abilityEffect != null) {
+                            defaultHitEffectList.Add(abilityEffect.AbilityEffectProperties);
+                        } else {
+                            Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find ability effect : " + defaultHitEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        }
+                    } else {
+                        Debug.LogError("UnitProfile.SetupScriptableObjects(): null or empty default hit effect found while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    }
+                }
             }
 
             if (faction == null && factionName != null && factionName != string.Empty) {
@@ -617,4 +644,6 @@ namespace AnyRPG {
         }
 
     }
+
+    public enum FootstepType { None, Unit, Environment, UnitFallback, Both }
 }

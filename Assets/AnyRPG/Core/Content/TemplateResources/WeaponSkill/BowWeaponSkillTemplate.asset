@@ -29,6 +29,8 @@ MonoBehaviour:
     animationProfileName: Bow
     onHitAudioProfiles:
     - Arrow Hit
+    animationEventAudioProfile: Draw Bow
+    playAttackVoice: 0
     abilityAnimationObjectList:
     - holdableObjectName: Medieval Arrow
       useUniversalAttachment: 1

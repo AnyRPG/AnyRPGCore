@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: PunchHitsAudioTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Punch Hits
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: 63beab059bb4b314fa92a81b4eb28d6a, type: 3}
+  - {fileID: 8300000, guid: cac62aa8a5bff2e4eab62192a535ba3f, type: 3}
+  - {fileID: 8300000, guid: 2fb55bab7db84ba42a35c8524a8e79f1, type: 3}

@@ -37,12 +37,6 @@ namespace AnyRPG {
             // do nothing
         }
 
-        public virtual bool IsDead {
-            get {
-                return false;
-            }
-        }
-
         public virtual GameObject UnitGameObject {
             get {
                 if (abilityCaster != null) {

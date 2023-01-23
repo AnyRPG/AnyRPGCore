@@ -106,17 +106,19 @@ namespace AnyRPG {
             return beginText + DisplayName + ": " + Mathf.Clamp(CurrentAmount, 0, Amount) + "/" + Amount;
         }
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
-            base.SetupScriptableObjects(systemGameManager);
-            baseAbility = null;
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager, Quest quest) {
+            base.SetupScriptableObjects(systemGameManager, quest);
+            
             if (abilityName != null && abilityName != string.Empty) {
-                baseAbility = systemDataFactory.GetResource<BaseAbility>(abilityName).AbilityProperties;
-            } else {
-                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing an ability objective.  CHECK INSPECTOR");
+                BaseAbility tmpAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
+                if (tmpAbility != null) {
+                    baseAbility = tmpAbility.AbilityProperties;
+                } else {
+                    Debug.LogError("AbilityObjective.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing an ability objective for " + quest.DisplayName + ".  CHECK INSPECTOR");
+                }
             }
         }
 
     }
-
 
 }

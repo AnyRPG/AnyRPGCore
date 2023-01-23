@@ -77,7 +77,7 @@ namespace AnyRPG {
             return item.BuyPrice();
         }
 
-        public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
+        public void SetupScriptableObjects(SystemDataFactory systemDataFactory, IDescribable describable) {
 
             item = null;
             if (itemName != null) {
@@ -85,7 +85,7 @@ namespace AnyRPG {
                 if (tmpItem != null) {
                     item = tmpItem;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing a vendor item.  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing a vendor item for " + describable.DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -95,7 +95,7 @@ namespace AnyRPG {
                 if (tmpItemQuality != null) {
                     itemQuality = tmpItemQuality;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing a vendor item.  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item quality : " + itemQualityName + " while inititalizing a vendor item for " + describable.DisplayName + ".  CHECK INSPECTOR");
                 }
             }
         }

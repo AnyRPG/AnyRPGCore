@@ -9,10 +9,6 @@ namespace AnyRPG {
 
     public class CharacterCreatorWindowPanel : CloseableWindowContents, ICapabilityConsumer {
 
-        public event System.Action OnConfirmAction = delegate { };
-        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
-        public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
-
         [SerializeField]
         private CharacterPreviewPanelController characterPreviewPanel = null;
 
@@ -70,6 +66,7 @@ namespace AnyRPG {
         private CharacterCreatorManager characterCreatorManager = null;
         private SaveManager saveManager = null;
         private LevelManager levelManager = null;
+        private CharacterCreatorInteractableManager characterCreatorInteractableManager = null;
 
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
         public UnitType UnitType { get => unitType; set => unitType = value; }
@@ -104,6 +101,7 @@ namespace AnyRPG {
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
             saveManager = systemGameManager.SaveManager;
             levelManager = systemGameManager.LevelManager;
+            characterCreatorInteractableManager = systemGameManager.CharacterCreatorInteractableManager;
         }
 
         public override void ReceiveClosedWindowNotification() {
@@ -113,7 +111,7 @@ namespace AnyRPG {
             characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.ReceiveClosedWindowNotification();
             umaCharacterPanel.ReceiveClosedWindowNotification();
-            OnCloseWindow(this);
+            characterCreatorInteractableManager.EndInteraction();
             // close interaction window too for smoother experience
             uIManager.interactionWindow.CloseWindow();
         }
@@ -174,7 +172,7 @@ namespace AnyRPG {
             //saveManager.LoadUMASettings();
             //ClosePanel();
 
-            OnConfirmAction();
+            characterCreatorInteractableManager.ConfirmAction();
         }
 
         public void HandleTargetCreated() {

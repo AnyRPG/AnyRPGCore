@@ -41,6 +41,10 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(AudioProfile))]
         protected string castingAudioProfileName = string.Empty;
 
+        [Tooltip("If true, the audio will be looped until the action is complete")]
+        [SerializeField]
+        protected bool loopAudio = false;
+
         [Header("Tick")]
 
         [Tooltip("While consuming, the number of seconds between each resource refill")]
@@ -123,6 +127,7 @@ namespace AnyRPG {
             channeledAbility.UseAnimationCastTime = true;
             channeledAbility.CastingAudioClip = castingAudioClip;
             channeledAbility.CastingAudioProfileName = castingAudioProfileName;
+            channeledAbility.LoopAudio = loopAudio;
             channeledAbility.UseableWithoutLearning = true;
             channeledAbility.UseSpeedMultipliers = false;
             channeledAbility.TickRate = tickRate;

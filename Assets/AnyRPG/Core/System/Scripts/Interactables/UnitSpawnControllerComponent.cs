@@ -9,6 +9,9 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class UnitSpawnControllerComponent : InteractableOptionComponent {
 
+        // game manager references
+        private UnitSpawnManager unitSpawnManager = null;
+
         public UnitSpawnControllerProps Props { get => interactableOptionProps as UnitSpawnControllerProps; }
 
         public UnitSpawnControllerComponent(Interactable interactable, UnitSpawnControllerProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
@@ -17,36 +20,18 @@ namespace AnyRPG {
             }
         }
 
-        //public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
-        public void CleanupEventSubscriptions(CloseableWindowContents windowContents) {
-            CleanupWindowEventSubscriptions();
-        }
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
 
-        public void CleanupWindowEventSubscriptions() {
-            if (uIManager.unitSpawnWindow.CloseableWindowContents != null) {
-                (uIManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnConfirmAction -= HandleConfirmAction;
-                (uIManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnCloseWindow -= CleanupEventSubscriptions;
-            }
-        }
-
-        public override void ProcessCleanupEventSubscriptions() {
-            base.ProcessCleanupEventSubscriptions();
-            CleanupWindowEventSubscriptions();
+            unitSpawnManager = systemGameManager.UnitSpawnManager;
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             base.Interact(source, optionIndex);
-            (uIManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).UnitProfileList = Props.UnitProfileList;
-            (uIManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).UnitSpawnNodeList = Props.UnitSpawnNodeList;
+            unitSpawnManager.SetProps(Props, this);
             uIManager.unitSpawnWindow.OpenWindow();
-            (uIManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnConfirmAction += HandleConfirmAction;
-            (uIManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnCloseWindow += CleanupEventSubscriptions;
             return true;
         }
-
-        /// <summary>
-        /// Pick an item up off the ground and put it in the inventory
-        /// </summary>
 
         public override void StopInteract() {
             base.StopInteract();

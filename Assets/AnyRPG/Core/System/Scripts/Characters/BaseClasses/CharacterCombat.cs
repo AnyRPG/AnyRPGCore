@@ -35,21 +35,22 @@ namespace AnyRPG {
         // components
         protected BaseCharacter baseCharacter;
 
+        // track equipped weapons for managing default hit effects
+        protected List<Weapon> equippedWeapons = new List<Weapon>();
+
         // list of on hit effects to cast on weapon hit if the weapon hit is an auto attack
         private List<AbilityEffectProperties> defaultHitEffects = new List<AbilityEffectProperties>();
 
         // list of on hit effects to cast on weapon hit from currently equipped weapons
         protected List<AbilityEffectProperties> onHitEffects = new List<AbilityEffectProperties>();
 
+        // the weapon skill from the weapon equipped in the main weapon slot
+        protected WeaponSkill mainWeaponSkill = null;
+
         protected AggroTable aggroTable = null;
 
         // this is what the current weapon defaults to
         protected List<AudioClip> defaultHitSoundEffects = new List<AudioClip>();
-
-        /// <summary>
-        ///  waiting for the animator to let us know we can hit again
-        /// </summary>
-        private bool waitingForAutoAttack = false;
 
         // the target we swung at, in case we try to change target mid swing and we don't put an animation on something too far away
         protected BaseCharacter swingTarget = null;
@@ -69,10 +70,6 @@ namespace AnyRPG {
         }
 
         public BaseCharacter BaseCharacter { get => baseCharacter; set => baseCharacter = value; }
-        public bool WaitingForAutoAttack {
-            get => waitingForAutoAttack;
-        }
-
         public List<AudioClip> DefaultHitSoundEffects { get => defaultHitSoundEffects; set => defaultHitSoundEffects = value; }
         public BaseCharacter SwingTarget { get => swingTarget; set => swingTarget = value; }
         public bool AutoAttackActive { get => autoAttackActive; set => autoAttackActive = value; }
@@ -106,7 +103,7 @@ namespace AnyRPG {
                 DeActivateAutoAttack();
                 return;
             }
-            if (WaitingForAction() == true) {
+            if (baseCharacter.CharacterAbilityManager.PerformingAnyAbility() == true) {
                 // can't auto-attack during auto-attack, animated attack, or cast
                 return;
             }
@@ -174,14 +171,6 @@ namespace AnyRPG {
             }
         }
 
-        public bool WaitingForAction() {
-            if (baseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility == true || WaitingForAutoAttack == true || baseCharacter.CharacterAbilityManager.IsCasting == true) {
-                // can't auto-attack during auto-attack, animated attack, or cast
-                return true;
-            }
-            return false;
-        }
-
         public void HandleDie() {
             //Debug.Log(gameObject.name + ".OnDieHandler()");
 
@@ -192,17 +181,13 @@ namespace AnyRPG {
                 (baseCharacter.UnitController as UnitController).ChangeState(new DeathState());
                 return;
             }
-
         }
 
         public void RegisterAnimatedAbilityBegin() {
             lastAttackBegin = Time.time;
         }
 
-        public void SetWaitingForAutoAttack(bool newValue) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.SetWaitingForAutoAttack(" + newValue + ")");
-            waitingForAutoAttack = newValue;
-        }
+        
 
         /// <summary>
         /// This is the entrypoint to a manual attack.
@@ -219,7 +204,7 @@ namespace AnyRPG {
                 swingTarget = characterTarget;
 
                 // Perform the attack. OnAttack should have been populated by the animator to begin an attack animation and send us an AttackHitEvent to respond to
-                if (WaitingForAction() == false) {
+                if (baseCharacter.CharacterAbilityManager.PerformingAnyAbility() == false) {
                     // in order to support attacks from bows (or wands in the future), the weapon needs to be unsheathed
                     baseCharacter.CharacterAbilityManager.AttemptAutoAttack(playerInitiated);
                 }
@@ -364,8 +349,7 @@ namespace AnyRPG {
         public IEnumerator WaitForCastsToFinish() {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.WaitForCastsToFinish()");
 
-            while (inCombat == false
-                && (waitingForAutoAttack == true || baseCharacter.CharacterAbilityManager.CurrentCastAbility != null || baseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility == true)) {
+            while (inCombat == false && baseCharacter.CharacterAbilityManager.PerformingAnyAbility() == true) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.WaitForCastsToFinish() waitingforAutoAttack: " + waitingForAutoAttack + "; currentcastAbility: " + (baseCharacter.CharacterAbilityManager.CurrentCastAbility == null ? "null" : baseCharacter.CharacterAbilityManager.CurrentCastAbility.DisplayName));
 
                 yield return null;
@@ -568,7 +552,7 @@ namespace AnyRPG {
         /// receive the AttackHitEvent from the attack animation so damage can be triggered against the enemy
         /// </summary>
         public void AttackHitEvent() {
-            AttackHit_AnimationEvent();
+            AttackHitAnimationEvent();
         }
 
         public bool ProcessAttackHit() {
@@ -585,8 +569,8 @@ namespace AnyRPG {
             // some attacks can hit more than once.
             // in case this is one of those attacks, get a copy of the ability effect context so subsequent hits do not get input power from each other
             AbilityEffectContext usedAbilityEffectContext = null;
-            if (BaseCharacter?.UnitController?.UnitAnimator?.CurrentAbilityEffectContext != null) {
-                usedAbilityEffectContext = BaseCharacter?.UnitController?.UnitAnimator?.CurrentAbilityEffectContext.GetCopy();
+            if (BaseCharacter?.CharacterAbilityManager.CurrentAbilityEffectContext != null) {
+                usedAbilityEffectContext = BaseCharacter.CharacterAbilityManager.CurrentAbilityEffectContext.GetCopy();
             } else {
                 return false;
             }
@@ -630,7 +614,7 @@ namespace AnyRPG {
         /// <summary>
         /// After the attack animation reaches the point where it contacts the enemy, do damage to it
         /// </summary>
-        public void AttackHit_AnimationEvent() {
+        public void AttackHitAnimationEvent() {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent()");
             ProcessAttackHit();
         }
@@ -639,6 +623,11 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterCombat.ReceiveCombatMiss()");
             lastCombatEvent = Time.time;
             OnReceiveCombatMiss(targetObject, abilityEffectContext);
+            
+            // miss sound should only be played on attacking unit
+            if (targetObject != baseCharacter.UnitController) {
+                baseCharacter.UnitController.UnitEventController.NotifyOnCombatMiss();
+            }
         }
 
         public bool DidAttackMiss() {
@@ -757,6 +746,21 @@ namespace AnyRPG {
             }
         }
 
+        public virtual bool GetWeaponSkillAttackVoiceSetting() {
+            if (mainWeaponSkill != null) {
+                return mainWeaponSkill.WeaponSkillProps.PlayAttackVoice;
+            }
+            return false;
+        }
+
+        public virtual AudioClip GetWeaponSkillAnimationHitSound() {
+            return mainWeaponSkill?.WeaponSkillProps.AnimationEventAudioProfile?.RandomAudioClip;
+        }
+
+        public virtual void SetMainWeaponSkill(WeaponSkill weaponSkill) {
+            this.mainWeaponSkill = weaponSkill;
+        }
+
         public virtual void AddOnHitEffects(List<AbilityEffectProperties> abilityEffectProperties) {
             onHitEffects.AddRange(abilityEffectProperties);
         }
@@ -770,6 +774,14 @@ namespace AnyRPG {
 
         public virtual void AddDefaultHitEffects(List<AbilityEffectProperties> abilityEffectProperties) {
             defaultHitEffects.AddRange(abilityEffectProperties);
+        }
+
+        public virtual void ClearUnitDefaultHitEffects() {
+            if (baseCharacter.UnitController?.UnitProfile != null) {
+                foreach (AbilityEffectProperties abilityEffectProperties in baseCharacter.UnitController?.UnitProfile.DefaultHitEffectList) {
+                    RemoveDefaultHitEffect(abilityEffectProperties);
+                }
+            }
         }
 
         public virtual void RemoveDefaultHitEffect(AbilityEffectProperties abilityEffect) {
@@ -804,6 +816,68 @@ namespace AnyRPG {
             if (newItem != null) {
                 newItem.HandleEquip(this, equipmentSlotProfile);
             }
+        }
+
+        public virtual void WeaponEquipped(Weapon weapon, EquipmentSlotProfile equipmentSlotProfile) {
+            
+            equippedWeapons.Add(weapon);
+            ClearUnitDefaultHitEffects();
+            baseCharacter.CharacterAbilityManager.WeaponEquipped(weapon);
+
+            if (weapon.OnHitEffectList.Count > 0) {
+                AddOnHitEffects(weapon.OnHitEffectList);
+            }
+            if (weapon.DefaultHitEffectList.Count > 0) {
+                AddDefaultHitEffects(weapon.DefaultHitEffectList);
+            }
+            if (equipmentSlotProfile != null) {
+                if (equipmentSlotProfile.MainWeaponSlot == true) {
+                    SetMainWeaponSkill(weapon.WeaponSkill);
+                }
+                if (equipmentSlotProfile.SetOnHitAudio == true) {
+                    if (weapon.DefaultHitSoundEffects != null) {
+                        AddDefaultHitSoundEffects(weapon.DefaultHitSoundEffects);
+                    }
+                }
+            }
+
+            SetAttackSpeed();
+        }
+
+        public virtual void AddUnitProfileHitEffects() {
+            if (equippedWeapons.Count == 0 && baseCharacter.UnitProfile != null) {
+                AddDefaultHitEffects(baseCharacter.UnitProfile.DefaultHitEffectList);
+            }
+        }
+
+        public virtual void WeaponUnequipped(Weapon weapon, EquipmentSlotProfile equipmentSlotProfile) {
+            if (equippedWeapons.Contains(weapon)) {
+                equippedWeapons.Remove(weapon);
+            }
+            AddUnitProfileHitEffects();
+            baseCharacter.CharacterAbilityManager.WeaponUnequipped(weapon);
+
+            if (weapon.OnHitEffectList != null && weapon.OnHitEffectList.Count > 0) {
+                foreach (AbilityEffectProperties abilityEffect in weapon.OnHitEffectList) {
+                    RemoveOnHitEffect(abilityEffect);
+                }
+            }
+            if (weapon.DefaultHitEffectList != null && weapon.DefaultHitEffectList.Count > 0) {
+                foreach (AbilityEffectProperties abilityEffect in weapon.DefaultHitEffectList) {
+                    RemoveDefaultHitEffect(abilityEffect);
+                }
+            }
+            if (equipmentSlotProfile != null) {
+                if (equipmentSlotProfile.MainWeaponSlot == true) {
+                    SetMainWeaponSkill(null);
+                }
+                if (equipmentSlotProfile.SetOnHitAudio == true) {
+                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): clearing default hit effects");
+                    ClearDefaultHitSoundEffects();
+                }
+            }
+
+            SetAttackSpeed();
         }
 
         public virtual void SetAttackSpeed() {

@@ -150,7 +150,7 @@ namespace AnyRPG {
             if (phaseNodes != null) {
                 foreach (CombatStrategyNode combatStrategyNode in phaseNodes) {
                     if (combatStrategyNode != null) {
-                        combatStrategyNode.SetupScriptableObjects(systemGameManager);
+                        combatStrategyNode.SetupScriptableObjects(systemGameManager, this);
                     }
                     
                 }

@@ -407,10 +407,13 @@ namespace AnyRPG {
 
         [Header("SYSTEM AUDIO")]
 
+        [Tooltip("This audio clip will play whenever a weapon (or unarmed) attack misses.")]
+        [SerializeField]
+        private AudioClip weaponMissAudioClip = null;
+
         [Tooltip("This audio clip will play whenever buying from or selling to a vendor.")]
         [SerializeField]
         private AudioClip vendorAudioClip = null;
-
 
         [Tooltip("This audio profile will play whenever buying from or selling to a vendor.  If this value is set, it will override the audio clip above.")]
         [SerializeField]
@@ -883,6 +886,7 @@ namespace AnyRPG {
         public float TimeOfDaySpeed { get => timeOfDaySpeed; set => timeOfDaySpeed = value; }
         public float DefaultSunAngle { get => defaultSunAngle; set => defaultSunAngle = value; }
         public Gradient DefaultSunGradient { get => defaultSunGradient; set => defaultSunGradient = value; }
+        public AudioClip WeaponMissAudioClip { get => weaponMissAudioClip; set => weaponMissAudioClip = value; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }
 

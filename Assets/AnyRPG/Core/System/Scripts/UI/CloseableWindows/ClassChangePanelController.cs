@@ -9,10 +9,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class ClassChangePanelController : WindowContentController {
 
-        public event System.Action OnConfirmAction = delegate { };
-        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
-        public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
-
         [SerializeField]
         private GameObject rewardIconPrefab = null;
 
@@ -41,14 +37,11 @@ namespace AnyRPG {
 
         private List<RewardButton> traitRewardIcons = new List<RewardButton>();
 
-        //private string characterClassName;
-
-        private CharacterClass characterClass = null;
-
         // game manager references
         private UIManager uIManager = null;
         private PlayerManager playerManager = null;
         private ObjectPooler objectPooler = null;
+        private ClassChangeManager classChangeManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -63,16 +56,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
-        }
-
-        public void Setup(CharacterClass newCharacterClass) {
-            //Debug.Log("ClassChangePanelController.Setup(" + newClassName + ")");
-            characterClass = newCharacterClass;
-            characterClassButton.AddCharacterClass(characterClass);
-            uIManager.classChangeWindow.SetWindowTitle(characterClass.DisplayName);
-            ShowAbilityRewards();
-            ShowTraitRewards();
-            uIManager.classChangeWindow.OpenWindow();
+            classChangeManager = systemGameManager.ClassChangeManager;
         }
 
         public void ShowTraitRewards() {
@@ -80,10 +64,10 @@ namespace AnyRPG {
 
             ClearTraitRewardIcons();
             // show trait rewards
-            CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(playerManager.ActiveCharacter);
+            CapabilityProps capabilityProps = classChangeManager.CharacterClass.GetFilteredCapabilities(playerManager.ActiveCharacter);
             if (playerManager.MyCharacter.Faction != null) {
                 CapabilityConsumerSnapshot capabilityConsumerSnapshot = new CapabilityConsumerSnapshot(playerManager.ActiveCharacter, systemGameManager);
-                capabilityConsumerSnapshot.CharacterClass = characterClass;
+                capabilityConsumerSnapshot.CharacterClass = classChangeManager.CharacterClass;
                 CapabilityProps capabilityPropsFaction = playerManager.MyCharacter.Faction.GetFilteredCapabilities(capabilityConsumerSnapshot, false);
                 capabilityProps = capabilityPropsFaction.Join(capabilityProps);
             }
@@ -117,10 +101,10 @@ namespace AnyRPG {
 
             ClearRewardIcons();
             // show ability rewards
-            CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(playerManager.ActiveCharacter);
+            CapabilityProps capabilityProps = classChangeManager.CharacterClass.GetFilteredCapabilities(playerManager.ActiveCharacter);
             if (playerManager.MyCharacter.Faction != null) {
                 CapabilityConsumerSnapshot capabilityConsumerSnapshot = new CapabilityConsumerSnapshot(playerManager.ActiveCharacter, systemGameManager);
-                capabilityConsumerSnapshot.CharacterClass = characterClass;
+                capabilityConsumerSnapshot.CharacterClass = classChangeManager.CharacterClass;
                 CapabilityProps capabilityPropsFaction = playerManager.MyCharacter.Faction.GetFilteredCapabilities(capabilityConsumerSnapshot, false);
                 capabilityProps = capabilityPropsFaction.Join(capabilityProps);
             }
@@ -174,14 +158,19 @@ namespace AnyRPG {
 
         public void ConfirmAction() {
             //Debug.Log("ClassChangePanelController.ConfirmAction()");
-            playerManager.SetPlayerCharacterClass(characterClass);
-            OnConfirmAction();
+            classChangeManager.ChangeCharacterClass();
             uIManager.classChangeWindow.CloseWindow();
         }
 
         public override void ProcessOpenWindowNotification() {
             //Debug.Log("ClassChangePanelController.OnOpenWindow()");
             base.ProcessOpenWindowNotification();
+            
+            uIManager.classChangeWindow.SetWindowTitle(classChangeManager.CharacterClass.DisplayName);
+            characterClassButton.AddCharacterClass(classChangeManager.CharacterClass);
+            ShowAbilityRewards();
+            ShowTraitRewards();
+
             LayoutRebuilder.ForceRebuildLayoutImmediate(abilityIconsArea.GetComponent<RectTransform>());
             LayoutRebuilder.ForceRebuildLayoutImmediate(traitIconsArea.GetComponent<RectTransform>());
 
@@ -190,7 +179,7 @@ namespace AnyRPG {
         public override void ReceiveClosedWindowNotification() {
             //Debug.Log("ClassChangePanelController.OnCloseWindow()");
             base.ReceiveClosedWindowNotification();
-            OnCloseWindow(this);
+            classChangeManager.EndInteraction();
         }
     }
 

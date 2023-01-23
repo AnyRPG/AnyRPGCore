@@ -322,6 +322,7 @@ namespace AnyRPG {
                     SetUnitToughness(unitProfile.DefaultToughness);
                 }
                 spawnDead = unitProfile.SpawnDead;
+
             }
 
             if (notify) {
@@ -343,6 +344,9 @@ namespace AnyRPG {
 
             }
 
+            // now that equipment has had a chance to be equipped, give character combat a chance to add default unit profile hit effects
+            // in case no weapons were equipped
+            characterCombat.AddUnitProfileHitEffects();
         }
 
         public void Update() {

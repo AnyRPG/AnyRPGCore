@@ -70,7 +70,7 @@ namespace AnyRPG {
             audioManager = systemGameManager.AudioManager;
         }
 
-        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+        public void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
 
             Configure(systemGameManager);
 
@@ -81,7 +81,7 @@ namespace AnyRPG {
                     if (baseAbility != null) {
                         attackAbilityList.Add(baseAbility.AbilityProperties);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find attack ability : " + baseAbilityName + " while inititalizing a combat strategy node.  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find attack ability : " + baseAbilityName + " while inititalizing a combat strategy node for " + describable.DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

@@ -58,8 +58,8 @@ namespace AnyRPG {
             levelManager = systemGameManager.LevelManager;
         }
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
-            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
+        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
+            Dictionary<PrefabProfile, List<GameObject>> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
             if (levelName != null) {
                 if (overrideSpawnDirection == true) {
                     levelManager.SetSpawnRotationOverride(spawnForwardDirection);

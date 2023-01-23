@@ -44,6 +44,7 @@ MonoBehaviour:
   animationProfileName: 
   castingAudioClip: {fileID: 8300000, guid: 8534e705f3997f34abeef573b6d39551, type: 3}
   castingAudioProfileName: 
+  loopAudio: 1
   tickRate: 1
   resourceAmounts:
   - resourceName: Health

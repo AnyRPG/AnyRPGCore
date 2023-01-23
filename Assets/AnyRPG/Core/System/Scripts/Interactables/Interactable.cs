@@ -546,13 +546,13 @@ namespace AnyRPG {
 
         public void OpenInteractionWindow() {
             //Debug.Log(gameObject.name + ".Interactable.OpenInteractionWindow");
-            interactionManager.CurrentInteractable = this;
+            interactionManager.BeginInteraction(this);
             uIManager.craftingWindow.CloseWindow();
             uIManager.interactionWindow.OpenWindow();
         }
 
         public void CloseInteractionWindow() {
-            interactionManager.CurrentInteractable = null;
+            interactionManager.SetInteractable(null);
             uIManager.interactionWindow.CloseWindow();
         }
 
@@ -647,11 +647,19 @@ namespace AnyRPG {
             return false;
         }
 
-        public virtual void ProcessStartInteract(InteractableOptionComponent interactableOptionComponent) {
+        public virtual void ProcessStartInteract() {
             // do something in inherited class
         }
 
-        public virtual void ProcessStopInteract(InteractableOptionComponent interactableOptionComponent) {
+        public virtual void ProcessStopInteract() {
+            // do something in inherited class
+        }
+
+        public virtual void ProcessStartInteractWithOption(InteractableOptionComponent interactableOptionComponent) {
+            // do something in inherited class
+        }
+
+        public virtual void ProcessStopInteractWithOption(InteractableOptionComponent interactableOptionComponent) {
             // do something in inherited class
         }
 

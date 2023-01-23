@@ -37,14 +37,16 @@ namespace AnyRPG {
             abilityManager.AbilityEffectGameObjects.Clear();
         }
 
-        public void BeginDestroyAbilityEffectObject(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, Interactable target, float timer, AbilityEffectContext abilityEffectInput, FixedLengthEffectProperties fixedLengthEffect) {
-            foreach (GameObject go in abilityEffectObjects.Values) {
-                abilityManager.AbilityEffectGameObjects.Add(go);
+        public void BeginDestroyAbilityEffectObject(Dictionary<PrefabProfile, List<GameObject>> abilityEffectObjects, IAbilityCaster source, Interactable target, float timer, AbilityEffectContext abilityEffectInput, FixedLengthEffectProperties fixedLengthEffect) {
+            foreach (List<GameObject> gameObjectList in abilityEffectObjects.Values) {
+                foreach (GameObject go in gameObjectList) {
+                    abilityManager.AbilityEffectGameObjects.Add(go);
+                }
             }
             abilityManager.AddDestroyAbilityEffectObjectCoroutine(StartCoroutine(DestroyAbilityEffectObject(abilityEffectObjects, source, target, timer, abilityEffectInput, fixedLengthEffect)));
         }
 
-        public IEnumerator DestroyAbilityEffectObject(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, Interactable target, float timer, AbilityEffectContext abilityEffectInput, FixedLengthEffectProperties fixedLengthEffect) {
+        public IEnumerator DestroyAbilityEffectObject(Dictionary<PrefabProfile, List<GameObject>> abilityEffectObjects, IAbilityCaster source, Interactable target, float timer, AbilityEffectContext abilityEffectInput, FixedLengthEffectProperties fixedLengthEffect) {
             //Debug.Log("SystemAbilityController.DestroyAbilityEffectObject(" + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + ", " + timer + ")");
             float timeRemaining = timer;
 
@@ -98,12 +100,14 @@ namespace AnyRPG {
             }
             //Debug.Log(fixedLengthEffect.DisplayName + ".FixedLengthEffect.Tick() Done ticking and about to perform ability affects.");
             fixedLengthEffect.CastComplete(source, target, abilityEffectInput);
-            foreach (GameObject go in abilityEffectObjects.Values) {
-                if (abilityManager.AbilityEffectGameObjects.Contains(go)) {
-                    abilityManager.AbilityEffectGameObjects.Remove(go);
-                }
-                if (go != null) {
-                    objectPooler.ReturnObjectToPool(go, fixedLengthEffect.PrefabDestroyDelay);
+            foreach (List<GameObject> gameObjectList in abilityEffectObjects.Values) {
+                foreach (GameObject go in gameObjectList) {
+                    if (abilityManager.AbilityEffectGameObjects.Contains(go)) {
+                        abilityManager.AbilityEffectGameObjects.Remove(go);
+                    }
+                    if (go != null) {
+                        objectPooler.ReturnObjectToPool(go, fixedLengthEffect.PrefabDestroyDelay);
+                    }
                 }
             }
             abilityEffectObjects.Clear();

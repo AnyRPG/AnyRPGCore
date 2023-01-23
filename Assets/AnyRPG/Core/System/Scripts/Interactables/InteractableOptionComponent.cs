@@ -107,7 +107,7 @@ namespace AnyRPG {
         public virtual void ProcessCleanupEventSubscriptions() {
         }
 
-        public virtual void HandleConfirmAction() {
+        public virtual void NotifyOnConfirmAction() {
             systemEventManager.NotifyOnInteractionWithOptionCompleted(this);
         }
 
@@ -167,16 +167,21 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessStartInteract() {
-            interactable.ProcessStartInteract(this);
+            interactable.ProcessStartInteractWithOption(this);
+        }
+
+        public virtual void ProcessStopInteract() {
+            interactable.ProcessStopInteractWithOption(this);
         }
 
         public virtual bool PlayInteractionSound() {
             return false;
         }
 
-        public virtual void ProcessStopInteract() {
-            interactable.ProcessStopInteract(this);
+        public virtual AudioClip GetInteractionSound(VoiceProps voiceProps) {
+            return voiceProps.RandomStartInteract;
         }
+
 
         public virtual bool HasMiniMapText() {
             return false;

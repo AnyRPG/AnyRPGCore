@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -80,6 +81,17 @@ namespace AnyRPG {
         [FormerlySerializedAs("damagePerSecond")]
         [SerializeField]
         protected float baseDamagePerSecond = 0f;
+        
+        /*
+        public BaseAbilityProperties AutoAttackOverride {
+            get {
+                if (weaponSkill != null) {
+                    return weaponSkill.WeaponSkillProps.AutoAttackOverride;
+                }
+                return null;
+            }
+        }
+        */
 
         public AnimationProfile AnimationProfile {
             get {
@@ -214,39 +226,13 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".Weapon.HandleEquip(" + characterCombat.BaseCharacter.CharacterName + ", " + equipmentSlotProfile.DisplayName + ")");
             base.HandleEquip(characterCombat, equipmentSlotProfile);
 
-            if (OnHitEffectList != null && OnHitEffectList.Count > 0) {
-                characterCombat.AddOnHitEffects(OnHitEffectList);
-            }
-            if (DefaultHitEffectList != null && DefaultHitEffectList.Count > 0) {
-                characterCombat.AddDefaultHitEffects(DefaultHitEffectList);
-            }
-            if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
-                if (DefaultHitSoundEffects != null) {
-                    characterCombat.AddDefaultHitSoundEffects(DefaultHitSoundEffects);
-                }
-            }
-
-            characterCombat.SetAttackSpeed();
+            characterCombat.WeaponEquipped(this, equipmentSlotProfile);
         }
 
         public override void HandleUnequip(CharacterCombat characterCombat, EquipmentSlotProfile equipmentSlotProfile) {
             base.HandleUnequip(characterCombat, equipmentSlotProfile);
 
-            if (OnHitEffectList != null && OnHitEffectList.Count > 0) {
-                foreach (AbilityEffectProperties abilityEffect in OnHitEffectList) {
-                    characterCombat.RemoveOnHitEffect(abilityEffect);
-                }
-            }
-            if (DefaultHitEffectList != null && DefaultHitEffectList.Count > 0) {
-                foreach (AbilityEffectProperties abilityEffect in DefaultHitEffectList) {
-                    characterCombat.RemoveDefaultHitEffect(abilityEffect);
-                }
-            }
-            if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
-                //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): clearing default hit effects");
-                characterCombat.ClearDefaultHitSoundEffects();
-            }
-            characterCombat.SetAttackSpeed();
+            characterCombat.WeaponUnequipped(this, equipmentSlotProfile);
         }
 
         public override void HandleEquip(CharacterEquipmentManager characterEquipmentManager) {

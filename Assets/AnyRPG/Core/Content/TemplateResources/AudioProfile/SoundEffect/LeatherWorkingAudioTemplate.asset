@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   artistName: 
   audioClips:
-  - {fileID: 8300000, guid: 1989786f256f80e41b6cd51fa96f3d53, type: 3}
+  - {fileID: 8300000, guid: 5d0d42dedc50ae94088a3342b024bf75, type: 3}

@@ -26,7 +26,6 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             base.Interact(source, optionIndex);
-            //Debug.Log(gameObject.name + ".CutSceneInteractable.Interact()");
             // save character position and stuff here
             //uIManager.interactionWindow.CloseWindow();
             if (Props.Cutscene != null
@@ -46,15 +45,6 @@ namespace AnyRPG {
             uIManager.interactionWindow.CloseWindow();
             uIManager.questGiverWindow.CloseWindow();
             return true;
-        }
-
-        /// <summary>
-        /// Pick an item up off the ground and put it in the inventory
-        /// </summary>
-
-        public override void StopInteract() {
-            base.StopInteract();
-            //uIManager.dialogWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

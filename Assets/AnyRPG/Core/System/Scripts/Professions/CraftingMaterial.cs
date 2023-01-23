@@ -21,7 +21,7 @@ namespace AnyRPG {
         public int Count { get => count; }
 
 
-        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+        public void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
             Configure(systemGameManager);
 
             item = null;
@@ -30,7 +30,7 @@ namespace AnyRPG {
                 if (tmpItem != null) {
                     item = tmpItem;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing a crafting material.  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing a crafting material for " + describable.DisplayName + ".  CHECK INSPECTOR");
                 }
             }
         }

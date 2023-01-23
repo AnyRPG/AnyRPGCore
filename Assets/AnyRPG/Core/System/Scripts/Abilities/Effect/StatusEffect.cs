@@ -14,6 +14,8 @@ namespace AnyRPG {
 
         public override AbilityEffectProperties AbilityEffectProperties { get => statusEffectProperties; }
 
+        public StatusEffectProperties StatusEffectProperties { get => statusEffectProperties; }
+
     }
 
 

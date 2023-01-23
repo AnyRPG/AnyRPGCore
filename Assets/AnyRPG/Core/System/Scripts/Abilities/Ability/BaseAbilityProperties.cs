@@ -88,6 +88,10 @@ namespace AnyRPG {
 
         protected AudioProfile castingAudioProfile;
 
+        [Tooltip("If true, the audio will be looped until the cast is complete")]
+        [SerializeField]
+        protected bool loopAudio = false;
+
         [Header("Learning")]
 
         [Tooltip("The minimum level a character must be to cast this ability")]
@@ -288,7 +292,7 @@ namespace AnyRPG {
                     return castingAudioClip;
                 }
                 if (castingAudioProfile != null) {
-                    return castingAudioProfile.AudioClip;
+                    return castingAudioProfile.RandomAudioClip;
                 }
                 return null;
             }
@@ -296,7 +300,7 @@ namespace AnyRPG {
                 castingAudioClip = value;
             }
         }
-        public AudioClip AnimationHitAudioClip { get => (animationHitAudioProfile == null ? null : animationHitAudioProfile.AudioClip); }
+        public AudioClip AnimationHitAudioClip { get => animationHitAudioProfile?.RandomAudioClip; }
         public bool AnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
         public List<AnimationClip> AttackClips { get => (animationProfile != null ? animationProfile.AnimationProps.AttackClips : null); }
         
@@ -346,6 +350,7 @@ namespace AnyRPG {
         public string CastingAudioProfileName { get => castingAudioProfileName; set => castingAudioProfileName = value; }
         public bool UseAnimationCastTime { get => useAnimationCastTime; set => useAnimationCastTime = value; }
         public bool RequireStealth { get => requireStealth; set => requireStealth = value; }
+        public bool LoopAudio { get => loopAudio; set => loopAudio = value; }
 
         /*
         public void GetBaseAbilityProperties(BaseAbility effect) {
@@ -598,6 +603,8 @@ namespace AnyRPG {
         }
 
         public virtual string GetSummary() {
+            //Debug.Log(DisplayName + ".BaseAbilityProperties.GetSummary()");
+
             return string.Format("{0}\n{1}", GetName(), GetDescription());
         }
 
@@ -685,7 +692,15 @@ namespace AnyRPG {
             return baseResourceCost;
         }
 
-        public virtual AudioClip GetAnimationHitSound() {
+        public virtual AudioClip GetAnimationEventSound(CharacterCombat characterCombat) {
+            AudioClip characterClip = characterCombat.GetWeaponSkillAnimationHitSound();
+            if (characterClip != null) {
+                return characterClip;
+            }
+            return GetAnimationEventSound();
+        }
+
+        public virtual AudioClip GetAnimationEventSound() {
             return AnimationHitAudioClip;
         }
 
@@ -792,9 +807,7 @@ namespace AnyRPG {
         }
 
         public virtual bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
-            if (playerInitiated) {
-                //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (sourceCharacter != null ? sourceCharacter.AbilityManager.Name : "null") + ")");
-            }
+            //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (sourceCharacter != null ? sourceCharacter.AbilityManager.Name : "null") + ")");
 
             if (useAbilityEffectTargetting == true
                 && GetAbilityEffects(sourceCharacter).Count > 0) {

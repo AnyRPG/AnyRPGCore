@@ -61,19 +61,17 @@ namespace AnyRPG {
         }
 
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager, Quest quest) {
             //Debug.Log("QuestQuestObjective.SetupScriptableObjects()");
-            base.SetupScriptableObjects(systemGameManager);
-            questObjective = null;
+            base.SetupScriptableObjects(systemGameManager, quest);
+
             if (questName != null && questName != string.Empty) {
-                Quest tmpQuestObjective = systemDataFactory.GetResource<Quest>(questName);
-                if (tmpQuestObjective != null) {
-                    questObjective = tmpQuestObjective;
-                } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find quest : " + questName + " while inititalizing a quest quest objective.  CHECK INSPECTOR");
+                questObjective = systemDataFactory.GetResource<Quest>(questName);
+                if (questObjective == null) {
+                    Debug.LogError("QuestQuestObjective.SetupScriptableObjects(): Could not find quest : " + questName + " while inititalizing a quest quest objective for " + quest.DisplayName + ".  CHECK INSPECTOR");
                 }
             } else {
-                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): MyType was null while inititalizing a quest quest objective.  CHECK INSPECTOR");
+                Debug.LogError("QuestQuestObjective.SetupScriptableObjects(): MyType was null while inititalizing a quest quest objective for " + quest.DisplayName + ".  CHECK INSPECTOR");
             }
         }
 

@@ -14,7 +14,7 @@ namespace AnyRPG {
         public void AttackHitEvent() {
             //Debug.Log(gameObject.name + ".CharacterAnimationEventReceiver.AttackHitEvent()");
             if (unitController?.CharacterUnit?.BaseCharacter?.CharacterCombat != null) {
-                unitController.CharacterUnit.BaseCharacter.CharacterCombat.AttackHit_AnimationEvent();
+                unitController.CharacterUnit.BaseCharacter.CharacterCombat.AttackHitAnimationEvent();
             }
         }
 
@@ -26,6 +26,18 @@ namespace AnyRPG {
         public void AnimationHit() {
             if (unitController?.CharacterUnit?.BaseCharacter?.CharacterAbilityManager != null) {
                 unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.AnimationHitAnimationEvent();
+            }
+        }
+
+        public void StartAudio() {
+            if (unitController?.CharacterUnit?.BaseCharacter?.CharacterAbilityManager != null) {
+                unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.StartAudioAnimationEvent();
+            }
+        }
+
+        public void StopAudio() {
+            if (unitController?.CharacterUnit?.BaseCharacter?.CharacterAbilityManager != null) {
+                unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.StopAudioAnimationEvent();
             }
         }
 

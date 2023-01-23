@@ -8,14 +8,21 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class SpecializationChangeComponent : InteractableOptionComponent {
 
-        public SpecializationChangeProps Props { get => interactableOptionProps as SpecializationChangeProps; }
+        // game manager references
+        private SpecializationChangeManager specializationChangeManager = null;
 
-        private bool windowEventSubscriptionsInitialized = false;
+        public SpecializationChangeProps Props { get => interactableOptionProps as SpecializationChangeProps; }
 
         public SpecializationChangeComponent(Interactable interactable, SpecializationChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
                 interactableOptionProps.InteractionPanelTitle = Props.ClassSpecialization.DisplayName + " Specialization";
             }
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            specializationChangeManager = systemGameManager.SpecializationChangeManager;
         }
 
         public override void ProcessCreateEventSubscriptions() {
@@ -25,59 +32,27 @@ namespace AnyRPG {
             // because the class is a special type of prerequisite, we need to be notified when it changes
             SystemEventManager.StartListening("OnSpecializationChange", HandleSpecializationChange);
             systemEventManager.OnClassChange += HandleClassChange;
-
-        }
-
-        //public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
-        public void CleanupEventSubscriptions(CloseableWindowContents windowContents) {
-            //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
-            CleanupWindowEventSubscriptions();
-        }
-
-        public void CleanupWindowEventSubscriptions() {
-            if (uIManager.specializationChangeWindow.CloseableWindowContents != null
-                && (uIManager.specializationChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
-                (uIManager.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (uIManager.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
-            }
-            windowEventSubscriptionsInitialized = false;
         }
 
         public override void ProcessCleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions()");
             base.ProcessCleanupEventSubscriptions();
-            CleanupWindowEventSubscriptions();
+
             SystemEventManager.StopListening("OnSpecializationChange", HandleSpecializationChange);
             if (systemEventManager != null) {
                 systemEventManager.OnClassChange -= HandleClassChange;
             }
         }
 
-        public override void HandleConfirmAction() {
-            //Debug.Log(gameObject.name + ".ClassChangeInteractable.HandleConfirmAction()");
-            base.HandleConfirmAction();
-
-            // just to be safe
-            CleanupWindowEventSubscriptions();
-        }
-
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.Interact()");
-            if (windowEventSubscriptionsInitialized == true) {
-                return false;
-            }
             base.Interact(source, optionIndex);
 
-            (uIManager.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).Setup(Props.ClassSpecialization);
-            (uIManager.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnConfirmAction += HandleConfirmAction;
-            (uIManager.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
-            windowEventSubscriptionsInitialized = true;
+            specializationChangeManager.SetDisplaySpecialization(Props.ClassSpecialization, this);
+            uIManager.specializationChangeWindow.OpenWindow();
+
             return true;
         }
-
-        /// <summary>
-        /// Pick an item up off the ground and put it in the inventory
-        /// </summary>
 
         public override void StopInteract() {
             base.StopInteract();
@@ -125,9 +100,9 @@ namespace AnyRPG {
             }
         }
 
-        public override bool PlayInteractionSound() {
-            return true;
-        }
+        //public override bool PlayInteractionSound() {
+        //    return true;
+        //}
 
 
 

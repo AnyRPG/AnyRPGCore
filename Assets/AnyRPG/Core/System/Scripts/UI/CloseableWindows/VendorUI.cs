@@ -29,22 +29,19 @@ namespace AnyRPG {
         VendorCollection buyBackCollection = null;
 
         // track the interactable to send a message back when the window closes
-        InteractableOptionComponent interactableOptionComponent = null;
+        //InteractableOptionComponent interactableOptionComponent = null;
 
         // game manager references
         protected PlayerManager playerManager = null;
         protected UIManager uIManager = null;
         protected MessageFeedManager messageFeedManager = null;
         protected CurrencyConverter currencyConverter = null;
+        protected VendorManager vendorManager = null;
 
         //protected List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            playerManager = systemGameManager.PlayerManager;
-            uIManager = systemGameManager.UIManager;
-            messageFeedManager = uIManager.MessageFeedManager;
-            currencyConverter = systemGameManager.CurrencyConverter;
 
             CreateEventSubscriptions();
             buyBackCollection = ScriptableObject.CreateInstance(typeof(VendorCollection)) as VendorCollection;
@@ -61,6 +58,16 @@ namespace AnyRPG {
                 currencyAmountController.Configure(systemGameManager);
             }
             */
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            playerManager = systemGameManager.PlayerManager;
+            uIManager = systemGameManager.UIManager;
+            messageFeedManager = uIManager.MessageFeedManager;
+            currencyConverter = systemGameManager.CurrencyConverter;
+            vendorManager = systemGameManager.VendorManager;
         }
 
         protected override void ProcessCreateEventSubscriptions() {
@@ -134,8 +141,7 @@ namespace AnyRPG {
             ClearButtons();
             ClearPages();
             ClearVendorCollections();
-            interactableOptionComponent?.ProcessStopInteract();
-            interactableOptionComponent = null;
+            vendorManager.EndInteraction();
         }
 
         public override void ProcessOpenWindowNotification() {
@@ -148,7 +154,7 @@ namespace AnyRPG {
             LoadPage(0);
             OnPageCountUpdate(false);
 
-
+            PopulateDropDownList(vendorManager.VendorProps.VendorCollections);
         }
 
         public void UpdateCurrencyAmount() {
@@ -163,9 +169,7 @@ namespace AnyRPG {
             }
         }
 
-        public void PopulateDropDownList(List<VendorCollection> vendorCollections, InteractableOptionComponent interactableOptionComponent) {
-            this.interactableOptionComponent = interactableOptionComponent;
-            interactableOptionComponent.ProcessStartInteract();
+        public void PopulateDropDownList(List<VendorCollection> vendorCollections) {
             UpdateCurrencyAmount();
             dropDownIndex = 1;
             this.vendorCollections = new List<VendorCollection>(1 + vendorCollections.Count);

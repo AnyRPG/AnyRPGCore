@@ -8,9 +8,10 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class ClassChangeComponent : InteractableOptionComponent {
 
-        public ClassChangeProps Props { get => interactableOptionProps as ClassChangeProps; }
+        // game manager references
+        private ClassChangeManager classChangeManager = null;
 
-        private bool windowEventSubscriptionsInitialized = false;
+        public ClassChangeProps Props { get => interactableOptionProps as ClassChangeProps; }
 
         public ClassChangeComponent(Interactable interactable, ClassChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
@@ -18,18 +19,10 @@ namespace AnyRPG {
             }
         }
 
-        //public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
-        public void CleanupEventSubscriptions(CloseableWindowContents windowContents) {
-            //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
-            CleanupWindowEventSubscriptions();
-        }
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
 
-        public void CleanupWindowEventSubscriptions() {
-            if (uIManager != null && uIManager.classChangeWindow != null && uIManager.classChangeWindow.CloseableWindowContents != null && (uIManager.classChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
-                (uIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (uIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
-            }
-            windowEventSubscriptionsInitialized = false;
+            classChangeManager = systemGameManager.ClassChangeManager;
         }
 
         public override void ProcessCreateEventSubscriptions() {
@@ -42,7 +35,6 @@ namespace AnyRPG {
         public override void ProcessCleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions()");
             base.ProcessCleanupEventSubscriptions();
-            CleanupWindowEventSubscriptions();
             systemEventManager.OnClassChange -= HandleClassChange;
         }
 
@@ -50,31 +42,15 @@ namespace AnyRPG {
             HandlePrerequisiteUpdates();
         }
 
-        public override void HandleConfirmAction() {
-            //Debug.Log(gameObject.name + ".ClassChangeInteractable.HandleConfirmAction()");
-            base.HandleConfirmAction();
-
-            // just to be safe
-            CleanupWindowEventSubscriptions();
-        }
-
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.Interact()");
-            if (windowEventSubscriptionsInitialized == true) {
-                return false;
-            }
             base.Interact(source, optionIndex);
 
-            (uIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).Setup(Props.CharacterClass);
-            (uIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnConfirmAction += HandleConfirmAction;
-            (uIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
-            windowEventSubscriptionsInitialized = true;
+            classChangeManager.SetDisplayClass(Props.CharacterClass, this);
+            uIManager.classChangeWindow.OpenWindow();
+
             return true;
         }
-
-        /// <summary>
-        /// Pick an item up off the ground and put it in the inventory
-        /// </summary>
 
         public override void StopInteract() {
             base.StopInteract();
@@ -111,9 +87,9 @@ namespace AnyRPG {
             }
         }
 
-        public override bool PlayInteractionSound() {
-            return true;
-        }
+        //public override bool PlayInteractionSound() {
+        //    return true;
+        //}
 
 
     }

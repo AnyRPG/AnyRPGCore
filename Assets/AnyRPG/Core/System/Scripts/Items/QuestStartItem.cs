@@ -18,6 +18,8 @@ namespace AnyRPG {
         protected QuestLog questLog = null;
 
         public Interactable Interactable { get => null; }
+        public InteractableOptionComponent InteractableOptionComponent { get => null; }
+
         public QuestGiverProps Props { get => questGiverProps; set => questGiverProps = value; }
 
         public override void SetGameManagerReferences() {

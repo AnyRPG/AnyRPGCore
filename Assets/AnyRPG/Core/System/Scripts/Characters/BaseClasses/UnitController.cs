@@ -107,13 +107,17 @@ namespace AnyRPG {
         private float maxCombatDistanceFromMasterOnMove = 15f;
 
         // track the current movement sound overrides
+        private List<MovementSoundArea> movementSoundAreas = new List<MovementSoundArea>();
         private MovementSoundArea movementSoundArea = null;
 
         // movement tracking
         private float apparentVelocity = 0f;
         private Vector3 lastPosition = Vector3.zero;
-        private AudioProfile footStepAudioProfile = null;
-        private int stepIndex = 0;
+        private FootstepType footstepType = FootstepType.Environment;
+        private AudioProfile environmentFootstepAudioProfile = null;
+        private AudioProfile unitFootstepAudioProfile = null;
+        private int unitStepIndex = 0;
+        private int environmentStepIndex = 0;
 
         // is this unit under the control of a master unit
         private bool underControl = false;
@@ -234,14 +238,21 @@ namespace AnyRPG {
         public bool Walking { get => walking; set => walking = value; }
         public AudioProfile MovementLoopProfile {
             get {
-                if (movementSoundArea != null && movementSoundArea.MovementLoopProfile != null) {
-                    return movementSoundArea.MovementLoopProfile;
+                if (unitProfile != null && unitProfile.FootstepType == FootstepType.None) {
+                    return null;
                 }
-                if (levelManager.GetActiveSceneNode()?.MovementLoopProfile != null) {
-                    return levelManager.GetActiveSceneNode().MovementLoopProfile;
+                if (unitProfile == null || unitProfile.FootstepType == FootstepType.Environment || unitProfile.FootstepType == FootstepType.UnitFallback) {
+                    if (movementSoundArea != null && movementSoundArea.MovementLoopProfile != null) {
+                        return movementSoundArea.MovementLoopProfile;
+                    }
+                    if (levelManager.GetActiveSceneNode()?.MovementLoopProfile != null) {
+                        return levelManager.GetActiveSceneNode().MovementLoopProfile;
+                    }
                 }
-                if (characterUnit?.BaseCharacter != null && unitProfile?.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
-                    return unitProfile.MovementAudioProfiles[0];
+                if (unitProfile != null && (unitProfile.FootstepType == FootstepType.Unit || unitProfile.FootstepType == FootstepType.UnitFallback)) {
+                    if (characterUnit?.BaseCharacter != null && unitProfile?.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
+                        return unitProfile.MovementAudioProfiles[0];
+                    }
                 }
                 return null;
             }
@@ -455,30 +466,42 @@ namespace AnyRPG {
             }
         }
 
-        private void SetFootStepAudioProfile() {
+        private void SetUnitFootstepAudioProfile() {
+
+            if (characterUnit.BaseCharacter != null && unitProfile?.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
+                unitFootstepAudioProfile = unitProfile.MovementAudioProfiles[0];
+            }
+        }
+
+        private void SetEnvironmentFootStepAudioProfile() {
+
+            if (footstepType == FootstepType.None
+                || unitProfile.FootstepType == FootstepType.Unit) {
+                // footstep type is none or unit only.  nothing to do.
+                return;
+            }
+
+            environmentFootstepAudioProfile = null;
+
             // movement sound areas override everything
             if (movementSoundArea != null && movementSoundArea.MovementHitProfile != null) {
                 //Debug.Log(gameObject.name + ".CharacterUnit.GetMovementHitProfile: return movementSoundArea.MovementHitProfile");
-                footStepAudioProfile = movementSoundArea.MovementHitProfile;
+                environmentFootstepAudioProfile = movementSoundArea.MovementHitProfile;
                 return;
             }
 
             // try the terrain layer based movement profile of the active scene node
-            footStepAudioProfile = levelManager.GetTerrainFootStepProfile(transform.position);
-            if (footStepAudioProfile != null) {
+            environmentFootstepAudioProfile = levelManager.GetTerrainFootStepProfile(transform.position);
+            if (environmentFootstepAudioProfile != null) {
                 return;
             }
 
             // try the default footstep profile of the active scene node
-            footStepAudioProfile = levelManager.GetActiveSceneNode()?.MovementHitProfile;
-            if (footStepAudioProfile != null) {
+            environmentFootstepAudioProfile = levelManager.GetActiveSceneNode()?.MovementHitProfile;
+            if (environmentFootstepAudioProfile != null) {
                 return;
             }
 
-            // default to the character movement audio profile
-            if (characterUnit.BaseCharacter != null && unitProfile != null && unitProfile.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
-                footStepAudioProfile = unitProfile.MovementAudioProfiles[0];
-            }
         }
 
         public override bool Interact(CharacterUnit source, bool processRangeCheck = false) {
@@ -493,7 +516,7 @@ namespace AnyRPG {
                 && unitControllerMode == UnitControllerMode.AI) {
 
                 // notify on interact
-                UnitEventController.NotifyOnInteract();
+                //UnitEventController.NotifyOnStartInteract();
 
                 if (unitProfile != null && unitProfile.FaceInteractionTarget == true) {
                     unitMotor.FaceTarget(source.Interactable);
@@ -503,14 +526,24 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override void ProcessStartInteract(InteractableOptionComponent interactableOptionComponent) {
-            base.ProcessStartInteract(interactableOptionComponent);
-            unitEventController.NotifyOnStartInteract(interactableOptionComponent);
+        public override void ProcessStartInteract() {
+            base.ProcessStartInteract();
+            unitEventController.NotifyOnStartInteract();
         }
 
-        public override void ProcessStopInteract(InteractableOptionComponent interactableOptionComponent) {
-            base.ProcessStopInteract(interactableOptionComponent);
-            unitEventController.NotifyOnStopInteract(interactableOptionComponent);
+        public override void ProcessStopInteract() {
+            base.ProcessStopInteract();
+            unitEventController.NotifyOnStopInteract();
+        }
+
+        public override void ProcessStartInteractWithOption(InteractableOptionComponent interactableOptionComponent) {
+            base.ProcessStartInteractWithOption(interactableOptionComponent);
+            unitEventController.NotifyOnStartInteractWithOption(interactableOptionComponent);
+        }
+
+        public override void ProcessStopInteractWithOption(InteractableOptionComponent interactableOptionComponent) {
+            base.ProcessStopInteractWithOption(interactableOptionComponent);
+            unitEventController.NotifyOnStopInteractWithOption(interactableOptionComponent);
         }
 
         public void HandleReputationChange(string eventName, EventParamProperties eventParamProperties) {
@@ -935,6 +968,7 @@ namespace AnyRPG {
         public void SetUnitProfile(UnitProfile unitProfile, UnitControllerMode unitControllerMode, int unitLevel = -1) {
             //Debug.Log(gameObject.name + "UnitController.SetUnitProfile()");
             this.unitProfile = unitProfile;
+            footstepType = unitProfile.FootstepType;
 
             if (unitProfile.FlightCapable == true) {
                 canFly = true;
@@ -956,6 +990,8 @@ namespace AnyRPG {
             unitModelController.SpawnUnitModel();
 
             SetUnitProfileInteractables();
+
+            SetUnitFootstepAudioProfile();
         }
 
         private void SetUnitProfileInteractables() {
@@ -1028,15 +1064,21 @@ namespace AnyRPG {
 
         public void SetMovementSoundArea(MovementSoundArea movementSoundArea) {
             //Debug.Log(gameObject.name + ".CharacterUnit.SetMovementSoundArea()");
-            if (movementSoundArea != this.movementSoundArea) {
+            if (movementSoundAreas.Contains(movementSoundArea) == false) {
+                movementSoundAreas.Add(movementSoundArea);
                 this.movementSoundArea = movementSoundArea;
             }
         }
 
         public void UnsetMovementSoundArea(MovementSoundArea movementSoundArea) {
             //Debug.Log(gameObject.name + ".CharacterUnit.UnsetMovementSoundArea()");
-            if (movementSoundArea == this.movementSoundArea) {
-                this.movementSoundArea = null;
+            if (movementSoundAreas.Contains(movementSoundArea) == true) {
+                movementSoundAreas.Remove(movementSoundArea);
+                if (movementSoundAreas.Count == 0) {
+                    this.movementSoundArea = null;
+                } else {
+                    this.movementSoundArea = movementSoundAreas[movementSoundAreas.Count - 1];
+                }
             }
             if (unitControllerMode == UnitControllerMode.Mount && riderUnitController != null) {
                 riderUnitController.UnsetMovementSoundArea(movementSoundArea);
@@ -1414,7 +1456,7 @@ namespace AnyRPG {
         /// play or stop movement loop
         /// </summary>
         private void HandleMovementAudio() {
-            //Debug.Log(gameObject.name + ".HandleMovementAudio(): " + apparentVelocity);
+            //Debug.Log(gameObject.name + ".HandleMovementAudio() velocity: " + apparentVelocity);
 
             // if this unit has no configured audio, or is set to use footstep events and is not in a movement area with no footstep events do nothing
             if (unitProfile?.MovementAudioProfiles == null
@@ -1461,37 +1503,87 @@ namespace AnyRPG {
         }
 
         public void PlayMovementSound(AudioClip audioClip, bool loop) {
+            //Debug.Log(gameObject.name + ".PlayMovementSound(" + (audioClip == null ? "null" : audioClip.name) + ", " + loop + ")");
+
             unitComponentController.PlayMovementSound(audioClip, loop);
         }
 
         public void PlayFootStep() {
 
-            if (unitProfile.PlayOnFootstep == false) {
+            if (unitProfile != null && unitProfile.PlayOnFootstep == false) {
+                // footstep sounds are movement loop only.  nothing to do
                 return;
             }
 
-            SetFootStepAudioProfile();
+            if (footstepType == FootstepType.None) {
+                // do not play any footsteps
+                return;
+            }
 
-            if ((footStepAudioProfile == null ||
-                            footStepAudioProfile?.AudioClips == null ||
-                            footStepAudioProfile.AudioClips.Count == 0)
-                            //&& unitController?.MovementSoundArea?.MovementLoopProfile == null
-                            //&& MovementSoundArea?.MovementHitProfile == null
+            if (footstepType == FootstepType.Unit) {
+                PlayUnitFootstep();
+                return;
+            }
+
+            SetEnvironmentFootStepAudioProfile();
+
+            if (footstepType == FootstepType.Environment) {
+                PlayEnvironmentFootstep();
+                return;
+            }
+
+            if (footstepType == FootstepType.Both) {
+                PlayUnitFootstep();
+                PlayEnvironmentFootstep();
+                return;
+            }
+
+            // we got this far, the only choice left is unit fallback
+
+            if ((environmentFootstepAudioProfile == null ||
+                            environmentFootstepAudioProfile?.AudioClips == null ||
+                            environmentFootstepAudioProfile.AudioClips.Count == 0)
                             ) {
-                //Debug.Log(gameObject.name + ".HandleMovementAudio(): nothing to do, returning");
+                PlayUnitFootstep();
                 return;
             }
 
-            if (stepIndex >= footStepAudioProfile.AudioClips.Count) {
-                stepIndex = 0;
+            // we got this far, the only choice left is environment footstep
+            PlayEnvironmentFootstep();
+        }
+
+        private void PlayUnitFootstep() {
+            if ((unitFootstepAudioProfile == null ||
+                                        unitFootstepAudioProfile.AudioClips == null ||
+                                        unitFootstepAudioProfile.AudioClips.Count == 0)
+                                        ) {
+                return;
             }
 
-            PlayMovementSound(footStepAudioProfile.AudioClips[stepIndex], false);
-
-            stepIndex++;
-            if (stepIndex >= footStepAudioProfile.AudioClips.Count) {
-                stepIndex = 0;
+            if (unitStepIndex >= unitFootstepAudioProfile.AudioClips.Count) {
+                unitStepIndex = 0;
             }
+
+            PlayMovementSound(unitFootstepAudioProfile.AudioClips[unitStepIndex], false);
+
+            unitStepIndex++;
+        }
+
+        private void PlayEnvironmentFootstep() {
+            if ((environmentFootstepAudioProfile == null ||
+                                        environmentFootstepAudioProfile.AudioClips == null ||
+                                        environmentFootstepAudioProfile.AudioClips.Count == 0)
+                                        ) {
+                return;
+            }
+
+            if (environmentStepIndex >= environmentFootstepAudioProfile.AudioClips.Count) {
+                environmentStepIndex = 0;
+            }
+
+            PlayMovementSound(environmentFootstepAudioProfile.AudioClips[environmentStepIndex], false);
+
+            environmentStepIndex++;
         }
 
         public void PlaySwimSound() {
@@ -1590,10 +1682,8 @@ namespace AnyRPG {
         }
 
         private void ApplyControlLock() {
-            if (characterUnit?.BaseCharacter?.CharacterAbilityManager != null) {
-                characterUnit.BaseCharacter.CharacterAbilityManager.StopCasting();
-            }
-            unitActionManager.StopAction();
+            characterUnit?.BaseCharacter?.CharacterAbilityManager?.TryToStopAnyAbility();
+            unitActionManager.TryToStopAction();
         }
 
         public void FreezeCharacter() {

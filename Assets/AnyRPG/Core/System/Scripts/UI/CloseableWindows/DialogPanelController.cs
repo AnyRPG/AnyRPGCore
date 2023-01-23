@@ -9,9 +9,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class DialogPanelController : WindowContentController {
 
-        public event System.Action OnConfirmAction = delegate { };
-        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
-        public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
+        private int dialogIndex = 0;
 
         [Tooltip("If no next text is provided for a dialog, this text will be used")]
         [SerializeField]
@@ -22,11 +20,6 @@ namespace AnyRPG {
 
         [SerializeField]
         private TextMeshProUGUI dialogText = null;
-
-        /*
-        [SerializeField]
-        private Button nextButton;
-        */
 
         [SerializeField]
         private TextMeshProUGUI buttonText = null;
@@ -43,30 +36,16 @@ namespace AnyRPG {
         [SerializeField]
         int dialogFontSize = 30;
 
-        private Interactable interactable = null;
-
-        private Dialog dialog = null;
-
-        private Quest quest = null;
-
-        public Dialog Dialog { get => dialog; set => dialog = value; }
-        public Interactable Interactable { get => interactable; set => interactable = value; }
-        public Quest Quest { get => quest; set => quest = value; }
-
-        private int dialogIndex = 0;
 
         // game manager references
         protected UIManager uIManager = null;
         protected QuestLog questLog = null;
         protected LogManager logManager = null;
+        protected DialogManager dialogManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            /*
-            continueButton.Configure(systemGameManager);
-            viewQuestButton.Configure(systemGameManager);
-            acceptQuestButton.Configure(systemGameManager);
-            */
+
         }
 
         public override void SetGameManagerReferences() {
@@ -74,30 +53,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             questLog = systemGameManager.QuestLog;
             logManager = systemGameManager.LogManager;
-        }
-
-        public void Setup(Quest quest, Interactable interactable) {
-            //Debug.Log("DialogPanelController.Setup(" + (quest == null ? "null" : quest.DisplayName) + ", " + (interactable == null ? "null" : interactable.DisplayName) + ")");
-            ClearSettings();
-            Quest = quest;
-            Interactable = interactable;
-            Dialog = quest.OpeningDialog;
-            uIManager.dialogWindow.OpenWindow();
-        }
-
-        public void Setup(Dialog dialog, Interactable interactable) {
-            //Debug.Log("DialogPanelController.Setup(" + dialog.DisplayName + ", " + interactable.DisplayName + ")");
-            ClearSettings();
-            Interactable = interactable;
-            Dialog = dialog;
-            uIManager.dialogWindow.OpenWindow();
-        }
-
-        public void ClearSettings() {
-            dialogIndex = 0;
-            Interactable = null;
-            Quest = null;
-            Dialog = null;
+            dialogManager = systemGameManager.DialogManager;
         }
 
         public void CancelAction() {
@@ -108,17 +64,17 @@ namespace AnyRPG {
         public void ConfirmAction() {
             //Debug.Log("NewGameMenuController.ConfirmAction(): dialogIndex: " + dialogIndex + "; DialogNode Count: " + MyDialog.MyDialogNodes.Count);
             dialogIndex++;
-            if (dialogIndex >= Dialog.DialogNodes.Count) {
-                Dialog.TurnedIn = true;
-                if (quest == null) {
+            if (dialogIndex >= dialogManager.Dialog.DialogNodes.Count) {
+                dialogManager.Dialog.TurnedIn = true;
+                if (dialogManager.Quest == null) {
 
                     // next line is no longer true because onconfirmaction calls a prerequisiteupdate on the dialog controller
                     // no one is currently subscribed so safe to set turnedIn at bottom because nothing here depends on it being set yet
 
-                    OnConfirmAction();
+                    dialogManager.ConfirmAction();
                     uIManager.dialogWindow.CloseWindow();
                 } else {
-                    if (!quest.TurnedIn) {
+                    if (!dialogManager.Quest.TurnedIn) {
                         DisplayQuestText();
                         continueButton.gameObject.SetActive(false);
                         viewQuestButton.gameObject.SetActive(true);
@@ -143,47 +99,49 @@ namespace AnyRPG {
 
         public void DisplayQuestText() {
             //Debug.Log("DialogPanelController.DisplayQuestText()");
-            if (Quest != null) {
-                dialogText.text = Quest.GetObjectiveDescription();
+            if (dialogManager.Quest != null) {
+                dialogText.text = dialogManager.Quest.GetObjectiveDescription();
             }
         }
 
         public void ViewQuest() {
             uIManager.questGiverWindow.OpenWindow();
-            questLog.ShowQuestGiverDescription(Quest, null);
+            questLog.ShowQuestGiverDescription(dialogManager.Quest, null);
             uIManager.dialogWindow.CloseWindow();
         }
 
         public void AcceptQuest() {
             //Debug.Log("DialogPanelController.AcceptQuest()");
+            Quest quest = dialogManager.Quest;
+
             // CLOSE THIS FIRST SO OTHER WINDOWS AREN'T BLOCKED FROM POPPING
             uIManager.dialogWindow.CloseWindow();
 
-            questLog.AcceptQuest(Quest);
+            questLog.AcceptQuest(quest);
             //interactable.CheckForInteractableObjectives(MyQuest.DisplayName);
         }
 
         public void DisplayNodeText() {
-            if (dialogIndex > Dialog.DialogNodes.Count + 1) {
+            if (dialogIndex > dialogManager.Dialog.DialogNodes.Count + 1) {
                 //Debug.Log("Past last node index.  will not display");
                 return;
             }
             if (characterNameText != null) {
-                characterNameText.text = Interactable.DisplayName;
+                characterNameText.text = dialogManager.Interactable.DisplayName;
             }
             
             if (dialogText != null) {
-                dialogText.text = string.Format("<size={0}>{1}</size>", dialogFontSize, Dialog.DialogNodes[dialogIndex].Description);
+                dialogText.text = string.Format("<size={0}>{1}</size>", dialogFontSize, dialogManager.Dialog.DialogNodes[dialogIndex].Description);
             }
 
-            logManager.WriteChatMessage(Dialog.DialogNodes[dialogIndex].Description);
-            if (Dialog.DialogNodes[dialogIndex].AudioClip != null) {
-                audioManager.PlayVoice(Dialog.DialogNodes[dialogIndex].AudioClip);
+            logManager.WriteChatMessage(dialogManager.Dialog.DialogNodes[dialogIndex].Description);
+            if (dialogManager.Dialog.DialogNodes[dialogIndex].AudioClip != null) {
+                audioManager.PlayVoice(dialogManager.Dialog.DialogNodes[dialogIndex].AudioClip);
             }
 
             if (buttonText != null) {
-                if (Dialog.DialogNodes[dialogIndex].NextOption != string.Empty) {
-                    buttonText.text = Dialog.DialogNodes[dialogIndex].NextOption;
+                if (dialogManager.Dialog.DialogNodes[dialogIndex].NextOption != string.Empty) {
+                    buttonText.text = dialogManager.Dialog.DialogNodes[dialogIndex].NextOption;
                 } else {
                     buttonText.text = defaultNextText;
                 }
@@ -212,7 +170,7 @@ namespace AnyRPG {
             acceptQuestButton.gameObject.SetActive(false);
             continueButton.gameObject.SetActive(true);
             dialogIndex = 0;
-            uIManager.dialogWindow.SetWindowTitle(interactable.DisplayName);
+            uIManager.dialogWindow.SetWindowTitle(dialogManager.Interactable.DisplayName);
 
             SetNavigationController(uINavigationControllers[0]);
 
@@ -222,7 +180,7 @@ namespace AnyRPG {
 
         public override void ReceiveClosedWindowNotification() {
             base.ReceiveClosedWindowNotification();
-            OnCloseWindow(this);
+            dialogManager.EndInteraction();
 
             viewQuestButton.gameObject.SetActive(false);
             acceptQuestButton.gameObject.SetActive(false);

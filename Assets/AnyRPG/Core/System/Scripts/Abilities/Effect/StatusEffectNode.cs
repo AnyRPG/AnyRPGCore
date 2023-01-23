@@ -25,7 +25,7 @@ namespace AnyRPG {
         private Dictionary<StatusEffectPanelController, StatusEffectNodeScript> statusTrackers = new Dictionary<StatusEffectPanelController, StatusEffectNodeScript>();
 
         // keep track of any spell effect prefabs associated with this status effect.
-        private Dictionary<PrefabProfile, GameObject> prefabObjects = new Dictionary<PrefabProfile, GameObject>();
+        private Dictionary<PrefabProfile, List<GameObject>> prefabObjects = new Dictionary<PrefabProfile, List<GameObject>>();
 
         // game manager references
         private ObjectPooler objectPooler = null;
@@ -33,7 +33,7 @@ namespace AnyRPG {
         public StatusEffectProperties StatusEffect { get => statusEffect; set => statusEffect = value; }
         public Coroutine MyMonitorCoroutine { get => monitorCoroutine; set => monitorCoroutine = value; }
         public AbilityEffectContext AbilityEffectContext { get => abilityEffectContext; set => abilityEffectContext = value; }
-        public Dictionary<PrefabProfile, GameObject> PrefabObjects { get => prefabObjects; set => prefabObjects = value; }
+        public Dictionary<PrefabProfile, List<GameObject>> PrefabObjects { get => prefabObjects; set => prefabObjects = value; }
         public int CurrentStacks { get => currentStacks; set => currentStacks = value; }
         public float RemainingDuration { get => remainingDuration; set => remainingDuration = value; }
 
@@ -57,9 +57,12 @@ namespace AnyRPG {
         public void ClearEffectPrefabs() {
             //Debug.Log("StatusEffectNode.ClearEffectPrefabs(): " + StatusEffect.DisplayName);
             if (prefabObjects != null) {
-                foreach (GameObject go in prefabObjects.Values) {
-                    //Debug.Log("StatusEffectNode.ClearEffectPrefabs() statusEffect: " + statusEffect.DisplayName + "; Destroy: " + go.name);
-                    objectPooler.ReturnObjectToPool(go, StatusEffect.PrefabDestroyDelay);
+                foreach (List<GameObject> gameObjectList in prefabObjects.Values) {
+                    foreach (GameObject go in gameObjectList) {
+                        //Debug.Log("StatusEffectNode.ClearEffectPrefabs() statusEffect: " + statusEffect.DisplayName + "; Destroy: " + go.name);
+                        objectPooler.ReturnObjectToPool(go, StatusEffect.PrefabDestroyDelay);
+                    }
+
                 }
                 prefabObjects.Clear();
             }

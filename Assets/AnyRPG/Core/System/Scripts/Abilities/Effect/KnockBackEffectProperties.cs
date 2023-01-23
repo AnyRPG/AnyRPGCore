@@ -73,22 +73,20 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
         }
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
+        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".KnockBackEffect.Cast()");
             if (target == null) {
                 return null;
             }
 
-            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
+            Dictionary<PrefabProfile, List<GameObject>> returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
 
             Vector3 sourcePosition = source.AbilityManager.UnitGameObject.transform.position;
             Vector3 targetPosition = target.transform.position;
 
             CharacterUnit targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
-            if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter != null && targetCharacterUnit.BaseCharacter.CharacterAbilityManager != null) {
-                //Debug.Log("KnockBackEffect.Cast(): stop casting");
-                targetCharacterUnit.BaseCharacter.CharacterAbilityManager.StopCasting();
-            }
+            targetCharacterUnit?.BaseCharacter?.CharacterAbilityManager?.TryToStopAnyAbility();
+            targetCharacterUnit?.BaseCharacter?.UnitController?.UnitActionManager?.TryToStopAction();
 
             if (knockbackType == KnockbackType.Knockback) {
                 if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter.UnitController.UnitMotor != null) {

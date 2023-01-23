@@ -10,35 +10,23 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class NameChangePanelController : WindowContentController {
 
-        public event System.Action OnConfirmAction = delegate { };
-        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
-        public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
-
         [SerializeField]
         private TMP_InputField textInput = null;
-
-        /*
-        [SerializeField]
-        private HighlightButton confirmButton = null;
-
-        [SerializeField]
-        private HighlightButton cancelButton = null;
-        */
 
         // game manager references
         private UIManager uIManager = null;
         private PlayerManager playerManager = null;
+        private NameChangeManager nameChangeManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            //confirmButton.Configure(systemGameManager);
-            //cancelButton.Configure(systemGameManager);
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
+            nameChangeManager = systemGameManager.NameChangeManager;
         }
 
         /// <summary>
@@ -61,8 +49,7 @@ namespace AnyRPG {
         public void ConfirmAction() {
             //Debug.Log("NameChangePanelController.ConfirmAction()");
             if (textInput.text != null && textInput.text != string.Empty) {
-                playerManager.SetPlayerName(textInput.text);
-                OnConfirmAction();
+                nameChangeManager.ChangePlayerName(textInput.text);
                 uIManager.nameChangeWindow.CloseWindow();
             }
         }
@@ -76,7 +63,7 @@ namespace AnyRPG {
         public override void ReceiveClosedWindowNotification() {
             //Debug.Log("NameChangePanelController.ReceiveClosedWindowNotification()");
             base.ReceiveClosedWindowNotification();
-            OnCloseWindow(this);
+            nameChangeManager.EndInteraction();
         }
 
         public void HandlePointerClick() {

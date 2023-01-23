@@ -10,6 +10,8 @@ namespace AnyRPG {
     [System.Serializable]
     public class StatusEffectProperties : LengthEffectProperties, ILearnable {
 
+        public event System.Action OnApply = delegate { };
+
         [Header("Status Effect")]
 
         [SerializeField]
@@ -280,7 +282,7 @@ namespace AnyRPG {
         }
 
         // bypass the creation of the status effect and just make its visual prefab
-        public Dictionary<PrefabProfile, GameObject> RawCast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
+        public Dictionary<PrefabProfile, List<GameObject>> RawCast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".StatusEffect.RawCast()");
             return base.Cast(source, target, originalTarget, abilityEffectInput);
         }
@@ -314,7 +316,7 @@ namespace AnyRPG {
         }
 
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
+        public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".StatusEffect.Cast(" + source.AbilityManager.Name + ", " + (target? target.name : "null") + ")");
 
             if (abilityEffectContext == null) {
@@ -324,7 +326,7 @@ namespace AnyRPG {
             if (abilityEffectContext.savedEffect == false && !CanUseOn(target, source)) {
                 return null;
             }
-            Dictionary<PrefabProfile, GameObject> returnObjects = null;
+            Dictionary<PrefabProfile, List<GameObject>> returnObjects = null;
             CharacterStats targetCharacterStats = null;
 
             if ((classTrait || abilityEffectContext.savedEffect) && (source as BaseCharacter) is BaseCharacter) {
@@ -519,6 +521,10 @@ namespace AnyRPG {
             }
             */
 
+        }
+
+        public void NotifyOnApply() {
+            OnApply();
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {

@@ -81,7 +81,7 @@ namespace AnyRPG {
             this.quest = quest;
         }
 
-        public virtual void SetQuest(Quest quest) {
+        private void SetQuest(Quest quest) {
             this.quest = quest;
         }
 
@@ -97,8 +97,9 @@ namespace AnyRPG {
             return DisplayName + ": " + Mathf.Clamp(CurrentAmount, 0, Amount) + "/" + Amount;
         }
 
-        public virtual void SetupScriptableObjects(SystemGameManager systemGameManager) {
+        public virtual void SetupScriptableObjects(SystemGameManager systemGameManager, Quest quest) {
             Configure(systemGameManager);
+            SetQuest(quest);
         }
 
         public override void SetGameManagerReferences() {

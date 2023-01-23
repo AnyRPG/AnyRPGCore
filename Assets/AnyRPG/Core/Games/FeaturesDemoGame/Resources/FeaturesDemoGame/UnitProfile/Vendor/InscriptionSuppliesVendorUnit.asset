@@ -149,22 +149,27 @@ MonoBehaviour:
   spawnDead: 0
   preventAutoDespawn: 0
   defaultToughness: 
-  voiceProfile: Female Mature Vendor
+  voiceProfile: Female Mature NPC
   useInlineVoiceProps: 0
   voiceProps:
     aggro: []
+    attack: []
     damage: []
     jump: []
     fallDamage: []
     death: []
     victory: []
     startInteract: []
+    startVendorInteract: []
     stopInteract: []
+    stopVendorInteract: []
   capabilities:
     abilityNames: []
     traitNames: []
     armorClassList: []
     weaponSkills: []
+    validPetTypes: []
+    startingPets: []
   isAggressive: 1
   aggroRadius: 20
   automaticCombatStrategy: 0
@@ -175,6 +180,7 @@ MonoBehaviour:
   equipmentNameList: []
   faceInteractionTarget: 1
   isMobile: 1
+  footstepType: 3
   playOnFootstep: 1
   movementAudioProfileNames:
   - Default Footstep Hits

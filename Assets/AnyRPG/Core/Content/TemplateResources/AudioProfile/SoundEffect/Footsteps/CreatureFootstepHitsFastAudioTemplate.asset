@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: CreatureFootstepHitsFastAudioTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Creature Footstep Hits Fast
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: 0db7a99617d398146898cc8dac13b006, type: 3}
+  - {fileID: 8300000, guid: b20007ff99629db4c95f0046d3b95fb5, type: 3}
+  - {fileID: 8300000, guid: ae75fdec86bff274c86b03f3f6895707, type: 3}
+  - {fileID: 8300000, guid: 5ee077418deb2df419235966e7bdfd49, type: 3}

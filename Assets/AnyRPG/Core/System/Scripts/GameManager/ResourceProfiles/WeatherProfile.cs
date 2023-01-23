@@ -19,7 +19,6 @@ namespace AnyRPG {
         [SerializeField]
         private bool suppressAmbientSounds = false;
 
-
         [Tooltip("Ambient sounds to play in the background while this weather is active")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AudioProfile))]
@@ -30,6 +29,11 @@ namespace AnyRPG {
         private AudioClip ambientSoundsAudio = null;
 
         private AudioProfile ambientSoundsProfileReference;
+
+        [Tooltip("This number will be multiplied by the default shadow strength to give a relative shadow strength while the weather is active.")]
+        [Range(0, 1)]
+        [SerializeField]
+        private float shadowStrength = 1f;
 
         [Tooltip("If true, fog will be active while this weather effect is active.")]
         [SerializeField]
@@ -51,6 +55,7 @@ namespace AnyRPG {
         }
 
         public FogSettings FogSettings { get => fogSettings; set => fogSettings = value; }
+        public float ShadowStrength { get => shadowStrength; set => shadowStrength = value; }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);

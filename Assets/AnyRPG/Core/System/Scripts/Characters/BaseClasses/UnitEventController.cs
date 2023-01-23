@@ -36,8 +36,10 @@ namespace AnyRPG {
         public event System.Action<UnitController> OnActivateMountedState = delegate { };
         public event System.Action OnDeActivateMountedState = delegate { };
         public event System.Action<string> OnMessageFeed = delegate { };
-        public event System.Action<InteractableOptionComponent> OnStartInteract = delegate { };
-        public event System.Action<InteractableOptionComponent> OnStopInteract = delegate { };
+        public event System.Action OnStartInteract = delegate { };
+        public event System.Action OnStopInteract = delegate { };
+        public event System.Action<InteractableOptionComponent> OnStartInteractWithOption = delegate { };
+        public event System.Action<InteractableOptionComponent> OnStopInteractWithOption = delegate { };
 
         // unit controller of controlling unit
         private UnitController unitController;
@@ -49,12 +51,20 @@ namespace AnyRPG {
 
         #region EventNotifications
 
-        public void NotifyOnStartInteract(InteractableOptionComponent interactableOptionComponent) {
-            OnStartInteract(interactableOptionComponent);
+        public void NotifyOnStartInteract() {
+            OnStartInteract();
         }
 
-        public void NotifyOnStopInteract(InteractableOptionComponent interactableOptionComponent) {
-            OnStopInteract(interactableOptionComponent);
+        public void NotifyOnStopInteract() {
+            OnStopInteract();
+        }
+
+        public void NotifyOnStartInteractWithOption(InteractableOptionComponent interactableOptionComponent) {
+            OnStartInteractWithOption(interactableOptionComponent);
+        }
+
+        public void NotifyOnStopInteractWithOption(InteractableOptionComponent interactableOptionComponent) {
+            OnStopInteractWithOption(interactableOptionComponent);
         }
 
         public void NotifyOnAggroTarget() {
@@ -96,12 +106,18 @@ namespace AnyRPG {
             OnUnitDestroy(unitProfile);
         }
 
+        /*
         public void NotifyOnInteract() {
             OnInteract();
         }
+        */
 
         public void NotifyOnJump() {
             OnJump();
+        }
+
+        public void NotifyOnCombatMiss() {
+            unitController.UnitComponentController.PlayEffectSound(systemConfigurationManager.WeaponMissAudioClip);
         }
 
         public void NotifyOnReputationChange() {

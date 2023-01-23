@@ -21,8 +21,6 @@ namespace AnyRPG {
 
         bool ControlLocked { get; }
 
-        bool IsDead { get; }
-
         bool IsOnCoolDown(string abilityName);
 
         CharacterUnit GetCharacterUnit();

@@ -124,6 +124,36 @@ namespace AnyRPG {
         [SerializeField]
         private WeatherManager weatherManager = null;
 
+        [SerializeField]
+        private DialogManager dialogManager = null;
+
+        [SerializeField]
+        private ClassChangeManager classChangeManager = null;
+
+        [SerializeField]
+        private FactionChangeManager factionChangeManager = null;
+
+        [SerializeField]
+        private SpecializationChangeManager specializationChangeManager = null;
+
+        [SerializeField]
+        private MusicPlayerManager musicPlayerManager = null;
+
+        [SerializeField]
+        private NameChangeManager nameChangeManager = null;
+
+        [SerializeField]
+        private SkillTrainerManager skillTrainerManager = null;
+
+        [SerializeField]
+        private UnitSpawnManager unitSpawnManager = null;
+
+        [SerializeField]
+        private VendorManager vendorManager = null;
+
+        [SerializeField]
+        private CharacterCreatorInteractableManager characterCreatorInteractableManager = null;
+
         // system scripts
         private SystemEventManager systemEventManager = null;
 
@@ -170,6 +200,16 @@ namespace AnyRPG {
         public ChatCommandManager ChatCommandManager { get => chatCommandManager; set => chatCommandManager = value; }
         public TimeOfDayManager TimeOfDayManager { get => timeOfDayManager; set => timeOfDayManager = value; }
         public WeatherManager WeatherManager { get => weatherManager; set => weatherManager = value; }
+        public DialogManager DialogManager { get => dialogManager; set => dialogManager = value; }
+        public ClassChangeManager ClassChangeManager { get => classChangeManager; set => classChangeManager = value; }
+        public FactionChangeManager FactionChangeManager { get => factionChangeManager; set => factionChangeManager = value; }
+        public SpecializationChangeManager SpecializationChangeManager { get => specializationChangeManager; set => specializationChangeManager = value; }
+        public MusicPlayerManager MusicPlayerManager { get => musicPlayerManager; set => musicPlayerManager = value; }
+        public NameChangeManager NameChangeManager { get => nameChangeManager; set => nameChangeManager = value; }
+        public SkillTrainerManager SkillTrainerManager { get => skillTrainerManager; set => skillTrainerManager = value; }
+        public UnitSpawnManager UnitSpawnManager { get => unitSpawnManager; set => unitSpawnManager = value; }
+        public VendorManager VendorManager { get => vendorManager; set => vendorManager = value; }
+        public CharacterCreatorInteractableManager CharacterCreatorInteractableManager { get => characterCreatorInteractableManager; set => characterCreatorInteractableManager = value; }
 
         private void Init() {
             //Debug.Log("SystemGameManager.Init()");
@@ -222,6 +262,16 @@ namespace AnyRPG {
             chatCommandManager.Configure(this);
             timeOfDayManager.Configure(this);
             weatherManager.Configure(this);
+            dialogManager.Configure(this);
+            classChangeManager.Configure(this);
+            factionChangeManager.Configure(this);
+            specializationChangeManager.Configure(this);
+            musicPlayerManager.Configure(this);
+            nameChangeManager.Configure(this);
+            skillTrainerManager.Configure(this);
+            unitSpawnManager.Configure(this);
+            vendorManager.Configure(this);
+            characterCreatorInteractableManager.Configure(this);
         }
 
         private void SetupPermanentObjects() {

@@ -68,13 +68,16 @@ namespace AnyRPG {
             systemEventManager.OnSkillListChanged -= UpdateCompletionCount;
         }
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
-            base.SetupScriptableObjects(systemGameManager);
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager, Quest quest) {
+            base.SetupScriptableObjects(systemGameManager, quest);
             skill = null;
             if (skillName != null && skillName != string.Empty) {
                 skill = systemDataFactory.GetResource<Skill>(skillName);
+                if (skill == null) {
+                    Debug.LogError("TradeSkillObjective.SetupScriptableObjects(): Could not find skill : " + skillName + " while inititalizing a trade skill objective for " + quest.DisplayName + ".  CHECK INSPECTOR");
+                }
             } else {
-                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + skillName + " while inititalizing an ability objective.  CHECK INSPECTOR");
+                Debug.LogError("TradeSkillObjective.SetupScriptableObjects(): Skill name was null while inititalizing a trade skill objective for " + quest.DisplayName + ".  CHECK INSPECTOR");
             }
         }
 

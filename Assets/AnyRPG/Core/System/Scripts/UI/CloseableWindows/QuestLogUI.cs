@@ -54,6 +54,7 @@ namespace AnyRPG {
             UpdateQuestCount();
 
             questDetailsArea.Configure(systemGameManager);
+            questDetailsArea.SetOwner(this);
         }
 
         public override void SetGameManagerReferences() {

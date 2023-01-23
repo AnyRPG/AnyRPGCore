@@ -82,11 +82,12 @@ namespace AnyRPG {
         [Header("Abilities")]
 
         [Tooltip("This ability will be cast when the item is equipped")]
+        [FormerlySerializedAs("onEquipAbilityName")]
         [SerializeField]
-        [ResourceSelector(resourceType = typeof(BaseAbility))]
-        private string onEquipAbilityName = string.Empty;
+        [ResourceSelector(resourceType = typeof(StatusEffect))]
+        private string onEquipStatusEffect = string.Empty;
 
-        private BaseAbility onEquipAbility;
+        private StatusEffect onEquipStatusEffectRef;
 
         [Tooltip("These abilities will be learned when the item is equipped")]
         [SerializeField]
@@ -160,8 +161,8 @@ namespace AnyRPG {
             return 0;
         }
 
-        public BaseAbility OnEquipAbility { get => onEquipAbility; set => onEquipAbility = value; }
-        public List<BaseAbilityProperties> LearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
+        public StatusEffect OnEquipAbilityEffect { get => onEquipStatusEffectRef; set => onEquipStatusEffectRef = value; }
+        public virtual List<BaseAbilityProperties> LearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
         public bool ManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
         public string EquipmentSlotTypeName { get => equipmentSlotType; set => equipmentSlotType = value; }
         public EquipmentSlotType EquipmentSlotType { get => realEquipmentSlotType; set => realEquipmentSlotType = value; }
@@ -309,8 +310,8 @@ namespace AnyRPG {
             }
 
             // abilities
-            if (onEquipAbility != null) {
-                summaryLines.Add(string.Format("<color=green>Cast On Equip: {0}</color>", onEquipAbility.DisplayName));
+            if (onEquipStatusEffectRef != null) {
+                summaryLines.Add(string.Format("<color=green>Cast On Equip: {0}</color>", onEquipStatusEffectRef.DisplayName));
             }
             foreach (BaseAbilityProperties learnedAbility in LearnedAbilities) {
                 summaryLines.Add(string.Format("<color=green>Learn On Equip: {0}</color>", learnedAbility.DisplayName));
@@ -346,13 +347,13 @@ namespace AnyRPG {
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
-            onEquipAbility = null;
-            if (onEquipAbilityName != null && onEquipAbilityName != string.Empty) {
-                BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(onEquipAbilityName);
-                if (baseAbility != null) {
-                    onEquipAbility = baseAbility;
+
+            if (onEquipStatusEffect != null && onEquipStatusEffect != string.Empty) {
+                StatusEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(onEquipStatusEffect) as StatusEffect;
+                if (abilityEffect != null) {
+                    onEquipStatusEffectRef = abilityEffect;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + onEquipAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find status effect : " + onEquipStatusEffect + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 

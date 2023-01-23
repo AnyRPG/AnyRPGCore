@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: LightHitsAudioTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Light Hits
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: e5a417e82a579574480958a8cde30e68, type: 3}
+  - {fileID: 8300000, guid: a45a0bc5d151ea24c834fe579ad95e00, type: 3}
+  - {fileID: 8300000, guid: b442a264aa75019489759eec513b3bd9, type: 3}
+  - {fileID: 8300000, guid: 6719a52ee8ab4e245b537703bf40a09a, type: 3}

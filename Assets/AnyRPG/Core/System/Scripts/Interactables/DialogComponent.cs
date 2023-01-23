@@ -9,28 +9,21 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class DialogComponent : InteractableOptionComponent {
 
+        // game manager references
+        private DialogManager dialogManager = null;
+
         public DialogProps Props { get => interactableOptionProps as DialogProps; }
 
         public DialogComponent(Interactable interactable, DialogProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
-            //AddUnitProfileSettings();
         }
 
-        /*
-        protected override void AddUnitProfileSettings() {
-            base.AddUnitProfileSettings();
-            if (unitProfile != null) {
-                interactableOptionProps = unitProfile.DialogProps;
-            }
-
-            // testing - add handle prerequisiteupdates here
-            // this is necessary because addUnitProfileSettings is called late in startup order
-            HandlePrerequisiteUpdates();
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            dialogManager = systemGameManager.DialogManager;
         }
-        */
 
         public override void Cleanup() {
             base.Cleanup();
-            CleanupConfirm();
             CleanupPrerequisiteOwner();
         }
 
@@ -38,26 +31,12 @@ namespace AnyRPG {
             Props.CleanupPrerequisiteOwner(this);
         }
 
-        public override void HandleConfirmAction() {
+        public override void NotifyOnConfirmAction() {
             //Debug.Log(gameObject.name + ".NameChangeInteractable.HandleConfirmAction()");
-            base.HandleConfirmAction();
-            // just to be safe
-            CleanupConfirm();
+            base.NotifyOnConfirmAction();
 
             // since the dialog completion status is itself a form of prerequisite, we should call the prerequisite update here
             HandlePrerequisiteUpdates();
-        }
-
-        public void CleanupConfirm() {
-            if (uIManager.dialogWindow.CloseableWindowContents != null) {
-                (uIManager.dialogWindow.CloseableWindowContents as DialogPanelController).OnConfirmAction -= HandleConfirmAction;
-                (uIManager.dialogWindow.CloseableWindowContents as DialogPanelController).OnCloseWindow -= CleanupConfirm;
-            }
-        }
-
-        //public void CleanupConfirm(ICloseableWindowContents contents) {
-        public void CleanupConfirm(CloseableWindowContents contents) {
-                CleanupConfirm();
         }
 
         public List<Dialog> GetCurrentOptionList() {
@@ -84,9 +63,8 @@ namespace AnyRPG {
                 if (currentList[optionIndex].Automatic) {
                     interactable.DialogController.BeginDialog(currentList[optionIndex]);
                 } else {
-                    (uIManager.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(currentList[optionIndex], this.interactable);
-                    (uIManager.dialogWindow.CloseableWindowContents as DialogPanelController).OnConfirmAction += HandleConfirmAction;
-                    (uIManager.dialogWindow.CloseableWindowContents as DialogPanelController).OnCloseWindow += CleanupConfirm;
+                    dialogManager.SetDialog(currentList[optionIndex], this.interactable, this);
+                    uIManager.dialogWindow.OpenWindow();
                 }
             }/* else {
                 interactable.OpenInteractionWindow();
@@ -105,10 +83,6 @@ namespace AnyRPG {
             }
             return true;
         }
-
-        /// <summary>
-        /// Pick an item up off the ground and put it in the inventory
-        /// </summary>
 
         public override void StopInteract() {
             base.StopInteract();

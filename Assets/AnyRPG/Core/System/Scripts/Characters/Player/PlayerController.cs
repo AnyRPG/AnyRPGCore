@@ -947,8 +947,8 @@ namespace AnyRPG {
                 playerManager.UnitController.ClearTarget();
                 if (playerManager.ActiveCharacter.CharacterStats.IsAlive != false) {
                     // prevent character from swapping to third party controller while dead
-                    playerManager.ActiveCharacter.CharacterAbilityManager.StopCasting();
-                    playerManager.UnitController.UnitActionManager.StopAction();
+                    playerManager.ActiveCharacter.CharacterAbilityManager.TryToStopAnyAbility();
+                    playerManager.UnitController.UnitActionManager.TryToStopAction();
                 }
                 playerManager.ActiveCharacter.CharacterAbilityManager.DeActivateTargettingMode();
             }
@@ -1098,6 +1098,8 @@ namespace AnyRPG {
             playerManager.ActiveUnitController.UnitEventController.OnClearTarget += HandleClearTarget;
             playerManager.ActiveUnitController.UnitAnimator.OnStartCasting += HandleStartCasting;
             playerManager.ActiveUnitController.UnitAnimator.OnEndCasting += HandleEndCasting;
+            playerManager.ActiveUnitController.UnitAnimator.OnStartActing += HandleStartActing;
+            playerManager.ActiveUnitController.UnitAnimator.OnEndActing += HandleEndActing;
             playerManager.ActiveUnitController.UnitAnimator.OnStartAttacking += HandleStartAttacking;
             playerManager.ActiveUnitController.UnitAnimator.OnEndAttacking += HandleEndAttacking;
             playerManager.ActiveUnitController.UnitAnimator.OnStartLevitated += HandleStartLevitated;
@@ -1279,6 +1281,22 @@ namespace AnyRPG {
             if (swapAnimator) {
                 playerManager.ActiveUnitController.UnitAnimator.SetCorrectOverrideController();
                 SystemEventManager.TriggerEvent("OnEndCasting", eventParam);
+            }
+        }
+
+        public void HandleStartActing(bool swapAnimator) {
+            EventParamProperties eventParam = new EventParamProperties();
+            if (swapAnimator == true) {
+                playerManager.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
+            }
+            SystemEventManager.TriggerEvent("OnStartActing", eventParam);
+        }
+
+        public void HandleEndActing(bool swapAnimator) {
+            EventParamProperties eventParam = new EventParamProperties();
+            if (swapAnimator) {
+                playerManager.ActiveUnitController.UnitAnimator.SetCorrectOverrideController();
+                SystemEventManager.TriggerEvent("OnEndActing", eventParam);
             }
         }
 

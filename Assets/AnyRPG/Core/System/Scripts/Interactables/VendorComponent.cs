@@ -7,10 +7,19 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class VendorComponent : InteractableOptionComponent {
 
+        // game manager references
+        private VendorManager vendorManager = null;
+
         public VendorProps Props { get => interactableOptionProps as VendorProps; }
 
         public VendorComponent(Interactable interactable, VendorProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             interactableOptionProps.InteractionPanelTitle = "Purchase Items";
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            vendorManager = systemGameManager.VendorManager;
         }
 
         /*
@@ -28,8 +37,9 @@ namespace AnyRPG {
             if (!uIManager.vendorWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
 
+                vendorManager.SetProps(Props, this);
                 uIManager.vendorWindow.OpenWindow();
-                (uIManager.vendorWindow.CloseableWindowContents as VendorUI).PopulateDropDownList(Props.VendorCollections, this);
+                
                 return true;
             }
             return false;
@@ -42,6 +52,10 @@ namespace AnyRPG {
 
         public override bool PlayInteractionSound() {
             return true;
+        }
+
+        public override AudioClip GetInteractionSound(VoiceProps voiceProps) {
+            return voiceProps.RandomStartVendorInteract;
         }
 
 

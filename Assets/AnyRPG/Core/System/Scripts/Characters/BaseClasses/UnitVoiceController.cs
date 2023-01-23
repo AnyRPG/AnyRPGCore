@@ -19,6 +19,8 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            unitController.UnitEventController.OnStartInteractWithOption += HandleStartInteractWithOption;
+            unitController.UnitEventController.OnStopInteractWithOption += HandleStopInteractWithOption;
             unitController.UnitEventController.OnStartInteract += HandleStartInteract;
             unitController.UnitEventController.OnStopInteract += HandleStopInteract;
             unitController.UnitEventController.OnAggroTarget += HandleAggroTarget;
@@ -31,8 +33,8 @@ namespace AnyRPG {
         }
 
         public void ResetSettings() {
-            unitController.UnitEventController.OnStartInteract -= HandleStartInteract;
-            unitController.UnitEventController.OnStopInteract -= HandleStopInteract;
+            unitController.UnitEventController.OnStartInteractWithOption -= HandleStartInteractWithOption;
+            unitController.UnitEventController.OnStopInteractWithOption -= HandleStopInteractWithOption;
             unitController.UnitEventController.OnAggroTarget -= HandleAggroTarget;
             unitController.UnitEventController.OnAttack -= HandleAttack;
             unitController.UnitEventController.OnTakeDamage -= HandleTakeDamage;
@@ -42,22 +44,34 @@ namespace AnyRPG {
             unitController.UnitEventController.OnJump -= HandleJump;
         }
 
-
-        public void HandleStartInteract(InteractableOptionComponent interactableOptionComponent) {
+        public void HandleStartInteract() {
             if (unitController.UnitProfile == null) {
                 return;
             }
 
-            if (interactableOptionComponent.GetType() == typeof(VendorComponent)) {
-                unitComponentController.PlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomStartVendorInteract);
-            } else {
-                if (interactableOptionComponent.PlayInteractionSound() == true) {
-                    unitComponentController.PlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomStartInteract);
-                }
+            unitComponentController.PlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomStartInteract);
+        }
+
+        public void HandleStopInteract() {
+            if (unitController.UnitProfile == null) {
+                return;
+            }
+
+            unitComponentController.PlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomStopInteract);
+        }
+
+
+        public void HandleStartInteractWithOption(InteractableOptionComponent interactableOptionComponent) {
+            if (unitController.UnitProfile == null) {
+                return;
+            }
+
+            if (interactableOptionComponent.PlayInteractionSound() == true) {
+                unitComponentController.PlayVoiceSound(interactableOptionComponent.GetInteractionSound(unitController.UnitProfile.VoiceProps));
             }
         }
 
-        public void HandleStopInteract(InteractableOptionComponent interactableOptionComponent) {
+        public void HandleStopInteractWithOption(InteractableOptionComponent interactableOptionComponent) {
             if (unitController.UnitProfile == null) {
                 return;
             }

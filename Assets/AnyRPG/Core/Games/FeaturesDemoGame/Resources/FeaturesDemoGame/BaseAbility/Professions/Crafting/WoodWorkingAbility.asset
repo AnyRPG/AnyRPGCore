@@ -34,9 +34,10 @@ MonoBehaviour:
     animationClip: {fileID: 0}
     animationProfileName: WoodWorking
     useUnitCastAnimations: 0
-    animationHitAudioProfileName: 
+    animationHitAudioProfileName: WoodWorking
     castingAudioClip: {fileID: 0}
-    castingAudioProfileName: WoodWorking
+    castingAudioProfileName: 
+    loopAudio: 1
     requiredLevel: 1
     characterClassRequirements: []
     classSpecializationRequirements: []

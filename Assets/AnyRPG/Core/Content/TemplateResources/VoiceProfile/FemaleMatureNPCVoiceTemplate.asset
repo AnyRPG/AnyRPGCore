@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9919e93b6dbcc294c82debc9e9adf546, type: 3}
+  m_Name: FemaleMatureNPCVoiceTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Female Mature NPC
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  voiceProps:
+    aggro:
+    - {fileID: 8300000, guid: 03bed6ff426d2304db19278a3744a356, type: 3}
+    attack:
+    - {fileID: 8300000, guid: d8a14b5bf8e91bc4f803e9e9f608a69e, type: 3}
+    - {fileID: 8300000, guid: 9fa07b8f1330b4543b1b9598bb1614f0, type: 3}
+    - {fileID: 8300000, guid: 03bed6ff426d2304db19278a3744a356, type: 3}
+    damage:
+    - {fileID: 8300000, guid: 088b2fd785c9d9943b7e578750bf8816, type: 3}
+    - {fileID: 8300000, guid: 38d05555a6224bf42aa625fa9ba39da4, type: 3}
+    - {fileID: 8300000, guid: d8fb8acafefafec4cb78d0cfd4f244b7, type: 3}
+    jump:
+    - {fileID: 8300000, guid: e2668717230ec7e499718cc7b2dc8ae7, type: 3}
+    - {fileID: 8300000, guid: 67118e42ee8e4a542ad1c952697a48c5, type: 3}
+    - {fileID: 8300000, guid: 093a686923036a048a1d437c3c6523ab, type: 3}
+    fallDamage:
+    - {fileID: 8300000, guid: 088b2fd785c9d9943b7e578750bf8816, type: 3}
+    - {fileID: 8300000, guid: 38d05555a6224bf42aa625fa9ba39da4, type: 3}
+    - {fileID: 8300000, guid: d8fb8acafefafec4cb78d0cfd4f244b7, type: 3}
+    death:
+    - {fileID: 8300000, guid: 98e9d6a79edbc7c4a8643f111037c7c4, type: 3}
+    - {fileID: 8300000, guid: e482b557fdfb72543a8c951f6cd0fbf8, type: 3}
+    - {fileID: 8300000, guid: 435ab742184b4be49b74d110d48d8243, type: 3}
+    victory: []
+    startInteract:
+    - {fileID: 8300000, guid: 6c071e18ee717974a9a88c550f4f9ae1, type: 3}
+    startVendorInteract:
+    - {fileID: 8300000, guid: 6c071e18ee717974a9a88c550f4f9ae1, type: 3}
+    stopInteract:
+    - {fileID: 8300000, guid: 6c1e78090592d844d9c65494b4fb21cb, type: 3}
+    stopVendorInteract:
+    - {fileID: 8300000, guid: 6c1e78090592d844d9c65494b4fb21cb, type: 3}
+    - {fileID: 8300000, guid: 20b6a041642243f4e8572f2c6e284bfe, type: 3}
+    - {fileID: 8300000, guid: dfb41f2b50f40ae4a9765064dc67d1aa, type: 3}

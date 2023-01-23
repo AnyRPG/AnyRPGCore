@@ -8,61 +8,29 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class NameChangeComponent : InteractableOptionComponent {
 
-        public NameChangeProps Props { get => interactableOptionProps as NameChangeProps; }
+        // game manager references
+        NameChangeManager nameChangeManager = null;
 
-        private bool windowEventSubscriptionsInitialized = false;
+        public NameChangeProps Props { get => interactableOptionProps as NameChangeProps; }
 
         public NameChangeComponent(Interactable interactable, NameChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
-        //public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
-        public void CleanupEventSubscriptions(CloseableWindowContents windowContents) {
-            //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
-            CleanupWindowEventSubscriptions();
-        }
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
 
-        public void CleanupWindowEventSubscriptions() {
-            if (uIManager.nameChangeWindow.CloseableWindowContents != null) {
-                (uIManager.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (uIManager.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
-            }
-            windowEventSubscriptionsInitialized = false;
-        }
-
-        public override void ProcessCleanupEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventSubscriptions()");
-            base.ProcessCleanupEventSubscriptions();
-            CleanupWindowEventSubscriptions();
-        }
-
-        public override void HandleConfirmAction() {
-            //Debug.Log(gameObject.name + ".NameChangeInteractable.HandleConfirmAction()");
-            base.HandleConfirmAction();
-
-            // just to be safe
-            CleanupWindowEventSubscriptions();
+            nameChangeManager = systemGameManager.NameChangeManager;
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".NameChangeInteractable.Interact()");
-            if (windowEventSubscriptionsInitialized == true) {
-                //Debug.Log(gameObject.name + ".NameChangeInteractable.Interact(): EVENT SUBSCRIPTIONS WERE ALREADY INITIALIZED!!! RETURNING");
-                return false;
-            }
+            
             base.Interact(source, optionIndex);
 
+            nameChangeManager.BeginInteraction(this);
             uIManager.nameChangeWindow.OpenWindow();
-            (uIManager.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnConfirmAction += HandleConfirmAction;
-            (uIManager.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
-            windowEventSubscriptionsInitialized = true;
             return true;
         }
-
-
-
-        /// <summary>
-        /// Pick an item up off the ground and put it in the inventory
-        /// </summary>
 
         public override void StopInteract() {
             base.StopInteract();
@@ -90,9 +58,9 @@ namespace AnyRPG {
             return GetValidOptionCount();
         }
 
-        public override bool PlayInteractionSound() {
-            return true;
-        }
+        //public override bool PlayInteractionSound() {
+        //    return true;
+        //}
 
 
     }
