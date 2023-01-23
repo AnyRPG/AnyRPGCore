@@ -608,8 +608,8 @@ namespace AnyRPG {
         public void SetupScriptableObjects(Quest quest, SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             foreach (QuestObjective objective in questObjectives) {
-                objective.SetupScriptableObjects(systemGameManager);
-                objective.SetQuest(quest);
+                objective.SetupScriptableObjects(systemGameManager, quest);
+                //objective.SetQuest(quest);
             }
         }
 

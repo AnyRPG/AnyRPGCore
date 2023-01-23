@@ -798,6 +798,9 @@ namespace AnyRPG {
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (oldItem != null ? oldItem.DisplayName : "null") + ")");
             if (oldItem != null) {
+                if (oldItem.OnEquipAbilityEffect != null) {
+                    baseCharacter.CharacterStats.GetStatusEffectNode(oldItem.OnEquipAbilityEffect.StatusEffectProperties)?.CancelStatusEffect();
+                }
                 foreach (BaseAbilityProperties baseAbility in oldItem.LearnedAbilities) {
                     UnlearnAbility(baseAbility);
                 }
@@ -805,9 +808,9 @@ namespace AnyRPG {
             UpdateEquipmentTraits(oldItem);
 
             if (newItem != null) {
-                if (newItem.OnEquipAbility != null) {
+                if (newItem.OnEquipAbilityEffect != null) {
                     if (baseCharacter.UnitController != null) {
-                        BeginAbility(newItem.OnEquipAbility.AbilityProperties);
+                        newItem.OnEquipAbilityEffect.AbilityEffectProperties.Cast(baseCharacter, baseCharacter.UnitController, baseCharacter.UnitController, null);
                     }
                 }
                 foreach (BaseAbilityProperties baseAbility in newItem.LearnedAbilities) {
