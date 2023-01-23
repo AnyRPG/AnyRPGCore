@@ -35,6 +35,7 @@ MonoBehaviour:
     animationHitAudioProfileName: 
     castingAudioClip: {fileID: 0}
     castingAudioProfileName: 
+    loopAudio: 0
     requiredLevel: 1
     characterClassRequirements:
     - Archer
@@ -69,6 +70,7 @@ MonoBehaviour:
       canCastOnNeutral: 0
       canCastOnFriendly: 0
       autoSelfCast: 0
+      unitTypeRestrictions: []
       useMeleeRange: 0
       maxRange: 30
       requireFacingTarget: 0
@@ -78,7 +80,7 @@ MonoBehaviour:
       groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
       groundTargetRadius: 0
     inlineAbilityEffects:
-    - id: 0
+    - rid: 0
     abilityEffectNames: []
     tickRate: 1
     inlineChannelingEffects: []
@@ -87,9 +89,12 @@ MonoBehaviour:
     useUnitAttackAnimations: 1
     useAutoAttackAnimations: 0
     useWeaponHitSound: 1
+    useWeaponSkillAttackVoiceSetting: 0
+    playAttackVoice: 0
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: 0
       type: {class: ProjectileEffectConfig, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         effectProperties:
@@ -104,6 +109,7 @@ MonoBehaviour:
             canCastOnNeutral: 0
             canCastOnFriendly: 0
             autoSelfCast: 0
+            unitTypeRestrictions: []
             useMeleeRange: 0
             maxRange: 40
             lineOfSightSourceLocation: 0
