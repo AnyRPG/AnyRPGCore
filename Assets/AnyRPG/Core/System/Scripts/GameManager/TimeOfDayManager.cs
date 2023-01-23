@@ -162,6 +162,14 @@ namespace AnyRPG {
                     }
                 }
 
+                // special check on level load to activate day or night settings
+                // otherwise sun could remain on if level was entered at night but particle system was on by default
+                if (IsDayTime()) {
+                    ActivateDay();
+                } else {
+                    ActivateNight(true);
+                }
+
                 // since this is a level load, set fade-in to 3 seconds, instead of using time of day speed
                 PlayAmbientSounds(3f);
             }
@@ -180,16 +188,33 @@ namespace AnyRPG {
             inGameTime = startTime.AddSeconds((DateTime.Now - startTime).TotalSeconds * systemConfigurationManager.TimeOfDaySpeed);
             //Debug.Log("Time is " + inGameTime.ToShortTimeString());
 
-            if (nightTime == true && inGameTime.TimeOfDay.TotalSeconds >= 10800 && inGameTime.TimeOfDay.TotalSeconds < 61800) {
+            if (nightTime == true && IsDayTime()) {
                 nightTime = false;
                 ActivateDay();
                 PlayAmbientSounds();
-            } else if (nightTime == false && (inGameTime.TimeOfDay.TotalSeconds < 10800 || inGameTime.TimeOfDay.TotalSeconds >= 61800)) {
+            } else if (nightTime == false && IsNightTime()) {
                 nightTime = true;
-                ActivateNight();
+                ActivateNight(false);
                 PlayAmbientSounds();
             }
         }
+
+        private bool IsDayTime() {
+            if (inGameTime.TimeOfDay.TotalSeconds >= 10800 && inGameTime.TimeOfDay.TotalSeconds < 61800) {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool IsNightTime() {
+            if (inGameTime.TimeOfDay.TotalSeconds < 10800 || inGameTime.TimeOfDay.TotalSeconds >= 61800) {
+                return true;
+            }
+
+            return false;
+        }
+
 
         private void ActivateDay() {
             if (sunParticle != null) {
@@ -197,9 +222,13 @@ namespace AnyRPG {
             }
         }
 
-        private void ActivateNight() {
+        private void ActivateNight(bool immediateStop) {
             if (sunParticle != null) {
-                sunParticle.Stop();
+                if (immediateStop == true) {
+                    sunParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                } else {
+                    sunParticle.Stop(true);
+                }
             }
         }
 
