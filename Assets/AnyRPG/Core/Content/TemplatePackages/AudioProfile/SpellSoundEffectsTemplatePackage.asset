@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: SpellSoundEffectsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Spell Sound Effects
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 219b5833ff1385a4d8681b3621076606, type: 2}
+  - {fileID: 11400000, guid: e83d18da8b6aae646893f214852f49ba, type: 2}
+  - {fileID: 11400000, guid: cea5a3289e3b3064a8ae890d1afb6e79, type: 2}
+  - {fileID: 11400000, guid: 70c15b3dc7d5e6541ab11fc5c31a6657, type: 2}
+  - {fileID: 11400000, guid: a2e2aca357f1535488ac5018fe66f2ab, type: 2}
+  - {fileID: 11400000, guid: 066eec02f7189b4468a58f70abf25904, type: 2}
+  - {fileID: 11400000, guid: 5b1708b1d9b01c54b838be41d6f324e1, type: 2}
+  - {fileID: 11400000, guid: 1b3c3517b905d58488b23c425c7d1acb, type: 2}
+  - {fileID: 11400000, guid: c8c6a1b475fed21429456cbf1b356b97, type: 2}
+  - {fileID: 11400000, guid: d14bd58ae1098c14f96544050fcb6375, type: 2}
+  - {fileID: 11400000, guid: a895ac6dfa0295446bd935d1f95c58b1, type: 2}
+  - {fileID: 11400000, guid: f7aeed2baaf647846ac432bc8cb6ab44, type: 2}
+  - {fileID: 11400000, guid: 1972220a61813564e962e3cdd9815ad8, type: 2}
+  - {fileID: 11400000, guid: e83f4f05dc77af24aa509fad02de9b75, type: 2}
+  - {fileID: 11400000, guid: 6fe0d4d9b20f3ec478af08e6d7115431, type: 2}
+  - {fileID: 11400000, guid: 205a75829b7dd4a4780f2f94e81d4cc8, type: 2}
+  - {fileID: 11400000, guid: 4261dd88afb2211428dcad86275d66b2, type: 2}
+  - {fileID: 11400000, guid: efa2a5b8dff912a418860b1a173b9d91, type: 2}
+  - {fileID: 11400000, guid: 078aafcd5f327604cac740fc098aad5e, type: 2}
+  - {fileID: 11400000, guid: 2ad537fb0625edb47a0b972c6af79577, type: 2}
+  - {fileID: 11400000, guid: 69fd57b4de1998f41a6514252c8c3606, type: 2}
+  - {fileID: 11400000, guid: bf623baadbcebbc4e826e8ac5108a037, type: 2}
+  - {fileID: 11400000, guid: 7733932720b8c8a43af55fb9a3d9b507, type: 2}
+  - {fileID: 11400000, guid: 36642c8a388e4d14a8d56e7809b8b266, type: 2}
+  - {fileID: 11400000, guid: 50757d7c63645ac4b90307dad080d64d, type: 2}
+  - {fileID: 11400000, guid: b92d39376c9fad545b0eda7b193383b2, type: 2}
+  - {fileID: 11400000, guid: c909479c82ddf8d44b93776ac9a06fb6, type: 2}
+  - {fileID: 11400000, guid: 901aa37aa5d251f428f619bd7dcdbcdd, type: 2}
+  - {fileID: 11400000, guid: 0692cc36f193e8040bc150c5d1deeaf2, type: 2}
+  - {fileID: 11400000, guid: 0c35b96e0963a0046bb45831e2677f0e, type: 2}
+  - {fileID: 11400000, guid: 17b8bf39ca8698b47855ce53b96ba17e, type: 2}
+  - {fileID: 11400000, guid: c7426d1e0b8be1241a869b5b6982b322, type: 2}
+  - {fileID: 11400000, guid: 214b02ed5ba571d40941dab4b2f0b3fe, type: 2}
+  - {fileID: 11400000, guid: 1192fc4050cde7641b944375e1f5ec9c, type: 2}
+  prefabs: []
+  dependencies: []

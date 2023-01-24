@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
-  m_Name: CoreAmbientSoundsTemplatePackage
+  m_Name: ActionSoundEffectsTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: Core Ambient Sounds
+  resourceName: Action Sound Effects
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -21,11 +21,10 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   resources:
-  - {fileID: 11400000, guid: 782e7c62ada11f5439c544bf24afea95, type: 2}
-  - {fileID: 11400000, guid: 66014b1284e15c44aba12e6f42cc0e30, type: 2}
-  - {fileID: 11400000, guid: 7ed7087416ed5244db25057608fb76be, type: 2}
-  - {fileID: 11400000, guid: a63ca211d5ee60e4798c2634aa121955, type: 2}
-  - {fileID: 11400000, guid: fc240af0e3160ef45b2d596f86b2c974, type: 2}
-  - {fileID: 11400000, guid: 1f60844005d2b1b409393464402b9561, type: 2}
+  - {fileID: 11400000, guid: 5ab1c46e537761c479de52ea4ea5a56c, type: 2}
+  - {fileID: 11400000, guid: 09623c658bfbe4f489d251bd2713b439, type: 2}
+  - {fileID: 11400000, guid: f64e39606317f6a40a0bc2efd97823cf, type: 2}
+  - {fileID: 11400000, guid: 61cfd4436f5f1ff488486dbc9419ca64, type: 2}
+  - {fileID: 11400000, guid: ce5e3f5b1c1d2824a90fea8c17831621, type: 2}
   prefabs: []
   dependencies: []

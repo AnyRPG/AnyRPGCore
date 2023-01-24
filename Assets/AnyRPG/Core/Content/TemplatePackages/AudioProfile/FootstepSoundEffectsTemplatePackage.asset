@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
   m_Name: FootstepSoundEffectsTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: RPG Sound Effects
+  resourceName: Footstep Sound Effects
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -21,6 +21,10 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   resources:
+  - {fileID: 11400000, guid: 3f59fe3225f8f79428f38b8a44034ce9, type: 2}
+  - {fileID: 11400000, guid: 0cb2aa35aba55194ea109c70b5ef5b1d, type: 2}
+  - {fileID: 11400000, guid: 091d70ba3b60c444ebd551c480ff6f54, type: 2}
+  - {fileID: 11400000, guid: 1d41fbf00befa714f9074b79df5a5d28, type: 2}
   - {fileID: 11400000, guid: 08e6c40f7e68ebd4b85bed239df23e03, type: 2}
   - {fileID: 11400000, guid: de10c7b9320dbaa48a6bd91a8cdbcb4d, type: 2}
   - {fileID: 11400000, guid: bcb6683c1905edd41a31c7e8e7e5ca0a, type: 2}
@@ -43,5 +47,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 353a20e74b36edf4f833a819b17182a0, type: 2}
   - {fileID: 11400000, guid: 35ce90f4192aa8c4caee000855ba5462, type: 2}
   - {fileID: 11400000, guid: 66efd40b2c2ad79418bc441cb7c6194e, type: 2}
+  - {fileID: 11400000, guid: e937a219eabb0034291e626381f56c33, type: 2}
+  - {fileID: 11400000, guid: 3f8558dbc0878414ea15adcb8b566917, type: 2}
   prefabs: []
   dependencies: []

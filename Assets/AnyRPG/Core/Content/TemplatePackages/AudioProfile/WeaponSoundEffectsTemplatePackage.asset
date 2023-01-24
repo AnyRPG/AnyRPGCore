@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: WeaponSoundEffectsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Weapon Sound Effects
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 4c71e9e8b73418449a47fdeb39e5a33c, type: 2}
+  - {fileID: 11400000, guid: a32ce6e4789c38f498feb778ef1664a6, type: 2}
+  - {fileID: 11400000, guid: 31f3084529cc0034e9fbb43a93e97988, type: 2}
+  - {fileID: 11400000, guid: 547606385f7bb8d419190c6249cb8723, type: 2}
+  - {fileID: 11400000, guid: 67f4520a1ca70464aa8cef9e00d1a00b, type: 2}
+  - {fileID: 11400000, guid: 82a3feca873c25e48a5a5ff635c2958b, type: 2}
+  - {fileID: 11400000, guid: ddde9e308c41a994ba714ebeb735cfbd, type: 2}
+  - {fileID: 11400000, guid: 68fde0babd21b0b4a91df556d273d574, type: 2}
+  - {fileID: 11400000, guid: 66fce81efaf36fe4598f4e9376d51eb0, type: 2}
+  - {fileID: 11400000, guid: ed4259c934de7e64f930a0e65844b1ff, type: 2}
+  - {fileID: 11400000, guid: 46214fbbca204624fbdae539a18d1ffa, type: 2}
+  - {fileID: 11400000, guid: d8bf677dbbb9c694fa336445762b0266, type: 2}
+  - {fileID: 11400000, guid: 7c40256fd7407c24e9f5a330adcfa926, type: 2}
+  - {fileID: 11400000, guid: c833f1034fda70d41b8357c66b0a897c, type: 2}
+  - {fileID: 11400000, guid: 223ffdad10bfbf4478b4ea0c24d477e4, type: 2}
+  - {fileID: 11400000, guid: 7f7a2a12d70e07f4a89a55452b5f9d53, type: 2}
+  - {fileID: 11400000, guid: 8bd3610ca90394a478fb220d8c482d37, type: 2}
+  - {fileID: 11400000, guid: 6ebb7e3eac3692e48a7036cc822cccdd, type: 2}
+  - {fileID: 11400000, guid: f1fca5b0de2c53443b438f45a697254c, type: 2}
+  - {fileID: 11400000, guid: 3c26c02d1202bc74489a3516df041055, type: 2}
+  prefabs: []
+  dependencies: []

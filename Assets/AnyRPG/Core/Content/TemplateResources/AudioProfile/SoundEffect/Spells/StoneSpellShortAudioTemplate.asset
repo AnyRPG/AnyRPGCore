@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
-  m_Name: DefaultSystemAudioTemplatePackage
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: StoneSpellShortAudioTemplate
   m_EditorClassIdentifier: 
-  resourceName: Default System Audio
+  resourceName: Stone Spell Short
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -20,7 +20,6 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  resources:
-  - {fileID: 11400000, guid: 09623c658bfbe4f489d251bd2713b439, type: 2}
-  prefabs: []
-  dependencies: []
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: 156c390febf0cdf418e9d2ac261fc940, type: 3}
