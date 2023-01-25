@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eef7edd6ae524264485cbe22d310dd60, type: 3}
-  m_Name: DaggerWeaponSkill
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: SwordHitsAudio
   m_EditorClassIdentifier: 
-  resourceName: Dagger
+  resourceName: Sword Hits
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -20,16 +20,9 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  weaponSkillProps:
-    defaultWeaponSkill: 0
-    attackSpeed: 2
-    defaultHitEffects:
-    - Dagger Attack
-    onHitEffects: []
-    animationProfileName: Melee Weapon
-    onHitAudioProfiles:
-    - Sword Hits
-    animationEventAudioProfile: 
-    playAttackVoice: 1
-    abilityAnimationObjectList: []
-    abilityObjectList: []
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: 39a2e98acb02d3f498dda18b3f119fb1, type: 3}
+  - {fileID: 8300000, guid: 0d7b0789a50e8f84bbdfe9f424bfc6f1, type: 3}
+  - {fileID: 8300000, guid: 2ea29a14774844e429afdce07100b91b, type: 3}
+  - {fileID: 8300000, guid: 91dfa4b33e7a2d246b6c971b9ae30b1d, type: 3}

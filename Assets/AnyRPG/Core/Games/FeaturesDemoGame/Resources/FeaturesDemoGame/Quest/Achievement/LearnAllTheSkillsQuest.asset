@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b491a306145b8e4aa064bbcf71f8e01, type: 3}
   m_Name: LearnAllTheSkillsQuest
   m_EditorClassIdentifier: 
-  resourceName: Learn All The Skills
+  resourceName: Learn All The Trade Skills
   displayName: 
   icon: {fileID: 21300000, guid: e029593ae7518d743830eccfc3e4e2b7, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Learn all the gathering and crafting skills.
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   isAchievement: 1
   repeatableQuest: 0
   hasOpeningDialog: 0
@@ -41,64 +42,30 @@ MonoBehaviour:
   skillRewardNames: []
   steps:
   - questObjectives:
-    - id: 0
-    - id: 1
-    - id: 2
-    - id: 3
-  collectObjectives: []
-  killObjectives: []
-  tradeSkillObjectives:
-  - amount: 1
-    type: Box Gathering
-    overrideDisplayName: 
-    skillName: 
-  - amount: 1
-    type: Sphere Gathering
-    overrideDisplayName: 
-    skillName: 
-  - amount: 1
-    type: Equipment Crafting
-    overrideDisplayName: 
-    skillName: 
-  - amount: 1
-    type: Consumable Crafting
-    overrideDisplayName: 
-    skillName: 
-  abilityObjectives: []
-  useInteractableObjectives: []
-  questQuestObjectives: []
-  dialogObjectives: []
-  visitZoneObjectives: []
+    - rid: 0
+    - rid: 1
+    - rid: 2
   prerequisiteConditions: []
   turnInItems: 0
   allowRawComplete: 0
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: 0
       type: {class: TradeSkillObjective, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         amount: 1
-        type: 
         overrideDisplayName: 
-        skillName: Box Gathering
-    00000001:
+        skillName: Herbalism
+    - rid: 1
       type: {class: TradeSkillObjective, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         amount: 1
-        type: 
         overrideDisplayName: 
-        skillName: Sphere Gathering
-    00000002:
+        skillName: Fishing
+    - rid: 2
       type: {class: TradeSkillObjective, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         amount: 1
-        type: 
         overrideDisplayName: 
-        skillName: Equipment Crafting
-    00000003:
-      type: {class: TradeSkillObjective, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        amount: 1
-        type: 
-        overrideDisplayName: 
-        skillName: Consumable Crafting
+        skillName: Mining

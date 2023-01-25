@@ -22,10 +22,14 @@ MonoBehaviour:
   optionalOverride: 0
   weaponSkillProps:
     defaultWeaponSkill: 0
+    attackSpeed: 2
     defaultHitEffects:
     - Polearm Attack
     onHitEffects: []
     animationProfileName: Melee Weapon
     onHitAudioProfiles:
-    - Metal Hit
+    - Sword Hits
+    animationEventAudioProfile: 
+    playAttackVoice: 1
+    abilityAnimationObjectList: []
     abilityObjectList: []

@@ -28,6 +28,8 @@ MonoBehaviour:
     onHitEffects: []
     animationProfileName: Melee Weapon
     onHitAudioProfiles:
-    - Sword Hit
+    - Sword Hits
+    animationEventAudioProfile: 
+    playAttackVoice: 1
     abilityAnimationObjectList: []
     abilityObjectList: []
