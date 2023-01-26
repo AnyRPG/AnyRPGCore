@@ -35,7 +35,7 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 
-namespace AnyRPG.Editor {
+namespace AnyRPG.EditorTools {
     public class ReverseAnimationClipWizard : ScriptableWizard {
         
         public AnimationClip sourceAnimationClip = null;

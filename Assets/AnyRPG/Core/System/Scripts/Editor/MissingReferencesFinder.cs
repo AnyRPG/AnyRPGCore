@@ -7,7 +7,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace AnyRPG.Editor {
+namespace AnyRPG.EditorTools {
 
     public class MissingReferencesFinder : MonoBehaviour {
         private class ObjectData {

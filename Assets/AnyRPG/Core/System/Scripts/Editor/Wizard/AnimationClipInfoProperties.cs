@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 
-namespace AnyRPG.Editor {
+namespace AnyRPG.EditorTools {
 
 	class AnimationClipInfoProperties {
 		SerializedProperty m_Property;

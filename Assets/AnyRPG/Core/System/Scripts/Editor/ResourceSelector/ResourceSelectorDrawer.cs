@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using AnyRPG;
 
-namespace AnyRPG.Editor {
+namespace AnyRPG.EditorTools {
 
     [CustomPropertyDrawer(typeof(ResourceSelectorAttribute))]
     public class ResourceSelectorDrawer : PropertyDrawer {

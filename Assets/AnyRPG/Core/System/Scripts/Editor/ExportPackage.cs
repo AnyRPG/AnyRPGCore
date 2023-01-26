@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace AnyRPG.Editor {
+namespace AnyRPG.EditorTools {
 
     public class ExportPackage {
         [MenuItem("Tools/AnyRPG/Export/FullExport")]

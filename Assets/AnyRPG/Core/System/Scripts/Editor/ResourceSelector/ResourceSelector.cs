@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using AnyRPG;
 
-namespace AnyRPG.Editor {
+namespace AnyRPG.EditorTools {
 
     public class ResourceSelector : EditorWindow {
         System.Type resourceType;

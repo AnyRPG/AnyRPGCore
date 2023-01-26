@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace AnyRPG.Editor {
+namespace AnyRPG.EditorTools {
 
     public class MissingPrefabDetector {
         [MenuItem("Tools/AnyRPG/Find Missing Prefab")]

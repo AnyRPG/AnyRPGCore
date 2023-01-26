@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using AnyRPG;
 
-namespace AnyRPG.Editor {
+namespace AnyRPG.EditorTools {
 
     [CustomEditor(typeof(Interactable))]
     public class InteractableEditor : UnityEditor.Editor {

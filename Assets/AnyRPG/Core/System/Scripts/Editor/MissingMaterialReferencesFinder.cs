@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace AnyRPG.Editor {
+namespace AnyRPG.EditorTools {
 
     public class MissingMaterialReferencesFinder : MonoBehaviour {
 
