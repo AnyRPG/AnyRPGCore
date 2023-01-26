@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: WarriorClassUnitTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Warrior Class Unit
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: f49136bdf9a578048a8c04fdae78d55d, type: 2}
+  - {fileID: 11400000, guid: 544e27fbd19edcc48803c648294febdc, type: 2}
+  prefabs:
+  - {fileID: 6390993854296471015, guid: 93c15a07d3354e04b860f13f85e886bf, type: 3}
+  - {fileID: 6390993854296471015, guid: 82220033e51406640aec9d5a27fea3fa, type: 3}
+  dependencies:
+  - {fileID: 11400000, guid: 1c9d0a13cad39f6439baacd710df2c34, type: 2}

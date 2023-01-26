@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: BloodKnightSpecializationTrainerTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Blood Knight Specialization Trainer
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 9b3ed0521a3832d4a8c35d2bd931006e, type: 2}
+  prefabs:
+  - {fileID: 6390993854296471015, guid: 18b3b57793ea1cc41ac0d4a629cb771a, type: 3}
+  dependencies:
+  - {fileID: 11400000, guid: 64e7397dbd1107b47b75ab5a3733aa4f, type: 2}

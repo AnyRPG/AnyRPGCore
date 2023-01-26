@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllCoreSoundEffectsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: All Sound Effects
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: b21c7ed3b37495f4cafc5470994b7247, type: 2}
+  - {fileID: 11400000, guid: 403be634e5fc1c4458b84adb4c5b07e3, type: 2}
+  - {fileID: 11400000, guid: cf526eeb2edcfd543bb13fbe28e8d21b, type: 2}
+  - {fileID: 11400000, guid: 412105be4ab600d4aba7a0bb8d8031ec, type: 2}
+  - {fileID: 11400000, guid: 188798e4d935b604f9df6774351c123f, type: 2}
+  - {fileID: 11400000, guid: 4a28323f108e3af42ad7748be0a10979, type: 2}
+  - {fileID: 11400000, guid: b20bfb5550c4ea74d9a229c9e3264a3f, type: 2}
+  - {fileID: 11400000, guid: a14ce181588c5254c81557cf25f6f215, type: 2}
+  - {fileID: 11400000, guid: d8cd7b605d4e38e448df23675dfc7b10, type: 2}

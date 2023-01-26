@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: GatheringSkillTrainerUnitsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Gathering Skill Trainer Units
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 9d2597f52c1be2244a716e727a32967b, type: 2}
+  - {fileID: 11400000, guid: f5cea31d6093868408bd25434af407a2, type: 2}
+  - {fileID: 11400000, guid: 8d4da2bba0e0ac044b43954bda890b18, type: 2}
+  - {fileID: 11400000, guid: 0a9f946fa54d8d3429eb5ff386510427, type: 2}
+  - {fileID: 11400000, guid: 6a2f47beb971a564f829d494692e6656, type: 2}

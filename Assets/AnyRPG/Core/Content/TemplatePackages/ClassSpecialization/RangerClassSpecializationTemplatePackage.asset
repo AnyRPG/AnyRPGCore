@@ -23,14 +23,10 @@ MonoBehaviour:
   resources:
   - {fileID: 11400000, guid: a78813d5c096642428f86bda00941f9f, type: 2}
   - {fileID: 11400000, guid: eb2bffc8b4bfb61498e0cf3175d63e8f, type: 2}
-  - {fileID: 11400000, guid: 95fcb430ada265d46bf9000d7c1931ef, type: 2}
-  - {fileID: 11400000, guid: e1f13cdb29e7e4c44aa6bf0607b91634, type: 2}
-  - {fileID: 11400000, guid: 171aa62fac9df6b41b16e94c99bf73dd, type: 2}
-  prefabs:
-  - {fileID: 6390993854296471015, guid: 393427b596c33eb45ab13b75fbb07120, type: 3}
-  - {fileID: 6390993854296471015, guid: e50c1f02a6404d1478602824c2f61ccd, type: 3}
-  - {fileID: 6390993854296471015, guid: 2b85e4f6ce4a456498c07446159a017d, type: 3}
+  prefabs: []
   dependencies:
+  - {fileID: 11400000, guid: c4a5e2743df9a6046956ffedaff0f9a1, type: 2}
+  - {fileID: 11400000, guid: f94d5a18b0c736a409eb02f91bfb7c34, type: 2}
   - {fileID: 11400000, guid: 85b9c1f59e80b4c41b619ee015c1b93c, type: 2}
   - {fileID: 11400000, guid: 15e0430842c14c34ababd4eb965bacd2, type: 2}
   - {fileID: 11400000, guid: 2804d2cf886945f47ab4829a716e79ef, type: 2}

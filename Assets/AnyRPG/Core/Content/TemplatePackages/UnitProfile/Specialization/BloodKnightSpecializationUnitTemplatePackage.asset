@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: BloodKnightSpecializationUnitTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Blood Knight Specialization Unit
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 43f1e12cc2c962646a1ddb78ea7f263e, type: 2}
+  - {fileID: 11400000, guid: 1d0575aaed5ad4d42bf027ad47fb7b38, type: 2}
+  prefabs:
+  - {fileID: 6390993854296471015, guid: b39c5f4dc2676914f97a50425f72e657, type: 3}
+  - {fileID: 6390993854296471015, guid: b1bd5271cd0e12d49bd433207aedab41, type: 3}
+  dependencies:
+  - {fileID: 11400000, guid: 64e7397dbd1107b47b75ab5a3733aa4f, type: 2}

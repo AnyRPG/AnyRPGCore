@@ -22,6 +22,7 @@ MonoBehaviour:
   optionalOverride: 0
   resources:
   - {fileID: 11400000, guid: fab7ab38f12d63240902a1af299b3076, type: 2}
+  - {fileID: 11400000, guid: 4c99f7db0036d124a9491064503d78d9, type: 2}
   prefabs:
   - {fileID: 5526004164212875172, guid: dcd3f54c5fdf4ca4697bf3d4cadb7469, type: 3}
   dependencies: []
