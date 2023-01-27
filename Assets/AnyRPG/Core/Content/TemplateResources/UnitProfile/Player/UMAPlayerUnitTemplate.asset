@@ -183,9 +183,9 @@ MonoBehaviour:
   faceInteractionTarget: 1
   isMobile: 1
   footstepType: 3
-  playOnFootstep: 0
+  playOnFootstep: 1
   movementAudioProfileNames:
-  - Default Footstep Loop
+  - Default Footstep Hits
   useInlinePatrol: 0
   patrolConfig:
     autoStart: 0

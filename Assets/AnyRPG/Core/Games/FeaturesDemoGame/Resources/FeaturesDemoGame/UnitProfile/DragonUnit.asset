@@ -36,6 +36,7 @@ MonoBehaviour:
       attackClips: []
       castClips: []
       takeDamageClips: []
+      actionClips: []
       idleClip: {fileID: 0}
       jumpClip: {fileID: 0}
       fallClip: {fileID: 0}
@@ -149,25 +150,43 @@ MonoBehaviour:
   spawnDead: 0
   preventAutoDespawn: 0
   defaultToughness: 
+  voiceProfile: 
+  useInlineVoiceProps: 0
+  voiceProps:
+    aggro: []
+    attack: []
+    damage: []
+    jump: []
+    fallDamage: []
+    death: []
+    victory: []
+    startInteract: []
+    startVendorInteract: []
+    stopInteract: []
+    stopVendorInteract: []
   capabilities:
     abilityNames:
     - Dragon Breath
     traitNames: []
     armorClassList: []
     weaponSkills: []
+    validPetTypes: []
+    startingPets: []
   isAggressive: 1
   aggroRadius: 20
   automaticCombatStrategy: 0
   combatStrategyName: 
+  defaultHitEffects: []
   primaryStats: []
   powerResources: []
   useProviderEquipment: 0
   equipmentNameList: []
   faceInteractionTarget: 1
   isMobile: 1
+  footstepType: 4
   playOnFootstep: 1
   movementAudioProfileNames:
-  - Default Footstep Hits
+  - Creature Footstep Hits Fast
   useInlinePatrol: 0
   patrolConfig:
     autoStart: 0
@@ -190,7 +209,7 @@ MonoBehaviour:
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: 0c4469aa-ec9f-491c-bdc8-68d3586271dc
+  m_UUID: dd766fb1-eca7-4d79-8dc1-5c8ec60366e5
   references:
     version: 2
     RefIds: []
