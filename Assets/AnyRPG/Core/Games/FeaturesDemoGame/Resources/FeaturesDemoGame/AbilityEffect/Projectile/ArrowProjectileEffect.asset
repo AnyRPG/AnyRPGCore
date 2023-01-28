@@ -32,6 +32,7 @@ MonoBehaviour:
       canCastOnNeutral: 0
       canCastOnFriendly: 0
       autoSelfCast: 0
+      unitTypeRestrictions: []
       useMeleeRange: 0
       maxRange: 40
       lineOfSightSourceLocation: 0
@@ -60,5 +61,5 @@ MonoBehaviour:
     defaultPrefabLifetime: 10
     projectileSpeed: 40
     flightAudioProfileNames:
-    - Trap Arrow
+    - Arrow Flight
     randomFlightAudioProfiles: 0

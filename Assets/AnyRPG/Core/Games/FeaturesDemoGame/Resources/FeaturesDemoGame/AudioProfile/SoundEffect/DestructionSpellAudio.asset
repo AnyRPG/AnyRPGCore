@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
-  m_Name: IceHitAudio
+  m_Name: DestructionSpellAudio
   m_EditorClassIdentifier: 
-  resourceName: Ice Hit
+  resourceName: Destruction Spell
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   artistName: 
   audioClips:
-  - {fileID: 8300000, guid: b43c714c4ce31934dbfeb81bbb56af82, type: 3}
+  - {fileID: 8300000, guid: a04e2e2c0d086844b9e32670c6a17031, type: 3}

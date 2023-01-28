@@ -10,15 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
-  m_Name: WaterSplashAudio
+  m_Name: WaterSplashesAudio
   m_EditorClassIdentifier: 
-  resourceName: Water Splash
+  resourceName: Water Splashes
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   artistName: 
   audioClips:
   - {fileID: 8300000, guid: e93aaaf3aa177004ca17ecbe73e42d53, type: 3}
+  - {fileID: 8300000, guid: e728ded7e756e1a438a0ade33f1b9a35, type: 3}
+  - {fileID: 8300000, guid: cd6466d8c991e364494bf35d8c97568d, type: 3}
+  - {fileID: 8300000, guid: 84fa1499778a59c4aad71daee35c6862, type: 3}
+  - {fileID: 8300000, guid: 105d11c4f0c49e54e8004358c921f65f, type: 3}
+  - {fileID: 8300000, guid: 49485ddb40a8d4742b2a5b901e2c5b74, type: 3}
+  - {fileID: 8300000, guid: c110d1a256a3c524493c2af60711c6af, type: 3}
+  - {fileID: 8300000, guid: e58ad29f33298584f843180672765099, type: 3}

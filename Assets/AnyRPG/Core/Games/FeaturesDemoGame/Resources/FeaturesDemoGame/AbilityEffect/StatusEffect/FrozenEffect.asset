@@ -32,6 +32,7 @@ MonoBehaviour:
       canCastOnNeutral: 0
       canCastOnFriendly: 0
       autoSelfCast: 0
+      unitTypeRestrictions: []
       useMeleeRange: 0
       maxRange: 0
       lineOfSightSourceLocation: 0
@@ -40,7 +41,7 @@ MonoBehaviour:
     effectMaterialName: Ice
     materialChangeDuration: 2
     onHitAudioProfileNames:
-    - Ice Hit
+    - Ice Spell Hit
     randomAudioProfiles: 0
     hitAbilityEffectNames: []
     inputMultiplier: 0

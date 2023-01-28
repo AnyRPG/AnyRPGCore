@@ -22,6 +22,7 @@ MonoBehaviour:
   optionalOverride: 0
   gatherAbilityProperties:
     requireOutOfCombat: 0
+    requireStealth: 0
     weaponAffinityNames: []
     holdableObjectList:
     - holdableObjectName: FishingPole
@@ -33,11 +34,13 @@ MonoBehaviour:
     animationClip: {fileID: 0}
     animationProfileName: Fishing
     useUnitCastAnimations: 0
-    animationHitAudioProfileName: Water Splash
+    animationHitAudioProfileName: Water Splashes
     castingAudioClip: {fileID: 0}
     castingAudioProfileName: 
+    loopAudio: 0
     requiredLevel: 1
     characterClassRequirements: []
+    classSpecializationRequirements: []
     useableWithoutLearning: 0
     autoAddToBars: 0
     canSimultaneousCast: 0
@@ -67,10 +70,12 @@ MonoBehaviour:
       canCastOnNeutral: 0
       canCastOnFriendly: 0
       autoSelfCast: 0
+      unitTypeRestrictions: []
       useMeleeRange: 0
       maxRange: 0
       requireFacingTarget: 0
       maxAngle: 45
+      requireBehindTarget: 0
       requiresGroundTarget: 0
       groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
       groundTargetRadius: 0
@@ -80,4 +85,5 @@ MonoBehaviour:
     inlineChannelingEffects: []
     channeledAbilityEffectnames: []
   references:
-    version: 1
+    version: 2
+    RefIds: []

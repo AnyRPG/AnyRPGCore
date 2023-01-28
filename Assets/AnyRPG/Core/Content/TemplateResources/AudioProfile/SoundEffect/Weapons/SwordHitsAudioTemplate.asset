@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
   m_Name: SwordHitsAudioTemplate
   m_EditorClassIdentifier: 
-  resourceName: Sword Hit
+  resourceName: Sword Hits
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}

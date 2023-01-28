@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b4eca1291e60f148801568f2a83a06b, type: 3}
-  m_Name: GreenLeatherHeadbandUMARecipe
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: IceSpellHitAudio
   m_EditorClassIdentifier: 
-  resourceName: Green Leather Headband
+  resourceName: Ice Spell Hit
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -20,10 +20,6 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  uMARecipeProfileProperties:
-    uMARecipes:
-    - {fileID: 11400000, guid: 16ee3f68c0f019c42afc937764bdb814, type: 2}
-    - {fileID: 11400000, guid: 65e0ac45995368b48827c93bc666702d, type: 2}
-    sharedColors:
-    - sharedColorname: Head Equipment Color 1
-      color: {r: 0, g: 0.65882355, b: 0, a: 1}
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: b43c714c4ce31934dbfeb81bbb56af82, type: 3}

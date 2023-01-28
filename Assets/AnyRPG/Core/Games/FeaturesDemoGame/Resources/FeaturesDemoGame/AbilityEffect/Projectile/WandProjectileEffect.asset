@@ -61,5 +61,5 @@ MonoBehaviour:
     defaultPrefabLifetime: 10
     projectileSpeed: 40
     flightAudioProfileNames:
-    - Trap Flame Arrow
+    - Flame Arrow
     randomFlightAudioProfiles: 0

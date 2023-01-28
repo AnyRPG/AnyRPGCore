@@ -20,16 +20,10 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  deprecatedUMARecipes:
-  - {fileID: 11400000, guid: ab2a7b204ea6e70db8f798f5a9f0eeed, type: 2}
-  - {fileID: 11400000, guid: e65a21f4c5fb8fdc5bdd9675d2feedc5, type: 2}
-  deprecatedSharedColors:
-  - sharedColorname: Head Equipment Color 1
-    color: {r: 0.6431373, g: 0, b: 0.6431373, a: 1}
   uMARecipeProfileProperties:
     uMARecipes:
-    - {fileID: 11400000, guid: ab2a7b204ea6e70db8f798f5a9f0eeed, type: 2}
-    - {fileID: 11400000, guid: e65a21f4c5fb8fdc5bdd9675d2feedc5, type: 2}
+    - {fileID: 11400000, guid: 16ee3f68c0f019c42afc937764bdb814, type: 2}
+    - {fileID: 11400000, guid: 65e0ac45995368b48827c93bc666702d, type: 2}
     sharedColors:
     - sharedColorname: Head Equipment Color 1
       color: {r: 0.6431373, g: 0, b: 0.6431373, a: 1}

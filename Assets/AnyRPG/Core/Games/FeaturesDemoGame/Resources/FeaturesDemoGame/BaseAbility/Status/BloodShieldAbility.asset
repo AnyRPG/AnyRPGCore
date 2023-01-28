@@ -36,7 +36,8 @@ MonoBehaviour:
     useUnitCastAnimations: 0
     animationHitAudioProfileName: 
     castingAudioClip: {fileID: 0}
-    castingAudioProfileName: Trap Destruction Spell
+    castingAudioProfileName: Destruction Spell
+    loopAudio: 0
     requiredLevel: 1
     characterClassRequirements: []
     classSpecializationRequirements: []
@@ -69,6 +70,7 @@ MonoBehaviour:
       canCastOnNeutral: 0
       canCastOnFriendly: 0
       autoSelfCast: 1
+      unitTypeRestrictions: []
       useMeleeRange: 0
       maxRange: 0
       requireFacingTarget: 0
@@ -84,4 +86,5 @@ MonoBehaviour:
     inlineChannelingEffects: []
     channeledAbilityEffectnames: []
   references:
-    version: 1
+    version: 2
+    RefIds: []

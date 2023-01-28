@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
-  m_Name: TrapArrowAudio
+  m_Name: FlameArrowAudio
   m_EditorClassIdentifier: 
-  resourceName: Trap Arrow
+  resourceName: Flame Arrow
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   artistName: 
   audioClips:
-  - {fileID: 8300000, guid: fb453a0c062535d47b60936eb5d9daa2, type: 3}
+  - {fileID: 8300000, guid: e26d0b27a356c1f4a9c13c64caff68d3, type: 3}

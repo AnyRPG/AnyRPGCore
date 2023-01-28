@@ -41,7 +41,7 @@ MonoBehaviour:
     effectMaterialName: 
     materialChangeDuration: 2
     onHitAudioProfileNames:
-    - Ice Hit
+    - Ice Spell Hit
     randomAudioProfiles: 0
     hitAbilityEffectNames:
     - Frozen
