@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
-  m_Name: VendorNPCTemplatePackage
+  m_Name: LeatherworkingSuppliesVendorUnitTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: Vendor NPC
+  resourceName: Leatherworking Supplies Vendor Unit
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -21,9 +21,9 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   resources:
-  - {fileID: 11400000, guid: bd375a657c49ba14388c12db06ff29ca, type: 2}
-  - {fileID: 11400000, guid: 57c1379f72ac7814e90dde2f5aa5114f, type: 2}
-  - {fileID: 11400000, guid: 3f7f83a944326344bb6931617483110f, type: 2}
+  - {fileID: 11400000, guid: 520807bbf17a21c4e93d3ff564b5bf61, type: 2}
+  - {fileID: 11400000, guid: 1cfa713402b5b634cb16ccf3ce87d7c2, type: 2}
   prefabs:
-  - {fileID: 6390993854296471015, guid: 6a07524b1e51ff645b18b918f3c820f7, type: 3}
-  dependencies: []
+  - {fileID: 6390993854296471015, guid: b332aa2b72ba0a34a839a12e1f715c12, type: 3}
+  dependencies:
+  - {fileID: 11400000, guid: 658701b1a3c42bd42812ac6b75096056, type: 2}

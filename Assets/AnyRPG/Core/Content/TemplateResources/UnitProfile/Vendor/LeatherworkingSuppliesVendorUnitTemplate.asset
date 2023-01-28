@@ -150,7 +150,7 @@ MonoBehaviour:
   spawnDead: 0
   preventAutoDespawn: 0
   defaultToughness: 
-  voiceProfile: 
+  voiceProfile: Female Mature NPC
   useInlineVoiceProps: 0
   voiceProps:
     aggro: []

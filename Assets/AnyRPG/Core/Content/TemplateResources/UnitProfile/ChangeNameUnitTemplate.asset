@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e31818c35d6ab14fbf88410e7e18453, type: 3}
-  m_Name: BlacksmithingSuppliesVendorUnitTemplate
+  m_Name: ChangeNameUnitTemplate
   m_EditorClassIdentifier: 
-  resourceName: Blacksmithing Supplies Vendor
+  resourceName: Change Name NPC
   displayName: 
-  icon: {fileID: 21300000, guid: 6e19024c02939bc41b1aa135f53055a2, type: 3}
+  icon: {fileID: 21300000, guid: d9e8c98d04dbfed4cb2258c177294ae8, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -26,7 +26,7 @@ MonoBehaviour:
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 6307183516646880328, guid: 19e8c32795f06634a9fd88f456134cab,
+    modelPrefab: {fileID: 6954704190252621995, guid: b50f0a866945a66428c3794bd6eba9b0,
       type: 3}
     animationProfileName: 
     useInlineAnimationProps: 0
@@ -140,7 +140,7 @@ MonoBehaviour:
   isPet: 0
   flightCapable: 0
   glideCapable: 0
-  characterName: Blacksmithing Supplies
+  characterName: Change Name
   title: 
   factionName: 
   unitTypeName: 
@@ -150,7 +150,7 @@ MonoBehaviour:
   spawnDead: 0
   preventAutoDespawn: 0
   defaultToughness: 
-  voiceProfile: Male NPC
+  voiceProfile: Female Mature NPC
   useInlineVoiceProps: 0
   voiceProps:
     aggro: []
@@ -209,16 +209,14 @@ MonoBehaviour:
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: 5ceba62c-b498-4af7-8d0c-649676090520
+  m_UUID: 21a1e7ff-e79a-4f4e-94b0-d3f3709d3eba
   references:
     version: 2
     RefIds:
     - rid: 0
-      type: {class: VendorProps, ns: AnyRPG, asm: Assembly-CSharp}
+      type: {class: NameChangeProps, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         interactionPanelTitle: 
         interactionPanelImage: {fileID: 0}
         namePlateImage: {fileID: 0}
         prerequisiteConditions: []
-        vendorCollectionNames:
-        - Blacksmithing Supplies

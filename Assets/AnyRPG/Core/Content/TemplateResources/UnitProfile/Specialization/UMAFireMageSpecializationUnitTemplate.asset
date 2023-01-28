@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: UMA Fire Mage
   displayName: 
-  icon: {fileID: 21300000, guid: 3fe8d957725f36c45892c3b66afed644, type: 3}
+  icon: {fileID: 21300000, guid: aceeb8db2cf7a164b9ae030c6de00591, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0

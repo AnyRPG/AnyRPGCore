@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
-  m_Name: VendorNPCTemplatePackage
+  m_Name: SavePositionPatrolUnitTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: Vendor NPC
+  resourceName: Save Position Patrol Unit
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -21,9 +21,8 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   resources:
-  - {fileID: 11400000, guid: bd375a657c49ba14388c12db06ff29ca, type: 2}
-  - {fileID: 11400000, guid: 57c1379f72ac7814e90dde2f5aa5114f, type: 2}
-  - {fileID: 11400000, guid: 3f7f83a944326344bb6931617483110f, type: 2}
+  - {fileID: 11400000, guid: 98910234fc361de4482b14e089fb8250, type: 2}
+  - {fileID: 11400000, guid: 56587046d22eef14fba5672ead00694e, type: 2}
   prefabs:
-  - {fileID: 6390993854296471015, guid: 6a07524b1e51ff645b18b918f3c820f7, type: 3}
+  - {fileID: 8684586224624033660, guid: 80cd55efee0c61d49b04748034056d84, type: 3}
   dependencies: []
