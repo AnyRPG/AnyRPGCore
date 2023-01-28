@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
-  m_Name: RPGItemQualitiesTemplatePackage
+  m_Name: CoreAmbientSoundsTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: RPG Item Qualities
+  resourceName: Core Ambient Sounds
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -21,12 +21,11 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   resources:
-  - {fileID: 11400000, guid: 2f6ad82e922e5064fb0fad15e2088b1b, type: 2}
-  - {fileID: 11400000, guid: a29e3e7957fda9d4390ddeb5623d61d4, type: 2}
-  - {fileID: 11400000, guid: 8093ed024b3e85242942ae7eb8854d98, type: 2}
-  - {fileID: 11400000, guid: 926bc4f0a959db6479828b2437631de2, type: 2}
-  - {fileID: 11400000, guid: b81573a08f19af64ebb2e03f39001aa0, type: 2}
-  - {fileID: 11400000, guid: 15706f8ed7c5a374e9445f14993b7476, type: 2}
-  - {fileID: 11400000, guid: 3bb978e4dc74af347a513369bab4ea72, type: 2}
+  - {fileID: 11400000, guid: 782e7c62ada11f5439c544bf24afea95, type: 2}
+  - {fileID: 11400000, guid: 66014b1284e15c44aba12e6f42cc0e30, type: 2}
+  - {fileID: 11400000, guid: 7ed7087416ed5244db25057608fb76be, type: 2}
+  - {fileID: 11400000, guid: a63ca211d5ee60e4798c2634aa121955, type: 2}
+  - {fileID: 11400000, guid: fc240af0e3160ef45b2d596f86b2c974, type: 2}
+  - {fileID: 11400000, guid: 1f60844005d2b1b409393464402b9561, type: 2}
   prefabs: []
   dependencies: []

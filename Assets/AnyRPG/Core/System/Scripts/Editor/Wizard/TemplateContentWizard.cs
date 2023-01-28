@@ -50,6 +50,9 @@ namespace AnyRPG {
         void OnWizardCreate() {
 
             EditorUtility.DisplayProgressBar("Template Content Wizard", "Creating Dependency Closure...", 0.1f);
+
+            Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
+
             try {
                 string fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
                 RunWizard(fileSystemGameName, gameParentFolder, scriptableContent, replaceExistingResources, replaceExistingPrefabs);
@@ -61,6 +64,7 @@ namespace AnyRPG {
                 EditorUtility.DisplayDialog("Template Content Wizard",
                     "Error!  See console log for details",
                     "OK");
+                Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.ScriptOnly);
                 throw;
             }
 
@@ -72,6 +76,7 @@ namespace AnyRPG {
                 "\nCopied " + copyPrefabCount + " / " + totalPrefabCount + " prefabs." +
                 "\nSkipped " + skipPrefabCount + " existing prefabs.",
                 "OK");
+            Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.ScriptOnly);
 
         }
 

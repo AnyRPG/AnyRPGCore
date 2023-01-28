@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
-  m_Name: AllCoreMusicTemplatePackage
+  m_Name: AllPowerResourcesTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: Core Music
+  resourceName: RPG Power Resources
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -20,8 +20,10 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  resources:
-  - {fileID: 11400000, guid: d92b8cd470e14d940ba6854a1f421c08, type: 2}
-  - {fileID: 11400000, guid: 54c04e88fd1f94d4d925c2d36c1cc76e, type: 2}
+  resources: []
   prefabs: []
-  dependencies: []
+  dependencies:
+  - {fileID: 11400000, guid: 376d2eb3e9ae6f54eb04400791a3b94a, type: 2}
+  - {fileID: 11400000, guid: ecc6d818469315a4f9823f0c97ccbf24, type: 2}
+  - {fileID: 11400000, guid: 53056916ab95db54a90ab636f26e04ec, type: 2}
+  - {fileID: 11400000, guid: 253e217cade5a544287d1d4db4d42597, type: 2}

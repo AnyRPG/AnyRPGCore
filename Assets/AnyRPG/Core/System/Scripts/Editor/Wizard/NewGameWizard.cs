@@ -19,19 +19,22 @@ namespace AnyRPG {
         private const string pathToSceneConfigPrefab = "/AnyRPG/Core/System/Prefabs/GameManager/SceneConfig.prefab";
         private const string pathToUMAGLIBPrefab = "/UMA/Getting Started/UMA_GLIB.prefab";
 
-        private const string pathToSystemAbilitiesTemplate = "/AnyRPG/Core/Content/TemplatePackages/DefaultSystemEffectsTemplatePackage.asset";
+        private const string pathToSystemAbilitiesTemplate = "/AnyRPG/Core/Content/TemplatePackages/AbilityEffect/DefaultSystemEffectsTemplatePackage.asset";
         private const string pathToHealthPowerResourceTemplate = "/AnyRPG/Core/Content/TemplatePackages/PowerResource/HealthPowerResourceTemplatePackage.asset";
-        private const string pathToAttackAbilityTemplate = "/AnyRPG/Core/Content/TemplatePackages/AttackAbilityTemplatePackage.asset";
-        private const string pathToPlayerUnitsTemplate = "/AnyRPG/Core/Content/TemplatePackages/DefaultPlayerUnitsTemplatePackage.asset";
+        private const string pathToAttackAbilityTemplate = "/AnyRPG/Core/Content/TemplatePackages/BaseAbility/Attack/AttackAbilityTemplatePackage.asset";
+        private const string pathToPlayerUnitsTemplate = "/AnyRPG/Core/Content/TemplatePackages/UnitProfile/Player/DefaultPlayerUnitsTemplatePackage.asset";
 
         // optional template prefabs
-        private const string pathToGoldCurrencyGroupTemplate = "/AnyRPG/Core/Content/TemplatePackages/GoldCurrencyGroupTemplatePackage.asset";
-        private const string pathToArmorClassesTemplate = "/AnyRPG/Core/Content/TemplatePackages/RPGArmorClassesTemplatePackage.asset";
-        private const string pathToItemQualitiesTemplate = "/AnyRPG/Core/Content/TemplatePackages/RPGItemQualitiesTemplatePackage.asset";
-        private const string pathToPowerResourcesTemplate = "/AnyRPG/Core/Content/TemplatePackages/RPGPowerResourcesTemplatePackage.asset";
-        private const string pathToCharacterStatsTemplate = "/AnyRPG/Core/Content/TemplatePackages/RPGCharacterStatsTemplatePackage.asset";
-        private const string pathToUnitToughnessesTemplate = "/AnyRPG/Core/Content/TemplatePackages/RPGUnitToughnessesTemplatePackage.asset";
-        private const string pathToWeaponSkillsTemplate = "/AnyRPG/Core/Content/TemplatePackages/RPGWeaponSkillsTemplatePackage.asset";
+        private const string pathToGoldCurrencyGroupTemplate = "/AnyRPG/Core/Content/TemplatePackages/Currency/GoldCurrencyGroupTemplatePackage.asset";
+        private const string pathToArmorClassesTemplate = "/AnyRPG/Core/Content/TemplatePackages/ArmorClass/AllArmorClassesTemplatePackage.asset";
+        private const string pathToItemQualitiesTemplate = "/AnyRPG/Core/Content/TemplatePackages/ItemQuality/AllItemQualitiesTemplatePackage.asset";
+        private const string pathToPowerResourcesTemplate = "/AnyRPG/Core/Content/TemplatePackages/PowerResource/AllPowerResourcesTemplatePackage.asset";
+        private const string pathToCharacterStatsTemplate = "/AnyRPG/Core/Content/TemplatePackages/CharacterStat/AllCharacterStatsTemplatePackage.asset";
+        private const string pathToUnitToughnessesTemplate = "/AnyRPG/Core/Content/TemplatePackages/UnitToughness/AllUnitToughnessesTemplatePackage.asset";
+        private const string pathToWeaponSkillsTemplate = "/AnyRPG/Core/Content/TemplatePackages/WeaponSkill/AllWeaponSkillsTemplatePackage.asset";
+        private const string pathToFootstepSoundsTemplate = "/AnyRPG/Core/Content/TemplatePackages/AudioProfile/FootstepSoundEffectsTemplatePackage.asset";
+        private const string pathToWeatherProfilesTemplate = "/AnyRPG/Core/Content/TemplatePackages/WeatherProfile/AllWeatherProfilesTemplatePackage.asset";
+        private const string pathToHumanVoiceProfilesTemplate = "/AnyRPG/Core/Content/TemplatePackages/VoiceProfile/CoreVoiceProfilesTemplatePackage.asset";
 
         // sill be a subfolder of Application.dataPath and should start with "/"
         private const string gameParentFolder = "/Games/";
@@ -76,7 +79,9 @@ namespace AnyRPG {
             "UnitToughness",
             "UnitType",
             "VendorCollection",
-            "WeaponSkill"
+            "VoiceProfile",
+            "WeaponSkill",
+            "WeatherProfile"
         };
 
         // compare the default first scene directory to any user picked scene name
@@ -121,6 +126,9 @@ namespace AnyRPG {
         public bool installPowerResources = true;
         public bool installUnitToughnesses = true;
         public bool installWeaponSkills = true;
+        public bool installFootstepSounds = true;
+        public bool installWeatherProfiles = true;
+        public bool installHumanVoiceProfiles = true;
 
         //private bool addFirstSceneToBuild = true;
         //private string umaRoot = "Assets/UMA/";
@@ -151,6 +159,8 @@ namespace AnyRPG {
 
             string gameLoadScenePath = string.Empty;
 
+            Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
+
             try {
                 gameLoadScenePath = CreateNewGame();
             } catch {
@@ -158,11 +168,13 @@ namespace AnyRPG {
 
                 EditorUtility.ClearProgressBar();
                 EditorUtility.DisplayDialog("New Game Wizard", "New Game Wizard encountered an error.  Check the console log for details.", "OK");
+                Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.ScriptOnly);
                 return;
             }
 
             EditorUtility.ClearProgressBar();
             EditorUtility.DisplayDialog("New Game Wizard", "New Game Wizard Complete! The game loading scene can be found at " + gameLoadScenePath, "OK");
+            Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.ScriptOnly);
 
         }
 
@@ -334,6 +346,18 @@ namespace AnyRPG {
                 contentTemplates.Add((ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToWeaponSkillsTemplate));
             }
 
+            if (installFootstepSounds) {
+                contentTemplates.Add((ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToFootstepSoundsTemplate));
+            }
+
+            if (installWeatherProfiles) {
+                contentTemplates.Add((ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToWeatherProfilesTemplate));
+            }
+
+            if (installHumanVoiceProfiles) {
+                contentTemplates.Add((ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToHumanVoiceProfilesTemplate));
+            }
+
             if (contentTemplates.Count > 0) {
                 TemplateContentWizard.RunWizard(fileSystemGameName, newGameParentFolder, contentTemplates, true, true);
             }
@@ -414,6 +438,21 @@ namespace AnyRPG {
 
             // check for presence of the weapon skills template
             if (WizardUtilities.CheckFileExists(pathToWeaponSkillsTemplate, "Weapon Skills Template") == false) {
+                return false;
+            }
+
+            // check for presence of the footstep sounds template
+            if (WizardUtilities.CheckFileExists(pathToFootstepSoundsTemplate, "Footstep Sounds Template") == false) {
+                return false;
+            }
+
+            // check for presence of the weather profiles template
+            if (WizardUtilities.CheckFileExists(pathToWeatherProfilesTemplate, "Weather Profiles Template") == false) {
+                return false;
+            }
+
+            // check for presence of the human voice profiles template
+            if (WizardUtilities.CheckFileExists(pathToHumanVoiceProfilesTemplate, "Human Voice Profiles Template") == false) {
                 return false;
             }
 
@@ -716,9 +755,9 @@ namespace AnyRPG {
                 existingScene = EditorGUILayout.ObjectField("Existing Scene", existingScene, typeof(SceneAsset), false) as SceneAsset;
             }
 
-            firstSceneDayAmbientSounds = EditorGUILayout.ObjectField("First Scene Day Ambient Sounds", firstSceneDayAmbientSounds, typeof(AudioClip), false) as AudioClip;
-            firstSceneNightAmbientSounds = EditorGUILayout.ObjectField("First Scene Night Ambient Sounds", firstSceneNightAmbientSounds, typeof(AudioClip), false) as AudioClip;
-            firstSceneMusic = EditorGUILayout.ObjectField("First Scene Music", firstSceneMusic, typeof(AudioClip), false) as AudioClip;
+            firstSceneDayAmbientSounds = EditorGUILayout.ObjectField("Day Ambient Sounds", firstSceneDayAmbientSounds, typeof(AudioClip), false) as AudioClip;
+            firstSceneNightAmbientSounds = EditorGUILayout.ObjectField("Night Ambient Sounds", firstSceneNightAmbientSounds, typeof(AudioClip), false) as AudioClip;
+            firstSceneMusic = EditorGUILayout.ObjectField("Background Music", firstSceneMusic, typeof(AudioClip), false) as AudioClip;
 
             EditorGUILayout.LabelField("Common RPG Building Blocks", EditorStyles.boldLabel);
 
@@ -729,6 +768,9 @@ namespace AnyRPG {
             installPowerResources = EditorGUILayout.Toggle(new GUIContent("Install Power Resources", "Includes Health, Mana, Rage, and Energy resources"), installPowerResources);
             installUnitToughnesses = EditorGUILayout.Toggle(new GUIContent("Install Unit Toughnesses", "Includes 2/5/10/25 man group toughnesses, and minion/boss solo toughnesses"), installUnitToughnesses);
             installWeaponSkills = EditorGUILayout.Toggle(new GUIContent("Install Weapon Skills", "Includes animations, sounds, and hit effects for all included weapon types such as bow, sword, etc"), installWeaponSkills);
+            installFootstepSounds = EditorGUILayout.Toggle(new GUIContent("Install Footstep Sounds", "Includes many different types of footstep sounds including gravel, sand, snow, etc"), installFootstepSounds);
+            installWeatherProfiles = EditorGUILayout.Toggle(new GUIContent("Install Weather", "Includes snow, rain, and fog weather"), installWeatherProfiles);
+            installHumanVoiceProfiles = EditorGUILayout.Toggle(new GUIContent("Install Human Voices", "Includes multiple types of male and female voices"), installHumanVoiceProfiles);
 
             return true;
         }
