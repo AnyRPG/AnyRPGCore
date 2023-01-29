@@ -19,11 +19,16 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   weaponSkillProps:
     defaultWeaponSkill: 1
+    attackSpeed: 2
     defaultHitEffects: []
     onHitEffects: []
     animationProfileName: 
     onHitAudioProfiles:
-    - Weapon Miss
+    - Punch Hits
+    animationEventAudioProfile: 
+    playAttackVoice: 1
+    abilityAnimationObjectList: []
     abilityObjectList: []
