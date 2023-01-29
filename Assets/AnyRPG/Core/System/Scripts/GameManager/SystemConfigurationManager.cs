@@ -699,11 +699,11 @@ namespace AnyRPG {
         [SerializeField]
         private float timeOfDaySpeed = 1f;
 
-        [Tooltip("The angle of the sun as an offset from straight down. -90 is pointing directly North, +90 is pointing directly south.")]
+        [Tooltip("The number of degrees around the X axis that the sun will be rotated compared to world space. 0 is pointing directly North, 90 is pointing straight down (directly over the player head), 180 is pointing directly South.")]
         [SerializeField]
         private float defaultSunAngle = 30f;
 
-        [Tooltip("A color gradient to use for the sun color.  The ends represent midnight, and the center is noon.")]
+        [Tooltip("A color gradient to use for the sun color.  The ends represent midnight, and the center is noon.  The alpha value controls sun light intensity and skybox blending.")]
         [SerializeField]
         private Gradient defaultSunGradient;
 

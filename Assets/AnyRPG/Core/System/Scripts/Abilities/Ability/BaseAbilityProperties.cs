@@ -88,7 +88,7 @@ namespace AnyRPG {
 
         protected AudioProfile castingAudioProfile;
 
-        [Tooltip("If true, the audio will be looped until the cast is complete")]
+        [Tooltip("If true, the audio will be looped until the cast is complete.")]
         [SerializeField]
         protected bool loopAudio = false;
 

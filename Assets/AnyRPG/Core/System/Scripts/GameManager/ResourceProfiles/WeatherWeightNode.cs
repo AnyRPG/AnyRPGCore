@@ -7,14 +7,14 @@ namespace AnyRPG {
     [System.Serializable]
     public class WeatherWeightNode : ConfiguredClass {
 
-        [Tooltip("The number of seconds to wait after the dialog starts playing before showing this text.")]
+        [Tooltip("A Weather Profile that defines the weather settings.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(WeatherProfile))]
         private string weather = string.Empty;
 
         private WeatherProfile weatherReference = null;
 
-        [Tooltip("A weighted value that determines the chance this weather is chosen")]
+        [Tooltip("A weighted value that determines the chance this weather is chosen.")]
         [SerializeField]
         private int weight = 0;
 

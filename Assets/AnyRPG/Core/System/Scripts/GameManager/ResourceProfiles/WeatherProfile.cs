@@ -8,7 +8,7 @@ namespace AnyRPG {
 
         [Header("Weather")]
 
-        [Tooltip("A shared prefab profile containing a weather prefab to spawn.")]
+        [Tooltip("A prefab profile containing a weather prefab to spawn.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(PrefabProfile))]
         private string prefabProfile = string.Empty;
@@ -19,23 +19,23 @@ namespace AnyRPG {
         [SerializeField]
         private bool suppressAmbientSounds = false;
 
-        [Tooltip("Ambient sounds to play in the background while this weather is active")]
+        [Tooltip("Ambient sounds to play in the background while this weather is active. These will override any normal ambient sounds for the scene.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string ambientSoundsProfile = string.Empty;
 
-        [Tooltip("Ambient sounds to play in the background while this weather is active.  This will override any audio profile chosen")]
+        [Tooltip("Ambient sounds to play in the background while this weather is active.  This will override any audio profile chosen as well as any normal ambient sounds for the scene.")]
         [SerializeField]
         private AudioClip ambientSoundsAudio = null;
 
         private AudioProfile ambientSoundsProfileReference;
 
-        [Tooltip("This number will be multiplied by the default shadow strength to give a relative shadow strength while the weather is active.")]
+        [Tooltip("This number will be multiplied by the default shadow strength of the sun to give a relative shadow strength while the weather is active.")]
         [Range(0, 1)]
         [SerializeField]
         private float shadowStrength = 1f;
 
-        [Tooltip("If true, fog will be active while this weather effect is active.")]
+        [Tooltip("Settings that will override the default environmental fog settings for the scene.")]
         [SerializeField]
         private FogSettings fogSettings;
 

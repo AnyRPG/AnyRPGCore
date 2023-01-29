@@ -49,10 +49,9 @@ MonoBehaviour:
   suppressMainCamera: 0
   autoPlayCutsceneName: 
   environmentStateNames: []
-  rotateSunDirection: 1
   sunRotationMode: 1
   useDefaultSunAngle: 0
-  sunAngle: -30
+  sunAngle: 60
   rotateSunColor: 1
   useDefaultSunGradient: 1
   sunGradient:

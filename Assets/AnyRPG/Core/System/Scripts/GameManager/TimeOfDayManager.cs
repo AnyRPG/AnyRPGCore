@@ -258,8 +258,7 @@ namespace AnyRPG {
             //sunSource.transform.localRotation = Quaternion.Euler(90f, ((float)inGameTime.TimeOfDay.TotalSeconds / 86400f) * 360f, 0f);
             //sunSource.transform.RotateAround(Vector3.zero, Vector3.right, ((float)inGameTime.TimeOfDay.TotalSeconds / 86400f) * 360f);
 
-            // adding 90 degrees to sun angle so 0 is directly down instead of directly forward on the z axis
-            sunObject.transform.localRotation = Quaternion.Euler(sunAngle + 90f, 0f, 0f);
+            sunObject.transform.localRotation = Quaternion.Euler(sunAngle, 0f, 0f);
 
             sunObject.transform.localRotation *= Quaternion.AngleAxis(Mathf.Clamp((((float)inGameTime.TimeOfDay.TotalSeconds / 86400f) * 360f) -180f, -91f, 91f), Vector3.up);
         }

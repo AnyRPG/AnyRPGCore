@@ -75,7 +75,7 @@ namespace AnyRPG {
 
         private AudioProfile movementHitProfile;
 
-        [Tooltip("A list of audio profiles containing footstep sounds to play depending on what terrain layer the character is moving on.  The list index is matched to the terrain layers index.  Eg, list item one will be played when the character is over terrain layer one.")]
+        [Tooltip("A list of audio profiles containing footstep sounds to play in response to FootStep() animation events, depending on what terrain layer the character is moving on.  The list index is matched to the terrain layers index.  Eg, list item one will be played when the character is over terrain layer one.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AudioProfile))]
         private List<string> footStepProfiles = new List<string>();
@@ -123,9 +123,9 @@ namespace AnyRPG {
         [SerializeField]
         private bool useDefaultSunAngle = false;
 
-        [Tooltip("The angle of the sun as an offset from straight down. -90 is pointing directly North, +90 is pointing directly south.")]
+        [Tooltip("The number of degrees around the X axis that the sun will be rotated compared to world space. 0 is pointing directly North, 90 is pointing straight down (directly over the player head), 180 is pointing directly South.")]
         [SerializeField]
-        private float sunAngle = 0f;
+        private float sunAngle = 90f;
 
         [Tooltip("If true, the color of light the sun emits will be changed over time.")]
         [SerializeField]
@@ -135,7 +135,7 @@ namespace AnyRPG {
         [SerializeField]
         private bool useDefaultSunGradient = false;
 
-        [Tooltip("A color gradient to use for the sun color.  The ends represent midnight, and the center is noon.")]
+        [Tooltip("A color gradient to use for the sun color.  The ends represent midnight, and the center is noon.  The alpha value controls sun light intensity and skybox blending.")]
         [SerializeField]
         private Gradient sunGradient;
 
@@ -152,7 +152,7 @@ namespace AnyRPG {
         [Range(0, 360)]
         private float skyboxRotationOffset = 0f;
 
-        [Tooltip("If true, the skybox will be rotated in the opposite of the default direction.  This should be used for negative sun angles.")]
+        [Tooltip("If true, the skybox will be rotated counter clockwise.  This should be used for sun angles between 0 and 90 degrees.")]
         [SerializeField]
         private bool reverseSkyboxRotation = false;
 
@@ -166,7 +166,7 @@ namespace AnyRPG {
         [SerializeField]
         private int maxWeatherLength = 10800;
 
-        [Tooltip("A weighted value the chance that clear weather will be chosen when weather is selected.")]
+        [Tooltip("A weighted value that determines the chance that clear weather will be chosen when weather changes.")]
         [SerializeField]
         private int noWeatherWeight = 100;
 

@@ -81,7 +81,7 @@ namespace AnyRPG {
 
         [Header("Abilities")]
 
-        [Tooltip("This ability will be cast when the item is equipped")]
+        [Tooltip("This status effect will be cast on the character when the item is equipped.")]
         [FormerlySerializedAs("onEquipAbilityName")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(StatusEffect))]

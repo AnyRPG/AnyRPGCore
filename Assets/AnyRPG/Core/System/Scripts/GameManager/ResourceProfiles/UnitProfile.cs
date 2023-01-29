@@ -114,7 +114,7 @@ namespace AnyRPG {
 
         [Header("Voice")]
 
-        [Tooltip("The name of the voice profile that contains voice files to play.")]
+        [Tooltip("A voice profile that contains voice audio clips to play.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(VoiceProfile))]
         private string voiceProfile = string.Empty;
@@ -123,14 +123,14 @@ namespace AnyRPG {
         [SerializeField]
         private bool useInlineVoiceProps = false;
 
-        [Tooltip("If useInlineVoiceProps is true, these values will be used instead of the shared voice profile above")]
+        [Tooltip("If useInlineVoiceProps is true, these values will be used instead of the shared voice profile above.")]
         [SerializeField]
         private VoiceProps voiceProps = new VoiceProps();
 
         private VoiceProps voiceProfileProps = new VoiceProps();
 
 
-        [Header("Capabilities")]
+        [Header("Configuration")]
 
         [Tooltip("Capabilities that apply to this unit")]
         [SerializeField]
@@ -138,7 +138,31 @@ namespace AnyRPG {
 
         private BaseAbilityProperties defaultAutoAttackAbility = null;
 
-        [Header("Control")]
+        [Tooltip("Stats available to this unit, in addition to the stats defined at the system level that all character use")]
+        [FormerlySerializedAs("statScaling")]
+        [SerializeField]
+        private List<StatScalingNode> primaryStats = new List<StatScalingNode>();
+
+        [Tooltip("Power Resources used by this unit.  The first resource is considered primary and will show on the unit frame.")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(PowerResource))]
+        private List<string> powerResources = new List<string>();
+
+        // reference to the actual power resources
+        private List<PowerResource> powerResourceList = new List<PowerResource>();
+
+        [Tooltip("By default, NPCS only equip the specific equipment in the list below.  If this box is checked, NPCs will equip all default equipment from their character class, specialization, faction, etc.")]
+        [SerializeField]
+        bool useProviderEquipment = false;
+
+        [Tooltip("This equipment will be equipped by default on this unit")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(Equipment))]
+        private List<string> equipmentNameList = new List<string>();
+
+        private List<Equipment> equipmentList = new List<Equipment>();
+
+        [Header("Combat")]
 
         [Tooltip("If true, the unit will attack anything in its aggro radius based on faction relationship")]
         [SerializeField]
@@ -148,8 +172,6 @@ namespace AnyRPG {
         [FormerlySerializedAs("aggroRange")]
         [SerializeField]
         private float aggroRadius = 20f;
-
-        [Header("Combat")]
 
         [Tooltip("If true, a combat strategy matching the unit name will be looked up and used if found")]
         [SerializeField]
@@ -163,54 +185,20 @@ namespace AnyRPG {
         // reference to the actual combat strategy
         private CombatStrategy combatStrategy;
 
-        [Tooltip("Ability effects to cast on the target when the performing an unarmed standard (auto) attack")]
+        [Tooltip("Ability effects to cast on the target when the performing an unarmed standard (auto) attack.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private List<string> defaultHitEffects = new List<string>();
 
         private List<AbilityEffectProperties> defaultHitEffectList = new List<AbilityEffectProperties>();
 
-        [Header("Stats and Scaling")]
-
-        [Tooltip("Stats available to this unit, in addition to the stats defined at the system level that all character use")]
-        [FormerlySerializedAs("statScaling")]
-        [SerializeField]
-        private List<StatScalingNode> primaryStats = new List<StatScalingNode>();
-
-        [Header("Power Resources")]
-
-        [Tooltip("Power Resources used by this unit.  The first resource is considered primary and will show on the unit frame.")]
-        [SerializeField]
-        [ResourceSelector(resourceType = typeof(PowerResource))]
-        private List<string> powerResources = new List<string>();
-
-        // reference to the actual power resources
-        private List<PowerResource> powerResourceList = new List<PowerResource>();
-
-        [Header("Equipment")]
-
-        [Tooltip("By default, NPCS only equip the specific equipment in the list below.  If this box is checked, NPCs will equip all default equipment from their character class, specialization, faction, etc.")]
-        [SerializeField]
-        bool useProviderEquipment = false;
-
-        [Tooltip("This equipment will be equipped by default on this unit")]
-        [SerializeField]
-        [ResourceSelector(resourceType = typeof(Equipment))]
-        private List<string> equipmentNameList = new List<string>();
-
-        private List<Equipment> equipmentList = new List<Equipment>();
-
         [Header("Movement")]
-
-        [Tooltip("If true, this unit will turn to face any target that interacts with it")]
-        [SerializeField]
-        private bool faceInteractionTarget = true;
 
         [Tooltip("If false, the unit will not have the Nav Mesh Agent enabled, and gravity will be disabled.")]
         [SerializeField]
         private bool isMobile = true;
 
-        [Tooltip("None = Do not play footsteps.  Unit = Play the footsteps configured below.  Environment = Play the footsteps based on the terrain. UnitFallback = Try environment, then fallback to Unit if no environment sound available.")]
+        [Tooltip("None = Do not play footsteps.  Unit = Play the footsteps configured below.  Environment = Play the footsteps based on the terrain. UnitFallback = Try environment, then fallback to Unit if no environment sound available. Both = Play environment and unit sounds at the same time.")]
         [SerializeField]
         private FootstepType footstepType = FootstepType.UnitFallback;
 
@@ -242,18 +230,18 @@ namespace AnyRPG {
 
         [Header("Interaction")]
 
+        [Tooltip("If true, this unit will turn to face any target that interacts with it.")]
+        [SerializeField]
+        private bool faceInteractionTarget = true;
+
         [Tooltip("The maximum range at which interacables on this unit can be interacted with")]
         [SerializeField]
         private float interactionMaxRange = 3f;
-
-        [Header("Named Interactables")]
 
         [Tooltip("The names of the interactable options available on this character")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(InteractableOptionConfig))]
         private List<string> interactableOptions = new List<string>();
-
-        [Header("Inline Interactables")]
 
         [Tooltip("The configs of the interactable options available on this character")]
         [SerializeReference]
@@ -275,8 +263,6 @@ namespace AnyRPG {
         [Tooltip("If true, this object will save it's position when the player saves the game.")]
         [SerializeField]
         private bool saveOnGameSave = false;
-
-        [Header("UUID")]
 
         [Tooltip("If true, this UUID will overwrite any UUID on the spawned unit.  Only use this for unique units")]
         [SerializeField]

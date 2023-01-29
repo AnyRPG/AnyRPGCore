@@ -6407,7 +6407,7 @@ MonoBehaviour:
     type: 3}
   questLogSize: 25
   timeOfDaySpeed: 1
-  defaultSunAngle: 30
+  defaultSunAngle: 120
   defaultSunGradient:
     serializedVersion: 2
     key0: {r: 0, g: 0, b: 1, a: 0}
