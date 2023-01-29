@@ -29,6 +29,8 @@ MonoBehaviour:
     animationProfileName: Wand
     onHitAudioProfiles:
     - Youth Spell
+    animationEventAudioProfile: 
+    playAttackVoice: 0
     abilityAnimationObjectList: []
     abilityObjectList:
     - holdableObjectName: Wand Projectile
