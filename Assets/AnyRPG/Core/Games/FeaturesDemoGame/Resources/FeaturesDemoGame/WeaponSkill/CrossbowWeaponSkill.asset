@@ -29,6 +29,8 @@ MonoBehaviour:
     animationProfileName: Crossbow
     onHitAudioProfiles:
     - Arrow Hit
+    animationEventAudioProfile: 
+    playAttackVoice: 0
     abilityAnimationObjectList: []
     abilityObjectList:
     - holdableObjectName: Medieval Arrow Projectile
