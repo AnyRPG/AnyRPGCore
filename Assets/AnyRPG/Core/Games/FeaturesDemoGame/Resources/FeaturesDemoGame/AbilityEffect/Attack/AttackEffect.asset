@@ -41,7 +41,7 @@ MonoBehaviour:
     effectMaterialName: 
     materialChangeDuration: 2
     onHitAudioProfileNames:
-    - Weapon Miss
+    - Punch Hits
     randomAudioProfiles: 0
     hitAbilityEffectNames: []
     inputMultiplier: 1
@@ -71,6 +71,7 @@ MonoBehaviour:
       baseAmount: 0
       amountPerLevel: 1
       maxAmount: 0
+      ignoreCastTime: 0
     ignoreAccuracy: 0
     weaponAttack: 1
     damageType: 1
