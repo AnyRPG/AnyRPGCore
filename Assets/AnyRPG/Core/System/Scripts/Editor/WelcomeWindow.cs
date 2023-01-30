@@ -44,7 +44,7 @@ namespace AnyRPG {
         };
         #endregion
 
-        public const string installedVersion = "0.15a";
+        public const string installedVersion = "0.15";
 
         public const string _projectSettingsPath = "Assets/AnyRPG/Basic Locomotion/Resources/ProjectSettings.unitypackage";
 
@@ -167,7 +167,7 @@ namespace AnyRPG {
                 if (GUILayout.Button("Content Demo Game")) {
                     EditorSceneManager.OpenScene("Assets" + contentDemoGameScenePath);
                 }
-                EditorGUILayout.HelpBox("A simple demo of all 3d and audio content including\n -Music\n -Clothing\n -Characters\n -Buildings\n -Props\n -Weapons", MessageType.None);
+                EditorGUILayout.HelpBox("A simple demo of all 3d and audio content including\n -Clothing\n -Characters\n -Buildings\n -Props\n -Weapons", MessageType.None);
                 GUILayout.EndVertical();
                 GUILayout.Space(10);
             }
