@@ -152,6 +152,7 @@ namespace AnyRPG {
 
         public void SetAmbientVolume(float volume) {
             //Debug.Log("AudioManager.SetAmbientVolume(" + volume + ")");
+
             PlayerPrefs.SetFloat(AmbientVolume, volume);
             audioMixer.SetFloat(AmbientVolume, GetLogVolume(volume));
         }
