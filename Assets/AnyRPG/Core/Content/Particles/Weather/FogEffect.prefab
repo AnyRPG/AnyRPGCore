@@ -50,6 +50,7 @@ MonoBehaviour:
   audioSource: {fileID: 0}
   weatherParticleSystem: {fileID: 4203914392646636072}
   fadeTime: 10
+  teleportParticles: 1
 --- !u!199 &4203914392645177238
 ParticleSystemRenderer:
   serializedVersion: 6
