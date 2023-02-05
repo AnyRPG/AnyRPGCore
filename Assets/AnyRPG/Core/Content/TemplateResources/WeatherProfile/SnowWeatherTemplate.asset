@@ -24,6 +24,7 @@ MonoBehaviour:
   suppressAmbientSounds: 1
   ambientSoundsProfile: 
   ambientSoundsAudio: {fileID: 0}
+  shadowStrength: 0
   fogSettings:
     useFog: 1
     fogColor: {r: 0.9716981, g: 0.9716981, b: 0.9716981, a: 1}
