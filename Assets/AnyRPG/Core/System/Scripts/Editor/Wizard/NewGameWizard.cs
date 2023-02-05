@@ -69,6 +69,7 @@ namespace AnyRPG {
             "PowerResource",
             "PrefabProfile",
             "Quest",
+            "QuestGiverProfile",
             "Recipe",
             "SceneNode",
             "Skill",
