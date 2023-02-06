@@ -170,7 +170,7 @@ namespace AnyRPG {
                 EditorUtility.ClearProgressBar();
                 EditorUtility.DisplayDialog("New Game Wizard", "New Game Wizard encountered an error.  Check the console log for details.", "OK");
                 Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.ScriptOnly);
-                return;
+                throw;
             }
 
             EditorUtility.ClearProgressBar();
