@@ -82,7 +82,7 @@ MonoBehaviour:
   isTrigger: 0
   suppressInteractionWindow: 0
   interactionMaxRange: 5
-  checkOptionsToSpawn: 0
+  checkOptionsToSpawn: 1
   spawnRequiresValidOption: 0
   despawnRequiresNoValidOption: 0
   componentController: {fileID: 7026694329721049842}
