@@ -46,17 +46,19 @@ namespace AnyRPG {
                 SceneNode tmpPrerequisiteSceneNode = systemDataFactory.GetResource<SceneNode>(prerequisiteName);
                 if (tmpPrerequisiteSceneNode != null) {
                     prerequisiteSceneNode = tmpPrerequisiteSceneNode;
+                    prerequisiteSceneNode.OnVisitZone += HandleSceneNodeVisisted;
                 } else {
                     Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find scene node : " + prerequisiteName + " while inititalizing a visit zone prerequisite.  CHECK INSPECTOR");
                 }
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): prerequisite empty while inititalizing a visit zone prerequisite.  CHECK INSPECTOR");
             }
-            prerequisiteSceneNode.OnVisitZone += HandleSceneNodeVisisted;
         }
 
         public void CleanupScriptableObjects() {
-            prerequisiteSceneNode.OnVisitZone -= HandleSceneNodeVisisted;
+            if (prerequisiteSceneNode != null) {
+                prerequisiteSceneNode.OnVisitZone -= HandleSceneNodeVisisted;
+            }
         }
     }
 
