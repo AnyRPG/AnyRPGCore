@@ -34,9 +34,10 @@ MonoBehaviour:
     animationClip: {fileID: 0}
     animationProfileName: Mining
     useUnitCastAnimations: 0
-    animationHitAudioProfileName: Metal Hits
+    animationHitAudioProfileName: Mining
     castingAudioClip: {fileID: 0}
     castingAudioProfileName: 
+    loopAudio: 0
     requiredLevel: 1
     characterClassRequirements: []
     classSpecializationRequirements: []
