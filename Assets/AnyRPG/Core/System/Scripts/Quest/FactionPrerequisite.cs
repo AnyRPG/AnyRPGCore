@@ -21,6 +21,7 @@ namespace AnyRPG {
 
         private bool prerequisiteMet = false;
 
+        private string ownerName = null;
 
         private Faction prerequisiteFaction = null;
 
@@ -51,12 +52,13 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
         }
 
-        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+        public void SetupScriptableObjects(SystemGameManager systemGameManager, string ownerName) {
+            this.ownerName = ownerName;
             Configure(systemGameManager);
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
                 prerequisiteFaction = systemDataFactory.GetResource<Faction>(prerequisiteName);
             } else {
-                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find dialog : " + prerequisiteName + " while inititalizing a dialog prerequisite.  CHECK INSPECTOR");
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find faction : " + prerequisiteName + " while inititalizing a faction prerequisite for " + ownerName + ".  CHECK INSPECTOR");
             }
             SystemEventManager.StartListening("OnReputationChange", HandleReputationChange);
         }

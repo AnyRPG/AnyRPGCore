@@ -33,6 +33,7 @@ namespace AnyRPG {
         protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
         public string ItemName { get => itemName; set => itemName = value; }
+        public string DisplayName { get => ItemName; }
         public Item Item { get => item; }
         public float DropChance { get => dropChance; set => dropChance = value; }
         public int MinDrops { get => minDrops; set => minDrops = value; }

@@ -18,6 +18,8 @@ namespace AnyRPG {
 
         private CharacterClass prerequisiteCharacterClass = null;
 
+        private string ownerName = null;
+
         // game manager references
         private PlayerManager playerManager = null;
         private SystemEventManager systemEventManager = null;
@@ -52,15 +54,16 @@ namespace AnyRPG {
             systemEventManager = systemGameManager.SystemEventManager;
         }
 
-        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+        public void SetupScriptableObjects(SystemGameManager systemGameManager, string ownerName) {
             //Debug.Log("CharacterClassPrerequisite.SetupScriptableObjects(" + (systemGameManager == null ? "null" : systemGameManager.gameObject.name) + ")");
 
+            this.ownerName = ownerName;
             Configure(systemGameManager);
             prerequisiteCharacterClass = null;
             if (requiredCharacterClass != null && requiredCharacterClass != string.Empty) {
                 prerequisiteCharacterClass = systemDataFactory.GetResource<CharacterClass>(requiredCharacterClass);
             } else {
-                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + prerequisiteCharacterClass + " while inititalizing a character class prerequisite.  CHECK INSPECTOR");
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + prerequisiteCharacterClass + " while inititalizing a character class prerequisite for " + ownerName + ".  CHECK INSPECTOR");
             }
 
             systemEventManager.OnClassChange += HandleClassChange;

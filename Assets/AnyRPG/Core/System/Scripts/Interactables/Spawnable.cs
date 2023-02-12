@@ -54,6 +54,13 @@ namespace AnyRPG {
 
         public GameObject SpawnReference { get => spawnReference; set => spawnReference = value; }
         public PrefabProfile PrefabProfile { get => prefabProfile; set => prefabProfile = value; }
+        public virtual string DisplayName {
+            get {
+                return gameObject.name;
+            }
+            set {
+            }
+        }
 
         public virtual bool SpawnPrerequisitesMet {
             get {

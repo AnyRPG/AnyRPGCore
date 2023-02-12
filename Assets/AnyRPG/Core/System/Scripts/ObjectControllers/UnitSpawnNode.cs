@@ -138,6 +138,12 @@ namespace AnyRPG {
             }
         }
 
+        public string DisplayName {
+            get {
+                return gameObject.name;
+            }
+        }
+
         public List<string> UnitProfileNames { get => unitProfileNames; set => unitProfileNames = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {

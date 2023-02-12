@@ -17,6 +17,8 @@ namespace AnyRPG {
 
         private BaseAbilityProperties prerequisiteAbility = null;
 
+        private string ownerName = null;
+
         // game manager references
         private PlayerManager playerManager = null;
 
@@ -49,7 +51,8 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
         }
 
-        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+        public void SetupScriptableObjects(SystemGameManager systemGameManager, string ownerName) {
+            this.ownerName = ownerName;
             Configure(systemGameManager);
             prerequisiteAbility = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
@@ -58,7 +61,7 @@ namespace AnyRPG {
                     prerequisiteAbility.OnAbilityLearn += HandleAbilityListChanged;
                 }
             } else {
-                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + prerequisiteName + " while inititalizing a prerequisite.  CHECK INSPECTOR");
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + prerequisiteName + " while inititalizing a prerequisite for " + ownerName + ".  CHECK INSPECTOR");
             }
         }
 

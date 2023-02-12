@@ -16,6 +16,8 @@ namespace AnyRPG {
 
         private bool prerequisiteMet = false;
 
+        private string ownerName = null;
+
         // game manager references
         private PlayerManager playerManager = null;
         private SystemEventManager systemEventManager = null;
@@ -39,7 +41,7 @@ namespace AnyRPG {
 
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             //Debug.Log("LevelPrerequisite.IsMet()");
-            
+
             return prerequisiteMet;
         }
 
@@ -49,7 +51,8 @@ namespace AnyRPG {
             systemEventManager = systemGameManager.SystemEventManager;
         }
 
-        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+        public void SetupScriptableObjects(SystemGameManager systemGameManager, string ownerName) {
+            this.ownerName = ownerName;
             Configure(systemGameManager);
             //this.prerequisiteConditions = prerequisiteConditions;
             systemEventManager.OnLevelChanged += HandleLevelChanged;

@@ -16,6 +16,7 @@ namespace AnyRPG {
 
         private bool prerequisiteMet = false;
 
+        private string ownerName = null;
 
         private Dialog prerequisiteDialog = null;
 
@@ -42,7 +43,8 @@ namespace AnyRPG {
             return prerequisiteMet;
         }
 
-        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+        public void SetupScriptableObjects(SystemGameManager systemGameManager, string ownerName) {
+            this.ownerName = ownerName;
             Configure(systemGameManager);
             prerequisiteDialog = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
@@ -51,10 +53,10 @@ namespace AnyRPG {
                     prerequisiteDialog = tmpDialog;
                     prerequisiteDialog.OnDialogCompleted += HandleDialogCompleted;
                 } else {
-                    Debug.LogError("DialogPrerequisite.SetupScriptableObjects(): Could not find dialog : " + prerequisiteName + " while inititalizing a dialog prerequisite.  CHECK INSPECTOR");
+                    Debug.LogError("DialogPrerequisite.SetupScriptableObjects(): Could not find dialog : " + prerequisiteName + " while inititalizing a dialog prerequisite for " + ownerName + ".  CHECK INSPECTOR");
                 }
             } else {
-                Debug.LogError("DialogPrerequisite.SetupScriptableObjects(): no prerequisite was defined while inititalizing a dialog prerequisite.  CHECK INSPECTOR");
+                Debug.LogError("DialogPrerequisite.SetupScriptableObjects(): no prerequisite was defined while inititalizing a dialog prerequisite for " + ownerName + ".  CHECK INSPECTOR");
             }
         }
 

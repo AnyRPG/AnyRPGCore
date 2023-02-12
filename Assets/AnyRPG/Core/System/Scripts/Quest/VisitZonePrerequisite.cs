@@ -15,6 +15,7 @@ namespace AnyRPG {
 
         private bool prerequisiteMet = false;
 
+        private string ownerName = null;
 
         private SceneNode prerequisiteSceneNode = null;
 
@@ -39,26 +40,25 @@ namespace AnyRPG {
             return prerequisiteMet;
         }
 
-        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+        public void SetupScriptableObjects(SystemGameManager systemGameManager, string ownerName) {
+            this.ownerName = ownerName;
             Configure(systemGameManager);
             prerequisiteSceneNode = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
                 SceneNode tmpPrerequisiteSceneNode = systemDataFactory.GetResource<SceneNode>(prerequisiteName);
                 if (tmpPrerequisiteSceneNode != null) {
                     prerequisiteSceneNode = tmpPrerequisiteSceneNode;
-                    prerequisiteSceneNode.OnVisitZone += HandleSceneNodeVisisted;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find scene node : " + prerequisiteName + " while inititalizing a visit zone prerequisite.  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find scene node : " + prerequisiteName + " while inititalizing a visit zone prerequisite for " + ownerName + ".  CHECK INSPECTOR");
                 }
             } else {
-                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): prerequisite empty while inititalizing a visit zone prerequisite.  CHECK INSPECTOR");
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): prerequisite empty while inititalizing a visit zone prerequisite for " + ownerName + ".  CHECK INSPECTOR");
             }
+            prerequisiteSceneNode.OnVisitZone += HandleSceneNodeVisisted;
         }
 
         public void CleanupScriptableObjects() {
-            if (prerequisiteSceneNode != null) {
-                prerequisiteSceneNode.OnVisitZone -= HandleSceneNodeVisisted;
-            }
+            prerequisiteSceneNode.OnVisitZone -= HandleSceneNodeVisisted;
         }
     }
 

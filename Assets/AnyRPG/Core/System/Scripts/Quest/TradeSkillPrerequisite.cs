@@ -10,12 +10,13 @@ namespace AnyRPG {
         public event System.Action OnStatusUpdated = delegate { };
 
         [SerializeField]
-        [ResourceSelector(resourceType = typeof(Skill))]
         private string prerequisiteName = string.Empty;
 
         private bool prerequisiteMet = false;
 
         private Skill prerequisiteSkill = null;
+
+        private string ownerName = null;
 
         // game manager references
         private PlayerManager playerManager = null;
@@ -46,7 +47,8 @@ namespace AnyRPG {
             systemEventManager = systemGameManager.SystemEventManager;
         }
 
-        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+        public void SetupScriptableObjects(SystemGameManager systemGameManager, string ownerName) {
+            this.ownerName = ownerName;
             Configure(systemGameManager);
             prerequisiteSkill = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
@@ -54,7 +56,7 @@ namespace AnyRPG {
                 if (tmpPrerequisiteSkill != null) {
                     prerequisiteSkill = tmpPrerequisiteSkill;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find skill : " + prerequisiteName + " while inititalizing a prerequisite.  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find skill : " + prerequisiteName + " while inititalizing a prerequisite for " + ownerName + ".  CHECK INSPECTOR");
                 }
             }
             systemEventManager.OnSkillListChanged += HandleSkillListChanged;

@@ -20,6 +20,7 @@ namespace AnyRPG {
 
         private bool prerequisiteMet = false;
 
+        private string ownerName = null;
 
         private Quest prerequisiteQuest = null;
 
@@ -74,7 +75,8 @@ namespace AnyRPG {
             questLog = systemGameManager.QuestLog;
         }
 
-        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+        public void SetupScriptableObjects(SystemGameManager systemGameManager, string ownerName) {
+            this.ownerName = ownerName;
             Configure(systemGameManager);
             prerequisiteQuest = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
@@ -83,10 +85,10 @@ namespace AnyRPG {
                     //Debug.Log("QuestPrerequisite.SetupScriptableObjects(): setting: " + prerequisiteName + " while inititalizing a quest prerequisite.");
                     prerequisiteQuest = tmpPrerequisiteQuest;
                 } else {
-                    Debug.LogError("QuestPrerequisite.SetupScriptableObjects(): Could not find quest : " + prerequisiteName + " while inititalizing a quest prerequisite.  CHECK INSPECTOR");
+                    Debug.LogError("QuestPrerequisite.SetupScriptableObjects(): Could not find quest : " + prerequisiteName + " while inititalizing a quest prerequisite for " + ownerName + ".  CHECK INSPECTOR");
                 }
             } else {
-                Debug.LogError("QuestPrerequisite.SetupScriptableObjects(): prerequisiteName was empty while inititalizing a quest prerequisite.  CHECK INSPECTOR");
+                Debug.LogError("QuestPrerequisite.SetupScriptableObjects(): prerequisiteName was empty while inititalizing a quest prerequisite for " + ownerName + ".  CHECK INSPECTOR");
             }
             if (prerequisiteQuest != null) {
                 prerequisiteQuest.OnQuestStatusUpdated += HandleQuestStatusUpdated;

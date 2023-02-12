@@ -152,7 +152,7 @@ namespace AnyRPG {
 
         public UnitComponentController UnitComponentController { get => unitComponentController; set => unitComponentController = value; }
 
-        public virtual string DisplayName {
+        public override string DisplayName {
             get {
                 if (interactableName != null && interactableName != string.Empty) {
                     return interactableName;
@@ -160,7 +160,7 @@ namespace AnyRPG {
                 if (characterUnit != null) {
                     return characterUnit.BaseCharacter.CharacterName;
                 }
-                return gameObject.name;
+                return base.DisplayName;
             }
             set {
                 interactableName = value;
@@ -338,7 +338,7 @@ namespace AnyRPG {
         protected virtual void Update() {
             // if the item is highlighted, we will continue a pulsing glow
             //return;
-            
+
             if (glowQueued) {
                 if (!IsBuilding()) {
                     //ActivateGlow();
@@ -348,7 +348,7 @@ namespace AnyRPG {
                     return;
                 }
             }
-            
+
 
             if (isFlashing) {
                 //Debug.Log("Interactable.Update(): isflashing == true");
@@ -522,8 +522,8 @@ namespace AnyRPG {
         public void CleanupMiniMapIndicator() {
             //Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator()");
             //if (miniMapIndicator != null) {
-                //Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator(): " + miniMapIndicator.name);
-                //MiniMapController.Instance.RemoveIndicator(this);
+            //Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator(): " + miniMapIndicator.name);
+            //MiniMapController.Instance.RemoveIndicator(this);
             miniMapManager.RemoveIndicator(this);
 
             // keeping this set to true so any other update can't respawn it
@@ -531,8 +531,8 @@ namespace AnyRPG {
             // miniMapIndicatorReady = false;
             //}
             //if (mainMapIndicator != null) {
-                //Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator(): " + miniMapIndicator.name);
-                //mainMapManager.RemoveIndicator(this);
+            //Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator(): " + miniMapIndicator.name);
+            //mainMapManager.RemoveIndicator(this);
             mainMapManager.RemoveIndicator(this);
             //}
 
@@ -796,7 +796,7 @@ namespace AnyRPG {
                 return;
             }
             */
-           
+
 
             if (SpawnPrerequisitesMet == false) {
                 return;
@@ -915,7 +915,7 @@ namespace AnyRPG {
                 // ensure ai don't accidentally trigger interactions
                 if (unitController != null && unitController == playerManager.ActiveUnitController) {
                     //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(): triggered by player");
-                    
+
                     // don't clear target on interaction with trigger since it could be a door switch or cutscene switch
                     playerManager.PlayerController.InterActWithTarget(this, false);
                     //Interact(otherCharacterUnit);
@@ -995,8 +995,8 @@ namespace AnyRPG {
             List<string> returnStrings = new List<string>();
             foreach (InteractableOptionComponent _interactable in currentInteractables) {
                 //if (!(_interactable is INamePlateUnit)) {
-                    // we already put the character name in the description so skip it here
-                    returnStrings.Add(_interactable.GetSummary());
+                // we already put the character name in the description so skip it here
+                returnStrings.Add(_interactable.GetSummary());
                 //}
             }
             returnString = string.Join("\n", returnStrings);

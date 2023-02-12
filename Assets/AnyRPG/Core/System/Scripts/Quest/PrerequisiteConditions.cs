@@ -342,7 +342,7 @@ namespace AnyRPG {
             if (prerequisiteOwners.Count == 0) {
                 foreach (List<IPrerequisite> prerequisiteList in allPrerequisites) {
                     foreach (IPrerequisite prerequisite in prerequisiteList) {
-                        prerequisite.SetupScriptableObjects(systemGameManager);
+                        prerequisite.SetupScriptableObjects(systemGameManager, prerequisiteOwner.DisplayName);
                         prerequisite.OnStatusUpdated += HandlePrerequisiteUpdates;
                     }
                 }
