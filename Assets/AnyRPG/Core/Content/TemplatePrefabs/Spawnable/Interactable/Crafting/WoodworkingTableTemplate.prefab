@@ -1243,6 +1243,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: table_wood
       objectReference: {fileID: 0}
+    - target: {fileID: 3171480021857917294, guid: f6720a33040d3a243bb23b6680ffd69d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f6720a33040d3a243bb23b6680ffd69d, type: 3}
 --- !u!4 &5944218827459646737 stripped
