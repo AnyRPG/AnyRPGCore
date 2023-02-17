@@ -35,6 +35,10 @@ namespace AnyRPG {
 
         [Header("UNIT FRAME SETTINGS")]
 
+        [Tooltip("If true, a snapshot of the target will be used.  If False, the UnitProfile image will be used.")]
+        [SerializeField]
+        private bool useSnapShot = true;
+
         [Tooltip("An object or bone in the heirarchy to use as the camera target.")]
         [SerializeField]
         private string unitFrameTarget = string.Empty;
@@ -70,6 +74,7 @@ namespace AnyRPG {
         public string UnitPreviewTarget { get => unitPreviewTarget; set => unitPreviewTarget = value; }
         public Vector3 UnitPreviewCameraLookOffset { get => unitPreviewCameraLookOffset; set => unitPreviewCameraLookOffset = value; }
         public Vector3 UnitPreviewCameraPositionOffset { get => unitPreviewCameraPositionOffset; set => unitPreviewCameraPositionOffset = value; }
+        public bool UseSnapShot { get => useSnapShot; set => useSnapShot = value; }
     }
 
 

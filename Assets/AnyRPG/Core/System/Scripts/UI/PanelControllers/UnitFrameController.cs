@@ -64,7 +64,10 @@ namespace AnyRPG {
         protected Texture portraitTexture = null;
 
         [SerializeField]
-        protected RawImage portraitImage = null;
+        protected Image portraitImage = null;
+
+        [SerializeField]
+        protected RawImage portraitSnapshotImage = null;
 
         [SerializeField]
         protected Vector3 cameraLookOffsetDefault = new Vector3(0, 1.6f, 0);
@@ -96,6 +99,7 @@ namespace AnyRPG {
 
         protected bool controllerInitialized = false;
         protected bool targetInitialized = false;
+        protected bool subscribedToTargetReady = false;
 
         protected Color reputationColor;
 
@@ -140,7 +144,7 @@ namespace AnyRPG {
             if (controllerInitialized) {
                 return;
             }
-            portraitImage.texture = portraitTexture;
+            portraitSnapshotImage.texture = portraitTexture;
             originalPrimaryResourceSliderWidth = primaryResourceSliderLayout.preferredWidth;
             originalSecondaryResourceSliderWidth = secondaryResourceSliderLayout.preferredWidth;
             DeActivateCastBar();
@@ -189,26 +193,47 @@ namespace AnyRPG {
             InitializePosition();
             gameObject.SetActive(true);
             targetInitialized = true;
-            if (isActiveAndEnabled) {
-                if (namePlateController.NamePlateUnit.CameraTargetReady) {
-                    HandleTargetReady();
-                }// else {
-                 // testing subscribe no matter what in case unit appearance changes
-                SubscribeToTargetReady();
-                //}
-            } else {
-                //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(): Unit Frame Not active after activate command.  Likely gameobject under inactive canvas.  Will run StartCoroutien() on enable instead.");
+            if (isActiveAndEnabled == false) {
+                return;
             }
+
+            namePlateController.NamePlateUnit.ConfigureUnitFrame(this);
+            
+        }
+
+        public void ConfigurePortrait(Sprite icon) {
+            portraitSnapshotImage.gameObject.SetActive(false);
+            portraitImage.gameObject.SetActive(true);
+
+            portraitImage.sprite = icon;
+        }
+
+        public void ConfigureSnapshotPortrait() {
+            portraitImage.gameObject.SetActive(false);
+            portraitSnapshotImage.gameObject.SetActive(true);
+            if (namePlateController.NamePlateUnit.CameraTargetReady) {
+                HandleTargetReady();
+            }// else {
+             // testing subscribe no matter what in case unit appearance changes
+            SubscribeToTargetReady();
+            //}
         }
 
         public void SubscribeToTargetReady() {
             namePlateController.NamePlateUnit.OnCameraTargetReady += HandleTargetReady;
+            subscribedToTargetReady = true;
         }
 
         public void UnsubscribeFromTargetReady() {
+            if (subscribedToTargetReady == false) {
+                return;
+            }
+
             if (namePlateController?.NamePlateUnit != null) {
                 namePlateController.NamePlateUnit.OnCameraTargetReady -= HandleTargetReady;
             }
+
+            subscribedToTargetReady = false;
         }
 
         public void HandleTargetReady() {

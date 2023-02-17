@@ -36,6 +36,7 @@ MonoBehaviour:
       attackClips: []
       castClips: []
       takeDamageClips: []
+      actionClips: []
       idleClip: {fileID: 0}
       jumpClip: {fileID: 0}
       fallClip: {fileID: 0}
@@ -120,6 +121,7 @@ MonoBehaviour:
       suppressFaction: 1
       overrideNameplatePosition: 0
       namePlatePosition: {x: 0, y: 0, z: 0}
+      useSnapShot: 0
       unitFrameTarget: head
       unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
       unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
@@ -149,21 +151,38 @@ MonoBehaviour:
   spawnDead: 0
   preventAutoDespawn: 0
   defaultToughness: 
+  voiceProfile: 
+  useInlineVoiceProps: 0
+  voiceProps:
+    aggro: []
+    attack: []
+    damage: []
+    jump: []
+    fallDamage: []
+    death: []
+    victory: []
+    startInteract: []
+    startVendorInteract: []
+    stopInteract: []
+    stopVendorInteract: []
   capabilities:
     abilityNames: []
     traitNames: []
     armorClassList: []
     weaponSkills: []
-  isAggressive: 0
-  aggroRadius: 20
-  automaticCombatStrategy: 0
-  combatStrategyName: 
+    validPetTypes: []
+    startingPets: []
   primaryStats: []
   powerResources: []
   useProviderEquipment: 0
   equipmentNameList: []
-  faceInteractionTarget: 1
+  isAggressive: 0
+  aggroRadius: 20
+  automaticCombatStrategy: 0
+  combatStrategyName: 
+  defaultHitEffects: []
   isMobile: 1
+  footstepType: 3
   playOnFootstep: 1
   movementAudioProfileNames:
   - Default Footstep Hits
@@ -182,6 +201,7 @@ MonoBehaviour:
     movementSpeed: 0
     savePositionAtDestination: 0
   patrolNames: []
+  faceInteractionTarget: 1
   interactionMaxRange: 3
   interactableOptions: []
   inlineInteractableOptions:

@@ -167,6 +167,10 @@ namespace AnyRPG {
             return Faction.GetFactionColor(playerManager, this);
         }
 
+        public virtual void ConfigureUnitFrame(UnitFrameController unitFrameController) {
+            unitFrameController.ConfigureSnapshotPortrait();
+        }
+
         public override Color GetDescriptionColor() {
             if (NamePlateController != null && NamePlateController.Faction != null) {
                 return Faction.GetFactionColor(playerManager, this);

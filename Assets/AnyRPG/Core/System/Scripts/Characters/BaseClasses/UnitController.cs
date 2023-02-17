@@ -466,6 +466,16 @@ namespace AnyRPG {
             }
         }
 
+        public override void ConfigureUnitFrame(UnitFrameController unitFrameController) {
+
+            if (unitProfile != null && unitProfile.UnitPrefabProps.NamePlateProps.UseSnapShot == false) {
+                unitFrameController.ConfigurePortrait(unitProfile.Icon);
+                return;
+            }
+
+            base.ConfigureUnitFrame(unitFrameController);
+        }
+
         private void SetUnitFootstepAudioProfile() {
 
             if (characterUnit.BaseCharacter != null && unitProfile?.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
