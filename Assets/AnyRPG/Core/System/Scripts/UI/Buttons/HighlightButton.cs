@@ -103,24 +103,24 @@ namespace AnyRPG {
                     //if (highlightButtonImage != null) {
                     if (highlightButton.targetGraphic != null) {
                         //highlightButtonImage.color = systemConfigurationManager.HighlightButtonColor;
-                        highlightButton.targetGraphic.color = systemConfigurationManager.HighlightButtonColor;
+                        highlightButton.targetGraphic.color = systemConfigurationManager.UIConfiguration.HighlightButtonColor;
                     }
                 }
             }
             if (!overrideNormalColor) {
-                normalColor = systemConfigurationManager.ButtonNormalColor;
+                normalColor = systemConfigurationManager.UIConfiguration.ButtonNormalColor;
             }
             if (!overrideHighlightedColor) {
-                highlightedColor = systemConfigurationManager.ButtonHighlightedColor;
+                highlightedColor = systemConfigurationManager.UIConfiguration.ButtonHighlightedColor;
             }
             if (!overridePressedColor) {
-                pressedColor = systemConfigurationManager.ButtonPressedColor;
+                pressedColor = systemConfigurationManager.UIConfiguration.ButtonPressedColor;
             }
             if (!overrideSelectedColor) {
-                selectedColor = systemConfigurationManager.ButtonSelectedColor;
+                selectedColor = systemConfigurationManager.UIConfiguration.ButtonSelectedColor;
             }
             if (!overrideDisabledColor) {
-                disabledColor = systemConfigurationManager.ButtonDisabledColor;
+                disabledColor = systemConfigurationManager.UIConfiguration.ButtonDisabledColor;
             }
             if (highlightButton != null) {
                 ColorBlock colorBlock = highlightButton.colors;

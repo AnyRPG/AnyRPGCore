@@ -106,8 +106,8 @@ namespace AnyRPG {
 
             CreateEventSubscriptions();
 
-            if (systemConfigurationManager.SystemBarMap != null) {
-                mapButtonImage.sprite = systemConfigurationManager.SystemBarMap;
+            if (systemConfigurationManager.UIConfiguration.SystemBarMap != null) {
+                mapButtonImage.sprite = systemConfigurationManager.UIConfiguration.SystemBarMap;
                 mapButtonImage.color = Color.white;
                 mapButtonText.SetActive(false);
             } else {
@@ -153,7 +153,7 @@ namespace AnyRPG {
         }
 
         public void HandleIndicatorRotation(Interactable interactable) {
-            mapIndicatorControllers[interactable].transform.rotation = Quaternion.Euler(0, 0, (interactable.transform.eulerAngles.y - systemConfigurationManager.PlayerMiniMapIconRotation) * -1f);
+            mapIndicatorControllers[interactable].transform.rotation = Quaternion.Euler(0, 0, (interactable.transform.eulerAngles.y - systemConfigurationManager.UIConfiguration.PlayerMiniMapIconRotation) * -1f);
         }
 
         public void HandleInteractableStatusUpdate(Interactable interactable, InteractableOptionComponent interactableOptionComponent) {

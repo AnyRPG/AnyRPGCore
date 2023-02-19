@@ -217,7 +217,7 @@ namespace AnyRPG {
 
         public override Sprite GetMiniMapIcon() {
             if (interactable.CombatOnly) {
-                return systemConfigurationManager.PlayerMiniMapIcon;
+                return systemConfigurationManager.UIConfiguration.PlayerMiniMapIcon;
             }
 
             return base.GetMiniMapIcon();

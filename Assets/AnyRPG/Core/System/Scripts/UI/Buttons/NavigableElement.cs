@@ -101,9 +101,9 @@ namespace AnyRPG {
 
             //if (useSystemImageTintColor) {
             if (useSystemOutlineColor == true) {
-                highlightOutlineColor = systemConfigurationManager.HighlightOutlineColor;
+                highlightOutlineColor = systemConfigurationManager.UIConfiguration.HighlightOutlineColor;
             }
-            highlightImageColor = systemConfigurationManager.HighlightImageColor;
+            highlightImageColor = systemConfigurationManager.UIConfiguration.HighlightImageColor;
             //}
 
             UnHighlightBackground();

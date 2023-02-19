@@ -71,35 +71,35 @@ namespace AnyRPG {
             inventoryButton.SetTooltipTransform(uIManager.BottomPanel.RectTransform);
 
 
-            if (systemConfigurationManager.SystemBarMainMenu != null) {
-                mainMenuButton.Icon = systemConfigurationManager.SystemBarMainMenu;
+            if (systemConfigurationManager.UIConfiguration.SystemBarMainMenu != null) {
+                mainMenuButton.Icon = systemConfigurationManager.UIConfiguration.SystemBarMainMenu;
             }
-            if (systemConfigurationManager.SystemBarAbilityBook != null) {
-                abilityBookButton.Icon = systemConfigurationManager.SystemBarAbilityBook;
+            if (systemConfigurationManager.UIConfiguration.SystemBarAbilityBook != null) {
+                abilityBookButton.Icon = systemConfigurationManager.UIConfiguration.SystemBarAbilityBook;
             }
-            if (systemConfigurationManager.SystemBarQuestLog != null) {
-                questLogButton.Icon = systemConfigurationManager.SystemBarQuestLog;
+            if (systemConfigurationManager.UIConfiguration.SystemBarQuestLog != null) {
+                questLogButton.Icon = systemConfigurationManager.UIConfiguration.SystemBarQuestLog;
             }
-            if (systemConfigurationManager.SystemBarCharacter != null) {
-                characterButton.Icon = systemConfigurationManager.SystemBarCharacter;
+            if (systemConfigurationManager.UIConfiguration.SystemBarCharacter != null) {
+                characterButton.Icon = systemConfigurationManager.UIConfiguration.SystemBarCharacter;
             }
-            if (systemConfigurationManager.SystemBarMap != null) {
-                mapButton.Icon = systemConfigurationManager.SystemBarMap;
+            if (systemConfigurationManager.UIConfiguration.SystemBarMap != null) {
+                mapButton.Icon = systemConfigurationManager.UIConfiguration.SystemBarMap;
             }
-            if (systemConfigurationManager.SystemBarSkills != null) {
-                skillsButton.Icon = systemConfigurationManager.SystemBarSkills;
+            if (systemConfigurationManager.UIConfiguration.SystemBarSkills != null) {
+                skillsButton.Icon = systemConfigurationManager.UIConfiguration.SystemBarSkills;
             }
-            if (systemConfigurationManager.SystemBarReputations != null) {
-                reputationsButton.Icon = systemConfigurationManager.SystemBarReputations;
+            if (systemConfigurationManager.UIConfiguration.SystemBarReputations != null) {
+                reputationsButton.Icon = systemConfigurationManager.UIConfiguration.SystemBarReputations;
             }
-            if (systemConfigurationManager.SystemBarCurrencies != null) {
-                currenciesButton.Icon = systemConfigurationManager.SystemBarCurrencies;
+            if (systemConfigurationManager.UIConfiguration.SystemBarCurrencies != null) {
+                currenciesButton.Icon = systemConfigurationManager.UIConfiguration.SystemBarCurrencies;
             }
-            if (systemConfigurationManager.SystemBarAchievements != null) {
-                achievementsButton.Icon = systemConfigurationManager.SystemBarAchievements;
+            if (systemConfigurationManager.UIConfiguration.SystemBarAchievements != null) {
+                achievementsButton.Icon = systemConfigurationManager.UIConfiguration.SystemBarAchievements;
             }
-            if (systemConfigurationManager.SystemBarInventory != null) {
-                inventoryButton.Icon = systemConfigurationManager.SystemBarInventory;
+            if (systemConfigurationManager.UIConfiguration.SystemBarInventory != null) {
+                inventoryButton.Icon = systemConfigurationManager.UIConfiguration.SystemBarInventory;
             }
         }
 

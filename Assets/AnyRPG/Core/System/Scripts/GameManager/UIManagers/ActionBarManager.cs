@@ -637,118 +637,125 @@ namespace AnyRPG {
             UpdateVisuals();
         }
 
+        private void ActivateGamepadActionBars() {
+            
+            // hide system bar
+            if (systemBarController.gameObject.activeSelf) {
+                systemBarController.gameObject.SetActive(false);
+            }
+
+            // deactivate action bar controllers
+            for (int i = 0; i <= 6; i++) {
+                if (actionBarControllers[i].gameObject.activeSelf) {
+                    actionBarControllers[i].gameObject.SetActive(false);
+                }
+            }
+
+            // show gamepad
+            uIManager.GamepadWindow.OpenWindow();
+        }
+
+        private void ActivateMouseActionBars() {
+            
+            // hide gamepad
+            uIManager.GamepadWindow.CloseWindow();
+
+            // show systembar
+            if (PlayerPrefs.GetInt("UseSystemBar") == 0) {
+                if (systemBarController.gameObject.activeSelf == true) {
+                    systemBarController.gameObject.SetActive(false);
+                }
+            } else if (PlayerPrefs.GetInt("UseSystemBar") == 1) {
+                if (systemBarController.gameObject.activeSelf == false) {
+                    systemBarController.gameObject.SetActive(true);
+                }
+            }
+
+            // activate action bar controller 1
+            if (PlayerPrefs.GetInt("UseActionBar1") == 0) {
+                if (actionBarControllers[0].gameObject.activeSelf == true) {
+                    actionBarControllers[0].gameObject.SetActive(false);
+                }
+            } else if (PlayerPrefs.GetInt("UseActionBar1") == 1) {
+                if (actionBarControllers[0].gameObject.activeSelf == false) {
+                    actionBarControllers[0].gameObject.SetActive(true);
+                }
+            }
+
+            // activate action bar controller 2
+            if (PlayerPrefs.GetInt("UseActionBar2") == 0) {
+                if (actionBarControllers[1].gameObject.activeSelf == true) {
+                    actionBarControllers[1].gameObject.SetActive(false);
+                }
+            } else if (PlayerPrefs.GetInt("UseActionBar2") == 1) {
+                if (actionBarControllers[1].gameObject.activeSelf == false) {
+                    actionBarControllers[1].gameObject.SetActive(true);
+                }
+            }
+
+            // activate action bar controller 3
+            if (PlayerPrefs.GetInt("UseActionBar3") == 0) {
+                if (actionBarControllers[2].gameObject.activeSelf) {
+                    actionBarControllers[2].gameObject.SetActive(false);
+                }
+            } else if (PlayerPrefs.GetInt("UseActionBar3") == 1) {
+                if (!actionBarControllers[2].gameObject.activeSelf) {
+                    actionBarControllers[2].gameObject.SetActive(true);
+                }
+            }
+
+            // activate action bar controller 4
+            if (PlayerPrefs.GetInt("UseActionBar4") == 0) {
+                if (actionBarControllers[3].gameObject.activeSelf) {
+                    actionBarControllers[3].gameObject.SetActive(false);
+                }
+            } else if (PlayerPrefs.GetInt("UseActionBar4") == 1) {
+                if (!actionBarControllers[3].gameObject.activeSelf) {
+                    actionBarControllers[3].gameObject.SetActive(true);
+                }
+            }
+
+            // activate action bar controller 5
+            if (PlayerPrefs.GetInt("UseActionBar5") == 0) {
+                if (actionBarControllers[4].gameObject.activeSelf) {
+                    actionBarControllers[4].gameObject.SetActive(false);
+                }
+            } else if (PlayerPrefs.GetInt("UseActionBar5") == 1) {
+                if (!actionBarControllers[4].gameObject.activeSelf) {
+                    actionBarControllers[4].gameObject.SetActive(true);
+                }
+            }
+
+            // activate action bar controller 6
+            if (PlayerPrefs.GetInt("UseActionBar6") == 0) {
+                if (actionBarControllers[5].gameObject.activeSelf) {
+                    actionBarControllers[5].gameObject.SetActive(false);
+                }
+            } else if (PlayerPrefs.GetInt("UseActionBar6") == 1) {
+                if (!actionBarControllers[5].gameObject.activeSelf) {
+                    actionBarControllers[5].gameObject.SetActive(true);
+                }
+            }
+
+            // activate action bar controller 7
+            if (PlayerPrefs.GetInt("UseActionBar7") == 0) {
+                if (actionBarControllers[6].gameObject.activeSelf) {
+                    actionBarControllers[6].gameObject.SetActive(false);
+                }
+            } else if (PlayerPrefs.GetInt("UseActionBar7") == 1) {
+                if (!actionBarControllers[6].gameObject.activeSelf) {
+                    actionBarControllers[6].gameObject.SetActive(true);
+                }
+            }
+        }
+
         public void ActivateCorrectActionBars() {
             //Debug.Log("ActionBarmanager.ActivateCorrectActionBars()");
 
             if (controlsManager.GamePadModeActive == true) {
-
-                // hide system bar
-                if (systemBarController.gameObject.activeSelf) {
-                    systemBarController.gameObject.SetActive(false);
-                }
-
-                // deactivate action bar controllers
-                for (int i = 0; i <= 6; i++) {
-                    if (actionBarControllers[i].gameObject.activeSelf) {
-                        actionBarControllers[i].gameObject.SetActive(false);
-                    }
-                }
-
-                // show gamepad
-                //gamepadPanel.ShowGamepad();
-                //gamepadPanel.gameObject.SetActive(true);
-                uIManager.GamepadWindow.OpenWindow();
-
-                /*
-                // activate gamepad action bar controllers
-                for (int i = 0; i <= 1; i++) {
-                    if (!gamepadActionBarControllers[i].gameObject.activeSelf) {
-                        gamepadActionBarControllers[i].gameObject.SetActive(true);
-                    }
-                }
-                */
+                ActivateGamepadActionBars();
             } else {
-
-                // hide gamepad controllers
-                /*
-                for (int i = 0; i <= 1; i++) {
-                    if (gamepadActionBarControllers[i].gameObject.activeSelf) {
-                        gamepadActionBarControllers[i].gameObject.SetActive(false);
-                    }
-                }
-                */
-
-                // hide gamepad
-                //gamepadPanel.HideGamepad();
-                //gamepadPanel.gameObject.SetActive(false);
-                uIManager.GamepadWindow.CloseWindow();
-
-                // show systembar
-                if (systemBarController.gameObject.activeSelf == false) {
-                    systemBarController.gameObject.SetActive(true);
-                }
-
-                // activate action bar controller 1
-                if (actionBarControllers[0].gameObject.activeSelf == false) {
-                    actionBarControllers[0].gameObject.SetActive(true);
-                }
-
-                if (PlayerPrefs.GetInt("UseActionBar2") == 0) {
-                    if (actionBarControllers[1].gameObject.activeSelf == true) {
-                        actionBarControllers[1].gameObject.SetActive(false);
-                    }
-                } else if (PlayerPrefs.GetInt("UseActionBar2") == 1) {
-                    if (actionBarControllers[1].gameObject.activeSelf == false) {
-                        actionBarControllers[1].gameObject.SetActive(true);
-                    }
-                }
-
-                if (PlayerPrefs.GetInt("UseActionBar3") == 0) {
-                    if (actionBarControllers[2].gameObject.activeSelf) {
-                        actionBarControllers[2].gameObject.SetActive(false);
-                    }
-                } else if (PlayerPrefs.GetInt("UseActionBar3") == 1) {
-                    if (!actionBarControllers[2].gameObject.activeSelf) {
-                        actionBarControllers[2].gameObject.SetActive(true);
-                    }
-                }
-
-                if (PlayerPrefs.GetInt("UseActionBar4") == 0) {
-                    if (actionBarControllers[3].gameObject.activeSelf) {
-                        actionBarControllers[3].gameObject.SetActive(false);
-                    }
-                } else if (PlayerPrefs.GetInt("UseActionBar4") == 1) {
-                    if (!actionBarControllers[3].gameObject.activeSelf) {
-                        actionBarControllers[3].gameObject.SetActive(true);
-                    }
-                }
-                if (PlayerPrefs.GetInt("UseActionBar5") == 0) {
-                    if (actionBarControllers[4].gameObject.activeSelf) {
-                        actionBarControllers[4].gameObject.SetActive(false);
-                    }
-                } else if (PlayerPrefs.GetInt("UseActionBar5") == 1) {
-                    if (!actionBarControllers[4].gameObject.activeSelf) {
-                        actionBarControllers[4].gameObject.SetActive(true);
-                    }
-                }
-                if (PlayerPrefs.GetInt("UseActionBar6") == 0) {
-                    if (actionBarControllers[5].gameObject.activeSelf) {
-                        actionBarControllers[5].gameObject.SetActive(false);
-                    }
-                } else if (PlayerPrefs.GetInt("UseActionBar6") == 1) {
-                    if (!actionBarControllers[5].gameObject.activeSelf) {
-                        actionBarControllers[5].gameObject.SetActive(true);
-                    }
-                }
-                if (PlayerPrefs.GetInt("UseActionBar7") == 0) {
-                    if (actionBarControllers[6].gameObject.activeSelf) {
-                        actionBarControllers[6].gameObject.SetActive(false);
-                    }
-                } else if (PlayerPrefs.GetInt("UseActionBar7") == 1) {
-                    if (!actionBarControllers[6].gameObject.activeSelf) {
-                        actionBarControllers[6].gameObject.SetActive(true);
-                    }
-                }
+                ActivateMouseActionBars();
             }
 
             UpdateVisuals();

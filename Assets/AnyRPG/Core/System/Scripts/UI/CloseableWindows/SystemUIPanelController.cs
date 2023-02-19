@@ -8,21 +8,41 @@ namespace AnyRPG {
     public class SystemUIPanelController : WindowContentController {
 
         [Header("UI Settings")]
+        public GameObject useQuestTrackerLine;
         public OnOffTextButton useQuestTrackerButton;
+        public GameObject useSystemBarLine;
+        public OnOffTextButton useSystemBarButton;
+        public GameObject useActionBar1Line;
+        public OnOffTextButton useActionBar1Button;
+        public GameObject useActionBar2Line;
         public OnOffTextButton useActionBar2Button;
+        public GameObject useActionBar3Line;
         public OnOffTextButton useActionBar3Button;
+        public GameObject useActionBar4Line;
         public OnOffTextButton useActionBar4Button;
+        public GameObject useActionBar5Line;
         public OnOffTextButton useActionBar5Button;
+        public GameObject useActionBar6Line;
         public OnOffTextButton useActionBar6Button;
+        public GameObject useActionBar7Line;
         public OnOffTextButton useActionBar7Button;
+        public GameObject useFocusUnitFrameLine;
         public OnOffTextButton useFocusUnitFrameButton;
+        public GameObject usePlayerUnitFrameLine;
         public OnOffTextButton usePlayerUnitFrameButton;
+        public GameObject useFloatingCastBarLine;
         public OnOffTextButton useFloatingCastBarButton;
+        public GameObject useMiniMapLine;
         public OnOffTextButton useMiniMapButton;
+        public GameObject useExperienceBarLine;
         public OnOffTextButton useExperienceBarButton;
+        public GameObject useFloatingCombatTextLine;
         public OnOffTextButton useFloatingCombatTextButton;
+        public GameObject useMessageFeedLine;
         public OnOffTextButton useMessageFeedButton;
+        public GameObject useStatusEffectBarLine;
         public OnOffTextButton useStatusEffectBarButton;
+        public GameObject useCombatLogLine;
         public OnOffTextButton useCombatLogButton;
 
         [Header("Player Interface Settings")]
@@ -37,8 +57,11 @@ namespace AnyRPG {
         [Header("Opacity")]
 
         public Slider inventoryOpacitySlider;
+        public GameObject actionBarOpacityLine;
         public Slider actionBarOpacitySlider;
+        public GameObject questTrackerOpacityLine;
         public Slider questTrackerOpacitySlider;
+        public GameObject combatLogOpacityLine;
         public Slider combatLogOpacitySlider;
         public Slider systemMenuOpacitySlider;
         public Slider popupWindowOpacitySlider;
@@ -57,6 +80,8 @@ namespace AnyRPG {
 
         // ui element visibility defaults
         private int defaultUseQuestTracker = 1;
+        private int defaultUseSystemBar = 1;
+        private int defaultUseActionBar1 = 1;
         private int defaultUseActionBar2 = 1;
         private int defaultUseActionBar3 = 1;
         private int defaultUseActionBar4 = 1;
@@ -73,6 +98,8 @@ namespace AnyRPG {
         private int defaultUseStatusEffectBarButton = 1;
         private int defaultLockUIButton = 1;
         private int defaultUseCombatLogButton = 1;
+
+        // in game element visibility defaults
         private int defaultShowPlayerNameButton = 1;
         private int defaultShowPlayerFactionButton = 1;
         private int defaultHideFullHealthBarButton = 1;
@@ -80,11 +107,15 @@ namespace AnyRPG {
         // game manager references
         private UIManager uIManager = null;
         private SaveManager saveManager = null;
+        private SystemUIConfiguration uiConfiguration = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            ShowHideUISettings();
+
             SetUIDefaults();
+
             //LoadUISettings();
         }
 
@@ -93,11 +124,212 @@ namespace AnyRPG {
 
             uIManager = systemGameManager.UIManager;
             saveManager = systemGameManager.SaveManager;
+            uiConfiguration = systemConfigurationManager.UIConfiguration;
         }
 
         public void ResetWindowPositions() {
             uIManager.LoadDefaultWindowPositions();
             saveManager.SaveWindowPositions();
+        }
+
+        /// <summary>
+        /// show or hide ui setting elements based on system configuration
+        /// </summary>
+        public void ShowHideUISettings() {
+
+            if (uiConfiguration.UseQuestTracker == UIElementUsage.Always) {
+                useQuestTrackerLine.SetActive(false);
+            } else if (uiConfiguration.UseQuestTracker == UIElementUsage.Never) {
+                useQuestTrackerLine.SetActive(false);
+                defaultUseQuestTracker = 0;
+                questTrackerOpacityLine.SetActive(false);
+            } else {
+                // user choice
+                defaultUseQuestTracker = uiConfiguration.UseQuestTrackerDefault ? 1 : 0;
+            }
+
+            if (uiConfiguration.UseActionBar1 == UIElementUsage.Never
+                && uiConfiguration.UseActionBar2 == UIElementUsage.Never
+                && uiConfiguration.UseActionBar3 == UIElementUsage.Never
+                && uiConfiguration.UseActionBar4 == UIElementUsage.Never
+                && uiConfiguration.UseActionBar5 == UIElementUsage.Never
+                && uiConfiguration.UseActionBar6 == UIElementUsage.Never
+                && uiConfiguration.UseActionBar7 == UIElementUsage.Never) {
+                actionBarOpacityLine.SetActive(false);
+            }
+
+            if (uiConfiguration.UseSystemBar == UIElementUsage.Always) {
+                useSystemBarLine.SetActive(false);
+            } else if(uiConfiguration.UseSystemBar == UIElementUsage.Never) {
+                useSystemBarLine.SetActive(false);
+                defaultUseSystemBar = 0;
+            } else {
+                // user choice
+                defaultUseSystemBar = uiConfiguration.UseSystemBarDefault ? 1 : 0;
+            }
+
+            if (uiConfiguration.UseActionBar1 == UIElementUsage.Always) {
+                useActionBar1Line.SetActive(false);
+            } else if (uiConfiguration.UseActionBar1 == UIElementUsage.Never) {
+                useActionBar1Line.SetActive(false);
+                defaultUseActionBar1 = 0;
+            } else {
+                // user choice
+                defaultUseActionBar1 = uiConfiguration.UseActionBar1Default ? 1 : 0;
+            }
+
+            if (uiConfiguration.UseActionBar2 == UIElementUsage.Always) {
+                useActionBar2Line.SetActive(false);
+            } else if (uiConfiguration.UseActionBar2 == UIElementUsage.Never) {
+                useActionBar2Line.SetActive(false);
+                defaultUseActionBar2 = 0;
+            } else {
+                // user choice
+                defaultUseActionBar2 = uiConfiguration.UseActionBar2Default ? 1 : 0;
+            }
+
+            if (uiConfiguration.UseActionBar3 == UIElementUsage.Always) {
+                useActionBar3Line.SetActive(false);
+            } else if (uiConfiguration.UseActionBar3 == UIElementUsage.Never) {
+                useActionBar3Line.SetActive(false);
+                defaultUseActionBar3 = 0;
+            } else {
+                // user choice
+                defaultUseActionBar3 = uiConfiguration.UseActionBar3Default ? 1 : 0;
+            }
+
+            if (uiConfiguration.UseActionBar4 == UIElementUsage.Always) {
+                useActionBar4Line.SetActive(false);
+            } else if (uiConfiguration.UseActionBar4 == UIElementUsage.Never) {
+                useActionBar4Line.SetActive(false);
+                defaultUseActionBar4 = 0;
+            } else {
+                // user choice
+                defaultUseActionBar4 = uiConfiguration.UseActionBar4Default ? 1 : 0;
+            }
+
+            if (uiConfiguration.UseActionBar5 == UIElementUsage.Always) {
+                useActionBar5Line.SetActive(false);
+            } else if (uiConfiguration.UseActionBar5 == UIElementUsage.Never) {
+                useActionBar5Line.SetActive(false);
+                defaultUseActionBar5 = 0;
+            } else {
+                // user choice
+                defaultUseActionBar5 = uiConfiguration.UseActionBar5Default ? 1 : 0;
+            }
+
+            if (uiConfiguration.UseActionBar6 == UIElementUsage.Always) {
+                useActionBar6Line.SetActive(false);
+            } else if (uiConfiguration.UseActionBar6 == UIElementUsage.Never) {
+                useActionBar6Line.SetActive(false);
+                defaultUseActionBar6 = 0;
+            } else {
+                // user choice
+                defaultUseActionBar6 = uiConfiguration.UseActionBar6Default ? 1 : 0;
+            }
+
+            if (uiConfiguration.UseActionBar7 == UIElementUsage.Always) {
+                useActionBar7Line.SetActive(false);
+            } else if (uiConfiguration.UseActionBar7 == UIElementUsage.Never) {
+                useActionBar7Line.SetActive(false);
+                defaultUseActionBar7 = 0;
+            } else {
+                // user choice
+                defaultUseActionBar7 = uiConfiguration.UseActionBar7Default ? 1 : 0;
+            }
+
+            if (uiConfiguration.UseTargetUnitFrame == UIElementUsage.Always) {
+                useFocusUnitFrameLine.SetActive(false);
+            } else if (uiConfiguration.UseTargetUnitFrame == UIElementUsage.Never) {
+                useFocusUnitFrameLine.SetActive(false);
+                defaultUseFocusUnitFrameButton = 0;
+            } else {
+                // user choice
+                defaultUseFocusUnitFrameButton = uiConfiguration.UseTargetUnitFrameDefault ? 1 : 0;
+            }
+
+            if (uiConfiguration.UsePlayerUnitFrame == UIElementUsage.Always) {
+                usePlayerUnitFrameLine.SetActive(false);
+            } else if (uiConfiguration.UsePlayerUnitFrame == UIElementUsage.Never) {
+                usePlayerUnitFrameLine.SetActive(false);
+                defaultUsePlayerUnitFrameButton = 0;
+            } else {
+                // user choice
+                defaultUsePlayerUnitFrameButton = uiConfiguration.UsePlayerUnitFrameDefault ? 1 : 0;
+            }
+
+            if (uiConfiguration.UseFloatingCastBar == UIElementUsage.Always) {
+                useFloatingCastBarLine.SetActive(false);
+            } else if (uiConfiguration.UseFloatingCastBar == UIElementUsage.Never) {
+                useFloatingCastBarLine.SetActive(false);
+                defaultUseFloatingCastBarButton = 0;
+            } else {
+                // user choice
+                defaultUseFloatingCastBarButton = uiConfiguration.UseFloatingCastBarDefault ? 1 : 0;
+            }
+
+            if (uiConfiguration.UseMiniMap == UIElementUsage.Always) {
+                useMiniMapLine.SetActive(false);
+            } else if (uiConfiguration.UseMiniMap == UIElementUsage.Never) {
+                useMiniMapLine.SetActive(false);
+                defaultUseMiniMapButton = 0;
+            } else {
+                // user choice
+                defaultUseMiniMapButton = uiConfiguration.UseMiniMapDefault ? 1 : 0;
+            }
+
+            if (uiConfiguration.UseExperienceBar == UIElementUsage.Always) {
+                useExperienceBarLine.SetActive(false);
+            } else if (uiConfiguration.UseExperienceBar == UIElementUsage.Never) {
+                useExperienceBarLine.SetActive(false);
+                defaultUseExperienceBarButton = 0;
+            } else {
+                // user choice
+                defaultUseExperienceBarButton = uiConfiguration.UseExperienceBarDefault ? 1 : 0;
+            }
+
+            if (uiConfiguration.UseFloatingCombatText == UIElementUsage.Always) {
+                useFloatingCombatTextLine.SetActive(false);
+            } else if (uiConfiguration.UseFloatingCombatText == UIElementUsage.Never) {
+                useFloatingCombatTextLine.SetActive(false);
+                defaultUseFloatingCombatTextButton = 0;
+            } else {
+                // user choice
+                defaultUseFloatingCombatTextButton = uiConfiguration.UseFloatingCombatTextDefault ? 1 : 0;
+            }
+
+            if (uiConfiguration.UseMessageFeed == UIElementUsage.Always) {
+                useMessageFeedLine.SetActive(false);
+            } else if (uiConfiguration.UseMessageFeed == UIElementUsage.Never) {
+                useMessageFeedLine.SetActive(false);
+                defaultUseMessageFeedButton = 0;
+            } else {
+                // user choice
+                defaultUseMessageFeedButton = uiConfiguration.UseMessageFeedDefault ? 1 : 0;
+            }
+
+            if (uiConfiguration.UseStatusEffectBar == UIElementUsage.Always) {
+                useStatusEffectBarLine.SetActive(false);
+            } else if (uiConfiguration.UseStatusEffectBar == UIElementUsage.Never) {
+                useStatusEffectBarLine.SetActive(false);
+                defaultUseStatusEffectBarButton = 0;
+            } else {
+                // user choice
+                defaultUseStatusEffectBarButton = uiConfiguration.UseStatusEffectBarDefault ? 1 : 0;
+            }
+
+            if (uiConfiguration.UseCombatLog == UIElementUsage.Always) {
+                useCombatLogLine.SetActive(false);
+            } else if (uiConfiguration.UseCombatLog == UIElementUsage.Never) {
+                useCombatLogLine.SetActive(false);
+                combatLogOpacityLine.SetActive(false);
+                defaultUseCombatLogButton = 0;
+            } else {
+                // user choice
+                defaultUseCombatLogButton = uiConfiguration.UseCombatLogDefault ? 1 : 0;
+            }
+
+
         }
 
         public void SetUIDefaults() {
@@ -125,63 +357,163 @@ namespace AnyRPG {
             if (!PlayerPrefs.HasKey("SystemMenuOpacity")) {
                 PlayerPrefs.SetFloat("SystemMenuOpacity", defaultSystemMenuOpacity);
             }
-            if (!PlayerPrefs.HasKey("UseQuestTracker")) {
+
+            if (uiConfiguration.UseQuestTracker == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UseQuestTracker", 0);
+            } else if (uiConfiguration.UseQuestTracker == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UseQuestTracker", 1);
+            } else if (PlayerPrefs.HasKey("UseQuestTracker") == false) {
                 PlayerPrefs.SetInt("UseQuestTracker", defaultUseQuestTracker);
             }
-            if (!PlayerPrefs.HasKey("UseActionBar2")) {
+
+            if (uiConfiguration.UseSystemBar == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UseSystemBar", 0);
+            } else if (uiConfiguration.UseSystemBar == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UseSystemBar", 1);
+            } else if (PlayerPrefs.HasKey("UseSystemBar") == false) {
+                PlayerPrefs.SetInt("UseSystemBar", defaultUseSystemBar);
+            }
+
+            if (uiConfiguration.UseActionBar1 == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UseActionBar1", 0);
+            } else if (uiConfiguration.UseActionBar1 == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UseActionBar1", 1);
+            } else if (PlayerPrefs.HasKey("UseActionBar1") == false) {
+                PlayerPrefs.SetInt("UseActionBar1", defaultUseActionBar1);
+            }
+
+            if (uiConfiguration.UseActionBar2 == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UseActionBar2", 0);
+            } else if (uiConfiguration.UseActionBar2 == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UseActionBar2", 1);
+            } else if (PlayerPrefs.HasKey("UseActionBar2") == false) {
                 PlayerPrefs.SetInt("UseActionBar2", defaultUseActionBar2);
             }
-            if (!PlayerPrefs.HasKey("UseActionBar3")) {
+
+            if (uiConfiguration.UseActionBar3 == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UseActionBar3", 0);
+            } else if (uiConfiguration.UseActionBar3 == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UseActionBar3", 1);
+            } else if (PlayerPrefs.HasKey("UseActionBar3") == false) {
                 PlayerPrefs.SetInt("UseActionBar3", defaultUseActionBar3);
             }
-            if (!PlayerPrefs.HasKey("UseActionBar4")) {
+
+            if (uiConfiguration.UseActionBar4 == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UseActionBar4", 0);
+            } else if (uiConfiguration.UseActionBar4 == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UseActionBar4", 1);
+            } else if (PlayerPrefs.HasKey("UseActionBar4") == false) {
                 PlayerPrefs.SetInt("UseActionBar4", defaultUseActionBar4);
             }
-            if (!PlayerPrefs.HasKey("UseActionBar5")) {
+
+            if (uiConfiguration.UseActionBar5 == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UseActionBar5", 0);
+            } else if (uiConfiguration.UseActionBar5 == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UseActionBar5", 1);
+            } else if (PlayerPrefs.HasKey("UseActionBar5") == false) {
                 PlayerPrefs.SetInt("UseActionBar5", defaultUseActionBar5);
             }
-            if (!PlayerPrefs.HasKey("UseActionBar6")) {
+
+            if (uiConfiguration.UseActionBar6 == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UseActionBar6", 0);
+            } else if (uiConfiguration.UseActionBar6 == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UseActionBar6", 1);
+            } else if (PlayerPrefs.HasKey("UseActionBar6") == false) {
                 PlayerPrefs.SetInt("UseActionBar6", defaultUseActionBar6);
             }
-            if (!PlayerPrefs.HasKey("UseActionBar7")) {
+
+            if (uiConfiguration.UseActionBar7 == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UseActionBar7", 0);
+            } else if (uiConfiguration.UseActionBar7 == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UseActionBar7", 1);
+            } else if (PlayerPrefs.HasKey("UseActionBar7") == false) {
                 PlayerPrefs.SetInt("UseActionBar7", defaultUseActionBar7);
             }
-            if (!PlayerPrefs.HasKey("UseFocusUnitFrame")) {
+
+            if (uiConfiguration.UseTargetUnitFrame == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UseFocusUnitFrame", 0);
+            } else if (uiConfiguration.UseTargetUnitFrame == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UseFocusUnitFrame", 1);
+            } else if (PlayerPrefs.HasKey("UseFocusUnitFrame") == false) {
                 PlayerPrefs.SetInt("UseFocusUnitFrame", defaultUseFocusUnitFrameButton);
             }
-            if (!PlayerPrefs.HasKey("UsePlayerUnitFrame")) {
+
+            if (uiConfiguration.UsePlayerUnitFrame == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UsePlayerUnitFrame", 0);
+            } else if (uiConfiguration.UsePlayerUnitFrame == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UsePlayerUnitFrame", 1);
+            } else if (PlayerPrefs.HasKey("UsePlayerUnitFrame") == false) {
                 PlayerPrefs.SetInt("UsePlayerUnitFrame", defaultUsePlayerUnitFrameButton);
             }
-            if (!PlayerPrefs.HasKey("UseFloatingCastBar")) {
+
+            if (uiConfiguration.UseFloatingCastBar == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UseFloatingCastBar", 0);
+            } else if (uiConfiguration.UseFloatingCastBar == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UseFloatingCastBar", 1);
+            } else if (PlayerPrefs.HasKey("UseFloatingCastBar") == false) {
                 PlayerPrefs.SetInt("UseFloatingCastBar", defaultUseFloatingCastBarButton);
             }
-            if (!PlayerPrefs.HasKey("UseMiniMap")) {
+
+            if (uiConfiguration.UseMiniMap == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UseMiniMap", 0);
+            } else if (uiConfiguration.UseMiniMap == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UseMiniMap", 1);
+            } else if (PlayerPrefs.HasKey("UseMiniMap") == false) {
                 PlayerPrefs.SetInt("UseMiniMap", defaultUseMiniMapButton);
             }
-            if (!PlayerPrefs.HasKey("UseExperienceBar")) {
+
+            if (uiConfiguration.UseExperienceBar == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UseExperienceBar", 0);
+            } else if (uiConfiguration.UseExperienceBar == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UseExperienceBar", 1);
+            } else if (PlayerPrefs.HasKey("UseExperienceBar") == false) {
                 PlayerPrefs.SetInt("UseExperienceBar", defaultUseExperienceBarButton);
             }
-            if (!PlayerPrefs.HasKey("UseFloatingCombatText")) {
+
+            if (uiConfiguration.UseFloatingCombatText == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UseFloatingCombatText", 0);
+            } else if (uiConfiguration.UseFloatingCombatText == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UseFloatingCombatText", 1);
+            } else if (PlayerPrefs.HasKey("UseFloatingCombatText") == false) {
                 PlayerPrefs.SetInt("UseFloatingCombatText", defaultUseFloatingCombatTextButton);
             }
-            if (!PlayerPrefs.HasKey("UseMessageFeed")) {
+
+            if (uiConfiguration.UseMessageFeed == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UseMessageFeed", 0);
+            } else if (uiConfiguration.UseMessageFeed == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UseMessageFeed", 1);
+            } else if (PlayerPrefs.HasKey("UseMessageFeed") == false) {
                 PlayerPrefs.SetInt("UseMessageFeed", defaultUseMessageFeedButton);
             }
-            if (!PlayerPrefs.HasKey("UseStatusEffectBar")) {
+
+            if (uiConfiguration.UseStatusEffectBar == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UseStatusEffectBar", 0);
+            } else if (uiConfiguration.UseStatusEffectBar == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UseStatusEffectBar", 1);
+            } else if (PlayerPrefs.HasKey("UseStatusEffectBar") == false) {
                 PlayerPrefs.SetInt("UseStatusEffectBar", defaultUseStatusEffectBarButton);
             }
-            if (!PlayerPrefs.HasKey("UseCombatLog")) {
+
+            if (uiConfiguration.UseCombatLog == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UseCombatLog", 0);
+            } else if (uiConfiguration.UseCombatLog == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UseCombatLog", 1);
+            } else if(PlayerPrefs.HasKey("UseCombatLog") == false) {
                 PlayerPrefs.SetInt("UseCombatLog", defaultUseCombatLogButton);
             }
+
             if (!PlayerPrefs.HasKey("LockUI")) {
                 PlayerPrefs.SetInt("LockUI", defaultLockUIButton);
             }
+
             if (!PlayerPrefs.HasKey("ShowPlayerName")) {
                 PlayerPrefs.SetInt("ShowPlayerName", defaultShowPlayerNameButton);
             }
+
             if (!PlayerPrefs.HasKey("ShowPlayerFaction")) {
                 PlayerPrefs.SetInt("ShowPlayerFaction", defaultShowPlayerFactionButton);
             }
+
             if (!PlayerPrefs.HasKey("HideFullHealthBar")) {
                 PlayerPrefs.SetInt("HideFullHealthBar", defaultHideFullHealthBarButton);
             }
@@ -383,6 +715,32 @@ namespace AnyRPG {
                 useCombatLogButton.SetOff();
             }
             uIManager.CheckCombatLogSettings();
+        }
+
+        public void ToggleUseSystemBar() {
+            if (PlayerPrefs.GetInt("UseSystemBar") == 0) {
+                PlayerPrefs.SetInt("UseSystemBar", 1);
+                uIManager.MessageFeedManager.WriteMessage("System Bar: on");
+                useSystemBarButton.SetOn();
+            } else {
+                PlayerPrefs.SetInt("UseSystemBar", 0);
+                uIManager.MessageFeedManager.WriteMessage("System Bar: off");
+                useSystemBarButton.SetOff();
+            }
+            uIManager.UpdateActionBars();
+        }
+
+        public void ToggleUseActionBar1() {
+            if (PlayerPrefs.GetInt("UseActionBar1") == 0) {
+                PlayerPrefs.SetInt("UseActionBar1", 1);
+                uIManager.MessageFeedManager.WriteMessage("Action Bar 1: on");
+                useActionBar1Button.SetOn();
+            } else {
+                PlayerPrefs.SetInt("UseActionBar1", 0);
+                uIManager.MessageFeedManager.WriteMessage("Action Bar 1: off");
+                useActionBar1Button.SetOff();
+            }
+            uIManager.UpdateActionBars();
         }
 
         public void ToggleUseActionBar2() {

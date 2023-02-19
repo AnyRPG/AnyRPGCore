@@ -28,6 +28,8 @@ namespace AnyRPG {
         // the number of pixels per meter of level based on the total map pixels
         protected float levelScaleFactor = 1f;
 
+        protected float playerMiniMapIconRotation = 0f;
+
         //private bool activeEventSubscriptionsInitialized = false;
 
         // system component references
@@ -50,6 +52,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             //cameraManager.MainMapCamera.enabled = false;
+            playerMiniMapIconRotation = systemConfigurationManager.UIConfiguration.PlayerMiniMapIconRotation;
         }
 
         public override void SetGameManagerReferences() {
@@ -100,7 +103,7 @@ namespace AnyRPG {
         }
 
         public void HandleIndicatorRotation(Interactable interactable) {
-            mapIndicatorControllers[interactable].transform.rotation = Quaternion.Euler(0, 0, (interactable.transform.eulerAngles.y - systemConfigurationManager.PlayerMiniMapIconRotation) * -1f);
+            mapIndicatorControllers[interactable].transform.rotation = Quaternion.Euler(0, 0, (interactable.transform.eulerAngles.y - playerMiniMapIconRotation) * -1f);
         }
 
         public void HandleAfterCameraUpdate(string eventName, EventParamProperties eventParamProperties) {

@@ -426,33 +426,13 @@ namespace AnyRPG {
         [SerializeField]
         private float maxChatTextDistance = 25f;
 
-        [Header("MINI MAP")]
-        /*
-        [Tooltip("If the the minimap texture for a scene cannot be found, what type of map display should be used")]
-        [SerializeField]
-        private MiniMapFallBackMode miniMapFallBackMode = MiniMapFallBackMode.Empty;
-        */
-
-        [Tooltip("When a minimap texture for a scene cannot be found, how many pixels per meter should be used when taking an automatic snapshot.  A higher number results in better image quality, but also higher memory usage.")]
-        [SerializeField]
-        private int autoPixelsPerMeter = 10;
-
-        [Tooltip("The icon to show on the mini map to represent the player.")]
-        [SerializeField]
-        private Sprite playerMiniMapIcon = null;
-
-        [Tooltip("If the icon does not face up on the screen, enter the number of clockwise degrees the image is naturally rotated.  This will be subtracted from the player angle at run-time.")]
-        [SerializeField]
-        private float playerMiniMapIconRotation = 0f;
-
-
-        [Header("UNIT FRAMES")]
-
-        [Tooltip("Using a real time camera will reduce performance.")]
-        [SerializeField]
-        private bool realTimeUnitFrameCamera = false;
-
         [Header("UI")]
+
+        [Tooltip("The material that will be used to display the cast target on the ground when casting ground targeted spells.")]
+        [SerializeField]
+        private SystemUIConfiguration UI = new SystemUIConfiguration();
+
+        [Header("INTERACTABLE CONFIGURATION")]
 
         [Tooltip("The material that will be used to display the cast target on the ground when casting ground targeted spells.")]
         [SerializeField]
@@ -461,106 +441,6 @@ namespace AnyRPG {
         [FormerlySerializedAs("focusProjectorColorMap")]
         [SerializeField]
         private List<ProjectorColorMapNode> highlightCircleColorMap = new List<ProjectorColorMapNode>();
-
-        [Tooltip("Default UI color for static elements that have no additional transparency applied to them.")]
-        [SerializeField]
-        private Color defaultUIColor;
-
-        /*
-        [Tooltip("defaultUIColor with full opacity for button frames")]
-        [SerializeField]
-        private Color defaultUISolidColor;
-        */
-
-        [Tooltip("Default UI color for background of UI sliders.")]
-        [SerializeField]
-        private Color defaultUIFillColor;
-
-        [Tooltip("Default UI color for outline image, when the mouse is hovering over an image.")]
-        [SerializeField]
-        private Color highlightOutlineColor;
-
-        [Tooltip("Default UI color for background highlight image, when a UI element has been clicked on and is the active image from a group of images.")]
-        [SerializeField]
-        private Color highlightImageColor;
-
-        [Tooltip("Default UI color for the button image on highlight buttons.")]
-        [SerializeField]
-        private Color highlightButtonColor;
-
-
-        [Tooltip("The normal color for button UI elements.")]
-        [SerializeField]
-        private Color buttonNormalColor = new Color32(163, 163, 163, 82);
-
-        [Tooltip("The highlight color for button UI elements.")]
-        [SerializeField]
-        private Color buttonHighlightedColor = new Color32(165, 165, 165, 166);
-
-        [Tooltip("The pressed color for button UI elements.")]
-        [SerializeField]
-        private Color buttonPressedColor = new Color32(120, 120, 120, 71);
-
-        [Tooltip("The selected color for button UI elements.")]
-        [SerializeField]
-        private Color buttonSelectedColor = new Color32(165, 165, 165, 166);
-
-        [Tooltip("The disabled color for button UI elements.")]
-        [SerializeField]
-        private Color buttonDisabledColor = new Color32(82, 82, 82, 17);
-
-
-        [Tooltip("The image to use for the frame of UI panel elements.")]
-        [SerializeField]
-        private Sprite defaultUIPanelFrame;
-
-        [Tooltip("The faction icon to show on the load game screen when the player has no faction.")]
-        [SerializeField]
-        private Sprite defaultFactionIcon;
-
-        [Header("SYSTEM BAR")]
-
-        [Tooltip("The main menu icon to show on the UI system bar.")]
-        [SerializeField]
-        private Sprite systemBarMainMenu;
-
-        [Tooltip("The ability book icon to show on the UI system bar.")]
-        [SerializeField]
-        private Sprite systemBarAbilityBook;
-
-        [Tooltip("The character icon to show on the UI system bar.")]
-        [SerializeField]
-        private Sprite systemBarCharacter;
-
-        [Tooltip("The quest log icon to show on the UI system bar.")]
-        [SerializeField]
-        private Sprite systemBarQuestLog;
-
-        [Tooltip("The map icon to show on the UI system bar.")]
-        [SerializeField]
-        private Sprite systemBarMap;
-
-        [Tooltip("The skills icon to show on the UI system bar.")]
-        [SerializeField]
-        private Sprite systemBarSkills;
-
-        [Tooltip("The reputations icon to show on the UI system bar.")]
-        [SerializeField]
-        private Sprite systemBarReputations;
-
-        [Tooltip("The currencies icon to show on the UI system bar.")]
-        [SerializeField]
-        private Sprite systemBarCurrencies;
-
-        [Tooltip("The achievements icon to show on the UI system bar.")]
-        [SerializeField]
-        private Sprite systemBarAchievements;
-
-        [Tooltip("The inventory icon to show on the UI system bar.")]
-        [SerializeField]
-        private Sprite systemBarInventory;
-
-        [Header("INTERACTABLE CONFIGURATION")]
 
         [SerializeField]
         private Material temporaryMaterial = null;
@@ -743,16 +623,6 @@ namespace AnyRPG {
         public Sprite MultipleCraftNamePlateImage { get => multipleCraftNamePlateImage; set => multipleCraftNamePlateImage = value; }
         public string GameName { get => gameName; set => gameName = value; }
         public string GameVersion { get => gameVersion; set => gameVersion = value; }
-        public Sprite SystemBarMainMenu { get => systemBarMainMenu; set => systemBarMainMenu = value; }
-        public Sprite SystemBarAbilityBook { get => systemBarAbilityBook; set => systemBarAbilityBook = value; }
-        public Sprite SystemBarCharacter { get => systemBarCharacter; set => systemBarCharacter = value; }
-        public Sprite SystemBarQuestLog { get => systemBarQuestLog; set => systemBarQuestLog = value; }
-        public Sprite SystemBarMap { get => systemBarMap; set => systemBarMap = value; }
-        public Sprite SystemBarSkills { get => systemBarSkills; set => systemBarSkills = value; }
-        public Sprite SystemBarReputations { get => systemBarReputations; set => systemBarReputations = value; }
-        public Sprite SystemBarCurrencies { get => systemBarCurrencies; set => systemBarCurrencies = value; }
-        public Sprite SystemBarAchievements { get => systemBarAchievements; set => systemBarAchievements = value; }
-        public Sprite SystemBarInventory { get => systemBarInventory; set => systemBarInventory = value; }
         public Sprite UnitSpawnControllerInteractionPanelImage { get => unitSpawnControllerInteractionPanelImage; set => unitSpawnControllerInteractionPanelImage = value; }
         public Sprite UnitSpawnControllerNamePlateImage { get => unitSpawnControllerNamePlateImage; set => unitSpawnControllerNamePlateImage = value; }
         public Sprite MusicPlayerInteractionPanelImage { get => musicPlayerInteractionPanelImage; set => musicPlayerInteractionPanelImage = value; }
@@ -760,9 +630,6 @@ namespace AnyRPG {
         public RuntimeAnimatorController DefaultAnimatorController { get => defaultAnimatorController; set => defaultAnimatorController = value; }
         public AnimationProfile DefaultAnimationProfile { get => defaultAnimationProfile; set => defaultAnimationProfile = value; }
         public Material DefaultCastingLightProjector { get => defaultCastTargetCircle; set => defaultCastTargetCircle = value; }
-        public Color DefaultUIColor { get => defaultUIColor; set => defaultUIColor = value; }
-        public Color DefaultUIFillColor { get => defaultUIFillColor; set => defaultUIFillColor = value; }
-        //public Color DefaultUISolidColor { get => defaultUISolidColor; set => defaultUISolidColor = value; }
         public List<string> LoadResourcesFolders { get => loadResourcesFolders; set => loadResourcesFolders = value; }
         public int MaxLevel { get => maxLevel; set => maxLevel = value; }
         public float StatBudgetPerLevel { get => statBudgetPerLevel; set => statBudgetPerLevel = value; }
@@ -784,7 +651,6 @@ namespace AnyRPG {
         public int KillXPPerLevel { get => killXPPerLevel; set => killXPPerLevel = value; }
         public bool UseKillXPLevelMultiplierDemoninator { get => useKillXPLevelMultiplierDemoninator; set => useKillXPLevelMultiplierDemoninator = value; }
         public int KillXPMultiplierLevelCap { get => killXPMultiplierLevelCap; set => killXPMultiplierLevelCap = value; }
-        public Sprite DefaultFactionIcon { get => defaultFactionIcon; set => defaultFactionIcon = value; }
         public List<StatScalingNode> PrimaryStats { get => statScalingNodes; set => statScalingNodes = value; }
         public List<string> PowerResources { get => powerResources; set => powerResources = value; }
         public List<PowerResource> PowerResourceList { get => powerResourceList; set => powerResourceList = value; }
@@ -846,13 +712,9 @@ namespace AnyRPG {
         public string InitializationScene { get => initializationScene; set => initializationScene = value; }
         public bool UseFirstCreatorProfile { get => useFirstCreatorProfile; set => useFirstCreatorProfile = value; }
         //public MiniMapFallBackMode MiniMapFallBackMode { get => miniMapFallBackMode; set => miniMapFallBackMode = value; }
-        public Sprite PlayerMiniMapIcon { get => playerMiniMapIcon; set => playerMiniMapIcon = value; }
-        public float PlayerMiniMapIconRotation { get => playerMiniMapIconRotation; set => playerMiniMapIconRotation = value; }
-        public bool RealTimeUnitFrameCamera { get => realTimeUnitFrameCamera; set => realTimeUnitFrameCamera = value; }
         public List<string> CharacterCreatorProfileNames { get => characterCreatorProfileNames; set => characterCreatorProfileNames = value; }
         public bool SyncMovementAnimationSpeed { get => syncMovementAnimationSpeed; set => syncMovementAnimationSpeed = value; }
         public int QuestLogSize { get => questLogSize; set => questLogSize = value; }
-        public int AutoPixelsPerMeter { get => autoPixelsPerMeter; set => autoPixelsPerMeter = value; }
         public float MaxTurnSpeed { get => maxTurnSpeed; }
         public float WalkSpeed { get => walkSpeed; }
         public float RunSpeed { get => runSpeed; }
@@ -864,14 +726,6 @@ namespace AnyRPG {
         public float FallDamagePerMeter { get => fallDamagePerMeter; set => fallDamagePerMeter = value; }
         public float FallDamageMinDistance { get => fallDamageMinDistance; set => fallDamageMinDistance = value; }
         public DefaultControllerConfiguration DefaultControllerConfiguration { get => defaultControllerConfiguration; set => defaultControllerConfiguration = value; }
-        public Color ButtonNormalColor { get => buttonNormalColor; set => buttonNormalColor = value; }
-        public Color ButtonHighlightedColor { get => buttonHighlightedColor; set => buttonHighlightedColor = value; }
-        public Color ButtonPressedColor { get => buttonPressedColor; set => buttonPressedColor = value; }
-        public Color ButtonSelectedColor { get => buttonSelectedColor; set => buttonSelectedColor = value; }
-        public Color ButtonDisabledColor { get => buttonDisabledColor; set => buttonDisabledColor = value; }
-        public Color HighlightOutlineColor { get => highlightOutlineColor; set => highlightOutlineColor = value; }
-        public Color HighlightImageColor { get => highlightImageColor; set => highlightImageColor = value; }
-        public Color HighlightButtonColor { get => highlightButtonColor; set => highlightButtonColor = value; }
         public int DefaultInventorySlots { get => defaultInventorySlots; set => defaultInventorySlots = value; }
         public int DefaultBankSlots { get => defaultBankSlots; set => defaultBankSlots = value; }
         public int MaxInventoryBags { get => maxInventoryBags; set => maxInventoryBags = value; }
@@ -887,6 +741,7 @@ namespace AnyRPG {
         public float DefaultSunAngle { get => defaultSunAngle; set => defaultSunAngle = value; }
         public Gradient DefaultSunGradient { get => defaultSunGradient; set => defaultSunGradient = value; }
         public AudioClip WeaponMissAudioClip { get => weaponMissAudioClip; set => weaponMissAudioClip = value; }
+        public SystemUIConfiguration UIConfiguration { get => UI; set => UI = value; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }
 

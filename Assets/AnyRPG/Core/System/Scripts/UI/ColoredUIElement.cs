@@ -21,7 +21,7 @@ namespace AnyRPG {
 
         public virtual void SetImageColor() {
             if (systemConfigurationManager != null && coloredImage != null) {
-                coloredImage.color = systemConfigurationManager.DefaultUIColor;
+                coloredImage.color = systemConfigurationManager.UIConfiguration.DefaultUIColor;
             }
         }
 

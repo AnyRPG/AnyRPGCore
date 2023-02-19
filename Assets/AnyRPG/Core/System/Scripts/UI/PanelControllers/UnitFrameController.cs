@@ -153,7 +153,7 @@ namespace AnyRPG {
         }
 
         private void LateUpdate() {
-            if (systemConfigurationManager.RealTimeUnitFrameCamera) {
+            if (systemConfigurationManager.UIConfiguration.RealTimeUnitFrameCamera) {
                 UpdateCameraPosition();
             }
         }
@@ -291,7 +291,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(): Unit Frame Not active after activate command.  Likely gameobject under inactive canvas.  Will run TargetInitialization() on enable instead.");
             }
-            if (systemConfigurationManager.RealTimeUnitFrameCamera == true) {
+            if (systemConfigurationManager.UIConfiguration.RealTimeUnitFrameCamera == true) {
                 previewCamera.enabled = true;
             }/* else {
             // this code disabled because it is handled by TargetInitialization(), which results in an extra render request here

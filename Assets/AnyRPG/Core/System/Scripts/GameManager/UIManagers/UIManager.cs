@@ -265,6 +265,7 @@ namespace AnyRPG {
         private InventoryManager inventoryManager = null;
         private SystemEventManager systemEventManager = null;
         private ControlsManager controlsManager = null;
+        private WindowManager windowManager = null;
 
         public CloseableWindow StatusEffectWindow { get => statusEffectWindow; }
         public UnitFrameController FocusUnitFrameController { get => focusUnitFrameController; }
@@ -415,6 +416,7 @@ namespace AnyRPG {
             inventoryManager = systemGameManager.InventoryManager;
             systemEventManager = systemGameManager.SystemEventManager;
             controlsManager = systemGameManager.ControlsManager;
+            windowManager = systemGameManager.WindowManager;
         }
 
         public void PerformSetupActivities() {
@@ -715,8 +717,19 @@ namespace AnyRPG {
                 }
             }
 
+            
+
             if (inputManager.KeyBindWasPressed("CANCELALL") && hadMoveable == false) {
-                CloseAllPopupWindows();
+
+                if (windowManager.CurrentWindow == null) {
+                    // special case for escape key to open main menu if no windows are open
+                    // this is necessary because the system bar could be disabled and this is the only way to open it 
+                    // (assuming player forgot / doesn't know about f12 keybind
+                    ToggleMainMenu();
+                    return;
+                } else {
+                    CloseAllPopupWindows();
+                }
             }
 
             // old system window manager code below : monitor for breakage
@@ -735,13 +748,29 @@ namespace AnyRPG {
             }
 
             if (inputManager.KeyBindWasPressed("MAINMENU")) {
-                if (controlsManager.GamePadModeActive == true) {
-                    gamepadMainMenuWindow.ToggleOpenClose();
-                } else {
-                    inGameMainMenuWindow.ToggleOpenClose();
-                }
+                ToggleMainMenu();   
             }
 
+        }
+
+        private void ToggleMainMenu() {
+            //Debug.Log("UIManager.ToggleMainMenu()");
+
+            if (controlsManager.GamePadModeActive == true) {
+                gamepadMainMenuWindow.ToggleOpenClose();
+                return;
+            }
+            
+            // special case for not using system bar since without it
+            // there is no way (except keystrokes) to access ability book, skills, achievements, etc
+            // so the gamepad main menu will be used because it has links to those windows
+            if (PlayerPrefs.GetInt("UseSystemBar") == 0) {
+
+                gamepadMainMenuWindow.ToggleOpenClose();
+                return;
+            }
+
+            inGameMainMenuWindow.ToggleOpenClose();
         }
 
         public void CloseAllPopupWindows() {

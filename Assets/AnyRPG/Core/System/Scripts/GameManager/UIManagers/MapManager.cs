@@ -96,8 +96,8 @@ namespace AnyRPG {
 
             //RenderMapFromCamera();
             //renderTexture = new RenderTexture((int)levelManager.SceneBounds.size.x, (int)levelManager.SceneBounds.size.z, 16, RenderTextureFormat.ARGB32);
-            mapTexture = new Texture2D((int)cameraSize * systemConfigurationManager.AutoPixelsPerMeter, (int)cameraSize * systemConfigurationManager.AutoPixelsPerMeter);
-            renderTexture = new RenderTexture((int)cameraSize * systemConfigurationManager.AutoPixelsPerMeter, (int)cameraSize * systemConfigurationManager.AutoPixelsPerMeter, 16, RenderTextureFormat.ARGB32);
+            mapTexture = new Texture2D((int)cameraSize * systemConfigurationManager.UIConfiguration.AutoPixelsPerMeter, (int)cameraSize * systemConfigurationManager.UIConfiguration.AutoPixelsPerMeter);
+            renderTexture = new RenderTexture((int)cameraSize * systemConfigurationManager.UIConfiguration.AutoPixelsPerMeter, (int)cameraSize * systemConfigurationManager.UIConfiguration.AutoPixelsPerMeter, 16, RenderTextureFormat.ARGB32);
             renderTexture.Create();
             cameraManager.MainMapCamera.targetTexture = renderTexture;
             cameraManager.MainMapCamera.Render();
