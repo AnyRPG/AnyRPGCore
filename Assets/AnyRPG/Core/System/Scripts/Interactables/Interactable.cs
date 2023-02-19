@@ -713,12 +713,12 @@ namespace AnyRPG {
             }
 
             if (notInteractable == true) {
-                return null;
+                return new List<InteractableOptionComponent>();
             }
 
             if (interactables == null) {
                 //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(): interactables is null.  returning null!");
-                return null;
+                return new List<InteractableOptionComponent>();
             }
 
             List<InteractableOptionComponent> currentInteractables = new List<InteractableOptionComponent>();
