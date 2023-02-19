@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class AbilityObjective : QuestObjective {
+    public class LearnAbilityObjective : QuestObjective {
 
         [SerializeField]
         [ResourceSelector(resourceType = typeof(BaseAbility))]
@@ -17,19 +17,15 @@ namespace AnyRPG {
 
         public override Type ObjectiveType {
             get {
-                return typeof(AbilityObjective);
+                return typeof(LearnAbilityObjective);
             }
         }
-
-        // if true, you must use the ability, otherwise, just learning it is good enough
-        [SerializeField]
-        private bool requireUse = false;
 
         private BaseAbilityProperties baseAbility;
 
         // for learning
         public void UpdateCompletionCount() {
-            Debug.Log("AbilityObjective.UpdateCompletionCount(" + (baseAbility == null ? "null" : baseAbility.DisplayName) + ")");
+            //Debug.Log("AbilityObjective.UpdateCompletionCount(" + (baseAbility == null ? "null" : baseAbility.DisplayName) + ")");
             bool completeBefore = IsComplete;
             if (completeBefore) {
                 return;
@@ -42,19 +38,6 @@ namespace AnyRPG {
             if (completeBefore == false && IsComplete && !quest.IsAchievement) {
                 messageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, DisplayName));
             }
-        }
-
-        // for casting
-        public void UpdateCastCount() {
-            bool completeBefore = IsComplete;
-                CurrentAmount++;
-                quest.CheckCompletion();
-                if (CurrentAmount <= Amount && !quest.IsAchievement) {
-                    messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", baseAbility.DisplayName, CurrentAmount, Amount));
-                }
-                if (completeBefore == false && IsComplete && !quest.IsAchievement) {
-                    messageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, baseAbility.DisplayName));
-                }
         }
 
         public override void UpdateCompletionCount(bool printMessages = true) {
@@ -76,34 +59,19 @@ namespace AnyRPG {
             }
         }
 
-        public bool RequireUse { get => requireUse; set => requireUse = value; }
-
         public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
             base.OnAcceptQuest(quest, printMessages);
-            if (requireUse == true) {
-                baseAbility.OnAbilityUsed += UpdateCastCount;
-            } else {
-                baseAbility.OnAbilityLearn += UpdateCompletionCount;
-                UpdateCompletionCount(printMessages);
-            }
+            baseAbility.OnAbilityLearn += UpdateCompletionCount;
+            UpdateCompletionCount(printMessages);
         }
 
         public override void OnAbandonQuest() {
             base.OnAbandonQuest();
             baseAbility.OnAbilityLearn -= UpdateCompletionCount;
-            if (requireUse == true) {
-                baseAbility.OnAbilityUsed -= UpdateCastCount;
-            }
         }
 
         public override string GetUnformattedStatus() {
-            string beginText = string.Empty;
-            if (RequireUse) {
-                beginText = "Use ";
-            } else {
-                beginText = "Learn ";
-            }
-            return beginText + DisplayName + ": " + Mathf.Clamp(CurrentAmount, 0, Amount) + "/" + Amount;
+            return "Learn " + DisplayName + ": " + Mathf.Clamp(CurrentAmount, 0, Amount) + "/" + Amount;
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager, Quest quest) {

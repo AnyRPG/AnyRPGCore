@@ -27,6 +27,7 @@ MonoBehaviour:
     once the first step is complete'
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   isAchievement: 0
   repeatableQuest: 1
   hasOpeningDialog: 0
@@ -49,34 +50,24 @@ MonoBehaviour:
   skillRewardNames: []
   steps:
   - questObjectives:
-    - id: 0
+    - rid: 0
   - questObjectives:
-    - id: 1
-  collectObjectives: []
-  killObjectives: []
-  tradeSkillObjectives: []
-  abilityObjectives: []
-  useInteractableObjectives: []
-  questQuestObjectives: []
-  dialogObjectives: []
-  visitZoneObjectives: []
+    - rid: 8385465461168668689
   prerequisiteConditions: []
   turnInItems: 0
   allowRawComplete: 1
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: 0
       type: {class: VisitZoneObjective, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         amount: 1
-        type: 
         overrideDisplayName: 
         zoneName: Features Demo Dungeon
-    00000001:
-      type: {class: AbilityObjective, ns: AnyRPG, asm: Assembly-CSharp}
+    - rid: 8385465461168668689
+      type: {class: UseAbilityObjective, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         amount: 1
-        type: 
         overrideDisplayName: 
         abilityName: Attack
-        requireUse: 1

@@ -10,26 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b491a306145b8e4aa064bbcf71f8e01, type: 3}
-  m_Name: Repeatable3StepQuest
+  m_Name: LearnAbilityQuest
   m_EditorClassIdentifier: 
-  resourceName: Repeatable 3 Step
+  resourceName: Learn Ability
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
-  description: 'This quest is repeatable.
+  description: 'This is a quest that requires you to learn abilities.
 
 
-    It requires you to complete 3 tasks
-    in a specific order.
-
-
-    The objectives for each step will only show in the
-    quest tracker and quest log once the previous steps are complete'
+'
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   isAchievement: 0
-  repeatableQuest: 1
+  repeatableQuest: 0
   hasOpeningDialog: 0
   experienceLevel: 1
   dynamicLevel: 1
@@ -40,7 +35,7 @@ MonoBehaviour:
   rewardCurrencyName: 
   baseCurrencyReward: 0
   currencyRewardPerLevel: 0
-  maxItemRewards: 1
+  maxItemRewards: 0
   itemRewardNames: []
   maxFactionRewards: 0
   factionRewards: []
@@ -50,33 +45,16 @@ MonoBehaviour:
   skillRewardNames: []
   steps:
   - questObjectives:
-    - rid: 0
-  - questObjectives:
-    - rid: 1
-  - questObjectives:
-    - rid: 8385465461168668690
+    - rid: 8385465461168668695
   prerequisiteConditions: []
   turnInItems: 0
   allowRawComplete: 0
   references:
     version: 2
     RefIds:
-    - rid: 0
-      type: {class: CollectObjective, ns: AnyRPG, asm: Assembly-CSharp}
+    - rid: 8385465461168668695
+      type: {class: LearnAbilityObjective, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         amount: 1
         overrideDisplayName: 
-        itemName: Medieval Dagger
-        partialMatch: 1
-    - rid: 1
-      type: {class: VisitZoneObjective, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        amount: 1
-        overrideDisplayName: 
-        zoneName: Features Demo Dungeon
-    - rid: 8385465461168668690
-      type: {class: UseAbilityObjective, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        amount: 1
-        overrideDisplayName: 
-        abilityName: Attack
+        abilityName: Blizzard

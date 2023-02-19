@@ -11618,6 +11618,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 280206183}
     m_Modifications:
+    - target: {fileID: -5793952350435592342, guid: 182e453858cadc34392feb6b095a7fa1,
+        type: 3}
+      propertyPath: notInteractable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5114853980853533880, guid: 182e453858cadc34392feb6b095a7fa1,
         type: 3}
       propertyPath: m_RootOrder
@@ -36005,7 +36010,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
 --- !u!95 &977488459
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -36022,7 +36027,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!81 &977488460
 AudioListener:
   m_ObjectHideFlags: 0

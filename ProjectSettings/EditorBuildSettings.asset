@@ -86,22 +86,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/AnyRPG/Core/Games/MovementTestGame/Scenes/Content/MovementTestZone/MovementTestZone.unity
     guid: a847437ee17c7aa4f98c2d363f671f1d
-  - enabled: 1
-    path: Assets/Games/NewGame/Scenes/NewGame/NewGame.unity
-    guid: b56b67aee0db2be47b54dd8f850bec01
-  - enabled: 1
-    path: Assets/Games/NewGame/Scenes/NewGameMainMenu/NewGameMainMenu.unity
-    guid: 943b1896ff773c34b97c2cae18637cd7
-  - enabled: 1
-    path: Assets/Games/NewGame/Scenes/NewScene/NewScene.unity
-    guid: 6015633491a34c144aab43ccd8530bcf
-  - enabled: 1
-    path: Assets/Games/NewGame2/Scenes/NewGame2/NewGame2.unity
-    guid: 7aaf0b68bb6661e4395e83863d306157
-  - enabled: 1
-    path: Assets/Games/NewGame2/Scenes/NewGame2MainMenu/NewGame2MainMenu.unity
-    guid: 5a8ffe8cf9b0e424cb4d5f93b9388d1f
-  - enabled: 1
-    path: Assets/Games/NewGame2/Scenes/NewScene2/NewScene2.unity
-    guid: 47dc7c6ef43eaae45b2d8dbd2a7f554a
   m_configObjects: {}

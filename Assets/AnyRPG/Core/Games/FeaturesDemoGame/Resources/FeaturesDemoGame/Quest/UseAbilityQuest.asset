@@ -16,16 +16,17 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
-  description: 'This is a quest that requires you to learn and use abilities
+  description: 'This is a quest that requires you to use abilities.
 
 
-    You
-    can use the ability by attacking any enemy.
+    You can
+    use the ability by attacking any enemy.
 
 
 '
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   isAchievement: 0
   repeatableQuest: 0
   hasOpeningDialog: 0
@@ -48,30 +49,16 @@ MonoBehaviour:
   skillRewardNames: []
   steps:
   - questObjectives:
-    - id: 0
-  collectObjectives: []
-  killObjectives: []
-  tradeSkillObjectives: []
-  abilityObjectives:
-  - amount: 1
-    type: Attack
-    overrideDisplayName: 
-    abilityName: 
-    requireUse: 1
-  useInteractableObjectives: []
-  questQuestObjectives: []
-  dialogObjectives: []
-  visitZoneObjectives: []
+    - rid: 8385465461168668692
   prerequisiteConditions: []
   turnInItems: 0
   allowRawComplete: 0
   references:
-    version: 1
-    00000000:
-      type: {class: AbilityObjective, ns: AnyRPG, asm: Assembly-CSharp}
+    version: 2
+    RefIds:
+    - rid: 8385465461168668692
+      type: {class: UseAbilityObjective, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         amount: 1
-        type: 
         overrideDisplayName: 
         abilityName: Attack
-        requireUse: 1

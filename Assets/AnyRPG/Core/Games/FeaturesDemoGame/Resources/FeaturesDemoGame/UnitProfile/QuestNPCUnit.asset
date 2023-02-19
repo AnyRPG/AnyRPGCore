@@ -248,6 +248,9 @@ MonoBehaviour:
           questName: Learn Trade Skill
         - startQuest: 1
           endQuest: 1
+          questName: Learn Ability
+        - startQuest: 1
+          endQuest: 1
           questName: Use Ability
         - startQuest: 1
           endQuest: 1
