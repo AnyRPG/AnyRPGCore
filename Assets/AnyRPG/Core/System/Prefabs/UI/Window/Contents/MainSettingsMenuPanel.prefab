@@ -35704,6 +35704,8 @@ MonoBehaviour:
   - {fileID: 8651182257449806643}
   - {fileID: 4010407203232260491}
   - {fileID: 6331455066446254607}
+  - {fileID: 3125163829857780252}
+  - {fileID: 9137168782695671483}
   - {fileID: 3795289479715019012}
   - {fileID: 2522865108016104011}
   - {fileID: 554850704317460440}
@@ -42842,7 +42844,7 @@ PrefabInstance:
     - target: {fileID: 114680356841326892, guid: f729553522aa04b4594ba7302e12faf2,
         type: 3}
       propertyPath: m_Name
-      value: OnOffTextButton
+      value: UseActionBar1OnOffTextButton
       objectReference: {fileID: 0}
     - target: {fileID: 1279817145134764923, guid: f729553522aa04b4594ba7302e12faf2,
         type: 3}
@@ -44117,7 +44119,7 @@ PrefabInstance:
     - target: {fileID: 114680356841326892, guid: f729553522aa04b4594ba7302e12faf2,
         type: 3}
       propertyPath: m_Name
-      value: OnOffTextButton
+      value: UseQuestTrackerOnOffTextButton
       objectReference: {fileID: 0}
     - target: {fileID: 1279817145134764923, guid: f729553522aa04b4594ba7302e12faf2,
         type: 3}
@@ -44478,7 +44480,7 @@ PrefabInstance:
     - target: {fileID: 114680356841326892, guid: f729553522aa04b4594ba7302e12faf2,
         type: 3}
       propertyPath: m_Name
-      value: OnOffTextButton
+      value: UseSystemBarOnOffTextButton
       objectReference: {fileID: 0}
     - target: {fileID: 1279817145134764923, guid: f729553522aa04b4594ba7302e12faf2,
         type: 3}
@@ -45636,7 +45638,7 @@ PrefabInstance:
     - target: {fileID: 114680356841326892, guid: f729553522aa04b4594ba7302e12faf2,
         type: 3}
       propertyPath: m_Name
-      value: OnOffTextButton
+      value: UseActionBar2OnOffTextButton
       objectReference: {fileID: 0}
     - target: {fileID: 1279817145134764923, guid: f729553522aa04b4594ba7302e12faf2,
         type: 3}

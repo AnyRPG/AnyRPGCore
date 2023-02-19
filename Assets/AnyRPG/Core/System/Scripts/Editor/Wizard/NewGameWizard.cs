@@ -13,6 +13,7 @@ namespace AnyRPG {
 
         // Template scene that will be used to create the new game load scene
         private const string pathToLoadSceneTemplate = "/AnyRPG/Core/Templates/Game/Scenes/LoadScene/LoadScene.unity";
+        private const string pathToMainMenuSceneTemplate = "/AnyRPG/Core/Templates/Game/Scenes/MainMenu/MainMenu.unity";
 
         // required template prefabs
         private const string pathToGameManagerPrefab = "/AnyRPG/Core/System/Prefabs/GameManager/GameManager.prefab";
@@ -243,13 +244,27 @@ namespace AnyRPG {
             AssetDatabase.CopyAsset("Assets" + pathToLoadSceneTemplate, loadSceneAssetPath);
 
             // add game load scene to build settings
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Adding Game Load Scene To Build Settings...", 0.5f);
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Adding Game Load Scene To Build Settings...", 0.45f);
             List<EditorBuildSettingsScene> currentSceneList = EditorBuildSettings.scenes.ToList();
             Debug.Log("Adding " + loadSceneAssetPath + " to build settings");
             currentSceneList.Add(new EditorBuildSettingsScene(loadSceneAssetPath, true));
             EditorBuildSettings.scenes = currentSceneList.ToArray();
 
-            // Open the scene to add the necessary elements
+            // copy main mneu scene
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Copying Main Menu Scene...", 0.5f);
+            string mainMenuSceneFolder = gameParentFolder + fileSystemGameName + "/Scenes/" + fileSystemGameName + "MainMenu";
+            string mainMenuSceneAssetPath = "Assets" + mainMenuSceneFolder + "/" + fileSystemGameName + "MainMenu.unity";
+            WizardUtilities.CreateFolderIfNotExists(Application.dataPath + mainMenuSceneFolder);
+            AssetDatabase.CopyAsset("Assets" + pathToMainMenuSceneTemplate, mainMenuSceneAssetPath);
+
+            // add main menu scene to build settings
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Adding Main Menu Scene To Build Settings...", 0.55f);
+            currentSceneList = EditorBuildSettings.scenes.ToList();
+            Debug.Log("Adding " + mainMenuSceneAssetPath + " to build settings");
+            currentSceneList.Add(new EditorBuildSettingsScene(mainMenuSceneAssetPath, true));
+            EditorBuildSettings.scenes = currentSceneList.ToArray();
+
+            // Open the load scene to add the necessary elements
             EditorUtility.DisplayProgressBar("New Game Wizard", "Modifying loading scene...", 0.6f);
             Debug.Log("Loading Scene at " + loadSceneAssetPath);
             Scene loadGameScene = EditorSceneManager.OpenScene(loadSceneAssetPath);
@@ -277,6 +292,19 @@ namespace AnyRPG {
             // Save changes to the load game scene
             EditorUtility.DisplayProgressBar("New Game Wizard", "Saving Load Game Scene...", 0.8f);
             EditorSceneManager.SaveScene(loadGameScene);
+
+            // Open the main menu scene to add the scene config
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Modifying main menu scene...", 0.85f);
+            Debug.Log("Loading Scene at " + mainMenuSceneAssetPath);
+            Scene mainMenuScene = EditorSceneManager.OpenScene(mainMenuSceneAssetPath);
+
+            // add sceneconfig to scene
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Adding SceneConfig to Scene...", 0.87f);
+            string sceneConfigPrefabAssetPath = "Assets" + gameParentFolder + fileSystemGameName + "/Prefab/GameManager/" + fileSystemGameName + "SceneConfig.prefab";
+            GameObject sceneConfigGameObject = (GameObject)AssetDatabase.LoadMainAssetAtPath(sceneConfigPrefabAssetPath);
+            GameObject instantiatedGO = (GameObject)PrefabUtility.InstantiatePrefab(sceneConfigGameObject);
+            instantiatedGO.transform.SetAsFirstSibling();
+            EditorSceneManager.SaveScene(mainMenuScene);
 
             // install default templates
             EditorUtility.DisplayProgressBar("New Game Wizard", "Installing Default Templates...", 0.9f);
@@ -484,7 +512,7 @@ namespace AnyRPG {
             // create scene node
             SceneNode sceneNode = ScriptableObject.CreateInstance("SceneNode") as SceneNode;
             sceneNode.ResourceName = "Main Menu";
-            sceneNode.SceneFile = "MainMenu";
+            sceneNode.SceneFile = $"{fileSystemGameName}MainMenu";
             sceneNode.AllowMount = false;
             sceneNode.SuppressCharacterSpawn = true;
             if (mainMenuMusic != null) {

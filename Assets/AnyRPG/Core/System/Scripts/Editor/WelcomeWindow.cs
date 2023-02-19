@@ -44,7 +44,7 @@ namespace AnyRPG {
         };
         #endregion
 
-        public const string installedVersion = "0.15";
+        public const string installedVersion = "0.16a";
 
         public const string _projectSettingsPath = "Assets/AnyRPG/Basic Locomotion/Resources/ProjectSettings.unitypackage";
 

@@ -721,7 +721,7 @@ namespace AnyRPG {
 
             if (inputManager.KeyBindWasPressed("CANCELALL") && hadMoveable == false) {
 
-                if (windowManager.CurrentWindow == null) {
+                if (windowManager.CurrentWindow == null && cutSceneBarController.CurrentCutscene == null) {
                     // special case for escape key to open main menu if no windows are open
                     // this is necessary because the system bar could be disabled and this is the only way to open it 
                     // (assuming player forgot / doesn't know about f12 keybind

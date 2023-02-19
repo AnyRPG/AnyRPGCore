@@ -12,14 +12,17 @@ EditorBuildSettings:
     path: Assets/ALostSoul/Games/ALostSoulCharacterDemo/Scenes/Game/ALostSoulCharacterDemoGame/ALostSoulCharacterDemoGame.unity
     guid: 4f5e18110aa706b49b11a4673427ebd3
   - enabled: 1
+    path: Assets/ALostSoul/Content/ALostSoulDemoShared/Scenes/ALostSoulDemoMainMenu/ALostSoulDemoMainMenu.unity
+    guid: f901f9b42904e72498a90bf08c05a94d
+  - enabled: 1
     path: Assets/AnyRPG/Engine/Games/ContentDemo/Scenes/Game/ContentDemoGame/ContentDemoGame.unity
     guid: ba8bd3a60f57ab64388665a58ea7f4bc
   - enabled: 1
+    path: Assets/AnyRPG/Engine/Games/ContentDemo/Scenes/Game/ContentDemoMainMenu/ContentDemoMainMenu.unity
+    guid: e2d3b039807b31c4794b64ee7bed4c80
+  - enabled: 1
     path: Assets/AnyRPG/Core/Games/EmptyGame/Scenes/EmptyGame/EmptyGame.unity
     guid: 7f52814d565a8844ba1d58d1b9dc3001
-  - enabled: 1
-    path: Assets/AnyRPG/Core/System/Scenes/MainMenu/MainMenu.unity
-    guid: 796bbdccf792ca145a55c45c89ec7454
   - enabled: 1
     path: Assets/ALostSoul/Content/ALostSoulDemoShared/Scenes/ExampleSoulForge/ExampleSoulForge.unity
     guid: e94e746e738fe2240bfc77cc3c5fad59
@@ -57,24 +60,48 @@ EditorBuildSettings:
     path: Assets/ALostSoul/Content/ALostSoulDemoShared/Scenes/ExampleTempleOfAncientEnergy/ExampleTempleOfAncientEnergy.unity
     guid: a5845d23eec8aad47a9774f4bc7e8311
   - enabled: 1
+    path: Assets/AnyRPG/Engine/Games/ContentDemo/Scenes/Content/ContentScene/ContentScene.unity
+    guid: 79ec306d7083e084bb061eebd6e5f62f
+  - enabled: 1
+    path: Assets/AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity
+    guid: a98b1f451adf75f4899466b9a4746144
+  - enabled: 1
+    path: Assets/AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Game/FeaturesDemoMainMenu/FeaturesDemoMainMenu.unity
+    guid: 3c050ae184863104d94d1c6a206d4a84
+  - enabled: 1
+    path: Assets/AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Content/FeaturesDemoZone/FeaturesDemoZone.unity
+    guid: c5448959a7d351845969586d6f5ce056
+  - enabled: 1
     path: Assets/AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Content/FeaturesDemoDungeon/FeaturesDemoDungeon.unity
     guid: c094c26c9175d674fafcb14b9282a864
   - enabled: 1
     path: Assets/AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Content/FeaturesDemoCutsceneZone/FeaturesDemoCutsceneZone.unity
     guid: b9ce6cec24f88e343bdd24c31d295b8a
   - enabled: 1
-    path: Assets/AnyRPG/Engine/Games/ContentDemo/Scenes/Content/ContentScene/ContentScene.unity
-    guid: 79ec306d7083e084bb061eebd6e5f62f
-  - enabled: 1
-    path: Assets/AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Content/FeaturesDemoZone/FeaturesDemoZone.unity
-    guid: c5448959a7d351845969586d6f5ce056
-  - enabled: 1
-    path: Assets/AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity
-    guid: a98b1f451adf75f4899466b9a4746144
-  - enabled: 1
     path: Assets/AnyRPG/Core/Games/MovementTestGame/Scenes/Game/MovementTestGame/MovementTestGame.unity
     guid: 677b052e3cf6eba4a87f60626ff3a923
   - enabled: 1
+    path: Assets/AnyRPG/Core/Games/MovementTestGame/Scenes/Game/MovementTestMainMenu/MovementTestMainMenu.unity
+    guid: cf38f90cd5bbb3e4f94bdf82fe956a9a
+  - enabled: 1
     path: Assets/AnyRPG/Core/Games/MovementTestGame/Scenes/Content/MovementTestZone/MovementTestZone.unity
     guid: a847437ee17c7aa4f98c2d363f671f1d
+  - enabled: 1
+    path: Assets/Games/NewGame/Scenes/NewGame/NewGame.unity
+    guid: b56b67aee0db2be47b54dd8f850bec01
+  - enabled: 1
+    path: Assets/Games/NewGame/Scenes/NewGameMainMenu/NewGameMainMenu.unity
+    guid: 943b1896ff773c34b97c2cae18637cd7
+  - enabled: 1
+    path: Assets/Games/NewGame/Scenes/NewScene/NewScene.unity
+    guid: 6015633491a34c144aab43ccd8530bcf
+  - enabled: 1
+    path: Assets/Games/NewGame2/Scenes/NewGame2/NewGame2.unity
+    guid: 7aaf0b68bb6661e4395e83863d306157
+  - enabled: 1
+    path: Assets/Games/NewGame2/Scenes/NewGame2MainMenu/NewGame2MainMenu.unity
+    guid: 5a8ffe8cf9b0e424cb4d5f93b9388d1f
+  - enabled: 1
+    path: Assets/Games/NewGame2/Scenes/NewScene2/NewScene2.unity
+    guid: 47dc7c6ef43eaae45b2d8dbd2a7f554a
   m_configObjects: {}
