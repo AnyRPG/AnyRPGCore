@@ -42,6 +42,7 @@ namespace AnyRPG {
 
         private List<string> resourceFolders = new List<string>() {
             "AbilityEffect",
+            "Achievement",
             "AnimatedAction",
             "AnimationProfile",
             "ArmorClass",
