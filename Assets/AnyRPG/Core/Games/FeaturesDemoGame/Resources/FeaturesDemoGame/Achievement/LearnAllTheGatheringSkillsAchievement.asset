@@ -9,61 +9,46 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b491a306145b8e4aa064bbcf71f8e01, type: 3}
-  m_Name: LearnAllTheSkillsQuest
+  m_Script: {fileID: 11500000, guid: c5c789e2f200eeb4aa6d9303486389d3, type: 3}
+  m_Name: LearnAllTheGatheringSkillsAchievement
   m_EditorClassIdentifier: 
-  resourceName: Learn All The Trade Skills
+  resourceName: Learn All The Gathering Skills
   displayName: 
   icon: {fileID: 21300000, guid: e029593ae7518d743830eccfc3e4e2b7, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: Learn all the gathering and crafting skills.
+  description: Learn all the gathering skills.
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  isAchievement: 1
-  repeatableQuest: 0
-  hasOpeningDialog: 0
-  experienceLevel: 1
-  dynamicLevel: 1
-  extraLevels: 0
-  baseExperienceReward: 0
-  experienceRewardPerLevel: 0
-  automaticCurrencyReward: 0
-  rewardCurrencyName: 
-  baseCurrencyReward: 0
-  currencyRewardPerLevel: 0
-  maxItemRewards: 0
-  itemRewardNames: []
-  maxFactionRewards: 0
-  factionRewards: []
-  maxAbilityRewards: 0
-  abilityRewardNames: []
-  maxSkillRewards: 0
-  skillRewardNames: []
   steps:
   - questObjectives:
-    - rid: 0
-    - rid: 1
-    - rid: 2
+    - rid: 8385465461168668726
+    - rid: 8385465461168668727
+    - rid: 8385465461168668728
+    - rid: 8385465461168668729
   prerequisiteConditions: []
-  turnInItems: 0
-  allowRawComplete: 0
   references:
     version: 2
     RefIds:
-    - rid: 0
-      type: {class: TradeSkillObjective, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        amount: 1
-        overrideDisplayName: 
-        skillName: Herbalism
-    - rid: 1
+    - rid: 8385465461168668726
       type: {class: TradeSkillObjective, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         amount: 1
         overrideDisplayName: 
         skillName: Fishing
-    - rid: 2
+    - rid: 8385465461168668727
+      type: {class: TradeSkillObjective, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        amount: 1
+        overrideDisplayName: 
+        skillName: Herbalism
+    - rid: 8385465461168668728
+      type: {class: TradeSkillObjective, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        amount: 1
+        overrideDisplayName: 
+        skillName: Logging
+    - rid: 8385465461168668729
       type: {class: TradeSkillObjective, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         amount: 1

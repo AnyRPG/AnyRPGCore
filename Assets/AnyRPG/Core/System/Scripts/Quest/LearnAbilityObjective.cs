@@ -31,11 +31,11 @@ namespace AnyRPG {
                 return;
             }
             CurrentAmount++;
-            quest.CheckCompletion();
-            if (CurrentAmount <= Amount && !quest.IsAchievement && CurrentAmount != 0) {
+            questBase.CheckCompletion();
+            if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages && CurrentAmount != 0) {
                 messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, Amount), Amount));
             }
-            if (completeBefore == false && IsComplete && !quest.IsAchievement) {
+            if (completeBefore == false && IsComplete && questBase.PrintObjectiveCompletionMessages) {
                 messageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, DisplayName));
             }
         }
@@ -49,18 +49,18 @@ namespace AnyRPG {
             }
             if (playerManager.MyCharacter.CharacterAbilityManager.HasAbility(baseAbility)) {
                 CurrentAmount++;
-                quest.CheckCompletion(true, printMessages);
-                if (CurrentAmount <= Amount && !quest.IsAchievement && printMessages == true) {
+                questBase.CheckCompletion(true, printMessages);
+                if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages && printMessages == true) {
                     messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", baseAbility.DisplayName, CurrentAmount, Amount));
                 }
-                if (completeBefore == false && IsComplete && !quest.IsAchievement && printMessages == true) {
+                if (completeBefore == false && IsComplete && questBase.PrintObjectiveCompletionMessages && printMessages == true) {
                     messageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, baseAbility.DisplayName));
                 }
             }
         }
 
-        public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
-            base.OnAcceptQuest(quest, printMessages);
+        public override void OnAcceptQuest(QuestBase questBase, bool printMessages = true) {
+            base.OnAcceptQuest(questBase, printMessages);
             baseAbility.OnAbilityLearn += UpdateCompletionCount;
             UpdateCompletionCount(printMessages);
         }
@@ -74,7 +74,7 @@ namespace AnyRPG {
             return "Learn " + DisplayName + ": " + Mathf.Clamp(CurrentAmount, 0, Amount) + "/" + Amount;
         }
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager, Quest quest) {
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager, QuestBase quest) {
             base.SetupScriptableObjects(systemGameManager, quest);
             
             if (abilityName != null && abilityName != string.Empty) {

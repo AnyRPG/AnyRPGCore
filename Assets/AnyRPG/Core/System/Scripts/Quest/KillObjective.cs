@@ -32,18 +32,18 @@ namespace AnyRPG {
             // INVESTIGATE IF STRING MATCH CAN BE REPLACED WITH TYPE.GETTYPE DIRECT MATCH
             if (character.GetType() == Type.GetType(targetName) || SystemDataFactory.MatchResource(character.CharacterName, targetName) || SystemDataFactory.MatchResource(character.Faction.DisplayName, targetName)) {
                 CurrentAmount++;
-                quest.CheckCompletion();
-                if (CurrentAmount <= Amount && !quest.IsAchievement && CurrentAmount != 0) {
+                questBase.CheckCompletion();
+                if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages && CurrentAmount != 0) {
                     messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, Amount), Amount));
                 }
-                if (completeBefore == false && IsComplete && !quest.IsAchievement) {
+                if (completeBefore == false && IsComplete && questBase.PrintObjectiveCompletionMessages) {
                     messageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, DisplayName));
                 }
 
             }
         }
 
-        public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
+        public override void OnAcceptQuest(QuestBase quest, bool printMessages = true) {
             base.OnAcceptQuest(quest, printMessages);
 
             // don't forget to remove these later

@@ -37,19 +37,19 @@ namespace AnyRPG {
             if (questObjective.GetStatus() == "completed") {
                 CurrentAmount++;
                 // i think that is supposed to be this instead to ask the quest that we are an objective for to check completion
-                quest.CheckCompletion(true, printMessages);
+                questBase.CheckCompletion(true, printMessages);
                 //questObjective.CheckCompletion(true, printMessages);
-                if (CurrentAmount <= Amount && !questObjective.IsAchievement && printMessages == true && CurrentAmount != 0) {
+                if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages && printMessages == true && CurrentAmount != 0) {
                     messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", questObjective.DisplayName, Mathf.Clamp(CurrentAmount, 0, Amount), Amount));
                 }
-                if (completeBefore == false && IsComplete && !questObjective.IsAchievement && printMessages == true) {
+                if (completeBefore == false && IsComplete && questBase.PrintObjectiveCompletionMessages && printMessages == true) {
                     messageFeedManager.WriteMessage(string.Format("Complete {1}: Objective Complete", CurrentAmount, questObjective.DisplayName));
                 }
             }
             base.UpdateCompletionCount(printMessages);
         }
 
-        public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
+        public override void OnAcceptQuest(QuestBase quest, bool printMessages = true) {
             base.OnAcceptQuest(quest, printMessages);
             questObjective.OnQuestStatusUpdated += HandleQuestStatusUpdated;
             UpdateCompletionCount(printMessages);
@@ -61,7 +61,7 @@ namespace AnyRPG {
         }
 
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager, Quest quest) {
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager, QuestBase quest) {
             //Debug.Log("QuestQuestObjective.SetupScriptableObjects()");
             base.SetupScriptableObjects(systemGameManager, quest);
 

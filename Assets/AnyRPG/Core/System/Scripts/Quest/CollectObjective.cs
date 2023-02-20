@@ -46,11 +46,11 @@ namespace AnyRPG {
             CurrentAmount = playerManager.MyCharacter.CharacterInventoryManager.GetItemCount(itemName, partialMatch);
             CurrentAmount += playerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentCount(itemName, partialMatch);
 
-            quest.CheckCompletion(true, printMessages);
-            if (CurrentAmount <= Amount && !quest.IsAchievement && printMessages == true && CurrentAmount != 0) {
+            questBase.CheckCompletion(true, printMessages);
+            if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages && printMessages == true && CurrentAmount != 0) {
                 messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, Amount), Amount));
             }
-            if (completeBefore == false && IsComplete && !quest.IsAchievement && printMessages == true) {
+            if (completeBefore == false && IsComplete && questBase.PrintObjectiveCompletionMessages && printMessages == true) {
                 messageFeedManager.WriteMessage(string.Format("Collect {0} {1}: Objective Complete", CurrentAmount, DisplayName));
             }
             base.UpdateCompletionCount(printMessages);
@@ -63,7 +63,7 @@ namespace AnyRPG {
             }
         }
 
-        public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
+        public override void OnAcceptQuest(QuestBase quest, bool printMessages = true) {
             base.OnAcceptQuest(quest, printMessages);
             systemEventManager.OnItemCountChanged += UpdateItemCount;
             UpdateCompletionCount(printMessages);

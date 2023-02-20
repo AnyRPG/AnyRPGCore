@@ -218,6 +218,10 @@ namespace AnyRPG {
             factoryDataAccess.Setup<WeatherProfile>("WeatherProfile", systemGameManager);
             dataDictionary.Add(typeof(WeatherProfile), factoryDataAccess);
 
+            factoryDataAccess = new FactoryDataAccess();
+            factoryDataAccess.Setup<Achievement>("Achievement", systemGameManager);
+            dataDictionary.Add(typeof(Achievement), factoryDataAccess);
+
             //setup scriptable objects
             foreach (FactoryDataAccess dataAccess in dataDictionary.Values) {
                 dataAccess.SetupScriptableObjects(systemGameManager);

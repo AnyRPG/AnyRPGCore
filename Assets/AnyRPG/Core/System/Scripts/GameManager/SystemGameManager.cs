@@ -95,6 +95,9 @@ namespace AnyRPG {
         private QuestLog questLog = null;
 
         [SerializeField]
+        private AchievementLog achievementLog = null;
+
+        [SerializeField]
         private SystemEnvironmentManager systemEnvironmentManager = null;
 
         [SerializeField]
@@ -172,6 +175,7 @@ namespace AnyRPG {
         public SaveManager SaveManager { get => saveManager; set => saveManager = value; }
         public KeyBindManager KeyBindManager { get => keyBindManager; set => keyBindManager = value; }
         public QuestLog QuestLog { get => questLog; set => questLog = value; }
+        public AchievementLog AchievementLog { get => achievementLog; set => achievementLog = value; }
 
         public SystemConfigurationManager SystemConfigurationManager { get => systemConfigurationManager; set => systemConfigurationManager = value; }
         public ControlsManager ControlsManager { get => controlsManager; }
@@ -252,6 +256,7 @@ namespace AnyRPG {
             saveManager.Configure(this);
             KeyBindManager.Configure(this);
             questLog.Configure(this);
+            achievementLog.Configure(this);
             systemEnvironmentManager.Configure(this);
             craftingManager.Configure(this);
             interactionManager.Configure(this);

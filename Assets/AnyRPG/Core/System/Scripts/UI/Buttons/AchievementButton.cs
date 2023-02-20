@@ -10,7 +10,7 @@ namespace AnyRPG {
     public class AchievementButton : TransparencyButton {
 
         [SerializeField]
-        protected Quest rawResource = null;
+        protected Achievement rawResource = null;
 
         [SerializeField]
         protected Image icon = null;
@@ -21,8 +21,8 @@ namespace AnyRPG {
         [SerializeField]
         protected TextMeshProUGUI descriptionField = null;
 
-        public void AddResource(Quest quest) {
-            this.rawResource = quest;
+        public void AddResource(Achievement achievement) {
+            this.rawResource = achievement;
             icon.sprite = this.rawResource.Icon;
             icon.color = Color.white;
             resourceNameField.text = this.rawResource.DisplayName;

@@ -46,18 +46,18 @@ namespace AnyRPG {
             }
             if (playerManager.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
                 CurrentAmount++;
-                quest.CheckCompletion(true, printMessages);
+                questBase.CheckCompletion(true, printMessages);
             }
-            if (CurrentAmount <= Amount && !quest.IsAchievement && printMessages == true && CurrentAmount != 0) {
+            if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages && printMessages == true && CurrentAmount != 0) {
                 messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", skill.DisplayName, Mathf.Clamp(CurrentAmount, 0, Amount), Amount));
             }
-            if (completeBefore == false && IsComplete && !quest.IsAchievement && printMessages == true) {
+            if (completeBefore == false && IsComplete && questBase.PrintObjectiveCompletionMessages && printMessages == true) {
                 messageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, skill.DisplayName));
             }
             base.UpdateCompletionCount(printMessages);
         }
 
-        public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
+        public override void OnAcceptQuest(QuestBase quest, bool printMessages = true) {
             base.OnAcceptQuest(quest, printMessages);
             systemEventManager.OnSkillListChanged += UpdateCompletionCount;
             UpdateCompletionCount(printMessages);
@@ -68,7 +68,7 @@ namespace AnyRPG {
             systemEventManager.OnSkillListChanged -= UpdateCompletionCount;
         }
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager, Quest quest) {
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager, QuestBase quest) {
             base.SetupScriptableObjects(systemGameManager, quest);
             skill = null;
             if (skillName != null && skillName != string.Empty) {

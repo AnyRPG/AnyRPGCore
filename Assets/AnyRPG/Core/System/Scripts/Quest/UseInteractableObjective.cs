@@ -59,19 +59,19 @@ namespace AnyRPG {
                 }
                 if (CurrentAmount < Amount) {
                     CurrentAmount++;
-                    quest.CheckCompletion();
+                    questBase.CheckCompletion();
                 }
-                if (CurrentAmount <= Amount && !quest.IsAchievement && CurrentAmount != 0) {
+                if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages && CurrentAmount != 0) {
                     messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, Amount), Amount));
                 }
-                if (completeBefore == false && IsComplete && !quest.IsAchievement) {
+                if (completeBefore == false && IsComplete && questBase.PrintObjectiveCompletionMessages) {
                     messageFeedManager.WriteMessage(string.Format("{0}: Objective Complete", DisplayName));
                 }
             }
         }
 
 
-        public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
+        public override void OnAcceptQuest(QuestBase quest, bool printMessages = true) {
             //Debug.Log("UseInteractableObjective.OnAcceptQuest()");
             base.OnAcceptQuest(quest, printMessages);
 

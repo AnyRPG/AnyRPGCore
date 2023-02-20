@@ -60,8 +60,8 @@ namespace AnyRPG {
 
         public void AcceptAchievements() {
             //Debug.Log("SystemQuestManager.AcceptAchievements()");
-            foreach (Quest resource in systemDataFactory.GetResourceList<Quest>()) {
-                if (resource.IsAchievement == true && resource.TurnedIn == false && resource.IsComplete == false) {
+            foreach (Achievement resource in systemDataFactory.GetResourceList<Achievement>()) {
+                if (resource.TurnedIn == false && resource.IsComplete == false) {
                     resource.AcceptQuest();
                 }
             }

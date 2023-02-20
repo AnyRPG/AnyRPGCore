@@ -25,16 +25,16 @@ namespace AnyRPG {
         protected override void PopulatePages() {
             //Debug.Log("AchievementPanelUI.CreatePages()");
             QuestContentList page = new QuestContentList();
-            foreach (Quest quest in systemDataFactory.GetResourceList<Quest>()) {
-                if (quest.IsAchievement && quest.TurnedIn) {
-                    page.quests.Add(quest);
+            foreach (Achievement quest in systemDataFactory.GetResourceList<Achievement>()) {
+                if (quest.TurnedIn) {
+                    page.achievements.Add(quest);
                 }
-                if (page.quests.Count == pageSize) {
+                if (page.achievements.Count == pageSize) {
                     pages.Add(page);
                     page = new QuestContentList();
                 }
             }
-            if (page.quests.Count > 0) {
+            if (page.achievements.Count > 0) {
                 pages.Add(page);
             }
             AddResources();
@@ -46,10 +46,10 @@ namespace AnyRPG {
                 for (int i = 0; i < pageSize; i++) {
                     //for (int i = 0; i < pages[pageIndex].Count - 1; i++) {
                     //Debug.Log("AchievementPanelUI.AddResources(): i: " + i);
-                    if (i < (pages[pageIndex] as QuestContentList).quests.Count) {
+                    if (i < (pages[pageIndex] as QuestContentList).achievements.Count) {
                         //Debug.Log("adding ability");
                         resourceButtons[i].gameObject.SetActive(true);
-                        resourceButtons[i].AddResource((pages[pageIndex] as QuestContentList).quests[i]);
+                        resourceButtons[i].AddResource((pages[pageIndex] as QuestContentList).achievements[i]);
                     } else {
                         //Debug.Log("clearing ability");
                         resourceButtons[i].ClearResource();
@@ -82,6 +82,6 @@ namespace AnyRPG {
     }
 
     public class QuestContentList : PagedContentList {
-        public List<Quest> quests = new List<Quest>();
+        public List<Achievement> achievements = new List<Achievement>();
     }
 }

@@ -12,7 +12,7 @@ namespace AnyRPG {
         [SerializeField]
         private int amount = 1;
 
-        protected Quest quest;
+        protected QuestBase questBase;
 
         [Tooltip("Set this if you want to override the name shown in the quest log objective to be something other than the type")]
         [SerializeField]
@@ -42,13 +42,13 @@ namespace AnyRPG {
 
         public int CurrentAmount {
             get {
-                return saveManager.GetQuestObjectiveSaveData(quest.DisplayName, ObjectiveType.Name, ObjectiveName).Amount;
+                return saveManager.GetQuestObjectiveSaveData(questBase.DisplayName, ObjectiveType.Name, ObjectiveName).Amount;
                 //return false;
             }
             set {
-                QuestObjectiveSaveData saveData = saveManager.GetQuestObjectiveSaveData(quest.DisplayName, ObjectiveType.Name, ObjectiveName);
+                QuestObjectiveSaveData saveData = saveManager.GetQuestObjectiveSaveData(questBase.DisplayName, ObjectiveType.Name, ObjectiveName);
                 saveData.Amount = value;
-                saveManager.QuestObjectiveSaveDataDictionary[quest.DisplayName][ObjectiveType.Name][ObjectiveName] = saveData;
+                saveManager.QuestObjectiveSaveDataDictionary[questBase.DisplayName][ObjectiveType.Name][ObjectiveName] = saveData;
             }
         }
 
@@ -61,7 +61,7 @@ namespace AnyRPG {
             }
         }
 
-        public Quest Quest { get => quest; set => quest = value; }
+        public QuestBase QuestBase { get => questBase; set => questBase = value; }
         public string OverrideDisplayName { get => overrideDisplayName; set => overrideDisplayName = value; }
         public string DisplayName {
             get {
@@ -77,12 +77,12 @@ namespace AnyRPG {
             //Debug.Log("QuestObjective.UpdateCompletionCount()");
         }
 
-        public virtual void OnAcceptQuest(Quest quest, bool printMessages = true) {
-            this.quest = quest;
+        public virtual void OnAcceptQuest(QuestBase questBase, bool printMessages = true) {
+            this.questBase = questBase;
         }
 
-        private void SetQuest(Quest quest) {
-            this.quest = quest;
+        private void SetQuest(QuestBase questBase) {
+            this.questBase = questBase;
         }
 
         public virtual void OnAbandonQuest() {
@@ -97,7 +97,7 @@ namespace AnyRPG {
             return DisplayName + ": " + Mathf.Clamp(CurrentAmount, 0, Amount) + "/" + Amount;
         }
 
-        public virtual void SetupScriptableObjects(SystemGameManager systemGameManager, Quest quest) {
+        public virtual void SetupScriptableObjects(SystemGameManager systemGameManager, QuestBase quest) {
             Configure(systemGameManager);
             SetQuest(quest);
         }

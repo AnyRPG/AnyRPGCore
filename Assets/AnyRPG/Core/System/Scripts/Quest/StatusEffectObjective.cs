@@ -26,11 +26,11 @@ namespace AnyRPG {
         public void UpdateApplyCount() {
             bool completeBefore = IsComplete;
                 CurrentAmount++;
-                quest.CheckCompletion();
-                if (CurrentAmount <= Amount && !quest.IsAchievement) {
+                questBase.CheckCompletion();
+                if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages) {
                     messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", statusEffect.DisplayName, CurrentAmount, Amount));
                 }
-                if (completeBefore == false && IsComplete && !quest.IsAchievement) {
+                if (completeBefore == false && IsComplete && questBase.PrintObjectiveCompletionMessages) {
                     messageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, statusEffect.DisplayName));
                 }
         }
@@ -44,17 +44,17 @@ namespace AnyRPG {
             }
             if (playerManager.MyCharacter.CharacterStats.GetStatusEffectNode(statusEffect) != null) {
                 CurrentAmount++;
-                quest.CheckCompletion(true, printMessages);
-                if (CurrentAmount <= Amount && !quest.IsAchievement && printMessages == true) {
+                questBase.CheckCompletion(true, printMessages);
+                if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages && printMessages == true) {
                     messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", statusEffect.DisplayName, CurrentAmount, Amount));
                 }
-                if (completeBefore == false && IsComplete && !quest.IsAchievement && printMessages == true) {
+                if (completeBefore == false && IsComplete && questBase.PrintObjectiveCompletionMessages && printMessages == true) {
                     messageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, statusEffect.DisplayName));
                 }
             }
         }
 
-        public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
+        public override void OnAcceptQuest(QuestBase quest, bool printMessages = true) {
             base.OnAcceptQuest(quest, printMessages);
             statusEffect.OnApply += UpdateApplyCount;
             UpdateCompletionCount(printMessages);
@@ -72,7 +72,7 @@ namespace AnyRPG {
             return DisplayName + ": " + Mathf.Clamp(CurrentAmount, 0, Amount) + "/" + Amount;
         }
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager, Quest quest) {
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager, QuestBase quest) {
             base.SetupScriptableObjects(systemGameManager, quest);
             
             if (effectName != null && effectName != string.Empty) {

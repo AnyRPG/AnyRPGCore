@@ -26,16 +26,16 @@ namespace AnyRPG {
         public void UpdateCastCount() {
             bool completeBefore = IsComplete;
                 CurrentAmount++;
-                quest.CheckCompletion();
-                if (CurrentAmount <= Amount && !quest.IsAchievement) {
+            questBase.CheckCompletion();
+                if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages) {
                     messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", baseAbility.DisplayName, CurrentAmount, Amount));
                 }
-                if (completeBefore == false && IsComplete && !quest.IsAchievement) {
+                if (completeBefore == false && IsComplete && questBase.PrintObjectiveCompletionMessages) {
                     messageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, baseAbility.DisplayName));
                 }
         }
 
-        public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
+        public override void OnAcceptQuest(QuestBase quest, bool printMessages = true) {
             base.OnAcceptQuest(quest, printMessages);
             baseAbility.OnAbilityUsed += UpdateCastCount;
         }
@@ -49,7 +49,7 @@ namespace AnyRPG {
             return "Use " + DisplayName + ": " + Mathf.Clamp(CurrentAmount, 0, Amount) + "/" + Amount;
         }
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager, Quest quest) {
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager, QuestBase quest) {
             base.SetupScriptableObjects(systemGameManager, quest);
             
             if (abilityName != null && abilityName != string.Empty) {

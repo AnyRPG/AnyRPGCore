@@ -6147,6 +6147,7 @@ GameObject:
   - component: {fileID: 7577693937512578360}
   - component: {fileID: 8511082740355230216}
   - component: {fileID: 1336645520798668948}
+  - component: {fileID: 8577629670151495976}
   - component: {fileID: 1630861930056385854}
   - component: {fileID: 1238949688181202490}
   - component: {fileID: 4883567332619093550}
@@ -6517,6 +6518,7 @@ MonoBehaviour:
   saveManager: {fileID: 7577693937512578360}
   keyBindManager: {fileID: 8511082740355230216}
   questLog: {fileID: 1336645520798668948}
+  achievementLog: {fileID: 8577629670151495976}
   systemEnvironmentManager: {fileID: 1630861930056385854}
   craftingManager: {fileID: 1238949688181202490}
   interactionManager: {fileID: 4883567332619093550}
@@ -6751,6 +6753,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a820a2eb32edd6d4f8a228befa160b37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8577629670151495976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5684895214070870814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9032d487af08e6f45908cbc3f612e895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1630861930056385854

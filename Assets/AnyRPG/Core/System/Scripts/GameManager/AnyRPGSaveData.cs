@@ -52,6 +52,7 @@ namespace AnyRPG {
         // the properties below currently overwrite properties of scriptableObjects
         // this is undesired and if any similar data is added, it needs to be intentionally cleared between game loads
         public List<QuestSaveData> questSaveData;
+        public List<QuestSaveData> achievementSaveData;
         public List<DialogSaveData> dialogSaveData;
         public List<SceneNodeSaveData> sceneNodeSaveData;
         public List<CutsceneSaveData> cutsceneSaveData;
@@ -75,15 +76,6 @@ namespace AnyRPG {
         public bool inLog;
 
         public List<QuestObjectiveSaveData> questObjectives;
-
-        /*
-        public List<QuestObjectiveSaveData> killObjectives;
-        public List<QuestObjectiveSaveData> useInteractableObjectives;
-        public List<QuestObjectiveSaveData> collectObjectives;
-        public List<QuestObjectiveSaveData> tradeSkillObjectives;
-        public List<QuestObjectiveSaveData> abilityObjectives;
-        public List<QuestObjectiveSaveData> visitZoneObjectives;
-        */
     }
 
     [Serializable]
