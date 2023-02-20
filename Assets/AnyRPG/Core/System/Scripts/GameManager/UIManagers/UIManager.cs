@@ -10,6 +10,8 @@ using UnityEngine.SceneManagement;
 namespace AnyRPG {
     public class UIManager : ConfiguredMonoBehaviour {
 
+        public event System.Action OnBeginChatCommand = delegate { };
+
         [Header("UI Managers")]
 
         [SerializeField]
@@ -680,6 +682,11 @@ namespace AnyRPG {
                     } else {
                         playerUI.SetActive(true);
                     }
+                }
+
+                // check for '/' to activate chat log input
+                if (inputManager.KeyBindWasPressed("BEGINCHATCOMMAND")) {
+                    OnBeginChatCommand();
                 }
 
                 // popup window keys pressed

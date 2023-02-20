@@ -73,6 +73,8 @@ namespace AnyRPG {
             //InitializeKey("CANCEL", KeyCode.Backspace, KeyCode.None, KeyCode.None, "Cancel", KeyBindType.Constant);
             InitializeKey("CANCELALL", KeyCode.Escape, KeyCode.None, KeyCode.None, "Cancel All", KeyBindType.Constant);
             InitializeKey("MAINMENU", KeyCode.F12, xBoxKeys["MAINMENU"], KeyCode.None, "Main Menu", KeyBindType.Constant);
+            InitializeKey("BEGINCHATCOMMAND", KeyCode.Slash, KeyCode.None, KeyCode.None, "Chat Command", KeyBindType.Constant);
+
             InitializeKey("JOYSTICKBUTTON0", KeyCode.None, xBoxKeys["JOYSTICKBUTTON0"], KeyCode.None, "Joystick Button 0", KeyBindType.Hidden);
             InitializeKey("JOYSTICKBUTTON1", KeyCode.None, xBoxKeys["JOYSTICKBUTTON1"], KeyCode.None, "Joystick Button 1", KeyBindType.Hidden);
             InitializeKey("JOYSTICKBUTTON2", KeyCode.None, xBoxKeys["JOYSTICKBUTTON2"], KeyCode.None, "Joystick Button 2", KeyBindType.Hidden);
@@ -83,6 +85,8 @@ namespace AnyRPG {
             InitializeKey("JOYSTICKBUTTON7", KeyCode.None, xBoxKeys["JOYSTICKBUTTON7"], KeyCode.None, "Joystick Button 7", KeyBindType.Hidden);
             InitializeKey("JOYSTICKBUTTON8", KeyCode.None, xBoxKeys["JOYSTICKBUTTON8"], KeyCode.None, "Joystick Button 8", KeyBindType.Hidden);
             InitializeKey("JOYSTICKBUTTON9", KeyCode.None, xBoxKeys["JOYSTICKBUTTON9"], KeyCode.None, "Joystick Button 9", KeyBindType.Hidden);
+
+
             InitializeKey("QUESTLOG", KeyCode.L, KeyCode.None, KeyCode.None, "Quest Log", KeyBindType.System);
             InitializeKey("CHARACTERPANEL", KeyCode.C, KeyCode.None, KeyCode.None, "Character Panel", KeyBindType.System);
             InitializeKey("CURRENCYPANEL", KeyCode.I, KeyCode.None, KeyCode.None, "Currency Panel", KeyBindType.System);

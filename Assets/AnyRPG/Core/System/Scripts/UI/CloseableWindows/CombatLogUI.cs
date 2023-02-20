@@ -104,6 +104,7 @@ namespace AnyRPG {
         // game manager references
         protected LogManager logManager = null;
         protected ChatCommandManager chatCommandManager = null;
+        protected UIManager uiManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("CombatLogUI.Awake()");
@@ -117,14 +118,13 @@ namespace AnyRPG {
             ClearLog();
 
             textInput.onSubmit.AddListener(ProcessEnterKey);
-
-            
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             logManager = systemGameManager.LogManager;
             chatCommandManager = systemGameManager.ChatCommandManager;
+            uiManager = systemGameManager.UIManager;
         }
 
         private void ClearLog() {
@@ -257,17 +257,32 @@ namespace AnyRPG {
             logManager.OnClearChatMessages += HandleClearChatMessages;
             logManager.OnClearSystemMessages += HandleClearSystemMessages;
             logManager.OnClearCombatMessages += HandleClearCombatMessages;
+            uiManager.OnBeginChatCommand += HandleBeginChatCommand;
         }
 
         protected override void ProcessCleanupEventSubscriptions() {
             ////Debug.Log("PlayerManager.CleanupEventSubscriptions()");
             base.ProcessCleanupEventSubscriptions();
-            logManager.OnWriteChatMessage += HandleWriteChatMessage;
-            logManager.OnWriteSystemMessage += HandleWriteSystemMessage;
-            logManager.OnWriteCombatMessage += HandleWriteCombatMessage;
-            logManager.OnClearChatMessages += HandleClearChatMessages;
-            logManager.OnClearSystemMessages += HandleClearSystemMessages;
-            logManager.OnClearCombatMessages += HandleClearCombatMessages;
+            logManager.OnWriteChatMessage -= HandleWriteChatMessage;
+            logManager.OnWriteSystemMessage -= HandleWriteSystemMessage;
+            logManager.OnWriteCombatMessage -= HandleWriteCombatMessage;
+            logManager.OnClearChatMessages -= HandleClearChatMessages;
+            logManager.OnClearSystemMessages -= HandleClearSystemMessages;
+            logManager.OnClearCombatMessages -= HandleClearCombatMessages;
+            uiManager.OnBeginChatCommand -= HandleBeginChatCommand;
+        }
+
+        public void HandleBeginChatCommand() {
+            // disable input of other keys while entering text
+            ActivateTextInput();
+
+            // focus the text input field
+            textInput.ActivateInputField();
+
+            // set the text to the slash that was just entered and move to end of the line so
+            // the text isn't selected and the '/' doesn't get overwritten with the next keystroke
+            textInput.text = "/";
+            textInput.caretPosition = 1;
         }
 
         public void HandleClearCombatMessages() {
