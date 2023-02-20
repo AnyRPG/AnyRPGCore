@@ -264,4 +264,7 @@ MonoBehaviour:
         - startQuest: 1
           endQuest: 1
           questName: Repeatable 5 Step
+        - startQuest: 1
+          endQuest: 1
+          questName: Status Effect
         questGiverProfileNames: []

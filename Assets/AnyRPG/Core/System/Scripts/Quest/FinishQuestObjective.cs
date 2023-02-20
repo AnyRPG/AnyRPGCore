@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class QuestQuestObjective : QuestObjective {
+    public class FinishQuestObjective : QuestObjective {
 
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Quest))]
@@ -17,7 +17,7 @@ namespace AnyRPG {
 
         public override Type ObjectiveType {
             get {
-                return typeof(QuestQuestObjective);
+                return typeof(FinishQuestObjective);
             }
         }
 

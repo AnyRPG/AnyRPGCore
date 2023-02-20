@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b491a306145b8e4aa064bbcf71f8e01, type: 3}
-  m_Name: FinishAnotherQuestQuest
+  m_Name: StatusEffectQuest
   m_EditorClassIdentifier: 
-  resourceName: Finish Another Quest
+  resourceName: Status Effect
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
-  description: 'This is a quest that requires you to finish another quest.
+  description: 'This is a quest that requires you to place a status effect on your
+    character.
 
 
-    To
-    complete it, you must finish the other quest'
+'
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -46,16 +46,16 @@ MonoBehaviour:
   skillRewardNames: []
   steps:
   - questObjectives:
-    - rid: 8385465461168668701
+    - rid: 8385465461168668710
   prerequisiteConditions: []
   turnInItems: 0
   allowRawComplete: 0
   references:
     version: 2
     RefIds:
-    - rid: 8385465461168668701
-      type: {class: FinishQuestObjective, ns: AnyRPG, asm: Assembly-CSharp}
+    - rid: 8385465461168668710
+      type: {class: StatusEffectObjective, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         amount: 1
         overrideDisplayName: 
-        questName: Collection
+        effectName: Heal Over Time
