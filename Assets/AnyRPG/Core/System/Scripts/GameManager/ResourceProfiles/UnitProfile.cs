@@ -619,7 +619,7 @@ namespace AnyRPG {
                 }
             }
 
-            unitPrefabProps.SetupScriptableObjects(systemDataFactory);
+            unitPrefabProps.SetupScriptableObjects(systemGameManager);
 
             capabilities.SetupScriptableObjects(systemDataFactory);
 

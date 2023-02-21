@@ -13,7 +13,8 @@ namespace AnyRPG {
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
-            unitPrefabProps.SetupScriptableObjects(systemDataFactory);
+
+            unitPrefabProps.SetupScriptableObjects(systemGameManager);
         }
     }
 

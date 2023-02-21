@@ -8,7 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class CloseableWindowContents : ConfiguredMonoBehaviour/*, ICloseableWindowContents*/ {
 
-        //public virtual event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
         public virtual event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
         [Header("Closeable Window")]
@@ -105,7 +104,11 @@ namespace AnyRPG {
                 }
             }
             foreach (ColoredUIElement coloredUIElement in coloredUIElements) {
-                coloredUIElement.Configure(systemGameManager);
+                if (coloredUIElement != null) {
+                    coloredUIElement.Configure(systemGameManager);
+                } else {
+                    Debug.LogWarning(gameObject.name + ".CloseableWindowContents.Configure(): Found null Colored UI Element in list");
+                }
             }
             if (uINavigationControllers.Count != 0) {
                 foreach (UINavigationController uINavigationController in uINavigationControllers) {

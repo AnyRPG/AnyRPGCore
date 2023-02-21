@@ -55,9 +55,11 @@ namespace AnyRPG {
         [SerializeField]
         private bool newGameAppearance = true;
 
+        /*
         [Tooltip("If the appearance tab is used, show the UMA version of the character customizer")]
         [SerializeField]
         private bool newGameUMAAppearance = true;
+        */
 
         [Tooltip("If the new game window is used, show the class tab")]
         [SerializeField]
@@ -701,7 +703,7 @@ namespace AnyRPG {
             }
         }
 
-        public bool NewGameUMAAppearance { get => newGameUMAAppearance; set => newGameUMAAppearance = value; }
+        //public bool NewGameUMAAppearance { get => newGameUMAAppearance; set => newGameUMAAppearance = value; }
         //public bool EquipDefaultBackPack { get => equipDefaultBackPack; set => equipDefaultBackPack = value; }
         public string DefaultPlayerUnitLayer { get => defaultPlayerUnitLayer; set => defaultPlayerUnitLayer = value; }
         public GameObject ThirdPartyCamera { get => thirdPartyCamera; set => thirdPartyCamera = value; }

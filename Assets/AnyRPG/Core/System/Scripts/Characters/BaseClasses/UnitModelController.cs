@@ -17,6 +17,7 @@ namespace AnyRPG {
         private bool modelReady = false;
 
         // specific controllers
+        private ModelAppearanceController modelAppearanceController = null;
         private UMAModelController umaModelController = null;
         private MecanimModelController mecanimModelController = null;
 
@@ -27,8 +28,9 @@ namespace AnyRPG {
         // properties
         private Transform floatTransform = null;
 
-        public UMAModelController UMAModelController { get => umaModelController; }
+        public ModelAppearanceController ModelAppearanceController { get => modelAppearanceController; }
         public MecanimModelController MecanimModelController { get => mecanimModelController; }
+
         public bool ModelReady { get => modelReady; }
 
         public UnitModelController(UnitController unitController, SystemGameManager systemGameManager) {
@@ -43,6 +45,14 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
             uIManager = systemGameManager.UIManager;
+        }
+
+        public void SetAppearanceController(UnitProfile unitProfile) {
+            //Debug.Log(unitController.gameObject.name + ".UnitModelController.SetAppearanceController()");
+
+            if (unitProfile.UnitPrefabProps.ModelProvider != null) {
+                modelAppearanceController = unitProfile.UnitPrefabProps.ModelProvider.GetAppearanceController(unitController, this, systemGameManager);
+            }
         }
 
         public bool isBuilding() {

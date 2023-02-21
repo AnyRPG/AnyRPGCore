@@ -28,6 +28,8 @@ MonoBehaviour:
       type: 3}
     modelPrefab: {fileID: 6307183516646880328, guid: d46b6b5df6312ea4ba9a077c173ec3c0,
       type: 3}
+    modelProvider:
+      rid: 8385465484531990533
     animationProfileName: 
     useInlineAnimationProps: 0
     animationProps:
@@ -121,6 +123,7 @@ MonoBehaviour:
       suppressFaction: 1
       overrideNameplatePosition: 0
       namePlatePosition: {x: 0, y: 0, z: 0}
+      useSnapShot: 1
       unitFrameTarget: head
       unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
       unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
@@ -171,16 +174,15 @@ MonoBehaviour:
     weaponSkills: []
     validPetTypes: []
     startingPets: []
+  primaryStats: []
+  powerResources: []
+  useProviderEquipment: 0
+  equipmentNameList: []
   isAggressive: 1
   aggroRadius: 20
   automaticCombatStrategy: 0
   combatStrategyName: 
   defaultHitEffects: []
-  primaryStats: []
-  powerResources: []
-  useProviderEquipment: 0
-  equipmentNameList: []
-  faceInteractionTarget: 1
   isMobile: 1
   footstepType: 3
   playOnFootstep: 1
@@ -201,6 +203,7 @@ MonoBehaviour:
     movementSpeed: 0
     savePositionAtDestination: 0
   patrolNames: []
+  faceInteractionTarget: 1
   interactionMaxRange: 3
   interactableOptions: []
   inlineInteractableOptions: []
@@ -211,4 +214,43 @@ MonoBehaviour:
   m_UUID: 66e263e5-21db-433d-a9e5-62eba6aed2eb
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 8385465484531990533
+      type: {class: SwappableMeshModelProvider, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        appearancePanel: {fileID: 4872326194738338516, guid: bf0d9aada2b1b2345877c94ecb4c57f6,
+          type: 3}
+        useInlineOptions: 1
+        inlineOptions:
+          meshGroups:
+          - groupName: Head
+            optional: 0
+            meshNames:
+            - human_male_head_default
+            - human_male_head_2
+            - human_male_head_3
+            - human_male_head_4
+            - human_male_head_5
+            - human_male_head_6
+          - groupName: Hair
+            optional: 1
+            meshNames:
+            - human_male_hair_1
+            - human_male_hair_2
+            - human_male_hair_3
+            - human_male_hair_4
+            - human_male_hair_5
+            - human_male_hair_6
+          - groupName: Body
+            optional: 0
+            meshNames:
+            - human_male_body_default
+          - groupName: Hands
+            optional: 0
+            meshNames:
+            - human_male_hands_default
+          - groupName: Feet
+            optional: 0
+            meshNames:
+            - human_male_feet_default
+        sharedOptions: 

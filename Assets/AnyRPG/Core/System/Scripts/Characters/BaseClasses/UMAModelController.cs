@@ -8,14 +8,12 @@ using UMA.CharacterSystem;
 using UMA.PoseTools;
 
 namespace AnyRPG {
-    public class UMAModelController : ConfiguredClass {
+    public class UMAModelController : ModelAppearanceController {
 
 
         // reference to unit
-        private UnitController unitController = null;
         private DynamicCharacterAvatar dynamicCharacterAvatar = null;
         private UMAExpressionPlayer expressionPlayer = null;
-        private UnitModelController unitModelController = null;
         private AvatarDefinition originalAvatarDefinition = new AvatarDefinition();
         private AvatarDefinition avatarDefinition = new AvatarDefinition();
 
@@ -29,11 +27,8 @@ namespace AnyRPG {
         // game manager references
         private SaveManager saveManager = null;
 
-        public UMAModelController(UnitController unitController, UnitModelController unitModelController, SystemGameManager systemGameManager) {
+        public UMAModelController(UnitController unitController, UnitModelController unitModelController, SystemGameManager systemGameManager) : base(unitController, unitModelController, systemGameManager) {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController()");
-            this.unitController = unitController;
-            this.unitModelController = unitModelController;
-            Configure(systemGameManager);
 
             // avatarDefintion is a struct so needs to have its properties set to something other than null
             avatarDefinition.RaceName = string.Empty;
@@ -45,6 +40,10 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             saveManager = systemGameManager.SaveManager;
+        }
+
+        public override T GetModelAppearanceController<T>() {
+            return this as T;
         }
 
         public bool IsBuilding() {

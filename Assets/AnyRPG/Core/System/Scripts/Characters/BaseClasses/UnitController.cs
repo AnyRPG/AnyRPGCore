@@ -978,6 +978,10 @@ namespace AnyRPG {
         public void SetUnitProfile(UnitProfile unitProfile, UnitControllerMode unitControllerMode, int unitLevel = -1) {
             //Debug.Log(gameObject.name + "UnitController.SetUnitProfile()");
             this.unitProfile = unitProfile;
+
+            // get the unit model controller to fetch the appearance controller from the unit profile
+            unitModelController.SetAppearanceController(unitProfile);
+
             footstepType = unitProfile.FootstepType;
 
             if (unitProfile.FlightCapable == true) {

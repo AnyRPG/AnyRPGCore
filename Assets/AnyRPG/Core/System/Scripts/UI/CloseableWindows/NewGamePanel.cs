@@ -9,13 +9,15 @@ namespace AnyRPG {
 
     public class NewGamePanel : WindowContentController {
 
-        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
         public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
         [Header("New Game Panel")]
 
         [SerializeField]
         private TextMeshProUGUI playerNameLabel = null;
+
+        [SerializeField]
+        private GameObject panelParent = null;
 
         [SerializeField]
         private CharacterPreviewPanelController characterPreviewPanel = null;
@@ -27,7 +29,7 @@ namespace AnyRPG {
         private NewGameMecanimCharacterPanelController characterPanel = null;
 
         [SerializeField]
-        private UMACharacterEditorPanelController umaCharacterPanel = null;
+        private DefaultAppearancePanel defaultAppearancePanel = null;
 
         [SerializeField]
         private NewGameClassPanelController classPanel = null;
@@ -67,6 +69,9 @@ namespace AnyRPG {
         private HighlightButton startButton = null;
         */
 
+        private Dictionary<GameObject, AppearancePanel> appearancePanels = new Dictionary<GameObject, AppearancePanel>();
+
+
         // game manager references
         protected SaveManager saveManager = null;
         protected SystemDataFactory systemDataFactory = null;
@@ -74,6 +79,7 @@ namespace AnyRPG {
         protected UIManager uIManager = null;
         protected LevelManager levelManager = null;
         protected NewGameManager newGameManager = null;
+        protected ObjectPooler objectPooler = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -116,6 +122,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             levelManager = systemGameManager.LevelManager;
             newGameManager = systemGameManager.NewGameManager;
+            objectPooler = systemGameManager.ObjectPooler;
         }
 
         public override void ReceiveClosedWindowNotification() {
@@ -137,11 +144,11 @@ namespace AnyRPG {
             characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
             characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.ReceiveClosedWindowNotification();
-            if (systemConfigurationManager.NewGameUMAAppearance == true) {
-                umaCharacterPanel.ReceiveClosedWindowNotification();
-            } else {
-                characterPanel.ReceiveClosedWindowNotification();
+            foreach (AppearancePanel appearancePanel in appearancePanels.Values) {
+                appearancePanel.ReceiveClosedWindowNotification();
             }
+            defaultAppearancePanel.ReceiveClosedWindowNotification();
+            characterPanel.ReceiveClosedWindowNotification();
             specializationPanel.ReceiveClosedWindowNotification();
             factionPanel.ReceiveClosedWindowNotification();
             classPanel.ReceiveClosedWindowNotification();
@@ -188,15 +195,21 @@ namespace AnyRPG {
             //Debug.Log("Preview Unit Ready: " + characterCreatorManager?.PreviewUnitController?.CameraTargetReady);
 
             // attempt to open the UMA window first
+            /*
             if (systemConfigurationManager.NewGameUMAAppearance == true) {
                 umaCharacterPanel.ReceiveOpenWindowNotification();
             }
+            */
 
             // if the UMA window is not in use, or there was no UMA unit available, try the mecanim window
+            /*
             if (systemConfigurationManager.NewGameUMAAppearance == false
                 || (systemConfigurationManager.NewGameUMAAppearance == true && characterCreatorManager.PreviewUnitController == null)) {
                 characterPanel.ReceiveOpenWindowNotification();
             }
+            */
+
+            defaultAppearancePanel.ReceiveOpenWindowNotification();
 
             // details should be last because it relies on all the information set in the previous methods
             detailsPanel.ReceiveOpenWindowNotification();
@@ -233,15 +246,19 @@ namespace AnyRPG {
             // disable character button if option not allowed or no faction exists
             if (systemConfigurationManager.NewGameAppearance == true) {
                 characterButton.gameObject.SetActive(true);
+                appearanceButton.gameObject.SetActive(true);
             } else {
                 characterButton.gameObject.SetActive(false);
+                appearanceButton.gameObject.SetActive(false);
             }
 
+            /*
             if (systemConfigurationManager.NewGameUMAAppearance == true) {
                 appearanceButton.gameObject.SetActive(true);
             } else {
                 appearanceButton.gameObject.SetActive(false);
             }
+            */
 
             // disable faction button if option not allowed or no faction exists
             factionButton.gameObject.SetActive(false);
@@ -385,7 +402,10 @@ namespace AnyRPG {
 
         private void ClosePanels() {
             characterPanel.HidePanel();
-            umaCharacterPanel.HidePanel();
+            foreach (AppearancePanel appearancePanel in appearancePanels.Values) {
+                appearancePanel.HidePanel();
+            }
+            defaultAppearancePanel.HidePanel();
             classPanel.HidePanel();
             factionPanel.HidePanel();
             specializationPanel.HidePanel();
@@ -417,11 +437,32 @@ namespace AnyRPG {
         public void OpenAppearancePanel() {
             //Debug.Log("NewGamePanel.OpenAppearancePanel()");
             ClosePanels();
-            umaCharacterPanel.ShowPanel();
-            SetOpenSubPanel(umaCharacterPanel, umaCharacterPanel.MainNoOptionsArea.activeSelf == false);
+
+            if (characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider == null) {
+                OpenDefaultAppearancePanel();
+            } else if (characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.AppearancePanel == null) {
+                OpenDefaultAppearancePanel();
+            } else {
+                if (appearancePanels.ContainsKey(characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.AppearancePanel) == false) {
+                    AppearancePanel appearancePanel = objectPooler.GetPooledObject(characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.AppearancePanel, panelParent.transform).GetComponent<AppearancePanel>();
+                    appearancePanel.Configure(systemGameManager);
+                    appearancePanel.SetParentPanel(this);
+                    appearancePanel.ReceiveOpenWindowNotification();
+                    appearancePanel.transform.SetSiblingIndex(1);
+                    appearancePanels.Add(characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.AppearancePanel, appearancePanel);
+                    subPanels.Add(appearancePanel);
+                }
+                appearancePanels[characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.AppearancePanel].ShowPanel();
+                SetOpenSubPanel(appearancePanels[characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.AppearancePanel], true);
+            }
+            //SetOpenSubPanel(umaCharacterPanel, umaCharacterPanel.MainNoOptionsArea.activeSelf == false);
 
             appearanceButton.HighlightBackground();
             uINavigationControllers[0].UnHightlightButtons(appearanceButton);
+        }
+
+        private void OpenDefaultAppearancePanel() {
+            defaultAppearancePanel.ShowPanel();
         }
 
         public void OpenFactionPanel(bool focus = true) {
