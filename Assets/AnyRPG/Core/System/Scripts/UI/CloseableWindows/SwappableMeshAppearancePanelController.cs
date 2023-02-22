@@ -91,8 +91,8 @@ namespace AnyRPG {
             // the character has options
             mainButtonsArea.SetActive(true);
 
-            foreach (SwappableMeshModelGroup modelGroup in swappableMeshModelController.ModelOptions.MeshGroups) {
-                if (modelGroup.MeshNames.Count == 0) {
+            foreach (SwappableMeshOptionGroup modelGroup in swappableMeshModelController.ModelOptions.MeshGroups) {
+                if (modelGroup.Meshes.Count == 0) {
                     continue;
                 }
                 MeshModelGroupButton meshModelGroupButton = objectPooler.GetPooledObject(modelGroupButtonPrefab, mainButtonsArea.transform).GetComponent<MeshModelGroupButton>();

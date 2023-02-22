@@ -9,9 +9,9 @@ namespace AnyRPG {
 
         [Tooltip("Groups of exclusive meshes that should not be active at the same time.")]
         [SerializeField]
-        private List<SwappableMeshModelGroup> meshGroups = new List<SwappableMeshModelGroup>();
+        private List<SwappableMeshOptionGroup> meshGroups = new List<SwappableMeshOptionGroup>();
 
-        public List<SwappableMeshModelGroup> MeshGroups { get => meshGroups; set => meshGroups = value; }
+        public List<SwappableMeshOptionGroup> MeshGroups { get => meshGroups; set => meshGroups = value; }
     }
 
 }
