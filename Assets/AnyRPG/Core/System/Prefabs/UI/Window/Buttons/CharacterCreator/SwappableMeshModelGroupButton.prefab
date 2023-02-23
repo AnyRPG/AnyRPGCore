@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 3091270394512091977}
   - component: {fileID: 5262341299037836078}
   m_Layer: 5
-  m_Name: MeshModelGroupButton
+  m_Name: SwappableMeshModelGroupButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

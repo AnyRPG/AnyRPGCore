@@ -178,7 +178,7 @@ namespace AnyRPG {
 
             // reset areas and buttons
             appearanceButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(appearanceButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(appearanceButton);
             CloseColorsOptionsArea();
             CloseSexOptionsArea();
 
@@ -202,7 +202,7 @@ namespace AnyRPG {
 
             // reset areas and buttons
             colorsButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(colorsButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(colorsButton);
             CloseAppearanceOptionsArea();
             CloseSexOptionsArea();
 
@@ -228,7 +228,7 @@ namespace AnyRPG {
 
             // reset areas and buttons
             sexButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(sexButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(sexButton);
             CloseColorsOptionsArea();
             CloseAppearanceOptionsArea();
 
@@ -248,7 +248,7 @@ namespace AnyRPG {
 
             CloseColorsOptionsAreas();
             eyesColorsButton.HighlightBackground();
-            uINavigationControllers[2].UnHightlightButtons(eyesColorsButton);
+            uINavigationControllers[2].UnHightlightButtonBackgrounds(eyesColorsButton);
             //UnHighlightColorsButtons();
 
             //eyesColorsButton.Select();
@@ -273,7 +273,7 @@ namespace AnyRPG {
 
             CloseColorsOptionsAreas();
             skinColorsButton.HighlightBackground();
-            uINavigationControllers[2].UnHightlightButtons(skinColorsButton);
+            uINavigationControllers[2].UnHightlightButtonBackgrounds(skinColorsButton);
             //UnHighlightColorsButtons();
 
             //skinColorsButton.Select();
@@ -291,7 +291,7 @@ namespace AnyRPG {
 
             CloseColorsOptionsAreas();
             hairColorsButton.HighlightBackground();
-            uINavigationControllers[2].UnHightlightButtons(hairColorsButton);
+            uINavigationControllers[2].UnHightlightButtonBackgrounds(hairColorsButton);
             //UnHighlightColorsButtons();
 
             //hairColorsButton.Select();

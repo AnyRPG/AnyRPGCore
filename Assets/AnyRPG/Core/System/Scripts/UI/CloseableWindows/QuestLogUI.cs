@@ -150,7 +150,7 @@ namespace AnyRPG {
                 }
             }
 
-            uINavigationControllers[0].UnHightlightButtons(SelectedQuestScript);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(SelectedQuestScript);
 
             // since questlog can be 
         }

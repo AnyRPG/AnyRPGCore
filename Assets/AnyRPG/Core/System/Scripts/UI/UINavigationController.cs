@@ -89,6 +89,7 @@ namespace AnyRPG {
 
         // game manager references
         protected ControlsManager controlsManager = null;
+        protected ObjectPooler objectPooler = null;
 
         public virtual NavigableElement CurrentNavigableElement {
             get {
@@ -115,6 +116,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             controlsManager = systemGameManager.ControlsManager;
+            objectPooler = systemGameManager.ObjectPooler;
         }
 
         public void SetOwner(CloseableWindowContents closeableWindowContents) {
@@ -147,11 +149,20 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void UnHightlightButtons(NavigableElement skipButton = null) {
+        public virtual void UnHightlightButtonBackgrounds(NavigableElement skipButton = null) {
             //Debug.Log(gameObject.name + ".UINavigationController.UnHightlightButtons(" + (skipButton == null ? "null" : skipButton.gameObject.name) + ")");
             foreach (NavigableElement navigableElement in activeNavigableButtons) {
                 if (skipButton != navigableElement) {
                     navigableElement.UnHighlightBackground();
+                }
+            }
+        }
+
+        public virtual void UnHightlightButtonOutlines(NavigableElement skipButton = null) {
+            //Debug.Log(gameObject.name + ".UINavigationController.UnHightlightButtons(" + (skipButton == null ? "null" : skipButton.gameObject.name) + ")");
+            foreach (NavigableElement navigableElement in activeNavigableButtons) {
+                if (skipButton != navigableElement) {
+                    navigableElement.UnHighlightOutline();
                 }
             }
         }
@@ -244,8 +255,20 @@ namespace AnyRPG {
         }
 
         public virtual void ClearActiveButton(NavigableElement clearButton) {
+            //Debug.Log(gameObject.name + ".UINavigationController.ClearActiveButton(" + clearButton.gameObject.name + ")");
             clearButton.DeSelect();
             activeNavigableButtons.Remove(clearButton);
+        }
+
+        public virtual void DeleteActiveButtons() {
+            //Debug.Log(gameObject.name + ".UINavigationController.DeleteActiveButtons()");
+
+            List<NavigableElement> deleteList = new List<NavigableElement>();
+            deleteList.AddRange(activeNavigableButtons);
+            foreach (NavigableElement navigableElement in deleteList) {
+                ClearActiveButton(navigableElement);
+                objectPooler.ReturnObjectToPool(navigableElement.gameObject);
+            }
         }
 
         public virtual void FocusFirstButton() {

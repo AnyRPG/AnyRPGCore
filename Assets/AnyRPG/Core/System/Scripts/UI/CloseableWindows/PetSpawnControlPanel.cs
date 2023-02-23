@@ -113,7 +113,7 @@ namespace AnyRPG {
 
             nameText.text = unitProfile.CharacterName;
             petSpawnButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(petSpawnButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(petSpawnButton);
         }
    
         public void UpdateUnitInformation() {

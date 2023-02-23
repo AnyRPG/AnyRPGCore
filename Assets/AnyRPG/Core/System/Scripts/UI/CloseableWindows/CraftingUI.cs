@@ -264,7 +264,7 @@ namespace AnyRPG {
                     recipeScripts[recipe].DeSelect();
                 }
             }
-            uINavigationControllers[0].UnHightlightButtons(SelectedRecipeScript);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(SelectedRecipeScript);
 
         }
 

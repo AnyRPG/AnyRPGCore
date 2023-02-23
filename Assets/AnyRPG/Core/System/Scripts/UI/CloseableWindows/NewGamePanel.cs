@@ -420,7 +420,7 @@ namespace AnyRPG {
             SetOpenSubPanel(detailsPanel, true);
 
             detailsButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(detailsButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(detailsButton);
         }
 
         public void OpenCharacterPanel() {
@@ -431,7 +431,7 @@ namespace AnyRPG {
             SetOpenSubPanel(characterPanel, true);
 
             characterButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(characterButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(characterButton);
         }
 
         public void OpenAppearancePanel() {
@@ -458,7 +458,7 @@ namespace AnyRPG {
             //SetOpenSubPanel(umaCharacterPanel, umaCharacterPanel.MainNoOptionsArea.activeSelf == false);
 
             appearanceButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(appearanceButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(appearanceButton);
         }
 
         private void OpenDefaultAppearancePanel() {
@@ -474,7 +474,7 @@ namespace AnyRPG {
 
             uINavigationControllers[0].SetCurrentButton(factionButton);
             factionButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(factionButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(factionButton);
         }
 
         public void OpenClassPanel(bool focus = true) {
@@ -486,7 +486,7 @@ namespace AnyRPG {
 
             uINavigationControllers[0].SetCurrentButton(classButton);
             classButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(classButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(classButton);
         }
 
         public void OpenSpecializationPanel(bool focus = true) {
@@ -501,7 +501,7 @@ namespace AnyRPG {
 
             uINavigationControllers[0].SetCurrentButton(specializationButton);
             specializationButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(specializationButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(specializationButton);
         }
 
         public void SetCharacterProperties() {

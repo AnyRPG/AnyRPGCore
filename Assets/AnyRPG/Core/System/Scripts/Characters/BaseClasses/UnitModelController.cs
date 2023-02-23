@@ -32,6 +32,7 @@ namespace AnyRPG {
         public MecanimModelController MecanimModelController { get => mecanimModelController; }
 
         public bool ModelReady { get => modelReady; }
+        public GameObject UnitModel { get => unitModel; }
 
         public UnitModelController(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;

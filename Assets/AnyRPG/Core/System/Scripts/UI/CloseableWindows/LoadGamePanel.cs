@@ -143,7 +143,7 @@ namespace AnyRPG {
             copyGameButton.Button.interactable = true;
             deleteGameButton.Button.interactable = true;
             uINavigationControllers[1].UpdateNavigationList();
-            uINavigationControllers[0].UnHightlightButtons(loadButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(loadButton);
 
             nameText.text = loadGameManager.AnyRPGSaveData.playerName;
         }
