@@ -20,6 +20,11 @@ namespace AnyRPG {
             text.text = meshModelGroup;
         }
 
+        public override void Interact() {
+            base.Interact();
+            ShowModelGroup();
+        }
+
         public void ShowModelGroup() {
             swappableMeshAppearancePanelController.ShowModelGroup(meshModelGroup);
         }

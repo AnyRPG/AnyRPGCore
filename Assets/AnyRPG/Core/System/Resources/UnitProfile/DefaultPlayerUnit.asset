@@ -227,6 +227,7 @@ MonoBehaviour:
             hidden: 0
             optional: 0
             displayAs: 1
+            hidesGroup: 
             meshes:
             - displayName: Head 1
               icon: {fileID: 21300000, guid: a7e5ee1c2ce46714abc0370deafd55a1, type: 3}
@@ -250,6 +251,7 @@ MonoBehaviour:
             hidden: 0
             optional: 1
             displayAs: 0
+            hidesGroup: 
             meshes:
             - displayName: Hair 1
               icon: {fileID: 21300000, guid: 502ac5c24285d694887cad282319a126, type: 3}
@@ -271,12 +273,10 @@ MonoBehaviour:
               meshName: human_male_hair_6
           - groupName: Armor
             hidden: 0
-            optional: 0
+            optional: 1
             displayAs: 0
+            hidesGroup: 
             meshes:
-            - displayName: None
-              icon: {fileID: 21300000, guid: 715b77f7cfb207e428d6639ff9ddb203, type: 3}
-              meshName: human_male_body_default
             - displayName: Heavy Armor
               icon: {fileID: 0}
               meshName: human_male_heavy_armor
@@ -295,14 +295,27 @@ MonoBehaviour:
             - displayName: InnKeeper
               icon: {fileID: 0}
               meshName: human_male_light_armor_4
+          - groupName: Helmet
+            hidden: 0
+            optional: 1
+            displayAs: 0
+            hidesGroup: Hair
+            meshes:
+            - displayName: Heavy Helmet
+              icon: {fileID: 0}
+              meshName: human_male_heavy_helmet
+            - displayName: Medium Helmet
+              icon: {fileID: 0}
+              meshName: human_male_medium_helmet
+            - displayName: Light Helmet
+              icon: {fileID: 0}
+              meshName: human_male_light_helmet
           - groupName: Gloves
             hidden: 0
-            optional: 0
+            optional: 1
             displayAs: 0
+            hidesGroup: 
             meshes:
-            - displayName: None
-              icon: {fileID: 21300000, guid: 715b77f7cfb207e428d6639ff9ddb203, type: 3}
-              meshName: human_male_hands_default
             - displayName: Heavy Gloves
               icon: {fileID: 0}
               meshName: human_male_heavy_gloves
@@ -317,12 +330,10 @@ MonoBehaviour:
               meshName: human_male_light_gloves_3
           - groupName: Boots
             hidden: 0
-            optional: 0
+            optional: 1
             displayAs: 0
+            hidesGroup: 
             meshes:
-            - displayName: None
-              icon: {fileID: 21300000, guid: 715b77f7cfb207e428d6639ff9ddb203, type: 3}
-              meshName: human_male_feet_default
             - displayName: Heavy Boots
               icon: {fileID: 0}
               meshName: human_male_heavy_boots
@@ -335,4 +346,13 @@ MonoBehaviour:
             - displayName: Clothes
               icon: {fileID: 0}
               meshName: human_male_light_boots_2
+          groupDefaults:
+          - groupName: Head
+            meshName: human_male_head_default
+          - groupName: Armor
+            meshName: human_male_body_default
+          - groupName: Gloves
+            meshName: human_male_hands_default
+          - groupName: Boots
+            meshName: human_male_feet_default
         sharedOptions: 

@@ -11,6 +11,7 @@ namespace AnyRPG {
         [SerializeField]
         private string groupName = string.Empty;
 
+
         [Tooltip("If true, the player will not see this group in the character appearance editor.")]
         [SerializeField]
         private bool hidden = false;
@@ -23,6 +24,10 @@ namespace AnyRPG {
         [SerializeField]
         private SwappableMeshOptionGroupType displayAs = SwappableMeshOptionGroupType.List;
 
+        [Tooltip("The name any group this replaces when worn.")]
+        [SerializeField]
+        private string hidesGroup = string.Empty;
+
         [Tooltip("The names of the GameObjects that contain meshes in the model prefab.")]
         [SerializeField]
         private List<SwappableMeshOptionChoice> meshes = new List<SwappableMeshOptionChoice>();
@@ -32,6 +37,7 @@ namespace AnyRPG {
         public List<SwappableMeshOptionChoice> Meshes { get => meshes; set => meshes = value; }
         public bool Hidden { get => hidden; set => hidden = value; }
         public SwappableMeshOptionGroupType DisplayAs { get => displayAs; set => displayAs = value; }
+        public string HidesGroup { get => hidesGroup; set => hidesGroup = value; }
     }
 
     public enum SwappableMeshOptionGroupType { List, Grid }

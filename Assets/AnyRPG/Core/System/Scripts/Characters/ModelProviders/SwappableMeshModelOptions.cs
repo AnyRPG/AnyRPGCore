@@ -11,7 +11,12 @@ namespace AnyRPG {
         [SerializeField]
         private List<SwappableMeshOptionGroup> meshGroups = new List<SwappableMeshOptionGroup>();
 
+        [Tooltip("Default meshes to display when no option is chosen.")]
+        [SerializeField]
+        private List<SwappableMeshOptionDefaults> groupDefaults = new List<SwappableMeshOptionDefaults>();
+
         public List<SwappableMeshOptionGroup> MeshGroups { get => meshGroups; set => meshGroups = value; }
+        public List<SwappableMeshOptionDefaults> GroupDefaults { get => groupDefaults; set => groupDefaults = value; }
     }
 
 }

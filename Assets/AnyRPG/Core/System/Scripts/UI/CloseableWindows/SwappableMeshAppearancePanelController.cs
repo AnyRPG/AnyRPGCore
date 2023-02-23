@@ -57,6 +57,8 @@ namespace AnyRPG {
 
         private Dictionary<string, SwappableMeshOptionGroup> optionGroups = new Dictionary<string, SwappableMeshOptionGroup>();
 
+        // key, meshName
+        private Dictionary<string, string> chosenOptions = new Dictionary<string, string>();
 
         // game manager references
         protected CharacterCreatorManager characterCreatorManager = null;
@@ -104,6 +106,7 @@ namespace AnyRPG {
             mainNoOptionsArea.SetActive(false);
 
             // get reference to model controller
+            SwappableMeshModelController oldSwappableMeshModelController = swappableMeshModelController;
             swappableMeshModelController = characterCreatorManager.PreviewUnitController.UnitModelController.ModelAppearanceController.GetModelAppearanceController<SwappableMeshModelController>();
 
             if (swappableMeshModelController == null) {
@@ -115,19 +118,33 @@ namespace AnyRPG {
             // if the character doesn't have options
             if (swappableMeshModelController.ModelOptions.MeshGroups.Count == 0) {
                 mainNoOptionsArea.SetActive(true);
-                optionsAreaLabel.SetActive(false);
                 return;
             }
 
             // the character has options
             mainButtonsArea.SetActive(true);
 
+            // no need to reset settings if this is still the same model
+            if (swappableMeshModelController == oldSwappableMeshModelController) {
+                return;
+            }
+
+            optionsAreaLabel.SetActive(false);
+
+            // reset options
             optionGroups.Clear();
+            chosenOptions.Clear();
+
+            // clear all old buttons
+            uINavigationControllers[0].DeleteActiveButtons();
 
             foreach (SwappableMeshOptionGroup modelGroup in swappableMeshModelController.ModelOptions.MeshGroups) {
-                
+
                 // populate the group dictionary
                 optionGroups.Add(modelGroup.GroupName, modelGroup);
+
+                // set chosen option to none for group
+                chosenOptions.Add(modelGroup.GroupName, "");
 
                 if (modelGroup.Meshes.Count == 0) {
                     continue;
@@ -139,6 +156,8 @@ namespace AnyRPG {
             }
             //uINavigationControllers[0].FocusCurrentButton();
             uINavigationControllers[0].FocusFirstButton();
+            //uINavigationControllers[0].SelectCurrentNavigableElement();
+            uINavigationControllers[0].CurrentNavigableElement?.Interact();
 
         }
 
@@ -148,16 +167,22 @@ namespace AnyRPG {
         }
 
         public void ChooseOptionChoice(HighlightButton highlightButton, string groupName, string optionChoice) {
-            Debug.Log("SwappableMeshAppearancePanelController.ChooseOptionChoice(" + groupName + ", " + optionChoice + ")");
+            //Debug.Log("SwappableMeshAppearancePanelController.ChooseOptionChoice(" + groupName + ", " + optionChoice + ")");
 
             swappableMeshModelController.SetGroupChoice(groupName, optionChoice);
             listOptionsArea.UnHightlightButtonOutlines();
             gridOptionsArea.UnHightlightButtonOutlines();
             highlightButton.HighlightOutline();
+
+            if (chosenOptions.ContainsKey(groupName) == true) {
+                chosenOptions[groupName] = optionChoice;
+            } else {
+                chosenOptions.Add(groupName, optionChoice);
+            }
         }
 
         public void ShowModelGroup(string groupName) {
-            Debug.Log("SwappableMeshAppearancePanelController.ShowModelGroup(" + groupName + ")");
+            //Debug.Log("SwappableMeshAppearancePanelController.ShowModelGroup(" + groupName + ")");
 
             if (optionGroups.ContainsKey(groupName) == false) {
                 return;
@@ -173,7 +198,7 @@ namespace AnyRPG {
         }
 
         private void PopulateOptionList(SwappableMeshOptionGroup optionGroup) {
-            Debug.Log("SwappableMeshAppearancePanelController.PopulateOptionList()");
+            //Debug.Log("SwappableMeshAppearancePanelController.PopulateOptionList()");
 
             gridOptionsArea.gameObject.SetActive(false);
             listOptionsArea.gameObject.SetActive(true);
@@ -189,7 +214,7 @@ namespace AnyRPG {
         }
 
         private void PopulateOptionGrid(SwappableMeshOptionGroup optionGroup) {
-            Debug.Log("SwappableMeshAppearancePanelController.PopulateOptionGrid()");
+            //Debug.Log("SwappableMeshAppearancePanelController.PopulateOptionGrid()");
 
             listOptionsArea.gameObject.SetActive(false);
             gridOptionsArea.gameObject.SetActive(true);
@@ -205,7 +230,7 @@ namespace AnyRPG {
         }
 
         private void AddOptionListButton(string groupName, Sprite optionImage, string displayName, string optionChoice) {
-            Debug.Log("SwappableMeshAppearancePanelController.AddOptionListButton()");
+            //Debug.Log("SwappableMeshAppearancePanelController.AddOptionListButton()");
 
             SwappableMeshOptionChoiceButton optionChoiceButton = null;
             if (optionImage != null) {
@@ -217,6 +242,11 @@ namespace AnyRPG {
                 optionChoiceButton.Configure(systemGameManager);
                 optionChoiceButton.ConfigureButton(this, groupName, optionImage, displayName, optionChoice);
                 listOptionsArea.AddActiveButton(optionChoiceButton);
+
+                // highlight the button if it is already the selected choice for the group
+                if (chosenOptions.ContainsKey(groupName) && chosenOptions[groupName] == optionChoice) {
+                    optionChoiceButton.HighlightOutline();
+                }
             }
         }
 
@@ -225,6 +255,12 @@ namespace AnyRPG {
             optionChoiceButton.Configure(systemGameManager);
             optionChoiceButton.ConfigureButton(this, groupName, optionImage, "", optionChoice);
             gridOptionsArea.AddActiveButton(optionChoiceButton);
+
+            // highlight the button if it is already the selected choice for the group
+            if (chosenOptions.ContainsKey(groupName) && chosenOptions[groupName] == optionChoice) {
+                optionChoiceButton.HighlightOutline();
+            }
+
         }
 
 
