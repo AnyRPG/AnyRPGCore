@@ -72,6 +72,17 @@ namespace AnyRPG {
             return this as T;
         }
 
+        public override void SaveAppearanceSettings(AnyRPGSaveData saveData) {
+
+            saveData.swappableMeshSaveData.Clear();
+            foreach (string groupName in optionGroupChoices.Keys) {
+                SwappableMeshSaveData swappableMeshSaveData = new SwappableMeshSaveData();
+                swappableMeshSaveData.groupName = groupName;
+                swappableMeshSaveData.meshName = optionGroupChoices[groupName];
+                saveData.swappableMeshSaveData.Add(swappableMeshSaveData);
+            }
+        }
+
         private void SetupAppliedConfiguration() {
 
             // set defaults on choices that are blank if defaults exist
@@ -98,22 +109,31 @@ namespace AnyRPG {
 
         }
 
-        public void SetGroupChoice(string groupName, string optionChoice) {
+        private bool LoadGroupChoice(string groupName, string optionChoice) {
             
             if (optionGroups.ContainsKey(groupName) == false) {
                 // option group did not exist
-                return;
+                return false;
             }
 
             if (unitModelController.UnitModel == null) {
                 // could not find the model to search
-                return;
+                return false;
             }
 
-            if (optionChoice == "" && optionGroupDefaults.ContainsKey(groupName) == true ) {
+            if (optionChoice == "" && optionGroupDefaults.ContainsKey(groupName) == true) {
                 optionGroupChoices[groupName] = optionGroupDefaults[groupName];
             } else {
                 optionGroupChoices[groupName] = optionChoice;
+            }
+
+            return true;
+        }
+
+        public void SetGroupChoice(string groupName, string optionChoice) {
+
+            if (LoadGroupChoice(groupName, optionChoice) == false) {
+                return;
             }
 
             SetupAppliedConfiguration();
@@ -159,6 +179,61 @@ namespace AnyRPG {
                 }
             }
 
+        }
+
+        public override void SetInitialSavedAppearance() {
+            foreach (SwappableMeshSaveData swappableMeshSaveData in saveManager.CurrentSaveData.swappableMeshSaveData) {
+                LoadGroupChoice(swappableMeshSaveData.groupName, swappableMeshSaveData.meshName);
+            }
+
+            SetupAppliedConfiguration();
+
+            ApplyConfiguration();
+        }
+
+        public override void BuildModelAppearance() {
+            // nothing to do here for now
+        }
+
+        public override bool IsBuilding() {
+            return false;
+        }
+
+        public override void ResetSettings() {
+            // nothing to do here for now
+        }
+
+        public override void RebuildModelAppearance() {
+            // nothing to do here for now
+        }
+
+        public override void EquipItemModels(CharacterEquipmentManager characterEquipmentManager, Equipment equipment, bool rebuildAppearance) {
+            // nothing to do here for now
+        }
+
+        public override void UnequipItemModels(Equipment equipment, bool rebuildAppearance) {
+            // nothing to do here for now
+        }
+
+        public override void DespawnModel() {
+            // nothing to do here for now
+        }
+
+        public override void ConfigureUnitModel() {
+            if (unitModelController.UnitModel == null) {
+                return;
+            }
+
+            unitModelController.SetModelReady();
+        }
+
+        public override bool KeepMonoBehaviorEnabled(MonoBehaviour monoBehaviour) {
+            return false;
+        }
+
+        public override bool ShouldCalculateFloatHeight() {
+            // this is already calculated in the mecanimModelController so no need perform any check here
+            return false;
         }
 
     }

@@ -75,22 +75,18 @@ namespace AnyRPG {
             faction = capabilityConsumerSnapshot.Faction;
 
             saveManager.ClearSharedData();
-            saveManager.LoadRecipeString(anyRPGSaveData);
-
-            //OnSetSavedGame(loadButton);
-           
         }
 
 
         public void ResetData() {
-            //Debug.Log("LoadGamePanel.ClearLoadButtons()");
+            //Debug.Log("LoadGameManager.ResetData()");
             unitProfile = null;
             unitType = null;
             characterRace = null;
             characterClass = null;
             classSpecialization = null;
             faction = null;
-            anyRPGSaveData = new AnyRPGSaveData();
+            anyRPGSaveData = saveManager.CreateSaveData();
             capabilityConsumerSnapshot = null;
         }
 

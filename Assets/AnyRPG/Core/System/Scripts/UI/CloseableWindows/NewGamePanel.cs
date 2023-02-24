@@ -592,15 +592,15 @@ namespace AnyRPG {
         }
 
         public void ClosePanel() {
-            //Debug.Log("CharacterCreatorPanel.ClosePanel()");
+            //Debug.Log("NewGamePanel.ClosePanel()");
             uIManager.newGameWindow.CloseWindow();
             levelManager.PlayLevelSounds();
         }
 
         public void NewGame() {
-            //Debug.Log("LoadGamePanel.NewGame()");
+            //Debug.Log("NewGamePanel.NewGame()");
 
-            newGameManager.SetPlayerUMARecipe(characterPreviewPanel.GetCurrentRecipe());
+            characterPreviewPanel.SaveAppearanceData(newGameManager.SaveData);
 
             uIManager.confirmNewGameMenuWindow.OpenWindow();
         }

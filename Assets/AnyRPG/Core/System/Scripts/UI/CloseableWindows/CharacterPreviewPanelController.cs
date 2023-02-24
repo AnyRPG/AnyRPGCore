@@ -119,11 +119,11 @@ namespace AnyRPG {
             OnTargetReady();
         }
 
-        public string GetCurrentRecipe() {
-            if (characterCreatorManager.PreviewUnitController?.UnitModelController != null) {
-                return characterCreatorManager.PreviewUnitController.UnitModelController.GetAppearanceSettings();
+        public void SaveAppearanceData(AnyRPGSaveData saveData) {
+            if (characterCreatorManager.PreviewUnitController?.UnitModelController == null) {
+                return;
             }
-            return string.Empty;
+            characterCreatorManager.PreviewUnitController.UnitModelController.SaveAppearanceSettings(saveData);
         }
 
     }

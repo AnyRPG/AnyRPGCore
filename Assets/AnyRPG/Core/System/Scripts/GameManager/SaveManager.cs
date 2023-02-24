@@ -24,7 +24,7 @@ namespace AnyRPG {
         private SystemAchievementManager systemAchievementManager = null;
 
         //private UMAData umaSaveData = null;
-        private string recipeString = string.Empty;
+        //private string recipeString = string.Empty;
         private string jsonSavePath = string.Empty;
 
         // prevent infinite loop loading list, and why would anyone need more than 1000 save games at this point
@@ -32,7 +32,7 @@ namespace AnyRPG {
 
         private string saveFileName = "AnyRPGPlayerSaveData";
 
-        private AnyRPGSaveData currentSaveData = new AnyRPGSaveData();
+        private AnyRPGSaveData currentSaveData;
 
         // data to turn into json for save
         private List<AnyRPGSaveData> anyRPGSaveDataList = new List<AnyRPGSaveData>();
@@ -56,7 +56,8 @@ namespace AnyRPG {
         public Dictionary<string, SceneNodeSaveData> SceneNodeSaveDataDictionary { get => sceneNodeSaveDataDictionary; set => sceneNodeSaveDataDictionary = value; }
         public Dictionary<string, CutsceneSaveData> CutsceneSaveDataDictionary { get => cutsceneSaveDataDictionary; set => cutsceneSaveDataDictionary = value; }
         public Dictionary<string, Dictionary<string, Dictionary<string, QuestObjectiveSaveData>>> QuestObjectiveSaveDataDictionary { get => questObjectiveSaveDataDictionary; set => questObjectiveSaveDataDictionary = value; }
-        public string RecipeString { get => recipeString; }
+        //public string RecipeString { get => recipeString; }
+        public AnyRPGSaveData CurrentSaveData { get => currentSaveData; }
 
         protected bool eventSubscriptionsInitialized = false;
 
@@ -155,7 +156,7 @@ namespace AnyRPG {
             if (anyRPGSaveData.DataFileName == null || anyRPGSaveData.DataFileName == string.Empty) {
                 anyRPGSaveData.DataFileName = Path.GetFileName(fileName);
             }
-            anyRPGSaveData = InitializeResourceLists(anyRPGSaveData, false);
+            anyRPGSaveData = InitializeSaveDataResourceLists(anyRPGSaveData, false);
 
             string saveDate = string.Empty;
             if (anyRPGSaveData.DataCreatedOn == null || anyRPGSaveData.DataCreatedOn == string.Empty) {
@@ -170,7 +171,7 @@ namespace AnyRPG {
             return anyRPGSaveData;
         }
 
-        public AnyRPGSaveData InitializeResourceLists(AnyRPGSaveData anyRPGSaveData, bool overWrite) {
+        public AnyRPGSaveData InitializeSaveDataResourceLists(AnyRPGSaveData anyRPGSaveData, bool overWrite) {
             //Debug.Log("SaveManager.InitializeResourceLists()");
 
 
@@ -196,6 +197,9 @@ namespace AnyRPG {
             }
 
             // things that are safe to overwrite any time because we get this data from other sources
+            if (anyRPGSaveData.swappableMeshSaveData == null || overWrite) {
+                anyRPGSaveData.swappableMeshSaveData = new List<SwappableMeshSaveData>();
+            }
             if (anyRPGSaveData.resourcePowerSaveData == null || overWrite) {
                 anyRPGSaveData.resourcePowerSaveData = new List<ResourcePowerSaveData>();
             }
@@ -259,66 +263,9 @@ namespace AnyRPG {
             //Debug.Log("SaveManager.SaveUMASettings(Equipment, Equipement)");
             if ((oldItem?.UMARecipeProfileProperties?.UMARecipes != null && oldItem.UMARecipeProfileProperties.UMARecipes.Count > 0)
                 || (newItem?.UMARecipeProfileProperties?.UMARecipes != null && newItem.UMARecipeProfileProperties.UMARecipes.Count > 0)) {
-                SaveAppearanceSettings();
+                SaveAppearanceData(currentSaveData);
             }
         }
-
-
-        public void SaveAppearanceSettings() {
-            //Debug.Log("SaveManager.SaveAppearanceSettings()");
-            if (playerManager.UnitController?.UnitModelController != null) {
-                //Debug.Log("SaveManager.SaveUMASettings(): avatar exists");
-                //if (recipeString == string.Empty) {
-                    //Debug.Log("SaveManager.SaveUMASettings(): recipestring is empty");
-                    playerManager.UnitController.UnitModelController.SaveAppearanceSettings();
-                //}
-            }
-        }
-
-        public void SaveRecipeString(string newRecipe) {
-            //Debug.Log("SaveManager.SaveRecipeString(): " + newRecipe);
-            recipeString = newRecipe;
-        }
-
-        public void ClearUMASettings() {
-            //Debug.Log("SaveManager.ClearUMASettings()");
-            recipeString = string.Empty;
-        }
-
-        /*
-        public void LoadUMASettings(DynamicCharacterAvatar _dynamicCharacterAvatar, bool rebuild = true) {
-            //Debug.Log("Savemanager.LoadUMASettings(" + _dynamicCharacterAvatar.gameObject.name + ", " + rebuild + ")");
-            if (recipeString == string.Empty) {
-                //Debug.Log("Savemanager.LoadUMASettings(): recipe string is empty. exiting!");
-                return;
-            }
-            LoadUMASettings(recipeString, _dynamicCharacterAvatar, rebuild);
-        }
-
-        public void LoadUMASettings(string _recipeString, DynamicCharacterAvatar _dynamicCharacterAvatar, bool rebuild = true) {
-            //Debug.Log("Savemanager.LoadUMASettings(string, " + _dynamicCharacterAvatar.gameObject.name + ", " + rebuild + ")");
-            if (_recipeString == null || _recipeString == string.Empty || _dynamicCharacterAvatar == null) {
-                //Debug.Log("Savemanager.LoadUMASettings(): _recipeString is empty. exiting!");
-                return;
-            }
-            //Debug.Log("Savemanager.LoadUMASettings(): " + recipeString);
-            //Debug.Log("Savemanager.LoadUMASettings(string, " + _dynamicCharacterAvatar.gameObject.name + ", " + rebuild + "): dynamicCharacterAvatar.SetLoadString()");
-            _dynamicCharacterAvatar.SetLoadString(_recipeString);
-            
-            if (rebuild) {
-                //Debug.Log("Savemanager.LoadUMASettings(string, " + _dynamicCharacterAvatar.gameObject.name + ", " + rebuild + "): dynamicCharacterAvatar.BuildCharacter()");
-                _dynamicCharacterAvatar.BuildCharacter();
-            }
-        }
-
-        */
-
-
-        /*
-        public void SaveUMASettings(UMAData umaData) {
-
-        }
-        */
 
         // save a game for the first time
         public bool SaveGame() {
@@ -425,15 +372,14 @@ namespace AnyRPG {
             anyRPGSaveData.PlayerRotationY = playerManager.ActiveUnitController.transform.forward.y;
             anyRPGSaveData.PlayerRotationZ = playerManager.ActiveUnitController.transform.forward.z;
             //Debug.Log("Savemanager.SaveGame() rotation: " + anyRPGSaveData.PlayerRotationX + ", " + anyRPGSaveData.PlayerRotationY + ", " + anyRPGSaveData.PlayerRotationZ);
-            SaveAppearanceSettings();
-            anyRPGSaveData.PlayerUMARecipe = recipeString;
             anyRPGSaveData.CurrentScene = levelManager.ActiveSceneName;
             anyRPGSaveData.GamepadActionButtonSet = actionBarManager.CurrentActionBarSet;
 
             // shared code to setup resource lists on load of old version file or save of new one
-            anyRPGSaveData = InitializeResourceLists(anyRPGSaveData, true);
+            anyRPGSaveData = InitializeSaveDataResourceLists(anyRPGSaveData, true);
 
             SaveResourcePowerData(anyRPGSaveData);
+            SaveAppearanceData(anyRPGSaveData);
 
             SaveQuestData(anyRPGSaveData);
             SaveAchievementData(anyRPGSaveData);
@@ -488,6 +434,10 @@ namespace AnyRPG {
                 resourcePowerData.amount = playerManager.MyCharacter.CharacterStats.PowerResourceDictionary[powerResource].currentValue;
                 anyRPGSaveData.resourcePowerSaveData.Add(resourcePowerData);
             }
+        }
+
+        public void SaveAppearanceData(AnyRPGSaveData anyRPGSaveData) {
+            playerManager.ActiveUnitController.UnitModelController.SaveAppearanceSettings(anyRPGSaveData);
         }
 
         public void SetQuestSaveData(string questName, QuestSaveData questSaveData) {
@@ -1262,17 +1212,6 @@ namespace AnyRPG {
             ClearSharedData();
             currentSaveData = InitalizeNewGameSettings(currentSaveData);
 
-            /*
-            // do this so a new game doesn't reset window positions every time
-            LoadWindowPositions();
-            */
-
-            /*
-            playerManager.SpawnPlayerConnection();
-
-            // load default scene
-            levelManager.LoadFirstScene();
-            */
             LoadGame(currentSaveData);
         }
 
@@ -1362,25 +1301,6 @@ namespace AnyRPG {
             NewGame();
         }
 
-        // data needed by both the load window and in game play
-        public void LoadRecipeString(AnyRPGSaveData anyRPGSaveData) {
-            //Debug.Log("Savemanager.LoadUMARecipe()");
-
-            // appearance
-            string loadedRecipeString = anyRPGSaveData.PlayerUMARecipe;
-            if (loadedRecipeString != null && loadedRecipeString != string.Empty) {
-                //Debug.Log("Savemanager.LoadSharedData(): recipe string in save data was not empty or null, loading UMA settings");
-                SaveRecipeString(loadedRecipeString);
-                // we have UMA data so should load the UMA unit instead of the default
-                //playerManager.SetUMAPrefab();
-            } else {
-                //Debug.Log("Savemanager.LoadSharedData(): recipe string in save data was empty or null, setting player prefab to default");
-                ClearUMASettings();
-                //playerManager.SetDefaultPrefab();
-            }
-
-        }
-
         public CapabilityConsumerSnapshot GetCapabilityConsumerSnapshot(AnyRPGSaveData saveData) {
             CapabilityConsumerSnapshot returnValue = new CapabilityConsumerSnapshot(systemGameManager);
             returnValue.UnitProfile = systemDataFactory.GetResource<UnitProfile>(saveData.unitProfileName);
@@ -1393,14 +1313,34 @@ namespace AnyRPG {
 
         public void ClearSharedData() {
             //Debug.Log("SaveManager.ClearSharedData()");
-            ClearUMASettings();
 
             ClearSystemManagedCharacterData();
 
             // added to prevent overwriting existing save file after going to main menu after saving game and starting new game
-            currentSaveData = new AnyRPGSaveData();
-            currentSaveData = InitializeResourceLists(currentSaveData, false);
+            currentSaveData = CreateSaveData();
+        }
 
+        public AnyRPGSaveData CreateSaveData() {
+            AnyRPGSaveData newSaveData = new AnyRPGSaveData();
+            newSaveData = InitializeSaveDataProperties(newSaveData);
+            newSaveData = InitializeSaveDataResourceLists(newSaveData, false);
+
+            return newSaveData;
+        }
+
+        public AnyRPGSaveData InitializeSaveDataProperties(AnyRPGSaveData saveData) {
+            saveData.playerName = string.Empty;
+            saveData.unitProfileName = string.Empty;
+            saveData.characterRace = string.Empty;
+            saveData.characterClass = string.Empty;
+            saveData.classSpecialization = string.Empty;
+            saveData.playerFaction = string.Empty;
+            saveData.PlayerUMARecipe = string.Empty;
+            saveData.CurrentScene = string.Empty;
+            saveData.DataCreatedOn = string.Empty;
+            saveData.DataFileName = string.Empty;
+
+            return saveData;
         }
 
 
@@ -1424,19 +1364,12 @@ namespace AnyRPG {
             playerManager.SpawnPlayerConnection();
             playerManager.MyCharacter.CharacterStats.CurrentXP = anyRPGSaveData.currentExperience;
 
-            // testing: load this before setting providers so no duplicates on bars
-            //LoadActionBarData(anyRPGSaveData);
-
             CapabilityConsumerSnapshot capabilityConsumerSnapshot = GetCapabilityConsumerSnapshot(anyRPGSaveData);
 
             playerManager.MyCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
 
             // this must be called after the snapshot is applied, because the unit profile could contain a default name
             playerManager.SetPlayerName(anyRPGSaveData.playerName);
-
-
-            // THIS NEEDS TO BE DOWN HERE SO THE PLAYERSTATS EXISTS TO SUBSCRIBE TO THE EQUIP EVENTS AND INCREASE STATS
-            LoadRecipeString(anyRPGSaveData);
 
             // complex data
             LoadEquippedBagData(anyRPGSaveData);
@@ -1445,6 +1378,7 @@ namespace AnyRPG {
             LoadAbilityData(anyRPGSaveData);
 
 
+            // THIS NEEDS TO BE DOWN HERE SO THE PLAYERSTATS EXISTS TO SUBSCRIBE TO THE EQUIP EVENTS AND INCREASE STATS
             // testing - move here to prevent learning auto-attack ability twice
             LoadEquipmentData(anyRPGSaveData, playerManager.MyCharacter.CharacterEquipmentManager);
 

@@ -35,6 +35,8 @@ namespace AnyRPG {
         }
 
         public bool ShouldCalculateFloatHeight () {
+
+            // modelReady is only false on first spawn, so this will only run once
             if (unitModelController.ModelReady == false) {
                 return true;
             }

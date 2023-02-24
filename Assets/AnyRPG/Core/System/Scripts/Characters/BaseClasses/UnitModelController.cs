@@ -18,7 +18,6 @@ namespace AnyRPG {
 
         // specific controllers
         private ModelAppearanceController modelAppearanceController = null;
-        private UMAModelController umaModelController = null;
         private MecanimModelController mecanimModelController = null;
 
         // game manager references
@@ -38,7 +37,6 @@ namespace AnyRPG {
             this.unitController = unitController;
             Configure(systemGameManager);
 
-            umaModelController = new UMAModelController(unitController, this, systemGameManager);
             mecanimModelController = new MecanimModelController(unitController, this, systemGameManager);
         }
 
@@ -53,15 +51,19 @@ namespace AnyRPG {
 
             if (unitProfile.UnitPrefabProps.ModelProvider != null) {
                 modelAppearanceController = unitProfile.UnitPrefabProps.ModelProvider.GetAppearanceController(unitController, this, systemGameManager);
+                return;
             }
+
+            // no model provider was configured, create null object
+            modelAppearanceController = new DefaultModelController(unitController, this, systemGameManager);
         }
 
-        public bool isBuilding() {
-            return umaModelController.IsBuilding();
+        public bool IsBuilding() {
+            return modelAppearanceController.IsBuilding();
         }
 
         public void ResetSettings() {
-            umaModelController.ResetSettings();
+            modelAppearanceController.ResetSettings();
         }
 
         public void SpawnUnitModel() {
@@ -79,18 +81,22 @@ namespace AnyRPG {
                 unitModel = animator.gameObject;
             }
 
-            umaModelController.FindUnitModel(unitModel);
+            if (modelAppearanceController == null) {
+                return;
+            }
+
+            modelAppearanceController.FindUnitModel(unitModel);
 
         }
 
         public void BuildModelAppearance() {
-            umaModelController.BuildModelAppearance();
+            modelAppearanceController.BuildModelAppearance();
         }
 
         public void RebuildModelAppearance() {
             // not yet implemented
             mecanimModelController.RebuildModelAppearance();
-            umaModelController.RebuildModelAppearance();
+            modelAppearanceController.RebuildModelAppearance();
         }
 
         /*
@@ -99,19 +105,12 @@ namespace AnyRPG {
         }
         */
 
-        public void SaveAppearanceSettings() {
-            umaModelController.SaveAppearanceSettings();
-        }
-
-        public string GetAppearanceSettings() {
-            if (umaModelController.DynamicCharacterAvatar != null) {
-                return umaModelController.GetAppearanceString();
-            }
-            return string.Empty;
+        public void SaveAppearanceSettings(AnyRPGSaveData saveData) {
+            modelAppearanceController.SaveAppearanceSettings(saveData);
         }
 
         public void SetAnimatorOverrideController(AnimatorOverrideController animatorOverrideController) {
-            umaModelController.SetAnimatorOverrideController(animatorOverrideController);
+            modelAppearanceController.SetAnimatorOverrideController(animatorOverrideController);
         }
 
         // This method does not actually equip the character, just apply models from already equipped equipment
@@ -155,7 +154,7 @@ namespace AnyRPG {
                 // removed because this is only supposed to equip weapons and other physical prefabs
                 // having it here resulted in a second application of the uma gear
                 // this code now inside if condition should be safe
-                umaModelController.EquipItemModels(characterEquipmentManager, equipment, rebuildAppearance);
+                modelAppearanceController.EquipItemModels(characterEquipmentManager, equipment, rebuildAppearance);
             }
 
             if (equipModels == true) {
@@ -172,7 +171,7 @@ namespace AnyRPG {
             }
 
             if (unequipAppearance == true) {
-                umaModelController.UnequipItemModels(equipment, rebuildAppearance);
+                modelAppearanceController.UnequipItemModels(equipment, rebuildAppearance);
             }
         }
 
@@ -183,25 +182,27 @@ namespace AnyRPG {
         */
 
         public void SetInitialSavedAppearance() {
-            umaModelController.SetInitialSavedAppearance();
+            modelAppearanceController.SetInitialSavedAppearance();
         }
 
         public void ConfigureUnitModel() {
             //Debug.Log(unitController.gameObject.name + "UnitModelController.ConfigureUnitModel()");
 
-            if (unitModel != null || umaModelController.DynamicCharacterAvatar != null) {
-                if (umaModelController.DynamicCharacterAvatar != null) {
+            if (modelAppearanceController == null) {
 
-                    umaModelController.InitializeModel();
-                } else {
-                    // this is not an UMA model, therefore it is ready and its bone structure is already created
+                if (unitModel != null) {
                     SetModelReady();
+                    return;
                 }
+
+                return;
             }
+
+            modelAppearanceController.ConfigureUnitModel();
         }
 
         public bool KeepMonoBehaviorEnabled(MonoBehaviour monoBehaviour) {
-            return umaModelController.KeepMonoBehaviorEnabled(monoBehaviour);
+            return modelAppearanceController.KeepMonoBehaviorEnabled(monoBehaviour);
         }
 
         public void SetAttachmentProfile(AttachmentProfile attachmentProfile) {
@@ -210,8 +211,9 @@ namespace AnyRPG {
 
         public void DespawnModel() {
             //Debug.Log(unitController.gameObject.name + "UnitModelController.DespawnModel()");
+
             mecanimModelController.DespawnModel();
-            umaModelController.DespawnModel();
+            modelAppearanceController.DespawnModel();
             if (unitController.UnitProfile?.UnitPrefabProps?.ModelPrefab != null) {
                 objectPooler.ReturnObjectToPool(unitModel);
             }
@@ -287,7 +289,7 @@ namespace AnyRPG {
                 unitController.CharacterUnit.BaseCharacter.HandleCharacterUnitSpawn();
                 EquipEquipmentModels(unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager);
             }
-            if (mecanimModelController.ShouldCalculateFloatHeight() || umaModelController.ShouldCalculateFloatHeight()) {
+            if (mecanimModelController.ShouldCalculateFloatHeight() || modelAppearanceController.ShouldCalculateFloatHeight()) {
                 CalculateFloatHeight();
             }
             modelReady = true;
@@ -297,15 +299,23 @@ namespace AnyRPG {
 
         public void CalculateFloatHeight() {
             unitController.FloatHeight += unitController.UnitProfile.UnitPrefabProps.FloatHeight;
-            if (unitController.UnitProfile?.UnitPrefabProps?.FloatTransform != string.Empty) {
-                floatTransform = unitController.transform.FindChildByRecursive(unitController.UnitProfile.UnitPrefabProps.FloatTransform);
-                if (floatTransform != null) {
-                    unitController.FloatHeight = floatTransform.position.y - unitController.transform.position.y;
-                    if (unitController.UnitProfile.UnitPrefabProps.AddFloatHeightToTransform == true) {
-                        unitController.FloatHeight += unitController.UnitProfile.UnitPrefabProps.FloatHeight;
-                    }
-                }
+            
+            if (unitController.UnitProfile?.UnitPrefabProps?.FloatTransform == string.Empty) {
+                return;
             }
+
+            floatTransform = unitController.transform.FindChildByRecursive(unitController.UnitProfile.UnitPrefabProps.FloatTransform);
+            if (floatTransform == null) {
+                return;
+            }
+
+            unitController.FloatHeight = floatTransform.position.y - unitController.transform.position.y;
+            if (unitController.UnitProfile.UnitPrefabProps.AddFloatHeightToTransform == false) {
+                return;
+            }
+            unitController.FloatHeight += unitController.UnitProfile.UnitPrefabProps.FloatHeight;
+
+
             //Debug.Log(unitController.gameObject.name + ".UnitModelController.CalculateFloatHeight() new float height: " + unitController.FloatHeight);
         }
     }

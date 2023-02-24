@@ -95,9 +95,7 @@ namespace AnyRPG {
         public void SetupSaveData() {
             //Debug.Log("NewGameManager.SetupSaveData()");
 
-            saveData = new AnyRPGSaveData();
-            saveData = saveManager.InitializeResourceLists(saveData, false);
-            //saveData.playerName = playerName;
+            saveData = saveManager.CreateSaveData();
             SetPlayerName(defaultPlayerName);
             saveData.PlayerLevel = 1;
             saveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
@@ -410,12 +408,6 @@ namespace AnyRPG {
                 }
                 saveData.equipmentSaveData.Add(tmpSaveData);
             }
-        }
-
-        public void SetPlayerUMARecipe(string newRecipe) {
-            //Debug.Log("NewGameManager.SetPlayerUMARecipe()");
-
-            saveData.PlayerUMARecipe = newRecipe;
         }
 
 

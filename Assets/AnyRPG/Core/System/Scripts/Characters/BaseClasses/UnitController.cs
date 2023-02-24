@@ -360,7 +360,7 @@ namespace AnyRPG {
 
         public override bool CameraTargetReady {
             get {
-                return unitModelController.ModelReady && unitModelController.isBuilding() == false;
+                return unitModelController.ModelReady && unitModelController.IsBuilding() == false;
             }
         }
 
@@ -2011,7 +2011,7 @@ namespace AnyRPG {
         }
 
         public override bool IsBuilding() {
-            return unitModelController.isBuilding();
+            return unitModelController.IsBuilding();
         }
 
         public void EnterWater(WaterBody water) {

@@ -33,6 +33,7 @@ namespace AnyRPG {
         public int GamepadActionButtonSet;
 
         public List<ResourcePowerSaveData> resourcePowerSaveData;
+        public List<SwappableMeshSaveData> swappableMeshSaveData;
         public List<ActionBarSaveData> actionBarSaveData;
         public List<ActionBarSaveData> gamepadActionBarSaveData;
         public List<InventorySlotSaveData> inventorySlotSaveData;
@@ -64,6 +65,13 @@ namespace AnyRPG {
 
         public string ResourceName;
         public float amount;
+    }
+
+    [Serializable]
+    public struct SwappableMeshSaveData {
+
+        public string groupName;
+        public string meshName;
     }
 
     [Serializable]

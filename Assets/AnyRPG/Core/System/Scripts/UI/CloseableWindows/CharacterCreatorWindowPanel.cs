@@ -151,7 +151,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorPanel.SaveCharacter()");
 
             if (characterCreatorManager.PreviewUnitController.UnitModelController != null) {
-                characterCreatorManager.PreviewUnitController.UnitModelController.SaveAppearanceSettings();
+                characterCreatorManager.PreviewUnitController.UnitModelController.SaveAppearanceSettings(saveManager.CurrentSaveData);
             }
 
             // replace a default player unit with an UMA player unit when a save occurs
