@@ -443,7 +443,7 @@ GameObject:
   - component: {fileID: 5283080037235096534}
   - component: {fileID: 6998069602732500345}
   m_Layer: 5
-  m_Name: DefaultAppearancePanel
+  m_Name: DefaultAppearanceEditorPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

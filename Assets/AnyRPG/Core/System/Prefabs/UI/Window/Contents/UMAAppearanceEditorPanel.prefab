@@ -4390,7 +4390,7 @@ GameObject:
   - component: {fileID: 2106055713678344826}
   - component: {fileID: 4667382650931184534}
   m_Layer: 5
-  m_Name: UMAAppearancePanel
+  m_Name: UMAAppearanceEditorPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
