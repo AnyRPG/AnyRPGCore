@@ -90,16 +90,17 @@ namespace AnyRPG {
             }
         }
 
-        public override void SetInitialSavedAppearance() {
+        public override void SetInitialSavedAppearance(AnyRPGSaveData saveData) {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.SetInitialSavedAppearance()");
 
-            if (saveManager.CurrentSaveData.PlayerUMARecipe != string.Empty) {
-                initialAppearance = saveManager.CurrentSaveData.PlayerUMARecipe;
+            if (saveData.PlayerUMARecipe != string.Empty) {
+                initialAppearance = saveData.PlayerUMARecipe;
             }
         }
 
         public void InitializeModel() {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.InitializeModel()");
+
             int preloadedModels = 0;
 
             if (initialAppearance != null && initialAppearance != string.Empty) {
@@ -546,7 +547,9 @@ namespace AnyRPG {
         }
 
         public override void ConfigureUnitModel() {
-            if (dynamicCharacterAvatar = null) {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.ConfigureUnitModel()");
+
+            if (dynamicCharacterAvatar == null) {
                 return;
             }
 

@@ -15,13 +15,8 @@ namespace AnyRPG {
 
         //public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
-        [Header("Appearance")]
-
         [SerializeField]
         protected GameObject mainButtonsArea = null;
-
-        [SerializeField]
-        protected GameObject mainNoOptionsArea = null;
 
         [SerializeField]
         protected HighlightButton appearanceButton = null;
@@ -107,8 +102,6 @@ namespace AnyRPG {
         protected UIManager uIManager = null;
         protected ObjectPooler objectPooler = null;
         protected SaveManager saveManager = null;
-
-        public GameObject MainNoOptionsArea { get => mainNoOptionsArea; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

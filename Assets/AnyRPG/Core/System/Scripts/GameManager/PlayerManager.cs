@@ -396,18 +396,11 @@ namespace AnyRPG {
             }
 
             // testing - move this to before the below calls so its initialized if a model is already ready
-            activeUnitController.UnitModelController.SetInitialSavedAppearance();
+            activeUnitController.UnitModelController.SetInitialSavedAppearance(saveManager.CurrentSaveData);
             if (subscribeToTargetReady) {
                 SubscribeToTargetReady();
             }
             activeUnitController.Init();
-
-            // saved appearance settings should only be run after the above Init() call or there is no reference to the avatar to load the settings onto
-            /*
-            if (activeUnitController.UnitModelController != null) {
-                activeUnitController.UnitModelController.LoadSavedAppearanceSettings();
-            }
-            */
 
             if (activeUnitController?.UnitModelController?.ModelReady == false) {
                 // do UMA spawn stuff to wait for UMA to spawn
@@ -416,7 +409,7 @@ namespace AnyRPG {
                 // handle spawn immediately since this is a non UMA unit and waiting should not be necessary
                 HandlePlayerUnitSpawn();
             }
-            //activeUnitController.Init();
+
             if (PlayerPrefs.HasKey("ShowNewPlayerHints") == false) {
                 if (controlsManager.GamePadModeActive == true) {
                     uIManager.gamepadHintWindow.OpenWindow();

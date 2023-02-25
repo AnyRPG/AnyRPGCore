@@ -12,13 +12,8 @@ namespace AnyRPG {
 
         //public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
-        [Header("Appearance")]
-
         [SerializeField]
         protected GameObject mainButtonsArea = null;
-
-        [SerializeField]
-        protected GameObject mainNoOptionsArea = null;
 
         [Header("Options Areas")]
 
@@ -66,8 +61,6 @@ namespace AnyRPG {
         protected ObjectPooler objectPooler = null;
         protected SaveManager saveManager = null;
 
-        public GameObject MainNoOptionsArea { get => mainNoOptionsArea; }
-        
         public override void SetGameManagerReferences() {
             //Debug.Log("SwappableMeshAppearancePanelController.SetGameManagerReferences()");
             base.SetGameManagerReferences();
@@ -161,8 +154,11 @@ namespace AnyRPG {
 
         }
 
-        public void HandleTargetReady() {
+        public override void HandleTargetReady() {
             //Debug.Log("SwappableMeshAppearancePanelController.HandleTargetReady()");
+            
+            base.HandleTargetReady();
+
             SetupOptions();
         }
 
@@ -244,7 +240,12 @@ namespace AnyRPG {
                 listOptionsArea.AddActiveButton(optionChoiceButton);
 
                 // highlight the button if it is already the selected choice for the group
+                /*
                 if (chosenOptions.ContainsKey(groupName) && chosenOptions[groupName] == optionChoice) {
+                    optionChoiceButton.HighlightOutline();
+                }
+                */
+                if (swappableMeshModelController.OptionGroupChoices.ContainsKey(groupName) && swappableMeshModelController.OptionGroupChoices[groupName] == optionChoice) {
                     optionChoiceButton.HighlightOutline();
                 }
             }
@@ -257,7 +258,12 @@ namespace AnyRPG {
             gridOptionsArea.AddActiveButton(optionChoiceButton);
 
             // highlight the button if it is already the selected choice for the group
+            /*
             if (chosenOptions.ContainsKey(groupName) && chosenOptions[groupName] == optionChoice) {
+                optionChoiceButton.HighlightOutline();
+            }
+            */
+            if (swappableMeshModelController.OptionGroupChoices.ContainsKey(groupName) && swappableMeshModelController.OptionGroupChoices[groupName] == optionChoice) {
                 optionChoiceButton.HighlightOutline();
             }
 

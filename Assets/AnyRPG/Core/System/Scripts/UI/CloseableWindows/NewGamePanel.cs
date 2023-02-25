@@ -64,11 +64,6 @@ namespace AnyRPG {
         [SerializeField]
         private HighlightButton specializationButton = null;
 
-        /*
-        [SerializeField]
-        private HighlightButton startButton = null;
-        */
-
         private Dictionary<GameObject, AppearancePanel> appearancePanels = new Dictionary<GameObject, AppearancePanel>();
 
 
@@ -84,33 +79,11 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            //returnButton.Configure(systemGameManager);
-            //detailsButton.Configure(systemGameManager);
-            //characterButton.Configure(systemGameManager);
-            //appearanceButton.Configure(systemGameManager);
-            //factionButton.Configure(systemGameManager);
-            //classButton.Configure(systemGameManager);
-            //specializationButton.Configure(systemGameManager);
-            //startButton.Configure(systemGameManager);
-
             characterPreviewPanel.Configure(systemGameManager);
 
-            //detailsPanel.Configure(systemGameManager);
             detailsPanel.SetNewGamePanel(this);
-
-            //characterPanel.Configure(systemGameManager);
-            //characterPanel.SetParentPanel(this);
-
-            //umaCharacterPanel.Configure(systemGameManager);
-            //umaCharacterPanel.SetParentPanel(this);
-
-            //classPanel.Configure(systemGameManager);
             classPanel.SetNewGamePanel(this);
-
-            //factionPanel.Configure(systemGameManager);
             factionPanel.SetNewGamePanel(this);
-
-            //specializationPanel.Configure(systemGameManager);
             specializationPanel.SetNewGamePanel(this);
         }
 
@@ -144,10 +117,12 @@ namespace AnyRPG {
             characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
             characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.ReceiveClosedWindowNotification();
+
             foreach (AppearancePanel appearancePanel in appearancePanels.Values) {
                 appearancePanel.ReceiveClosedWindowNotification();
             }
             defaultAppearancePanel.ReceiveClosedWindowNotification();
+
             characterPanel.ReceiveClosedWindowNotification();
             specializationPanel.ReceiveClosedWindowNotification();
             factionPanel.ReceiveClosedWindowNotification();
@@ -194,21 +169,6 @@ namespace AnyRPG {
 
             //Debug.Log("Preview Unit Ready: " + characterCreatorManager?.PreviewUnitController?.CameraTargetReady);
 
-            // attempt to open the UMA window first
-            /*
-            if (systemConfigurationManager.NewGameUMAAppearance == true) {
-                umaCharacterPanel.ReceiveOpenWindowNotification();
-            }
-            */
-
-            // if the UMA window is not in use, or there was no UMA unit available, try the mecanim window
-            /*
-            if (systemConfigurationManager.NewGameUMAAppearance == false
-                || (systemConfigurationManager.NewGameUMAAppearance == true && characterCreatorManager.PreviewUnitController == null)) {
-                characterPanel.ReceiveOpenWindowNotification();
-            }
-            */
-
             defaultAppearancePanel.ReceiveOpenWindowNotification();
 
             // details should be last because it relies on all the information set in the previous methods
@@ -251,14 +211,6 @@ namespace AnyRPG {
                 characterButton.gameObject.SetActive(false);
                 appearanceButton.gameObject.SetActive(false);
             }
-
-            /*
-            if (systemConfigurationManager.NewGameUMAAppearance == true) {
-                appearanceButton.gameObject.SetActive(true);
-            } else {
-                appearanceButton.gameObject.SetActive(false);
-            }
-            */
 
             // disable faction button if option not allowed or no faction exists
             factionButton.gameObject.SetActive(false);
@@ -455,7 +407,6 @@ namespace AnyRPG {
                 appearancePanels[characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.AppearancePanel].ShowPanel();
                 SetOpenSubPanel(appearancePanels[characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.AppearancePanel], true);
             }
-            //SetOpenSubPanel(umaCharacterPanel, umaCharacterPanel.MainNoOptionsArea.activeSelf == false);
 
             appearanceButton.HighlightBackground();
             uINavigationControllers[0].UnHightlightButtonBackgrounds(appearanceButton);

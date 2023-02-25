@@ -29,7 +29,7 @@ namespace AnyRPG {
 
         public abstract T GetModelAppearanceController<T>() where T : ModelAppearanceController;
         public abstract void SaveAppearanceSettings(AnyRPGSaveData saveData);
-        public abstract void SetInitialSavedAppearance();
+        public abstract void SetInitialSavedAppearance(AnyRPGSaveData saveData);
         public abstract void BuildModelAppearance();
         public abstract bool IsBuilding();
         public abstract void ResetSettings();

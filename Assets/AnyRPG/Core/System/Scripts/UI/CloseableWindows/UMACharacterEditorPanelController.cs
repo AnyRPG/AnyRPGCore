@@ -61,8 +61,11 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleTargetReady() {
+        public override void HandleTargetReady() {
             //Debug.Log("UMACharacterEditorPanelController.HandleTargetReady()");
+
+            base.HandleTargetReady();
+
             SetupOptions();
         }
 

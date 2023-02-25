@@ -23,7 +23,7 @@ namespace AnyRPG {
         public override void SaveAppearanceSettings(AnyRPGSaveData saveData) {
         }
 
-        public override void SetInitialSavedAppearance() {
+        public override void SetInitialSavedAppearance(AnyRPGSaveData saveData) {
             // do nothing
         }
 

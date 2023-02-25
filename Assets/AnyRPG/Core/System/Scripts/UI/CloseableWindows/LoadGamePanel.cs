@@ -62,14 +62,6 @@ namespace AnyRPG {
             loadGameManager.OnDeleteGame += HandleDeleteGame;
             loadGameManager.OnCopyGame += HandleCopyGame;
 
-            /*
-            returnButton.Configure(systemGameManager);
-            loadGameButton.Configure(systemGameManager);
-            newGameButton.Configure(systemGameManager);
-            deleteGameButton.Configure(systemGameManager);
-            copyGameButton.Configure(systemGameManager);
-            */
-
             characterPreviewPanel.Configure(systemGameManager);
             characterPreviewPanel.SetParentPanel(this);
         }
@@ -201,7 +193,7 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.HandleTargetCreated()");
 
             if (characterCreatorManager.PreviewUnitController?.UnitModelController != null) {
-                characterCreatorManager.PreviewUnitController?.UnitModelController.SetInitialSavedAppearance();
+                characterCreatorManager.PreviewUnitController?.UnitModelController.SetInitialSavedAppearance(loadGameManager.AnyRPGSaveData);
             }
 
             // set level before attempting to load equipment in case equipment has level restrictions

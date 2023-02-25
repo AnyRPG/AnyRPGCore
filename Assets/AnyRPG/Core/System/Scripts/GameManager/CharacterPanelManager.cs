@@ -10,6 +10,7 @@ namespace AnyRPG {
         // game manager references
         protected PlayerManager playerManager = null;
         protected SystemEventManager systemEventManager = null;
+        protected SaveManager saveManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -20,6 +21,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             playerManager = systemGameManager.PlayerManager;
             systemEventManager = systemGameManager.SystemEventManager;
+            saveManager = systemGameManager.SaveManager;
         }
 
         protected void CreateEventSubscriptions() {
@@ -125,7 +127,7 @@ namespace AnyRPG {
 
         public void HandleTargetCreated() {
             //Debug.Log("CharacterPanel.HandleTargetCreated()");
-            unitController?.UnitModelController.SetInitialSavedAppearance();
+            unitController?.UnitModelController.SetInitialSavedAppearance(saveManager.CurrentSaveData);
             CharacterEquipmentManager characterEquipmentManager = unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
 
             // providers need to be set or equipment won't be able to be equipped

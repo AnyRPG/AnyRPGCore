@@ -67,14 +67,16 @@ namespace AnyRPG {
         }
 
         public void SpawnUnitModel() {
-            //Debug.Log(gameObject.name + ".UnitController.SpawnUnitModel()");
+            //Debug.Log(unitController.gameObject.name + ".UnitModelController.SpawnUnitModel()");
+
             if (unitController.UnitProfile?.UnitPrefabProps?.ModelPrefab != null) {
                 unitModel = unitController.UnitProfile.SpawnModelPrefab(unitController.transform, unitController.transform.position, unitController.transform.forward);
             }
         }
 
         public void FindUnitModel(Animator animator) {
-            //Debug.Log(unitController.gameObject.name + ".UnitController.FindUnitModel()");
+            //Debug.Log(unitController.gameObject.name + ".UnitModelController.FindUnitModel()");
+
             // this may have been called from a unit which already had a model attached
             // if so, the model is the animator gameobject, since no model will have been passed to this call
             if (animator != null && unitModel == null) {
@@ -181,8 +183,10 @@ namespace AnyRPG {
         }
         */
 
-        public void SetInitialSavedAppearance() {
-            modelAppearanceController.SetInitialSavedAppearance();
+        public void SetInitialSavedAppearance(AnyRPGSaveData saveData) {
+            //Debug.Log(unitController.gameObject.name + ".UnitModelController.SetInitialSavedAppearance()");
+
+            modelAppearanceController.SetInitialSavedAppearance(saveData);
         }
 
         public void ConfigureUnitModel() {

@@ -28,6 +28,8 @@ MonoBehaviour:
       type: 3}
     modelPrefab: {fileID: 2692339740015506113, guid: 9396e25e38decac4b8b80eb1f92213e2,
       type: 3}
+    modelProvider:
+      rid: 8385465583208759297
     animationProfileName: 
     useInlineAnimationProps: 0
     animationProps:
@@ -212,4 +214,9 @@ MonoBehaviour:
   m_UUID: acdcef3b-04da-4796-b40e-3b619cf84261
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 8385465583208759297
+      type: {class: UMAModelProvider, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        appearancePanel: {fileID: 5887363405687166838, guid: 581df359df1c12649b30479e9f7a958c,
+          type: 3}

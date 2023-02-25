@@ -13,8 +13,15 @@ namespace AnyRPG {
 
         //public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
+        [Header("Appearance")]
+
+        [SerializeField]
+        protected GameObject mainNoOptionsArea = null;
+
         [SerializeField]
         protected CanvasGroup canvasGroup = null;
+
+        public GameObject MainNoOptionsArea { get => mainNoOptionsArea; }
 
         /*
         public override void ReceiveClosedWindowNotification() {
@@ -53,6 +60,9 @@ namespace AnyRPG {
             //Debug.Log("AppearancePanel.SetupOptions()");
         }
 
+        public virtual void HandleTargetReady() {
+
+        }
 
     }
 
