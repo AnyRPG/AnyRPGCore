@@ -21,9 +21,17 @@ namespace AnyRPG {
         [SerializeField]
         private string defaultStartingLocationTag = string.Empty;
 
-        [Tooltip("If true, hide any default unit profiles when this faction is used")]
+        [Tooltip("The races available to this faction.")]
         [SerializeField]
-        private bool hideDefaultProfiles = false;
+        [ResourceSelector(resourceType = typeof(CharacterRace))]
+        private List<string> races = new List<string>();
+
+        // reference to the default profile
+        private List<CharacterRace> raceRefs = new List<CharacterRace>();
+
+        [Tooltip("If true, the new game unit profiles from the System Configuration Manager will be used, in addition to the profiles below.")]
+        [SerializeField]
+        private bool addSystemProfiles = false;
 
         [Tooltip("The options available when the character creator is used")]
         [SerializeField]
@@ -67,9 +75,10 @@ namespace AnyRPG {
         public bool NewGameOption { get => newGameOption; set => newGameOption = value; }
         public string DefaultStartingZone { get => defaultStartingZone; set => defaultStartingZone = value; }
         public List<UnitProfile> CharacterCreatorProfiles { get => characterCreatorProfiles; set => characterCreatorProfiles = value; }
-        public bool HideDefaultProfiles { get => hideDefaultProfiles; set => hideDefaultProfiles = value; }
+        public bool AddSystemProfiles { get => addSystemProfiles; set => addSystemProfiles = value; }
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
         public string DefaultStartingLocationTag { get => defaultStartingLocationTag; }
+        public List<CharacterRace> Races { get => raceRefs; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -273,14 +282,10 @@ namespace AnyRPG {
             }
 
             if (characterCreatorProfileNames != null) {
-                //Debug.Log("Faction.SetupScriptableObjects(): characterCreatorProfileNames is not null");
                 foreach (string characterCreatorProfileName in characterCreatorProfileNames) {
-                    //Debug.Log("Faction.SetupScriptableObjects(): found a string");
                     if (characterCreatorProfileName != null && characterCreatorProfileName != string.Empty) {
-                        //Debug.Log("Faction.SetupScriptableObjects(): found a string that is not empty");
                         UnitProfile tmpUnitProfile = systemDataFactory.GetResource<UnitProfile>(characterCreatorProfileName);
                         if (tmpUnitProfile != null) {
-                            //Debug.Log("Faction.SetupScriptableObjects(): found a string that is not empty and added it to the list");
                             characterCreatorProfiles.Add(tmpUnitProfile);
                         } else {
                             Debug.LogError("Faction.SetupScriptableObjects(): could not find unit profile " + characterCreatorProfileName + " while initializing " + DisplayName + ".  Check Inspector");
@@ -288,7 +293,19 @@ namespace AnyRPG {
                     } else {
                         Debug.LogError("Faction.SetupScriptableObjects(): a character creator profile string was empty while initializing " + DisplayName + ".  Check Inspector");
                     }
+                }
+            }
 
+            foreach (string raceName in races) {
+                if (raceName != null && raceName != string.Empty) {
+                    CharacterRace tmpRace = systemDataFactory.GetResource<CharacterRace>(raceName);
+                    if (tmpRace != null) {
+                        raceRefs.Add(tmpRace);
+                    } else {
+                        Debug.LogError("Faction.SetupScriptableObjects(): could not find race " + raceName + " while initializing " + DisplayName + ".  Check Inspector");
+                    }
+                } else {
+                    Debug.LogError("Faction.SetupScriptableObjects(): a race string was empty while initializing " + DisplayName + ".  Check Inspector");
                 }
             }
 

@@ -68,6 +68,13 @@ namespace AnyRPG {
         public float initialYDegrees = 0f;
         public float initialXDegrees = 0f;
 
+        /// <summary>
+        /// Rotate the target instead of the camera
+        /// </summary>
+        public bool rotateTarget = false;
+
+        protected Quaternion initialTargetRotation;
+
         protected float currentYDegrees = 0f;
         protected float currentXDegrees = 0f;
 
@@ -152,6 +159,7 @@ namespace AnyRPG {
 
             currentYDegrees = initialYDegrees;
             currentXDegrees = initialXDegrees;
+            initialTargetRotation = unitController.gameObject.transform.rotation;
 
             FindFollowTarget();
             EnableCamera();
@@ -307,7 +315,12 @@ namespace AnyRPG {
                 //currentCameraOffset = xQuaternion * yQuaternion * initialCameraPositionOffset;
                 //currentCameraPositionOffset = xQuaternion * yQuaternion * initialCameraPositionOffset;
                 //currentCameraPositionOffset = xQuaternion * yQuaternion * initialCameraLookOffset;
-                currentCameraPositionOffset = xQuaternion * yQuaternion * initialLookVector;
+                if (rotateTarget == true) {
+                    unitController.transform.rotation = initialTargetRotation * xQuaternion;
+                    currentCameraPositionOffset = yQuaternion * initialLookVector;
+                } else {
+                    currentCameraPositionOffset = xQuaternion * yQuaternion * initialLookVector;
+                }
             }
 
             // move the rotation point away from the center of the target using middle mouse button

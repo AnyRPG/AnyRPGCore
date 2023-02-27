@@ -10,6 +10,26 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Character Race", menuName = "AnyRPG/CharacterRace")]
     public class CharacterRace : DescribableResource, IStatProvider, ICapabilityProvider {
 
+        [Header("NewGame")]
+
+        [Tooltip("If true, this race is available for Players to choose on the new game menu, no matter what faction is chosen")]
+        [SerializeField]
+        private bool newGameOption = false;
+
+        [Tooltip("The unit profile to use when the male gender is chosen")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitProfile))]
+        private string maleUnitProfile = string.Empty;
+
+        private UnitProfile maleUnitProfileRef = null;
+
+        [Tooltip("The unit profile to use when the female gender is chosen")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitProfile))]
+        private string femaleUnitProfile = string.Empty;
+
+        private UnitProfile femaleUnitProfileRef = null;
+
         [Header("Start Equipment")]
 
         [Tooltip("The names of the equipment that will be worn by this race when a new game is started")]
@@ -63,6 +83,9 @@ namespace AnyRPG {
         public List<AbilityEffect> DefaultHitEffectList { get => defaultHitEffectList; set => defaultHitEffectList = value; }
         public List<AbilityEffect> OnHitEffectList { get => onHitEffectList; set => onHitEffectList = value; }
         public CapabilityProps Capabilities { get => capabilities; set => capabilities = value; }
+        public bool NewGameOption { get => newGameOption; set => newGameOption = value; }
+        public UnitProfile MaleUnitProfile { get => maleUnitProfileRef; }
+        public UnitProfile FemaleUnitProfile { get => femaleUnitProfileRef; }
 
         public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
             return capabilities;
@@ -70,6 +93,20 @@ namespace AnyRPG {
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
+
+            if (maleUnitProfile != string.Empty) {
+                maleUnitProfileRef = systemDataFactory.GetResource<UnitProfile>(maleUnitProfile);
+                if (maleUnitProfileRef == null) {
+                    Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find unit profile : " + maleUnitProfile + " while inititalizing.  CHECK INSPECTOR");
+                }
+            }
+
+            if (femaleUnitProfile != string.Empty) {
+                femaleUnitProfileRef = systemDataFactory.GetResource<UnitProfile>(femaleUnitProfile);
+                if (femaleUnitProfileRef == null) {
+                    Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find unit profile : " + femaleUnitProfile + " while inititalizing.  CHECK INSPECTOR");
+                }
+            }
 
             if (onHitEffects != null) {
                 foreach (string onHitEffectName in onHitEffects) {

@@ -42,6 +42,12 @@ namespace AnyRPG {
         private NewGameDetailsFactionButton factionButton = null;
 
         [SerializeField]
+        private GameObject raceLabel = null;
+
+        [SerializeField]
+        private NewGameDetailsRaceButton raceButton = null;
+
+        [SerializeField]
         private CanvasGroup canvasGroup = null;
 
         private NewGamePanel newGamePanel = null;
@@ -79,9 +85,17 @@ namespace AnyRPG {
         }
 
         public void OpenFactionPanel() {
-            //Debug.Log("NewGameDetailsPanelController.OpenfactionPanel()");
+            //Debug.Log("NewGameDetailsPanelController.OpenFactionPanel()");
             if (newGamePanel != null) {
                 newGamePanel.OpenFactionPanel(true);
+                //newGamePanel.SetNavigationControllerByIndex(0);
+            }
+        }
+
+        public void OpenRacePanel() {
+            //Debug.Log("NewGameDetailsPanelController.OpenRacePanel()");
+            if (newGamePanel != null) {
+                newGamePanel.OpenRacePanel(true);
                 //newGamePanel.SetNavigationControllerByIndex(0);
             }
         }
@@ -197,17 +211,30 @@ namespace AnyRPG {
             }
         }
 
-        public void SetFaction(Faction newfaction) {
+        public void SetFaction(Faction newFaction) {
             //if (newfaction != null && systemConfigurationManager.NewGameFaction == true) {
             if (systemConfigurationManager.NewGameFaction == true) {
                 factionLabel.SetActive(true);
                 factionButton.gameObject.SetActive(true);
-                factionButton.AddFaction(newfaction);
+                factionButton.AddFaction(newFaction);
             } else {
                 factionLabel.SetActive(false);
                 factionButton.gameObject.SetActive(false);
             }
         }
+
+        public void SetCharacterRace(CharacterRace newRace) {
+            //if (newfaction != null && systemConfigurationManager.NewGameFaction == true) {
+            if (systemConfigurationManager.NewGameRace == true) {
+                raceLabel.SetActive(true);
+                raceButton.gameObject.SetActive(true);
+                raceButton.AddRace(newRace);
+            } else {
+                raceLabel.SetActive(false);
+                raceButton.gameObject.SetActive(false);
+            }
+        }
+
 
         public void SetClassSpecialization(ClassSpecialization newClassSpecialization) {
             //Debug.Log("NewGameDetailsPanelController.SetClassSpecialization(" + (newClassSpecialization == null ? "null" : newClassSpecialization.DisplayName) + ")");

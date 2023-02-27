@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6973582095505325909}
   - component: {fileID: 3309121852376907503}
   m_Layer: 22
-  m_Name: DefaultUMACharacterModel
+  m_Name: DefaultUMAHumanMaleCharacterModel
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -102,10 +102,6 @@ MonoBehaviour:
       _compatibleRaces:
       - HumanMale
       - HumanMaleDCS
-    - _recipeName: FemaleUndies2
-      _compatibleRaces:
-      - HumanFemaleDCS
-      - HumanFemale
   raceAnimationControllers:
     defaultAnimationController: {fileID: 9100000, guid: 547e6a8928ecb2d49b24c599db6d49c9,
       type: 2}
@@ -212,7 +208,7 @@ MonoBehaviour:
   _buildCharacterEnabled: 1
 --- !u!95 &3309121852376907503
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -229,4 +225,4 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0

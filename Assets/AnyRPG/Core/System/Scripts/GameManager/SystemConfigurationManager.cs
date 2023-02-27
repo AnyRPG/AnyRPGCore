@@ -47,9 +47,13 @@ namespace AnyRPG {
         [SerializeField]
         private string defaultPlayerName = "New Player";
 
-        [Tooltip("If false, launch straight into a game with no character configuration")]
+        [Tooltip("If false, launch straight into a game with no character configuration.")]
         [SerializeField]
         private bool useNewGameWindow = true;
+
+        [Tooltip("When the new game window is used, what method will be used to select a character.")]
+        [SerializeField]
+        private CharacterSelectionType characterSelectionType = CharacterSelectionType.RaceAndGender;
 
         [Tooltip("If the new game window is used, show the appearance tab")]
         [SerializeField]
@@ -61,13 +65,17 @@ namespace AnyRPG {
         private bool newGameUMAAppearance = true;
         */
 
-        [Tooltip("If the new game window is used, show the class tab")]
-        [SerializeField]
-        private bool newGameClass = true;
-
         [Tooltip("If the new game window is used, show the faction tab")]
         [SerializeField]
         private bool newGameFaction = true;
+
+        [Tooltip("If the new game window is used, show the race tab")]
+        [SerializeField]
+        private bool newGameRace = true;
+
+        [Tooltip("If the new game window is used, show the class tab")]
+        [SerializeField]
+        private bool newGameClass = true;
 
         [Tooltip("If the new game window is used, show the specialiation tab")]
         [SerializeField]
@@ -84,10 +92,6 @@ namespace AnyRPG {
         [SerializeField]
         [ResourceSelector(resourceType = typeof(UnitProfile))]
         private string defaultPlayerUnitProfileName = string.Empty;
-
-        [Tooltip("If true, the default profiles will always be shown, in addition to any allowed by faction (if used)")]
-        [SerializeField]
-        private bool alwaysShowDefaultProfiles = true;
 
         [Tooltip("The options available when the character creator is used")]
         [SerializeField]
@@ -676,6 +680,7 @@ namespace AnyRPG {
         public bool NewGameAppearance { get => newGameAppearance; set => newGameAppearance = value; }
         public bool NewGameClass { get => newGameClass; set => newGameClass = value; }
         public bool NewGameFaction { get => newGameFaction; set => newGameFaction = value; }
+        public bool NewGameRace { get => newGameRace; set => newGameRace = value; }
         public bool NewGameSpecialization { get => newGameSpecialization; set => newGameSpecialization = value; }
         public AudioProfile NewGameAudioProfile { get => newGameAudioProfile; set => newGameAudioProfile = value; }
         public string DefaultPlayerName { get => defaultPlayerName; set => defaultPlayerName = value; }
@@ -709,7 +714,6 @@ namespace AnyRPG {
         public GameObject ThirdPartyCamera { get => thirdPartyCamera; set => thirdPartyCamera = value; }
         public string DefaultBackpackItem { get => defaultBackpackItem; set => defaultBackpackItem = value; }
         //public string DefaultBankBagItem { get => defaultBankBagItem; set => defaultBankBagItem = value; }
-        public bool AlwaysShowDefaultProfiles { get => alwaysShowDefaultProfiles; set => alwaysShowDefaultProfiles = value; }
         public string MainMenuScene { get => mainMenuScene; set => mainMenuScene = value; }
         public string InitializationScene { get => initializationScene; set => initializationScene = value; }
         public bool UseFirstCreatorProfile { get => useFirstCreatorProfile; set => useFirstCreatorProfile = value; }
@@ -744,6 +748,7 @@ namespace AnyRPG {
         public Gradient DefaultSunGradient { get => defaultSunGradient; set => defaultSunGradient = value; }
         public AudioClip WeaponMissAudioClip { get => weaponMissAudioClip; set => weaponMissAudioClip = value; }
         public SystemUIConfiguration UIConfiguration { get => UI; set => UI = value; }
+        public CharacterSelectionType CharacterSelectionType { get => characterSelectionType; set => characterSelectionType = value; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }
 
@@ -961,5 +966,7 @@ namespace AnyRPG {
     }
 
     public enum DefaultControllerConfiguration { MouseAndKeyboard, GamePad }
+
+    public enum CharacterSelectionType { DefaultCharacter, CharacterList, RaceAndGender }
 
 }

@@ -32,10 +32,13 @@ namespace AnyRPG {
         private DefaultAppearancePanel defaultAppearancePanel = null;
 
         [SerializeField]
-        private NewGameClassPanelController classPanel = null;
+        private NewGameFactionPanelController factionPanel = null;
 
         [SerializeField]
-        private NewGameFactionPanelController factionPanel = null;
+        private NewGameRacePanelController racePanel = null;
+
+        [SerializeField]
+        private NewGameClassPanelController classPanel = null;
 
         [SerializeField]
         private NewGameSpecializationPanelController specializationPanel = null;
@@ -57,6 +60,9 @@ namespace AnyRPG {
 
         [SerializeField]
         private HighlightButton factionButton = null;
+
+        [SerializeField]
+        private HighlightButton raceButton = null;
 
         [SerializeField]
         private HighlightButton classButton = null;
@@ -84,6 +90,7 @@ namespace AnyRPG {
             detailsPanel.SetNewGamePanel(this);
             classPanel.SetNewGamePanel(this);
             factionPanel.SetNewGamePanel(this);
+            racePanel.SetNewGamePanel(this);
             specializationPanel.SetNewGamePanel(this);
         }
 
@@ -107,6 +114,7 @@ namespace AnyRPG {
             newGameManager.OnSetCharacterClass -= HandleSetCharacterClass;
             newGameManager.OnSetClassSpecialization -= HandleSetClassSpecialization;
             newGameManager.OnSetFaction -= HandleSetFaction;
+            newGameManager.OnSetCharacterRace -= HandleSetRace;
             newGameManager.OnUpdateEquipmentList -= HandleUpdateEquipmentList;
             newGameManager.OnUpdateFactionList -= HandleUpdateFactionList;
             newGameManager.OnUpdateCharacterClassList -= HandleUpdateCharacterClassList;
@@ -124,9 +132,10 @@ namespace AnyRPG {
             defaultAppearancePanel.ReceiveClosedWindowNotification();
 
             characterPanel.ReceiveClosedWindowNotification();
-            specializationPanel.ReceiveClosedWindowNotification();
             factionPanel.ReceiveClosedWindowNotification();
+            racePanel.ReceiveClosedWindowNotification();
             classPanel.ReceiveClosedWindowNotification();
+            specializationPanel.ReceiveClosedWindowNotification();
             detailsPanel.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
@@ -141,6 +150,7 @@ namespace AnyRPG {
             newGameManager.OnSetCharacterClass += HandleSetCharacterClass;
             newGameManager.OnSetClassSpecialization += HandleSetClassSpecialization;
             newGameManager.OnSetFaction += HandleSetFaction;
+            newGameManager.OnSetCharacterRace += HandleSetRace;
             newGameManager.OnUpdateEquipmentList += HandleUpdateEquipmentList;
             newGameManager.OnUpdateFactionList += HandleUpdateFactionList;
             newGameManager.OnUpdateCharacterClassList += HandleUpdateCharacterClassList;
@@ -154,6 +164,7 @@ namespace AnyRPG {
             saveManager.ClearSharedData();
 
             factionPanel.ReceiveOpenWindowNotification();
+            racePanel.ReceiveOpenWindowNotification();
             // class goes before specialization because it acts as a filter for it
             classPanel.ReceiveOpenWindowNotification();
             specializationPanel.ReceiveOpenWindowNotification();
@@ -205,10 +216,8 @@ namespace AnyRPG {
         public void ClearButtons() {
             // disable character button if option not allowed or no faction exists
             if (systemConfigurationManager.NewGameAppearance == true) {
-                characterButton.gameObject.SetActive(true);
                 appearanceButton.gameObject.SetActive(true);
             } else {
-                characterButton.gameObject.SetActive(false);
                 appearanceButton.gameObject.SetActive(false);
             }
 
@@ -223,7 +232,21 @@ namespace AnyRPG {
                 }
             }
 
-            // disable class button if option not allowed or no faction exists
+            // disable character button if not allowed
+            if (systemConfigurationManager.CharacterSelectionType == CharacterSelectionType.CharacterList) {
+                characterButton.gameObject.SetActive(true);
+            } else {
+                characterButton.gameObject.SetActive(false);
+            }
+
+            // disable race button if option not allowed
+            if (systemConfigurationManager.CharacterSelectionType == CharacterSelectionType.RaceAndGender) {
+                raceButton.gameObject.SetActive(true);
+            } else {
+                raceButton.gameObject.SetActive(false);
+            }
+
+            // disable class button if option not allowed
             classButton.gameObject.SetActive(false);
             if (systemConfigurationManager.NewGameClass == true) {
                 foreach (CharacterClass characterClass in systemDataFactory.GetResourceList<CharacterClass>()) {
@@ -304,6 +327,15 @@ namespace AnyRPG {
 
         }
 
+        public void HandleSetRace(CharacterRace newRace) {
+            //Debug.Log("NewGamePanel.HandleSetRace()");
+
+            detailsPanel.SetCharacterRace(newRace);
+
+            racePanel.SetCharacterRace(newRace);
+
+        }
+
         public void HandleUpdateEquipmentList() {
             //Debug.Log("NameGamePanel.UpdateEquipmentList()");
 
@@ -319,6 +351,10 @@ namespace AnyRPG {
 
         public void HandleUpdateFactionList() {
             factionPanel.ShowOptionButtons();
+        }
+
+        public void HandleUpdateRaceList() {
+            racePanel.ShowOptionButtons();
         }
 
         public void HandleUpdateCharacterClassList() {
@@ -360,6 +396,7 @@ namespace AnyRPG {
             defaultAppearancePanel.HidePanel();
             classPanel.HidePanel();
             factionPanel.HidePanel();
+            racePanel.HidePanel();
             specializationPanel.HidePanel();
             detailsPanel.HidePanel();
         }
@@ -426,6 +463,18 @@ namespace AnyRPG {
             uINavigationControllers[0].SetCurrentButton(factionButton);
             factionButton.HighlightBackground();
             uINavigationControllers[0].UnHightlightButtonBackgrounds(factionButton);
+        }
+
+        public void OpenRacePanel(bool focus = true) {
+            //Debug.Log("NewGamePanel.OpenRacePanel()");
+
+            ClosePanels();
+            racePanel.ShowPanel();
+            SetOpenSubPanel(racePanel, focus);
+
+            uINavigationControllers[0].SetCurrentButton(raceButton);
+            raceButton.HighlightBackground();
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(raceButton);
         }
 
         public void OpenClassPanel(bool focus = true) {
