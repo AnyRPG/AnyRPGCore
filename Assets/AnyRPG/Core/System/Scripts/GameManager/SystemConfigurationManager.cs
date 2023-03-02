@@ -385,6 +385,10 @@ namespace AnyRPG {
         [SerializeField]
         private string defaultPlayerUnitLayer = "Player";
 
+        [Tooltip("Character units will automatically be set to this layer so they can respond to AOE / looting and other things that filter by this layer.")]
+        [SerializeField]
+        private string defaultPreviewUnitLayer = "UnitPreview";
+
         [Header("SYSTEM ABILITIES")]
 
         [Tooltip("The ability effect to cast on a player when they level up.")]
@@ -749,6 +753,7 @@ namespace AnyRPG {
         public AudioClip WeaponMissAudioClip { get => weaponMissAudioClip; set => weaponMissAudioClip = value; }
         public SystemUIConfiguration UIConfiguration { get => UI; set => UI = value; }
         public CharacterSelectionType CharacterSelectionType { get => characterSelectionType; set => characterSelectionType = value; }
+        public string DefaultPreviewUnitLayer { get => defaultPreviewUnitLayer; set => defaultPreviewUnitLayer = value; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }
 

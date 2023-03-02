@@ -1,5 +1,6 @@
 using AnyRPG;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -111,12 +112,13 @@ namespace AnyRPG {
 
             newGameManager.OnSetPlayerName -= HandleSetPlayerName;
             newGameManager.OnSetUnitProfile -= HandleSetUnitProfile;
+            newGameManager.OnSetFaction -= HandleSetFaction;
+            newGameManager.OnSetCharacterRace -= HandleSetCharacterRace;
             newGameManager.OnSetCharacterClass -= HandleSetCharacterClass;
             newGameManager.OnSetClassSpecialization -= HandleSetClassSpecialization;
-            newGameManager.OnSetFaction -= HandleSetFaction;
-            newGameManager.OnSetCharacterRace -= HandleSetRace;
             newGameManager.OnUpdateEquipmentList -= HandleUpdateEquipmentList;
             newGameManager.OnUpdateFactionList -= HandleUpdateFactionList;
+            newGameManager.OnUpdateCharacterRaceList -= HandleUpdateCharacterRaceList;
             newGameManager.OnUpdateCharacterClassList -= HandleUpdateCharacterClassList;
             newGameManager.OnUpdateClassSpecializationList -= HandleUpdateClassSpecializationList;
             newGameManager.OnUpdateUnitProfileList -= HandleUpdateUnitProfileList;
@@ -137,6 +139,9 @@ namespace AnyRPG {
             classPanel.ReceiveClosedWindowNotification();
             specializationPanel.ReceiveClosedWindowNotification();
             detailsPanel.ReceiveClosedWindowNotification();
+
+            characterCreatorManager.DisableLight();
+            characterCreatorManager.DespawnEnvironmentPreviewPrefab();
             OnCloseWindow(this);
         }
 
@@ -145,14 +150,31 @@ namespace AnyRPG {
 
             base.ProcessOpenWindowNotification();
 
+            // delay until end of frame to give scroll rects time to initialize
+            // so they can properly resize
+            //StartCoroutine(OpenWindowDelay());
+            ProcessOpenWindow();
+        }
+
+        /*
+        public IEnumerator OpenWindowDelay() {
+            yield return null;
+            ProcessOpenWindow();
+        }
+        */
+
+        private void ProcessOpenWindow() {
+            //Debug.Log("NewGamePanel.ProcessOpenWindow()");
+
             newGameManager.OnSetPlayerName += HandleSetPlayerName;
             newGameManager.OnSetUnitProfile += HandleSetUnitProfile;
+            newGameManager.OnSetFaction += HandleSetFaction;
+            newGameManager.OnSetCharacterRace += HandleSetCharacterRace;
             newGameManager.OnSetCharacterClass += HandleSetCharacterClass;
             newGameManager.OnSetClassSpecialization += HandleSetClassSpecialization;
-            newGameManager.OnSetFaction += HandleSetFaction;
-            newGameManager.OnSetCharacterRace += HandleSetRace;
             newGameManager.OnUpdateEquipmentList += HandleUpdateEquipmentList;
             newGameManager.OnUpdateFactionList += HandleUpdateFactionList;
+            newGameManager.OnUpdateCharacterRaceList += HandleUpdateCharacterRaceList;
             newGameManager.OnUpdateCharacterClassList += HandleUpdateCharacterClassList;
             newGameManager.OnUpdateClassSpecializationList += HandleUpdateClassSpecializationList;
             newGameManager.OnUpdateUnitProfileList += HandleUpdateUnitProfileList;
@@ -211,6 +233,7 @@ namespace AnyRPG {
             }
             */
 
+            characterCreatorManager.EnableLight();
         }
 
         public void ClearButtons() {
@@ -327,7 +350,7 @@ namespace AnyRPG {
 
         }
 
-        public void HandleSetRace(CharacterRace newRace) {
+        public void HandleSetCharacterRace(CharacterRace newRace) {
             //Debug.Log("NewGamePanel.HandleSetRace()");
 
             detailsPanel.SetCharacterRace(newRace);
@@ -350,18 +373,26 @@ namespace AnyRPG {
         }
 
         public void HandleUpdateFactionList() {
+            //Debug.Log("NameGamePanel.HandleUpdateFactionList()");
+
             factionPanel.ShowOptionButtons();
         }
 
-        public void HandleUpdateRaceList() {
+        public void HandleUpdateCharacterRaceList() {
+            //Debug.Log("NameGamePanel.HandleUpdateCharacterRaceList()");
+
             racePanel.ShowOptionButtons();
         }
 
         public void HandleUpdateCharacterClassList() {
+            //Debug.Log("NameGamePanel.HandleUpdateCharacterClassList()");
+
             classPanel.ShowOptionButtons();
         }
 
         public void HandleUpdateClassSpecializationList() {
+            //Debug.Log("NameGamePanel.HandleUpdateClassSpecializationList()");
+
             specializationPanel.ShowOptionButtons();
         }
 

@@ -14,6 +14,9 @@ namespace AnyRPG {
         // need a local reference to this for preview characters which don't have a way to reference back to the base character to find this
         protected AttachmentProfile attachmentProfile;
 
+        private int unitPreviewLayer = 0;
+        private int equipmentLayer = 0;
+
         // game manager references
         private ObjectPooler objectPooler = null;
 
@@ -23,6 +26,9 @@ namespace AnyRPG {
             this.unitController = unitController;
             this.unitModelController = unitModelController;
             Configure(systemGameManager);
+
+            unitPreviewLayer = LayerMask.NameToLayer("UnitPreview");
+            equipmentLayer = LayerMask.NameToLayer("Equipment");
         }
 
         public override void SetGameManagerReferences() {
@@ -80,6 +86,11 @@ namespace AnyRPG {
                                         holdableObjects.Add(attachmentNode, newEquipmentPrefab);
                                         //currentEquipmentPhysicalObjects[equipmentSlotProfile] = newEquipmentPrefab;
 
+                                        if (unitModelController.UnitModel.layer == unitPreviewLayer) {
+                                            SetLayerRecursive(newEquipmentPrefab, unitPreviewLayer);
+                                        } else {
+                                            SetLayerRecursive(newEquipmentPrefab, equipmentLayer);
+                                        }
                                         newEquipmentPrefab.transform.localScale = attachmentNode.HoldableObject.Scale;
                                         if (unitController?.CharacterUnit?.BaseCharacter.CharacterCombat != null && unitController?.CharacterUnit?.BaseCharacter.CharacterCombat.GetInCombat() == true) {
                                             HoldObject(newEquipmentPrefab, attachmentNode, unitController.gameObject);
@@ -98,6 +109,21 @@ namespace AnyRPG {
             if (holdableObjects.Count > 0) {
                 currentEquipmentPhysicalObjects[equipmentSlotProfile] = holdableObjects;
             }
+        }
+
+        public void SetLayerRecursive(GameObject objectName, int newLayer) {
+            // set the preview unit layer to the PlayerPreview layer so the preview camera can see it and all other cameras will ignore it
+            int spellMask = 1 << LayerMask.NameToLayer("SpellEffects");
+            int raycastmask = 1 << LayerMask.NameToLayer("Ignore Raycast");
+            int ignoreMask = (spellMask | raycastmask);
+
+            objectName.layer = newLayer;
+            foreach (MeshRenderer meshRenderer in objectName.gameObject.GetComponentsInChildren<MeshRenderer>(true)) {
+                if (!UnitModelController.IsInLayerMask(meshRenderer.gameObject.layer, ignoreMask)) {
+                    meshRenderer.gameObject.layer = newLayer;
+                }
+            }
+
         }
 
         public void SheathObject(GameObject go, AttachmentNode attachmentNode, GameObject searchObject) {

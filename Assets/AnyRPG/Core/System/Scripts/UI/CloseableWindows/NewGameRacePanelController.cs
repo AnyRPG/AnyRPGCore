@@ -196,8 +196,8 @@ namespace AnyRPG {
             traitLabel.SetActive(false);
             LayoutRebuilder.ForceRebuildLayoutImmediate(abilityButtonArea.GetComponent<RectTransform>());
 
-            ShowOptionButtons();
-
+            // this should only be necessary on UpdateRaceList()
+            //ShowOptionButtons();
         }
 
         /*

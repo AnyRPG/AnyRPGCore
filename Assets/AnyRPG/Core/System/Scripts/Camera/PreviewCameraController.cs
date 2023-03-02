@@ -26,6 +26,9 @@ namespace AnyRPG {
         private float gamepadZoomSpeed = 0.05f;
         public float minZoom = 1f;
 
+        // avoid use of local variables
+        private RaycastHit wallHit = new RaycastHit();
+
         [Tooltip("The maximum zoom distance is how far past the initial zoom you can zoom out")]
         [SerializeField]
         private float maxZoomDifference = 5f;
@@ -73,10 +76,15 @@ namespace AnyRPG {
         /// </summary>
         public bool rotateTarget = false;
 
+        [Tooltip("Ignore these layers when checking if walls are in the way of the camera view of the character")]
+        [SerializeField]
+        private LayerMask ignoreMask = ~0;
+
         protected Quaternion initialTargetRotation;
 
         protected float currentYDegrees = 0f;
         protected float currentXDegrees = 0f;
+        protected float adjustedXDegrees = 0f;
 
         protected float currentZoomDistance = 0f;
 
@@ -310,7 +318,12 @@ namespace AnyRPG {
 
             if (cameraPan == true) {
                 currentYDegrees = Mathf.Clamp(currentYDegrees, minVerticalPan, maxVerticalPan);
-                Quaternion xQuaternion = Quaternion.AngleAxis(currentXDegrees, Vector3.up);
+                if (rotateTarget == true) {
+                    adjustedXDegrees = currentXDegrees * -1;
+                } else {
+                    adjustedXDegrees = currentXDegrees;
+                }
+                Quaternion xQuaternion = Quaternion.AngleAxis(adjustedXDegrees, Vector3.up);
                 Quaternion yQuaternion = Quaternion.AngleAxis(currentYDegrees, Vector3.right);
                 //currentCameraOffset = xQuaternion * yQuaternion * initialCameraPositionOffset;
                 //currentCameraPositionOffset = xQuaternion * yQuaternion * initialCameraPositionOffset;
@@ -344,7 +357,7 @@ namespace AnyRPG {
             SetWantedPosition();
             //}
 
-            //CompensateForWalls();
+            CompensateForWalls();
             if (cameraZoom || cameraPan) {
                 //Debug.Log("Camera was zoomed or panned.  Jumping to Wanted Position.");
                 JumpToWantedPosition();
@@ -355,19 +368,34 @@ namespace AnyRPG {
             LookAtTargetPosition();
         }
 
+        private void CompensateForWalls() {
+            //Debug.Log("drawing Camera debug line from targetPosition: " + targetPosition + " to wantedPosition: " + wantedPosition);
+            Debug.DrawLine(wantedLookPosition, wantedPosition, Color.cyan);
+            //wallHit = new RaycastHit();
+            if (Physics.Linecast(wantedLookPosition, wantedPosition, out wallHit, ~ignoreMask)) {
+                //Debug.Log("hit: " + wallHit.transform.name);
+                Debug.DrawRay(wallHit.point, wallHit.point - wantedLookPosition, Color.red);
+                wantedPosition = new Vector3(wallHit.point.x, wallHit.point.y, wallHit.point.z);
+                wantedPosition = Vector3.MoveTowards(wantedPosition, wantedLookPosition, 0.2f);
+            }
+        }
+
+
         private void SetWantedPosition() {
             //Debug.Log("SetWantedPosition(): targetPosition: " + targetPosition + "; localwanted: " + (currentCameraOffset.normalized * currentZoomDistance));
-            if (followTransform != null) {
-                //wantedPosition = followTransform.TransformPoint((currentCameraOffset.normalized * currentZoomDistance)) + currentCameraPositionOffset;
-                //wantedPosition = followTransform.TransformPoint((currentCameraPositionOffset.normalized * currentZoomDistance)) + initialCameraPositionOffset;
-                //wantedPosition = followTransform.TransformPoint((currentCameraPositionOffset.normalized * currentZoomDistance));
-                wantedPosition = followTransform.TransformPoint((currentCameraPositionOffset.normalized * currentZoomDistance)) + currentCameraLookOffset;
 
-                wantedLookPosition = followTransform.TransformPoint(currentCameraLookOffset);
-            } else {
-                //Debug.Log("SetWantedPosition(): targetPosition: " + targetPosition + "; localwanted: " + (currentCameraOffset.normalized * currentZoomDistance));
+            if (followTransform == null) {
+                return;
             }
-            //Debug.Log("SetWantedPosition(): currentTargetOffset: " + currentTargetOffset + "; wantedPosition: " + wantedPosition);
+
+            if (rotateTarget == true) {
+                wantedPosition = followTransform.position + ((currentCameraPositionOffset.normalized * currentZoomDistance) + currentCameraLookOffset);
+            } else {
+                wantedPosition = followTransform.TransformPoint((currentCameraPositionOffset.normalized * currentZoomDistance)) + currentCameraLookOffset;
+            }
+
+            wantedLookPosition = followTransform.TransformPoint(currentCameraLookOffset);
+
         }
 
         public void ResetWantedPosition() {

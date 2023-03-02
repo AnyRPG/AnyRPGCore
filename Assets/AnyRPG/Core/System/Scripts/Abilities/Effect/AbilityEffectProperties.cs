@@ -100,7 +100,9 @@ namespace AnyRPG {
         }
 
         public string GetShortDescription() {
-            return describableData.GetSummary();
+            //return describableData.GetSummary();
+            // ability buttons were returning the title as part of this so changed to description only
+            return describableData.Description;
         }
 
         

@@ -589,7 +589,7 @@ namespace AnyRPG {
         private void SetPreviewMode() {
             //Debug.Log(gameObject.name + ".UnitController.SetPreviewMode()");
             SetUnitControllerMode(UnitControllerMode.Preview);
-            unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultCharacterUnitLayer);
+            unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultPreviewUnitLayer);
             useAgent = false;
             DisableAgent();
 
