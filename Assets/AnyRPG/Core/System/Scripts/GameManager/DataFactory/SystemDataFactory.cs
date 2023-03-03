@@ -222,6 +222,10 @@ namespace AnyRPG {
             factoryDataAccess.Setup<Achievement>("Achievement", systemGameManager);
             dataDictionary.Add(typeof(Achievement), factoryDataAccess);
 
+            factoryDataAccess = new FactoryDataAccess();
+            factoryDataAccess.Setup<AppearanceEditorProfile>("AppearanceEditorProfile", systemGameManager);
+            dataDictionary.Add(typeof(AppearanceEditorProfile), factoryDataAccess);
+
             //setup scriptable objects
             foreach (FactoryDataAccess dataAccess in dataDictionary.Values) {
                 dataAccess.SetupScriptableObjects(systemGameManager);

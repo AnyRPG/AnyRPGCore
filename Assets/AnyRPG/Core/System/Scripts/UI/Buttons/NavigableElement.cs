@@ -236,21 +236,26 @@ namespace AnyRPG {
         }
 
         public void HighlightBackground() {
-            //Debug.Log(gameObject.name + ".HightlightButton.HighlightBackground()");
-            if (highlightImage != null) {
-                if (navigationControllerFocused == true
-                    || useUnfocusedColor == false
-                    || controlsManager.GamePadInputActive == false) {
-                    //highlightImage.color = highlightImageColor * selectedColor;
-                    highlightImage.color = highlightImageColor;
-                } else {
-                    highlightImage.color = unFocusedColor;
-                }
+            //Debug.Log(gameObject.name + ".NavigableElement.HighlightBackground()");
+            
+            if (highlightImage == null) {
+                return;
             }
+
+            if (navigationControllerFocused == true
+                || useUnfocusedColor == false
+                || controlsManager.GamePadInputActive == false) {
+                //highlightImage.color = highlightImageColor * selectedColor;
+                highlightImage.color = highlightImageColor;
+            } else {
+                highlightImage.color = unFocusedColor;
+            }
+
         }
 
         public void UnHighlightBackground() {
-            //Debug.Log(gameObject.name + ".HightlightButton.UnHighlightBackground()");
+            //Debug.Log(gameObject.name + ".NavigableElement.UnHighlightBackground()");
+
             if (highlightImage != null) {
                 highlightImage.color = hiddenColor;
             }
@@ -278,7 +283,7 @@ namespace AnyRPG {
         /// leave the current navigation controller
         /// </summary>
         public virtual void UnFocus() {
-            //Debug.Log(gameObject.name + ".NavigableElement.UnFocus()");
+            Debug.Log(gameObject.name + ".NavigableElement.UnFocus()");
 
             navigationControllerFocused = false;
 

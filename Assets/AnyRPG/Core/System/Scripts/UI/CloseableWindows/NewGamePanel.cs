@@ -72,6 +72,7 @@ namespace AnyRPG {
         private HighlightButton specializationButton = null;
 
         private Dictionary<GameObject, AppearancePanel> appearancePanels = new Dictionary<GameObject, AppearancePanel>();
+        private Dictionary<Type, GameObject> appearanceEditorPanelTypes = new Dictionary<Type, GameObject>();
 
 
         // game manager references
@@ -93,6 +94,10 @@ namespace AnyRPG {
             factionPanel.SetNewGamePanel(this);
             racePanel.SetNewGamePanel(this);
             specializationPanel.SetNewGamePanel(this);
+
+            defaultAppearancePanel.SetCapabilityConsumer(newGameManager);
+
+            GetAvailableAppearancePanels();
         }
 
         public override void SetGameManagerReferences() {
@@ -104,6 +109,14 @@ namespace AnyRPG {
             levelManager = systemGameManager.LevelManager;
             newGameManager = systemGameManager.NewGameManager;
             objectPooler = systemGameManager.ObjectPooler;
+        }
+
+        private void GetAvailableAppearancePanels() {
+            foreach (AppearanceEditorProfile appearanceEditorProfile in systemDataFactory.GetResourceList<AppearanceEditorProfile>()) {
+                if (appearanceEditorProfile.ModelProviderType != null) {
+                    appearanceEditorPanelTypes.Add(appearanceEditorProfile.ModelProviderType, appearanceEditorProfile.Prefab);
+                }
+            }
         }
 
         public override void ReceiveClosedWindowNotification() {
@@ -458,26 +471,41 @@ namespace AnyRPG {
             //Debug.Log("NewGamePanel.OpenAppearancePanel()");
             ClosePanels();
 
-            if (characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider == null) {
-                OpenDefaultAppearancePanel();
-            } else if (characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.AppearancePanel == null) {
-                OpenDefaultAppearancePanel();
-            } else {
-                if (appearancePanels.ContainsKey(characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.AppearancePanel) == false) {
-                    AppearancePanel appearancePanel = objectPooler.GetPooledObject(characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.AppearancePanel, panelParent.transform).GetComponent<AppearancePanel>();
-                    appearancePanel.Configure(systemGameManager);
-                    appearancePanel.SetParentPanel(this);
-                    appearancePanel.ReceiveOpenWindowNotification();
-                    appearancePanel.transform.SetSiblingIndex(1);
-                    appearancePanels.Add(characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.AppearancePanel, appearancePanel);
-                    subPanels.Add(appearancePanel);
-                }
-                appearancePanels[characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.AppearancePanel].ShowPanel();
-                SetOpenSubPanel(appearancePanels[characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.AppearancePanel], true);
-            }
+            ActivateCorrectAppearancePanel();
 
             appearanceButton.HighlightBackground();
             uINavigationControllers[0].UnHightlightButtonBackgrounds(appearanceButton);
+        }
+
+        private void ActivateCorrectAppearancePanel() {
+            //Debug.Log("NewGamePanel.ActivateCorrectAppearancePanel()");
+
+            if (characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider == null) {
+                OpenDefaultAppearancePanel();
+                return;
+            }
+
+            //Debug.Log("provider type is " + characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType());
+
+            if (appearanceEditorPanelTypes.ContainsKey(characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType()) == false) {
+                OpenDefaultAppearancePanel();
+                return;
+            }
+
+            GameObject panelPrefab = appearanceEditorPanelTypes[characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType()];
+
+            if (appearancePanels.ContainsKey(panelPrefab) == false) {
+                AppearancePanel appearancePanel = objectPooler.GetPooledObject(panelPrefab, panelParent.transform).GetComponent<AppearancePanel>();
+                appearancePanel.Configure(systemGameManager);
+                appearancePanel.SetParentPanel(this);
+                appearancePanel.SetCapabilityConsumer(newGameManager);
+                appearancePanel.ReceiveOpenWindowNotification();
+                appearancePanel.transform.SetSiblingIndex(1);
+                appearancePanels.Add(panelPrefab, appearancePanel);
+                subPanels.Add(appearancePanel);
+            }
+            appearancePanels[panelPrefab].ShowPanel();
+            SetOpenSubPanel(appearancePanels[panelPrefab], true);
         }
 
         private void OpenDefaultAppearancePanel() {

@@ -92,7 +92,7 @@ namespace AnyRPG {
             }
 
             //spawn correct preview unit
-            characterCreatorManager.HandleOpenWindow(capabilityConsumer.UnitProfile);
+            characterCreatorManager.SpawnUnit(capabilityConsumer.UnitProfile);
 
             if (cameraManager.CharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");

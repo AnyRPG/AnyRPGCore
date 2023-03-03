@@ -14,12 +14,12 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");
 
             //cloneSource = GetCloneSource();
-            cloneSource = unitSpawnControlPanel.SelectedUnitSpawnButton.UnitProfile;
-            if (cloneSource == null) {
+            unitProfile = unitSpawnControlPanel.SelectedUnitSpawnButton.UnitProfile;
+            if (unitProfile == null) {
                 return;
             }
 
-            OpenWindowCommon();
+            SpawnUnit();
         }
 
 

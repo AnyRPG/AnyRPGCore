@@ -10,8 +10,6 @@ namespace AnyRPG {
 
     public class SwappableMeshAppearancePanelController : AppearancePanel {
 
-        //public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
-
         [SerializeField]
         protected GameObject mainButtonsArea = null;
 
@@ -56,7 +54,6 @@ namespace AnyRPG {
         private Dictionary<string, string> chosenOptions = new Dictionary<string, string>();
 
         // game manager references
-        protected CharacterCreatorManager characterCreatorManager = null;
         protected UIManager uIManager = null;
         protected ObjectPooler objectPooler = null;
         protected SaveManager saveManager = null;
@@ -65,7 +62,6 @@ namespace AnyRPG {
             //Debug.Log("SwappableMeshAppearancePanelController.SetGameManagerReferences()");
             base.SetGameManagerReferences();
 
-            characterCreatorManager = systemGameManager.CharacterCreatorManager;
             uIManager = systemGameManager.UIManager;
             objectPooler = systemGameManager.ObjectPooler;
             saveManager = systemGameManager.SaveManager;

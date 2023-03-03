@@ -76,7 +76,7 @@ namespace AnyRPG {
         }
 
         public void ShowOptionButtons() {
-            Debug.Log("NewGameFactionPanelController.ShowOptionButtons()");
+            //Debug.Log("NewGameFactionPanelController.ShowOptionButtons()");
 
             ClearOptionButtons();
 

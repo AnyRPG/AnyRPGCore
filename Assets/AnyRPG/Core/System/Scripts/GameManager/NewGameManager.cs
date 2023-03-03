@@ -147,7 +147,7 @@ namespace AnyRPG {
         }
 
         protected void UpdateFactionList() {
-            Debug.Log("NewGameManager.UpdateFactionList()");
+            //Debug.Log("NewGameManager.UpdateFactionList()");
 
             factionList.Clear();
 
@@ -166,7 +166,7 @@ namespace AnyRPG {
         }
 
         protected void UpdateCharacterRaceList() {
-            Debug.Log("NewGameManager.UpdateCharacterRaceList()");
+            //Debug.Log("NewGameManager.UpdateCharacterRaceList()");
 
             characterRaceList.Clear();
 
@@ -238,7 +238,7 @@ namespace AnyRPG {
         }
 
         protected void UpdateUnitProfileList() {
-            Debug.Log("NewGameManager.UpdateUnitProfileList()");
+            //Debug.Log("NewGameManager.UpdateUnitProfileList()");
 
             unitProfileList.Clear();
 
@@ -312,7 +312,7 @@ namespace AnyRPG {
         }
 
         public void SetUnitProfile(UnitProfile newUnitProfile) {
-            Debug.Log("NewGameManager.SetUnitProfile(" + newUnitProfile.DisplayName + ")");
+            //Debug.Log("NewGameManager.SetUnitProfile(" + newUnitProfile.DisplayName + ")");
 
             if (unitProfile == newUnitProfile) {
                 return;
@@ -327,7 +327,7 @@ namespace AnyRPG {
         }
 
         private void UpdateCharacterEnvironment() {
-            Debug.Log("NewGameManager.UpdateCharacterEnvironment()");
+            //Debug.Log("NewGameManager.UpdateCharacterEnvironment()");
 
             if (characterRace == null ) {
                 return;
@@ -354,7 +354,7 @@ namespace AnyRPG {
         }
 
         private GameObject GetEnvironmentPreviewPrefab() {
-            Debug.Log("NewGameManager.GetEnvironmentPreviewPrefab()");
+            //Debug.Log("NewGameManager.GetEnvironmentPreviewPrefab()");
 
             if (characterRace.EnvironmentPreviewPrefab != null) {
                 return characterRace.EnvironmentPreviewPrefab;
@@ -439,7 +439,7 @@ namespace AnyRPG {
         }
 
         public void SetCharacterClass(CharacterClass newCharacterClass) {
-            Debug.Log("NewGamePanel.SetCharacterClass(" + (newCharacterClass == null ? "null" : newCharacterClass.DisplayName) + ")");
+            //Debug.Log("NewGamePanel.SetCharacterClass(" + (newCharacterClass == null ? "null" : newCharacterClass.DisplayName) + ")");
 
             if (characterClass == newCharacterClass) {
                 return;
@@ -464,7 +464,7 @@ namespace AnyRPG {
         }
 
         public void SetClassSpecialization(ClassSpecialization newClassSpecialization) {
-            Debug.Log("NewGamePanel.SetClassSpecialization(" + (newClassSpecialization == null ? "null" : newClassSpecialization.DisplayName) + ")");
+            //Debug.Log("NewGamePanel.SetClassSpecialization(" + (newClassSpecialization == null ? "null" : newClassSpecialization.DisplayName) + ")");
 
             if (classSpecialization !=  newClassSpecialization || newClassSpecialization == null) {
                 classSpecialization = newClassSpecialization;
@@ -483,7 +483,7 @@ namespace AnyRPG {
         }
 
         public void SetFaction(Faction newFaction) {
-            Debug.Log("NewGameManager.SetFaction(" + (newFaction == null ? "null" : newFaction.DisplayName) + ")");
+            //Debug.Log("NewGameManager.SetFaction(" + (newFaction == null ? "null" : newFaction.DisplayName) + ")");
 
             if (faction == newFaction) {
                 return;
@@ -513,7 +513,7 @@ namespace AnyRPG {
         }
 
         public void SetCharacterRace(CharacterRace characterRace) {
-            Debug.Log("NewGameManager.SetCharacterRace(" + (characterRace == null ? "null" : characterRace.DisplayName) + ")");
+            //Debug.Log("NewGameManager.SetCharacterRace(" + (characterRace == null ? "null" : characterRace.DisplayName) + ")");
 
             if (this.characterRace == characterRace) {
                 return;

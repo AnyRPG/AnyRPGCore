@@ -56,7 +56,7 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn()");
-            cloneSource = playerManager.ActiveUnitController.UnitProfile;
+            unitProfile = playerManager.ActiveUnitController.UnitProfile;
             SpawnUnit();
             systemEventManager.OnEquipmentChanged += HandleEquipmentChanged;
             playerManager.ActiveUnitController.UnitEventController.OnUnitTypeChange += HandleUnitTypeChange;

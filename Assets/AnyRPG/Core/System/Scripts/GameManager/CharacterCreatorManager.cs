@@ -63,19 +63,16 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
         }
 
-        public void HandleOpenWindow(UnitProfile unitProfile) {
-            //Debug.Log("CharacterCreatorManager.HandleOpenWindow(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ")");
+        public void SpawnUnit(UnitProfile unitProfile) {
+            Debug.Log("CharacterCreatorManager.SpawnUnit(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ")");
 
             if (unitProfile == null) {
                 Debug.Log("CharacterCreatorManager.HandleOpenWindow(): unitProfile is null");
                 return;
             }
-            cloneSource = unitProfile;
-            if (cloneSource == null) {
-                return;
-            }
+            this.unitProfile = unitProfile;
 
-            OpenWindowCommon();
+            SpawnUnit();
         }
 
         public void SetPlatformMaterial(Material material) {
@@ -100,7 +97,7 @@ namespace AnyRPG {
         }
 
         public void SpawnEnvironmentPreviewPrefab(GameObject environmentPreviewPrefab) {
-            Debug.Log("CharacterCreatorManager.SpawnEnvironmentPreviewPrefab(" + (environmentPreviewPrefab == null ? "null" : environmentPreviewPrefab.name) + ")");
+            //Debug.Log("CharacterCreatorManager.SpawnEnvironmentPreviewPrefab(" + (environmentPreviewPrefab == null ? "null" : environmentPreviewPrefab.name) + ")");
 
             if (environmentPreviewPrefab == this.environmentPreviewPrefab) {
                 // there is no change to the preview prefab, do nothing

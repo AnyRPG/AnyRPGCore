@@ -56,7 +56,6 @@ namespace AnyRPG {
                 mainButtonsArea.SetActive(true);
                 OpenAppearanceOptionsArea();
                 //appearanceButton.HighlightBackground();
-                InitializeSexButtons();
                 uINavigationControllers[0].FocusCurrentButton();
             }
         }

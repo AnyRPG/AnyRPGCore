@@ -23,9 +23,11 @@ namespace AnyRPG {
         */
 
         // the source we are going to clone from 
-        protected UnitProfile cloneSource;
+        protected UnitProfile unitProfile = null;
 
         public UnitController PreviewUnitController { get => unitController; set => unitController = value; }
+        public UnitProfile UnitProfile { get => unitProfile; }
+
         //public int PreviewLayer { get => previewLayer; set => previewLayer = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -41,11 +43,15 @@ namespace AnyRPG {
             DespawnUnit();
         }
 
-        protected virtual void DespawnUnit() {
-            if (unitController != null) {
-                unitController.Despawn();
-                unitController = null;
+        public virtual void DespawnUnit() {
+            Debug.Log("PreviewManager.DespawnUnit()");
+
+            if (unitController == null) {
+                return;
             }
+
+            unitController.Despawn();
+            unitController = null;
         }
 
         public virtual UnitProfile GetCloneSource() {
@@ -53,19 +59,13 @@ namespace AnyRPG {
             return null;
         }
 
-        public void OpenWindowCommon() {
-            //Debug.Log("PreviewManager.OpenWindowCommon()");
-
-            SpawnUnit();
-        }
-
         protected virtual void SpawnUnit() {
-            //Debug.Log("PreviewManager.SpawnUnit()");
+            Debug.Log("PreviewManager.SpawnUnit()");
 
-            unitController = cloneSource.SpawnUnitPrefab(transform, transform.position, transform.forward, UnitControllerMode.Preview);
+            unitController = unitProfile.SpawnUnitPrefab(transform, transform.position, transform.forward, UnitControllerMode.Preview);
             if (unitController != null) {
                 if (unitController.UnitModelController != null) {
-                    unitController.UnitModelController.SetAttachmentProfile(cloneSource.UnitPrefabProps.AttachmentProfile);
+                    unitController.UnitModelController.SetAttachmentProfile(unitProfile.UnitPrefabProps.AttachmentProfile);
                 }
                 BroadcastTargetCreated();
                 unitController.Init();

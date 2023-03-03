@@ -69,7 +69,7 @@ namespace AnyRPG {
         }
 
         public void ShowOptionButtons() {
-            Debug.Log("NewGameRacePanelController.ShowOptionButtons()");
+            //Debug.Log("NewGameRacePanelController.ShowOptionButtons()");
             ClearOptionButtons();
 
             for (int i = 0; i < newGameManager.CharacterRaceList.Count; i++) {

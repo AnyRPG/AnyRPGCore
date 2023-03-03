@@ -24,6 +24,7 @@ namespace AnyRPG {
         private HighlightButton saveButton = null;
 
         private Dictionary<GameObject, AppearancePanel> appearanceEditorPanels = new Dictionary<GameObject, AppearancePanel>();
+        private Dictionary<Type, GameObject> appearanceEditorPanelTypes = new Dictionary<Type, GameObject>();
 
         private AppearancePanel currentAppearanceEditorPanel = null;
 
@@ -38,14 +39,16 @@ namespace AnyRPG {
 
         private AnyRPGSaveData saveData;
 
+
         // game manager references
-        private UIManager uIManager = null;
-        private PlayerManager playerManager = null;
-        private CharacterCreatorManager characterCreatorManager = null;
-        private SaveManager saveManager = null;
-        private LevelManager levelManager = null;
-        private CharacterCreatorInteractableManager characterCreatorInteractableManager = null;
-        private ObjectPooler objectPooler = null;
+        protected UIManager uIManager = null;
+        protected PlayerManager playerManager = null;
+        protected CharacterCreatorManager characterCreatorManager = null;
+        protected SaveManager saveManager = null;
+        protected LevelManager levelManager = null;
+        protected CharacterCreatorInteractableManager characterCreatorInteractableManager = null;
+        protected ObjectPooler objectPooler = null;
+        protected SystemDataFactory systemDataFactory = null;
 
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
         public UnitType UnitType { get => unitType; set => unitType = value; }
@@ -60,6 +63,10 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             characterPreviewPanel.Configure(systemGameManager);
+
+            defaultAppearancePanel.SetCapabilityConsumer(this);
+
+            GetAvailableAppearancePanels();
         }
 
         public override void SetGameManagerReferences() {
@@ -71,6 +78,15 @@ namespace AnyRPG {
             levelManager = systemGameManager.LevelManager;
             characterCreatorInteractableManager = systemGameManager.CharacterCreatorInteractableManager;
             objectPooler = systemGameManager.ObjectPooler;
+            systemDataFactory = systemGameManager.SystemDataFactory;
+        }
+
+        private void GetAvailableAppearancePanels() {
+            foreach (AppearanceEditorProfile appearanceEditorProfile in systemDataFactory.GetResourceList<AppearanceEditorProfile>()) {
+                if (appearanceEditorProfile.ModelProviderType != null) {
+                    appearanceEditorPanelTypes.Add(appearanceEditorProfile.ModelProviderType, appearanceEditorProfile.Prefab);
+                }
+            }
         }
 
         public override void ReceiveClosedWindowNotification() {
@@ -130,22 +146,31 @@ namespace AnyRPG {
 
             if (unitProfile.UnitPrefabProps.ModelProvider == null) {
                 OpenDefaultAppearanceEditorPanel();
-            } else if (unitProfile.UnitPrefabProps.ModelProvider.AppearancePanel == null) {
-                OpenDefaultAppearanceEditorPanel();
-            } else {
-                if (appearanceEditorPanels.ContainsKey(unitProfile.UnitPrefabProps.ModelProvider.AppearancePanel) == false) {
-                    AppearancePanel appearancePanel = objectPooler.GetPooledObject(unitProfile.UnitPrefabProps.ModelProvider.AppearancePanel, panelParent.transform).GetComponent<AppearancePanel>();
-                    appearancePanel.Configure(systemGameManager);
-                    appearancePanel.SetParentPanel(this);
-                    appearancePanel.ReceiveOpenWindowNotification();
-                    appearancePanel.transform.SetSiblingIndex(1);
-                    appearanceEditorPanels.Add(unitProfile.UnitPrefabProps.ModelProvider.AppearancePanel, appearancePanel);
-                    subPanels.Add(appearancePanel);
-                    currentAppearanceEditorPanel = appearancePanel;
-                }
-                //appearanceEditorPanels[unitProfile.UnitPrefabProps.ModelProvider.AppearancePanel].ShowPanel();
-                SetOpenSubPanel(appearanceEditorPanels[unitProfile.UnitPrefabProps.ModelProvider.AppearancePanel], true);
+                return;
             }
+
+            //Debug.Log("provider type is " + unitProfile.UnitPrefabProps.ModelProvider.GetType());
+
+            if (appearanceEditorPanelTypes.ContainsKey(unitProfile.UnitPrefabProps.ModelProvider.GetType()) == false) {
+                OpenDefaultAppearanceEditorPanel();
+                return;
+            }
+
+            GameObject panelPrefab = appearanceEditorPanelTypes[unitProfile.UnitPrefabProps.ModelProvider.GetType()];
+
+            if (appearanceEditorPanels.ContainsKey(panelPrefab) == false) {
+                AppearancePanel appearancePanel = objectPooler.GetPooledObject(panelPrefab, panelParent.transform).GetComponent<AppearancePanel>();
+                appearancePanel.Configure(systemGameManager);
+                appearancePanel.SetParentPanel(this);
+                appearancePanel.SetCapabilityConsumer(this);
+                appearancePanel.ReceiveOpenWindowNotification();
+                appearancePanel.transform.SetSiblingIndex(1);
+                appearanceEditorPanels.Add(panelPrefab, appearancePanel);
+                subPanels.Add(appearancePanel);
+                currentAppearanceEditorPanel = appearancePanel;
+            }
+            //appearanceEditorPanels[unitProfile.UnitPrefabProps.ModelProvider.AppearancePanel].ShowPanel();
+            SetOpenSubPanel(appearanceEditorPanels[panelPrefab], true);
         }
 
         private void ClosePanels() {
