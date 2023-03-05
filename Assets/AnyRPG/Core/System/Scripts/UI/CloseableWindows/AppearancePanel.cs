@@ -62,7 +62,7 @@ namespace AnyRPG {
         }
 
         public virtual void ShowPanel() {
-            Debug.Log(gameObject.name + ".AppearancePanel.ShowPanel()");
+            //Debug.Log(gameObject.name + ".AppearancePanel.ShowPanel()");
 
             canvasGroup.alpha = 1;
             canvasGroup.blocksRaycasts = true;
@@ -72,7 +72,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetupOptions() {
-            Debug.Log(gameObject.name + ".AppearancePanel.SetupOptions()");
+            //Debug.Log(gameObject.name + ".AppearancePanel.SetupOptions()");
 
             InitializeGenderButtons();
         }
@@ -82,7 +82,7 @@ namespace AnyRPG {
         }
 
         protected void InitializeGenderButtons() {
-            Debug.Log(gameObject.name + ".AppearancePanel.InitializeGenderButtons()");
+            //Debug.Log(gameObject.name + ".AppearancePanel.InitializeGenderButtons()");
 
             if (capabilityConsumer.CharacterRace == null) {
                 // no race set so no way to get the proper gender model
@@ -105,21 +105,21 @@ namespace AnyRPG {
         }
 
         public virtual void DisableGenderButtons() {
-            Debug.Log(gameObject.name + ".AppearancePanel.DisableGenderButtons()");
+            //Debug.Log(gameObject.name + ".AppearancePanel.DisableGenderButtons()");
 
             maleButton.gameObject.SetActive(false);
             femaleButton.gameObject.SetActive(false);
         }
 
         public virtual void EnableGenderButtons() {
-            Debug.Log(gameObject.name + ".AppearancePanel.EnableGenderButtons()");
+            //Debug.Log(gameObject.name + ".AppearancePanel.EnableGenderButtons()");
 
             maleButton.gameObject.SetActive(true);
             femaleButton.gameObject.SetActive(true);
         }
 
         public virtual void SetMale() {
-            Debug.Log("AppearancePanel.SetMale()");
+            //Debug.Log("AppearancePanel.SetMale()");
 
             if (capabilityConsumer.CharacterRace == null) {
                 // no race set so no way to get the proper gender model
@@ -149,14 +149,14 @@ namespace AnyRPG {
         }
 
         public virtual void HighlightMaleButton() {
-            Debug.Log("AppearancePanel.HighlightMaleButton()");
+            //Debug.Log("AppearancePanel.HighlightMaleButton()");
 
             femaleButton.UnHighlightBackground();
             maleButton.HighlightBackground();
         }
 
         public virtual void SetFemale() {
-            Debug.Log(gameObject.name + ".AppearancePanel.SetFemale()");
+            //Debug.Log(gameObject.name + ".AppearancePanel.SetFemale()");
 
             if (capabilityConsumer.CharacterRace == null) {
                 // no race set so no way to get the proper gender model
@@ -180,14 +180,14 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessSetFemale() {
-            Debug.Log(gameObject.name + ".AppearancePanel.ProcessSetFemale()");
+            //Debug.Log(gameObject.name + ".AppearancePanel.ProcessSetFemale()");
 
             characterCreatorManager.DespawnUnit();
             characterCreatorManager.SpawnUnit(capabilityConsumer.CharacterRace.FemaleUnitProfile);
         }
 
         public virtual void HighlightFemaleButton() {
-            Debug.Log(gameObject.name + ".AppearancePanel.HighlightFemaleButton()");
+            //Debug.Log(gameObject.name + ".AppearancePanel.HighlightFemaleButton()");
 
             maleButton.UnHighlightBackground();
             femaleButton.HighlightBackground();

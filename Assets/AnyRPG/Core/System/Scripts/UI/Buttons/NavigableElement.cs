@@ -283,7 +283,7 @@ namespace AnyRPG {
         /// leave the current navigation controller
         /// </summary>
         public virtual void UnFocus() {
-            Debug.Log(gameObject.name + ".NavigableElement.UnFocus()");
+            //Debug.Log(gameObject.name + ".NavigableElement.UnFocus()");
 
             navigationControllerFocused = false;
 

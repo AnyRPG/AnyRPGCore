@@ -60,7 +60,7 @@ namespace AnyRPG {
         }
 
         protected virtual void SpawnUnit() {
-            Debug.Log("PreviewManager.SpawnUnit()");
+            //Debug.Log("PreviewManager.SpawnUnit()");
 
             unitController = unitProfile.SpawnUnitPrefab(transform, transform.position, transform.forward, UnitControllerMode.Preview);
             if (unitController != null) {

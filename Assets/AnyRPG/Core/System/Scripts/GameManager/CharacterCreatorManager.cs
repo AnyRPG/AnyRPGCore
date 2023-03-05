@@ -64,7 +64,7 @@ namespace AnyRPG {
         }
 
         public void SpawnUnit(UnitProfile unitProfile) {
-            Debug.Log("CharacterCreatorManager.SpawnUnit(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ")");
+            //Debug.Log("CharacterCreatorManager.SpawnUnit(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ")");
 
             if (unitProfile == null) {
                 Debug.Log("CharacterCreatorManager.HandleOpenWindow(): unitProfile is null");
