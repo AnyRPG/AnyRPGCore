@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -61,10 +62,16 @@ namespace AnyRPG {
         protected GameObject beardLabel = null;
 
         [SerializeField]
+        protected GameObject faceDnaLabel = null;
+
+        [SerializeField]
         protected UINavigationListVertical bodyOptionsArea = null;
 
         [SerializeField]
         protected ColorSelectionController skinColorSelectionController = null;
+
+        [SerializeField]
+        protected GameObject bodyDnaLabel = null;
 
 
         [Header("Image")]
@@ -74,14 +81,19 @@ namespace AnyRPG {
 
         [Header("Prefabs")]
 
+        /*
         [SerializeField]
-        private GameObject imageButtonPrefab;
+        private GameObject imageButtonPrefab = null;
+        */
 
         [SerializeField]
-        private GameObject mixedButtonPrefab;
+        private GameObject mixedButtonPrefab = null;
 
         [SerializeField]
-        private GameObject textButtonPrefab;
+        private GameObject textButtonPrefab = null;
+
+        [SerializeField]
+        private GameObject dnaSliderPrefab = null;
 
         [Header("Color Tables")]
 
@@ -98,6 +110,13 @@ namespace AnyRPG {
         protected List<UMATextRecipe> eyebrowsRecipes = new List<UMATextRecipe>();
         protected List<UMATextRecipe> beardRecipes = new List<UMATextRecipe>();
 
+        protected Dictionary<string, DNAInfoNode> dnaDictionary = new Dictionary<string, DNAInfoNode>();
+        protected List<string> bodyDNA;
+        protected List<string> faceDNA;
+
+        // slots to not clear when viewing the character appearance
+        protected List<string> keepPreviewSlots;
+
         protected UMAModelController umaModelController = null;
         protected DynamicCharacterAvatar dynamicCharacterAvatar = null;
 
@@ -105,6 +124,26 @@ namespace AnyRPG {
         protected UIManager uIManager = null;
         protected ObjectPooler objectPooler = null;
         protected SaveManager saveManager = null;
+
+        public class DNAInfoNode {
+            public string name;
+            public float value;
+            public int index;
+            public UMADnaBase dnaBase;
+            public DNAInfoNode(string Name, float Value, int Index, UMADnaBase DNABase) {
+                name = Name;
+                value = Value;
+                index = Index;
+                dnaBase = DNABase;
+            }
+            /*
+            #region IComparable implementation
+            public int CompareTo(DNAHolder other) {
+                return string.Compare(name, other.name);
+            }
+            #endregion
+            */
+        }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -117,6 +156,74 @@ namespace AnyRPG {
             //sexButton.Configure(systemGameManager);
             //maleButton.Configure(systemGameManager);
             //femaleButton.Configure(systemGameManager);
+            bodyDNA = new List<string>() {
+                "skinGreenness",
+                "skinBlueness",
+                "skinRedness",
+                "height",
+                "neckThickness",
+                "armLength",
+                "forearmLength",
+                "armWidth",
+                "forearmWidth",
+                "handsSize",
+                "feetSize",
+                "legSeparation",
+                "upperMuscle",
+                "upperWeight",
+                "lowerWeight",
+                "legsSize",
+                "belly",
+                "waist",
+                "gluteusSize"
+            };
+
+            faceDNA = new List<string>() {
+                "headSize",
+                "headWidth",
+                "earsSize",
+                "earsPosition",
+                "earsRotation",
+                "noseSize",
+                "noseCurve",
+                "noseWidth",
+                "noseInclination",
+                "nosePosition",
+                "nosePronounced",
+                "noseFlatten",
+                "chinSize",
+                "chinPronounced",
+                "chinPosition",
+                "mandibleSize",
+                "jawsSize",
+                "jawsPosition",
+                "cheekSize",
+                "cheekPosition",
+                "lowCheekPronounced",
+                "lowCheekPosition",
+                "foreheadSize",
+                "foreheadPosition",
+                "lipsSize",
+                "mouthSize",
+                "eyeRotation",
+                "eyeSize",
+                "eyeSpacing"
+            };
+
+            keepPreviewSlots = new List<string>() {
+                "Physique",
+                "Face",
+                "Eyes",
+                "Hair",
+                "Body",
+                "Complexion",
+                "Tattoo",
+                "Underwear",
+                "Eyebrows",
+                "Beard",
+                "Ears"
+            };
+
         }
 
         public override void SetGameManagerReferences() {
@@ -278,52 +385,6 @@ namespace AnyRPG {
             eyeColorSelectionController.Setup(dynamicCharacterAvatar, "Eyes", eyeOptionsArea.gameObject, EyesColor);
         }
 
-        /*
-        public void ColorsClick() {
-            Debug.Log("CharacterAppearancePanel.ColorsClick()");
-
-            CleanupDynamicMenus();
-            GameObject setupParent = null;
-
-            foreach (UMA.OverlayColorData overlayColorData in dynamicCharacterAvatar.CurrentSharedColors) {
-                //Debug.Log("CharacterCreatorPanel.ColorsClick(): overlayColorData.name: " + overlayColorData.name);
-
-                GameObject go = objectPooler.GetPooledObject(ColorPrefab);
-                AvailableColorsHandler availableColorsHandler = go.GetComponent<AvailableColorsHandler>();
-
-                SharedColorTable currColors = ClothingColor;
-
-                if (overlayColorData.name.ToLower() == "skin") {
-                    currColors = SkinColor;
-                    setupParent = skinColorsOptionsArea;
-                } else if (overlayColorData.name.ToLower() == "hair") {
-                    currColors = HairColor;
-                    setupParent = hairColorsOptionsArea;
-                } else if (overlayColorData.name.ToLower() == "eyes") {
-                    currColors = EyesColor;
-                    setupParent = eyesColorsOptionsArea;
-                } else {
-                    //Debug.Log("CharacterCreatorPanel.ColorsClick(): setupParent.name: " + setupParent.name + " does not match skin or hair or eyes");
-
-                }
-                //Debug.Log("CharacterCreatorPanel.ColorsClick(): setupParent.name: " + setupParent.name);
-
-                availableColorsHandler.Setup(dynamicCharacterAvatar, overlayColorData.name, setupParent, currColors);
-
-                // delete next part?
-
-                Text txt = go.GetComponentInChildren<Text>();
-                txt.text = overlayColorData.name;
-                go.transform.SetParent(setupParent.transform);
-                //go.transform.SetParent(SlotPanel.transform);
-
-                availableColorsHandler.OnClick();
-
-            }
-        }
-
-        */
-
         public override void ProcessBeforeSetMale() {
             base.ProcessBeforeSetMale();
             femaleRecipe = umaModelController.GetAppearanceString();
@@ -373,12 +434,30 @@ namespace AnyRPG {
         }
 
         public void CloseOptionsAreas() {
-            //Debug.Log("CharacterCreatorPanel.CloseOptionsAreas()");
-            
+            //Debug.Log("UMAAppearanceEditorPanel.CloseOptionsAreas()");
+
             CloseHairOptionsArea();
             CloseEyeOptionsArea();
             CloseFaceOptionsArea();
             CloseBodyOptionsArea();
+        }
+
+        private void GetDNAList() {
+            //Debug.Log("UMAAppearanceEditorPanel.GetDNAList()");
+            
+            dnaDictionary.Clear();
+            UMADnaBase[] DNA = dynamicCharacterAvatar.GetAllDNA();
+
+            foreach (UMADnaBase dnaBase in DNA) {
+                string[] names = dnaBase.Names;
+                float[] values = dnaBase.Values;
+
+                for (int i = 0; i < names.Length; i++) {
+                    string name = names[i];
+                    //Debug.Log("Found DNA: " + name);
+                    dnaDictionary.Add(name, new DNAInfoNode(name, values[i], i, dnaBase));
+                }
+            }
         }
 
         public void CheckAppearance() {
@@ -395,6 +474,7 @@ namespace AnyRPG {
             bodyOptionsArea.DeleteActiveButtons();
 
             allRecipes = dynamicCharacterAvatar.AvailableRecipes;
+            GetDNAList();
 
             // Hair
             if (allRecipes.ContainsKey("Hair")) {
@@ -429,12 +509,32 @@ namespace AnyRPG {
             } else {
                 beardLabel.SetActive(false);
             }
+
+            // face DNA
+            PopulateDNAOptions(faceDnaLabel, faceOptionsArea, faceDNA);
+
             faceOptionsArea.UpdateNavigationList();
 
             // body
             InitializeSkinColors();
+            PopulateDNAOptions(bodyDnaLabel, bodyOptionsArea, bodyDNA);
+
             bodyOptionsArea.UpdateNavigationList();
 
+        }
+
+        private void PopulateDNAOptions(GameObject label, UINavigationController navigationController, List<string> dnaOptions) {
+            //label.transform.SetAsLastSibling();
+            foreach (string dnaName in dnaOptions) {
+                if (dnaDictionary.ContainsKey(dnaName)) {
+                    DNAInfoNode dnaInfoNode = dnaDictionary[dnaName];
+                    UMADNASlider dnaSlider = objectPooler.GetPooledObject(dnaSliderPrefab, navigationController.transform).GetComponent<UMADNASlider>();
+                    dnaSlider.Configure(systemGameManager);
+                    dnaSlider.Initialize(dnaInfoNode.name.BreakupCamelCase(), dnaInfoNode.index, dnaInfoNode.dnaBase, dynamicCharacterAvatar, dnaInfoNode.value);
+                    dnaSlider.transform.SetAsLastSibling();
+                    navigationController.AddActiveButton(dnaSlider);
+                }
+            }
         }
 
         private void PopulateHairOptions(List<UMATextRecipe> hairRecipes) {
@@ -466,7 +566,7 @@ namespace AnyRPG {
             optionChoiceButton.transform.SetSiblingIndex(index);
             index++;
             foreach (UMATextRecipe recipeName in beardRecipes) {
-                AddOptionListButton(faceOptionsArea, "Beard", null, recipeName.DisplayValue, recipeName.DisplayValue);
+                optionChoiceButton = AddOptionListButton(faceOptionsArea, "Beard", null, recipeName.DisplayValue, recipeName.DisplayValue);
                 optionChoiceButton.transform.SetSiblingIndex(index);
                 index++;
             }
@@ -487,7 +587,7 @@ namespace AnyRPG {
                 listOptionsArea.AddActiveButton(optionChoiceButton);
 
                 // highlight the button if it is already the selected choice for the group
-                if (dynamicCharacterAvatar.GetWardrobeItemName(groupName) == optionChoice) {
+                if (dynamicCharacterAvatar.GetWardrobeItemName(groupName) == GetRecipeName(optionChoice, allRecipes[groupName])) {
                     optionChoiceButton.HighlightOutline();
                 }
             }
@@ -495,7 +595,7 @@ namespace AnyRPG {
         }
 
         public void SetRecipe(UMAOptionChoiceButton optionChoiceButton, string groupName, string optionChoice) {
-            Debug.Log("UMAAppearanceEditorPanel.SetRecipe(" + groupName + ", " + optionChoice + ")");
+            //Debug.Log("UMAAppearanceEditorPanel.SetRecipe(" + groupName + ", " + optionChoice + ")");
 
             if (optionChoice == string.Empty) {
                 dynamicCharacterAvatar.ClearSlot(groupName);
@@ -505,20 +605,38 @@ namespace AnyRPG {
         }
 
         private string GetRecipeName(string recipeDisplayName, List<UMATextRecipe> recipeList) {
-            //Debug.Log("CharacterCreatorPanel.GetRecipeName(" + recipeDisplayName + ")");
+            //Debug.Log("UMAAppearanceEditorPanelController.GetRecipeName(" + recipeDisplayName + ")");
             foreach (UMATextRecipe umaTextRecipe in recipeList) {
                 if (umaTextRecipe.DisplayValue == recipeDisplayName) {
+                    //Debug.Log("UMAAppearanceEditorPanelController.GetRecipeName(" + recipeDisplayName + "): returning " + umaTextRecipe.name);
                     return umaTextRecipe.name;
                 }
             }
-            //Debug.Log("CharacterCreatorPanel.GetRecipeName(" + recipeDisplayName + "): Could not find recipe.  return string.Empty!!!");
+            //Debug.Log("UMAAppearanceEditorPanelController.GetRecipeName(" + recipeDisplayName + "): Could not find recipe.  return string.Empty!!!");
             return string.Empty;
         }
 
         public void RebuildUMA() {
-            //Debug.Log("CharacterCreatorPanel.RebuildUMA()");
+            //Debug.Log("UMAAppearanceEditorPanelController.RebuildUMA()");
 
             umaModelController.BuildModelAppearance();
+        }
+
+        public override void ShowPanel() {
+            //Debug.Log("UMAAppearanceEditorPanelController.ShowPanel()");
+
+            base.ShowPanel();
+
+            RemoveClothing();
+        }
+
+        private void RemoveClothing() {
+            Debug.Log("UMAAppearanceEditorPanelController.RemoveClothing()");
+
+            List<string> currentSlots = dynamicCharacterAvatar.CurrentWardrobeSlots;
+            List<string> clearSlots = currentSlots.Except(keepPreviewSlots).ToList();
+            dynamicCharacterAvatar.ClearSlots(clearSlots);
+            RebuildUMA();
         }
 
     }

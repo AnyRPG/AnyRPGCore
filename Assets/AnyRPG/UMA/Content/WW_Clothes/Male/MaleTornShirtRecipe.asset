@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0188188c253e0c4bb9b46e19fa7312e, type: 3}
-  m_Name: Male_Belt_Recipe
+  m_Name: MaleTornShirtRecipe
   m_EditorClassIdentifier: 
   label: 
   resourcesOnly: 0
   recipeType: Wardrobe
-  DisplayValue: Male_Belt_Slot
+  DisplayValue: Male Torn Shirt
   compatibleRaces:
   - HumanMale
   - HumanMaleDCS
@@ -26,7 +26,7 @@ MonoBehaviour:
   - race: HumanMaleDCS
     filename: 
     thumb: {fileID: 0}
-  wardrobeSlot: Waist
+  wardrobeSlot: Chest
   Hides: []
   HideTags: []
   suppressWardrobeSlots: []
@@ -34,8 +34,8 @@ MonoBehaviour:
   MeshHideAssets: []
   OverrideDNA:
     PreloadValues: []
-  recipeString: '{"version":3,"packedSlotDataList":[],"slotsV2":[],"slotsV3":[{"id":"","scale":1,"copyIdx":-1,"overlays":[],"Tags":[],"Races":[]},{"id":"Male_Belt","scale":100,"copyIdx":-1,"overlays":[{"id":"Source/Male_Belt_Overlay","colorIdx":0,"rect":[0.0,0.0,0.0,0.0],"isTransformed":false,"scale":{"x":1.0,"y":1.0,"z":1.0},"rotation":0.0}],"Tags":[],"Races":[]}],"colors":[],"fColors":[{"name":"Waist
-    Equipment Color 1","colors":[255,255,255,255,60,58,58,255,255,255,255,255,0,0,0,0,255,255,255,255,0,0,0,0],"ShaderParms":[],"alwaysUpdate":false}],"sharedColorCount":1,"race":"","packedDna":[]}'
+  recipeString: '{"version":3,"packedSlotDataList":[],"slotsV2":[],"slotsV3":[{"id":"Male_TornShirt","scale":100,"copyIdx":-1,"overlays":[{"id":"Male_TornShirt_Overlay","colorIdx":0,"rect":[0.0,0.0,0.0,0.0],"isTransformed":false,"scale":{"x":1.0,"y":1.0,"z":1.0},"rotation":0.0}],"Tags":[],"Races":[]}],"colors":[],"fColors":[{"name":"Chest
+    Equipment Color 1","colors":[255,255,255,255,0,0,0,0,255,255,255,255,0,0,0,0,255,255,255,255,0,0,0,0],"ShaderParms":[],"alwaysUpdate":false}],"sharedColorCount":1,"race":"","packedDna":[]}'
   IncompatibleRecipes: []
   UserField: 
   replaces: Nothing

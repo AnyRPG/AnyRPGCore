@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0188188c253e0c4bb9b46e19fa7312e, type: 3}
-  m_Name: MalePlateBracers_Recipe
+  m_Name: MalePlateLegsRecipe
   m_EditorClassIdentifier: 
   label: 
   resourcesOnly: 0
   recipeType: Wardrobe
-  DisplayValue: MalePlateBracers_Slot
+  DisplayValue: Male Plate Legs
   compatibleRaces:
   - HumanMale
   - HumanMaleDCS
@@ -26,16 +26,17 @@ MonoBehaviour:
   - race: HumanMaleDCS
     filename: 
     thumb: {fileID: 0}
-  wardrobeSlot: Arms
-  Hides: []
+  wardrobeSlot: Legs
+  Hides:
+  - MaleLegs
   HideTags: []
   suppressWardrobeSlots: []
   activeWardrobeSet: []
   MeshHideAssets: []
   OverrideDNA:
     PreloadValues: []
-  recipeString: '{"version":3,"packedSlotDataList":[],"slotsV2":[],"slotsV3":[{"id":"MalePlateBracers","scale":100,"copyIdx":-1,"overlays":[{"id":"MalePlateBracers_Overlay","colorIdx":0,"rect":[0.0,0.0,0.0,0.0],"isTransformed":false,"scale":{"x":1.0,"y":1.0,"z":1.0},"rotation":0.0}],"Tags":[],"Races":[]},{"id":"","scale":1,"copyIdx":-1,"overlays":[],"Tags":[],"Races":[]},{"id":"MalePlateBracers_1","scale":100,"copyIdx":-1,"overlays":[{"id":"MalePlateBracers_1_Overlay","colorIdx":1,"rect":[0.0,0.0,0.0,0.0],"isTransformed":false,"scale":{"x":1.0,"y":1.0,"z":1.0},"rotation":0.0}],"Tags":[],"Races":[]}],"colors":[],"fColors":[{"name":"Wrist
-    Equipment Color 1","colors":[255,255,255,255,0,0,0,0,255,255,255,255,0,0,0,0,255,255,255,255,0,0,0,0],"ShaderParms":[],"alwaysUpdate":false},{"name":"Wrist
+  recipeString: '{"version":3,"packedSlotDataList":[],"slotsV2":[],"slotsV3":[{"id":"MalePlateLegs","scale":100,"copyIdx":-1,"overlays":[{"id":"MalePlateLegs_Overlay","colorIdx":0,"rect":[0.0,0.0,0.0,0.0],"isTransformed":false,"scale":{"x":1.0,"y":1.0,"z":1.0},"rotation":0.0}],"Tags":[],"Races":[]},{"id":"","scale":1,"copyIdx":-1,"overlays":[],"Tags":[],"Races":[]},{"id":"","scale":1,"copyIdx":-1,"overlays":[],"Tags":[],"Races":[]},{"id":"MalePlateLegs_1","scale":100,"copyIdx":-1,"overlays":[{"id":"MalePlateLegs_1_Overlay","colorIdx":1,"rect":[0.0,0.0,0.0,0.0],"isTransformed":false,"scale":{"x":1.0,"y":1.0,"z":1.0},"rotation":0.0}],"Tags":[],"Races":[]}],"colors":[],"fColors":[{"name":"Leg
+    Equipment Color 1","colors":[255,255,255,255,0,0,0,0,255,255,255,255,0,0,0,0,255,255,255,255,0,0,0,0],"ShaderParms":[],"alwaysUpdate":false},{"name":"Leg
     Equipment Color 2","colors":[255,255,255,255,0,0,0,0,255,255,255,255,0,0,0,0,255,255,255,255,0,0,0,0],"ShaderParms":[],"alwaysUpdate":false}],"sharedColorCount":2,"race":"","packedDna":[]}'
   IncompatibleRecipes: []
   UserField: 
