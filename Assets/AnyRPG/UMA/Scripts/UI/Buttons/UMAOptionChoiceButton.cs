@@ -33,6 +33,8 @@ namespace AnyRPG {
         }
 
         public void MakeSelection() {
+            Debug.Log("UMAOptionChoiceButton.MakeSelection()");
+
             appearancePanelController.SetRecipe(this, optionGroupName, optionChoice);
         }
 

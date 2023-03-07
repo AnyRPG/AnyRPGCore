@@ -120,8 +120,8 @@ namespace AnyRPG {
                 unitController.UnitModelController.BuildModelAppearance();
         }
 
-        protected override void BroadcastTargetCreated() {
-            base.BroadcastTargetCreated();
+        protected override void BroadcastUnitCreated() {
+            base.BroadcastUnitCreated();
             HandleTargetCreated();
         }
 

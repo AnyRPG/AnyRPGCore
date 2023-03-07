@@ -150,13 +150,15 @@ namespace AnyRPG {
 
         }
 
-        public override void HandleTargetReady() {
-            //Debug.Log("SwappableMeshAppearancePanelController.HandleTargetReady()");
-            
-            base.HandleTargetReady();
+        /*
+        public override void HandleModelCreated() {
+            //Debug.Log("SwappableMeshAppearancePanelController.HandleModelCreated()");
+
+            base.HandleModelCreated();
 
             SetupOptions();
         }
+        */
 
         public void ChooseOptionChoice(HighlightButton highlightButton, string groupName, string optionChoice) {
             //Debug.Log("SwappableMeshAppearancePanelController.ChooseOptionChoice(" + groupName + ", " + optionChoice + ")");

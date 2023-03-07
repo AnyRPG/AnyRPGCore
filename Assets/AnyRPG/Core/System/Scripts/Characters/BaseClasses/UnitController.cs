@@ -360,7 +360,7 @@ namespace AnyRPG {
 
         public override bool CameraTargetReady {
             get {
-                return unitModelController.ModelReady && unitModelController.IsBuilding() == false;
+                return unitModelController.ModelCreated && unitModelController.IsBuilding() == false;
             }
         }
 

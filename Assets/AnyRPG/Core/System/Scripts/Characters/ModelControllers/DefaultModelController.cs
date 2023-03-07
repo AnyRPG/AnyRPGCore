@@ -68,7 +68,10 @@ namespace AnyRPG {
         }
 
         public override bool ShouldCalculateFloatHeight() {
-            // this is already calculated in the mecanimModelController so no need perform any check here
+            // modelReady is only false on first spawn, so this will only run once
+            if (unitModelController.ModelCreated == false) {
+                return true;
+            }
             return false;
         }
 

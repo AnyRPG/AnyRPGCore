@@ -201,7 +201,7 @@ MonoBehaviour:
   BoundsOffset: {x: 0, y: 0, z: 0}
   editorTimeGeneration: 0
   showPlaceholder: 1
-  previewModel: 0
+  previewModel: 1
   customModel: {fileID: 0}
   customRotation: {x: 0, y: 0, z: 0}
   previewColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

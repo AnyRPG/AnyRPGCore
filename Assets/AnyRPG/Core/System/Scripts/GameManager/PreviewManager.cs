@@ -7,7 +7,8 @@ using UnityEngine.AI;
 namespace AnyRPG {
     public abstract class PreviewManager : ConfiguredMonoBehaviour {
 
-        public event System.Action OnTargetCreated = delegate { };
+        public event System.Action OnUnitCreated = delegate { };
+        public event System.Action OnModelCreated = delegate { };
 
         protected UnitController unitController;
 
@@ -50,6 +51,8 @@ namespace AnyRPG {
                 return;
             }
 
+            unitController.UnitModelController.OnModelUpdated -= HandleModelCreated;
+
             unitController.Despawn();
             unitController = null;
         }
@@ -66,15 +69,23 @@ namespace AnyRPG {
             if (unitController != null) {
                 if (unitController.UnitModelController != null) {
                     unitController.UnitModelController.SetAttachmentProfile(unitProfile.UnitPrefabProps.AttachmentProfile);
+                    unitController.UnitModelController.OnModelCreated += HandleModelCreated;
                 }
-                BroadcastTargetCreated();
+                BroadcastUnitCreated();
                 unitController.Init();
+                if (unitController.UnitModelController.ModelCreated == true) {
+                    HandleModelCreated();
+                }
             }
         }
 
-        protected virtual void BroadcastTargetCreated() {
-            //Debug.Log("PreviewManager.BroadcastTargetCreated()");
-            OnTargetCreated();
+        protected virtual void BroadcastUnitCreated() {
+            //Debug.Log("PreviewManager.BroadcastUnitCreated()");
+            OnUnitCreated();
+        }
+
+        protected virtual void HandleModelCreated() {
+            OnModelCreated();
         }
 
     }

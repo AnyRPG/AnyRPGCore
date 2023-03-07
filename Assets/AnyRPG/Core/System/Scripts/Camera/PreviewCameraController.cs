@@ -464,7 +464,7 @@ namespace AnyRPG {
             //Debug.Log("PreviewCameraController.UnsubscribeFromModelReady()");
 
             if (unitController?.UnitModelController != null) {
-                unitController.UnitModelController.OnModelReady -= HandleModelReady;
+                unitController.UnitModelController.OnModelUpdated -= HandleModelReady;
             }
         }
 
@@ -472,7 +472,7 @@ namespace AnyRPG {
             //Debug.Log("PreviewCameraController.SubscribeToModelReady()");
 
             if (unitController?.UnitModelController != null) {
-                unitController.UnitModelController.OnModelReady += HandleModelReady;
+                unitController.UnitModelController.OnModelUpdated += HandleModelReady;
             }
         }
 
@@ -496,7 +496,7 @@ namespace AnyRPG {
             if (targetBone == null) {
                 //Debug.Log("PreviewCameraController.FindFollowTarget(): targetBone is null");
                 // we did not find the target bone.  Either there was an error, or this was an UMA unit that didn't spawn yet.
-                if (unitController?.UnitModelController?.ModelReady == false) {
+                if (unitController?.UnitModelController?.ModelCreated == false) {
                     //Debug.Log("PreviewCameraController.FindFollowTarget(): model is not ready yet, subscribing to model ready");
                     SubscribeToModelReady();
                 } else {

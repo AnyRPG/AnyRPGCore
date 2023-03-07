@@ -135,7 +135,7 @@ namespace AnyRPG {
             OpenAppearanceEditorPanel();
 
             characterPreviewPanel.OnTargetReady += HandleTargetReady;
-            if (characterCreatorManager.PreviewUnitController.UnitModelController.ModelReady == true) {
+            if (characterCreatorManager.PreviewUnitController.UnitModelController.ModelCreated == true) {
                 HandleTargetReady();
             }
         }

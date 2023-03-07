@@ -40,15 +40,6 @@ namespace AnyRPG {
             this.attachmentProfile = attachmentProfile;
         }
 
-        public bool ShouldCalculateFloatHeight () {
-
-            // modelReady is only false on first spawn, so this will only run once
-            if (unitModelController.ModelReady == false) {
-                return true;
-            }
-            return false;
-        }
-
         public void EquipItemModels(CharacterEquipmentManager characterEquipmentManager, EquipmentSlotProfile equipmentSlotProfile, Equipment equipment) {
             //Debug.Log(unitController.gameObject.name + ".MecanimModelController.EquipItemModels()");
 
@@ -276,8 +267,12 @@ namespace AnyRPG {
         }
 
         public void RebuildModelAppearance() {
-            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.RebuildModelAppearance()");
-            //RemoveEquipmentObjects();
+            Debug.Log(unitController.gameObject.name + ".MecanimModelController.RebuildModelAppearance()");
+
+            if (unitModelController.SuppressEquipment == true) {
+                RemoveEquipmentObjects();
+                return;
+            }
 
             foreach (EquipmentSlotProfile equipmentSlotProfile in unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.CurrentEquipment.Keys) {
                 //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): ask to equip: " + equipment.DisplayName);

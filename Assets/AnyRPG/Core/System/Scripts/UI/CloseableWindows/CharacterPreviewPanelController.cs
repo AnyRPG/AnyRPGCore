@@ -50,7 +50,7 @@ namespace AnyRPG {
             base.ReceiveClosedWindowNotification();
             characterReady = false;
             windowOpened = false;
-            characterCreatorManager.OnTargetCreated -= HandleTargetCreated;
+            characterCreatorManager.OnUnitCreated -= HandleTargetCreated;
             characterCreatorManager.HandleCloseWindow();
             previewCameraController.ClearTarget();
             OnCloseWindow(this);
@@ -61,7 +61,7 @@ namespace AnyRPG {
             base.ProcessOpenWindowNotification();
             windowOpened = true;
             characterReady = false;
-            characterCreatorManager.OnTargetCreated += HandleTargetCreated;
+            characterCreatorManager.OnUnitCreated += HandleTargetCreated;
             SetPreviewTarget();
         }
 

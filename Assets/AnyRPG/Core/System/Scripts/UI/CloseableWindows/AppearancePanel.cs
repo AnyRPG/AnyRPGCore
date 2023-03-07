@@ -28,6 +28,10 @@ namespace AnyRPG {
 
         protected ICapabilityConsumer capabilityConsumer = null;
 
+        protected UnitModelController unitModelController = null;
+
+        //private bool panelVisible = false;
+
         // game manager references
         protected CharacterCreatorManager characterCreatorManager = null;
 
@@ -56,29 +60,56 @@ namespace AnyRPG {
 
         public virtual void HidePanel() {
             //Debug.Log("AppearancePanel.HidePanel()");
+
+            HidePanel(true);
+        }
+
+        public virtual void HidePanel(bool showEquipment) {
+            //if (panelVisible == false) {
+            //    return;
+            //}
+
             canvasGroup.alpha = 0;
             canvasGroup.blocksRaycasts = false;
             canvasGroup.interactable = false;
+
+            if (showEquipment) {
+                ShowEquipment();
+            }
+
+            //panelVisible = false;
         }
 
         public virtual void ShowPanel() {
             //Debug.Log(gameObject.name + ".AppearancePanel.ShowPanel()");
 
+            //if (panelVisible == true) {
+            //    return;
+            //}
+
             canvasGroup.alpha = 1;
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
 
-            SetupOptions();
+            //SetupOptions();
+
+            HideEquipment();
+
+            //panelVisible = true;
         }
 
         public virtual void SetupOptions() {
-            //Debug.Log(gameObject.name + ".AppearancePanel.SetupOptions()");
+            Debug.Log(gameObject.name + ".AppearancePanel.SetupOptions()");
 
             InitializeGenderButtons();
+
+            GetUnitModelController();
         }
 
-        public virtual void HandleTargetReady() {
+        public virtual void GetUnitModelController() {
+            Debug.Log(gameObject.name + ".AppearancePanel.GetUnitModelController()");
 
+            unitModelController = characterCreatorManager.PreviewUnitController?.UnitModelController;
         }
 
         protected void InitializeGenderButtons() {
@@ -146,6 +177,10 @@ namespace AnyRPG {
         public virtual void ProcessSetMale() {
             characterCreatorManager.DespawnUnit();
             characterCreatorManager.SpawnUnit(capabilityConsumer.CharacterRace.MaleUnitProfile);
+            /*
+            GetUnitModelController();
+            unitModelController.SuppressEquipment = true;
+            */
         }
 
         public virtual void HighlightMaleButton() {
@@ -184,6 +219,10 @@ namespace AnyRPG {
 
             characterCreatorManager.DespawnUnit();
             characterCreatorManager.SpawnUnit(capabilityConsumer.CharacterRace.FemaleUnitProfile);
+            /*
+            GetUnitModelController();
+            unitModelController.SuppressEquipment = true;
+            */
         }
 
         public virtual void HighlightFemaleButton() {
@@ -193,6 +232,36 @@ namespace AnyRPG {
             femaleButton.HighlightBackground();
         }
 
+        protected void HideEquipment() {
+            Debug.Log(gameObject.name + ".AppearancePanel.HideEquipment()");
+
+            unitModelController.HideEquipment();
+        }
+
+        protected void ShowEquipment() {
+            Debug.Log(gameObject.name + ".AppearancePanel.ShowEquipment()");
+
+            if (unitModelController == null) {
+                return;
+            }
+
+            unitModelController.ShowEquipment();
+        }
+
+        public virtual void HandleUnitCreated() {
+            Debug.Log(gameObject.name + ".AppearancePanel.HandleUnitCreated()");
+
+            GetUnitModelController();
+            //if (panelVisible == true) {
+            if (canvasGroup.alpha == 1) {
+                Debug.Log(gameObject.name + ".AppearancePanel.HandleTargetCreated() suppressing equipment");
+                unitModelController.SuppressEquipment = true;
+            }
+        }
+
+        public virtual void HandleModelCreated() {
+            Debug.Log("UMAAppearanceEditorPanelController.HandleModelCreated()");
+        }
     }
 
 }

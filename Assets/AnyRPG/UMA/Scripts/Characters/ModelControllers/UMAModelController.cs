@@ -212,7 +212,7 @@ namespace AnyRPG {
         */
 
         public override void FindUnitModel(GameObject unitModel) {
-            //Debug.Log(unitController.gameObject.name + ".UMAModelController.FindUnitModel(" + (unitModel == null ? "null" : unitModel.name) + ")");
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.FindUnitModel(" + (unitModel == null ? "null" : unitModel.name) + ")");
             
             // try to find the dynamicCharacterAvatar on the unitModel gameObject
             if (unitModel != null && dynamicCharacterAvatar == null) {
@@ -251,7 +251,7 @@ namespace AnyRPG {
         }
 
         public void HandleCharacterCreated(UMAData umaData) {
-            //Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterCreated()");
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterCreated()");
             //UnsubscribeFromUMACreate();
             SetModelReady();
         }
@@ -269,7 +269,8 @@ namespace AnyRPG {
             //Debug.Log("PreviewCameraController.OnCharacterDestroyed(): " + umaData);
         }
         public void HandleCharacterUpdated(UMAData umaData) {
-            //Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterUpdated()");
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterUpdated()");
+
             //Debug.Log("UMAModelController.HandleCharacterUpdated(): " + umaData + "; frame: " + Time.frameCount);
             //HandleCharacterCreated(umaData);
 
@@ -292,7 +293,12 @@ namespace AnyRPG {
         }
 
         public int PreloadEquipmentModels(CharacterEquipmentManager characterEquipmentManager, bool resetWardrobe = false) {
-            //Debug.Log(unitController.gameObject.name + ".UMAModelController.PreloadEquipmentModels(" + resetWardrobe + ")");
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.PreloadEquipmentModels(" + resetWardrobe + ")");
+
+            if (unitModelController.SuppressEquipment == true) {
+                return 0;
+            }
+
             int returnValue = 0;
             if (resetWardrobe == true) {
                 avatarDefinition.Wardrobe = new string[0];
@@ -341,7 +347,8 @@ namespace AnyRPG {
         }
 
         public int PreloadItemModels(CharacterEquipmentManager characterEquipmentManager, Equipment equipment) {
-            //Debug.Log(unitController.gameObject.name + ".UMAModelController.PreloadItemModels(" + equipment.DisplayName + ")");
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.PreloadItemModels(" + equipment.DisplayName + ")");
+
             int returnValue = 0;
             if (equipment.UMARecipeProfileProperties?.UMARecipes != null
             && equipment.UMARecipeProfileProperties.UMARecipes.Count > 0
@@ -414,7 +421,11 @@ namespace AnyRPG {
         }
 
         public override void EquipItemModels(CharacterEquipmentManager characterEquipmentManager, Equipment equipment, bool rebuildAppearance = true) {
-            //Debug.Log(unitController.gameObject.name + ".UMAModelController.EquipItemModels(" + equipment.DisplayName + ", " + rebuildAppearance + ")");
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.EquipItemModels(" + equipment.DisplayName + ", " + rebuildAppearance + ")");
+
+            if (equipment == null) {
+                return;
+            }
 
             if (equipment.UMARecipeProfileProperties?.UMARecipes != null
             && equipment.UMARecipeProfileProperties.UMARecipes.Count > 0
@@ -477,24 +488,24 @@ namespace AnyRPG {
         }
 
         public override void RebuildModelAppearance() {
-            
-            /*
-            if (dynamicCharacterAvatar != null) {
-                //dynamicCharacterAvatar.ClearSlots();
-            }
-            */
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.RebuildModelAppearance()");
 
             foreach (Equipment equipment in unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
                 //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): ask to equip: " + equipment.DisplayName);
-                if (equipment != null) {
+                if (unitModelController.SuppressEquipment == false) {
+                    Debug.Log(unitController.gameObject.name + ".UMAModelController.RebuildModelAppearance() SuppressEquipment is false");
                     EquipItemModels(unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager, equipment, false);
+                } else {
+                    Debug.Log(unitController.gameObject.name + ".UMAModelController.RebuildModelAppearance() SuppressEquipment is true");
+                    UnequipItemModels(equipment, false);
                 }
             }
             BuildModelAppearance();
         }
 
         public override void BuildModelAppearance() {
-            //Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance()");
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance()");
+
             if (dynamicCharacterAvatar != null) {
                 //Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance() : " + dynamicCharacterAvatar.GetCurrentRecipe());
                 buildInProgress = true;

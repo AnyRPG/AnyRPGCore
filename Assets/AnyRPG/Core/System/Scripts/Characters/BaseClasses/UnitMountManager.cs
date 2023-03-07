@@ -31,7 +31,7 @@ namespace AnyRPG {
             this.mountUnitController = mountUnitController;
             this.mountUnitProfile = mountUnitProfile;
             mountUnitController.SetRider(unitController);
-            if (mountUnitController?.UnitModelController != null && mountUnitController.UnitModelController.ModelReady == false) {
+            if (mountUnitController?.UnitModelController != null && mountUnitController.UnitModelController.ModelCreated == false) {
                 SubscribeToMountModelReady();
             } else {
                 HandleMountUnitSpawn();
@@ -40,7 +40,7 @@ namespace AnyRPG {
 
         public void SubscribeToMountModelReady() {
             if (mountUnitController?.UnitModelController != null) {
-                mountUnitController.UnitModelController.OnModelReady += HandleMountModelReady;
+                mountUnitController.UnitModelController.OnModelUpdated += HandleMountModelReady;
             }
         }
 
@@ -52,7 +52,7 @@ namespace AnyRPG {
 
         public void UnsubscribeFromMountModelReady() {
             if (mountUnitController?.UnitModelController != null) {
-                mountUnitController.UnitModelController.OnModelReady -= HandleMountModelReady;
+                mountUnitController.UnitModelController.OnModelUpdated -= HandleMountModelReady;
             }
         }
 

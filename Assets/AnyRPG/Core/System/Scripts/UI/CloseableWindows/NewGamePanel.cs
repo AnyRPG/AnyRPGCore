@@ -73,6 +73,7 @@ namespace AnyRPG {
 
         private Dictionary<GameObject, AppearancePanel> appearancePanels = new Dictionary<GameObject, AppearancePanel>();
         private Dictionary<Type, GameObject> appearanceEditorPanelTypes = new Dictionary<Type, GameObject>();
+        private AppearancePanel currentAppearancePanel = null;
 
 
         // game manager references
@@ -97,6 +98,7 @@ namespace AnyRPG {
 
             defaultAppearancePanel.SetCapabilityConsumer(newGameManager);
 
+            AddDefaultAppearancePanel();
             GetAvailableAppearancePanels();
         }
 
@@ -111,7 +113,12 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
         }
 
+        private void AddDefaultAppearancePanel() {
+            appearancePanels.Add(defaultAppearancePanel.gameObject, defaultAppearancePanel);
+        }
+
         private void GetAvailableAppearancePanels() {
+
             foreach (AppearanceEditorProfile appearanceEditorProfile in systemDataFactory.GetResourceList<AppearanceEditorProfile>()) {
                 if (appearanceEditorProfile.ModelProviderType != null) {
                     appearanceEditorPanelTypes.Add(appearanceEditorProfile.ModelProviderType, appearanceEditorProfile.Prefab);
@@ -137,8 +144,12 @@ namespace AnyRPG {
             newGameManager.OnUpdateUnitProfileList -= HandleUpdateUnitProfileList;
 
             saveManager.ClearSharedData();
-            characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
-            characterPreviewPanel.OnTargetReady -= HandleTargetReady;
+            //characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
+            //characterPreviewPanel.OnTargetReady -= HandleTargetReady;
+
+            characterCreatorManager.OnUnitCreated -= HandleUnitCreated;
+            characterCreatorManager.OnModelCreated -= HandleModelCreated;
+
             characterPreviewPanel.ReceiveClosedWindowNotification();
 
             foreach (AppearancePanel appearancePanel in appearancePanels.Values) {
@@ -208,8 +219,11 @@ namespace AnyRPG {
 
             // now that faction is set, and character panel is opened (which caused the first available unit to be selected), it's time to render the unit
             // inform the preview panel so the character can be rendered
-            characterPreviewPanel.OnTargetReady += HandleTargetReady;
-            characterPreviewPanel.OnTargetCreated += HandleTargetCreated;
+            //characterPreviewPanel.OnTargetCreated += HandleTargetCreated;
+            //characterPreviewPanel.OnTargetReady += HandleTargetReady;
+            characterCreatorManager.OnUnitCreated += HandleUnitCreated;
+            characterCreatorManager.OnModelCreated += HandleModelCreated;
+
             characterPreviewPanel.CapabilityConsumer = newGameManager;
             characterPreviewPanel.ReceiveOpenWindowNotification();
 
@@ -224,27 +238,10 @@ namespace AnyRPG {
 
             OpenDetailsPanel();
 
-            //SetNavigationController(uINavigationControllers[0]);
-            //detailsButton.Accept();
-
-            // testing appearance last since it relies on at very minimum the unit profile being set
-
             if (systemConfigurationManager.NewGameAudioProfile != null) {
                 audioManager.StopMusic();
                 audioManager.PlayMusic(systemConfigurationManager.NewGameAudioProfile.AudioClip);
             }
-
-            /*
-            if (controlsManager.GamePadModeActive && focusFirstButtonOnOpen == true) {
-                currentNavigationController.FocusFirstButton();
-                return;
-            }
-
-            if (controlsManager.GamePadModeActive && focusActiveSubPanel == true) {
-                openSubPanel.FocusFirstButton();
-                return;
-            }
-            */
 
             characterCreatorManager.EnableLight();
         }
@@ -432,25 +429,40 @@ namespace AnyRPG {
         }
         */
 
-        private void ClosePanels() {
-            characterPanel.HidePanel();
-            foreach (AppearancePanel appearancePanel in appearancePanels.Values) {
-                appearancePanel.HidePanel();
+        private void ClosePanels(CloseableWindowContents skipPanel) {
+            if (skipPanel != detailsPanel) {
+                detailsPanel.HidePanel();
             }
-            defaultAppearancePanel.HidePanel();
-            classPanel.HidePanel();
-            factionPanel.HidePanel();
-            racePanel.HidePanel();
-            specializationPanel.HidePanel();
-            detailsPanel.HidePanel();
+            if (skipPanel != characterPanel) {
+                characterPanel.HidePanel();
+            }
+            foreach (AppearancePanel appearancePanel in appearancePanels.Values) {
+                if (skipPanel != appearancePanel) {
+                    appearancePanel.HidePanel();
+                }
+            }
+            if (skipPanel != factionPanel) {
+                factionPanel.HidePanel();
+            }
+            if (skipPanel != racePanel) {
+                racePanel.HidePanel();
+            }
+            if (skipPanel != specializationPanel) {
+                specializationPanel.HidePanel();
+            }
+            if (skipPanel != classPanel) {
+                classPanel.HidePanel();
+            }
         }
 
         public void OpenDetailsPanel() {
             //Debug.Log("NewGamePanel.OpenDetailsPanel()");
 
-            ClosePanels();
-            detailsPanel.ShowPanel();
-            SetOpenSubPanel(detailsPanel, true);
+            if (openSubPanel != detailsPanel) {
+                ClosePanels(detailsPanel);
+                detailsPanel.ShowPanel();
+                SetOpenSubPanel(detailsPanel, true);
+            }
 
             detailsButton.HighlightBackground();
             uINavigationControllers[0].UnHightlightButtonBackgrounds(detailsButton);
@@ -459,36 +471,41 @@ namespace AnyRPG {
         public void OpenCharacterPanel() {
             //Debug.Log("NewGamePanel.OpenCharacterPanel()");
 
-            ClosePanels();
-            characterPanel.ShowPanel();
-            SetOpenSubPanel(characterPanel, true);
+            if (openSubPanel != characterPanel) {
+                ClosePanels(characterPanel);
+                characterPanel.ShowPanel();
+                SetOpenSubPanel(characterPanel, true);
+            }
 
             characterButton.HighlightBackground();
             uINavigationControllers[0].UnHightlightButtonBackgrounds(characterButton);
         }
 
         public void OpenAppearancePanel() {
-            //Debug.Log("NewGamePanel.OpenAppearancePanel()");
-            ClosePanels();
+            Debug.Log("NewGamePanel.OpenAppearancePanel()");
 
-            ActivateCorrectAppearancePanel();
+            if (openSubPanel != currentAppearancePanel) {
+                ClosePanels(currentAppearancePanel);
+                currentAppearancePanel.ShowPanel();
+                SetOpenSubPanel(currentAppearancePanel, true);
+            }
 
             appearanceButton.HighlightBackground();
             uINavigationControllers[0].UnHightlightButtonBackgrounds(appearanceButton);
         }
 
         private void ActivateCorrectAppearancePanel() {
-            //Debug.Log("NewGamePanel.ActivateCorrectAppearancePanel()");
+            Debug.Log("NewGamePanel.ActivateCorrectAppearancePanel()");
 
             if (characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider == null) {
-                OpenDefaultAppearancePanel();
+                currentAppearancePanel = defaultAppearancePanel;
                 return;
             }
 
             //Debug.Log("provider type is " + characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType());
 
             if (appearanceEditorPanelTypes.ContainsKey(characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType()) == false) {
-                OpenDefaultAppearancePanel();
+                currentAppearancePanel = defaultAppearancePanel;
                 return;
             }
 
@@ -504,20 +521,18 @@ namespace AnyRPG {
                 appearancePanels.Add(panelPrefab, appearancePanel);
                 subPanels.Add(appearancePanel);
             }
-            appearancePanels[panelPrefab].ShowPanel();
-            SetOpenSubPanel(appearancePanels[panelPrefab], true);
-        }
-
-        private void OpenDefaultAppearancePanel() {
-            defaultAppearancePanel.ShowPanel();
+            currentAppearancePanel = appearancePanels[panelPrefab];
+            currentAppearancePanel.SetupOptions();
         }
 
         public void OpenFactionPanel(bool focus = true) {
             //Debug.Log("NewGamePanel.OpenFactionPanel()");
 
-            ClosePanels();
-            factionPanel.ShowPanel();
-            SetOpenSubPanel(factionPanel, focus);
+            if (openSubPanel != factionPanel) {
+                ClosePanels(factionPanel);
+                factionPanel.ShowPanel();
+                SetOpenSubPanel(factionPanel, focus);
+            }
 
             uINavigationControllers[0].SetCurrentButton(factionButton);
             factionButton.HighlightBackground();
@@ -527,9 +542,11 @@ namespace AnyRPG {
         public void OpenRacePanel(bool focus = true) {
             //Debug.Log("NewGamePanel.OpenRacePanel()");
 
-            ClosePanels();
-            racePanel.ShowPanel();
-            SetOpenSubPanel(racePanel, focus);
+            if (openSubPanel != racePanel) {
+                ClosePanels(racePanel);
+                racePanel.ShowPanel();
+                SetOpenSubPanel(racePanel, focus);
+            }
 
             uINavigationControllers[0].SetCurrentButton(raceButton);
             raceButton.HighlightBackground();
@@ -539,9 +556,11 @@ namespace AnyRPG {
         public void OpenClassPanel(bool focus = true) {
             //Debug.Log("NewGamePanel.OpenClassPanel()");
 
-            ClosePanels();
-            classPanel.ShowPanel();
-            SetOpenSubPanel(classPanel, focus);
+            if (openSubPanel != classPanel) {
+                ClosePanels(classPanel);
+                classPanel.ShowPanel();
+                SetOpenSubPanel(classPanel, focus);
+            }
 
             uINavigationControllers[0].SetCurrentButton(classButton);
             classButton.HighlightBackground();
@@ -552,8 +571,8 @@ namespace AnyRPG {
             //Debug.Log("NewGamePanel.OpenSpecializationPanel()");
 
             // this is only called from buttons, so safe to assume it's already been populated with buttons when the window opened or a class was selected
-            if (specializationPanel.OptionButtons.Count > 0) {
-                ClosePanels();
+            if (specializationPanel.OptionButtons.Count > 0 && openSubPanel != specializationPanel) {
+                ClosePanels(specializationPanel);
                 specializationPanel.ShowPanel();
                 SetOpenSubPanel(specializationPanel, focus);
             }
@@ -576,17 +595,37 @@ namespace AnyRPG {
 
         }
 
-        public void HandleTargetCreated() {
-            //Debug.Log("NewGamePanel.HandleTargetCreated()");
-            
-            // just a reminder
+        public void HandleUnitCreated() {
+            Debug.Log("NewGamePanel.HandleUnitCreated()");
+
+            if (currentAppearancePanel != null) {
+                currentAppearancePanel.HandleUnitCreated();
+            }
+
             EquipCharacter();
         }
 
 
-        public void HandleTargetReady() {
-            //Debug.Log("NewGameCharacterPanelController.HandleTargetReady()");
-            //EquipCharacter();
+        public void HandleModelCreated() {
+            Debug.Log("NewGamePanel.HandleModelCreated()");
+
+            bool appearanceWasOpen = false;
+            if (openSubPanel == currentAppearancePanel) {
+                appearanceWasOpen = true;
+            }
+
+            ActivateCorrectAppearancePanel();
+
+            if (appearanceWasOpen == false) {
+                Debug.Log("NewGamePanel.HandleModelCreated()");
+                currentAppearancePanel.HidePanel(false);
+            }
+
+            /*
+            if (currentAppearancePanel != null) {
+                currentAppearancePanel.HandleModelCreated();
+            }
+            */
         }
 
         public void EquipCharacter() {

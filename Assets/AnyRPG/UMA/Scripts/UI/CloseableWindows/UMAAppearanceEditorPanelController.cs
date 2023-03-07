@@ -236,7 +236,7 @@ namespace AnyRPG {
         }
 
         public override void SetupOptions() {
-            //Debug.Log("UMACharacterEditorPanelController.SetupOptions()");
+            Debug.Log("UMACharacterEditorPanelController.SetupOptions()");
 
             base.SetupOptions();
 
@@ -244,10 +244,9 @@ namespace AnyRPG {
             mainButtonsArea.SetActive(false);
             mainNoOptionsArea.SetActive(false);
 
-            umaModelController = characterCreatorManager.PreviewUnitController?.UnitModelController.ModelAppearanceController.GetModelAppearanceController<UMAModelController>();
-
             if (umaModelController == null) {
                 // somehow this panel was opened but the preview model is not configured as an UMA model
+                Debug.Log("UMACharacterEditorPanelController.SetupOptions() : no UMA model controller");
                 mainNoOptionsArea.SetActive(true);
                 return;
             }
@@ -256,27 +255,48 @@ namespace AnyRPG {
 
             // there are no options to show if this is not an UMA
             if (dynamicCharacterAvatar == null) {
+                Debug.Log("UMACharacterEditorPanelController.SetupOptions() : no dynamic character avatar");
                 mainNoOptionsArea.SetActive(true);
                 return;
             }
 
-            CheckAppearance();
+            GetAvatarConfiguration();
+            ShowAppearanceOptions();
 
-            if (characterCreatorManager.PreviewUnitController?.UnitModelController?.ModelReady == true) {
+            //if (characterCreatorManager.PreviewUnitController?.UnitModelController?.ModelReady == true) {
                 mainButtonsArea.SetActive(true);
                 OpenHairOptionsArea();
                 //appearanceButton.HighlightBackground();
                 mainOptionsNavigationController.FocusCurrentButton();
-            }
+            //}
         }
 
-        public override void HandleTargetReady() {
-            //Debug.Log("UMAAppearanceEditorPanelController.HandleTargetReady()");
+        private void GetAvatarConfiguration() {
+            Debug.Log("UMACharacterEditorPanelController.GetAvatarConfiguration()");
 
-            base.HandleTargetReady();
+            if (dynamicCharacterAvatar == null) {
+                Debug.Log("UMAAppearanceEditorPanel.CheckAppearance(): umaAvatar is null!!!!");
+            }
+
+            allRecipes = dynamicCharacterAvatar.AvailableRecipes;
+            GetDNAList();
+        }
+
+        public override void GetUnitModelController() {
+            base.GetUnitModelController();
+
+            umaModelController = characterCreatorManager.PreviewUnitController?.UnitModelController.ModelAppearanceController.GetModelAppearanceController<UMAModelController>();
+        }
+
+        /*
+        public override void HandleModelCreated() {
+            Debug.Log("UMAAppearanceEditorPanelController.HandleModelCreated()");
+
+            base.HandleUnitCreated();
 
             SetupOptions();
         }
+        */
 
         public virtual void OpenHairOptionsArea() {
             //Debug.Log("CharacterCreatorPanel.OpenAppearanceOptions()");
@@ -434,7 +454,7 @@ namespace AnyRPG {
         }
 
         public void CloseOptionsAreas() {
-            //Debug.Log("UMAAppearanceEditorPanel.CloseOptionsAreas()");
+            Debug.Log("UMAAppearanceEditorPanelController.CloseOptionsAreas()");
 
             CloseHairOptionsArea();
             CloseEyeOptionsArea();
@@ -460,11 +480,11 @@ namespace AnyRPG {
             }
         }
 
-        public void CheckAppearance() {
-            Debug.Log("UMAAppearanceEditorPanel.CheckAppearance()");
+        private void ShowAppearanceOptions() {
+            Debug.Log("UMAAppearanceEditorPanelController.ShowAppearanceOptions()");
 
             if (dynamicCharacterAvatar == null) {
-                Debug.Log("UMAAppearanceEditorPanel.CheckAppearance(): umaAvatar is null!!!!");
+                Debug.Log("UMAAppearanceEditorPanelController.ShowAppearanceOptions(): umaAvatar is null!!!!");
             }
 
             // clear old buttons
@@ -472,9 +492,6 @@ namespace AnyRPG {
             eyeOptionsArea.DeleteActiveButtons();
             faceOptionsArea.DeleteActiveButtons();
             bodyOptionsArea.DeleteActiveButtons();
-
-            allRecipes = dynamicCharacterAvatar.AvailableRecipes;
-            GetDNAList();
 
             // Hair
             if (allRecipes.ContainsKey("Hair")) {
@@ -485,11 +502,11 @@ namespace AnyRPG {
                 hairStyleLabel.SetActive(false);
             }
             InitializeHairColors();
-            hairOptionsArea.UpdateNavigationList();
+            //hairOptionsArea.UpdateNavigationList();
 
             // eyes
             InitializeEyeColors();
-            eyeOptionsArea.UpdateNavigationList();
+            //eyeOptionsArea.UpdateNavigationList();
 
 
             // Eyebrows
@@ -513,18 +530,19 @@ namespace AnyRPG {
             // face DNA
             PopulateDNAOptions(faceDnaLabel, faceOptionsArea, faceDNA);
 
-            faceOptionsArea.UpdateNavigationList();
+            //faceOptionsArea.UpdateNavigationList();
 
             // body
             InitializeSkinColors();
             PopulateDNAOptions(bodyDnaLabel, bodyOptionsArea, bodyDNA);
 
-            bodyOptionsArea.UpdateNavigationList();
+            //bodyOptionsArea.UpdateNavigationList();
 
         }
 
         private void PopulateDNAOptions(GameObject label, UINavigationController navigationController, List<string> dnaOptions) {
-            //label.transform.SetAsLastSibling();
+            Debug.Log("UMAAppearanceEditorPanelController.PopulateDNAOptions()");
+
             foreach (string dnaName in dnaOptions) {
                 if (dnaDictionary.ContainsKey(dnaName)) {
                     DNAInfoNode dnaInfoNode = dnaDictionary[dnaName];
@@ -538,6 +556,8 @@ namespace AnyRPG {
         }
 
         private void PopulateHairOptions(List<UMATextRecipe> hairRecipes) {
+            Debug.Log("UMAAppearanceEditorPanelController.PopulateHairOptions()");
+
             int index = 2;
             UMAOptionChoiceButton optionChoiceButton = AddOptionListButton(hairOptionsArea, "Hair", noOptionImage, "None", "");
             optionChoiceButton.transform.SetSiblingIndex(1);
@@ -549,6 +569,8 @@ namespace AnyRPG {
         }
 
         private void PopulateEyebrowOptions(List<UMATextRecipe> eyebrowRecipes) {
+            Debug.Log("UMAAppearanceEditorPanelController.PopulateEyebrowOptions()");
+
             int index = eyebrowsLabel.transform.GetSiblingIndex() + 1;
             UMAOptionChoiceButton optionChoiceButton = AddOptionListButton(faceOptionsArea, "Eyebrows", noOptionImage, "None", "");
             optionChoiceButton.transform.SetSiblingIndex(index);
@@ -595,7 +617,7 @@ namespace AnyRPG {
         }
 
         public void SetRecipe(UMAOptionChoiceButton optionChoiceButton, string groupName, string optionChoice) {
-            //Debug.Log("UMAAppearanceEditorPanel.SetRecipe(" + groupName + ", " + optionChoice + ")");
+            Debug.Log("UMAAppearanceEditorPanel.SetRecipe(" + groupName + ", " + optionChoice + ")");
 
             if (optionChoice == string.Empty) {
                 dynamicCharacterAvatar.ClearSlot(groupName);
@@ -608,7 +630,7 @@ namespace AnyRPG {
             //Debug.Log("UMAAppearanceEditorPanelController.GetRecipeName(" + recipeDisplayName + ")");
             foreach (UMATextRecipe umaTextRecipe in recipeList) {
                 if (umaTextRecipe.DisplayValue == recipeDisplayName) {
-                    //Debug.Log("UMAAppearanceEditorPanelController.GetRecipeName(" + recipeDisplayName + "): returning " + umaTextRecipe.name);
+                    Debug.Log("UMAAppearanceEditorPanelController.GetRecipeName(" + recipeDisplayName + "): returning " + umaTextRecipe.name);
                     return umaTextRecipe.name;
                 }
             }
@@ -621,23 +643,7 @@ namespace AnyRPG {
 
             umaModelController.BuildModelAppearance();
         }
-
-        public override void ShowPanel() {
-            //Debug.Log("UMAAppearanceEditorPanelController.ShowPanel()");
-
-            base.ShowPanel();
-
-            RemoveClothing();
-        }
-
-        private void RemoveClothing() {
-            Debug.Log("UMAAppearanceEditorPanelController.RemoveClothing()");
-
-            List<string> currentSlots = dynamicCharacterAvatar.CurrentWardrobeSlots;
-            List<string> clearSlots = currentSlots.Except(keepPreviewSlots).ToList();
-            dynamicCharacterAvatar.ClearSlots(clearSlots);
-            RebuildUMA();
-        }
+        
 
     }
 

@@ -167,6 +167,9 @@ namespace AnyRPG {
             }
         }
 
+        /// <summary>
+        /// rebuild active button list from the serialized navigable buttons list, removing any buttons added at run-time
+        /// </summary>
         public virtual void UpdateNavigationList() {
             //Debug.Log(gameObject.name + ".UINavigationController.UpdateNavigationList()");
 
@@ -255,13 +258,14 @@ namespace AnyRPG {
         }
 
         public virtual void ClearActiveButton(NavigableElement clearButton) {
-            //Debug.Log(gameObject.name + ".UINavigationController.ClearActiveButton(" + clearButton.gameObject.name + ")");
+            Debug.Log(gameObject.name + ".UINavigationController.ClearActiveButton(" + clearButton.gameObject.name + ")");
+
             clearButton.DeSelect();
             activeNavigableButtons.Remove(clearButton);
         }
 
         public virtual void DeleteActiveButtons() {
-            //Debug.Log(gameObject.name + ".UINavigationController.DeleteActiveButtons()");
+            Debug.Log(gameObject.name + ".UINavigationController.DeleteActiveButtons()");
 
             List<NavigableElement> deleteList = new List<NavigableElement>();
             deleteList.AddRange(activeNavigableButtons);

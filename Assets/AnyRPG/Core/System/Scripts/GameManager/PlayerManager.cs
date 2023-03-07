@@ -402,7 +402,7 @@ namespace AnyRPG {
             }
             activeUnitController.Init();
 
-            if (activeUnitController?.UnitModelController?.ModelReady == false) {
+            if (activeUnitController?.UnitModelController?.ModelCreated == false) {
                 // do UMA spawn stuff to wait for UMA to spawn
                 SubscribeToModelReady();
             } else {
@@ -491,11 +491,11 @@ namespace AnyRPG {
             // try this earlier
             //saveManager.LoadUMASettings(false);
 
-            activeUnitController.UnitModelController.OnModelReady += HandleModelReady;
+            activeUnitController.UnitModelController.OnModelUpdated += HandleModelReady;
         }
 
         public void UnsubscribeFromModelReady() {
-            activeUnitController.UnitModelController.OnModelReady -= HandleModelReady;
+            activeUnitController.UnitModelController.OnModelUpdated -= HandleModelReady;
         }
 
         public void SpawnPlayerConnection() {

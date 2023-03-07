@@ -7,31 +7,35 @@ using UnityEngine.AI;
 namespace AnyRPG {
     public class UnitModelController : ConfiguredClass {
 
-        public event System.Action OnModelReady = delegate { };
+        public event System.Action OnModelCreated = delegate { };
+        public event System.Action OnModelUpdated = delegate { };
 
         // reference to unit
         private UnitController unitController = null;
         private GameObject unitModel = null;
 
         // track model
-        private bool modelReady = false;
+        private bool modelCreated = false;
 
         // specific controllers
         private ModelAppearanceController modelAppearanceController = null;
         private MecanimModelController mecanimModelController = null;
 
+        // properties
+        private Transform floatTransform = null;
+
+        // options
+        private bool suppressEquipment = false;
+
         // game manager references
         private ObjectPooler objectPooler = null;
         private UIManager uIManager = null;
 
-        // properties
-        private Transform floatTransform = null;
-
         public ModelAppearanceController ModelAppearanceController { get => modelAppearanceController; }
         public MecanimModelController MecanimModelController { get => mecanimModelController; }
-
-        public bool ModelReady { get => modelReady; }
+        public bool ModelCreated { get => modelCreated; }
         public GameObject UnitModel { get => unitModel; }
+        public bool SuppressEquipment { get => suppressEquipment; set => suppressEquipment = value; }
 
         public UnitModelController(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
@@ -44,6 +48,16 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
             uIManager = systemGameManager.UIManager;
+        }
+
+        public void HideEquipment() {
+            suppressEquipment = true;
+            RebuildModelAppearance();
+        }
+
+        public void ShowEquipment() {
+            suppressEquipment = false;
+            RebuildModelAppearance();
         }
 
         public void SetAppearanceController(UnitProfile unitProfile) {
@@ -67,7 +81,7 @@ namespace AnyRPG {
         }
 
         public void SpawnUnitModel() {
-            //Debug.Log(unitController.gameObject.name + ".UnitModelController.SpawnUnitModel()");
+            Debug.Log(unitController.gameObject.name + ".UnitModelController.SpawnUnitModel()");
 
             if (unitController.UnitProfile?.UnitPrefabProps?.ModelPrefab != null) {
                 unitModel = unitController.UnitProfile.SpawnModelPrefab(unitController.transform, unitController.transform.position, unitController.transform.forward);
@@ -96,9 +110,8 @@ namespace AnyRPG {
         }
 
         public void RebuildModelAppearance() {
-            // not yet implemented
-            mecanimModelController.RebuildModelAppearance();
             modelAppearanceController.RebuildModelAppearance();
+            mecanimModelController.RebuildModelAppearance();
         }
 
         /*
@@ -115,9 +128,13 @@ namespace AnyRPG {
             modelAppearanceController.SetAnimatorOverrideController(animatorOverrideController);
         }
 
-        // This method does not actually equip the character, just apply models from already equipped equipment
         public void EquipEquipmentModels(CharacterEquipmentManager characterEquipmentManager) {
-            //Debug.Log(unitController.gameObject.name + ".UnitModelController.EquipEquipmentModels()");
+            Debug.Log(unitController.gameObject.name + ".UnitModelController.EquipEquipmentModels()");
+
+            if (suppressEquipment == true) {
+                return;
+            }
+
             if (characterEquipmentManager.CurrentEquipment == null || characterEquipmentManager.CurrentEquipment.Count == 0) {
                 //Debug.Log(unitController.gameObject.name + ".UnitModelController.EquipCharacter(): currentEquipment == null!");
                 // no point building model appearance if there was nothing equipped
@@ -135,6 +152,11 @@ namespace AnyRPG {
 
         public void EquipItemModels(CharacterEquipmentManager characterEquipmentManager, EquipmentSlotProfile equipmentSlotProfile, Equipment equipment, bool equipModels, bool setAppearance, bool rebuildAppearance) {
             //Debug.Log(unitController.gameObject.name + ".UnitModelController.EquipItemModels(" + equipment.DisplayName + ", " + equipModels + ", " + setAppearance + ", " + rebuildAppearance + ")");
+
+            if (suppressEquipment == true) {
+                return;
+            }
+
             if (characterEquipmentManager.CurrentEquipment == null) {
                 Debug.LogError("UnitModelController.EquipItemModels(" + equipmentSlotProfile.DisplayName + "): currentEquipment is null!");
                 return;
@@ -287,17 +309,22 @@ namespace AnyRPG {
         }
 
         public void SetModelReady() {
-            //Debug.Log(unitController.gameObject.name + ".UnitModelController.SetModelReady()");
-            if (modelReady == false) {
+            Debug.Log(unitController.gameObject.name + ".UnitModelController.SetModelReady()");
+
+            if (modelCreated == false) {
 
                 unitController.CharacterUnit.BaseCharacter.HandleCharacterUnitSpawn();
                 EquipEquipmentModels(unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager);
             }
-            if (mecanimModelController.ShouldCalculateFloatHeight() || modelAppearanceController.ShouldCalculateFloatHeight()) {
+            if (modelAppearanceController.ShouldCalculateFloatHeight()) {
                 CalculateFloatHeight();
             }
-            modelReady = true;
-            OnModelReady();
+            if (modelCreated == false) {
+                modelCreated = true;
+                OnModelCreated();
+            } else {
+                OnModelUpdated();
+            }
             unitController.SetModelReady();
         }
 
