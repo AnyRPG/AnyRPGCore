@@ -267,7 +267,7 @@ namespace AnyRPG {
         }
 
         public void RebuildModelAppearance() {
-            Debug.Log(unitController.gameObject.name + ".MecanimModelController.RebuildModelAppearance()");
+            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.RebuildModelAppearance()");
 
             if (unitModelController.SuppressEquipment == true) {
                 RemoveEquipmentObjects();

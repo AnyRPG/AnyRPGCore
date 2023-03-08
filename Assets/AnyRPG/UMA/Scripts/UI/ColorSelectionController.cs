@@ -26,6 +26,7 @@ namespace AnyRPG {
 
         private DynamicCharacterAvatar dynamicCharacterAvatar;
         private SharedColorTable colorTable;
+        private GameObject label;
         private string colorName;
 
         // game manager references
@@ -38,18 +39,24 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
         }
 
-        public void Setup(DynamicCharacterAvatar avatar, string colorName, GameObject buttonParent, SharedColorTable colorTable) {
+        public void Setup(DynamicCharacterAvatar avatar, string colorName, GameObject buttonParent, GameObject label, SharedColorTable colorTable) {
             //Debug.Log("AvailableColorsHandler.Setup(): colorPanel.name: " + colorPanel.name);
             this.colorName = colorName;
             dynamicCharacterAvatar = avatar;
             this.buttonParent = buttonParent;
+            this.label = label;
             this.colorTable = colorTable;
 
             //Cleanup();
 
-            AddRemoverButton();
+            int index = label.transform.GetSiblingIndex() + 1;
+            GameObject go = AddRemoverButton();
+            go.transform.SetSiblingIndex(index);
+            index++;
             foreach (OverlayColorData ocd in this.colorTable.colors) {
-                AddButton(ocd);
+                go = AddButton(ocd);
+                go.transform.SetSiblingIndex(index);
+                index++;
             }
         }
 
@@ -62,26 +69,30 @@ namespace AnyRPG {
             }*/
 
 
-        private void AddRemoverButton() {
-            GameObject go = objectPooler.GetPooledObject(colorButtonPrefab);
+        private GameObject AddRemoverButton() {
+            GameObject go = objectPooler.GetPooledObject(colorButtonPrefab, buttonParent.transform);
             ColorPickerButton colorPickerButton = go.GetComponent<ColorPickerButton>();
             colorPickerButton.Configure(systemGameManager);
             colorPickerButton.SetupRemover(dynamicCharacterAvatar, colorName, Color.white);
-            go.transform.SetParent(buttonParent.transform);
-            go.transform.SetAsLastSibling();
+            //go.transform.SetParent(buttonParent.transform);
+            //go.transform.SetAsLastSibling();
             navigationController.AddActiveButton(colorPickerButton);
+            
+            return go;
         }
 
-        private void AddButton(OverlayColorData ocd) {
+        private GameObject AddButton(OverlayColorData ocd) {
             //Debug.Log("AvailableColorsHandler.AddButton(): " + ColorName);
 
-            GameObject go = objectPooler.GetPooledObject(colorButtonPrefab);
+            GameObject go = objectPooler.GetPooledObject(colorButtonPrefab, buttonParent.transform);
             ColorPickerButton colorPickerButton = go.GetComponent<ColorPickerButton>();
             colorPickerButton.Configure(systemGameManager);
             colorPickerButton.Setup(dynamicCharacterAvatar, colorName, ocd, ocd.color);
-            go.transform.SetParent(buttonParent.transform);
-            go.transform.SetAsLastSibling();
+            //go.transform.SetParent(buttonParent.transform);
+            //go.transform.SetAsLastSibling();
             navigationController.AddActiveButton(colorPickerButton);
+            
+            return go;
         }
 
         /*

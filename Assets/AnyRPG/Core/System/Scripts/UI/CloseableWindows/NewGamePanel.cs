@@ -482,7 +482,7 @@ namespace AnyRPG {
         }
 
         public void OpenAppearancePanel() {
-            Debug.Log("NewGamePanel.OpenAppearancePanel()");
+            //Debug.Log("NewGamePanel.OpenAppearancePanel()");
 
             if (openSubPanel != currentAppearancePanel) {
                 ClosePanels(currentAppearancePanel);
@@ -495,7 +495,7 @@ namespace AnyRPG {
         }
 
         private void ActivateCorrectAppearancePanel() {
-            Debug.Log("NewGamePanel.ActivateCorrectAppearancePanel()");
+            //Debug.Log("NewGamePanel.ActivateCorrectAppearancePanel()");
 
             if (characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider == null) {
                 currentAppearancePanel = defaultAppearancePanel;
@@ -596,7 +596,7 @@ namespace AnyRPG {
         }
 
         public void HandleUnitCreated() {
-            Debug.Log("NewGamePanel.HandleUnitCreated()");
+            //Debug.Log("NewGamePanel.HandleUnitCreated()");
 
             if (currentAppearancePanel != null) {
                 currentAppearancePanel.HandleUnitCreated();
@@ -607,7 +607,7 @@ namespace AnyRPG {
 
 
         public void HandleModelCreated() {
-            Debug.Log("NewGamePanel.HandleModelCreated()");
+            //Debug.Log("NewGamePanel.HandleModelCreated()");
 
             bool appearanceWasOpen = false;
             if (openSubPanel == currentAppearancePanel) {
@@ -617,7 +617,7 @@ namespace AnyRPG {
             ActivateCorrectAppearancePanel();
 
             if (appearanceWasOpen == false) {
-                Debug.Log("NewGamePanel.HandleModelCreated()");
+                //Debug.Log("NewGamePanel.HandleModelCreated()");
                 currentAppearancePanel.HidePanel(false);
             }
 

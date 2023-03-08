@@ -258,14 +258,14 @@ namespace AnyRPG {
         }
 
         public virtual void ClearActiveButton(NavigableElement clearButton) {
-            Debug.Log(gameObject.name + ".UINavigationController.ClearActiveButton(" + clearButton.gameObject.name + ")");
+            //Debug.Log(gameObject.name + ".UINavigationController.ClearActiveButton(" + clearButton.gameObject.name + ")");
 
             clearButton.DeSelect();
             activeNavigableButtons.Remove(clearButton);
         }
 
         public virtual void DeleteActiveButtons() {
-            Debug.Log(gameObject.name + ".UINavigationController.DeleteActiveButtons()");
+            //Debug.Log(gameObject.name + ".UINavigationController.DeleteActiveButtons()");
 
             List<NavigableElement> deleteList = new List<NavigableElement>();
             deleteList.AddRange(activeNavigableButtons);

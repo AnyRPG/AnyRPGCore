@@ -99,7 +99,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetupOptions() {
-            Debug.Log(gameObject.name + ".AppearancePanel.SetupOptions()");
+            //Debug.Log(gameObject.name + ".AppearancePanel.SetupOptions()");
 
             InitializeGenderButtons();
 
@@ -107,7 +107,7 @@ namespace AnyRPG {
         }
 
         public virtual void GetUnitModelController() {
-            Debug.Log(gameObject.name + ".AppearancePanel.GetUnitModelController()");
+            //Debug.Log(gameObject.name + ".AppearancePanel.GetUnitModelController()");
 
             unitModelController = characterCreatorManager.PreviewUnitController?.UnitModelController;
         }
@@ -233,13 +233,13 @@ namespace AnyRPG {
         }
 
         protected void HideEquipment() {
-            Debug.Log(gameObject.name + ".AppearancePanel.HideEquipment()");
+            //Debug.Log(gameObject.name + ".AppearancePanel.HideEquipment()");
 
             unitModelController.HideEquipment();
         }
 
         protected void ShowEquipment() {
-            Debug.Log(gameObject.name + ".AppearancePanel.ShowEquipment()");
+            //Debug.Log(gameObject.name + ".AppearancePanel.ShowEquipment()");
 
             if (unitModelController == null) {
                 return;
@@ -249,7 +249,7 @@ namespace AnyRPG {
         }
 
         public virtual void HandleUnitCreated() {
-            Debug.Log(gameObject.name + ".AppearancePanel.HandleUnitCreated()");
+            //Debug.Log(gameObject.name + ".AppearancePanel.HandleUnitCreated()");
 
             GetUnitModelController();
             //if (panelVisible == true) {

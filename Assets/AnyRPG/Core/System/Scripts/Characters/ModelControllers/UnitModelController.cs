@@ -81,7 +81,7 @@ namespace AnyRPG {
         }
 
         public void SpawnUnitModel() {
-            Debug.Log(unitController.gameObject.name + ".UnitModelController.SpawnUnitModel()");
+            //Debug.Log(unitController.gameObject.name + ".UnitModelController.SpawnUnitModel()");
 
             if (unitController.UnitProfile?.UnitPrefabProps?.ModelPrefab != null) {
                 unitModel = unitController.UnitProfile.SpawnModelPrefab(unitController.transform, unitController.transform.position, unitController.transform.forward);
@@ -129,7 +129,7 @@ namespace AnyRPG {
         }
 
         public void EquipEquipmentModels(CharacterEquipmentManager characterEquipmentManager) {
-            Debug.Log(unitController.gameObject.name + ".UnitModelController.EquipEquipmentModels()");
+            //Debug.Log(unitController.gameObject.name + ".UnitModelController.EquipEquipmentModels()");
 
             if (suppressEquipment == true) {
                 return;
@@ -309,7 +309,7 @@ namespace AnyRPG {
         }
 
         public void SetModelReady() {
-            Debug.Log(unitController.gameObject.name + ".UnitModelController.SetModelReady()");
+            //Debug.Log(unitController.gameObject.name + ".UnitModelController.SetModelReady()");
 
             if (modelCreated == false) {
 
