@@ -50,6 +50,7 @@ namespace AnyRPG {
             base.ProcessOpenWindowNotification();
             InitializeGenderButtons();
             //uINavigationControllers[0].FocusCurrentButton();
+            DisablePanelDisplay();
         }
         
 
@@ -60,42 +61,45 @@ namespace AnyRPG {
 
         public virtual void HidePanel() {
             //Debug.Log("AppearancePanel.HidePanel()");
-
-            HidePanel(true);
+            if (canvasGroup.alpha == 1) {
+                DisablePanelDisplay();
+                ShowEquipment();
+            }
+            //HidePanel(true);
         }
 
+        /*
         public virtual void HidePanel(bool showEquipment) {
-            //if (panelVisible == false) {
-            //    return;
-            //}
 
-            canvasGroup.alpha = 0;
-            canvasGroup.blocksRaycasts = false;
-            canvasGroup.interactable = false;
+            DisablePanelDisplay();
 
             if (showEquipment) {
                 ShowEquipment();
             }
+        }
+        */
 
-            //panelVisible = false;
+        public void DisablePanelDisplay() {
+            Debug.Log(gameObject.name + ".AppearancePanel.DisablePanelDisplay()");
+
+            canvasGroup.alpha = 0;
+            canvasGroup.blocksRaycasts = false;
+            canvasGroup.interactable = false;
         }
 
         public virtual void ShowPanel() {
             //Debug.Log(gameObject.name + ".AppearancePanel.ShowPanel()");
 
-            //if (panelVisible == true) {
-            //    return;
-            //}
+            if (canvasGroup.alpha == 0) {
+                HideEquipment();
+                EnablePanelDisplay();
+            }
+        }
 
+        public void EnablePanelDisplay() {
             canvasGroup.alpha = 1;
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
-
-            //SetupOptions();
-
-            HideEquipment();
-
-            //panelVisible = true;
         }
 
         public virtual void SetupOptions() {

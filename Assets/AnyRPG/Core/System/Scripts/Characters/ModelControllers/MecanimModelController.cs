@@ -313,11 +313,6 @@ namespace AnyRPG {
 
             SynchronizeEquipmentDictionaryKeys();
 
-            if (unitModelController.SuppressEquipment == true) {
-                RemoveEquipmentObjects();
-                return;
-            }
-
             foreach (EquipmentSlotProfile equipmentSlotProfile in characterEquipmentManager.CurrentEquipment.Keys) {
                 RebuildSlotAppearance(equipmentSlotProfile, GetEquipmentForSlot(equipmentSlotProfile));
             }

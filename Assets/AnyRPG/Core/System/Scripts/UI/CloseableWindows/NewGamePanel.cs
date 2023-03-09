@@ -609,41 +609,17 @@ namespace AnyRPG {
         public void HandleModelCreated() {
             //Debug.Log("NewGamePanel.HandleModelCreated()");
 
-            bool appearanceWasOpen = false;
-            if (openSubPanel == currentAppearancePanel) {
-                appearanceWasOpen = true;
-            }
-
             ActivateCorrectAppearancePanel();
-
-            if (appearanceWasOpen == false) {
-                //Debug.Log("NewGamePanel.HandleModelCreated()");
-                currentAppearancePanel.HidePanel(false);
-            }
-
-            /*
-            if (currentAppearancePanel != null) {
-                currentAppearancePanel.HandleModelCreated();
-            }
-            */
         }
 
         public void EquipCharacter() {
-            //Debug.Log("NewGamePanel.EquipCharacter()");
+            Debug.Log("NewGamePanel.EquipCharacter()");
 
             if (characterCreatorManager.PreviewUnitController == null) {
                 // if this is called on the initial load then the preview panel isn't open yet
                 //Debug.Log("NewGamePanel.EquipCharacter(): no preview unit available");
                 return;
             }
-
-            /*
-            if (characterPreviewPanel.CharacterReady == false) {
-                // attempting this before the character is spawned will make it go invisible (UMA bug)
-                //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): character not ready yet, exiting.");
-                return;
-            }
-            */
 
             // set character class etc first so preview works and can equip character
             SetCharacterProperties();
