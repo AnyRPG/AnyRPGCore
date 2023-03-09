@@ -1039,10 +1039,12 @@ namespace AnyRPG {
             return animator.GetCurrentAnimatorClipInfo(layerIndex);
         }
 
+        /*
         public void PerformEquipmentChange(Equipment newItem) {
             //Debug.Log(unitController.gameObject.name + ".CharacterAnimator.PerformEquipmentChange(" + newItem.DisplayName + ")");
             HandleEquipmentChanged(newItem, null, -1);
         }
+        */
 
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex = -1) {
             //Debug.Log(unitController.gameObject.name + ".UnitAnimator.HandleEquipmentChanged(" + (newItem == null ? "null" : newItem.DisplayName) + ", " + (oldItem == null ? "null" : oldItem.DisplayName) + ")");

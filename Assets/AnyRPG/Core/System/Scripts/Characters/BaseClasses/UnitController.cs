@@ -414,6 +414,8 @@ namespace AnyRPG {
 
             // allow the base character to initialize.
             characterUnit.BaseCharacter.Init();
+
+            unitModelController.Initialize();
         }
 
         public override void SetGameManagerReferences() {

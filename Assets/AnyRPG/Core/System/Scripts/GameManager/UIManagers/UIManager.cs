@@ -1431,7 +1431,6 @@ namespace AnyRPG {
                     childTransform.gameObject.layer = newLayer;
                 }
             }
-
         }
 
         public static bool MouseInRect(RectTransform rectTransform) {

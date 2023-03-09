@@ -50,6 +50,10 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
         }
 
+        public void Initialize() {
+            mecanimModelController.Initialize();
+        }
+
         public void HideEquipment() {
             suppressEquipment = true;
             RebuildModelAppearance();
@@ -182,8 +186,8 @@ namespace AnyRPG {
             }
 
             if (equipModels == true) {
-                // testing new code to prevent UKMA characters from trying to find bones before they are created.
-                mecanimModelController.EquipItemModels(characterEquipmentManager, equipmentSlotProfile, equipment);
+                // testing new code to prevent UMA characters from trying to find bones before they are created.
+                mecanimModelController.EquipItemModels(equipmentSlotProfile, equipment);
             }
         }
 
@@ -215,12 +219,9 @@ namespace AnyRPG {
             //Debug.Log(unitController.gameObject.name + "UnitModelController.ConfigureUnitModel()");
 
             if (modelAppearanceController == null) {
-
                 if (unitModel != null) {
                     SetModelReady();
-                    return;
                 }
-
                 return;
             }
 
@@ -245,59 +246,25 @@ namespace AnyRPG {
             }
         }
 
-        public static bool IsInLayerMask(int layer, LayerMask layermask) {
-            return layermask == (layermask | (1 << layer));
-        }
+       
 
         public void SetDefaultLayer(string layerName) {
             //Debug.Log(unitController.gameObject.name + ".UnitModelController.SetDefaultLayer(" + layerName + ")");
             if (layerName != null && layerName != string.Empty) {
                 int defaultLayer = LayerMask.NameToLayer(layerName);
                 int finalmask = (1 << defaultLayer);
-                if (!IsInLayerMask(unitController.gameObject.layer, finalmask)) {
+                if (!LayerUtility.IsInLayerMask(unitController.gameObject.layer, finalmask)) {
                     unitController.gameObject.layer = defaultLayer;
-                    //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): object was not set to correct layer: " + layerName + ". Setting automatically");
                 }
-                //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): unitModel: " + (unitModel == null ? "null" : unitModel.name));
 
-                //if (unitModel != null && !IsInLayerMask(unitModel.layer, finalmask)) {
                 if (unitModel != null) {
-                    //if (unitModel != null && unitModel.gameObject != unitController.gameObject) {
-                        // the unit model is separate from the unit controller.  It is safe to do a recursive layer set
-                        SetLayerRecursive(unitModel, defaultLayer);
-                    //} else if (unitModel.gameObject == unitController.gameObject) {
-                        // the unit model is the gameObject.  Only renderers should have the layer set
-                    //}
-                }
-                //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): model was not set to correct layer: " + layerName + ". Setting automatically");
-                /*
-                if (unitModel != null) {
-                    Renderer[] renderers = unitModel.GetComponentsInChildren<Renderer>();
-                    for (int i = 0; i < renderers.Length; i++) {
-                        if (renderers[i].gameObject.layer != uIManager.IgnoreChangeLayer) {
-                            //Debug.Log(unitController.gameObject.name + ".UnitController.SetDefaultLayer(): renderer " + renderers[i].gameObject.name + " was not set to correct layer: " + layerName + ". Setting automatically");
-                            renderers[i].gameObject.layer = defaultLayer;
-                        }
-                    }
-                }
-                */
-            }
-        }
-
-        public void SetLayerRecursive(GameObject objectName, int newLayer) {
-            // set the preview unit layer to the PlayerPreview layer so the preview camera can see it and all other cameras will ignore it
-            int equipmentMask = 1 << LayerMask.NameToLayer("Equipment");
-            int spellMask = 1 << LayerMask.NameToLayer("SpellEffects");
-            int raycastmask = 1 << LayerMask.NameToLayer("Ignore Raycast");
-            int ignoreMask = (equipmentMask | spellMask | raycastmask);
-
-            objectName.layer = newLayer;
-            foreach (Transform childTransform in objectName.gameObject.GetComponentsInChildren<Transform>(true)) {
-                if (!IsInLayerMask(childTransform.gameObject.layer, ignoreMask)) {
-                    childTransform.gameObject.layer = newLayer;
+                    int equipmentMask = 1 << LayerMask.NameToLayer("Equipment");
+                    int spellMask = 1 << LayerMask.NameToLayer("SpellEffects");
+                    int raycastmask = 1 << LayerMask.NameToLayer("Ignore Raycast");
+                    int ignoreMask = (equipmentMask | spellMask | raycastmask);
+                    LayerUtility.SetTransformLayerRecursive(unitModel, defaultLayer, ignoreMask);
                 }
             }
-
         }
 
         public void SheathWeapons() {

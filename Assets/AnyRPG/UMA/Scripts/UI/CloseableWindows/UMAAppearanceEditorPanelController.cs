@@ -298,7 +298,7 @@ namespace AnyRPG {
             }
 
             allRecipes = dynamicCharacterAvatar.AvailableRecipes;
-            Debug.Log("recipes: " + string.Join(',', allRecipes.Keys));
+            //Debug.Log("recipes: " + string.Join(',', allRecipes.Keys));
             GetDNAList();
         }
 
