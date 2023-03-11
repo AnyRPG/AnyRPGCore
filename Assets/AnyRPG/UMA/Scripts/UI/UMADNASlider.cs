@@ -17,7 +17,11 @@ namespace AnyRPG {
 		protected DynamicCharacterAvatar dynamicCharacterAvatar;
 		protected DNARangeAsset dnaRangeAsset;
 
+		// prevent setting slider initial values from causing unnecessary UMA update
+		private bool initialized = false;
+
 		public void Initialize(string name, int index, UMADnaBase owner, DynamicCharacterAvatar avatar, float currentValue) {
+			initialized = false;
 			dnaName = name;
 			text.text = name;
 			this.index = index;
@@ -32,9 +36,14 @@ namespace AnyRPG {
 					return;
 				}
 			}
+			initialized = true;
 		}
 
 		public void ChangeValue(float value) {
+            if (initialized == false) {
+				return;
+            }
+
 			if (dnaRangeAsset == null) //No specified DNA Range Asset for this DNA
 			{
 				umaDnaBase.SetValue(index, value);

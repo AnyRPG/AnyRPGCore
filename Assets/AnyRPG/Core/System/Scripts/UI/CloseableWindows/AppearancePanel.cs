@@ -80,7 +80,7 @@ namespace AnyRPG {
         */
 
         public void DisablePanelDisplay() {
-            Debug.Log(gameObject.name + ".AppearancePanel.DisablePanelDisplay()");
+            //Debug.Log(gameObject.name + ".AppearancePanel.DisablePanelDisplay()");
 
             canvasGroup.alpha = 0;
             canvasGroup.blocksRaycasts = false;

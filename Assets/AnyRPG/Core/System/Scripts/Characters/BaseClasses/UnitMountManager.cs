@@ -40,7 +40,8 @@ namespace AnyRPG {
 
         public void SubscribeToMountModelReady() {
             if (mountUnitController?.UnitModelController != null) {
-                mountUnitController.UnitModelController.OnModelUpdated += HandleMountModelReady;
+                //mountUnitController.UnitModelController.OnModelUpdated += HandleMountModelReady;
+                mountUnitController.UnitModelController.OnModelCreated += HandleMountModelReady;
             }
         }
 
@@ -52,7 +53,8 @@ namespace AnyRPG {
 
         public void UnsubscribeFromMountModelReady() {
             if (mountUnitController?.UnitModelController != null) {
-                mountUnitController.UnitModelController.OnModelUpdated -= HandleMountModelReady;
+                //mountUnitController.UnitModelController.OnModelUpdated -= HandleMountModelReady;
+                mountUnitController.UnitModelController.OnModelCreated -= HandleMountModelReady;
             }
         }
 

@@ -64,7 +64,7 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            CreateEventSubscriptions();
+            //CreateEventSubscriptions();
             GetSaveDataList();
         }
 
@@ -84,6 +84,7 @@ namespace AnyRPG {
             actionBarManager = uIManager.ActionBarManager;
         }
 
+        /*
         private void CreateEventSubscriptions() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
@@ -102,6 +103,7 @@ namespace AnyRPG {
             systemEventManager.OnEquipmentChanged -= SaveUMASettings;
             eventSubscriptionsInitialized = false;
         }
+        */
 
         public List<AnyRPGSaveData> GetSaveDataList() {
             //Debug.Log("GetSaveDataList()");
@@ -258,7 +260,7 @@ namespace AnyRPG {
             return returnList;
         }
 
-
+        /*
         public void SaveUMASettings(Equipment oldItem, Equipment newItem) {
             //Debug.Log("SaveManager.SaveUMASettings(Equipment, Equipement)");
             if ((oldItem?.UMARecipeProfileProperties?.UMARecipes != null && oldItem.UMARecipeProfileProperties.UMARecipes.Count > 0)
@@ -266,6 +268,7 @@ namespace AnyRPG {
                 SaveAppearanceData(currentSaveData);
             }
         }
+        */
 
         // save a game for the first time
         public bool SaveGame() {
@@ -434,6 +437,10 @@ namespace AnyRPG {
                 resourcePowerData.amount = playerManager.MyCharacter.CharacterStats.PowerResourceDictionary[powerResource].currentValue;
                 anyRPGSaveData.resourcePowerSaveData.Add(resourcePowerData);
             }
+        }
+
+        public void SaveAppearanceData() {
+            SaveAppearanceData(currentSaveData);
         }
 
         public void SaveAppearanceData(AnyRPGSaveData anyRPGSaveData) {
@@ -1024,7 +1031,7 @@ namespace AnyRPG {
                             newItem.InitializeRandomStatsFromIndex();
                         }
                         if (characterEquipmentManager != null) {
-                            characterEquipmentManager.Equip(newItem, null, false, false, false);
+                            characterEquipmentManager.Equip(newItem, null);
                         }
                     }
                 }

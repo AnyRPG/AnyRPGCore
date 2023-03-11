@@ -291,7 +291,6 @@ namespace AnyRPG {
                 //Debug.Log("Player Unit is not spawned.  Nothing to despawn.  returning");
                 return;
             }
-
             unitController.Despawn();
         }
 
@@ -410,6 +409,7 @@ namespace AnyRPG {
                 HandlePlayerUnitSpawn();
             }
 
+            
             if (PlayerPrefs.HasKey("ShowNewPlayerHints") == false) {
                 if (controlsManager.GamePadModeActive == true) {
                     uIManager.gamepadHintWindow.OpenWindow();
@@ -491,11 +491,13 @@ namespace AnyRPG {
             // try this earlier
             //saveManager.LoadUMASettings(false);
 
-            activeUnitController.UnitModelController.OnModelUpdated += HandleModelReady;
+            //activeUnitController.UnitModelController.OnModelUpdated += HandleModelReady;
+            activeUnitController.UnitModelController.OnModelCreated += HandleModelReady;
         }
 
         public void UnsubscribeFromModelReady() {
-            activeUnitController.UnitModelController.OnModelUpdated -= HandleModelReady;
+            //activeUnitController.UnitModelController.OnModelUpdated -= HandleModelReady;
+            activeUnitController.UnitModelController.OnModelCreated -= HandleModelReady;
         }
 
         public void SpawnPlayerConnection() {
@@ -562,7 +564,7 @@ namespace AnyRPG {
             activeCharacter.CharacterStats.OnDie += HandleDie;
             activeCharacter.CharacterStats.OnReviveBegin += HandleReviveBegin;
             activeCharacter.CharacterStats.OnReviveComplete += HandleReviveComplete;
-            MyCharacter.CharacterStats.OnLevelChanged += HandleLevelChanged;
+            activeCharacter.CharacterStats.OnLevelChanged += HandleLevelChanged;
             activeCharacter.CharacterStats.OnGainXP += HandleGainXP;
             activeCharacter.CharacterStats.OnStatusEffectAdd += HandleStatusEffectAdd;
             activeCharacter.CharacterStats.OnRecoverResource += HandleRecoverResource;

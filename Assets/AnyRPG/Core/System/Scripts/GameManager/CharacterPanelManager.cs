@@ -111,13 +111,14 @@ namespace AnyRPG {
 
         public void HandleEquipmentChanged(Equipment newEquipment, Equipment oldEquipment) {
             //Debug.Log("CharacterPanelManager.HandleEquipmentChanged(" + (newEquipment == null ? "null" : newEquipment.DisplayName) + ", " + (oldEquipment == null ? "null" : oldEquipment.DisplayName) + ")");
-                if (oldEquipment != null) {
-                    unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.Unequip(oldEquipment, true, true, false);
-                }
-                if (newEquipment != null) {
-                    unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.Equip(newEquipment, null, true, true, false);
-                }
-                unitController.UnitModelController.BuildModelAppearance();
+            if (oldEquipment != null) {
+                unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.Unequip(oldEquipment);
+            }
+            if (newEquipment != null) {
+                unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.Equip(newEquipment, null);
+            }
+            //unitController.UnitModelController.BuildModelAppearance();
+            unitController.UnitModelController.RebuildModelAppearance();
         }
 
         protected override void BroadcastUnitCreated() {

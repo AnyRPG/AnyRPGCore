@@ -39,18 +39,6 @@ namespace AnyRPG {
             // nothing to do here for now
         }
 
-        public override void RebuildModelAppearance() {
-            // nothing to do here for now
-        }
-
-        public override void EquipItemModels(CharacterEquipmentManager characterEquipmentManager, Equipment equipment, bool rebuildAppearance) {
-            // nothing to do here for now
-        }
-
-        public override void UnequipItemModels(Equipment equipment, bool rebuildAppearance) {
-            // nothing to do here for now
-        }
-
         public override void DespawnModel() {
             // nothing to do here for now
         }

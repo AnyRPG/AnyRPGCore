@@ -216,6 +216,7 @@ namespace AnyRPG {
                     return false;
                 }
                 if (playerManager.MyCharacter.CharacterEquipmentManager.Equip(this) == true) {
+                    playerManager.UnitController.UnitModelController.RebuildModelAppearance();
                     Remove();
                     return true;
                 } else {

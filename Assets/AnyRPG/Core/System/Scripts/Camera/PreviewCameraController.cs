@@ -464,7 +464,8 @@ namespace AnyRPG {
             //Debug.Log("PreviewCameraController.UnsubscribeFromModelReady()");
 
             if (unitController?.UnitModelController != null) {
-                unitController.UnitModelController.OnModelUpdated -= HandleModelReady;
+                //unitController.UnitModelController.OnModelUpdated -= HandleModelReady;
+                unitController.UnitModelController.OnModelCreated -= HandleModelReady;
             }
         }
 
@@ -472,7 +473,8 @@ namespace AnyRPG {
             //Debug.Log("PreviewCameraController.SubscribeToModelReady()");
 
             if (unitController?.UnitModelController != null) {
-                unitController.UnitModelController.OnModelUpdated += HandleModelReady;
+                //unitController.UnitModelController.OnModelUpdated += HandleModelReady;
+                unitController.UnitModelController.OnModelCreated += HandleModelReady;
             }
         }
 

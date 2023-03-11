@@ -51,7 +51,7 @@ namespace AnyRPG {
                 return;
             }
 
-            unitController.UnitModelController.OnModelUpdated -= HandleModelCreated;
+            unitController.UnitModelController.OnModelCreated -= HandleModelCreated;
 
             unitController.Despawn();
             unitController = null;
@@ -85,6 +85,8 @@ namespace AnyRPG {
         }
 
         protected virtual void HandleModelCreated() {
+            //Debug.Log("PreviewManager.HandleModelCreated()");
+
             OnModelCreated();
         }
 

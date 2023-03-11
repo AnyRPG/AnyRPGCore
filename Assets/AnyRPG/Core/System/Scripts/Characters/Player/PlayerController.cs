@@ -67,6 +67,7 @@ namespace AnyRPG {
         protected ControlsManager controlsManager = null;
         protected ActionBarManager actionBarManager = null;
         protected CastTargettingManager castTargettingManager = null;
+        protected SaveManager saveManager = null;
 
         public List<Interactable> Interactables { get => interactables; }
         public RaycastHit MouseOverhit { get => mouseOverhit; set => mouseOverhit = value; }
@@ -86,6 +87,7 @@ namespace AnyRPG {
             controlsManager = systemGameManager.ControlsManager;
             actionBarManager = uIManager.ActionBarManager;
             castTargettingManager = systemGameManager.CastTargettingManager;
+            saveManager = systemGameManager.SaveManager;
         }
 
         public void AddInteractable(Interactable interactable) {
@@ -1116,6 +1118,7 @@ namespace AnyRPG {
             playerManager.ActiveUnitController.UnitEventController.OnMessageFeed += HandleMessageFeed;
             playerManager.ActiveUnitController.UnitEventController.OnUnitDestroy += HandleUnitDestroy;
             playerManager.ActiveUnitController.UnitEventController.OnCastCancel += HandleCastCancel;
+            playerManager.ActiveUnitController.UnitModelController.OnModelUpdated += HandleModelUpdated;
 
             // subscribe and call in case the namePlate is already spawned
             playerManager.ActiveUnitController.OnInitializeNamePlate += HandleInitializeNamePlate;
@@ -1145,7 +1148,12 @@ namespace AnyRPG {
             playerManager.ActiveUnitController.OnInitializeNamePlate -= HandleInitializeNamePlate;
             playerManager.ActiveUnitController.UnitEventController.OnUnitDestroy -= HandleUnitDestroy;
             playerManager.ActiveUnitController.UnitEventController.OnCastCancel -= HandleCastCancel;
+            playerManager.ActiveUnitController.UnitModelController.OnModelUpdated -= HandleModelUpdated;
 
+        }
+
+        public void HandleModelUpdated() {
+            saveManager.SaveAppearanceData();
         }
 
         public void HandleCastCancel(BaseCharacter baseCharacter) {

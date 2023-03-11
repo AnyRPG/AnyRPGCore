@@ -13,6 +13,7 @@ namespace AnyRPG {
         // reference to unit
         private UnitController unitController = null;
         private GameObject unitModel = null;
+        private CharacterEquipmentManager characterEquipmentManager = null;
 
         // track model
         private bool modelCreated = false;
@@ -36,6 +37,7 @@ namespace AnyRPG {
         public bool ModelCreated { get => modelCreated; }
         public GameObject UnitModel { get => unitModel; }
         public bool SuppressEquipment { get => suppressEquipment; set => suppressEquipment = value; }
+        public CharacterEquipmentManager CharacterEquipmentManager { get => characterEquipmentManager; }
 
         public UnitModelController(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
@@ -51,15 +53,23 @@ namespace AnyRPG {
         }
 
         public void Initialize() {
+            characterEquipmentManager = unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
+            if (characterEquipmentManager == null) {
+                Debug.LogWarning("CharacterEquipmentManager was null");
+            }
             mecanimModelController.Initialize();
         }
 
         public void HideEquipment() {
+            Debug.Log(unitController.gameObject.name + ".UnitModelController.HideEquipment()");
+
             suppressEquipment = true;
             RebuildModelAppearance();
         }
 
         public void ShowEquipment() {
+            Debug.Log(unitController.gameObject.name + ".UnitModelController.ShowEquipment()");
+
             suppressEquipment = false;
             RebuildModelAppearance();
         }
@@ -69,11 +79,12 @@ namespace AnyRPG {
 
             if (unitProfile.UnitPrefabProps.ModelProvider != null) {
                 modelAppearanceController = unitProfile.UnitPrefabProps.ModelProvider.GetAppearanceController(unitController, this, systemGameManager);
-                return;
+            } else {
+                // no model provider was configured, create null object
+                modelAppearanceController = new DefaultModelController(unitController, this, systemGameManager);
             }
 
-            // no model provider was configured, create null object
-            modelAppearanceController = new DefaultModelController(unitController, this, systemGameManager);
+            modelAppearanceController.Initialize();
         }
 
         public bool IsBuilding() {
@@ -114,6 +125,8 @@ namespace AnyRPG {
         }
 
         public void RebuildModelAppearance() {
+            Debug.Log(unitController.gameObject.name + ".UnitModelController.RebuildModelAppearance()");
+
             modelAppearanceController.RebuildModelAppearance();
             mecanimModelController.RebuildModelAppearance();
         }
@@ -132,7 +145,8 @@ namespace AnyRPG {
             modelAppearanceController.SetAnimatorOverrideController(animatorOverrideController);
         }
 
-        public void EquipEquipmentModels(CharacterEquipmentManager characterEquipmentManager) {
+        /*
+        public void EquipEquipmentModels() {
             //Debug.Log(unitController.gameObject.name + ".UnitModelController.EquipEquipmentModels()");
 
             if (suppressEquipment == true) {
@@ -147,14 +161,16 @@ namespace AnyRPG {
             foreach (EquipmentSlotProfile equipmentSlotProfile in characterEquipmentManager.CurrentEquipment.Keys) {
                 if (characterEquipmentManager.CurrentEquipment[equipmentSlotProfile] != null) {
                     // armor and weapon models handling
-                    EquipItemModels(characterEquipmentManager, equipmentSlotProfile, characterEquipmentManager.CurrentEquipment[equipmentSlotProfile], true, false, false);
+                    EquipItemModels(characterEquipmentManager, equipmentSlotProfile, characterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
                 }
             }
 
             //umaModelController.BuildModelAppearance();
         }
+        */
 
-        public void EquipItemModels(CharacterEquipmentManager characterEquipmentManager, EquipmentSlotProfile equipmentSlotProfile, Equipment equipment, bool equipModels, bool setAppearance, bool rebuildAppearance) {
+        /*
+        private void EquipItemModels(CharacterEquipmentManager characterEquipmentManager, EquipmentSlotProfile equipmentSlotProfile, Equipment equipment) {
             //Debug.Log(unitController.gameObject.name + ".UnitModelController.EquipItemModels(" + equipment.DisplayName + ", " + equipModels + ", " + setAppearance + ", " + rebuildAppearance + ")");
 
             if (suppressEquipment == true) {
@@ -176,32 +192,19 @@ namespace AnyRPG {
                 return;
             }
 
-            if (setAppearance == true) {
-                // both of these not needed if character unit not yet spawned?
-                // re-enabled for newGamePanel
-                // removed because this is only supposed to equip weapons and other physical prefabs
-                // having it here resulted in a second application of the uma gear
-                // this code now inside if condition should be safe
-                modelAppearanceController.EquipItemModels(characterEquipmentManager, equipment, rebuildAppearance);
-            }
-
-            if (equipModels == true) {
-                // testing new code to prevent UMA characters from trying to find bones before they are created.
-                mecanimModelController.EquipItemModels(equipmentSlotProfile, equipment);
-            }
+            modelAppearanceController.EquipItemModels(equipmentSlotProfile, equipment);
+            mecanimModelController.EquipItemModels(equipmentSlotProfile, equipment);
         }
+        */
 
-        public void UnequipItemModels(EquipmentSlotProfile equipmentSlot, Equipment equipment, bool unequipModels = true, bool unequipAppearance = true, bool rebuildAppearance = true) {
+        /*
+        public void UnequipItemModels(EquipmentSlotProfile equipmentSlot, Equipment equipment) {
             //Debug.Log(unitController.gameObject.name + ".UnitModelController.UnequipItemModels(" + equipment.DisplayName + ", " + unequipModels + ", " + unequipAppearance + ", " + rebuildAppearance + ")");
 
-            if (unequipModels == true) {
-                mecanimModelController.UnequipItemModels(equipmentSlot);
-            }
-
-            if (unequipAppearance == true) {
-                modelAppearanceController.UnequipItemModels(equipment, rebuildAppearance);
-            }
+            modelAppearanceController.UnequipItemModels(equipmentSlot);
+            mecanimModelController.UnequipItemModels(equipmentSlot);
         }
+        */
 
         /*
         public void SetInitialAppearance(string appearance) {
@@ -277,19 +280,22 @@ namespace AnyRPG {
 
         public void SetModelReady() {
             //Debug.Log(unitController.gameObject.name + ".UnitModelController.SetModelReady()");
-
+            
             if (modelCreated == false) {
-
                 unitController.CharacterUnit.BaseCharacter.HandleCharacterUnitSpawn();
-                EquipEquipmentModels(unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager);
             }
+
+            RebuildModelAppearance();
+
             if (modelAppearanceController.ShouldCalculateFloatHeight()) {
                 CalculateFloatHeight();
             }
             if (modelCreated == false) {
                 modelCreated = true;
+                //Debug.Log("OnModelCreated()");
                 OnModelCreated();
             } else {
+                //Debug.Log("OnModelUpdated()");
                 OnModelUpdated();
             }
             unitController.SetModelReady();

@@ -521,6 +521,7 @@ namespace AnyRPG {
                 appearancePanels.Add(panelPrefab, appearancePanel);
                 subPanels.Add(appearancePanel);
             }
+
             currentAppearancePanel = appearancePanels[panelPrefab];
             currentAppearancePanel.SetupOptions();
         }
@@ -613,7 +614,7 @@ namespace AnyRPG {
         }
 
         public void EquipCharacter() {
-            Debug.Log("NewGamePanel.EquipCharacter()");
+            //Debug.Log("NewGamePanel.EquipCharacter()");
 
             if (characterCreatorManager.PreviewUnitController == null) {
                 // if this is called on the initial load then the preview panel isn't open yet
@@ -630,7 +631,6 @@ namespace AnyRPG {
                 //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): found equipment manager");
 
                 // unequip equipment not in current list
-                //characterEquipmentManager.UnequipAll(false);
                 List<Equipment> removeList = new List<Equipment>();
                 foreach (Equipment equipment in characterEquipmentManager.CurrentEquipment.Values) {
                     //Debug.Log("NewGamePanel.EquipCharacter(): checking for removal : " + (equipment == null ? "null" : equipment.DisplayName));
@@ -640,7 +640,7 @@ namespace AnyRPG {
                 }
                 foreach (Equipment equipment in removeList) {
                     //characterEquipmentManager.Unequip(equipment, false, false, false);
-                    characterEquipmentManager.Unequip(equipment, true, true, false);
+                    characterEquipmentManager.Unequip(equipment);
                     changes++;
                 }
 
@@ -652,7 +652,7 @@ namespace AnyRPG {
                         if (characterEquipmentManager.CurrentEquipment.ContainsKey(equipmentSlotProfile) == false
                             || characterEquipmentManager.CurrentEquipment[equipmentSlotProfile] == null
                             || characterEquipmentManager.CurrentEquipment[equipmentSlotProfile] != newGameManager.EquipmentList[equipmentSlotProfile]) {
-                            characterEquipmentManager.Equip(newGameManager.EquipmentList[equipmentSlotProfile], equipmentSlotProfile, false, false, false);
+                            characterEquipmentManager.Equip(newGameManager.EquipmentList[equipmentSlotProfile], equipmentSlotProfile);
                             changes++;
                         }
                     }
@@ -661,7 +661,6 @@ namespace AnyRPG {
                     //Debug.Log("NewGamePanel.EquipCharacter(): character is ready");
                     characterCreatorManager.PreviewUnitController.UnitModelController.RebuildModelAppearance();
                 }
-                //characterPreviewPanel.BuildModelAppearance();
             }
         }
 

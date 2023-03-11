@@ -20,7 +20,7 @@ namespace AnyRPG {
         private int setLayerIgnoreMask = 0;
 
         // rebuilds should be queued in the case that an UMA update is in progress to avoid a situation where the skeleton is not available
-        private bool rebuildQueued = false;
+        //private bool rebuildQueued = false;
 
         // game manager references
         private ObjectPooler objectPooler = null;
@@ -51,18 +51,15 @@ namespace AnyRPG {
         }
 
         public void Initialize() {
-            characterEquipmentManager = unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
-            if (characterEquipmentManager == null) {
-                Debug.LogWarning("CharacterEquipmentManager was null");
-            }
+            characterEquipmentManager = unitModelController.CharacterEquipmentManager;
         }
 
         public void SetAttachmentProfile(AttachmentProfile attachmentProfile) {
             this.attachmentProfile = attachmentProfile;
         }
 
-        public void EquipItemModels(EquipmentSlotProfile equipmentSlotProfile, Equipment equipment) {
-            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.EquipItemModels()");
+        private void EquipItemModels(EquipmentSlotProfile equipmentSlotProfile, Equipment equipment) {
+            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.EquipItemModels(" + equipmentSlotProfile.DisplayName + ", " + (equipment == null ? "null" : equipment.DisplayName) +")");
 
             SpawnEquipmentObjects(equipmentSlotProfile, equipment);
 
@@ -311,6 +308,11 @@ namespace AnyRPG {
         public void RebuildModelAppearance() {
             Debug.Log(unitController.gameObject.name + ".MecanimModelController.RebuildModelAppearance()");
 
+            if (unitModelController.IsBuilding() == true) {
+                // let model appearance get built first (in case of UMA without bones being ready)
+                return;
+            }
+
             SynchronizeEquipmentDictionaryKeys();
 
             foreach (EquipmentSlotProfile equipmentSlotProfile in characterEquipmentManager.CurrentEquipment.Keys) {
@@ -331,7 +333,7 @@ namespace AnyRPG {
             EquipItemModels(equipmentSlotProfile, equipment);
         }
 
-        public void RemoveEquipmentObjects() {
+        private void RemoveEquipmentObjects() {
             Debug.Log(unitController.gameObject.name + ".MecanimModelController.RemoveEquipmentObjects()");
             
             List<EquipmentSlotProfile> equipmentSlots = new List<EquipmentSlotProfile>();
@@ -342,7 +344,7 @@ namespace AnyRPG {
             }
         }
 
-        public void UnequipItemModels(EquipmentSlotProfile equipmentSlot) {
+        private void UnequipItemModels(EquipmentSlotProfile equipmentSlot) {
             
             if (equippedEquipment[equipmentSlot] == null) {
                 // nothing equipped in this slot, nothing to do

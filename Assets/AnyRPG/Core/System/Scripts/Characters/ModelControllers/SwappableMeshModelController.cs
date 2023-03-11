@@ -201,16 +201,12 @@ namespace AnyRPG {
             // nothing to do here for now
         }
 
-        public override void RebuildModelAppearance() {
-            // nothing to do here for now
+        public override void EquipItemModels(EquipmentSlotProfile equipmentSlotProfile, Equipment equipment) {
+            base.EquipItemModels(equipmentSlotProfile, equipment);
         }
 
-        public override void EquipItemModels(CharacterEquipmentManager characterEquipmentManager, Equipment equipment, bool rebuildAppearance) {
-            // nothing to do here for now
-        }
-
-        public override void UnequipItemModels(Equipment equipment, bool rebuildAppearance) {
-            // nothing to do here for now
+        protected override void UnequipItemModels(EquipmentSlotProfile equipmentSlot) {
+            base.UnequipItemModels(equipmentSlot);
         }
 
         public override void DespawnModel() {

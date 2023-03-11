@@ -111,28 +111,6 @@ namespace AnyRPG {
 
             // get list of compatible slots that can take this slot type
             List<EquipmentSlotProfile> slotProfileList = GetCompatibleSlotProfiles(newItem.EquipmentSlotType);
-            /*
-            // if no equipment slot was provided, attempt to find a conflicting slot and free it
-            if (equipmentSlotProfile == null) {
-                equipmentSlotProfile = equipmentManager.GetConflictingSlot(equipmentSlotProfile, slotProfileList);
-
-                // a conflicting slot was found, free it
-                if (equipmentSlotProfile != null) {
-                    Unequip(equipmentSlotProfile);
-                }
-            }
-
-            // no slot was provided, and there was at least one empty slot in the compatible list, use it
-            if (equipmentSlotProfile == null) {
-                equipmentSlotProfile = equipmentManager.GetFirstEmptySlot(slotProfileList);
-            }
-
-            if (equipmentSlotProfile == null) {
-                Debug.LogError(baseCharacter.gameObject.name + "CharacterEquipmentManager.Equip() " + newItem.DisplayName + " emptyslotProfile is null.  CHECK INSPECTOR.");
-                return false;
-            }
-            */
-
             
             // check if any are empty.  if not, unequip the first one
             EquipmentSlotProfile emptySlotProfile = equipmentSlotProfile;
@@ -145,12 +123,6 @@ namespace AnyRPG {
                     UnequipEquipment(slotProfileList[0]);
                     emptySlotProfile = GetFirstEmptySlot(slotProfileList);
                 }
-                /*
-                if (emptySlotProfile == null) {
-                    Debug.LogError(baseCharacter.gameObject.name + "CharacterEquipmentManager.Equip() " + newItem.DisplayName + " emptyslotProfile is null.  CHECK INSPECTOR.");
-                    return false;
-                }
-                */
             }
 
             if (emptySlotProfile != null) {

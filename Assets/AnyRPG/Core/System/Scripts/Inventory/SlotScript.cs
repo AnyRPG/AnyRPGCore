@@ -136,6 +136,7 @@ namespace AnyRPG {
                         EquipmentSlotProfile equipmentSlotProfile = playerManager.MyCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(handScript.Moveable as Equipment);
                         playerManager.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
                         playerManager.MyCharacter.CharacterEquipmentManager.Equip(inventorySlot.Item as Equipment, equipmentSlotProfile);
+                        playerManager.UnitController.UnitModelController.RebuildModelAppearance();
                         inventorySlot.Item.Remove();
                        //UseItem();
                         //uIManager.RefreshTooltip();
@@ -159,9 +160,6 @@ namespace AnyRPG {
                 } else if (handScript.Moveable is Equipment) {
                     // the handscript had equipment in it, and therefore we are trying to unequip some equipment
                     Equipment equipment = (Equipment)handScript.Moveable;
-                    // probably don't need to do this, since dequip should drop the equipment in the bag anyway
-                    //AddItem(equipment);
-
                     EquipmentSlotProfile equipmentSlotProfile = playerManager.MyCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(handScript.Moveable as Equipment);
                     playerManager.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile, inventorySlot.GetCurrentSlotIndex());
                     handScript.Drop();
