@@ -252,7 +252,7 @@ namespace AnyRPG {
        
 
         public void SetDefaultLayer(string layerName) {
-            //Debug.Log(unitController.gameObject.name + ".UnitModelController.SetDefaultLayer(" + layerName + ")");
+            Debug.Log(unitController.gameObject.name + ".UnitModelController.SetDefaultLayer(" + layerName + ")");
             if (layerName != null && layerName != string.Empty) {
                 int defaultLayer = LayerMask.NameToLayer(layerName);
                 int finalmask = (1 << defaultLayer);
@@ -285,7 +285,9 @@ namespace AnyRPG {
                 unitController.CharacterUnit.BaseCharacter.HandleCharacterUnitSpawn();
             }
 
-            RebuildModelAppearance();
+            //RebuildModelAppearance();
+            // give mecanim model controller a chance to spawn or despawn weapons now that character skeleton is available (if UMA was used)
+            mecanimModelController.RebuildModelAppearance();
 
             if (modelAppearanceController.ShouldCalculateFloatHeight()) {
                 CalculateFloatHeight();

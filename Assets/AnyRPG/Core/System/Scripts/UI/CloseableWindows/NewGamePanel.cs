@@ -523,7 +523,7 @@ namespace AnyRPG {
             }
 
             currentAppearancePanel = appearancePanels[panelPrefab];
-            currentAppearancePanel.SetupOptions();
+            //currentAppearancePanel.SetupOptions();
         }
 
         public void OpenFactionPanel(bool focus = true) {
@@ -597,11 +597,13 @@ namespace AnyRPG {
         }
 
         public void HandleUnitCreated() {
-            //Debug.Log("NewGamePanel.HandleUnitCreated()");
+            Debug.Log("NewGamePanel.HandleUnitCreated()");
 
-            if (currentAppearancePanel != null) {
+            ActivateCorrectAppearancePanel();
+
+            //if (currentAppearancePanel != null) {
                 currentAppearancePanel.HandleUnitCreated();
-            }
+            //}
 
             EquipCharacter();
         }
@@ -610,7 +612,8 @@ namespace AnyRPG {
         public void HandleModelCreated() {
             //Debug.Log("NewGamePanel.HandleModelCreated()");
 
-            ActivateCorrectAppearancePanel();
+            //ActivateCorrectAppearancePanel();
+            currentAppearancePanel.SetupOptions();
         }
 
         public void EquipCharacter() {

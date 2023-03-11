@@ -253,7 +253,7 @@ namespace AnyRPG {
         }
 
         public virtual void HandleUnitCreated() {
-            //Debug.Log(gameObject.name + ".AppearancePanel.HandleUnitCreated()");
+            Debug.Log(gameObject.name + ".AppearancePanel.HandleUnitCreated()");
 
             GetUnitModelController();
             //if (panelVisible == true) {

@@ -96,10 +96,12 @@ namespace AnyRPG {
                                         holdableObjects.Add(attachmentNode, newEquipmentPrefab);
                                         //currentEquipmentPhysicalObjects[equipmentSlotProfile] = newEquipmentPrefab;
 
-                                        
-                                        if (unitModelController.UnitModel.layer == unitPreviewLayer) {
+                                        if (unitController.UnitControllerMode == UnitControllerMode.Preview) {
+                                        //if (unitModelController.UnitModel.layer == unitPreviewLayer) {
+                                            //Debug.Log("unit preview layer");
                                             LayerUtility.SetMeshRendererLayerRecursive(newEquipmentPrefab, unitPreviewLayer, setLayerIgnoreMask);
                                         } else {
+                                            //Debug.Log("not unit preview layer");
                                             LayerUtility.SetMeshRendererLayerRecursive(newEquipmentPrefab, equipmentLayer, setLayerIgnoreMask);
                                         }
                                         newEquipmentPrefab.transform.localScale = attachmentNode.HoldableObject.Scale;
