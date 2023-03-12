@@ -252,6 +252,7 @@ namespace AnyRPG {
             base.Accept();
             if (equippedEquipment != null) {
                 playerManager.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
+                playerManager.UnitController.UnitModelController.RebuildModelAppearance();
                 ShowContextInfo();
             }
         }

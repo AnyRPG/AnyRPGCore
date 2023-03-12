@@ -119,13 +119,6 @@ namespace AnyRPG {
             OnTargetReady();
         }
 
-        public void SaveAppearanceData(AnyRPGSaveData saveData) {
-            if (characterCreatorManager.PreviewUnitController?.UnitModelController == null) {
-                return;
-            }
-            characterCreatorManager.PreviewUnitController.UnitModelController.SaveAppearanceSettings(saveData);
-        }
-
     }
 
 }

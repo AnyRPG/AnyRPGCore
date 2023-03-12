@@ -33,7 +33,7 @@ namespace AnyRPG {
         }
 
         public abstract T GetModelAppearanceController<T>() where T : ModelAppearanceController;
-        public abstract void SaveAppearanceSettings(AnyRPGSaveData saveData);
+        public abstract void SaveAppearanceSettings(ISaveDataOwner saveDataOwner, AnyRPGSaveData saveData);
         public abstract void SetInitialSavedAppearance(AnyRPGSaveData saveData);
         public abstract void BuildModelAppearance();
         public abstract bool IsBuilding();
@@ -96,7 +96,7 @@ namespace AnyRPG {
             foreach (EquipmentSlotProfile equipmentSlotProfile in characterEquipmentManager.CurrentEquipment.Keys) {
                 updateCount += RebuildSlotAppearance(equipmentSlotProfile, GetEquipmentForSlot(equipmentSlotProfile));
             }
-            Debug.Log(unitController.gameObject.name + ".ModelAppearanceController.RebuildModelAppearance() " + updateCount + " updates");
+            //Debug.Log(unitController.gameObject.name + ".ModelAppearanceController.RebuildModelAppearance() " + updateCount + " updates");
             return updateCount;
         }
 

@@ -308,7 +308,7 @@ namespace AnyRPG {
         }
 
         public void RebuildModelAppearance() {
-            Debug.Log(unitController.gameObject.name + ".MecanimModelController.RebuildModelAppearance()");
+            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.RebuildModelAppearance()");
 
             if (unitModelController.IsBuilding() == true) {
                 // let model appearance get built first (in case of UMA without bones being ready)
@@ -336,7 +336,7 @@ namespace AnyRPG {
         }
 
         private void RemoveEquipmentObjects() {
-            Debug.Log(unitController.gameObject.name + ".MecanimModelController.RemoveEquipmentObjects()");
+            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.RemoveEquipmentObjects()");
             
             List<EquipmentSlotProfile> equipmentSlots = new List<EquipmentSlotProfile>();
             equipmentSlots.AddRange(equippedEquipment.Keys);
@@ -363,7 +363,7 @@ namespace AnyRPG {
         }
 
         public void DespawnModel() {
-            Debug.Log(unitController.gameObject.name + ".MecanimModelController.DespawnModel()");
+            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.DespawnModel()");
 
             RemoveEquipmentObjects();
         }

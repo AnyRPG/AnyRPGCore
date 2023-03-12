@@ -128,7 +128,7 @@ namespace AnyRPG {
             if (emptySlotProfile != null) {
                 EquipToList(newItem, emptySlotProfile);
             }
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(): equippping " + newItem.DisplayName + " in slot: " + emptySlotProfile + "; " + emptySlotProfile.GetInstanceID());
+            //Debug.Log("EquipmentManager.EquipEquipment(): equippping " + newItem.DisplayName + " in slot: " + emptySlotProfile.DisplayName + "; " + emptySlotProfile.GetInstanceID());
             
             return emptySlotProfile;
         }

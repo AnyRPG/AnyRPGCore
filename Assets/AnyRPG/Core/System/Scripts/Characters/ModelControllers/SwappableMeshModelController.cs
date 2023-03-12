@@ -73,7 +73,7 @@ namespace AnyRPG {
             return this as T;
         }
 
-        public override void SaveAppearanceSettings(AnyRPGSaveData saveData) {
+        public override void SaveAppearanceSettings(ISaveDataOwner saveDataOwner, AnyRPGSaveData saveData) {
 
             saveData.swappableMeshSaveData.Clear();
             foreach (string groupName in optionGroupChoices.Keys) {
@@ -82,6 +82,7 @@ namespace AnyRPG {
                 swappableMeshSaveData.meshName = optionGroupChoices[groupName];
                 saveData.swappableMeshSaveData.Add(swappableMeshSaveData);
             }
+            saveDataOwner.SetSaveData(saveData);
         }
 
         private void SetupAppliedConfiguration() {

@@ -162,6 +162,7 @@ namespace AnyRPG {
                     Equipment equipment = (Equipment)handScript.Moveable;
                     EquipmentSlotProfile equipmentSlotProfile = playerManager.MyCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(handScript.Moveable as Equipment);
                     playerManager.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile, inventorySlot.GetCurrentSlotIndex());
+                    playerManager.UnitController.UnitModelController.RebuildModelAppearance();
                     handScript.Drop();
                 }
             }

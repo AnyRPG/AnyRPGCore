@@ -274,7 +274,7 @@ namespace AnyRPG {
         */
 
         public void HandleCharacterUpdated(UMAData umaData) {
-            Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterUpdated() frame: " + Time.frameCount);
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterUpdated() frame: " + Time.frameCount);
 
             //Debug.Log("UMAModelController.HandleCharacterUpdated(): " + umaData + "; frame: " + Time.frameCount);
             //HandleCharacterCreated(umaData);
@@ -312,6 +312,7 @@ namespace AnyRPG {
             if (resetWardrobe == true) {
                 avatarDefinition.Wardrobe = new string[0];
             }
+
             foreach (EquipmentSlotProfile equipmentSlotProfile in characterEquipmentManager.CurrentEquipment.Keys) {
                 if (characterEquipmentManager.CurrentEquipment[equipmentSlotProfile] != null) {
                     // armor and weapon models handling
@@ -530,10 +531,9 @@ namespace AnyRPG {
         }
 
         public override void BuildModelAppearance() {
-            Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance()");
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance()");
 
             if (dynamicCharacterAvatar != null) {
-                //Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance() : " + dynamicCharacterAvatar.GetCurrentRecipe());
                 buildInProgress = true;
                 dynamicCharacterAvatar.BuildCharacter();
             }
@@ -575,12 +575,15 @@ namespace AnyRPG {
             return false;
         }
 
-        public override void SaveAppearanceSettings(AnyRPGSaveData saveData) {
+        public override void SaveAppearanceSettings(ISaveDataOwner saveDataOwner, AnyRPGSaveData saveData) {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.SaveAppearanceSettings()");
+
             if (dynamicCharacterAvatar == null) {
                 return;
             }
 
             saveData.PlayerUMARecipe = GetAppearanceString();
+            saveDataOwner.SetSaveData(saveData);
         }
 
         public override void ConfigureUnitModel() {

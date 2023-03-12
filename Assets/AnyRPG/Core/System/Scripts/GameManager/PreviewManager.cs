@@ -45,7 +45,7 @@ namespace AnyRPG {
         }
 
         public virtual void DespawnUnit() {
-            Debug.Log("PreviewManager.DespawnUnit()");
+            //Debug.Log("PreviewManager.DespawnUnit()");
 
             if (unitController == null) {
                 return;

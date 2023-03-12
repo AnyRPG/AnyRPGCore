@@ -415,7 +415,8 @@ namespace AnyRPG {
             // allow the base character to initialize.
             characterUnit.BaseCharacter.Init();
 
-            unitModelController.Initialize();
+            // testing moved to SetUnitProfile to give a chance to override baseCharacter if player so equipmentManager reference is correct
+            //unitModelController.Initialize();
         }
 
         public override void SetGameManagerReferences() {
@@ -774,6 +775,7 @@ namespace AnyRPG {
 
         public void SetUnitControllerMode(UnitControllerMode unitControllerMode) {
             //Debug.Log(gameObject.name + ".UnitController.SetUnitControllerMode(" + unitControllerMode + ")");
+
             this.unitControllerMode = unitControllerMode;
             if (unitControllerMode == UnitControllerMode.Player) {
                 ConfigurePlayer();
@@ -997,6 +999,7 @@ namespace AnyRPG {
             }
             SetUnitControllerMode(unitControllerMode);
 
+            unitModelController.Initialize();
             // testing - not necessary here since it was actually not doing anything and code is now in Init that used to be in Start which requires the model spawned
             //Init();
 

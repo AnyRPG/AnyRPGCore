@@ -7,7 +7,7 @@ using UnityEngine;
 using System.Text.RegularExpressions;
 
 namespace AnyRPG {
-    public class SaveManager : ConfiguredMonoBehaviour {
+    public class SaveManager : ConfiguredMonoBehaviour, ISaveDataOwner {
 
         // game manager references
         private SystemEventManager systemEventManager = null;
@@ -444,7 +444,7 @@ namespace AnyRPG {
         }
 
         public void SaveAppearanceData(AnyRPGSaveData anyRPGSaveData) {
-            playerManager.ActiveUnitController.UnitModelController.SaveAppearanceSettings(anyRPGSaveData);
+            playerManager.ActiveUnitController.UnitModelController.SaveAppearanceSettings(this, anyRPGSaveData);
         }
 
         public void SetQuestSaveData(string questName, QuestSaveData questSaveData) {
@@ -1017,6 +1017,7 @@ namespace AnyRPG {
 
         public void LoadEquipmentData(AnyRPGSaveData anyRPGSaveData, CharacterEquipmentManager characterEquipmentManager) {
             //Debug.Log("Savemanager.LoadEquipmentData()");
+
             foreach (EquipmentSaveData equipmentSaveData in anyRPGSaveData.equipmentSaveData) {
                 if (equipmentSaveData.EquipmentName != string.Empty) {
                     Equipment newItem = (systemItemManager.GetNewResource(equipmentSaveData.EquipmentName) as Equipment);
@@ -1353,6 +1354,7 @@ namespace AnyRPG {
 
         public void LoadGame(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadGame()");
+
             ClearSharedData();
             currentSaveData = anyRPGSaveData;
 
@@ -1655,6 +1657,9 @@ namespace AnyRPG {
             return replaceString;
         }
 
+        public void SetSaveData(AnyRPGSaveData saveData) {
+            currentSaveData = saveData;
+        }
     }
 
 }

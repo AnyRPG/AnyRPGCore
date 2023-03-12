@@ -57,6 +57,7 @@ namespace AnyRPG {
 
         public void ConfirmAction() {
             //Debug.Log("NewGameMenuController.ConfirmAction()");
+
             uIManager.confirmNewGameMenuWindow.CloseWindow();
             uIManager.loadGameWindow.CloseWindow();
             uIManager.newGameWindow.CloseWindow();

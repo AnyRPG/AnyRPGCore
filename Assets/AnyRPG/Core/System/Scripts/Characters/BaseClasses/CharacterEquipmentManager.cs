@@ -108,7 +108,7 @@ namespace AnyRPG {
         }
 
         public bool Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (equipmentSlotProfile == null ? "null" : equipmentSlotProfile.DisplayName) + ", " + equipModels + ", " + setAppearance + ", " + rebuildAppearance + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (equipmentSlotProfile == null ? "null" : equipmentSlotProfile.DisplayName) + ")");
 
             if (newItem == null) {
                 Debug.Log("Instructed to Equip a null item!");

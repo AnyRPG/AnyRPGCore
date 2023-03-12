@@ -53,6 +53,8 @@ namespace AnyRPG {
         }
 
         public void Initialize() {
+            //Debug.Log(unitController.gameObject.name + ".UnitModelController.Initialize()");
+
             characterEquipmentManager = unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
             if (characterEquipmentManager == null) {
                 Debug.LogWarning("CharacterEquipmentManager was null");
@@ -61,14 +63,14 @@ namespace AnyRPG {
         }
 
         public void HideEquipment() {
-            Debug.Log(unitController.gameObject.name + ".UnitModelController.HideEquipment()");
+            //Debug.Log(unitController.gameObject.name + ".UnitModelController.HideEquipment()");
 
             suppressEquipment = true;
             RebuildModelAppearance();
         }
 
         public void ShowEquipment() {
-            Debug.Log(unitController.gameObject.name + ".UnitModelController.ShowEquipment()");
+            //Debug.Log(unitController.gameObject.name + ".UnitModelController.ShowEquipment()");
 
             suppressEquipment = false;
             RebuildModelAppearance();
@@ -125,7 +127,7 @@ namespace AnyRPG {
         }
 
         public void RebuildModelAppearance() {
-            Debug.Log(unitController.gameObject.name + ".UnitModelController.RebuildModelAppearance()");
+            //Debug.Log(unitController.gameObject.name + ".UnitModelController.RebuildModelAppearance()");
 
             modelAppearanceController.RebuildModelAppearance();
             mecanimModelController.RebuildModelAppearance();
@@ -137,8 +139,10 @@ namespace AnyRPG {
         }
         */
 
-        public void SaveAppearanceSettings(AnyRPGSaveData saveData) {
-            modelAppearanceController.SaveAppearanceSettings(saveData);
+        public void SaveAppearanceSettings(ISaveDataOwner saveDataOwner, AnyRPGSaveData saveData) {
+            //Debug.Log(unitController.gameObject.name + ".UnitModelController.SaveAppearanceSettings()");
+
+            modelAppearanceController.SaveAppearanceSettings(saveDataOwner, saveData);
         }
 
         public void SetAnimatorOverrideController(AnimatorOverrideController animatorOverrideController) {
@@ -252,7 +256,8 @@ namespace AnyRPG {
        
 
         public void SetDefaultLayer(string layerName) {
-            Debug.Log(unitController.gameObject.name + ".UnitModelController.SetDefaultLayer(" + layerName + ")");
+            //Debug.Log(unitController.gameObject.name + ".UnitModelController.SetDefaultLayer(" + layerName + ")");
+
             if (layerName != null && layerName != string.Empty) {
                 int defaultLayer = LayerMask.NameToLayer(layerName);
                 int finalmask = (1 << defaultLayer);

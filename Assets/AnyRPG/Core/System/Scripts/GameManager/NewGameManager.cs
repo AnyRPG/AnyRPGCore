@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class NewGameManager : ConfiguredMonoBehaviour, ICapabilityConsumer {
+    public class NewGameManager : ConfiguredMonoBehaviour, ICharacterEditor, ISaveDataOwner {
 
         public event System.Action<UnitProfile> OnSetUnitProfile = delegate { };
         public event System.Action<string> OnSetPlayerName = delegate { };
@@ -73,7 +73,7 @@ namespace AnyRPG {
         public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
         public CharacterClass CharacterClass { get => characterClass; }
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
-        public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
+        public UnitProfile UnitProfile { get => unitProfile; }
         public AnyRPGSaveData SaveData { get => saveData; set => saveData = value; }
         public Dictionary<EquipmentSlotProfile, Equipment> EquipmentList { get => equipmentManager.CurrentEquipment; }
         public UnitType UnitType { get => unitType; set => unitType = value; }
@@ -651,7 +651,9 @@ namespace AnyRPG {
             }
         }
 
-
+        public void SetSaveData(AnyRPGSaveData saveData) {
+            this.saveData = saveData;
+        }
     }
 
 }

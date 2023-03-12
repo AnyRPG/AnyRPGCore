@@ -349,6 +349,7 @@ namespace AnyRPG {
 
         public Vector3 SpawnPlayerUnit() {
             //Debug.Log("PlayerManager.SpawnPlayerUnit()");
+
             cameraManager.HidePlayers();
             subscribeToTargetReady = true;
             Vector3 spawnLocation = levelManager.GetSpawnLocation();
@@ -429,6 +430,7 @@ namespace AnyRPG {
 
         public void SetUnitController(UnitController unitController) {
             //Debug.Log("PlayerManager.SetUnitController(" + unitController.gameObject.name + ")");
+
             this.unitController = unitController;
             activeUnitController = unitController;
 
