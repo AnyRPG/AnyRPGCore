@@ -14,12 +14,15 @@ namespace AnyRPG {
         private SwappableMeshModelOptions inlineOptions = new SwappableMeshModelOptions();
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(SwappableMeshModelProfile))]
         private string sharedOptions = string.Empty;
+
+        private SwappableMeshModelOptions usedOptions = null;
 
         public override ModelAppearanceController GetAppearanceController(UnitController unitController, UnitModelController unitModelController, SystemGameManager systemGameManager) {
             //Debug.Log("SwappableMeshModelProvider.GetAppearanceController()");
             
-            return new SwappableMeshModelController(unitController, unitModelController, systemGameManager, inlineOptions);
+            return new SwappableMeshModelController(unitController, unitModelController, systemGameManager, usedOptions);
         }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -33,7 +36,15 @@ namespace AnyRPG {
             if (useInlineOptions == false) {
                 if (sharedOptions != string.Empty) {
                     // get shared options and overwrite inline options
+                    SwappableMeshModelProfile tmpProfile = systemDataFactory.GetResource<SwappableMeshModelProfile>(sharedOptions);
+                    if (tmpProfile != null) {
+                        usedOptions = tmpProfile.ModelOptions;
+                    } else {
+                        Debug.LogError("SwappableMeshModelProvider.SetupScriptableObjects(): Could not find model profile : " + sharedOptions + " while inititalizing.  CHECK INSPECTOR");
+                    }
                 }
+            } else {
+                usedOptions = inlineOptions;
             }
         }
 

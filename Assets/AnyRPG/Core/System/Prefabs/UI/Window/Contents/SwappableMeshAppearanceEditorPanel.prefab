@@ -1421,6 +1421,7 @@ MonoBehaviour:
   focusActiveSubPanel: 0
   uINavigationControllers:
   - {fileID: 7045388437034373054}
+  - {fileID: 5753691118557821035}
   - {fileID: 3459536516967886131}
   - {fileID: 4426594736624126570}
   subPanels: []

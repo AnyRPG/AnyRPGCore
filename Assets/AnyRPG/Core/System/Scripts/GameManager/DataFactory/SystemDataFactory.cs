@@ -226,6 +226,10 @@ namespace AnyRPG {
             factoryDataAccess.Setup<AppearanceEditorProfile>("AppearanceEditorProfile", systemGameManager);
             dataDictionary.Add(typeof(AppearanceEditorProfile), factoryDataAccess);
 
+            factoryDataAccess = new FactoryDataAccess();
+            factoryDataAccess.Setup<SwappableMeshModelProfile>("SwappableMeshModelProfile", systemGameManager);
+            dataDictionary.Add(typeof(SwappableMeshModelProfile), factoryDataAccess);
+
             //setup scriptable objects
             foreach (FactoryDataAccess dataAccess in dataDictionary.Values) {
                 dataAccess.SetupScriptableObjects(systemGameManager);
