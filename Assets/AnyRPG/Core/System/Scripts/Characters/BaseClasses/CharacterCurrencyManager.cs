@@ -32,7 +32,7 @@ namespace AnyRPG {
                 return;
             }
             CurrencyNode newCurrencyNode = new CurrencyNode();
-            string keyName = SystemDataFactory.PrepareStringForMatch(currency.DisplayName);
+            string keyName = SystemDataFactory.PrepareStringForMatch(currency.ResourceName);
             if (CurrencyList.ContainsKey(keyName)) {
                 newCurrencyNode = new CurrencyNode();
                 newCurrencyNode.currency = CurrencyList[keyName].currency;
@@ -56,7 +56,7 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.gameObject.name + ".PlayerCurrencyManager.SpendCurrency(" + currency.DisplayName + ", " + currencyAmount + ")");
             //bool foundReputation = false;
             CurrencyNode newCurrencyNode = new CurrencyNode();
-            string keyName = SystemDataFactory.PrepareStringForMatch(currency.DisplayName);
+            string keyName = SystemDataFactory.PrepareStringForMatch(currency.ResourceName);
             if (CurrencyList.ContainsKey(keyName)) {
                 if (currencyConverter.GetBaseCurrencyAmount(currency, currencyAmount) <= GetBaseCurrencyValue(currency) ) {
                     //if (currencyAmount < MyCurrencyList[keyName].MyAmount) {
@@ -127,14 +127,14 @@ namespace AnyRPG {
 
                 // replace the original values in the currency list with the redistributed ones
                 foreach (KeyValuePair<Currency, int> newCurrencyValue in newAmountList) {
-                    if (CurrencyList.ContainsKey(SystemDataFactory.PrepareStringForMatch(newCurrencyValue.Key.DisplayName))) {
-                        CurrencyList.Remove(SystemDataFactory.PrepareStringForMatch(newCurrencyValue.Key.DisplayName));
+                    if (CurrencyList.ContainsKey(SystemDataFactory.PrepareStringForMatch(newCurrencyValue.Key.ResourceName))) {
+                        CurrencyList.Remove(SystemDataFactory.PrepareStringForMatch(newCurrencyValue.Key.ResourceName));
                     }
                     CurrencyNode newSaveData = new CurrencyNode();
                     newSaveData = new CurrencyNode();
                     newSaveData.currency = newCurrencyValue.Key;
                     newSaveData.Amount = newCurrencyValue.Value;
-                    CurrencyList[SystemDataFactory.PrepareStringForMatch(newCurrencyValue.Key.DisplayName)] = newSaveData;
+                    CurrencyList[SystemDataFactory.PrepareStringForMatch(newCurrencyValue.Key.ResourceName)] = newSaveData;
                 }
                 SystemEventManager.TriggerEvent("OnCurrencyChange", new EventParamProperties());
             }
@@ -142,7 +142,7 @@ namespace AnyRPG {
 
         public int GetCurrencyAmount(Currency currency) {
             //Debug.Log(baseCharacter.gameObject.name + ".PlayerCurrencyManager.GetCurrency(" + currency.DisplayName + ")");
-            string keyName = SystemDataFactory.PrepareStringForMatch(currency.DisplayName);
+            string keyName = SystemDataFactory.PrepareStringForMatch(currency.ResourceName);
             if (CurrencyList.ContainsKey(keyName)) {
                 return CurrencyList[keyName].Amount;
             }

@@ -29,7 +29,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (SystemDataFactory.MatchResource(dialogName, dialog.DisplayName)) {
+            if (SystemDataFactory.MatchResource(dialogName, dialog.ResourceName)) {
                 CurrentAmount++;
                 questBase.CheckCompletion();
                 if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages && CurrentAmount != 0) {

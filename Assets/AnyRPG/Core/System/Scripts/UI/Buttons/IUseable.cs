@@ -9,6 +9,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public interface IUseable {
         Sprite Icon { get; }
+        string ResourceName { get; }
         string DisplayName { get; }
         float CoolDown { get; }
         bool RequireOutOfCombat { get; }

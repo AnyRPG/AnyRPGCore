@@ -61,7 +61,7 @@ namespace AnyRPG {
             if (fixedItem == true && itemName != null && itemName != string.Empty) {
                 Item tmpItem = systemDataFactory.GetResource<Item>(itemName);
                 if (tmpItem == null) {
-                    Debug.LogError("GainItemCommand.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("GainItemCommand.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
         }

@@ -137,7 +137,7 @@ namespace AnyRPG {
                                 newEquipmentPrefab.transform.localScale = abilityAttachmentNode.HoldableObject.Scale;
                                 HoldObject(newEquipmentPrefab, abilityAttachmentNode, unitController.gameObject);
                             } else {
-                                Debug.Log("CharacterAbilityManager.SpawnAbilityObjects(). We could not find the target bone " + attachmentPointNode.TargetBone + " while spawning " + abilityAttachmentNode.HoldableObject.DisplayName);
+                                Debug.Log("CharacterAbilityManager.SpawnAbilityObjects(). We could not find the target bone " + attachmentPointNode.TargetBone + " while spawning " + abilityAttachmentNode.HoldableObject.ResourceName);
                             }
                         }
                     }

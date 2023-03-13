@@ -61,14 +61,14 @@ namespace AnyRPG {
                 if (baseAbility != null) {
                     craftAbility = baseAbility.AbilityProperties as CraftAbilityProperties;
                 } else {
-                    Debug.LogError("Recipe.SetupScriptableObjects(): Could not find ability : " + craftAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("Recipe.SetupScriptableObjects(): Could not find ability : " + craftAbilityName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
             if (holdableObjectList != null) {
                 foreach (AbilityAttachmentNode holdableObjectAttachment in holdableObjectList) {
                     if (holdableObjectAttachment != null) {
-                        holdableObjectAttachment.SetupScriptableObjects(DisplayName, systemGameManager);
+                        holdableObjectAttachment.SetupScriptableObjects(ResourceName, systemGameManager);
                     }
                 }
             }
@@ -79,7 +79,7 @@ namespace AnyRPG {
                 if (item != null) {
                     output = item;
                 } else {
-                    Debug.LogError("Recipe.SetupScriptableObjects(): Could not find item : " + itemOutputName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("Recipe.SetupScriptableObjects(): Could not find item : " + itemOutputName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 

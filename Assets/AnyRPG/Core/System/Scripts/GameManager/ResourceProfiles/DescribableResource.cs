@@ -39,7 +39,7 @@ namespace AnyRPG {
             // get the description profile if it exists, and then overwrite any local properties that are not null in that profile
             resourceDescription = null;
             if (useRegionalDescription == true) {
-                resourceDescriptionProfile = DisplayName;
+                resourceDescriptionProfile = ResourceName;
             }
             if (resourceDescriptionProfile != null && resourceDescriptionProfile != string.Empty) {
                 ResourceDescription tmpResourceDescription = systemDataFactory.GetResource<ResourceDescription>(resourceDescriptionProfile);
@@ -59,7 +59,7 @@ namespace AnyRPG {
                     }
                 } else {
                     if (optionalOverride == false) {
-                        Debug.LogError("DescribableResource.SetupScriptableObjects(): Could Not Find " + resourceDescriptionProfile + " resource description while processing " + DisplayName + ". CHECK INSPECTOR!");
+                        Debug.LogError("DescribableResource.SetupScriptableObjects(): Could Not Find " + resourceDescriptionProfile + " resource description while processing " + ResourceName + ". CHECK INSPECTOR!");
                     }
                 }
             }

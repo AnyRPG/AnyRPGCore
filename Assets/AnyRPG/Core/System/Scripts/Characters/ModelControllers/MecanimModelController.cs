@@ -111,7 +111,7 @@ namespace AnyRPG {
                                             SheathObject(newEquipmentPrefab, attachmentNode, unitController.gameObject);
                                         }
                                     } else {
-                                        Debug.Log("MecanimModelController.SpawnEquipmentObjects(). We could not find the target bone " + attachmentPointNode.TargetBone + " when trying to Equip " + newEquipment.DisplayName);
+                                        Debug.Log("MecanimModelController.SpawnEquipmentObjects(). We could not find the target bone " + attachmentPointNode.TargetBone + " when trying to Equip " + newEquipment.ResourceName);
                                     }
                                 }
                             }
@@ -233,7 +233,7 @@ namespace AnyRPG {
 
             Transform targetBone = searchObject.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
             if (targetBone == null) {
-                Debug.Log("MecanimModelController.HoldObject(): Unable to find target bone : " + attachmentPointNode.TargetBone + " while holding " + attachmentNode.HoldableObject.DisplayName);
+                Debug.Log("MecanimModelController.HoldObject(): Unable to find target bone : " + attachmentPointNode.TargetBone + " while holding " + attachmentNode.HoldableObject.ResourceName);
                 return;
             }
 

@@ -395,7 +395,7 @@ namespace AnyRPG {
             if (item == null) {
                 return false;
             }
-            if (performUniqueCheck == true && item.UniqueItem == true && GetItemCount(item.DisplayName) > 0) {
+            if (performUniqueCheck == true && item.UniqueItem == true && GetItemCount(item.ResourceName) > 0) {
                 messageFeedManager.WriteMessage(item.DisplayName + " is unique.  You can only carry one at a time.");
                 return false;
             }
@@ -429,7 +429,7 @@ namespace AnyRPG {
 
         public void RemoveItem(Item item) {
             foreach (InventorySlot slot in inventorySlots) {
-                if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.Item.DisplayName, item.DisplayName)) {
+                if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.Item.ResourceName, item.ResourceName)) {
                     slot.RemoveItem(item);
                     return;
                 }
@@ -506,7 +506,7 @@ namespace AnyRPG {
         public int GetUseableCount(IUseable useable) {
             int count = 0;
             foreach (InventorySlot slot in inventorySlots) {
-                if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.Item.DisplayName, useable.DisplayName)) {
+                if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.Item.ResourceName, useable.ResourceName)) {
                     count += slot.Count;
                 }
             }
@@ -522,12 +522,12 @@ namespace AnyRPG {
             int itemCount = 0;
 
             foreach (InventorySlot slot in inventorySlots) {
-                if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.Item.DisplayName, type, partialMatch)) {
+                if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.Item.ResourceName, type, partialMatch)) {
                     itemCount += slot.Count;
                 }
             }
             foreach (InventorySlot slot in bankSlots) {
-                if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.Item.DisplayName, type, partialMatch)) {
+                if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.Item.ResourceName, type, partialMatch)) {
                     itemCount += slot.Count;
                 }
             }
@@ -540,7 +540,7 @@ namespace AnyRPG {
             List<Item> items = new List<Item>();
             foreach (InventorySlot slot in inventorySlots) {
                 //Debug.Log("InventoryManager.GetItems() got bagnode and it has a bag and we are looking in a slotscript");
-                if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.Item.DisplayName, itemType)) {
+                if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.Item.ResourceName, itemType)) {
                     //Debug.Log("InventoryManager.GetItems() got bagnode and it has a bag and we are looking in a slotscript and the slot is not empty and it matches");
                     foreach (Item item in slot.Items) {
                         //Debug.Log("InventoryManager.GetItems() got bagnode and it has a bag and we are looking in a slotscript and the slot is not empty and it matches and we are ading and item");

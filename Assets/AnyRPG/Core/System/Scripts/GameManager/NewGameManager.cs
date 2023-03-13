@@ -319,7 +319,7 @@ namespace AnyRPG {
             }
 
             unitProfile = newUnitProfile;
-            saveData.unitProfileName = unitProfile.DisplayName;
+            saveData.unitProfileName = unitProfile.ResourceName;
 
             OnSetUnitProfile(newUnitProfile);
 
@@ -446,7 +446,7 @@ namespace AnyRPG {
             }
 
             characterClass = newCharacterClass;
-            saveData.characterClass = characterClass.DisplayName;
+            saveData.characterClass = characterClass.ResourceName;
             OnSetCharacterClass(newCharacterClass);
 
             UpdateClassSpecializationList();
@@ -469,7 +469,7 @@ namespace AnyRPG {
             if (classSpecialization !=  newClassSpecialization || newClassSpecialization == null) {
                 classSpecialization = newClassSpecialization;
                 if (classSpecialization != null) {
-                    saveData.classSpecialization = classSpecialization.DisplayName;
+                    saveData.classSpecialization = classSpecialization.ResourceName;
                 } else {
                     saveData.classSpecialization = string.Empty;
                 }
@@ -493,7 +493,7 @@ namespace AnyRPG {
 
             UpdateEquipmentList();
 
-            saveData.playerFaction = faction.DisplayName;
+            saveData.playerFaction = faction.ResourceName;
 
             if (faction != null && faction.DefaultStartingZone != null && faction.DefaultStartingZone != string.Empty) {
                 saveData.CurrentScene = faction.DefaultStartingZone;
@@ -523,7 +523,7 @@ namespace AnyRPG {
 
             UpdateEquipmentList();
 
-            saveData.characterRace = characterRace.DisplayName;
+            saveData.characterRace = characterRace.ResourceName;
 
             if (faction != null && faction.DefaultStartingZone != string.Empty) {
                 saveData.CurrentScene = faction.DefaultStartingZone;

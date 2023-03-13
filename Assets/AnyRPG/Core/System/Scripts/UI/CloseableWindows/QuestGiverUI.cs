@@ -255,7 +255,7 @@ namespace AnyRPG {
                 completeButton.Button.enabled = true;
                 return;
             }
-            if (newQuest.GetStatus() == "available" && questLog.HasQuest(newQuest.DisplayName) == false) {
+            if (newQuest.GetStatus() == "available" && questLog.HasQuest(newQuest.ResourceName) == false) {
                 acceptButton.gameObject.SetActive(true);
                 acceptButton.Button.enabled = true;
                 completeButton.gameObject.SetActive(false);
@@ -263,7 +263,7 @@ namespace AnyRPG {
             }
 
             //Debug.Log("questGiver: " + questGiver.ToString());
-            if (newQuest.GetStatus() == "complete" && questLog.HasQuest(newQuest.DisplayName) == true && questGiver != null && questGiver.EndsQuest(newQuest.DisplayName)) {
+            if (newQuest.GetStatus() == "complete" && questLog.HasQuest(newQuest.ResourceName) == true && questGiver != null && questGiver.EndsQuest(newQuest.ResourceName)) {
                 completeButton.gameObject.SetActive(true);
                 completeButton.Button.enabled = true;
                 acceptButton.gameObject.SetActive(false);

@@ -50,9 +50,9 @@ namespace AnyRPG {
             if (requireTurnedIn && prerequisiteQuest.TurnedIn == true) {
                 //Debug.Log("QuestPrerequisite.UpdateStatus(): " + prerequisiteQuest.DisplayName + ";requireTurnedIn = true and prerequisiteQuest.TurnedIn == true; originalresult: " + originalResult);
                 prerequisiteMet = true;
-            } else if (!requireTurnedIn && requireComplete && prerequisiteQuest.IsComplete && questLog.HasQuest(prerequisiteQuest.DisplayName)) {
+            } else if (!requireTurnedIn && requireComplete && prerequisiteQuest.IsComplete && questLog.HasQuest(prerequisiteQuest.ResourceName)) {
                 prerequisiteMet = true;
-            } else if (!requireTurnedIn && !requireComplete && questLog.HasQuest(prerequisiteQuest.DisplayName) && (stepIndex == -1 || prerequisiteQuest.CurrentStep == stepIndex)) {
+            } else if (!requireTurnedIn && !requireComplete && questLog.HasQuest(prerequisiteQuest.ResourceName) && (stepIndex == -1 || prerequisiteQuest.CurrentStep == stepIndex)) {
                 prerequisiteMet = true;
             } else {
                 prerequisiteMet = false;

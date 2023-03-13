@@ -20,7 +20,7 @@ namespace AnyRPG {
 
             // populate the dictionary
             foreach (ChatCommand chatCommand in systemDataFactory.GetResourceList<ChatCommand>()) {
-                commandDictionary.Add(chatCommand.DisplayName.ToLower().Replace(" ", ""), chatCommand);
+                commandDictionary.Add(chatCommand.ResourceName.ToLower().Replace(" ", ""), chatCommand);
             }
         }
 

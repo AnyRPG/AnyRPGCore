@@ -226,7 +226,7 @@ namespace AnyRPG {
                 if (statusEffectNode.StatusEffect.SceneNames.Count > 0) {
                     bool sceneFound = false;
                     foreach (string sceneName in statusEffectNode.StatusEffect.SceneNames) {
-                        if (SystemDataFactory.PrepareStringForMatch(sceneName) == SystemDataFactory.PrepareStringForMatch(levelManager.GetActiveSceneNode().DisplayName)) {
+                        if (SystemDataFactory.PrepareStringForMatch(sceneName) == SystemDataFactory.PrepareStringForMatch(levelManager.GetActiveSceneNode().ResourceName)) {
                             sceneFound = true;
                         }
                     }
@@ -295,13 +295,13 @@ namespace AnyRPG {
 
             // add base power resource regen amounts
             foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
-                if (powerResourceRegenDictionary.ContainsKey(powerResource.DisplayName) == false) {
-                    powerResourceRegenDictionary.Add(powerResource.DisplayName, new PowerResourceRegenProperty());
+                if (powerResourceRegenDictionary.ContainsKey(powerResource.ResourceName) == false) {
+                    powerResourceRegenDictionary.Add(powerResource.ResourceName, new PowerResourceRegenProperty());
                 }
-                powerResourceRegenDictionary[powerResource.DisplayName].PercentPerTick += powerResource.PercentPerTick;
-                powerResourceRegenDictionary[powerResource.DisplayName].AmountPerTick += powerResource.AmountPerTick;
-                powerResourceRegenDictionary[powerResource.DisplayName].CombatPercentPerTick += powerResource.CombatPercentPerTick;
-                powerResourceRegenDictionary[powerResource.DisplayName].CombatAmountPerTick += powerResource.CombatAmountPerTick;
+                powerResourceRegenDictionary[powerResource.ResourceName].PercentPerTick += powerResource.PercentPerTick;
+                powerResourceRegenDictionary[powerResource.ResourceName].AmountPerTick += powerResource.AmountPerTick;
+                powerResourceRegenDictionary[powerResource.ResourceName].CombatPercentPerTick += powerResource.CombatPercentPerTick;
+                powerResourceRegenDictionary[powerResource.ResourceName].CombatAmountPerTick += powerResource.CombatAmountPerTick;
             }
 
             // loop through all stat providers
@@ -1237,7 +1237,7 @@ namespace AnyRPG {
         public bool RecoverResource(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int amount, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.RecoverResource(" + powerResource.DisplayName + ", " + amount + ")");
 
-            bool returnValue = AddResourceAmount(powerResource.DisplayName, amount);
+            bool returnValue = AddResourceAmount(powerResource.ResourceName, amount);
             if (returnValue == false) {
                 return false;
             }
@@ -1323,7 +1323,7 @@ namespace AnyRPG {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.TrySpawnDead(): spawning with no health");
                 isAlive = false;
 
-                SetResourceAmount(PrimaryResource.DisplayName, 0f);
+                SetResourceAmount(PrimaryResource.ResourceName, 0f);
 
                 // notify subscribers that our health has changed
                 NotifyOnResourceAmountChanged(PrimaryResource, MaxPrimaryResource, CurrentPrimaryResource);
@@ -1526,15 +1526,15 @@ namespace AnyRPG {
                     }
                 }
             }
-            if (resourceMultipliers.ContainsKey(powerResource.DisplayName)) {
-                returnValue *= resourceMultipliers[powerResource.DisplayName];
+            if (resourceMultipliers.ContainsKey(powerResource.ResourceName)) {
+                returnValue *= resourceMultipliers[powerResource.ResourceName];
             }
             return returnValue;
         }
 
         protected void ClearPowerAmounts() {
             foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
-                SetResourceAmount(powerResource.DisplayName, 0f);
+                SetResourceAmount(powerResource.ResourceName, 0f);
             }
         }
 
@@ -1553,28 +1553,28 @@ namespace AnyRPG {
                     powerResourceDictionary[powerResource].elapsedTime -= powerResource.TickRate;
                     if (
                         (
-                         (powerResourceRegenDictionary[powerResource.DisplayName].AmountPerTick > 0f
-                            || powerResourceRegenDictionary[powerResource.DisplayName].PercentPerTick > 0f
-                            || powerResourceRegenDictionary[powerResource.DisplayName].CombatAmountPerTick > 0f
-                            || powerResourceRegenDictionary[powerResource.DisplayName].CombatPercentPerTick > 0f)
+                         (powerResourceRegenDictionary[powerResource.ResourceName].AmountPerTick > 0f
+                            || powerResourceRegenDictionary[powerResource.ResourceName].PercentPerTick > 0f
+                            || powerResourceRegenDictionary[powerResource.ResourceName].CombatAmountPerTick > 0f
+                            || powerResourceRegenDictionary[powerResource.ResourceName].CombatPercentPerTick > 0f)
                          && (powerResourceDictionary[powerResource].currentValue < GetPowerResourceMaxAmount(powerResource))
                         )
                         || (
-                         (powerResourceRegenDictionary[powerResource.DisplayName].AmountPerTick < 0f
-                         || powerResourceRegenDictionary[powerResource.DisplayName].PercentPerTick < 0f
-                         || powerResourceRegenDictionary[powerResource.DisplayName].CombatAmountPerTick < 0f
-                         || powerResourceRegenDictionary[powerResource.DisplayName].CombatPercentPerTick < 0f)
+                         (powerResourceRegenDictionary[powerResource.ResourceName].AmountPerTick < 0f
+                         || powerResourceRegenDictionary[powerResource.ResourceName].PercentPerTick < 0f
+                         || powerResourceRegenDictionary[powerResource.ResourceName].CombatAmountPerTick < 0f
+                         || powerResourceRegenDictionary[powerResource.ResourceName].CombatPercentPerTick < 0f)
                         && (powerResourceDictionary[powerResource].currentValue > 0f))
                        ) {
                         float usedRegenAmount = 0f;
                         if (baseCharacter?.CharacterCombat != null && baseCharacter.CharacterCombat.GetInCombat() == true) {
                             // perform combat regen
-                            usedRegenAmount += GetPowerResourceMaxAmount(powerResource) * (powerResourceRegenDictionary[powerResource.DisplayName].CombatPercentPerTick / 100f);
-                            usedRegenAmount += powerResourceRegenDictionary[powerResource.DisplayName].CombatAmountPerTick;
+                            usedRegenAmount += GetPowerResourceMaxAmount(powerResource) * (powerResourceRegenDictionary[powerResource.ResourceName].CombatPercentPerTick / 100f);
+                            usedRegenAmount += powerResourceRegenDictionary[powerResource.ResourceName].CombatAmountPerTick;
                         } else {
                             // perform out of combat regen
-                            usedRegenAmount += GetPowerResourceMaxAmount(powerResource) * (powerResourceRegenDictionary[powerResource.DisplayName].PercentPerTick / 100f);
-                            usedRegenAmount += powerResourceRegenDictionary[powerResource.DisplayName].AmountPerTick;
+                            usedRegenAmount += GetPowerResourceMaxAmount(powerResource) * (powerResourceRegenDictionary[powerResource.ResourceName].PercentPerTick / 100f);
+                            usedRegenAmount += powerResourceRegenDictionary[powerResource.ResourceName].AmountPerTick;
                         }
                         powerResourceDictionary[powerResource].currentValue += usedRegenAmount;
                         powerResourceDictionary[powerResource].currentValue = Mathf.Clamp(

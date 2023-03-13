@@ -68,10 +68,10 @@ namespace AnyRPG {
             if (questName != null && questName != string.Empty) {
                 questObjective = systemDataFactory.GetResource<Quest>(questName);
                 if (questObjective == null) {
-                    Debug.LogError("QuestQuestObjective.SetupScriptableObjects(): Could not find quest : " + questName + " while inititalizing a quest quest objective for " + quest.DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("QuestQuestObjective.SetupScriptableObjects(): Could not find quest : " + questName + " while inititalizing a quest quest objective for " + quest.ResourceName + ".  CHECK INSPECTOR");
                 }
             } else {
-                Debug.LogError("QuestQuestObjective.SetupScriptableObjects(): MyType was null while inititalizing a quest quest objective for " + quest.DisplayName + ".  CHECK INSPECTOR");
+                Debug.LogError("QuestQuestObjective.SetupScriptableObjects(): questName was null while inititalizing a quest quest objective for " + quest.ResourceName + ".  CHECK INSPECTOR");
             }
         }
 

@@ -310,7 +310,7 @@ namespace AnyRPG {
                     if (tmpEquipment != null) {
                         equipmentList.Add(tmpEquipment);
                     } else {
-                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find equipment : " + equipmentName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find equipment : " + equipmentName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -330,10 +330,10 @@ namespace AnyRPG {
                         if (tmpUnitProfile != null) {
                             characterCreatorProfiles.Add(tmpUnitProfile);
                         } else {
-                            Debug.LogError("Faction.SetupScriptableObjects(): could not find unit profile " + characterCreatorProfileName + " while initializing " + DisplayName + ".  Check Inspector");
+                            Debug.LogError("Faction.SetupScriptableObjects(): could not find unit profile " + characterCreatorProfileName + " while initializing " + ResourceName + ".  Check Inspector");
                         }
                     } else {
-                        Debug.LogError("Faction.SetupScriptableObjects(): a character creator profile string was empty while initializing " + DisplayName + ".  Check Inspector");
+                        Debug.LogError("Faction.SetupScriptableObjects(): a character creator profile string was empty while initializing " + ResourceName + ".  Check Inspector");
                     }
                 }
             }
@@ -344,10 +344,10 @@ namespace AnyRPG {
                     if (tmpRace != null) {
                         raceRefs.Add(tmpRace);
                     } else {
-                        Debug.LogError("Faction.SetupScriptableObjects(): could not find race " + raceName + " while initializing " + DisplayName + ".  Check Inspector");
+                        Debug.LogError("Faction.SetupScriptableObjects(): could not find race " + raceName + " while initializing " + ResourceName + ".  Check Inspector");
                     }
                 } else {
-                    Debug.LogError("Faction.SetupScriptableObjects(): a race string was empty while initializing " + DisplayName + ".  Check Inspector");
+                    Debug.LogError("Faction.SetupScriptableObjects(): a race string was empty while initializing " + ResourceName + ".  Check Inspector");
                 }
             }
 

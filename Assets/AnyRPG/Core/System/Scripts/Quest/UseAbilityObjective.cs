@@ -57,7 +57,7 @@ namespace AnyRPG {
                 if (tmpAbility != null) {
                     baseAbility = tmpAbility.AbilityProperties;
                 } else {
-                    Debug.LogError("AbilityObjective.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing an ability objective for " + quest.DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("AbilityObjective.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing an ability objective for " + quest.ResourceName + ".  CHECK INSPECTOR");
                 }
             }
         }

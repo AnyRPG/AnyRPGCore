@@ -417,7 +417,7 @@ namespace AnyRPG {
                 if (unitController != null) {
                     
                     // give this unit a unique name
-                    unitController.gameObject.name = DisplayName.Replace(" ", "") + systemGameManager.GetSpawnCount();
+                    unitController.gameObject.name = ResourceName.Replace(" ", "") + systemGameManager.GetSpawnCount();
                     unitController.Configure(systemGameManager);
                     // test - set unitprofile first so we don't overwrite players baseCharacter settings
                     unitController.SetUnitProfile(this, unitControllerMode, unitLevel);
@@ -470,7 +470,7 @@ namespace AnyRPG {
                     if (tmpAudioProfile != null) {
                         movementAudioProfiles.Add(tmpAudioProfile);
                     } else {
-                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find audio profile : " + movementAudioProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find audio profile : " + movementAudioProfileName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -481,7 +481,7 @@ namespace AnyRPG {
                     if (tmpEquipment != null) {
                         equipmentList.Add(tmpEquipment);
                     } else {
-                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find equipment : " + equipmentName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find equipment : " + equipmentName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -494,7 +494,7 @@ namespace AnyRPG {
                     if (tmpPowerResource != null) {
                         powerResourceList.Add(tmpPowerResource);
                     } else {
-                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find power resource : " + powerResourcename + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find power resource : " + powerResourcename + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -511,7 +511,7 @@ namespace AnyRPG {
                 if (tmpCombatStrategy != null) {
                     combatStrategy = tmpCombatStrategy;
                 } else {
-                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find combat strategy : " + combatStrategyName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find combat strategy : " + combatStrategyName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -522,10 +522,10 @@ namespace AnyRPG {
                         if (abilityEffect != null) {
                             defaultHitEffectList.Add(abilityEffect.AbilityEffectProperties);
                         } else {
-                            Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find ability effect : " + defaultHitEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                            Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find ability effect : " + defaultHitEffectName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                         }
                     } else {
-                        Debug.LogError("UnitProfile.SetupScriptableObjects(): null or empty default hit effect found while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("UnitProfile.SetupScriptableObjects(): null or empty default hit effect found while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -535,7 +535,7 @@ namespace AnyRPG {
                 if (tmpFaction != null) {
                     faction = tmpFaction;
                 } else {
-                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find faction : " + factionName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find faction : " + factionName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -544,7 +544,7 @@ namespace AnyRPG {
                 if (tmpCharacterClass != null) {
                     characterClass = tmpCharacterClass;
                 } else {
-                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find class : " + characterClassName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find class : " + characterClassName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -553,7 +553,7 @@ namespace AnyRPG {
                 if (tmpSpecialization != null) {
                     classSpecialization = tmpSpecialization;
                 } else {
-                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find specialization : " + classSpecializationName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find specialization : " + classSpecializationName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -562,7 +562,7 @@ namespace AnyRPG {
                 if (tmpCharacterRace != null) {
                     characterRace = tmpCharacterRace;
                 } else {
-                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find race : " + characterRaceName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find race : " + characterRaceName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -571,7 +571,7 @@ namespace AnyRPG {
                 if (tmpUnitType != null) {
                     unitType = tmpUnitType;
                 } else {
-                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find unit type : " + unitTypeName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find unit type : " + unitTypeName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -604,7 +604,7 @@ namespace AnyRPG {
                         if (interactableOptionConfig != null && interactableOptionConfig.InteractableOptionProps != null) {
                             interactableOptionProps.Add(interactableOptionConfig.InteractableOptionProps);
                         } else {
-                            Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find interactableOptionConfig: " + interactableOptionName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                            Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find interactableOptionConfig: " + interactableOptionName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                         }
                     }
                 }

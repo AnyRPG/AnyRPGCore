@@ -26,7 +26,7 @@ namespace AnyRPG {
         }
 
         public virtual void ExecuteCommand(string commandParameters) {
-            Debug.Log("ChatCommand.ExecuteCommand(): Executing command " + DisplayName + " with parameters (" + commandParameters + ")");
+            //Debug.Log("ChatCommand.ExecuteCommand(): Executing command " + ResourceName + " with parameters (" + commandParameters + ")");
         }
 
     }

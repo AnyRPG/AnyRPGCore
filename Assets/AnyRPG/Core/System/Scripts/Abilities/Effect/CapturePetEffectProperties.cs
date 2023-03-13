@@ -91,7 +91,7 @@ namespace AnyRPG {
                     if (tmpUnitType != null) {
                         unitTypeRestrictionList.Add(tmpUnitType);
                     } else {
-                        Debug.LogError("CapturePetEffect.SetupScriptableObjects(): Could not find unitTypeRestriction: " + unitTypeRestriction + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("CapturePetEffect.SetupScriptableObjects(): Could not find unitTypeRestriction: " + unitTypeRestriction + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }

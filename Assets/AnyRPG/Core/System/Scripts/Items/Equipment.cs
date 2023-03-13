@@ -323,7 +323,7 @@ namespace AnyRPG {
                 summaryLines.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.DisplayName, equipmentCount, equipmentSet.EquipmentList.Count));
                 foreach (Equipment equipment in equipmentSet.EquipmentList) {
                     string colorName = "#888888";
-                    if (playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.DisplayName)) {
+                    if (playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.ResourceName)) {
                         colorName = "yellow";
                     }
                     summaryLines.Add(string.Format("  <color={0}>{1}</color>", colorName, equipment.DisplayName));
@@ -354,7 +354,7 @@ namespace AnyRPG {
                 if (abilityEffect != null) {
                     onEquipStatusEffectRef = abilityEffect;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find status effect : " + onEquipStatusEffect + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find status effect : " + onEquipStatusEffect + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -365,7 +365,7 @@ namespace AnyRPG {
                     if (baseAbility != null) {
                         learnedAbilities.Add(baseAbility.AbilityProperties);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -377,10 +377,10 @@ namespace AnyRPG {
                 if (tmpEquipmentSlotType != null) {
                     realEquipmentSlotType = tmpEquipmentSlotType;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipment slot type : " + equipmentSlotType + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipment slot type : " + equipmentSlotType + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             } else {
-                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): EquipmentSlotType is a required field while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): EquipmentSlotType is a required field while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
             }
 
             equipmentSet = null;
@@ -389,7 +389,7 @@ namespace AnyRPG {
                 if (tmpEquipmentSet != null) {
                     equipmentSet = tmpEquipmentSet;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipment set : " + equipmentSetName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipment set : " + equipmentSetName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -412,7 +412,7 @@ namespace AnyRPG {
                 if (tmpUMARecipeProfile != null) {
                     uMARecipeProfileProperties = tmpUMARecipeProfile.Properties;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find uma recipe profile : " + umaRecipeProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find uma recipe profile : " + umaRecipeProfileName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 

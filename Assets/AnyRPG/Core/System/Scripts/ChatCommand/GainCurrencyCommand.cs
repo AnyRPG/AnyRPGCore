@@ -112,7 +112,7 @@ namespace AnyRPG {
                 if (tmpCurrency != null) {
                     currency = tmpCurrency;
                 } else {
-                    Debug.LogError("GainItemCommand.SetupScriptableObjects(): Could not find currency : " + currencyName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("GainItemCommand.SetupScriptableObjects(): Could not find currency : " + currencyName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
         }

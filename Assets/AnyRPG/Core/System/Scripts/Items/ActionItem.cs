@@ -64,7 +64,7 @@ namespace AnyRPG {
             if (playerManager.MyCharacter.AbilityManager.ControlLocked) {
                 return false;
             }
-            if (playerManager.MyCharacter.AbilityManager.IsOnCoolDown(DisplayName)) {
+            if (playerManager.MyCharacter.AbilityManager.IsOnCoolDown(ResourceName)) {
                 messageFeedManager.WriteMessage("Item is on cooldown");
                 return false;
             }
@@ -130,10 +130,10 @@ namespace AnyRPG {
         public string GetCooldownTimeString() {
             string coolDownString = string.Empty;
             if (playerManager?.MyCharacter?.CharacterAbilityManager != null
-                && playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName)) {
+                && playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(ResourceName)) {
                 float dictionaryCooldown = 0f;
-                if (playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName)) {
-                    dictionaryCooldown = playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary[DisplayName].RemainingCoolDown;
+                if (playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(ResourceName)) {
+                    dictionaryCooldown = playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary[ResourceName].RemainingCoolDown;
                 }
                 coolDownString = "\n\nCooldown Remaining: " + SystemAbilityController.GetTimeText(dictionaryCooldown);
             }
@@ -151,7 +151,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName)) {
+            if (playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(ResourceName)) {
                 //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): Ability is on cooldown");
                 if (actionButton.CoolDownIcon.isActiveAndEnabled != true) {
                     //Debug.Log("ActionButton.UpdateVisual(): coolDownIcon is not enabled: " + (useable == null ? "null" : useable.DisplayName));
@@ -165,9 +165,9 @@ namespace AnyRPG {
                 }
                 float remainingAbilityCoolDown = 0f;
                 float initialCoolDown = 0f;
-                if (playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName)) {
-                    remainingAbilityCoolDown = playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary[DisplayName].RemainingCoolDown;
-                    initialCoolDown = playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary[DisplayName].InitialCoolDown;
+                if (playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(ResourceName)) {
+                    remainingAbilityCoolDown = playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary[ResourceName].RemainingCoolDown;
+                    initialCoolDown = playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary[ResourceName].InitialCoolDown;
                 } else {
                     initialCoolDown = coolDown;
                 }
@@ -186,13 +186,13 @@ namespace AnyRPG {
 
 
             if (actionType == ResourcePropertyType.Inline) {
-                actionProperties.SetupScriptableObjects(systemGameManager, DisplayName);
+                actionProperties.SetupScriptableObjects(systemGameManager, ResourceName);
             } else if (actionType == ResourcePropertyType.Named && actionName != null && actionName != string.Empty) {
                 AnimatedAction tmpAction = systemDataFactory.GetResource<AnimatedAction>(actionName);
                 if (tmpAction != null) {
                     actionProperties = tmpAction.ActionProperties;
                 } else {
-                    Debug.LogError("ActionItem.SetupScriptableObjects(): Could not find action : " + actionName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("ActionItem.SetupScriptableObjects(): Could not find action : " + actionName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 

@@ -54,6 +54,7 @@ namespace AnyRPG {
         public Image Image { get => icon; set => icon = value; }
 
         public Sprite Icon { get => (BagNode.Bag != null ? BagNode.Bag.Icon : null); }
+        public string ResourceName { get => (BagNode.Bag != null ? BagNode.Bag.ResourceName : null); }
         public string DisplayName { get => (BagNode.Bag != null ? BagNode.Bag.DisplayName : null); }
         public string Description { get => (BagNode.Bag != null ? BagNode.Bag.Description : null); }
 

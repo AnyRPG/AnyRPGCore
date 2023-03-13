@@ -86,7 +86,7 @@ namespace AnyRPG {
                     if (audioProfile != null) {
                         flightAudioProfiles.Add(audioProfile);
                     } else {
-                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + audioProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + audioProfileName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }

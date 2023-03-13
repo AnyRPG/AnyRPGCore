@@ -48,6 +48,7 @@ namespace AnyRPG {
         public Sprite Icon { get => icon.sprite; set => icon.sprite = value; }
         public Image EmptySlotImage { get => emptySlotImage; set => emptySlotImage = value; }
 
+        public string ResourceName { get => DisplayName; }
         public string DisplayName {
             get {
                 if (equippedEquipment != null) {

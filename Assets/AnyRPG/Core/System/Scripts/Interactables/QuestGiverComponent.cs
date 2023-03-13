@@ -73,13 +73,11 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".InitializeQuestGiver(): questnode.MyQuestTemplate is null!!!!");
                     return;
                 }
-                if (questNode.Quest.DisplayName == null) {
+                if (questNode.Quest.ResourceName == null) {
                     //Debug.Log(gameObject.name + ".InitializeQuestGiver(): questnode.MyQuestTemplate.MyTitle is null!!!!");
                     return;
-                } else {
-                    //Debug.Log(gameObject.name + ".InitializeQuestGiver(): Adding watches on " + questNode.MyQuestTemplate.MyTitle);
                 }
-                questNode.Quest = systemDataFactory.GetResource<Quest>(questNode.Quest.DisplayName);
+                questNode.Quest = systemDataFactory.GetResource<Quest>(questNode.Quest.ResourceName);
             }
             questGiverInitialized = true;
         }
@@ -190,7 +188,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + "QuestGiver.GetIndicatorType(): quests.length: " + quests.Length);
             foreach (QuestNode questNode in Props.Quests) {
                 if (questNode != null && questNode.Quest != null) {
-                    if (questLog.HasQuest(questNode.Quest.DisplayName)) {
+                    if (questLog.HasQuest(questNode.Quest.ResourceName)) {
                         if (questNode.Quest.IsComplete && !questNode.Quest.TurnedIn && questNode.EndQuest) {
                             //Debug.Log(gameObject.name + ": There is a complete quest to turn in.  Incrementing inProgressCount.");
                             completeCount++;
@@ -200,7 +198,7 @@ namespace AnyRPG {
                         } else {
                             //Debug.Log(gameObject.name + ": This quest must have been turned in already or we are not responsible for ending it.  doing nothing.");
                         }
-                    } else if ((questNode.Quest.TurnedIn == false || (questNode.Quest.RepeatableQuest == true && questLog.HasQuest(questNode.Quest.DisplayName) == false)) && questNode.StartQuest && questNode.Quest.PrerequisitesMet == true) {
+                    } else if ((questNode.Quest.TurnedIn == false || (questNode.Quest.RepeatableQuest == true && questLog.HasQuest(questNode.Quest.ResourceName) == false)) && questNode.StartQuest && questNode.Quest.PrerequisitesMet == true) {
                         availableCount++;
                         //Debug.Log(gameObject.name + ": The quest is not in the log and hasn't been turned in yet.  Incrementing available count");
                     }
@@ -290,7 +288,7 @@ namespace AnyRPG {
 
         public bool EndsQuest(string questName) {
             foreach (QuestNode questNode in Props.Quests) {
-                if (SystemDataFactory.MatchResource(questNode.Quest.DisplayName, questName)) {
+                if (SystemDataFactory.MatchResource(questNode.Quest.ResourceName, questName)) {
                     if (questNode.EndQuest == true) {
                         return true;
                     } else {

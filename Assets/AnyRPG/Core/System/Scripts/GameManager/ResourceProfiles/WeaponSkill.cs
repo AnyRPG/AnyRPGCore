@@ -12,7 +12,7 @@ namespace AnyRPG {
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
-            weaponSkillProps.SetupScriptableObjects(DisplayName, systemGameManager);
+            weaponSkillProps.SetupScriptableObjects(ResourceName, systemGameManager);
         }
     }
 

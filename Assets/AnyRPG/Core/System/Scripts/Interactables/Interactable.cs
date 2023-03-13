@@ -152,6 +152,7 @@ namespace AnyRPG {
 
         public UnitComponentController UnitComponentController { get => unitComponentController; set => unitComponentController = value; }
 
+        public string ResourceName { get => DisplayName; }
         public override string DisplayName {
             get {
                 if (interactableName != null && interactableName != string.Empty) {

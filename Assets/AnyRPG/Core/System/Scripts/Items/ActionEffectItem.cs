@@ -58,14 +58,14 @@ namespace AnyRPG {
 
             if (useInlineEffect) {
                 abilityEffectProperties = inlineEffect.AbilityEffectProperties;
-                abilityEffectProperties.SetupScriptableObjects(systemGameManager, new DescribableProperties(Icon, DisplayName));
+                abilityEffectProperties.SetupScriptableObjects(systemGameManager, new DescribableProperties(Icon, ResourceName));
             } else {
                 if (effectName != null && effectName != string.Empty) {
                     AbilityEffect tmpEffect = systemDataFactory.GetResource<AbilityEffect>(effectName);
                     if (tmpEffect != null) {
                         abilityEffectProperties = tmpEffect.AbilityEffectProperties;
                     } else {
-                        Debug.LogError("PowerResourcePotion.SetupScriptableObjects(): Could not find ability effect : " + effectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("PowerResourcePotion.SetupScriptableObjects(): Could not find ability effect : " + effectName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }

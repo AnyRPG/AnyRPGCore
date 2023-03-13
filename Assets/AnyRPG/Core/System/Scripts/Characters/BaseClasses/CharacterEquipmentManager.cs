@@ -116,7 +116,7 @@ namespace AnyRPG {
             }
 
             if (newItem.EquipmentSlotType == null) {
-                Debug.LogError(baseCharacter.gameObject.name + "CharacterEquipmentManager.Equip() " + newItem.DisplayName + " could not be equipped because it had no equipment slot.  CHECK INSPECTOR.");
+                Debug.LogError(baseCharacter.gameObject.name + "CharacterEquipmentManager.Equip() " + newItem.ResourceName + " could not be equipped because it had no equipment slot.  CHECK INSPECTOR.");
                 return false;
             }
 
@@ -129,7 +129,7 @@ namespace AnyRPG {
             equipmentSlotProfile = base.EquipEquipment(newItem, equipmentSlotProfile);
             
             if (equipmentSlotProfile == null) {
-                Debug.LogError(baseCharacter.gameObject.name + "CharacterEquipmentManager.Equip() " + newItem.DisplayName + " equipmentSlotProfile is null.  CHECK INSPECTOR.");
+                Debug.LogError(baseCharacter.gameObject.name + "CharacterEquipmentManager.Equip() " + newItem.ResourceName + " equipmentSlotProfile is null.  CHECK INSPECTOR.");
                 return false;
             }
 

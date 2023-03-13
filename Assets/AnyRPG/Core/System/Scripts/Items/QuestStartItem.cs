@@ -35,7 +35,7 @@ namespace AnyRPG {
                 return false;
             }
             if (questGiverProps.Quests != null) {
-                if (questLog.HasQuest(questGiverProps.Quests[0].Quest.DisplayName)) {
+                if (questLog.HasQuest(questGiverProps.Quests[0].Quest.ResourceName)) {
                     messageFeedManager.WriteMessage("You are already on that quest");
                 } else if (questGiverProps.Quests[0].Quest.TurnedIn == true && questGiverProps.Quests[0].Quest.RepeatableQuest == false) {
                     messageFeedManager.WriteMessage("You have already completed that quest");
@@ -61,7 +61,7 @@ namespace AnyRPG {
                         // the next condition is failing on raw complete quest start items because they are always considered complete
                         //&& questNode.MyQuest.IsComplete == false
                         && questNode.Quest.TurnedIn == false
-                        && !questLog.HasQuest(questNode.Quest.DisplayName)
+                        && !questLog.HasQuest(questNode.Quest.ResourceName)
                         && (questNode.Quest.RepeatableQuest == true || questNode.Quest.TurnedIn == false)) {
                         //Debug.Log(DisplayName + ".QuestStartItem.QuestRequirementsAreMet(): return true");
                         return true;
@@ -128,7 +128,7 @@ namespace AnyRPG {
 
         public bool EndsQuest(string questName) {
             foreach (QuestNode questNode in questGiverProps.Quests) {
-                if (SystemDataFactory.MatchResource(questNode.Quest.DisplayName, questName)) {
+                if (SystemDataFactory.MatchResource(questNode.Quest.ResourceName, questName)) {
                     if (questNode.EndQuest == true) {
                         return true;
                     } else {

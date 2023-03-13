@@ -71,6 +71,7 @@ namespace AnyRPG {
         public List<AbilityEffectProperties> HitAbilityEffectList { get => hitAbilityEffectList; set => hitAbilityEffectList = value; }
         public float ThreatMultiplier { get => threatMultiplier; set => threatMultiplier = value; }
         public float ChanceToCast { get => chanceToCast; set => chanceToCast = value; }
+        public string ResourceName { get => describableData.ResourceName; }
         public string DisplayName { get => describableData.DisplayName; }
         public Sprite Icon { get => describableData.Icon; }
         public string Description { get => describableData.Description; }
@@ -358,7 +359,7 @@ namespace AnyRPG {
                     if (abilityEffect != null) {
                         hitAbilityEffectList.Add(abilityEffect.AbilityEffectProperties);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -370,7 +371,7 @@ namespace AnyRPG {
                     if (audioProfile != null) {
                         onHitAudioProfiles.Add(audioProfile);
                     } else {
-                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + audioProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + audioProfileName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -381,7 +382,7 @@ namespace AnyRPG {
                 if (tmpMaterialProfile != null) {
                     effectMaterial = tmpMaterialProfile.MyEffectMaterial;
                 } else {
-                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find material profile: " + effectMaterialName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find material profile: " + effectMaterialName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 

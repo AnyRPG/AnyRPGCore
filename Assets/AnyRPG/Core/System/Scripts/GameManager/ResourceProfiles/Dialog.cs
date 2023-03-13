@@ -155,7 +155,7 @@ namespace AnyRPG {
                         }
                     }
                 } else {
-                    Debug.LogError("Dialog.SetupScriptableObjects(): Could not find audioProfile " + audioProfileName + " while initializing " + DisplayName);
+                    Debug.LogError("Dialog.SetupScriptableObjects(): Could not find audioProfile " + audioProfileName + " while initializing " + ResourceName);
                 }
             }
         }

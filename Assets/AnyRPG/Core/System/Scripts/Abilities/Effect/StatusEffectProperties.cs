@@ -537,7 +537,7 @@ namespace AnyRPG {
                     if (abilityEffect != null) {
                         reflectAbilityEffectList.Add(abilityEffect.AbilityEffectProperties);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -549,7 +549,7 @@ namespace AnyRPG {
                     if (abilityEffect != null) {
                         weaponHitAbilityEffectList.Add(abilityEffect.AbilityEffectProperties);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -559,7 +559,7 @@ namespace AnyRPG {
                 if (tmpStatusEffectType != null) {
                     statusEffectType = tmpStatusEffectType;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find status effect type: " + statusEffectTypeName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find status effect type: " + statusEffectTypeName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -568,7 +568,7 @@ namespace AnyRPG {
                 if (tmpStatusEffectGroup != null) {
                     statusEffectGroup = tmpStatusEffectGroup;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find status effect group: " + statusEffectGroupName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find status effect group: " + statusEffectGroupName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 

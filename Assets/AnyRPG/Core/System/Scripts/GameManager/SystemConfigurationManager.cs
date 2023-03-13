@@ -884,7 +884,7 @@ namespace AnyRPG {
             foreach (CharacterStat characterStat in characterStats) {
                 if (characterStat.GlobalStat == true) {
                     StatScalingNode statScalingNode = new StatScalingNode();
-                    statScalingNode.StatName = characterStat.DisplayName;
+                    statScalingNode.StatName = characterStat.ResourceName;
                     statScalingNode.BudgetPerLevel = characterStat.BudgetPerLevel;
                     statScalingNode.PrimaryToSecondaryConversion = characterStat.PrimaryToSecondaryConversion;
                     statScalingNode.PrimaryToResourceConversion = characterStat.PrimaryToResourceConversion;

@@ -164,7 +164,7 @@ namespace AnyRPG {
         }
 
         public void GiveReward() {
-            Item newItem = systemItemManager.GetNewResource(DisplayName);
+            Item newItem = systemItemManager.GetNewResource(ResourceName);
             if (newItem != null) {
                 //Debug.Log("RewardButton.CompleteQuest(): newItem is not null, adding to inventory");
                 newItem.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
@@ -324,11 +324,11 @@ namespace AnyRPG {
         public int UseLevel { get => useLevel; set => useLevel = value; }
 
         public IUseable GetFactoryUseable() {
-            return systemDataFactory.GetResource<Item>(DisplayName);
+            return systemDataFactory.GetResource<Item>(ResourceName);
         }
 
         public bool ActionButtonUse() {
-            List<Item> itemList = playerManager.MyCharacter.CharacterInventoryManager?.GetItems(DisplayName, 1);
+            List<Item> itemList = playerManager.MyCharacter.CharacterInventoryManager?.GetItems(ResourceName, 1);
             if (itemList == null || itemList.Count == 0) {
                 return false;
             }
@@ -507,7 +507,7 @@ namespace AnyRPG {
                 if (tmpCurrency != null) {
                     currency = tmpCurrency;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find currency : " + currencyName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find currency : " + currencyName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -517,7 +517,7 @@ namespace AnyRPG {
                 if (tmpItemQuality != null) {
                     realItemQuality = tmpItemQuality;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item quality : " + itemQuality + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item quality : " + itemQuality + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -528,7 +528,7 @@ namespace AnyRPG {
                     if (tmpCharacterClass != null) {
                         realCharacterClassRequirementList.Add(tmpCharacterClass);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + characterClassName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + characterClassName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }

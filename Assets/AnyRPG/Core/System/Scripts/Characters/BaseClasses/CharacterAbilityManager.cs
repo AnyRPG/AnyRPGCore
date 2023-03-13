@@ -298,7 +298,7 @@ namespace AnyRPG {
                                 newEquipmentPrefab.transform.localScale = abilityAttachmentNode.HoldableObject.Scale;
                                 HoldObject(newEquipmentPrefab, abilityAttachmentNode, baseCharacter.UnitController.gameObject);
                             } else {
-                                Debug.Log(baseCharacter.gameObject.name + "CharacterAbilityManager.SpawnAbilityObjects(). We could not find the target bone " + attachmentPointNode.TargetBone + " while attempting to hold " + abilityAttachmentNode.HoldableObject.DisplayName);
+                                Debug.Log(baseCharacter.gameObject.name + "CharacterAbilityManager.SpawnAbilityObjects(). We could not find the target bone " + attachmentPointNode.TargetBone + " while attempting to hold " + abilityAttachmentNode.HoldableObject.ResourceName);
                             }
                         }
                     }
@@ -351,7 +351,7 @@ namespace AnyRPG {
             base.GeneratePower(ability);
             if (baseCharacter != null && baseCharacter.CharacterStats != null) {
                 //Debug.Log(gameObject.name + ".GeneratePower(" + ability.DisplayName + "): name " + ability.GeneratePowerResource.DisplayName  + "; " + ability.GetResourceGain(this));
-                baseCharacter.CharacterStats.AddResourceAmount(ability.GeneratePowerResource.DisplayName, ability.GetResourceGain(baseCharacter));
+                baseCharacter.CharacterStats.AddResourceAmount(ability.GeneratePowerResource.ResourceName, ability.GetResourceGain(baseCharacter));
             }
         }
 
@@ -976,8 +976,8 @@ namespace AnyRPG {
                 return;
             }
             foreach (StatusEffect statusEffect in statusEffects) {
-                if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName))) {
-                    baseCharacter.CharacterStats.StatusEffects[SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
+                if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.ResourceName))) {
+                    baseCharacter.CharacterStats.StatusEffects[SystemDataFactory.PrepareStringForMatch(statusEffect.ResourceName)].CancelStatusEffect();
                 }
             }
         }
@@ -1780,7 +1780,7 @@ namespace AnyRPG {
             if (ability.GetResourceCost(baseCharacter) != 0 && ability.PowerResource != null) {
                 // testing - should add ever be used?
                 //abilityEffectContext.AddResourceAmount(ability.PowerResource.DisplayName, ability.GetResourceCost(baseCharacter));
-                abilityEffectContext.SetResourceAmount(ability.PowerResource.DisplayName, ability.GetResourceCost(baseCharacter));
+                abilityEffectContext.SetResourceAmount(ability.PowerResource.ResourceName, ability.GetResourceCost(baseCharacter));
                 // intentionally not keeping track of this coroutine.  many of these could be in progress at once.
                 abilityCaster.StartCoroutine(UsePowerResourceDelay(ability.PowerResource, (int)ability.GetResourceCost(baseCharacter), ability.SpendDelay));
             }

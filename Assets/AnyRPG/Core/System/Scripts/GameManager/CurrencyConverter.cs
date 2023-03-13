@@ -24,13 +24,13 @@ namespace AnyRPG {
                 // attemp redistribution
                 Currency baseCurrency = currencyGroup.MyBaseCurrency;
                 // convert everything in the group to the base amount
-                if (SystemDataFactory.MatchResource(currency.DisplayName, currencyGroup.MyBaseCurrency.DisplayName)) {
+                if (SystemDataFactory.MatchResource(currency.ResourceName, currencyGroup.MyBaseCurrency.ResourceName)) {
                     //Debug.Log("CurrencyConverter.GetBaseCurrencyAmount(" + currency.DisplayName + ", " + currencyAmount + ") return: " + currencyAmount);
                     return currencyAmount;
                 }
                 // the currency needs conversion
                 foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
-                    if (SystemDataFactory.MatchResource(currencyGroupRate.Currency.DisplayName, currency.DisplayName)) {
+                    if (SystemDataFactory.MatchResource(currencyGroupRate.Currency.ResourceName, currency.ResourceName)) {
                         //Debug.Log("CurrencyConverter.GetBaseCurrencyAmount(" + currency.DisplayName + ", " + currencyAmount + ") return: " + (currencyGroupRate.MyBaseMultiple * currencyAmount));
                         return currencyGroupRate.BaseMultiple * currencyAmount;
                     }
@@ -83,7 +83,7 @@ namespace AnyRPG {
                         }
                     }
                     if (nonZeroFound == true) {
-                        returnStrings.Add(keyValuePair.Value + " " + keyValuePair.Key.DisplayName);
+                        returnStrings.Add(keyValuePair.Value + " " + keyValuePair.Key.ResourceName);
                     }
                 }
             }

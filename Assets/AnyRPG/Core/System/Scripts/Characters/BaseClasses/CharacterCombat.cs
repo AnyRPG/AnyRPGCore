@@ -220,7 +220,7 @@ namespace AnyRPG {
             }
             */
             abilityEffectContext.powerResource = powerResource;
-            abilityEffectContext.SetResourceAmount(powerResource.DisplayName, damage);
+            abilityEffectContext.SetResourceAmount(powerResource.ResourceName, damage);
 
             // prevent infinite reflect loops
             if (abilityEffectContext.reflectDamage == false) {

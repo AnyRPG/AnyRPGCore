@@ -282,7 +282,7 @@ namespace AnyRPG {
                     if (abilityEffect != null) {
                         tickAbilityEffectList.Add(abilityEffect.AbilityEffectProperties);
                     } else {
-                        Debug.LogError("LengthEffect.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("LengthEffect.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -294,7 +294,7 @@ namespace AnyRPG {
                     if (abilityEffect != null) {
                         completeAbilityEffectList.Add(abilityEffect.AbilityEffectProperties);
                     } else {
-                        Debug.LogError("LengthEffect.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("LengthEffect.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -309,7 +309,7 @@ namespace AnyRPG {
                     if (prefabProfile != null) {
                         prefabProfileList.Add(prefabProfile);
                     } else {
-                        Debug.LogError("LengthEffect.SetupScriptableObjects(): Could not find prefab Profile : " + prefabName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("LengthEffect.SetupScriptableObjects(): Could not find prefab Profile : " + prefabName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -322,7 +322,7 @@ namespace AnyRPG {
                     if (audioProfile != null) {
                         onTickAudioProfiles.Add(audioProfile);
                     } else {
-                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + audioProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + audioProfileName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }

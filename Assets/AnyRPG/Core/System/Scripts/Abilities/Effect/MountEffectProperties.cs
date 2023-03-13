@@ -81,10 +81,10 @@ namespace AnyRPG {
                 if (tmpUnitProfile != null) {
                     unitProfile = tmpUnitProfile;
                 } else {
-                    Debug.LogError("MountEffect.SetupScriptableObjects(): Could not find prefab Profile : " + unitProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("MountEffect.SetupScriptableObjects(): Could not find prefab Profile : " + unitProfileName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             } else {
-                Debug.LogError("MountEffect.SetupScriptableObjects(): Mount effect requires a unit prefab profile but non was configured while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                Debug.LogError("MountEffect.SetupScriptableObjects(): Mount effect requires a unit prefab profile but non was configured while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
             }
 
         }

@@ -69,7 +69,7 @@ namespace AnyRPG {
                 if (tmpUnitProfile != null) {
                     unitProfile = tmpUnitProfile;
                 } else {
-                    Debug.LogError("SummonEffect.SetupScriptableObjects(): Could not find unitProfile : " + unitProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SummonEffect.SetupScriptableObjects(): Could not find unitProfile : " + unitProfileName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
         }

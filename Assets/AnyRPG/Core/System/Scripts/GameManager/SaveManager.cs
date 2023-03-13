@@ -353,18 +353,18 @@ namespace AnyRPG {
             anyRPGSaveData.currentExperience = playerManager.MyCharacter.CharacterStats.CurrentXP;
             anyRPGSaveData.playerName = playerManager.MyCharacter.CharacterName;
             if (playerManager.MyCharacter.Faction != null) {
-                anyRPGSaveData.playerFaction = playerManager.MyCharacter.Faction.DisplayName;
+                anyRPGSaveData.playerFaction = playerManager.MyCharacter.Faction.ResourceName;
             }
             if (playerManager.MyCharacter.CharacterRace != null) {
-                anyRPGSaveData.characterRace = playerManager.MyCharacter.CharacterRace.DisplayName;
+                anyRPGSaveData.characterRace = playerManager.MyCharacter.CharacterRace.ResourceName;
             }
             if (playerManager.MyCharacter.CharacterClass != null) {
-                anyRPGSaveData.characterClass = playerManager.MyCharacter.CharacterClass.DisplayName;
+                anyRPGSaveData.characterClass = playerManager.MyCharacter.CharacterClass.ResourceName;
             }
             if (playerManager.MyCharacter.ClassSpecialization != null) {
-                anyRPGSaveData.classSpecialization = playerManager.MyCharacter.ClassSpecialization.DisplayName;
+                anyRPGSaveData.classSpecialization = playerManager.MyCharacter.ClassSpecialization.ResourceName;
             }
-            anyRPGSaveData.unitProfileName = playerManager.MyCharacter.UnitProfile.DisplayName;
+            anyRPGSaveData.unitProfileName = playerManager.MyCharacter.UnitProfile.ResourceName;
 
             anyRPGSaveData.OverrideLocation = true;
             anyRPGSaveData.OverrideRotation = true;
@@ -433,7 +433,7 @@ namespace AnyRPG {
         public void SaveResourcePowerData(AnyRPGSaveData anyRPGSaveData) {
             foreach (PowerResource powerResource in playerManager.MyCharacter.CharacterStats.PowerResourceDictionary.Keys) {
                 ResourcePowerSaveData resourcePowerData = new ResourcePowerSaveData();
-                resourcePowerData.ResourceName = powerResource.DisplayName;
+                resourcePowerData.ResourceName = powerResource.ResourceName;
                 resourcePowerData.amount = playerManager.MyCharacter.CharacterStats.PowerResourceDictionary[powerResource].currentValue;
                 anyRPGSaveData.resourcePowerSaveData.Add(resourcePowerData);
             }
@@ -465,75 +465,75 @@ namespace AnyRPG {
 
         public QuestSaveData GetQuestSaveData(QuestBase quest) {
             QuestSaveData saveData;
-            if (questSaveDataDictionary.ContainsKey(quest.DisplayName)) {
-                saveData = questSaveDataDictionary[quest.DisplayName];
+            if (questSaveDataDictionary.ContainsKey(quest.ResourceName)) {
+                saveData = questSaveDataDictionary[quest.ResourceName];
             } else {
                 saveData = new QuestSaveData();
-                saveData.QuestName = quest.DisplayName;
-                questSaveDataDictionary.Add(quest.DisplayName, saveData);
+                saveData.QuestName = quest.ResourceName;
+                questSaveDataDictionary.Add(quest.ResourceName, saveData);
             }
             return saveData;
         }
 
         public QuestSaveData GetAchievementSaveData(QuestBase quest) {
             QuestSaveData saveData;
-            if (achievementSaveDataDictionary.ContainsKey(quest.DisplayName)) {
-                saveData = achievementSaveDataDictionary[quest.DisplayName];
+            if (achievementSaveDataDictionary.ContainsKey(quest.ResourceName)) {
+                saveData = achievementSaveDataDictionary[quest.ResourceName];
             } else {
                 saveData = new QuestSaveData();
-                saveData.QuestName = quest.DisplayName;
-                achievementSaveDataDictionary.Add(quest.DisplayName, saveData);
+                saveData.QuestName = quest.ResourceName;
+                achievementSaveDataDictionary.Add(quest.ResourceName, saveData);
             }
             return saveData;
         }
 
         public DialogSaveData GetDialogSaveData(Dialog dialog) {
             DialogSaveData saveData;
-            if (dialogSaveDataDictionary.ContainsKey(dialog.DisplayName)) {
-                saveData = dialogSaveDataDictionary[dialog.DisplayName];
+            if (dialogSaveDataDictionary.ContainsKey(dialog.ResourceName)) {
+                saveData = dialogSaveDataDictionary[dialog.ResourceName];
             } else {
                 saveData = new DialogSaveData();
-                saveData.DialogName = dialog.DisplayName;
-                dialogSaveDataDictionary.Add(dialog.DisplayName, saveData);
+                saveData.DialogName = dialog.ResourceName;
+                dialogSaveDataDictionary.Add(dialog.ResourceName, saveData);
             }
             return saveData;
         }
 
         public SceneNodeSaveData GetSceneNodeSaveData(SceneNode sceneNode) {
             SceneNodeSaveData saveData;
-            if (sceneNodeSaveDataDictionary.ContainsKey(sceneNode.DisplayName)) {
-                saveData = sceneNodeSaveDataDictionary[sceneNode.DisplayName];
+            if (sceneNodeSaveDataDictionary.ContainsKey(sceneNode.ResourceName)) {
+                saveData = sceneNodeSaveDataDictionary[sceneNode.ResourceName];
             } else {
                 saveData = new SceneNodeSaveData();
                 saveData.persistentObjects = new List<PersistentObjectSaveData>();
-                saveData.SceneName = sceneNode.DisplayName;
-                sceneNodeSaveDataDictionary.Add(sceneNode.DisplayName, saveData);
+                saveData.SceneName = sceneNode.ResourceName;
+                sceneNodeSaveDataDictionary.Add(sceneNode.ResourceName, saveData);
             }
             return saveData;
         }
 
         public CutsceneSaveData GetCutsceneSaveData(Cutscene cutscene) {
             CutsceneSaveData saveData;
-            if (cutsceneSaveDataDictionary.ContainsKey(cutscene.DisplayName)) {
+            if (cutsceneSaveDataDictionary.ContainsKey(cutscene.ResourceName)) {
                 //Debug.Log("Savemanager.GetCutsceneSaveData(): loading existing save data for: " + cutscene.DisplayName);
-                saveData = cutsceneSaveDataDictionary[cutscene.DisplayName];
+                saveData = cutsceneSaveDataDictionary[cutscene.ResourceName];
             } else {
                 //Debug.Log("Savemanager.GetCutsceneSaveData(): generating new cutscene save data for: " + cutscene.DisplayName);
                 saveData = new CutsceneSaveData();
-                saveData.CutsceneName = cutscene.DisplayName;
-                cutsceneSaveDataDictionary.Add(cutscene.DisplayName, saveData);
+                saveData.CutsceneName = cutscene.ResourceName;
+                cutsceneSaveDataDictionary.Add(cutscene.ResourceName, saveData);
             }
             return saveData;
         }
 
         public BehaviorSaveData GetBehaviorSaveData(BehaviorProfile behaviorProfile) {
             BehaviorSaveData saveData;
-            if (behaviorSaveDataDictionary.ContainsKey(behaviorProfile.DisplayName)) {
-                saveData = behaviorSaveDataDictionary[behaviorProfile.DisplayName];
+            if (behaviorSaveDataDictionary.ContainsKey(behaviorProfile.ResourceName)) {
+                saveData = behaviorSaveDataDictionary[behaviorProfile.ResourceName];
             } else {
                 saveData = new BehaviorSaveData();
-                saveData.BehaviorName = behaviorProfile.DisplayName;
-                behaviorSaveDataDictionary.Add(behaviorProfile.DisplayName, saveData);
+                saveData.BehaviorName = behaviorProfile.ResourceName;
+                behaviorSaveDataDictionary.Add(behaviorProfile.ResourceName, saveData);
             }
             return saveData;
         }
@@ -742,7 +742,7 @@ namespace AnyRPG {
                     continue;
                 }
                 ReputationSaveData saveData = new ReputationSaveData();
-                saveData.ReputationName = factionDisposition.Faction.DisplayName;
+                saveData.ReputationName = factionDisposition.Faction.ResourceName;
                 saveData.Amount = factionDisposition.disposition;
                 anyRPGSaveData.reputationSaveData.Add(saveData);
             }
@@ -753,7 +753,7 @@ namespace AnyRPG {
             foreach (CurrencyNode currencyNode in playerManager.MyCharacter.CharacterCurrencyManager.CurrencyList.Values) {
                 CurrencySaveData currencySaveData = new CurrencySaveData();
                 currencySaveData.Amount = currencyNode.Amount;
-                currencySaveData.CurrencyName = currencyNode.currency.DisplayName;
+                currencySaveData.CurrencyName = currencyNode.currency.ResourceName;
                 anyRPGSaveData.currencySaveData.Add(currencySaveData);
             }
         }
@@ -776,7 +776,7 @@ namespace AnyRPG {
 
         private EquippedBagSaveData GetBagSaveData(BagNode bagNode) {
             EquippedBagSaveData saveData = new EquippedBagSaveData();
-            saveData.BagName = (bagNode.Bag != null ? bagNode.Bag.DisplayName : string.Empty);
+            saveData.BagName = (bagNode.Bag != null ? bagNode.Bag.ResourceName : string.Empty);
             saveData.slotCount = (bagNode.Bag != null ? bagNode.Bag.Slots : 0);
             
             return saveData;
@@ -795,7 +795,7 @@ namespace AnyRPG {
             //Debug.Log("Savemanager.SaveAbilityData()");
             foreach (UnitProfile unitProfile in playerManager.MyCharacter.CharacterPetManager.UnitProfiles) {
                 PetSaveData saveData = new PetSaveData();
-                saveData.PetName = unitProfile.DisplayName;
+                saveData.PetName = unitProfile.ResourceName;
                 anyRPGSaveData.petSaveData.Add(saveData);
             }
         }
@@ -1236,7 +1236,7 @@ namespace AnyRPG {
                     return anyRPGSaveData;
                 }
                 EquippedBagSaveData saveData = new EquippedBagSaveData();
-                saveData.BagName = bag.DisplayName;
+                saveData.BagName = bag.ResourceName;
                 saveData.slotCount = bag.Slots;
                 anyRPGSaveData.equippedBagSaveData.Add(saveData);
                 bagCount++;

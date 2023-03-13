@@ -203,7 +203,7 @@ namespace AnyRPG {
         }
 
         protected override void ResetObjectiveSaveData() {
-            saveManager.ResetQuestObjectiveSaveData(DisplayName);
+            saveManager.ResetQuestObjectiveSaveData(ResourceName);
         }
 
         protected override QuestSaveData GetSaveData() {
@@ -215,7 +215,7 @@ namespace AnyRPG {
         }
 
         protected override bool HasQuest() {
-            return questLog.HasQuest(DisplayName);
+            return questLog.HasQuest(ResourceName);
         }
 
         protected override bool StatusAvailable() {
@@ -268,7 +268,7 @@ namespace AnyRPG {
                     if (baseAbility != null) {
                         abilityRewardList.Add(baseAbility);
                     } else {
-                        Debug.LogError("Quest.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("Quest.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -280,7 +280,7 @@ namespace AnyRPG {
                     if (skill != null) {
                         skillRewardList.Add(skill);
                     } else {
-                        Debug.LogError("Quest.SetupScriptableObjects(): Could not find skill : " + skillName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("Quest.SetupScriptableObjects(): Could not find skill : " + skillName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -292,7 +292,7 @@ namespace AnyRPG {
                     if (item != null) {
                         itemRewardList.Add(item);
                     } else {
-                        Debug.LogError("Quest.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("Quest.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -305,11 +305,11 @@ namespace AnyRPG {
 
             openingDialog = null;
             if (hasOpeningDialog) {
-                Dialog dialog = systemDataFactory.GetResource<Dialog>(DisplayName);
+                Dialog dialog = systemDataFactory.GetResource<Dialog>(ResourceName);
                 if (dialog != null) {
                     openingDialog = dialog;
                 } else {
-                    Debug.LogError("Quest.SetupScriptableObjects(): Could not find dialog : " + DisplayName + " while inititalizing quest " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("Quest.SetupScriptableObjects(): Could not find dialog : " + ResourceName + " while inititalizing quest " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
         }

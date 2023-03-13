@@ -100,7 +100,7 @@ namespace AnyRPG {
                 if (tmpArmorClass != null) {
                     armorClass = tmpArmorClass;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find armor class : " + armorClassName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find armor class : " + armorClassName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
