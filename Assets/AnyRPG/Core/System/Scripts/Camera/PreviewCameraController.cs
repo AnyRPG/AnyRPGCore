@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace AnyRPG {
 
-    public class PreviewCameraController : ConfiguredMonoBehaviour, IPointerDownHandler {
+    public class PreviewCameraController : ConfiguredMonoBehaviour, IPointerDownHandler, IScrollHandler {
         // public variables
         public event System.Action OnTargetReady = delegate { };
 
@@ -87,6 +87,7 @@ namespace AnyRPG {
         protected float adjustedXDegrees = 0f;
 
         protected float currentZoomDistance = 0f;
+        protected float scrollDelta = 0f;
 
         // keep track if we are panning or zooming this frame
         protected bool cameraPan = false;
@@ -265,12 +266,7 @@ namespace AnyRPG {
             cameraZoom = false;
 
             // ==== MOUSE ZOOM ====
-            if (!mouseOutsideWindow && inputManager.mouseScrolled) {
-                //Debug.Log("Mouse Scrollwheel: " + Input.GetAxis("Mouse ScrollWheel"));
-                currentZoomDistance += (Input.GetAxis("Mouse ScrollWheel") * cameraSpeed * -1);
-                currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, currentMaxZoom);
-                cameraZoom = true;
-            }
+            GetMouseZoom();
 
             // ==== GAMEPAD ZOOM ====
             if (Input.GetAxis("RightAnalogVertical") != 0f
@@ -366,6 +362,23 @@ namespace AnyRPG {
                 SmoothToWantedPosition();
             }
             LookAtTargetPosition();
+
+            scrollDelta = 0f;
+        }
+
+        private void GetMouseZoom() {
+            if (scrollDelta == 0f) {
+                return;
+            }
+            //if (!mouseOutsideWindow && inputManager.mouseScrolled) {
+            //Debug.Log("Mouse Scrollwheel: " + Input.GetAxis("Mouse ScrollWheel"));
+            //currentZoomDistance += (scrollDelta * cameraSpeed * -1);
+            currentZoomDistance += (scrollDelta * -1f);
+            //currentZoomDistance += (Input.GetAxis("Mouse ScrollWheel") * cameraSpeed * -1);
+            currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, currentMaxZoom);
+            //}
+
+            cameraZoom = true;
         }
 
         private void CompensateForWalls() {
@@ -539,6 +552,13 @@ namespace AnyRPG {
             }
         }
 
+        public void OnScroll(PointerEventData eventData) {
+            //Debug.Log(gameObject.name + ".PreviewCameraController.OnScroll()");
+
+            scrollDelta += eventData.scrollDelta.y;
+        }
+
+
         public void OnDisable() {
             if (SystemGameManager.IsShuttingDown) {
                 return;
@@ -546,6 +566,7 @@ namespace AnyRPG {
             UnsubscribeFromModelReady();
             StopAllCoroutines();
         }
+
     }
 
 }
