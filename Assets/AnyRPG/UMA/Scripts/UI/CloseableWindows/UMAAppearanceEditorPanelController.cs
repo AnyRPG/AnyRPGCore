@@ -282,12 +282,9 @@ namespace AnyRPG {
             GetAvatarConfiguration();
             ShowAppearanceOptions();
 
-            //if (characterCreatorManager.PreviewUnitController?.UnitModelController?.ModelReady == true) {
-                mainButtonsArea.SetActive(true);
-                OpenHairOptionsArea();
-                //appearanceButton.HighlightBackground();
-                mainOptionsNavigationController.FocusCurrentButton();
-            //}
+            mainButtonsArea.SetActive(true);
+            OpenHairOptionsArea();
+            mainOptionsNavigationController.FocusCurrentButton();
         }
 
         private void GetAvatarConfiguration() {

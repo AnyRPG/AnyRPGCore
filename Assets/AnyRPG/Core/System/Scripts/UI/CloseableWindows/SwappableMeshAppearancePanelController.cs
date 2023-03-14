@@ -10,8 +10,13 @@ namespace AnyRPG {
 
     public class SwappableMeshAppearancePanelController : AppearancePanel {
 
+        [Header("Swappable Mesh")]
+
         [SerializeField]
         protected GameObject mainButtonsArea = null;
+
+        [SerializeField]
+        protected UINavigationListVertical mainOptionsNavigationController = null;
 
         [Header("Options Areas")]
 
@@ -80,7 +85,7 @@ namespace AnyRPG {
         public override void ProcessOpenWindowNotification() {
             //Debug.Log("UMACharacterEditorPanelController.ProcessOpenWindowNotification()");
             base.ProcessOpenWindowNotification();
-            //uINavigationControllers[0].FocusCurrentButton();
+            //mainOptionsNavigationController.FocusCurrentButton();
         }
         */
 
@@ -125,8 +130,18 @@ namespace AnyRPG {
             chosenOptions.Clear();
 
             // clear all old buttons
-            uINavigationControllers[0].DeleteActiveButtons();
+            mainOptionsNavigationController.DeleteActiveButtons();
 
+            AddMainButtons();
+
+            mainOptionsNavigationController.FocusFirstButton();
+            mainOptionsNavigationController.CurrentNavigableElement?.Interact();
+            //mainOptionsNavigationController.FocusCurrentButton();
+            //mainOptionsNavigationController.SelectCurrentNavigableElement();
+
+        }
+
+        private void AddMainButtons() {
             foreach (SwappableMeshOptionGroup modelGroup in swappableMeshModelController.ModelOptions.MeshGroups) {
 
                 // populate the group dictionary
@@ -141,13 +156,8 @@ namespace AnyRPG {
                 MeshModelGroupButton meshModelGroupButton = objectPooler.GetPooledObject(modelGroupButtonPrefab, mainButtonsArea.transform).GetComponent<MeshModelGroupButton>();
                 meshModelGroupButton.Configure(systemGameManager);
                 meshModelGroupButton.ConfigureButton(this, modelGroup.GroupName);
-                uINavigationControllers[0].AddActiveButton(meshModelGroupButton);
+                mainOptionsNavigationController.AddActiveButton(meshModelGroupButton);
             }
-            //uINavigationControllers[0].FocusCurrentButton();
-            uINavigationControllers[0].FocusFirstButton();
-            //uINavigationControllers[0].SelectCurrentNavigableElement();
-            uINavigationControllers[0].CurrentNavigableElement?.Interact();
-
         }
 
         /*
@@ -175,7 +185,7 @@ namespace AnyRPG {
             }
         }
 
-        public void ShowModelGroup(string groupName) {
+        public void ShowModelGroup(HighlightButton highlightButton, string groupName) {
             //Debug.Log("SwappableMeshAppearancePanelController.ShowModelGroup(" + groupName + ")");
 
             if (optionGroups.ContainsKey(groupName) == false) {
@@ -189,6 +199,9 @@ namespace AnyRPG {
             } else {
                 PopulateOptionGrid(optionGroups[groupName]);
             }
+
+            highlightButton.HighlightBackground();
+            mainOptionsNavigationController.UnHightlightButtonBackgrounds(highlightButton);
         }
 
         private void PopulateOptionList(SwappableMeshOptionGroup optionGroup) {

@@ -73,9 +73,13 @@ namespace AnyRPG {
                 }
                 BroadcastUnitCreated();
                 unitController.Init();
+
+                // theoretically this next statement is no longer needed because OnModelCreated is only fired after running Init() and we are already subscribed by that point
+                /*
                 if (unitController.UnitModelController.ModelCreated == true) {
                     HandleModelCreated();
                 }
+                */
             }
         }
 

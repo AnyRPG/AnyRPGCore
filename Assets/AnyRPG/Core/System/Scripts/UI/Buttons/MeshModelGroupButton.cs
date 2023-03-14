@@ -26,7 +26,7 @@ namespace AnyRPG {
         }
 
         public void ShowModelGroup() {
-            swappableMeshAppearancePanelController.ShowModelGroup(meshModelGroup);
+            swappableMeshAppearancePanelController.ShowModelGroup(this, meshModelGroup);
         }
     }
 

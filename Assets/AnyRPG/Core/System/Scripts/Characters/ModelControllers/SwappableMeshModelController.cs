@@ -25,6 +25,9 @@ namespace AnyRPG {
         // applied configuration takes group hiding by other groups into account
         private Dictionary<string, string> optionGroupAppliedConfiguration = new Dictionary<string, string>();
 
+        // track mesh renderers
+        private List<GameObject> meshRenderers = new List<GameObject>();
+
 
         public SwappableMeshModelController(UnitController unitController, UnitModelController unitModelController, SystemGameManager systemGameManager, SwappableMeshModelOptions modelOptions)
             : base(unitController, unitModelController, systemGameManager) {
@@ -166,13 +169,14 @@ namespace AnyRPG {
             }
 
             // enable all chosen meshes and disable all others
-            foreach (Transform child in unitModelController.UnitModel.transform) {
-                if (enabledMeshes.Contains(child.name)) {
+            //foreach (Transform child in unitModelController.UnitModel.transform) {
+            foreach (GameObject go in meshRenderers) {
+                if (enabledMeshes.Contains(go.name)) {
                     // enable chosen mesh
-                    child.gameObject.SetActive(true);
+                    go.SetActive(true);
                 } else {
                     // disable meshes that were not chosen
-                    child.gameObject.SetActive(false);
+                    go.SetActive(false);
                 }
             }
 
@@ -192,6 +196,20 @@ namespace AnyRPG {
 
         public override void BuildModelAppearance() {
             // nothing to do here for now
+        }
+
+        /*
+        public override void Initialize() {
+            // delete me
+            base.Initialize();
+            unitModelController.SetModelReady();
+        }
+        */
+        
+
+        public override int RebuildModelAppearance() {
+            unitModelController.SetModelReady();
+            return base.RebuildModelAppearance();
         }
 
         public override bool IsBuilding() {
@@ -221,11 +239,21 @@ namespace AnyRPG {
                 return;
             }
 
+            GetMeshRenderers();
+
             SetupAppliedConfiguration();
 
             ApplyConfiguration();
 
             unitModelController.SetModelReady();
+        }
+
+        private void GetMeshRenderers() {
+            foreach (Transform childTransform in unitModelController.UnitModel.transform) {
+                if (childTransform.GetComponent<SkinnedMeshRenderer>() != null) {
+                    meshRenderers.Add(childTransform.gameObject);
+                }
+            }
         }
 
         public override bool KeepMonoBehaviorEnabled(MonoBehaviour monoBehaviour) {

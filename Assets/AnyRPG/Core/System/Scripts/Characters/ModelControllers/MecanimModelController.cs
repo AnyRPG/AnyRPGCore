@@ -69,7 +69,8 @@ namespace AnyRPG {
         }
 
         private void SpawnEquipmentObjects(EquipmentSlotProfile equipmentSlotProfile, Equipment newEquipment) {
-            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.SpawnEquipmentObjects()");
+            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.SpawnEquipmentObjects(" + equipmentSlotProfile.DisplayName + ", " + (newEquipment == null ? "null" : newEquipment.DisplayName) + ")");
+
             if (newEquipment == null || newEquipment.HoldableObjectList == null || newEquipment.HoldableObjectList.Count == 0|| equipmentSlotProfile == null) {
                 //Debug.Log("MecanimModelController.SpawnEquipmentObjects() : FAILED TO SPAWN OBJECTS");
                 return;
@@ -77,16 +78,20 @@ namespace AnyRPG {
             //Dictionary<PrefabProfile, GameObject> holdableObjects = new Dictionary<PrefabProfile, GameObject>();
             Dictionary<AttachmentNode, GameObject> holdableObjects = new Dictionary<AttachmentNode, GameObject>();
             foreach (HoldableObjectAttachment holdableObjectAttachment in newEquipment.HoldableObjectList) {
+                //Debug.Log("MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.ResourceName + " has an attachment");
                 if (holdableObjectAttachment != null && holdableObjectAttachment.AttachmentNodes != null) {
+                    //Debug.Log("MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.ResourceName + " has attachment nodes");
                     foreach (AttachmentNode attachmentNode in holdableObjectAttachment.AttachmentNodes) {
+                        //Debug.Log("MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.ResourceName + " cycling attachment node");
                         if (attachmentNode != null && attachmentNode.EquipmentSlotProfile != null && equipmentSlotProfile == attachmentNode.EquipmentSlotProfile) {
-                            //CreateComponentReferences();
+                            //Debug.Log("MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.ResourceName + " found equipmentSlotProfile");
                             if (attachmentNode.HoldableObject != null && attachmentNode.HoldableObject.Prefab != null) {
-                                //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab");
+                                //Debug.Log("MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.ResourceName + " has a physical prefab");
                                 // attach a mesh to a bone for weapons
 
                                 AttachmentPointNode attachmentPointNode = GetSheathedAttachmentPointNode(attachmentNode);
                                 if (attachmentPointNode != null) {
+                                    //Debug.Log("MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.ResourceName + " found attachment point");
                                     Transform targetBone = unitController.gameObject.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
 
                                     if (targetBone != null) {
@@ -97,7 +102,6 @@ namespace AnyRPG {
                                         //currentEquipmentPhysicalObjects[equipmentSlotProfile] = newEquipmentPrefab;
 
                                         if (unitController.UnitControllerMode == UnitControllerMode.Preview) {
-                                        //if (unitModelController.UnitModel.layer == unitPreviewLayer) {
                                             //Debug.Log("unit preview layer");
                                             LayerUtility.SetMeshRendererLayerRecursive(newEquipmentPrefab, unitPreviewLayer, setLayerIgnoreMask);
                                         } else {
@@ -323,6 +327,8 @@ namespace AnyRPG {
         }
 
         private void RebuildSlotAppearance(EquipmentSlotProfile equipmentSlotProfile, Equipment equipment) {
+            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.RebuildSlotAppearance(" + equipmentSlotProfile.ResourceName + ", " + (equipment == null ? "null" : equipment.ResourceName) + ")");
+
             if (equipment == equippedEquipment[equipmentSlotProfile]) {
                 // equipment spawned is the same as what is the character equipment manager, nothing to do
                 return;

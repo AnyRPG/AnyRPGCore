@@ -651,7 +651,7 @@ GameObject:
   - component: {fileID: 1711997021167615790}
   - component: {fileID: 3458797982126465742}
   m_Layer: 5
-  m_Name: HighlightLine
+  m_Name: AppearanceHighlightLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -956,7 +956,7 @@ GameObject:
   - component: {fileID: 1599062215681924008}
   - component: {fileID: 7045388437034373054}
   m_Layer: 5
-  m_Name: OptionGroupsButtonArea
+  m_Name: AppearanceLeftContents
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1106,7 +1106,7 @@ GameObject:
   - component: {fileID: 411291691868745312}
   - component: {fileID: 3400542492461949561}
   m_Layer: 5
-  m_Name: LeftScrollRect
+  m_Name: AppearanceLeftScrollRect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1412,8 +1412,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
   captureCamera: 0
-  coloredUIElements:
-  - {fileID: 3458797982126465742}
+  coloredUIElements: []
   addToWindowStack: 0
   userCloseable: 0
   focusFirstButtonOnOpen: 0
@@ -1431,6 +1430,7 @@ MonoBehaviour:
   maleButton: {fileID: 3290424494982936933}
   femaleButton: {fileID: 3991232186750549757}
   mainButtonsArea: {fileID: 3440348350633360733}
+  mainOptionsNavigationController: {fileID: 7045388437034373054}
   optionsAreaLabel: {fileID: 2710145987956468334}
   optionsAreaLabelText: {fileID: 1300848090760272174}
   listOptionsArea: {fileID: 3459536516967886131}
@@ -2206,7 +2206,7 @@ GameObject:
   - component: {fileID: 2826765164352834501}
   - component: {fileID: 4207709968563270370}
   m_Layer: 5
-  m_Name: PaneContents
+  m_Name: AppearanceLeftViewport
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4806,6 +4806,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: MaleButton
       objectReference: {fileID: 0}
+    - target: {fileID: 6026230212564126063, guid: f3a1bab5e9bf1184d9ee6bb2585d2773,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 4726856860968889056}
+    - target: {fileID: 6026230212564126063, guid: f3a1bab5e9bf1184d9ee6bb2585d2773,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ProcessSetMale
+      objectReference: {fileID: 0}
+    - target: {fileID: 6026230212564126063, guid: f3a1bab5e9bf1184d9ee6bb2585d2773,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: AnyRPG.AppearancePanel, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 6084647000045268564, guid: f3a1bab5e9bf1184d9ee6bb2585d2773,
         type: 3}
       propertyPath: m_Pivot.x
@@ -5152,6 +5167,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: FemaleButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 6026230212564126063, guid: 0c105927afdf1284aad8828936745b69,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 4726856860968889056}
+    - target: {fileID: 6026230212564126063, guid: 0c105927afdf1284aad8828936745b69,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ProcessSetFemale
+      objectReference: {fileID: 0}
+    - target: {fileID: 6026230212564126063, guid: 0c105927afdf1284aad8828936745b69,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: AnyRPG.AppearancePanel, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 6084647000045268564, guid: 0c105927afdf1284aad8828936745b69,
         type: 3}

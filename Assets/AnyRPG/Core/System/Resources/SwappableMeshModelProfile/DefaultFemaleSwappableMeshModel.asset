@@ -29,13 +29,13 @@ MonoBehaviour:
       hidesGroup: 
       meshes:
       - displayName: Head 1
-        icon: {fileID: 21300000, guid: a7e5ee1c2ce46714abc0370deafd55a1, type: 3}
+        icon: {fileID: 21300000, guid: 853f26297062a9441843e25e9591ebef, type: 3}
         meshName: human_female_head_default
       - displayName: Head 2
-        icon: {fileID: 21300000, guid: 81fbbf8513987b34ca672698f3d83802, type: 3}
+        icon: {fileID: 21300000, guid: 3ca8a5a8b1d152c40aea62944e7a6829, type: 3}
         meshName: human_female_head_2
       - displayName: Head 3
-        icon: {fileID: 21300000, guid: 019fecba109f26046a2e6271c5363bfa, type: 3}
+        icon: {fileID: 21300000, guid: b5254db264c4ab042967158864ab4544, type: 3}
         meshName: human_female_head_3
     - groupName: Hair
       hidden: 0
@@ -44,13 +44,13 @@ MonoBehaviour:
       hidesGroup: 
       meshes:
       - displayName: Hair 1
-        icon: {fileID: 21300000, guid: 502ac5c24285d694887cad282319a126, type: 3}
+        icon: {fileID: 21300000, guid: 3825ffb3229d4fd4da7bb6ca70477eeb, type: 3}
         meshName: human_female_hair_1
       - displayName: Hair 2
-        icon: {fileID: 21300000, guid: fe1ee0e7055768a4aa6baa70ee8e6553, type: 3}
+        icon: {fileID: 21300000, guid: 15550f20041ac69448bfe535c341d378, type: 3}
         meshName: human_female_hair_2
       - displayName: Hair 3
-        icon: {fileID: 21300000, guid: 798fc914377bb15448a4a164e74f92c0, type: 3}
+        icon: {fileID: 21300000, guid: 1b7ee18fb5614994fafb4145fd669adf, type: 3}
         meshName: human_female_hair_3
     - groupName: Armor
       hidden: 0

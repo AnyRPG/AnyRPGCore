@@ -213,8 +213,8 @@ MonoBehaviour:
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 4729377561069226169}
   selectedButtonColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
-  overrideNormalColor: 0
-  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.32156864}
+  overrideNormalColor: 1
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
   overrideHighlightedColor: 0
   highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   overridePressedColor: 0
