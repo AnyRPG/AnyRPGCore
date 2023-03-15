@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e31818c35d6ab14fbf88410e7e18453, type: 3}
-  m_Name: UMAPlayerUnit
+  m_Name: MecanimMaleUnit
   m_EditorClassIdentifier: 
-  resourceName: UMA Player
+  resourceName: Mecanim Male
   displayName: 
-  icon: {fileID: 21300000, guid: 9176b48a2857c364280b4f5b9d620852, type: 3}
+  icon: {fileID: 21300000, guid: 4ce9927e29c4e67439b2afb877749f1b, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: An UMA character
+  description: A Mecanim male
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -26,10 +26,10 @@ MonoBehaviour:
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 2692339740015506113, guid: 9396e25e38decac4b8b80eb1f92213e2,
+    modelPrefab: {fileID: 5647419420616109803, guid: 0b163976c97d00a47bde453dc1ff0798,
       type: 3}
     modelProvider:
-      rid: 8385465583208759297
+      rid: 5705935686525255711
     animationProfileName: 
     useInlineAnimationProps: 0
     animationProps:
@@ -116,7 +116,7 @@ MonoBehaviour:
       swimMoveClip: {fileID: 0}
       flyIdleClip: {fileID: 0}
       flyMoveClip: {fileID: 0}
-    rotateModel: 1
+    rotateModel: 0
     namePlateProps:
       displayName: 
       suppressNamePlate: 0
@@ -124,7 +124,7 @@ MonoBehaviour:
       overrideNameplatePosition: 0
       namePlatePosition: {x: 0, y: 0, z: 0}
       useSnapShot: 1
-      unitFrameTarget: Head
+      unitFrameTarget: head
       unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
       unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
       unitPreviewTarget: 
@@ -135,11 +135,11 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
     targetBone: 
-    attachmentProfileName: UMA
+    attachmentProfileName: Humanoid
     floatHeight: 1.4
     addFloatHeightToTransform: 0
     floatTransform: Spine1
-  isUMAUnit: 1
+  isUMAUnit: 0
   isPet: 0
   flightCapable: 0
   glideCapable: 0
@@ -153,7 +153,7 @@ MonoBehaviour:
   spawnDead: 0
   preventAutoDespawn: 0
   defaultToughness: 
-  voiceProfile: Male Default
+  voiceProfile: 
   useInlineVoiceProps: 0
   voiceProps:
     aggro: []
@@ -171,7 +171,8 @@ MonoBehaviour:
     abilityNames: []
     traitNames: []
     armorClassList: []
-    weaponSkills: []
+    weaponSkills:
+    - Unarmed
     validPetTypes: []
     startingPets: []
   primaryStats: []
@@ -211,12 +212,15 @@ MonoBehaviour:
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: acdcef3b-04da-4796-b40e-3b619cf84261
+  m_UUID: 0daf62c0-2d5b-4fe2-b00a-8b9ccacee706
   references:
     version: 2
     RefIds:
-    - rid: 8385465583208759297
-      type: {class: UMAModelProvider, ns: AnyRPG, asm: Assembly-CSharp}
+    - rid: 5705935686525255711
+      type: {class: SwappableMeshModelProvider, ns: AnyRPG, asm: Assembly-CSharp}
       data:
-        appearancePanel: {fileID: 5887363405687166838, guid: 581df359df1c12649b30479e9f7a958c,
-          type: 3}
+        useInlineOptions: 0
+        inlineOptions:
+          meshGroups: []
+          groupDefaults: []
+        sharedOptions: Default Male Swappable Mesh Model

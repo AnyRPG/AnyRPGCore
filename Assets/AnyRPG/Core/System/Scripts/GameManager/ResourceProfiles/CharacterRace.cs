@@ -137,14 +137,14 @@ namespace AnyRPG {
             if (maleUnitProfile != string.Empty) {
                 maleUnitProfileRef = systemDataFactory.GetResource<UnitProfile>(maleUnitProfile);
                 if (maleUnitProfileRef == null) {
-                    Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find unit profile : " + maleUnitProfile + " while inititalizing.  CHECK INSPECTOR");
+                    Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find unit profile : " + maleUnitProfile + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
             if (femaleUnitProfile != string.Empty) {
                 femaleUnitProfileRef = systemDataFactory.GetResource<UnitProfile>(femaleUnitProfile);
                 if (femaleUnitProfileRef == null) {
-                    Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find unit profile : " + femaleUnitProfile + " while inititalizing.  CHECK INSPECTOR");
+                    Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find unit profile : " + femaleUnitProfile + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -155,10 +155,10 @@ namespace AnyRPG {
                         if (abilityEffect != null) {
                             onHitEffectList.Add(abilityEffect);
                         } else {
-                            Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find ability effect : " + onHitEffectName + " while inititalizing.  CHECK INSPECTOR");
+                            Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find ability effect : " + onHitEffectName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                         }
                     } else {
-                        Debug.LogError("CharacterRace.SetupScriptableObjects(): null or empty on hit effect found while inititalizing.  CHECK INSPECTOR");
+                        Debug.LogError("CharacterRace.SetupScriptableObjects(): null or empty on hit effect found while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -170,10 +170,10 @@ namespace AnyRPG {
                         if (abilityEffect != null) {
                             defaultHitEffectList.Add(abilityEffect);
                         } else {
-                            Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find ability effect : " + defaultHitEffectName + " while inititalizing.  CHECK INSPECTOR");
+                            Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find ability effect : " + defaultHitEffectName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                         }
                     } else {
-                        Debug.LogError("CharacterRace.SetupScriptableObjects(): null or empty default hit effect found while inititalizing.  CHECK INSPECTOR");
+                        Debug.LogError("CharacterRace.SetupScriptableObjects(): null or empty default hit effect found while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }

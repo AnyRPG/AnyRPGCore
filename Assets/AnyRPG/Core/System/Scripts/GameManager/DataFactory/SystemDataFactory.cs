@@ -283,8 +283,6 @@ namespace AnyRPG {
                         return true;
                     }
                 }
-            } else {
-                //Debug.Log("SystemGameManager.MatchResource(" + (resourceName == null ? "null" : resourceName) + ", " + (resourceMatchName == null ? "null" : resourceMatchName) + ")");
             }
             return false;
         }

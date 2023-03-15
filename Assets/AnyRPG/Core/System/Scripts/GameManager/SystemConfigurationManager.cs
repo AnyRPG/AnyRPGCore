@@ -51,7 +51,7 @@ namespace AnyRPG {
         [SerializeField]
         private bool useNewGameWindow = true;
 
-        [Tooltip("When the new game window is used, what method will be used to select a character.")]
+        [Tooltip("When the new game window is used, what method will be used to select a character.  DefaultCharacter = only the default character will be available. CharacterList = The faction will control the list. RaceAndGender = A Male or Female character can be chosen after the race is selected.")]
         [SerializeField]
         private CharacterSelectionType characterSelectionType = CharacterSelectionType.RaceAndGender;
 

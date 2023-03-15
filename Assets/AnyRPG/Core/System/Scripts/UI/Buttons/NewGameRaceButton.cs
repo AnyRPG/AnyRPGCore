@@ -50,7 +50,7 @@ namespace AnyRPG {
         }
 
         public void CommonSelect() {
-            newGameManager.SetCharacterRace(characterRace);
+            newGameManager.ChooseNewCharacterRace(characterRace);
         }
 
         public void RawSelect() {

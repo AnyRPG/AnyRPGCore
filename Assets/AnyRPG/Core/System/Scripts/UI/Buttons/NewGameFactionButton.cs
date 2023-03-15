@@ -50,7 +50,7 @@ namespace AnyRPG {
         }
 
         public void CommonSelect() {
-            newGameManager.SetFaction(faction);
+            newGameManager.ChooseNewFaction(faction);
         }
 
         public void RawSelect() {

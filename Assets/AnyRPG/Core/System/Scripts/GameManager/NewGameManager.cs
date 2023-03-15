@@ -135,7 +135,19 @@ namespace AnyRPG {
             unitProfile = systemConfigurationManager.CharacterCreatorUnitProfile;
             saveData.unitProfileName = systemConfigurationManager.CharacterCreatorUnitProfileName;
 
-            UpdateFactionList();
+            if (systemConfigurationManager.NewGameFaction == true) {
+                UpdateFactionList();
+            }
+
+            if (systemConfigurationManager.NewGameRace == true) {
+                UpdateCharacterRaceList();
+            }
+
+            UpdateUnitProfileList();
+
+            UpdateCharacterEnvironment();
+
+
             UpdateCharacterClassList();
             
             // testing - not needed because updating character class list will result in class getting set, which will update the class specialization list
@@ -356,10 +368,10 @@ namespace AnyRPG {
         private GameObject GetEnvironmentPreviewPrefab() {
             //Debug.Log("NewGameManager.GetEnvironmentPreviewPrefab()");
 
-            if (characterRace.EnvironmentPreviewPrefab != null) {
+            if (characterRace?.EnvironmentPreviewPrefab != null) {
                 return characterRace.EnvironmentPreviewPrefab;
             }
-            if (faction.EnvironmentPreviewPrefab != null) {
+            if (faction?.EnvironmentPreviewPrefab != null) {
                 return faction.EnvironmentPreviewPrefab;
             }
             return null;
@@ -368,10 +380,10 @@ namespace AnyRPG {
         private Material GetPlatformMaterial() {
             //Debug.Log("NewGameManager.GetPlatformMaterial()");
 
-            if (characterRace.PlatformMaterial != null) {
+            if (characterRace?.PlatformMaterial != null) {
                 return characterRace.PlatformMaterial;
             }
-            if (faction.PlatformMaterial != null) {
+            if (faction?.PlatformMaterial != null) {
                 return faction.PlatformMaterial;
             }
             return defaultPlatformMaterial;
@@ -379,60 +391,60 @@ namespace AnyRPG {
 
 
         private Material GetTopMaterial() {
-            if (characterRace.TopMaterial != null) {
+            if (characterRace?.TopMaterial != null) {
                 return characterRace.TopMaterial;
             }
-            if (faction.TopMaterial != null) {
+            if (faction?.TopMaterial != null) {
                 return faction.TopMaterial;
             }
             return defaultTopMaterial;
         }
 
         private Material GetBottomMaterial() {
-            if (characterRace.BottomMaterial != null) {
+            if (characterRace?.BottomMaterial != null) {
                 return characterRace.BottomMaterial;
             }
-            if (faction.BottomMaterial != null) {
+            if (faction?.BottomMaterial != null) {
                 return faction.BottomMaterial;
             }
             return defaultBottomMaterial;
         }
 
         private Material GetNorthMaterial() {
-            if (characterRace.NorthMaterial != null) {
+            if (characterRace?.NorthMaterial != null) {
                 return characterRace.NorthMaterial;
             }
-            if (faction.NorthMaterial != null) {
+            if (faction?.NorthMaterial != null) {
                 return faction.NorthMaterial;
             }
             return defaultNorthMaterial;
         }
 
         private Material GetSouthMaterial() {
-            if (characterRace.SouthMaterial != null) {
+            if (characterRace?.SouthMaterial != null) {
                 return characterRace.SouthMaterial;
             }
-            if (faction.SouthMaterial != null) {
+            if (faction?.SouthMaterial != null) {
                 return faction.SouthMaterial;
             }
             return defaultSouthMaterial;
         }
 
         private Material GetEastMaterial() {
-            if (characterRace.EastMaterial != null) {
+            if (characterRace?.EastMaterial != null) {
                 return characterRace.EastMaterial;
             }
-            if (faction.EastMaterial != null) {
+            if (faction?.EastMaterial != null) {
                 return faction.EastMaterial;
             }
             return defaultEastMaterial;
         }
 
         private Material GetWestMaterial() {
-            if (characterRace.WestMaterial != null) {
+            if (characterRace?.WestMaterial != null) {
                 return characterRace.WestMaterial;
             }
-            if (faction.WestMaterial != null) {
+            if (faction?.WestMaterial != null) {
                 return faction.WestMaterial;
             }
             return defaultWestMaterial;
@@ -482,6 +494,23 @@ namespace AnyRPG {
 
         }
 
+        public void ChooseNewFaction(Faction newFaction) {
+            //Debug.Log("NewGameManager.SetFaction(" + (newFaction == null ? "null" : newFaction.DisplayName) + ")");
+
+            if (faction == newFaction) {
+                return;
+            }
+
+            SetFaction(newFaction);
+            if (systemConfigurationManager.NewGameRace == true) {
+                UpdateCharacterRaceList();
+            }
+
+            UpdateUnitProfileList();
+
+            UpdateCharacterEnvironment();
+        }
+
         public void SetFaction(Faction newFaction) {
             //Debug.Log("NewGameManager.SetFaction(" + (newFaction == null ? "null" : newFaction.DisplayName) + ")");
 
@@ -505,8 +534,17 @@ namespace AnyRPG {
             }
 
             OnSetFaction(newFaction);
+        }
 
-            UpdateCharacterRaceList();
+        public void ChooseNewCharacterRace(CharacterRace characterRace) {
+            //Debug.Log("NewGameManager.SetCharacterRace(" + (characterRace == null ? "null" : characterRace.DisplayName) + ")");
+
+            if (this.characterRace == characterRace) {
+                return;
+            }
+
+            SetCharacterRace(characterRace);
+
             UpdateUnitProfileList();
 
             UpdateCharacterEnvironment();
@@ -535,10 +573,6 @@ namespace AnyRPG {
             }
 
             OnSetCharacterRace(characterRace);
-
-            UpdateUnitProfileList();
-
-            UpdateCharacterEnvironment();
         }
 
         public void UpdateEquipmentList() {
