@@ -40,7 +40,7 @@ namespace AnyRPG {
             quest.AcceptQuest(false, false);
             // gotta check here because kills and ability use are not automatically checked on accept because under normal circumstances those amounts must start at 0
             quest.CheckCompletion(true, false);
-            string keyName = SystemDataFactory.PrepareStringForMatch(quest.ResourceName);
+            string keyName = SystemDataUtility.PrepareStringForMatch(quest.ResourceName);
             quests[keyName] = quest;
 
             // just in case one quest was complete but not turned in
@@ -56,7 +56,7 @@ namespace AnyRPG {
             // AVOID ACCIDENTALLY ACCEPTING TURNED IN QUESTS THAT ARE NOT REPEATABLE
             if (newQuest != null && (newQuest.TurnedIn == false || newQuest.RepeatableQuest == true)) {
                 // add first, then use acceptquest because it needs to be in the log for the accepquest completion check to pass
-                string keyName = SystemDataFactory.PrepareStringForMatch(newQuest.ResourceName);
+                string keyName = SystemDataUtility.PrepareStringForMatch(newQuest.ResourceName);
                 quests[keyName] = newQuest;
                 newQuest.AcceptQuest();
 
@@ -70,7 +70,7 @@ namespace AnyRPG {
 
         public bool HasQuest(string questName) {
             //Debug.Log("QuestLog.HasQuest(" + questName + ")");
-            string keyName = SystemDataFactory.PrepareStringForMatch(questName);
+            string keyName = SystemDataUtility.PrepareStringForMatch(questName);
             if (quests.ContainsKey(keyName)) {
                 return true;
             }
@@ -98,7 +98,7 @@ namespace AnyRPG {
 
         public void RemoveQuest(Quest oldQuest) {
             //Debug.Log("QuestLog.RemoveQuest()");
-            string keyName = SystemDataFactory.PrepareStringForMatch(oldQuest.ResourceName);
+            string keyName = SystemDataUtility.PrepareStringForMatch(oldQuest.ResourceName);
             if (quests.ContainsKey(keyName)) {
                 quests.Remove(keyName);
             }

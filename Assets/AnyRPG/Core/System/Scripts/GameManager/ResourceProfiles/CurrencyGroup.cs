@@ -36,11 +36,11 @@ namespace AnyRPG {
             if (baseCurrency == null) {
                 Debug.Log("CurrencyGroup.HasCurrency(" + (currency == null ? "null" : currency.ResourceName) + "): basecurrency is null");
             }
-            if (SystemDataFactory.MatchResource(baseCurrency.ResourceName, currency.ResourceName)) {
+            if (SystemDataUtility.MatchResource(baseCurrency.ResourceName, currency.ResourceName)) {
                 return true;
             }
             foreach (CurrencyGroupRate currencyGroupRate in currencyGroupRates) {
-                if (SystemDataFactory.MatchResource(currencyGroupRate.Currency.ResourceName, currency.ResourceName)) {
+                if (SystemDataUtility.MatchResource(currencyGroupRate.Currency.ResourceName, currency.ResourceName)) {
                     return true;
                 }
             }

@@ -30,7 +30,7 @@ namespace AnyRPG {
             }
 
             // INVESTIGATE IF STRING MATCH CAN BE REPLACED WITH TYPE.GETTYPE DIRECT MATCH
-            if (character.GetType() == Type.GetType(targetName) || SystemDataFactory.MatchResource(character.CharacterName, targetName) || SystemDataFactory.MatchResource(character.Faction.ResourceName, targetName)) {
+            if (character.GetType() == Type.GetType(targetName) || SystemDataUtility.MatchResource(character.CharacterName, targetName) || SystemDataUtility.MatchResource(character.Faction.ResourceName, targetName)) {
                 CurrentAmount++;
                 questBase.CheckCompletion();
                 if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages && CurrentAmount != 0) {

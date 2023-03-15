@@ -474,7 +474,7 @@ namespace AnyRPG {
             if (systemConfigurationManager.MainMenuSceneNode != null) {
                 LoadLevel(systemConfigurationManager.MainMenuSceneNode.ResourceName);
             } else {
-                LoadLevel(SystemDataFactory.PrepareStringForMatch(systemConfigurationManager.MainMenuScene));
+                LoadLevel(SystemDataUtility.PrepareStringForMatch(systemConfigurationManager.MainMenuScene));
             }
         }
 

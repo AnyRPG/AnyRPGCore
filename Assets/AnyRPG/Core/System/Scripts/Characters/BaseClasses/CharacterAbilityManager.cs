@@ -861,13 +861,13 @@ namespace AnyRPG {
                 if (statusEffect != null) {
                     if (equipmentCount > i) {
                         // we are allowed to have this buff
-                        if (!baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName))) {
+                        if (!baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataUtility.PrepareStringForMatch(statusEffect.DisplayName))) {
                             ApplyStatusEffect(statusEffect);
                         }
                     } else {
                         // we are not allowed to have this buff
-                        if (baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName))) {
-                            baseCharacter.CharacterStats.StatusEffects[SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
+                        if (baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataUtility.PrepareStringForMatch(statusEffect.DisplayName))) {
+                            baseCharacter.CharacterStats.StatusEffects[SystemDataUtility.PrepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
                         }
                     }
                 }
@@ -976,8 +976,8 @@ namespace AnyRPG {
                 return;
             }
             foreach (StatusEffect statusEffect in statusEffects) {
-                if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.ResourceName))) {
-                    baseCharacter.CharacterStats.StatusEffects[SystemDataFactory.PrepareStringForMatch(statusEffect.ResourceName)].CancelStatusEffect();
+                if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataUtility.PrepareStringForMatch(statusEffect.ResourceName))) {
+                    baseCharacter.CharacterStats.StatusEffects[SystemDataUtility.PrepareStringForMatch(statusEffect.ResourceName)].CancelStatusEffect();
                 }
             }
         }
@@ -1058,7 +1058,7 @@ namespace AnyRPG {
 
         public override bool HasAbility(string abilityName) {
 
-            if (AbilityList.ContainsKey(SystemDataFactory.PrepareStringForMatch(abilityName))) {
+            if (AbilityList.ContainsKey(SystemDataUtility.PrepareStringForMatch(abilityName))) {
                 //Debug.Log(gameObject.name + ".CharacterAbilitymanager.HasAbility( " + abilityName + "): keyname: " + keyName + " TRUE!");
                 return true;
             }
@@ -1121,7 +1121,7 @@ namespace AnyRPG {
                 return;
             }
 
-            string keyName = SystemDataFactory.PrepareStringForMatch(abilityProperties.DisplayName);
+            string keyName = SystemDataUtility.PrepareStringForMatch(abilityProperties.DisplayName);
             if (abilityList.ContainsKey(keyName)) {
                 // ability is already known, exit
                 return;
@@ -1163,7 +1163,7 @@ namespace AnyRPG {
             }
 
             // if we made it this far, there is no reason to not learn the ability
-            abilityList[SystemDataFactory.PrepareStringForMatch(newAbility.DisplayName)] = newAbility;
+            abilityList[SystemDataUtility.PrepareStringForMatch(newAbility.DisplayName)] = newAbility;
 
             newAbility.ProcessLearnAbility(this);
 
@@ -1178,7 +1178,7 @@ namespace AnyRPG {
         public void UnlearnAbility(BaseAbilityProperties oldAbility, bool updateActionBars = true) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.UnleanAbility(" + oldAbility.DisplayName + ", " + updateActionBars + ")");
             
-            string keyName = SystemDataFactory.PrepareStringForMatch(oldAbility.DisplayName);
+            string keyName = SystemDataUtility.PrepareStringForMatch(oldAbility.DisplayName);
             if (abilityList.ContainsKey(keyName)) {
                 oldAbility.ProcessUnLearnAbility(this);
                 abilityList.Remove(keyName);
@@ -1711,7 +1711,7 @@ namespace AnyRPG {
 
         public bool PerformLearnedCheck(BaseAbilityProperties ability) {
 
-            string keyName = SystemDataFactory.PrepareStringForMatch(ability.DisplayName);
+            string keyName = SystemDataUtility.PrepareStringForMatch(ability.DisplayName);
 
             if (!ability.UseableWithoutLearning && !AbilityList.ContainsKey(keyName)) {
                 OnLearnedCheckFail(ability);

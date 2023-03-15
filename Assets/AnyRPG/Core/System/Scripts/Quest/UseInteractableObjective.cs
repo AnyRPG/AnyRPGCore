@@ -50,7 +50,7 @@ namespace AnyRPG {
             if (completeBefore) {
                 return;
             }
-            if (SystemDataFactory.MatchResource(interactableName, this.interactableName)) {
+            if (SystemDataUtility.MatchResource(interactableName, this.interactableName)) {
                 if (!interactionComplete && requireCompletion == true) {
                     return;
                 }

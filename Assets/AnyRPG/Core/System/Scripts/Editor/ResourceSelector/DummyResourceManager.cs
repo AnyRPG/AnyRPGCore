@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class DummyResourceManager : FactoryResource
+    public class DummyResourceManager
     {
         public string resourceClassName;
-        List<ResourceProfile> allResources = new List<ResourceProfile>();
+        private List<ResourceProfile> allResources = new List<ResourceProfile>();
 
-        System.Type type;
+        private System.Type type;
 
-        List<string> validFolders = new List<string> {
+        private List<string> validFolders = new List<string> {
             typeof(AbilityEffect).Name,
             typeof(AnimationProfile).Name,
             typeof(ArmorClass).Name,
@@ -53,7 +53,9 @@ namespace AnyRPG {
             resourceClassName = resourceType.Name;
         }
 
-        public override void LoadResourceList() {
+        public void LoadResourceList() {
+            allResources.Clear();
+
             List<string> mappedClassNames = new List<string>();
             if (resourceClassName == "ResourceProfile") {
                 foreach (string folder in validFolders)
@@ -73,16 +75,14 @@ namespace AnyRPG {
                     GenericLoadList<ResourceProfile>(className);
                 }
             }
-            //base.LoadResourceList();
-            // other than the in-game resource managers we only need a list of all the resources
-            allResources = new List<ResourceProfile>();
-            foreach (ResourceProfile[] subList in masterList) {
-                allResources.AddRange(subList);
-            }
         }
 
-        void GenericLoadList<T>(string folder) where T: ResourceProfile {
-            masterList.Add(Resources.LoadAll<T>(folder));
+        private void GenericLoadList<T>(string folder) where T: ResourceProfile {
+
+            // add the scriptable objects stored in the root of all Resources folders to the resource list
+            allResources.AddRange(Resources.LoadAll<T>(folder));
+
+            // find the system game manager to load specific resource subfolders for the current game (based on the open scene)
             SystemConfigurationManager systemConfigurationManager = GameObject.FindObjectOfType<SystemConfigurationManager>();
             if (systemConfigurationManager == null) {
                 SceneConfig sceneConfig = GameObject.FindObjectOfType<SceneConfig>();
@@ -91,20 +91,15 @@ namespace AnyRPG {
                 }
             }
             if (systemConfigurationManager != null) {
+                // add the scriptable objects stored specific subfolders of the Resources folders to the master list
                 foreach (string resourceFolderName in systemConfigurationManager.LoadResourcesFolders) {
-                    masterList.Add(Resources.LoadAll<T>(resourceFolderName + "/" + folder));
+                    allResources.AddRange(Resources.LoadAll<T>(resourceFolderName + "/" + folder));
                 }
             }
         }
 
         public List<ResourceProfile> GetResourceList() {
             return allResources;
-            //List<ResourceProfile> returnList = new List<ResourceProfile>();
-
-            //foreach (UnityEngine.Object listItem in resourceList.Values) {
-                //returnList.Add(listItem as ResourceProfile);
-            //}
-            //return returnList;
         }
 
     }

@@ -31,7 +31,7 @@ namespace AnyRPG {
         }
 
         public void UpdateCompletionCount(Skill skill) {
-            if (!SystemDataFactory.MatchResource(skill.ResourceName, skillName)) {
+            if (!SystemDataUtility.MatchResource(skill.ResourceName, skillName)) {
                 // some other skill than this one was learned.  no need to check.
                 return;
             }

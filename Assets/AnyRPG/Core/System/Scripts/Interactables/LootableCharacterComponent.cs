@@ -163,8 +163,8 @@ namespace AnyRPG {
                 }
 
                 // cancel loot sparkle here because despawn takes a while
-                if (characterUnit.BaseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(systemConfigurationManager.LootSparkleEffect.ResourceName))) {
-                    characterUnit.BaseCharacter.CharacterStats.StatusEffects[SystemDataFactory.PrepareStringForMatch(systemConfigurationManager.LootSparkleEffect.ResourceName)].CancelStatusEffect();
+                if (characterUnit.BaseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataUtility.PrepareStringForMatch(systemConfigurationManager.LootSparkleEffect.ResourceName))) {
+                    characterUnit.BaseCharacter.CharacterStats.StatusEffects[SystemDataUtility.PrepareStringForMatch(systemConfigurationManager.LootSparkleEffect.ResourceName)].CancelStatusEffect();
                 }
                 AdvertiseLootComplete();
                 Despawn();

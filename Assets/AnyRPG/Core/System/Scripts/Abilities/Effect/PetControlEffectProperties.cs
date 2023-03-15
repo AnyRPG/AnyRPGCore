@@ -45,7 +45,7 @@ namespace AnyRPG {
 
             List<AbilityEffectProperties> castList = new List<AbilityEffectProperties>();
             foreach (SummonEffectProperties petEffect in petEffectList) {
-                if (SystemDataFactory.MatchResource(petEffect.DisplayName, DisplayName)) {
+                if (SystemDataUtility.MatchResource(petEffect.DisplayName, DisplayName)) {
                     Debug.LogError(DisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                 } else {
                     //Debug.Log(DisplayName + ".PetEffect.CheckPetSpawn(): adding to cast list");

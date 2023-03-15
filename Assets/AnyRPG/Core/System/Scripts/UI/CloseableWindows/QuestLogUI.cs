@@ -134,14 +134,14 @@ namespace AnyRPG {
             foreach (QuestScript questScript in questScripts) {
                 if (SelectedQuestScript == null) {
                     // we came from questtracker UI
-                    if (SystemDataFactory.MatchResource(newQuest.ResourceName, questScript.Quest.ResourceName)) {
+                    if (SystemDataUtility.MatchResource(newQuest.ResourceName, questScript.Quest.ResourceName)) {
                         questScript.RawSelect();
                         SelectedQuestScript = questScript;
                     } else {
                         questScript.DeSelect();
                     }
                 } else {
-                    if (SystemDataFactory.MatchResource(newQuest.ResourceName, questScript.Quest.ResourceName)) {
+                    if (SystemDataUtility.MatchResource(newQuest.ResourceName, questScript.Quest.ResourceName)) {
                         questScript.RawSelect();
                         SelectedQuestScript = questScript;
                     } else {

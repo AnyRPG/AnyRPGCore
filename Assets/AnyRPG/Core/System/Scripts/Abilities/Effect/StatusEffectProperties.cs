@@ -304,7 +304,7 @@ namespace AnyRPG {
             if (SceneNames.Count > 0) {
                 bool sceneFound = false;
                 foreach (string sceneName in SceneNames) {
-                    if (SystemDataFactory.PrepareStringForMatch(sceneName) == SystemDataFactory.PrepareStringForMatch(levelManager.GetActiveSceneNode().SceneName)) {
+                    if (SystemDataUtility.PrepareStringForMatch(sceneName) == SystemDataUtility.PrepareStringForMatch(levelManager.GetActiveSceneNode().SceneName)) {
                         sceneFound = true;
                     }
                 }

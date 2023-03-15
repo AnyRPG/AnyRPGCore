@@ -58,7 +58,7 @@ namespace AnyRPG {
                 if ((lootDrop as ItemLootDrop) is ItemLootDrop) {
 
                 }
-                if (SystemDataFactory.MatchResource((lootDrop as ItemLootDrop).Item.ResourceName, itemName)) {
+                if (SystemDataUtility.MatchResource((lootDrop as ItemLootDrop).Item.ResourceName, itemName)) {
                     return true;
                 }
             }

@@ -491,7 +491,7 @@ namespace AnyRPG {
                 //Debug.Log("This slot is empty, there is nothing to merge.");
                 return false;
             }
-            if (SystemDataFactory.MatchResource(from.Item.DisplayName, Item.DisplayName) && !IsFull) {
+            if (SystemDataUtility.MatchResource(from.Item.DisplayName, Item.DisplayName) && !IsFull) {
                 // how many free slots there are in the new stack
                 int free = Item.MaximumStackSize - Count;
                 if (free >= from.Count) {
