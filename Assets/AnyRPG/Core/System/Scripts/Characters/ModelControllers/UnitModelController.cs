@@ -217,7 +217,7 @@ namespace AnyRPG {
         */
 
         public void SetInitialSavedAppearance(AnyRPGSaveData saveData) {
-            //Debug.Log(unitController.gameObject.name + ".UnitModelController.SetInitialSavedAppearance()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetInitialSavedAppearance()");
 
             modelAppearanceController.SetInitialSavedAppearance(saveData);
         }

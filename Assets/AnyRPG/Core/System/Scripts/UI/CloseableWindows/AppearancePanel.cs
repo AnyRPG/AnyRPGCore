@@ -60,27 +60,16 @@ namespace AnyRPG {
         }
 
         public virtual void HidePanel() {
-            //Debug.Log("AppearancePanel.HidePanel()");
+            //Debug.Log($"{gameObject.name}.AppearancePanel.HidePanel()");
+
             if (canvasGroup.alpha == 1) {
                 DisablePanelDisplay();
                 ShowEquipment();
             }
-            //HidePanel(true);
         }
-
-        /*
-        public virtual void HidePanel(bool showEquipment) {
-
-            DisablePanelDisplay();
-
-            if (showEquipment) {
-                ShowEquipment();
-            }
-        }
-        */
 
         public void DisablePanelDisplay() {
-            //Debug.Log(gameObject.name + ".AppearancePanel.DisablePanelDisplay()");
+            //Debug.Log($"{gameObject.name}.AppearancePanel.DisablePanelDisplay()");
 
             canvasGroup.alpha = 0;
             canvasGroup.blocksRaycasts = false;
@@ -88,7 +77,7 @@ namespace AnyRPG {
         }
 
         public virtual void ShowPanel() {
-            //Debug.Log(gameObject.name + ".AppearancePanel.ShowPanel()");
+            //Debug.Log($"{gameObject.name}.AppearancePanel.ShowPanel()");
 
             if (canvasGroup.alpha == 0) {
                 HideEquipment();
@@ -97,6 +86,8 @@ namespace AnyRPG {
         }
 
         public void EnablePanelDisplay() {
+            //Debug.Log($"{gameObject.name}.AppearancePanel.EnablePanelDisplay()");
+
             canvasGroup.alpha = 1;
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
@@ -190,14 +181,14 @@ namespace AnyRPG {
         }
 
         public virtual void HighlightMaleButton() {
-            //Debug.Log("AppearancePanel.HighlightMaleButton()");
+            //Debug.Log($"{gameObject.name}.AppearancePanel.HighlightMaleButton()");
 
             femaleButton.UnHighlightBackground();
             maleButton.HighlightBackground();
         }
 
         public virtual void SetFemale() {
-            Debug.Log(gameObject.name + ".AppearancePanel.SetFemale()");
+            //Debug.Log($"{gameObject.name}.AppearancePanel.SetFemale()");
 
             if (characterEditor.CharacterRace == null) {
                 // no race set so no way to get the proper gender model
@@ -241,7 +232,7 @@ namespace AnyRPG {
         }
 
         protected void HideEquipment() {
-            //Debug.Log(gameObject.name + ".AppearancePanel.HideEquipment()");
+            //Debug.Log($"{gameObject.name}.AppearancePanel.HideEquipment()");
 
             unitModelController.HideEquipment();
         }

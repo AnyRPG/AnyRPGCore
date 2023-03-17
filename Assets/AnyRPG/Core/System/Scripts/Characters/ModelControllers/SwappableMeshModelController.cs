@@ -31,6 +31,8 @@ namespace AnyRPG {
 
         public SwappableMeshModelController(UnitController unitController, UnitModelController unitModelController, SystemGameManager systemGameManager, SwappableMeshModelOptions modelOptions)
             : base(unitController, unitModelController, systemGameManager) {
+            //Debug.Log($"{unitController.gameObject.name}.SwappableMeshModelController()");
+
             this.modelOptions = modelOptions;
 
             // populate the default dictionary
@@ -39,6 +41,7 @@ namespace AnyRPG {
                     Debug.LogWarning(unitController.gameObject.name + ".SwappableMeshModelController(): Key '" + optionDefault.GroupName + "' already exists.  Ensure group names are unique in group defaults.");
                     continue;
                 }
+                //Debug.Log($"{unitController.gameObject.name}.SwappableMeshModelController(): adding {optionDefault.GroupName} as {optionDefault.MeshName}");
                 optionGroupDefaults.Add(optionDefault.GroupName, optionDefault.MeshName);
             }
 
@@ -77,6 +80,7 @@ namespace AnyRPG {
         }
 
         public override void SaveAppearanceSettings(ISaveDataOwner saveDataOwner, AnyRPGSaveData saveData) {
+            Debug.Log(unitController.gameObject.name + ".SwappableMeshModelController.SaveAppearanceSettings()");
 
             saveData.swappableMeshSaveData.Clear();
             foreach (string groupName in optionGroupChoices.Keys) {
@@ -107,7 +111,7 @@ namespace AnyRPG {
         }
 
         private bool LoadGroupChoice(string groupName, string optionChoice) {
-            //Debug.Log(unitController.gameObject.name + ".SwappableMeshModelController.LoadGroupChoice(" + groupName + ", " + optionChoice + ")");
+            //Debug.Log($"{unitController.gameObject.name}.SwappableMeshModelController.LoadGroupChoice({groupName}, {optionChoice})");
 
             if (optionGroups.ContainsKey(groupName) == false) {
                 // option group did not exist
@@ -155,7 +159,7 @@ namespace AnyRPG {
         }
 
         private void ApplyConfiguration() {
-            //Debug.Log(unitController.gameObject.name + ".SwappableMeshModelController.ApplyConfiguration()");
+            Debug.Log(unitController.gameObject.name + ".SwappableMeshModelController.ApplyConfiguration()");
 
             // get a list of meshes to enable
             List<string> enabledMeshes = new List<string>();
@@ -164,6 +168,7 @@ namespace AnyRPG {
                 if (optionGroupAppliedConfiguration[groupName] != "") {
                     // extract the actual mesh name from the optionGroupMembers dictionary based on the chosen option for the group
                     //enabledMeshes.Add(optionGroupMembers[groupName][optionGroupAppliedConfiguration[groupName]]);
+                    Debug.Log($"adding {optionGroupAppliedConfiguration[groupName]}");
                     enabledMeshes.Add(optionGroupAppliedConfiguration[groupName]);
                 }
             }
@@ -183,7 +188,7 @@ namespace AnyRPG {
         }
 
         public override void SetInitialSavedAppearance(AnyRPGSaveData saveData) {
-            //Debug.Log(unitController.gameObject.name + ".SwappableMeshModelController.SetInitialSavedAppearance()");
+            Debug.Log(unitController.gameObject.name + ".SwappableMeshModelController.SetInitialSavedAppearance()");
 
             foreach (SwappableMeshSaveData swappableMeshSaveData in saveData.swappableMeshSaveData) {
                 LoadGroupChoice(swappableMeshSaveData.groupName, swappableMeshSaveData.meshName);

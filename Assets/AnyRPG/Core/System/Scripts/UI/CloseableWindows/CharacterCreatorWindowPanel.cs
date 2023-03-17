@@ -124,7 +124,7 @@ namespace AnyRPG {
         }
 
         private void UpdateUnitProfile(UnitProfile unitProfile) {
-            Debug.Log("CharacterCreatorWindowPanel.UpdateUnitProfile(" + (unitProfile == null ? "null" : unitProfile.ResourceName) + ")");
+            //Debug.Log("CharacterCreatorWindowPanel.UpdateUnitProfile(" + (unitProfile == null ? "null" : unitProfile.ResourceName) + ")");
 
             this.unitProfile = unitProfile;
             this.characterRace = unitProfile.CharacterRace;
@@ -239,6 +239,7 @@ namespace AnyRPG {
 
         public void ClosePanel() {
             //Debug.Log("CharacterCreatorPanel.ClosePanel()");
+            currentAppearanceEditorPanel.DisablePanelDisplay();
             uIManager.characterCreatorWindow.CloseWindow();
         }
 
@@ -275,6 +276,12 @@ namespace AnyRPG {
 
             currentAppearanceEditorPanel.ShowPanel();
             SetOpenSubPanel(currentAppearanceEditorPanel, true);
+
+            //if (openSubPanel != currentAppearanceEditorPanel) {
+            //    ClosePanels(currentAppearanceEditorPanel);
+            //    currentAppearanceEditorPanel.ShowPanel();
+            //    SetOpenSubPanel(currentAppearanceEditorPanel, true);
+            //}
         }
 
         public void HandleUnitCreated() {
@@ -287,7 +294,13 @@ namespace AnyRPG {
         }
 
         private void EquipCharacter() {
-            characterCreatorManager.PreviewUnitController.UnitModelController.SetInitialSavedAppearance(saveManager.CurrentSaveData);
+            //Debug.Log("CharacterCreatorWindowPanel.EquipCharacter()");
+
+            // only set saved appearance if displaying the same unit as the existing player unit
+            if (playerManager.ActiveCharacter.UnitProfile == UnitProfile) {
+                characterCreatorManager.PreviewUnitController.UnitModelController.SetInitialSavedAppearance(saveManager.CurrentSaveData);
+            }
+
             foreach (EquipmentSlotProfile equipmentSlotProfile in playerManager.ActiveCharacter.CharacterEquipmentManager.CurrentEquipment.Keys) {
                 characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.CurrentEquipment.Add(equipmentSlotProfile, playerManager.ActiveCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
             }
