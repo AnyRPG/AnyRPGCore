@@ -147,7 +147,7 @@ MonoBehaviour:
   title: 
   factionName: 
   unitTypeName: 
-  characterRaceName: 
+  characterRaceName: Mecanim
   characterClassName: 
   classSpecializationName: 
   spawnDead: 0

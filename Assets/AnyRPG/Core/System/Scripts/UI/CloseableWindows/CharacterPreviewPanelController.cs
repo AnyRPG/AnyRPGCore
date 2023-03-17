@@ -9,10 +9,9 @@ namespace AnyRPG {
 
     public class CharacterPreviewPanelController : WindowContentController {
 
-
+        // events
         public event Action OnTargetReady = delegate { };
-        public event Action OnTargetCreated = delegate { };
-        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        public event Action OnUnitCreated = delegate { };
         public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
         [SerializeField]
@@ -50,7 +49,7 @@ namespace AnyRPG {
             base.ReceiveClosedWindowNotification();
             characterReady = false;
             windowOpened = false;
-            characterCreatorManager.OnUnitCreated -= HandleTargetCreated;
+            characterCreatorManager.OnUnitCreated -= HandleUnitCreated;
             characterCreatorManager.HandleCloseWindow();
             previewCameraController.ClearTarget();
             OnCloseWindow(this);
@@ -61,7 +60,7 @@ namespace AnyRPG {
             base.ProcessOpenWindowNotification();
             windowOpened = true;
             characterReady = false;
-            characterCreatorManager.OnUnitCreated += HandleTargetCreated;
+            characterCreatorManager.OnUnitCreated += HandleUnitCreated;
             SetPreviewTarget();
         }
 
@@ -106,9 +105,9 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleTargetCreated() {
-            //Debug.Log("CharacterPreviewPanelController.HandleTargetCreated()");
-            OnTargetCreated();
+        public void HandleUnitCreated() {
+            //Debug.Log("CharacterPreviewPanelController.HandleUnitCreated()");
+            OnUnitCreated();
         }
 
         public void HandleTargetReady() {

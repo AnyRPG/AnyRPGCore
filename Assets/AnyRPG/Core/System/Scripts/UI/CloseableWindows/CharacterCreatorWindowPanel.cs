@@ -39,7 +39,6 @@ namespace AnyRPG {
 
         private AnyRPGSaveData saveData;
 
-
         // game manager references
         protected UIManager uIManager = null;
         protected PlayerManager playerManager = null;
@@ -113,6 +112,8 @@ namespace AnyRPG {
             
             // close interaction window too for smoother experience
             uIManager.interactionWindow.CloseWindow();
+
+            characterCreatorManager.DisableLight();
         }
 
         public override void ProcessOpenWindowNotification() {
@@ -122,19 +123,21 @@ namespace AnyRPG {
             ProcessOpenWindow();
         }
 
-        public void SetUnitProfile(UnitProfile unitProfile) {
+        private void UpdateUnitProfile(UnitProfile unitProfile) {
+            Debug.Log("CharacterCreatorWindowPanel.UpdateUnitProfile(" + (unitProfile == null ? "null" : unitProfile.ResourceName) + ")");
+
             this.unitProfile = unitProfile;
             this.characterRace = unitProfile.CharacterRace;
         }
 
+        public void SetUnitProfile(UnitProfile unitProfile) {
+            UpdateUnitProfile(unitProfile);
+            characterPreviewPanel.ReloadUnit();
+        }
+
         private void ProcessOpenWindow() {
 
-            // set unit profile to default
-            if (systemConfigurationManager.UseFirstCreatorProfile) {
-                SetUnitProfile(systemConfigurationManager.CharacterCreatorUnitProfile);
-            } else {
-                SetUnitProfile(playerManager.ActiveCharacter.UnitProfile);
-            }
+            ApplyInitialUnitProfile();
 
             characterCreatorManager.OnUnitCreated += HandleUnitCreated;
             characterCreatorManager.OnModelCreated += HandleModelCreated;
@@ -144,7 +147,7 @@ namespace AnyRPG {
 
             defaultAppearancePanel.ReceiveOpenWindowNotification();
 
-            saveButton.Button.interactable = false;
+            //saveButton.Button.interactable = false;
             uINavigationControllers[0].UpdateNavigationList();
             uINavigationControllers[0].FocusCurrentButton();
 
@@ -153,6 +156,37 @@ namespace AnyRPG {
                 HandleModelCreated();
             }
             */
+            characterCreatorManager.EnableLight();
+        }
+
+        private void ApplyInitialUnitProfile() {
+
+            if (characterCreatorInteractableManager.CharacterCreator == null) {
+                // the window was not opened from an interaction with a character creator. nothing to do
+                return;
+            }
+
+            // set unit profile to default
+            if (characterCreatorInteractableManager.CharacterCreator.Props.UnitProfileList.Count == 0) {
+                if (characterCreatorInteractableManager.CharacterCreator.Props.AllowGenderChange == true) {
+                    characterRace = playerManager.ActiveCharacter.UnitProfile.CharacterRace;
+                }
+                UpdateUnitProfile(playerManager.ActiveCharacter.UnitProfile);
+                return;
+            }
+
+            if (characterCreatorInteractableManager.CharacterCreator.Props.UnitProfileList.Contains(playerManager.ActiveCharacter.UnitProfile)) {
+                if (characterCreatorInteractableManager.CharacterCreator.Props.AllowGenderChange == true) {
+                    characterRace = playerManager.ActiveCharacter.UnitProfile.CharacterRace;
+                }
+                UpdateUnitProfile(playerManager.ActiveCharacter.UnitProfile);
+            } else {
+                if (characterCreatorInteractableManager.CharacterCreator.Props.AllowGenderChange == true) {
+                    characterRace = characterCreatorInteractableManager.CharacterCreator.Props.UnitProfileList[0].CharacterRace;
+                }
+                UpdateUnitProfile(characterCreatorInteractableManager.CharacterCreator.Props.UnitProfileList[0]);
+            }
+
         }
 
         private void ActivateCorrectAppearancePanel() {
@@ -268,7 +302,6 @@ namespace AnyRPG {
             OpenAppearancePanel();
 
             /*
-            currentAppearanceEditorPanel.ShowPanel();
 
             // showPanel makes same call as HandleTargetReady() so no need to call it
             if (currentAppearanceEditorPanel.MainNoOptionsArea.activeSelf == false) {

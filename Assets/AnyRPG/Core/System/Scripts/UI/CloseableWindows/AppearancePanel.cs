@@ -121,6 +121,7 @@ namespace AnyRPG {
 
             if (characterEditor.CharacterRace == null) {
                 // no race set so no way to get the proper gender model
+                DisableGenderButtons();
                 return;
             }
 
@@ -196,7 +197,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetFemale() {
-            //Debug.Log(gameObject.name + ".AppearancePanel.SetFemale()");
+            Debug.Log(gameObject.name + ".AppearancePanel.SetFemale()");
 
             if (characterEditor.CharacterRace == null) {
                 // no race set so no way to get the proper gender model

@@ -27,7 +27,7 @@ namespace AnyRPG {
             // was there a reason why we didn't have base.Interact here before or just an oversight?
             base.Interact(source, optionIndex);
             // moved to coroutine because UMA will crash here due to its use of DestroyImmediate in the case where an UMAData was attached to the model.
-            characterCreatorInteractableManager.BeginInteraction(this);
+            characterCreatorInteractableManager.SetCharacterCreator(this);
             interactable.StartCoroutine(OpenWindowWait());
             
             return true;

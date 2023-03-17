@@ -5,10 +5,10 @@ using UnityEngine.EventSystems;
 namespace AnyRPG {
 
     public class PreviewCameraController : ConfiguredMonoBehaviour, IPointerDownHandler, IScrollHandler {
-        // public variables
+        
+        // events
         public event System.Action OnTargetReady = delegate { };
 
-        //[SerializeField]
         protected UnitController unitController = null;
 
         [SerializeField]
@@ -455,7 +455,7 @@ namespace AnyRPG {
             //Debug.Log("Camera offset is " + cameraOffsetVector);
         }
 
-        public void HandleModelReady() {
+        public void HandleModelCreated() {
             //Debug.Log("PreviewCameraController.HandleModelReady()");
             UnsubscribeFromModelReady();
             if (initialTargetString != null && initialTargetString != string.Empty) {
@@ -477,17 +477,16 @@ namespace AnyRPG {
             //Debug.Log("PreviewCameraController.UnsubscribeFromModelReady()");
 
             if (unitController?.UnitModelController != null) {
-                //unitController.UnitModelController.OnModelUpdated -= HandleModelReady;
-                unitController.UnitModelController.OnModelCreated -= HandleModelReady;
+                unitController.UnitModelController.OnModelCreated -= HandleModelCreated;
             }
         }
 
-        public void SubscribeToModelReady() {
+        public void SubscribeToModelCreated() {
             //Debug.Log("PreviewCameraController.SubscribeToModelReady()");
 
             if (unitController?.UnitModelController != null) {
                 //unitController.UnitModelController.OnModelUpdated += HandleModelReady;
-                unitController.UnitModelController.OnModelCreated += HandleModelReady;
+                unitController.UnitModelController.OnModelCreated += HandleModelCreated;
             }
         }
 
@@ -513,7 +512,7 @@ namespace AnyRPG {
                 // we did not find the target bone.  Either there was an error, or this was an UMA unit that didn't spawn yet.
                 if (unitController?.UnitModelController?.ModelCreated == false) {
                     //Debug.Log("PreviewCameraController.FindFollowTarget(): model is not ready yet, subscribing to model ready");
-                    SubscribeToModelReady();
+                    SubscribeToModelCreated();
                 } else {
                     //Debug.Log("PreviewCameraController.FindFollowTarget(): model is ready");
                     if (initialTargetString != string.Empty) {

@@ -104,12 +104,6 @@ namespace AnyRPG {
         // reference to the default profile
         private List<UnitProfile> characterCreatorProfiles = new List<UnitProfile>();
 
-        [Header("In Game Character Creator")]
-
-        [Tooltip("If true, when the character creator is used in-game, the character will be forced to use the first character creator profile, rather than their current model.")]
-        [SerializeField]
-        private bool useFirstCreatorProfile = false;
-
         [Header("Inventory")]
 
         /*
@@ -720,7 +714,6 @@ namespace AnyRPG {
         //public string DefaultBankBagItem { get => defaultBankBagItem; set => defaultBankBagItem = value; }
         public string MainMenuScene { get => mainMenuScene; set => mainMenuScene = value; }
         public string InitializationScene { get => initializationScene; set => initializationScene = value; }
-        public bool UseFirstCreatorProfile { get => useFirstCreatorProfile; set => useFirstCreatorProfile = value; }
         //public MiniMapFallBackMode MiniMapFallBackMode { get => miniMapFallBackMode; set => miniMapFallBackMode = value; }
         public List<string> CharacterCreatorProfileNames { get => characterCreatorProfileNames; set => characterCreatorProfileNames = value; }
         public bool SyncMovementAnimationSpeed { get => syncMovementAnimationSpeed; set => syncMovementAnimationSpeed = value; }
