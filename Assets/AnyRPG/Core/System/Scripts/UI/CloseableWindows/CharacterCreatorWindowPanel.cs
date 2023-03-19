@@ -20,8 +20,8 @@ namespace AnyRPG {
         [SerializeField]
         private DefaultAppearancePanel defaultAppearancePanel = null;
 
-        [SerializeField]
-        private HighlightButton saveButton = null;
+        //[SerializeField]
+        //private HighlightButton saveButton = null;
 
         private Dictionary<GameObject, AppearancePanel> appearanceEditorPanels = new Dictionary<GameObject, AppearancePanel>();
         private Dictionary<Type, GameObject> appearanceEditorPanelTypes = new Dictionary<Type, GameObject>();

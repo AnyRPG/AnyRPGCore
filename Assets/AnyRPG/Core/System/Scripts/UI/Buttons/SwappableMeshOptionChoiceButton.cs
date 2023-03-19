@@ -18,22 +18,22 @@ namespace AnyRPG {
 
         private SwappableMeshAppearancePanelController appearancePanelController = null;
         private string optionGroupName = string.Empty;
-        private string optionChoice = string.Empty;
+        private string optionName = string.Empty;
 
-        public void ConfigureButton(SwappableMeshAppearancePanelController appearancePanelController, string groupName, Sprite image, string optionName, string optionChoice) {
+        public void ConfigureButton(SwappableMeshAppearancePanelController appearancePanelController, string groupName, Sprite image, string optionName) {
             this.appearancePanelController = appearancePanelController;
             optionGroupName = groupName;
             if (icon != null) {
                 icon.sprite = image;
             }
-            this.optionChoice = optionChoice;
+            this.optionName = optionName;
             if (text != null) {
                 text.text = optionName;
             }
         }
 
         public void MakeSelection() {
-            appearancePanelController.ChooseOptionChoice(this, optionGroupName, optionChoice);
+            appearancePanelController.ChooseOptionChoice(this, optionGroupName, optionName);
         }
 
 

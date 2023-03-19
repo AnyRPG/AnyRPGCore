@@ -36,12 +36,12 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Armor
   equipmentSetName: 
-  deprecatedUseUMARecipe: 0
   umaRecipeProfileName: Brown Leather Armor
   uMARecipeProfileProperties:
     uMARecipes: []
     sharedColors: []
   holdableObjectList: []
+  inlineEquipmentModels: []
   useArmorModifier: 1
   useManualArmor: 0
   manualValueIsScale: 0
@@ -55,7 +55,10 @@ MonoBehaviour:
     manualModifierValue: 0
   randomSecondaryStats: 0
   secondaryStats: []
-  onEquipAbilityName: 
+  onEquipStatusEffect: 
   learnedAbilityNames: []
   requireArmorClass: 0
   armorClassName: Leather
+  references:
+    version: 2
+    RefIds: []

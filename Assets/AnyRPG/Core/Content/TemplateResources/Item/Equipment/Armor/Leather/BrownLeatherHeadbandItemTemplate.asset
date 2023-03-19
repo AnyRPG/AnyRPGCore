@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Brown Leather Headband
   displayName: 
-  icon: {fileID: 21300000, guid: 58ec580e05da247408647464bae6a571, type: 3}
+  icon: {fileID: 21300000, guid: b28b9e9d7a14b0642876b18af564ee38, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very brown
   useRegionalDescription: 0
@@ -36,12 +36,12 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Helm
   equipmentSetName: 
-  deprecatedUseUMARecipe: 0
   umaRecipeProfileName: Brown Leather Headband
   uMARecipeProfileProperties:
     uMARecipes: []
     sharedColors: []
   holdableObjectList: []
+  inlineEquipmentModels: []
   useArmorModifier: 1
   useManualArmor: 0
   manualValueIsScale: 0
@@ -55,7 +55,10 @@ MonoBehaviour:
     manualModifierValue: 0
   randomSecondaryStats: 0
   secondaryStats: []
-  onEquipAbilityName: 
+  onEquipStatusEffect: 
   learnedAbilityNames: []
   requireArmorClass: 0
   armorClassName: Leather
+  references:
+    version: 2
+    RefIds: []

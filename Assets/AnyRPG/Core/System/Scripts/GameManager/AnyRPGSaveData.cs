@@ -71,7 +71,7 @@ namespace AnyRPG {
     public struct SwappableMeshSaveData {
 
         public string groupName;
-        public string meshName;
+        public string optionName;
     }
 
     [Serializable]

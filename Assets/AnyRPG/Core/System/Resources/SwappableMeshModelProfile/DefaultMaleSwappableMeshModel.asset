@@ -70,11 +70,38 @@ MonoBehaviour:
       - displayName: Hair 6
         icon: {fileID: 21300000, guid: 5905afa9ef160c6468368a3be2e525e1, type: 3}
         meshName: human_male_hair_6
-    - groupName: Armor
-      hidden: 0
-      optional: 1
+    - groupName: Body
+      hidden: 1
+      optional: 0
       displayAs: 0
       hidesGroup: 
+      meshes:
+      - displayName: Default Body
+        icon: {fileID: 0}
+        meshName: human_male_body_default
+    - groupName: Hands
+      hidden: 1
+      optional: 0
+      displayAs: 0
+      hidesGroup: 
+      meshes:
+      - displayName: Default Hands
+        icon: {fileID: 0}
+        meshName: human_male_hands_default
+    - groupName: Feet
+      hidden: 1
+      optional: 0
+      displayAs: 0
+      hidesGroup: 
+      meshes:
+      - displayName: Default Feet
+        icon: {fileID: 0}
+        meshName: human_male_feet_default
+    - groupName: Armor
+      hidden: 1
+      optional: 0
+      displayAs: 0
+      hidesGroup: Body
       meshes:
       - displayName: Heavy Armor
         icon: {fileID: 0}
@@ -95,8 +122,8 @@ MonoBehaviour:
         icon: {fileID: 0}
         meshName: human_male_light_armor_4
     - groupName: Helmet
-      hidden: 0
-      optional: 1
+      hidden: 1
+      optional: 0
       displayAs: 0
       hidesGroup: Hair
       meshes:
@@ -110,10 +137,10 @@ MonoBehaviour:
         icon: {fileID: 0}
         meshName: human_male_light_helmet
     - groupName: Gloves
-      hidden: 0
-      optional: 1
+      hidden: 1
+      optional: 0
       displayAs: 0
-      hidesGroup: 
+      hidesGroup: Hands
       meshes:
       - displayName: Heavy Gloves
         icon: {fileID: 0}
@@ -128,10 +155,10 @@ MonoBehaviour:
         icon: {fileID: 0}
         meshName: human_male_light_gloves_3
     - groupName: Boots
-      hidden: 0
-      optional: 1
+      hidden: 1
+      optional: 0
       displayAs: 0
-      hidesGroup: 
+      hidesGroup: Feet
       meshes:
       - displayName: Heavy Boots
         icon: {fileID: 0}
@@ -147,10 +174,10 @@ MonoBehaviour:
         meshName: human_male_light_boots_2
     groupDefaults:
     - groupName: Head
-      meshName: human_male_head_default
-    - groupName: Armor
-      meshName: human_male_body_default
-    - groupName: Gloves
-      meshName: human_male_hands_default
-    - groupName: Boots
-      meshName: human_male_feet_default
+      optionName: Head 1
+    - groupName: Body
+      optionName: Default Body
+    - groupName: Hands
+      optionName: Default Hands
+    - groupName: Feet
+      optionName: Default Feet

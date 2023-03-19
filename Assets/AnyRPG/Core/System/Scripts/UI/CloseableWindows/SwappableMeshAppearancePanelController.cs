@@ -142,7 +142,17 @@ namespace AnyRPG {
         }
 
         private void AddMainButtons() {
+            //Debug.Log("SwappableMeshAppearancePanelController.AddMainButtons()");
+
             foreach (SwappableMeshOptionGroup modelGroup in swappableMeshModelController.ModelOptions.MeshGroups) {
+
+                if (modelGroup.Hidden == true) {
+                    continue;
+                }
+
+                if (modelGroup.Meshes.Count == 0) {
+                    continue;
+                }
 
                 // populate the group dictionary
                 optionGroups.Add(modelGroup.GroupName, modelGroup);
@@ -150,9 +160,6 @@ namespace AnyRPG {
                 // set chosen option to none for group
                 chosenOptions.Add(modelGroup.GroupName, "");
 
-                if (modelGroup.Meshes.Count == 0) {
-                    continue;
-                }
                 MeshModelGroupButton meshModelGroupButton = objectPooler.GetPooledObject(modelGroupButtonPrefab, mainButtonsArea.transform).GetComponent<MeshModelGroupButton>();
                 meshModelGroupButton.Configure(systemGameManager);
                 meshModelGroupButton.ConfigureButton(this, modelGroup.GroupName);
@@ -174,6 +181,7 @@ namespace AnyRPG {
             //Debug.Log("SwappableMeshAppearancePanelController.ChooseOptionChoice(" + groupName + ", " + optionChoice + ")");
 
             swappableMeshModelController.SetGroupChoice(groupName, optionChoice);
+            swappableMeshModelController.BuildModelAppearance();
             listOptionsArea.UnHightlightButtonOutlines();
             gridOptionsArea.UnHightlightButtonOutlines();
             highlightButton.HighlightOutline();
@@ -212,11 +220,12 @@ namespace AnyRPG {
             listOptionsArea.DeleteActiveButtons();
 
             if (optionGroup.Optional == true) {
-                AddOptionListButton(optionGroup.GroupName,  noOptionImage, "None", "");
+                AddOptionListButton(optionGroup.GroupName,  noOptionImage, "None");
             }
 
             foreach (SwappableMeshOptionChoice optionChoice in optionGroup.Meshes) {
-                AddOptionListButton(optionGroup.GroupName, optionChoice.Icon, optionChoice.DisplayName, optionChoice.MeshName);
+                //AddOptionListButton(optionGroup.GroupName, optionChoice.Icon, optionChoice.DisplayName, optionChoice.MeshName);
+                AddOptionListButton(optionGroup.GroupName, optionChoice.Icon, optionChoice.DisplayName);
             }
         }
 
@@ -228,15 +237,16 @@ namespace AnyRPG {
             gridOptionsArea.DeleteActiveButtons();
 
             if (optionGroup.Optional == true) {
-                AddOptionGridButton(optionGroup.GroupName, noOptionImage, "");
+                AddOptionGridButton(optionGroup.GroupName, noOptionImage, "None");
             }
 
             foreach (SwappableMeshOptionChoice optionChoice in optionGroup.Meshes) {
-                AddOptionGridButton(optionGroup.GroupName, optionChoice.Icon, optionChoice.MeshName);
+                AddOptionGridButton(optionGroup.GroupName, optionChoice.Icon, optionChoice.DisplayName);
             }
         }
 
-        private void AddOptionListButton(string groupName, Sprite optionImage, string displayName, string optionChoice) {
+        //private void AddOptionListButton(string groupName, Sprite optionImage, string displayName, string optionChoice) {
+        private void AddOptionListButton(string groupName, Sprite optionImage, string displayName) {
             //Debug.Log("SwappableMeshAppearancePanelController.AddOptionListButton()");
 
             SwappableMeshOptionChoiceButton optionChoiceButton = null;
@@ -245,27 +255,31 @@ namespace AnyRPG {
             } else {
                 optionChoiceButton = objectPooler.GetPooledObject(textListOptionButtonPrefab, listOptionsArea.transform).GetComponent<SwappableMeshOptionChoiceButton>();
             }
-            if (optionChoiceButton != null) {
-                optionChoiceButton.Configure(systemGameManager);
-                optionChoiceButton.ConfigureButton(this, groupName, optionImage, displayName, optionChoice);
-                listOptionsArea.AddActiveButton(optionChoiceButton);
-
-                // highlight the button if it is already the selected choice for the group
-                /*
-                if (chosenOptions.ContainsKey(groupName) && chosenOptions[groupName] == optionChoice) {
-                    optionChoiceButton.HighlightOutline();
-                }
-                */
-                if (swappableMeshModelController.OptionGroupChoices.ContainsKey(groupName) && swappableMeshModelController.OptionGroupChoices[groupName] == optionChoice) {
-                    optionChoiceButton.HighlightOutline();
-                }
+            if (optionChoiceButton == null) {
+                return;
             }
+
+            optionChoiceButton.Configure(systemGameManager);
+            //optionChoiceButton.ConfigureButton(this, groupName, optionImage, displayName, optionChoice);
+            optionChoiceButton.ConfigureButton(this, groupName, optionImage, displayName);
+            listOptionsArea.AddActiveButton(optionChoiceButton);
+
+            // highlight the button if it is already the selected choice for the group
+            /*
+            if (chosenOptions.ContainsKey(groupName) && chosenOptions[groupName] == optionChoice) {
+                optionChoiceButton.HighlightOutline();
+            }
+            */
+            if (swappableMeshModelController.OptionGroupChoices.ContainsKey(groupName) && swappableMeshModelController.OptionGroupChoices[groupName] == displayName) {
+                optionChoiceButton.HighlightOutline();
+            }
+
         }
 
         private void AddOptionGridButton(string groupName, Sprite optionImage, string optionChoice) {
             SwappableMeshOptionChoiceButton optionChoiceButton = objectPooler.GetPooledObject(gridOptionButtonPrefab, gridOptionsArea.transform).GetComponent<SwappableMeshOptionChoiceButton>();
             optionChoiceButton.Configure(systemGameManager);
-            optionChoiceButton.ConfigureButton(this, groupName, optionImage, "", optionChoice);
+            optionChoiceButton.ConfigureButton(this, groupName, optionImage, optionChoice);
             gridOptionsArea.AddActiveButton(optionChoiceButton);
 
             // highlight the button if it is already the selected choice for the group

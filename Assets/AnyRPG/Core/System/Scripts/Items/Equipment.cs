@@ -38,13 +38,21 @@ namespace AnyRPG {
         [SerializeField]
         private UMARecipeProfileProperties uMARecipeProfileProperties = new UMARecipeProfileProperties();
 
-        // The next 5 fields are meant for weapons.  They are being left in the base equipment class for now in case we want to do something like attach a cape to the spine
-
         [Header("Prefab Equipment Models")]
 
         [Tooltip("Physical prefabs to attach to bones on the character unit")]
         [SerializeField]
         private List<HoldableObjectAttachment> holdableObjectList = new List<HoldableObjectAttachment>();
+
+        [Header("Equipment Models")]
+
+        [Tooltip("Inline equipment model definitions.")]
+        [SerializeReference]
+        [SerializeReferenceButton]
+        private List<EquipmentModel> inlineEquipmentModels = new List<EquipmentModel>();
+
+        [SerializeField]
+        private EquipmentModelProperties equipmentModelProperties = new EquipmentModelProperties();
 
         [Header("Base Armor")]
 
@@ -100,6 +108,8 @@ namespace AnyRPG {
 
         //[SerializeField]
         private List<BaseAbilityProperties> learnedAbilities = new List<BaseAbilityProperties>();
+
+        private Dictionary<Type, EquipmentModel> equipmentModelDictionary = new Dictionary<Type, EquipmentModel>();
 
         public float GetArmorModifier(int characterLevel) {
             return GetArmorModifier(characterLevel, realItemQuality);
@@ -259,6 +269,22 @@ namespace AnyRPG {
             // nothing here yet
         }
 
+        public bool HasEquipmentModel<T>() where T : EquipmentModel {
+            if (equipmentModelDictionary.ContainsKey(typeof(T))) {
+                return true;
+            }
+
+            return false;
+        }
+
+        public T GetEquipmentModel<T>() where T : EquipmentModel {
+            if (equipmentModelDictionary.ContainsKey(typeof(T))) {
+                return equipmentModelDictionary[typeof(T)] as T;
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// meant to be overwritten by specific equipment types
         /// </summary>
@@ -416,7 +442,14 @@ namespace AnyRPG {
                 }
             }
 
-
+            foreach (EquipmentModel equipmentModel in inlineEquipmentModels) {
+                if (equipmentModel != null) {
+                    equipmentModel.Configure(systemGameManager);
+                    equipmentModel.SetupScriptableObjects(this);
+                    Debug.Log($"adding type {equipmentModel.GetType().Name}");
+                    equipmentModelDictionary.Add(equipmentModel.GetType(), equipmentModel);
+                }
+            }
         }
 
         public override void InitializeNewItem(ItemQuality itemQuality = null) {

@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 382dd122006c3fd459cf45025d3eb79e, type: 3}
+  m_Name: BrownLeatherArmorModel
+  m_EditorClassIdentifier: 
+  resourceName: Brown Leather Armor
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  equipmentModels:
+  - rid: 5705935809496219648
+  - rid: 5705935809496219649
+  references:
+    version: 2
+    RefIds:
+    - rid: 5705935809496219648
+      type: {class: SwappableMeshEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        meshes:
+        - groupName: Armor
+          optionName: Medium Armor
+    - rid: 5705935809496219649
+      type: {class: UMAEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        umaRecipeProfileName: 
+        uMARecipeProfileProperties:
+          uMARecipes:
+          - {fileID: 11400000, guid: 11de76457c1583a4488f2ce67fbed54a, type: 2}
+          - {fileID: 11400000, guid: a78aabc8efb2d462da981b0f7864bbcb, type: 2}
+          sharedColors:
+          - sharedColorname: Chest Equipment Color 1
+            color: {r: 0.21960784, g: 0.11764706, b: 0.03137255, a: 1}
+          - sharedColorname: Chest Equipment Color 2
+            color: {r: 0.78431374, g: 0.6627451, b: 0.34509805, a: 1}
