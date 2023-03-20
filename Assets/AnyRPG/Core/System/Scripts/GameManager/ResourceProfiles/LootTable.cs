@@ -66,7 +66,7 @@ namespace AnyRPG {
         }
 
         protected virtual void RollLoot(LootTableState lootTableState) {
-            //Debug.Log(gameObject.name + ".LootTable.RollLoot()");
+            //Debug.Log($"{gameObject.name}.LootTable.RollLoot()");
             int lootTableRemainingDrops = dropLimit;
             bool lootTableUnlimitedDrops = (dropLimit == 0);
 

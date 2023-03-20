@@ -33,7 +33,7 @@ namespace AnyRPG {
         }
 
         public override void ProcessCleanupEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".FactionChangeInteractable.CleanupEventSubscriptions()");
+            //Debug.Log($"{gameObject.name}.FactionChangeInteractable.CleanupEventSubscriptions()");
             base.ProcessCleanupEventSubscriptions();
 
             SystemEventManager.StopListening("OnFactionChange", HandleFactionChange);
@@ -75,7 +75,7 @@ namespace AnyRPG {
         }
 
         public override int GetCurrentOptionCount() {
-            //Debug.Log(gameObject.name + ".CharacterCreatorInteractable.GetCurrentOptionCount()");
+            //Debug.Log($"{gameObject.name}.CharacterCreatorInteractable.GetCurrentOptionCount()");
             return GetValidOptionCount();
         }
 

@@ -90,7 +90,7 @@ namespace AnyRPG {
         }
 
         public override bool RightTrigger() {
-            //Debug.Log(gameObject.name + ".PagedWindowContents.RightTrigger()");
+            //Debug.Log($"{gameObject.name}.PagedWindowContents.RightTrigger()");
             if (base.RightTrigger()) {
                 return true;
             }

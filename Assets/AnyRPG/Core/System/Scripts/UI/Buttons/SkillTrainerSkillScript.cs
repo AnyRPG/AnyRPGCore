@@ -25,7 +25,7 @@ namespace AnyRPG {
         }
 
         public override void Select() {
-            //Debug.Log(gameObject.name + ".SkillTrainerSkillScript.Select()");
+            //Debug.Log($"{gameObject.name}.SkillTrainerSkillScript.Select()");
 
             base.Select();
             skillTrainerUI.SetSelectedButton(this);

@@ -22,7 +22,7 @@ namespace AnyRPG {
         }
 
         public void OnTriggerEnter(Collider other) {
-            //Debug.Log(gameObject.name + ".MovementSoundArea.OnTriggerEnter()");
+            //Debug.Log($"{gameObject.name}.MovementSoundArea.OnTriggerEnter()");
             if (other.gameObject == playerManager.ActiveUnitController.gameObject) {
                 playerManager.RespawnPlayer();
             }

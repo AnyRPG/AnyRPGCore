@@ -134,12 +134,12 @@ namespace AnyRPG {
         }
 
         public void ProcessLevelUnload() {
-            //Debug.Log(gameObject.name + ".PlayerController.ProcessLevelUnload()");
+            //Debug.Log($"{gameObject.name}.PlayerController.ProcessLevelUnload()");
             ClearInteractables();
         }
 
         public void ClearInteractables() {
-            //Debug.Log(gameObject.name + ".PlayerController.ClearInteractables()");
+            //Debug.Log($"{gameObject.name}.PlayerController.ClearInteractables()");
             interactables.Clear();
         }
 
@@ -225,7 +225,7 @@ namespace AnyRPG {
             //ResetMoveInput();
 
             if (playerManager.ActiveUnitController == null) {
-                //Debug.Log(gameObject.name + ".PlayerController.Update(): Player Unit is not spawned. Exiting");
+                //Debug.Log($"{gameObject.name}.PlayerController.Update(): Player Unit is not spawned. Exiting");
                 return;
             }
 
@@ -385,7 +385,7 @@ namespace AnyRPG {
         /// which breaks the invector controller
         /// </summary>
         private void HandleMouseOver() {
-            //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver()");
+            //Debug.Log($"{gameObject.name}.PlayerController.HandleMouseOver()");
             if (cameraManager.ActiveMainCamera == null) {
                 // we are in a cutscene and shouldn't be dealing with mouseover
                 return;
@@ -438,7 +438,7 @@ namespace AnyRPG {
                 }
             } else {
                 disableMouseOver = true;
-                //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver(): mouseovernameplate: " + namePlateManager.MouseOverNamePlate() + "; pointerovergameobject: " + EventSystem.current.IsPointerOverGameObject());
+                //Debug.Log($"{gameObject.name}.PlayerController.HandleMouseOver(): mouseovernameplate: " + namePlateManager.MouseOverNamePlate() + "; pointerovergameobject: " + EventSystem.current.IsPointerOverGameObject());
             }
 
             if (disableMouseOver) {
@@ -458,7 +458,7 @@ namespace AnyRPG {
 
         /*
         public void HandleMouseOver(Interactable newInteractable) {
-            //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver()");
+            //Debug.Log($"{gameObject.name}.PlayerController.HandleMouseOver()");
             if (cameraManager.MyActiveMainCamera == null) {
                 // we are in a cutscene and shouldn't be dealing with mouseover
                 return;
@@ -476,7 +476,7 @@ namespace AnyRPG {
         */
 
         private void HandleRightMouseClick() {
-            //Debug.Log(gameObject.name + ".PlayerController.HandleRightMouseClick()");
+            //Debug.Log($"{gameObject.name}.PlayerController.HandleRightMouseClick()");
 
             if (MouseOutsideScreen()) {
                 return;
@@ -484,7 +484,7 @@ namespace AnyRPG {
 
             // check if the right mouse button clicked on something and interact with it
             if (inputManager.rightMouseButtonClicked && !EventSystem.current.IsPointerOverGameObject()) {
-                //Debug.Log(gameObject.name + ".PlayerController.HandleRightMouseClick(): !EventSystem.current.IsPointerOverGameObject() == true!!!");
+                //Debug.Log($"{gameObject.name}.PlayerController.HandleRightMouseClick(): !EventSystem.current.IsPointerOverGameObject() == true!!!");
 
 
                 if (mouseOverInteractable != null && mouseOverInteractable.IsTrigger == false) {
@@ -497,7 +497,7 @@ namespace AnyRPG {
         }
 
         private void ProcessGamepadButtonClicks() {
-            //Debug.Log(gameObject.name + ".PlayerController.ProcessGamepadButtonClicks()");
+            //Debug.Log($"{gameObject.name}.PlayerController.ProcessGamepadButtonClicks()");
 
             // if a window is open, all button clicks will be processed by that window instead of the player
             if (windowManager.CurrentWindow != null) {
@@ -610,7 +610,7 @@ namespace AnyRPG {
         /// if an interactable is set, try to interact with it if it's in range.
         /// </summary>
         private void CheckForInteraction() {
-            //Debug.Log(gameObject.name + ".PlayerController.CheckForInteraction()");
+            //Debug.Log($"{gameObject.name}.PlayerController.CheckForInteraction()");
 
             if (playerManager.UnitController == null) {
                 return;
@@ -626,7 +626,7 @@ namespace AnyRPG {
         }
 
         private bool InteractionSucceeded(Interactable target) {
-            //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded()");
+            //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded()");
 
             if (playerManager.UnitController == null) {
                 return false;
@@ -634,18 +634,18 @@ namespace AnyRPG {
 
             //if (playerManager.UnitController.Target == null) {
             if (target == null) {
-                //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): target is null. return false.");
+                //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded(): target is null. return false.");
                 return false;
             }
             //if (IsTargetInHitBox(target)) {
             // get reference to name now since interactable could change scene and then target reference is lost
             string targetDisplayName = target.DisplayName;
             if (target.Interact(playerManager.ActiveUnitController.CharacterUnit, true)) {
-                //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
+                //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
                 systemEventManager.NotifyOnInteractionStarted(targetDisplayName);
                 return true;
             }
-            //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): returning false");
+            //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded(): returning false");
 
             return false;
             //}
@@ -886,7 +886,7 @@ namespace AnyRPG {
         }
 
         public void InterActWithTarget(Interactable interactable, bool resetTarget = true) {
-            //Debug.Log(gameObject.name + ".InterActWithTarget(" + interactable.gameObject.name + ")");
+            //Debug.Log($"{gameObject.name}.InterActWithTarget(" + interactable.gameObject.name + ")");
 
             if (playerManager.UnitController.Target != interactable && resetTarget == true) {
                 playerManager.UnitController.ClearTarget();
@@ -926,17 +926,17 @@ namespace AnyRPG {
         }
 
         private bool InteractionWithOptionSucceeded(InteractableOptionComponent interactableOption) {
-            //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded()");
+            //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded()");
             //if (IsTargetInHitBox(target)) {
             if (interactableOption.Interact(playerManager.ActiveUnitController.CharacterUnit)) {
-                //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
+                //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
                 systemEventManager.NotifyOnInteractionStarted(playerManager.UnitController.Target.DisplayName);
                 systemEventManager.NotifyOnInteractionWithOptionStarted(interactableOption);
                 // no longer needed since targeting is changed and we don't want to lose target in the middle of attacking
                 //playerManager.ActiveUnitController.SetTarget(null);
                 return true;
             }
-            //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): returning false");
+            //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded(): returning false");
             return false;
             //}
             //return false;
@@ -1047,7 +1047,7 @@ namespace AnyRPG {
         }
 
         public void HandleDie(CharacterStats characterStats) {
-            //Debug.Log(gameObject.name + ".PlayerController.HandleDeath()");
+            //Debug.Log($"{gameObject.name}.PlayerController.HandleDeath()");
             Lock(true, true, false, 0.1f, 0f);
         }
 
@@ -1057,7 +1057,7 @@ namespace AnyRPG {
 
         //Keep character from moving.
         public void LockMovement() {
-            //Debug.Log(gameObject.name + ".PlayerController.LockMovement()");
+            //Debug.Log($"{gameObject.name}.PlayerController.LockMovement()");
             canMove = false;
             if (playerManager.ActiveUnitController != null) {
                 playerManager.ActiveUnitController.UnitAnimator.SetMoving(false);
@@ -1072,7 +1072,7 @@ namespace AnyRPG {
         }
 
         public void UnlockMovement() {
-            //Debug.Log(gameObject.name + ".PlayerController.UnlockMovement()");
+            //Debug.Log($"{gameObject.name}.PlayerController.UnlockMovement()");
             canMove = true;
 
             // why do we do this?
@@ -1089,7 +1089,7 @@ namespace AnyRPG {
         }
 
         public void SubscribeToUnitEvents() {
-            //Debug.Log(gameObject.name + ".PlayerController.SubscribeToUnitEvents()");
+            //Debug.Log($"{gameObject.name}.PlayerController.SubscribeToUnitEvents()");
             
             // if player was agrod at spawn, they may have a target already since we subscribe on model ready
             playerManager.ActiveUnitController.UnitEventController.OnSetTarget += HandleSetTarget;
@@ -1126,7 +1126,7 @@ namespace AnyRPG {
         }
 
         public void UnsubscribeFromUnitEvents() {
-            //Debug.Log(gameObject.name + ".PlayerController.UnsubscribeFromUnitEvents()");
+            //Debug.Log($"{gameObject.name}.PlayerController.UnsubscribeFromUnitEvents()");
             playerManager.ActiveUnitController.UnitEventController.OnSetTarget -= HandleSetTarget;
             playerManager.ActiveUnitController.UnitEventController.OnClearTarget -= HandleClearTarget;
             playerManager.ActiveUnitController.UnitAnimator.OnStartCasting -= HandleStartCasting;
@@ -1169,7 +1169,7 @@ namespace AnyRPG {
         }
 
         public void HandleUnitDestroy(UnitProfile unitProfile) {
-            //Debug.Log(gameObject.name + ".PlayerController.HandleUnitDestroy()");
+            //Debug.Log($"{gameObject.name}.PlayerController.HandleUnitDestroy()");
             SystemEventManager.TriggerEvent("OnPlayerUnitDespawn", new EventParamProperties());
             UnsubscribeFromUnitEvents();
             NotifyInteractablesOnDespawn();
@@ -1239,7 +1239,7 @@ namespace AnyRPG {
 
 
         public void HandleDeath() {
-            //Debug.Log(gameObject.name + ".PlayerController.HandleDeath()");
+            //Debug.Log($"{gameObject.name}.PlayerController.HandleDeath()");
             playerManager.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
             SystemEventManager.TriggerEvent("OnDeath", new EventParamProperties());
         }

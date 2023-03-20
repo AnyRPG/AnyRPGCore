@@ -62,7 +62,7 @@ namespace AnyRPG {
         }
 
         public void SetInteractable(Interactable interactable) {
-            //Debug.Log(gameObject.name + ".MiniMapIndicatorController.SetInteractable(" + interactable.gameObject.name + "): instance: " + instanceNumber);
+            //Debug.Log($"{gameObject.name}.MiniMapIndicatorController.SetInteractable(" + interactable.gameObject.name + "): instance: " + instanceNumber);
             this.interactable = interactable;
             SetupMiniMap();
         }

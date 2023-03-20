@@ -221,7 +221,7 @@ namespace AnyRPG {
                     }
                 } else {
                     // enable for troubleshooting only.  It gets spammy with beast units that don't have attachments.
-                    //Debug.Log(gameObject.name + ".MecanimModelController.GetSheathedAttachmentPointNode(): could not get attachment profile from prefabprofile");
+                    //Debug.Log($"{gameObject.name}.MecanimModelController.GetSheathedAttachmentPointNode(): could not get attachment profile from prefabprofile");
                 }
             }
             // enable for troubleshooting only.  It gets spammy with beast units that don't have attachments.
@@ -230,7 +230,7 @@ namespace AnyRPG {
         }
 
         public AttachmentPointNode GetHeldAttachmentPointNode(AttachmentNode attachmentNode) {
-            //Debug.Log(gameObject.name + ".MecanimModelController.GetHeldAttachmentPointNode()");
+            //Debug.Log($"{gameObject.name}.MecanimModelController.GetHeldAttachmentPointNode()");
             if (attachmentNode.UseUniversalAttachment == false) {
                 AttachmentPointNode attachmentPointNode = new AttachmentPointNode();
                 attachmentPointNode.TargetBone = attachmentNode.HoldableObject.TargetBone;

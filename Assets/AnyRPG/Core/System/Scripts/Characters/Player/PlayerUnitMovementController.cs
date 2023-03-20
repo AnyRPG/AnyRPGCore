@@ -252,14 +252,14 @@ namespace AnyRPG {
         }
 
         public void Init() {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OrchestrateStartup()");
+            //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.OrchestrateStartup()");
             //airForwardDirection = playerManager.ActiveUnitController.transform.forward;
             ConfigureStateMachine();
             SwitchCollisionOn();
         }
 
         public void ConfigureStateMachine() {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.ConfigureStateMachine()");
+            //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.ConfigureStateMachine()");
             currentState = AnyRPGCharacterState.Idle;
             //rpgCharacterState = AnyRPGCharacterState.Idle;
             if (movementStateController != null) {
@@ -270,7 +270,7 @@ namespace AnyRPG {
         public void GetComponentReferences() {
             movementStateController = GetComponent<PlayerMovementStateController>();
             if (movementStateController == null) {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.GetComponentReferences(): unable to get AnyRPGCharacterController");
+                //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.GetComponentReferences(): unable to get AnyRPGCharacterController");
             } else {
                 movementStateController.Configure(systemGameManager);
             }
@@ -278,7 +278,7 @@ namespace AnyRPG {
 
         //Put any code in here you want to run BEFORE the state's update function. This is run regardless of what state you're in.
         protected override void EarlyGlobalStateUpdate() {
-            //Debug.Log(gameObject.name + ".earlyGlobalStateUpdate()");
+            //Debug.Log($"{gameObject.name}.earlyGlobalStateUpdate()");
             /*
             CalculateForward();
             //CalculateBackward();
@@ -311,7 +311,7 @@ namespace AnyRPG {
 
                 // handle movement
                 if (localMoveVelocity.magnitude > 0 && playerManager.PlayerController.HasMoveInput()) {
-                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): animator velocity: " + playerManager.ActiveUnitController.MyCharacterAnimator.MyAnimator.velocity + "; angular: " + playerManager.ActiveUnitController.MyCharacterAnimator.MyAnimator.angularVelocity);
+                    //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.LateGlobalSuperUpdate(): animator velocity: " + playerManager.ActiveUnitController.MyCharacterAnimator.MyAnimator.velocity + "; angular: " + playerManager.ActiveUnitController.MyCharacterAnimator.MyAnimator.angularVelocity);
                     if (playerManager.PlayerController.inputStrafe == true) {
                         playerManager.ActiveUnitController.UnitAnimator.SetStrafing(true);
                     } else {
@@ -351,14 +351,14 @@ namespace AnyRPG {
                     && (!inputManager.rightMouseButtonClickedOverUI || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false)))
                     || (controlsManager.GamePadModeActive == false && Input.GetAxis("RightAnalogHorizontal") != 0f && windowManager.CurrentWindow == null)
                     ) {
-                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): resetting playerManager.ActiveUnitController.transform.forward");
+                    //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.LateGlobalSuperUpdate(): resetting playerManager.ActiveUnitController.transform.forward");
 
                     playerManager.ActiveUnitController.transform.forward = new Vector3(cameraManager.MainCameraController.WantedDirection.x, 0, cameraManager.MainCameraController.WantedDirection.z);
                     cameraManager.MainCameraController.ResetWantedPosition();
                 }
 
                 if (playerManager.PlayerController.inputTurn != 0) {
-                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): rotating " + currentTurnVelocity.x);
+                    //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.LateGlobalSuperUpdate(): rotating " + currentTurnVelocity.x);
                     playerManager.ActiveUnitController.UnitMotor.Rotate(new Vector3(0, currentTurnVelocity.x * Time.deltaTime, 0));
                 }
             }
@@ -395,7 +395,7 @@ namespace AnyRPG {
 
         //Below are the state functions. Each one is called based on the name of the state, so when currentState = Idle, we call Idle_EnterState. If currentState = Jump, we call Jump_StateUpdate()
         void Idle_EnterState() {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_EnterState()");
+            //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.Idle_EnterState()");
             if (playerManager.ActiveUnitController != null) {
                 // allow the character to fall until they reach the ground
                 playerManager.ActiveUnitController.FreezePositionXZ();
@@ -416,7 +416,7 @@ namespace AnyRPG {
         }
 
         void Idle_StateUpdate() {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate()");
+            //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.Idle_StateUpdate()");
 
             if (playerManager.ActiveUnitController == null) {
                 // still waiting for character to spawn
@@ -445,7 +445,7 @@ namespace AnyRPG {
                 return;
             }
             if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): entering move state");
+                //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.Idle_StateUpdate(): entering move state");
                 currentState = AnyRPGCharacterState.Move;
                 return;
             }
@@ -468,7 +468,7 @@ namespace AnyRPG {
         }
 
         void Idle_ExitState() {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_ExitState(). Freezing Rotation only");
+            //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.Idle_ExitState(). Freezing Rotation only");
             playerManager.ActiveUnitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
         }
 
@@ -663,7 +663,7 @@ namespace AnyRPG {
                     // multiply normalized movement by calculated speed to get actual movement
                     localMoveVelocity = NormalizedFlyMovement() * calculatedSpeed;
                     adjustedlocalMoveVelocity = localMoveVelocity;
-                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
+                    //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
                 }
                 CalculateTurnVelocity();
 
@@ -714,7 +714,7 @@ namespace AnyRPG {
         }
 
         void Swim_StateUpdate() {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Swim_StateUpdate()");
+            //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.Swim_StateUpdate()");
             airForwardDirection = playerManager.ActiveUnitController.transform.forward;
 
             if (playerManager.ActiveUnitController.InWater == true) {
@@ -761,7 +761,7 @@ namespace AnyRPG {
                     // multiply normalized movement by calculated speed to get actual movement
                     localMoveVelocity = NormalizedSwimMovement() * calculatedSpeed;
                     adjustedlocalMoveVelocity = localMoveVelocity;
-                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
+                    //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
                 }
                 CalculateTurnVelocity();
 
@@ -995,7 +995,7 @@ namespace AnyRPG {
             // multiply normalized movement by calculated speed to get actual movement
             localMoveVelocity = NormalizedGlideMovement(calculatedSpeed) * calculatedSpeed;
             adjustedlocalMoveVelocity = localMoveVelocity;
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
+            //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
 
             CalculateTurnVelocity();
 
@@ -1028,7 +1028,7 @@ namespace AnyRPG {
         }
 
         public void SwitchCollisionOn() {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwitchCollisionOn()");
+            //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.SwitchCollisionOn()");
             if (playerManager.ActiveUnitController != null) {
                 playerManager.PlayerController.canMove = true;
                 if (movementStateController != null) {
@@ -1182,7 +1182,7 @@ namespace AnyRPG {
         }
 
         public bool MaintainingGround() {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.MaintainingGround");
+            //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.MaintainingGround");
             return closeToGround;
         }
 
@@ -1199,20 +1199,20 @@ namespace AnyRPG {
                 && playerManager.PlayerController.HasMoveInput()
                 && (!inputManager.rightMouseButtonClickedOverUI || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))) {
 
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraManager.MainCameraGameObject.transform.localEulerAngles.x);
+                //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraManager.MainCameraGameObject.transform.localEulerAngles.x);
 
                 // prevent constant bouncing out of water using right mouse
                 // always allow downward motion
                 // only allow upward motion if the swim speed would not result in a bounce
                 float cameraAngle = (cameraManager.MainCamera.transform.localEulerAngles.x < 180f ? cameraManager.MainCamera.transform.localEulerAngles.x : cameraManager.MainCamera.transform.localEulerAngles.x - 360f);
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle);
+                //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle);
                 // ignore angle if already touching ground underwater to prevent hitting bottom and stopping while trying to swim forward
                 if ((cameraAngle > 0f && returnValue.z > 0f && !touchingGround) // camera above and moving forward / down
                     || (cameraAngle > 0f && returnValue.z < 0f && chestBelowWater == true) // camera above and moving back / up
                     || (cameraAngle < 0f && returnValue.z < 0f && !touchingGround) // camera below and moving back / down
                     || (cameraAngle < 0f && returnValue.z > 0f && chestBelowWater == true) // camera below and forward / up
                     ) {
-                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle + "; direction: " + returnValue.z +
+                    //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle + "; direction: " + returnValue.z +
                     //    "; chest height: " + (playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.ChestHeight) + "; surface: " + playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight + "; speed: " + (playerManager.ActiveUnitController.SwimSpeed * Time.deltaTime));
                     returnValue = Quaternion.AngleAxis(cameraManager.MainCamera.transform.localEulerAngles.x, Vector3.right) * returnValue;
                 }
@@ -1238,18 +1238,18 @@ namespace AnyRPG {
                 && playerManager.PlayerController.HasMoveInput()
                 && (!inputManager.rightMouseButtonClickedOverUI || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))) {
 
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraManager.MainCameraGameObject.transform.localEulerAngles.x);
+                //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraManager.MainCameraGameObject.transform.localEulerAngles.x);
 
                 // prevent constant bouncing out of water using right mouse
                 // always allow downward motion
                 // only allow upward motion if the swim speed would not result in a bounce
                 float cameraAngle = (cameraManager.MainCamera.transform.localEulerAngles.x < 180f ? cameraManager.MainCamera.transform.localEulerAngles.x : cameraManager.MainCamera.transform.localEulerAngles.x - 360f);
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle);
+                //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle);
                 // ignore angle if already touching ground underwater to prevent hitting bottom and stopping while trying to swim forward
                 if ((cameraAngle > 0f && returnValue.z > 0f && !touchingGround) // camera above and moving forward / down
                     || (cameraAngle < 0f && returnValue.z < 0f && !touchingGround) // camera below and moving back / down
                     ) {
-                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle + "; direction: " + returnValue.z +
+                    //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle + "; direction: " + returnValue.z +
                     //    "; chest height: " + (playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.ChestHeight) + "; surface: " + playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight + "; speed: " + (playerManager.ActiveUnitController.SwimSpeed * Time.deltaTime));
                     returnValue = Quaternion.AngleAxis(cameraManager.MainCamera.transform.localEulerAngles.x, Vector3.right) * returnValue;
                 }
@@ -1416,7 +1416,7 @@ namespace AnyRPG {
         }
 
         private void CheckGround() {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround()");
+            //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.CheckGround()");
 
             //closestGroundDistance = 0f;
             closestGroundDistance = -stepHeight - 0.01f; // reset closest ground distance to something below step height so player is not considered to be touching by default
@@ -1452,10 +1452,10 @@ namespace AnyRPG {
             /*
             // downward cast for close to ground
             if (Physics.Raycast(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f), -Vector3.up, out downHitInfo, (closeToGroundHeight + 0.25f), groundMask)) {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is true");
+                //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.CheckGround(): grounded is true");
                 closeToGround = true;
             } else {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is false");
+                //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.CheckGround(): grounded is false");
                 closeToGround = false;
             }
             */
@@ -1463,10 +1463,10 @@ namespace AnyRPG {
             /*
             // downward cast for touching ground
             if (Physics.Raycast(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f), -Vector3.up, out downHitInfo, (touchingGroundHeight + 0.25f), groundMask)) {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is true");
+                //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.CheckGround(): grounded is true");
                 touchingGround = true;
             } else {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is false");
+                //Debug.Log($"{gameObject.name}.PlayerUnitMovementController.CheckGround(): grounded is false");
                 if (RaycastForGround()) {
                     touchingGround = true;
                 }

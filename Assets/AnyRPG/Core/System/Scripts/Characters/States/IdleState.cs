@@ -9,7 +9,7 @@ namespace AnyRPG {
         private UnitController unitController;
 
         public void Enter(UnitController unitController) {
-            //Debug.Log(unitController.gameObject.name + " entering Idle state");
+            //Debug.Log($"{unitController.gameObject.name} entering Idle state");
             this.unitController = unitController;
             this.unitController.Reset();
             TryToEnterPatrolState();
@@ -20,7 +20,7 @@ namespace AnyRPG {
         }
 
         public void TryToEnterPatrolState() {
-            //Debug.Log(unitController.gameObject.name + ".IdleState.TryToEnterPatrolState()");
+            //Debug.Log($"{unitController.gameObject.name}.IdleState.TryToEnterPatrolState()");
             if (unitController.UnitControllerMode == UnitControllerMode.AI
                 && unitController.PatrolController != null
                 && unitController.PatrolController.CurrentPatrol != null

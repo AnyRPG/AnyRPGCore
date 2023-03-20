@@ -129,7 +129,7 @@ namespace AnyRPG {
 
         // this only checks if the ability is able to be cast based on character state.  It does not check validity of target or ability specific requirements
         public virtual bool CanCastAbility(BaseAbilityProperties ability, bool playerInitiated = false) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + ")");
+            //Debug.Log($"{gameObject.name}.CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + ")");
 
             return true;
         }

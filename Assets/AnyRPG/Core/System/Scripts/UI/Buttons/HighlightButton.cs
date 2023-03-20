@@ -135,7 +135,7 @@ namespace AnyRPG {
         }
 
         public override void SetGameManagerReferences() {
-            //Debug.Log(gameObject.name + ".HighlightButton.SetGameManagerReferences(): " + GetInstanceID());
+            //Debug.Log($"{gameObject.name}.HighlightButton.SetGameManagerReferences(): " + GetInstanceID());
             base.SetGameManagerReferences();
 
             uIManager = systemGameManager.UIManager;
@@ -151,7 +151,7 @@ namespace AnyRPG {
 
 
         public override void Select() {
-            //Debug.Log(gameObject.name + ".HighlightButton.Select()");
+            //Debug.Log($"{gameObject.name}.HighlightButton.Select()");
             base.Select();
             //if (highlightButton != null && useHighlightColorOnButton == true) {
             if (highlightButton != null && navigationControllerFocused == true && controlsManager.GamePadInputActive == true) {
@@ -168,7 +168,7 @@ namespace AnyRPG {
         }
 
         public override void DeSelect() {
-            //Debug.Log(gameObject.name + ".HightlightButton.DeSelect()");
+            //Debug.Log($"{gameObject.name}.HightlightButton.DeSelect()");
 
             base.DeSelect();
             if (highlightButton != null) {
@@ -202,7 +202,7 @@ namespace AnyRPG {
         }
 
         public override void OnPointerClick(PointerEventData eventData) {
-            //Debug.Log(gameObject.name + ".HighlightButton.OnPointerClick()");
+            //Debug.Log($"{gameObject.name}.HighlightButton.OnPointerClick()");
             base.OnPointerClick(eventData);
 
             if (mouseClickSound == true) {
@@ -214,7 +214,7 @@ namespace AnyRPG {
 
         /*
         public override void Interact() {
-            //Debug.Log(gameObject.name + ".HighlightButton.Interact()");
+            //Debug.Log($"{gameObject.name}.HighlightButton.Interact()");
 
             base.Interact();
             

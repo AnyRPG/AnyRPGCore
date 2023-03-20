@@ -177,7 +177,7 @@ namespace AnyRPG {
         }
 
         public void HandleWeaponHoldableObjects(Equipment newItem, Equipment oldItem) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (oldItem != null ? oldItem.DisplayName : "null") + ")");
+            //Debug.Log($"{gameObject.name}.CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (oldItem != null ? oldItem.DisplayName : "null") + ")");
 
             oldItem?.HandleUnequip(this);
 

@@ -21,7 +21,7 @@ namespace AnyRPG {
         }
 
         public virtual void Focus() {
-            //Debug.Log(gameObject.name + ".NavigableInterfaceElement.Focus()");
+            //Debug.Log($"{gameObject.name}.NavigableInterfaceElement.Focus()");
             outline.color = Color.white;
             if (currentNavigationController != null) {
                 currentNavigationController.Focus();
@@ -29,7 +29,7 @@ namespace AnyRPG {
         }
 
         public override void UnFocus() {
-            //Debug.Log(gameObject.name + ".NavigableInterfaceElement.UnFocus()");
+            //Debug.Log($"{gameObject.name}.NavigableInterfaceElement.UnFocus()");
             if (outline != null) {
                 outline.color = hiddenColor;
             }
@@ -38,7 +38,7 @@ namespace AnyRPG {
         }
 
         public override void ProcessOpenWindowNotification() {
-            //Debug.Log(gameObject.name + ".NavigableInterfaceElement.ProcessOpenWindowNotification()");
+            //Debug.Log($"{gameObject.name}.NavigableInterfaceElement.ProcessOpenWindowNotification()");
             base.ProcessOpenWindowNotification();
             if (currentNavigationController != null) {
                 currentNavigationController.UnFocus();

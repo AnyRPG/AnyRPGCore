@@ -91,7 +91,7 @@ namespace AnyRPG {
         }
 
         public void LoadPersistentState() {
-            //Debug.Log(gameObject.name + "PersistentObject.LoadPersistentState()");
+            //Debug.Log($"{gameObject.name}PersistentObject.LoadPersistentState()");
             PersistentState persistentState = GetPersistentState();
             if (persistentState != null) {
                 persistentObjectOwner.transform.position = persistentState.Position;
@@ -100,7 +100,7 @@ namespace AnyRPG {
         }
 
         public void CreateEventSubscriptions() {
-            //Debug.Log(gameObject.name + "CharacterAbilityManager.CreateEventSubscriptions()");
+            //Debug.Log($"{gameObject.name}CharacterAbilityManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
@@ -152,7 +152,7 @@ namespace AnyRPG {
                 return;
             }
 
-            //Debug.Log(gameObject.name + "PersistentObject.SaveProperties()");
+            //Debug.Log($"{gameObject.name}PersistentObject.SaveProperties()");
             storedPosition = persistentObjectOwner.transform.position;
             storedForwardDirection = persistentObjectOwner.transform.forward;
             if (persistentObjectOwner.UUID != null) {

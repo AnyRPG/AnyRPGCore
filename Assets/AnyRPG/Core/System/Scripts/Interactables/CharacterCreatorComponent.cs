@@ -52,7 +52,7 @@ namespace AnyRPG {
         }
 
         public override bool SetMiniMapText(TextMeshProUGUI text) {
-            //Debug.Log(gameObject.name + ".CharacterCreatorInteractable.SetMiniMapText(" + text + ")");
+            //Debug.Log($"{gameObject.name}.CharacterCreatorInteractable.SetMiniMapText(" + text + ")");
             if (!base.SetMiniMapText(text)) {
                 text.text = "";
                 text.color = new Color32(0, 0, 0, 0);
@@ -64,7 +64,7 @@ namespace AnyRPG {
         }
 
         public override int GetCurrentOptionCount() {
-            //Debug.Log(gameObject.name + ".CharacterCreatorInteractable.GetCurrentOptionCount()");
+            //Debug.Log($"{gameObject.name}.CharacterCreatorInteractable.GetCurrentOptionCount()");
             return GetValidOptionCount();
         }
 

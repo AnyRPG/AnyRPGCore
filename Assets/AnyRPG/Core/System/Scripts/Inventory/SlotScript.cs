@@ -543,17 +543,17 @@ namespace AnyRPG {
                 finalColor = new Color32(0, 0, 0, (byte)slotOpacityLevel);
                 backGroundImage.sprite = null;
                 if (backGroundImage != null) {
-                    //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image is not null, setting color: " + slotOpacityLevel);
+                    //Debug.Log($"{gameObject.name}.WindowContentController.SetBackGroundColor(): background image is not null, setting color: " + slotOpacityLevel);
                     backGroundImage.color = finalColor;
                 } else {
-                    //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image IS NULL!");
+                    //Debug.Log($"{gameObject.name}.WindowContentController.SetBackGroundColor(): background image IS NULL!");
                 }
             } else {
                 // check if the item has a quality.  if not, just do the default color
                 uIManager.SetItemBackground(inventorySlot.Item, backGroundImage, new Color32(0, 0, 0, 255));
 
             }
-            //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor()");
+            //Debug.Log($"{gameObject.name}.WindowContentController.SetBackGroundColor()");
         }
 
         

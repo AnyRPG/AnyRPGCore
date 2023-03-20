@@ -52,7 +52,7 @@ namespace AnyRPG {
         }
 
         public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f, bool processNonCombatCheck = true) {
-            //Debug.Log(gameObject.name + ".QuestGiver.CanInteract()");
+            //Debug.Log($"{gameObject.name}.QuestGiver.CanInteract()");
             if (questLog.GetCompleteQuests(Props.Quests).Count + questLog.GetAvailableQuests(Props.Quests).Count == 0) {
                 return false;
             }
@@ -70,11 +70,11 @@ namespace AnyRPG {
             foreach (QuestNode questNode in Props.Quests) {
                 //Type questType = questNode.MyQuestTemplate.GetType();
                 if (questNode.Quest == null) {
-                    //Debug.Log(gameObject.name + ".InitializeQuestGiver(): questnode.MyQuestTemplate is null!!!!");
+                    //Debug.Log($"{gameObject.name}.InitializeQuestGiver(): questnode.MyQuestTemplate is null!!!!");
                     return;
                 }
                 if (questNode.Quest.ResourceName == null) {
-                    //Debug.Log(gameObject.name + ".InitializeQuestGiver(): questnode.MyQuestTemplate.MyTitle is null!!!!");
+                    //Debug.Log($"{gameObject.name}.InitializeQuestGiver(): questnode.MyQuestTemplate.MyTitle is null!!!!");
                     return;
                 }
                 questNode.Quest = systemDataFactory.GetResource<Quest>(questNode.Quest.ResourceName);
@@ -141,7 +141,7 @@ namespace AnyRPG {
         }
 
         public override void StopInteract() {
-            //Debug.Log(gameObject.name + ".QuestGiver.StopInteract()");
+            //Debug.Log($"{gameObject.name}.QuestGiver.StopInteract()");
             base.StopInteract();
             //vendorUI.ClearPages();
             uIManager.questGiverWindow.CloseWindow();
@@ -150,11 +150,11 @@ namespace AnyRPG {
         public void UpdateQuestStatus() {
             //Debug.Log(interactable.gameObject.name + ".QuestGiver.UpdateQuestStatus()");
             if (playerManager.MyCharacter == null) {
-                //Debug.Log(gameObject.name + ".QuestGiver.UpdateQuestStatus(): player has no character");
+                //Debug.Log($"{gameObject.name}.QuestGiver.UpdateQuestStatus(): player has no character");
                 return;
             }
             if (interactable == null) {
-                //Debug.Log(gameObject.name + ":QuestGiver.UpdateQuestStatus() Nameplate is null");
+                //Debug.Log($"{gameObject.name}:QuestGiver.UpdateQuestStatus() Nameplate is null");
                 return;
             }
 
@@ -168,16 +168,16 @@ namespace AnyRPG {
         }
 
         public string GetIndicatorType() {
-            //Debug.Log(gameObject.name + ".QuestGiver.GetIndicatorType()");
+            //Debug.Log($"{gameObject.name}.QuestGiver.GetIndicatorType()");
 
             if (playerManager.MyCharacter == null) {
-                //Debug.Log(gameObject.name + ".QuestGiver.GetIndicatorType(): playerManager.MyCharacter is null. returning empty");
+                //Debug.Log($"{gameObject.name}.QuestGiver.GetIndicatorType(): playerManager.MyCharacter is null. returning empty");
                 return string.Empty;
             }
 
             float relationValue = interactable.PerformFactionCheck(playerManager.MyCharacter);
             if (CanInteract(false, false, relationValue) == false) {
-                //Debug.Log(gameObject.name + ".QuestGiver.GetIndicatorType(): Cannot interact.  Return empty string");
+                //Debug.Log($"{gameObject.name}.QuestGiver.GetIndicatorType(): Cannot interact.  Return empty string");
                 return string.Empty;
             }
 
@@ -185,33 +185,33 @@ namespace AnyRPG {
             int completeCount = 0;
             int inProgressCount = 0;
             int availableCount = 0;
-            //Debug.Log(gameObject.name + "QuestGiver.GetIndicatorType(): quests.length: " + quests.Length);
+            //Debug.Log($"{gameObject.name}QuestGiver.GetIndicatorType(): quests.length: " + quests.Length);
             foreach (QuestNode questNode in Props.Quests) {
                 if (questNode != null && questNode.Quest != null) {
                     if (questLog.HasQuest(questNode.Quest.ResourceName)) {
                         if (questNode.Quest.IsComplete && !questNode.Quest.TurnedIn && questNode.EndQuest) {
-                            //Debug.Log(gameObject.name + ": There is a complete quest to turn in.  Incrementing inProgressCount.");
+                            //Debug.Log($"{gameObject.name}: There is a complete quest to turn in.  Incrementing inProgressCount.");
                             completeCount++;
                         } else if (!questNode.Quest.IsComplete && questNode.EndQuest) {
-                            //Debug.Log(gameObject.name + ": A quest is in progress.  Incrementing inProgressCount.");
+                            //Debug.Log($"{gameObject.name}: A quest is in progress.  Incrementing inProgressCount.");
                             inProgressCount++;
                         } else {
-                            //Debug.Log(gameObject.name + ": This quest must have been turned in already or we are not responsible for ending it.  doing nothing.");
+                            //Debug.Log($"{gameObject.name}: This quest must have been turned in already or we are not responsible for ending it.  doing nothing.");
                         }
                     } else if ((questNode.Quest.TurnedIn == false || (questNode.Quest.RepeatableQuest == true && questLog.HasQuest(questNode.Quest.ResourceName) == false)) && questNode.StartQuest && questNode.Quest.PrerequisitesMet == true) {
                         availableCount++;
-                        //Debug.Log(gameObject.name + ": The quest is not in the log and hasn't been turned in yet.  Incrementing available count");
+                        //Debug.Log($"{gameObject.name}: The quest is not in the log and hasn't been turned in yet.  Incrementing available count");
                     }
                 } else {
                     if (questNode == null) {
-                        //Debug.Log(gameObject.name + ": The quest node was null");
+                        //Debug.Log($"{gameObject.name}: The quest node was null");
                     }
                     if (questNode.Quest == null) {
-                        //Debug.Log(gameObject.name + ": The questNode.MyQuest was null");
+                        //Debug.Log($"{gameObject.name}: The questNode.MyQuest was null");
                     }
                 }
             }
-            //Debug.Log(gameObject.name + ": complete: " + completeCount.ToString() + "; available: " + availableCount.ToString() + "; inProgress: " + inProgressCount.ToString() + ";");
+            //Debug.Log($"{gameObject.name}: complete: " + completeCount.ToString() + "; available: " + availableCount.ToString() + "; inProgress: " + inProgressCount.ToString() + ";");
             if (completeCount > 0) {
                 indicatorType = "complete";
             } else if (availableCount > 0) {
@@ -241,12 +241,12 @@ namespace AnyRPG {
         }
 
         public override bool HasMiniMapText() {
-            //Debug.Log(gameObject.name + ".QuestGiverComponent.HasMiniMapText()");
+            //Debug.Log($"{gameObject.name}.QuestGiverComponent.HasMiniMapText()");
             return true;
         }
 
         public override bool HasMainMapText() {
-            //Debug.Log(gameObject.name + ".QuestGiverComponent.HasMiniMapText()");
+            //Debug.Log($"{gameObject.name}.QuestGiverComponent.HasMiniMapText()");
             return true;
         }
 

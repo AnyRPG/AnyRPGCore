@@ -80,7 +80,7 @@ namespace AnyRPG {
         }
 
         public void HoldObject(GameObject go, AbilityAttachmentNode attachmentNode, GameObject searchObject) {
-            //Debug.Log(unitController.gameObject.name + ".UnitActionManager.HoldObject(" + go.name + ", " + searchObject.name + ")");
+            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.HoldObject(" + go.name + ", " + searchObject.name + ")");
             if (attachmentNode == null || attachmentNode.HoldableObject == null || go == null || searchObject == null) {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): MyHoldableObjectName is empty");
                 return;
@@ -111,7 +111,7 @@ namespace AnyRPG {
         }
 
         public void SpawnActionObjects(List<AbilityAttachmentNode> abilityAttachmentNodes) {
-            //Debug.Log(unitController.gameObject.name + ".UnitActionManager.SpawnActionObjects(" + abilityAttachmentNodes.Count + ")");
+            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.SpawnActionObjects(" + abilityAttachmentNodes.Count + ")");
 
             // ensure that any current ability objects are cleared before spawning new ones
             DespawnActionObjects();
@@ -161,7 +161,7 @@ namespace AnyRPG {
         }
 
         public void DespawnActionObjects() {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.DespawnAbilityObjects()");
+            //Debug.Log($"{gameObject.name}.CharacterAbilityManager.DespawnAbilityObjects()");
 
             if (actionObjects == null || actionObjects.Count == 0) {
                 return;
@@ -180,7 +180,7 @@ namespace AnyRPG {
         }
 
         public AnimationProps GetUnitAnimationProps() {
-            //Debug.Log(gameObject.name + ".GetDefaultAttackAnimations()");
+            //Debug.Log($"{gameObject.name}.GetDefaultAttackAnimations()");
             if (unitController.CharacterUnit.BaseCharacter.UnitProfile?.UnitPrefabProps?.AnimationProps != null) {
                 return unitController.CharacterUnit.BaseCharacter.UnitProfile.UnitPrefabProps.AnimationProps;
             }
@@ -192,7 +192,7 @@ namespace AnyRPG {
 
         /*
         public List<AnimationClip> GetUnitCastAnimations() {
-            //Debug.Log(gameObject.name + ".GetDefaultAttackAnimations()");
+            //Debug.Log($"{gameObject.name}.GetDefaultAttackAnimations()");
             if (unitController?.UnitAnimator?.CurrentAnimations != null) {
                 return unitController.UnitAnimator.CurrentAnimations.CastClips;
             }
@@ -201,7 +201,7 @@ namespace AnyRPG {
         */
 
         public void PerformActionAnimation(AnimationClip animationClip, AnimatedActionProperties animatedActionProperties) {
-            //Debug.Log(unitController.gameObject.name + ".PerformActionAnimation(" + (animationClip == null ? "null" : animationClip.name) + ")");
+            //Debug.Log($"{unitController.gameObject.name}.PerformActionAnimation(" + (animationClip == null ? "null" : animationClip.name) + ")");
 
             if (animationClip == null) {
                 return;
@@ -294,7 +294,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="animatedAction"></param>
         public bool BeginAction(AnimatedActionProperties animatedActionProperties, bool playerInitiated = false) {
-            //Debug.Log(unitController.gameObject.name + ".UnitActionManager.BeginAction(" + (animatedActionProperties == null ? "null" : animatedActionProperties.DisplayName) + ")");
+            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.BeginAction(" + (animatedActionProperties == null ? "null" : animatedActionProperties.DisplayName) + ")");
 
             if (animatedActionProperties == null) {
                 //Debug.Log("CharacterAbilityManager.BeginAbility(): ability is null! Exiting!");
@@ -304,7 +304,7 @@ namespace AnyRPG {
         }
 
         public bool BeginAction(AnimatedActionProperties animatedActionProperties, Interactable target) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbility(" + ability.DisplayName + ")");
+            //Debug.Log($"{gameObject.name}.CharacterAbilityManager.BeginAbility(" + ability.DisplayName + ")");
             return BeginActionCommon(animatedActionProperties, target);
         }
 
@@ -354,7 +354,7 @@ namespace AnyRPG {
 
         // this only checks if the ability is able to be cast based on character state.  It does not check validity of target or ability specific requirements
         public bool CanPerformAction(AnimatedActionProperties animatedAction, bool playerInitiated = false) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + ")");
+            //Debug.Log($"{gameObject.name}.CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + ")");
 
             /*
             // check if the action is learned yet
@@ -471,7 +471,7 @@ namespace AnyRPG {
         }
 
         private void StopAction() {
-            //Debug.Log(unitController.gameObject.name + ".UnitActionManager.StopAction()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.StopAction()");
 
             unitController.StopCoroutine(currentActionCoroutine);
             currentActionCoroutine = null;

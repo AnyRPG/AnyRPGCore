@@ -64,7 +64,7 @@ namespace AnyRPG {
         */
 
         public override void ButtonClickAction() {
-            //Debug.Log(gameObject.name + ".NewGameUnitButton.ButtonClickAction()");
+            //Debug.Log($"{gameObject.name}.NewGameUnitButton.ButtonClickAction()");
             base.ButtonClickAction();
 
             newGameManager.SetUnitProfile(unitProfile);
@@ -72,7 +72,7 @@ namespace AnyRPG {
 
         
         public void CommonSelect() {
-            //Debug.Log(gameObject.name + ".NewGameUnitButton.CommonSelect()");
+            //Debug.Log($"{gameObject.name}.NewGameUnitButton.CommonSelect()");
             newGameManager.SetUnitProfile(unitProfile);
         }
         

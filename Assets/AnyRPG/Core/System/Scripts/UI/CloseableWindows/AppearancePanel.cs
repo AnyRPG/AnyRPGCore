@@ -8,8 +8,6 @@ namespace AnyRPG {
 
     public class AppearancePanel : WindowContentController {
 
-        //public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
-
         [Header("Appearance")]
 
         [SerializeField]
@@ -29,8 +27,6 @@ namespace AnyRPG {
         protected ICharacterEditor characterEditor = null;
 
         protected UnitModelController unitModelController = null;
-
-        //private bool panelVisible = false;
 
         // game manager references
         protected CharacterCreatorManager characterCreatorManager = null;
@@ -94,7 +90,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetupOptions() {
-            //Debug.Log(gameObject.name + ".AppearancePanel.SetupOptions()");
+            //Debug.Log($"{gameObject.name}.AppearancePanel.SetupOptions()");
 
             InitializeGenderButtons();
 
@@ -102,13 +98,13 @@ namespace AnyRPG {
         }
 
         public virtual void GetUnitModelController() {
-            //Debug.Log(gameObject.name + ".AppearancePanel.GetUnitModelController()");
+            //Debug.Log($"{gameObject.name}.AppearancePanel.GetUnitModelController()");
 
             unitModelController = characterCreatorManager.PreviewUnitController?.UnitModelController;
         }
 
         protected void InitializeGenderButtons() {
-            //Debug.Log(gameObject.name + ".AppearancePanel.InitializeGenderButtons()");
+            //Debug.Log($"{gameObject.name}.AppearancePanel.InitializeGenderButtons()");
 
             if (characterEditor.CharacterRace == null) {
                 // no race set so no way to get the proper gender model
@@ -132,21 +128,21 @@ namespace AnyRPG {
         }
 
         public virtual void DisableGenderButtons() {
-            //Debug.Log(gameObject.name + ".AppearancePanel.DisableGenderButtons()");
+            //Debug.Log($"{gameObject.name}.AppearancePanel.DisableGenderButtons()");
 
             maleButton.gameObject.SetActive(false);
             femaleButton.gameObject.SetActive(false);
         }
 
         public virtual void EnableGenderButtons() {
-            //Debug.Log(gameObject.name + ".AppearancePanel.EnableGenderButtons()");
+            //Debug.Log($"{gameObject.name}.AppearancePanel.EnableGenderButtons()");
 
             maleButton.gameObject.SetActive(true);
             femaleButton.gameObject.SetActive(true);
         }
 
         public virtual void SetMale() {
-            //Debug.Log("AppearancePanel.SetMale()");
+            //Debug.Log($"{gameObject.name}.AppearancePanel.SetMale()");
 
             if (characterEditor.CharacterRace == null) {
                 // no race set so no way to get the proper gender model
@@ -212,7 +208,7 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessSetFemale() {
-            //Debug.Log(gameObject.name + ".AppearancePanel.ProcessSetFemale()");
+            //Debug.Log($"{gameObject.name}.AppearancePanel.ProcessSetFemale()");
 
             //characterCreatorManager.DespawnUnit();
             //characterCreatorManager.SpawnUnit(capabilityConsumer.CharacterRace.FemaleUnitProfile);
@@ -225,7 +221,7 @@ namespace AnyRPG {
         }
 
         public virtual void HighlightFemaleButton() {
-            //Debug.Log(gameObject.name + ".AppearancePanel.HighlightFemaleButton()");
+            //Debug.Log($"{gameObject.name}.AppearancePanel.HighlightFemaleButton()");
 
             maleButton.UnHighlightBackground();
             femaleButton.HighlightBackground();
@@ -238,7 +234,7 @@ namespace AnyRPG {
         }
 
         protected void ShowEquipment() {
-            //Debug.Log(gameObject.name + ".AppearancePanel.ShowEquipment()");
+            //Debug.Log($"{gameObject.name}.AppearancePanel.ShowEquipment()");
 
             if (unitModelController == null) {
                 return;
@@ -248,12 +244,12 @@ namespace AnyRPG {
         }
 
         public virtual void HandleUnitCreated() {
-            //Debug.Log(gameObject.name + ".AppearancePanel.HandleUnitCreated()");
+            //Debug.Log($"{gameObject.name}.AppearancePanel.HandleUnitCreated()");
 
             GetUnitModelController();
             //if (panelVisible == true) {
             if (canvasGroup.alpha == 1) {
-                //Debug.Log(gameObject.name + ".AppearancePanel.HandleTargetCreated() suppressing equipment");
+                //Debug.Log($"{gameObject.name}.AppearancePanel.HandleTargetCreated() suppressing equipment");
                 unitModelController.SuppressEquipment = true;
             }
         }

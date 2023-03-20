@@ -869,12 +869,12 @@ namespace AnyRPG {
 
         
         public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
-            //Debug.Log(gameObject.name + ".UIManager.HandlePlayerUnitSpawn()");
+            //Debug.Log($"{gameObject.name}.UIManager.HandlePlayerUnitSpawn()");
             ProcessPlayerUnitSpawn();
         }
         /*
         public void HandleMainCamera(string eventName, EventParamProperties eventParamProperties) {
-            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
+            //Debug.Log($"{gameObject.name}.InanimateUnit.HandlePlayerUnitSpawn()");
             ProcessMainCamera();
         }
 
@@ -1116,10 +1116,10 @@ namespace AnyRPG {
                 finalColor = defaultColor;
             }
             if (backgroundImage != null) {
-                //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image is not null, setting color: " + finalColor);
+                //Debug.Log($"{gameObject.name}.WindowContentController.SetBackGroundColor(): background image is not null, setting color: " + finalColor);
                 backgroundImage.color = finalColor;
             } else {
-                //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image IS NULL!");
+                //Debug.Log($"{gameObject.name}.WindowContentController.SetBackGroundColor(): background image IS NULL!");
             }
 
         }
@@ -1435,7 +1435,7 @@ namespace AnyRPG {
 
         public static bool MouseInRect(RectTransform rectTransform) {
             Vector2 localMousePosition = rectTransform.InverseTransformPoint(Input.mousePosition);
-            //Debug.Log(gameObject.name + ".MouseInRect(): local Mouse Position: " + localMousePosition + "; rectTransform.rect: " + rectTransform.rect);
+            //Debug.Log($"{gameObject.name}.MouseInRect(): local Mouse Position: " + localMousePosition + "; rectTransform.rect: " + rectTransform.rect);
             if (rectTransform.rect.Contains(localMousePosition)) {
                 return true;
             }

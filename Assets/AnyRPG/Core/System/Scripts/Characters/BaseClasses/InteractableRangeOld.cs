@@ -66,13 +66,13 @@ namespace AnyRPG {
                     foreach (Interactable interactable in playerManager.PlayerController.Interactables) {
                         if (_interactable == interactable) {
                             isAlreadyInRangeTable = true;
-                            //Debug.Log(gameObject.name + " adding " + aggroAmount.ToString() + " aggro to entry: " + target.name + "; total: " + aggroNode.aggroValue.ToString());
+                            //Debug.Log($"{gameObject.name} adding " + aggroAmount.ToString() + " aggro to entry: " + target.name + "; total: " + aggroNode.aggroValue.ToString());
                         }
                     }
                 }
 
                 if (!isAlreadyInRangeTable) {
-                    //Debug.Log(gameObject.name + " adding new entry " + target.name + " to aggro table");
+                    //Debug.Log($"{gameObject.name} adding new entry " + target.name + " to aggro table");
                     playerManager.PlayerController.Interactables.Add(_interactable);
                 }
                 //Debug.Log("OnTriggerEnter(): Rangetable size: " + playerManager.MyCharacter.MyCharacterController.MyInteractables.Count);
@@ -80,14 +80,14 @@ namespace AnyRPG {
         }
 
         private void OnTriggerExit(Collider collider) {
-            //Debug.Log(gameObject.name + ".InteractableRange.OnTriggerExit()");
+            //Debug.Log($"{gameObject.name}.InteractableRange.OnTriggerExit()");
             /*
             if (playerUnit == null) {
                 return;
             }
             */
             Interactable _interactable = collider.GetComponent<Interactable>();
-            //Debug.Log(gameObject.name + " at " + transform.position + ".InteractableRange.OnTriggerExit(): " + collider.gameObject.name + " at " + collider.gameObject.transform.position);
+            //Debug.Log($"{gameObject.name} at " + transform.position + ".InteractableRange.OnTriggerExit(): " + collider.gameObject.name + " at " + collider.gameObject.transform.position);
             if (_interactable != null) {
                 for (int i = 0; i < playerManager.PlayerController.Interactables.Count; i++) {
                     if (playerManager.PlayerController.Interactables[i] == _interactable) {

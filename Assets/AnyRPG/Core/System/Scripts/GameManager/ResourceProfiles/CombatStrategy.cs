@@ -22,7 +22,7 @@ namespace AnyRPG {
             List<BaseAbilityProperties> returnList = new List<BaseAbilityProperties>();
 
             if (sourceCharacter != null && sourceCharacter.AbilityManager != null) {
-                //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
+                //Debug.Log($"{gameObject.name}.AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
                 List<CombatStrategyNode> validPhaseNodes = GetValidPhaseNodes(sourceCharacter);
 
                 foreach (CombatStrategyNode validPhaseNode in validPhaseNodes) {
@@ -66,7 +66,7 @@ namespace AnyRPG {
         public BaseAbilityProperties GetMeleeAbility(BaseCharacter sourceCharacter) {
 
             if (sourceCharacter != null && sourceCharacter.AbilityManager != null) {
-                //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
+                //Debug.Log($"{gameObject.name}.AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
                 List<CombatStrategyNode> validPhaseNodes = GetValidPhaseNodes(sourceCharacter);
 
                 foreach (CombatStrategyNode validPhaseNode in validPhaseNodes) {
@@ -102,7 +102,7 @@ namespace AnyRPG {
             List<BaseAbilityProperties> returnList = new List<BaseAbilityProperties>();
 
             if (sourceCharacter != null && sourceCharacter.AbilityManager != null) {
-                //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
+                //Debug.Log($"{gameObject.name}.AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
                 List<CombatStrategyNode> validPhaseNodes = GetValidPhaseNodes(sourceCharacter);
 
                 foreach (CombatStrategyNode validPhaseNode in validPhaseNodes) {

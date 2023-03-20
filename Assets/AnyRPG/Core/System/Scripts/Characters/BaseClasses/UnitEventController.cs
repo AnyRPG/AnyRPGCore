@@ -68,12 +68,12 @@ namespace AnyRPG {
         }
 
         public void NotifyOnAggroTarget() {
-            //Debug.Log(unitController.gameObject.name + ".UnitEventController.NotifyOnAggroTarget()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnAggroTarget()");
             OnAggroTarget();
         }
 
         public void NotifyOnAttack() {
-            //Debug.Log(unitController.gameObject.name + ".UnitEventController.NotifyOnAttack()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnAttack()");
             OnAttack();
         }
 
@@ -180,7 +180,7 @@ namespace AnyRPG {
             OnResourceAmountChanged(powerResource, maxAmount, currentAmount);
         }
         public void NotifyOnStatusEffectAdd(StatusEffectNode statusEffectNode) {
-            //Debug.Log(gameObject.name + ".NotifyOnStatusEffectAdd()");
+            //Debug.Log($"{gameObject.name}.NotifyOnStatusEffectAdd()");
             OnStatusEffectAdd(statusEffectNode);
         }
         public void NotifyOnCastTimeChanged(IAbilityCaster source, BaseAbilityProperties baseAbility, float castPercent) {
@@ -199,7 +199,7 @@ namespace AnyRPG {
             OnDeActivateMountedState();
         }
         public void NotifyOnMessageFeed(string message) {
-            //Debug.Log(gameObject.name + ".NotifyOnMessageFeed(" + message + ")");
+            //Debug.Log($"{gameObject.name}.NotifyOnMessageFeed(" + message + ")");
             OnMessageFeed(message);
         }
 

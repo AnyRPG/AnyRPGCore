@@ -49,7 +49,7 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             if (moveableTransform == null) {
-                //Debug.Log(gameObject.name + "DraggableWindow.Awake(): moveableTransform was null, setting to self");
+                //Debug.Log($"{gameObject.name}DraggableWindow.Awake(): moveableTransform was null, setting to self");
                 moveableTransform = transform;
             }
         }
@@ -85,7 +85,7 @@ namespace AnyRPG {
         }
 
         public virtual void LockUI() {
-            //Debug.Log(gameObject.name + ".DraggableWindow.LockUI()");
+            //Debug.Log($"{gameObject.name}.DraggableWindow.LockUI()");
             if (!PlayerPrefs.HasKey("LockUI")) {
                 return;
             }

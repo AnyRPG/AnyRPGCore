@@ -200,22 +200,22 @@ namespace AnyRPG {
         }
 
         public virtual int MaxHealth() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.MaxHealth()");
+            //Debug.Log($"{gameObject.name}.CharacterUnit.MaxHealth()");
             return 1;
         }
 
         public virtual bool HasPrimaryResource() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
+            //Debug.Log($"{gameObject.name}.CharacterUnit.HasHealth(): return true");
             return false;
         }
 
         public virtual bool HasSecondaryResource() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
+            //Debug.Log($"{gameObject.name}.CharacterUnit.HasHealth(): return true");
             return false;
         }
 
         public virtual bool HasHealth() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
+            //Debug.Log($"{gameObject.name}.CharacterUnit.HasHealth(): return true");
             return false;
         }
 

@@ -13,7 +13,7 @@ namespace AnyRPG {
         }
 
         public override StatusEffectNodeScript ClearStatusEffectNode(StatusEffectNode statusEffectNode) {
-            //Debug.Log(gameObject.name + ".MainStatusEffectPanelController.ClearStatusEffectNode()");
+            //Debug.Log($"{gameObject.name}.MainStatusEffectPanelController.ClearStatusEffectNode()");
             StatusEffectNodeScript returnValue = base.ClearStatusEffectNode(statusEffectNode);
 
             if (returnValue != null && statusEffectWindowPanel != null) {
@@ -25,7 +25,7 @@ namespace AnyRPG {
 
 
         public override StatusEffectNodeScript SpawnStatusNode(StatusEffectNode statusEffectNode) {
-            //Debug.Log(gameObject.name + ".MainStatusEffectPanelController.SpawnStatusNode()");
+            //Debug.Log($"{gameObject.name}.MainStatusEffectPanelController.SpawnStatusNode()");
 
             StatusEffectNodeScript returnValue = base.SpawnStatusNode(statusEffectNode);
 

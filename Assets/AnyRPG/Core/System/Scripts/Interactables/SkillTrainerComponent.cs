@@ -25,7 +25,7 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            //Debug.Log(gameObject.name + ".SkillTrainer.Interact(" + source + ")");
+            //Debug.Log($"{gameObject.name}.SkillTrainer.Interact(" + source + ")");
             base.Interact(source, optionIndex);
             if (!uIManager.skillTrainerWindow.IsOpen) {
                 skillTrainerManager.SetSkillTrainer(this);
@@ -36,13 +36,13 @@ namespace AnyRPG {
         }
 
         public override void StopInteract() {
-            //Debug.Log(gameObject.name + ".SkillTrainer.StopInteract()");
+            //Debug.Log($"{gameObject.name}.SkillTrainer.StopInteract()");
             base.StopInteract();
             uIManager.skillTrainerWindow.CloseWindow();
         }
 
         public override void ProcessCleanupEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions()");
+            //Debug.Log($"{gameObject.name}.SkillTrainer.CleanupEventSubscriptions()");
             base.ProcessCleanupEventSubscriptions();
             if (systemEventManager != null) {
                 systemEventManager.OnSkillListChanged -= HandleSkillListChanged;
@@ -64,7 +64,7 @@ namespace AnyRPG {
         }
 
         public override int GetCurrentOptionCount() {
-            //Debug.Log(gameObject.name + ".SkillTrainerInteractable.GetCurrentOptionCount()");
+            //Debug.Log($"{gameObject.name}.SkillTrainerInteractable.GetCurrentOptionCount()");
             if (interactable.CombatOnly) {
                 return 0;
             }
@@ -74,16 +74,16 @@ namespace AnyRPG {
                     optionCount++;
                 }
             }
-            //Debug.Log(gameObject.name + ".SkillTrainerInteractable.GetCurrentOptionCount(); return: " + optionCount);
+            //Debug.Log($"{gameObject.name}.SkillTrainerInteractable.GetCurrentOptionCount(); return: " + optionCount);
             // testing - having the actual skill count causes multiple interaction window items
             // return 1 for anything other than no skills
             return (optionCount == 0 ? 0 : 1);
         }
 
         public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f, bool processNonCombatCheck = true) {
-            //Debug.Log(gameObject.name + ".SkillTrainer.CanInteract()");
+            //Debug.Log($"{gameObject.name}.SkillTrainer.CanInteract()");
             bool returnValue = ((GetCurrentOptionCount() > 0 && base.CanInteract(processRangeCheck, passedRangeCheck, factionValue, processNonCombatCheck)) ? true : false);
-            //Debug.Log(gameObject.name + ".SkillTrainer.CanInteract(): return: " + returnValue);
+            //Debug.Log($"{gameObject.name}.SkillTrainer.CanInteract(): return: " + returnValue);
             return returnValue;
         }
 

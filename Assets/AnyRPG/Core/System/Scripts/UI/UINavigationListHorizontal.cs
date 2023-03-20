@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class UINavigationListHorizontal : UINavigationController {
 
         public override void FocusCurrentButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.FocusCurrentButton()");
+            //Debug.Log($"{gameObject.name}.UINavigationListHorizontal.FocusCurrentButton()");
             base.FocusCurrentButton();
             if (activeNavigableButtons.Count == 0) {
                 return;
@@ -19,7 +19,7 @@ namespace AnyRPG {
         }
 
         public override void HighlightCurrentButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.HighlightCurrentButton()");
+            //Debug.Log($"{gameObject.name}.UINavigationListHorizontal.HighlightCurrentButton()");
             //base.FocusCurrentButton();
             base.HighlightCurrentButton();
             if (activeNavigableButtons.Count == 0) {
@@ -30,7 +30,7 @@ namespace AnyRPG {
         }
 
         public override void ProcessLeftButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.LeftButton()");
+            //Debug.Log($"{gameObject.name}.UINavigationListHorizontal.LeftButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
@@ -55,7 +55,7 @@ namespace AnyRPG {
         }
 
         public override void ProcessRightButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.RightButton()");
+            //Debug.Log($"{gameObject.name}.UINavigationListHorizontal.RightButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
@@ -79,12 +79,12 @@ namespace AnyRPG {
         }
 
         public override void ProcessUpButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.UpButton()");
+            //Debug.Log($"{gameObject.name}.UINavigationListHorizontal.UpButton()");
             LeaveUp();
         }
 
         public override void ProcessDownButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.DownButton()");
+            //Debug.Log($"{gameObject.name}.UINavigationListHorizontal.DownButton()");
             LeaveDown();
         }
 

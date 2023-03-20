@@ -22,14 +22,14 @@ namespace AnyRPG {
 
         public void SelectButton(int buttonIndex) {
             DeSelectButtons();
-            //Debug.Log(gameObject.name + ".TextOptionHighlightArea.SelectButton(" + buttonIndex + ")");
+            //Debug.Log($"{gameObject.name}.TextOptionHighlightArea.SelectButton(" + buttonIndex + ")");
             highlightButtons[buttonIndex].Select();
         }
 
         public void DeSelectButtons() {
-            //Debug.Log(gameObject.name + ".HightlightButton.DeSelectButtons()");
+            //Debug.Log($"{gameObject.name}.HightlightButton.DeSelectButtons()");
             foreach (HighlightButton highlightButton in highlightButtons) {
-                //Debug.Log(gameObject.name + ".HightlightButton.DeSelectButtons(): deselecting a button");
+                //Debug.Log($"{gameObject.name}.HightlightButton.DeSelectButtons(): deselecting a button");
                 highlightButton.DeSelect();
             }
         }

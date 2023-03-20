@@ -24,7 +24,7 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            //Debug.Log(gameObject.name + ".AnimatedObject.Interact(" + (source == null ? "null" : source.name) +")");
+            //Debug.Log($"{gameObject.name}.AnimatedObject.Interact(" + (source == null ? "null" : source.name) +")");
             base.Interact(source, optionIndex);
             uIManager.interactionWindow.CloseWindow();
 

@@ -35,7 +35,7 @@ namespace AnyRPG {
         public Dictionary<BehaviorProfile, BehaviorProfileState> BehaviorList { get => behaviorList; set => behaviorList = value; }
 
         public BehaviorController(UnitController unitController, SystemGameManager systemGameManager) {
-            //Debug.Log(unitController.gameObject.name + "BehaviorController.Constructor()");
+            //Debug.Log($"{unitController.gameObject.name}BehaviorController.Constructor()");
 
             this.unitController = unitController;
             Configure(systemGameManager);
@@ -52,7 +52,7 @@ namespace AnyRPG {
 
         // this should be run after the unit profile is set
         public void Init() {
-            //Debug.Log(unitController.gameObject.name + "BehaviorController.Init()");
+            //Debug.Log($"{unitController.gameObject.name}BehaviorController.Init()");
 
             behaviorComponent = BehaviorComponent.GetBehaviorComponent(unitController);
 
@@ -71,7 +71,7 @@ namespace AnyRPG {
         }
 
         public void TryPlayBehavior(BehaviorProfile behaviorProfile, BehaviorComponent caller = null) {
-            //Debug.Log(unitController.gameObject.name + ".BehaviorInteractable.TryPlayBehavior()");
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorInteractable.TryPlayBehavior()");
 
             if (behaviorPlaying == false) {
                 behaviorCoroutine = unitController.StartCoroutine(PlayBehavior(behaviorProfile, caller));
@@ -91,7 +91,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator PlayBehavior(BehaviorProfile behaviorProfile, BehaviorComponent caller = null) {
-            //Debug.Log(unitController.gameObject.name + ".BehaviorController.PlayBehavior(" + (behaviorProfile == null ? "null" : behaviorProfile.DisplayName) + ")");
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.PlayBehavior(" + (behaviorProfile == null ? "null" : behaviorProfile.DisplayName) + ")");
 
             SetBehaviorPlaying(true);
 
@@ -115,7 +115,7 @@ namespace AnyRPG {
                         if (currentbehaviorNode.BehaviorActionNodes != null) {
                             foreach (BehaviorActionNode behaviorActionNode in currentbehaviorNode.BehaviorActionNodes) {
                                 if (behaviorActionNode.BehaviorMethod != null && behaviorActionNode.BehaviorMethod != string.Empty) {
-                                    //Debug.Log(unitController.gameObject.name + ".BehaviorInteractable.playBehavior(): sending Message " + behaviorActionNode.MyBehaviorMethod + "(" + behaviorActionNode.MyBehaviorParameter + ")");
+                                    //Debug.Log($"{unitController.gameObject.name}.BehaviorInteractable.playBehavior(): sending Message " + behaviorActionNode.MyBehaviorMethod + "(" + behaviorActionNode.MyBehaviorParameter + ")");
                                     if (behaviorActionNode.BehaviorParameter != null && behaviorActionNode.BehaviorParameter != string.Empty) {
                                         unitController.gameObject.SendMessage(behaviorActionNode.BehaviorMethod, behaviorActionNode.BehaviorParameter, SendMessageOptions.DontRequireReceiver);
                                     } else {
@@ -137,7 +137,7 @@ namespace AnyRPG {
                 }
                 yield return null;
             }
-            //Debug.Log(gameObject.name + ".BehaviorInteractable.playBehavior(" + (behaviorProfile == null ? "null" : behaviorProfile.DisplayName) + ") : END LOOP");
+            //Debug.Log($"{gameObject.name}.BehaviorInteractable.playBehavior(" + (behaviorProfile == null ? "null" : behaviorProfile.DisplayName) + ") : END LOOP");
             behaviorCoroutine = null;
             SetBehaviorPlaying(false);
             suppressNameplateImage = false;
@@ -162,7 +162,7 @@ namespace AnyRPG {
         */
 
         public void HandlePrerequisiteUpdates() {
-            //Debug.Log(unitController.gameObject.name + ".BehaviorController.HandlePrerequisiteUpdates()");
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.HandlePrerequisiteUpdates()");
             if (unitController.UnitControllerMode != UnitControllerMode.AI) {
                 return;
             }
@@ -175,7 +175,7 @@ namespace AnyRPG {
         }
 
         public void HandlePlayerUnitSpawn() {
-            //Debug.Log(unitController.gameObject.name + ".BehaviorController.HandlePlayerUnitSpawn()");
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.HandlePlayerUnitSpawn()");
             if (unitController.UnitControllerMode != UnitControllerMode.AI) {
                 return;
             }
@@ -193,7 +193,7 @@ namespace AnyRPG {
 
 
         public void PlayAutomaticBehaviors() {
-            //Debug.Log(unitController.gameObject.name + ".Controller.PlayAutomaticBehaviors()");
+            //Debug.Log($"{unitController.gameObject.name}.Controller.PlayAutomaticBehaviors()");
 
             if (unitController.UnitControllerMode != UnitControllerMode.AI) {
                 return;
@@ -207,7 +207,7 @@ namespace AnyRPG {
         }
 
         public List<BehaviorProfile> GetCurrentOptionList() {
-            //Debug.Log(unitController.gameObject.name + ".BehaviorController.GetCurrentOptionList()");
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.GetCurrentOptionList()");
             List<BehaviorProfile> currentList = new List<BehaviorProfile>();
             foreach (BehaviorProfile behaviorProfile in behaviorList.Keys) {
                 if (behaviorProfile.PrerequisitesMet == true
@@ -226,7 +226,7 @@ namespace AnyRPG {
         }
 
         public void SetupScriptableObjects() {
-            //Debug.Log(unitController.gameObject.name + ".BehaviorController.SetupScriptableObjects()");
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.SetupScriptableObjects()");
 
             // local behaviors
             if (unitController.BehaviorNames != null) {

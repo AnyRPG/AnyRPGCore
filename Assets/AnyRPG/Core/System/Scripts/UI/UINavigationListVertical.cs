@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class UINavigationListVertical : UINavigationController {
 
         public override void FocusCurrentButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListVertical.FocusCurrentButton()");
+            //Debug.Log($"{gameObject.name}.UINavigationListVertical.FocusCurrentButton()");
             base.FocusCurrentButton();
             if (activeNavigableButtons.Count == 0) {
                 return;
@@ -19,7 +19,7 @@ namespace AnyRPG {
         }
 
         public override void HighlightCurrentButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListVertical.FocusCurrentButton()");
+            //Debug.Log($"{gameObject.name}.UINavigationListVertical.FocusCurrentButton()");
             base.FocusCurrentButton();
             if (activeNavigableButtons.Count == 0) {
                 return;
@@ -30,7 +30,7 @@ namespace AnyRPG {
 
 
         public override void ProcessUpButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListVertical.ProcessUpButton()");
+            //Debug.Log($"{gameObject.name}.UINavigationListVertical.ProcessUpButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
@@ -55,7 +55,7 @@ namespace AnyRPG {
         }
 
         public override void ProcessDownButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListVertical.ProcessDownButton()");
+            //Debug.Log($"{gameObject.name}.UINavigationListVertical.ProcessDownButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
@@ -80,18 +80,18 @@ namespace AnyRPG {
         }
 
         public override void ProcessLeftButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListVertical.LeftButton()");
+            //Debug.Log($"{gameObject.name}.UINavigationListVertical.LeftButton()");
             LeaveLeft();
         }
 
         public override void ProcessRightButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListVertical.RightButton()");
+            //Debug.Log($"{gameObject.name}.UINavigationListVertical.RightButton()");
             LeaveRight();
         }
 
 
         public override void SelectCurrentNavigableElement() {
-            //Debug.Log(gameObject.name + ".UINavigationListVertical.SelectCurrentNavigableElement()");
+            //Debug.Log($"{gameObject.name}.UINavigationListVertical.SelectCurrentNavigableElement()");
             base.SelectCurrentNavigableElement();
             if (scrollRect != null) {
                 scrollRect.content.localPosition = GetSnapToPositionToBringChildIntoView(scrollRect, currentNavigableElement.RectTransform);

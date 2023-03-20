@@ -35,7 +35,7 @@ namespace AnyRPG {
         }
 
         public override void ProcessCleanupEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions()");
+            //Debug.Log($"{gameObject.name}.ClassChangeInteractable.CleanupEventSubscriptions()");
             base.ProcessCleanupEventSubscriptions();
 
             SystemEventManager.StopListening("OnSpecializationChange", HandleSpecializationChange);
@@ -45,7 +45,7 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            //Debug.Log(gameObject.name + ".ClassChangeInteractable.Interact()");
+            //Debug.Log($"{gameObject.name}.ClassChangeInteractable.Interact()");
             base.Interact(source, optionIndex);
 
             specializationChangeManager.SetDisplaySpecialization(Props.ClassSpecialization, this);
@@ -75,7 +75,7 @@ namespace AnyRPG {
         }
 
         public override int GetCurrentOptionCount() {
-            //Debug.Log(gameObject.name + ".CharacterCreatorInteractable.GetCurrentOptionCount()");
+            //Debug.Log($"{gameObject.name}.CharacterCreatorInteractable.GetCurrentOptionCount()");
             return GetValidOptionCount();
         }
 

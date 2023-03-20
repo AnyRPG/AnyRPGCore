@@ -88,7 +88,7 @@ namespace AnyRPG {
         }
 
         public virtual int RebuildModelAppearance() {
-            //Debug.Log(unitController.gameObject.name + ".ModelAppearanceController.RebuildModelAppearance()");
+            //Debug.Log($"{unitController.gameObject.name}.ModelAppearanceController.RebuildModelAppearance()");
 
             SynchronizeEquipmentDictionaryKeys();
 
@@ -96,7 +96,7 @@ namespace AnyRPG {
             foreach (EquipmentSlotProfile equipmentSlotProfile in characterEquipmentManager.CurrentEquipment.Keys) {
                 updateCount += RebuildSlotAppearance(equipmentSlotProfile, GetEquipmentForSlot(equipmentSlotProfile));
             }
-            //Debug.Log(unitController.gameObject.name + ".ModelAppearanceController.RebuildModelAppearance() " + updateCount + " updates");
+            //Debug.Log($"{unitController.gameObject.name}.ModelAppearanceController.RebuildModelAppearance() " + updateCount + " updates");
             return updateCount;
         }
 

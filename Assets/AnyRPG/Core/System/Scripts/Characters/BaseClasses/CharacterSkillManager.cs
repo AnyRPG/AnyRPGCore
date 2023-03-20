@@ -42,7 +42,7 @@ namespace AnyRPG {
         }
 
         public bool HasSkill(Skill checkSkill) {
-            //Debug.Log(gameObject.name + ".CharacterSkillManager.HasSkill(" + skillName + ")");
+            //Debug.Log($"{gameObject.name}.CharacterSkillManager.HasSkill(" + skillName + ")");
             if (skillList.ContainsValue(checkSkill)) {
                 return true;
             }

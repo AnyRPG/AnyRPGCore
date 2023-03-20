@@ -78,7 +78,7 @@ namespace AnyRPG {
         }
 
         public void ActivateMountedState() {
-            //Debug.Log(unitController.gameObject.name + ".UnitMountManager.ActivateMountedState()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ActivateMountedState()");
 
             unitController?.UnitModelController?.SheathWeapons();
 
@@ -124,7 +124,7 @@ namespace AnyRPG {
         }
 
         public void DeActivateMountedState() {
-            //Debug.Log(unitController.gameObject.name + ".UnitMountManager.DeActivateMountedState()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeActivateMountedState()");
             UnsubscribeFromMountModelReady();
             if (mountUnitController != null && unitController != null && unitController.enabled == true) {
 
@@ -166,7 +166,7 @@ namespace AnyRPG {
         }
 
         public void ConfigureCharacterRegularPhysics() {
-            //Debug.Log(unitController.gameObject.name + ".UnitMountManager.ConfigureCharacterRegularPhysics()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics()");
             unitController.RigidBody.WakeUp();
             unitController.RigidBody.detectCollisions = true;
             unitController.RigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;

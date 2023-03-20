@@ -107,7 +107,7 @@ namespace AnyRPG {
 
         /*
         public int GetCurrencyAmountFromList(Currency currency, List<KeyValuePair<Currency, int>>) {
-            //Debug.Log(gameObject.name + ".PlayerCurrencyManager.GetCurrency(" + currency.DisplayName + ")");
+            //Debug.Log($"{gameObject.name}.PlayerCurrencyManager.GetCurrency(" + currency.DisplayName + ")");
             //bool foundReputation = false;
             string keyName = SystemDataUtility.PrepareStringForMatch(currency.DisplayName);
             if (MyCurrencyList.ContainsKey(keyName)) {

@@ -29,12 +29,12 @@ namespace AnyRPG {
         private AbilityEffectContext abilityEffectContext = null;
 
         private void Update() {
-            //Debug.Log(gameObject.name + ".ProjectileScript.Update()");
+            //Debug.Log($"{gameObject.name}.ProjectileScript.Update()");
             MoveTowardTarget();
         }
 
         public void Initialize(float velocity, IAbilityCaster source, Interactable target, Vector3 positionOffset, GameObject go, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(gameObject.name + ".ProjectileScript.Initialize(" + velocity + ", " + source.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ", " + positionOffset + ")");
+            //Debug.Log($"{gameObject.name}.ProjectileScript.Initialize(" + velocity + ", " + source.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ", " + positionOffset + ")");
             projectileGameObject = go;
             this.source = source;
             this.velocity = velocity;
@@ -89,7 +89,7 @@ namespace AnyRPG {
         }
 
         private void OnTriggerEnter(Collider other) {
-            //Debug.Log(gameObject.name + ".ProjectileScript.OnTriggerEnter(" + other.name + ")");
+            //Debug.Log($"{gameObject.name}.ProjectileScript.OnTriggerEnter(" + other.name + ")");
             if (!initialized) {
                 // could potentially respawn from pool on top of old target
                 return;
@@ -103,7 +103,7 @@ namespace AnyRPG {
         }
 
         private void OnDisable() {
-            //Debug.Log(gameObject.name + " " + gameObject.GetInstanceID() + ".ProjectileScript.OnDisable()");
+            //Debug.Log($"{gameObject.name} " + gameObject.GetInstanceID() + ".ProjectileScript.OnDisable()");
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }

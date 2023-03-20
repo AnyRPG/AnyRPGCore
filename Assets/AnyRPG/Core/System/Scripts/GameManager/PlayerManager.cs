@@ -326,7 +326,7 @@ namespace AnyRPG {
         }
 
         public void HandleTargetReady() {
-            //Debug.Log(gameObject.name + ".UnitFrameController.HandleTargetReady()");
+            //Debug.Log($"{gameObject.name}.UnitFrameController.HandleTargetReady()");
 
             waitForPlayerReadyCoroutine = StartCoroutine(WaitForPlayerReady());
         }
@@ -335,12 +335,12 @@ namespace AnyRPG {
             //Debug.Log("PlayerManager.WaitForPlayerReady()");
             //private IEnumerator WaitForCamera(int frameNumber) {
             yield return null;
-            //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): about to render " + namePlateController.Interactable.GetInstanceID() + "; initial frame: " + frameNumber + "; current frame: " + lastWaitFrame);
+            //Debug.Log($"{gameObject.name}.UnitFrameController.WaitForCamera(): about to render " + namePlateController.Interactable.GetInstanceID() + "; initial frame: " + frameNumber + "; current frame: " + lastWaitFrame);
             //if (lastWaitFrame != frameNumber) {
             if (activeUnitController.IsBuilding() == true) {
-                //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): a new wait was started. initial frame: " + frameNumber +  "; current wait: " + lastWaitFrame);
+                //Debug.Log($"{gameObject.name}.UnitFrameController.WaitForCamera(): a new wait was started. initial frame: " + frameNumber +  "; current wait: " + lastWaitFrame);
             } else {
-                //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): rendering");
+                //Debug.Log($"{gameObject.name}.UnitFrameController.WaitForCamera(): rendering");
                 waitForPlayerReadyCoroutine = null;
                 UnsubscribeFromTargetReady();
                 cameraManager.ShowPlayers();
@@ -782,7 +782,7 @@ namespace AnyRPG {
             if (creditPercent == 0) {
                 return;
             }
-            //Debug.Log(gameObject.name + ": About to gain xp from kill with creditPercent: " + creditPercent);
+            //Debug.Log($"{gameObject.name}: About to gain xp from kill with creditPercent: " + creditPercent);
             MyCharacter.CharacterStats.GainXP((int)(LevelEquations.GetXPAmountForKill(activeCharacter.CharacterStats.Level, sourceCharacter, systemConfigurationManager) * creditPercent));
         }
 

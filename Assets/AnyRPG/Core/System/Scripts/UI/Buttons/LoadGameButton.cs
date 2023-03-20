@@ -110,7 +110,7 @@ namespace AnyRPG {
         */
 
         public void CommonSelect() {
-            //Debug.Log(gameObject.name + ".LoadGameButton.CommonSelect()");
+            //Debug.Log($"{gameObject.name}.LoadGameButton.CommonSelect()");
             if (loadGamePanel.SelectedLoadGameButton != null && loadGamePanel.SelectedLoadGameButton != this) {
                 loadGamePanel.SelectedLoadGameButton.DeSelect();
             }
@@ -126,7 +126,7 @@ namespace AnyRPG {
         */
 
         public override void Select() {
-            //Debug.Log(gameObject.name + ".LoadGameButton.Select()");
+            //Debug.Log($"{gameObject.name}.LoadGameButton.Select()");
             CommonSelect();
             base.Select();
         }

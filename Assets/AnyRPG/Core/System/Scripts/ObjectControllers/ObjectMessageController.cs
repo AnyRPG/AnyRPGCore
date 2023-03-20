@@ -25,29 +25,29 @@ namespace AnyRPG {
         public Dictionary<string, LocalEventResponseNode> LocalEventDictionary { get => localEventDictionary; set => localEventDictionary = value; }
 
         void Awake() {
-            //Debug.Log(gameObject.name + ".ObjectMessageController.Awake()");
+            //Debug.Log($"{gameObject.name}.ObjectMessageController.Awake()");
             RunEarlyInit();
         }
 
         private void RunEarlyInit() {
-            //Debug.Log(gameObject.name + ".ObjectMessageController.RunEarlyInit()");
+            //Debug.Log($"{gameObject.name}.ObjectMessageController.RunEarlyInit()");
             SetupScriptableObjects();
             InitializeEventResponses(SubscribeStage.Awake);
         }
 
         private void Start() {
-            //Debug.Log(gameObject.name + ".ObjectMessageController.Start()");
+            //Debug.Log($"{gameObject.name}.ObjectMessageController.Start()");
             RunLateInit();
             //InitializeEventResponses(SubscribeStage.Start);
         }
 
         private void RunLateInit() {
-            //Debug.Log(gameObject.name + ".ObjectMessageController.RunLateInit()");
+            //Debug.Log($"{gameObject.name}.ObjectMessageController.RunLateInit()");
             InitializeEventResponses(SubscribeStage.Start);
         }
 
         private void InitializeEventResponses(SubscribeStage subscribeStage) {
-            //Debug.Log(gameObject.name + ".ObjectMessageController.InitializeMessageResponses()");
+            //Debug.Log($"{gameObject.name}.ObjectMessageController.InitializeMessageResponses()");
             if (eventTemplate == null) {
                 return;
             }
@@ -63,7 +63,7 @@ namespace AnyRPG {
             foreach (SystemEventResponseNode eventResponseNode in eventTemplate.MySystemEventList) {
                 if (eventResponseNode.SubscribeStage == subscribeStage) {
                     systemEventDictionary[eventResponseNode.EventName] = eventResponseNode;
-                    //Debug.Log(gameObject.name + ".ObjectMessageController.InitializeMessageResponses(): listening to: " + objectMessageNode.MyEventName);
+                    //Debug.Log($"{gameObject.name}.ObjectMessageController.InitializeMessageResponses(): listening to: " + objectMessageNode.MyEventName);
                     SystemEventManager.StartListening(eventResponseNode.EventName, CallbackFunction);
                     eventResponseNode.Listener = CallbackFunction;
                 }
@@ -189,7 +189,7 @@ namespace AnyRPG {
         }
 
         public void CallbackFunction(string eventName, EventParamProperties eventParam) {
-            //Debug.Log(gameObject.name + ".ObjectMessageController.CallbackFunction(" + eventName + ")");
+            //Debug.Log($"{gameObject.name}.ObjectMessageController.CallbackFunction(" + eventName + ")");
             if (enabled == false) {
                 // we should not process events if we are disabled
                 return;
@@ -229,44 +229,44 @@ namespace AnyRPG {
                     usedEventParam = propertyResponseNode.CustomParameters;
                 }
 
-                //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): MyScriptName: " + propertyResponseNode.MyScriptName);
+                //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessEvent(): MyScriptName: " + propertyResponseNode.MyScriptName);
                 Type type = Type.GetType(propertyResponseNode.ScriptName);
-                //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): MyScriptName: " + propertyResponseNode.MyScriptName + "; type: " + (type == null ? "null" : type.Name));
+                //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessEvent(): MyScriptName: " + propertyResponseNode.MyScriptName + "; type: " + (type == null ? "null" : type.Name));
 
                 Component component = GetComponent(Type.GetType(propertyResponseNode.ScriptName));
                 if (component != null) {
                     foreach (FieldInfo fieldInfo in (component as MonoBehaviour).GetType().GetFields()) {
-                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): found field: "+ fieldInfo.Name);
+                        //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessEvent(): found field: "+ fieldInfo.Name);
                     }
                     //(component as MonoBehaviour).GetType().GetFields();
 
                     FieldInfo primaryFieldType = (component as MonoBehaviour).GetType().GetField(propertyResponseNode.PropertyName);
                     object primaryFieldObject = component;
                     object primaryFieldValue = primaryFieldType.GetValue(primaryFieldObject);
-                    //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): primaryField: " + primaryFieldType.Name + "; GetType(): " + primaryFieldType.GetType().Name + "; reflected: " + primaryFieldType.ReflectedType);
-                    //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): object: " + primaryFieldObject);
+                    //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessEvent(): primaryField: " + primaryFieldType.Name + "; GetType(): " + primaryFieldType.GetType().Name + "; reflected: " + primaryFieldType.ReflectedType);
+                    //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessEvent(): object: " + primaryFieldObject);
 
                     FieldInfo usedFieldType = primaryFieldType;
                     object usedFieldValue = primaryFieldValue;
                     object usedFieldObject = primaryFieldObject;
 
                     if (propertyResponseNode.SubPropertyName != string.Empty) {
-                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): sub property name was: " + propertyResponseNode.MySubPropertyName);
+                        //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessEvent(): sub property name was: " + propertyResponseNode.MySubPropertyName);
                         usedFieldType = primaryFieldValue.GetType().GetField(propertyResponseNode.SubPropertyName);
-                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): usedFieldType: " + usedFieldType.Name);
+                        //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessEvent(): usedFieldType: " + usedFieldType.Name);
                         usedFieldValue = usedFieldType.GetValue(primaryFieldValue);
                         usedFieldObject = primaryFieldValue;
-                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): usedFieldObject: " + usedFieldObject);
-                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): primaryField.GetType(): " + primaryField.ReflectedType.Name + "; usedfield.GetType(): " + usedField.GetType().Name + "; reflected: " + usedField.ReflectedType.Name);
+                        //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessEvent(): usedFieldObject: " + usedFieldObject);
+                        //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessEvent(): primaryField.GetType(): " + primaryField.ReflectedType.Name + "; usedfield.GetType(): " + usedField.GetType().Name + "; reflected: " + usedField.ReflectedType.Name);
                         foreach (FieldInfo fieldInfo in primaryFieldType.GetValue(component).GetType().GetFields()) {
-                            //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): found sub field: " + fieldInfo.Name);
+                            //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessEvent(): found sub field: " + fieldInfo.Name);
                         }
                     } else {
-                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): sub property name was empty");
+                        //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessEvent(): sub property name was empty");
                     }
 
-                    //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): usedFieldType: " + usedFieldType.Name + "; GetType(): " + usedFieldType.GetType().Name + "; reflected: " + usedFieldType.ReflectedType);
-                    //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): object: " + usedFieldObject);
+                    //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessEvent(): usedFieldType: " + usedFieldType.Name + "; GetType(): " + usedFieldType.GetType().Name + "; reflected: " + usedFieldType.ReflectedType);
+                    //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessEvent(): object: " + usedFieldObject);
 
 
                     if (propertyResponseNode.Parameter == EventParamType.noneType) {
@@ -291,7 +291,7 @@ namespace AnyRPG {
                         } else {
                             usedObjectTypeName = eventParam.objectParam.MyObjectName;
                         }
-                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessPropertyResponses(): usedObjectTypeName: " + usedObjectTypeName);
+                        //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessPropertyResponses(): usedObjectTypeName: " + usedObjectTypeName);
 
 
                         // set object type
@@ -300,8 +300,8 @@ namespace AnyRPG {
 
                         // get parameter counts and lists
                         List<SimpleParamNode> paramNodes;
-                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessPropertyResponses(): event parameter count : " + eventParam.objectParam.MySimpleParams.Count);
-                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessPropertyResponses(): response parameter count : " + propertyResponseNode.MyCustomParameters.objectParam.MySimpleParams.Count);
+                        //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessPropertyResponses(): event parameter count : " + eventParam.objectParam.MySimpleParams.Count);
+                        //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessPropertyResponses(): response parameter count : " + propertyResponseNode.MyCustomParameters.objectParam.MySimpleParams.Count);
                         if (propertyResponseNode.UseCustomParam == false) {
                             // get parameters from input
                             numParameters = eventParam.objectParam.MySimpleParams.Count;
@@ -314,7 +314,7 @@ namespace AnyRPG {
                         Type[] parameterTypes = new Type[numParameters];
                         object[] parameterValues = new object[numParameters];
 
-                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessPropertyResponses(): usedObjectTypeName: " + usedObjectTypeName + "; parameters: " + numParameters);
+                        //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessPropertyResponses(): usedObjectTypeName: " + usedObjectTypeName + "; parameters: " + numParameters);
 
                         // set parameter types and values
                         int index = 0;
@@ -367,7 +367,7 @@ namespace AnyRPG {
         }
 
         private bool ProcessInvokeResponses(EventResponseNode eventResponseNode, EventParamProperties eventParam) {
-            //Debug.Log(gameObject.name + ".ObjectMessageController.ProcessInvokeResponses():");
+            //Debug.Log($"{gameObject.name}.ObjectMessageController.ProcessInvokeResponses():");
 
             foreach (InvokeResponseNode invokeResponseNode in eventResponseNode.InvokeResponses) {
                 EventParamProperties usedEventParam = eventParam;
@@ -376,25 +376,25 @@ namespace AnyRPG {
                 }
 
                 Type scriptType = Type.GetType(invokeResponseNode.ScriptName);
-                //Debug.Log(gameObject.name + "ObjectMessageController.ProcessInvokeResponses(): Got scriptType: " + scriptType);
+                //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessInvokeResponses(): Got scriptType: " + scriptType);
 
                 Component component = GetComponent(scriptType);
                 if (component != null) {
                     foreach (FieldInfo fieldInfo in (component as MonoBehaviour).GetType().GetFields()) {
-                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): found field: "+ fieldInfo.Name);
+                        //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessEvent(): found field: "+ fieldInfo.Name);
                     }
 
                     string usedMethodName = invokeResponseNode.PropertyName;
                     object primaryFieldObject = component;
                     object usedFieldObject = primaryFieldObject;
 
-                    //Debug.Log(gameObject.name + "ObjectMessageController.ProcessInvokeResponses(): primaryObject: " + (primaryFieldObject == null ? "null" : primaryFieldObject.ToString()) + "; usedObject: " + (usedFieldObject == null ? "null" : usedFieldObject.ToString()) + "; component: " + (component as MonoBehaviour).ToString());
+                    //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessInvokeResponses(): primaryObject: " + (primaryFieldObject == null ? "null" : primaryFieldObject.ToString()) + "; usedObject: " + (usedFieldObject == null ? "null" : usedFieldObject.ToString()) + "; component: " + (component as MonoBehaviour).ToString());
 
                     if (invokeResponseNode.SubMethodName != null && invokeResponseNode.SubMethodName != string.Empty) {
                         usedMethodName = invokeResponseNode.SubMethodName;
 
                         FieldInfo primaryFieldType = (component as MonoBehaviour).GetType().GetField(invokeResponseNode.PropertyName);
-                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessInvokeResponses(): primary field type: " + primaryFieldType.Name);
+                        //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessInvokeResponses(): primary field type: " + primaryFieldType.Name);
                         object usedFieldValue = primaryFieldType.GetValue(primaryFieldObject);
                         if (usedFieldValue == null) {
                             // the field we are trying to access may not be initialized yet
@@ -405,7 +405,7 @@ namespace AnyRPG {
 
                         //usedFieldObject = primaryFieldType.GetValue(usedFieldValue);
                     }
-                    //Debug.Log(gameObject.name + "ObjectMessageController.ProcessInvokeResponses(): object: " + (usedFieldObject == null ? "null" : usedFieldObject.ToString()) + "; component: " + (component as MonoBehaviour).name);
+                    //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessInvokeResponses(): object: " + (usedFieldObject == null ? "null" : usedFieldObject.ToString()) + "; component: " + (component as MonoBehaviour).name);
 
                     object[] parameterValues = new object[1];
 
@@ -428,7 +428,7 @@ namespace AnyRPG {
                         } else {
                             usedObjectTypeName = eventParam.objectParam.MyObjectName;
                         }
-                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessPropertyResponses(): usedObjectTypeName: " + usedObjectTypeName);
+                        //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessPropertyResponses(): usedObjectTypeName: " + usedObjectTypeName);
 
 
                         // set object type
@@ -437,8 +437,8 @@ namespace AnyRPG {
 
                         // get parameter counts and lists
                         List<SimpleParamNode> paramNodes;
-                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessPropertyResponses(): event parameter count : " + eventParam.objectParam.MySimpleParams.Count);
-                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessPropertyResponses(): response parameter count : " + propertyResponseNode.MyCustomParameters.objectParam.MySimpleParams.Count);
+                        //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessPropertyResponses(): event parameter count : " + eventParam.objectParam.MySimpleParams.Count);
+                        //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessPropertyResponses(): response parameter count : " + propertyResponseNode.MyCustomParameters.objectParam.MySimpleParams.Count);
                         if (invokeResponseNode.UseCustomParam == false) {
                             // get parameters from input
                             numParameters = eventParam.objectParam.MySimpleParams.Count;
@@ -451,7 +451,7 @@ namespace AnyRPG {
                         Type[] parameterTypes = new Type[numParameters];
                         parameterValues = new object[numParameters];
 
-                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessPropertyResponses(): usedObjectTypeName: " + usedObjectTypeName + "; parameters: " + numParameters);
+                        //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessPropertyResponses(): usedObjectTypeName: " + usedObjectTypeName + "; parameters: " + numParameters);
 
                         // set parameter types and values
                         int index = 0;
@@ -488,7 +488,7 @@ namespace AnyRPG {
                             index++;
                         }
                     }
-                    //Debug.Log(gameObject.name + "ObjectMessageController.ProcessPropertyResponses(): parameter count: " + parameterValues.Length);
+                    //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessPropertyResponses(): parameter count: " + parameterValues.Length);
 
                     // call the method with the correct list of parameters
                     MethodInfo invokedMethod = usedFieldObject.GetType().GetMethod(usedMethodName);
@@ -506,17 +506,17 @@ namespace AnyRPG {
             // component responses
             foreach (ComponentResponseNode componentResponseNode in objectMessageNode.ComponentResponses) {
 
-                //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): MyScriptName: " + propertyResponseNode.MyScriptName);
+                //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessEvent(): MyScriptName: " + propertyResponseNode.MyScriptName);
                 Type type = Type.GetType(componentResponseNode.ScriptName);
-                //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): MyScriptName: " + propertyResponseNode.MyScriptName + "; type: " + (type == null ? "null" : type.Name));
+                //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessEvent(): MyScriptName: " + propertyResponseNode.MyScriptName + "; type: " + (type == null ? "null" : type.Name));
 
                 Component component = GetComponent(Type.GetType(componentResponseNode.ScriptName));
                 if (component != null) {
                     if (componentResponseNode.ComponentAction == ComponentAction.Enable) {
-                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): eventName: " + objectMessageNode.MyEventName + "; enabling " + component.name);
+                        //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessEvent(): eventName: " + objectMessageNode.MyEventName + "; enabling " + component.name);
                         (component as MonoBehaviour).enabled = true;
                     } else {
-                        //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): eventName: " + objectMessageNode.MyEventName + "; disabling " + component.name);
+                        //Debug.Log($"{gameObject.name}ObjectMessageController.ProcessEvent(): eventName: " + objectMessageNode.MyEventName + "; disabling " + component.name);
                         (component as MonoBehaviour).enabled = false;
                     }
                 }
@@ -525,14 +525,14 @@ namespace AnyRPG {
         }
 
         private void ProcessEvent(EventResponseNode eventResponseNode, EventParamProperties eventParam) {
-            //Debug.Log(gameObject.name + ".ObjectMessageController.ProcessEvent()");
+            //Debug.Log($"{gameObject.name}.ObjectMessageController.ProcessEvent()");
             if (enabled == false) {
                 // we should not process events if we are disabled
                 return;
             }
 
             if (eventResponseNode.ResponseLimit > 0) {
-                //Debug.Log(gameObject.name + ".ObjectMessageController.ProcessEvent(): responseLimit: " + eventResponseNode.ResponseLimit + "; counter: " + eventResponseNode.ResponseCounter);
+                //Debug.Log($"{gameObject.name}.ObjectMessageController.ProcessEvent(): responseLimit: " + eventResponseNode.ResponseLimit + "; counter: " + eventResponseNode.ResponseCounter);
                 if (eventResponseNode.ResponseCounter >= eventResponseNode.ResponseLimit) {
 
                     // unsubscribe first to avoid unnecessary event sending if we have passed the processing limit count
@@ -555,7 +555,7 @@ namespace AnyRPG {
         }
 
         public void OnDisable() {
-            //Debug.Log(gameObject.name + "ObjectMessageController.OnDisable()");
+            //Debug.Log($"{gameObject.name}ObjectMessageController.OnDisable()");
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }
@@ -563,9 +563,9 @@ namespace AnyRPG {
         }
 
         private void CleanupEventResponses() {
-            //Debug.Log(gameObject.name + "ObjectMessageController.CleanupMessageResponses()");
+            //Debug.Log($"{gameObject.name}ObjectMessageController.CleanupMessageResponses()");
             foreach (SystemEventResponseNode systemEventResponseNode in eventTemplate.MySystemEventList) {
-                //Debug.Log(gameObject.name + "ObjectMessageController.CleanupMessageResponses(): processing objectMessageNode");
+                //Debug.Log($"{gameObject.name}ObjectMessageController.CleanupMessageResponses(): processing objectMessageNode");
                 //if (systemEventDictionary.ContainsKey(systemEventResponseNode.MyEventName)) {
                 //systemEventDictionary.Remove(systemEventResponseNode.MyEventName);
                 systemEventResponseNode.StopListening(this);
@@ -574,7 +574,7 @@ namespace AnyRPG {
             }
 
             foreach (LocalEventResponseNode localEventResponseNode in eventTemplate.MyLocalEventList) {
-                //Debug.Log(gameObject.name + "ObjectMessageController.CleanupMessageResponses(): processing objectMessageNode");
+                //Debug.Log($"{gameObject.name}ObjectMessageController.CleanupMessageResponses(): processing objectMessageNode");
                 //if (localEventDictionary.ContainsKey(localEventResponseNode.MyEventName)) {
                 //localEventDictionary.Remove(localEventResponseNode.MyEventName);
                 localEventResponseNode.StopListening(this);
@@ -590,7 +590,7 @@ namespace AnyRPG {
         }
 
         public void OnGetReusedObjectFromPool() {
-            //Debug.Log(gameObject.name + ".ObjectMessageController.OnGetReusedObjectFromPool()");
+            //Debug.Log($"{gameObject.name}.ObjectMessageController.OnGetReusedObjectFromPool()");
             RunEarlyInit();
             RunLateInit();
         }

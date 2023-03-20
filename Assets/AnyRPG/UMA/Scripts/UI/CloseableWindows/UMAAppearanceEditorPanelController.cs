@@ -130,8 +130,7 @@ namespace AnyRPG {
         protected List<string> bodyDNA;
         protected List<string> faceDNA;
 
-        // slots to not clear when viewing the character appearance
-        protected List<string> keepPreviewSlots;
+        protected Dictionary<string, UMAOptionChoiceButton> highlightedButtons = new Dictionary<string, UMAOptionChoiceButton>();
 
         protected UMAModelOptions umaModelOptions = null;
         protected UMAModelController umaModelController = null;
@@ -227,20 +226,6 @@ namespace AnyRPG {
                 "cheekPosition",
                 "lowCheekPronounced",
                 "lowCheekPosition"
-            };
-
-            keepPreviewSlots = new List<string>() {
-                "Physique",
-                "Face",
-                "Eyes",
-                "Hair",
-                "Body",
-                "Complexion",
-                "Tattoo",
-                "Underwear",
-                "Eyebrows",
-                "Beard",
-                "Ears"
             };
 
         }
@@ -548,6 +533,8 @@ namespace AnyRPG {
             faceOptionsArea.DeleteActiveButtons();
             bodyOptionsArea.DeleteActiveButtons();
 
+            highlightedButtons.Clear();
+
             // Hair
             if (allRecipes.ContainsKey("Hair")) {
                 hairStyleLabel.SetActive(true);
@@ -648,6 +635,7 @@ namespace AnyRPG {
                     index++;
                 }
             }
+
         }
 
         private void PopulateEyebrowOptions(List<UMATextRecipe> eyebrowRecipes) {
@@ -681,7 +669,7 @@ namespace AnyRPG {
         }
 
         private UMAOptionChoiceButton AddOptionListButton(UINavigationListVertical listOptionsArea, string groupName, Sprite optionImage, string displayName, string optionChoice) {
-            //Debug.Log("SwappableMeshAppearancePanelController.AddOptionListButton()");
+            Debug.Log($"SwappableMeshAppearancePanelController.AddOptionListButton({groupName}, {displayName}, {optionChoice})");
 
             UMAOptionChoiceButton optionChoiceButton = null;
             if (optionImage != null) {
@@ -695,21 +683,42 @@ namespace AnyRPG {
                 listOptionsArea.AddActiveButton(optionChoiceButton);
 
                 // highlight the button if it is already the selected choice for the group
+                Debug.Log($"wardrobe item: {dynamicCharacterAvatar.GetWardrobeItemName(groupName)} recipeName: {GetRecipeName(optionChoice, allRecipes[groupName])}");
                 if (dynamicCharacterAvatar.GetWardrobeItemName(groupName) == GetRecipeName(optionChoice, allRecipes[groupName])) {
-                    optionChoiceButton.HighlightOutline();
+                    HighlightButton(groupName, optionChoiceButton);
                 }
             }
             return optionChoiceButton;
         }
 
+        private void HighlightButton(string groupName, UMAOptionChoiceButton optionChoiceButton) {
+            Debug.Log($"UMAAppearanceEditorPanel.HighlightButton({groupName})");
+
+            Debug.Log($"UMAAppearanceEditorPanel.HighlightButton({groupName}) wardrobe item: {dynamicCharacterAvatar.GetWardrobeItemName(groupName)}");
+
+            if (highlightedButtons.ContainsKey(groupName) == false) {
+                highlightedButtons.Add(groupName, null);
+            }
+
+            if (highlightedButtons[groupName] != null) {
+                highlightedButtons[groupName].UnHighlightOutline();
+            }
+
+            highlightedButtons[groupName] = optionChoiceButton;
+            optionChoiceButton.HighlightOutline();
+        }
+
         public void SetRecipe(UMAOptionChoiceButton optionChoiceButton, string groupName, string optionChoice) {
-            //Debug.Log("UMAAppearanceEditorPanel.SetRecipe(" + groupName + ", " + optionChoice + ")");
+            //Debug.Log($"UMAAppearanceEditorPanel.SetRecipe({groupName}, {optionChoice})");
 
             if (optionChoice == string.Empty) {
                 dynamicCharacterAvatar.ClearSlot(groupName);
+            } else {
+                dynamicCharacterAvatar.SetSlot(groupName, GetRecipeName(optionChoice, allRecipes[groupName]));
             }
-            dynamicCharacterAvatar.SetSlot(groupName, GetRecipeName(optionChoice, allRecipes[groupName]));
             RebuildUMA();
+
+            HighlightButton(groupName, optionChoiceButton);
         }
 
         private string GetRecipeName(string recipeDisplayName, List<UMATextRecipe> recipeList) {

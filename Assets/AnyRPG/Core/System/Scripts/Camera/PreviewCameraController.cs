@@ -175,17 +175,17 @@ namespace AnyRPG {
         }
 
         public void InitializePosition() {
-            //Debug.Log(gameObject.name + ".PreviewCameraController.InitializePosition()");
+            //Debug.Log($"{gameObject.name}.PreviewCameraController.InitializePosition()");
             if (unitController == null) {
-                //Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition(): unitController is null");
+                //Debug.Log($"{gameObject.name}.UnitFrameController.InitializePosition(): unitController is null");
             }
             if (unitController.NamePlateController == null) {
-                //Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition(): unitController.NamePlateController is null");
+                //Debug.Log($"{gameObject.name}.UnitFrameController.InitializePosition(): unitController.NamePlateController is null");
             }
 
             if (unitController.NamePlateController.UnitPreviewCameraPositionOffset != null) {
                 initialCameraPositionOffset = unitController.NamePlateController.UnitPreviewCameraPositionOffset;
-                //Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition(): initialCameraPositionOffset from unitController: " + initialCameraPositionOffset);
+                //Debug.Log($"{gameObject.name}.UnitFrameController.InitializePosition(): initialCameraPositionOffset from unitController: " + initialCameraPositionOffset);
             } else {
                 initialCameraPositionOffset = cameraPositionOffsetDefault;
             }
@@ -202,7 +202,7 @@ namespace AnyRPG {
 
             currentCameraPositionOffset = initialLookVector;
 
-            //Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition() currentCameraPositionOffset: " + currentCameraPositionOffset + "; currentCameraLookOffset: " + currentCameraLookOffset + "; initialLookVector" + initialLookVector);
+            //Debug.Log($"{gameObject.name}.UnitFrameController.InitializePosition() currentCameraPositionOffset: " + currentCameraPositionOffset + "; currentCameraLookOffset: " + currentCameraLookOffset + "; initialLookVector" + initialLookVector);
         }
 
 
@@ -552,7 +552,7 @@ namespace AnyRPG {
         }
 
         public void OnScroll(PointerEventData eventData) {
-            //Debug.Log(gameObject.name + ".PreviewCameraController.OnScroll()");
+            //Debug.Log($"{gameObject.name}.PreviewCameraController.OnScroll()");
 
             scrollDelta += eventData.scrollDelta.y;
         }

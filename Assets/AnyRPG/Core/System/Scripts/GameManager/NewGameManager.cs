@@ -324,7 +324,7 @@ namespace AnyRPG {
         }
 
         public void SetUnitProfile(UnitProfile newUnitProfile) {
-            //Debug.Log("NewGameManager.SetUnitProfile(" + newUnitProfile.DisplayName + ")");
+            //Debug.Log($"NewGameManager.SetUnitProfile({newUnitProfile.DisplayName})");
 
             if (unitProfile == newUnitProfile) {
                 return;
@@ -537,7 +537,7 @@ namespace AnyRPG {
         }
 
         public void ChooseNewCharacterRace(CharacterRace characterRace) {
-            //Debug.Log("NewGameManager.SetCharacterRace(" + (characterRace == null ? "null" : characterRace.DisplayName) + ")");
+            //Debug.Log($"NewGameManager.SetCharacterRace({(characterRace == null ? "null" : characterRace.DisplayName)})");
 
             if (this.characterRace == characterRace) {
                 return;
@@ -551,7 +551,7 @@ namespace AnyRPG {
         }
 
         public void SetCharacterRace(CharacterRace characterRace) {
-            //Debug.Log("NewGameManager.SetCharacterRace(" + (characterRace == null ? "null" : characterRace.DisplayName) + ")");
+            //Debug.Log($"NewGameManager.SetCharacterRace({(characterRace == null ? "null" : characterRace.DisplayName)})");
 
             if (this.characterRace == characterRace) {
                 return;

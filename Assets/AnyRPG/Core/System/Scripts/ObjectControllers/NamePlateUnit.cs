@@ -40,7 +40,7 @@ namespace AnyRPG {
         /// initialize a nameplate if it has not been initialied yet
         /// </summary>
         public virtual void InitializeNamePlateController() {
-            //Debug.Log(gameObject.name + ".UnitController.InitializeNamePlateController()");
+            //Debug.Log($"{gameObject.name}.UnitController.InitializeNamePlateController()");
             if (namePlateReady == true) {
                 return;
             }
@@ -53,7 +53,7 @@ namespace AnyRPG {
         /// directly initialize a nameplate
         /// </summary>
         public bool InitializeNamePlate() {
-            //Debug.Log(gameObject.name + ".NamePlateUnit.InitializenamePlate() namePlateReady: " + namePlateReady);
+            //Debug.Log($"{gameObject.name}.NamePlateUnit.InitializenamePlate() namePlateReady: " + namePlateReady);
             // account for characters that spawn dead 
             if (namePlateReady == true) {
                 return false;
@@ -66,20 +66,20 @@ namespace AnyRPG {
         }
 
         public override void HandlePrerequisiteUpdates() {
-            //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
+            //Debug.Log($"{gameObject.name}.Interactable.HandlePrerequisiteUpdates()");
             base.HandlePrerequisiteUpdates();
             if (!playerManager.PlayerUnitSpawned) {
-                //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");
+                //Debug.Log($"{gameObject.name}.Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");
                 return;
             }
             UpdateNamePlateImage();
         }
 
         public void UpdateNamePlateImage() {
-            //Debug.Log(gameObject.name + ".NamePlateUnit.UpdateNamePlateImage()");
+            //Debug.Log($"{gameObject.name}.NamePlateUnit.UpdateNamePlateImage()");
 
             if (playerManager.MyCharacter == null || playerManager.UnitController == null) {
-                //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): player has no character");
+                //Debug.Log($"{gameObject.name}.Interactable.UpdateNamePlateImage(): player has no character");
                 return;
             }
             // if there is a nameplate unit give it a chance to initialize its nameplate.
@@ -95,7 +95,7 @@ namespace AnyRPG {
             List<InteractableOptionComponent> currentInteractables = GetCurrentInteractables();
 
             int currentInteractableCount = currentInteractables.Count;
-            //Debug.Log(gameObject.name + ".Interactable.UpdateDialogStatus(): currentInteractableCount: " + currentInteractableCount);
+            //Debug.Log($"{gameObject.name}.Interactable.UpdateDialogStatus(): currentInteractableCount: " + currentInteractableCount);
 
             // determine if one of our current interactables is a questgiver
             bool questGiverCurrent = false;
@@ -139,7 +139,7 @@ namespace AnyRPG {
         }
 
         public override void ProcessDialogTextUpdate(string newText) {
-            //Debug.Log(gameObject.name + ".NamePlateUnit.ProcessDialogTextUpdate(" + newText + ")");
+            //Debug.Log($"{gameObject.name}.NamePlateUnit.ProcessDialogTextUpdate(" + newText + ")");
 
             base.ProcessDialogTextUpdate(newText);
             if (NamePlateController != null && NamePlateController.NamePlate != null) {
@@ -151,7 +151,7 @@ namespace AnyRPG {
             base.ProcessShowQuestIndicator(indicatorText, questGiverComponent);
             if (NamePlateController != null && NamePlateController.NamePlate != null) {
                 NamePlateController.NamePlate.QuestIndicatorBackground.SetActive(true);
-                //Debug.Log(gameObject.name + ":QuestGiver.UpdateQuestStatus() Indicator is active.  Setting to: " + indicatorType);
+                //Debug.Log($"{gameObject.name}:QuestGiver.UpdateQuestStatus() Indicator is active.  Setting to: " + indicatorType);
                 questGiverComponent.SetIndicatorText(indicatorText, NamePlateController.NamePlate.QuestIndicator);
             }
         }
@@ -194,7 +194,7 @@ namespace AnyRPG {
         }
 
         public void RemoveNamePlate() {
-            //Debug.Log(gameObject.name + ".NamePlateUnit.RemoveNamePlate()");
+            //Debug.Log($"{gameObject.name}.NamePlateUnit.RemoveNamePlate()");
             namePlateController?.RemoveNamePlate();
             namePlateReady = false;
         }

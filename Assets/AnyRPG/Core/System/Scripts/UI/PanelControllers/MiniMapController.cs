@@ -191,7 +191,7 @@ namespace AnyRPG {
         }
 
         void Start() {
-            //Debug.Log(gameObject.name + ": MiniMapController.Start()");
+            //Debug.Log($"{gameObject.name}: MiniMapController.Start()");
             if (followGameObject == null) {
                 this.gameObject.SetActive(false);
             }
