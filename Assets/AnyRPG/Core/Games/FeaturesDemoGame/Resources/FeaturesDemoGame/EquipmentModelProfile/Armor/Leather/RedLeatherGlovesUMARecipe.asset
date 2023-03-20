@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b4eca1291e60f148801568f2a83a06b, type: 3}
+  m_Name: RedLeatherGlovesUMARecipe
+  m_EditorClassIdentifier: 
+  resourceName: Red Leather Gloves
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  properties:
+    equipmentModels:
+    - rid: 5705935833309905333
+    - rid: 5705935843888463885
+  references:
+    version: 2
+    RefIds:
+    - rid: 5705935833309905333
+      type: {class: UMAEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        properties:
+          uMARecipes:
+          - {fileID: 11400000, guid: 7e956433206e66147af651cae9144c40, type: 2}
+          - {fileID: 11400000, guid: 1c35999d05bf37c0ba44721da9975e89, type: 2}
+          sharedColors:
+          - sharedColorname: Hand Equipment Color 1
+            color: {r: 0.78039217, g: 0.18039216, b: 0.19215687, a: 1}
+    - rid: 5705935843888463885
+      type: {class: SwappableMeshEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        properties:
+          meshes:
+          - groupName: Gloves
+            optionName: Medium Gloves

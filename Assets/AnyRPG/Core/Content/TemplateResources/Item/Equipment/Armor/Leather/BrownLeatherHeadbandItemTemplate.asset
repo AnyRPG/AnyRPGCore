@@ -41,7 +41,9 @@ MonoBehaviour:
     uMARecipes: []
     sharedColors: []
   holdableObjectList: []
-  inlineEquipmentModels: []
+  inlineEquipmentModels:
+    equipmentModels: []
+  sharedEquipmentModels: Brown Leather Headband
   useArmorModifier: 1
   useManualArmor: 0
   manualValueIsScale: 0

@@ -36,12 +36,14 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Boots
   equipmentSetName: 
-  deprecatedUseUMARecipe: 1
   umaRecipeProfileName: Iron Plate Boots
   uMARecipeProfileProperties:
     uMARecipes: []
     sharedColors: []
   holdableObjectList: []
+  inlineEquipmentModels:
+    equipmentModels: []
+  sharedEquipmentModels: Iron Plate Boots
   useArmorModifier: 1
   useManualArmor: 0
   manualValueIsScale: 0
@@ -55,7 +57,10 @@ MonoBehaviour:
     manualModifierValue: 0
   randomSecondaryStats: 0
   secondaryStats: []
-  onEquipAbilityName: 
+  onEquipStatusEffect: 
   learnedAbilityNames: []
   requireArmorClass: 0
   armorClassName: Plate
+  references:
+    version: 2
+    RefIds: []

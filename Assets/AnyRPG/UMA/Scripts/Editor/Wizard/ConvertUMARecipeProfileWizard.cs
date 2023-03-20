@@ -9,9 +9,9 @@ using UnityEditor.SceneManagement;
 namespace AnyRPG {
     public class ConvertUMARecipeProfileWizard : ScriptableWizard {
 
-        public List<UMARecipeProfile> convertList = new List<UMARecipeProfile>();
+        public List<EquipmentModelProfile> convertList = new List<EquipmentModelProfile>();
 
-        //[MenuItem("Tools/AnyRPG/Wizard/Convert/Convert UMARecipeProfile to 0.14.2a")]
+        [MenuItem("Tools/AnyRPG/Wizard/Convert/Convert EquipmentModelProfile to 0.16")]
         public static void CreateWizard() {
             ScriptableWizard.DisplayWizard<ConvertUMARecipeProfileWizard>("New Convert UMARecipeProfile Wizard", "Convert");
         }
@@ -30,12 +30,13 @@ namespace AnyRPG {
             EditorUtility.DisplayProgressBar("Convert UMARecipeProfile Wizard", "Beginning Conversion...", 0f);
 
             int i = 0;
-            foreach (UMARecipeProfile convertItem in convertList) {
+            foreach (EquipmentModelProfile convertItem in convertList) {
                 i++;
                 EditorUtility.DisplayProgressBar("Convert UMARecipeProfile Wizard", "Beginning Conversion...", (float)i / (float)convertList.Count);
 
-                //convertItem.Properties.SharedColors = convertItem.DeprecatedSharedColors;
-                //convertItem.Properties.UMARecipes = convertItem.DeprecatedUMARecipes;
+                UMAEquipmentModel umaEquipmentModel = new UMAEquipmentModel();
+                umaEquipmentModel.Properties = convertItem.DeprecatedUMARecipeProfileProperties;
+                convertItem.Properties.EquipmentModels.Add(umaEquipmentModel);
 
                 EditorUtility.SetDirty(convertItem);
                 AssetDatabase.SaveAssets();
@@ -48,7 +49,7 @@ namespace AnyRPG {
         }
 
         void OnWizardUpdate() {
-            helpString = "Converts older UMARecipeProfile to 0.14.2a compatible";
+            helpString = "Converts older UMARecipeProfile to EquipmentModelProfile";
 
             errorString = Validate();
             isValid = (errorString == null || errorString == "");

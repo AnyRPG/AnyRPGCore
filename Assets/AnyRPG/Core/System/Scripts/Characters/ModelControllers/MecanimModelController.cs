@@ -69,64 +69,94 @@ namespace AnyRPG {
         }
 
         private void SpawnEquipmentObjects(EquipmentSlotProfile equipmentSlotProfile, Equipment newEquipment) {
-            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.SpawnEquipmentObjects(" + equipmentSlotProfile.DisplayName + ", " + (newEquipment == null ? "null" : newEquipment.DisplayName) + ")");
+            //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.SpawnEquipmentObjects({equipmentSlotProfile.DisplayName}, {(newEquipment == null ? "null" : newEquipment.DisplayName)})");
 
-            if (newEquipment == null || newEquipment.HoldableObjectList == null || newEquipment.HoldableObjectList.Count == 0|| equipmentSlotProfile == null) {
+            if (newEquipment == null || equipmentSlotProfile == null) {
+                return;
+            }
+
+            SpawnEquipmentObjects(equipmentSlotProfile, newEquipment, newEquipment.GetEquipmentModel<PrefabEquipmentModel>());
+            equippedEquipment[equipmentSlotProfile] = newEquipment;
+        }
+
+        private void SpawnEquipmentObjects(EquipmentSlotProfile equipmentSlotProfile, Equipment newEquipment, PrefabEquipmentModel prefabEquipmentModel) {
+            if (prefabEquipmentModel == null) {
+                // no prefab model for this equipment
+                return;
+            }
+
+            if (prefabEquipmentModel.Properties.HoldableObjectList == null || prefabEquipmentModel.Properties.HoldableObjectList.Count == 0) {
                 //Debug.Log("MecanimModelController.SpawnEquipmentObjects() : FAILED TO SPAWN OBJECTS");
                 return;
             }
-            //Dictionary<PrefabProfile, GameObject> holdableObjects = new Dictionary<PrefabProfile, GameObject>();
-            Dictionary<AttachmentNode, GameObject> holdableObjects = new Dictionary<AttachmentNode, GameObject>();
-            foreach (HoldableObjectAttachment holdableObjectAttachment in newEquipment.HoldableObjectList) {
-                //Debug.Log("MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.ResourceName + " has an attachment");
-                if (holdableObjectAttachment != null && holdableObjectAttachment.AttachmentNodes != null) {
-                    //Debug.Log("MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.ResourceName + " has attachment nodes");
-                    foreach (AttachmentNode attachmentNode in holdableObjectAttachment.AttachmentNodes) {
-                        //Debug.Log("MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.ResourceName + " cycling attachment node");
-                        if (attachmentNode != null && attachmentNode.EquipmentSlotProfile != null && equipmentSlotProfile == attachmentNode.EquipmentSlotProfile) {
-                            //Debug.Log("MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.ResourceName + " found equipmentSlotProfile");
-                            if (attachmentNode.HoldableObject != null && attachmentNode.HoldableObject.Prefab != null) {
-                                //Debug.Log("MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.ResourceName + " has a physical prefab");
-                                // attach a mesh to a bone for weapons
 
-                                AttachmentPointNode attachmentPointNode = GetSheathedAttachmentPointNode(attachmentNode);
-                                if (attachmentPointNode != null) {
-                                    //Debug.Log("MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.ResourceName + " found attachment point");
-                                    Transform targetBone = unitController.gameObject.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
+            Dictionary<AttachmentNode, GameObject> holdableObjects = SpawnHoldableObjects(equipmentSlotProfile, newEquipment, prefabEquipmentModel);
 
-                                    if (targetBone != null) {
-                                        //Debug.Log(unitController.gameObject.name + ".MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.name + " has a physical prefab. targetbone is not null: equipSlot: " + newEquipment.EquipmentSlotType.DisplayName);
-                                        GameObject newEquipmentPrefab = objectPooler.GetPooledObject(attachmentNode.HoldableObject.Prefab, targetBone);
-                                        //holdableObjects.Add(attachmentNode.MyHoldableObject, newEquipmentPrefab);
-                                        holdableObjects.Add(attachmentNode, newEquipmentPrefab);
-                                        //currentEquipmentPhysicalObjects[equipmentSlotProfile] = newEquipmentPrefab;
-
-                                        if (unitController.UnitControllerMode == UnitControllerMode.Preview) {
-                                            //Debug.Log("unit preview layer");
-                                            LayerUtility.SetMeshRendererLayerRecursive(newEquipmentPrefab, unitPreviewLayer, setLayerIgnoreMask);
-                                        } else {
-                                            //Debug.Log("not unit preview layer");
-                                            LayerUtility.SetMeshRendererLayerRecursive(newEquipmentPrefab, equipmentLayer, setLayerIgnoreMask);
-                                        }
-                                        newEquipmentPrefab.transform.localScale = attachmentNode.HoldableObject.Scale;
-                                        if (unitController?.CharacterUnit?.BaseCharacter.CharacterCombat != null && unitController?.CharacterUnit?.BaseCharacter.CharacterCombat.GetInCombat() == true) {
-                                            HoldObject(newEquipmentPrefab, attachmentNode, unitController.gameObject);
-                                        } else {
-                                            SheathObject(newEquipmentPrefab, attachmentNode, unitController.gameObject);
-                                        }
-                                    } else {
-                                        Debug.Log("MecanimModelController.SpawnEquipmentObjects(). We could not find the target bone " + attachmentPointNode.TargetBone + " when trying to Equip " + newEquipment.ResourceName);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
             if (holdableObjects.Count > 0) {
                 currentEquipmentPhysicalObjects[equipmentSlotProfile] = holdableObjects;
             }
-            equippedEquipment[equipmentSlotProfile] = newEquipment;
+        }
+
+        private Dictionary<AttachmentNode, GameObject> SpawnHoldableObjects(EquipmentSlotProfile equipmentSlotProfile, Equipment newEquipment, PrefabEquipmentModel prefabEquipmentModel) {
+
+            Dictionary<AttachmentNode, GameObject> holdableObjects = new Dictionary<AttachmentNode, GameObject>();
+
+            foreach (HoldableObjectAttachment holdableObjectAttachment in prefabEquipmentModel.Properties.HoldableObjectList) {
+                //Debug.Log("MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.ResourceName + " has an attachment");
+
+                if (holdableObjectAttachment?.AttachmentNodes == null) {
+                    continue;
+                }
+
+                //Debug.Log("MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.ResourceName + " has attachment nodes");
+                foreach (AttachmentNode attachmentNode in holdableObjectAttachment.AttachmentNodes) {
+                    //Debug.Log("MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.ResourceName + " cycling attachment node");
+                    if (attachmentNode?.EquipmentSlotProfile == null) {
+                        continue;
+                    }
+
+                    if (equipmentSlotProfile != attachmentNode.EquipmentSlotProfile) {
+                        continue;
+                    }
+                    //Debug.Log("MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.ResourceName + " found equipmentSlotProfile");
+
+                    if (attachmentNode.HoldableObject?.Prefab == null) {
+                        continue;
+                    }
+                    //Debug.Log("MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.ResourceName + " has a physical prefab");
+
+                    // attach a mesh to a bone for weapons
+                    AttachmentPointNode attachmentPointNode = GetSheathedAttachmentPointNode(attachmentNode);
+                    if (attachmentPointNode == null) {
+                        continue;
+                    }
+                    //Debug.Log("MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.ResourceName + " found attachment point");
+                    
+                    Transform targetBone = unitController.gameObject.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
+                    if (targetBone != null) {
+                        //Debug.Log(unitController.gameObject.name + ".MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.name + " has a physical prefab. targetbone is not null: equipSlot: " + newEquipment.EquipmentSlotType.DisplayName);
+                        
+                        GameObject newEquipmentPrefab = objectPooler.GetPooledObject(attachmentNode.HoldableObject.Prefab, targetBone);
+                        holdableObjects.Add(attachmentNode, newEquipmentPrefab);
+
+                        if (unitController.UnitControllerMode == UnitControllerMode.Preview) {
+                            LayerUtility.SetMeshRendererLayerRecursive(newEquipmentPrefab, unitPreviewLayer, setLayerIgnoreMask);
+                        } else {
+                            LayerUtility.SetMeshRendererLayerRecursive(newEquipmentPrefab, equipmentLayer, setLayerIgnoreMask);
+                        }
+                        newEquipmentPrefab.transform.localScale = attachmentNode.HoldableObject.Scale;
+                        if (unitController?.CharacterUnit?.BaseCharacter.CharacterCombat != null && unitController?.CharacterUnit?.BaseCharacter.CharacterCombat.GetInCombat() == true) {
+                            HoldObject(newEquipmentPrefab, attachmentNode, unitController.gameObject);
+                        } else {
+                            SheathObject(newEquipmentPrefab, attachmentNode, unitController.gameObject);
+                        }
+                    } else {
+                        Debug.Log("MecanimModelController.SpawnEquipmentObjects(). We could not find the target bone " + attachmentPointNode.TargetBone + " when trying to Equip " + newEquipment.ResourceName);
+                    }
+                }
+            }
+
+            return holdableObjects;
         }
 
         public void SetLayerRecursive(GameObject objectName, int newLayer) {

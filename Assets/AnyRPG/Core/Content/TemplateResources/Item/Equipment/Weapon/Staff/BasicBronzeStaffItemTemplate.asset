@@ -36,7 +36,6 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Two Hand
   equipmentSetName: 
-  deprecatedUseUMARecipe: 0
   umaRecipeProfileName: 
   uMARecipeProfileProperties:
     uMARecipes: []
@@ -48,6 +47,10 @@ MonoBehaviour:
       useUniversalAttachment: 1
       primaryAttachmentName: Staff Sheathed
       unsheathedAttachmentName: Right Hand
+  inlineEquipmentModels:
+    equipmentModels:
+    - rid: 5705935833309905541
+  sharedEquipmentModels: 
   useArmorModifier: 0
   useManualArmor: 0
   manualValueIsScale: 0
@@ -61,7 +64,7 @@ MonoBehaviour:
     manualModifierValue: 0
   randomSecondaryStats: 0
   secondaryStats: []
-  onEquipAbilityName: 
+  onEquipStatusEffect: 
   learnedAbilityNames: []
   requireWeaponSkill: 0
   weaponType: Staff
@@ -74,3 +77,17 @@ MonoBehaviour:
   abilityObjectList: []
   addScaledDamagePerSecond: 1
   baseDamagePerSecond: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 5705935833309905541
+      type: {class: PrefabEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        properties:
+          holdableObjectList:
+          - attachmentNodes:
+            - equipmentSlotProfileName: Main Hand
+              holdableObjectName: Basic Bronze Staff
+              useUniversalAttachment: 1
+              primaryAttachmentName: Staff Sheathed
+              unsheathedAttachmentName: Right Hand

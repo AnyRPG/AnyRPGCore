@@ -36,7 +36,6 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: One Hand
   equipmentSetName: 
-  deprecatedUseUMARecipe: 0
   umaRecipeProfileName: 
   uMARecipeProfileProperties:
     uMARecipes: []
@@ -53,6 +52,10 @@ MonoBehaviour:
       useUniversalAttachment: 1
       primaryAttachmentName: Off Hand Fist Sheathed
       unsheathedAttachmentName: Left Hand
+  inlineEquipmentModels:
+    equipmentModels:
+    - rid: 5705935833309905547
+  sharedEquipmentModels: 
   useArmorModifier: 0
   useManualArmor: 0
   manualValueIsScale: 0
@@ -66,7 +69,7 @@ MonoBehaviour:
     manualModifierValue: 0
   randomSecondaryStats: 0
   secondaryStats: []
-  onEquipAbilityName: 
+  onEquipStatusEffect: 
   learnedAbilityNames: []
   requireWeaponSkill: 0
   weaponType: Fist
@@ -79,3 +82,22 @@ MonoBehaviour:
   abilityObjectList: []
   addScaledDamagePerSecond: 1
   baseDamagePerSecond: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 5705935833309905547
+      type: {class: PrefabEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        properties:
+          holdableObjectList:
+          - attachmentNodes:
+            - equipmentSlotProfileName: Main Hand
+              holdableObjectName: Basic Claw Main Hand
+              useUniversalAttachment: 1
+              primaryAttachmentName: Main Hand Fist Sheathed
+              unsheathedAttachmentName: Right Hand
+            - equipmentSlotProfileName: Off Hand
+              holdableObjectName: Basic Claw Off Hand
+              useUniversalAttachment: 1
+              primaryAttachmentName: Off Hand Fist Sheathed
+              unsheathedAttachmentName: Left Hand

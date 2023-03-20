@@ -65,7 +65,7 @@ namespace AnyRPG {
             SetupFactoryDataAccess<StatusEffectGroup>();
             SetupFactoryDataAccess<StatusEffectType>();
             SetupFactoryDataAccess<SwappableMeshModelProfile>();
-            SetupFactoryDataAccess<UMARecipeProfile>();
+            SetupFactoryDataAccess<EquipmentModelProfile>();
             SetupFactoryDataAccess<UnitPrefabProfile>();
             SetupFactoryDataAccess<UnitProfile>();
             SetupFactoryDataAccess<UnitToughness>();

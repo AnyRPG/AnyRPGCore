@@ -232,7 +232,7 @@ namespace AnyRPG {
                 return;
             }
 
-            foreach (SwappableMeshEquipmentModelNode swappableMeshEquipmentModelNode in swappableMeshEquipmentModel.Meshes) {
+            foreach (SwappableMeshEquipmentModelNode swappableMeshEquipmentModelNode in swappableMeshEquipmentModel.Properties.Meshes) {
                 LoadGroupChoice(swappableMeshEquipmentModelNode.GroupName, swappableMeshEquipmentModelNode.OptionName);
             }
         }
@@ -250,7 +250,7 @@ namespace AnyRPG {
                 return;
             }
 
-            foreach (SwappableMeshEquipmentModelNode swappableMeshEquipmentModelNode in swappableMeshEquipmentModel.Meshes) {
+            foreach (SwappableMeshEquipmentModelNode swappableMeshEquipmentModelNode in swappableMeshEquipmentModel.Properties.Meshes) {
                 LoadGroupChoice(swappableMeshEquipmentModelNode.GroupName, "");
             }
         }

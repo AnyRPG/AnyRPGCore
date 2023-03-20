@@ -5,7 +5,7 @@ using UnityEngine;
 namespace AnyRPG {
 
     [System.Serializable]
-    public class EquipmentModelProperties {
+    public class EquipmentModelProperties : ConfiguredClass {
 
         [Tooltip("Inline equipment model definitions.")]
         [SerializeReference]

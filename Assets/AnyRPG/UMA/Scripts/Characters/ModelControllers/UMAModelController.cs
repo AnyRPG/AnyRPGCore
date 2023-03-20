@@ -338,32 +338,36 @@ namespace AnyRPG {
         }
 
         private void UnequipeUMARecipes(Equipment equipment) {
-            if (equipment.UMARecipeProfileProperties?.UMARecipes == null) {
+            UnequipUMARecipes(equipment, equipment.GetEquipmentModel<UMAEquipmentModel>());
+        }
+
+        private void UnequipUMARecipes(Equipment equipment, UMAEquipmentModel umaEquipmentModel) {
+            if (umaEquipmentModel?.Properties.UMARecipes == null) {
                 return;
             }
 
-            if (equipment.UMARecipeProfileProperties.UMARecipes.Count == 0) {
+            if (umaEquipmentModel.Properties.UMARecipes.Count == 0) {
                 return;
             }
 
             // Clear the item from the UMA slot on the UMA character
-            foreach (UMATextRecipe uMARecipe in equipment.UMARecipeProfileProperties.UMARecipes) {
-                UnequipUMARecipe(uMARecipe, equipment);
+            foreach (UMATextRecipe uMARecipe in umaEquipmentModel.Properties.UMARecipes) {
+                UnequipUMARecipe(uMARecipe, umaEquipmentModel.Properties);
             }
         }
 
-        private void UnequipUMARecipe(UMATextRecipe umaRecipe, Equipment equipment) {
+        private void UnequipUMARecipe(UMATextRecipe umaRecipe, UMAEquipmentModelProperties equipmentModelProperties) {
             if (umaRecipe == null || umaRecipe.compatibleRaces.Contains(dynamicCharacterAvatar.activeRace.name) == false) {
                 return;
             }
 
             dynamicCharacterAvatar.ClearSlot(umaRecipe.wardrobeSlot);
 
-            if (equipment.UMARecipeProfileProperties?.SharedColors == null || equipment.UMARecipeProfileProperties.SharedColors.Count == 0) {
+            if (equipmentModelProperties.SharedColors == null || equipmentModelProperties.SharedColors.Count == 0) {
                 return;
             }
 
-            foreach (SharedColorNode sharedColorNode in equipment.UMARecipeProfileProperties.SharedColors) {
+            foreach (SharedColorNode sharedColorNode in equipmentModelProperties.SharedColors) {
                 dynamicCharacterAvatar.ClearColor(sharedColorNode.SharedColorname, false);
             }
         }
@@ -377,11 +381,17 @@ namespace AnyRPG {
                 return returnValue;
             }
 
-            if (equipment.UMARecipeProfileProperties?.UMARecipes == null) {
+            UMAEquipmentModel umaEquipmentModel = equipment.GetEquipmentModel<UMAEquipmentModel>();
+
+            if (umaEquipmentModel == null) {
                 return returnValue;
             }
 
-            if (equipment.UMARecipeProfileProperties.UMARecipes.Count == 0) {
+            if (umaEquipmentModel.Properties.UMARecipes == null) {
+                return returnValue;
+            }
+
+            if (umaEquipmentModel.Properties.UMARecipes.Count == 0) {
                 return returnValue;
             }
 
@@ -391,7 +401,7 @@ namespace AnyRPG {
             // create a dictionary to ensure the last item valid for a slot in the list is the one that gets set
             Dictionary<string, string> wardrobeRecipes = new Dictionary<string, string>();
 
-            foreach (UMATextRecipe uMARecipe in equipment.UMARecipeProfileProperties.UMARecipes) {
+            foreach (UMATextRecipe uMARecipe in umaEquipmentModel.Properties.UMARecipes) {
                 if (uMARecipe != null && uMARecipe.compatibleRaces.Contains(avatarDefinition.RaceName)) {
                     //Debug.Log(unitController.gameObject.name + ".UMAModelController.PreloadItemModels(): Adding: " + uMARecipe.wardrobeSlot + ", " + uMARecipe.name);
                     if (wardrobeRecipes.ContainsKey(uMARecipe.wardrobeSlot) == false) {
@@ -407,7 +417,7 @@ namespace AnyRPG {
                     //Debug.Log(unitController.gameObject.name + ".UMAModelController.PreloadItemModels(): Setting: " + wardrobeSlot + ", " + wardrobeRecipes[wardrobeSlot]);
                     newWardrobe.Add(wardrobeRecipes[wardrobeSlot]);
                     returnValue++;
-                    AddOrUpdateSharedColors(equipment.UMARecipeProfileProperties, newColors);
+                    AddOrUpdateSharedColors(umaEquipmentModel.Properties, newColors);
                 }
             }
             if (returnValue != 0) {
@@ -418,7 +428,7 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        private void AddOrUpdateSharedColors(UMARecipeProfileProperties uMARecipeProfileProperties, List<SharedColorDef> sharedColorDefs) {
+        private void AddOrUpdateSharedColors(UMAEquipmentModelProperties uMARecipeProfileProperties, List<SharedColorDef> sharedColorDefs) {
             foreach (SharedColorNode sharedColorNode in uMARecipeProfileProperties.SharedColors) {
                 AddOrUpdateSharedColor(sharedColorNode, sharedColorDefs);
             }
@@ -463,22 +473,28 @@ namespace AnyRPG {
                 return;
             }
 
-            if (equipment.UMARecipeProfileProperties?.UMARecipes == null) {
+            UMAEquipmentModel umaEquipmentModel = equipment.GetEquipmentModel<UMAEquipmentModel>();
+
+            if (umaEquipmentModel == null) {
                 return;
             }
 
-            if (equipment.UMARecipeProfileProperties.UMARecipes.Count == 0) {
+            if (umaEquipmentModel.Properties.UMARecipes == null) {
+                return;
+            }
+
+            if (umaEquipmentModel.Properties.UMARecipes.Count == 0) {
                 return;
             }
 
             // create a dictionary to ensure the last item valid for a slot in the list is the one that gets set
             Dictionary<string, string> wardrobeRecipes = new Dictionary<string, string>();
 
-            foreach (UMATextRecipe uMARecipe in equipment.UMARecipeProfileProperties.UMARecipes) {
+            foreach (UMATextRecipe uMARecipe in umaEquipmentModel.Properties.UMARecipes) {
                 if (uMARecipe != null && uMARecipe.compatibleRaces.Contains(dynamicCharacterAvatar.activeRace.name)) {
                     //Debug.Log(unitController.gameObject.name + ".UMAModelController.EquipItemModels(): Adding: " + uMARecipe.wardrobeSlot + ", " + uMARecipe.name);
-                    if (equipment.UMARecipeProfileProperties.SharedColors != null && equipment.UMARecipeProfileProperties.SharedColors.Count > 0) {
-                        foreach (SharedColorNode sharedColorNode in equipment.UMARecipeProfileProperties.SharedColors) {
+                    if (umaEquipmentModel.Properties.SharedColors != null && umaEquipmentModel.Properties.SharedColors.Count > 0) {
+                        foreach (SharedColorNode sharedColorNode in umaEquipmentModel.Properties.SharedColors) {
                             dynamicCharacterAvatar.SetColor(sharedColorNode.SharedColorname, sharedColorNode.Color);
                         }
                     }

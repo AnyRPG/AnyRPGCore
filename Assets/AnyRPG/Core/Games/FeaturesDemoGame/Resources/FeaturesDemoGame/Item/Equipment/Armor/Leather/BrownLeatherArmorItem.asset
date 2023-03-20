@@ -42,8 +42,8 @@ MonoBehaviour:
     sharedColors: []
   holdableObjectList: []
   inlineEquipmentModels:
-  - rid: 5705935798284320769
-  - rid: 5705935798284320770
+    equipmentModels: []
+  sharedEquipmentModels: Brown Leather Armor
   useArmorModifier: 1
   useManualArmor: 0
   manualValueIsScale: 0
@@ -63,17 +63,4 @@ MonoBehaviour:
   armorClassName: Leather
   references:
     version: 2
-    RefIds:
-    - rid: 5705935798284320769
-      type: {class: UMAEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        umaRecipeProfileName: Brown Leather Armor
-        uMARecipeProfileProperties:
-          uMARecipes: []
-          sharedColors: []
-    - rid: 5705935798284320770
-      type: {class: SwappableMeshEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        meshes:
-        - groupName: Armor
-          optionName: Medium Armor
+    RefIds: []

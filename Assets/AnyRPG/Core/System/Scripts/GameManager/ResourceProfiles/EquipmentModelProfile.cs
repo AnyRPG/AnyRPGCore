@@ -1,33 +1,28 @@
+using AnyRPG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AnyRPG {
 
-    [CreateAssetMenu(fileName = "New Equipment Model Profile", menuName = "AnyRPG/Inventory/Equipment/Equipment Model Profile")]
+    [CreateAssetMenu(fileName = "New UMA Recipe Profile", menuName = "AnyRPG/Inventory/Equipment/Equipment Model Profile")]
     public class EquipmentModelProfile : DescribableResource {
 
-        [Tooltip("Inline equipment model definitions.")]
-        [SerializeReference]
-        [SerializeReferenceButton]
-        private List<EquipmentModel> equipmentModels = new List<EquipmentModel>();
+        [Header("Equipment Model")]
+
+        [FormerlySerializedAs("uMARecipeProfileProperties")]
+        [SerializeField]
+        private UMAEquipmentModelProperties deprecatedUMARecipeProfileProperties = new UMAEquipmentModelProperties();
 
         [SerializeField]
-        private EquipmentModelProperties equipmentModelProperties = new EquipmentModelProperties();
+        private EquipmentModelProperties properties = new EquipmentModelProperties();
 
-        public List<EquipmentModel> EquipmentModels { get => equipmentModels; set => equipmentModels = value; }
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
-            base.SetupScriptableObjects(systemGameManager);
-
-            foreach (EquipmentModel equipmentModel in equipmentModels) {
-                if (equipmentModel != null) {
-                    equipmentModel.Configure(systemGameManager);
-                    equipmentModel.SetupScriptableObjects(this);
-                }
-            }
-        }
-
+        //public UMARecipeProfileProperties Properties { get => uMARecipeProfileProperties; set => uMARecipeProfileProperties = value; }
+        public EquipmentModelProperties Properties { get => properties; set => properties = value; }
+        public UMAEquipmentModelProperties DeprecatedUMARecipeProfileProperties { get => deprecatedUMARecipeProfileProperties; set => deprecatedUMARecipeProfileProperties = value; }
     }
+   
 }
-

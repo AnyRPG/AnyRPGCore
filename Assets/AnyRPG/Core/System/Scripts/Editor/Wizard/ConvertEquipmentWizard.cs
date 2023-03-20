@@ -1,5 +1,4 @@
-﻿using AnyRPG;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,7 +10,7 @@ namespace AnyRPG {
 
         public List<Equipment> equipmentList = new List<Equipment>();
 
-        //[MenuItem("Tools/AnyRPG/Wizard/Convert/Convert Equipment to 0.14.2a")]
+        [MenuItem("Tools/AnyRPG/Wizard/Convert/Convert Equipment")]
         public static void CreateWizard() {
             ScriptableWizard.DisplayWizard<ConvertEquipmentWizard>("New Convert Equipment Wizard", "Convert");
         }
@@ -34,11 +33,22 @@ namespace AnyRPG {
                 i++;
                 EditorUtility.DisplayProgressBar("Convert Equipment Wizard", "Beginning Conversion...", (float)i / (float)equipmentList.Count);
 
-                /*
-                if (equipment.DeprecatedUseUMARecipe == true) {
-                    equipment.UmaRecipeProfileName = equipment.ResourceName;
+                // copy uma recipe profile
+                equipment.SharedEquipmentModels = equipment.DeprecatedUmaRecipeProfileName;
+
+                // copy uma recipe profile properties
+                if (equipment.DeprecatedUMARecipeProfileProperties.UMARecipes.Count > 0 || equipment.DeprecatedUMARecipeProfileProperties.SharedColors.Count > 0) {
+                    UMAEquipmentModel umaEquipmentModel = new UMAEquipmentModel();
+                    umaEquipmentModel.Properties = equipment.DeprecatedUMARecipeProfileProperties;
+                    equipment.InlineEquipmentModels.EquipmentModels.Add(umaEquipmentModel);
                 }
-                */
+
+                // copy prefab equipment models
+                if (equipment.DeprecatedHoldableObjectList.Count > 0) {
+                    PrefabEquipmentModel prefabEquipmentModel = new PrefabEquipmentModel();
+                    prefabEquipmentModel.Properties.HoldableObjectList = equipment.DeprecatedHoldableObjectList;
+                    equipment.InlineEquipmentModels.EquipmentModels.Add(prefabEquipmentModel);
+                }
 
                 EditorUtility.SetDirty(equipment);
                 AssetDatabase.SaveAssets();
@@ -51,7 +61,7 @@ namespace AnyRPG {
         }
 
         void OnWizardUpdate() {
-            helpString = "Converts older equipment to 0.14.2a compatible";
+            helpString = "Converts older equipment to 0.16 compatible";
 
             errorString = Validate();
             isValid = (errorString == null || errorString == "");

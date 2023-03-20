@@ -40,7 +40,7 @@ namespace AnyRPG {
             typeof(SceneNode).Name,
             typeof(Skill).Name,
             typeof(StatusEffectType).Name,
-            typeof(UMARecipeProfile).Name,
+            typeof(EquipmentModelProfile).Name,
             typeof(UnitProfile).Name,
             typeof(UnitToughness).Name,
             typeof(UnitType).Name,
