@@ -395,7 +395,6 @@ namespace AnyRPG {
                 }
             }
 
-            // testing - move this to before the below calls so its initialized if a model is already ready
             activeUnitController.UnitModelController.SetInitialSavedAppearance(saveManager.CurrentSaveData);
             if (subscribeToTargetReady) {
                 SubscribeToTargetReady();

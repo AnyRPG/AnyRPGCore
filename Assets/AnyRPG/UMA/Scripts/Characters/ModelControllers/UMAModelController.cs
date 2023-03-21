@@ -96,8 +96,8 @@ namespace AnyRPG {
         public override void SetInitialSavedAppearance(AnyRPGSaveData saveData) {
             //Debug.Log($"{unitController.gameObject.name}.UMAModelController.SetInitialSavedAppearance()");
 
-            if (saveData.PlayerUMARecipe != string.Empty) {
-                initialAppearance = saveData.PlayerUMARecipe;
+            if (saveData.appearanceString != string.Empty) {
+                initialAppearance = saveData.appearanceString;
             }
         }
 
@@ -604,7 +604,7 @@ namespace AnyRPG {
                 return;
             }
 
-            saveData.PlayerUMARecipe = GetAppearanceString();
+            saveData.appearanceString = GetAppearanceString();
             saveDataOwner.SetSaveData(saveData);
         }
 

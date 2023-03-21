@@ -6380,16 +6380,15 @@ MonoBehaviour:
   defaultStartingZone: 
   defaultPlayerName: New Player
   useNewGameWindow: 1
-  characterSelectionType: 2
+  characterSelectionType: 0
   newGameAppearance: 1
   newGameFaction: 1
   newGameRace: 1
   newGameClass: 1
   newGameSpecialization: 1
   newGameAudio: 
-  defaultPlayerUnitProfileName: DefaultPlayer
+  defaultPlayerUnitProfile: DefaultPlayer
   characterCreatorProfileNames: []
-  useFirstCreatorProfile: 0
   defaultInventorySlots: 20
   defaultBankSlots: 48
   maxInventoryBags: 5

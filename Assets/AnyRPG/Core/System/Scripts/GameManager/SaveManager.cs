@@ -32,7 +32,7 @@ namespace AnyRPG {
 
         private string saveFileName = "AnyRPGPlayerSaveData";
 
-        private AnyRPGSaveData currentSaveData;
+        private AnyRPGSaveData currentSaveData = null;
 
         // data to turn into json for save
         private List<AnyRPGSaveData> anyRPGSaveDataList = new List<AnyRPGSaveData>();
@@ -147,9 +147,9 @@ namespace AnyRPG {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player Faction is null.  Setting to default");
                 anyRPGSaveData.unitProfileName = systemConfigurationManager.CharacterCreatorUnitProfileName;
             }
-            if (anyRPGSaveData.PlayerUMARecipe == null) {
+            if (anyRPGSaveData.appearanceString == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player UMA Recipe is null.  Setting to empty");
-                anyRPGSaveData.PlayerUMARecipe = string.Empty;
+                anyRPGSaveData.appearanceString = string.Empty;
             }
             if (anyRPGSaveData.CurrentScene == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): CurrentScene is null.  Setting to default");
@@ -274,7 +274,6 @@ namespace AnyRPG {
         public bool SaveGame() {
             bool foundValidName = false;
             if (currentSaveData.DataFileName == null || currentSaveData.DataFileName == string.Empty) {
-                //if (currentSaveData.Equals(default(AnyRPGSaveData))) {
                 //Debug.Log("Savemanager.SaveGame(): Current save data is empty, creating new save file");
                 string finalSaveFileName = GetNewSaveFileName();
                 if (finalSaveFileName != string.Empty) {
@@ -1330,12 +1329,13 @@ namespace AnyRPG {
 
         public AnyRPGSaveData CreateSaveData() {
             AnyRPGSaveData newSaveData = new AnyRPGSaveData();
-            newSaveData = InitializeSaveDataProperties(newSaveData);
+            //newSaveData = InitializeSaveDataProperties(newSaveData);
             newSaveData = InitializeSaveDataResourceLists(newSaveData, false);
 
             return newSaveData;
         }
 
+        /*
         public AnyRPGSaveData InitializeSaveDataProperties(AnyRPGSaveData saveData) {
             saveData.playerName = string.Empty;
             saveData.unitProfileName = string.Empty;
@@ -1343,13 +1343,14 @@ namespace AnyRPG {
             saveData.characterClass = string.Empty;
             saveData.classSpecialization = string.Empty;
             saveData.playerFaction = string.Empty;
-            saveData.PlayerUMARecipe = string.Empty;
+            saveData.appearanceString = string.Empty;
             saveData.CurrentScene = string.Empty;
             saveData.DataCreatedOn = string.Empty;
             saveData.DataFileName = string.Empty;
 
             return saveData;
         }
+        */
 
 
         public void LoadGame(AnyRPGSaveData anyRPGSaveData) {

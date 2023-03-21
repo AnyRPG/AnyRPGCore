@@ -218,7 +218,10 @@ namespace AnyRPG {
 
         public void SetInitialSavedAppearance(AnyRPGSaveData saveData) {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetInitialSavedAppearance()");
-
+            if (saveData == null) {
+                // in empty game mode, this can be null
+                return;
+            }
             modelAppearanceController.SetInitialSavedAppearance(saveData);
         }
 

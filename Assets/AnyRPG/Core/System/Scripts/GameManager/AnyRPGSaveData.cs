@@ -1,22 +1,22 @@
-using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
+    
     [Serializable]
-    public struct AnyRPGSaveData {
+    public class AnyRPGSaveData {
 
         public int PlayerLevel;
         public int currentExperience;
 
-        public string playerName;
-        public string unitProfileName;
-        public string characterRace;
-        public string characterClass;
-        public string classSpecialization;
-        public string playerFaction;
+        public string playerName = string.Empty;
+        public string unitProfileName = string.Empty;
+        public string characterRace = string.Empty;
+        public string characterClass = string.Empty;
+        public string classSpecialization = string.Empty;
+        public string playerFaction = string.Empty;
         public bool OverrideLocation;
         public float PlayerLocationX;
         public float PlayerLocationY;
@@ -25,38 +25,38 @@ namespace AnyRPG {
         public float PlayerRotationX;
         public float PlayerRotationY;
         public float PlayerRotationZ;
-        public string PlayerUMARecipe;
-        public string CurrentScene;
-        public string DataCreatedOn;
-        public string DataSavedOn;
-        public string DataFileName;
+        public string appearanceString = string.Empty;
+        public string CurrentScene = string.Empty;
+        public string DataCreatedOn = string.Empty;
+        public string DataSavedOn = string.Empty;
+        public string DataFileName = string.Empty;
         public int GamepadActionButtonSet;
 
-        public List<ResourcePowerSaveData> resourcePowerSaveData;
-        public List<SwappableMeshSaveData> swappableMeshSaveData;
-        public List<ActionBarSaveData> actionBarSaveData;
-        public List<ActionBarSaveData> gamepadActionBarSaveData;
-        public List<InventorySlotSaveData> inventorySlotSaveData;
-        public List<InventorySlotSaveData> bankSlotSaveData;
-        public List<EquippedBagSaveData> equippedBagSaveData;
-        public List<EquippedBagSaveData> equippedBankBagSaveData;
-        public List<AbilitySaveData> abilitySaveData;
-        public List<SkillSaveData> skillSaveData;
-        public List<RecipeSaveData> recipeSaveData;
-        public List<ReputationSaveData> reputationSaveData;
-        public List<EquipmentSaveData> equipmentSaveData;
-        public List<CurrencySaveData> currencySaveData;
-        public List<StatusEffectSaveData> statusEffectSaveData;
-        public List<PetSaveData> petSaveData;
-        public List<BehaviorSaveData> behaviorSaveData;
+        public List<ResourcePowerSaveData> resourcePowerSaveData = new List<ResourcePowerSaveData>();
+        public List<SwappableMeshSaveData> swappableMeshSaveData = new List<SwappableMeshSaveData>();
+        public List<ActionBarSaveData> actionBarSaveData = new List<ActionBarSaveData>();
+        public List<ActionBarSaveData> gamepadActionBarSaveData = new List<ActionBarSaveData>();
+        public List<InventorySlotSaveData> inventorySlotSaveData = new List<InventorySlotSaveData>();
+        public List<InventorySlotSaveData> bankSlotSaveData = new List<InventorySlotSaveData>();
+        public List<EquippedBagSaveData> equippedBagSaveData = new List<EquippedBagSaveData>();
+        public List<EquippedBagSaveData> equippedBankBagSaveData = new List<EquippedBagSaveData>();
+        public List<AbilitySaveData> abilitySaveData = new List<AbilitySaveData>();
+        public List<SkillSaveData> skillSaveData = new List<SkillSaveData>();
+        public List<RecipeSaveData> recipeSaveData = new List<RecipeSaveData>();
+        public List<ReputationSaveData> reputationSaveData = new List<ReputationSaveData>();
+        public List<EquipmentSaveData> equipmentSaveData = new List<EquipmentSaveData>();
+        public List<CurrencySaveData> currencySaveData = new List<CurrencySaveData>();
+        public List<StatusEffectSaveData> statusEffectSaveData = new List<StatusEffectSaveData>();
+        public List<PetSaveData> petSaveData = new List<PetSaveData>();
+        public List<BehaviorSaveData> behaviorSaveData = new List<BehaviorSaveData>();
 
         // the properties below currently overwrite properties of scriptableObjects
         // this is undesired and if any similar data is added, it needs to be intentionally cleared between game loads
-        public List<QuestSaveData> questSaveData;
-        public List<QuestSaveData> achievementSaveData;
-        public List<DialogSaveData> dialogSaveData;
-        public List<SceneNodeSaveData> sceneNodeSaveData;
-        public List<CutsceneSaveData> cutsceneSaveData;
+        public List<QuestSaveData> questSaveData = new List<QuestSaveData>();
+        public List<QuestSaveData> achievementSaveData = new List<QuestSaveData>();
+        public List<DialogSaveData> dialogSaveData = new List<DialogSaveData>();
+        public List<SceneNodeSaveData> sceneNodeSaveData = new List<SceneNodeSaveData>();
+        public List<CutsceneSaveData> cutsceneSaveData = new List<CutsceneSaveData>();
 
     }
 

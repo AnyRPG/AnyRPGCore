@@ -53,7 +53,7 @@ namespace AnyRPG {
 
         [Tooltip("When the new game window is used, what method will be used to select a character.  DefaultCharacter = only the default character will be available. CharacterList = The faction will control the list. RaceAndGender = A Male or Female character can be chosen after the race is selected.")]
         [SerializeField]
-        private CharacterSelectionType characterSelectionType = CharacterSelectionType.RaceAndGender;
+        private CharacterSelectionType characterSelectionType = CharacterSelectionType.DefaultCharacter;
 
         [Tooltip("If the new game window is used, show the appearance tab")]
         [SerializeField]
@@ -89,9 +89,10 @@ namespace AnyRPG {
         private AudioProfile newGameAudioProfile = null;
 
         [Tooltip("If the character creator is not used, this unit will be the default player unit. Usually a non UMA mecanim Unit or pre-configured UMA unit.")]
+        [FormerlySerializedAs("defaultPlayerUnitProfileName")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(UnitProfile))]
-        private string defaultPlayerUnitProfileName = string.Empty;
+        private string defaultPlayerUnitProfile = string.Empty;
 
         [Tooltip("The options available when the character creator is used")]
         [SerializeField]
@@ -99,7 +100,7 @@ namespace AnyRPG {
         private List<string> characterCreatorProfileNames = new List<string>();
 
         // reference to the default profile
-        private UnitProfile defaultPlayerUnitProfile = null;
+        private UnitProfile defaultPlayerUnitProfileRef = null;
 
         // reference to the default profile
         private List<UnitProfile> characterCreatorProfiles = new List<UnitProfile>();
@@ -682,8 +683,8 @@ namespace AnyRPG {
         public bool NewGameSpecialization { get => newGameSpecialization; set => newGameSpecialization = value; }
         public AudioProfile NewGameAudioProfile { get => newGameAudioProfile; set => newGameAudioProfile = value; }
         public string DefaultPlayerName { get => defaultPlayerName; set => defaultPlayerName = value; }
-        public string DefaultPlayerUnitProfileName { get => defaultPlayerUnitProfileName; set => defaultPlayerUnitProfileName = value; }
-        public UnitProfile DefaultPlayerUnitProfile { get => defaultPlayerUnitProfile; set => defaultPlayerUnitProfile = value; }
+        public string DefaultPlayerUnitProfileName { get => defaultPlayerUnitProfile; set => defaultPlayerUnitProfile = value; }
+        public UnitProfile DefaultPlayerUnitProfile { get => defaultPlayerUnitProfileRef; set => defaultPlayerUnitProfileRef = value; }
         public string CharacterCreatorUnitProfileName {
             get {
                 if (characterCreatorProfileNames.Count > 0) {
@@ -761,13 +762,6 @@ namespace AnyRPG {
         public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
             return capabilities;
         }
-
-        public void PerformRequiredPropertyChecks() {
-            if (defaultPlayerUnitProfileName == null || defaultPlayerUnitProfileName == string.Empty) {
-                Debug.LogError("PlayerManager.Awake(): the default player unit profile name is null.  Please set it in the inspector");
-            }
-        }
-
 
         // verify that system abilities are available through the factory
         public void SetupScriptableObjects() {
@@ -907,15 +901,17 @@ namespace AnyRPG {
             }
 
             // get default player unit profile
-            if (defaultPlayerUnitProfileName != null && defaultPlayerUnitProfileName != string.Empty) {
-                UnitProfile tmpUnitProfile = systemDataFactory.GetResource<UnitProfile>(defaultPlayerUnitProfileName);
+            if (defaultPlayerUnitProfile != null && defaultPlayerUnitProfile != string.Empty) {
+                UnitProfile tmpUnitProfile = systemDataFactory.GetResource<UnitProfile>(defaultPlayerUnitProfile);
                 if (tmpUnitProfile != null) {
-                    defaultPlayerUnitProfile = tmpUnitProfile;
+                    defaultPlayerUnitProfileRef = tmpUnitProfile;
                 } else {
-                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): could not find unit profile " + defaultPlayerUnitProfileName + ".  Check Inspector");
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): could not find unit profile " + defaultPlayerUnitProfile + ".  Check Inspector");
                 }
             } else {
-                Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): defaultPlayerUnitProfileName field is required, but not value was set.  Check Inspector");
+                if (characterSelectionType == CharacterSelectionType.DefaultCharacter) {
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): Character Selection Type is set to Default Player, but the Default Player Unit Profile is empty.  Please set it in the inspector");
+                }
             }
 
             // get default player unit profile
