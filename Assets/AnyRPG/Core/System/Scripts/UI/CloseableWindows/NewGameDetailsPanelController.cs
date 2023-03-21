@@ -224,7 +224,7 @@ namespace AnyRPG {
         }
 
         public void SetFaction(Faction newFaction) {
-            Debug.Log("NewGameDetailsPanelController.SetFaction()");
+            //Debug.Log("NewGameDetailsPanelController.SetFaction()");
 
             if (systemConfigurationManager.NewGameFaction == true) {
                 factionLabel.SetActive(true);
@@ -237,7 +237,7 @@ namespace AnyRPG {
         }
 
         public void SetCharacterRace(CharacterRace newRace) {
-            Debug.Log("NewGameDetailsPanelController.SetCharacterRace()");
+            //Debug.Log("NewGameDetailsPanelController.SetCharacterRace()");
 
             if (systemConfigurationManager.NewGameRace == true) {
                 raceLabel.SetActive(true);

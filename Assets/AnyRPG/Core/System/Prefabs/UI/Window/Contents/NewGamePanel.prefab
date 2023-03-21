@@ -1224,7 +1224,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6117378408458430898}
   m_Layer: 5
-  m_Name: FactionLeftPanel
+  m_Name: FactionLeftPane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1262,7 +1262,7 @@ GameObject:
   m_Component:
   - component: {fileID: 286296093276540477}
   m_Layer: 5
-  m_Name: CharacterListLeftPanel
+  m_Name: CharacterListLeftPane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3258,7 +3258,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3545057580128387883}
   m_Layer: 5
-  m_Name: RaceRightPanel
+  m_Name: RaceRightPane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5010,7 +5010,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7300510077141273603}
   m_Layer: 5
-  m_Name: ClassLeftPanel
+  m_Name: ClassLeftPane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7391,7 +7391,7 @@ GameObject:
   - component: {fileID: 942004617624076340}
   - component: {fileID: 1988568163679203346}
   m_Layer: 5
-  m_Name: DetailsCenterPanel
+  m_Name: DetailsCenterPane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8383,7 +8383,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2314860672431681985}
   m_Layer: 5
-  m_Name: SpecializationRightPanel
+  m_Name: SpecializationRightPane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8947,7 +8947,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7822213938265454535}
   m_Layer: 5
-  m_Name: RaceLeftPanel
+  m_Name: RaceLeftPane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9493,7 +9493,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7319483290030877751}
   m_Layer: 5
-  m_Name: FactionRightPanel
+  m_Name: FactionRightPane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9608,7 +9608,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6467271797415038644}
   m_Layer: 5
-  m_Name: ClassRightPanel
+  m_Name: ClassRightPane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10425,7 +10425,7 @@ GameObject:
   - component: {fileID: 2222718765514475920}
   - component: {fileID: 502963902447971259}
   m_Layer: 5
-  m_Name: DetailsLeftPanel
+  m_Name: DetailsLeftPane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12328,7 +12328,7 @@ GameObject:
   - component: {fileID: 9087035075821975346}
   - component: {fileID: 3553031993845428821}
   m_Layer: 5
-  m_Name: HighlightLine
+  m_Name: CharacterLabelHighlightLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13580,7 +13580,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1642654081087065527}
   m_Layer: 5
-  m_Name: SpecializationLeftPanel
+  m_Name: SpecializationLeftPane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15782,7 +15782,7 @@ GameObject:
   - component: {fileID: 5254292354650580094}
   - component: {fileID: 9015300939075899385}
   m_Layer: 5
-  m_Name: DetailsRightPanel
+  m_Name: DetailsRightPane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19825,8 +19825,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
   captureCamera: 0
-  coloredUIElements:
-  - {fileID: 3553031993845428821}
+  coloredUIElements: []
   addToWindowStack: 0
   userCloseable: 0
   focusFirstButtonOnOpen: 0

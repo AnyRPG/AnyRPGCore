@@ -85,14 +85,18 @@ namespace AnyRPG {
 
             ClearOptionButtons();
 
-            for (int i = 0; i < newGameManager.UnitProfileList.Count; i++) {
+            foreach (UnitProfile unitProfile in newGameManager.UnitProfileList) {
                 //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon(): found valid unit profile: " + unitProfile.DisplayName);
                 GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
                 NewGameUnitButton optionButton = go.GetComponent<NewGameUnitButton>();
                 optionButton.Configure(systemGameManager);
-                optionButton.AddUnitProfile(newGameManager.UnitProfileList[i]);
+                optionButton.AddUnitProfile(unitProfile);
                 optionButtons.Add(optionButton);
                 uINavigationControllers[0].AddActiveButton(optionButton);
+                if (unitProfile == newGameManager.UnitProfile) {
+                    optionButton.HighlightBackground();
+                    selectedUnitButton = optionButton;
+                }
             }
             /*
             if (optionButtons.Count > 0) {

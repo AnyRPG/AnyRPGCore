@@ -51,7 +51,7 @@ GameObject:
   - component: {fileID: 5413231335725734612}
   - component: {fileID: 5044208322982161230}
   m_Layer: 5
-  m_Name: HighlightLine
+  m_Name: AppearanceOptionsHighlightLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 4063541437038441659}
   - component: {fileID: 9028165385050915082}
   m_Layer: 5
-  m_Name: AppearanceCenterPanel
+  m_Name: AppearanceCenterPane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -569,8 +569,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
   captureCamera: 0
-  coloredUIElements:
-  - {fileID: 5044208322982161230}
+  coloredUIElements: []
   addToWindowStack: 0
   userCloseable: 0
   focusFirstButtonOnOpen: 0
@@ -596,7 +595,7 @@ GameObject:
   - component: {fileID: 7864910399711312437}
   - component: {fileID: 4174235606549490185}
   m_Layer: 5
-  m_Name: AppearanceLeftPanel
+  m_Name: AppearanceLeftPane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
