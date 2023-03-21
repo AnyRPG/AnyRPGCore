@@ -145,7 +145,7 @@ namespace AnyRPG {
             }
             if (anyRPGSaveData.unitProfileName == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player Faction is null.  Setting to default");
-                anyRPGSaveData.unitProfileName = systemConfigurationManager.CharacterCreatorUnitProfileName;
+                anyRPGSaveData.unitProfileName = systemConfigurationManager.DefaultUnitProfileName;
             }
             if (anyRPGSaveData.appearanceString == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player UMA Recipe is null.  Setting to empty");
@@ -1323,7 +1323,7 @@ namespace AnyRPG {
 
             ClearSystemManagedCharacterData();
 
-            // added to prevent overwriting existing save file after going to main menu after saving game and starting new game
+            // prevent overwriting existing save file after going to main menu after saving game and starting new game
             currentSaveData = CreateSaveData();
         }
 

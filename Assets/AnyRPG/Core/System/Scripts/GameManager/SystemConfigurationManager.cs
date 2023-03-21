@@ -95,15 +95,16 @@ namespace AnyRPG {
         private string defaultPlayerUnitProfile = string.Empty;
 
         [Tooltip("The options available when the character creator is used")]
+        [FormerlySerializedAs("characterCreatorProfileNames")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(UnitProfile))]
-        private List<string> characterCreatorProfileNames = new List<string>();
+        private List<string> defaultUnitProfiles = new List<string>();
 
         // reference to the default profile
         private UnitProfile defaultPlayerUnitProfileRef = null;
 
         // reference to the default profile
-        private List<UnitProfile> characterCreatorProfiles = new List<UnitProfile>();
+        private List<UnitProfile> defaultUnitProfileList = new List<UnitProfile>();
 
         [Header("Inventory")]
 
@@ -685,27 +686,28 @@ namespace AnyRPG {
         public string DefaultPlayerName { get => defaultPlayerName; set => defaultPlayerName = value; }
         public string DefaultPlayerUnitProfileName { get => defaultPlayerUnitProfile; set => defaultPlayerUnitProfile = value; }
         public UnitProfile DefaultPlayerUnitProfile { get => defaultPlayerUnitProfileRef; set => defaultPlayerUnitProfileRef = value; }
-        public string CharacterCreatorUnitProfileName {
+        public string DefaultUnitProfileName {
             get {
-                if (characterCreatorProfileNames.Count > 0) {
-                    return characterCreatorProfileNames[0];
+                if (defaultUnitProfiles.Count > 0) {
+                    return defaultUnitProfiles[0];
                 }
                 return null;
             }
         }
-        public List<UnitProfile> CharacterCreatorProfiles { get => characterCreatorProfiles; set => characterCreatorProfiles = value; }
+        public UnitProfile DefaultUnitProfile {
+            get {
+                if (defaultUnitProfileList != null && defaultUnitProfileList.Count > 0) {
+                    return defaultUnitProfileList[0];
+                }
+                return null;
+            }
+        }
+        public List<UnitProfile> DefaultUnitProfileList { get => defaultUnitProfileList; set => defaultUnitProfileList = value; }
+
         public string DefaultStartingZone { get => defaultStartingZone; set => defaultStartingZone = value; }
         public SceneNode InitializationSceneNode { get => initializationSceneNode; set => initializationSceneNode = value; }
         public SceneNode MainMenuSceneNode { get => mainMenuSceneNode; set => mainMenuSceneNode = value; }
 
-        public UnitProfile CharacterCreatorUnitProfile {
-            get {
-                if (characterCreatorProfiles != null && characterCreatorProfiles.Count > 0) {
-                    return characterCreatorProfiles[0];
-                }
-                return null;
-            }
-        }
 
         //public bool NewGameUMAAppearance { get => newGameUMAAppearance; set => newGameUMAAppearance = value; }
         //public bool EquipDefaultBackPack { get => equipDefaultBackPack; set => equipDefaultBackPack = value; }
@@ -716,7 +718,7 @@ namespace AnyRPG {
         public string MainMenuScene { get => mainMenuScene; set => mainMenuScene = value; }
         public string InitializationScene { get => initializationScene; set => initializationScene = value; }
         //public MiniMapFallBackMode MiniMapFallBackMode { get => miniMapFallBackMode; set => miniMapFallBackMode = value; }
-        public List<string> CharacterCreatorProfileNames { get => characterCreatorProfileNames; set => characterCreatorProfileNames = value; }
+        public List<string> CharacterCreatorProfileNames { get => defaultUnitProfiles; set => defaultUnitProfiles = value; }
         public bool SyncMovementAnimationSpeed { get => syncMovementAnimationSpeed; set => syncMovementAnimationSpeed = value; }
         public int QuestLogSize { get => questLogSize; set => questLogSize = value; }
         public float MaxTurnSpeed { get => maxTurnSpeed; }
@@ -915,14 +917,14 @@ namespace AnyRPG {
             }
 
             // get default player unit profile
-            if (characterCreatorProfileNames != null) {
-                foreach (string characterCreatorProfileName in characterCreatorProfileNames) {
+            if (defaultUnitProfiles != null) {
+                foreach (string characterCreatorProfileName in defaultUnitProfiles) {
                     if (characterCreatorProfileName != null && characterCreatorProfileName != string.Empty) {
                         UnitProfile tmpUnitProfile = systemDataFactory.GetResource<UnitProfile>(characterCreatorProfileName);
                         if (tmpUnitProfile != null) {
-                            characterCreatorProfiles.Add(tmpUnitProfile);
+                            defaultUnitProfileList.Add(tmpUnitProfile);
                         } else {
-                            Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): could not find unit profile " + characterCreatorProfileName + ".  Check Inspector");
+                            Debug.LogError($"SystemConfigurationManager.SetupScriptableObjects(): could not find unit profile {characterCreatorProfileName}.  Check Inspector");
                         }
                     } else {
                         Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): defaultPlayerUnitProfileName field is required, but not value was set.  Check Inspector");

@@ -218,9 +218,7 @@ MonoBehaviour:
     - rid: 8385465484531990533
       type: {class: SwappableMeshModelProvider, ns: AnyRPG, asm: Assembly-CSharp}
       data:
-        appearancePanel: {fileID: 4872326194738338516, guid: bf0d9aada2b1b2345877c94ecb4c57f6,
-          type: 3}
-        useInlineOptions: 1
+        useInlineOptions: 0
         inlineOptions:
           meshGroups:
           - groupName: Head
@@ -348,11 +346,11 @@ MonoBehaviour:
               meshName: human_male_light_boots_2
           groupDefaults:
           - groupName: Head
-            meshName: human_male_head_default
+            optionName: 
           - groupName: Armor
-            meshName: human_male_body_default
+            optionName: 
           - groupName: Gloves
-            meshName: human_male_hands_default
+            optionName: 
           - groupName: Boots
-            meshName: human_male_feet_default
-        sharedOptions: 
+            optionName: 
+        sharedOptions: Default Male Swappable Mesh Model

@@ -13,6 +13,7 @@ namespace AnyRPG {
 
         [Tooltip("If this list is empty, the current model will be edited.  If the list has items, model will be forced to be one of the models below.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitProfile))]
         private List<string> unitProfiles = new List<string>();
 
         private List<UnitProfile> unitProfileList = new List<UnitProfile>();

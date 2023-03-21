@@ -143,7 +143,19 @@ namespace AnyRPG {
                     }
                 }
             }
-            
+
+            raceLabel.SetActive(false);
+            raceButton.gameObject.SetActive(false);
+            if (systemConfigurationManager.NewGameRace == true) {
+                foreach (CharacterRace characterRace in systemDataFactory.GetResourceList<CharacterRace>()) {
+                    if (characterRace.NewGameOption == true) {
+                        raceLabel.SetActive(true);
+                        raceButton.gameObject.SetActive(true);
+                        break;
+                    }
+                }
+            }
+
             characterClassLabel.SetActive(false);
             characterClassButton.gameObject.SetActive(false);
             if (systemConfigurationManager.NewGameClass == true) {
@@ -212,7 +224,8 @@ namespace AnyRPG {
         }
 
         public void SetFaction(Faction newFaction) {
-            //if (newfaction != null && systemConfigurationManager.NewGameFaction == true) {
+            Debug.Log("NewGameDetailsPanelController.SetFaction()");
+
             if (systemConfigurationManager.NewGameFaction == true) {
                 factionLabel.SetActive(true);
                 factionButton.gameObject.SetActive(true);
@@ -224,7 +237,8 @@ namespace AnyRPG {
         }
 
         public void SetCharacterRace(CharacterRace newRace) {
-            //if (newfaction != null && systemConfigurationManager.NewGameFaction == true) {
+            Debug.Log("NewGameDetailsPanelController.SetCharacterRace()");
+
             if (systemConfigurationManager.NewGameRace == true) {
                 raceLabel.SetActive(true);
                 raceButton.gameObject.SetActive(true);

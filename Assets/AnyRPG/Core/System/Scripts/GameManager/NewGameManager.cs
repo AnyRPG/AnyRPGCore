@@ -50,7 +50,7 @@ namespace AnyRPG {
 
         private CapabilityConsumerProcessor capabilityConsumerProcessor = null;
 
-        private AnyRPGSaveData saveData;
+        private AnyRPGSaveData saveData = null;
 
         //private Dictionary<EquipmentSlotType, Equipment> equipmentList = new Dictionary<EquipmentSlotType, Equipment>();
         private EquipmentManager equipmentManager = null;
@@ -122,18 +122,18 @@ namespace AnyRPG {
             classSpecialization = null;
             faction = null;
             capabilityConsumerProcessor = null;
+            saveData = saveManager.CreateSaveData();
 
         }
 
         public void SetupSaveData() {
             //Debug.Log("NewGameManager.SetupSaveData()");
 
-            saveData = saveManager.CreateSaveData();
             SetPlayerName(defaultPlayerName);
             saveData.PlayerLevel = 1;
             saveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
-            unitProfile = systemConfigurationManager.CharacterCreatorUnitProfile;
-            saveData.unitProfileName = systemConfigurationManager.CharacterCreatorUnitProfileName;
+            unitProfile = systemConfigurationManager.DefaultUnitProfile;
+            saveData.unitProfileName = systemConfigurationManager.DefaultUnitProfileName;
 
             if (systemConfigurationManager.NewGameFaction == true) {
                 UpdateFactionList();
@@ -311,7 +311,7 @@ namespace AnyRPG {
             if (systemConfigurationManager.DefaultPlayerUnitProfile != null) {
                 unitProfileList.Add(systemConfigurationManager.DefaultPlayerUnitProfile);
             }
-            foreach (UnitProfile unitProfile in systemConfigurationManager.CharacterCreatorProfiles) {
+            foreach (UnitProfile unitProfile in systemConfigurationManager.DefaultUnitProfileList) {
                 unitProfileList.Add(unitProfile);
             }
         }
