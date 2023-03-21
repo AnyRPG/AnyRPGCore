@@ -382,8 +382,8 @@ MonoBehaviour:
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 3765188348631034981}
   selectedButtonColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
-  overrideNormalColor: 0
-  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.32156864}
+  overrideNormalColor: 1
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
   overrideHighlightedColor: 0
   highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   overridePressedColor: 0
@@ -1211,8 +1211,8 @@ MonoBehaviour:
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 6317207218028164599}
   selectedButtonColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
-  overrideNormalColor: 0
-  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.32156864}
+  overrideNormalColor: 1
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
   overrideHighlightedColor: 0
   highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   overridePressedColor: 0
@@ -1714,12 +1714,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 2
-    m_Right: 2
-    m_Top: 2
-    m_Bottom: 2
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 4
+  m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
@@ -2202,8 +2202,8 @@ MonoBehaviour:
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 6657104691925574427}
   selectedButtonColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
-  overrideNormalColor: 0
-  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.32156864}
+  overrideNormalColor: 1
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
   overrideHighlightedColor: 0
   highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   overridePressedColor: 0
@@ -3043,12 +3043,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 2
-    m_Right: 2
-    m_Top: 2
-    m_Bottom: 2
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 4
+  m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
@@ -3167,8 +3167,8 @@ MonoBehaviour:
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 5337077826543137530}
   selectedButtonColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
-  overrideNormalColor: 0
-  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.32156864}
+  overrideNormalColor: 1
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
   overrideHighlightedColor: 0
   highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   overridePressedColor: 0
@@ -3587,12 +3587,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 2
-    m_Right: 2
-    m_Top: 2
-    m_Bottom: 2
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 4
+  m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
@@ -5497,12 +5497,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 2
-    m_Right: 2
-    m_Top: 2
-    m_Bottom: 2
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 4
+  m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
@@ -6855,12 +6855,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 2
-    m_Right: 2
-    m_Top: 2
-    m_Bottom: 2
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 4
+  m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1

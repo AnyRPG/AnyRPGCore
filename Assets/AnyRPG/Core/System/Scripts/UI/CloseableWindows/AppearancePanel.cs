@@ -94,7 +94,7 @@ namespace AnyRPG {
 
             InitializeGenderButtons();
 
-            GetUnitModelController();
+            //GetUnitModelController();
         }
 
         public virtual void GetUnitModelController() {

@@ -120,6 +120,7 @@ namespace AnyRPG {
         // hold data so changes are not reset on switch between male and female
         protected string maleRecipe = string.Empty;
         protected string femaleRecipe = string.Empty;
+        protected string savedAppearanceString = string.Empty;
 
         protected Dictionary<string, List<UMATextRecipe>> allRecipes = new Dictionary<string, List<UMATextRecipe>>();
         protected List<UMATextRecipe> hairRecipes = new List<UMATextRecipe>();
@@ -290,6 +291,12 @@ namespace AnyRPG {
             umaModelOptions = umaModelController.UMAModelOptions;
         }
 
+        public override void HandleUnitCreated() {
+            base.HandleUnitCreated();
+
+            umaModelController.SetInitialSavedAppearance(savedAppearanceString);
+        }
+
         /*
         public override void HandleModelCreated() {
             Debug.Log("UMAAppearanceEditorPanelController.HandleModelCreated()");
@@ -386,6 +393,16 @@ namespace AnyRPG {
             uIManager.characterCreatorWindow.CloseWindow();
         }
 
+        public override void ReceiveClosedWindowNotification() {
+            base.ReceiveClosedWindowNotification();
+            savedAppearanceString = string.Empty;
+        }
+
+        public override void HidePanel() {
+            base.HidePanel();
+            savedAppearanceString = string.Empty;
+        }
+
         private bool HasSharedColor(string colorName) {
             foreach (DynamicCharacterAvatar.ColorValue colorValue in dynamicCharacterAvatar.characterColors.Colors) {
                 if (colorValue.Name == colorName) {
@@ -458,8 +475,10 @@ namespace AnyRPG {
         public override void ProcessSetMale() {
             //Debug.Log("CharacterCreatorPanel.ProcessSetMale()");
 
+            savedAppearanceString = maleRecipe;
             base.ProcessSetMale();
 
+            /*
             if (maleRecipe != string.Empty) {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): maleRecipe != string.Empty");
                 //dynamicCharacterAvatar.ChangeRace("HumanMale");
@@ -472,13 +491,16 @@ namespace AnyRPG {
                 umaModelController.PreloadEquipmentModels(true);
                 umaModelController.ReloadAvatarDefinition();
             }
+            */
         }
 
         public override void ProcessSetFemale() {
             //Debug.Log("UMAAppearancePanel.ProcessSetFemale()");
 
+            savedAppearanceString = femaleRecipe;
             base.ProcessSetFemale();
 
+            /*
             if (femaleRecipe != string.Empty) {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): femaleRecipe != string.Empty");
                 //dynamicCharacterAvatar.ChangeRace("HumanFemale");
@@ -491,6 +513,7 @@ namespace AnyRPG {
                 umaModelController.PreloadEquipmentModels(true);
                 umaModelController.ReloadAvatarDefinition();
             }
+            */
         }
 
         public void CloseOptionsAreas() {
@@ -669,7 +692,7 @@ namespace AnyRPG {
         }
 
         private UMAOptionChoiceButton AddOptionListButton(UINavigationListVertical listOptionsArea, string groupName, Sprite optionImage, string displayName, string optionChoice) {
-            Debug.Log($"SwappableMeshAppearancePanelController.AddOptionListButton({groupName}, {displayName}, {optionChoice})");
+            //Debug.Log($"SwappableMeshAppearancePanelController.AddOptionListButton({groupName}, {displayName}, {optionChoice})");
 
             UMAOptionChoiceButton optionChoiceButton = null;
             if (optionImage != null) {
@@ -683,7 +706,7 @@ namespace AnyRPG {
                 listOptionsArea.AddActiveButton(optionChoiceButton);
 
                 // highlight the button if it is already the selected choice for the group
-                Debug.Log($"wardrobe item: {dynamicCharacterAvatar.GetWardrobeItemName(groupName)} recipeName: {GetRecipeName(optionChoice, allRecipes[groupName])}");
+                //Debug.Log($"wardrobe item: {dynamicCharacterAvatar.GetWardrobeItemName(groupName)} recipeName: {GetRecipeName(optionChoice, allRecipes[groupName])}");
                 if (dynamicCharacterAvatar.GetWardrobeItemName(groupName) == GetRecipeName(optionChoice, allRecipes[groupName])) {
                     HighlightButton(groupName, optionChoiceButton);
                 }
@@ -692,9 +715,9 @@ namespace AnyRPG {
         }
 
         private void HighlightButton(string groupName, UMAOptionChoiceButton optionChoiceButton) {
-            Debug.Log($"UMAAppearanceEditorPanel.HighlightButton({groupName})");
+            //Debug.Log($"UMAAppearanceEditorPanel.HighlightButton({groupName})");
 
-            Debug.Log($"UMAAppearanceEditorPanel.HighlightButton({groupName}) wardrobe item: {dynamicCharacterAvatar.GetWardrobeItemName(groupName)}");
+            //Debug.Log($"UMAAppearanceEditorPanel.HighlightButton({groupName}) wardrobe item: {dynamicCharacterAvatar.GetWardrobeItemName(groupName)}");
 
             if (highlightedButtons.ContainsKey(groupName) == false) {
                 highlightedButtons.Add(groupName, null);

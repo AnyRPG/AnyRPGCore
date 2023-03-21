@@ -59,7 +59,7 @@ namespace AnyRPG {
         }
 
         private void EquipItemModels(EquipmentSlotProfile equipmentSlotProfile, Equipment equipment) {
-            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.EquipItemModels(" + equipmentSlotProfile.DisplayName + ", " + (equipment == null ? "null" : equipment.DisplayName) +")");
+            //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.EquipItemModels(" + equipmentSlotProfile.DisplayName + ", " + (equipment == null ? "null" : equipment.DisplayName) +")");
 
             SpawnEquipmentObjects(equipmentSlotProfile, equipment);
 
@@ -134,7 +134,7 @@ namespace AnyRPG {
                     
                     Transform targetBone = unitController.gameObject.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
                     if (targetBone != null) {
-                        //Debug.Log(unitController.gameObject.name + ".MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.name + " has a physical prefab. targetbone is not null: equipSlot: " + newEquipment.EquipmentSlotType.DisplayName);
+                        //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.name + " has a physical prefab. targetbone is not null: equipSlot: " + newEquipment.EquipmentSlotType.DisplayName);
                         
                         GameObject newEquipmentPrefab = objectPooler.GetPooledObject(attachmentNode.HoldableObject.Prefab, targetBone);
                         holdableObjects.Add(attachmentNode, newEquipmentPrefab);
@@ -342,7 +342,7 @@ namespace AnyRPG {
         }
 
         public void RebuildModelAppearance() {
-            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.RebuildModelAppearance()");
+            //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.RebuildModelAppearance()");
 
             if (unitModelController.IsBuilding() == true) {
                 // let model appearance get built first (in case of UMA without bones being ready)
@@ -357,7 +357,7 @@ namespace AnyRPG {
         }
 
         private void RebuildSlotAppearance(EquipmentSlotProfile equipmentSlotProfile, Equipment equipment) {
-            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.RebuildSlotAppearance(" + equipmentSlotProfile.ResourceName + ", " + (equipment == null ? "null" : equipment.ResourceName) + ")");
+            //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.RebuildSlotAppearance(" + equipmentSlotProfile.ResourceName + ", " + (equipment == null ? "null" : equipment.ResourceName) + ")");
 
             if (equipment == equippedEquipment[equipmentSlotProfile]) {
                 // equipment spawned is the same as what is the character equipment manager, nothing to do
@@ -372,7 +372,7 @@ namespace AnyRPG {
         }
 
         private void RemoveEquipmentObjects() {
-            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.RemoveEquipmentObjects()");
+            //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.RemoveEquipmentObjects()");
             
             List<EquipmentSlotProfile> equipmentSlots = new List<EquipmentSlotProfile>();
             equipmentSlots.AddRange(equippedEquipment.Keys);
@@ -399,7 +399,7 @@ namespace AnyRPG {
         }
 
         public void DespawnModel() {
-            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.DespawnModel()");
+            //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.DespawnModel()");
 
             RemoveEquipmentObjects();
         }

@@ -101,6 +101,12 @@ namespace AnyRPG {
             }
         }
 
+        public void SetInitialSavedAppearance(string savedAppearance) {
+            if (savedAppearance != string.Empty) {
+                initialAppearance = savedAppearance;
+            }
+        }
+
         public void InitializeModel() {
             //Debug.Log($"{unitController.gameObject.name}.UMAModelController.InitializeModel()");
 
