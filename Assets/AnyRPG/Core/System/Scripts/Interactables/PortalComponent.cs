@@ -22,11 +22,11 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            //Debug.Log(gameObject.name + ".PortalInteractable.Interact()");
+            //Debug.Log($"{gameObject.name}.PortalInteractable.Interact()");
             base.Interact(source, optionIndex);
-            //Debug.Log(gameObject.name + ".PortalInteractable.Interact(): about to close interaction window");
+            //Debug.Log($"{gameObject.name}.PortalInteractable.Interact(): about to close interaction window");
             uIManager.interactionWindow.CloseWindow();
-            //Debug.Log(gameObject.name + ".PortalInteractable.Interact(): window should now be closed!!!!!!!!!!!!!!!!!");
+            //Debug.Log($"{gameObject.name}.PortalInteractable.Interact(): window should now be closed!!!!!!!!!!!!!!!!!");
             if (Props.OverrideSpawnDirection == true) {
                 levelManager.SetSpawnRotationOverride(Props.SpawnForwardDirection);
             }
@@ -60,7 +60,7 @@ namespace AnyRPG {
         }
 
         public override int GetCurrentOptionCount() {
-            //Debug.Log(gameObject.name + ".PortalInteractable.GetCurrentOptionCount()");
+            //Debug.Log($"{gameObject.name}.PortalInteractable.GetCurrentOptionCount()");
             return GetValidOptionCount();
         }
 

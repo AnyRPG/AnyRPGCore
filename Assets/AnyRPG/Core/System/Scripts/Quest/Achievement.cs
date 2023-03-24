@@ -31,7 +31,7 @@ namespace AnyRPG {
         }
 
         protected override void ResetObjectiveSaveData() {
-            saveManager.ResetAchievementObjectiveSaveData(DisplayName);
+            saveManager.ResetAchievementObjectiveSaveData(ResourceName);
         }
 
         protected override QuestSaveData GetSaveData() {
@@ -39,11 +39,11 @@ namespace AnyRPG {
         }
 
         protected override void SetSaveData(string QuestName, QuestSaveData questSaveData) {
-            saveManager.SetAchievementSaveData(DisplayName, questSaveData);
+            saveManager.SetAchievementSaveData(ResourceName, questSaveData);
         }
 
         protected override bool HasQuest() {
-            return achievementLog.HasAchievement(DisplayName);
+            return achievementLog.HasAchievement(ResourceName);
         }
 
     }

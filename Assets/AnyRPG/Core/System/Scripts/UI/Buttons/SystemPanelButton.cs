@@ -35,6 +35,7 @@ namespace AnyRPG {
             }
         }
 
+        public string ResourceName { get => optionName; }
         public string DisplayName { get => optionName; }
         public string Description { get => description; }
 

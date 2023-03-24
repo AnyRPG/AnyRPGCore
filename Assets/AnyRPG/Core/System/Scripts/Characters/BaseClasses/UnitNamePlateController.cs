@@ -73,9 +73,9 @@ namespace AnyRPG {
 
         /*
         public override void InitializeNamePlate() {
-            //Debug.Log(unitController.gameObject.name + ".UnitNamePlateController.InitializeNamePlate()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitNamePlateController.InitializeNamePlate()");
             if (SuppressNamePlate == true) {
-                //Debug.Log(unitController.gameObject.name + ".UnitNamePlateController.InitializeNamePlate(): namePlate suppressed.  Returning.");
+                //Debug.Log($"{unitController.gameObject.name}.UnitNamePlateController.InitializeNamePlate(): namePlate suppressed.  Returning.");
                 return;
             }
             if (unitController != null) {
@@ -89,7 +89,7 @@ namespace AnyRPG {
                 
                 BroadcastInitializeNamePlate();
             } else {
-                //Debug.Log(gameObject.name + ".CharacterUnit.InitializeNamePlate(): Character is null or start has not been run yet. exiting.");
+                //Debug.Log($"{gameObject.name}.CharacterUnit.InitializeNamePlate(): Character is null or start has not been run yet. exiting.");
                 return;
             }
         }
@@ -109,7 +109,7 @@ namespace AnyRPG {
         }
 
         public override void SetupNamePlate() {
-            //Debug.Log(unitController.gameObject.name + ".UnitNamePlateController.SetupNamePlate()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitNamePlateController.SetupNamePlate()");
             // intentionally not calling base because it disables the healthbar
             if (HasHealth() == true) {
                 namePlate.ProcessHealthChanged(MaxHealth(), CurrentHealth());
@@ -133,7 +133,7 @@ namespace AnyRPG {
         }
 
         public void HandleResourceAmountChanged(PowerResource powerResource, int maxAmount, int currentAmount) {
-            //Debug.Log(unitController.gameObject.name + ".UnitNamePlateController.HandleResourceAmountChanged()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitNamePlateController.HandleResourceAmountChanged()");
             namePlate.HandleResourceAmountChanged(powerResource, maxAmount, currentAmount);
         }
 
@@ -164,7 +164,7 @@ namespace AnyRPG {
         }
 
         public override int MaxHealth() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.MaxHealth()");
+            //Debug.Log($"{gameObject.name}.CharacterUnit.MaxHealth()");
             if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
                 return unitController.CharacterUnit.BaseCharacter.CharacterStats.MaxPrimaryResource;
             }
@@ -172,7 +172,7 @@ namespace AnyRPG {
         }
 
         public override bool HasPrimaryResource() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
+            //Debug.Log($"{gameObject.name}.CharacterUnit.HasHealth(): return true");
             if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
                 return unitController.CharacterUnit.BaseCharacter.CharacterStats.HasPrimaryResource;
             }
@@ -180,7 +180,7 @@ namespace AnyRPG {
         }
 
         public override bool HasSecondaryResource() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
+            //Debug.Log($"{gameObject.name}.CharacterUnit.HasHealth(): return true");
             if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
                 return unitController.CharacterUnit.BaseCharacter.CharacterStats.HasSecondaryResource;
             }
@@ -188,7 +188,7 @@ namespace AnyRPG {
         }
 
         public override bool HasHealth() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
+            //Debug.Log($"{gameObject.name}.CharacterUnit.HasHealth(): return true");
             if (unitController == null) {
                 Debug.Log("UnitNamePlateController.HasHealth(): unitcontroller is null");
             }

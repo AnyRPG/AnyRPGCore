@@ -66,7 +66,7 @@ namespace AnyRPG {
                 if (tmpRecipe != null) {
                     recipe = tmpRecipe;
                 } else {
-                    Debug.LogError("RecipeItem.SetupScriptableObjects(): Could not find recipe : " + recipeName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("RecipeItem.SetupScriptableObjects(): Could not find recipe : " + recipeName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 

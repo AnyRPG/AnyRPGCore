@@ -97,7 +97,7 @@ namespace AnyRPG {
                 //Debug.Log(source.name + " can interact with us!");
                 return true;
             }
-            //Debug.Log(gameObject.name + ".CharacterUnit.CanInteract: " + source.name + " was unable to interact with (attack) us!");
+            //Debug.Log($"{gameObject.name}.CharacterUnit.CanInteract: " + source.name + " was unable to interact with (attack) us!");
             return false;
         }
 
@@ -119,7 +119,7 @@ namespace AnyRPG {
         }
 
         public override void StopInteract() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.StopInteract()");
+            //Debug.Log($"{gameObject.name}.CharacterUnit.StopInteract()");
             base.StopInteract();
         }
 
@@ -147,7 +147,7 @@ namespace AnyRPG {
         }
 
         public override bool SetMiniMapText(TextMeshProUGUI text) {
-            //Debug.Log(gameObject.name + ".CharacterUnit.SetMiniMapText()");
+            //Debug.Log($"{gameObject.name}.CharacterUnit.SetMiniMapText()");
             if (!base.SetMiniMapText(text)) {
                 text.text = "";
                 text.color = new Color32(0, 0, 0, 0);
@@ -225,12 +225,12 @@ namespace AnyRPG {
 
         /*
         public override string GetDescription() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.GetDescription()");
+            //Debug.Log($"{gameObject.name}.CharacterUnit.GetDescription()");
             if (interactionPanelTitle == null || interactionPanelTitle == string.Empty) {
-                //Debug.Log(gameObject.name + ".CharacterUnit.GetDescription(): returning " + MyDisplayName);
+                //Debug.Log($"{gameObject.name}.CharacterUnit.GetDescription(): returning " + MyDisplayName);
                 return DisplayName;
             } else {
-                //Debug.Log(gameObject.name + ".CharacterUnit.GetDescription(): returning " + interactionPanelTitle);
+                //Debug.Log($"{gameObject.name}.CharacterUnit.GetDescription(): returning " + interactionPanelTitle);
                 return interactionPanelTitle;
             }
         }
@@ -238,12 +238,12 @@ namespace AnyRPG {
 
         // CHARACTER UNIT ALIVE IS ALWAYS VALID AND CURRENT TO ALLOW ATTACKS
         public override int GetValidOptionCount() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.GetValidOptionCount()");
+            //Debug.Log($"{gameObject.name}.CharacterUnit.GetValidOptionCount()");
             return (BaseCharacter.CharacterStats.IsAlive == true ? 1 : 0);
         }
 
         public override int GetCurrentOptionCount() {
-            //Debug.Log(gameObject.name + ".CharacterUnit.GetCurrentOptionCount()");
+            //Debug.Log($"{gameObject.name}.CharacterUnit.GetCurrentOptionCount()");
             return GetValidOptionCount();
         }
 

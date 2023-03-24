@@ -91,7 +91,7 @@ namespace AnyRPG {
 
 
         public virtual void UpdatePrerequisites(bool notify = true) {
-            //Debug.Log(gameObject.name + ".Dialog.UpdatePrerequisites()");
+            //Debug.Log($"{gameObject.name}.Dialog.UpdatePrerequisites()");
             if (prerequisiteConditions != null && prerequisiteConditions.Count > 0) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
@@ -155,7 +155,7 @@ namespace AnyRPG {
                         }
                     }
                 } else {
-                    Debug.LogError("Dialog.SetupScriptableObjects(): Could not find audioProfile " + audioProfileName + " while initializing " + DisplayName);
+                    Debug.LogError("Dialog.SetupScriptableObjects(): Could not find audioProfile " + audioProfileName + " while initializing " + ResourceName);
                 }
             }
         }

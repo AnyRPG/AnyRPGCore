@@ -289,10 +289,10 @@ namespace AnyRPG {
                         if (abilityEffect != null) {
                             onHitEffectList.Add(abilityEffect.AbilityEffectProperties);
                         } else {
-                            Debug.LogError("Weapon.SetupScriptableObjects(): Could not find ability effect : " + onHitEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                            Debug.LogError("Weapon.SetupScriptableObjects(): Could not find ability effect : " + onHitEffectName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                         }
                     } else {
-                        Debug.LogError("Weapon.SetupScriptableObjects(): null or empty on hit effect found while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("Weapon.SetupScriptableObjects(): null or empty on hit effect found while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -304,10 +304,10 @@ namespace AnyRPG {
                         if (abilityEffect != null) {
                             defaultHitEffectList.Add(abilityEffect.AbilityEffectProperties);
                         } else {
-                            Debug.LogError("Weapon.SetupScriptableObjects(): Could not find ability effect : " + defaultHitEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                            Debug.LogError("Weapon.SetupScriptableObjects(): Could not find ability effect : " + defaultHitEffectName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                         }
                     } else {
-                        Debug.LogError("Weapon.SetupScriptableObjects(): null or empty default hit effect found while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("Weapon.SetupScriptableObjects(): null or empty default hit effect found while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -319,7 +319,7 @@ namespace AnyRPG {
                 if (tmpAnimationProfile != null) {
                     animationProfile = tmpAnimationProfile;
                 } else {
-                    Debug.LogError("Weapon.SetupScriptableObjects(): Could not find attack animation profile : " + animationProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("Weapon.SetupScriptableObjects(): Could not find attack animation profile : " + animationProfileName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -328,7 +328,7 @@ namespace AnyRPG {
                 if (audioProfile != null) {
                     defaultHitSoundEffects = audioProfile.AudioClips;
                 } else {
-                    Debug.LogError("Weapon.SetupScriptableObjects(): Could not find audio profile : " + defaultHitAudioProfile + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("Weapon.SetupScriptableObjects(): Could not find audio profile : " + defaultHitAudioProfile + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -337,14 +337,14 @@ namespace AnyRPG {
                 if (tmpWeaponSkill != null) {
                     weaponSkill = tmpWeaponSkill;
                 } else {
-                    Debug.LogError("Weapon.SetupScriptableObjects(): Could not find weapon skill : " + weaponType + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("Weapon.SetupScriptableObjects(): Could not find weapon skill : " + weaponType + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
             if (abilityObjectList != null) {
                 foreach (AbilityAttachmentNode abilityAttachmentNode in abilityObjectList) {
                     if (abilityAttachmentNode != null) {
-                        abilityAttachmentNode.SetupScriptableObjects(DisplayName, systemGameManager);
+                        abilityAttachmentNode.SetupScriptableObjects(ResourceName, systemGameManager);
                     }
                 }
             }
@@ -352,7 +352,7 @@ namespace AnyRPG {
             if (abilityAnimationObjectList != null) {
                 foreach (AbilityAttachmentNode abilityAttachmentNode in abilityAnimationObjectList) {
                     if (abilityAttachmentNode != null) {
-                        abilityAttachmentNode.SetupScriptableObjects(DisplayName, systemGameManager);
+                        abilityAttachmentNode.SetupScriptableObjects(ResourceName, systemGameManager);
                     }
                 }
             }

@@ -39,7 +39,7 @@ namespace AnyRPG {
         }
 
         public override void Select() {
-            //Debug.Log(gameObject.name + ".QuestScript.Select()");
+            //Debug.Log($"{gameObject.name}.QuestScript.Select()");
 
             RawSelect();
 

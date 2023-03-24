@@ -45,7 +45,7 @@ namespace AnyRPG {
                     if (tmpEquipment != null) {
                         equipmentList.Add(tmpEquipment);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipment : " + equipmentName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipment : " + equipmentName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -61,7 +61,7 @@ namespace AnyRPG {
                         if (tmpStatusEffect != null) {
                             traitList.Add(tmpStatusEffect.AbilityEffectProperties as StatusEffectProperties);
                         } else {
-                            Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find status effect : " + traitName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                            Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find status effect : " + traitName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                         }
                     }
                 }

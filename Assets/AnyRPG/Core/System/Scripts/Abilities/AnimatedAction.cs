@@ -68,7 +68,7 @@ namespace AnyRPG {
         }
 
         public IUseable GetFactoryUseable() {
-            return systemDataFactory.GetResource<BaseAbility>(DisplayName).AbilityProperties;
+            return systemDataFactory.GetResource<BaseAbility>(ResourceName).AbilityProperties;
         }
 
         public virtual void UpdateChargeCount(ActionButton actionButton) {
@@ -186,7 +186,7 @@ namespace AnyRPG {
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
 
-            actionProperties.SetupScriptableObjects(systemGameManager, DisplayName);
+            actionProperties.SetupScriptableObjects(systemGameManager, ResourceName);
 
         }
 

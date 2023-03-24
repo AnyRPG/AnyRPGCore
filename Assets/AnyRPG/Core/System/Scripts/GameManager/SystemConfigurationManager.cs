@@ -47,25 +47,35 @@ namespace AnyRPG {
         [SerializeField]
         private string defaultPlayerName = "New Player";
 
-        [Tooltip("If false, launch straight into a game with no character configuration")]
+        [Tooltip("If false, launch straight into a game with no character configuration.")]
         [SerializeField]
         private bool useNewGameWindow = true;
+
+        [Tooltip("When the new game window is used, what method will be used to select a character.  DefaultCharacter = only the default character will be available. CharacterList = The faction will control the list. RaceAndGender = A Male or Female character can be chosen after the race is selected.")]
+        [SerializeField]
+        private CharacterSelectionType characterSelectionType = CharacterSelectionType.DefaultCharacter;
 
         [Tooltip("If the new game window is used, show the appearance tab")]
         [SerializeField]
         private bool newGameAppearance = true;
 
+        /*
         [Tooltip("If the appearance tab is used, show the UMA version of the character customizer")]
         [SerializeField]
         private bool newGameUMAAppearance = true;
-
-        [Tooltip("If the new game window is used, show the class tab")]
-        [SerializeField]
-        private bool newGameClass = true;
+        */
 
         [Tooltip("If the new game window is used, show the faction tab")]
         [SerializeField]
         private bool newGameFaction = true;
+
+        [Tooltip("If the new game window is used, show the race tab")]
+        [SerializeField]
+        private bool newGameRace = true;
+
+        [Tooltip("If the new game window is used, show the class tab")]
+        [SerializeField]
+        private bool newGameClass = true;
 
         [Tooltip("If the new game window is used, show the specialiation tab")]
         [SerializeField]
@@ -79,30 +89,22 @@ namespace AnyRPG {
         private AudioProfile newGameAudioProfile = null;
 
         [Tooltip("If the character creator is not used, this unit will be the default player unit. Usually a non UMA mecanim Unit or pre-configured UMA unit.")]
+        [FormerlySerializedAs("defaultPlayerUnitProfileName")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(UnitProfile))]
-        private string defaultPlayerUnitProfileName = string.Empty;
-
-        [Tooltip("If true, the default profiles will always be shown, in addition to any allowed by faction (if used)")]
-        [SerializeField]
-        private bool alwaysShowDefaultProfiles = true;
+        private string defaultPlayerUnitProfile = string.Empty;
 
         [Tooltip("The options available when the character creator is used")]
+        [FormerlySerializedAs("characterCreatorProfileNames")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(UnitProfile))]
-        private List<string> characterCreatorProfileNames = new List<string>();
+        private List<string> defaultUnitProfiles = new List<string>();
 
         // reference to the default profile
-        private UnitProfile defaultPlayerUnitProfile = null;
+        private UnitProfile defaultPlayerUnitProfileRef = null;
 
         // reference to the default profile
-        private List<UnitProfile> characterCreatorProfiles = new List<UnitProfile>();
-
-        [Header("In Game Character Creator")]
-
-        [Tooltip("If true, when the character creator is used in-game, the character will be forced to use the first character creator profile, rather than their current model.")]
-        [SerializeField]
-        private bool useFirstCreatorProfile = false;
+        private List<UnitProfile> defaultUnitProfileList = new List<UnitProfile>();
 
         [Header("Inventory")]
 
@@ -378,6 +380,10 @@ namespace AnyRPG {
         [Tooltip("Player units will automatically be set to this layer.")]
         [SerializeField]
         private string defaultPlayerUnitLayer = "Player";
+
+        [Tooltip("Character units will automatically be set to this layer so they can respond to AOE / looting and other things that filter by this layer.")]
+        [SerializeField]
+        private string defaultPreviewUnitLayer = "UnitPreview";
 
         [Header("SYSTEM ABILITIES")]
 
@@ -674,45 +680,45 @@ namespace AnyRPG {
         public bool NewGameAppearance { get => newGameAppearance; set => newGameAppearance = value; }
         public bool NewGameClass { get => newGameClass; set => newGameClass = value; }
         public bool NewGameFaction { get => newGameFaction; set => newGameFaction = value; }
+        public bool NewGameRace { get => newGameRace; set => newGameRace = value; }
         public bool NewGameSpecialization { get => newGameSpecialization; set => newGameSpecialization = value; }
         public AudioProfile NewGameAudioProfile { get => newGameAudioProfile; set => newGameAudioProfile = value; }
         public string DefaultPlayerName { get => defaultPlayerName; set => defaultPlayerName = value; }
-        public string DefaultPlayerUnitProfileName { get => defaultPlayerUnitProfileName; set => defaultPlayerUnitProfileName = value; }
-        public UnitProfile DefaultPlayerUnitProfile { get => defaultPlayerUnitProfile; set => defaultPlayerUnitProfile = value; }
-        public string CharacterCreatorUnitProfileName {
+        public string DefaultPlayerUnitProfileName { get => defaultPlayerUnitProfile; set => defaultPlayerUnitProfile = value; }
+        public UnitProfile DefaultPlayerUnitProfile { get => defaultPlayerUnitProfileRef; set => defaultPlayerUnitProfileRef = value; }
+        public string DefaultUnitProfileName {
             get {
-                if (characterCreatorProfileNames.Count > 0) {
-                    return characterCreatorProfileNames[0];
+                if (defaultUnitProfiles.Count > 0) {
+                    return defaultUnitProfiles[0];
                 }
                 return null;
             }
         }
-        public List<UnitProfile> CharacterCreatorProfiles { get => characterCreatorProfiles; set => characterCreatorProfiles = value; }
+        public UnitProfile DefaultUnitProfile {
+            get {
+                if (defaultUnitProfileList != null && defaultUnitProfileList.Count > 0) {
+                    return defaultUnitProfileList[0];
+                }
+                return null;
+            }
+        }
+        public List<UnitProfile> DefaultUnitProfileList { get => defaultUnitProfileList; set => defaultUnitProfileList = value; }
+
         public string DefaultStartingZone { get => defaultStartingZone; set => defaultStartingZone = value; }
         public SceneNode InitializationSceneNode { get => initializationSceneNode; set => initializationSceneNode = value; }
         public SceneNode MainMenuSceneNode { get => mainMenuSceneNode; set => mainMenuSceneNode = value; }
 
-        public UnitProfile CharacterCreatorUnitProfile {
-            get {
-                if (characterCreatorProfiles != null && characterCreatorProfiles.Count > 0) {
-                    return characterCreatorProfiles[0];
-                }
-                return null;
-            }
-        }
 
-        public bool NewGameUMAAppearance { get => newGameUMAAppearance; set => newGameUMAAppearance = value; }
+        //public bool NewGameUMAAppearance { get => newGameUMAAppearance; set => newGameUMAAppearance = value; }
         //public bool EquipDefaultBackPack { get => equipDefaultBackPack; set => equipDefaultBackPack = value; }
         public string DefaultPlayerUnitLayer { get => defaultPlayerUnitLayer; set => defaultPlayerUnitLayer = value; }
         public GameObject ThirdPartyCamera { get => thirdPartyCamera; set => thirdPartyCamera = value; }
         public string DefaultBackpackItem { get => defaultBackpackItem; set => defaultBackpackItem = value; }
         //public string DefaultBankBagItem { get => defaultBankBagItem; set => defaultBankBagItem = value; }
-        public bool AlwaysShowDefaultProfiles { get => alwaysShowDefaultProfiles; set => alwaysShowDefaultProfiles = value; }
         public string MainMenuScene { get => mainMenuScene; set => mainMenuScene = value; }
         public string InitializationScene { get => initializationScene; set => initializationScene = value; }
-        public bool UseFirstCreatorProfile { get => useFirstCreatorProfile; set => useFirstCreatorProfile = value; }
         //public MiniMapFallBackMode MiniMapFallBackMode { get => miniMapFallBackMode; set => miniMapFallBackMode = value; }
-        public List<string> CharacterCreatorProfileNames { get => characterCreatorProfileNames; set => characterCreatorProfileNames = value; }
+        public List<string> CharacterCreatorProfileNames { get => defaultUnitProfiles; set => defaultUnitProfiles = value; }
         public bool SyncMovementAnimationSpeed { get => syncMovementAnimationSpeed; set => syncMovementAnimationSpeed = value; }
         public int QuestLogSize { get => questLogSize; set => questLogSize = value; }
         public float MaxTurnSpeed { get => maxTurnSpeed; }
@@ -742,6 +748,8 @@ namespace AnyRPG {
         public Gradient DefaultSunGradient { get => defaultSunGradient; set => defaultSunGradient = value; }
         public AudioClip WeaponMissAudioClip { get => weaponMissAudioClip; set => weaponMissAudioClip = value; }
         public SystemUIConfiguration UIConfiguration { get => UI; set => UI = value; }
+        public CharacterSelectionType CharacterSelectionType { get => characterSelectionType; set => characterSelectionType = value; }
+        public string DefaultPreviewUnitLayer { get => defaultPreviewUnitLayer; set => defaultPreviewUnitLayer = value; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }
 
@@ -756,13 +764,6 @@ namespace AnyRPG {
         public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
             return capabilities;
         }
-
-        public void PerformRequiredPropertyChecks() {
-            if (defaultPlayerUnitProfileName == null || defaultPlayerUnitProfileName == string.Empty) {
-                Debug.LogError("PlayerManager.Awake(): the default player unit profile name is null.  Please set it in the inspector");
-            }
-        }
-
 
         // verify that system abilities are available through the factory
         public void SetupScriptableObjects() {
@@ -872,7 +873,7 @@ namespace AnyRPG {
             foreach (CharacterStat characterStat in characterStats) {
                 if (characterStat.GlobalStat == true) {
                     StatScalingNode statScalingNode = new StatScalingNode();
-                    statScalingNode.StatName = characterStat.DisplayName;
+                    statScalingNode.StatName = characterStat.ResourceName;
                     statScalingNode.BudgetPerLevel = characterStat.BudgetPerLevel;
                     statScalingNode.PrimaryToSecondaryConversion = characterStat.PrimaryToSecondaryConversion;
                     statScalingNode.PrimaryToResourceConversion = characterStat.PrimaryToResourceConversion;
@@ -902,26 +903,28 @@ namespace AnyRPG {
             }
 
             // get default player unit profile
-            if (defaultPlayerUnitProfileName != null && defaultPlayerUnitProfileName != string.Empty) {
-                UnitProfile tmpUnitProfile = systemDataFactory.GetResource<UnitProfile>(defaultPlayerUnitProfileName);
+            if (defaultPlayerUnitProfile != null && defaultPlayerUnitProfile != string.Empty) {
+                UnitProfile tmpUnitProfile = systemDataFactory.GetResource<UnitProfile>(defaultPlayerUnitProfile);
                 if (tmpUnitProfile != null) {
-                    defaultPlayerUnitProfile = tmpUnitProfile;
+                    defaultPlayerUnitProfileRef = tmpUnitProfile;
                 } else {
-                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): could not find unit profile " + defaultPlayerUnitProfileName + ".  Check Inspector");
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): could not find unit profile " + defaultPlayerUnitProfile + ".  Check Inspector");
                 }
             } else {
-                Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): defaultPlayerUnitProfileName field is required, but not value was set.  Check Inspector");
+                if (characterSelectionType == CharacterSelectionType.DefaultCharacter) {
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): Character Selection Type is set to Default Player, but the Default Player Unit Profile is empty.  Please set it in the inspector");
+                }
             }
 
             // get default player unit profile
-            if (characterCreatorProfileNames != null) {
-                foreach (string characterCreatorProfileName in characterCreatorProfileNames) {
+            if (defaultUnitProfiles != null) {
+                foreach (string characterCreatorProfileName in defaultUnitProfiles) {
                     if (characterCreatorProfileName != null && characterCreatorProfileName != string.Empty) {
                         UnitProfile tmpUnitProfile = systemDataFactory.GetResource<UnitProfile>(characterCreatorProfileName);
                         if (tmpUnitProfile != null) {
-                            characterCreatorProfiles.Add(tmpUnitProfile);
+                            defaultUnitProfileList.Add(tmpUnitProfile);
                         } else {
-                            Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): could not find unit profile " + characterCreatorProfileName + ".  Check Inspector");
+                            Debug.LogError($"SystemConfigurationManager.SetupScriptableObjects(): could not find unit profile {characterCreatorProfileName}.  Check Inspector");
                         }
                     } else {
                         Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): defaultPlayerUnitProfileName field is required, but not value was set.  Check Inspector");
@@ -959,5 +962,7 @@ namespace AnyRPG {
     }
 
     public enum DefaultControllerConfiguration { MouseAndKeyboard, GamePad }
+
+    public enum CharacterSelectionType { DefaultCharacter, CharacterList, RaceAndGender }
 
 }

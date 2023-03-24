@@ -66,7 +66,7 @@ namespace AnyRPG {
         }
 
         public void PlayCastSound(AudioClip audioClip, bool loop) {
-            //Debug.Log(gameObject.name + ".UnitComponentController.PlayCastSound(" + (audioClip == null ? "null" : audioClip.name) + ")");
+            //Debug.Log($"{gameObject.name}.UnitComponentController.PlayCastSound(" + (audioClip == null ? "null" : audioClip.name) + ")");
             if (audioClip == null) {
                 return;
             }
@@ -81,7 +81,7 @@ namespace AnyRPG {
         }
 
         public void PlayEffectSound(AudioClip audioClip, bool loop) {
-            //Debug.Log(gameObject.name + ".UnitComponentController.PlayEffectSound(" + (audioClip == null ? "null" : audioClip.name) + ")");
+            //Debug.Log($"{gameObject.name}.UnitComponentController.PlayEffectSound(" + (audioClip == null ? "null" : audioClip.name) + ")");
             if (audioClip == null) {
                 return;
             }
@@ -101,7 +101,7 @@ namespace AnyRPG {
         }
 
         public void PlayMovementSound(AudioClip audioClip, bool loop) {
-            //Debug.Log(gameObject.name + "UnitAudio.PlayMovement()");
+            //Debug.Log($"{gameObject.name}UnitAudio.PlayMovement()");
             if (audioClip == null) {
                 return;
             }
@@ -111,28 +111,28 @@ namespace AnyRPG {
         }
 
         public void StopCastSound() {
-            //Debug.Log(gameObject.name + "UnitAudio.StopCast()");
+            //Debug.Log($"{gameObject.name}UnitAudio.StopCast()");
             if (unitAudioEmitter != null) {
                 unitAudioEmitter.StopCast();
             }
         }
 
         public void StopEffectSound() {
-            //Debug.Log(gameObject.name + "UnitAudio.StopEffect()");
+            //Debug.Log($"{gameObject.name}UnitAudio.StopEffect()");
             if (unitAudioEmitter != null) {
                 unitAudioEmitter.StopEffect();
             }
         }
 
         public void StopVoiceSound() {
-            //Debug.Log(gameObject.name + "UnitAudio.StopVoice()");
+            //Debug.Log($"{gameObject.name}UnitAudio.StopVoice()");
             if (unitAudioEmitter != null) {
                 unitAudioEmitter.StopVoice();
             }
         }
 
         public void StopMovementSound(bool stopLoopsOnly = true) {
-            //Debug.Log(gameObject.name + ".UnitComponentController.StopMovementSound()");
+            //Debug.Log($"{gameObject.name}.UnitComponentController.StopMovementSound()");
             if (unitAudioEmitter != null) {
                 unitAudioEmitter.StopMovement(stopLoopsOnly);
             }

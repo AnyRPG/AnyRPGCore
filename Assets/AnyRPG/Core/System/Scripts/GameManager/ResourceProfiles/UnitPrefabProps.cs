@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 namespace AnyRPG {
 
     [System.Serializable]
-    public class UnitPrefabProps {
+    public class UnitPrefabProps : ConfiguredClass {
 
         [Header("Prefab")]
 
@@ -16,6 +16,11 @@ namespace AnyRPG {
         [Tooltip("The prefab to use for the model, if the unit prefab doesn't already have a model.  UMA units currently don't require this.")]
         [SerializeField]
         private GameObject modelPrefab = null;
+
+        [Tooltip("The type of character model for the purpose of character customization")]
+        [SerializeReference]
+        [SerializeReferenceButton]
+        private CharacterModelProvider modelProvider = null;
 
         [Header("Animation")]
 
@@ -125,9 +130,11 @@ namespace AnyRPG {
         public bool AddFloatHeightToTransform { get => addFloatHeightToTransform; }
         public bool UseInlineAnimationProps { get => useInlineAnimationProps; set => useInlineAnimationProps = value; }
         public string AttachmentProfileName { get => attachmentProfileName; set => attachmentProfileName = value; }
+        public CharacterModelProvider ModelProvider { get => modelProvider; set => modelProvider = value; }
 
-        public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
+        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
 
+            Configure(systemGameManager);
 
             animationProps.Configure();
 
@@ -148,6 +155,10 @@ namespace AnyRPG {
                 } else {
                     Debug.LogError("UnitPrefabProps.SetupScriptableObjects(): UNABLE TO FIND Attachment Profile " + attachmentProfileName + " while initializing. CHECK INSPECTOR!");
                 }
+            }
+
+            if (modelProvider != null) {
+                modelProvider.Configure(systemGameManager);
             }
         }
     }

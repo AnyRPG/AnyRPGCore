@@ -81,7 +81,7 @@ namespace AnyRPG {
         public Faction Faction {
             get {
                 if (UnitController != null && UnitController.UnderControl) {
-                    //Debug.Log(gameObject.name + ".MyFactionName: return master unit faction name");
+                    //Debug.Log($"{gameObject.name}.MyFactionName: return master unit faction name");
                     return UnitController.MasterUnit.Faction;
                 }
                 return faction;
@@ -99,7 +99,7 @@ namespace AnyRPG {
         public string UnitProfileName { get => unitProfileName; }
 
         public override void Configure(SystemGameManager systemGameManager) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.Configure()");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.Configure()");
 
             base.Configure(systemGameManager);
         }
@@ -112,7 +112,7 @@ namespace AnyRPG {
 
         // baseCharacter does not initialize itself.  It is initialized by the PlayerManager (player case), or the UnitController (AI case)
         public void Init() {
-            //Debug.Log(gameObject.name + ".BaseCharacter.Init()");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.Init()");
 
             // react to level load and unload events
             CreateEventSubscriptions();
@@ -188,7 +188,7 @@ namespace AnyRPG {
 
         // currently this is only used for load game panel and loading game, so it's always a player
         public void ApplyCapabilityConsumerSnapshot(CapabilityConsumerSnapshot newCapabilityConsumerSnapshot) {
-            //Debug.Log(gameObject.name + ".ApplyCapabilityConsumerSnapshot()");
+            //Debug.Log($"{gameObject.name}.ApplyCapabilityConsumerSnapshot()");
 
             // get initial snapshot
             //CapabilityConsumerSnapshot oldSnapshot = new CapabilityConsumerSnapshot(this, systemGameManager);
@@ -217,25 +217,25 @@ namespace AnyRPG {
         }
 
         public void SetUnitController(UnitController unitController) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitController(" + unitController.gameObject.name + ")");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.SetUnitController(" + unitController.gameObject.name + ")");
             this.unitController = unitController;
         }
 
         public virtual void GetComponentReferences() {
-            //Debug.Log(gameObject.name + ".BaseCharacter.GetComponentReferences()");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.GetComponentReferences()");
 
             unitController = GetComponent<UnitController>();
         }
 
         public void JoinFaction(Faction newFaction) {
-            //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
+            //Debug.Log($"{gameObject.name}.PlayerCharacter.Joinfaction(" + newFaction + ")");
             if (newFaction != null && newFaction != faction) {
                 SetCharacterFaction(newFaction);
             }
         }
 
         public void ChangeClassSpecialization(ClassSpecialization newClassSpecialization) {
-            //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
+            //Debug.Log($"{gameObject.name}.PlayerCharacter.Joinfaction(" + newFaction + ")");
             if (newClassSpecialization != classSpecialization) {
                 characterStats.ClearStatusEffects();
                 characterPetManager.DespawnAllPets();
@@ -244,7 +244,7 @@ namespace AnyRPG {
         }
 
         public void ChangeCharacterClass(CharacterClass newCharacterClass) {
-            //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
+            //Debug.Log($"{gameObject.name}.PlayerCharacter.Joinfaction(" + newFaction + ")");
             if (newCharacterClass != null && newCharacterClass != characterClass) {
                 characterStats.ClearStatusEffects();
                 characterPetManager.DespawnAllPets();
@@ -255,7 +255,7 @@ namespace AnyRPG {
 
         /*
         public void ChangeCharacterRace(CharacterRace newCharacterRace) {
-            //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
+            //Debug.Log($"{gameObject.name}.PlayerCharacter.Joinfaction(" + newFaction + ")");
             if (newCharacterRace != null && newCharacterRace != characterRace) {
                 SetCharacterRace(newCharacterRace);
             }
@@ -263,13 +263,13 @@ namespace AnyRPG {
         */
 
         public void SetUnitProfile(string unitProfileName, bool notify = true, int unitLevel = -1, bool loadProviderEquipment = true) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + unitProfileName + ")");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.SetUnitProfile(" + unitProfileName + ")");
 
             SetUnitProfile(systemDataFactory.GetResource<UnitProfile>(unitProfileName), notify, unitLevel, loadProviderEquipment);
         }
 
         public void SetUnitProfile (UnitProfile unitProfile, bool notify = true, int unitLevel = -1, bool loadProviderEquipment = true, bool processEquipmentRestrictions = true) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ", " + notify + ", " + unitLevel + ", " + loadProviderEquipment + ", " + processEquipmentRestrictions + ")");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.SetUnitProfile(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ", " + notify + ", " + unitLevel + ", " + loadProviderEquipment + ", " + processEquipmentRestrictions + ")");
 
             // get a snapshot of the current state
             CapabilityConsumerSnapshot oldSnapshot = new CapabilityConsumerSnapshot(this, systemGameManager);
@@ -294,7 +294,7 @@ namespace AnyRPG {
         /// This will retrieve a unit profile from the system unit profile manager
         /// </summary>
         private void SetUnitProfileProperties(bool notify = true, int unitLevel = -1, bool loadProviderEquipment = true, bool processEquipmentRestrictions = true) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfileProperties(" + notify + ", " + unitLevel + ", " + loadProviderEquipment + ")");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.SetUnitProfileProperties(" + notify + ", " + unitLevel + ", " + loadProviderEquipment + ")");
 
             if (unitProfile != null) {
                 if (unitProfile.CharacterName != null && unitProfile.CharacterName != string.Empty) {
@@ -395,14 +395,14 @@ namespace AnyRPG {
         }
 
         public void Initialize(string characterName, int characterLevel = 1) {
-            //Debug.Log(gameObject.name + ": BaseCharacter.Initialize()");
+            //Debug.Log($"{gameObject.name}: BaseCharacter.Initialize()");
             this.characterName = characterName;
             characterStats.SetLevel(characterLevel);
             characterInventoryManager.PerformSetupActivities();
         }
 
         public void SetUnitToughness(UnitToughness newUnitToughness, bool resetLevel = false) {
-            //Debug.Log(gameObject.name + ": BaseCharacter.SetUnitToughness(" + (newUnitToughness == null ? "null" : newUnitToughness.DisplayName) + ")");
+            //Debug.Log($"{gameObject.name}: BaseCharacter.SetUnitToughness(" + (newUnitToughness == null ? "null" : newUnitToughness.DisplayName) + ")");
             unitToughness = newUnitToughness;
             if (resetLevel) {
                 characterStats.SetLevel(characterStats.Level);
@@ -410,7 +410,7 @@ namespace AnyRPG {
         }
 
         public void SetCharacterName(string newName, bool notify = true) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetCharactername(" + newName + ")");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.SetCharactername(" + newName + ")");
             if (newName != null && newName != string.Empty) {
                 characterName = newName;
                 //OnNameChange(newName);
@@ -421,7 +421,7 @@ namespace AnyRPG {
         }
 
         public void SetCharacterTitle(string newTitle, bool notify = true) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newFaction + ")");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.SetCharacterFaction(" + newFaction + ")");
             if (newTitle != null) {
                 title = newTitle;
                 //OnTitleChange(newTitle);
@@ -432,7 +432,7 @@ namespace AnyRPG {
         }
 
         public void SetCharacterFaction(Faction newFaction, bool notify = true, bool resetStats = true, bool processEquipmentRestrictions = true) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newFaction + ")");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.SetCharacterFaction(" + newFaction + ")");
 
             CapabilityConsumerSnapshot oldSnapshot = null;
 
@@ -469,7 +469,7 @@ namespace AnyRPG {
         }
 
         public void SetClassSpecialization(ClassSpecialization newClassSpecialization, bool notify = true, bool resetStats = true, bool processEquipmentRestrictions = true) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newCharacterClassName + ")");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.SetCharacterFaction(" + newCharacterClassName + ")");
 
             CapabilityConsumerSnapshot oldSnapshot = null;
 
@@ -506,7 +506,7 @@ namespace AnyRPG {
         }
 
         public void SetCharacterClass(CharacterClass newCharacterClass, bool notify = true, bool resetStats = true, bool processEquipmentRestrictions = true) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterClass(" + (newCharacterClass != null ? newCharacterClass.DisplayName : "null") + ", " + notify + ", " + resetStats + ", " + processEquipmentRestrictions + ")");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.SetCharacterClass(" + (newCharacterClass != null ? newCharacterClass.DisplayName : "null") + ", " + notify + ", " + resetStats + ", " + processEquipmentRestrictions + ")");
 
             CapabilityConsumerSnapshot oldSnapshot = null;
 
@@ -541,7 +541,7 @@ namespace AnyRPG {
         }
 
         public void SetCharacterRace(CharacterRace newCharacterRace, bool notify = true, bool resetStats = true, bool processEquipmentRestrictions = true) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterClass(" + (newCharacterClass != null ? newCharacterClass.DisplayName : "null") + ", " + notify + ")");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.SetCharacterClass(" + (newCharacterClass != null ? newCharacterClass.DisplayName : "null") + ", " + notify + ")");
 
             CapabilityConsumerSnapshot oldSnapshot = null;
 
@@ -585,7 +585,7 @@ namespace AnyRPG {
         }
 
         public void SetUnitType(UnitType newUnitType, bool notify = true, bool resetStats = true, bool processEquipmentRestrictions = true) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitType(" + (newUnitType != null ? newUnitType.DisplayName : "null") + ", " + notify + ")");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.SetUnitType(" + (newUnitType != null ? newUnitType.DisplayName : "null") + ", " + notify + ")");
 
             CapabilityConsumerSnapshot oldSnapshot = null;
 
@@ -621,7 +621,7 @@ namespace AnyRPG {
         }
 
         public void ProcessCapabilityConsumerChange(CapabilityConsumerSnapshot oldSnapshot, CapabilityConsumerSnapshot newSnapshot, bool processEquipmentRestrictions = true) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.ProcessCapabilityConsumerChange()");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.ProcessCapabilityConsumerChange()");
             if (processEquipmentRestrictions == true) {
                 characterEquipmentManager.HandleCapabilityConsumerChange();
             }
@@ -630,14 +630,14 @@ namespace AnyRPG {
         }
 
         public void HandleCharacterUnitSpawn() {
-            //Debug.Log(gameObject.name + ".BaseCharacter.HandleCharacterUnitSpawn()");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.HandleCharacterUnitSpawn()");
             // no longer necessary - moved to UnitModel -> UnitModelController
             //characterEquipmentManager.HandleCharacterUnitSpawn();
             characterStats.HandleCharacterUnitSpawn();
         }
 
         public void HandleCharacterUnitDespawn() {
-            //Debug.Log(gameObject.name + ".BaseCharacter.HandleCharacterUnitSpawn()");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.HandleCharacterUnitSpawn()");
             // no longer necessary - moved to UnitModel -> UnitModelController
             //characterEquipmentManager.HandleCharacterUnitDespawn();
 
@@ -657,7 +657,7 @@ namespace AnyRPG {
         }
 
         public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.HandleLevelUnload(): instanceID: " + gameObject.GetInstanceID());
+            //Debug.Log($"{gameObject.name}.BaseCharacter.HandleLevelUnload(): instanceID: " + gameObject.GetInstanceID());
 
             // testing - do nothing here and let the unit call this so that ordering is correct
             //ProcessLevelUnload()
@@ -687,21 +687,21 @@ namespace AnyRPG {
         }
 
         public void DespawnImmediate() {
-            //Debug.Log(gameObject.name + ".BaseCharacter.DespawnImmediate()");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.DespawnImmediate()");
             if (unitController != null && unitController.CharacterUnit != null) {
                 unitController.CharacterUnit.Despawn(0, false, true);
             }
         }
 
         public void Despawn() {
-            //Debug.Log(gameObject.name + ".BaseCharacter.Despawn()");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.Despawn()");
             if (unitController != null && unitController.CharacterUnit != null) {
                 unitController.CharacterUnit.Despawn();
             }
         }
 
         public void TryToDespawn() {
-            //Debug.Log(gameObject.name + ".BaseCharacter.TryToDespawn()");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.TryToDespawn()");
             if (unitProfile != null && unitProfile.PreventAutoDespawn == true) {
                 return;
             }
@@ -714,7 +714,7 @@ namespace AnyRPG {
         }
 
         public void OnSendObjectToPool() {
-            //Debug.Log(gameObject.name + ".BaseCharacter.OnSendObjectToPool()");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.OnSendObjectToPool()");
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }
@@ -724,7 +724,7 @@ namespace AnyRPG {
         }
 
         private void ResetSettings() {
-            //Debug.Log(gameObject.name + ".BaseCharacter.ResetSettings()");
+            //Debug.Log($"{gameObject.name}.BaseCharacter.ResetSettings()");
             characterName = string.Empty;
             title = string.Empty;
             faction = null;

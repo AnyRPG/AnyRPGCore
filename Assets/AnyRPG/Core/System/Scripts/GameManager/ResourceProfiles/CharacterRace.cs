@@ -10,6 +10,58 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Character Race", menuName = "AnyRPG/CharacterRace")]
     public class CharacterRace : DescribableResource, IStatProvider, ICapabilityProvider {
 
+        [Header("NewGame")]
+
+        [Tooltip("If true, this race is available for Players to choose on the new game menu, no matter what faction is chosen")]
+        [SerializeField]
+        private bool newGameOption = false;
+
+        [Tooltip("The unit profile to use when the male gender is chosen")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitProfile))]
+        private string maleUnitProfile = string.Empty;
+
+        private UnitProfile maleUnitProfileRef = null;
+
+        [Tooltip("The unit profile to use when the female gender is chosen")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitProfile))]
+        private string femaleUnitProfile = string.Empty;
+
+        private UnitProfile femaleUnitProfileRef = null;
+
+        [Tooltip("A prefab to instantiate in the new game window.")]
+        [SerializeField]
+        private GameObject environmentPreviewPrefab = null;
+
+        [Tooltip("The material on the platform the player stands on in the new game window.")]
+        [SerializeField]
+        private Material platformMaterial = null;
+
+        [Tooltip("The skybox material on the top quad in the new game window.")]
+        [SerializeField]
+        private Material topMaterial = null;
+
+        [Tooltip("The skybox material on the bottom quad in the new game window.")]
+        [SerializeField]
+        private Material bottomMaterial = null;
+
+        [Tooltip("The skybox material on the north quad in the new game window.")]
+        [SerializeField]
+        private Material northMaterial = null;
+
+        [Tooltip("The skybox material on the south quad in the new game window.")]
+        [SerializeField]
+        private Material southMaterial = null;
+
+        [Tooltip("The skybox material on the east quad in the new game window.")]
+        [SerializeField]
+        private Material eastMaterial = null;
+
+        [Tooltip("The skybox material on the west quad in the new game window.")]
+        [SerializeField]
+        private Material westMaterial = null;
+
         [Header("Start Equipment")]
 
         [Tooltip("The names of the equipment that will be worn by this race when a new game is started")]
@@ -63,6 +115,17 @@ namespace AnyRPG {
         public List<AbilityEffect> DefaultHitEffectList { get => defaultHitEffectList; set => defaultHitEffectList = value; }
         public List<AbilityEffect> OnHitEffectList { get => onHitEffectList; set => onHitEffectList = value; }
         public CapabilityProps Capabilities { get => capabilities; set => capabilities = value; }
+        public bool NewGameOption { get => newGameOption; set => newGameOption = value; }
+        public UnitProfile MaleUnitProfile { get => maleUnitProfileRef; }
+        public UnitProfile FemaleUnitProfile { get => femaleUnitProfileRef; }
+        public Material PlatformMaterial { get => platformMaterial; set => platformMaterial = value; }
+        public Material TopMaterial { get => topMaterial; set => topMaterial = value; }
+        public Material BottomMaterial { get => bottomMaterial; set => bottomMaterial = value; }
+        public Material NorthMaterial { get => northMaterial; set => northMaterial = value; }
+        public Material SouthMaterial { get => southMaterial; set => southMaterial = value; }
+        public Material EastMaterial { get => eastMaterial; set => eastMaterial = value; }
+        public Material WestMaterial { get => westMaterial; set => westMaterial = value; }
+        public GameObject EnvironmentPreviewPrefab { get => environmentPreviewPrefab; set => environmentPreviewPrefab = value; }
 
         public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
             return capabilities;
@@ -71,6 +134,20 @@ namespace AnyRPG {
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
 
+            if (maleUnitProfile != string.Empty) {
+                maleUnitProfileRef = systemDataFactory.GetResource<UnitProfile>(maleUnitProfile);
+                if (maleUnitProfileRef == null) {
+                    Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find unit profile : " + maleUnitProfile + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            if (femaleUnitProfile != string.Empty) {
+                femaleUnitProfileRef = systemDataFactory.GetResource<UnitProfile>(femaleUnitProfile);
+                if (femaleUnitProfileRef == null) {
+                    Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find unit profile : " + femaleUnitProfile + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                }
+            }
+
             if (onHitEffects != null) {
                 foreach (string onHitEffectName in onHitEffects) {
                     if (onHitEffectName != null && onHitEffectName != string.Empty) {
@@ -78,10 +155,10 @@ namespace AnyRPG {
                         if (abilityEffect != null) {
                             onHitEffectList.Add(abilityEffect);
                         } else {
-                            Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find ability effect : " + onHitEffectName + " while inititalizing.  CHECK INSPECTOR");
+                            Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find ability effect : " + onHitEffectName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                         }
                     } else {
-                        Debug.LogError("CharacterRace.SetupScriptableObjects(): null or empty on hit effect found while inititalizing.  CHECK INSPECTOR");
+                        Debug.LogError("CharacterRace.SetupScriptableObjects(): null or empty on hit effect found while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -93,10 +170,10 @@ namespace AnyRPG {
                         if (abilityEffect != null) {
                             defaultHitEffectList.Add(abilityEffect);
                         } else {
-                            Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find ability effect : " + defaultHitEffectName + " while inititalizing.  CHECK INSPECTOR");
+                            Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find ability effect : " + defaultHitEffectName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                         }
                     } else {
-                        Debug.LogError("CharacterRace.SetupScriptableObjects(): null or empty default hit effect found while inititalizing.  CHECK INSPECTOR");
+                        Debug.LogError("CharacterRace.SetupScriptableObjects(): null or empty default hit effect found while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -108,7 +185,7 @@ namespace AnyRPG {
                     if (tmpEquipment != null) {
                         equipmentList.Add(tmpEquipment);
                     } else {
-                        Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find equipment : " + equipmentName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find equipment : " + equipmentName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -120,7 +197,7 @@ namespace AnyRPG {
                     if (tmpPowerResource != null) {
                         powerResourceList.Add(tmpPowerResource);
                     } else {
-                        Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find power resource : " + powerResourcename + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("CharacterRace.SetupScriptableObjects(): Could not find power resource : " + powerResourcename + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }

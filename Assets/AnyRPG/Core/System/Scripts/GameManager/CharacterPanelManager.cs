@@ -10,6 +10,7 @@ namespace AnyRPG {
         // game manager references
         protected PlayerManager playerManager = null;
         protected SystemEventManager systemEventManager = null;
+        protected SaveManager saveManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -20,6 +21,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             playerManager = systemGameManager.PlayerManager;
             systemEventManager = systemGameManager.SystemEventManager;
+            saveManager = systemGameManager.SaveManager;
         }
 
         protected void CreateEventSubscriptions() {
@@ -48,13 +50,13 @@ namespace AnyRPG {
         }
 
         public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
-            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
+            //Debug.Log($"{gameObject.name}.InanimateUnit.HandlePlayerUnitSpawn()");
             ProcessPlayerUnitSpawn();
         }
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn()");
-            cloneSource = playerManager.ActiveUnitController.UnitProfile;
+            unitProfile = playerManager.ActiveUnitController.UnitProfile;
             SpawnUnit();
             systemEventManager.OnEquipmentChanged += HandleEquipmentChanged;
             playerManager.ActiveUnitController.UnitEventController.OnUnitTypeChange += HandleUnitTypeChange;
@@ -109,23 +111,24 @@ namespace AnyRPG {
 
         public void HandleEquipmentChanged(Equipment newEquipment, Equipment oldEquipment) {
             //Debug.Log("CharacterPanelManager.HandleEquipmentChanged(" + (newEquipment == null ? "null" : newEquipment.DisplayName) + ", " + (oldEquipment == null ? "null" : oldEquipment.DisplayName) + ")");
-                if (oldEquipment != null) {
-                    unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.Unequip(oldEquipment, true, true, false);
-                }
-                if (newEquipment != null) {
-                    unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.Equip(newEquipment, null, true, true, false);
-                }
-                unitController.UnitModelController.BuildModelAppearance();
+            if (oldEquipment != null) {
+                unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.Unequip(oldEquipment);
+            }
+            if (newEquipment != null) {
+                unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.Equip(newEquipment, null);
+            }
+            //unitController.UnitModelController.BuildModelAppearance();
+            unitController.UnitModelController.RebuildModelAppearance();
         }
 
-        protected override void BroadcastTargetCreated() {
-            base.BroadcastTargetCreated();
+        protected override void BroadcastUnitCreated() {
+            base.BroadcastUnitCreated();
             HandleTargetCreated();
         }
 
         public void HandleTargetCreated() {
             //Debug.Log("CharacterPanel.HandleTargetCreated()");
-            unitController?.UnitModelController.SetInitialSavedAppearance();
+            unitController?.UnitModelController.SetInitialSavedAppearance(saveManager.CurrentSaveData);
             CharacterEquipmentManager characterEquipmentManager = unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
 
             // providers need to be set or equipment won't be able to be equipped

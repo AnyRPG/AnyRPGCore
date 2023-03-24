@@ -138,7 +138,7 @@ namespace AnyRPG {
                 foreach (AggroNode aggroNode in aggroNodes) {
                     if (aggroNode.aggroTarget == target) {
                         return true;
-                        //Debug.Log(gameObject.name + " adding " + aggroAmount.ToString() + " aggro to entry: " + target.name + "; total: " + aggroNode.aggroValue.ToString());
+                        //Debug.Log($"{gameObject.name} adding " + aggroAmount.ToString() + " aggro to entry: " + target.name + "; total: " + aggroNode.aggroValue.ToString());
                     }
                 }
             }

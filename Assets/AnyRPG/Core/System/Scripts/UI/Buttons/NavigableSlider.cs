@@ -13,16 +13,15 @@ namespace AnyRPG {
         [Header("Slider")]
 
         [SerializeField]
-        Slider slider = null;
+        protected Slider slider = null;
 
         [SerializeField]
-        ColoredUIElement fill = null;
+        protected ColoredUIElement fill = null;
 
         [SerializeField]
-        ColoredUIElement handle = null;
+        protected ColoredUIElement handle = null;
 
         protected bool interacting = false;
-
 
         public override bool CaptureCancelButton {
             get {

@@ -31,7 +31,7 @@ namespace AnyRPG {
             this.mountUnitController = mountUnitController;
             this.mountUnitProfile = mountUnitProfile;
             mountUnitController.SetRider(unitController);
-            if (mountUnitController?.UnitModelController != null && mountUnitController.UnitModelController.ModelReady == false) {
+            if (mountUnitController?.UnitModelController != null && mountUnitController.UnitModelController.ModelCreated == false) {
                 SubscribeToMountModelReady();
             } else {
                 HandleMountUnitSpawn();
@@ -40,7 +40,8 @@ namespace AnyRPG {
 
         public void SubscribeToMountModelReady() {
             if (mountUnitController?.UnitModelController != null) {
-                mountUnitController.UnitModelController.OnModelReady += HandleMountModelReady;
+                //mountUnitController.UnitModelController.OnModelUpdated += HandleMountModelReady;
+                mountUnitController.UnitModelController.OnModelCreated += HandleMountModelReady;
             }
         }
 
@@ -52,7 +53,8 @@ namespace AnyRPG {
 
         public void UnsubscribeFromMountModelReady() {
             if (mountUnitController?.UnitModelController != null) {
-                mountUnitController.UnitModelController.OnModelReady -= HandleMountModelReady;
+                //mountUnitController.UnitModelController.OnModelUpdated -= HandleMountModelReady;
+                mountUnitController.UnitModelController.OnModelCreated -= HandleMountModelReady;
             }
         }
 
@@ -76,7 +78,7 @@ namespace AnyRPG {
         }
 
         public void ActivateMountedState() {
-            //Debug.Log(unitController.gameObject.name + ".UnitMountManager.ActivateMountedState()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ActivateMountedState()");
 
             unitController?.UnitModelController?.SheathWeapons();
 
@@ -122,7 +124,7 @@ namespace AnyRPG {
         }
 
         public void DeActivateMountedState() {
-            //Debug.Log(unitController.gameObject.name + ".UnitMountManager.DeActivateMountedState()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeActivateMountedState()");
             UnsubscribeFromMountModelReady();
             if (mountUnitController != null && unitController != null && unitController.enabled == true) {
 
@@ -164,7 +166,7 @@ namespace AnyRPG {
         }
 
         public void ConfigureCharacterRegularPhysics() {
-            //Debug.Log(unitController.gameObject.name + ".UnitMountManager.ConfigureCharacterRegularPhysics()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics()");
             unitController.RigidBody.WakeUp();
             unitController.RigidBody.detectCollisions = true;
             unitController.RigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;

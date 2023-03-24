@@ -22,7 +22,7 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            //Debug.Log(gameObject.name + ".SkillTrainer.Interact(" + source + ")");
+            //Debug.Log($"{gameObject.name}.SkillTrainer.Interact(" + source + ")");
             base.Interact(source, optionIndex);
             if (!uIManager.musicPlayerWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
@@ -34,7 +34,7 @@ namespace AnyRPG {
         }
 
         public override void StopInteract() {
-            //Debug.Log(gameObject.name + ".SkillTrainer.StopInteract()");
+            //Debug.Log($"{gameObject.name}.SkillTrainer.StopInteract()");
             base.StopInteract();
             uIManager.musicPlayerWindow.CloseWindow();
         }

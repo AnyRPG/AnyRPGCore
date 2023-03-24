@@ -42,6 +42,12 @@ namespace AnyRPG {
         private NewGameDetailsFactionButton factionButton = null;
 
         [SerializeField]
+        private GameObject raceLabel = null;
+
+        [SerializeField]
+        private NewGameDetailsRaceButton raceButton = null;
+
+        [SerializeField]
         private CanvasGroup canvasGroup = null;
 
         private NewGamePanel newGamePanel = null;
@@ -79,9 +85,17 @@ namespace AnyRPG {
         }
 
         public void OpenFactionPanel() {
-            //Debug.Log("NewGameDetailsPanelController.OpenfactionPanel()");
+            //Debug.Log("NewGameDetailsPanelController.OpenFactionPanel()");
             if (newGamePanel != null) {
                 newGamePanel.OpenFactionPanel(true);
+                //newGamePanel.SetNavigationControllerByIndex(0);
+            }
+        }
+
+        public void OpenRacePanel() {
+            //Debug.Log("NewGameDetailsPanelController.OpenRacePanel()");
+            if (newGamePanel != null) {
+                newGamePanel.OpenRacePanel(true);
                 //newGamePanel.SetNavigationControllerByIndex(0);
             }
         }
@@ -117,42 +131,94 @@ namespace AnyRPG {
             base.ProcessOpenWindowNotification();
         }
 
-        public void ClearLabels() {
+        private void ShowOrHideFactionSection() {
             factionLabel.SetActive(false);
             factionButton.gameObject.SetActive(false);
             if (systemConfigurationManager.NewGameFaction == true) {
-                foreach (Faction faction in systemDataFactory.GetResourceList<Faction>()) {
-                    if (faction.NewGameOption == true) {
-                        factionLabel.SetActive(true);
-                        factionButton.gameObject.SetActive(true);
-                        break;
-                    }
+                FindFactions();
+            }
+        }
+
+        private void FindFactions() {
+            foreach (Faction faction in systemDataFactory.GetResourceList<Faction>()) {
+                if (faction.NewGameOption == true) {
+                    factionLabel.SetActive(true);
+                    factionButton.gameObject.SetActive(true);
+                    return;
                 }
             }
-            
-            characterClassLabel.SetActive(false);
-            characterClassButton.gameObject.SetActive(false);
-            if (systemConfigurationManager.NewGameClass == true) {
-                foreach (CharacterClass characterClass in systemDataFactory.GetResourceList<CharacterClass>()) {
-                    if (characterClass.NewGameOption == true) {
-                        characterClassLabel.SetActive(true);
-                        characterClassButton.gameObject.SetActive(true);
-                        break;
-                    }
+        }
+
+        private void ShowOrHideRaceSection() {
+            raceLabel.SetActive(false);
+            raceButton.gameObject.SetActive(false);
+            if (systemConfigurationManager.NewGameRace == true) {
+                FindRaces();
+            }
+        }
+
+        private void FindRaces() {
+            // find races that are available in factions
+            foreach (Faction faction in systemDataFactory.GetResourceList<Faction>()) {
+                if (faction.NewGameOption == true && faction.Races.Count > 0) {
+                    raceLabel.SetActive(true);
+                    raceButton.gameObject.SetActive(true);
+                    return;
                 }
             }
 
+            // find races that are globally available regardless of faction
+            foreach (CharacterRace characterRace in systemDataFactory.GetResourceList<CharacterRace>()) {
+                if (characterRace.NewGameOption == true) {
+                    raceLabel.SetActive(true);
+                    raceButton.gameObject.SetActive(true);
+                    return;
+                }
+            }
+        }
+
+        private void ShowOrHideClassSection() {
+            characterClassLabel.SetActive(false);
+            characterClassButton.gameObject.SetActive(false);
+            if (systemConfigurationManager.NewGameClass == true) {
+                FindClasses();
+            }
+        }
+
+        private void FindClasses() {
+            foreach (CharacterClass characterClass in systemDataFactory.GetResourceList<CharacterClass>()) {
+                if (characterClass.NewGameOption == true) {
+                    characterClassLabel.SetActive(true);
+                    characterClassButton.gameObject.SetActive(true);
+                    return;
+                }
+            }
+        }
+
+        private void ShowOrHideSpecializations() {
             classSpecializationLabel.SetActive(false);
             classSpecializationButton.gameObject.SetActive(false);
             if (systemConfigurationManager.NewGameSpecialization == true) {
-                foreach (ClassSpecialization classSpecialization in systemDataFactory.GetResourceList<ClassSpecialization>()) {
-                    if (classSpecialization.NewGameOption == true) {
-                        classSpecializationLabel.SetActive(true);
-                        classSpecializationButton.gameObject.SetActive(true);
-                        break;
-                    }
+                FindSpecializations();
+            }
+        }
+
+        private void FindSpecializations() {
+            foreach (ClassSpecialization classSpecialization in systemDataFactory.GetResourceList<ClassSpecialization>()) {
+                if (classSpecialization.NewGameOption == true) {
+                    classSpecializationLabel.SetActive(true);
+                    classSpecializationButton.gameObject.SetActive(true);
+                    return;
                 }
             }
+        }
+
+        public void ClearLabels() {
+            ShowOrHideFactionSection();
+            ShowOrHideRaceSection();
+            ShowOrHideClassSection();
+            ShowOrHideSpecializations();
+            
             /*
             foreach (UINavigationController uINavigationController in uINavigationControllers) {
                 uINavigationController.UpdateNavigationList();
@@ -197,17 +263,32 @@ namespace AnyRPG {
             }
         }
 
-        public void SetFaction(Faction newfaction) {
-            //if (newfaction != null && systemConfigurationManager.NewGameFaction == true) {
+        public void SetFaction(Faction newFaction) {
+            //Debug.Log("NewGameDetailsPanelController.SetFaction()");
+
             if (systemConfigurationManager.NewGameFaction == true) {
                 factionLabel.SetActive(true);
                 factionButton.gameObject.SetActive(true);
-                factionButton.AddFaction(newfaction);
+                factionButton.AddFaction(newFaction);
             } else {
                 factionLabel.SetActive(false);
                 factionButton.gameObject.SetActive(false);
             }
         }
+
+        public void SetCharacterRace(CharacterRace newRace) {
+            //Debug.Log("NewGameDetailsPanelController.SetCharacterRace()");
+
+            if (systemConfigurationManager.NewGameRace == true) {
+                raceLabel.SetActive(true);
+                raceButton.gameObject.SetActive(true);
+                raceButton.AddRace(newRace);
+            } else {
+                raceLabel.SetActive(false);
+                raceButton.gameObject.SetActive(false);
+            }
+        }
+
 
         public void SetClassSpecialization(ClassSpecialization newClassSpecialization) {
             //Debug.Log("NewGameDetailsPanelController.SetClassSpecialization(" + (newClassSpecialization == null ? "null" : newClassSpecialization.DisplayName) + ")");

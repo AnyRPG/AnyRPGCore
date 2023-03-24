@@ -18,7 +18,7 @@ namespace AnyRPG {
         }
 
         private void GetLocalComponents() {
-            //Debug.Log(gameObject.name + ".NamePlateCanvasController.GetLocalComponents()");
+            //Debug.Log($"{gameObject.name}.NamePlateCanvasController.GetLocalComponents()");
             if (LocalComponentsInitialized) {
                 return;
             }
@@ -33,7 +33,7 @@ namespace AnyRPG {
 
         public bool MouseOverNamePlate() {
             if (LocalComponentsInitialized == false) {
-                //Debug.Log(gameObject.name + ".NamePlateCanvasController.MouseOverNamePlate() Local components are not yet initialized");
+                //Debug.Log($"{gameObject.name}.NamePlateCanvasController.MouseOverNamePlate() Local components are not yet initialized");
                 return false;
             }
 

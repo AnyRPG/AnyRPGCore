@@ -23,7 +23,7 @@ namespace AnyRPG {
         }
 
         public void Init() {
-            //Debug.Log(gameObject.name + ".AnyRPGCharacterController.OrchestrateStartup()");
+            //Debug.Log($"{gameObject.name}.AnyRPGCharacterController.OrchestrateStartup()");
             gameObject.SendMessage("StateStart", SendMessageOptions.DontRequireReceiver);
         }
 
@@ -36,7 +36,7 @@ namespace AnyRPG {
         }
 
         void SingleUpdate() {
-            //Debug.Log(gameObject.name + ".AnyRPGCharacterController.SingleUpdate()");
+            //Debug.Log($"{gameObject.name}.AnyRPGCharacterController.SingleUpdate()");
 
             gameObject.SendMessage("StateUpdate", SendMessageOptions.DontRequireReceiver);
 
@@ -45,14 +45,14 @@ namespace AnyRPG {
         }
 
         private void OnDisable() {
-            //Debug.Log(gameObject.name + ".AnyRPGCharacterController.OnDisable()");
+            //Debug.Log($"{gameObject.name}.AnyRPGCharacterController.OnDisable()");
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }
         }
 
         private void OnEnable() {
-            //Debug.Log(gameObject.name + ".AnyRPGCharacterController.OnEnable()");
+            //Debug.Log($"{gameObject.name}.AnyRPGCharacterController.OnEnable()");
         }
 
     }

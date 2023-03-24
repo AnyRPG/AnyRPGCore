@@ -31,7 +31,7 @@ namespace AnyRPG {
         }
 
         public void UpdateCompletionCount(Skill skill) {
-            if (!SystemDataFactory.MatchResource(skill.DisplayName, skillName)) {
+            if (!SystemDataUtility.MatchResource(skill.ResourceName, skillName)) {
                 // some other skill than this one was learned.  no need to check.
                 return;
             }
@@ -74,10 +74,10 @@ namespace AnyRPG {
             if (skillName != null && skillName != string.Empty) {
                 skill = systemDataFactory.GetResource<Skill>(skillName);
                 if (skill == null) {
-                    Debug.LogError("TradeSkillObjective.SetupScriptableObjects(): Could not find skill : " + skillName + " while inititalizing a trade skill objective for " + quest.DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("TradeSkillObjective.SetupScriptableObjects(): Could not find skill : " + skillName + " while inititalizing a trade skill objective for " + quest.ResourceName + ".  CHECK INSPECTOR");
                 }
             } else {
-                Debug.LogError("TradeSkillObjective.SetupScriptableObjects(): Skill name was null while inititalizing a trade skill objective for " + quest.DisplayName + ".  CHECK INSPECTOR");
+                Debug.LogError("TradeSkillObjective.SetupScriptableObjects(): Skill name was null while inititalizing a trade skill objective for " + quest.ResourceName + ".  CHECK INSPECTOR");
             }
         }
 

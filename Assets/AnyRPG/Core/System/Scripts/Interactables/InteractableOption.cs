@@ -17,7 +17,7 @@ namespace AnyRPG {
         public InteractableOptionComponent InteractableOptionComponent { get => interactableOptionComponent; }
 
         public void SetComponent(InteractableOptionComponent interactableOptionComponent) {
-            //Debug.Log(gameObject.name + ".InteractableOption.SetComponent(" + (interactableOptionComponent == null ? "null" : interactableOptionComponent.Interactable.gameObject.name) + ")");
+            //Debug.Log($"{gameObject.name}.InteractableOption.SetComponent(" + (interactableOptionComponent == null ? "null" : interactableOptionComponent.Interactable.gameObject.name) + ")");
             this.interactableOptionComponent = interactableOptionComponent;
         }
 

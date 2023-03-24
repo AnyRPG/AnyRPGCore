@@ -95,7 +95,7 @@ namespace AnyRPG {
                 if (tmpSceneNode != null) {
                     loadScene = tmpSceneNode;
                 } else {
-                    Debug.LogError("Cutscene.SetupScriptableObjects(): Could not find sceneNode : " + loadSceneName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("Cutscene.SetupScriptableObjects(): Could not find sceneNode : " + loadSceneName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 

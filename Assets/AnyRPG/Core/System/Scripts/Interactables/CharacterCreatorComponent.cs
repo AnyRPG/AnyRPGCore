@@ -27,7 +27,7 @@ namespace AnyRPG {
             // was there a reason why we didn't have base.Interact here before or just an oversight?
             base.Interact(source, optionIndex);
             // moved to coroutine because UMA will crash here due to its use of DestroyImmediate in the case where an UMAData was attached to the model.
-            characterCreatorInteractableManager.BeginInteraction(this);
+            characterCreatorInteractableManager.SetCharacterCreator(this);
             interactable.StartCoroutine(OpenWindowWait());
             
             return true;
@@ -52,7 +52,7 @@ namespace AnyRPG {
         }
 
         public override bool SetMiniMapText(TextMeshProUGUI text) {
-            //Debug.Log(gameObject.name + ".CharacterCreatorInteractable.SetMiniMapText(" + text + ")");
+            //Debug.Log($"{gameObject.name}.CharacterCreatorInteractable.SetMiniMapText(" + text + ")");
             if (!base.SetMiniMapText(text)) {
                 text.text = "";
                 text.color = new Color32(0, 0, 0, 0);
@@ -64,7 +64,7 @@ namespace AnyRPG {
         }
 
         public override int GetCurrentOptionCount() {
-            //Debug.Log(gameObject.name + ".CharacterCreatorInteractable.GetCurrentOptionCount()");
+            //Debug.Log($"{gameObject.name}.CharacterCreatorInteractable.GetCurrentOptionCount()");
             return GetValidOptionCount();
         }
 

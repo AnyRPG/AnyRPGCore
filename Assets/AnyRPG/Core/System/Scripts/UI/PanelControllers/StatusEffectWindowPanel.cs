@@ -33,14 +33,14 @@ namespace AnyRPG {
         }
 
         public void SetTarget(UnitController unitController) {
-            //Debug.Log(gameObject.name + ".StatusEffectWindowPanel.SetTarget(" + unitController.DisplayName + ")");
+            //Debug.Log($"{gameObject.name}.StatusEffectWindowPanel.SetTarget(" + unitController.DisplayName + ")");
             if (statusEffectPanel != null) {
                 statusEffectPanel.SetTarget(unitController);
             }
         }
 
         public void ClearTarget() {
-            //Debug.Log(gameObject.name + ".StatusEffectPanelController.ClearTarget()");
+            //Debug.Log($"{gameObject.name}.StatusEffectPanelController.ClearTarget()");
 
             if (statusEffectPanel != null) {
                 statusEffectPanel.ClearTarget();
@@ -49,7 +49,7 @@ namespace AnyRPG {
         }
 
         public void AddStatusNode(StatusEffectNodeScript statusEffectNodeScript) {
-            //Debug.Log(gameObject.name + ".StatusEffectWindowPanel.AddStatusNode()");
+            //Debug.Log($"{gameObject.name}.StatusEffectWindowPanel.AddStatusNode()");
             if (uINavigationControllers[0].ActiveNavigableButtonCount == 0) {
                 uIManager.AddNavigableInterfaceElement(this);
             }
@@ -57,7 +57,7 @@ namespace AnyRPG {
         }
 
         public void RemoveStatusNode(StatusEffectNodeScript statusEffectNodeScript) {
-            //Debug.Log(gameObject.name + ".StatusEffectWindowPanel.RemoveStatusNode()");
+            //Debug.Log($"{gameObject.name}.StatusEffectWindowPanel.RemoveStatusNode()");
             uINavigationControllers[0].ClearActiveButton(statusEffectNodeScript);
 
             if (uINavigationControllers[0].ActiveNavigableButtonCount == 0) {

@@ -34,7 +34,7 @@ namespace AnyRPG {
 
         public virtual bool PrerequisitesMet {
             get {
-                //Debug.Log(gameObject.name + ".InteractableOption.MyPrerequisitesMet");
+                //Debug.Log($"{gameObject.name}.InteractableOption.MyPrerequisitesMet");
                 foreach (PrerequisiteConditions prerequisiteCondition in interactableOptionProps.PrerequisiteConditions) {
                     if (!prerequisiteCondition.IsMet()) {
                         return false;
@@ -162,7 +162,7 @@ namespace AnyRPG {
         }
 
         public virtual void StopInteract() {
-            //Debug.Log(gameObject.name + ".InanimateUnit.StopInteract()");
+            //Debug.Log($"{gameObject.name}.InanimateUnit.StopInteract()");
             playerManager.PlayerController.StopInteract();
         }
 
@@ -204,7 +204,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetMiniMapIcon(Image icon) {
-            //Debug.Log(gameObject.name + ".InteractableOption.SetMiniMapIcon()");
+            //Debug.Log($"{gameObject.name}.InteractableOption.SetMiniMapIcon()");
             if (CanShowMiniMapIcon()) {
                 icon.sprite = GetMiniMapIcon();
                 icon.color = Color.white;
@@ -220,7 +220,7 @@ namespace AnyRPG {
         }
 
         public virtual bool CanShowMiniMapIcon() {
-            //Debug.Log(gameObject.name + ".InteractableOption.CanShowMiniMapIcon()");
+            //Debug.Log($"{gameObject.name}.InteractableOption.CanShowMiniMapIcon()");
             return (GetCurrentOptionCount() > 0);
         }
 
@@ -271,7 +271,7 @@ namespace AnyRPG {
 
         public virtual int GetCurrentOptionCount() {
             // overwrite me or everything is valid as long as prerequisites are met, which isn't the case for things like dialog, which have multiple options
-            //Debug.Log(gameObject.name + ".CharacterCreatorInteractable.GetCurrentOptionCount()");
+            //Debug.Log($"{gameObject.name}.CharacterCreatorInteractable.GetCurrentOptionCount()");
             if (interactable.CombatOnly) {
                 return 0;
             }

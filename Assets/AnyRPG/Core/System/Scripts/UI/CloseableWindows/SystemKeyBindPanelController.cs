@@ -104,7 +104,7 @@ namespace AnyRPG {
             ResetPanels();
             PanelMovement.gameObject.SetActive(true);
 
-            uINavigationControllers[0].UnHightlightButtons(movementButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(movementButton);
 
             movementButton.HighlightBackground();
             movementButton.Select();
@@ -114,7 +114,7 @@ namespace AnyRPG {
             ResetPanels();
             PanelCombat.gameObject.SetActive(true);
 
-            uINavigationControllers[0].UnHightlightButtons(actionBarsButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(actionBarsButton);
 
             actionBarsButton.HighlightBackground();
             actionBarsButton.Select();
@@ -124,7 +124,7 @@ namespace AnyRPG {
             ResetPanels();
             PanelGeneral.gameObject.SetActive(true);
 
-            uINavigationControllers[0].UnHightlightButtons(systemButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(systemButton);
 
             systemButton.HighlightBackground();
             systemButton.Select();

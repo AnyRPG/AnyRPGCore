@@ -58,7 +58,7 @@ namespace AnyRPG {
             if (fixedAbility == true && abilityName != null && abilityName != string.Empty) {
                 BaseAbility tmpAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
                 if (tmpAbility == null) {
-                    Debug.LogError("LearnAbilityCommand.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("LearnAbilityCommand.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
         }

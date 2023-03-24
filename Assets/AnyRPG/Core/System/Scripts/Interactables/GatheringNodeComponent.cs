@@ -42,7 +42,7 @@ namespace AnyRPG {
         }
 
         public void HandleAbilityListChange(BaseAbilityProperties baseAbility) {
-            //Debug.Log(gameObject.name + ".GatheringNode.HandleAbilityListChange(" + baseAbility.DisplayName + ")");
+            //Debug.Log($"{gameObject.name}.GatheringNode.HandleAbilityListChange(" + baseAbility.DisplayName + ")");
             HandlePrerequisiteUpdates();
         }
 
@@ -55,9 +55,9 @@ namespace AnyRPG {
 
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            //Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + ")");
+            //Debug.Log($"{gameObject.name}.GatheringNode.Interact(" + source.name + ")");
             if (Props.LootTables == null) {
-                //Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + "): lootTable was null!");
+                //Debug.Log($"{gameObject.name}.GatheringNode.Interact(" + source.name + "): lootTable was null!");
                 return true;
             }
             // base.Interact() will drop loot automatically so we will intentionally not call it because the loot drop in this class is activated by the gatherability
@@ -84,7 +84,7 @@ namespace AnyRPG {
         }
 
         public void Gather(int optionIndex = 0) {
-            //Debug.Log(gameObject.name + ".GatheringNode.DropLoot()");
+            //Debug.Log($"{gameObject.name}.GatheringNode.DropLoot()");
             if (playerManager.ActiveUnitController != null) {
                 base.Interact(playerManager.ActiveUnitController.CharacterUnit, optionIndex);
             }
@@ -100,7 +100,7 @@ namespace AnyRPG {
         */
 
         public override int GetCurrentOptionCount() {
-            //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
+            //Debug.Log($"{gameObject.name}.GatheringNode.GetCurrentOptionCount()");
             return ((playerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility.AbilityProperties) == true
                 && interactable.SpawnReference != null
                 && currentTimer <= 0f) ? 1 : 0);

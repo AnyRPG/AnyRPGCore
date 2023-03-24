@@ -75,7 +75,7 @@ namespace AnyRPG {
                 if (tmpAmbientMusicProfile != null) {
                     ambientSoundsProfileReference = tmpAmbientMusicProfile;
                 } else {
-                    Debug.LogError("WeatherProfile.SetupScriptableObjects(): Could not find audio profile : " + ambientSoundsProfile + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("WeatherProfile.SetupScriptableObjects(): Could not find audio profile : " + ambientSoundsProfile + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 

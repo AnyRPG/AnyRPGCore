@@ -63,7 +63,7 @@ namespace AnyRPG {
         public DraggableWindow DragHandle { get => dragHandle; }
 
         public override void Configure(SystemGameManager systemGameManager) {
-            //Debug.Log(gameObject.name + ".CloseableWindow.Awake()");
+            //Debug.Log($"{gameObject.name}.CloseableWindow.Awake()");
             base.Configure(systemGameManager);
             if (dragHandle != null) {
                 dragHandle.Configure(systemGameManager);
@@ -86,7 +86,7 @@ namespace AnyRPG {
         }
 
         protected virtual void InitializeWindow() {
-            //Debug.Log(gameObject.name + ".CloseableWindow.InitializeWindow()");
+            //Debug.Log($"{gameObject.name}.CloseableWindow.InitializeWindow()");
             if (windowText != null) {
                 windowText.text = windowTitle;
             }
@@ -100,7 +100,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".CloseableWindow.InitializeWindowContentsCommon(): Instantiating window Contents: " + contentPrefab.name + " and got id: " + contentGameObject.GetInstanceID());
             }
             if (contentGameObject != null) {
-                //Debug.Log(gameObject.name + ".CloseableWindow.InitializeWindow(): Instanted; setting window Contents");
+                //Debug.Log($"{gameObject.name}.CloseableWindow.InitializeWindow(): Instanted; setting window Contents");
                 //windowContents = contentGameObject.GetComponent<ICloseableWindowContents>();
                 GetWindowContents();
                 windowContents.Configure(systemGameManager);
@@ -129,7 +129,7 @@ namespace AnyRPG {
         }
 
         public virtual void DestroyWindowContents() {
-            //Debug.Log(gameObject.name + ".CloseableWindow.DestroyWindowContents()");
+            //Debug.Log($"{gameObject.name}.CloseableWindow.DestroyWindowContents()");
             if (windowContents != null) {
                 //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".CloseableWindow.DestroyWindowContents(): " + CloseableWindowContents.gameObject.name + CloseableWindowContents.gameObject.GetInstanceID());
                 objectPooler.ReturnObjectToPool(CloseableWindowContents.gameObject);
@@ -140,13 +140,13 @@ namespace AnyRPG {
         }
 
         public virtual void OpenWindow() {
-            //Debug.Log(gameObject.name + ".CloseableWindow.OpenWindow()");
+            //Debug.Log($"{gameObject.name}.CloseableWindow.OpenWindow()");
             //InitializeWindow();
             if (IsOpen) {
                 return;
             }
             if (windowContents != null) {
-                //Debug.Log(gameObject.name + ".CloseableWindow.OpenWindow(): turning up alpha and setting to interactable");
+                //Debug.Log($"{gameObject.name}.CloseableWindow.OpenWindow(): turning up alpha and setting to interactable");
                 /*
                 canvasGroup.alpha = 1;
                 canvasGroup.interactable = true;
@@ -163,14 +163,14 @@ namespace AnyRPG {
         }
 
         public virtual void CloseWindow() {
-            //Debug.Log(gameObject.name + ".CloseableWindow.CloseWindow()");
+            //Debug.Log($"{gameObject.name}.CloseableWindow.CloseWindow()");
             //InitializeWindow();
             if (IsOpen == false) {
                 RawCloseWindow();
                 return;
             }
             RawCloseWindow();
-            //Debug.Log(gameObject.name + ".CloseableWindow.CloseWindow(): alpha should be set to zero: doing callbacks");
+            //Debug.Log($"{gameObject.name}.CloseableWindow.CloseWindow(): alpha should be set to zero: doing callbacks");
             OnCloseWindowCallback();
             if (windowContents != null) {
                 windowContents.ReceiveClosedWindowNotification();
@@ -184,7 +184,7 @@ namespace AnyRPG {
         }
 
         public void RawCloseWindow() {
-            //Debug.Log(gameObject.name + ".CloseableWindow.RawCloseWindow()");
+            //Debug.Log($"{gameObject.name}.CloseableWindow.RawCloseWindow()");
             /*
             canvasGroup.alpha = 0;
             canvasGroup.interactable = false;
@@ -194,7 +194,7 @@ namespace AnyRPG {
         }
 
         public void ToggleOpenClose() {
-            //Debug.Log(gameObject.name + ".CloseableWindow.ToggleOpenClose()");
+            //Debug.Log($"{gameObject.name}.CloseableWindow.ToggleOpenClose()");
             if (IsOpen) {
                 CloseWindow();
             } else {
@@ -213,14 +213,14 @@ namespace AnyRPG {
         }
 
         public void SetControllerHints(string aOption, string xOption, string yOption, string bOption, string dPadOption, string rDownOption) {
-            //Debug.Log(gameObject.name + ".CloseableWindow.SetControllerHints()");
+            //Debug.Log($"{gameObject.name}.CloseableWindow.SetControllerHints()");
             if (hintBarController != null) {
                 hintBarController.SetOptions(aOption, xOption, yOption, bOption, dPadOption, rDownOption);
             }
         }
 
         public void HideControllerHints() {
-            //Debug.Log(gameObject.name + ".CloseableWindow.HideControllerHints()");
+            //Debug.Log($"{gameObject.name}.CloseableWindow.HideControllerHints()");
             if (hintBarController != null) {
                 hintBarController.Hide();
             }
@@ -233,7 +233,7 @@ namespace AnyRPG {
         }
 
         public void LeftAnalog(float inputHorizontal, float inputVertical) {
-            //Debug.Log(gameObject.name + ".CloseableWindow.LeftAnalog()");
+            //Debug.Log($"{gameObject.name}.CloseableWindow.LeftAnalog()");
 
             if (dragHandle != null) {
                 dragHandle.LeftAnalog(inputHorizontal, inputVertical);

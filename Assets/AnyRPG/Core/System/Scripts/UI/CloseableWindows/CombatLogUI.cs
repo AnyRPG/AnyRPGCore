@@ -160,7 +160,7 @@ namespace AnyRPG {
 
         public void ShowChatLog() {
             chatHighlightButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(chatHighlightButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(chatHighlightButton);
             combatArea.SetActive(false);
             systemArea.SetActive(false);
             chatArea.SetActive(true);
@@ -172,7 +172,7 @@ namespace AnyRPG {
 
         public void ShowCombatLog() {
             combatHighlightButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(combatHighlightButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(combatHighlightButton);
             systemArea.SetActive(false);
             chatArea.SetActive(false);
             combatArea.SetActive(true);
@@ -184,7 +184,7 @@ namespace AnyRPG {
 
         public void ShowSystemLog() {
             systemHighlightButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(systemHighlightButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(systemHighlightButton);
             chatArea.SetActive(false);
             combatArea.SetActive(false);
             systemArea.SetActive(true);

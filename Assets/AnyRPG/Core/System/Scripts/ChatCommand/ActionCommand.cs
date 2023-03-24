@@ -25,7 +25,7 @@ namespace AnyRPG {
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
 
-            actionProperties.SetupScriptableObjects(systemGameManager, DisplayName);
+            actionProperties.SetupScriptableObjects(systemGameManager, ResourceName);
         }
 
     }

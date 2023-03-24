@@ -10,7 +10,12 @@ namespace AnyRPG {
             get => icon;
             set => icon = value;
         }
-        
+
+        public string ResourceName {
+            get => resourceName;
+            set => resourceName = value;
+        }
+
         public string DisplayName { 
             get => displayName;
             set => displayName = value;
@@ -22,6 +27,7 @@ namespace AnyRPG {
         }
 
         private Sprite icon = null;
+        private string resourceName = string.Empty;
         private string displayName = string.Empty;
         private string description = string.Empty;
         private string summary = string.Empty;

@@ -1,4 +1,3 @@
-using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,6 +6,11 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     public class NewGameClassPanelController : WindowContentController {
+
+        [Header("Class Panel")]
+
+        [SerializeField]
+        private GameObject classRightPane = null;
 
         [SerializeField]
         private GameObject buttonPrefab = null;
@@ -54,7 +58,6 @@ namespace AnyRPG {
 
         public void SetNewGamePanel(NewGamePanel newGamePanel) {
             this.newGamePanel = newGamePanel;
-            //parentPanel = newGamePanel;
         }
 
         public void ClearOptionButtons() {
@@ -72,6 +75,7 @@ namespace AnyRPG {
 
         public void ShowOptionButtons() {
             //Debug.Log("NewGameClassPanelController.ShowOptionButtons()");
+            
             ClearOptionButtons();
 
             for (int i = 0; i < newGameManager.CharacterClassList.Count; i++) {
@@ -86,11 +90,6 @@ namespace AnyRPG {
                     uINavigationControllers[0].SetCurrentIndex(i);
                 }
             }
-            /*
-            if (optionButtons.Count > 0) {
-                SetNavigationController(uINavigationControllers[0]);
-            }
-            */
         }
 
         public void SetCharacterClass(CharacterClass newCharacterClass) {
@@ -111,9 +110,14 @@ namespace AnyRPG {
                 }
             }
 
-
             ShowAbilityRewards();
             ShowTraitRewards();
+            if (abilityLabel.activeSelf == false && traitLabel.activeSelf == false) {
+                classRightPane.SetActive(false);
+            } else {
+                classRightPane.SetActive(true);
+            }
+
         }
 
         public void HidePanel() {
@@ -127,7 +131,6 @@ namespace AnyRPG {
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
         }
-
 
         public void ShowTraitRewards() {
             //Debug.Log("ClassChangePanelController.ShowTraitRewards()");
@@ -214,15 +217,6 @@ namespace AnyRPG {
             ShowOptionButtons();
 
         }
-
-        /*
-        public override void Accept() {
-            base.Accept();
-            if (currentNavigationController == uINavigationControllers[0]) {
-                newGamePanel.OpenDetailsPanel();
-            }
-        }
-        */
 
     }
 

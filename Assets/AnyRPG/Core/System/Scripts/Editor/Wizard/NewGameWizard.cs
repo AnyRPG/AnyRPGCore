@@ -77,6 +77,7 @@ namespace AnyRPG {
             "Skill",
             "StatusEffectGroup",
             "StatusEffectType",
+            "SwappableMeshModelProfile",
             "UMARecipeProfile",
             "UnitProfile",
             "UnitToughness",

@@ -91,10 +91,10 @@ namespace AnyRPG {
 
         public bool CanDropUniqueItem(Item item) {
             //Debug.Log("LootManager.CanDropUniqueItem(" + item.DisplayName + ")");
-            if (playerManager.MyCharacter.CharacterInventoryManager.GetItemCount(item.DisplayName) > 0) {
+            if (playerManager.MyCharacter.CharacterInventoryManager.GetItemCount(item.ResourceName) > 0) {
                 return false;
             }
-            if (playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(item.DisplayName) == true) {
+            if (playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(item.ResourceName) == true) {
                 return false;
             }
             foreach (LootTableState lootTableState in lootTableStates) {

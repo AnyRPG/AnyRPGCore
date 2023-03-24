@@ -1,5 +1,6 @@
 using AnyRPG;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -9,13 +10,15 @@ namespace AnyRPG {
 
     public class NewGamePanel : WindowContentController {
 
-        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
         public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
         [Header("New Game Panel")]
 
         [SerializeField]
         private TextMeshProUGUI playerNameLabel = null;
+
+        [SerializeField]
+        private GameObject panelParent = null;
 
         [SerializeField]
         private CharacterPreviewPanelController characterPreviewPanel = null;
@@ -27,13 +30,16 @@ namespace AnyRPG {
         private NewGameMecanimCharacterPanelController characterPanel = null;
 
         [SerializeField]
-        private UMACharacterEditorPanelController umaCharacterPanel = null;
-
-        [SerializeField]
-        private NewGameClassPanelController classPanel = null;
+        private DefaultAppearancePanel defaultAppearancePanel = null;
 
         [SerializeField]
         private NewGameFactionPanelController factionPanel = null;
+
+        [SerializeField]
+        private NewGameRacePanelController racePanel = null;
+
+        [SerializeField]
+        private NewGameClassPanelController classPanel = null;
 
         [SerializeField]
         private NewGameSpecializationPanelController specializationPanel = null;
@@ -43,6 +49,9 @@ namespace AnyRPG {
         [SerializeField]
         private HighlightButton returnButton = null;
         */
+
+        [SerializeField]
+        private UINavigationController mainNavigationController = null;
 
         [SerializeField]
         private HighlightButton detailsButton = null;
@@ -57,15 +66,18 @@ namespace AnyRPG {
         private HighlightButton factionButton = null;
 
         [SerializeField]
+        private HighlightButton raceButton = null;
+
+        [SerializeField]
         private HighlightButton classButton = null;
 
         [SerializeField]
         private HighlightButton specializationButton = null;
 
-        /*
-        [SerializeField]
-        private HighlightButton startButton = null;
-        */
+        private Dictionary<GameObject, AppearancePanel> appearanceEditorPanels = new Dictionary<GameObject, AppearancePanel>();
+        private Dictionary<Type, GameObject> appearanceEditorPanelTypes = new Dictionary<Type, GameObject>();
+        private AppearancePanel currentAppearanceEditorPanel = null;
+
 
         // game manager references
         protected SaveManager saveManager = null;
@@ -74,38 +86,23 @@ namespace AnyRPG {
         protected UIManager uIManager = null;
         protected LevelManager levelManager = null;
         protected NewGameManager newGameManager = null;
+        protected ObjectPooler objectPooler = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            //returnButton.Configure(systemGameManager);
-            //detailsButton.Configure(systemGameManager);
-            //characterButton.Configure(systemGameManager);
-            //appearanceButton.Configure(systemGameManager);
-            //factionButton.Configure(systemGameManager);
-            //classButton.Configure(systemGameManager);
-            //specializationButton.Configure(systemGameManager);
-            //startButton.Configure(systemGameManager);
-
             characterPreviewPanel.Configure(systemGameManager);
 
-            //detailsPanel.Configure(systemGameManager);
             detailsPanel.SetNewGamePanel(this);
-
-            //characterPanel.Configure(systemGameManager);
-            //characterPanel.SetParentPanel(this);
-
-            //umaCharacterPanel.Configure(systemGameManager);
-            //umaCharacterPanel.SetParentPanel(this);
-
-            //classPanel.Configure(systemGameManager);
             classPanel.SetNewGamePanel(this);
-
-            //factionPanel.Configure(systemGameManager);
             factionPanel.SetNewGamePanel(this);
-
-            //specializationPanel.Configure(systemGameManager);
+            racePanel.SetNewGamePanel(this);
             specializationPanel.SetNewGamePanel(this);
+
+            defaultAppearancePanel.SetCharacterEditor(newGameManager);
+
+            AddDefaultAppearancePanel();
+            GetAvailableAppearancePanels();
         }
 
         public override void SetGameManagerReferences() {
@@ -116,6 +113,20 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             levelManager = systemGameManager.LevelManager;
             newGameManager = systemGameManager.NewGameManager;
+            objectPooler = systemGameManager.ObjectPooler;
+        }
+
+        private void AddDefaultAppearancePanel() {
+            appearanceEditorPanels.Add(defaultAppearancePanel.gameObject, defaultAppearancePanel);
+        }
+
+        private void GetAvailableAppearancePanels() {
+
+            foreach (AppearanceEditorProfile appearanceEditorProfile in systemDataFactory.GetResourceList<AppearanceEditorProfile>()) {
+                if (appearanceEditorProfile.ModelProviderType != null) {
+                    appearanceEditorPanelTypes.Add(appearanceEditorProfile.ModelProviderType, appearanceEditorProfile.Prefab);
+                }
+            }
         }
 
         public override void ReceiveClosedWindowNotification() {
@@ -124,28 +135,40 @@ namespace AnyRPG {
 
             newGameManager.OnSetPlayerName -= HandleSetPlayerName;
             newGameManager.OnSetUnitProfile -= HandleSetUnitProfile;
+            newGameManager.OnSetFaction -= HandleSetFaction;
+            newGameManager.OnSetCharacterRace -= HandleSetCharacterRace;
             newGameManager.OnSetCharacterClass -= HandleSetCharacterClass;
             newGameManager.OnSetClassSpecialization -= HandleSetClassSpecialization;
-            newGameManager.OnSetFaction -= HandleSetFaction;
             newGameManager.OnUpdateEquipmentList -= HandleUpdateEquipmentList;
             newGameManager.OnUpdateFactionList -= HandleUpdateFactionList;
+            newGameManager.OnUpdateCharacterRaceList -= HandleUpdateCharacterRaceList;
             newGameManager.OnUpdateCharacterClassList -= HandleUpdateCharacterClassList;
             newGameManager.OnUpdateClassSpecializationList -= HandleUpdateClassSpecializationList;
             newGameManager.OnUpdateUnitProfileList -= HandleUpdateUnitProfileList;
 
             saveManager.ClearSharedData();
-            characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
-            characterPreviewPanel.OnTargetReady -= HandleTargetReady;
+            //characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
+            //characterPreviewPanel.OnTargetReady -= HandleTargetReady;
+
+            characterCreatorManager.OnUnitCreated -= HandleUnitCreated;
+            characterCreatorManager.OnModelCreated -= HandleModelCreated;
+
             characterPreviewPanel.ReceiveClosedWindowNotification();
-            if (systemConfigurationManager.NewGameUMAAppearance == true) {
-                umaCharacterPanel.ReceiveClosedWindowNotification();
-            } else {
-                characterPanel.ReceiveClosedWindowNotification();
+
+            foreach (AppearancePanel appearancePanel in appearanceEditorPanels.Values) {
+                appearancePanel.ReceiveClosedWindowNotification();
             }
-            specializationPanel.ReceiveClosedWindowNotification();
+            defaultAppearancePanel.ReceiveClosedWindowNotification();
+
+            characterPanel.ReceiveClosedWindowNotification();
             factionPanel.ReceiveClosedWindowNotification();
+            racePanel.ReceiveClosedWindowNotification();
             classPanel.ReceiveClosedWindowNotification();
+            specializationPanel.ReceiveClosedWindowNotification();
             detailsPanel.ReceiveClosedWindowNotification();
+
+            characterCreatorManager.DisableLight();
+            characterCreatorManager.DespawnEnvironmentPreviewPrefab();
             OnCloseWindow(this);
         }
 
@@ -154,13 +177,21 @@ namespace AnyRPG {
 
             base.ProcessOpenWindowNotification();
 
+            ProcessOpenWindow();
+        }
+
+        private void ProcessOpenWindow() {
+            //Debug.Log("NewGamePanel.ProcessOpenWindow()");
+
             newGameManager.OnSetPlayerName += HandleSetPlayerName;
             newGameManager.OnSetUnitProfile += HandleSetUnitProfile;
+            newGameManager.OnSetFaction += HandleSetFaction;
+            newGameManager.OnSetCharacterRace += HandleSetCharacterRace;
             newGameManager.OnSetCharacterClass += HandleSetCharacterClass;
             newGameManager.OnSetClassSpecialization += HandleSetClassSpecialization;
-            newGameManager.OnSetFaction += HandleSetFaction;
             newGameManager.OnUpdateEquipmentList += HandleUpdateEquipmentList;
             newGameManager.OnUpdateFactionList += HandleUpdateFactionList;
+            newGameManager.OnUpdateCharacterRaceList += HandleUpdateCharacterRaceList;
             newGameManager.OnUpdateCharacterClassList += HandleUpdateCharacterClassList;
             newGameManager.OnUpdateClassSpecializationList += HandleUpdateClassSpecializationList;
             newGameManager.OnUpdateUnitProfileList += HandleUpdateUnitProfileList;
@@ -172,6 +203,7 @@ namespace AnyRPG {
             saveManager.ClearSharedData();
 
             factionPanel.ReceiveOpenWindowNotification();
+            racePanel.ReceiveOpenWindowNotification();
             // class goes before specialization because it acts as a filter for it
             classPanel.ReceiveOpenWindowNotification();
             specializationPanel.ReceiveOpenWindowNotification();
@@ -180,64 +212,40 @@ namespace AnyRPG {
 
             // now that faction is set, and character panel is opened (which caused the first available unit to be selected), it's time to render the unit
             // inform the preview panel so the character can be rendered
-            characterPreviewPanel.OnTargetReady += HandleTargetReady;
-            characterPreviewPanel.OnTargetCreated += HandleTargetCreated;
+            //characterPreviewPanel.OnTargetCreated += HandleTargetCreated;
+            //characterPreviewPanel.OnTargetReady += HandleTargetReady;
+            characterCreatorManager.OnUnitCreated += HandleUnitCreated;
+            characterCreatorManager.OnModelCreated += HandleModelCreated;
+
             characterPreviewPanel.CapabilityConsumer = newGameManager;
             characterPreviewPanel.ReceiveOpenWindowNotification();
 
             //Debug.Log("Preview Unit Ready: " + characterCreatorManager?.PreviewUnitController?.CameraTargetReady);
 
-            // attempt to open the UMA window first
-            if (systemConfigurationManager.NewGameUMAAppearance == true) {
-                umaCharacterPanel.ReceiveOpenWindowNotification();
-            }
-
-            // if the UMA window is not in use, or there was no UMA unit available, try the mecanim window
-            if (systemConfigurationManager.NewGameUMAAppearance == false
-                || (systemConfigurationManager.NewGameUMAAppearance == true && characterCreatorManager.PreviewUnitController == null)) {
-                characterPanel.ReceiveOpenWindowNotification();
-            }
+            defaultAppearancePanel.ReceiveOpenWindowNotification();
 
             // details should be last because it relies on all the information set in the previous methods
             detailsPanel.ReceiveOpenWindowNotification();
 
-            uINavigationControllers[0].SetCurrentButton(detailsButton);
+            mainNavigationController.SetCurrentButton(detailsButton);
+            if (controlsManager.GamePadInputActive == true) {
+                mainNavigationController.FocusCurrentButton();
+            }
+
 
             OpenDetailsPanel();
-
-            //SetNavigationController(uINavigationControllers[0]);
-            //detailsButton.Accept();
-
-            // testing appearance last since it relies on at very minimum the unit profile being set
 
             if (systemConfigurationManager.NewGameAudioProfile != null) {
                 audioManager.StopMusic();
                 audioManager.PlayMusic(systemConfigurationManager.NewGameAudioProfile.AudioClip);
             }
 
-            /*
-            if (controlsManager.GamePadModeActive && focusFirstButtonOnOpen == true) {
-                currentNavigationController.FocusFirstButton();
-                return;
-            }
-
-            if (controlsManager.GamePadModeActive && focusActiveSubPanel == true) {
-                openSubPanel.FocusFirstButton();
-                return;
-            }
-            */
-
+            characterCreatorManager.EnableLight();
         }
 
         public void ClearButtons() {
             // disable character button if option not allowed or no faction exists
             if (systemConfigurationManager.NewGameAppearance == true) {
-                characterButton.gameObject.SetActive(true);
-            } else {
-                characterButton.gameObject.SetActive(false);
-            }
-
-            if (systemConfigurationManager.NewGameUMAAppearance == true) {
                 appearanceButton.gameObject.SetActive(true);
             } else {
                 appearanceButton.gameObject.SetActive(false);
@@ -254,7 +262,21 @@ namespace AnyRPG {
                 }
             }
 
-            // disable class button if option not allowed or no faction exists
+            // disable character button if not allowed
+            if (systemConfigurationManager.CharacterSelectionType == CharacterSelectionType.CharacterList) {
+                characterButton.gameObject.SetActive(true);
+            } else {
+                characterButton.gameObject.SetActive(false);
+            }
+
+            // disable race button if option not allowed
+            if (systemConfigurationManager.CharacterSelectionType == CharacterSelectionType.RaceAndGender) {
+                raceButton.gameObject.SetActive(true);
+            } else {
+                raceButton.gameObject.SetActive(false);
+            }
+
+            // disable class button if option not allowed
             classButton.gameObject.SetActive(false);
             if (systemConfigurationManager.NewGameClass == true) {
                 foreach (CharacterClass characterClass in systemDataFactory.GetResourceList<CharacterClass>()) {
@@ -335,6 +357,15 @@ namespace AnyRPG {
 
         }
 
+        public void HandleSetCharacterRace(CharacterRace newRace) {
+            //Debug.Log("NewGamePanel.HandleSetRace()");
+
+            detailsPanel.SetCharacterRace(newRace);
+
+            racePanel.SetCharacterRace(newRace);
+
+        }
+
         public void HandleUpdateEquipmentList() {
             //Debug.Log("NameGamePanel.UpdateEquipmentList()");
 
@@ -349,14 +380,26 @@ namespace AnyRPG {
         }
 
         public void HandleUpdateFactionList() {
+            //Debug.Log("NameGamePanel.HandleUpdateFactionList()");
+
             factionPanel.ShowOptionButtons();
         }
 
+        public void HandleUpdateCharacterRaceList() {
+            //Debug.Log("NameGamePanel.HandleUpdateCharacterRaceList()");
+
+            racePanel.ShowOptionButtons();
+        }
+
         public void HandleUpdateCharacterClassList() {
+            //Debug.Log("NameGamePanel.HandleUpdateCharacterClassList()");
+
             classPanel.ShowOptionButtons();
         }
 
         public void HandleUpdateClassSpecializationList() {
+            //Debug.Log("NameGamePanel.HandleUpdateClassSpecializationList()");
+
             specializationPanel.ShowOptionButtons();
         }
 
@@ -383,84 +426,158 @@ namespace AnyRPG {
         }
         */
 
-        private void ClosePanels() {
-            characterPanel.HidePanel();
-            umaCharacterPanel.HidePanel();
-            classPanel.HidePanel();
-            factionPanel.HidePanel();
-            specializationPanel.HidePanel();
-            detailsPanel.HidePanel();
+        private void ClosePanels(CloseableWindowContents skipPanel) {
+            if (skipPanel != detailsPanel) {
+                detailsPanel.HidePanel();
+            }
+            if (skipPanel != characterPanel) {
+                characterPanel.HidePanel();
+            }
+            foreach (AppearancePanel appearancePanel in appearanceEditorPanels.Values) {
+                if (skipPanel != appearancePanel) {
+                    appearancePanel.HidePanel();
+                }
+            }
+            if (skipPanel != factionPanel) {
+                factionPanel.HidePanel();
+            }
+            if (skipPanel != racePanel) {
+                racePanel.HidePanel();
+            }
+            if (skipPanel != specializationPanel) {
+                specializationPanel.HidePanel();
+            }
+            if (skipPanel != classPanel) {
+                classPanel.HidePanel();
+            }
         }
 
         public void OpenDetailsPanel() {
             //Debug.Log("NewGamePanel.OpenDetailsPanel()");
 
-            ClosePanels();
-            detailsPanel.ShowPanel();
-            SetOpenSubPanel(detailsPanel, true);
+            if (openSubPanel != detailsPanel) {
+                ClosePanels(detailsPanel);
+                detailsPanel.ShowPanel();
+                SetOpenSubPanel(detailsPanel, false);
+            }
 
             detailsButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(detailsButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(detailsButton);
         }
 
         public void OpenCharacterPanel() {
             //Debug.Log("NewGamePanel.OpenCharacterPanel()");
 
-            ClosePanels();
-            characterPanel.ShowPanel();
-            SetOpenSubPanel(characterPanel, true);
+            if (openSubPanel != characterPanel) {
+                ClosePanels(characterPanel);
+                characterPanel.ShowPanel();
+                SetOpenSubPanel(characterPanel, false);
+            }
 
             characterButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(characterButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(characterButton);
         }
 
         public void OpenAppearancePanel() {
             //Debug.Log("NewGamePanel.OpenAppearancePanel()");
-            ClosePanels();
-            umaCharacterPanel.ShowPanel();
-            SetOpenSubPanel(umaCharacterPanel, umaCharacterPanel.MainNoOptionsArea.activeSelf == false);
+
+            if (openSubPanel != currentAppearanceEditorPanel) {
+                ClosePanels(currentAppearanceEditorPanel);
+                currentAppearanceEditorPanel.ShowPanel();
+                SetOpenSubPanel(currentAppearanceEditorPanel, false);
+            }
 
             appearanceButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(appearanceButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(appearanceButton);
         }
 
-        public void OpenFactionPanel(bool focus = true) {
-            //Debug.Log("NewGamePanel.OpenFactionPanel()");
+        private void ActivateCorrectAppearancePanel() {
+            //Debug.Log("NewGamePanel.ActivateCorrectAppearancePanel()");
 
-            ClosePanels();
-            factionPanel.ShowPanel();
-            SetOpenSubPanel(factionPanel, focus);
+            if (characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider == null) {
+                currentAppearanceEditorPanel = defaultAppearancePanel;
+                return;
+            }
+
+            //Debug.Log("provider type is " + characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType());
+
+            if (appearanceEditorPanelTypes.ContainsKey(characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType()) == false) {
+                currentAppearanceEditorPanel = defaultAppearancePanel;
+                return;
+            }
+
+            GameObject panelPrefab = appearanceEditorPanelTypes[characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType()];
+
+            if (appearanceEditorPanels.ContainsKey(panelPrefab) == false) {
+                AppearancePanel appearancePanel = objectPooler.GetPooledObject(panelPrefab, panelParent.transform).GetComponent<AppearancePanel>();
+                appearancePanel.Configure(systemGameManager);
+                appearancePanel.SetParentPanel(this);
+                appearancePanel.SetCharacterEditor(newGameManager);
+                appearancePanel.ReceiveOpenWindowNotification();
+                appearancePanel.transform.SetSiblingIndex(1);
+                appearanceEditorPanels.Add(panelPrefab, appearancePanel);
+                subPanels.Add(appearancePanel);
+            }
+
+            currentAppearanceEditorPanel = appearanceEditorPanels[panelPrefab];
+            //currentAppearancePanel.SetupOptions();
+        }
+
+        public void OpenFactionPanel(bool focus) {
+            //Debug.Log($"NewGamePanel.OpenFactionPanel({focus})");
+
+            if (openSubPanel != factionPanel) {
+                ClosePanels(factionPanel);
+                factionPanel.ShowPanel();
+                SetOpenSubPanel(factionPanel, focus);
+            }
 
             uINavigationControllers[0].SetCurrentButton(factionButton);
             factionButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(factionButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(factionButton);
         }
 
-        public void OpenClassPanel(bool focus = true) {
-            //Debug.Log("NewGamePanel.OpenClassPanel()");
+        public void OpenRacePanel(bool focus) {
+            //Debug.Log($"NewGamePanel.OpenRacePanel({focus})");
 
-            ClosePanels();
-            classPanel.ShowPanel();
-            SetOpenSubPanel(classPanel, focus);
+            if (openSubPanel != racePanel) {
+                ClosePanels(racePanel);
+                racePanel.ShowPanel();
+                SetOpenSubPanel(racePanel, focus);
+            }
+
+            uINavigationControllers[0].SetCurrentButton(raceButton);
+            raceButton.HighlightBackground();
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(raceButton);
+        }
+
+        public void OpenClassPanel(bool focus) {
+            //Debug.Log($"NewGamePanel.OpenClassPanel({focus})");
+
+            if (openSubPanel != classPanel) {
+                ClosePanels(classPanel);
+                classPanel.ShowPanel();
+                SetOpenSubPanel(classPanel, focus);
+            }
 
             uINavigationControllers[0].SetCurrentButton(classButton);
             classButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(classButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(classButton);
         }
 
-        public void OpenSpecializationPanel(bool focus = true) {
-            //Debug.Log("NewGamePanel.OpenSpecializationPanel()");
+        public void OpenSpecializationPanel(bool focus) {
+            //Debug.Log($"NewGamePanel.OpenSpecializationPanel({focus})");
 
             // this is only called from buttons, so safe to assume it's already been populated with buttons when the window opened or a class was selected
-            if (specializationPanel.OptionButtons.Count > 0) {
-                ClosePanels();
+            if (specializationPanel.OptionButtons.Count > 0 && openSubPanel != specializationPanel) {
+                ClosePanels(specializationPanel);
                 specializationPanel.ShowPanel();
                 SetOpenSubPanel(specializationPanel, focus);
             }
 
             uINavigationControllers[0].SetCurrentButton(specializationButton);
             specializationButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(specializationButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(specializationButton);
         }
 
         public void SetCharacterProperties() {
@@ -476,17 +593,20 @@ namespace AnyRPG {
 
         }
 
-        public void HandleTargetCreated() {
-            //Debug.Log("NewGamePanel.HandleTargetCreated()");
-            
-            // just a reminder
+        public void HandleUnitCreated() {
+            //Debug.Log("NewGamePanel.HandleUnitCreated()");
+
+            ActivateCorrectAppearancePanel();
+            currentAppearanceEditorPanel.HandleUnitCreated();
+
             EquipCharacter();
         }
 
 
-        public void HandleTargetReady() {
-            //Debug.Log("NewGameCharacterPanelController.HandleTargetReady()");
-            //EquipCharacter();
+        public void HandleModelCreated() {
+            //Debug.Log("NewGamePanel.HandleModelCreated()");
+
+            currentAppearanceEditorPanel.SetupOptions();
         }
 
         public void EquipCharacter() {
@@ -498,14 +618,6 @@ namespace AnyRPG {
                 return;
             }
 
-            /*
-            if (characterPreviewPanel.CharacterReady == false) {
-                // attempting this before the character is spawned will make it go invisible (UMA bug)
-                //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): character not ready yet, exiting.");
-                return;
-            }
-            */
-
             // set character class etc first so preview works and can equip character
             SetCharacterProperties();
 
@@ -515,7 +627,6 @@ namespace AnyRPG {
                 //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): found equipment manager");
 
                 // unequip equipment not in current list
-                //characterEquipmentManager.UnequipAll(false);
                 List<Equipment> removeList = new List<Equipment>();
                 foreach (Equipment equipment in characterEquipmentManager.CurrentEquipment.Values) {
                     //Debug.Log("NewGamePanel.EquipCharacter(): checking for removal : " + (equipment == null ? "null" : equipment.DisplayName));
@@ -525,7 +636,7 @@ namespace AnyRPG {
                 }
                 foreach (Equipment equipment in removeList) {
                     //characterEquipmentManager.Unequip(equipment, false, false, false);
-                    characterEquipmentManager.Unequip(equipment, true, true, false);
+                    characterEquipmentManager.Unequip(equipment);
                     changes++;
                 }
 
@@ -537,7 +648,7 @@ namespace AnyRPG {
                         if (characterEquipmentManager.CurrentEquipment.ContainsKey(equipmentSlotProfile) == false
                             || characterEquipmentManager.CurrentEquipment[equipmentSlotProfile] == null
                             || characterEquipmentManager.CurrentEquipment[equipmentSlotProfile] != newGameManager.EquipmentList[equipmentSlotProfile]) {
-                            characterEquipmentManager.Equip(newGameManager.EquipmentList[equipmentSlotProfile], equipmentSlotProfile, false, false, false);
+                            characterEquipmentManager.Equip(newGameManager.EquipmentList[equipmentSlotProfile], equipmentSlotProfile);
                             changes++;
                         }
                     }
@@ -546,22 +657,30 @@ namespace AnyRPG {
                     //Debug.Log("NewGamePanel.EquipCharacter(): character is ready");
                     characterCreatorManager.PreviewUnitController.UnitModelController.RebuildModelAppearance();
                 }
-                //characterPreviewPanel.BuildModelAppearance();
             }
         }
 
         public void ClosePanel() {
-            //Debug.Log("CharacterCreatorPanel.ClosePanel()");
+            //Debug.Log("NewGamePanel.ClosePanel()");
             uIManager.newGameWindow.CloseWindow();
             levelManager.PlayLevelSounds();
         }
 
         public void NewGame() {
-            //Debug.Log("LoadGamePanel.NewGame()");
+            //Debug.Log("NewGamePanel.NewGame()");
 
-            newGameManager.SetPlayerUMARecipe(characterPreviewPanel.GetCurrentRecipe());
+            SaveAppearanceData(newGameManager.SaveData);
 
             uIManager.confirmNewGameMenuWindow.OpenWindow();
+        }
+
+        public void SaveAppearanceData(AnyRPGSaveData saveData) {
+            //Debug.Log("CharacterPreviewPanelController.SaveAppearanceData()");
+
+            if (characterCreatorManager.PreviewUnitController?.UnitModelController == null) {
+                return;
+            }
+            characterCreatorManager.PreviewUnitController.UnitModelController.SaveAppearanceSettings(newGameManager, saveData);
         }
 
 

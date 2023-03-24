@@ -57,7 +57,7 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            //Debug.Log(gameObject.name + ".AnimatedObject.Interact(" + (source == null ? "null" : source.name) +")");
+            //Debug.Log($"{gameObject.name}.AnimatedObject.Interact(" + (source == null ? "null" : source.name) +")");
 
             base.Interact(source, optionIndex);
             uIManager.interactionWindow.CloseWindow();
@@ -125,7 +125,7 @@ namespace AnyRPG {
             newAngle = GetTranslatedEulerAngles(newAngle);
 
             if (audioSource != null && audioClip != null) {
-                //Debug.Log(gameObject.name + ".AnimatedObject.animateObject(): playing audioclip: " + audioProfile.AudioClip);
+                //Debug.Log($"{gameObject.name}.AnimatedObject.animateObject(): playing audioclip: " + audioProfile.AudioClip);
                 audioSource.PlayOneShot(audioClip);
             }
 

@@ -54,6 +54,7 @@ namespace AnyRPG {
         public Image Image { get => icon; set => icon = value; }
 
         public Sprite Icon { get => (BagNode.Bag != null ? BagNode.Bag.Icon : null); }
+        public string ResourceName { get => (BagNode.Bag != null ? BagNode.Bag.ResourceName : null); }
         public string DisplayName { get => (BagNode.Bag != null ? BagNode.Bag.DisplayName : null); }
         public string Description { get => (BagNode.Bag != null ? BagNode.Bag.Description : null); }
 
@@ -79,7 +80,7 @@ namespace AnyRPG {
         }
 
         public void HandleAddBag(Bag bag) {
-            //Debug.Log(gameObject.name + ".BagButton.HandleAddBag()");
+            //Debug.Log($"{gameObject.name}.BagButton.HandleAddBag()");
             icon.sprite = bag.Icon;
             icon.color = Color.white;
             SetBackGroundColor();
@@ -111,7 +112,7 @@ namespace AnyRPG {
                 return;
             }
             if (backGroundImage == null) {
-                //Debug.Log(gameObject.name + "SlotScript.Awake(): background image is null, trying to get component");
+                //Debug.Log($"{gameObject.name}SlotScript.Awake(): background image is null, trying to get component");
                 backGroundImage = GetComponent<Image>();
             }
             SetDefaultIcon();
@@ -244,12 +245,12 @@ namespace AnyRPG {
             //GetLocalComponents();
             Color finalColor;
             finalColor = new Color32(0, 0, 0, 255);
-            //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor()");
+            //Debug.Log($"{gameObject.name}.WindowContentController.SetBackGroundColor()");
             if (backGroundImage != null) {
-                //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image is not null, setting color: " + slotOpacityLevel);
+                //Debug.Log($"{gameObject.name}.WindowContentController.SetBackGroundColor(): background image is not null, setting color: " + slotOpacityLevel);
                 backGroundImage.color = finalColor;
             } else {
-                //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image IS NULL!");
+                //Debug.Log($"{gameObject.name}.WindowContentController.SetBackGroundColor(): background image IS NULL!");
             }
         }
 

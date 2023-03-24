@@ -25,9 +25,9 @@ namespace AnyRPG {
 
             List<Renderer> tempList = new List<Renderer>();
             if (meshRenderers == null || meshRenderers.Length == 0) {
-                //Debug.Log(gameObject.name + ".Interactable.InitializeMaterialsNew(): Unable to find mesh renderer in target.");
+                //Debug.Log($"{gameObject.name}.Interactable.InitializeMaterialsNew(): Unable to find mesh renderer in target.");
             } else {
-                //Debug.Log(gameObject.name + ".Interactable.InitializeMaterialsNew(): Found " + meshRenderers.Length + " Mesh Renderers");
+                //Debug.Log($"{gameObject.name}.Interactable.InitializeMaterialsNew(): Found " + meshRenderers.Length + " Mesh Renderers");
                 foreach (Renderer renderer in meshRenderers) {
                     if (renderer.gameObject.layer != LayerMask.NameToLayer("SpellEffects")) {
                         tempList.Add(renderer);
@@ -36,9 +36,9 @@ namespace AnyRPG {
             }
             Renderer[] skinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
             if (skinnedMeshRenderers == null || skinnedMeshRenderers.Length == 0) {
-                //Debug.Log(gameObject.name + ".Interactable.InitializeMaterialsNew(): Unable to find skinned mesh renderer in target.");
+                //Debug.Log($"{gameObject.name}.Interactable.InitializeMaterialsNew(): Unable to find skinned mesh renderer in target.");
             } else {
-                //Debug.Log(gameObject.name + ".Interactable.InitializeMaterialsNew(): Found " + skinnedMeshRenderers.Length + " Skinned Mesh Renderers");
+                //Debug.Log($"{gameObject.name}.Interactable.InitializeMaterialsNew(): Found " + skinnedMeshRenderers.Length + " Skinned Mesh Renderers");
                 foreach (Renderer renderer in skinnedMeshRenderers) {
                     if (renderer.gameObject.layer != LayerMask.NameToLayer("SpellEffects")) {
                         tempList.Add(renderer);
@@ -51,7 +51,7 @@ namespace AnyRPG {
         }
 
         public void PerformMaterialChange() {
-            //Debug.Log(gameObject.name + ".MaterialChangeController.PerformMaterialChange()");
+            //Debug.Log($"{gameObject.name}.MaterialChangeController.PerformMaterialChange()");
 
             if (meshRenderers == null) {
                 //Debug.Log("MaterialChangeController.PerformMaterialChange(): meshRender is null.  This shouldn't happen because we checked before instantiating this!");
@@ -72,19 +72,19 @@ namespace AnyRPG {
                 renderer.materials = temporaryMaterials;
             }
 
-            //Debug.Log(gameObject.name + ".MaterialChangeController.PerformMaterialChange(): Invoke RevertMaterialChange in duration: " + changeDuration);
+            //Debug.Log($"{gameObject.name}.MaterialChangeController.PerformMaterialChange(): Invoke RevertMaterialChange in duration: " + changeDuration);
             Invoke("RevertMaterialChange", changeDuration);
         }
 
         public void OnDisable() {
-            //Debug.Log(gameObject.name + ".MaterialChangeController.OnDisable()");
+            //Debug.Log($"{gameObject.name}.MaterialChangeController.OnDisable()");
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }
         }
 
         public void RevertMaterialChange() {
-            //Debug.Log(gameObject.name + ".MaterialChangeController.RevertMaterialChange()");
+            //Debug.Log($"{gameObject.name}.MaterialChangeController.RevertMaterialChange()");
 
             if (meshRenderers == null) {
                 //Debug.Log("meshRender is null.  This shouldn't happen because we checked before instantiating this!");

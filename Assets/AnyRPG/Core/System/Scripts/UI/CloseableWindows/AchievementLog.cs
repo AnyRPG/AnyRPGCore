@@ -37,7 +37,7 @@ namespace AnyRPG {
             achievement.AcceptQuest(false, false);
             // gotta check here because kills and ability use are not automatically checked on accept because under normal circumstances those amounts must start at 0
             achievement.CheckCompletion(true, false);
-            string keyName = SystemDataFactory.PrepareStringForMatch(achievement.DisplayName);
+            string keyName = SystemDataUtility.PrepareStringForMatch(achievement.ResourceName);
             achievements[keyName] = achievement;
 
             // just in case one quest was complete but not turned in
@@ -46,7 +46,7 @@ namespace AnyRPG {
 
         public bool HasAchievement(string achievementName) {
             //Debug.Log("QuestLog.HasAchievement(" + questName + ")");
-            string keyName = SystemDataFactory.PrepareStringForMatch(achievementName);
+            string keyName = SystemDataUtility.PrepareStringForMatch(achievementName);
             if (achievements.ContainsKey(keyName)) {
                 return true;
             }

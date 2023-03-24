@@ -29,7 +29,7 @@ namespace AnyRPG {
         */
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            //Debug.Log(gameObject.name + ".BehaviorInteractable.Interact()");
+            //Debug.Log($"{gameObject.name}.BehaviorInteractable.Interact()");
             //List<BehaviorProfile> currentList = GetCurrentOptionList();
             /*
             if (currentList.Count == 0) {
@@ -70,7 +70,7 @@ namespace AnyRPG {
         List<PatrolProps> currentList = new List<PatrolProps>();
         if (interactable.CombatOnly == false) {
             //foreach (BehaviorProfile behaviorProfile in unitController.BehaviorController.BehaviorList.Keys) {
-                //Debug.Log(unitController.gameObject.name + ".BehaviorComponent.GetCurrentOptionList() processing behavior: " + behaviorProfile.DisplayName);
+                //Debug.Log($"{unitController.gameObject.name}.BehaviorComponent.GetCurrentOptionList() processing behavior: " + behaviorProfile.DisplayName);
                 if (PrerequisitesMet == true
                     && Props.PatrolProperties.AutoStart == false) {
                     //Debug.Log(unitController.gameObject.name +  ".BehaviorComponent.GetCurrentOptionList() adding behaviorProfile " + behaviorProfile.DisplayName + "; id: " + behaviorProfile.GetInstanceID());
@@ -83,7 +83,7 @@ namespace AnyRPG {
     }
 
     public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f, bool processNonCombatCheck = true) {
-        //Debug.Log(gameObject.name + ".BehaviorInteractable.CanInteract()");
+        //Debug.Log($"{gameObject.name}.BehaviorInteractable.CanInteract()");
         if (!base.CanInteract(processRangeCheck, passedRangeCheck, factionValue, processNonCombatCheck)) {
             return false;
         }
@@ -115,7 +115,7 @@ namespace AnyRPG {
     }
 
     public override int GetCurrentOptionCount() {
-        //Debug.Log(unitController.gameObject.name + ".BehaviorComponent.GetCurrentOptionCount()");
+        //Debug.Log($"{unitController.gameObject.name}.BehaviorComponent.GetCurrentOptionCount()");
         if (interactable.CombatOnly) {
             return 0;
         }
@@ -125,7 +125,7 @@ namespace AnyRPG {
                 /*
                 int count = 0;
                 foreach (BehaviorProfile behaviorProfile in GetCurrentOptionList()) {
-                    //Debug.Log(unitController.gameObject.name + ".BehaviorInteractable.GetCurrentOptionCount(): found behaviorProfile: " + behaviorProfile);
+                    //Debug.Log($"{unitController.gameObject.name}.BehaviorInteractable.GetCurrentOptionCount(): found behaviorProfile: " + behaviorProfile);
                     if (behaviorProfile.AllowManualStart == true) {
                         count++;
                     }

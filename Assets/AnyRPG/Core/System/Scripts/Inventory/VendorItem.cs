@@ -57,6 +57,7 @@ namespace AnyRPG {
 
         Sprite IDescribable.Icon => item.Icon;
 
+        string IDescribable.ResourceName => item.ResourceName;
         string IDescribable.DisplayName => item.DisplayName;
 
         string IDescribable.Description => item.Description;

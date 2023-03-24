@@ -103,7 +103,7 @@ namespace AnyRPG {
         public Vector3 EndPosition { get => endPosition; set => endPosition = value; }
 
         public void Setup(GameObject startObject, Vector3 startPosition, GameObject endObject, Vector3 endPosition, SystemGameManager systemGameManager) {
-            //Debug.Log(gameObject.name + ".ChanneledObjectScript.Setup(" + (startObject == null ? "null" : startObject.name) + ", " + startPosition + ", " + (endObject == null ? "null" : endObject.name) + ", " + endPosition + ")");
+            //Debug.Log($"{gameObject.name}.ChanneledObjectScript.Setup(" + (startObject == null ? "null" : startObject.name) + ", " + startPosition + ", " + (endObject == null ? "null" : endObject.name) + ", " + endPosition + ")");
             Configure(systemGameManager);
             StartObject = startObject;
             StartPosition = startPosition;

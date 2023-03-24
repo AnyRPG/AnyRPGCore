@@ -45,16 +45,16 @@ namespace AnyRPG {
         }
 
         public void DisableCastBar() {
-            //Debug.Log(gameObject.name + ".CastBarController.DisableCastBar()");
+            //Debug.Log($"{gameObject.name}.CastBarController.DisableCastBar()");
             if (closeableWindow?.DragHandle != null && closeableWindow.DragHandle.UiLocked == false && closeableWindow.DragHandle.NeverDraggable != true) {
-                //Debug.Log(gameObject.name + ".CastBarController.InitializeController(): ui is unlocked and neverdraggable is not set to true.  returning to avoid deactivating cast bar");
+                //Debug.Log($"{gameObject.name}.CastBarController.InitializeController(): ui is unlocked and neverdraggable is not set to true.  returning to avoid deactivating cast bar");
                 return;
             }
             this.gameObject.SetActive(false);
         }
 
         public void InitializeController() {
-            //Debug.Log(gameObject.name + ".CastBarController.InitializeController()");
+            //Debug.Log($"{gameObject.name}.CastBarController.InitializeController()");
             if (controllerInitialized) {
                 return;
             }
@@ -67,20 +67,20 @@ namespace AnyRPG {
         }
 
         private void TargetInitialization() {
-            //Debug.Log(gameObject.name + ".CastBarController.TargetInitialization()");
+            //Debug.Log($"{gameObject.name}.CastBarController.TargetInitialization()");
             InitializeCallbacks();
             //this.gameObject.SetActive(true);
         }
 
         public void SetTarget(UnitNamePlateController unitNamePlateController) {
-            //Debug.Log(gameObject.name + ".CastBarController.SetTarget(" + target.name + ")");
+            //Debug.Log($"{gameObject.name}.CastBarController.SetTarget(" + target.name + ")");
             InitializeController();
             this.unitNamePlateController = unitNamePlateController;
             TargetInitialization();
         }
 
         public void ClearTarget() {
-            //Debug.Log(gameObject.name + ".CastBarController.ClearTarget()");
+            //Debug.Log($"{gameObject.name}.CastBarController.ClearTarget()");
             if (unitNamePlateController != null
                 && unitNamePlateController.UnitController != null) {
                 unitNamePlateController.UnitController.UnitEventController.OnCastTimeChanged -= OnCastTimeChanged;
@@ -93,7 +93,7 @@ namespace AnyRPG {
         }
 
         private void InitializeCallbacks() {
-            //Debug.Log(gameObject.name + ".CastBarController.InitializeCallbacks()");
+            //Debug.Log($"{gameObject.name}.CastBarController.InitializeCallbacks()");
 
             if (unitNamePlateController != null
                 && unitNamePlateController.UnitController != null) {
@@ -105,12 +105,12 @@ namespace AnyRPG {
         }
 
         void OnCastStop(BaseCharacter source) {
-            //Debug.Log(gameObject.name + ".CastBarController.OnCastStop();");
+            //Debug.Log($"{gameObject.name}.CastBarController.OnCastStop();");
             DisableCastBar();
         }
 
         public void OnCastTimeChanged(IAbilityCaster abilityCaster, BaseAbilityProperties ability, float currentPercent) {
-            //Debug.Log(gameObject.name + ".CastBarController.OnCastTimeChanged(" + currentTime + ") : total casting time: " + ability.MyAbilityCastingTime);
+            //Debug.Log($"{gameObject.name}.CastBarController.OnCastTimeChanged(" + currentTime + ") : total casting time: " + ability.MyAbilityCastingTime);
 
             if (currentPercent <= 1f) {
                 // first set text because bar width is based on text size
@@ -118,7 +118,7 @@ namespace AnyRPG {
 
                 // then get width of container that expands to the text
                 originalCastSliderWidth = castBackground.GetComponent<RectTransform>().rect.width;
-                //Debug.Log(gameObject.name + ".CastBarController.OnCastTimeChanged(): cast slider width: " + originalCastSliderWidth);
+                //Debug.Log($"{gameObject.name}.CastBarController.OnCastTimeChanged(): cast slider width: " + originalCastSliderWidth);
 
                 this.gameObject.SetActive(true);
                 //float castPercent = (float)currentPercent / ability.GetAbilityCastingTime(abilityCaster);

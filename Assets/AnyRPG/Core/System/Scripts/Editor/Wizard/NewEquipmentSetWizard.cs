@@ -392,7 +392,9 @@ namespace AnyRPG {
 
             // uma properties
             if (uMATextRecipes.Count > 0) {
-                equipmentItem.UMARecipeProfileProperties.UMARecipes = uMATextRecipes;
+                UMAEquipmentModel umaEquipmentModel = new UMAEquipmentModel();
+                umaEquipmentModel.Properties.UMARecipes = uMATextRecipes;
+                equipmentItem.InlineEquipmentModels.EquipmentModels.Add(umaEquipmentModel);
                 /*
                 // disabled for now due to null reference in UMA code when trying to access shared colors
                 // make unique list of shared color names

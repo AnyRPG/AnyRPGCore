@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class UINavigationListHorizontal : UINavigationController {
 
         public override void FocusCurrentButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.FocusCurrentButton()");
+            //Debug.Log($"{gameObject.name}.UINavigationListHorizontal.FocusCurrentButton()");
             base.FocusCurrentButton();
             if (activeNavigableButtons.Count == 0) {
                 return;
@@ -19,7 +19,7 @@ namespace AnyRPG {
         }
 
         public override void HighlightCurrentButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.HighlightCurrentButton()");
+            //Debug.Log($"{gameObject.name}.UINavigationListHorizontal.HighlightCurrentButton()");
             //base.FocusCurrentButton();
             base.HighlightCurrentButton();
             if (activeNavigableButtons.Count == 0) {
@@ -30,17 +30,16 @@ namespace AnyRPG {
         }
 
         public override void ProcessLeftButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.LeftButton()");
+            //Debug.Log($"{gameObject.name}.UINavigationListHorizontal.LeftButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
 
             // already at far left
             if (currentIndex == 0) {
-                if (leftControllers.Count != 0 || leftPanel != null) {
-                    LeaveLeft();
+                if (LeaveLeft()) {
+                    return;
                 }
-                return;
             }
 
             // not at far left
@@ -55,14 +54,13 @@ namespace AnyRPG {
         }
 
         public override void ProcessRightButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.RightButton()");
+            //Debug.Log($"{gameObject.name}.UINavigationListHorizontal.RightButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
             // already at right
             if (currentIndex == (activeNavigableButtons.Count - 1)) {
-                if (rightControllers.Count != 0 || rightPanel != null) {
-                    LeaveRight();
+                if (LeaveRight()) {
                     return;
                 }
             }
@@ -79,12 +77,12 @@ namespace AnyRPG {
         }
 
         public override void ProcessUpButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.UpButton()");
+            //Debug.Log($"{gameObject.name}.UINavigationListHorizontal.UpButton()");
             LeaveUp();
         }
 
         public override void ProcessDownButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.DownButton()");
+            //Debug.Log($"{gameObject.name}.UINavigationListHorizontal.DownButton()");
             LeaveDown();
         }
 

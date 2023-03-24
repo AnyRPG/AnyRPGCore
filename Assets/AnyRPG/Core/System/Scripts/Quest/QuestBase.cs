@@ -299,7 +299,7 @@ namespace AnyRPG {
             }
             questSaveData.markedComplete = false;
             questSaveData.turnedIn = false;
-            SetSaveData(DisplayName, questSaveData);
+            SetSaveData(ResourceName, questSaveData);
             if (steps.Count > 0) {
                 foreach (QuestObjective questObjective in steps[CurrentStep].QuestObjectives) {
                     questObjective.OnAcceptQuest(this, printMessages);

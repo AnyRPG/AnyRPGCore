@@ -291,7 +291,6 @@ namespace AnyRPG {
                 //Debug.Log("Player Unit is not spawned.  Nothing to despawn.  returning");
                 return;
             }
-
             unitController.Despawn();
         }
 
@@ -327,7 +326,7 @@ namespace AnyRPG {
         }
 
         public void HandleTargetReady() {
-            //Debug.Log(gameObject.name + ".UnitFrameController.HandleTargetReady()");
+            //Debug.Log($"{gameObject.name}.UnitFrameController.HandleTargetReady()");
 
             waitForPlayerReadyCoroutine = StartCoroutine(WaitForPlayerReady());
         }
@@ -336,12 +335,12 @@ namespace AnyRPG {
             //Debug.Log("PlayerManager.WaitForPlayerReady()");
             //private IEnumerator WaitForCamera(int frameNumber) {
             yield return null;
-            //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): about to render " + namePlateController.Interactable.GetInstanceID() + "; initial frame: " + frameNumber + "; current frame: " + lastWaitFrame);
+            //Debug.Log($"{gameObject.name}.UnitFrameController.WaitForCamera(): about to render " + namePlateController.Interactable.GetInstanceID() + "; initial frame: " + frameNumber + "; current frame: " + lastWaitFrame);
             //if (lastWaitFrame != frameNumber) {
             if (activeUnitController.IsBuilding() == true) {
-                //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): a new wait was started. initial frame: " + frameNumber +  "; current wait: " + lastWaitFrame);
+                //Debug.Log($"{gameObject.name}.UnitFrameController.WaitForCamera(): a new wait was started. initial frame: " + frameNumber +  "; current wait: " + lastWaitFrame);
             } else {
-                //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): rendering");
+                //Debug.Log($"{gameObject.name}.UnitFrameController.WaitForCamera(): rendering");
                 waitForPlayerReadyCoroutine = null;
                 UnsubscribeFromTargetReady();
                 cameraManager.ShowPlayers();
@@ -350,6 +349,7 @@ namespace AnyRPG {
 
         public Vector3 SpawnPlayerUnit() {
             //Debug.Log("PlayerManager.SpawnPlayerUnit()");
+
             cameraManager.HidePlayers();
             subscribeToTargetReady = true;
             Vector3 spawnLocation = levelManager.GetSpawnLocation();
@@ -395,28 +395,21 @@ namespace AnyRPG {
                 }
             }
 
-            // testing - move this to before the below calls so its initialized if a model is already ready
-            activeUnitController.UnitModelController.SetInitialSavedAppearance();
+            activeUnitController.UnitModelController.SetInitialSavedAppearance(saveManager.CurrentSaveData);
             if (subscribeToTargetReady) {
                 SubscribeToTargetReady();
             }
             activeUnitController.Init();
 
-            // saved appearance settings should only be run after the above Init() call or there is no reference to the avatar to load the settings onto
-            /*
-            if (activeUnitController.UnitModelController != null) {
-                activeUnitController.UnitModelController.LoadSavedAppearanceSettings();
-            }
-            */
-
-            if (activeUnitController?.UnitModelController?.ModelReady == false) {
+            if (activeUnitController?.UnitModelController?.ModelCreated == false) {
                 // do UMA spawn stuff to wait for UMA to spawn
                 SubscribeToModelReady();
             } else {
                 // handle spawn immediately since this is a non UMA unit and waiting should not be necessary
                 HandlePlayerUnitSpawn();
             }
-            //activeUnitController.Init();
+
+            
             if (PlayerPrefs.HasKey("ShowNewPlayerHints") == false) {
                 if (controlsManager.GamePadModeActive == true) {
                     uIManager.gamepadHintWindow.OpenWindow();
@@ -436,6 +429,7 @@ namespace AnyRPG {
 
         public void SetUnitController(UnitController unitController) {
             //Debug.Log("PlayerManager.SetUnitController(" + unitController.gameObject.name + ")");
+
             this.unitController = unitController;
             activeUnitController = unitController;
 
@@ -498,11 +492,13 @@ namespace AnyRPG {
             // try this earlier
             //saveManager.LoadUMASettings(false);
 
-            activeUnitController.UnitModelController.OnModelReady += HandleModelReady;
+            //activeUnitController.UnitModelController.OnModelUpdated += HandleModelReady;
+            activeUnitController.UnitModelController.OnModelCreated += HandleModelReady;
         }
 
         public void UnsubscribeFromModelReady() {
-            activeUnitController.UnitModelController.OnModelReady -= HandleModelReady;
+            //activeUnitController.UnitModelController.OnModelUpdated -= HandleModelReady;
+            activeUnitController.UnitModelController.OnModelCreated -= HandleModelReady;
         }
 
         public void SpawnPlayerConnection() {
@@ -569,7 +565,7 @@ namespace AnyRPG {
             activeCharacter.CharacterStats.OnDie += HandleDie;
             activeCharacter.CharacterStats.OnReviveBegin += HandleReviveBegin;
             activeCharacter.CharacterStats.OnReviveComplete += HandleReviveComplete;
-            MyCharacter.CharacterStats.OnLevelChanged += HandleLevelChanged;
+            activeCharacter.CharacterStats.OnLevelChanged += HandleLevelChanged;
             activeCharacter.CharacterStats.OnGainXP += HandleGainXP;
             activeCharacter.CharacterStats.OnStatusEffectAdd += HandleStatusEffectAdd;
             activeCharacter.CharacterStats.OnRecoverResource += HandleRecoverResource;
@@ -785,7 +781,7 @@ namespace AnyRPG {
             if (creditPercent == 0) {
                 return;
             }
-            //Debug.Log(gameObject.name + ": About to gain xp from kill with creditPercent: " + creditPercent);
+            //Debug.Log($"{gameObject.name}: About to gain xp from kill with creditPercent: " + creditPercent);
             MyCharacter.CharacterStats.GainXP((int)(LevelEquations.GetXPAmountForKill(activeCharacter.CharacterStats.Level, sourceCharacter, systemConfigurationManager) * creditPercent));
         }
 

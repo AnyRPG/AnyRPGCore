@@ -154,7 +154,7 @@ namespace AnyRPG {
             */
 
             nameText.text = unitSpawnButton.UnitProfile.CharacterName;
-            uINavigationControllers[0].UnHightlightButtons(unitSpawnButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(unitSpawnButton);
         }
 
         public void ClearPreviewTarget() {

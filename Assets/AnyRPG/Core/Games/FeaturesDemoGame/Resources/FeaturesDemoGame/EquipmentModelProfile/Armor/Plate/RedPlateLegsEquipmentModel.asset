@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b4eca1291e60f148801568f2a83a06b, type: 3}
+  m_Name: RedPlateLegsEquipmentModel
+  m_EditorClassIdentifier: 
+  resourceName: Red Plate Legs
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  uMARecipeProfileProperties:
+    uMARecipes:
+    - {fileID: 11400000, guid: 7f42feeb0692fecf984e232c918da3b1, type: 2}
+    - {fileID: 11400000, guid: a5586e6dfb800c152ba216faa2645a4a, type: 2}
+    sharedColors:
+    - sharedColorname: Leg Equipment Color 1
+      color: {r: 0.78039217, g: 0.18039216, b: 0.19215687, a: 1}
+    - sharedColorname: Leg Equipment Color 2
+      color: {r: 0.78431374, g: 0.6627451, b: 0.34509805, a: 1}
+  properties:
+    equipmentModels:
+    - rid: 5705935833309905362
+  references:
+    version: 2
+    RefIds:
+    - rid: 5705935833309905362
+      type: {class: UMAEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        umaRecipeProfileName: 
+        properties:
+          uMARecipes:
+          - {fileID: 11400000, guid: 7f42feeb0692fecf984e232c918da3b1, type: 2}
+          - {fileID: 11400000, guid: a5586e6dfb800c152ba216faa2645a4a, type: 2}
+          sharedColors:
+          - sharedColorname: Leg Equipment Color 1
+            color: {r: 0.78039217, g: 0.18039216, b: 0.19215687, a: 1}
+          - sharedColorname: Leg Equipment Color 2
+            color: {r: 0.78431374, g: 0.6627451, b: 0.34509805, a: 1}

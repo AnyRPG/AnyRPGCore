@@ -23,7 +23,7 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            //Debug.Log(gameObject.name + ".NameChangeInteractable.Interact()");
+            //Debug.Log($"{gameObject.name}.NameChangeInteractable.Interact()");
             
             base.Interact(source, optionIndex);
 
@@ -42,7 +42,7 @@ namespace AnyRPG {
         }
 
         public override bool SetMiniMapText(TextMeshProUGUI text) {
-            //Debug.Log(gameObject.name + ".NameChangeInteractable.SetMiniMapText(" + text + ")");
+            //Debug.Log($"{gameObject.name}.NameChangeInteractable.SetMiniMapText(" + text + ")");
             if (!base.SetMiniMapText(text)) {
                 text.text = "";
                 text.color = new Color32(0, 0, 0, 0);

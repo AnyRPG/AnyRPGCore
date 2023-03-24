@@ -70,7 +70,7 @@ namespace AnyRPG {
         public bool IsArmorSupported(Armor armor) {
             foreach (ICapabilityProvider capabilityProvider in capabilityProviders) {
                 CapabilityProps capabilityProps = capabilityProvider.GetFilteredCapabilities(capabilityConsumer);
-                if (capabilityProps.ArmorClassList.Contains(armor.ArmorClass.DisplayName)) {
+                if (capabilityProps.ArmorClassList.Contains(armor.ArmorClass.ResourceName)) {
                     return true;
                 }
             }

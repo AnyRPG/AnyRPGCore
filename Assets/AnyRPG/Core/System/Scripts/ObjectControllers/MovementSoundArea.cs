@@ -42,7 +42,7 @@ namespace AnyRPG {
         }
 
         public void OnTriggerEnter(Collider other) {
-            //Debug.Log(gameObject.name + ".MovementSoundArea.OnTriggerEnter()");
+            //Debug.Log($"{gameObject.name}.MovementSoundArea.OnTriggerEnter()");
             UnitController unitController = other.gameObject.GetComponent<UnitController>();
             // stop playing sound in case movement sounds will change
             if (unitController != null) {
@@ -62,7 +62,7 @@ namespace AnyRPG {
         }
 
         private void SetupScriptableObjects() {
-            //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.SetupScriptableObjects()");
+            //Debug.Log($"{gameObject.name}.EnvironmentalEffectArea.SetupScriptableObjects()");
             if (systemGameManager == null) {
                 Debug.LogError(gameObject.name + ": SystemGameManager not found.  Is the GameManager in the scene?");
                 return;

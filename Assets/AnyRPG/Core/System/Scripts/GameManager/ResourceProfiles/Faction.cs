@@ -21,9 +21,17 @@ namespace AnyRPG {
         [SerializeField]
         private string defaultStartingLocationTag = string.Empty;
 
-        [Tooltip("If true, hide any default unit profiles when this faction is used")]
+        [Tooltip("The races available to this faction.")]
         [SerializeField]
-        private bool hideDefaultProfiles = false;
+        [ResourceSelector(resourceType = typeof(CharacterRace))]
+        private List<string> races = new List<string>();
+
+        // reference to the default profile
+        private List<CharacterRace> raceRefs = new List<CharacterRace>();
+
+        [Tooltip("If true, the new game unit profiles from the System Configuration Manager will be used, in addition to the profiles below.")]
+        [SerializeField]
+        private bool addSystemProfiles = false;
 
         [Tooltip("The options available when the character creator is used")]
         [SerializeField]
@@ -32,6 +40,40 @@ namespace AnyRPG {
 
         // reference to the default profile
         private List<UnitProfile> characterCreatorProfiles = new List<UnitProfile>();
+
+        [Header("New Game Preview")]
+
+        [Tooltip("A prefab to instantiate in the new game window.")]
+        [SerializeField]
+        private GameObject environmentPreviewPrefab = null;
+
+        [Tooltip("The material on the platform the player stands on in the new game window.")]
+        [SerializeField]
+        private Material platformMaterial = null;
+
+        [Tooltip("The skybox material on the top quad in the new game window.")]
+        [SerializeField]
+        private Material topMaterial = null;
+
+        [Tooltip("The skybox material on the bottom quad in the new game window.")]
+        [SerializeField]
+        private Material bottomMaterial = null;
+
+        [Tooltip("The skybox material on the north quad in the new game window.")]
+        [SerializeField]
+        private Material northMaterial = null;
+
+        [Tooltip("The skybox material on the south quad in the new game window.")]
+        [SerializeField]
+        private Material southMaterial = null;
+
+        [Tooltip("The skybox material on the east quad in the new game window.")]
+        [SerializeField]
+        private Material eastMaterial = null;
+
+        [Tooltip("The skybox material on the west quad in the new game window.")]
+        [SerializeField]
+        private Material westMaterial = null;
 
         [Header("Start Equipment")]
 
@@ -67,9 +109,18 @@ namespace AnyRPG {
         public bool NewGameOption { get => newGameOption; set => newGameOption = value; }
         public string DefaultStartingZone { get => defaultStartingZone; set => defaultStartingZone = value; }
         public List<UnitProfile> CharacterCreatorProfiles { get => characterCreatorProfiles; set => characterCreatorProfiles = value; }
-        public bool HideDefaultProfiles { get => hideDefaultProfiles; set => hideDefaultProfiles = value; }
+        public bool AddSystemProfiles { get => addSystemProfiles; set => addSystemProfiles = value; }
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
         public string DefaultStartingLocationTag { get => defaultStartingLocationTag; }
+        public List<CharacterRace> Races { get => raceRefs; }
+        public Material PlatformMaterial { get => platformMaterial; set => platformMaterial = value; }
+        public Material TopMaterial { get => topMaterial; set => topMaterial = value; }
+        public Material BottomMaterial { get => bottomMaterial; set => bottomMaterial = value; }
+        public Material NorthMaterial { get => northMaterial; set => northMaterial = value; }
+        public Material SouthMaterial { get => southMaterial; set => southMaterial = value; }
+        public Material EastMaterial { get => eastMaterial; set => eastMaterial = value; }
+        public Material WestMaterial { get => westMaterial; set => westMaterial = value; }
+        public GameObject EnvironmentPreviewPrefab { get => environmentPreviewPrefab; set => environmentPreviewPrefab = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -259,7 +310,7 @@ namespace AnyRPG {
                     if (tmpEquipment != null) {
                         equipmentList.Add(tmpEquipment);
                     } else {
-                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find equipment : " + equipmentName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find equipment : " + equipmentName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -273,22 +324,30 @@ namespace AnyRPG {
             }
 
             if (characterCreatorProfileNames != null) {
-                //Debug.Log("Faction.SetupScriptableObjects(): characterCreatorProfileNames is not null");
                 foreach (string characterCreatorProfileName in characterCreatorProfileNames) {
-                    //Debug.Log("Faction.SetupScriptableObjects(): found a string");
                     if (characterCreatorProfileName != null && characterCreatorProfileName != string.Empty) {
-                        //Debug.Log("Faction.SetupScriptableObjects(): found a string that is not empty");
                         UnitProfile tmpUnitProfile = systemDataFactory.GetResource<UnitProfile>(characterCreatorProfileName);
                         if (tmpUnitProfile != null) {
-                            //Debug.Log("Faction.SetupScriptableObjects(): found a string that is not empty and added it to the list");
                             characterCreatorProfiles.Add(tmpUnitProfile);
                         } else {
-                            Debug.LogError("Faction.SetupScriptableObjects(): could not find unit profile " + characterCreatorProfileName + " while initializing " + DisplayName + ".  Check Inspector");
+                            Debug.LogError("Faction.SetupScriptableObjects(): could not find unit profile " + characterCreatorProfileName + " while initializing " + ResourceName + ".  Check Inspector");
                         }
                     } else {
-                        Debug.LogError("Faction.SetupScriptableObjects(): a character creator profile string was empty while initializing " + DisplayName + ".  Check Inspector");
+                        Debug.LogError("Faction.SetupScriptableObjects(): a character creator profile string was empty while initializing " + ResourceName + ".  Check Inspector");
                     }
+                }
+            }
 
+            foreach (string raceName in races) {
+                if (raceName != null && raceName != string.Empty) {
+                    CharacterRace tmpRace = systemDataFactory.GetResource<CharacterRace>(raceName);
+                    if (tmpRace != null) {
+                        raceRefs.Add(tmpRace);
+                    } else {
+                        Debug.LogError("Faction.SetupScriptableObjects(): could not find race " + raceName + " while initializing " + ResourceName + ".  Check Inspector");
+                    }
+                } else {
+                    Debug.LogError("Faction.SetupScriptableObjects(): a race string was empty while initializing " + ResourceName + ".  Check Inspector");
                 }
             }
 

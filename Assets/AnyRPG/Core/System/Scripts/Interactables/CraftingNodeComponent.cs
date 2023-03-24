@@ -54,12 +54,12 @@ namespace AnyRPG {
         }
 
         public void HandleAbilityListChange(BaseAbilityProperties baseAbility) {
-            //Debug.Log(gameObject.name + ".GatheringNode.HandleAbilityListChange(" + baseAbility.DisplayName + ")");
+            //Debug.Log($"{gameObject.name}.GatheringNode.HandleAbilityListChange(" + baseAbility.DisplayName + ")");
             HandlePrerequisiteUpdates();
         }
 
         public override int GetCurrentOptionCount() {
-            //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
+            //Debug.Log($"{gameObject.name}.GatheringNode.GetCurrentOptionCount()");
             return ((playerManager.MyCharacter.CharacterAbilityManager.HasAbility(Props.Ability) == true) ? 1 : 0);
         }
 

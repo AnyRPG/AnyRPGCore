@@ -71,59 +71,52 @@ namespace AnyRPG {
                 return;
             }
 
-            // testing skip this if loadProviderEquipment is set to false to allow new game panel to work
-            // since new game panel already sets up the equipment
-            // monitor to see if it breaks anything else
-            //if (loadProviderEquipment == true) {
-                // load the unit profile equipment
-                foreach (Equipment equipment in baseCharacter.UnitProfile.EquipmentList) {
-                    if (equipment != null) {
-                        Equip(equipment, null, false, false, false);
-                    }
+            // load the unit profile equipment
+            foreach (Equipment equipment in baseCharacter.UnitProfile.EquipmentList) {
+                if (equipment != null) {
+                    Equip(equipment, null);
                 }
-            //}
+            }
 
             if (loadProviderEquipment == false || baseCharacter.UnitProfile.UseProviderEquipment == false) {
                 return;
             }
 
+            if (baseCharacter.Faction != null) {
+                foreach (Equipment equipment in baseCharacter.Faction.EquipmentList) {
+                    Equip(equipment, null);
+                }
+            }
+
             if (baseCharacter.CharacterRace != null) {
                 foreach (Equipment equipment in baseCharacter.CharacterRace.EquipmentList) {
-                    Equip(equipment, null, false, false, false);
+                    Equip(equipment, null);
                 }
             }
 
             if (baseCharacter.CharacterClass != null) {
                 foreach (Equipment equipment in baseCharacter.CharacterClass.EquipmentList) {
-                    Equip(equipment, null, false, false, false);
+                    Equip(equipment, null);
                 }
                 if (baseCharacter.ClassSpecialization != null) {
                     foreach (Equipment equipment in baseCharacter.ClassSpecialization.EquipmentList) {
-                        Equip(equipment, null, false, false, false);
+                        Equip(equipment, null);
                     }
-                }
-            }
-
-            if (baseCharacter.Faction != null) {
-                foreach (Equipment equipment in baseCharacter.Faction.EquipmentList) {
-                    Equip(equipment, null, false, false, false);
                 }
             }
 
         }
 
-        public bool Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null, bool equipModels = true, bool setAppearance = true, bool rebuildAppearance = true) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (equipmentSlotProfile == null ? "null" : equipmentSlotProfile.DisplayName) + ", " + equipModels + ", " + setAppearance + ", " + rebuildAppearance + ")");
+        public bool Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (equipmentSlotProfile == null ? "null" : equipmentSlotProfile.DisplayName) + ")");
 
-            //Debug.Break();
             if (newItem == null) {
                 Debug.Log("Instructed to Equip a null item!");
                 return false;
             }
-            //currentEquipment[newItem.equipSlot].MyCharacterButton.DequipEquipment();
-            //Unequip(newItem.equipSlot);
+
             if (newItem.EquipmentSlotType == null) {
-                Debug.LogError(baseCharacter.gameObject.name + "CharacterEquipmentManager.Equip() " + newItem.DisplayName + " could not be equipped because it had no equipment slot.  CHECK INSPECTOR.");
+                Debug.LogError(baseCharacter.gameObject.name + "CharacterEquipmentManager.Equip() " + newItem.ResourceName + " could not be equipped because it had no equipment slot.  CHECK INSPECTOR.");
                 return false;
             }
 
@@ -132,66 +125,15 @@ namespace AnyRPG {
                 return false;
             }
 
-            /*
-            // unequip any item in an exclusive slot for this item
-            List<EquipmentSlotProfile> exclusiveSlotList = equipmentManager.GetExclusiveSlotList(newItem.EquipmentSlotType);
-            foreach (EquipmentSlotProfile removeSlotProfile in exclusiveSlotList) {
-                Unequip(removeSlotProfile);
-            }
-
-            // get list of compatible slots that can take this slot type
-            List<EquipmentSlotProfile> slotProfileList = equipmentManager.GetCompatibleSlotProfiles(newItem.EquipmentSlotType);
-
-            // if no equipment slot was provided, attempt to find a conflicting slot and free it
-            if (equipmentSlotProfile == null) {
-                equipmentSlotProfile = equipmentManager.GetConflictingSlot(equipmentSlotProfile, slotProfileList);
-                
-                // a conflicting slot was found, free it
-                if (equipmentSlotProfile != null) {
-                    Unequip(equipmentSlotProfile);
-                }
-            }
-
-            // no slot was provided, and there was at least one empty slot in the compatible list, use it
-            if (equipmentSlotProfile == null) {
-                equipmentSlotProfile = equipmentManager.GetFirstEmptySlot(slotProfileList);
-            }
-            */
+            
             equipmentSlotProfile = base.EquipEquipment(newItem, equipmentSlotProfile);
             
             if (equipmentSlotProfile == null) {
-                Debug.LogError(baseCharacter.gameObject.name + "CharacterEquipmentManager.Equip() " + newItem.DisplayName + " emptyslotProfile is null.  CHECK INSPECTOR.");
+                Debug.LogError(baseCharacter.gameObject.name + "CharacterEquipmentManager.Equip() " + newItem.ResourceName + " equipmentSlotProfile is null.  CHECK INSPECTOR.");
                 return false;
             }
 
-            /*
-            // check if any are empty.  if not, unequip the first one
-            EquipmentSlotProfile emptySlotProfile = equipmentSlotProfile;
-            if (emptySlotProfile == null) {
-                emptySlotProfile = equipmentManager.GetFirstEmptySlot(slotProfileList);
-            }
-
-            if (emptySlotProfile == null) {
-                if (slotProfileList != null && slotProfileList.Count > 0) {
-                    Unequip(slotProfileList[0]);
-                    emptySlotProfile = GetFirstEmptySlot(slotProfileList);
-                }
-                if (emptySlotProfile == null) {
-                    Debug.LogError(baseCharacter.gameObject.name + "CharacterEquipmentManager.Equip() " + newItem.DisplayName + " emptyslotProfile is null.  CHECK INSPECTOR.");
-                    return false;
-                }
-            }
-            */
-
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(): equippping " + newItem.DisplayName + " in slot: " + emptySlotProfile + "; " + emptySlotProfile.GetInstanceID());
-            //equipmentManager.EquipToList(newItem, equipmentSlotProfile);
-
-            baseCharacter?.UnitController?.UnitModelController.EquipItemModels(this, equipmentSlotProfile, newItem, equipModels, setAppearance, rebuildAppearance);
-           
             // DO THIS LAST OR YOU WILL SAVE THE UMA DATA BEFORE ANYTHING IS EQUIPPED!
-            // updated oldItem to null here because this call is already done in Unequip.
-            // having it here also was leading to duplicate stat removal when gear was changed.
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip() FIRING ONEQUIPMENTCHANGED");
             NotifyEquipmentChanged(newItem, null, -1, equipmentSlotProfile);
 
             //Debug.Log("CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.DisplayName : "null") + "; successfully equipped");
@@ -235,7 +177,7 @@ namespace AnyRPG {
         }
 
         public void HandleWeaponHoldableObjects(Equipment newItem, Equipment oldItem) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (oldItem != null ? oldItem.DisplayName : "null") + ")");
+            //Debug.Log($"{gameObject.name}.CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (oldItem != null ? oldItem.DisplayName : "null") + ")");
 
             oldItem?.HandleUnequip(this);
 
@@ -271,23 +213,21 @@ namespace AnyRPG {
         }
         */
 
-        public Equipment Unequip(Equipment equipment, bool unequipModels = true, bool unequipAppearance = true, bool rebuildAppearance = true) {
+        public Equipment Unequip(Equipment equipment) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.Unequip(" + (equipment == null ? "null" : equipment.DisplayName) + ", " + unequipModels + ", " + unequipAppearance + ", " + rebuildAppearance + ")");
 
             EquipmentSlotProfile equipmentSlotProfile = FindEquipmentSlotForEquipment(equipment);
             if (equipmentSlotProfile != null) {
-                return Unequip(equipmentSlotProfile, -1, unequipModels, unequipAppearance, rebuildAppearance);
+                return Unequip(equipmentSlotProfile, -1);
             }
             return null;
         }
 
-        public Equipment Unequip(EquipmentSlotProfile equipmentSlot, int slotIndex = -1, bool unequipModels = true, bool unequipAppearance = true, bool rebuildAppearance = true) {
+        public Equipment Unequip(EquipmentSlotProfile equipmentSlot, int slotIndex = -1) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.Unequip(" + equipmentSlot.ToString() + ", " + slotIndex + ", " + unequipModels + ", " + unequipAppearance + ", " + rebuildAppearance + ")");
             
             if (CurrentEquipment.ContainsKey(equipmentSlot) && CurrentEquipment[equipmentSlot] != null) {
                 //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; currentEquipment has this slot key");
-
-                baseCharacter?.UnitController?.UnitModelController?.UnequipItemModels(equipmentSlot, CurrentEquipment[equipmentSlot], unequipModels, unequipAppearance, rebuildAppearance);
 
                 Equipment oldItem = base.UnequipFromList(equipmentSlot);
 
@@ -297,6 +237,7 @@ namespace AnyRPG {
             return null;
         }
 
+        /*
         public void UnequipAll(bool rebuildUMA = true) {
             //Debug.Log("EquipmentManager.UnequipAll()");
             List<EquipmentSlotProfile> tmpList = new List<EquipmentSlotProfile>();
@@ -308,6 +249,7 @@ namespace AnyRPG {
                 Unequip(equipmentSlotProfile, -1, true, true, rebuildUMA);
             }
         }
+        */
 
         public bool HasAffinity(WeaponSkill weaponAffinity) {
             //Debug.Log("EquipmentManager.HasAffinity(" + weaponAffinity.ToString() + ")");

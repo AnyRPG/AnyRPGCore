@@ -36,12 +36,14 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Belt
   equipmentSetName: 
-  deprecatedUseUMARecipe: 1
   umaRecipeProfileName: Red Cloth Sash
   uMARecipeProfileProperties:
     uMARecipes: []
     sharedColors: []
   holdableObjectList: []
+  inlineEquipmentModels:
+    equipmentModels: []
+  sharedEquipmentModels: Red Cloth Sash
   useArmorModifier: 1
   useManualArmor: 0
   manualValueIsScale: 0
@@ -55,7 +57,10 @@ MonoBehaviour:
     manualModifierValue: 0
   randomSecondaryStats: 0
   secondaryStats: []
-  onEquipAbilityName: 
+  onEquipStatusEffect: 
   learnedAbilityNames: []
   requireArmorClass: 0
   armorClassName: Cloth
+  references:
+    version: 2
+    RefIds: []

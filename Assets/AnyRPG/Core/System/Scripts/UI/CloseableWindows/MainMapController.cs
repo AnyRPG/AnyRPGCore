@@ -183,7 +183,7 @@ namespace AnyRPG {
         */
 
         public void InitializeMap() {
-            //Debug.Log(gameObject.name + ": MainMapController.InitializeMap()");
+            //Debug.Log($"{gameObject.name}: MainMapController.InitializeMap()");
 
             
             if (loadedMapName == SceneManager.GetActiveScene().name) {

@@ -60,7 +60,7 @@ namespace AnyRPG {
             if (fixedScene == true && sceneName != null && sceneName != string.Empty) {
                 SceneNode sceneNode = systemDataFactory.GetResource<SceneNode>(sceneName);
                 if (sceneNode == null) {
-                    Debug.LogError("LoadSceneCommand.SetupScriptableObjects(): Could not find scene node for : " + sceneName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("LoadSceneCommand.SetupScriptableObjects(): Could not find scene node for : " + sceneName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
             */

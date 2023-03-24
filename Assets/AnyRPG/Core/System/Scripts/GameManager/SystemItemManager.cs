@@ -22,8 +22,8 @@ namespace AnyRPG {
         /// <returns></returns>
         public Item GetNewResource(string resourceName, ItemQuality usedItemQuality = null) {
             //Debug.Log(this.GetType().Name + ".GetNewResource(" + resourceName + ")");
-            if (!SystemDataFactory.RequestIsEmpty(resourceName)) {
-                string keyName = SystemDataFactory.PrepareStringForMatch(resourceName);
+            if (!SystemDataUtility.RequestIsEmpty(resourceName)) {
+                string keyName = SystemDataUtility.PrepareStringForMatch(resourceName);
                 Item itemTemplate = systemDataFactory.GetResource<Item>(keyName);
                 if (itemTemplate != null) {
                     Item returnValue = ScriptableObject.Instantiate(itemTemplate) as Item;

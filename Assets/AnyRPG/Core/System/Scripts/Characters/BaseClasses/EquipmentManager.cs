@@ -111,28 +111,6 @@ namespace AnyRPG {
 
             // get list of compatible slots that can take this slot type
             List<EquipmentSlotProfile> slotProfileList = GetCompatibleSlotProfiles(newItem.EquipmentSlotType);
-            /*
-            // if no equipment slot was provided, attempt to find a conflicting slot and free it
-            if (equipmentSlotProfile == null) {
-                equipmentSlotProfile = equipmentManager.GetConflictingSlot(equipmentSlotProfile, slotProfileList);
-
-                // a conflicting slot was found, free it
-                if (equipmentSlotProfile != null) {
-                    Unequip(equipmentSlotProfile);
-                }
-            }
-
-            // no slot was provided, and there was at least one empty slot in the compatible list, use it
-            if (equipmentSlotProfile == null) {
-                equipmentSlotProfile = equipmentManager.GetFirstEmptySlot(slotProfileList);
-            }
-
-            if (equipmentSlotProfile == null) {
-                Debug.LogError(baseCharacter.gameObject.name + "CharacterEquipmentManager.Equip() " + newItem.DisplayName + " emptyslotProfile is null.  CHECK INSPECTOR.");
-                return false;
-            }
-            */
-
             
             // check if any are empty.  if not, unequip the first one
             EquipmentSlotProfile emptySlotProfile = equipmentSlotProfile;
@@ -145,18 +123,12 @@ namespace AnyRPG {
                     UnequipEquipment(slotProfileList[0]);
                     emptySlotProfile = GetFirstEmptySlot(slotProfileList);
                 }
-                /*
-                if (emptySlotProfile == null) {
-                    Debug.LogError(baseCharacter.gameObject.name + "CharacterEquipmentManager.Equip() " + newItem.DisplayName + " emptyslotProfile is null.  CHECK INSPECTOR.");
-                    return false;
-                }
-                */
             }
 
             if (emptySlotProfile != null) {
                 EquipToList(newItem, emptySlotProfile);
             }
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(): equippping " + newItem.DisplayName + " in slot: " + emptySlotProfile + "; " + emptySlotProfile.GetInstanceID());
+            //Debug.Log("EquipmentManager.EquipEquipment(): equippping " + newItem.DisplayName + " in slot: " + emptySlotProfile.DisplayName + "; " + emptySlotProfile.GetInstanceID());
             
             return emptySlotProfile;
         }
@@ -216,7 +188,7 @@ namespace AnyRPG {
         public bool HasEquipment(string equipmentName, bool partialMatch = false) {
             foreach (Equipment equipment in currentEquipment.Values) {
                 if (equipment != null) {
-                    if (SystemDataFactory.MatchResource(equipment.DisplayName, equipmentName, partialMatch)) {
+                    if (SystemDataUtility.MatchResource(equipment.ResourceName, equipmentName, partialMatch)) {
                         return true;
                     }
                 }
@@ -228,7 +200,7 @@ namespace AnyRPG {
             int returnValue = 0;
             foreach (Equipment equipment in currentEquipment.Values) {
                 if (equipment != null) {
-                    if (SystemDataFactory.MatchResource(equipment.DisplayName, equipmentName, partialMatch)) {
+                    if (SystemDataUtility.MatchResource(equipment.ResourceName, equipmentName, partialMatch)) {
                         returnValue++;
                     }
                 }

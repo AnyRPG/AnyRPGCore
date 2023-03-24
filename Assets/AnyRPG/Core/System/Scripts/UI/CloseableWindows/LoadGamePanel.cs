@@ -9,7 +9,6 @@ namespace AnyRPG {
 
     public class LoadGamePanel : WindowContentController {
 
-        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
         public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
         [SerializeField]
@@ -62,14 +61,6 @@ namespace AnyRPG {
             loadGameManager.OnDeleteGame += HandleDeleteGame;
             loadGameManager.OnCopyGame += HandleCopyGame;
 
-            /*
-            returnButton.Configure(systemGameManager);
-            loadGameButton.Configure(systemGameManager);
-            newGameButton.Configure(systemGameManager);
-            deleteGameButton.Configure(systemGameManager);
-            copyGameButton.Configure(systemGameManager);
-            */
-
             characterPreviewPanel.Configure(systemGameManager);
             characterPreviewPanel.SetParentPanel(this);
         }
@@ -86,29 +77,27 @@ namespace AnyRPG {
 
         public override void ReceiveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.RecieveClosedWindowNotification()");
-            // testing - character will load its own equipment when it spawns
-            //characterPreviewPanel.OnTargetReady -= HandleTargetReady;
-            characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
+
+            characterPreviewPanel.OnUnitCreated -= HandleUnitCreated;
             characterPreviewPanel.CapabilityConsumer = null;
             characterPreviewPanel.ReceiveClosedWindowNotification();
             //saveManager.ClearSharedData();
 
             ClearLoadButtons();
 
+            characterCreatorManager.DisableLight();
+
             base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
 
         public override void ProcessOpenWindowNotification() {
-            //Debug.Log("LoadGamePanel.OnOpenWindow()");
+            //Debug.Log("LoadGamePanel.ProcessOpenWindowNotification()");
+
             base.ProcessOpenWindowNotification();
 
-            //ShowLoadButtonsCommon();
-
             // inform the preview panel so the character can be rendered
-            // testing - character will load its own equipment when it spawns
-            //characterPreviewPanel.OnTargetReady += HandleTargetReady;
-            characterPreviewPanel.OnTargetCreated += HandleTargetCreated;
+            characterPreviewPanel.OnUnitCreated += HandleUnitCreated;
             characterPreviewPanel.CapabilityConsumer = loadGameManager;
             characterPreviewPanel.ReceiveOpenWindowNotification();
 
@@ -117,6 +106,8 @@ namespace AnyRPG {
 
             // this needs to be run here because the initial run in ShowLoadButtonsCommon will have done nothing because the preview panel wasn't open yet
             //LoadSavedAppearanceSettings();
+
+            characterCreatorManager.EnableLight();
         }
 
         public void ShowSavedGame(LoadGameButton loadButton) {
@@ -143,7 +134,7 @@ namespace AnyRPG {
             copyGameButton.Button.interactable = true;
             deleteGameButton.Button.interactable = true;
             uINavigationControllers[1].UpdateNavigationList();
-            uINavigationControllers[0].UnHightlightButtons(loadButton);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(loadButton);
 
             nameText.text = loadGameManager.AnyRPGSaveData.playerName;
         }
@@ -197,11 +188,11 @@ namespace AnyRPG {
             //SetPreviewTarget();
         }
 
-        public void HandleTargetCreated() {
+        public void HandleUnitCreated() {
             //Debug.Log("LoadGamePanel.HandleTargetCreated()");
 
             if (characterCreatorManager.PreviewUnitController?.UnitModelController != null) {
-                characterCreatorManager.PreviewUnitController?.UnitModelController.SetInitialSavedAppearance();
+                characterCreatorManager.PreviewUnitController?.UnitModelController.SetInitialSavedAppearance(loadGameManager.AnyRPGSaveData);
             }
 
             // set level before attempting to load equipment in case equipment has level restrictions

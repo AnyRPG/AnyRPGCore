@@ -28,6 +28,8 @@ MonoBehaviour:
       type: 3}
     modelPrefab: {fileID: 6954704190252621995, guid: c7fa83c5e457d3d4d9d3edbb5409249c,
       type: 3}
+    modelProvider:
+      rid: -2
     animationProfileName: 
     useInlineAnimationProps: 0
     animationProps:
@@ -214,6 +216,8 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 0
       type: {class: CharacterCreatorProps, ns: AnyRPG, asm: Assembly-CSharp}
       data:
@@ -221,3 +225,5 @@ MonoBehaviour:
         interactionPanelImage: {fileID: 0}
         namePlateImage: {fileID: 0}
         prerequisiteConditions: []
+        allowGenderChange: 1
+        unitProfiles: []

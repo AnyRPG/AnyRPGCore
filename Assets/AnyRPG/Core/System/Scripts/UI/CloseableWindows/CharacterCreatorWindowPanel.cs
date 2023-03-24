@@ -7,47 +7,26 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class CharacterCreatorWindowPanel : CloseableWindowContents, ICapabilityConsumer {
+    public class CharacterCreatorWindowPanel : CloseableWindowContents, ICharacterEditor {
+
+        [Header("Character Creator")]
 
         [SerializeField]
         private CharacterPreviewPanelController characterPreviewPanel = null;
 
         [SerializeField]
-        private UMACharacterEditorPanelController umaCharacterPanel = null;
-        
-        /*
-        // appearance buttons
-        [SerializeField]
-        private HighlightButton faceButton = null;
+        private GameObject panelParent = null;
 
         [SerializeField]
-        private HighlightButton colorsButton = null;
+        private DefaultAppearancePanel defaultAppearancePanel = null;
 
-        [SerializeField]
-        private HighlightButton sexButton = null;
+        //[SerializeField]
+        //private HighlightButton saveButton = null;
 
-        [SerializeField]
-        private HighlightButton maleButton = null;
+        private Dictionary<GameObject, AppearancePanel> appearanceEditorPanels = new Dictionary<GameObject, AppearancePanel>();
+        private Dictionary<Type, GameObject> appearanceEditorPanelTypes = new Dictionary<Type, GameObject>();
 
-        [SerializeField]
-        private HighlightButton femaleButton = null;
-
-        [SerializeField]
-        private HighlightButton hairButton = null;
-
-        [SerializeField]
-        private HighlightButton skinButton = null;
-
-        [SerializeField]
-        private HighlightButton eyesButton = null;
-
-        // bottom row
-        [SerializeField]
-        private HighlightButton closeButton = null;
-        */
-
-        [SerializeField]
-        private HighlightButton saveButton = null;
+        private AppearancePanel currentAppearanceEditorPanel = null;
 
         private UnitProfile unitProfile = null;
         private UnitType unitType = null;
@@ -61,12 +40,14 @@ namespace AnyRPG {
         private AnyRPGSaveData saveData;
 
         // game manager references
-        private UIManager uIManager = null;
-        private PlayerManager playerManager = null;
-        private CharacterCreatorManager characterCreatorManager = null;
-        private SaveManager saveManager = null;
-        private LevelManager levelManager = null;
-        private CharacterCreatorInteractableManager characterCreatorInteractableManager = null;
+        protected UIManager uIManager = null;
+        protected PlayerManager playerManager = null;
+        protected CharacterCreatorManager characterCreatorManager = null;
+        protected SaveManager saveManager = null;
+        protected LevelManager levelManager = null;
+        protected CharacterCreatorInteractableManager characterCreatorInteractableManager = null;
+        protected ObjectPooler objectPooler = null;
+        protected SystemDataFactory systemDataFactory = null;
 
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
         public UnitType UnitType { get => unitType; set => unitType = value; }
@@ -79,19 +60,13 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            //faceButton.Configure(systemGameManager);
-            //colorsButton.Configure(systemGameManager);
-            //sexButton.Configure(systemGameManager);
-            //maleButton.Configure(systemGameManager);
-            //femaleButton.Configure(systemGameManager);
-            //hairButton.Configure(systemGameManager);
-            //skinButton.Configure(systemGameManager);
-            //eyesButton.Configure(systemGameManager);
-            //closeButton.Configure(systemGameManager);
-            //saveButton.Configure(systemGameManager);
 
             characterPreviewPanel.Configure(systemGameManager);
-            //umaCharacterPanel.Configure(systemGameManager);
+
+            defaultAppearancePanel.SetCharacterEditor(this);
+            
+            AddDefaultAppearancePanel();
+            GetAvailableAppearancePanels();
         }
 
         public override void SetGameManagerReferences() {
@@ -102,48 +77,169 @@ namespace AnyRPG {
             saveManager = systemGameManager.SaveManager;
             levelManager = systemGameManager.LevelManager;
             characterCreatorInteractableManager = systemGameManager.CharacterCreatorInteractableManager;
+            objectPooler = systemGameManager.ObjectPooler;
+            systemDataFactory = systemGameManager.SystemDataFactory;
+        }
+
+        private void AddDefaultAppearancePanel() {
+            appearanceEditorPanels.Add(defaultAppearancePanel.gameObject, defaultAppearancePanel);
+        }
+
+        private void GetAvailableAppearancePanels() {
+            foreach (AppearanceEditorProfile appearanceEditorProfile in systemDataFactory.GetResourceList<AppearanceEditorProfile>()) {
+                if (appearanceEditorProfile.ModelProviderType != null) {
+                    appearanceEditorPanelTypes.Add(appearanceEditorProfile.ModelProviderType, appearanceEditorProfile.Prefab);
+                }
+            }
         }
 
         public override void ReceiveClosedWindowNotification() {
             //Debug.Log("CharacterCreatorPanel.OnCloseWindow()");
+
             base.ReceiveClosedWindowNotification();
-            characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
-            characterPreviewPanel.OnTargetReady -= HandleTargetReady;
+
+            characterCreatorManager.OnUnitCreated -= HandleUnitCreated;
+            characterCreatorManager.OnModelCreated -= HandleModelCreated;
+
             characterPreviewPanel.ReceiveClosedWindowNotification();
-            umaCharacterPanel.ReceiveClosedWindowNotification();
+            
+            foreach (AppearancePanel appearancePanel in appearanceEditorPanels.Values) {
+                appearancePanel.ReceiveClosedWindowNotification();
+            }
+            defaultAppearancePanel.ReceiveClosedWindowNotification();
+
             characterCreatorInteractableManager.EndInteraction();
+            
             // close interaction window too for smoother experience
             uIManager.interactionWindow.CloseWindow();
+
+            characterCreatorManager.DisableLight();
         }
 
         public override void ProcessOpenWindowNotification() {
             //Debug.Log("CharacterCreatorPanel.ProcessOpenWindowNotification()");
             base.ProcessOpenWindowNotification();
-            saveButton.Button.interactable = false;
-            uINavigationControllers[0].UpdateNavigationList();
-            uINavigationControllers[0].FocusCurrentButton();
-            umaCharacterPanel.ReceiveOpenWindowNotification();
-            umaCharacterPanel.ShowPanel();
-            //SetOpenSubPanel(umaCharacterPanel, true);
-            SetOpenSubPanel(umaCharacterPanel, false);
 
-            // set unit profile to default
-            if (systemConfigurationManager.UseFirstCreatorProfile) {
-                unitProfile = systemConfigurationManager.CharacterCreatorUnitProfile;
-            } else {
-                unitProfile = playerManager.ActiveCharacter.UnitProfile;
-            }
+            ProcessOpenWindow();
+        }
 
-            // inform the preview panel so the character can be rendered
-            characterPreviewPanel.OnTargetCreated += HandleTargetCreated;
-            characterPreviewPanel.OnTargetReady += HandleTargetReady;
+        private void UpdateUnitProfile(UnitProfile unitProfile) {
+            //Debug.Log("CharacterCreatorWindowPanel.UpdateUnitProfile(" + (unitProfile == null ? "null" : unitProfile.ResourceName) + ")");
+
+            this.unitProfile = unitProfile;
+            this.characterRace = unitProfile.CharacterRace;
+        }
+
+        public void SetUnitProfile(UnitProfile unitProfile) {
+            UpdateUnitProfile(unitProfile);
+            characterPreviewPanel.ReloadUnit();
+        }
+
+        private void ProcessOpenWindow() {
+
+            ApplyInitialUnitProfile();
+
+            characterCreatorManager.OnUnitCreated += HandleUnitCreated;
+            characterCreatorManager.OnModelCreated += HandleModelCreated;
+
             characterPreviewPanel.CapabilityConsumer = this;
             characterPreviewPanel.ReceiveOpenWindowNotification();
 
+            defaultAppearancePanel.ReceiveOpenWindowNotification();
+
+            //saveButton.Button.interactable = false;
+            uINavigationControllers[0].UpdateNavigationList();
+            uINavigationControllers[0].FocusCurrentButton();
+
+            /*
+            if (characterCreatorManager.PreviewUnitController.UnitModelController.ModelCreated == true) {
+                HandleModelCreated();
+            }
+            */
+            characterCreatorManager.EnableLight();
         }
+
+        private void ApplyInitialUnitProfile() {
+
+            if (characterCreatorInteractableManager.CharacterCreator == null) {
+                // the window was not opened from an interaction with a character creator. nothing to do
+                return;
+            }
+
+            // set unit profile to default
+            if (characterCreatorInteractableManager.CharacterCreator.Props.UnitProfileList.Count == 0) {
+                if (characterCreatorInteractableManager.CharacterCreator.Props.AllowGenderChange == true) {
+                    characterRace = playerManager.ActiveCharacter.UnitProfile.CharacterRace;
+                }
+                UpdateUnitProfile(playerManager.ActiveCharacter.UnitProfile);
+                return;
+            }
+
+            if (characterCreatorInteractableManager.CharacterCreator.Props.UnitProfileList.Contains(playerManager.ActiveCharacter.UnitProfile)) {
+                if (characterCreatorInteractableManager.CharacterCreator.Props.AllowGenderChange == true) {
+                    characterRace = playerManager.ActiveCharacter.UnitProfile.CharacterRace;
+                }
+                UpdateUnitProfile(playerManager.ActiveCharacter.UnitProfile);
+            } else {
+                if (characterCreatorInteractableManager.CharacterCreator.Props.AllowGenderChange == true) {
+                    characterRace = characterCreatorInteractableManager.CharacterCreator.Props.UnitProfileList[0].CharacterRace;
+                }
+                UpdateUnitProfile(characterCreatorInteractableManager.CharacterCreator.Props.UnitProfileList[0]);
+            }
+
+        }
+
+        private void ActivateCorrectAppearancePanel() {
+            //Debug.Log("NewGamePanel.ActivateCorrectAppearancePanel()");
+
+            if (characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider == null) {
+                currentAppearanceEditorPanel = defaultAppearancePanel;
+                return;
+            }
+
+            //Debug.Log("provider type is " + characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType());
+
+            if (appearanceEditorPanelTypes.ContainsKey(characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType()) == false) {
+                currentAppearanceEditorPanel = defaultAppearancePanel;
+                return;
+            }
+
+            GameObject panelPrefab = appearanceEditorPanelTypes[characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType()];
+
+            if (appearanceEditorPanels.ContainsKey(panelPrefab) == false) {
+                AppearancePanel appearancePanel = objectPooler.GetPooledObject(panelPrefab, panelParent.transform).GetComponent<AppearancePanel>();
+                appearancePanel.Configure(systemGameManager);
+                appearancePanel.SetParentPanel(this);
+                appearancePanel.SetCharacterEditor(this);
+                appearancePanel.ReceiveOpenWindowNotification();
+                appearancePanel.transform.SetSiblingIndex(1);
+                appearanceEditorPanels.Add(panelPrefab, appearancePanel);
+                subPanels.Add(appearancePanel);
+            }
+
+            currentAppearanceEditorPanel = appearanceEditorPanels[panelPrefab];
+            //currentAppearancePanel.SetupOptions();
+        }
+
+        /*
+        private void ClosePanels() {
+            foreach (AppearancePanel appearancePanel in appearanceEditorPanels.Values) {
+                appearancePanel.HidePanel();
+            }
+            defaultAppearancePanel.HidePanel();
+        }
+        */
+
+        /*
+        private void OpenDefaultAppearanceEditorPanel() {
+            defaultAppearancePanel.ShowPanel();
+            currentAppearanceEditorPanel = defaultAppearancePanel;
+        }
+        */
 
         public void ClosePanel() {
             //Debug.Log("CharacterCreatorPanel.ClosePanel()");
+            currentAppearanceEditorPanel.DisablePanelDisplay();
             uIManager.characterCreatorWindow.CloseWindow();
         }
 
@@ -151,7 +247,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorPanel.SaveCharacter()");
 
             if (characterCreatorManager.PreviewUnitController.UnitModelController != null) {
-                characterCreatorManager.PreviewUnitController.UnitModelController.SaveAppearanceSettings();
+                characterCreatorManager.PreviewUnitController.UnitModelController.SaveAppearanceSettings(saveManager, saveManager.CurrentSaveData);
             }
 
             // replace a default player unit with an UMA player unit when a save occurs
@@ -161,7 +257,7 @@ namespace AnyRPG {
             Vector3 currentPlayerLocation = playerManager.ActiveUnitController.transform.position;
             levelManager.SetSpawnRotationOverride(playerManager.ActiveUnitController.transform.forward);
             playerManager.DespawnPlayerUnit();
-            playerManager.MyCharacter.SetUnitProfile(unitProfile.DisplayName, true, -1, false);
+            playerManager.MyCharacter.SetUnitProfile(unitProfile.ResourceName, true, -1, false);
             playerManager.SpawnPlayerUnit(currentPlayerLocation);
             if (playerManager.MyCharacter.CharacterAbilityManager != null) {
                 playerManager.MyCharacter.CharacterAbilityManager.LearnDefaultAutoAttackAbility();
@@ -175,19 +271,53 @@ namespace AnyRPG {
             characterCreatorInteractableManager.ConfirmAction();
         }
 
-        public void HandleTargetCreated() {
+        public void OpenAppearancePanel() {
+            //Debug.Log("NewGamePanel.OpenAppearancePanel()");
+
+            currentAppearanceEditorPanel.ShowPanel();
+            SetOpenSubPanel(currentAppearanceEditorPanel, false);
+
+            //if (openSubPanel != currentAppearanceEditorPanel) {
+            //    ClosePanels(currentAppearanceEditorPanel);
+            //    currentAppearanceEditorPanel.ShowPanel();
+            //    SetOpenSubPanel(currentAppearanceEditorPanel, true);
+            //}
+        }
+
+        public void HandleUnitCreated() {
             //Debug.Log("CharacterCreatorWindowPanel.HandleTargetCreated()");
-            characterCreatorManager.PreviewUnitController.UnitModelController.SetInitialSavedAppearance();
+
+            ActivateCorrectAppearancePanel();
+            currentAppearanceEditorPanel.HandleUnitCreated();
+
+            EquipCharacter();
+        }
+
+        private void EquipCharacter() {
+            //Debug.Log("CharacterCreatorWindowPanel.EquipCharacter()");
+
+            // only set saved appearance if displaying the same unit as the existing player unit
+            if (playerManager.ActiveCharacter.UnitProfile == UnitProfile) {
+                characterCreatorManager.PreviewUnitController.UnitModelController.SetInitialSavedAppearance(saveManager.CurrentSaveData);
+            }
+
             foreach (EquipmentSlotProfile equipmentSlotProfile in playerManager.ActiveCharacter.CharacterEquipmentManager.CurrentEquipment.Keys) {
                 characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.CurrentEquipment.Add(equipmentSlotProfile, playerManager.ActiveCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
             }
+
         }
 
-        public void HandleTargetReady() {
+        public void HandleModelCreated() {
             //Debug.Log("CharacterCreatorWindowPanel.HandleTargetReady()");
-            //LoadSavedAppearanceSettings();
-            umaCharacterPanel.HandleTargetReady();
-            if (umaCharacterPanel.MainNoOptionsArea.activeSelf == false) {
+
+            currentAppearanceEditorPanel.SetupOptions();
+            
+            OpenAppearancePanel();
+
+            /*
+
+            // showPanel makes same call as HandleTargetReady() so no need to call it
+            if (currentAppearanceEditorPanel.MainNoOptionsArea.activeSelf == false) {
                 saveButton.Button.interactable = true;
             } else {
                 openSubPanel = null;
@@ -196,6 +326,8 @@ namespace AnyRPG {
             if (activeSubPanel == null) {
                 uINavigationControllers[0].FocusCurrentButton();
             }
+            */
+
         }
 
         /*

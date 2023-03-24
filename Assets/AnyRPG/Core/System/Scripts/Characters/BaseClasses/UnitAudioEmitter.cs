@@ -35,7 +35,7 @@ namespace AnyRPG {
             if (audioClip == null) {
                 return;
             }
-            //Debug.Log(gameObject.name + ".UnitAudioEmitter.PlayCast(" + audioClip.name + ")");
+            //Debug.Log($"{gameObject.name}.UnitAudioEmitter.PlayCast(" + audioClip.name + ")");
 
             if (castSource != null) {
                 if (loop == true) {
@@ -53,7 +53,7 @@ namespace AnyRPG {
         }
 
         public void PlayEffect(AudioClip audioClip, bool loop) {
-            //Debug.Log(gameObject.name + ".UnitAudioEmitter.PlayEffect(" + (audioClip == null ? "null" : audioClip.name) + ", " + loop + ")");
+            //Debug.Log($"{gameObject.name}.UnitAudioEmitter.PlayEffect(" + (audioClip == null ? "null" : audioClip.name) + ", " + loop + ")");
             if (audioClip == null) {
                 return;
             }
@@ -72,7 +72,7 @@ namespace AnyRPG {
             if (audioClip == null) {
                 return;
             }
-            //Debug.Log(gameObject.name + ".UnitAudioEmitter.PlayVoice(" + audioClip.name + ")");
+            //Debug.Log($"{gameObject.name}.UnitAudioEmitter.PlayVoice(" + audioClip.name + ")");
             if (voiceSource != null) {
                 voiceSource.PlayOneShot(audioClip);
             }
@@ -82,7 +82,7 @@ namespace AnyRPG {
             if (audioClip == null) {
                 return;
             }
-            //Debug.Log(gameObject.name + ".UnitAudioEmitter.PlayMovement(" + audioClip.name + ")");
+            //Debug.Log($"{gameObject.name}.UnitAudioEmitter.PlayMovement(" + audioClip.name + ")");
 
             if (loop) {
                 if (movementSource != null) {
@@ -98,7 +98,7 @@ namespace AnyRPG {
         }
 
         public void StopCast() {
-            //Debug.Log(gameObject.name + ".UnitAudioEmitter.StopCast()");
+            //Debug.Log($"{gameObject.name}.UnitAudioEmitter.StopCast()");
             if (castSource != null) {
                 castSource.Stop();
                 castSource.loop = false;
@@ -106,7 +106,7 @@ namespace AnyRPG {
         }
 
         public void StopEffect() {
-            //Debug.Log(gameObject.name + ".UnitAudioEmitter.StopEffect()");
+            //Debug.Log($"{gameObject.name}.UnitAudioEmitter.StopEffect()");
             if (effectSource != null) {
                 effectSource.Stop();
                 effectSource.loop = false;
@@ -114,14 +114,14 @@ namespace AnyRPG {
         }
 
         public void StopVoice() {
-            //Debug.Log(gameObject.name + ".UnitAudioEmitter.StopVoice()");
+            //Debug.Log($"{gameObject.name}.UnitAudioEmitter.StopVoice()");
             if (voiceSource != null) {
                 voiceSource.Stop();
             }
         }
 
         public void StopMovement(bool stopLoopsOnly = true) {
-            //Debug.Log(gameObject.name + ".UnitAudioEmitter.StopVoice()");
+            //Debug.Log($"{gameObject.name}.UnitAudioEmitter.StopVoice()");
             if (movementSource != null) { 
                 movementSource.Stop();
             }

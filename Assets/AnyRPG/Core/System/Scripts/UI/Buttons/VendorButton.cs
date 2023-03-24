@@ -94,8 +94,8 @@ namespace AnyRPG {
                 descriptionText.text = vendorItem.Item.Description;
                 if (vendorItem.BuyPrice() > 0
                     && vendorItem.Item.Currency != null
-                    && vendorItem.Item.Currency.DisplayName != null
-                    && vendorItem.Item.Currency.DisplayName != string.Empty) {
+                    && vendorItem.Item.Currency.ResourceName != null
+                    && vendorItem.Item.Currency.ResourceName != string.Empty) {
                     price.gameObject.SetActive(false);
                     //price.text = "Price:";
                     if (currencyBarController != null) {
@@ -157,7 +157,7 @@ namespace AnyRPG {
                     tmpItem = vendorItem.Item;
                 } else {
                     // if this is a new purchase, a new copy of the item must be instantiated since the button is referring to the original factory item template
-                    tmpItem = systemItemManager.GetNewResource(vendorItem.Item.DisplayName, vendorItem.GetItemQuality());
+                    tmpItem = systemItemManager.GetNewResource(vendorItem.Item.ResourceName, vendorItem.GetItemQuality());
                     //Debug.Log("Instantiated an item with id: " + tmpItem.GetInstanceID().ToString());
                 }
 

@@ -32,7 +32,7 @@ namespace AnyRPG {
         }
 
         public override void NotifyOnConfirmAction() {
-            //Debug.Log(gameObject.name + ".NameChangeInteractable.HandleConfirmAction()");
+            //Debug.Log($"{gameObject.name}.NameChangeInteractable.HandleConfirmAction()");
             base.NotifyOnConfirmAction();
 
             // since the dialog completion status is itself a form of prerequisite, we should call the prerequisite update here
@@ -40,7 +40,7 @@ namespace AnyRPG {
         }
 
         public List<Dialog> GetCurrentOptionList() {
-            //Debug.Log(gameObject.name + ".DialogInteractable.GetCurrentOptionList()");
+            //Debug.Log($"{gameObject.name}.DialogInteractable.GetCurrentOptionList()");
             List<Dialog> currentList = new List<Dialog>();
             if (interactable.CombatOnly == false) {
                 foreach (Dialog dialog in Props.DialogList) {
@@ -50,7 +50,7 @@ namespace AnyRPG {
                     }
                 }
             }
-            //Debug.Log(gameObject.name + ".DialogInteractable.GetCurrentOptionList(): List Size: " + currentList.Count);
+            //Debug.Log($"{gameObject.name}.DialogInteractable.GetCurrentOptionList(): List Size: " + currentList.Count);
             return currentList;
         }
 
@@ -74,7 +74,7 @@ namespace AnyRPG {
         }
 
         public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f, bool processNonCombatCheck = true) {
-            //Debug.Log(gameObject.name + ".DialogInteractable.CanInteract()");
+            //Debug.Log($"{gameObject.name}.DialogInteractable.CanInteract()");
             if (!base.CanInteract(processRangeCheck, passedRangeCheck, factionValue, processNonCombatCheck)) {
                 return false;
             }
@@ -105,7 +105,7 @@ namespace AnyRPG {
         }
 
         public override int GetCurrentOptionCount() {
-            //Debug.Log(gameObject.name + ".DialogInteractable.GetCurrentOptionCount(): " + GetCurrentOptionList().Count);
+            //Debug.Log($"{gameObject.name}.DialogInteractable.GetCurrentOptionCount(): " + GetCurrentOptionList().Count);
             return GetCurrentOptionList().Count;
         }
 

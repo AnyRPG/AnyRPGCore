@@ -80,7 +80,7 @@ namespace AnyRPG {
                 if (tmpAbility != null) {
                     statusEffect = tmpAbility.StatusEffectProperties;
                 } else {
-                    Debug.LogError("StatusEffectObjective.SetupScriptableObjects(): Could not find ability : " + effectName + " while inititalizing an ability objective for " + quest.DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("StatusEffectObjective.SetupScriptableObjects(): Could not find ability : " + effectName + " while inititalizing an ability objective for " + quest.ResourceName + ".  CHECK INSPECTOR");
                 }
             }
         }

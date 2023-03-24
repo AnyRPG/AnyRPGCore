@@ -7,15 +7,17 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class NewGameManager : ConfiguredMonoBehaviour, ICapabilityConsumer {
+    public class NewGameManager : ConfiguredMonoBehaviour, ICharacterEditor, ISaveDataOwner {
 
         public event System.Action<UnitProfile> OnSetUnitProfile = delegate { };
         public event System.Action<string> OnSetPlayerName = delegate { };
+        public event System.Action<Faction> OnSetFaction = delegate { };
+        public event System.Action<CharacterRace> OnSetCharacterRace = delegate { };
         public event System.Action<CharacterClass> OnSetCharacterClass = delegate { };
         public event System.Action<ClassSpecialization> OnSetClassSpecialization = delegate { };
-        public event System.Action<Faction> OnSetFaction = delegate { };
         public event System.Action OnUpdateEquipmentList = delegate { };
         public event System.Action OnUpdateFactionList = delegate { };
+        public event System.Action OnUpdateCharacterRaceList = delegate { };
         public event System.Action OnUpdateCharacterClassList = delegate { };
         public event System.Action OnUpdateClassSpecializationList = delegate { };
         public event System.Action OnUpdateUnitProfileList = delegate { };
@@ -29,15 +31,33 @@ namespace AnyRPG {
         private ClassSpecialization classSpecialization = null;
         private Faction faction = null;
 
+        private Material defaultPlatformMaterial = null;
+        private Material defaultTopMaterial = null;
+        private Material defaultBottomMaterial = null;
+        private Material defaultNorthMaterial = null;
+        private Material defaultSouthMaterial = null;
+        private Material defaultEastMaterial = null;
+        private Material defaultWestMaterial = null;
+
+        private GameObject environmentPreviewPrefab = null;
+        private Material platformMaterial = null;
+        private Material topMaterial = null;
+        private Material bottomMaterial = null;
+        private Material northMaterial = null;
+        private Material southMaterial = null;
+        private Material eastMaterial = null;
+        private Material westMaterial = null;
+
         private CapabilityConsumerProcessor capabilityConsumerProcessor = null;
 
-        private AnyRPGSaveData saveData;
+        private AnyRPGSaveData saveData = null;
 
         //private Dictionary<EquipmentSlotType, Equipment> equipmentList = new Dictionary<EquipmentSlotType, Equipment>();
         private EquipmentManager equipmentManager = null;
 
         // valid choices for new game
         private List<Faction> factionList = new List<Faction>();
+        private List<CharacterRace> characterRaceList = new List<CharacterRace>();
         private List<CharacterClass> characterClassList = new List<CharacterClass>();
         private List<ClassSpecialization> classSpecializationList = new List<ClassSpecialization>();
         private List<UnitProfile> unitProfileList = new List<UnitProfile>();
@@ -49,17 +69,18 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private LevelManager levelManager = null;
 
+        public Faction Faction { get => faction; }
+        public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
         public CharacterClass CharacterClass { get => characterClass; }
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
-        public Faction Faction { get => faction; }
-        public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
+        public UnitProfile UnitProfile { get => unitProfile; }
         public AnyRPGSaveData SaveData { get => saveData; set => saveData = value; }
         public Dictionary<EquipmentSlotProfile, Equipment> EquipmentList { get => equipmentManager.CurrentEquipment; }
         public UnitType UnitType { get => unitType; set => unitType = value; }
-        public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
         public string PlayerName { get => playerName; set => playerName = value; }
         public List<Faction> FactionList { get => factionList; }
+        public List<CharacterRace> CharacterRaceList { get => characterRaceList; }
         public List<CharacterClass> CharacterClassList { get => characterClassList; }
         public List<ClassSpecialization> ClassSpecializationList { get => classSpecializationList; }
         public List<UnitProfile> UnitProfileList { get => unitProfileList; }
@@ -77,6 +98,18 @@ namespace AnyRPG {
             if (systemConfigurationManager.DefaultPlayerName != null && systemConfigurationManager.DefaultPlayerName != string.Empty) {
                 defaultPlayerName = systemConfigurationManager.DefaultPlayerName;
             }
+
+            GetDefaultMaterials();
+        }
+
+        private void GetDefaultMaterials() {
+            defaultPlatformMaterial = characterCreatorManager.PlatformRenderer.material;
+            defaultTopMaterial = characterCreatorManager.TopRenderer.material;
+            defaultBottomMaterial = characterCreatorManager.BottomRenderer.material;
+            defaultNorthMaterial = characterCreatorManager.NorthRenderer.material;
+            defaultSouthMaterial = characterCreatorManager.SouthRenderer.material;
+            defaultEastMaterial = characterCreatorManager.EastRenderer.material;
+            defaultWestMaterial = characterCreatorManager.WestRenderer.material;
         }
 
         public void ClearData() {
@@ -89,22 +122,32 @@ namespace AnyRPG {
             classSpecialization = null;
             faction = null;
             capabilityConsumerProcessor = null;
+            saveData = saveManager.CreateSaveData();
 
         }
 
         public void SetupSaveData() {
             //Debug.Log("NewGameManager.SetupSaveData()");
 
-            saveData = new AnyRPGSaveData();
-            saveData = saveManager.InitializeResourceLists(saveData, false);
-            //saveData.playerName = playerName;
             SetPlayerName(defaultPlayerName);
             saveData.PlayerLevel = 1;
             saveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
-            unitProfile = systemConfigurationManager.CharacterCreatorUnitProfile;
-            saveData.unitProfileName = systemConfigurationManager.CharacterCreatorUnitProfileName;
+            unitProfile = systemConfigurationManager.DefaultUnitProfile;
+            saveData.unitProfileName = systemConfigurationManager.DefaultUnitProfileName;
 
-            UpdateFactionList();
+            if (systemConfigurationManager.NewGameFaction == true) {
+                UpdateFactionList();
+            }
+
+            if (systemConfigurationManager.NewGameRace == true) {
+                UpdateCharacterRaceList();
+            }
+
+            UpdateUnitProfileList();
+
+            UpdateCharacterEnvironment();
+
+
             UpdateCharacterClassList();
             
             // testing - not needed because updating character class list will result in class getting set, which will update the class specialization list
@@ -116,6 +159,7 @@ namespace AnyRPG {
         }
 
         protected void UpdateFactionList() {
+            //Debug.Log("NewGameManager.UpdateFactionList()");
 
             factionList.Clear();
 
@@ -130,6 +174,34 @@ namespace AnyRPG {
             if (factionList.Count > 0
                 && (factionList.Contains(faction) == false || faction == null)) {
                 SetFaction(factionList[0]);
+            }
+        }
+
+        protected void UpdateCharacterRaceList() {
+            //Debug.Log("NewGameManager.UpdateCharacterRaceList()");
+
+            characterRaceList.Clear();
+
+            if (faction != null) {
+                characterRaceList.AddRange(faction.Races);
+            }
+
+            // add default races that are accessible regardless of faction
+            foreach (CharacterRace characterRace in systemDataFactory.GetResourceList<CharacterRace>()) {
+                if (characterRace.NewGameOption == true
+                    && characterRaceList.Contains(characterRace) == false) {
+                    characterRaceList.Add(characterRace);
+                }
+            }
+
+            OnUpdateCharacterRaceList();
+
+            if (characterRaceList.Count > 0) {
+                if (characterRaceList.Contains(characterRace) == false || characterRace == null) {
+                    SetCharacterRace(characterRaceList[0]);
+                }
+            } else {
+                SetCharacterRace(null);
             }
         }
 
@@ -179,26 +251,14 @@ namespace AnyRPG {
 
         protected void UpdateUnitProfileList() {
             //Debug.Log("NewGameManager.UpdateUnitProfileList()");
+
             unitProfileList.Clear();
 
-            if ((faction != null && faction.HideDefaultProfiles == false)
-                            || systemConfigurationManager.AlwaysShowDefaultProfiles == true
-                            || faction == null) {
-                //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon(): showing default profiles");
-                AddDefaultProfiles();
-            }
-
-            if (faction != null) {
-                foreach (UnitProfile unitProfile in faction.CharacterCreatorProfiles) {
-                    unitProfileList.Add(unitProfile);
-                }
-            }
+            PopulateUnitProfileList();
 
             OnUpdateUnitProfileList();
 
-            if (unitProfileList.Count > 0
-                //&& (unitProfileList.Contains(unitProfile) == false || unitProfile == null)) {
-                ) {
+            if (unitProfileList.Count > 0) {
                 if (unitProfileList.Contains(unitProfile)) {
                     SetUnitProfile(unitProfileList[unitProfileList.IndexOf(unitProfile)]);
                 } else {
@@ -207,11 +267,51 @@ namespace AnyRPG {
             }
         }
 
+        private void PopulateUnitProfileList() {
+            
+            if (systemConfigurationManager.CharacterSelectionType == CharacterSelectionType.DefaultCharacter) {
+                unitProfileList.Add(systemConfigurationManager.DefaultPlayerUnitProfile);
+                return;
+            }
+
+            if (systemConfigurationManager.CharacterSelectionType == CharacterSelectionType.CharacterList) {
+                
+                // add default profiles
+                if (faction == null || faction.AddSystemProfiles == true) {
+                    AddDefaultProfiles();
+                }
+
+                // add faction specific profiles
+                if (faction != null) {
+                    foreach (UnitProfile unitProfile in faction.CharacterCreatorProfiles) {
+                        if (unitProfileList.Contains(unitProfile) == false) {
+                            unitProfileList.Add(unitProfile);
+                        }
+                    }
+                }
+                return;
+            }
+
+            if (systemConfigurationManager.CharacterSelectionType == CharacterSelectionType.RaceAndGender) {
+                if (characterRace != null) {
+                    if (characterRace.MaleUnitProfile != null) {
+                        unitProfileList.Add(characterRace.MaleUnitProfile);
+                        return;
+                    }
+                    if (characterRace.FemaleUnitProfile != null) {
+                        unitProfileList.Add(characterRace.FemaleUnitProfile);
+                        return;
+                    }
+                }
+            }
+
+        }
+
         private void AddDefaultProfiles() {
             if (systemConfigurationManager.DefaultPlayerUnitProfile != null) {
                 unitProfileList.Add(systemConfigurationManager.DefaultPlayerUnitProfile);
             }
-            foreach (UnitProfile unitProfile in systemConfigurationManager.CharacterCreatorProfiles) {
+            foreach (UnitProfile unitProfile in systemConfigurationManager.DefaultUnitProfileList) {
                 unitProfileList.Add(unitProfile);
             }
         }
@@ -224,38 +324,155 @@ namespace AnyRPG {
         }
 
         public void SetUnitProfile(UnitProfile newUnitProfile) {
-            //Debug.Log("NewGameManager.SetUnitProfile(" + newUnitProfile.DisplayName + ")");
+            //Debug.Log($"NewGameManager.SetUnitProfile({newUnitProfile.DisplayName})");
+
+            if (unitProfile == newUnitProfile) {
+                return;
+            }
 
             unitProfile = newUnitProfile;
-            saveData.unitProfileName = unitProfile.DisplayName;
+            saveData.unitProfileName = unitProfile.ResourceName;
 
             OnSetUnitProfile(newUnitProfile);
+
+            //UpdateCharacterEnvironment();
+        }
+
+        private void UpdateCharacterEnvironment() {
+            //Debug.Log("NewGameManager.UpdateCharacterEnvironment()");
+
+            if (characterRace == null ) {
+                return;
+            }
+
+            environmentPreviewPrefab = GetEnvironmentPreviewPrefab();
+            characterCreatorManager.SpawnEnvironmentPreviewPrefab(environmentPreviewPrefab);
+
+            platformMaterial = GetPlatformMaterial();
+            characterCreatorManager.SetPlatformMaterial(platformMaterial);
+
+            topMaterial = GetTopMaterial();
+            bottomMaterial = GetBottomMaterial();
+            northMaterial = GetNorthMaterial();
+            southMaterial = GetSouthMaterial();
+            eastMaterial = GetEastMaterial();
+            westMaterial = GetWestMaterial();
+            characterCreatorManager.SetSkybox(topMaterial,
+                bottomMaterial,
+                northMaterial,
+                southMaterial,
+                eastMaterial,
+                westMaterial);
+        }
+
+        private GameObject GetEnvironmentPreviewPrefab() {
+            //Debug.Log("NewGameManager.GetEnvironmentPreviewPrefab()");
+
+            if (characterRace?.EnvironmentPreviewPrefab != null) {
+                return characterRace.EnvironmentPreviewPrefab;
+            }
+            if (faction?.EnvironmentPreviewPrefab != null) {
+                return faction.EnvironmentPreviewPrefab;
+            }
+            return null;
+        }
+
+        private Material GetPlatformMaterial() {
+            //Debug.Log("NewGameManager.GetPlatformMaterial()");
+
+            if (characterRace?.PlatformMaterial != null) {
+                return characterRace.PlatformMaterial;
+            }
+            if (faction?.PlatformMaterial != null) {
+                return faction.PlatformMaterial;
+            }
+            return defaultPlatformMaterial;
+        }
+
+
+        private Material GetTopMaterial() {
+            if (characterRace?.TopMaterial != null) {
+                return characterRace.TopMaterial;
+            }
+            if (faction?.TopMaterial != null) {
+                return faction.TopMaterial;
+            }
+            return defaultTopMaterial;
+        }
+
+        private Material GetBottomMaterial() {
+            if (characterRace?.BottomMaterial != null) {
+                return characterRace.BottomMaterial;
+            }
+            if (faction?.BottomMaterial != null) {
+                return faction.BottomMaterial;
+            }
+            return defaultBottomMaterial;
+        }
+
+        private Material GetNorthMaterial() {
+            if (characterRace?.NorthMaterial != null) {
+                return characterRace.NorthMaterial;
+            }
+            if (faction?.NorthMaterial != null) {
+                return faction.NorthMaterial;
+            }
+            return defaultNorthMaterial;
+        }
+
+        private Material GetSouthMaterial() {
+            if (characterRace?.SouthMaterial != null) {
+                return characterRace.SouthMaterial;
+            }
+            if (faction?.SouthMaterial != null) {
+                return faction.SouthMaterial;
+            }
+            return defaultSouthMaterial;
+        }
+
+        private Material GetEastMaterial() {
+            if (characterRace?.EastMaterial != null) {
+                return characterRace.EastMaterial;
+            }
+            if (faction?.EastMaterial != null) {
+                return faction.EastMaterial;
+            }
+            return defaultEastMaterial;
+        }
+
+        private Material GetWestMaterial() {
+            if (characterRace?.WestMaterial != null) {
+                return characterRace.WestMaterial;
+            }
+            if (faction?.WestMaterial != null) {
+                return faction.WestMaterial;
+            }
+            return defaultWestMaterial;
         }
 
         public void SetCharacterClass(CharacterClass newCharacterClass) {
-            //Debug.Log("NewGamePanel.ShowCharacterClass()");
+            //Debug.Log("NewGamePanel.SetCharacterClass(" + (newCharacterClass == null ? "null" : newCharacterClass.DisplayName) + ")");
 
-            if (characterClass != newCharacterClass) {
-                characterClass = newCharacterClass;
-                saveData.characterClass = characterClass.DisplayName;
-                OnSetCharacterClass(newCharacterClass);
-                //OnSetClassSpecialization(null);
-
-                UpdateClassSpecializationList();
-
-                
-                // not all classes have specializations
-                // update equipment list manually in that case
-                // FIX - THIS WAS COMMENTED OUT FOR SOME REASON - MONITOR FOR BREAKAGE
-                // it needed to be re-enabled because character doens't get equipment if they have no spec
-                // re-commented out because class specialization is always set now, even if its set to null because there are no specs
-                /*
-                if (classSpecializationList.Count == 0) {
-                    UpdateEquipmentList();
-                }
-                */
-                
+            if (characterClass == newCharacterClass) {
+                return;
             }
+
+            characterClass = newCharacterClass;
+            saveData.characterClass = characterClass.ResourceName;
+            OnSetCharacterClass(newCharacterClass);
+
+            UpdateClassSpecializationList();
+
+            // not all classes have specializations
+            // update equipment list manually in that case
+            // FIX - THIS WAS COMMENTED OUT FOR SOME REASON - MONITOR FOR BREAKAGE
+            // it needed to be re-enabled because character doens't get equipment if they have no spec
+            // re-commented out because class specialization is always set now, even if its set to null because there are no specs
+            /*
+            if (classSpecializationList.Count == 0) {
+                UpdateEquipmentList();
+            }
+            */
         }
 
         public void SetClassSpecialization(ClassSpecialization newClassSpecialization) {
@@ -264,7 +481,7 @@ namespace AnyRPG {
             if (classSpecialization !=  newClassSpecialization || newClassSpecialization == null) {
                 classSpecialization = newClassSpecialization;
                 if (classSpecialization != null) {
-                    saveData.classSpecialization = classSpecialization.DisplayName;
+                    saveData.classSpecialization = classSpecialization.ResourceName;
                 } else {
                     saveData.classSpecialization = string.Empty;
                 }
@@ -273,20 +490,39 @@ namespace AnyRPG {
 
                 // must call this after setting specialization so its available to the UI
                 OnSetClassSpecialization(newClassSpecialization);
-
             }
-
 
         }
 
+        public void ChooseNewFaction(Faction newFaction) {
+            //Debug.Log("NewGameManager.SetFaction(" + (newFaction == null ? "null" : newFaction.DisplayName) + ")");
+
+            if (faction == newFaction) {
+                return;
+            }
+
+            SetFaction(newFaction);
+            if (systemConfigurationManager.NewGameRace == true) {
+                UpdateCharacterRaceList();
+            }
+
+            UpdateUnitProfileList();
+
+            UpdateCharacterEnvironment();
+        }
+
         public void SetFaction(Faction newFaction) {
-            //Debug.Log("NewGameManager.ShowFaction()");
+            //Debug.Log("NewGameManager.SetFaction(" + (newFaction == null ? "null" : newFaction.DisplayName) + ")");
+
+            if (faction == newFaction) {
+                return;
+            }
 
             faction = newFaction;
 
             UpdateEquipmentList();
 
-            saveData.playerFaction = faction.DisplayName;
+            saveData.playerFaction = faction.ResourceName;
 
             if (faction != null && faction.DefaultStartingZone != null && faction.DefaultStartingZone != string.Empty) {
                 saveData.CurrentScene = faction.DefaultStartingZone;
@@ -298,8 +534,45 @@ namespace AnyRPG {
             }
 
             OnSetFaction(newFaction);
+        }
+
+        public void ChooseNewCharacterRace(CharacterRace characterRace) {
+            //Debug.Log($"NewGameManager.SetCharacterRace({(characterRace == null ? "null" : characterRace.DisplayName)})");
+
+            if (this.characterRace == characterRace) {
+                return;
+            }
+
+            SetCharacterRace(characterRace);
 
             UpdateUnitProfileList();
+
+            UpdateCharacterEnvironment();
+        }
+
+        public void SetCharacterRace(CharacterRace characterRace) {
+            //Debug.Log($"NewGameManager.SetCharacterRace({(characterRace == null ? "null" : characterRace.DisplayName)})");
+
+            if (this.characterRace == characterRace) {
+                return;
+            }
+
+            this.characterRace = characterRace;
+
+            UpdateEquipmentList();
+
+            saveData.characterRace = characterRace.ResourceName;
+
+            if (faction != null && faction.DefaultStartingZone != string.Empty) {
+                saveData.CurrentScene = faction.DefaultStartingZone;
+            } else {
+                saveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
+            }
+            if (faction != null) {
+                levelManager.OverrideSpawnLocationTag = faction.DefaultStartingLocationTag;
+            }
+
+            OnSetCharacterRace(characterRace);
         }
 
         public void UpdateEquipmentList() {
@@ -412,13 +685,9 @@ namespace AnyRPG {
             }
         }
 
-        public void SetPlayerUMARecipe(string newRecipe) {
-            //Debug.Log("NewGameManager.SetPlayerUMARecipe()");
-
-            saveData.PlayerUMARecipe = newRecipe;
+        public void SetSaveData(AnyRPGSaveData saveData) {
+            this.saveData = saveData;
         }
-
-
     }
 
 }

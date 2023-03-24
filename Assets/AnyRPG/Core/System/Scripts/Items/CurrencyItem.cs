@@ -51,7 +51,7 @@ namespace AnyRPG {
                     currencyNode.currency = tmpCurrency;
                     currencyNode.Amount = gainCurrencyAmount;
                 } else {
-                    Debug.LogError("CurrencyItem.SetupScriptableObjects(): Could not find currency : " + gainCurrencyName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("CurrencyItem.SetupScriptableObjects(): Could not find currency : " + gainCurrencyName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
         }

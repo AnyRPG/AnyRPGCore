@@ -1,4 +1,3 @@
-using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,8 +7,12 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class NewGameSpecializationPanelController : WindowContentController {
 
-        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
         public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
+
+        [Header("Specialization Panel")]
+
+        [SerializeField]
+        private GameObject specializationRightPane = null;
 
         [SerializeField]
         private GameObject buttonPrefab = null;
@@ -48,20 +51,17 @@ namespace AnyRPG {
 
         // game manager references
         private ObjectPooler objectPooler = null;
-        private SystemDataFactory systemDataFactory = null;
         private NewGameManager newGameManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
             objectPooler = systemGameManager.ObjectPooler;
-            systemDataFactory = systemGameManager.SystemDataFactory;
             newGameManager = systemGameManager.NewGameManager;
         }
 
         public void SetNewGamePanel(NewGamePanel newGamePanel) {
             this.newGamePanel = newGamePanel;
-            //parentPanel = newGamePanel;
         }
 
         public void ClearOptionButtons() {
@@ -103,11 +103,6 @@ namespace AnyRPG {
                     uINavigationControllers[0].SetCurrentIndex(i);
                 }
             }
-            /*
-            if (optionButtons.Count > 0) {
-                SetNavigationController(uINavigationControllers[0]);
-            }
-            */
         }
 
         public void SetClassSpecialization(ClassSpecialization newClassSpecialization) {
@@ -130,6 +125,12 @@ namespace AnyRPG {
 
             ShowAbilityRewards();
             ShowTraitRewards();
+            if (abilityLabel.activeSelf == false && traitLabel.activeSelf == false) {
+                specializationRightPane.SetActive(false);
+            } else {
+                specializationRightPane.SetActive(true);
+            }
+
         }
 
         public void HidePanel() {
@@ -235,15 +236,6 @@ namespace AnyRPG {
             base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
-
-        /*
-        public override void Accept() {
-            base.Accept();
-            if (currentNavigationController == uINavigationControllers[0]) {
-                newGamePanel.OpenDetailsPanel();
-            }
-        }
-        */
 
     }
 

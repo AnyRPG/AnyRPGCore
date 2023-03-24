@@ -136,6 +136,7 @@ namespace AnyRPG {
                         EquipmentSlotProfile equipmentSlotProfile = playerManager.MyCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(handScript.Moveable as Equipment);
                         playerManager.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
                         playerManager.MyCharacter.CharacterEquipmentManager.Equip(inventorySlot.Item as Equipment, equipmentSlotProfile);
+                        playerManager.UnitController.UnitModelController.RebuildModelAppearance();
                         inventorySlot.Item.Remove();
                        //UseItem();
                         //uIManager.RefreshTooltip();
@@ -159,11 +160,9 @@ namespace AnyRPG {
                 } else if (handScript.Moveable is Equipment) {
                     // the handscript had equipment in it, and therefore we are trying to unequip some equipment
                     Equipment equipment = (Equipment)handScript.Moveable;
-                    // probably don't need to do this, since dequip should drop the equipment in the bag anyway
-                    //AddItem(equipment);
-
                     EquipmentSlotProfile equipmentSlotProfile = playerManager.MyCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(handScript.Moveable as Equipment);
                     playerManager.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile, inventorySlot.GetCurrentSlotIndex());
+                    playerManager.UnitController.UnitModelController.RebuildModelAppearance();
                     handScript.Drop();
                 }
             }
@@ -492,7 +491,7 @@ namespace AnyRPG {
                 //Debug.Log("This slot is empty, there is nothing to merge.");
                 return false;
             }
-            if (SystemDataFactory.MatchResource(from.Item.DisplayName, Item.DisplayName) && !IsFull) {
+            if (SystemDataUtility.MatchResource(from.Item.DisplayName, Item.DisplayName) && !IsFull) {
                 // how many free slots there are in the new stack
                 int free = Item.MaximumStackSize - Count;
                 if (free >= from.Count) {
@@ -544,17 +543,17 @@ namespace AnyRPG {
                 finalColor = new Color32(0, 0, 0, (byte)slotOpacityLevel);
                 backGroundImage.sprite = null;
                 if (backGroundImage != null) {
-                    //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image is not null, setting color: " + slotOpacityLevel);
+                    //Debug.Log($"{gameObject.name}.WindowContentController.SetBackGroundColor(): background image is not null, setting color: " + slotOpacityLevel);
                     backGroundImage.color = finalColor;
                 } else {
-                    //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image IS NULL!");
+                    //Debug.Log($"{gameObject.name}.WindowContentController.SetBackGroundColor(): background image IS NULL!");
                 }
             } else {
                 // check if the item has a quality.  if not, just do the default color
                 uIManager.SetItemBackground(inventorySlot.Item, backGroundImage, new Color32(0, 0, 0, 255));
 
             }
-            //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor()");
+            //Debug.Log($"{gameObject.name}.WindowContentController.SetBackGroundColor()");
         }
 
         

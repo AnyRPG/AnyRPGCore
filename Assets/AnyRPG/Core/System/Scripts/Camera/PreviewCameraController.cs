@@ -4,11 +4,11 @@ using UnityEngine.EventSystems;
 
 namespace AnyRPG {
 
-    public class PreviewCameraController : ConfiguredMonoBehaviour, IPointerDownHandler {
-        // public variables
+    public class PreviewCameraController : ConfiguredMonoBehaviour, IPointerDownHandler, IScrollHandler {
+        
+        // events
         public event System.Action OnTargetReady = delegate { };
 
-        //[SerializeField]
         protected UnitController unitController = null;
 
         [SerializeField]
@@ -25,6 +25,9 @@ namespace AnyRPG {
         public float cameraSpeed = 4f;
         private float gamepadZoomSpeed = 0.05f;
         public float minZoom = 1f;
+
+        // avoid use of local variables
+        private RaycastHit wallHit = new RaycastHit();
 
         [Tooltip("The maximum zoom distance is how far past the initial zoom you can zoom out")]
         [SerializeField]
@@ -68,10 +71,23 @@ namespace AnyRPG {
         public float initialYDegrees = 0f;
         public float initialXDegrees = 0f;
 
+        /// <summary>
+        /// Rotate the target instead of the camera
+        /// </summary>
+        public bool rotateTarget = false;
+
+        [Tooltip("Ignore these layers when checking if walls are in the way of the camera view of the character")]
+        [SerializeField]
+        private LayerMask ignoreMask = ~0;
+
+        protected Quaternion initialTargetRotation;
+
         protected float currentYDegrees = 0f;
         protected float currentXDegrees = 0f;
+        protected float adjustedXDegrees = 0f;
 
         protected float currentZoomDistance = 0f;
+        protected float scrollDelta = 0f;
 
         // keep track if we are panning or zooming this frame
         protected bool cameraPan = false;
@@ -152,23 +168,24 @@ namespace AnyRPG {
 
             currentYDegrees = initialYDegrees;
             currentXDegrees = initialXDegrees;
+            initialTargetRotation = unitController.gameObject.transform.rotation;
 
             FindFollowTarget();
             EnableCamera();
         }
 
         public void InitializePosition() {
-            //Debug.Log(gameObject.name + ".PreviewCameraController.InitializePosition()");
+            //Debug.Log($"{gameObject.name}.PreviewCameraController.InitializePosition()");
             if (unitController == null) {
-                //Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition(): unitController is null");
+                //Debug.Log($"{gameObject.name}.UnitFrameController.InitializePosition(): unitController is null");
             }
             if (unitController.NamePlateController == null) {
-                //Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition(): unitController.NamePlateController is null");
+                //Debug.Log($"{gameObject.name}.UnitFrameController.InitializePosition(): unitController.NamePlateController is null");
             }
 
             if (unitController.NamePlateController.UnitPreviewCameraPositionOffset != null) {
                 initialCameraPositionOffset = unitController.NamePlateController.UnitPreviewCameraPositionOffset;
-                //Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition(): initialCameraPositionOffset from unitController: " + initialCameraPositionOffset);
+                //Debug.Log($"{gameObject.name}.UnitFrameController.InitializePosition(): initialCameraPositionOffset from unitController: " + initialCameraPositionOffset);
             } else {
                 initialCameraPositionOffset = cameraPositionOffsetDefault;
             }
@@ -185,7 +202,7 @@ namespace AnyRPG {
 
             currentCameraPositionOffset = initialLookVector;
 
-            //Debug.Log(gameObject.name + ".UnitFrameController.InitializePosition() currentCameraPositionOffset: " + currentCameraPositionOffset + "; currentCameraLookOffset: " + currentCameraLookOffset + "; initialLookVector" + initialLookVector);
+            //Debug.Log($"{gameObject.name}.UnitFrameController.InitializePosition() currentCameraPositionOffset: " + currentCameraPositionOffset + "; currentCameraLookOffset: " + currentCameraLookOffset + "; initialLookVector" + initialLookVector);
         }
 
 
@@ -249,12 +266,7 @@ namespace AnyRPG {
             cameraZoom = false;
 
             // ==== MOUSE ZOOM ====
-            if (!mouseOutsideWindow && inputManager.mouseScrolled) {
-                //Debug.Log("Mouse Scrollwheel: " + Input.GetAxis("Mouse ScrollWheel"));
-                currentZoomDistance += (Input.GetAxis("Mouse ScrollWheel") * cameraSpeed * -1);
-                currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, currentMaxZoom);
-                cameraZoom = true;
-            }
+            GetMouseZoom();
 
             // ==== GAMEPAD ZOOM ====
             if (Input.GetAxis("RightAnalogVertical") != 0f
@@ -302,12 +314,22 @@ namespace AnyRPG {
 
             if (cameraPan == true) {
                 currentYDegrees = Mathf.Clamp(currentYDegrees, minVerticalPan, maxVerticalPan);
-                Quaternion xQuaternion = Quaternion.AngleAxis(currentXDegrees, Vector3.up);
+                if (rotateTarget == true) {
+                    adjustedXDegrees = currentXDegrees * -1;
+                } else {
+                    adjustedXDegrees = currentXDegrees;
+                }
+                Quaternion xQuaternion = Quaternion.AngleAxis(adjustedXDegrees, Vector3.up);
                 Quaternion yQuaternion = Quaternion.AngleAxis(currentYDegrees, Vector3.right);
                 //currentCameraOffset = xQuaternion * yQuaternion * initialCameraPositionOffset;
                 //currentCameraPositionOffset = xQuaternion * yQuaternion * initialCameraPositionOffset;
                 //currentCameraPositionOffset = xQuaternion * yQuaternion * initialCameraLookOffset;
-                currentCameraPositionOffset = xQuaternion * yQuaternion * initialLookVector;
+                if (rotateTarget == true) {
+                    unitController.transform.rotation = initialTargetRotation * xQuaternion;
+                    currentCameraPositionOffset = yQuaternion * initialLookVector;
+                } else {
+                    currentCameraPositionOffset = xQuaternion * yQuaternion * initialLookVector;
+                }
             }
 
             // move the rotation point away from the center of the target using middle mouse button
@@ -331,7 +353,7 @@ namespace AnyRPG {
             SetWantedPosition();
             //}
 
-            //CompensateForWalls();
+            CompensateForWalls();
             if (cameraZoom || cameraPan) {
                 //Debug.Log("Camera was zoomed or panned.  Jumping to Wanted Position.");
                 JumpToWantedPosition();
@@ -340,21 +362,53 @@ namespace AnyRPG {
                 SmoothToWantedPosition();
             }
             LookAtTargetPosition();
+
+            scrollDelta = 0f;
         }
+
+        private void GetMouseZoom() {
+            if (scrollDelta == 0f) {
+                return;
+            }
+            //if (!mouseOutsideWindow && inputManager.mouseScrolled) {
+            //Debug.Log("Mouse Scrollwheel: " + Input.GetAxis("Mouse ScrollWheel"));
+            //currentZoomDistance += (scrollDelta * cameraSpeed * -1);
+            currentZoomDistance += (scrollDelta * -1f);
+            //currentZoomDistance += (Input.GetAxis("Mouse ScrollWheel") * cameraSpeed * -1);
+            currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, currentMaxZoom);
+            //}
+
+            cameraZoom = true;
+        }
+
+        private void CompensateForWalls() {
+            //Debug.Log("drawing Camera debug line from targetPosition: " + targetPosition + " to wantedPosition: " + wantedPosition);
+            Debug.DrawLine(wantedLookPosition, wantedPosition, Color.cyan);
+            //wallHit = new RaycastHit();
+            if (Physics.Linecast(wantedLookPosition, wantedPosition, out wallHit, ~ignoreMask)) {
+                //Debug.Log("hit: " + wallHit.transform.name);
+                Debug.DrawRay(wallHit.point, wallHit.point - wantedLookPosition, Color.red);
+                wantedPosition = new Vector3(wallHit.point.x, wallHit.point.y, wallHit.point.z);
+                wantedPosition = Vector3.MoveTowards(wantedPosition, wantedLookPosition, 0.2f);
+            }
+        }
+
 
         private void SetWantedPosition() {
             //Debug.Log("SetWantedPosition(): targetPosition: " + targetPosition + "; localwanted: " + (currentCameraOffset.normalized * currentZoomDistance));
-            if (followTransform != null) {
-                //wantedPosition = followTransform.TransformPoint((currentCameraOffset.normalized * currentZoomDistance)) + currentCameraPositionOffset;
-                //wantedPosition = followTransform.TransformPoint((currentCameraPositionOffset.normalized * currentZoomDistance)) + initialCameraPositionOffset;
-                //wantedPosition = followTransform.TransformPoint((currentCameraPositionOffset.normalized * currentZoomDistance));
-                wantedPosition = followTransform.TransformPoint((currentCameraPositionOffset.normalized * currentZoomDistance)) + currentCameraLookOffset;
 
-                wantedLookPosition = followTransform.TransformPoint(currentCameraLookOffset);
-            } else {
-                //Debug.Log("SetWantedPosition(): targetPosition: " + targetPosition + "; localwanted: " + (currentCameraOffset.normalized * currentZoomDistance));
+            if (followTransform == null) {
+                return;
             }
-            //Debug.Log("SetWantedPosition(): currentTargetOffset: " + currentTargetOffset + "; wantedPosition: " + wantedPosition);
+
+            if (rotateTarget == true) {
+                wantedPosition = followTransform.position + ((currentCameraPositionOffset.normalized * currentZoomDistance) + currentCameraLookOffset);
+            } else {
+                wantedPosition = followTransform.TransformPoint((currentCameraPositionOffset.normalized * currentZoomDistance)) + currentCameraLookOffset;
+            }
+
+            wantedLookPosition = followTransform.TransformPoint(currentCameraLookOffset);
+
         }
 
         public void ResetWantedPosition() {
@@ -401,7 +455,7 @@ namespace AnyRPG {
             //Debug.Log("Camera offset is " + cameraOffsetVector);
         }
 
-        public void HandleModelReady() {
+        public void HandleModelCreated() {
             //Debug.Log("PreviewCameraController.HandleModelReady()");
             UnsubscribeFromModelReady();
             if (initialTargetString != null && initialTargetString != string.Empty) {
@@ -423,15 +477,16 @@ namespace AnyRPG {
             //Debug.Log("PreviewCameraController.UnsubscribeFromModelReady()");
 
             if (unitController?.UnitModelController != null) {
-                unitController.UnitModelController.OnModelReady -= HandleModelReady;
+                unitController.UnitModelController.OnModelCreated -= HandleModelCreated;
             }
         }
 
-        public void SubscribeToModelReady() {
+        public void SubscribeToModelCreated() {
             //Debug.Log("PreviewCameraController.SubscribeToModelReady()");
 
             if (unitController?.UnitModelController != null) {
-                unitController.UnitModelController.OnModelReady += HandleModelReady;
+                //unitController.UnitModelController.OnModelUpdated += HandleModelReady;
+                unitController.UnitModelController.OnModelCreated += HandleModelCreated;
             }
         }
 
@@ -455,9 +510,9 @@ namespace AnyRPG {
             if (targetBone == null) {
                 //Debug.Log("PreviewCameraController.FindFollowTarget(): targetBone is null");
                 // we did not find the target bone.  Either there was an error, or this was an UMA unit that didn't spawn yet.
-                if (unitController?.UnitModelController?.ModelReady == false) {
+                if (unitController?.UnitModelController?.ModelCreated == false) {
                     //Debug.Log("PreviewCameraController.FindFollowTarget(): model is not ready yet, subscribing to model ready");
-                    SubscribeToModelReady();
+                    SubscribeToModelCreated();
                 } else {
                     //Debug.Log("PreviewCameraController.FindFollowTarget(): model is ready");
                     if (initialTargetString != string.Empty) {
@@ -496,6 +551,13 @@ namespace AnyRPG {
             }
         }
 
+        public void OnScroll(PointerEventData eventData) {
+            //Debug.Log($"{gameObject.name}.PreviewCameraController.OnScroll()");
+
+            scrollDelta += eventData.scrollDelta.y;
+        }
+
+
         public void OnDisable() {
             if (SystemGameManager.IsShuttingDown) {
                 return;
@@ -503,6 +565,7 @@ namespace AnyRPG {
             UnsubscribeFromModelReady();
             StopAllCoroutines();
         }
+
     }
 
 }

@@ -1,0 +1,147 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 534edf300d8929243a0d291e413e2f0b, type: 3}
+  m_Name: LipstickColorTable
+  m_EditorClassIdentifier: 
+  channelCount: 3
+  sharedColorName: Lipstick
+  colors:
+  - name: Lipstick
+    channelMask:
+    - {r: 1, g: 0, b: 0.020421028, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.18382353, g: 0.18382353, b: 0.18382353, a: 0.153}
+    PropertyBlock:
+      alwaysUpdate: 0
+      serializedProperties: []
+    foldout: 0
+  - name: Lipstick
+    channelMask:
+    - {r: 0.9245283, g: 0.004360993, b: 0.37452224, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.111, g: 0.055, b: 0.055, a: 0.197}
+    PropertyBlock:
+      alwaysUpdate: 0
+      serializedProperties: []
+    foldout: 0
+  - name: Lipstick
+    channelMask:
+    - {r: 0.16237983, g: 0.16918342, b: 0.8396226, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.16911763, g: 0.16911763, b: 0.16911763, a: 0.172}
+    PropertyBlock:
+      alwaysUpdate: 0
+      serializedProperties: []
+    foldout: 0
+  - name: Lipstick
+    channelMask:
+    - {r: 0.09825563, g: 0.9056604, b: 0.37781033, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.19117647, g: 0.19398789, b: 0.19398789, a: 0.197}
+    PropertyBlock:
+      alwaysUpdate: 0
+      serializedProperties: []
+    foldout: 0
+  - name: Lipstick
+    channelMask:
+    - {r: 0.3018868, g: 0.0754717, b: 0.08398794, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.2205882, g: 0.22383215, b: 0.22383215, a: 0.141}
+    PropertyBlock:
+      alwaysUpdate: 0
+      serializedProperties: []
+    foldout: 0
+  - name: Lipstick
+    channelMask:
+    - {r: 0.9716981, g: 0.47209862, b: 0.4818948, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.35294116, g: 0.35294116, b: 0.35294116, a: 0.184}
+    PropertyBlock:
+      alwaysUpdate: 0
+      serializedProperties: []
+    foldout: 0
+  - name: Lipstick
+    channelMask:
+    - {r: 0.9150943, g: 0.3927999, b: 0.60394025, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.5441177, g: 0.5441177, b: 0.5441177, a: 0.147}
+    PropertyBlock:
+      alwaysUpdate: 0
+      serializedProperties: []
+    foldout: 0
+  - name: Lipstick
+    channelMask:
+    - {r: 0.41251338, g: 0.41756, b: 0.8490566, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.2794118, g: 0.2794118, b: 0.2794118, a: 0.209}
+    PropertyBlock:
+      alwaysUpdate: 0
+      serializedProperties: []
+    foldout: 0
+  - name: Lipstick
+    channelMask:
+    - {r: 0.46564615, g: 0.9056604, b: 0.6173016, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.16911763, g: 0.16911763, b: 0.16911763, a: 0.147}
+    PropertyBlock:
+      alwaysUpdate: 0
+      serializedProperties: []
+    foldout: 0
+  - name: Lipstick
+    channelMask:
+    - {r: 0.33962262, g: 0.1714133, b: 0.17721365, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.25, g: 0.25, b: 0.25, a: 0.141}
+    PropertyBlock:
+      alwaysUpdate: 0
+      serializedProperties: []
+    foldout: 0

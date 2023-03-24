@@ -298,7 +298,7 @@ namespace AnyRPG {
                                 newEquipmentPrefab.transform.localScale = abilityAttachmentNode.HoldableObject.Scale;
                                 HoldObject(newEquipmentPrefab, abilityAttachmentNode, baseCharacter.UnitController.gameObject);
                             } else {
-                                Debug.Log(baseCharacter.gameObject.name + "CharacterAbilityManager.SpawnAbilityObjects(). We could not find the target bone " + attachmentPointNode.TargetBone + " while attempting to hold " + abilityAttachmentNode.HoldableObject.DisplayName);
+                                Debug.Log(baseCharacter.gameObject.name + "CharacterAbilityManager.SpawnAbilityObjects(). We could not find the target bone " + attachmentPointNode.TargetBone + " while attempting to hold " + abilityAttachmentNode.HoldableObject.ResourceName);
                             }
                         }
                     }
@@ -323,7 +323,7 @@ namespace AnyRPG {
         }
 
         public override void DespawnAbilityObjects() {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.DespawnAbilityObjects()");
+            //Debug.Log($"{gameObject.name}.CharacterAbilityManager.DespawnAbilityObjects()");
             base.DespawnAbilityObjects();
 
             if (abilityObjects == null || abilityObjects.Count == 0) {
@@ -343,20 +343,20 @@ namespace AnyRPG {
         }
 
         public override void GeneratePower(BaseAbilityProperties ability) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.GeneratePower(" + ability.DisplayName + ")");
+            //Debug.Log($"{gameObject.name}.CharacterAbilityManager.GeneratePower(" + ability.DisplayName + ")");
             if (ability.GeneratePowerResource == null) {
                 // nothing to generate
                 return;
             }
             base.GeneratePower(ability);
             if (baseCharacter != null && baseCharacter.CharacterStats != null) {
-                //Debug.Log(gameObject.name + ".GeneratePower(" + ability.DisplayName + "): name " + ability.GeneratePowerResource.DisplayName  + "; " + ability.GetResourceGain(this));
-                baseCharacter.CharacterStats.AddResourceAmount(ability.GeneratePowerResource.DisplayName, ability.GetResourceGain(baseCharacter));
+                //Debug.Log($"{gameObject.name}.GeneratePower(" + ability.DisplayName + "): name " + ability.GeneratePowerResource.DisplayName  + "; " + ability.GetResourceGain(this));
+                baseCharacter.CharacterStats.AddResourceAmount(ability.GeneratePowerResource.ResourceName, ability.GetResourceGain(baseCharacter));
             }
         }
 
         public override List<AnimationClip> GetDefaultAttackAnimations() {
-            //Debug.Log(gameObject.name + ".GetDefaultAttackAnimations()");
+            //Debug.Log($"{gameObject.name}.GetDefaultAttackAnimations()");
             if (AutoAttackAbility != null) {
                 return AutoAttackAbility.AttackClips;
             }
@@ -368,7 +368,7 @@ namespace AnyRPG {
         /// </summary>
         /// <returns></returns>
         public override List<AnimationClip> GetUnitAttackAnimations() {
-            //Debug.Log(gameObject.name + ".GetDefaultAttackAnimations()");
+            //Debug.Log($"{gameObject.name}.GetDefaultAttackAnimations()");
             if (baseCharacter?.UnitController?.UnitAnimator?.CurrentAnimations != null) {
                 return baseCharacter.UnitController.UnitAnimator.CurrentAnimations.AttackClips;
             }
@@ -376,7 +376,7 @@ namespace AnyRPG {
         }
 
         public override AnimationProps GetUnitAnimationProps() {
-            //Debug.Log(gameObject.name + ".GetDefaultAttackAnimations()");
+            //Debug.Log($"{gameObject.name}.GetDefaultAttackAnimations()");
             if (baseCharacter.UnitProfile?.UnitPrefabProps?.AnimationProps != null) {
                 return baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps;
             }
@@ -387,7 +387,7 @@ namespace AnyRPG {
         }
 
         public override List<AnimationClip> GetUnitCastAnimations() {
-            //Debug.Log(gameObject.name + ".GetDefaultAttackAnimations()");
+            //Debug.Log($"{gameObject.name}.GetDefaultAttackAnimations()");
             if (baseCharacter?.UnitController?.UnitAnimator?.CurrentAnimations != null) {
                 return baseCharacter.UnitController.UnitAnimator.CurrentAnimations.CastClips;
             }
@@ -444,7 +444,7 @@ namespace AnyRPG {
         public override void CapturePet(UnitController targetUnitController) {
             base.CapturePet(targetUnitController);
             if (baseCharacter.CharacterPetManager != null && targetUnitController != null) {
-                //Debug.Log(gameObject.name + ".CapturePet(): adding to pet manager");
+                //Debug.Log($"{gameObject.name}.CapturePet(): adding to pet manager");
                 baseCharacter.CharacterPetManager.CapturePet(targetUnitController.UnitProfile, targetUnitController);
             }
         }
@@ -593,11 +593,11 @@ namespace AnyRPG {
         }
 
         public IEnumerator WaitForAttackToComplete(AnimatedAbilityProperties animatedAbilityProperties, float animationLength) {
-            //Debug.Log(unitController.gameObject.name + ".WaitForAnimation(" + baseAbility + ", " + animationLength + ", " + clearAutoAttack + ", " + clearAnimatedAttack + ", " + clearCasting + ")");
+            //Debug.Log($"{unitController.gameObject.name}.WaitForAnimation(" + baseAbility + ", " + animationLength + ", " + clearAutoAttack + ", " + clearAnimatedAttack + ", " + clearCasting + ")");
             float remainingTime = animationLength;
-            //Debug.Log(gameObject.name + "waitforanimation remainingtime: " + remainingTime + "; MyWaitingForHits: " + PerformingAutoAttack + "; PerformingAnimatedAbility: " + performingAnimatedAbility);
+            //Debug.Log($"{gameObject.name}waitforanimation remainingtime: " + remainingTime + "; MyWaitingForHits: " + PerformingAutoAttack + "; PerformingAnimatedAbility: " + performingAnimatedAbility);
             while (remainingTime > 0f && PerformingAnyAbility() == true) {
-                //Debug.Log(gameObject.name + ".WaitForAttackToComplete(" + animationLength + "): remainingTime: " + remainingTime + "; PerformingAutoAttack: " + PerformingAutoAttack + "; PerformingAnimatedAbility: " + performingAnimatedAbility + "; animationSpeed: " + animator.GetFloat("AnimationSpeed"));
+                //Debug.Log($"{gameObject.name}.WaitForAttackToComplete(" + animationLength + "): remainingTime: " + remainingTime + "; PerformingAutoAttack: " + PerformingAutoAttack + "; PerformingAnimatedAbility: " + performingAnimatedAbility + "; animationSpeed: " + animator.GetFloat("AnimationSpeed"));
                 yield return null;
                 remainingTime -= Time.deltaTime;
             }
@@ -639,7 +639,7 @@ namespace AnyRPG {
             }
 
             if (baseCharacter.CharacterCombat.AutoAttackActive == false) {
-                //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): activating auto-attack");
+                //Debug.Log($"{gameObject.name}.CharacterCombat.AttackHit_AnimationEvent(): activating auto-attack");
                 baseCharacter.CharacterCombat.ActivateAutoAttack();
             }
             return base.ProcessAnimatedAbilityHit(target, deactivateAutoAttack);
@@ -796,7 +796,7 @@ namespace AnyRPG {
         }
 
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (oldItem != null ? oldItem.DisplayName : "null") + ")");
+            //Debug.Log($"{gameObject.name}.CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (oldItem != null ? oldItem.DisplayName : "null") + ")");
             if (oldItem != null) {
                 if (oldItem.OnEquipAbilityEffect != null) {
                     baseCharacter.CharacterStats.GetStatusEffectNode(oldItem.OnEquipAbilityEffect.StatusEffectProperties)?.CancelStatusEffect();
@@ -861,13 +861,13 @@ namespace AnyRPG {
                 if (statusEffect != null) {
                     if (equipmentCount > i) {
                         // we are allowed to have this buff
-                        if (!baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName))) {
+                        if (!baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataUtility.PrepareStringForMatch(statusEffect.DisplayName))) {
                             ApplyStatusEffect(statusEffect);
                         }
                     } else {
                         // we are not allowed to have this buff
-                        if (baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName))) {
-                            baseCharacter.CharacterStats.StatusEffects[SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
+                        if (baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataUtility.PrepareStringForMatch(statusEffect.DisplayName))) {
+                            baseCharacter.CharacterStats.StatusEffects[SystemDataUtility.PrepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
                         }
                     }
                 }
@@ -885,12 +885,12 @@ namespace AnyRPG {
         public void LearnDefaultAutoAttackAbility() {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.LearnDefaultAutoAttackAbility()");
             if (autoAttackAbility != null) {
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnDefaultAutoAttackAbility(): auto-attack already know, exiting");
+                //Debug.Log($"{gameObject.name}.CharacterAbilityManager.LearnDefaultAutoAttackAbility(): auto-attack already know, exiting");
                 // can't learn two auto-attacks at the same time
                 return;
             }
             if (baseCharacter.UnitProfile?.DefaultAutoAttackAbility != null) {
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnDefaultAutoAttackAbility(): learning default auto attack ability");
+                //Debug.Log($"{gameObject.name}.CharacterAbilityManager.LearnDefaultAutoAttackAbility(): learning default auto attack ability");
                 LearnAbility(baseCharacter.UnitProfile.DefaultAutoAttackAbility);
             }
         }
@@ -976,8 +976,8 @@ namespace AnyRPG {
                 return;
             }
             foreach (StatusEffect statusEffect in statusEffects) {
-                if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName))) {
-                    baseCharacter.CharacterStats.StatusEffects[SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
+                if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataUtility.PrepareStringForMatch(statusEffect.ResourceName))) {
+                    baseCharacter.CharacterStats.StatusEffects[SystemDataUtility.PrepareStringForMatch(statusEffect.ResourceName)].CancelStatusEffect();
                 }
             }
         }
@@ -1020,7 +1020,7 @@ namespace AnyRPG {
                     // in case ability is somehow accidentally cast while on cooldown, this will prevent null reference when other coroutine removes it from the dictionary
                     abilityCoolDownDictionary[abilityName].RemainingCoolDown -= Time.deltaTime;
                 }
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCooldown():  IENUMERATOR: " + abilityCoolDownDictionary[abilityName].MyRemainingCoolDown);
+                //Debug.Log($"{gameObject.name}.CharacterAbilityManager.PerformAbilityCooldown():  IENUMERATOR: " + abilityCoolDownDictionary[abilityName].MyRemainingCoolDown);
             }
             if (abilityCoolDownDictionary.ContainsKey(abilityName)) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCoolDown(" + abilityName + ") REMOVING FROM DICTIONARY");
@@ -1058,8 +1058,8 @@ namespace AnyRPG {
 
         public override bool HasAbility(string abilityName) {
 
-            if (AbilityList.ContainsKey(SystemDataFactory.PrepareStringForMatch(abilityName))) {
-                //Debug.Log(gameObject.name + ".CharacterAbilitymanager.HasAbility( " + abilityName + "): keyname: " + keyName + " TRUE!");
+            if (AbilityList.ContainsKey(SystemDataUtility.PrepareStringForMatch(abilityName))) {
+                //Debug.Log($"{gameObject.name}.CharacterAbilitymanager.HasAbility( " + abilityName + "): keyname: " + keyName + " TRUE!");
                 return true;
             }
 
@@ -1067,7 +1067,7 @@ namespace AnyRPG {
         }
 
         public override bool HasAbility(BaseAbilityProperties baseAbility) {
-            //Debug.Log(gameObject.name + ".CharacterAbilitymanager.HasAbility(" + abilityName + ")");
+            //Debug.Log($"{gameObject.name}.CharacterAbilitymanager.HasAbility(" + abilityName + ")");
 
             return HasAbility(baseAbility.DisplayName);
         }
@@ -1114,14 +1114,14 @@ namespace AnyRPG {
         }
 
         public void LoadAbility(string abilityName) {
-            //Debug.Log(gameObject.name + ".PlayerAbilityManager.LoadAbility(" + abilityName + ")");
+            //Debug.Log($"{gameObject.name}.PlayerAbilityManager.LoadAbility(" + abilityName + ")");
             BaseAbilityProperties abilityProperties = systemDataFactory.GetResource<BaseAbility>(abilityName)?.AbilityProperties;
             if (abilityProperties == null) {
                 // if we renamed an ability, old save data could load a null.  prevent invalid abilities from loading.
                 return;
             }
 
-            string keyName = SystemDataFactory.PrepareStringForMatch(abilityProperties.DisplayName);
+            string keyName = SystemDataUtility.PrepareStringForMatch(abilityProperties.DisplayName);
             if (abilityList.ContainsKey(keyName)) {
                 // ability is already known, exit
                 return;
@@ -1163,7 +1163,7 @@ namespace AnyRPG {
             }
 
             // if we made it this far, there is no reason to not learn the ability
-            abilityList[SystemDataFactory.PrepareStringForMatch(newAbility.DisplayName)] = newAbility;
+            abilityList[SystemDataUtility.PrepareStringForMatch(newAbility.DisplayName)] = newAbility;
 
             newAbility.ProcessLearnAbility(this);
 
@@ -1178,7 +1178,7 @@ namespace AnyRPG {
         public void UnlearnAbility(BaseAbilityProperties oldAbility, bool updateActionBars = true) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.UnleanAbility(" + oldAbility.DisplayName + ", " + updateActionBars + ")");
             
-            string keyName = SystemDataFactory.PrepareStringForMatch(oldAbility.DisplayName);
+            string keyName = SystemDataUtility.PrepareStringForMatch(oldAbility.DisplayName);
             if (abilityList.ContainsKey(keyName)) {
                 oldAbility.ProcessUnLearnAbility(this);
                 abilityList.Remove(keyName);
@@ -1299,7 +1299,7 @@ namespace AnyRPG {
         }
 
         public void SpawnAbilityObjects(int indexValue = -1) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.SpawnAbilityObjects(" + indexValue + ")");
+            //Debug.Log($"{gameObject.name}.CharacterAbilityManager.SpawnAbilityObjects(" + indexValue + ")");
             BaseAbilityProperties usedBaseAbility = null;
             if (currentAbilityEffectContext != null) {
                 usedBaseAbility = currentAbilityEffectContext.baseAbility;
@@ -1313,7 +1313,7 @@ namespace AnyRPG {
                 usedBaseAbility != null &&
                 usedBaseAbility.GetHoldableObjectList(baseCharacter).Count != 0) {
                 //if (baseCharacter != null && baseCharacter.MyCharacterEquipmentManager != null && ability.MyAbilityCastingTime > 0f && ability.MyHoldableObjectNames.Count != 0) {
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): spawning ability objects");
+                //Debug.Log($"{gameObject.name}.CharacterAbilityManager.PerformAbilityCast(): spawning ability objects");
                 if (usedBaseAbility.AnimatorCreatePrefabs) {
                     if (indexValue == -1) {
                         SpawnAbilityObjects(usedBaseAbility.GetHoldableObjectList(baseCharacter));
@@ -1393,7 +1393,7 @@ namespace AnyRPG {
         }
 
         public bool BeginAbility(BaseAbilityProperties ability, Interactable target) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbility(" + ability.DisplayName + ")");
+            //Debug.Log($"{gameObject.name}.CharacterAbilityManager.BeginAbility(" + ability.DisplayName + ")");
             return BeginAbilityCommon(ability, target);
         }
 
@@ -1443,7 +1443,7 @@ namespace AnyRPG {
             }
 
             foreach (StatusEffectNode statusEffectNode in BaseCharacter.CharacterStats.StatusEffects.Values) {
-                //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): Casting OnHit Ability On Take Damage");
+                //Debug.Log($"{gameObject.name}.CharacterCombat.AttackHit_AnimationEvent(): Casting OnHit Ability On Take Damage");
                 // this could maybe be done better through an event subscription
                 if (statusEffectNode.StatusEffect.WeaponHitAbilityEffectList.Count > 0) {
                     statusEffectNode.StatusEffect.CastWeaponHit(BaseCharacter, target, abilityEffectContext);
@@ -1569,7 +1569,7 @@ namespace AnyRPG {
 
             if (ability.CanSimultaneousCast) {
                 // directly performing to avoid interference with other abilities being casted
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): can simultaneous cast");
+                //Debug.Log($"{gameObject.name}.CharacterAbilityManager.BeginAbilityCommon(): can simultaneous cast");
 
                 // there is no ground target yet because that is handled in performabilitycast below
                 PerformAbility(ability, finalTarget, abilityEffectContext);
@@ -1624,7 +1624,7 @@ namespace AnyRPG {
 
         // this only checks if the ability is able to be cast based on character state.  It does not check validity of target or ability specific requirements
         public override bool CanCastAbility(BaseAbilityProperties ability, bool playerInitiated = false) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + ")");
+            //Debug.Log($"{gameObject.name}.CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + ")");
 
             // check if the ability is learned yet
             if (!PerformLearnedCheck(ability)) {
@@ -1711,7 +1711,7 @@ namespace AnyRPG {
 
         public bool PerformLearnedCheck(BaseAbilityProperties ability) {
 
-            string keyName = SystemDataFactory.PrepareStringForMatch(ability.DisplayName);
+            string keyName = SystemDataUtility.PrepareStringForMatch(ability.DisplayName);
 
             if (!ability.UseableWithoutLearning && !AbilityList.ContainsKey(keyName)) {
                 OnLearnedCheckFail(ability);
@@ -1721,7 +1721,7 @@ namespace AnyRPG {
         }
 
         public bool PerformCooldownCheck(BaseAbilityProperties ability) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformCooldownCheck(" + ability.DisplayName + ") : global: " + MyRemainingGlobalCoolDown);
+            //Debug.Log($"{gameObject.name}.CharacterAbilityManager.PerformCooldownCheck(" + ability.DisplayName + ") : global: " + MyRemainingGlobalCoolDown);
             if (abilityCoolDownDictionary.ContainsKey(ability.DisplayName) ||
                 (RemainingGlobalCoolDown > 0f && ability.IgnoreGlobalCoolDown == false)) {
                 return false;
@@ -1780,7 +1780,7 @@ namespace AnyRPG {
             if (ability.GetResourceCost(baseCharacter) != 0 && ability.PowerResource != null) {
                 // testing - should add ever be used?
                 //abilityEffectContext.AddResourceAmount(ability.PowerResource.DisplayName, ability.GetResourceCost(baseCharacter));
-                abilityEffectContext.SetResourceAmount(ability.PowerResource.DisplayName, ability.GetResourceCost(baseCharacter));
+                abilityEffectContext.SetResourceAmount(ability.PowerResource.ResourceName, ability.GetResourceCost(baseCharacter));
                 // intentionally not keeping track of this coroutine.  many of these could be in progress at once.
                 abilityCaster.StartCoroutine(UsePowerResourceDelay(ability.PowerResource, (int)ability.GetResourceCost(baseCharacter), ability.SpendDelay));
             }
@@ -1914,7 +1914,7 @@ namespace AnyRPG {
         /// This will be triggered in response to things like hammer taps, not attacks
         /// </summary>
         public void AnimationHitAnimationEvent() {
-            //Debug.Log(gameObject.name + ".CharacterAbilitymanager.AnimationHitAnimationEvent()");
+            //Debug.Log($"{gameObject.name}.CharacterAbilitymanager.AnimationHitAnimationEvent()");
 
             if (currentCastAbility != null) {
                 AudioClip audioClip = currentCastAbility.GetAnimationEventSound();
@@ -1953,14 +1953,14 @@ namespace AnyRPG {
         /// Stops playing audio in response to the StopAudio() animation event
         /// </summary>
         public void StopAudioAnimationEvent() {
-            //Debug.Log(gameObject.name + ".CharacterAbilitymanager.StopAudioAnimationEvent()");
+            //Debug.Log($"{gameObject.name}.CharacterAbilitymanager.StopAudioAnimationEvent()");
 
             baseCharacter.UnitController.UnitComponentController.StopEffectSound();
         }
 
 
         public override void InitiateGlobalCooldown(float coolDownToUse = 0f) {
-            //Debug.Log(gameObject.name + ".CharacterAbilitymanager.InitiateGlobalCooldown(" + coolDownToUse + ")");
+            //Debug.Log($"{gameObject.name}.CharacterAbilitymanager.InitiateGlobalCooldown(" + coolDownToUse + ")");
             base.InitiateGlobalCooldown(coolDownToUse);
             if (globalCoolDownCoroutine == null) {
                 // set global cooldown length to animation length so we don't end up in situation where cast bars look fine, but we can't actually cast
@@ -1971,7 +1971,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator BeginGlobalCoolDown(float coolDownTime) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginGlobalCoolDown(" + coolDownTime + ")");
+            //Debug.Log($"{gameObject.name}.CharacterAbilityManager.BeginGlobalCoolDown(" + coolDownTime + ")");
             // 10 is kinda arbitrary, but if any animation is causing a GCD greater than 10 seconds, we've probably got issues anyway...
             // the current longest animated attack is ground slam at around 4 seconds
             remainingGlobalCoolDown = Mathf.Clamp(coolDownTime, 1, 10);
@@ -1980,7 +1980,7 @@ namespace AnyRPG {
                 yield return null;
                 remainingGlobalCoolDown -= Time.deltaTime;
                 // we want to end immediately if the time is up or the cooldown coroutine will not be nullifed until the next frame
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginGlobalCoolDown(): in loop; remaining time: " + remainingGlobalCoolDown);
+                //Debug.Log($"{gameObject.name}.CharacterAbilityManager.BeginGlobalCoolDown(): in loop; remaining time: " + remainingGlobalCoolDown);
             }
             globalCoolDownCoroutine = null;
         }

@@ -29,7 +29,7 @@ namespace AnyRPG {
         public LootDrop LootDrop { get => lootDrop; }
 
         public void SetLootDrop(LootDrop lootDrop) {
-            //Debug.Log(gameObject.name + ".LootButton.SetLootDrop(" + lootDrop.DisplayName + ")");
+            //Debug.Log($"{gameObject.name}.LootButton.SetLootDrop(" + lootDrop.DisplayName + ")");
             this.lootDrop = lootDrop;
             Icon.sprite = lootDrop.Icon;
             lootDrop.SetBackgroundImage(lootBackGroundImage);

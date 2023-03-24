@@ -293,17 +293,19 @@ namespace AnyRPG {
 
             foreach (WeaponSlotConfig weaponSlotConfig in weaponType.WeaponSlotConfigs) {
                 if (weaponSlotConfig.weaponSlotType == weaponSlotType) {
-                    weaponItem.HoldableObjectList = weaponSlotConfig.holdableObjectList;
+                    PrefabEquipmentModel prefabEquipmentModel = new PrefabEquipmentModel();
+                    prefabEquipmentModel.Properties.HoldableObjectList = weaponSlotConfig.holdableObjectList;
                     //foreach (HoldableObjectAttachment holdableObjectAttachment in weaponItem.HoldableObjectList) {
                     if (weaponSlotType == WeaponSlotType.AnyHand && asymmetricalWeapon == true) {
-                        weaponItem.HoldableObjectList[0].AttachmentNodes[0].HoldableObjectName = weaponName + " Main Hand";
-                        weaponItem.HoldableObjectList[0].AttachmentNodes[1].HoldableObjectName = weaponName + " Off Hand";
+                        prefabEquipmentModel.Properties.HoldableObjectList[0].AttachmentNodes[0].HoldableObjectName = weaponName + " Main Hand";
+                        prefabEquipmentModel.Properties.HoldableObjectList[0].AttachmentNodes[1].HoldableObjectName = weaponName + " Off Hand";
                     } else {
-                        foreach (AttachmentNode attachmentNode in weaponItem.HoldableObjectList[0].AttachmentNodes) {
+                        foreach (AttachmentNode attachmentNode in prefabEquipmentModel.Properties.HoldableObjectList[0].AttachmentNodes) {
                             //foreach (AttachmentNode attachmentNode in holdableObjectAttachment.AttachmentNodes) {
                             attachmentNode.HoldableObjectName = weaponName;
                         }
                     }
+                    weaponItem.InlineEquipmentModels.EquipmentModels.Add(prefabEquipmentModel);
                     // this is where you would do a quiver/ammo pouch as [1]
                     //}
                     break;

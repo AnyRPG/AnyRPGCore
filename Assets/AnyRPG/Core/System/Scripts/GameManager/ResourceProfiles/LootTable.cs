@@ -58,7 +58,7 @@ namespace AnyRPG {
                 if ((lootDrop as ItemLootDrop) is ItemLootDrop) {
 
                 }
-                if (SystemDataFactory.MatchResource((lootDrop as ItemLootDrop).Item.DisplayName, itemName)) {
+                if (SystemDataUtility.MatchResource((lootDrop as ItemLootDrop).Item.ResourceName, itemName)) {
                     return true;
                 }
             }
@@ -66,7 +66,7 @@ namespace AnyRPG {
         }
 
         protected virtual void RollLoot(LootTableState lootTableState) {
-            //Debug.Log(gameObject.name + ".LootTable.RollLoot()");
+            //Debug.Log($"{gameObject.name}.LootTable.RollLoot()");
             int lootTableRemainingDrops = dropLimit;
             bool lootTableUnlimitedDrops = (dropLimit == 0);
 
@@ -167,7 +167,7 @@ namespace AnyRPG {
             int itemCount = Random.Range(loot.MinDrops, loot.MaxDrops + 1);
             //Debug.Log("GatherLootTable.RollLoot(): itemCount: " + itemCount);
             for (int i = 0; i < itemCount; i++) {
-                ItemLootDrop droppedItem = new ItemLootDrop(systemItemManager.GetNewResource(loot.Item.DisplayName), lootTableState, systemGameManager);
+                ItemLootDrop droppedItem = new ItemLootDrop(systemItemManager.GetNewResource(loot.Item.ResourceName), lootTableState, systemGameManager);
                 droppedItem.Item.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
                 lootTableState.DroppedItems.Add(droppedItem);
                 if (lootGroupUnlimitedDrops == false && ignoreDropLimit == false) {

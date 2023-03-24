@@ -46,8 +46,8 @@ namespace AnyRPG {
             ResetSettingsPanels();
             PanelSound.gameObject.SetActive(true);
 
-            uINavigationControllers[0].UnHightlightButtons(soundButton);
-            SetOpenSubPanel(PanelSound);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(soundButton);
+            SetOpenSubPanel(PanelSound, false);
 
             soundButton.HighlightBackground();
             soundButton.Select();
@@ -57,8 +57,8 @@ namespace AnyRPG {
             ResetSettingsPanels();
             PanelVideo.gameObject.SetActive(true);
 
-            uINavigationControllers[0].UnHightlightButtons(videoButton);
-            SetOpenSubPanel(PanelVideo);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(videoButton);
+            SetOpenSubPanel(PanelVideo, false);
 
             videoButton.HighlightBackground();
             videoButton.Select();
@@ -68,8 +68,8 @@ namespace AnyRPG {
             ResetSettingsPanels();
             PanelControls.gameObject.SetActive(true);
 
-            uINavigationControllers[0].UnHightlightButtons(controlsButton);
-            SetOpenSubPanel(PanelControls);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(controlsButton);
+            SetOpenSubPanel(PanelControls, false);
 
             controlsButton.HighlightBackground();
             controlsButton.Select();
@@ -79,8 +79,8 @@ namespace AnyRPG {
             ResetSettingsPanels();
             PanelKeyBindings.gameObject.SetActive(true);
 
-            uINavigationControllers[0].UnHightlightButtons(keyBindingsButton);
-            SetOpenSubPanel(PanelKeyBindings);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(keyBindingsButton);
+            SetOpenSubPanel(PanelKeyBindings, false);
 
             keyBindingsButton.HighlightBackground();
             keyBindingsButton.Select();
@@ -91,8 +91,8 @@ namespace AnyRPG {
             ResetSettingsPanels();
             PanelUserInterface.gameObject.SetActive(true);
 
-            uINavigationControllers[0].UnHightlightButtons(userInterfaceButton);
-            SetOpenSubPanel(PanelUserInterface);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(userInterfaceButton);
+            SetOpenSubPanel(PanelUserInterface, false);
 
             userInterfaceButton.HighlightBackground();
             userInterfaceButton.Select();

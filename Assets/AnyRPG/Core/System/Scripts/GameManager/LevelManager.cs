@@ -319,7 +319,7 @@ namespace AnyRPG {
 
             // send messages to subscribers
             EventParamProperties eventParamProperties = new EventParamProperties();
-            eventParamProperties.simpleParams.StringParam = (activeSceneNode == null ? activeSceneName : activeSceneNode.DisplayName);
+            eventParamProperties.simpleParams.StringParam = (activeSceneNode == null ? activeSceneName : activeSceneNode.ResourceName);
             SystemEventManager.TriggerEvent("OnLevelLoad", eventParamProperties);
         }
 
@@ -472,9 +472,9 @@ namespace AnyRPG {
             SystemEventManager.TriggerEvent("OnExitGame", new EventParamProperties());
             playerManager.ProcessExitToMainMenu();
             if (systemConfigurationManager.MainMenuSceneNode != null) {
-                LoadLevel(systemConfigurationManager.MainMenuSceneNode.DisplayName);
+                LoadLevel(systemConfigurationManager.MainMenuSceneNode.ResourceName);
             } else {
-                LoadLevel(SystemDataFactory.PrepareStringForMatch(systemConfigurationManager.MainMenuScene));
+                LoadLevel(SystemDataUtility.PrepareStringForMatch(systemConfigurationManager.MainMenuScene));
             }
         }
 

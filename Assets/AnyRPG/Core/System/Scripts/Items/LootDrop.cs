@@ -13,6 +13,7 @@ namespace AnyRPG {
 
         public virtual Sprite Icon => null;
 
+        public virtual string ResourceName => string.Empty;
         public virtual string DisplayName => string.Empty;
         public virtual string Description => string.Empty;
 
@@ -213,7 +214,7 @@ namespace AnyRPG {
         }
 
         public override bool HasItem(Item item) {
-            return (Item.DisplayName == item.DisplayName);
+            return (Item.ResourceName == item.ResourceName);
         }
 
         protected override bool ProcessTakeLoot() {

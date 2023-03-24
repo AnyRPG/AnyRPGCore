@@ -169,7 +169,7 @@ namespace AnyRPG {
 
                 // check unit type restrictions
                 if (unitTypeRestrictions.Count > 0) {
-                    if (targetCharacterUnit.BaseCharacter.UnitType == null || !unitTypeRestrictions.Contains(targetCharacterUnit.BaseCharacter.UnitType.DisplayName)) {
+                    if (targetCharacterUnit.BaseCharacter.UnitType == null || !unitTypeRestrictions.Contains(targetCharacterUnit.BaseCharacter.UnitType.ResourceName)) {
                         //Debug.Log(MyDisplayName + ".CapturePetEffect.CanUseOn(): pet was not allowed by your restrictions ");
                         if (playerInitiated) {
                             sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + targetable.DisplayName + " on target. Pet type was not allowed");

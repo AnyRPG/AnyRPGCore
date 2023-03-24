@@ -61,9 +61,9 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            //Debug.Log(gameObject.name + ".LootableNode.Interact(" + source.name + ")");
+            //Debug.Log($"{gameObject.name}.LootableNode.Interact(" + source.name + ")");
             if (Props.LootTables == null) {
-                //Debug.Log(gameObject.name + ".GatheringNode.Interact(" + source.name + "): lootTable was null!");
+                //Debug.Log($"{gameObject.name}.GatheringNode.Interact(" + source.name + "): lootTable was null!");
                 return true;
             }
             base.Interact(source, optionIndex);
@@ -89,7 +89,7 @@ namespace AnyRPG {
             }
             spawnCoroutine = null;
 
-            //Debug.Log(gameObject.name + ".LootableNode.StartSpawnCountdown(): countdown complete");
+            //Debug.Log($"{gameObject.name}.LootableNode.StartSpawnCountdown(): countdown complete");
             //interactable.Spawn();
 
             // ENABLE MINIMAP ICON AFTER SPAWN
@@ -98,7 +98,7 @@ namespace AnyRPG {
 
 
         public virtual void DropLoot() {
-            //Debug.Log(gameObject.name + ".LootableNode.DropLoot()");
+            //Debug.Log($"{gameObject.name}.LootableNode.DropLoot()");
 
             // is the below code necessary?  it was causing stuff that was already dropped but not picked up to not pop a window again and just remain unlootable
             /*
@@ -121,7 +121,7 @@ namespace AnyRPG {
         /// Pick an item up off the ground and put it in the inventory
         /// </summary>
         public void PickUp() {
-            //Debug.Log(gameObject.name + ".LootableNode.Pickup()");
+            //Debug.Log($"{gameObject.name}.LootableNode.Pickup()");
             CreateWindowEventSubscriptions();
             uIManager.lootWindow.CloseableWindowContents.OnCloseWindow += ClearTakeLootHandler;
             uIManager.lootWindow.OpenWindow();
@@ -129,17 +129,17 @@ namespace AnyRPG {
 
         //public void ClearTakeLootHandler(ICloseableWindowContents windowContents) {
         public void ClearTakeLootHandler(CloseableWindowContents windowContents) {
-            //Debug.Log(gameObject.name + ".LootableNode.ClearTakeLootHandler()");
+            //Debug.Log($"{gameObject.name}.LootableNode.ClearTakeLootHandler()");
             CleanupWindowEventSubscriptions();
         }
 
         public void CreateWindowEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".LootableNode.CreateWindowEventSubscriptions()");
+            //Debug.Log($"{gameObject.name}.LootableNode.CreateWindowEventSubscriptions()");
             SystemEventManager.StartListening("OnTakeLoot", HandleTakeLoot);
         }
 
         public void CleanupWindowEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".LootableNode.CleanupWindowEventSubscriptions()");
+            //Debug.Log($"{gameObject.name}.LootableNode.CleanupWindowEventSubscriptions()");
             SystemEventManager.StopListening("OnTakeLoot", HandleTakeLoot);
             if (uIManager?.lootWindow?.CloseableWindowContents != null) {
                 uIManager.lootWindow.CloseableWindowContents.OnCloseWindow -= ClearTakeLootHandler;
@@ -161,7 +161,7 @@ namespace AnyRPG {
         }
 
         public void CheckDropListSize() {
-            //Debug.Log(gameObject.name + ".LootableNode.CheckDropListSize()");
+            //Debug.Log($"{gameObject.name}.LootableNode.CheckDropListSize()");
             int lootCount = 0;
             foreach (LootTable lootTable in Props.LootTables) {
                 lootCount += lootHolder.LootTableStates[lootTable].DroppedItems.Count;
@@ -186,7 +186,7 @@ namespace AnyRPG {
 
                 // spawn timer of -1 means don't spawn again
                 if (spawnCoroutine == null && Props.SpawnTimer >= 0f) {
-                    //Debug.Log(gameObject.name + ".LootableNode.CheckDropListSize(): starting countdown; spawnTimer: " + spawnTimer);
+                    //Debug.Log($"{gameObject.name}.LootableNode.CheckDropListSize(): starting countdown; spawnTimer: " + spawnTimer);
                     spawnCoroutine = interactable.StartCoroutine(StartSpawnCountdown());
                 }
 

@@ -169,7 +169,7 @@ namespace AnyRPG {
                     skillTrainerSkillScript.DeSelect();
                 }
             }
-            uINavigationControllers[0].UnHightlightButtons(selectedSkillTrainerSkillScript);
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(selectedSkillTrainerSkillScript);
 
         }
 

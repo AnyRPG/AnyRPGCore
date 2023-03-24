@@ -17,7 +17,6 @@ namespace AnyRPG {
         [SerializeField]
         protected TextMeshProUGUI description = null;
 
-        //[SerializeField]
         protected UnitProfile unitProfile = null;
 
         // game manager references
@@ -64,26 +63,26 @@ namespace AnyRPG {
         */
 
         public override void ButtonClickAction() {
-            //Debug.Log(gameObject.name + ".NewGameUnitButton.ButtonClickAction()");
+            //Debug.Log($"{gameObject.name}.NewGameUnitButton.ButtonClickAction()");
             base.ButtonClickAction();
 
             newGameManager.SetUnitProfile(unitProfile);
         }
 
         
-        public void CommonSelect() {
-            //Debug.Log(gameObject.name + ".NewGameUnitButton.CommonSelect()");
-            newGameManager.SetUnitProfile(unitProfile);
-        }
+        //public void CommonSelect() {
+        //    //Debug.Log($"{gameObject.name}.NewGameUnitButton.CommonSelect()");
+        //    newGameManager.SetUnitProfile(unitProfile);
+        //}
         
-        public void RawSelect() {
-            CommonSelect();
-        }
+        //public void RawSelect() {
+        //    CommonSelect();
+        //}
         
-        public override void Select() {
-            CommonSelect();
-            base.Select();
-        }
+        //public override void Select() {
+        //    CommonSelect();
+        //    base.Select();
+        //}
         
 
     }

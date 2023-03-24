@@ -10,9 +10,6 @@ namespace AnyRPG {
     public class NewGameFactionButton : HighlightButton {
 
         [SerializeField]
-        protected Faction faction = null;
-
-        [SerializeField]
         protected Image icon = null;
 
         [SerializeField]
@@ -20,6 +17,8 @@ namespace AnyRPG {
 
         [SerializeField]
         protected TextMeshProUGUI description = null;
+
+        protected Faction faction = null;
 
         // game manager references
         protected NewGameManager newGameManager = null;
@@ -49,19 +48,23 @@ namespace AnyRPG {
             description.text = string.Empty;
         }
 
-        public void CommonSelect() {
-            newGameManager.SetFaction(faction);
+        //public void CommonSelect() {
+        //    newGameManager.ChooseNewFaction(faction);
+        //}
+
+        public void SetFaction() {
+            newGameManager.ChooseNewFaction(faction);
         }
 
-        public void RawSelect() {
-            CommonSelect();
-        }
+        //public void RawSelect() {
+        //    CommonSelect();
+        //}
 
-        public override void Select() {
-            //Debug.Log("NewGameFactionButton.Select()");
-            CommonSelect();
-            base.Select();
-        }
+        //public override void Select() {
+        //    //Debug.Log("NewGameFactionButton.Select()");
+        //    CommonSelect();
+        //    base.Select();
+        //}
 
 
 

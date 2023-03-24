@@ -1,0 +1,167 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8a482a75654f824f8ab60f7106c0e0a, type: 3}
+  m_Name: DefaultFemaleSwappableMeshModel
+  m_EditorClassIdentifier: 
+  resourceName: Default Female Swappable Mesh Model
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  modelOptions:
+    meshGroups:
+    - groupName: Head
+      hidden: 0
+      optional: 0
+      displayAs: 1
+      hidesGroup: 
+      meshes:
+      - displayName: Head 1
+        icon: {fileID: 21300000, guid: 853f26297062a9441843e25e9591ebef, type: 3}
+        meshName: human_female_head_default
+      - displayName: Head 2
+        icon: {fileID: 21300000, guid: 3ca8a5a8b1d152c40aea62944e7a6829, type: 3}
+        meshName: human_female_head_2
+      - displayName: Head 3
+        icon: {fileID: 21300000, guid: b5254db264c4ab042967158864ab4544, type: 3}
+        meshName: human_female_head_3
+    - groupName: Hair
+      hidden: 0
+      optional: 1
+      displayAs: 0
+      hidesGroup: 
+      meshes:
+      - displayName: Hair 1
+        icon: {fileID: 21300000, guid: 3825ffb3229d4fd4da7bb6ca70477eeb, type: 3}
+        meshName: human_female_hair_1
+      - displayName: Hair 2
+        icon: {fileID: 21300000, guid: 15550f20041ac69448bfe535c341d378, type: 3}
+        meshName: human_female_hair_2
+      - displayName: Hair 3
+        icon: {fileID: 21300000, guid: 1b7ee18fb5614994fafb4145fd669adf, type: 3}
+        meshName: human_female_hair_3
+    - groupName: Body
+      hidden: 1
+      optional: 0
+      displayAs: 0
+      hidesGroup: 
+      meshes:
+      - displayName: Default Body
+        icon: {fileID: 0}
+        meshName: human_female_body_default
+    - groupName: Hands
+      hidden: 1
+      optional: 0
+      displayAs: 0
+      hidesGroup: 
+      meshes:
+      - displayName: Default Hands
+        icon: {fileID: 0}
+        meshName: human_female_hands_default
+    - groupName: Feet
+      hidden: 1
+      optional: 0
+      displayAs: 0
+      hidesGroup: 
+      meshes:
+      - displayName: Default Feet
+        icon: {fileID: 0}
+        meshName: human_female_feet_default
+    - groupName: Armor
+      hidden: 1
+      optional: 0
+      displayAs: 0
+      hidesGroup: Body
+      meshes:
+      - displayName: Heavy Armor
+        icon: {fileID: 0}
+        meshName: human_female_heavy_armor
+      - displayName: Medium Armor
+        icon: {fileID: 0}
+        meshName: human_female_medium_armor
+      - displayName: Light Armor
+        icon: {fileID: 0}
+        meshName: human_female_light_armor
+      - displayName: Clothes
+        icon: {fileID: 0}
+        meshName: human_female_light_armor_2
+      - displayName: Blacksmith
+        icon: {fileID: 0}
+        meshName: human_female_light_armor_3
+      - displayName: InnKeeper
+        icon: {fileID: 0}
+        meshName: human_female_light_armor_4
+    - groupName: Helmet
+      hidden: 1
+      optional: 0
+      displayAs: 0
+      hidesGroup: Hair
+      meshes:
+      - displayName: Heavy Helmet
+        icon: {fileID: 0}
+        meshName: human_female_heavy_helmet
+      - displayName: Medium Helmet
+        icon: {fileID: 0}
+        meshName: human_female_medium_helmet
+      - displayName: Light Helmet
+        icon: {fileID: 0}
+        meshName: human_female_light_helmet
+    - groupName: Gloves
+      hidden: 1
+      optional: 0
+      displayAs: 0
+      hidesGroup: Hands
+      meshes:
+      - displayName: Heavy Gloves
+        icon: {fileID: 0}
+        meshName: human_female_heavy_gloves
+      - displayName: Medium Gloves
+        icon: {fileID: 0}
+        meshName: human_female_medium_gloves
+      - displayName: Light Gloves
+        icon: {fileID: 0}
+        meshName: human_female_light_gloves
+      - displayName: Bracers
+        icon: {fileID: 0}
+        meshName: human_female_light_gloves_3
+    - groupName: Boots
+      hidden: 1
+      optional: 0
+      displayAs: 0
+      hidesGroup: Feet
+      meshes:
+      - displayName: Heavy Boots
+        icon: {fileID: 0}
+        meshName: human_female_heavy_boots
+      - displayName: Medium Boots
+        icon: {fileID: 0}
+        meshName: human_female_medium_boots
+      - displayName: Light Boots
+        icon: {fileID: 0}
+        meshName: human_female_light_boots
+      - displayName: Clothes
+        icon: {fileID: 0}
+        meshName: human_female_light_boots_2
+    groupDefaults:
+    - groupName: Head
+      optionName: Head 1
+    - groupName: Hair
+      optionName: Hair 1
+    - groupName: Body
+      optionName: Default Body
+    - groupName: Hands
+      optionName: Default Hands
+    - groupName: Feet
+      optionName: Default Feet

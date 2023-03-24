@@ -117,7 +117,7 @@ namespace AnyRPG {
         }
 
         public Vector2 GetSnapToPositionToBringChildIntoView(ScrollRect instance, RectTransform child) {
-            //Debug.Log(gameObject.name + ".UINavigationListVertical.GetSnapToPositionToBringChildIntoView()");
+            //Debug.Log($"{gameObject.name}.UINavigationListVertical.GetSnapToPositionToBringChildIntoView()");
             Canvas.ForceUpdateCanvases();
             Vector2 viewportLocalPosition = instance.viewport.localPosition;
             Vector2 childLocalPosition = child.localPosition;

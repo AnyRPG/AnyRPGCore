@@ -29,22 +29,31 @@ namespace AnyRPG {
 
         [Header("UMA Equipment Models")]
 
-        [Tooltip("The name of an UMA recipe to manually search for")]
+        [FormerlySerializedAs("umaRecipeProfileName")]
         [SerializeField]
-        [ResourceSelector(resourceType = typeof(UMARecipeProfile))]
-        private string umaRecipeProfileName = string.Empty;
+        private string deprecatedUmaRecipeProfileName = string.Empty;
 
-        [Tooltip("Inline UMA recipe profile properties")]
+        [FormerlySerializedAs("uMARecipeProfileProperties")]
         [SerializeField]
-        private UMARecipeProfileProperties uMARecipeProfileProperties = new UMARecipeProfileProperties();
-
-        // The next 5 fields are meant for weapons.  They are being left in the base equipment class for now in case we want to do something like attach a cape to the spine
+        private UMAEquipmentModelProperties deprecatedUMARecipeProfileProperties = new UMAEquipmentModelProperties();
 
         [Header("Prefab Equipment Models")]
 
         [Tooltip("Physical prefabs to attach to bones on the character unit")]
+        [FormerlySerializedAs("holdableObjectList")]
         [SerializeField]
-        private List<HoldableObjectAttachment> holdableObjectList = new List<HoldableObjectAttachment>();
+        private List<HoldableObjectAttachment> deprecatedHoldableObjectList = new List<HoldableObjectAttachment>();
+
+        [Header("Equipment Models")]
+
+        [Tooltip("Inline equipment model definitions.")]
+        [SerializeField]
+        private EquipmentModelProperties inlineEquipmentModels = new EquipmentModelProperties();
+
+        [Tooltip("Shared equipment model definitions.  This will override any inline equipment model properties.")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(EquipmentModelProfile))]
+        private string sharedEquipmentModels = string.Empty;
 
         [Header("Base Armor")]
 
@@ -100,6 +109,8 @@ namespace AnyRPG {
 
         //[SerializeField]
         private List<BaseAbilityProperties> learnedAbilities = new List<BaseAbilityProperties>();
+
+        private Dictionary<Type, EquipmentModel> equipmentModelDictionary = new Dictionary<Type, EquipmentModel>();
 
         public float GetArmorModifier(int characterLevel) {
             return GetArmorModifier(characterLevel, realItemQuality);
@@ -166,7 +177,7 @@ namespace AnyRPG {
         public bool ManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
         public string EquipmentSlotTypeName { get => equipmentSlotType; set => equipmentSlotType = value; }
         public EquipmentSlotType EquipmentSlotType { get => realEquipmentSlotType; set => realEquipmentSlotType = value; }
-        public List<HoldableObjectAttachment> HoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
+        public List<HoldableObjectAttachment> DeprecatedHoldableObjectList { get => deprecatedHoldableObjectList; set => deprecatedHoldableObjectList = value; }
         public EquipmentSet EquipmentSet { get => equipmentSet; set => equipmentSet = value; }
         public List<ItemPrimaryStatNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
         public bool RandomSecondaryStats { get => randomSecondaryStats; set => randomSecondaryStats = value; }
@@ -184,10 +195,12 @@ namespace AnyRPG {
 
         public List<ItemSecondaryStatNode> ChosenSecondaryStats { get => chosenSecondaryStats; set => chosenSecondaryStats = value; }
         public List<int> RandomStatIndexes { get => randomStatIndexes; set => randomStatIndexes = value; }
-        public UMARecipeProfileProperties UMARecipeProfileProperties { get => uMARecipeProfileProperties; set => uMARecipeProfileProperties = value; }
-        public string UmaRecipeProfileName { get => umaRecipeProfileName; set => umaRecipeProfileName = value; }
+        public UMAEquipmentModelProperties DeprecatedUMARecipeProfileProperties { get => deprecatedUMARecipeProfileProperties; set => deprecatedUMARecipeProfileProperties = value; }
+        public string DeprecatedUmaRecipeProfileName { get => deprecatedUmaRecipeProfileName; set => deprecatedUmaRecipeProfileName = value; }
         public string EquipmentSetName { get => equipmentSetName; set => equipmentSetName = value; }
         public bool UseArmorModifier { get => useArmorModifier; set => useArmorModifier = value; }
+        public string SharedEquipmentModels { get => sharedEquipmentModels; set => sharedEquipmentModels = value; }
+        public EquipmentModelProperties InlineEquipmentModels { get => inlineEquipmentModels; set => inlineEquipmentModels = value; }
 
         public float GetTotalSlotWeights() {
             float returnValue = 0f;
@@ -216,6 +229,7 @@ namespace AnyRPG {
                     return false;
                 }
                 if (playerManager.MyCharacter.CharacterEquipmentManager.Equip(this) == true) {
+                    playerManager.UnitController.UnitModelController.RebuildModelAppearance();
                     Remove();
                     return true;
                 } else {
@@ -256,6 +270,22 @@ namespace AnyRPG {
 
         public virtual void HandleUnequip(CharacterEquipmentManager characterEquipmentManager) {
             // nothing here yet
+        }
+
+        public bool HasEquipmentModel<T>() where T : EquipmentModel {
+            if (equipmentModelDictionary.ContainsKey(typeof(T))) {
+                return true;
+            }
+
+            return false;
+        }
+
+        public T GetEquipmentModel<T>() where T : EquipmentModel {
+            if (equipmentModelDictionary.ContainsKey(typeof(T))) {
+                return equipmentModelDictionary[typeof(T)] as T;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -322,7 +352,7 @@ namespace AnyRPG {
                 summaryLines.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.DisplayName, equipmentCount, equipmentSet.EquipmentList.Count));
                 foreach (Equipment equipment in equipmentSet.EquipmentList) {
                     string colorName = "#888888";
-                    if (playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.DisplayName)) {
+                    if (playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.ResourceName)) {
                         colorName = "yellow";
                     }
                     summaryLines.Add(string.Format("  <color={0}>{1}</color>", colorName, equipment.DisplayName));
@@ -353,7 +383,7 @@ namespace AnyRPG {
                 if (abilityEffect != null) {
                     onEquipStatusEffectRef = abilityEffect;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find status effect : " + onEquipStatusEffect + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("Equipment.SetupScriptableObjects(): Could not find status effect : " + onEquipStatusEffect + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -364,7 +394,7 @@ namespace AnyRPG {
                     if (baseAbility != null) {
                         learnedAbilities.Add(baseAbility.AbilityProperties);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("Equipment.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -376,10 +406,10 @@ namespace AnyRPG {
                 if (tmpEquipmentSlotType != null) {
                     realEquipmentSlotType = tmpEquipmentSlotType;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipment slot type : " + equipmentSlotType + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("Equipment.SetupScriptableObjects(): Could not find equipment slot type : " + equipmentSlotType + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             } else {
-                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): EquipmentSlotType is a required field while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                Debug.LogError("Equipment.SetupScriptableObjects(): EquipmentSlotType is a required field while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
             }
 
             equipmentSet = null;
@@ -388,34 +418,27 @@ namespace AnyRPG {
                 if (tmpEquipmentSet != null) {
                     equipmentSet = tmpEquipmentSet;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipment set : " + equipmentSetName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("Equipment.SetupScriptableObjects(): Could not find equipment set : " + equipmentSetName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 
-
-            if (holdableObjectList != null) {
-                foreach (HoldableObjectAttachment holdableObjectAttachment in holdableObjectList) {
-                    if (holdableObjectAttachment != null) {
-                        holdableObjectAttachment.SetupScriptableObjects(systemGameManager, this);
-                    }
-                }
-            }
-
-            /*
-            if (deprecatedUseUMARecipe == true && (umaRecipeProfileName == null || umaRecipeProfileName == string.Empty)) {
-                umaRecipeProfileName = ResourceName;
-            }
-            */
-            if (umaRecipeProfileName != null && umaRecipeProfileName != string.Empty) {
-                UMARecipeProfile tmpUMARecipeProfile = systemDataFactory.GetResource<UMARecipeProfile>(umaRecipeProfileName);
-                if (tmpUMARecipeProfile != null) {
-                    uMARecipeProfileProperties = tmpUMARecipeProfile.Properties;
+            if (sharedEquipmentModels != string.Empty) {
+                EquipmentModelProfile tmpEquipmentModelProfile = systemDataFactory.GetResource<EquipmentModelProfile>(sharedEquipmentModels);
+                if (tmpEquipmentModelProfile != null) {
+                    inlineEquipmentModels = tmpEquipmentModelProfile.Properties;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find uma recipe profile : " + umaRecipeProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError($"Equipment.SetupScriptableObjects(): Could not find equipment model profile : {sharedEquipmentModels} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                 }
             }
 
-
+            foreach (EquipmentModel equipmentModel in inlineEquipmentModels.EquipmentModels) {
+                if (equipmentModel != null) {
+                    equipmentModel.Configure(systemGameManager);
+                    equipmentModel.SetupScriptableObjects(this);
+                    //Debug.Log($"Equipment.SetupScriptableObjects(): adding type {equipmentModel.GetType().Name} for {ResourceName}");
+                    equipmentModelDictionary.Add(equipmentModel.GetType(), equipmentModel);
+                }
+            }
         }
 
         public override void InitializeNewItem(ItemQuality itemQuality = null) {

@@ -52,14 +52,14 @@ namespace AnyRPG {
         private void FixedUpdate() {
             elapsedTime += Time.fixedDeltaTime;
             if (elapsedTime > tickRate) {
-                //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.FixedUpdate()");
+                //Debug.Log($"{gameObject.name}.EnvironmentalEffectArea.FixedUpdate()");
                 elapsedTime -= tickRate;
                 PerformAbilityEffects();
             }
         }
 
         private void PerformAbilityEffects() {
-            //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.PerformAbilityEffects()");
+            //Debug.Log($"{gameObject.name}.EnvironmentalEffectArea.PerformAbilityEffects()");
 
             List<AOETargetNode> validTargets = GetValidTargets();
             foreach (AOETargetNode validTarget in validTargets) {
@@ -70,7 +70,7 @@ namespace AnyRPG {
         }
 
         protected virtual List<AOETargetNode> GetValidTargets() {
-            //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.GetValidTargets()");
+            //Debug.Log($"{gameObject.name}.EnvironmentalEffectArea.GetValidTargets()");
 
             Vector3 aoeSpawnCenter = transform.position;
 
@@ -85,7 +85,7 @@ namespace AnyRPG {
             //Debug.Log("AOEEffect.Cast(): Casting OverlapSphere with radius: " + aoeRadius);
             List<AOETargetNode> validTargets = new List<AOETargetNode>();
             foreach (Collider collider in colliders) {
-                //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.GetValidTargets() hit: " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
+                //Debug.Log($"{gameObject.name}.EnvironmentalEffectArea.GetValidTargets() hit: " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
 
                 bool canAdd = true;
                 Interactable interactable = collider.gameObject.GetComponent<Interactable>();
@@ -102,12 +102,12 @@ namespace AnyRPG {
                     validTargets.Add(validTargetNode);
                 }
             }
-            //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.GetValidTargets(). Valid targets count: " + validTargets.Count);
+            //Debug.Log($"{gameObject.name}.EnvironmentalEffectArea.GetValidTargets(). Valid targets count: " + validTargets.Count);
             return validTargets;
         }
 
         private void SetupScriptableObjects() {
-            //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.SetupScriptableObjects()");
+            //Debug.Log($"{gameObject.name}.EnvironmentalEffectArea.SetupScriptableObjects()");
             if (systemGameManager == null) {
                 Debug.LogError(gameObject.name + ": SystemAbilityEffectManager not found.  Is the GameManager in the scene?");
                 return;

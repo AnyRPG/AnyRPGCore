@@ -49,7 +49,7 @@ namespace AnyRPG {
         }
 
         public void BeginPatrol(string patrolName) {
-            //Debug.Log(unitController.gameObject.name + ".PatrolController.BeginPatrol(" + (patrolName != null ? patrolName : "null" ) + ")");
+            //Debug.Log($"{unitController.gameObject.name}.PatrolController.BeginPatrol(" + (patrolName != null ? patrolName : "null" ) + ")");
             PatrolProfile tmpPatrolProfile = systemDataFactory.GetResource<PatrolProfile>(patrolName);
             if (tmpPatrolProfile != null) {
                 //if (patrolSaveStates.ContainsKey(tmpPatrolProfile.PatrolProperties) == false) {
@@ -63,7 +63,7 @@ namespace AnyRPG {
         }
 
         public void BeginPatrol(PatrolProperties patrolProps) {
-            //Debug.Log(unitController.gameObject.name + ".PatrolController.BeginPatrol(" + (patrolProps == null ? "null" : "valid patrolProps") + ")");
+            //Debug.Log($"{unitController.gameObject.name}.PatrolController.BeginPatrol(" + (patrolProps == null ? "null" : "valid patrolProps") + ")");
 
             // testing - monitor if putting this here instead of in AddPatrolState() breaks anything
             if (patrolSaveStates.ContainsKey(patrolProps)) {
@@ -96,15 +96,15 @@ namespace AnyRPG {
         }
 
         private void FindAutomaticPatrol() {
-            //Debug.Log(unitController.gameObject.name + ".patrolController.FindAutomaticPatrol()");
+            //Debug.Log($"{unitController.gameObject.name}.patrolController.FindAutomaticPatrol()");
             if (unitController.UnitControllerMode != UnitControllerMode.AI) {
                 return;
             }
 
             foreach (PatrolProperties patrolProps in patrolPropsList) {
-                //Debug.Log(unitController.gameObject.name + ".patrolController.FindAutomaticPatrol(): found patrol profile: " + patrolProfile.DisplayName);
+                //Debug.Log($"{unitController.gameObject.name}.patrolController.FindAutomaticPatrol(): found patrol profile: " + patrolProfile.DisplayName);
                 if (patrolProps.AutoStart == true) {
-                    //Debug.Log(unitController.gameObject.name + ".patrolController.FindAutomaticPatrol(): found autostart profile");
+                    //Debug.Log($"{unitController.gameObject.name}.patrolController.FindAutomaticPatrol(): found autostart profile");
                     BeginPatrol(patrolProps);
                     break;
                 }
@@ -112,7 +112,7 @@ namespace AnyRPG {
         }
 
         private void SetupScriptableObjects() {
-            //Debug.Log(unitController.gameObject.name + ".patrolController.SetupScriptableObjects()");
+            //Debug.Log($"{unitController.gameObject.name}.patrolController.SetupScriptableObjects()");
 
             // local patrols
             if (unitController?.PatrolNames != null) {

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef252abeb0993314baa8a2043a32b123, type: 3}
+  m_Name: UMAEditor
+  m_EditorClassIdentifier: 
+  resourceName: UMA Editor
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  prefab: {fileID: 5887363405687166838, guid: 581df359df1c12649b30479e9f7a958c, type: 3}
+  modelProviderType: AnyRPG.UMAModelProvider

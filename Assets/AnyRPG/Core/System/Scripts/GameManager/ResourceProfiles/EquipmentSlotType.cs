@@ -57,7 +57,7 @@ namespace AnyRPG {
                     if (tmpSlotProfile != null) {
                         exclusiveSlotProfileList.Add(tmpSlotProfile);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find realExclusiveSlotProfile: " + exclusiveSlotProfile + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find realExclusiveSlotProfile: " + exclusiveSlotProfile + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }
@@ -69,7 +69,7 @@ namespace AnyRPG {
                     if (tmpSlotType != null) {
                         exclusiveSlotTypeList.Add(tmpSlotType);
                     } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find exclusiveSlotType: " + exclusiveSlotType + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find exclusiveSlotType: " + exclusiveSlotType + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
                 }
             }

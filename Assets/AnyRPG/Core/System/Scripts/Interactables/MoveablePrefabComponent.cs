@@ -37,9 +37,9 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            //Debug.Log(gameObject.name + ".AnimatedObject.Interact(" + (source == null ? "null" : source.name) +")");
+            //Debug.Log($"{gameObject.name}.AnimatedObject.Interact(" + (source == null ? "null" : source.name) +")");
             //if (coroutine != null) {
-                //Debug.Log(gameObject.name + ".AnimatedObject.Interact(): coroutine is not null, exiting");
+                //Debug.Log($"{gameObject.name}.AnimatedObject.Interact(): coroutine is not null, exiting");
                 //return false;
             //}
             base.Interact(source, optionIndex);
@@ -94,11 +94,11 @@ namespace AnyRPG {
             newAngle = new Vector3(newAngle.x < 0 ? newAngle.x + 360 : newAngle.x, newAngle.y < 0 ? newAngle.y + 360 : newAngle.y, newAngle.z < 0 ? newAngle.z + 360 : newAngle.z);
             Quaternion originalRotation = interactable.SpawnReference.transform.localRotation;
             Vector3 originalPosition = interactable.SpawnReference.transform.localPosition;
-            //Debug.Log(gameObject.name + ".AnimatedObject.animateObject(" + newAngle + ", " + newPosition + "): original position: " + originalPosition + "; rotation: " + originalRotation);
+            //Debug.Log($"{gameObject.name}.AnimatedObject.animateObject(" + newAngle + ", " + newPosition + "): original position: " + originalPosition + "; rotation: " + originalRotation);
 
             AudioSource audioSource = interactable.SpawnReference.GetComponent<AudioSource>();
             if (audioSource != null && audioProfile != null && audioProfile.AudioClip != null) {
-                //Debug.Log(gameObject.name + ".AnimatedObject.animateObject(): playing audioclip: " + audioProfile.AudioClip);
+                //Debug.Log($"{gameObject.name}.AnimatedObject.animateObject(): playing audioclip: " + audioProfile.AudioClip);
                 audioSource.PlayOneShot(audioProfile.AudioClip);
             }
 
@@ -106,7 +106,7 @@ namespace AnyRPG {
             objectOpen = !objectOpen;
 
             while (interactable.SpawnReference.transform.localEulerAngles != newAngle || interactable.SpawnReference.transform.localPosition != newPosition) {
-                //Debug.Log(gameObject.name + ".AnimatedObject.animateObject(" + newAngle + ", " + newPosition + "): localEulerAngles: " + interactable.MySpawnReference.transform.localEulerAngles + "; position: " + interactable.MySpawnReference.transform.localPosition);
+                //Debug.Log($"{gameObject.name}.AnimatedObject.animateObject(" + newAngle + ", " + newPosition + "): localEulerAngles: " + interactable.MySpawnReference.transform.localEulerAngles + "; position: " + interactable.MySpawnReference.transform.localPosition);
                 //Quaternion newRotation = Quaternion.Lerp(originalRotation, Quaternion.Euler(newAngle), 0.01f);
                 //Quaternion newRotation = Quaternion.RotateTowards(interactable.MySpawnReference.transform.localRotation, Quaternion.Euler(newAngle), rotationSpeed);
 
@@ -123,7 +123,7 @@ namespace AnyRPG {
                 yield return null;
             }
             //objectOpen = !objectOpen;
-            //Debug.Log(gameObject.name + ".AnimatedObject.animateObject(" + newAngle + ", " + newPosition + "): localEulerAngles: " + interactable.MySpawnReference.transform.localEulerAngles + "; position: " + interactable.MySpawnReference.transform.localPosition + "; COMPLETE ANIMATION");
+            //Debug.Log($"{gameObject.name}.AnimatedObject.animateObject(" + newAngle + ", " + newPosition + "): localEulerAngles: " + interactable.MySpawnReference.transform.localEulerAngles + "; position: " + interactable.MySpawnReference.transform.localPosition + "; COMPLETE ANIMATION");
             moveCoroutine = null;
         }
 
