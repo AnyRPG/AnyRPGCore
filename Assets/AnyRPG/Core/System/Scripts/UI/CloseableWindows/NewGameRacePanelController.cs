@@ -8,6 +8,11 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class NewGameRacePanelController : WindowContentController {
 
+        [Header("Race Panel")]
+
+        [SerializeField]
+        private GameObject raceRightPane = null;
+
         [SerializeField]
         private GameObject buttonPrefab = null;
 
@@ -111,6 +116,12 @@ namespace AnyRPG {
 
             ShowAbilityRewards();
             ShowTraitRewards();
+            if (abilityLabel.activeSelf == false && traitLabel.activeSelf == false) {
+                raceRightPane.SetActive(false);
+            } else {
+                raceRightPane.SetActive(true);
+            }
+
         }
 
         public void HidePanel() {

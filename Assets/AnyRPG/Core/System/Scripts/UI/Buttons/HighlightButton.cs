@@ -13,6 +13,9 @@ namespace AnyRPG {
 
         [Header("Highlight Button")]
 
+        //[SerializeField]
+        //protected bool interactOnSelect = false;
+
         [SerializeField]
         protected TextMeshProUGUI text;
 
@@ -154,6 +157,10 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.HighlightButton.Select()");
             base.Select();
             //if (highlightButton != null && useHighlightColorOnButton == true) {
+            //if (interactOnSelect == true) {
+            //    Interact();
+            //}
+
             if (highlightButton != null && navigationControllerFocused == true && controlsManager.GamePadInputActive == true) {
                 ColorBlock colorBlock = highlightButton.colors;
                 colorBlock.normalColor = selectedButtonColor;
@@ -202,7 +209,8 @@ namespace AnyRPG {
         }
 
         public override void OnPointerClick(PointerEventData eventData) {
-            //Debug.Log($"{gameObject.name}.HighlightButton.OnPointerClick()");
+            Debug.Log($"{gameObject.name}.HighlightButton.OnPointerClick()");
+
             base.OnPointerClick(eventData);
 
             if (mouseClickSound == true) {
@@ -222,6 +230,8 @@ namespace AnyRPG {
         */
 
         public override void Accept() {
+            //Debug.Log($"{gameObject.name}.HighlightButton.Accept()");
+
             base.Accept();
             if (highlightButton != null) {
                 highlightButton.onClick.Invoke();

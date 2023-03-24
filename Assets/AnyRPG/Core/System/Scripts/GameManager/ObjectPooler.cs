@@ -161,7 +161,8 @@ namespace AnyRPG {
         }
 
         public void ReturnObjectToPool(GameObject pooledGameObject) {
-            //Debug.Log("ObjectPooler.ReturnObjectToPool(" + pooledGameObject.name + ")");
+            //Debug.Log($"ObjectPooler.ReturnObjectToPool({pooledGameObject.name}) instanceID: {pooledGameObject.GetInstanceID()}");
+
             if (pooledGameObject == null) {
                 return;
             }

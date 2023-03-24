@@ -18,6 +18,9 @@ namespace AnyRPG {
         protected bool moveToSameIndex = false;
         */
 
+        [SerializeField]
+        protected NavigateAwayOption leaveLeftOption = NavigateAwayOption.Specify;
+
         [Tooltip("If the left button is passed, switch to the first controller on this panel")]
         [SerializeField]
         protected CloseableWindowContents leftPanel = null;
@@ -25,6 +28,9 @@ namespace AnyRPG {
         [Tooltip("If the left button is passed, switch to the first active controller in this list")]
         [SerializeField]
         protected List<UINavigationController> leftControllers = new List<UINavigationController>();
+
+        [SerializeField]
+        protected NavigateAwayOption leaveRightOption = NavigateAwayOption.Specify;
 
         [Tooltip("If the right button is passed, switch to the first controller on this panel")]
         [SerializeField]
@@ -34,6 +40,9 @@ namespace AnyRPG {
         [SerializeField]
         protected List<UINavigationController> rightControllers = new List<UINavigationController>();
 
+        [SerializeField]
+        protected NavigateAwayOption leaveUpOption = NavigateAwayOption.Specify;
+
         [Tooltip("If the top button is passed, switch to the first controller on this panel")]
         [SerializeField]
         protected CloseableWindowContents upPanel = null;
@@ -41,6 +50,9 @@ namespace AnyRPG {
         [Tooltip("If the top button is passed, switch to the first active controller in this list")]
         [SerializeField]
         protected List<UINavigationController> upControllers = new List<UINavigationController>();
+
+        [SerializeField]
+        protected NavigateAwayOption leaveDownOption = NavigateAwayOption.Specify;
 
         [Tooltip("If the bottom button is passed, switch to the first controller on this panel")]
         [SerializeField]
@@ -271,6 +283,9 @@ namespace AnyRPG {
             deleteList.AddRange(activeNavigableButtons);
             foreach (NavigableElement navigableElement in deleteList) {
                 ClearActiveButton(navigableElement);
+                if (navigableElement.gameObject.activeInHierarchy == false) {
+                    navigableElement.OnSendObjectToPool();
+                }
                 objectPooler.ReturnObjectToPool(navigableElement.gameObject);
             }
         }
@@ -315,55 +330,95 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.UINavigationController.ProcessUpButton()");
         }
 
-        public virtual bool LeaveUp() {
-            //Debug.Log($"{gameObject.name}.UINavigationController.LeaveUp()");
-            if (upControllers.Count != 0) {
-                foreach (UINavigationController uINavigationController in upControllers) {
-                    if (uINavigationController.gameObject.activeInHierarchy == true && uINavigationController.ActiveNavigableButtonCount > 0) {
-                        LeaveController();
-                        uINavigationController.Activate();
-                        return true;
-                    }
+        private bool LeaveToControllers(List<UINavigationController> uINavigationControllers) {
+            //Debug.Log($"{gameObject.name}.UINavigationController.LeaveToControllers()");
+
+            foreach (UINavigationController uINavigationController in uINavigationControllers) {
+                if (uINavigationController == null) {
+                    Debug.LogWarning($"{gameObject.name}.UINavigationController.LeaveToControllers() navigation controller is null, check inspector.");
+                    continue;
+                }
+                if (uINavigationController.gameObject.activeInHierarchy == true && uINavigationController.ActiveNavigableButtonCount > 0) {
+                    LeaveController();
+                    uINavigationController.Activate();
+                    return true;
                 }
             }
-            if (upPanel != null && upPanel.HasOpenSubPanel() == true) {
+
+            return false;
+        }
+
+        private bool LeaveToPanel(CloseableWindowContents closeableWindowContents) {
+            if (closeableWindowContents != null &&
+                closeableWindowContents.HasActiveNavigableButtons() == true) {
                 LeaveController();
-                upPanel.ChooseFocus();
+                closeableWindowContents.ChooseFocus();
                 return true;
             }
+
             return false;
+        }
+
+        private bool LeaveToParent() {
+            //Debug.Log($"{gameObject.name}.UINavigationController.LeaveToParent()");
+
+            LeaveController();
+            owner.NavigateToOwner();
+            return true;
+        }
+
+        public virtual bool LeaveUp() {
+            //Debug.Log($"{gameObject.name}.UINavigationController.LeaveUp()");
+            
+            if (leaveUpOption == NavigateAwayOption.Specify) {
+                return LeaveUpSpecific();
+            }
+
+            // option is Parent
+            return LeaveToParent();
+        }
+
+        private bool LeaveUpSpecific() {
+            
+            if (upControllers.Count != 0) {
+                return LeaveToControllers(upControllers);
+            }
+
+            return LeaveToPanel(upPanel);
         }
 
         public void DownButton() {
             //Debug.Log($"{gameObject.name}.UINavigationController.DownButton()");
+
             if (currentNavigableElement != null && currentNavigableElement.CaptureDPad == true) {
                 currentNavigableElement.DownButton();
                 return;
             }
+
             ProcessDownButton();
         }
 
         public virtual void ProcessDownButton() {
-
+            //Debug.Log($"{gameObject.name}.UINavigationController.ProcessDownButton()");
         }
 
         public virtual bool LeaveDown() {
             //Debug.Log($"{gameObject.name}.UINavigationController.LeaveDown()");
+
+            if (leaveDownOption == NavigateAwayOption.Specify) {
+                return LeaveDownSpecific();
+            }
+
+            // option is Parent
+            return LeaveToParent();
+        }
+
+        private bool LeaveDownSpecific() {
             if (downControllers.Count != 0) {
-                foreach (UINavigationController uINavigationController in downControllers) {
-                    if (uINavigationController.gameObject.activeInHierarchy == true && uINavigationController.ActiveNavigableButtonCount > 0) {
-                        LeaveController();
-                        uINavigationController.Activate();
-                        return true;
-                    }
-                }
+                return LeaveToControllers(downControllers);
             }
-            if (downPanel != null) {
-                LeaveController();
-                downPanel.ChooseFocus();
-                return true;
-            }
-            return false;
+
+            return LeaveToPanel(downPanel);
         }
 
         public void LeftButton() {
@@ -380,21 +435,21 @@ namespace AnyRPG {
 
         public virtual bool LeaveLeft() {
             //Debug.Log($"{gameObject.name}.UINavigationController.LeaveLeft()");
+            
+            if (leaveLeftOption == NavigateAwayOption.Specify) {
+                return LeaveLeftSpecific();
+            }
+
+            // option is Parent
+            return LeaveToParent();
+        }
+
+        private bool LeaveLeftSpecific() {
             if (leftControllers.Count != 0) {
-                foreach (UINavigationController uINavigationController in leftControllers) {
-                    if (uINavigationController.gameObject.activeInHierarchy == true && uINavigationController.ActiveNavigableButtonCount > 0) {
-                        LeaveController();
-                        uINavigationController.Activate();
-                        return true;
-                    }
-                }
+                return LeaveToControllers(leftControllers);
             }
-            if (leftPanel != null) {
-                LeaveController();
-                leftPanel.ChooseFocus();
-                return true;
-            }
-            return false;
+
+            return LeaveToPanel(leftPanel);
         }
 
         public void RightButton() {
@@ -411,21 +466,21 @@ namespace AnyRPG {
 
         public virtual bool LeaveRight() {
             //Debug.Log($"{gameObject.name}.UINavigationController.LeaveRight()");
+
+            if (leaveRightOption == NavigateAwayOption.Specify) {
+                return LeaveRightSpecific();
+            }
+
+            // option is Parent
+            return LeaveToParent();
+        }
+
+        private bool LeaveRightSpecific() {
             if (rightControllers.Count != 0) {
-                foreach (UINavigationController uINavigationController in rightControllers) {
-                    if (uINavigationController.gameObject.activeInHierarchy == true && uINavigationController.ActiveNavigableButtonCount > 0) {
-                        LeaveController();
-                        uINavigationController.Activate();
-                        return true;
-                    }
-                }
+                return LeaveToControllers(rightControllers);
             }
-            if (rightPanel != null) {
-                LeaveController();
-                rightPanel.ChooseFocus();
-                return true;
-            }
-            return false;
+
+            return LeaveToPanel(rightPanel);
         }
 
         public virtual void LeaveController() {
@@ -551,6 +606,11 @@ namespace AnyRPG {
         }
 
     }
+
+    /// <summary>
+    /// Specify = specific panel or controller. Parent = parent panel of the panel the navigation controller is located on.
+    /// </summary>
+    public enum NavigateAwayOption { Specify, Parent }
 
 }
 

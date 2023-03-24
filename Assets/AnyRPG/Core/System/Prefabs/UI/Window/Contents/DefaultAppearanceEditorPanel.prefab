@@ -177,13 +177,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leaveLeftOption: 0
   leftPanel: {fileID: 0}
   leftControllers:
   - {fileID: 0}
+  leaveRightOption: 0
   rightPanel: {fileID: 0}
   rightControllers: []
+  leaveUpOption: 0
   upPanel: {fileID: 0}
   upControllers: []
+  leaveDownOption: 1
   downPanel: {fileID: 0}
   downControllers: []
   acceptController: {fileID: 0}
@@ -581,6 +585,7 @@ MonoBehaviour:
   hintBarController: {fileID: 0}
   mainNoOptionsArea: {fileID: 6405194114616070386}
   canvasGroup: {fileID: 5283080037235096534}
+  genderNavigationController: {fileID: 9028165385050915082}
   maleButton: {fileID: 6045581845060507701}
   femaleButton: {fileID: 262950675516782920}
 --- !u!1 &4899020053557800150
@@ -643,15 +648,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leaveLeftOption: 0
   leftPanel: {fileID: 0}
   leftControllers: []
+  leaveRightOption: 0
   rightPanel: {fileID: 0}
   rightControllers:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  leaveUpOption: 0
   upPanel: {fileID: 0}
   upControllers: []
+  leaveDownOption: 0
   downPanel: {fileID: 0}
   downControllers: []
   acceptController: {fileID: 0}

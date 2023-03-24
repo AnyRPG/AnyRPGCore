@@ -19,6 +19,9 @@ namespace AnyRPG {
         [Header("Buttons")]
 
         [SerializeField]
+        protected UINavigationController genderNavigationController = null;
+
+        [SerializeField]
         protected HighlightButton maleButton = null;
 
         [SerializeField]
@@ -132,6 +135,8 @@ namespace AnyRPG {
 
             maleButton.gameObject.SetActive(false);
             femaleButton.gameObject.SetActive(false);
+            genderNavigationController.UpdateNavigationList();
+
         }
 
         public virtual void EnableGenderButtons() {
@@ -139,6 +144,7 @@ namespace AnyRPG {
 
             maleButton.gameObject.SetActive(true);
             femaleButton.gameObject.SetActive(true);
+            genderNavigationController.UpdateNavigationList();
         }
 
         public virtual void SetMale() {

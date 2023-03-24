@@ -162,6 +162,7 @@ namespace AnyRPG {
         }
 
         public virtual void DownButton() {
+            Debug.Log($"{gameObject.name}.NavigableElement.DownButton()");
         }
 
         public virtual void LeftButton() {
@@ -314,6 +315,7 @@ namespace AnyRPG {
 
         public virtual void OnSendObjectToPool() {
             //Debug.Log($"{gameObject.name}.navigableElement.OnSendObjectToPool()");
+
             UnHighlightOutline();
             UnHighlightBackground();
         }

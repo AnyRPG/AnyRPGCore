@@ -51,6 +51,9 @@ namespace AnyRPG {
         */
 
         [SerializeField]
+        private UINavigationController mainNavigationController = null;
+
+        [SerializeField]
         private HighlightButton detailsButton = null;
 
         [SerializeField]
@@ -224,7 +227,11 @@ namespace AnyRPG {
             // details should be last because it relies on all the information set in the previous methods
             detailsPanel.ReceiveOpenWindowNotification();
 
-            uINavigationControllers[0].SetCurrentButton(detailsButton);
+            mainNavigationController.SetCurrentButton(detailsButton);
+            if (controlsManager.GamePadInputActive == true) {
+                mainNavigationController.FocusCurrentButton();
+            }
+
 
             OpenDetailsPanel();
 
@@ -451,7 +458,7 @@ namespace AnyRPG {
             if (openSubPanel != detailsPanel) {
                 ClosePanels(detailsPanel);
                 detailsPanel.ShowPanel();
-                SetOpenSubPanel(detailsPanel, true);
+                SetOpenSubPanel(detailsPanel, false);
             }
 
             detailsButton.HighlightBackground();
@@ -464,7 +471,7 @@ namespace AnyRPG {
             if (openSubPanel != characterPanel) {
                 ClosePanels(characterPanel);
                 characterPanel.ShowPanel();
-                SetOpenSubPanel(characterPanel, true);
+                SetOpenSubPanel(characterPanel, false);
             }
 
             characterButton.HighlightBackground();
@@ -477,7 +484,7 @@ namespace AnyRPG {
             if (openSubPanel != currentAppearanceEditorPanel) {
                 ClosePanels(currentAppearanceEditorPanel);
                 currentAppearanceEditorPanel.ShowPanel();
-                SetOpenSubPanel(currentAppearanceEditorPanel, true);
+                SetOpenSubPanel(currentAppearanceEditorPanel, false);
             }
 
             appearanceButton.HighlightBackground();
@@ -516,8 +523,8 @@ namespace AnyRPG {
             //currentAppearancePanel.SetupOptions();
         }
 
-        public void OpenFactionPanel(bool focus = true) {
-            //Debug.Log("NewGamePanel.OpenFactionPanel()");
+        public void OpenFactionPanel(bool focus) {
+            //Debug.Log($"NewGamePanel.OpenFactionPanel({focus})");
 
             if (openSubPanel != factionPanel) {
                 ClosePanels(factionPanel);
@@ -530,8 +537,8 @@ namespace AnyRPG {
             uINavigationControllers[0].UnHightlightButtonBackgrounds(factionButton);
         }
 
-        public void OpenRacePanel(bool focus = true) {
-            //Debug.Log("NewGamePanel.OpenRacePanel()");
+        public void OpenRacePanel(bool focus) {
+            //Debug.Log($"NewGamePanel.OpenRacePanel({focus})");
 
             if (openSubPanel != racePanel) {
                 ClosePanels(racePanel);
@@ -544,8 +551,8 @@ namespace AnyRPG {
             uINavigationControllers[0].UnHightlightButtonBackgrounds(raceButton);
         }
 
-        public void OpenClassPanel(bool focus = true) {
-            //Debug.Log("NewGamePanel.OpenClassPanel()");
+        public void OpenClassPanel(bool focus) {
+            //Debug.Log($"NewGamePanel.OpenClassPanel({focus})");
 
             if (openSubPanel != classPanel) {
                 ClosePanels(classPanel);
@@ -558,8 +565,8 @@ namespace AnyRPG {
             uINavigationControllers[0].UnHightlightButtonBackgrounds(classButton);
         }
 
-        public void OpenSpecializationPanel(bool focus = true) {
-            //Debug.Log("NewGamePanel.OpenSpecializationPanel()");
+        public void OpenSpecializationPanel(bool focus) {
+            //Debug.Log($"NewGamePanel.OpenSpecializationPanel({focus})");
 
             // this is only called from buttons, so safe to assume it's already been populated with buttons when the window opened or a class was selected
             if (specializationPanel.OptionButtons.Count > 0 && openSubPanel != specializationPanel) {

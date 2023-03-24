@@ -10,9 +10,6 @@ namespace AnyRPG {
     public class NewGameClassSpecializationButton : HighlightButton {
 
         [SerializeField]
-        protected ClassSpecialization classSpecialization = null;
-
-        [SerializeField]
         protected Image icon = null;
 
         [SerializeField]
@@ -20,6 +17,8 @@ namespace AnyRPG {
 
         [SerializeField]
         protected TextMeshProUGUI description = null;
+
+        protected ClassSpecialization classSpecialization = null;
 
         // game manager references
         protected NewGameManager newGameManager = null;
@@ -58,20 +57,31 @@ namespace AnyRPG {
             description.text = string.Empty;
         }
 
-        public void CommonSelect() {
+        public void SetClassSpecialization() {
             newGameManager.SetClassSpecialization(classSpecialization);
         }
 
+        /*
         public void RawSelect() {
             CommonSelect();
         }
+        */
 
-        public override void Select() {
-            CommonSelect();
-            base.Select();
-        }
+        
+        //public override void Select() {
+        //    Debug.Log("NewGameClassSpecializationbutton.Select()");
 
+        //    //CommonSelect();
+        //    base.Select();
+        //}
+        
 
+        //public override void Interact() {
+        //    Debug.Log("NewGameClassSpecializationbutton.Interact()");
+            
+        //    base.Interact();
+
+        //}
 
     }
 

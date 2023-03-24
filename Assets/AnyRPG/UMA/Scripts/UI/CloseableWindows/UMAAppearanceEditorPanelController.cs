@@ -724,11 +724,12 @@ namespace AnyRPG {
             }
 
             if (highlightedButtons[groupName] != null) {
-                highlightedButtons[groupName].UnHighlightOutline();
+                highlightedButtons[groupName].UnHighlightBackground();
             }
 
             highlightedButtons[groupName] = optionChoiceButton;
-            optionChoiceButton.HighlightOutline();
+            //optionChoiceButton.HighlightOutline();
+            optionChoiceButton.HighlightBackground();
         }
 
         public void SetRecipe(UMAOptionChoiceButton optionChoiceButton, string groupName, string optionChoice) {

@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 535681869865687226}
   - component: {fileID: 5753691118557821035}
   m_Layer: 5
-  m_Name: AppearanceCenterPanel
+  m_Name: AppearanceCenterPane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -142,14 +142,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leaveLeftOption: 0
   leftPanel: {fileID: 0}
   leftControllers: []
+  leaveRightOption: 0
   rightPanel: {fileID: 0}
   rightControllers:
   - {fileID: 3459536516967886131}
   - {fileID: 4426594736624126570}
+  leaveUpOption: 0
   upPanel: {fileID: 0}
   upControllers: []
+  leaveDownOption: 1
   downPanel: {fileID: 0}
   downControllers: []
   acceptController: {fileID: 0}
@@ -874,7 +878,7 @@ GameObject:
   - component: {fileID: 2040084746476159610}
   - component: {fileID: 5814839537094800678}
   m_Layer: 5
-  m_Name: AppearanceLeftPanel
+  m_Name: AppearanceLeftPane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1078,14 +1082,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leaveLeftOption: 0
   leftPanel: {fileID: 0}
   leftControllers: []
+  leaveRightOption: 0
   rightPanel: {fileID: 0}
   rightControllers:
   - {fileID: 3459536516967886131}
   - {fileID: 4426594736624126570}
+  leaveUpOption: 0
   upPanel: {fileID: 0}
   upControllers: []
+  leaveDownOption: 1
   downPanel: {fileID: 0}
   downControllers: []
   acceptController: {fileID: 0}
@@ -1317,12 +1325,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 2
-    m_Right: 2
-    m_Top: 2
-    m_Bottom: 2
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 4
+  m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
@@ -1342,14 +1350,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leaveLeftOption: 0
   leftPanel: {fileID: 0}
   leftControllers:
   - {fileID: 5753691118557821035}
   - {fileID: 7045388437034373054}
+  leaveRightOption: 0
   rightPanel: {fileID: 0}
   rightControllers: []
+  leaveUpOption: 0
   upPanel: {fileID: 0}
   upControllers: []
+  leaveDownOption: 1
   downPanel: {fileID: 0}
   downControllers: []
   acceptController: {fileID: 0}
@@ -1427,6 +1439,7 @@ MonoBehaviour:
   hintBarController: {fileID: 0}
   mainNoOptionsArea: {fileID: 8375605769830092455}
   canvasGroup: {fileID: 8538433723253695920}
+  genderNavigationController: {fileID: 5753691118557821035}
   maleButton: {fileID: 3290424494982936933}
   femaleButton: {fileID: 3991232186750549757}
   mainButtonsArea: {fileID: 3440348350633360733}
@@ -1566,14 +1579,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 2
-    m_Right: 2
-    m_Top: 2
-    m_Bottom: 2
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 128, y: 128}
+  m_CellSize: {x: 132, y: 132}
   m_Spacing: {x: 5, y: 5}
   m_Constraint: 1
   m_ConstraintCount: 3
@@ -1589,13 +1602,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30e086dccacef8d45959cb3d8f7ea6b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leaveLeftOption: 0
   leftPanel: {fileID: 0}
   leftControllers:
+  - {fileID: 5753691118557821035}
   - {fileID: 7045388437034373054}
+  leaveRightOption: 0
   rightPanel: {fileID: 0}
   rightControllers: []
+  leaveUpOption: 0
   upPanel: {fileID: 0}
   upControllers: []
+  leaveDownOption: 1
   downPanel: {fileID: 0}
   downControllers: []
   acceptController: {fileID: 0}
@@ -2296,7 +2314,7 @@ GameObject:
   - component: {fileID: 6000064816865364360}
   - component: {fileID: 6259644402413816980}
   m_Layer: 5
-  m_Name: AppearanceRightPanel
+  m_Name: AppearanceRightPane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

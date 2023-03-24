@@ -77,12 +77,9 @@ namespace AnyRPG {
         private void LessColumn() {
             currentColumn--;
             if (currentColumn < 0) {
-                if (leftControllers.Count != 0 || leftPanel != null) {
-                    currentColumn++;
-                    LeaveLeft();
+                currentColumn++;
+                if (LeaveLeft()) {
                     return;
-                } else {
-                    currentColumn++;
                 }
             }
             if (currentNavigableElement != null) {
@@ -112,12 +109,9 @@ namespace AnyRPG {
         private void MoreColumn() {
             currentColumn++;
             if (currentColumn >= currentNumColumns) {
-                if (rightControllers.Count != 0 || rightPanel != null) {
-                    currentColumn--;
-                    LeaveRight();
+                currentColumn--;
+                if (LeaveRight()) {
                     return;
-                } else {
-                    currentColumn--;
                 }
             }
             if (currentNavigableElement != null) {
@@ -136,12 +130,9 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.UINavigationGrid.UpButton()");
             currentRow--;
             if (currentRow < 0) {
-                if (upControllers.Count != 0 || upPanel != null) {
-                    currentRow++;
-                    LeaveUp();
+                currentRow++;
+                if (LeaveUp()) {
                     return;
-                } else {
-                    currentRow++;
                 }
             }
             if (currentNavigableElement != null) {
@@ -160,12 +151,9 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.UINavigationGrid.DownButton()");
             currentRow++;
             if (currentRow >= currentNumRows) {
-                if (downControllers.Count != 0 || downPanel != null) {
-                    currentRow--;
-                    LeaveDown();
+                currentRow--;
+                if (LeaveDown()) {
                     return;
-                } else {
-                    currentRow--;
                 }
             }
             if (currentNavigableElement != null) {

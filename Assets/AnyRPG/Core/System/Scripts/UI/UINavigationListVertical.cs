@@ -37,10 +37,9 @@ namespace AnyRPG {
 
             // already at top
             if (currentIndex == 0) {
-                if (upControllers.Count != 0 || upPanel != null) {
-                    LeaveUp();
+                if (LeaveUp()) {
+                    return;
                 }
-                return;
             }
 
             // not at top
@@ -56,14 +55,14 @@ namespace AnyRPG {
 
         public override void ProcessDownButton() {
             //Debug.Log($"{gameObject.name}.UINavigationListVertical.ProcessDownButton()");
+
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
 
             // already at bottom
             if (currentIndex == (activeNavigableButtons.Count - 1)) {
-                if (downControllers.Count != 0 || downPanel != null) {
-                    LeaveDown();
+                if (LeaveDown()) {
                     return;
                 }
             }

@@ -37,10 +37,9 @@ namespace AnyRPG {
 
             // already at far left
             if (currentIndex == 0) {
-                if (leftControllers.Count != 0 || leftPanel != null) {
-                    LeaveLeft();
+                if (LeaveLeft()) {
+                    return;
                 }
-                return;
             }
 
             // not at far left
@@ -61,8 +60,7 @@ namespace AnyRPG {
             }
             // already at right
             if (currentIndex == (activeNavigableButtons.Count - 1)) {
-                if (rightControllers.Count != 0 || rightPanel != null) {
-                    LeaveRight();
+                if (LeaveRight()) {
                     return;
                 }
             }

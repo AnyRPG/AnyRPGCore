@@ -8,8 +8,12 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class NewGameFactionPanelController : WindowContentController {
 
-        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
         public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
+
+        [Header("Faction Panel")]
+
+        [SerializeField]
+        private GameObject factionRightPane = null;
 
         [SerializeField]
         private GameObject buttonPrefab = null;
@@ -63,7 +67,7 @@ namespace AnyRPG {
         }
 
         public void ClearOptionButtons() {
-            // clear the quest list so any quests left over from a previous time opening the window aren't shown
+            // clear the quest list so any buttons left over from a previous time opening the window aren't shown
             //Debug.Log("LoadGamePanel.ClearLoadButtons()");
             foreach (NewGameFactionButton optionButton in optionButtons) {
                 if (optionButton != null) {
@@ -119,6 +123,11 @@ namespace AnyRPG {
 
             ShowAbilityRewards();
             ShowTraitRewards();
+            if (abilityLabel.activeSelf == false && traitLabel.activeSelf == false) {
+                factionRightPane.SetActive(false);
+            } else {
+                factionRightPane.SetActive(true);
+            }
         }
 
         public void HidePanel() {

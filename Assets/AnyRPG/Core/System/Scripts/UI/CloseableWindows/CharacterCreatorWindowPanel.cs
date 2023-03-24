@@ -275,7 +275,7 @@ namespace AnyRPG {
             //Debug.Log("NewGamePanel.OpenAppearancePanel()");
 
             currentAppearanceEditorPanel.ShowPanel();
-            SetOpenSubPanel(currentAppearanceEditorPanel, true);
+            SetOpenSubPanel(currentAppearanceEditorPanel, false);
 
             //if (openSubPanel != currentAppearanceEditorPanel) {
             //    ClosePanels(currentAppearanceEditorPanel);
