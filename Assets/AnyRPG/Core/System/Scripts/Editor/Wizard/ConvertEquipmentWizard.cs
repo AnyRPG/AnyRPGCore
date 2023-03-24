@@ -10,7 +10,7 @@ namespace AnyRPG {
 
         public List<Equipment> equipmentList = new List<Equipment>();
 
-        [MenuItem("Tools/AnyRPG/Wizard/Convert/Convert Equipment")]
+        [MenuItem("Tools/AnyRPG/Wizard/Convert/Convert Equipment to 0.16")]
         public static void CreateWizard() {
             ScriptableWizard.DisplayWizard<ConvertEquipmentWizard>("New Convert Equipment Wizard", "Convert");
         }
