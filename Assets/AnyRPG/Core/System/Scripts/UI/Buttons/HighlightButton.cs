@@ -209,7 +209,7 @@ namespace AnyRPG {
         }
 
         public override void OnPointerClick(PointerEventData eventData) {
-            Debug.Log($"{gameObject.name}.HighlightButton.OnPointerClick()");
+            //Debug.Log($"{gameObject.name}.HighlightButton.OnPointerClick()");
 
             base.OnPointerClick(eventData);
 

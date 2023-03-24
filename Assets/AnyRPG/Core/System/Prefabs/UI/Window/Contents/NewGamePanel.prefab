@@ -937,8 +937,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leaveLeftOption: 0
   leftPanel: {fileID: 0}
-  leftControllers:
-  - {fileID: 0}
+  leftControllers: []
   leaveRightOption: 0
   rightPanel: {fileID: 0}
   rightControllers: []
