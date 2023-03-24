@@ -20,7 +20,7 @@ namespace AnyRPG {
         private string optionGroupName = string.Empty;
         private string optionName = string.Empty;
 
-        public void ConfigureButton(SwappableMeshAppearancePanelController appearancePanelController, string groupName, Sprite image, string optionName) {
+        public void ConfigureButton(SwappableMeshAppearancePanelController appearancePanelController, string groupName, Sprite image, string displayName, string optionName) {
             this.appearancePanelController = appearancePanelController;
             optionGroupName = groupName;
             if (icon != null) {
@@ -28,7 +28,7 @@ namespace AnyRPG {
             }
             this.optionName = optionName;
             if (text != null) {
-                text.text = optionName;
+                text.text = displayName;
             }
         }
 
@@ -49,19 +49,6 @@ namespace AnyRPG {
             base.JoystickButton3();
 
         }
-
-        public override void JoystickButton9() {
-            base.JoystickButton9();
-
-        }
-
-        /*
-        public override void Select() {
-            //Debug.Log("SlotScript.Select()");
-            base.Select();
-        }
-        */
-
 
     }
 

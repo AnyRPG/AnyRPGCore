@@ -162,7 +162,7 @@ namespace AnyRPG {
         }
 
         public virtual void DownButton() {
-            Debug.Log($"{gameObject.name}.NavigableElement.DownButton()");
+            //Debug.Log($"{gameObject.name}.NavigableElement.DownButton()");
         }
 
         public virtual void LeftButton() {

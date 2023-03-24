@@ -144,7 +144,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leaveLeftOption: 0
   leftPanel: {fileID: 0}
-  leftControllers: []
+  leftControllers:
+  - {fileID: 7045388437034373054}
   leaveRightOption: 0
   rightPanel: {fileID: 0}
   rightControllers:
@@ -1587,7 +1588,7 @@ MonoBehaviour:
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 132, y: 132}
-  m_Spacing: {x: 5, y: 5}
+  m_Spacing: {x: 0, y: 0}
   m_Constraint: 1
   m_ConstraintCount: 3
 --- !u!114 &4426594736624126570
