@@ -341,10 +341,6 @@ namespace AnyRPG {
         private void UpdateCharacterEnvironment() {
             //Debug.Log("NewGameManager.UpdateCharacterEnvironment()");
 
-            if (characterRace == null ) {
-                return;
-            }
-
             environmentPreviewPrefab = GetEnvironmentPreviewPrefab();
             characterCreatorManager.SpawnEnvironmentPreviewPrefab(environmentPreviewPrefab);
 
@@ -368,11 +364,11 @@ namespace AnyRPG {
         private GameObject GetEnvironmentPreviewPrefab() {
             //Debug.Log("NewGameManager.GetEnvironmentPreviewPrefab()");
 
-            if (characterRace?.EnvironmentPreviewPrefab != null) {
-                return characterRace.EnvironmentPreviewPrefab;
+            if (characterRace?.EnvironmentPreview.EnvironmentPreviewPrefab != null) {
+                return characterRace.EnvironmentPreview.EnvironmentPreviewPrefab;
             }
-            if (faction?.EnvironmentPreviewPrefab != null) {
-                return faction.EnvironmentPreviewPrefab;
+            if (faction?.EnvironmentPreview.EnvironmentPreviewPrefab != null) {
+                return faction.EnvironmentPreview.EnvironmentPreviewPrefab;
             }
             return null;
         }
@@ -380,72 +376,72 @@ namespace AnyRPG {
         private Material GetPlatformMaterial() {
             //Debug.Log("NewGameManager.GetPlatformMaterial()");
 
-            if (characterRace?.PlatformMaterial != null) {
-                return characterRace.PlatformMaterial;
+            if (characterRace?.EnvironmentPreview.PlatformMaterial != null) {
+                return characterRace.EnvironmentPreview.PlatformMaterial;
             }
-            if (faction?.PlatformMaterial != null) {
-                return faction.PlatformMaterial;
+            if (faction?.EnvironmentPreview.PlatformMaterial != null) {
+                return faction.EnvironmentPreview.PlatformMaterial;
             }
             return defaultPlatformMaterial;
         }
 
 
         private Material GetTopMaterial() {
-            if (characterRace?.TopMaterial != null) {
-                return characterRace.TopMaterial;
+            if (characterRace?.EnvironmentPreview.TopMaterial != null) {
+                return characterRace.EnvironmentPreview.TopMaterial;
             }
-            if (faction?.TopMaterial != null) {
-                return faction.TopMaterial;
+            if (faction?.EnvironmentPreview.TopMaterial != null) {
+                return faction.EnvironmentPreview.TopMaterial;
             }
             return defaultTopMaterial;
         }
 
         private Material GetBottomMaterial() {
-            if (characterRace?.BottomMaterial != null) {
-                return characterRace.BottomMaterial;
+            if (characterRace?.EnvironmentPreview.BottomMaterial != null) {
+                return characterRace.EnvironmentPreview.BottomMaterial;
             }
-            if (faction?.BottomMaterial != null) {
-                return faction.BottomMaterial;
+            if (faction?.EnvironmentPreview.BottomMaterial != null) {
+                return faction.EnvironmentPreview.BottomMaterial;
             }
             return defaultBottomMaterial;
         }
 
         private Material GetNorthMaterial() {
-            if (characterRace?.NorthMaterial != null) {
-                return characterRace.NorthMaterial;
+            if (characterRace?.EnvironmentPreview.NorthMaterial != null) {
+                return characterRace.EnvironmentPreview.NorthMaterial;
             }
-            if (faction?.NorthMaterial != null) {
-                return faction.NorthMaterial;
+            if (faction?.EnvironmentPreview.NorthMaterial != null) {
+                return faction.EnvironmentPreview.NorthMaterial;
             }
             return defaultNorthMaterial;
         }
 
         private Material GetSouthMaterial() {
-            if (characterRace?.SouthMaterial != null) {
-                return characterRace.SouthMaterial;
+            if (characterRace?.EnvironmentPreview.SouthMaterial != null) {
+                return characterRace.EnvironmentPreview.SouthMaterial;
             }
-            if (faction?.SouthMaterial != null) {
-                return faction.SouthMaterial;
+            if (faction?.EnvironmentPreview.SouthMaterial != null) {
+                return faction.EnvironmentPreview.SouthMaterial;
             }
             return defaultSouthMaterial;
         }
 
         private Material GetEastMaterial() {
-            if (characterRace?.EastMaterial != null) {
-                return characterRace.EastMaterial;
+            if (characterRace?.EnvironmentPreview.EastMaterial != null) {
+                return characterRace.EnvironmentPreview.EastMaterial;
             }
-            if (faction?.EastMaterial != null) {
-                return faction.EastMaterial;
+            if (faction?.EnvironmentPreview.EastMaterial != null) {
+                return faction.EnvironmentPreview.EastMaterial;
             }
             return defaultEastMaterial;
         }
 
         private Material GetWestMaterial() {
-            if (characterRace?.WestMaterial != null) {
-                return characterRace.WestMaterial;
+            if (characterRace?.EnvironmentPreview.WestMaterial != null) {
+                return characterRace.EnvironmentPreview.WestMaterial;
             }
-            if (faction?.WestMaterial != null) {
-                return faction.WestMaterial;
+            if (faction?.EnvironmentPreview.WestMaterial != null) {
+                return faction.EnvironmentPreview.WestMaterial;
             }
             return defaultWestMaterial;
         }
