@@ -10,7 +10,7 @@ namespace AnyRPG {
 
         public List<Equipment> equipmentList = new List<Equipment>();
 
-        [MenuItem("Tools/AnyRPG/Wizard/Convert/Convert Equipment to 0.16")]
+        //[MenuItem("Tools/AnyRPG/Wizard/Convert/Convert Equipment to 0.16")]
         public static void CreateWizard() {
             ScriptableWizard.DisplayWizard<ConvertEquipmentWizard>("New Convert Equipment Wizard", "Convert");
         }
@@ -34,14 +34,16 @@ namespace AnyRPG {
                 EditorUtility.DisplayProgressBar("Convert Equipment Wizard", "Beginning Conversion...", (float)i / (float)equipmentList.Count);
 
                 // copy uma recipe profile
-                equipment.SharedEquipmentModels = equipment.DeprecatedUmaRecipeProfileName;
+                //equipment.SharedEquipmentModels = equipment.DeprecatedUmaRecipeProfileName;
 
                 // copy uma recipe profile properties
+                /*
                 if (equipment.DeprecatedUMARecipeProfileProperties.UMARecipes.Count > 0 || equipment.DeprecatedUMARecipeProfileProperties.SharedColors.Count > 0) {
                     UMAEquipmentModel umaEquipmentModel = new UMAEquipmentModel();
                     umaEquipmentModel.Properties = equipment.DeprecatedUMARecipeProfileProperties;
                     equipment.InlineEquipmentModels.EquipmentModels.Add(umaEquipmentModel);
                 }
+                */
 
                 // copy prefab equipment models
                 if (equipment.DeprecatedHoldableObjectList.Count > 0) {

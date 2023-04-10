@@ -26,16 +26,6 @@ namespace AnyRPG {
         // keep a reference to the actual equipment set
         private EquipmentSet equipmentSet = null;
 
-        [Header("UMA Equipment Models")]
-
-        [FormerlySerializedAs("umaRecipeProfileName")]
-        [SerializeField]
-        private string deprecatedUmaRecipeProfileName = string.Empty;
-
-        [FormerlySerializedAs("uMARecipeProfileProperties")]
-        [SerializeField]
-        private UMAEquipmentModelProperties deprecatedUMARecipeProfileProperties = new UMAEquipmentModelProperties();
-
         [Header("Prefab Equipment Models")]
 
         [Tooltip("Physical prefabs to attach to bones on the character unit")]
@@ -194,8 +184,6 @@ namespace AnyRPG {
 
         public List<ItemSecondaryStatNode> ChosenSecondaryStats { get => chosenSecondaryStats; set => chosenSecondaryStats = value; }
         public List<int> RandomStatIndexes { get => randomStatIndexes; set => randomStatIndexes = value; }
-        public UMAEquipmentModelProperties DeprecatedUMARecipeProfileProperties { get => deprecatedUMARecipeProfileProperties; set => deprecatedUMARecipeProfileProperties = value; }
-        public string DeprecatedUmaRecipeProfileName { get => deprecatedUmaRecipeProfileName; set => deprecatedUmaRecipeProfileName = value; }
         public string EquipmentSetName { get => equipmentSetName; set => equipmentSetName = value; }
         public bool UseArmorModifier { get => useArmorModifier; set => useArmorModifier = value; }
         public string SharedEquipmentModels { get => sharedEquipmentModels; set => sharedEquipmentModels = value; }
