@@ -11,7 +11,7 @@ namespace AnyRPG {
 
         public List<EquipmentModelProfile> convertList = new List<EquipmentModelProfile>();
 
-        [MenuItem("Tools/AnyRPG/Wizard/Convert/Convert EquipmentModelProfile to 0.16")]
+        //[MenuItem("Tools/AnyRPG/Wizard/Convert/Convert EquipmentModelProfile to 0.16")]
         public static void CreateWizard() {
             ScriptableWizard.DisplayWizard<ConvertUMARecipeProfileWizard>("New Convert UMARecipeProfile Wizard", "Convert");
         }
@@ -35,7 +35,7 @@ namespace AnyRPG {
                 EditorUtility.DisplayProgressBar("Convert UMARecipeProfile Wizard", "Beginning Conversion...", (float)i / (float)convertList.Count);
 
                 UMAEquipmentModel umaEquipmentModel = new UMAEquipmentModel();
-                umaEquipmentModel.Properties = convertItem.DeprecatedUMARecipeProfileProperties;
+                //umaEquipmentModel.Properties = convertItem.DeprecatedUMARecipeProfileProperties;
                 convertItem.Properties.EquipmentModels.Add(umaEquipmentModel);
 
                 EditorUtility.SetDirty(convertItem);
