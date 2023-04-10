@@ -134,6 +134,7 @@ namespace AnyRPG {
             base.ReceiveClosedWindowNotification();
 
             newGameManager.OnSetPlayerName -= HandleSetPlayerName;
+            newGameManager.OnResetPlayerName -= HandleResetPlayerName;
             newGameManager.OnSetUnitProfile -= HandleSetUnitProfile;
             newGameManager.OnSetFaction -= HandleSetFaction;
             newGameManager.OnSetCharacterRace -= HandleSetCharacterRace;
@@ -184,6 +185,7 @@ namespace AnyRPG {
             //Debug.Log("NewGamePanel.ProcessOpenWindow()");
 
             newGameManager.OnSetPlayerName += HandleSetPlayerName;
+            newGameManager.OnResetPlayerName += HandleResetPlayerName;
             newGameManager.OnSetUnitProfile += HandleSetUnitProfile;
             newGameManager.OnSetFaction += HandleSetFaction;
             newGameManager.OnSetCharacterRace += HandleSetCharacterRace;
@@ -310,10 +312,26 @@ namespace AnyRPG {
         private void ClearData() {
             //Debug.Log("NewGamePanel.ClearData()");
             newGameManager.ClearData();
+
+            //detailsPanel.ResetInputText(newGameManager.PlayerName);
+        }
+
+        public void HandleResetPlayerName(string newPlayerName) {
+            //Debug.Log($"NewGamePanel.HandleResetPlayerName({newPlayerName})");
+
             detailsPanel.ResetInputText(newGameManager.PlayerName);
+            SetPlayerNameText(newPlayerName);
         }
 
         public void HandleSetPlayerName(string newPlayerName) {
+            //Debug.Log($"NewGamePanel.HandleSetPlayerName({newPlayerName})");
+
+            SetPlayerNameText(newPlayerName);
+        }
+
+        private void SetPlayerNameText(string newPlayerName) {
+            //Debug.Log($"NewGamePanel.SetPlayerNameText({newPlayerName})");
+
             playerNameLabel.text = newPlayerName;
         }
 

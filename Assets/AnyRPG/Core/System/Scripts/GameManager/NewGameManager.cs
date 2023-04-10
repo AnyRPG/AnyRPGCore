@@ -11,6 +11,7 @@ namespace AnyRPG {
 
         public event System.Action<UnitProfile> OnSetUnitProfile = delegate { };
         public event System.Action<string> OnSetPlayerName = delegate { };
+        public event System.Action<string> OnResetPlayerName = delegate { };
         public event System.Action<Faction> OnSetFaction = delegate { };
         public event System.Action<CharacterRace> OnSetCharacterRace = delegate { };
         public event System.Action<CharacterClass> OnSetCharacterClass = delegate { };
@@ -95,7 +96,8 @@ namespace AnyRPG {
             levelManager = systemGameManager.LevelManager;
 
             equipmentManager = new EquipmentManager(systemGameManager);
-            if (systemConfigurationManager.DefaultPlayerName != null && systemConfigurationManager.DefaultPlayerName != string.Empty) {
+            if (systemConfigurationManager.DefaultPlayerName != string.Empty &&
+                systemConfigurationManager.PlayerNameSource == PlayerNameSource.DefaultPlayerName) {
                 defaultPlayerName = systemConfigurationManager.DefaultPlayerName;
             }
 
@@ -112,9 +114,36 @@ namespace AnyRPG {
             defaultWestMaterial = characterCreatorManager.WestRenderer.material;
         }
 
+        private void ResetPlayerName(string newPlayerName) {
+            //Debug.Log($"NewGameManager.ResetPlayerName({newPlayerName})");
+
+            playerName = newPlayerName;
+            OnResetPlayerName(newPlayerName);
+        }
+
+        private void SetPlayerName(string newPlayerName) {
+            //Debug.Log($"NewGameManager.SetPlayerName({newPlayerName})");
+
+            if (newPlayerName == "") {
+                return;
+            }
+
+            playerName = newPlayerName;
+            saveData.playerName = playerName;
+        }
+
+        public void EditPlayerName(string newPlayerName) {
+            //Debug.Log($"NewGameManager.EditPlayerName({newPlayerName})");
+
+            SetPlayerName(newPlayerName);
+
+            OnSetPlayerName(newPlayerName);
+        }
+
         public void ClearData() {
             //Debug.Log("NewGameManager.ClearData()");
-            playerName = defaultPlayerName;
+
+            playerName = string.Empty;
             unitProfile = null;
             unitType = null;
             characterRace = null;
@@ -129,10 +158,16 @@ namespace AnyRPG {
         public void SetupSaveData() {
             //Debug.Log("NewGameManager.SetupSaveData()");
 
-            SetPlayerName(defaultPlayerName);
+            if (systemConfigurationManager.PlayerNameSource == PlayerNameSource.DefaultPlayerName) {
+                ResetPlayerName(defaultPlayerName);
+            }
+
             saveData.PlayerLevel = 1;
             saveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
-            unitProfile = systemConfigurationManager.DefaultUnitProfile;
+            
+            // testing - this is done later by updateUnitProfileList() anyway
+            //unitProfile = systemConfigurationManager.DefaultUnitProfile;
+
             saveData.unitProfileName = systemConfigurationManager.DefaultUnitProfileName;
 
             if (systemConfigurationManager.NewGameFaction == true) {
@@ -153,9 +188,12 @@ namespace AnyRPG {
             // testing - not needed because updating character class list will result in class getting set, which will update the class specialization list
             //UpdateClassSpecializationList();
 
+            /*
+             // is this necessary ? It's already done above on line 147
             if (systemConfigurationManager.NewGameFaction == false || factionList.Count == 0) {
                 UpdateUnitProfileList();
             }
+            */
         }
 
         protected void UpdateFactionList() {
@@ -316,12 +354,6 @@ namespace AnyRPG {
             }
         }
 
-        public void SetPlayerName(string newPlayerName) {
-            playerName = newPlayerName;
-            saveData.playerName = playerName;
-
-            OnSetPlayerName(newPlayerName);
-        }
 
         public void SetUnitProfile(UnitProfile newUnitProfile) {
             //Debug.Log($"NewGameManager.SetUnitProfile({newUnitProfile.DisplayName})");
@@ -334,6 +366,14 @@ namespace AnyRPG {
             saveData.unitProfileName = unitProfile.ResourceName;
 
             OnSetUnitProfile(newUnitProfile);
+
+            if (systemConfigurationManager.PlayerNameSource == PlayerNameSource.UnitProfile) {
+                if (newUnitProfile.CharacterName != string.Empty) {
+                    ResetPlayerName(newUnitProfile.CharacterName);
+                } else {
+                    ResetPlayerName(newUnitProfile.DisplayName);
+                }
+            }
 
             //UpdateCharacterEnvironment();
         }

@@ -14099,6 +14099,7 @@ MonoBehaviour:
   raceLabel: {fileID: 6267207265839385405}
   raceButton: {fileID: 4318491110293821590}
   canvasGroup: {fileID: 1307705059707542861}
+  playerNameNavigation: {fileID: 3238386004125043425}
 --- !u!114 &7080667115725989563
 MonoBehaviour:
   m_ObjectHideFlags: 0

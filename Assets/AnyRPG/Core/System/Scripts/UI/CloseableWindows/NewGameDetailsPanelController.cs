@@ -50,7 +50,12 @@ namespace AnyRPG {
         [SerializeField]
         private CanvasGroup canvasGroup = null;
 
+        [SerializeField]
+        private GameObject playerNameNavigation = null;
+
         private NewGamePanel newGamePanel = null;
+
+        private bool isResettingInputText = false;
 
         // game manager references
         private SystemDataFactory systemDataFactory = null;
@@ -70,6 +75,10 @@ namespace AnyRPG {
             //factionButton.OnInteract += OpenFactionPanel;
             //characterClassButton.OnInteract += OpenClassPanel;
             //classSpecializationButton.OnInteract += OpenSpecializationPanel;
+
+            if (systemConfigurationManager.EditPlayerName == false) {
+                playerNameNavigation.SetActive(false);
+            }
         }
 
         public override void SetGameManagerReferences() {
@@ -116,7 +125,9 @@ namespace AnyRPG {
         }
 
         public void ResetInputText(string newText) {
+            isResettingInputText = true;
             textInput.text = newText;
+            isResettingInputText = false;
         }
 
         public override void ReceiveClosedWindowNotification() {
@@ -228,21 +239,22 @@ namespace AnyRPG {
         }
 
         public void SetPlayerName(string newPlayerName) {
-            newGameManager.SetPlayerName(newPlayerName);
+            if (isResettingInputText == true) {
+                return;
+            }
+            newGameManager.EditPlayerName(newPlayerName);
         }
 
         public void HidePanel() {
             canvasGroup.alpha = 0;
             canvasGroup.blocksRaycasts = false;
             canvasGroup.interactable = false;
-            //RemoveFromWindowStack();
         }
 
         public void ShowPanel() {
             canvasGroup.alpha = 1;
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
-            //AddToWindowStack();
         }
 
 

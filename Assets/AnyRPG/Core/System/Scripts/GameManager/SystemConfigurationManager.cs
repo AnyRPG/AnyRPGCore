@@ -51,6 +51,14 @@ namespace AnyRPG {
         [SerializeField]
         private bool useNewGameWindow = true;
 
+        [Tooltip("If true, the player name can be modified in the new game window.")]
+        [SerializeField]
+        private bool editPlayerName = true;
+
+        [Tooltip("Default Player Name = The player name will be set to the default defined above. Unit Profile = The player name will be changed based on the unit profile selected.")]
+        [SerializeField]
+        private PlayerNameSource playerNameSource = PlayerNameSource.DefaultPlayerName;
+
         [Tooltip("When the new game window is used, what method will be used to select a character.  DefaultCharacter = only the default character will be available. CharacterList = The faction will control the list. RaceAndGender = A Male or Female character can be chosen after the race is selected.")]
         [SerializeField]
         private CharacterSelectionType characterSelectionType = CharacterSelectionType.DefaultCharacter;
@@ -750,6 +758,8 @@ namespace AnyRPG {
         public SystemUIConfiguration UIConfiguration { get => UI; set => UI = value; }
         public CharacterSelectionType CharacterSelectionType { get => characterSelectionType; set => characterSelectionType = value; }
         public string DefaultPreviewUnitLayer { get => defaultPreviewUnitLayer; set => defaultPreviewUnitLayer = value; }
+        public bool EditPlayerName { get => editPlayerName; set => editPlayerName = value; }
+        public PlayerNameSource PlayerNameSource { get => playerNameSource; set => playerNameSource = value; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }
 
@@ -964,5 +974,7 @@ namespace AnyRPG {
     public enum DefaultControllerConfiguration { MouseAndKeyboard, GamePad }
 
     public enum CharacterSelectionType { DefaultCharacter, CharacterList, RaceAndGender }
+
+    public enum PlayerNameSource { DefaultPlayerName, UnitProfile }
 
 }
