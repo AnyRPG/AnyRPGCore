@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: UMAHumanPlayerUnitsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: UMA Human Player Units
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 41a679149f6543a46a86fbc851b90c77, type: 2}
+  - {fileID: 11400000, guid: 3c529a5e0d879f34fad7619ba523d92b, type: 2}
+  - {fileID: 11400000, guid: 23ecb31d0044f174186f2bf9086cf6d7, type: 2}
+  - {fileID: 11400000, guid: 4c99f7db0036d124a9491064503d78d9, type: 2}
+  - {fileID: 11400000, guid: 24be917c52dce1c4582eb53af8e4d64e, type: 2}
+  prefabs: []
+  dependencies: []

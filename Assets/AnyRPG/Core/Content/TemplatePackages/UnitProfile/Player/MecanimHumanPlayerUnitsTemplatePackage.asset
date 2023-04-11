@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
-  m_Name: DefaultPlayerUnitsTemplatePackage
+  m_Name: MecanimHumanPlayerUnitsTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: Default Player Units
+  resourceName: Mecanim Human Player Units
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -21,8 +21,10 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   resources:
-  - {fileID: 11400000, guid: 4225f1a76b52e17459e6d6861ba059d7, type: 2}
-  - {fileID: 11400000, guid: 9dab643f3c666be4196faf220a0cb8eb, type: 2}
+  - {fileID: 11400000, guid: 9d19454eb11b8424dbbbf64a934133e6, type: 2}
+  - {fileID: 11400000, guid: 89e9bc8635d1c97479cfe1a02abc7eee, type: 2}
   - {fileID: 11400000, guid: 23ecb31d0044f174186f2bf9086cf6d7, type: 2}
+  - {fileID: 11400000, guid: 4c99f7db0036d124a9491064503d78d9, type: 2}
+  - {fileID: 11400000, guid: a5f5d43bf3fa6804dbb0dc990ca21131, type: 2}
   prefabs: []
   dependencies: []

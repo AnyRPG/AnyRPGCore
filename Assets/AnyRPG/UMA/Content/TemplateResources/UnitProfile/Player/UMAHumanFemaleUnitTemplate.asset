@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e31818c35d6ab14fbf88410e7e18453, type: 3}
-  m_Name: MecanimPlayerUnitTemplate
+  m_Name: UMAHumanFemaleUnitTemplate
   m_EditorClassIdentifier: 
-  resourceName: Mecanim Player
+  resourceName: UMA Human Female
   displayName: 
-  icon: {fileID: 21300000, guid: 4ce9927e29c4e67439b2afb877749f1b, type: 3}
+  icon: {fileID: 21300000, guid: ecadaada9dd71a946923ce1576e25862, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: The default mechanim humanoid player unit configured in the engine.
+  description: An UMA human female
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -26,8 +26,10 @@ MonoBehaviour:
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 6307183516646880328, guid: d46b6b5df6312ea4ba9a077c173ec3c0,
+    modelPrefab: {fileID: 2692339740015506113, guid: 2da13b91748b5f042bdc582eebb82983,
       type: 3}
+    modelProvider:
+      rid: 5705935559922810880
     animationProfileName: 
     useInlineAnimationProps: 0
     animationProps:
@@ -121,7 +123,8 @@ MonoBehaviour:
       suppressFaction: 1
       overrideNameplatePosition: 0
       namePlatePosition: {x: 0, y: 0, z: 0}
-      unitFrameTarget: head
+      useSnapShot: 1
+      unitFrameTarget: Head
       unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
       unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
       unitPreviewTarget: 
@@ -132,11 +135,10 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
     targetBone: 
-    attachmentProfileName: Humanoid
-    floatHeight: 0.3
-    addFloatHeightToTransform: 1
-    floatTransform: torso
-  isUMAUnit: 0
+    attachmentProfileName: UMA
+    floatHeight: 1.4
+    addFloatHeightToTransform: 0
+    floatTransform: Spine1
   isPet: 0
   flightCapable: 0
   glideCapable: 0
@@ -144,13 +146,13 @@ MonoBehaviour:
   title: 
   factionName: 
   unitTypeName: 
-  characterRaceName: 
+  characterRaceName: UMA
   characterClassName: 
   classSpecializationName: 
   spawnDead: 0
   preventAutoDespawn: 0
   defaultToughness: 
-  voiceProfile: Male Default
+  voiceProfile: Female Low
   useInlineVoiceProps: 0
   voiceProps:
     aggro: []
@@ -171,16 +173,15 @@ MonoBehaviour:
     weaponSkills: []
     validPetTypes: []
     startingPets: []
+  primaryStats: []
+  powerResources: []
+  useProviderEquipment: 0
+  equipmentNameList: []
   isAggressive: 1
   aggroRadius: 20
   automaticCombatStrategy: 0
   combatStrategyName: 
   defaultHitEffects: []
-  primaryStats: []
-  powerResources: []
-  useProviderEquipment: 0
-  equipmentNameList: []
-  faceInteractionTarget: 1
   isMobile: 1
   footstepType: 3
   playOnFootstep: 1
@@ -201,6 +202,7 @@ MonoBehaviour:
     movementSpeed: 0
     savePositionAtDestination: 0
   patrolNames: []
+  faceInteractionTarget: 1
   interactionMaxRange: 3
   interactableOptions: []
   inlineInteractableOptions: []
@@ -208,7 +210,18 @@ MonoBehaviour:
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: 0dac5dde-ae08-4387-9ad2-d541d9013058
+  m_UUID: 7ca3f185-a93b-4742-b226-5732b6d7926c
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 5705935559922810880
+      type: {class: UMAModelProvider, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        useInlineOptions: 1
+        inlineOptions:
+          slotOptions:
+          - slotName: Hair
+            recipeListType: 0
+            recipeNames:
+            - BoneyTail
+        sharedOptions: 

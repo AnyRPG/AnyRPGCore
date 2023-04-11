@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 425c70f59eaa57843a5a504c8041c0f4, type: 3}
+  m_Name: UMARaceTemplate
+  m_EditorClassIdentifier: 
+  resourceName: UMA
+  displayName: 
+  icon: {fileID: 21300000, guid: 9176b48a2857c364280b4f5b9d620852, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: UMA characters that use the UMA character system for appearance.
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  newGameOption: 1
+  maleUnitProfile: UMA Human Male
+  femaleUnitProfile: UMA Human Female
+  environmentPreviewPrefab: {fileID: 0}
+  platformMaterial: {fileID: 0}
+  topMaterial: {fileID: 0}
+  bottomMaterial: {fileID: 0}
+  northMaterial: {fileID: 0}
+  southMaterial: {fileID: 0}
+  eastMaterial: {fileID: 0}
+  westMaterial: {fileID: 0}
+  equipmentNames: []
+  defaultHitEffects: []
+  onHitEffects: []
+  capabilities:
+    abilityNames: []
+    traitNames: []
+    armorClassList: []
+    weaponSkills: []
+    validPetTypes: []
+    startingPets: []
+  primaryStats: []
+  powerResources: []

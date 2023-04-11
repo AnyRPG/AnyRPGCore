@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e31818c35d6ab14fbf88410e7e18453, type: 3}
-  m_Name: UMAPlayerUnitTemplate
+  m_Name: MecanimHumanFemaleUnitTemplate
   m_EditorClassIdentifier: 
-  resourceName: UMA Player
+  resourceName: Mecanim Human Female
   displayName: 
-  icon: {fileID: 21300000, guid: 9176b48a2857c364280b4f5b9d620852, type: 3}
+  icon: {fileID: 21300000, guid: fff03fbc1edf8e44ba5a7f8bb9eff0dd, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: The default UMA player unit configured in the engine.
+  description: A mecanim human female
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -26,8 +26,10 @@ MonoBehaviour:
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 2692339740015506113, guid: 9396e25e38decac4b8b80eb1f92213e2,
+    modelPrefab: {fileID: 2985534377770187114, guid: 49ede4650496e4f4d9d3d3f4162f7386,
       type: 3}
+    modelProvider:
+      rid: 5705935686525255710
     animationProfileName: 
     useInlineAnimationProps: 0
     animationProps:
@@ -114,14 +116,15 @@ MonoBehaviour:
       swimMoveClip: {fileID: 0}
       flyIdleClip: {fileID: 0}
       flyMoveClip: {fileID: 0}
-    rotateModel: 1
+    rotateModel: 0
     namePlateProps:
       displayName: 
       suppressNamePlate: 0
       suppressFaction: 1
       overrideNameplatePosition: 0
       namePlatePosition: {x: 0, y: 0, z: 0}
-      unitFrameTarget: Head
+      useSnapShot: 1
+      unitFrameTarget: head
       unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
       unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
       unitPreviewTarget: 
@@ -132,11 +135,10 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
     targetBone: 
-    attachmentProfileName: UMA
+    attachmentProfileName: Humanoid
     floatHeight: 1.4
     addFloatHeightToTransform: 0
     floatTransform: Spine1
-  isUMAUnit: 1
   isPet: 0
   flightCapable: 0
   glideCapable: 0
@@ -144,13 +146,13 @@ MonoBehaviour:
   title: 
   factionName: 
   unitTypeName: 
-  characterRaceName: 
+  characterRaceName: Mecanim
   characterClassName: 
   classSpecializationName: 
   spawnDead: 0
   preventAutoDespawn: 0
   defaultToughness: 
-  voiceProfile: Male Default
+  voiceProfile: Female Low
   useInlineVoiceProps: 0
   voiceProps:
     aggro: []
@@ -168,19 +170,19 @@ MonoBehaviour:
     abilityNames: []
     traitNames: []
     armorClassList: []
-    weaponSkills: []
+    weaponSkills:
+    - Unarmed
     validPetTypes: []
     startingPets: []
+  primaryStats: []
+  powerResources: []
+  useProviderEquipment: 0
+  equipmentNameList: []
   isAggressive: 1
   aggroRadius: 20
   automaticCombatStrategy: 0
   combatStrategyName: 
   defaultHitEffects: []
-  primaryStats: []
-  powerResources: []
-  useProviderEquipment: 0
-  equipmentNameList: []
-  faceInteractionTarget: 1
   isMobile: 1
   footstepType: 3
   playOnFootstep: 1
@@ -201,6 +203,7 @@ MonoBehaviour:
     movementSpeed: 0
     savePositionAtDestination: 0
   patrolNames: []
+  faceInteractionTarget: 1
   interactionMaxRange: 3
   interactableOptions: []
   inlineInteractableOptions: []
@@ -208,7 +211,15 @@ MonoBehaviour:
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: bc8f95bc-9a43-413a-867f-e489ffe59ba1
+  m_UUID: 927804df-a4dc-4aa2-bf18-48c9f3daa8bd
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 5705935686525255710
+      type: {class: SwappableMeshModelProvider, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        useInlineOptions: 0
+        inlineOptions:
+          meshGroups: []
+          groupDefaults: []
+        sharedOptions: Default Female Swappable Mesh Model
