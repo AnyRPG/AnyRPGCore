@@ -117,7 +117,8 @@ namespace AnyRPG {
         private void ResetPlayerName(string newPlayerName) {
             //Debug.Log($"NewGameManager.ResetPlayerName({newPlayerName})");
 
-            playerName = newPlayerName;
+            SetPlayerName(newPlayerName);
+
             OnResetPlayerName(newPlayerName);
         }
 
