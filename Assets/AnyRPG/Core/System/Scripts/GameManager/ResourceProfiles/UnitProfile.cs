@@ -29,10 +29,6 @@ namespace AnyRPG {
 
         [Header("Unit Settings")]
 
-        [Tooltip("Mark this if true is the unit is an UMA unit")]
-        [SerializeField]
-        private bool isUMAUnit = false;
-
         [Tooltip("If true, this unit can be charmed and made into a pet")]
         [SerializeField]
         private bool isPet = false;
@@ -307,7 +303,6 @@ namespace AnyRPG {
 
         public UnitToughness DefaultToughness { get => unitToughness; set => unitToughness = value; }
         public BaseAbilityProperties DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
-        public bool IsUMAUnit { get => isUMAUnit; set => isUMAUnit = value; }
         public bool IsPet { get => isPet; set => isPet = value; }
         public FootstepType FootstepType { get => footstepType; set => footstepType = value; }
         public bool PlayOnFootstep { get => playOnFootstep; set => playOnFootstep = value; }

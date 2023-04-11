@@ -15,8 +15,6 @@ namespace AnyRPG {
         [SerializeField]
         private EquipmentModelProperties properties = new EquipmentModelProperties();
 
-
-        //public UMARecipeProfileProperties Properties { get => uMARecipeProfileProperties; set => uMARecipeProfileProperties = value; }
         public EquipmentModelProperties Properties { get => properties; set => properties = value; }
     }
    

@@ -237,20 +237,6 @@ namespace AnyRPG {
             return null;
         }
 
-        /*
-        public void UnequipAll(bool rebuildUMA = true) {
-            //Debug.Log("EquipmentManager.UnequipAll()");
-            List<EquipmentSlotProfile> tmpList = new List<EquipmentSlotProfile>();
-            foreach (EquipmentSlotProfile equipmentSlotProfile in CurrentEquipment.Keys) {
-                tmpList.Add(equipmentSlotProfile);
-            }
-
-            foreach (EquipmentSlotProfile equipmentSlotProfile in tmpList) {
-                Unequip(equipmentSlotProfile, -1, true, true, rebuildUMA);
-            }
-        }
-        */
-
         public bool HasAffinity(WeaponSkill weaponAffinity) {
             //Debug.Log("EquipmentManager.HasAffinity(" + weaponAffinity.ToString() + ")");
             int weaponCount = 0;

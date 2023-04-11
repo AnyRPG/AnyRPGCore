@@ -86,7 +86,7 @@ namespace AnyRPG {
             if (characterCreatorManager.PreviewUnitController != null
                 || capabilityConsumer == null
                 || capabilityConsumer.UnitProfile == null) {
-                //Debug.Log("CharacterPreviewPanelController.SetPreviewTarget() UMA avatar is already spawned!");
+                //Debug.Log("CharacterPreviewPanelController.SetPreviewTarget() character is already spawned!");
                 return;
             }
 

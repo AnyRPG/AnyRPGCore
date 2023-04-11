@@ -167,7 +167,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterPanel.SetPreviewTarget()");
             
             if (unitPreviewManager.PreviewUnitController != null) {
-                //Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
+                //Debug.Log("CharacterPanel.SetPreviewTarget() character is already spawned!");
                 return;
             }
 

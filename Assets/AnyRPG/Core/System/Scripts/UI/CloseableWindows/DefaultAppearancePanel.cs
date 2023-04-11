@@ -7,7 +7,7 @@ namespace AnyRPG {
         public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
         public override void ReceiveClosedWindowNotification() {
-            //Debug.Log("CharacterCreatorPanel.OnCloseWindow()");
+            //Debug.Log("DefaultAppearancePanel.ReceiveClosedWindowNotification()");
             base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
@@ -15,7 +15,7 @@ namespace AnyRPG {
 
         /*
         public override void ProcessOpenWindowNotification() {
-            //Debug.Log("UMACharacterEditorPanelController.ProcessOpenWindowNotification()");
+            //Debug.Log("DefaultAppearancePanel.ProcessOpenWindowNotification()");
             base.ProcessOpenWindowNotification();
             //uINavigationControllers[0].FocusCurrentButton();
         }

@@ -333,7 +333,7 @@ namespace AnyRPG {
 
                 // set animator on UMA if one exists
                 if (unitController.UnitModelController != null) {
-                    //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetOverrideController(" + animatorOverrideController.name + ") setting override controller on UMA");
+                    //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetOverrideController(" + animatorOverrideController.name + ") setting override controller");
                     unitController.UnitModelController.SetAnimatorOverrideController(animatorOverrideController);
                 }
                 //animator.updateMode = AnimatorUpdateMode.

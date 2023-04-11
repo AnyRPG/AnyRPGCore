@@ -261,7 +261,7 @@ namespace AnyRPG {
         }
 
         public virtual void HandleModelCreated() {
-            //Debug.Log("UMAAppearanceEditorPanelController.HandleModelCreated()");
+            //Debug.Log("AppearancePanel.HandleModelCreated()");
         }
     }
 

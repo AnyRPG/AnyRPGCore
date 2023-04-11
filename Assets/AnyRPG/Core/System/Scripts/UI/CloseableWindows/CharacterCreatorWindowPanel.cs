@@ -250,10 +250,7 @@ namespace AnyRPG {
                 characterCreatorManager.PreviewUnitController.UnitModelController.SaveAppearanceSettings(saveManager, saveManager.CurrentSaveData);
             }
 
-            // replace a default player unit with an UMA player unit when a save occurs
-            // testing : old if statement would cause a character that switched between 2 UMA profiles to not get unit profile properties set
-            // from the second profile.  Just go ahead and always despawn units if their appearance changes.
-            //if (playerManager.UnitController.DynamicCharacterAvatar == null) {
+            // Always despawn units if their appearance changes.
             Vector3 currentPlayerLocation = playerManager.ActiveUnitController.transform.position;
             levelManager.SetSpawnRotationOverride(playerManager.ActiveUnitController.transform.forward);
             playerManager.DespawnPlayerUnit();
@@ -262,11 +259,6 @@ namespace AnyRPG {
             if (playerManager.MyCharacter.CharacterAbilityManager != null) {
                 playerManager.MyCharacter.CharacterAbilityManager.LearnDefaultAutoAttackAbility();
             }
-
-            //}
-            // testing this is not needed because subscribing to the player unit spawn already handles this through the playermanager
-            //saveManager.LoadUMASettings();
-            //ClosePanel();
 
             characterCreatorInteractableManager.ConfirmAction();
         }

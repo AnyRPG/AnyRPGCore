@@ -461,7 +461,7 @@ namespace AnyRPG {
             if (initialTargetString != null && initialTargetString != string.Empty) {
                 Transform targetBone = unitController.transform.FindChildByRecursive(initialTargetString);
                 if (targetBone == null) {
-                    Debug.LogWarning("AnyRPGCharacterPreviewCameraController.HandleCharacterCreated(): UMA is ready and could not find target bone: " + initialTargetString);
+                    Debug.LogWarning("AnyRPGCharacterPreviewCameraController.HandleCharacterCreated(): Character model is ready and could not find target bone: " + initialTargetString);
                 } else {
                     followTransform = targetBone;
                     HandleTargetAvailable();
@@ -516,7 +516,7 @@ namespace AnyRPG {
                 } else {
                     //Debug.Log("PreviewCameraController.FindFollowTarget(): model is ready");
                     if (initialTargetString != string.Empty) {
-                        Debug.LogWarning("AnyRPGCharacterPreviewCameraController.FindFollowTarget(): Character was not UMA and could not find bone. Check inspector");
+                        Debug.LogWarning("AnyRPGCharacterPreviewCameraController.FindFollowTarget(): Could not find bone. Check inspector");
                     }
                     followTransform = unitController.transform;
                     HandleTargetAvailable();

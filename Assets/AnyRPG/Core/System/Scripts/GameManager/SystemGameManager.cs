@@ -290,8 +290,7 @@ namespace AnyRPG {
                 }
             }
             if (umaDCS == null) {
-                //Debug.LogError("SystemGameManager.SetupPermanentObjects(): AnyRPG requires uma.  Ensure that the UMA_DCS prefab is in your loading scene.");
-                Debug.Log("SystemGameManager.SetupPermanentObjects(): Neither UMA_GLIB nor UMA_DCS prefab could be found in the scene. UMA will be unavailable");
+                //Debug.Log("SystemGameManager.SetupPermanentObjects(): Neither UMA_GLIB nor UMA_DCS prefab could be found in the scene. UMA will be unavailable");
             } else {
                 DontDestroyOnLoad(umaDCS);
             }

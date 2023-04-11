@@ -74,7 +74,7 @@ namespace AnyRPG {
 
         /*
         public override void ReceiveClosedWindowNotification() {
-            //Debug.Log("SwappableMeshAppearancePanelController.OnCloseWindow()");
+            //Debug.Log("SwappableMeshAppearancePanelController.ReceiveClosedWindowNotification()");
             base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
@@ -83,7 +83,7 @@ namespace AnyRPG {
 
         /*
         public override void ProcessOpenWindowNotification() {
-            //Debug.Log("UMACharacterEditorPanelController.ProcessOpenWindowNotification()");
+            //Debug.Log("SwappableMeshAppearancePanelController.ProcessOpenWindowNotification()");
             base.ProcessOpenWindowNotification();
             //mainOptionsNavigationController.FocusCurrentButton();
         }

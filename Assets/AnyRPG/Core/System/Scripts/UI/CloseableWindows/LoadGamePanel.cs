@@ -101,7 +101,7 @@ namespace AnyRPG {
             characterPreviewPanel.CapabilityConsumer = loadGameManager;
             characterPreviewPanel.ReceiveOpenWindowNotification();
 
-            // testing - move this down here so re-used UMA units don't trigger handleTargetCreated before we can subscribe to it
+            // This is down here so re-used UMA units don't trigger handleTargetCreated before we can subscribe to it
             ShowLoadButtonsCommon();
 
             // this needs to be run here because the initial run in ShowLoadButtonsCommon will have done nothing because the preview panel wasn't open yet
@@ -116,10 +116,6 @@ namespace AnyRPG {
             selectedLoadGameButton = loadButton;
 
             loadGameManager.SetSavedGame(loadButton.SaveData);
-
-            // testing avoid naked spawn
-            // seems to make no difference to have this disabled here
-            //LoadUMARecipe();
 
             // ensure the correct unit and character model is spawned
             characterPreviewPanel.ReloadUnit();
@@ -217,24 +213,12 @@ namespace AnyRPG {
             if (characterCreatorManager.PreviewUnitController != null) {
                 //Debug.Log("LoadGamePanel.LoadEquipmentData(): preview controller found");
 
-                //LoadUMARecipe();
-
                 // apply capabilities to it so equipment can work
                 characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.ApplyCapabilityConsumerSnapshot(loadGameManager.CapabilityConsumerSnapshot);
 
                 BaseCharacter baseCharacter = characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter;
                 if (baseCharacter != null) {
-                    //saveManager.LoadEquipmentData(loadGameButton.MySaveData, characterEquipmentManager);
-                    // results in equipment being sheathed
                     saveManager.LoadEquipmentData(loadGameManager.AnyRPGSaveData, baseCharacter.CharacterEquipmentManager);
-                    
-                    /*
-                    if (characterCreatorManager.PreviewUnitController.UnitModelController.ModelReady == true) {
-                        // any mecanim, and re-used UMAs will already be initialized, so the equipment models can be loaded right away
-                        characterCreatorManager.PreviewUnitController.UnitModelController.EquipEquipmentModels(baseCharacter.CharacterEquipmentManager);
-                    }
-                    */
-                    
                 }
             }
         }
@@ -243,16 +227,6 @@ namespace AnyRPG {
         public void ClosePanel() {
             //Debug.Log("LoadGamePanel.ClosePanel()");
             uIManager.loadGameWindow.CloseWindow();
-        }
-        */
-
-        /*
-        public void RebuildUMA() {
-            //Debug.Log("CharacterCreatorPanel.RebuildUMA()");
-            Debug.Log("LoadGamePanel.RebuildUMA(): BuildCharacter()");
-            umaAvatar.BuildCharacter();
-            //umaAvatar.BuildCharacter(true);
-            //umaAvatar.ForceUpdate(true, true, true);
         }
         */
 

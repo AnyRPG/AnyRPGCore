@@ -489,9 +489,6 @@ namespace AnyRPG {
         public void SubscribeToModelReady() {
             //Debug.Log("PlayerManager.SubscribeToModelReady()");
 
-            // try this earlier
-            //saveManager.LoadUMASettings(false);
-
             //activeUnitController.UnitModelController.OnModelUpdated += HandleModelReady;
             activeUnitController.UnitModelController.OnModelCreated += HandleModelReady;
         }

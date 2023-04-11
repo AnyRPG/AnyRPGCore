@@ -13,7 +13,7 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject unitPrefab = null;
 
-        [Tooltip("The prefab to use for the model, if the unit prefab doesn't already have a model.  UMA units currently don't require this.")]
+        [Tooltip("The prefab to use for the model, if the unit prefab doesn't already have a model.")]
         [SerializeField]
         private GameObject modelPrefab = null;
 

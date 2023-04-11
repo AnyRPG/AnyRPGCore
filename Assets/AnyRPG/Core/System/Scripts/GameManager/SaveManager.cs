@@ -23,8 +23,6 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private SystemAchievementManager systemAchievementManager = null;
 
-        //private UMAData umaSaveData = null;
-        //private string recipeString = string.Empty;
         private string jsonSavePath = string.Empty;
 
         // prevent infinite loop loading list, and why would anyone need more than 1000 save games at this point
@@ -84,27 +82,6 @@ namespace AnyRPG {
             actionBarManager = uIManager.ActionBarManager;
         }
 
-        /*
-        private void CreateEventSubscriptions() {
-            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            systemEventManager.OnEquipmentChanged += SaveUMASettings;
-            eventSubscriptionsInitialized = true;
-        }
-
-        // not currently called because this script is active the entire time the application is active
-        private void CleanupEventSubscriptions() {
-            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
-            systemEventManager.OnEquipmentChanged -= SaveUMASettings;
-            eventSubscriptionsInitialized = false;
-        }
-        */
-
         public List<AnyRPGSaveData> GetSaveDataList() {
             //Debug.Log("GetSaveDataList()");
             anyRPGSaveDataList.Clear();
@@ -148,7 +125,7 @@ namespace AnyRPG {
                 anyRPGSaveData.unitProfileName = systemConfigurationManager.DefaultUnitProfileName;
             }
             if (anyRPGSaveData.appearanceString == null) {
-                //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player UMA Recipe is null.  Setting to empty");
+                //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player appearance string is null.  Setting to empty");
                 anyRPGSaveData.appearanceString = string.Empty;
             }
             if (anyRPGSaveData.CurrentScene == null) {
@@ -259,16 +236,6 @@ namespace AnyRPG {
             }
             return returnList;
         }
-
-        /*
-        public void SaveUMASettings(Equipment oldItem, Equipment newItem) {
-            //Debug.Log("SaveManager.SaveUMASettings(Equipment, Equipement)");
-            if ((oldItem?.UMARecipeProfileProperties?.UMARecipes != null && oldItem.UMARecipeProfileProperties.UMARecipes.Count > 0)
-                || (newItem?.UMARecipeProfileProperties?.UMARecipes != null && newItem.UMARecipeProfileProperties.UMARecipes.Count > 0)) {
-                SaveAppearanceData(currentSaveData);
-            }
-        }
-        */
 
         // save a game for the first time
         public bool SaveGame() {

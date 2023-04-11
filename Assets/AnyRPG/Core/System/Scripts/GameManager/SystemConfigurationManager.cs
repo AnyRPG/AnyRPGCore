@@ -67,12 +67,6 @@ namespace AnyRPG {
         [SerializeField]
         private bool newGameAppearance = true;
 
-        /*
-        [Tooltip("If the appearance tab is used, show the UMA version of the character customizer")]
-        [SerializeField]
-        private bool newGameUMAAppearance = true;
-        */
-
         [Tooltip("If the new game window is used, show the faction tab")]
         [SerializeField]
         private bool newGameFaction = true;
@@ -96,7 +90,7 @@ namespace AnyRPG {
 
         private AudioProfile newGameAudioProfile = null;
 
-        [Tooltip("If the character creator is not used, this unit will be the default player unit. Usually a non UMA mecanim Unit or pre-configured UMA unit.")]
+        [Tooltip("If the character creator is not used, this unit will be the default player unit.")]
         [FormerlySerializedAs("defaultPlayerUnitProfileName")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(UnitProfile))]
@@ -717,7 +711,6 @@ namespace AnyRPG {
         public SceneNode MainMenuSceneNode { get => mainMenuSceneNode; set => mainMenuSceneNode = value; }
 
 
-        //public bool NewGameUMAAppearance { get => newGameUMAAppearance; set => newGameUMAAppearance = value; }
         //public bool EquipDefaultBackPack { get => equipDefaultBackPack; set => equipDefaultBackPack = value; }
         public string DefaultPlayerUnitLayer { get => defaultPlayerUnitLayer; set => defaultPlayerUnitLayer = value; }
         public GameObject ThirdPartyCamera { get => thirdPartyCamera; set => thirdPartyCamera = value; }

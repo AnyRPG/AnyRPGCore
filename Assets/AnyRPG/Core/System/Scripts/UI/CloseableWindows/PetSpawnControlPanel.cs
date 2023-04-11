@@ -10,7 +10,6 @@ namespace AnyRPG {
     public class PetSpawnControlPanel : WindowContentController, ICapabilityConsumer {
 
         public event System.Action OnConfirmAction = delegate { };
-        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
         public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
         private PetSpawnButton selectedPetSpawnButton;
@@ -159,13 +158,6 @@ namespace AnyRPG {
             uIManager.interactionWindow.CloseWindow();
         }
 
-        /*
-        public void HandleTargetReady() {
-            //LoadUMARecipe();
-            // not doing anything for now since pets don't have equipment yet
-        }
-        */
-
         public override void ReceiveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");
             base.ReceiveClosedWindowNotification();
@@ -188,9 +180,6 @@ namespace AnyRPG {
             //characterPreviewPanel.OnTargetReady += HandleTargetReady;
             characterPreviewPanel.CapabilityConsumer = this;
             characterPreviewPanel.ReceiveOpenWindowNotification();
-
-            // this needs to be run here because the initial run in ShowLoadButtonsCommon will have done nothing because the preview panel wasn't open yet
-            //LoadUMARecipe();
         }
 
         public void ShowPreviewButtonsCommon() {

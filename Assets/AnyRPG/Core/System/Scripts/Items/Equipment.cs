@@ -515,5 +515,4 @@ namespace AnyRPG {
         }
     }
 
-    //public enum UMASlot { None, Helm, Chest, Legs, Feet, Hands }
 }
