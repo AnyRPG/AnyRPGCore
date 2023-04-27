@@ -139,7 +139,6 @@ MonoBehaviour:
     floatHeight: 1.4
     addFloatHeightToTransform: 0
     floatTransform: Spine1
-  isUMAUnit: 1
   isPet: 0
   flightCapable: 0
   glideCapable: 0
@@ -218,11 +217,7 @@ MonoBehaviour:
     - rid: 5705935559922810880
       type: {class: UMAModelProvider, ns: AnyRPG, asm: Assembly-CSharp}
       data:
-        useInlineOptions: 1
+        useInlineOptions: 0
         inlineOptions:
-          slotOptions:
-          - slotName: Hair
-            recipeListType: 0
-            recipeNames:
-            - BoneyTail
-        sharedOptions: 
+          slotOptions: []
+        sharedOptions: UMA Human Female

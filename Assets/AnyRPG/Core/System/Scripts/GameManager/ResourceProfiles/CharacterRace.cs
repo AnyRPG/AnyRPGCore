@@ -12,18 +12,18 @@ namespace AnyRPG {
 
         [Header("NewGame")]
 
-        [Tooltip("If true, this race is available for Players to choose on the new game menu, no matter what faction is chosen")]
+        [Tooltip("If true, this race is available for Players to choose on the new game menu, no matter what faction is chosen.")]
         [SerializeField]
         private bool newGameOption = false;
 
-        [Tooltip("The unit profile to use when the male gender is chosen")]
+        [Tooltip("The unit profile to use when the male gender is chosen.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(UnitProfile))]
         private string maleUnitProfile = string.Empty;
 
         private UnitProfile maleUnitProfileRef = null;
 
-        [Tooltip("The unit profile to use when the female gender is chosen")]
+        [Tooltip("The unit profile to use when the female gender is chosen.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(UnitProfile))]
         private string femaleUnitProfile = string.Empty;

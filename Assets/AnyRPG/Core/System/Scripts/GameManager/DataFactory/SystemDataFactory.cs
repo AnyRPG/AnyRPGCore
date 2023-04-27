@@ -44,6 +44,7 @@ namespace AnyRPG {
             SetupFactoryDataAccess<Cutscene>();
             SetupFactoryDataAccess<Dialog>();
             SetupFactoryDataAccess<EnvironmentStateProfile>();
+            SetupFactoryDataAccess<EquipmentModelProfile>();
             SetupFactoryDataAccess<EquipmentSet>();
             SetupFactoryDataAccess<EquipmentSlotProfile>();
             SetupFactoryDataAccess<EquipmentSlotType>();
@@ -65,7 +66,7 @@ namespace AnyRPG {
             SetupFactoryDataAccess<StatusEffectGroup>();
             SetupFactoryDataAccess<StatusEffectType>();
             SetupFactoryDataAccess<SwappableMeshModelProfile>();
-            SetupFactoryDataAccess<EquipmentModelProfile>();
+            SetupFactoryDataAccess<UMAModelProfile>();
             SetupFactoryDataAccess<UnitPrefabProfile>();
             SetupFactoryDataAccess<UnitProfile>();
             SetupFactoryDataAccess<UnitToughness>();

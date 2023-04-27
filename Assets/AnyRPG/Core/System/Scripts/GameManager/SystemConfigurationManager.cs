@@ -63,19 +63,19 @@ namespace AnyRPG {
         [SerializeField]
         private CharacterSelectionType characterSelectionType = CharacterSelectionType.DefaultCharacter;
 
-        [Tooltip("If the new game window is used, show the appearance tab")]
+        [Tooltip("If the new game window is used, show the appearance tab.")]
         [SerializeField]
         private bool newGameAppearance = true;
 
-        [Tooltip("If the new game window is used, show the faction tab")]
+        [Tooltip("If the new game window is used, show the faction tab.")]
         [SerializeField]
         private bool newGameFaction = true;
 
-        [Tooltip("If the new game window is used, show the race tab")]
+        [Tooltip("If the new game window is used, show the race tab.")]
         [SerializeField]
         private bool newGameRace = true;
 
-        [Tooltip("If the new game window is used, show the class tab")]
+        [Tooltip("If the new game window is used, show the class tab.")]
         [SerializeField]
         private bool newGameClass = true;
 
@@ -96,7 +96,7 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(UnitProfile))]
         private string defaultPlayerUnitProfile = string.Empty;
 
-        [Tooltip("The options available when the character creator is used")]
+        [Tooltip("A list of unit profiles that should always be available if the character selection type is 'Character List' or no faction is available or the current faction is configured to show default profiles.")]
         [FormerlySerializedAs("characterCreatorProfileNames")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(UnitProfile))]
@@ -719,7 +719,7 @@ namespace AnyRPG {
         public string MainMenuScene { get => mainMenuScene; set => mainMenuScene = value; }
         public string InitializationScene { get => initializationScene; set => initializationScene = value; }
         //public MiniMapFallBackMode MiniMapFallBackMode { get => miniMapFallBackMode; set => miniMapFallBackMode = value; }
-        public List<string> CharacterCreatorProfileNames { get => defaultUnitProfiles; set => defaultUnitProfiles = value; }
+        public List<string> DefaultUnitProfileNames { get => defaultUnitProfiles; set => defaultUnitProfiles = value; }
         public bool SyncMovementAnimationSpeed { get => syncMovementAnimationSpeed; set => syncMovementAnimationSpeed = value; }
         public int QuestLogSize { get => questLogSize; set => questLogSize = value; }
         public float MaxTurnSpeed { get => maxTurnSpeed; }
