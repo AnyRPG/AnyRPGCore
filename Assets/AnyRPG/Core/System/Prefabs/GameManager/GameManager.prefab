@@ -6373,13 +6373,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameName: AnyRPG Engine
-  gameVersion: v0.16a
+  gameVersion: v0.16
   loadResourcesFolders: []
   initializationScene: 
   mainMenuScene: 
   defaultStartingZone: 
   defaultPlayerName: New Player
   useNewGameWindow: 1
+  editPlayerName: 1
+  playerNameSource: 0
   characterSelectionType: 0
   newGameAppearance: 1
   newGameFaction: 1
@@ -6388,7 +6390,7 @@ MonoBehaviour:
   newGameSpecialization: 1
   newGameAudio: 
   defaultPlayerUnitProfile: DefaultPlayer
-  characterCreatorProfileNames: []
+  defaultUnitProfiles: []
   defaultInventorySlots: 20
   defaultBankSlots: 48
   maxInventoryBags: 5

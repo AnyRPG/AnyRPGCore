@@ -55,7 +55,7 @@ A Unity package that includes this repository, a complex sample game, and all de
 ### AnyRPG Core Github Installation
 A video tutorial for installing AnyRPG Core version 0.10.1a (and higher) from github can be watched here: https://www.youtube.com/watch?v=oMeWWgNYrYI
 
-1. Install the correct Unity version to open this project.  The current project Unity version is 2021.3.21f1
+1. Install the correct Unity version to open this project.  The current project Unity version is 2021.3.24f1
 1. Clone this repository into a directory on your computer
 1. Open the Unity Hub and add the project
 1. Open the project and install the following Unity packages:
