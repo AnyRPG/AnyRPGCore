@@ -765,7 +765,7 @@ namespace AnyRPG {
                     closestTargetDistance = targetDistance;
                 }
                 xPosition = playerManager.ActiveUnitController.transform.InverseTransformPoint(collidedGameObject.transform.position).x;
-                if (closestLeftIndex == -1 && xPosition <= currentx ) {
+                if (closestLeftIndex == -1 && xPosition <= currentx) {
                     //Debug.Log("no left index and x position " + xPosition + " < currentx " + currentx);
                     closestLeftDistance = xPosition;
                     farthestLeftDistance = xPosition;
@@ -1090,7 +1090,7 @@ namespace AnyRPG {
 
         public void SubscribeToUnitEvents() {
             //Debug.Log($"{gameObject.name}.PlayerController.SubscribeToUnitEvents()");
-            
+
             // if player was agrod at spawn, they may have a target already since we subscribe on model ready
             playerManager.ActiveUnitController.UnitEventController.OnSetTarget += HandleSetTarget;
             if (playerManager.ActiveUnitController.Target != null) {

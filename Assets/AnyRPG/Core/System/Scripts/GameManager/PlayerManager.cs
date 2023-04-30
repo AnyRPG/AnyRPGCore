@@ -409,7 +409,7 @@ namespace AnyRPG {
                 HandlePlayerUnitSpawn();
             }
 
-            
+
             if (PlayerPrefs.HasKey("ShowNewPlayerHints") == false) {
                 if (controlsManager.GamePadModeActive == true) {
                     uIManager.gamepadHintWindow.OpenWindow();
@@ -705,6 +705,8 @@ namespace AnyRPG {
         }
 
         public void HandleReputationChange() {
+            //Debug.Log("PlayerManager.HandleReputationChange");
+
             SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
         }
 

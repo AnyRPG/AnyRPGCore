@@ -67,6 +67,7 @@ namespace AnyRPG {
         private bool localComponentsInitialized = false;
 
         protected bool eventSubscriptionsInitialized = false;
+        protected bool playerEventSubscriptionsInitialized = false;
 
         public Image HealthSlider { get => healthSlider; }
         public GameObject HealthBar { get => healthBar; }
@@ -98,12 +99,11 @@ namespace AnyRPG {
         }
 
         private void CreateEventSubscriptions() {
-            //Debug.Log("NamePlateController.CreateEventSubscriptions()");
+            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.CreateEventSubscriptions()");
+
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            //Debug.Log("NamePlateController.CreateEventSubscriptions()");
-            SystemEventManager.StartListening("OnReputationChange", HandleReputationChange);
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.StartListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
             //if (playerManager.MyPlayerUnitSpawned) {
@@ -113,34 +113,54 @@ namespace AnyRPG {
         }
 
         private void CleanupEventSubscriptions() {
-            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.CleanupEventSubscriptions()");
+
             if (!eventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
-            SystemEventManager.StopListening("OnReputationChange", HandleReputationChange);
 
             eventSubscriptionsInitialized = false;
         }
 
+        private void CreatePlayerEventSubscriptions() {
+            if (playerEventSubscriptionsInitialized) {
+                return;
+            }
+            SystemEventManager.StartListening("OnReputationChange", HandleReputationChange);
+            playerEventSubscriptionsInitialized = true;
+        }
+
+        private void CleanupPlayerEventSubscriptions() {
+            if (!playerEventSubscriptionsInitialized) {
+                return;
+            }
+            SystemEventManager.StopListening("OnReputationChange", HandleReputationChange);
+            playerEventSubscriptionsInitialized = false;
+        }
+
         public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
-            //Debug.Log($"{gameObject.name}.InanimateUnit.HandlePlayerUnitSpawn()");
-            CleanupEventSubscriptions();
+            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.HandlePlayerUnitDespawn()");
+
+            CleanupPlayerEventSubscriptions();
         }
 
         public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
-            //Debug.Log($"{gameObject.name}.InanimateUnit.HandlePlayerUnitSpawn()");
+            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.HandlePlayerUnitSpawn()");
+
             ProcessPlayerUnitSpawn();
         }
 
 
         public void ProcessPlayerUnitSpawn() {
+            CreatePlayerEventSubscriptions();
             SetFactionColor();
         }
 
         public void HandleReputationChange(string eventName, EventParamProperties eventParam) {
-            //Debug.Log(unitNamePlateController.UnitDisplayName + ".NamePlateController.HandleReputationChange()");
+            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.HandleReputationChange()");
+
             SetFactionColor();
         }
 
@@ -543,12 +563,14 @@ namespace AnyRPG {
         // name plates can be disabled by hiding the ui with the '.' button, so this should only be done when sending them to the pool
         //public void OnDisable() {
         public void OnSendObjectToPool() {
-            //Debug.Log(unitNamePlateController.NamePlateUnit.gameObject.name + ".NamePlateController.OnDisable()");
+            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.OnSendObjectToPool()");
+
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }
             ProcessPointerExit();
             CleanupEventSubscriptions();
+            CleanupPlayerEventSubscriptions();
 
             // this could have been disabled while it was still the focus so it needs to be unhighlighted just in case
             UnHighlight(false);
