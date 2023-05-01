@@ -14,8 +14,9 @@ namespace AnyRPG {
 
         private UnitController unitController = null;
 
-        //protected bool isPerformingAction = false;
-
+        // it is necessary to use the boolean instead of just the coroutine because if the action is misconfigured and has no animation
+        // the coroutine will exit without actually setting the coroutine variable, because it doesn't get set until the first yield statement executes
+        protected bool isPerformingAction = false;
         private Coroutine currentActionCoroutine = null;
 
         //private AnimatedActionProperties currentAction = null;
@@ -44,8 +45,6 @@ namespace AnyRPG {
                 return false;
             }
         }
-
-        public Coroutine CurrentActionCoroutine { get => currentActionCoroutine; }
 
         public UnitActionManager(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
@@ -233,6 +232,7 @@ namespace AnyRPG {
         /// <returns></returns>
         public IEnumerator PerformActionCast(AnimatedActionProperties animatedActionProperties, Interactable target) {
             float startTime = Time.time;
+            isPerformingAction = true;
             //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + ", " + (target == null ? "null" : target.name) + ") Enter Ienumerator with tag: " + startTime);
 
             PerformActionAnimation(animatedActionProperties.AnimationClip, animatedActionProperties);
@@ -334,11 +334,9 @@ namespace AnyRPG {
             */
 
             // any action can interrupt any other action
-            if (currentActionCoroutine != null) {
-                StopAction();
-            }
+            TryToStopAction();
 
-            if (currentActionCoroutine == null) {
+            if (isPerformingAction == false) {
                 //Debug.Log("Performing Ability " + ability.DisplayName + " at a cost of " + ability.MyAbilityManaCost.ToString() + ": ABOUT TO START COROUTINE");
 
                 // currentAction must be set before starting the coroutine because for animated events, the cast time is zero and the variable will be cleared in the coroutine
@@ -453,7 +451,7 @@ namespace AnyRPG {
         /// </summary>
         public void HandleManualMovement() {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleManualMovement()");
-            
+
             // require some movement distance to prevent gravity while standing still from triggering this
             if (unitController.ApparentVelocity <= 0.1f) {
                 return;
@@ -463,7 +461,7 @@ namespace AnyRPG {
         }
 
         public void TryToStopAction() {
-            if (currentActionCoroutine == null) {
+            if (isPerformingAction == false) {
                 return;
             }
 
@@ -473,13 +471,20 @@ namespace AnyRPG {
         private void StopAction() {
             //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.StopAction()");
 
-            unitController.StopCoroutine(currentActionCoroutine);
-            currentActionCoroutine = null;
+            if (isPerformingAction == false) {
+                return;
+            }
+
+            if (currentActionCoroutine != null) {
+                unitController.StopCoroutine(currentActionCoroutine);
+                currentActionCoroutine = null;
+            }
 
             EndActionCleanup();
             DespawnActionObjects();
 
             unitController.UnitAnimator?.ClearAction();
+            isPerformingAction = false;
         }
 
         public void HandleCharacterUnitDespawn() {

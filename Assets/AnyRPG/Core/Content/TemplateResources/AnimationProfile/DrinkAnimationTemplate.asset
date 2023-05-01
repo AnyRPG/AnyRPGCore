@@ -24,9 +24,10 @@ MonoBehaviour:
     useRootMotion: 0
     suppressAdjustAnimatorSpeed: 0
     attackClips: []
-    castClips:
-    - {fileID: 7400000, guid: 9057664a7d024c041aa282529c8e3ff0, type: 2}
+    castClips: []
     takeDamageClips: []
+    actionClips:
+    - {fileID: 7400000, guid: 9057664a7d024c041aa282529c8e3ff0, type: 2}
     idleClip: {fileID: 0}
     jumpClip: {fileID: 0}
     fallClip: {fileID: 0}
