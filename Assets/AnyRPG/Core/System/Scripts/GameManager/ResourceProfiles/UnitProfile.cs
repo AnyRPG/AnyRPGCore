@@ -25,8 +25,6 @@ namespace AnyRPG {
         [SerializeField]
         private UnitPrefabProps unitPrefabProps = new UnitPrefabProps();
 
-        private UnitPrefabProps unitPrefabProfileProps = null;
-
         [Header("Unit Settings")]
 
         [Tooltip("If true, this unit can be charmed and made into a pet")]
@@ -322,14 +320,7 @@ namespace AnyRPG {
         public List<string> PatrolNames { get => patrolNames; set => patrolNames = value; }
         public float AggroRadius { get => aggroRadius; set => aggroRadius = value; }
         //public BehaviorProps BehaviorProps { get => behaviorConfig; set => behaviorConfig = value; }
-        public UnitPrefabProps UnitPrefabProps {
-            get {
-                if (useInlinePrefabProps) {
-                    return unitPrefabProps;
-                }
-                return unitPrefabProfileProps;
-            }
-        }
+        public UnitPrefabProps UnitPrefabProps { get => unitPrefabProps; }
         public VoiceProps VoiceProps {
             get {
                 if (useInlineVoiceProps) {
@@ -410,7 +401,7 @@ namespace AnyRPG {
             if (prefabObject != null) {
                 unitController = prefabObject.GetComponent<UnitController>();
                 if (unitController != null) {
-                    
+
                     // give this unit a unique name
                     unitController.gameObject.name = ResourceName.Replace(" ", "") + systemGameManager.GetSpawnCount();
                     unitController.Configure(systemGameManager);
@@ -436,7 +427,7 @@ namespace AnyRPG {
             if (spawnPrefab == null) {
                 return null;
             }
-            
+
             GameObject prefabObject = objectPooler.GetPooledObject(spawnPrefab, position, (forward == Vector3.zero ? Quaternion.identity : Quaternion.LookRotation(forward)), parentTransform);
 
             return prefabObject;
@@ -570,17 +561,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (automaticPrefabProfile == true) {
-                prefabProfileName = ResourceName;
-            }
-            if (prefabProfileName != null && prefabProfileName != string.Empty) {
-                UnitPrefabProfile tmpPrefabProfile = systemDataFactory.GetResource<UnitPrefabProfile>(prefabProfileName);
-                if (tmpPrefabProfile != null) {
-                    unitPrefabProfileProps = tmpPrefabProfile.UnitPrefabProps;
-                } else {
-                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find prefab profile : " + prefabProfileName + " while inititalizing " + name + ".  CHECK INSPECTOR");
-                }
-            }
+            SetupUnitPrefabProps();
 
             if (voiceProfile != null && voiceProfile != string.Empty) {
                 VoiceProfile tmpVoiceProfile = systemDataFactory.GetResource<VoiceProfile>(voiceProfile);
@@ -614,14 +595,30 @@ namespace AnyRPG {
                 }
             }
 
-            unitPrefabProps.SetupScriptableObjects(systemGameManager);
-
             capabilities.SetupScriptableObjects(systemDataFactory);
 
             // controller configs
             // patrolConfig doesn't need setup ?
             //behaviorConfig.SetupScriptableObjects(systemGameManager);
 
+        }
+
+        private void SetupUnitPrefabProps() {
+            if (automaticPrefabProfile == true) {
+                prefabProfileName = ResourceName;
+            }
+            if (prefabProfileName != null && prefabProfileName != string.Empty) {
+                UnitPrefabProfile tmpPrefabProfile = systemDataFactory.GetResource<UnitPrefabProfile>(prefabProfileName);
+                if (tmpPrefabProfile != null) {
+                    unitPrefabProps = tmpPrefabProfile.UnitPrefabProps;
+                    return;
+                } else {
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find prefab profile : " + prefabProfileName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                }
+            }
+
+            // if we made it this far, we are using the built-in prefab props, so they must be configured
+            unitPrefabProps.SetupScriptableObjects(systemGameManager, this);
         }
 
     }

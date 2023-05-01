@@ -33,7 +33,7 @@ namespace AnyRPG {
         [Tooltip("A shared animation profile to be used for the unit animations")]
         [SerializeField]
         */
-        private AnimationProfile animationProfile = null;
+        //private AnimationProfile animationProfile = null;
 
         [Tooltip("If true, the inline values below will be used instead of the animation profile above")]
         [SerializeField]
@@ -99,6 +99,9 @@ namespace AnyRPG {
         // reference to the actual attachment profile
         private AttachmentProfile attachmentProfile = null;
 
+        // track describable
+        private IDescribable describable = null;
+
         public Vector3 Position { get => position; }
         public Vector3 Rotation { get => rotation; }
         public Vector3 Scale { get => scale; }
@@ -110,21 +113,7 @@ namespace AnyRPG {
         public GameObject ModelPrefab { get => modelPrefab; set => modelPrefab = value; }
         public bool RotateModel { get => rotateModel; set => rotateModel = value; }
         public NamePlateProps NamePlateProps { get => namePlateProps; set => namePlateProps = value; }
-        public AnimationProps AnimationProps {
-            get {
-                if (useInlineAnimationProps) {
-                    return animationProps;
-                }
-                if (animationProfile != null) {
-                    return animationProfile.AnimationProps;
-                }
-                return null;
-            }
-            set {
-                animationProps = value;
-            }
-        }
-
+        public AnimationProps AnimationProps { get => animationProps; set => animationProps = value; }
         public string FloatTransform { get => floatTransform; set => floatTransform = value; }
         public float FloatHeight { get => floatHeight; }
         public bool AddFloatHeightToTransform { get => addFloatHeightToTransform; }
@@ -132,21 +121,13 @@ namespace AnyRPG {
         public string AttachmentProfileName { get => attachmentProfileName; set => attachmentProfileName = value; }
         public CharacterModelProvider ModelProvider { get => modelProvider; set => modelProvider = value; }
 
-        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+        public void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
+            //Debug.Log($"UnitPrefabProps.SetupScriptableObjects({describable.ResourceName})");
 
+            this.describable = describable;
             Configure(systemGameManager);
 
-            animationProps.Configure();
-
-            if (animationProfileName != null && animationProfileName != string.Empty) {
-                AnimationProfile tmpAnimationProfile = systemDataFactory.GetResource<AnimationProfile>(animationProfileName);
-                if (tmpAnimationProfile != null) {
-                    animationProfile = tmpAnimationProfile;
-                } else {
-                    Debug.LogError("UnitPrefabProps.SetupScriptableObjects(): UNABLE TO FIND Animation Profile " + animationProfileName + " while initializing. CHECK INSPECTOR!");
-                }
-            }
-
+            SetupAnimationProps();
 
             if (attachmentProfileName != null && attachmentProfileName != string.Empty) {
                 AttachmentProfile tmpAttachmentProfile = systemDataFactory.GetResource<AttachmentProfile>(attachmentProfileName);
@@ -161,7 +142,22 @@ namespace AnyRPG {
                 modelProvider.Configure(systemGameManager);
             }
         }
-    }
 
+        private void SetupAnimationProps() {
+            if (animationProfileName != null && animationProfileName != string.Empty) {
+                AnimationProfile tmpAnimationProfile = systemDataFactory.GetResource<AnimationProfile>(animationProfileName);
+                if (tmpAnimationProfile != null) {
+                    animationProps = tmpAnimationProfile.AnimationProps;
+                    return;
+                } else {
+                    Debug.LogError("UnitPrefabProps.SetupScriptableObjects(): UNABLE TO FIND Animation Profile " + animationProfileName + " while initializing. CHECK INSPECTOR!");
+                }
+            }
+
+            // if we reached here, we must use the built-in animation props, so they need to be configured
+            animationProps.Configure();
+        }
+
+    }
 
 }

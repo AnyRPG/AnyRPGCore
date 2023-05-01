@@ -41,7 +41,7 @@ namespace AnyRPG {
         private AnimationClip fallClip;
         [SerializeField]
         private AnimationClip landClip;
-        
+
         [FormerlySerializedAs("moveForwardClip")]
         [SerializeField]
         private AnimationClip walkClip;

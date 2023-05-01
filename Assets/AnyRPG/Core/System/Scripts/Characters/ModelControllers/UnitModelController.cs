@@ -77,9 +77,9 @@ namespace AnyRPG {
         }
 
         public void SetAppearanceController(UnitProfile unitProfile) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetAppearanceController()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetAppearanceController(" + (unitProfile == null ? "null" : unitProfile.ResourceName) + ")");
 
-            if (unitProfile.UnitPrefabProps.ModelProvider != null) {
+            if (unitProfile?.UnitPrefabProps.ModelProvider != null) {
                 modelAppearanceController = unitProfile.UnitPrefabProps.ModelProvider.GetAppearanceController(unitController, this, systemGameManager);
             } else {
                 // no model provider was configured, create null object
@@ -256,7 +256,7 @@ namespace AnyRPG {
             }
         }
 
-       
+
 
         public void SetDefaultLayer(string layerName) {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetDefaultLayer(" + layerName + ")");
@@ -288,7 +288,7 @@ namespace AnyRPG {
 
         public void SetModelReady() {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetModelReady()");
-            
+
             if (modelCreated == false) {
                 unitController.CharacterUnit.BaseCharacter.HandleCharacterUnitSpawn();
             }
@@ -313,7 +313,7 @@ namespace AnyRPG {
 
         public void CalculateFloatHeight() {
             unitController.FloatHeight += unitController.UnitProfile.UnitPrefabProps.FloatHeight;
-            
+
             if (unitController.UnitProfile?.UnitPrefabProps?.FloatTransform == string.Empty) {
                 return;
             }
