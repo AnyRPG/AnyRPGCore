@@ -144,6 +144,11 @@ namespace AnyRPG {
         }
 
         private void SetupAnimationProps() {
+            if (useInlineAnimationProps == true) {
+                animationProps.Configure();
+                return;
+            }
+
             if (animationProfileName != null && animationProfileName != string.Empty) {
                 AnimationProfile tmpAnimationProfile = systemDataFactory.GetResource<AnimationProfile>(animationProfileName);
                 if (tmpAnimationProfile != null) {
@@ -154,8 +159,8 @@ namespace AnyRPG {
                 }
             }
 
-            // if we reached here, we must use the built-in animation props, so they need to be configured
-            animationProps.Configure();
+            // animationProps rely on being null by default due to the way the unitAnimator initializes animation overrides
+            animationProps = null;
         }
 
     }

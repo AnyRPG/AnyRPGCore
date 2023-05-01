@@ -59,7 +59,7 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         private Dictionary<string, float> animationSpeeds = new Dictionary<string, float>();
-        
+
         // configure which direction animations should get their speeds from
         private List<string> zList = new List<string>();
         private List<string> xList = new List<string>();
@@ -291,7 +291,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}: setting override controller to: " + overrideController.name);
 
             // before finishing initialization, search for a valid unit profile and try to get an animation profile from it
-            if (unitController.UnitProfile != null && unitController.UnitProfile != null && unitController.UnitProfile.UnitPrefabProps.AnimationProps != null) {
+            if (unitController.UnitProfile?.UnitPrefabProps.AnimationProps != null) {
                 defaultAnimationProps = unitController.UnitProfile.UnitPrefabProps.AnimationProps;
             }
             SetAnimationProfileOverride(defaultAnimationProps);
@@ -679,7 +679,7 @@ namespace AnyRPG {
                 OnStartCasting(swapAnimator);
             }
             SetAnimationSpeed(castingSpeed);
-            
+
             if (ParameterExists("Casting")) {
                 animator.SetBool("Casting", varValue);
             }
@@ -804,10 +804,10 @@ namespace AnyRPG {
                     if (normalizedVector.x != 0 || normalizedVector.z != 0) {
                         Vector3 newDirection;
                         //if (controlsManager.GamePadModeActive == true && unitController.UnitControllerMode == UnitControllerMode.Player) {
-                            //newDirection = Quaternion.LookRotation(new Vector3(cameraManager.ActiveMainCamera.transform.forward.x, 0f, cameraManager.ActiveMainCamera.transform.forward.z).normalized) * new Vector3(normalizedVector.x, 0, normalizedVector.z);
-                            //newDirection = cameraManager.MainCameraGameObject.transform.TransformDirection
+                        //newDirection = Quaternion.LookRotation(new Vector3(cameraManager.ActiveMainCamera.transform.forward.x, 0f, cameraManager.ActiveMainCamera.transform.forward.z).normalized) * new Vector3(normalizedVector.x, 0, normalizedVector.z);
+                        //newDirection = cameraManager.MainCameraGameObject.transform.TransformDirection
                         //} else {
-                            newDirection = unitController.transform.TransformDirection(new Vector3(normalizedVector.x, 0, normalizedVector.z));
+                        newDirection = unitController.transform.TransformDirection(new Vector3(normalizedVector.x, 0, normalizedVector.z));
                         //}
                         if (newDirection != Vector3.zero) {
                             //animator.transform.forward = newDirection;
@@ -1093,7 +1093,6 @@ namespace AnyRPG {
                 }
             }
         }
-
 
     }
 

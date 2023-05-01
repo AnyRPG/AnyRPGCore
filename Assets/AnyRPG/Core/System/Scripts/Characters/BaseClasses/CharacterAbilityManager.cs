@@ -368,7 +368,8 @@ namespace AnyRPG {
         /// </summary>
         /// <returns></returns>
         public override List<AnimationClip> GetUnitAttackAnimations() {
-            //Debug.Log($"{gameObject.name}.GetDefaultAttackAnimations()");
+            //Debug.Log($"{baseCharacter.gameObject.name}.GetUnitAttackAnimations()");
+
             if (baseCharacter?.UnitController?.UnitAnimator?.CurrentAnimations != null) {
                 return baseCharacter.UnitController.UnitAnimator.CurrentAnimations.AttackClips;
             }
@@ -556,7 +557,7 @@ namespace AnyRPG {
 
         public override float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbilityProperties animatedAbility, BaseCharacter targetBaseCharacter, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.PerformAnimatedAbility(" + animatedAbility.DisplayName + ")");
-            
+
             // this type of ability is allowed to interrupt other types of animations, so clear them all
             // is this really necessary ?  shouldn't checks have been performed before we got there as to whether anything specific was happening, and then cancel it already ?
             //TryToStopAnyAbility();
@@ -1177,7 +1178,7 @@ namespace AnyRPG {
 
         public void UnlearnAbility(BaseAbilityProperties oldAbility, bool updateActionBars = true) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.UnleanAbility(" + oldAbility.DisplayName + ", " + updateActionBars + ")");
-            
+
             string keyName = SystemDataUtility.PrepareStringForMatch(oldAbility.DisplayName);
             if (abilityList.ContainsKey(keyName)) {
                 oldAbility.ProcessUnLearnAbility(this);
@@ -1202,7 +1203,7 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + ", " + (target == null ? "null" : target.name) + ") Enter Ienumerator with tag: " + startTime);
 
             bool canCast = true;
-           
+
             abilityEffectContext.originalTarget = target;
             if (ability.GetTargetOptions(baseCharacter).RequiresGroundTarget == true) {
                 //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() Ability requires a ground target.");
@@ -1497,7 +1498,7 @@ namespace AnyRPG {
 
         protected bool BeginAbilityCommon(BaseAbilityProperties ability, Interactable target, bool playerInitiated = false) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.gameObject.name) + ")");
-            
+
             if (ability == null) {
                 Debug.LogError("CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.name) + ") NO ABILITY FOUND");
                 return false;
@@ -1832,7 +1833,7 @@ namespace AnyRPG {
             TryToStopAnimatedAbility();
             TryToStopAutoAttack();
         }
-        
+
         public void TryToStopCastBlockers() {
             TryToStopAutoAttack();
             baseCharacter.UnitController?.UnitActionManager.TryToStopAction();
@@ -1868,7 +1869,7 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.StopAnimatedAbility()");
 
             abilityCaster.StopCoroutine(attackCoroutine);
-            
+
             ProcessAnimatedAbilityEnd();
 
             NotifyOnCastCancel();

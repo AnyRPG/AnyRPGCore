@@ -174,7 +174,7 @@ namespace AnyRPG {
                 //Debug.Log("ActionButton.OnUseableUse(" + ability.DisplayName + "): WAS ANIMATED AUTO ATTACK");
                 //if (autoAttackCoRoutine == null) {
                 //if (monitorCoroutine == null) {
-                    return systemAbilityController.StartCoroutine(actionButton.MonitorAutoAttack(this));
+                return systemAbilityController.StartCoroutine(actionButton.MonitorAutoAttack(this));
                 //}
             }
             return systemAbilityController.StartCoroutine(actionButton.MonitorAbility(DisplayName));
@@ -231,7 +231,8 @@ namespace AnyRPG {
         }
 
         public override bool Cast(IAbilityCaster sourceCharacter, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(DisplayName + ".AnimatedAbility.Cast(" + sourceCharacter.AbilityManager.Name + ")");
+            //Debug.Log($"{ResourceName}.AnimatedAbility.Cast({sourceCharacter.AbilityManager.Name})");
+
             if (base.Cast(sourceCharacter, target, abilityEffectContext)) {
                 List<AnimationClip> usedAnimationClips = GetAnimationClips(sourceCharacter);
                 if (usedAnimationClips != null && usedAnimationClips.Count > 0) {
@@ -239,7 +240,7 @@ namespace AnyRPG {
 
                     CharacterUnit targetCharacterUnit = null;
                     if (target != null) {
-                        targetCharacterUnit =  CharacterUnit.GetCharacterUnit(target);
+                        targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
                     }
                     BaseCharacter targetBaseCharacter = null;
                     if (targetCharacterUnit != null) {
@@ -325,7 +326,6 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + "AnimatedAbility.ProcessGCDAuto()");
             //intentionally do nothing
         }
-
 
     }
 

@@ -11,7 +11,8 @@ namespace AnyRPG {
         public AnimationProps AnimationProps { get => animationProps; set => animationProps = value; }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
-            //Debug.Log(DisplayName + ".AnimationProfile.SetupScriptableObjects()");
+            //Debug.Log($"{ResourceName}.AnimationProfile.SetupScriptableObjects()");
+
             base.SetupScriptableObjects(systemGameManager);
             animationProps.Configure();
         }
