@@ -77,7 +77,7 @@ namespace AnyRPG {
             icon.sprite = moveable.Icon;
             icon.color = Color.white;
 
-            
+
             if (controlsManager.GamePadModeActive == true) {
                 rectTransform.pivot = new Vector2(0, 1);
             } else {
@@ -107,7 +107,7 @@ namespace AnyRPG {
                 playerManager.MyCharacter.CharacterInventoryManager.FromSlot.PutItemBack();
             }
             Moveable = null;
-            
+
             // clear background image
             backgroundImage.color = new Color32(0, 0, 0, 0);
             backgroundImage.sprite = null;
@@ -138,6 +138,7 @@ namespace AnyRPG {
                         if (item.Slot != null) {
                             item.Slot.Clear();
                         }
+                        playerManager.UnitController.UnitModelController.RebuildModelAppearance();
                     }
                 }
             }

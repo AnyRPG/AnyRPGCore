@@ -25,7 +25,7 @@ namespace AnyRPG {
         public List<AbilityAttachmentNode> WeaponAbilityAnimationObjects { get => weaponAbilityAnimationObjects; }
         public List<AbilityAttachmentNode> WeaponAbilityObjects { get => weaponAbilityObjects; }
 
-        public CharacterEquipmentManager (BaseCharacter baseCharacter, SystemGameManager systemGameManager) : base(systemGameManager) {
+        public CharacterEquipmentManager(BaseCharacter baseCharacter, SystemGameManager systemGameManager) : base(systemGameManager) {
             this.baseCharacter = baseCharacter;
             //Configure(systemGameManager);
 
@@ -39,8 +39,13 @@ namespace AnyRPG {
                     equipmentToRemove.Add(equipment);
                 }
             }
-            foreach (Equipment equipment in equipmentToRemove) {
-                Unequip(equipment);
+            if (equipmentToRemove.Count > 0) {
+                foreach (Equipment equipment in equipmentToRemove) {
+                    Unequip(equipment);
+                }
+                if (baseCharacter.UnitController != null) {
+                    baseCharacter.UnitController.UnitModelController.RebuildModelAppearance();
+                }
             }
 
             // since all status effects were cancelled on the change, it is necessary to re-apply set bonuses
@@ -125,9 +130,9 @@ namespace AnyRPG {
                 return false;
             }
 
-            
+
             equipmentSlotProfile = base.EquipEquipment(newItem, equipmentSlotProfile);
-            
+
             if (equipmentSlotProfile == null) {
                 Debug.LogError(baseCharacter.gameObject.name + "CharacterEquipmentManager.Equip() " + newItem.ResourceName + " equipmentSlotProfile is null.  CHECK INSPECTOR.");
                 return false;
@@ -225,7 +230,7 @@ namespace AnyRPG {
 
         public Equipment Unequip(EquipmentSlotProfile equipmentSlot, int slotIndex = -1) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.Unequip(" + equipmentSlot.ToString() + ", " + slotIndex + ", " + unequipModels + ", " + unequipAppearance + ", " + rebuildAppearance + ")");
-            
+
             if (CurrentEquipment.ContainsKey(equipmentSlot) && CurrentEquipment[equipmentSlot] != null) {
                 //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; currentEquipment has this slot key");
 
