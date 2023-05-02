@@ -30,6 +30,9 @@ namespace AnyRPG {
         private GameObject classLabel = null;
 
         [SerializeField]
+        private GameObject classTextBox = null;
+
+        [SerializeField]
         private TextMeshProUGUI classText = null;
 
         /*
@@ -69,6 +72,7 @@ namespace AnyRPG {
         private PlayerManager playerManager = null;
         private UIManager uIManager = null;
         private ObjectPooler objectPooler = null;
+        protected CharacterCreatorManager characterCreatorManager = null;
 
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
         public UnitType UnitType { get => unitType; set => unitType = value; }
@@ -95,6 +99,7 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             uIManager = systemGameManager.UIManager;
             objectPooler = systemGameManager.ObjectPooler;
+            characterCreatorManager = systemGameManager.CharacterCreatorManager;
         }
 
         public void ShowUnit(PetSpawnButton petSpawnButton) {
@@ -116,11 +121,17 @@ namespace AnyRPG {
         }
    
         public void UpdateUnitInformation() {
-            classLabel.SetActive(true);
-            if (unitProfile != null && unitProfile.CharacterClass != null) {
-                classText.text = unitProfile.CharacterClass.DisplayName;
-            }
             nameText.text = unitProfile.DisplayName;
+
+            if (unitProfile.CharacterClass == null) {
+                classLabel.SetActive(false);
+                classTextBox.SetActive(false);
+                return;
+            }
+
+            classLabel.SetActive(true);
+            classTextBox.SetActive(true);
+            classText.text = unitProfile.CharacterClass.DisplayName;
         }
 
         public void UpdateButtons(PetSpawnButton petSpawnButton) {
@@ -148,6 +159,7 @@ namespace AnyRPG {
             spawnButton.gameObject.SetActive(false);
             despawnButton.gameObject.SetActive(false);
             classLabel.SetActive(false);
+            classTextBox.SetActive(false);
             classText.text = string.Empty;
             nameText.text = "No Pets Available";
         }
@@ -164,6 +176,8 @@ namespace AnyRPG {
             //characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
+            characterCreatorManager.DisableLight();
+
         }
 
         public override void ProcessOpenWindowNotification() {
@@ -180,6 +194,7 @@ namespace AnyRPG {
             //characterPreviewPanel.OnTargetReady += HandleTargetReady;
             characterPreviewPanel.CapabilityConsumer = this;
             characterPreviewPanel.ReceiveOpenWindowNotification();
+            characterCreatorManager.EnableLight();
         }
 
         public void ShowPreviewButtonsCommon() {
