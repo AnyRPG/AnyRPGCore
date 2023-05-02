@@ -111,7 +111,8 @@ namespace AnyRPG {
                     }
                 }
             } else {
-                Debug.Log(gameObject.name + ".StatusEffectPanelController.ClearStatusEffectNodeScript() received a clear request from a node script that was not in the list.  How did this happne?");
+                // the status effect panel was full and the clear request was received for a status effect that was not on the panel
+                //Debug.Log(gameObject.name + ".StatusEffectPanelController.ClearStatusEffectNodeScript() received a clear request from a node script that was not in the list.  How did this happen?");
             }
 
             return returnValue;
