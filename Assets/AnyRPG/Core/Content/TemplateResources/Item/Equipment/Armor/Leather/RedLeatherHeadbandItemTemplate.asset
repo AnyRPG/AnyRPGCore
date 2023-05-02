@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Red Leather Headband
   displayName: 
-  icon: {fileID: 21300000, guid: 230e148b444434341a8aff036a15a4d1, type: 3}
+  icon: {fileID: 21300000, guid: 3f300b21e4efffd4abc9e26b5d6b8573, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very red
   useRegionalDescription: 0
@@ -36,11 +36,7 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Helm
   equipmentSetName: 
-  umaRecipeProfileName: Red Leather Headband
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Red Leather Headband

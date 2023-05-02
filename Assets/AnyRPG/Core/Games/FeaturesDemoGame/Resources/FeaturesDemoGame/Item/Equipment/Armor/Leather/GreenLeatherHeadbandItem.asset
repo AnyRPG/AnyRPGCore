@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Green Leather Headband
   displayName: 
-  icon: {fileID: 21300000, guid: 79f30d1c60e52384f8c728960f015704, type: 3}
+  icon: {fileID: 21300000, guid: 3f1b425a947abdb47a7908a2a980be39, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very green
   useRegionalDescription: 0
@@ -36,11 +36,7 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Helm
   equipmentSetName: 
-  umaRecipeProfileName: Green Leather Headband
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Green Leather Headband

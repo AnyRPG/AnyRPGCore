@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Legendary Leather Headband
   displayName: 
-  icon: {fileID: 21300000, guid: 2982593b4b52fde469aa7715d91159b7, type: 3}
+  icon: {fileID: 21300000, guid: 71fe80ae3eb521e4eb91160585ae9d25, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very legendary
   useRegionalDescription: 0
@@ -36,11 +36,7 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Helm
   equipmentSetName: Legendary Leather
-  umaRecipeProfileName: Yellow Leather Headband
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Yellow Leather Headband

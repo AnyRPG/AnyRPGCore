@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Violet Leather Headband
   displayName: 
-  icon: {fileID: 21300000, guid: dc49257c2fc494c429e1cf6f14ba2d8b, type: 3}
+  icon: {fileID: 21300000, guid: 808d24884578c7d49ac8f23b453ca9da, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very violet
   useRegionalDescription: 0
@@ -36,11 +36,7 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Helm
   equipmentSetName: 
-  umaRecipeProfileName: Violet Leather Headband
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Violet Leather Headband

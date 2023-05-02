@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Blue Leather Headband
   displayName: 
-  icon: {fileID: 21300000, guid: e87c482a8be18ed4cb68eebd55560f11, type: 3}
+  icon: {fileID: 21300000, guid: e0de42c4566384f42ab46161901a8b4e, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very blue
   useRegionalDescription: 0
@@ -36,11 +36,7 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Helm
   equipmentSetName: 
-  umaRecipeProfileName: Blue Leather Headband
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Blue Leather Headband

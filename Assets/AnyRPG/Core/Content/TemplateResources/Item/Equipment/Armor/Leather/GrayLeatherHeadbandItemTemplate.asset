@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Gray Leather Headband
   displayName: 
-  icon: {fileID: 21300000, guid: bcacb291a76e6284587f9f9ec9ba3fc8, type: 3}
+  icon: {fileID: 21300000, guid: 7bf05bd755d763c4f8027d9b23ae934c, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very gray
   useRegionalDescription: 0
@@ -36,11 +36,7 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Helm
   equipmentSetName: 
-  umaRecipeProfileName: Gray Leather Headband
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Gray Leather Headband

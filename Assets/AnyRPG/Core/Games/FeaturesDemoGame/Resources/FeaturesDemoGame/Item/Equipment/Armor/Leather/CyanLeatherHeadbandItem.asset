@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Cyan Leather Headband
   displayName: 
-  icon: {fileID: 21300000, guid: fca230159d2a63c428640214223ed526, type: 3}
+  icon: {fileID: 21300000, guid: 1d43eb9dea3551d479a50f14d8e082cd, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very cyan
   useRegionalDescription: 0
@@ -36,11 +36,7 @@ MonoBehaviour:
   characterClassRequirementList: []
   equipmentSlotType: Helm
   equipmentSetName: 
-  umaRecipeProfileName: Cyan Leather Headband
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Cyan Leather Headband
