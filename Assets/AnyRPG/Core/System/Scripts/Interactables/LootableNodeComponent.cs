@@ -45,9 +45,7 @@ namespace AnyRPG {
 
         public LootableNodeComponent(Interactable interactable, LootableNodeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             // initialize loot tables and states
-            foreach (LootTable lootTable in Props.LootTables) {
-                lootHolder.LootTableStates.Add(lootTable, new LootTableState());
-            }
+            InitializeLootTableStates();
         }
 
         public override void SetGameManagerReferences() {
@@ -110,7 +108,7 @@ namespace AnyRPG {
 
             List<LootDrop> lootDrops = new List<LootDrop>();
             foreach (LootTable lootTable in Props.LootTables) {
-                lootDrops.AddRange(lootTable.GetLoot(lootHolder.LootTableStates[lootTable]));
+                lootDrops.AddRange(lootHolder.LootTableStates[lootTable].GetLoot(lootTable));
             }
             //lootManager.CreatePages(lootDrops);
             lootManager.AddLoot(lootDrops);
@@ -179,10 +177,7 @@ namespace AnyRPG {
                 // testing : monitor if this affects pickup nodes.  Theoretically the HandlePrerequisiteUpdates() call should trigger a despawn anyway
                 //interactable.DestroySpawn();
 
-
-                foreach (LootTable lootTable in Props.LootTables) {
-                    lootHolder.LootTableStates[lootTable].Reset();
-                }
+                InitializeLootTableStates();
 
                 // spawn timer of -1 means don't spawn again
                 if (spawnCoroutine == null && Props.SpawnTimer >= 0f) {
@@ -194,6 +189,13 @@ namespace AnyRPG {
                 // DISABLE MINIMAP ICON WHILE ITEM IS NOT SPAWNED
 
                 HandlePrerequisiteUpdates();
+            }
+        }
+
+        private void InitializeLootTableStates() {
+            lootHolder.InitializeLootTableStates();
+            foreach (LootTable lootTable in Props.LootTables) {
+                lootHolder.AddLootTableState(lootTable, new LootTableState(systemGameManager));
             }
         }
 

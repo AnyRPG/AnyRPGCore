@@ -10,13 +10,14 @@ namespace AnyRPG {
 
         public event System.Action OnTakeLoot = delegate { };
 
+        // a list that is reset every time the loot window opens or closes to give the proper list depending on what was looted
         private List<LootDrop> droppedLoot = new List<LootDrop>();
 
+        // this list is solely for the purpose of tracking dropped loot to ensure that unique items cannot be dropped twice
+        // if one drops and is left on a body unlooted and another enemy is killed
         private List<LootTableState> lootTableStates = new List<LootTableState>();
 
         // game manager references
-        //private UIManager uIManager = null;
-        //private InventoryManager inventoryManager = null;
         private MessageFeedManager messageFeedManager = null;
         private PlayerManager playerManager = null;
 
@@ -24,18 +25,19 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            //uIManager = systemGameManager.UIManager;
-            //inventoryManager = systemGameManager.InventoryManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
             playerManager = systemGameManager.PlayerManager;
         }
 
         public void AddLoot(List<LootDrop> items) {
+            //Debug.Log("LootManager.AddLoot()");
+
             droppedLoot = items;
         }
 
         public void ClearDroppedLoot() {
             //Debug.Log("LootManager.ClearDroppedLoot()");
+
             droppedLoot.Clear();
         }
 
@@ -77,6 +79,7 @@ namespace AnyRPG {
 
         public void AddLootTableState(LootTableState lootTableState) {
             //Debug.Log("LootManager.AddLootTableState()");
+
             if (lootTableStates.Contains(lootTableState) == false) {
                 lootTableStates.Add(lootTableState);
             }
@@ -84,6 +87,7 @@ namespace AnyRPG {
 
         public void RemoveLootTableState(LootTableState lootTableState) {
             //Debug.Log("LootManager.RemoveLootTableState()");
+
             if (lootTableStates.Contains(lootTableState)) {
                 lootTableStates.Remove(lootTableState);
             }

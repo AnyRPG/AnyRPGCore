@@ -224,7 +224,7 @@ namespace AnyRPG {
 
         public override void Remove() {
             base.Remove();
-            LootTableState.DroppedItems.Remove(this);
+            LootTableState.RemoveDroppedItem(this);
             if (LootTableState.DroppedItems.Count == 0) {
                 lootManager.RemoveLootTableState(LootTableState);
             }

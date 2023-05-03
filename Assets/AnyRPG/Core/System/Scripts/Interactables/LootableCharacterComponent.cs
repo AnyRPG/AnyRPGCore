@@ -31,7 +31,7 @@ namespace AnyRPG {
         private SystemAbilityController systemAbilityController = null;
         private LootManager lootManager = null;
 
-        public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
+        public CharacterUnit CharacterUnit { get => characterUnit; set => characterUnit = value; }
         public bool CurrencyRolled { get => currencyRolled; }
         public CurrencyNode CurrencyNode { get => currencyNode; set => currencyNode = value; }
         public bool CurrencyCollected { get => currencyCollected; set => currencyCollected = value; }
@@ -80,7 +80,7 @@ namespace AnyRPG {
             characterUnit = CharacterUnit.GetCharacterUnit(interactable);
 
             (characterUnit.Interactable as UnitController).UnitEventController.OnBeforeDie += HandleDeath;
-            (characterUnit.Interactable as UnitController).UnitEventController.OnReviveComplete += HandleRevive;
+            //(characterUnit.Interactable as UnitController).UnitEventController.OnReviveComplete += HandleRevive;
         }
 
         public override void ProcessCleanupEventSubscriptions() {
@@ -88,7 +88,7 @@ namespace AnyRPG {
             base.ProcessCleanupEventSubscriptions();
             if (characterUnit != null && characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.CharacterStats != null) {
                 (characterUnit.Interactable as UnitController).UnitEventController.OnBeforeDie -= HandleDeath;
-                (characterUnit.Interactable as UnitController).UnitEventController.OnReviveComplete -= HandleRevive;
+                //(characterUnit.Interactable as UnitController).UnitEventController.OnReviveComplete -= HandleRevive;
             }
             if (monitoringTakeLoot) {
                 SystemEventManager.StopListening("OnTakeLoot", HandleTakeLoot);
@@ -105,7 +105,7 @@ namespace AnyRPG {
             foreach (string lootTableName in Props.LootTableNames) {
                 LootTable lootTable = systemDataFactory.GetResource<LootTable>(lootTableName);
                 if (lootTable != null) {
-                    lootHolder.LootTableStates.Add(lootTable, new LootTableState());
+                    lootHolder.AddLootTableState(lootTable, new LootTableState(systemGameManager));
                 }
             }
         }
@@ -113,7 +113,7 @@ namespace AnyRPG {
         public void ClearLootTables() {
             //Debug.Log(interactable.gameObject.name + "LootableCharacterComponent.ClearLootTables()");
             ResetLootTableStates();
-            lootHolder.LootTableStates.Clear();
+            lootHolder.ClearLootTableStates();
         }
 
         public void HandleDeath(CharacterStats characterStats) {
@@ -140,9 +140,9 @@ namespace AnyRPG {
         }
 
         public void TryToDespawn() {
+            //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.TryToDespawn()");
 
-            //Debug.Log(interactable.gameObject.name + ".LootableCharacter.TryToDespawn()");
-            if (MyCharacterUnit.BaseCharacter.CharacterStats.IsAlive == true) {
+            if (CharacterUnit.BaseCharacter.CharacterStats.IsAlive == true) {
                 //Debug.Log("LootableCharacter.TryToDespawn(): Character is alive.  Returning and doing nothing.");
                 return;
             }
@@ -206,7 +206,7 @@ namespace AnyRPG {
             
             foreach (LootTable lootTable in lootHolder.LootTableStates.Keys) {
                 if (lootTable != null) {
-                    lootTable.GetLoot(lootHolder.LootTableStates[lootTable], !lootCalculated);
+                    lootHolder.LootTableStates[lootTable].GetLoot(lootTable, !lootCalculated);
                     lootCount += lootHolder.LootTableStates[lootTable].DroppedItems.Count;
                     //Debug.Log($"{gameObject.name}.LootableCharacter.GetLootCount(): after loot table count: " + lootCount);
                 }
@@ -223,7 +223,7 @@ namespace AnyRPG {
         }
 
         public List<Interactable> GetLootableTargets() {
-            Vector3 aoeSpawnCenter = MyCharacterUnit.Interactable.transform.position;
+            Vector3 aoeSpawnCenter = CharacterUnit.Interactable.transform.position;
             Collider[] colliders = new Collider[0];
             int validMask = 1 << LayerMask.NameToLayer("CharacterUnit");
             colliders = Physics.OverlapSphere(aoeSpawnCenter, 15f, validMask);
@@ -294,7 +294,7 @@ namespace AnyRPG {
 
                             // get item loot
                             foreach (LootTable lootTable in lootableCharacter.LootHolder.LootTableStates.Keys) {
-                                itemDrops.AddRange(lootTable.GetLoot(lootableCharacter.LootHolder.LootTableStates[lootTable]));
+                                itemDrops.AddRange(lootableCharacter.LootHolder.LootTableStates[lootTable].GetLoot(lootTable));
                                 // testing - move this outside of loop because otherwise we can subscribe multiple times to loot events, and they will never be cleared
                                 //lootableCharacter.MonitorLootTable();
                             }
@@ -363,11 +363,12 @@ namespace AnyRPG {
         }
 
         public void Despawn() {
-            //Debug.Log(interactable.gameObject.name + ".LootableCharacterComponent.Despawn()");
+            //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.Despawn()");
+
             //gameObject.SetActive(false);
-            ResetLootTableStates();
-            if (MyCharacterUnit != null) {
-                MyCharacterUnit.Despawn();
+            //ResetLootTableStates();
+            if (CharacterUnit != null) {
+                CharacterUnit.Despawn();
             }
         }
 
@@ -377,7 +378,7 @@ namespace AnyRPG {
             if (base.GetValidOptionCount() == 0) {
                 return 0;
             }
-                return (MyCharacterUnit.BaseCharacter.CharacterStats.IsAlive == false ? 1 : 0);
+                return (CharacterUnit.BaseCharacter.CharacterStats.IsAlive == false ? 1 : 0);
             //}
             //return 0;
         }
@@ -390,14 +391,16 @@ namespace AnyRPG {
             return ((lootCount > 0) ? 1 : 0);
         }
 
+        /*
         public void HandleRevive() {
             ResetLootTableStates();
         }
+        */
 
         public void ResetLootTableStates() {
             foreach (LootTable lootTable in lootHolder.LootTableStates.Keys) {
                 if (lootTable != null) {
-                    lootHolder.LootTableStates[lootTable].ResetLootTableState();
+                    //lootHolder.LootTableStates[lootTable].ResetLootTableState();
                     lootManager.RemoveLootTableState(lootHolder.LootTableStates[lootTable]);
                 }
             }

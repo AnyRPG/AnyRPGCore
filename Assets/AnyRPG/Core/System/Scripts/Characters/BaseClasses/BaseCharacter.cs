@@ -695,6 +695,7 @@ namespace AnyRPG {
 
         public void Despawn() {
             //Debug.Log($"{gameObject.name}.BaseCharacter.Despawn()");
+
             if (unitController != null && unitController.CharacterUnit != null) {
                 unitController.CharacterUnit.Despawn();
             }
@@ -702,12 +703,15 @@ namespace AnyRPG {
 
         public void TryToDespawn() {
             //Debug.Log($"{gameObject.name}.BaseCharacter.TryToDespawn()");
+
             if (unitProfile != null && unitProfile.PreventAutoDespawn == true) {
                 return;
             }
             if (unitController != null && unitController.LootableCharacter != null) {
                 // lootable character handles its own despawn logic
                 return;
+            } else {
+
             }
 
             Despawn();
