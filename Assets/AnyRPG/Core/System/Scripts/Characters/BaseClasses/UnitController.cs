@@ -1038,6 +1038,8 @@ namespace AnyRPG {
             foreach (InteractableOptionComponent interactableOptionComponent in interactables) {
                 interactableOptionComponent.HandlePrerequisiteUpdates();
             }
+
+            lootableCharacter = LootableCharacterComponent.GetLootableCharacterComponent(this);
         }
 
         private void SetStartPosition() {
