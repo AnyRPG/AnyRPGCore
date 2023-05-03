@@ -214,6 +214,8 @@ namespace AnyRPG {
 
         // the frame in which the player last entered a jump state
         private int lastJumpFrame;
+        private int lastKnockbackFrame;
+
 
         // game manager references
         protected PlayerManager playerManager = null;
@@ -798,14 +800,22 @@ namespace AnyRPG {
         }
 
         void Knockback_EnterState() {
-            //Debug.Log("Knockback_EnterState()");
+            //Debug.Log($"PlayerUnitMovementController.Knockback_EnterState() on frame {Time.frameCount}");
+
             //currentMoveVelocity.y = (Vector3.up * jumpAcceleration).y;
             canJump = false;
             playerManager.ActiveUnitController.UnitAnimator.SetJumping(1);
             playerManager.ActiveUnitController.UnitAnimator.SetTrigger("JumpTrigger");
+            lastKnockbackFrame = Time.frameCount;
         }
 
         void Knockback_StateUpdate() {
+
+            if (Time.frameCount <= (lastKnockbackFrame + 2)) {
+                // rigidbody velocity does not immediately update, so a small delay must be added before checking
+                // if a different state should be entered
+                return;
+            }
 
             if (playerManager.ActiveUnitController.InWater == true) {
                 if (CheckForSwimming() == true) {
@@ -820,6 +830,7 @@ namespace AnyRPG {
                     currentState = AnyRPGCharacterState.Move;
                     return;
                 }
+                //Debug.Log($"PlayerUnitMovementController.Knockback_StateUpdate() entering Idle state with y velocity: {playerManager.ActiveUnitController.RigidBody.velocity.y} on frame {Time.frameCount}");
                 currentState = AnyRPGCharacterState.Idle;
                 return;
             }

@@ -994,7 +994,8 @@ namespace AnyRPG {
         }
 
         public void SetInteger(string varName, int varValue) {
-            //Debug.Log($"{gameObject.name}.CharacterAnimator.SetFloat(" + varName + ", " + varValue + ")");
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetInteger({varName}, {varValue})");
+
             if (animator != null && ParameterExists(varName)) {
                 animator.SetInteger(varName, varValue);
             }
@@ -1028,7 +1029,8 @@ namespace AnyRPG {
         }
 
         public void SetTrigger(string varName) {
-            //Debug.Log($"{gameObject.name}.CharacterAnimator.SetTrigger(" + varName + ")");
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetTrigger({varName})");
+
             if (animator != null && ParameterExists(varName)) {
                 animator.ResetTrigger(varName);
                 animator.SetTrigger(varName);
