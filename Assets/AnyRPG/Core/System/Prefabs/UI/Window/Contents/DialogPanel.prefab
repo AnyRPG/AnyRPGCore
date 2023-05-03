@@ -910,6 +910,8 @@ MonoBehaviour:
   acceptQuestButton: {fileID: 7940204633215222608}
   continueButton: {fileID: 7401077208548695849}
   dialogFontSize: 30
+  portraitImage: {fileID: 91021708855212633}
+  portraitSnapshotImage: {fileID: 1509235669066598807}
 --- !u!1 &2382909202718761569
 GameObject:
   m_ObjectHideFlags: 0
@@ -1158,6 +1160,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2873774645619677555}
   - {fileID: 6310542254467634367}
   m_Father: {fileID: 4142652417095471157}
   m_RootOrder: 0
@@ -1367,7 +1370,7 @@ GameObject:
   - component: {fileID: 6364842037664734092}
   - component: {fileID: 1509235669066598807}
   m_Layer: 5
-  m_Name: CharacterPortrait
+  m_Name: CharacterPortraitSnapshot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1386,7 +1389,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1838669082305220513}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -1428,6 +1431,82 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!1 &3523405518914852229
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2873774645619677555}
+  - component: {fileID: 7593651533244145474}
+  - component: {fileID: 91021708855212633}
+  m_Layer: 5
+  m_Name: CharacterPortrait
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2873774645619677555
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3523405518914852229}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1838669082305220513}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 185, y: -185}
+  m_SizeDelta: {x: 370, y: 370}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &7593651533244145474
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3523405518914852229}
+  m_CullTransparentMesh: 0
+--- !u!114 &91021708855212633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3523405518914852229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: a5049d8fafbe58a47989c22139dbbe65, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &3785028953846236942
 GameObject:
   m_ObjectHideFlags: 0
@@ -2262,12 +2341,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leaveLeftOption: 0
   leftPanel: {fileID: 0}
   leftControllers: []
+  leaveRightOption: 0
   rightPanel: {fileID: 0}
   rightControllers: []
+  leaveUpOption: 0
   upPanel: {fileID: 0}
   upControllers: []
+  leaveDownOption: 0
   downPanel: {fileID: 0}
   downControllers:
   - {fileID: 2447269729933671565}
@@ -2338,13 +2421,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leaveLeftOption: 0
   leftPanel: {fileID: 0}
   leftControllers: []
+  leaveRightOption: 0
   rightPanel: {fileID: 0}
   rightControllers: []
+  leaveUpOption: 0
   upPanel: {fileID: 0}
   upControllers:
   - {fileID: 8562219457695108404}
+  leaveDownOption: 0
   downPanel: {fileID: 0}
   downControllers: []
   acceptController: {fileID: 0}

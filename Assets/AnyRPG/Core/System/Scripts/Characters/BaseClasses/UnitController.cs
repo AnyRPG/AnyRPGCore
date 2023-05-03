@@ -479,6 +479,16 @@ namespace AnyRPG {
             base.ConfigureUnitFrame(unitFrameController);
         }
 
+        public override void ConfigureDialogPanel(DialogPanelController dialogPanelController) {
+
+            if (unitProfile != null && unitProfile.UnitPrefabProps.NamePlateProps.UseSnapShot == false) {
+                dialogPanelController.ConfigurePortrait(unitProfile.Icon);
+                return;
+            }
+
+            base.ConfigureDialogPanel(dialogPanelController);
+        }
+
         private void SetUnitFootstepAudioProfile() {
 
             if (characterUnit.BaseCharacter != null && unitProfile?.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {

@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class DialogPanelController : WindowContentController {
 
-        private int dialogIndex = 0;
+        [Header("Dialog Panel")]
 
         [Tooltip("If no next text is provided for a dialog, this text will be used")]
         [SerializeField]
@@ -34,8 +34,16 @@ namespace AnyRPG {
         private HighlightButton continueButton = null;
 
         [SerializeField]
-        int dialogFontSize = 30;
+        private int dialogFontSize = 30;
 
+        [SerializeField]
+        private Image portraitImage = null;
+
+        [SerializeField]
+        private RawImage portraitSnapshotImage = null;
+
+
+        private int dialogIndex = 0;
 
         // game manager references
         protected UIManager uIManager = null;
@@ -174,8 +182,34 @@ namespace AnyRPG {
 
             SetNavigationController(uINavigationControllers[0]);
 
+            TargetInitialization();
+
             // this one last because it does a layout rebuild
             DisplayNodeText();
+        }
+
+        private void TargetInitialization() {
+            dialogManager.Interactable.ConfigureDialogPanel(this);
+        }
+
+        public void ConfigurePortrait(Sprite icon) {
+            portraitSnapshotImage.gameObject.SetActive(false);
+            portraitImage.gameObject.SetActive(true);
+
+            portraitImage.sprite = icon;
+        }
+
+        public void ConfigureSnapshotPortrait() {
+            portraitImage.gameObject.SetActive(false);
+            portraitSnapshotImage.gameObject.SetActive(true);
+            /*
+            if (namePlateController.NamePlateUnit.CameraTargetReady) {
+                HandleTargetReady();
+            }// else {
+             // testing subscribe no matter what in case unit appearance changes
+            SubscribeToTargetReady();
+            //}
+            */
         }
 
         public override void ReceiveClosedWindowNotification() {

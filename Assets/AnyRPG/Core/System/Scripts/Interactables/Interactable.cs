@@ -1151,6 +1151,10 @@ namespace AnyRPG {
             mainMapManager.InteractableStatusUpdate(this, interactableOptionComponent);
         }
 
+        public virtual void ConfigureDialogPanel(DialogPanelController dialogPanelController) {
+            // only needed in namePlateUnit and above
+        }
+
         public override void ResetSettings() {
             foreach (InteractableOptionComponent interactableOptionComponent in interactables) {
                 //Debug.Log($"{gameObject.name}.Interactable.Awake(): Found InteractableOptionComponent: " + interactable.ToString());
