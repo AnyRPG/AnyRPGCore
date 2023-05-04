@@ -59,6 +59,9 @@ namespace AnyRPG {
         [SerializeField]
         private List<DescribableCraftingInputIcon> inputIcons = new List<DescribableCraftingInputIcon>();
 
+        [SerializeField]
+        private UINavigationController recipeListNavigationController = null;
+
         // holds all the recipes
         private CraftAbilityProperties craftAbility = null;
 
@@ -82,7 +85,7 @@ namespace AnyRPG {
         private ObjectPooler objectPooler = null;
         private UIManager uIManager = null;
 
-        public RecipeScript SelectedRecipeScript { get => selectedRecipeScript; set => selectedRecipeScript = value; }
+        public RecipeScript SelectedRecipeScript { get => selectedRecipeScript; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -124,6 +127,10 @@ namespace AnyRPG {
             craftingManager.OnSetCraftAbility -= ViewRecipes;
         }
 
+        public void ClickOnRecipe(RecipeScript recipeScript) {
+            recipeListNavigationController.SetCurrentButton(recipeScript);
+        }
+
         public void SelectRecipe(Recipe recipe) {
             selectedRecipeScript = recipeScripts[recipe];
             //DeselectOtherRecipes();
@@ -160,7 +167,8 @@ namespace AnyRPG {
         }
 
         public void ShowRecipesCommon(CraftAbilityProperties craftAbility) {
-            //Debug.Log("craftingUI.ShowRecipesCommon(" + craftAbility.name + ")");
+            Debug.Log($"CraftingUI.ShowRecipesCommon({craftAbility.ResourceName})");
+
             Clearrecipes();
             RecipeScript firstScript = null;
             foreach (Recipe recipe in GetRecipes()) {
@@ -173,9 +181,9 @@ namespace AnyRPG {
                         firstScript = qs;
                     }
                     qs.Text.text = recipe.Output.DisplayName;
-                    qs.SetRecipe(recipe);
+                    qs.SetRecipe(recipe, this);
                     recipeScripts.Add(recipe, qs);
-                    uINavigationControllers[0].AddActiveButton(qs);
+                    recipeListNavigationController.AddActiveButton(qs);
                 } else {
                     //Debug.Log("Recipe Output is null!");
                 }
@@ -184,13 +192,13 @@ namespace AnyRPG {
             //if (MySelectedRecipeScript != null) {
             //MySelectedRecipeScript.Select();
             //} else {
-            SelectedRecipeScript = firstScript;
+            selectedRecipeScript = firstScript;
             /*
             if (firstScript != null) {
                 firstScript.Select();
             }
             */
-            SetNavigationController(uINavigationControllers[0]);
+            SetNavigationController(recipeListNavigationController);
 
             //}
         }
@@ -201,13 +209,15 @@ namespace AnyRPG {
         }
 
         public void ShowRecipes(CraftAbilityProperties craftAbility) {
-            //Debug.Log("craftingUI.Showrecipes(" + craftAbility.name + ")");
+            Debug.Log($"craftingUI.Showrecipes({craftAbility.ResourceName})");
+
             this.craftAbility = craftAbility;
             ShowRecipesCommon(this.craftAbility);
         }
 
         public void UpdateSelected() {
-            //Debug.Log("CraftingUI.UpdateSelected()");
+            Debug.Log("CraftingUI.UpdateSelected()");
+
             if (selectedRecipeScript != null) {
                 craftAmount = 1;
                 ShowDescription(selectedRecipeScript.Recipe);
@@ -215,7 +225,8 @@ namespace AnyRPG {
         }
 
         public void ShowDescription(Recipe newRecipe) {
-            //Debug.Log("CraftingUI.ShowDescription(" + newRecipe.DisplayName + ")");
+            Debug.Log($"CraftingUI.ShowDescription({newRecipe.ResourceName})");
+
             ClearDescription();
 
             if (newRecipe == null) {
@@ -258,13 +269,14 @@ namespace AnyRPG {
         }
 
         public void DeselectOtherRecipes() {
-            //Debug.Log("CraftingUI.DeselectRecipes()");
+            Debug.Log("CraftingUI.DeselectRecipes()");
+
             foreach (Recipe recipe in recipeScripts.Keys) {
-                if (recipe != SelectedRecipeScript?.Recipe) {
+                if (recipe != selectedRecipeScript?.Recipe) {
                     recipeScripts[recipe].DeSelect();
                 }
             }
-            uINavigationControllers[0].UnHightlightButtonBackgrounds(SelectedRecipeScript);
+            recipeListNavigationController.UnHightlightButtonBackgrounds(selectedRecipeScript);
 
         }
 
@@ -279,14 +291,14 @@ namespace AnyRPG {
                 objectPooler.ReturnObjectToPool(recipeScript.gameObject);
             }
             recipeScripts.Clear();
-            uINavigationControllers[0].ClearActiveButtons();
+            recipeListNavigationController.ClearActiveButtons();
         }
 
         public override void ReceiveClosedWindowNotification() {
             //Debug.Log("craftingUI.OnCloseWindow()");
             base.ReceiveClosedWindowNotification();
             //Debug.Log("craftingUI.OnCloseWindow(): nulling recipe script");
-            SelectedRecipeScript = null;
+            selectedRecipeScript = null;
             craftingManager.ClearSelectedRecipe();
         }
 
@@ -322,8 +334,8 @@ namespace AnyRPG {
 
         public void CraftAll() {
             //Debug.Log("CraftingUI.CraftAll()");
-            if (SelectedRecipeScript != null) {
-                craftAmount = craftingManager.GetMaxCraftAmount(SelectedRecipeScript.Recipe);
+            if (selectedRecipeScript != null) {
+                craftAmount = craftingManager.GetMaxCraftAmount(selectedRecipeScript.Recipe);
                 UpdateCraftAmountArea();
                 BeginCrafting();
             } else {
@@ -333,9 +345,9 @@ namespace AnyRPG {
 
         public void BeginCrafting() {
             //Debug.Log("CraftingUI.BeginCrafting()");
-            if (SelectedRecipeScript != null) {
+            if (selectedRecipeScript != null) {
                 for (int i = 0; i < craftAmount; i++) {
-                    craftingManager.CraftingQueue.Add(SelectedRecipeScript.Recipe);
+                    craftingManager.CraftingQueue.Add(selectedRecipeScript.Recipe);
                 }
                 playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility);
             } else {
@@ -347,8 +359,8 @@ namespace AnyRPG {
         public void UpdateCraftAmountArea() {
             //Debug.Log("CraftingUI.UpdateCraftAmountArea()");
             int maxAmount = 0;
-            if (SelectedRecipeScript != null) {
-                maxAmount = craftingManager.GetMaxCraftAmount(SelectedRecipeScript.Recipe);
+            if (selectedRecipeScript != null) {
+                maxAmount = craftingManager.GetMaxCraftAmount(selectedRecipeScript.Recipe);
                 if (craftAmount == 0 && maxAmount > 0) {
                     craftAmount = 1;
                 }

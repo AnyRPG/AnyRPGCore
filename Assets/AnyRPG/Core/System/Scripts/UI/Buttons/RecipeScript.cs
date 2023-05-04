@@ -10,6 +10,8 @@ namespace AnyRPG {
 
         protected Recipe recipe;
 
+        private CraftingUI craftingUI = null;
+
         // game manager references
         protected CraftingManager craftingManager = null;
 
@@ -21,8 +23,14 @@ namespace AnyRPG {
             craftingManager = systemGameManager.CraftingManager;
         }
 
-        public void SetRecipe(Recipe newRecipe) {
+        public void SetRecipe(Recipe newRecipe, CraftingUI craftingUI) {
             recipe = newRecipe;
+            this.craftingUI = craftingUI;
+        }
+
+        public void ClickOnButton() {
+            Select();
+            craftingUI.ClickOnRecipe(this);
         }
 
         public override void Select() {
