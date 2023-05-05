@@ -66,7 +66,6 @@ namespace AnyRPG {
                 return;
             }
 
-            //uIManager.ShowToolTip(transform.position, LootDrop);
             ShowGamepadTooltip();
         }
 

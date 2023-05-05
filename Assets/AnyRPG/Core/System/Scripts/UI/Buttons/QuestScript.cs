@@ -69,20 +69,6 @@ namespace AnyRPG {
             Text.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, quest.ExperienceLevel);
         }
 
-        /*
-        public void CommonSelect() {
-            if (QuestLogUI.Instance.MySelectedQuestScript != null && QuestLogUI.Instance.MySelectedQuestScript != this) {
-                QuestLogUI.Instance.MySelectedQuestScript.DeSelect();
-            }
-            QuestLogUI.Instance.MySelectedQuestScript = this;
-
-        }
-        */
-        /*
-        public void RawSelect() {
-            CommonSelect();
-        }
-        */
 
     }
 

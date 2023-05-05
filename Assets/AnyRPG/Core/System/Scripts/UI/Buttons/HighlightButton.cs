@@ -220,15 +220,9 @@ namespace AnyRPG {
             Interact();
         }
 
-        /*
-        public override void Interact() {
-            //Debug.Log($"{gameObject.name}.HighlightButton.Interact()");
-
-            base.Interact();
-            
-        }
-        */
-
+        /// <summary>
+        /// called by pressing the accept button on the gamepad
+        /// </summary>
         public override void Accept() {
             //Debug.Log($"{gameObject.name}.HighlightButton.Accept()");
 
@@ -238,8 +232,14 @@ namespace AnyRPG {
             }
         }
 
+        /// <summary>
+        /// Meant to be called from the OnClick() action of a Unity button component, which can also be invoked via gamepad button press causing Accept() to fire
+        /// </summary>
         public virtual void ButtonClickAction() {
-            // only use in child classes
+            if (controlsManager.GamePadInputActive == false) {
+                Select();
+                owner.SetCurrentButton(this);
+            }
         }
 
 

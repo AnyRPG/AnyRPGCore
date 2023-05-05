@@ -8,28 +8,20 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class LoadGameButton : HighlightButton {
 
-        //[SerializeField]
-        //private Faction faction = null;
-
-        LoadGamePanel loadGamePanel = null;
+        [Header("Load Game Button")]
 
         [SerializeField]
         protected Image icon = null;
 
-        //[SerializeField]
-        //private TextMeshProUGUI playerName = null;
-
         [SerializeField]
         protected TextMeshProUGUI playerName = null;
-
-        //[SerializeField]
-        //private TextMeshProUGUI description = null;
 
         [SerializeField]
         protected TextMeshProUGUI description = null;
 
-        //[SerializeField]
         protected AnyRPGSaveData saveData;
+
+        LoadGamePanel loadGamePanel = null;
 
         protected UnitProfile unitProfile;
 
@@ -100,15 +92,6 @@ namespace AnyRPG {
             unitProfile = systemDataFactory.GetResource<UnitProfile>(saveData.unitProfileName);
         }
 
-        /*
-        public void ClearSaveData() {
-            icon.sprite = null;
-            icon.color = new Color32(0, 0, 0, 0);
-            factionName.text = string.Empty;
-            description.text = string.Empty;
-        }
-        */
-
         public void CommonSelect() {
             //Debug.Log($"{gameObject.name}.LoadGameButton.CommonSelect()");
             if (loadGamePanel.SelectedLoadGameButton != null && loadGamePanel.SelectedLoadGameButton != this) {
@@ -118,12 +101,6 @@ namespace AnyRPG {
                 loadGamePanel.ShowSavedGame(this);
             }
         }
-
-        /*
-        public void RawSelect() {
-            CommonSelect();
-        }
-        */
 
         public override void Select() {
             //Debug.Log($"{gameObject.name}.LoadGameButton.Select()");

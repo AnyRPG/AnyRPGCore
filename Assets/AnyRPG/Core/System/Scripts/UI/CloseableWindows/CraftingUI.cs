@@ -127,10 +127,6 @@ namespace AnyRPG {
             craftingManager.OnSetCraftAbility -= ViewRecipes;
         }
 
-        public void ClickOnRecipe(RecipeScript recipeScript) {
-            recipeListNavigationController.SetCurrentButton(recipeScript);
-        }
-
         public void SelectRecipe(Recipe recipe) {
             selectedRecipeScript = recipeScripts[recipe];
             //DeselectOtherRecipes();
@@ -167,7 +163,7 @@ namespace AnyRPG {
         }
 
         public void ShowRecipesCommon(CraftAbilityProperties craftAbility) {
-            Debug.Log($"CraftingUI.ShowRecipesCommon({craftAbility.ResourceName})");
+            //Debug.Log($"CraftingUI.ShowRecipesCommon({craftAbility.ResourceName})");
 
             Clearrecipes();
             RecipeScript firstScript = null;
@@ -181,7 +177,7 @@ namespace AnyRPG {
                         firstScript = qs;
                     }
                     qs.Text.text = recipe.Output.DisplayName;
-                    qs.SetRecipe(recipe, this);
+                    qs.SetRecipe(recipe);
                     recipeScripts.Add(recipe, qs);
                     recipeListNavigationController.AddActiveButton(qs);
                 } else {
@@ -209,14 +205,14 @@ namespace AnyRPG {
         }
 
         public void ShowRecipes(CraftAbilityProperties craftAbility) {
-            Debug.Log($"craftingUI.Showrecipes({craftAbility.ResourceName})");
+            //Debug.Log($"craftingUI.Showrecipes({craftAbility.ResourceName})");
 
             this.craftAbility = craftAbility;
             ShowRecipesCommon(this.craftAbility);
         }
 
         public void UpdateSelected() {
-            Debug.Log("CraftingUI.UpdateSelected()");
+            //Debug.Log("CraftingUI.UpdateSelected()");
 
             if (selectedRecipeScript != null) {
                 craftAmount = 1;
@@ -225,7 +221,7 @@ namespace AnyRPG {
         }
 
         public void ShowDescription(Recipe newRecipe) {
-            Debug.Log($"CraftingUI.ShowDescription({newRecipe.ResourceName})");
+            //Debug.Log($"CraftingUI.ShowDescription({newRecipe.ResourceName})");
 
             ClearDescription();
 
@@ -269,7 +265,7 @@ namespace AnyRPG {
         }
 
         public void DeselectOtherRecipes() {
-            Debug.Log("CraftingUI.DeselectRecipes()");
+            //Debug.Log("CraftingUI.DeselectRecipes()");
 
             foreach (Recipe recipe in recipeScripts.Keys) {
                 if (recipe != selectedRecipeScript?.Recipe) {

@@ -184,6 +184,7 @@ namespace AnyRPG {
 
         public void SetSelectedButton(MusicPlayerHighlightButton musicPlayerHighlightButton) {
             uINavigationControllers[0].UnHightlightButtonBackgrounds(musicPlayerHighlightButton);
+            ShowDescription(musicPlayerHighlightButton.MusicProfile);
         }
 
         public void ClearMusicProfiles() {

@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    // this is almost identical to questscript
 
     public class InteractionPanelQuestScript : HighlightButton {
 
@@ -35,26 +34,6 @@ namespace AnyRPG {
             questLog = systemGameManager.QuestLog;
         }
 
-        /*
-        public override void Interact() {
-            Debug.Log("InteractionPanelQuestScript.Interact()");
-
-            base.Interact();
-            //Debug.Log((MyQuest == null ? "null" : MyQuest.DisplayName) + ".InteractionPanelQuestScript.Select()");
-            if (quest == null) {
-                return;
-            }
-
-            if (quest.HasOpeningDialog == true && quest.OpeningDialog != null && quest.OpeningDialog.TurnedIn == false) {
-                //Debug.Log("InteractionPanelQuestScript.Select(): dialog is not completed, popping dialog with questGiver: " + (questGiver == null ? "null" : questGiver.Interactable.DisplayName));
-                questLog.ShowQuestGiverDescription(quest, questGiver);
-            } else {
-                //Debug.Log("InteractionPanelQuestScript.Select(): has no dialog, or dialog is completed, opening questgiver window");
-                questLog.ShowQuestGiverDescription(quest, questGiver);
-            }
-        }
-        */
-
         public override void ButtonClickAction() {
             //Debug.Log("InteractionPanelQuestScript.ButtonClickAction()");
             base.ButtonClickAction();
@@ -71,22 +50,6 @@ namespace AnyRPG {
                 questLog.ShowQuestGiverDescription(quest, questGiver);
             }
         }
-
-        /*
-        public void IsComplete() {
-            //Debug.Log("QuestTrackerQuestScript.IsComplete(): Checking questscript iscomplete on myquest: " + MyQuest.MyTitle);
-            if (quest.IsComplete && !markedComplete) {
-                markedComplete = true;
-                //Debug.Log("the quest is complete");
-                Text.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName + " (Complete)";
-            } else if (!quest.IsComplete) {
-                markedComplete = false;
-                Text.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName;
-            }
-            Text.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, quest.ExperienceLevel);
-        }
-        */
-
 
     }
 

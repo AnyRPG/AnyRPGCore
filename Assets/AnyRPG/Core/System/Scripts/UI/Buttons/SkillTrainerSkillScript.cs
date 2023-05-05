@@ -31,10 +31,6 @@ namespace AnyRPG {
             skillTrainerUI.SetSelectedButton(this);
         }
 
-        public override void DeSelect() {
-            base.DeSelect();
-        }
-
     }
 
 }

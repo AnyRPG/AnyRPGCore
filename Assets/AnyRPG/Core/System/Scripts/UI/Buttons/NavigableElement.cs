@@ -125,6 +125,9 @@ namespace AnyRPG {
             return gameObject.activeInHierarchy;
         }
 
+        /// <summary>
+        /// respond to accept button pressed on gamepad
+        /// </summary>
         public virtual void Accept() {
             //Debug.Log($"{gameObject.name}NavigableElement.Accept()");
             Interact();
@@ -224,7 +227,8 @@ namespace AnyRPG {
 
 
         public void HighlightOutline() {
-            //Debug.Log($"{gameObject.name}NavigableElement.HighlightOutline()");
+            //Debug.Log($"{gameObject.name}.NavigableElement.HighlightOutline()");
+
             if (outlineImage != null) {
                 outlineImage.color = highlightOutlineColor;
             }
