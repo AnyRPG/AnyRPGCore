@@ -38,8 +38,6 @@ MonoBehaviour:
       lineOfSightSourceLocation: 0
       targetRangeSourceLocation: 0
     chanceToCast: 100
-    effectMaterialName: Ice
-    materialChangeDuration: 2
     onHitAudioProfileNames:
     - Ice Spell Hit
     randomAudioProfiles: 0
@@ -53,7 +51,7 @@ MonoBehaviour:
       useUniversalAttachment: 0
       attachmentName: 
     prefabSpawnLocation: 2
-    prefabDestroyDelay: 0
+    prefabDestroyDelay: 2
     destroyOnEndCast: 0
     tickRate: 0
     castZeroTick: 0
@@ -64,11 +62,13 @@ MonoBehaviour:
     statusEffectAlignment: 2
     statusEffectTypeName: 
     statusEffectGroupName: 
+    effectMaterialName: Ice
     classTrait: 0
     requiredLevel: 1
     sceneNames: []
     requireOutOfCombat: 0
     limitedDuration: 1
+    refreshableDuration: 0
     duration: 2
     maxStacks: 1
     statBuffTypeNames: []

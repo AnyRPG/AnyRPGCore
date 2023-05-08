@@ -406,7 +406,7 @@ namespace AnyRPG {
             patrolController = new PatrolController(this, systemGameManager);
             behaviorController = new BehaviorController(this, systemGameManager);
             unitModelController = new UnitModelController(this, systemGameManager);
-            unitMaterialController = new UnitMaterialController(this, systemGameManager);
+            
             unitVoiceController = new UnitVoiceController(this, systemGameManager);
             unitMountManager = new UnitMountManager(this, systemGameManager);
             unitActionManager = new UnitActionManager(this, systemGameManager);
@@ -425,6 +425,12 @@ namespace AnyRPG {
             levelManager = systemGameManager.LevelManager;
             keyBindManager = systemGameManager.KeyBindManager;
             audioManager = systemGameManager.AudioManager;
+        }
+
+        protected override void CreateMaterialController() {
+            // intentionally not calling base
+            unitMaterialController = new UnitMaterialController(this, systemGameManager);
+            objectMaterialController = unitMaterialController;
         }
 
         public override void ProcessCreateEventSubscriptions() {
@@ -1089,7 +1095,7 @@ namespace AnyRPG {
 
         public void SetModelReady() {
             //Debug.Log($"{gameObject.name}.UnitController.SetModelReady()");
-            unitMaterialController.SetupMaterialArrays();
+            unitMaterialController.PopulateOriginalMaterials();
             OnCameraTargetReady();
         }
 

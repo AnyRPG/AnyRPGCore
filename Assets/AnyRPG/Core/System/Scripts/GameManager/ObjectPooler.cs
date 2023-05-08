@@ -148,6 +148,8 @@ namespace AnyRPG {
         }
 
         public void ReturnObjectToPool(GameObject pooledGameObject, float delayTime = 0f) {
+            //Debug.Log($"ObjectPooler.ReturnObjectToPool({pooledGameObject.name}) instanceID: {pooledGameObject.GetInstanceID()}, {delayTime}");
+
             if (delayTime == 0f) {
                 ReturnObjectToPool(pooledGameObject);
                 return;

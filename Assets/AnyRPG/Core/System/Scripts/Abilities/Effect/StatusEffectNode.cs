@@ -55,7 +55,8 @@ namespace AnyRPG {
         }
 
         public void ClearEffectPrefabs() {
-            //Debug.Log("StatusEffectNode.ClearEffectPrefabs(): " + StatusEffect.DisplayName);
+            //Debug.Log($"StatusEffectNode.ClearEffectPrefabs(): {StatusEffect.DisplayName}");
+
             if (prefabObjects != null) {
                 foreach (List<GameObject> gameObjectList in prefabObjects.Values) {
                     foreach (GameObject go in gameObjectList) {

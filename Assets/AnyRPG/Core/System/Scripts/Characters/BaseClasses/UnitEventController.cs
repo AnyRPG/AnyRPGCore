@@ -139,7 +139,7 @@ namespace AnyRPG {
 
         public void NotifyOnAfterDie(CharacterStats characterStats) {
             if (unitController.GetCurrentInteractables().Count == 0) {
-                unitController.RevertMaterialChange();
+                unitController.OutlineController.TurnOffOutline();
             }
         }
 

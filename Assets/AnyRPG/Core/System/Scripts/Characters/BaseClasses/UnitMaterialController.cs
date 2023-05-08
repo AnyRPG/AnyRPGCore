@@ -5,72 +5,21 @@ using System.Collections.Generic;
 
 namespace AnyRPG {
 
-    public class UnitMaterialController : ConfiguredClass {
+    public class UnitMaterialController : ObjectMaterialController {
 
         // unit controller of controlling unit
-        private UnitController unitController;
+        private UnitController unitController = null;
 
-        private float changeDuration = 2f;
+        // global to prevent garbage collection every time stealth is activated
+        public Material[] stealthMaterials = null;
 
-        public Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
-
+        // global to prevent garbage collection every time non stealth material change is activated
         public Material[] temporaryMaterials = null;
 
         private Material temporaryMaterial = null;
 
-        Renderer[] meshRenderers = null;
-
-        public UnitMaterialController(UnitController unitController, SystemGameManager systemGameManager) {
+        public UnitMaterialController(UnitController unitController, SystemGameManager systemGameManager) : base(unitController, systemGameManager) {
             this.unitController = unitController;
-            Configure(systemGameManager);
-        }
-
-        public void SetupMaterialArrays() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMaterialController.SetupMaterialArrays()");
-
-            // reset original materials
-            originalMaterials = new Dictionary<Renderer, Material[]>();
-
-            meshRenderers = unitController.GetComponentsInChildren<MeshRenderer>();
-
-            List<Renderer> tempList = new List<Renderer>();
-            if (meshRenderers == null || meshRenderers.Length == 0) {
-                //Debug.Log($"{gameObject.name}.Interactable.InitializeMaterialsNew(): Unable to find mesh renderer in target.");
-            } else {
-                //Debug.Log($"{gameObject.name}.Interactable.InitializeMaterialsNew(): Found " + meshRenderers.Length + " Mesh Renderers");
-                foreach (Renderer renderer in meshRenderers) {
-                    if (renderer.gameObject.layer != LayerMask.NameToLayer("SpellEffects")) {
-                        tempList.Add(renderer);
-                    }
-                }
-            }
-            Renderer[] skinnedMeshRenderers = unitController.GetComponentsInChildren<SkinnedMeshRenderer>();
-            if (skinnedMeshRenderers == null || skinnedMeshRenderers.Length == 0) {
-                //Debug.Log($"{gameObject.name}.Interactable.InitializeMaterialsNew(): Unable to find skinned mesh renderer in target.");
-            } else {
-                //Debug.Log($"{gameObject.name}.Interactable.InitializeMaterialsNew(): Found " + skinnedMeshRenderers.Length + " Skinned Mesh Renderers");
-                foreach (Renderer renderer in skinnedMeshRenderers) {
-                    if (renderer.gameObject.layer != LayerMask.NameToLayer("SpellEffects")) {
-                        tempList.Add(renderer);
-                    }
-                }
-            }
-            meshRenderers = tempList.ToArray();
-
-
-            foreach (Renderer renderer in meshRenderers) {
-                if (renderer.gameObject.layer == LayerMask.NameToLayer("SpellEffects")) {
-                    continue;
-                }
-                originalMaterials.Add(renderer, renderer.materials);
-            }
-        }
-
-        public void Initialize(float changeDuration, Material temporaryMaterial) {
-            this.changeDuration = changeDuration;
-            this.temporaryMaterial = temporaryMaterial;
-
-            PerformMaterialChange();
         }
 
         public void ActivateStealth() {
@@ -81,22 +30,15 @@ namespace AnyRPG {
                 return;
             }
             foreach (Renderer renderer in meshRenderers) {
-                //Debug.Log("MaterialChangeController.PerformMaterialChange(): material length: " + originalMaterials[renderer].Length);
-                temporaryMaterials = new Material[originalMaterials[renderer].Length];
-                //Debug.Log("MaterialChangeController.PerformMaterialChange(): temporary materials length: " + temporaryMaterials.Length);
+                stealthMaterials = new Material[originalMaterials[renderer].Length];
                 for (int i = 0; i < originalMaterials[renderer].Length; i++) {
-                    //temporaryMaterials[i] = originalMaterials[renderer][i];
-                    temporaryMaterials[i] = new Material(originalMaterials[renderer][i]);
-                    //enable emission and set the emission texture to none in case this item already had some type of glow mask or effect
-                    //Debug.Log("Interactable.Update(): flashingmaterial: " + temporaryMaterial.name + "; emission enabled? " + temporaryMaterial.IsKeywordEnabled("_EMISSION"));
-                    //Debug.Log($"{gameObject.name}.Interactable.PerformMaterialChange(): enabling emission");
-                    ToFadeMode(temporaryMaterials[i]);
-                    Color materialColor = temporaryMaterials[i].color;
-                    //temporaryMaterials[i].color = new Color32(temporaryMaterials[i].color.r, temporaryMaterials[i].color.g, temporaryMaterials[i].color.b, 100);
+                    stealthMaterials[i] = new Material(originalMaterials[renderer][i]);
+                    ToFadeMode(stealthMaterials[i]);
+                    Color materialColor = stealthMaterials[i].color;
                     materialColor.a = 0.25f;
-                    temporaryMaterials[i].color = materialColor;
+                    stealthMaterials[i].color = materialColor;
                 }
-                renderer.materials = temporaryMaterials;
+                renderer.materials = stealthMaterials;
             }
         }
 
@@ -117,41 +59,40 @@ namespace AnyRPG {
             material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
         }
 
-        public void PerformMaterialChange() {
-            //Debug.Log($"{gameObject.name}.MaterialChangeController.PerformMaterialChange()");
+        public void ApplyTemporaryMaterialChange(Material temporaryMaterial) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitMaterialController.PerformMaterialChange()");
+
+            this.temporaryMaterial = temporaryMaterial;
+
+            PerformTemporaryMaterialChange();
+        }
+
+        public void PerformTemporaryMaterialChange() {
+            //Debug.Log($"{unitController.gameObject.name}.UnitMaterialController.PerformTemporaryMaterialChange()");
 
             if (meshRenderers == null) {
-                //Debug.Log("MaterialChangeController.PerformMaterialChange(): meshRender is null.  This shouldn't happen because we checked before instantiating this!");
+                //Debug.Log("UnitMaterialController.PerformTemporaryMaterialChange(): meshRender is null.  This shouldn't happen because we checked before instantiating this!");
                 return;
             }
             foreach (Renderer renderer in meshRenderers) {
-                if (renderer.gameObject.layer == LayerMask.NameToLayer("SpellEffects")) {
-                    continue;
-                }
-                originalMaterials.Add(renderer, renderer.materials);
-                //Debug.Log("MaterialChangeController.PerformMaterialChange(): material length: " + originalMaterials[renderer].Length);
                 temporaryMaterials = new Material[originalMaterials[renderer].Length];
-                //Debug.Log("MaterialChangeController.PerformMaterialChange(): temporary materials length: " + temporaryMaterials.Length);
                 for (int i = 0; i < originalMaterials[renderer].Length; i++) {
-                    //temporaryMaterials[i] = originalMaterials[renderer][i];
                     temporaryMaterials[i] = temporaryMaterial;
                 }
                 renderer.materials = temporaryMaterials;
             }
 
-            //Debug.Log($"{gameObject.name}.MaterialChangeController.PerformMaterialChange(): Invoke RevertMaterialChange in duration: " + changeDuration);
-            //Invoke("RevertMaterialChange", changeDuration);
         }
 
-        public void OnDisable() {
-            //Debug.Log($"{gameObject.name}.MaterialChangeController.OnDisable()");
-            if (SystemGameManager.IsShuttingDown) {
-                return;
-            }
+        public void RevertTemporaryMaterialChange() {
+            //Debug.Log($"{unitController.gameObject.name}.UnitMaterialController.RevertMaterialChange()");
+
+            temporaryMaterial = null;
+            RevertMaterialChange();
         }
 
-        public void RevertMaterialChange() {
-            //Debug.Log($"{gameObject.name}.MaterialChangeController.RevertMaterialChange()");
+        private void RevertMaterialChange() {
+            //Debug.Log($"{unitController.gameObject.name}.UnitMaterialController.RevertMaterialChange()");
 
             if (meshRenderers == null) {
                 //Debug.Log("meshRender is null.  This shouldn't happen because we checked before instantiating this!");
@@ -159,15 +100,13 @@ namespace AnyRPG {
             }
 
             foreach (Renderer renderer in meshRenderers) {
-                if (renderer != null && renderer.gameObject.layer == LayerMask.NameToLayer("SpellEffects")) {
-                    continue;
-                }
                 if (renderer != null && originalMaterials.ContainsKey(renderer)) {
                     renderer.materials = originalMaterials[renderer];
                 }
             }
 
         }
+
     }
 
 }

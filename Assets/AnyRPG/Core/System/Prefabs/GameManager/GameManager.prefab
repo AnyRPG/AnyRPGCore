@@ -7462,6 +7462,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 4857892935139143783}
   mainCameraGameObject: {fileID: 5793331057073808572}
+  mainCameraHighlighter: {fileID: 3857152535411761136}
   mainMapCamera: {fileID: 2597024624114562679}
   characterPortraitCamera: {fileID: 664596880785486704}
   focusPortraitCamera: {fileID: 6331059154455404701}
@@ -23785,6 +23786,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 127f9d6e30fbd644882440aa59a99f29, type: 3}
+--- !u!114 &3857152535411761136 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8346454242582532190, guid: 127f9d6e30fbd644882440aa59a99f29,
+    type: 3}
+  m_PrefabInstance: {fileID: 5067627252420186030}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8b4c15dda808c24999a777f512600af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!20 &4857892935139143783 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 376446118617235401, guid: 127f9d6e30fbd644882440aa59a99f29,

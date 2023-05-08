@@ -17,20 +17,6 @@ namespace AnyRPG {
         [SerializeField]
         protected float chanceToCast = 100f;
 
-        [Header("Material Changes")]
-
-        [SerializeField]
-        [ResourceSelector(resourceType = typeof(MaterialProfile))]
-        private string effectMaterialName = string.Empty;
-
-        // a material to temporarily assign to the target we hit
-        //[SerializeField]
-        private Material effectMaterial;
-
-        [Tooltip("The length, in seconds, that any material change (such as ice freeze) should last.")]
-        [SerializeField]
-        private float materialChangeDuration = 2f;
-
         [Header("Audio")]
 
         [SerializeField]
@@ -293,43 +279,9 @@ namespace AnyRPG {
                 return;
             }
             PlayAudioEffects(onHitAudioProfiles, target, abilityEffectContext);
-            //PerformMaterialChange(source, target);
-            PerformMaterialChange(target);
         }
 
-        //void PerformMaterialChange(BaseCharacter source, GameObject target) {
-        void PerformMaterialChange(Interactable target) {
-            //Debug.Log(abilityEffectName + ".AbilityEffect.PerformMaterialChange(" + source.name + ", " + target.name + ")");
-            if (effectMaterial == null) {
-                //Debug.Log("This effect does not have a material.  returning");
-                return;
-            }
-            if (target == null) {
-                //Debug.Log("target is null.  returning");
-                return;
-            }
-
-            Renderer[] meshRenderer = target.GetComponentsInChildren<MeshRenderer>();
-
-            if (meshRenderer == null || meshRenderer.Length == 0) {
-                //Debug.Log(resourceName + ".AbilityEffect.PerformmaterialChange(): Unable to find mesh renderer in target.");
-                meshRenderer = target.GetComponentsInChildren<SkinnedMeshRenderer>();
-                if (meshRenderer == null || meshRenderer.Length == 0) {
-                    //Debug.Log(resourceName + ".AbilityEffect.PerformmaterialChange(): Unable to find skinned mesh renderer in target.");
-                    return;
-                } else {
-                    //Debug.Log(resourceName + ".AbilityEffect.PerformmaterialChange(): Found " + meshRenderer.Length + " Skinned Mesh Renderers");
-                }
-            } else {
-                //Debug.Log(resourceName + ".AbilityEffect.PerformmaterialChange(): Found " + meshRenderer.Length + " Mesh Renderers");
-            }
-
-
-            if (target.GetComponent<MaterialChangeController>() == null) {
-                MaterialChangeController materialChangeController = target.gameObject.AddComponent<MaterialChangeController>();
-                materialChangeController.Initialize(materialChangeDuration, effectMaterial);
-            }
-        }
+       
 
         public AbilityEffectContext ApplyInputMultiplier(AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AbilityEffect.ApplyInputMultiplier()");
@@ -373,16 +325,6 @@ namespace AnyRPG {
                     } else {
                         Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find audio profile: " + audioProfileName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                     }
-                }
-            }
-
-            if (effectMaterialName != null && effectMaterialName != string.Empty) {
-                effectMaterial = null;
-                MaterialProfile tmpMaterialProfile = systemDataFactory.GetResource<MaterialProfile>(effectMaterialName);
-                if (tmpMaterialProfile != null) {
-                    effectMaterial = tmpMaterialProfile.MyEffectMaterial;
-                } else {
-                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find material profile: " + effectMaterialName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace AnyRPG {
 
+    // currently unused, replaced by UnitMaterialController
     public class MaterialChangeController : MonoBehaviour {
 
         private float changeDuration = 2f;
@@ -74,13 +75,6 @@ namespace AnyRPG {
 
             //Debug.Log($"{gameObject.name}.MaterialChangeController.PerformMaterialChange(): Invoke RevertMaterialChange in duration: " + changeDuration);
             Invoke("RevertMaterialChange", changeDuration);
-        }
-
-        public void OnDisable() {
-            //Debug.Log($"{gameObject.name}.MaterialChangeController.OnDisable()");
-            if (SystemGameManager.IsShuttingDown) {
-                return;
-            }
         }
 
         public void RevertMaterialChange() {

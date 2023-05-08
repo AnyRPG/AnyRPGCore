@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1669450327300939225}
   - component: {fileID: 1056082443696094217}
   - component: {fileID: 5858463170870984339}
+  - component: {fileID: 8346454242582532190}
   m_Layer: 3
   m_Name: CameraObject
   m_TagString: MainCamera
@@ -30,6 +31,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1600431275800750871}
   m_RootOrder: 0
@@ -159,6 +161,24 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!114 &8346454242582532190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181534647069752322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8b4c15dda808c24999a777f512600af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineColor: {r: 1, g: 0, b: 0, a: 0.5}
+  occludedOutlineOpacity: 0.3
+  blurSize: 1
+  alphaCutoff: 0.1
+  bufferDrawEvent: 18
+  cam: {fileID: 376446118617235401}
 --- !u!1 &1600431275800750866
 GameObject:
   m_ObjectHideFlags: 0
@@ -188,6 +208,7 @@ Transform:
   m_LocalRotation: {x: 0.02077415, y: 0.97018987, z: -0.22407508, w: 0.08994696}
   m_LocalPosition: {x: -11, y: 6, z: 21.72}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3261859672803438991}
   m_Father: {fileID: 0}

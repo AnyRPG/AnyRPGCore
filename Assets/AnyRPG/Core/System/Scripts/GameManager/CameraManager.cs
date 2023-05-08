@@ -14,6 +14,9 @@ namespace AnyRPG {
         private GameObject mainCameraGameObject = null;
 
         [SerializeField]
+        private ObjectHighlighter mainCameraHighlighter = null;
+
+        [SerializeField]
         private Camera mainMapCamera = null;
 
         [SerializeField]
@@ -81,6 +84,7 @@ namespace AnyRPG {
         }
 
         public CutsceneCameraController CurrentCutsceneCameraController { get => currentCutsceneCameraController; set => currentCutsceneCameraController = value; }
+        public ObjectHighlighter MainCameraHighlighter { get => mainCameraHighlighter; set => mainCameraHighlighter = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("CameraManager.Awake()");

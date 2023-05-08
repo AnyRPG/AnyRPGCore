@@ -107,22 +107,8 @@ namespace AnyRPG {
 
         protected List<InteractableOptionComponent> interactables = new List<InteractableOptionComponent>();
 
-        protected Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
-
-        protected Material[] temporaryMaterials = null;
-        protected Renderer[] meshRenderers = null;
-
-        protected List<Shader> shaderList = new List<Shader>();
-        protected List<Color> emissionColorList = new List<Color>();
-        protected List<Texture> emissionTextureList = new List<Texture>();
-        protected List<bool> emissionEnabledList = new List<bool>();
-
         // state
-        protected bool suppressGlow = false;
-        protected bool glowQueued = false;
         protected bool isInteracting = false;
-        protected bool isFlashing = false;
-        protected bool hasMeshRenderer = false;
         protected bool miniMapIndicatorReady = false;
         protected bool isMouseOverUnit = false;
         protected bool isMouseOverNameplate = false;
@@ -135,6 +121,8 @@ namespace AnyRPG {
         // created components
         protected CharacterUnit characterUnit = null;
         protected DialogController dialogController = null;
+        protected OutlineController outlineController = null;
+        protected ObjectMaterialController objectMaterialController = null;
 
         // game manager references
         protected UIManager uIManager = null;
@@ -146,7 +134,6 @@ namespace AnyRPG {
         // properties
         public bool IsInteracting { get => isInteracting; }
         public List<InteractableOptionComponent> Interactables { get => interactables; set => interactables = value; }
-
 
         public Sprite Icon { get => interactableIcon; }
 
@@ -219,6 +206,8 @@ namespace AnyRPG {
         public bool IsMouseOverUnit { get => isMouseOverUnit; set => isMouseOverUnit = value; }
         public bool IsMouseOverNameplate { get => isMouseOverNameplate; set => isMouseOverNameplate = value; }
         public string InteractionTooltipText { get => interactionTooltipText; set => interactionTooltipText = value; }
+        public OutlineController OutlineController { get => outlineController; }
+        public ObjectMaterialController ObjectMaterialController { get => objectMaterialController; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log($"{gameObject.name}.Interactable.Configure()");
@@ -232,7 +221,6 @@ namespace AnyRPG {
             }
             dialogController = new DialogController(this, systemGameManager);
             DisableInteraction();
-            temporaryMaterials = null;
             if (temporaryMaterial == null) {
                 temporaryMaterial = systemConfigurationManager.TemporaryMaterial;
             }
@@ -240,6 +228,13 @@ namespace AnyRPG {
                 //Debug.Log("No glow materials available. overrideing glowOnMouseover to false");
                 glowOnMouseOver = false;
             }
+
+            outlineController = new OutlineController(this, systemGameManager);
+            CreateMaterialController();
+        }
+
+        protected virtual void CreateMaterialController() {
+            objectMaterialController = new ObjectMaterialController(this, systemGameManager);
         }
 
         public override void SetGameManagerReferences() {
@@ -287,6 +282,13 @@ namespace AnyRPG {
             }
         }
 
+        public override void ProcessInit() {
+            base.ProcessInit();
+
+            //if (spawnReference != null) {
+                objectMaterialController.PopulateOriginalMaterials();
+            //}
+        }
 
 
         /// <summary>
@@ -327,30 +329,16 @@ namespace AnyRPG {
             interactables.Add(interactableOption);
         }
 
-        public IEnumerator GlowNextFrame() {
-            yield return null;
-            if (glowQueued) {
-                if (!IsBuilding()) {
-                    ActivateGlow();
-                }
-            }
-        }
+        
 
         protected virtual void Update() {
             // if the item is highlighted, we will continue a pulsing glow
             //return;
 
-            if (glowQueued) {
-                if (!IsBuilding()) {
-                    //ActivateGlow();
-                    StartCoroutine(GlowNextFrame());
-                    return;
-                } else {
-                    return;
-                }
-            }
+            outlineController.Update();
+            
 
-
+            /*
             if (isFlashing) {
                 //Debug.Log("Interactable.Update(): isflashing == true");
                 float emission = glowMinIntensity + Mathf.PingPong(Time.time * glowFlashSpeed, glowMaxIntensity - glowMinIntensity);
@@ -371,6 +359,7 @@ namespace AnyRPG {
                     }
                 }
             }
+            */
         }
 
         public override bool CanSpawn() {
@@ -453,6 +442,7 @@ namespace AnyRPG {
             base.Spawn();
 
             EnableInteraction();
+            objectMaterialController.PopulateOriginalMaterials();
         }
 
         // meant to be overwritten on characters
@@ -475,7 +465,6 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.Interactable.DestroySpawn()");
             base.DestroySpawn();
 
-            originalMaterials.Clear();
             DisableInteraction();
             //MiniMapStatusUpdateHandler(this);
         }
@@ -790,14 +779,6 @@ namespace AnyRPG {
                 //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): should not activate mouseover when windows are in front of things");
                 return;
             }
-            /*
-             * the above case should handle this now - delete this code if no crashes found
-            if (playerManager.MyCharacter.MyCharacterUnit == null) {
-                //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): Player Unit is not active. Cannot glow.");
-                return;
-            }
-            */
-
 
             if (SpawnPrerequisitesMet == false) {
                 return;
@@ -813,22 +794,12 @@ namespace AnyRPG {
                 return;
             }
             if (glowOnMouseOver) {
-                if (!IsBuilding()) {
-                    ActivateGlow();
-                } else {
-                    glowQueued = true;
-                }
+                outlineController.TurnOnOutline();
+                
             }
         }
 
-        protected virtual void ActivateGlow() {
-            //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): hasMeshRenderer && glowOnMouseOver == true");
-            if (isFlashing == false) {
-                isFlashing = true;
-                InitializeMaterialsNew();
-            }
-            glowQueued = false;
-        }
+        
 
         /*
         public void OnMouseExit() {
@@ -878,13 +849,7 @@ namespace AnyRPG {
             // new mouseover code
             uIManager.HideToolTip();
 
-            if (!isFlashing) {
-                // there was nothing to interact with on mouseover so just exit instead of trying to reset materials
-                glowQueued = false;
-                return;
-            }
-            RevertMaterialChange();
-            // return emission enabled, emission color, and emission texture to their previous values
+            outlineController.TurnOffOutline();
         }
 
         protected void OnMouseDown() {
@@ -1031,117 +996,8 @@ namespace AnyRPG {
 
         #region MaterialChange
 
-        public virtual void RequestSnapshot() {
-            //Debug.Log($"{gameObject.name}.Interactable.RequestSnapshot()");
-            suppressGlow = true;
-            if (isFlashing) {
-                RevertMaterialChange();
-                // results in glowing even when mouse is no longer over as result of dialog panel opening
-                //glowQueued = true;
-            }
-        }
-
-        public virtual void ClearSnapshotRequest() {
-            //Debug.Log($"{gameObject.name}.Interactable.ClearSnapshotRequest()");
-            suppressGlow = false;
-            if (isMouseOverUnit == true) {
-                OnMouseIn();
-            }
-        }
-
         public virtual Color GetGlowColor() {
             return Color.yellow;
-        }
-
-        public void InitializeMaterialsNew() {
-            //public void InitializeMaterialsNew(Material temporaryMaterial) {
-            //Debug.Log($"{gameObject.name}.Interactable.InitializeMaterialsNew()");
-            //this.temporaryMaterial = temporaryMaterial;
-            glowColor = GetGlowColor();
-            //Debug.Log($"{gameObject.name}.Interactable.InitializeMaterialsNew(): glowcolor set to: " + glowColor);
-
-            meshRenderers = GetComponentsInChildren<MeshRenderer>();
-
-            List<Renderer> tempList = new List<Renderer>();
-            if (meshRenderers == null || meshRenderers.Length == 0) {
-                //Debug.Log($"{gameObject.name}.Interactable.InitializeMaterialsNew(): Unable to find mesh renderer in target.");
-            } else {
-                //Debug.Log($"{gameObject.name}.Interactable.InitializeMaterialsNew(): Found " + meshRenderers.Length + " Mesh Renderers");
-                foreach (Renderer renderer in meshRenderers) {
-                    if (renderer.gameObject.layer != LayerMask.NameToLayer("SpellEffects")) {
-                        tempList.Add(renderer);
-                    }
-                }
-            }
-            Renderer[] skinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
-            if (skinnedMeshRenderers == null || skinnedMeshRenderers.Length == 0) {
-                //Debug.Log($"{gameObject.name}.Interactable.InitializeMaterialsNew(): Unable to find skinned mesh renderer in target.");
-            } else {
-                //Debug.Log($"{gameObject.name}.Interactable.InitializeMaterialsNew(): Found " + skinnedMeshRenderers.Length + " Skinned Mesh Renderers");
-                foreach (Renderer renderer in skinnedMeshRenderers) {
-                    if (renderer.gameObject.layer != LayerMask.NameToLayer("SpellEffects")) {
-                        tempList.Add(renderer);
-                    }
-                }
-            }
-            meshRenderers = tempList.ToArray();
-            if (meshRenderers.Length != 0) {
-                hasMeshRenderer = true;
-            }
-
-            PerformMaterialChange();
-        }
-
-        public void PerformMaterialChange() {
-            //Debug.Log($"{gameObject.name}.Interactable.PerformMaterialChange()");
-
-            if (meshRenderers == null) {
-                //Debug.Log($"{gameObject.name}.MaterialChangeController.PerformMaterialChange(): meshRender is null.  This shouldn't happen because we checked before instantiating this!");
-                return;
-            }
-            foreach (Renderer renderer in meshRenderers) {
-                originalMaterials.Add(renderer, renderer.materials);
-                //Debug.Log("MaterialChangeController.PerformMaterialChange(): material length: " + originalMaterials[renderer].Length);
-                temporaryMaterials = new Material[originalMaterials[renderer].Length];
-                //Debug.Log("MaterialChangeController.PerformMaterialChange(): temporary materials length: " + temporaryMaterials.Length);
-                for (int i = 0; i < originalMaterials[renderer].Length; i++) {
-                    //temporaryMaterials[i] = originalMaterials[renderer][i];
-                    temporaryMaterials[i] = temporaryMaterial;
-                    //enable emission and set the emission texture to none in case this item already had some type of glow mask or effect
-                    //Debug.Log("Interactable.Update(): flashingmaterial: " + temporaryMaterial.name + "; emission enabled? " + temporaryMaterial.IsKeywordEnabled("_EMISSION"));
-                    if (lightEmission) {
-                        //Debug.Log($"{gameObject.name}.Interactable.PerformMaterialChange(): enabling emission");
-                        temporaryMaterials[i].EnableKeyword("_EMISSION");
-                        temporaryMaterials[i].SetTexture("_EmissionMap", null);
-                    }
-                }
-                renderer.materials = temporaryMaterials;
-            }
-        }
-
-        public void RevertMaterialChange() {
-            //Debug.Log($"{gameObject.name}.Interactable.RevertMaterialChange()");
-            if (hasMeshRenderer && isFlashing) {
-                isFlashing = false;
-                // return emission enabled, emission color, and emission texture to their previous values
-            } else {
-                return;
-            }
-
-
-            if (meshRenderers == null || originalMaterials.Count == 0) {
-                //Debug.Log("meshRender is null.  This shouldn't happen because we checked before instantiating this!");
-                return;
-            }
-
-            foreach (Renderer renderer in meshRenderers) {
-                if (renderer != null) {
-                    // here to prevent infestor materials that are temporary from crashing the game
-                    renderer.materials = originalMaterials[renderer];
-                }
-            }
-
-            originalMaterials.Clear();
         }
 
         #endregion
@@ -1168,21 +1024,7 @@ namespace AnyRPG {
 
             interactables = new List<InteractableOptionComponent>();
 
-            originalMaterials = new Dictionary<Renderer, Material[]>();
-
-            temporaryMaterials = null;
-            meshRenderers = null;
-
-            shaderList = new List<Shader>();
-            emissionColorList = new List<Color>();
-            emissionTextureList = new List<Texture>();
-            emissionEnabledList = new List<bool>();
-
-            suppressGlow = false;
-            glowQueued = false;
             isInteracting = false;
-            isFlashing = false;
-            hasMeshRenderer = false;
             miniMapIndicatorReady = false;
             isMouseOverUnit = false;
             isMouseOverNameplate = false;
@@ -1191,6 +1033,8 @@ namespace AnyRPG {
             //mainMapIndicator = null;
 
             characterUnit = null;
+
+            outlineController = null;
 
             // base is intentionally last because we want to unitialize children first
             base.ResetSettings();

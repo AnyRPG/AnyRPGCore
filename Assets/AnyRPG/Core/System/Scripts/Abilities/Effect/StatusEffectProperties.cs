@@ -31,6 +31,16 @@ namespace AnyRPG {
 
         protected StatusEffectGroup statusEffectGroup = null;
 
+        [Header("Material Changes")]
+
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(MaterialProfile))]
+        private string effectMaterialName = string.Empty;
+
+        // a material to temporarily assign to the target we hit
+        //[SerializeField]
+        private Material effectMaterial;
+
         [Header("Trait")]
 
         [Tooltip("Automatically cast on the character, active at all times, and do not appear on the status bar. Useful for class traits and equipment set bonuses.")]
@@ -59,6 +69,7 @@ namespace AnyRPG {
         protected bool limitedDuration;
 
         [Tooltip("when an attempt to apply the effect is made, is the duration refreshed")]
+        [SerializeField]
         protected bool refreshableDuration = true;
 
         [Tooltip("If limited duration is true, the number of seconds this will be active for without haste or slow")]
@@ -279,6 +290,19 @@ namespace AnyRPG {
         public override void CancelEffect(BaseCharacter targetCharacter) {
             base.CancelEffect(targetCharacter);
             RemoveControlEffects(targetCharacter);
+            UndoMaterialChange(targetCharacter);
+        }
+
+        private void UndoMaterialChange(BaseCharacter targetCharacter) {
+            if (effectMaterial == null) {
+                return;
+            }
+            
+            if (targetCharacter.UnitController == null) {
+                return;
+            }
+
+            targetCharacter.UnitController.UnitMaterialController.RevertTemporaryMaterialChange();
         }
 
         // bypass the creation of the status effect and just make its visual prefab
@@ -349,15 +373,36 @@ namespace AnyRPG {
                     // pass in the ability effect object so we can independently destroy it and let it last as long as the status effect (which could be refreshed).
                     _statusEffectNode.PrefabObjects = returnObjects;
                 }
+                PerformMaterialChange(target);
                 PerformAbilityHit(source, target, abilityEffectContext);
 
             }
             return returnObjects;
         }
 
-        public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log("DirectEffect.PerformAbilityEffect()");
-            base.PerformAbilityHit(source, target, abilityEffectInput);
+        void PerformMaterialChange(Interactable target) {
+            //Debug.Log(ResourceName + ".AbilityEffectProperties.PerformMaterialChange(" + (target == null ? "null" : target.gameObject.name) + ")");
+
+            if (effectMaterial == null) {
+                //Debug.Log("This effect does not have a material.  returning");
+                return;
+            }
+            if (target == null) {
+                //Debug.Log("target is null.  returning");
+                return;
+            }
+
+            ApplyMaterialChange(target as UnitController);
+        }
+
+        private void ApplyMaterialChange(UnitController unitController) {
+            //Debug.Log(ResourceName + ".AbilityEffectProperties.ApplyMaterialChange(" + (unitController == null ? "null" : unitController.gameObject.name) + ")");
+
+            if (unitController == null) {
+                return;
+            }
+
+            unitController.UnitMaterialController.ApplyTemporaryMaterialChange(effectMaterial);
         }
 
         // THESE TWO EXIST IN DIRECTEFFECT ALSO BUT I COULD NOT FIND A GOOD WAY TO SHARE THEM
@@ -578,6 +623,16 @@ namespace AnyRPG {
                     if (factionDisposition != null) {
                         factionDisposition.SetupScriptableObjects(systemDataFactory);
                     }
+                }
+            }
+
+            if (effectMaterialName != null && effectMaterialName != string.Empty) {
+                effectMaterial = null;
+                MaterialProfile tmpMaterialProfile = systemDataFactory.GetResource<MaterialProfile>(effectMaterialName);
+                if (tmpMaterialProfile != null) {
+                    effectMaterial = tmpMaterialProfile.MyEffectMaterial;
+                } else {
+                    Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find material profile: " + effectMaterialName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
                 }
             }
 

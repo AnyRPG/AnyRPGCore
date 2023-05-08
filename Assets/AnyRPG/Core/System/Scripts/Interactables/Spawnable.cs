@@ -283,13 +283,6 @@ namespace AnyRPG {
                 if (spawnReference != null && spawnReference.activeSelf == false) {
                     spawnReference.SetActive(true);
                 }
-                if (prefabProfile == null) {
-                    //Debug.Log($"{gameObject.name}.Spawnable.Spawn(): PrefabProfile is null");
-                } else {
-                    if (prefabProfile.Prefab == null) {
-                        //Debug.Log($"{gameObject.name}.Spawnable.Spawn(): PrefabProfile.myprefab is null");
-                    }
-                }
             }
 
         }

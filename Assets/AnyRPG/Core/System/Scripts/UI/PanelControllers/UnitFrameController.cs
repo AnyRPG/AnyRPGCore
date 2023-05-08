@@ -248,7 +248,7 @@ namespace AnyRPG {
             //waitForCameraCoroutine = StartCoroutine(WaitForCamera(lastWaitFrame));
             //}
             waitForCameraCoroutine = StartCoroutine(WaitForCamera());
-            namePlateController?.NamePlateUnit.RequestSnapshot();
+            //namePlateController?.NamePlateUnit.RequestSnapshot();
         }
 
         public void InitializePosition() {
@@ -344,7 +344,7 @@ namespace AnyRPG {
                 UpdateCameraPosition();
                 previewCamera.Render();
                 waitForCameraCoroutine = null;
-                namePlateController?.Interactable.ClearSnapshotRequest();
+                //namePlateController?.Interactable.ClearSnapshotRequest();
             }
         }
 
