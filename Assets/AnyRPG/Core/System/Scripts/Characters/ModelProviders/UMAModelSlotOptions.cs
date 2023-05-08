@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace AnyRPG {
 
+    // ===============================================================================
+    // THIS CLASS DOESN'T REQUIRE THE UMA NAMESPACE SO IT IS SAFE TO EXIST IN THE CORE
+    // ===============================================================================
+
     [System.Serializable]
     public class UMAModelSlotOptions : ConfiguredClass {
 
