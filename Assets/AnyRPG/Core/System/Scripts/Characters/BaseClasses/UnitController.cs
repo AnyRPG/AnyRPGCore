@@ -959,7 +959,7 @@ namespace AnyRPG {
             if (baseCharacter != null) {
                 //Debug.Log($"{gameObject.name}.UnitController.GetComponentReferences(): found baseCharacter, creating characterUnit");
                 baseCharacter.Configure(systemGameManager);
-                characterUnit = new CharacterUnit(this as Interactable, new InteractableOptionProps(), systemGameManager);
+                characterUnit = new CharacterUnit(this, new InteractableOptionProps(), systemGameManager);
                 characterUnit.SetBaseCharacter(baseCharacter);
                 baseCharacter.SetUnitController(this);
 

@@ -347,21 +347,6 @@ namespace AnyRPG {
             TryToDespawn();
         }
 
-        public override bool HasMiniMapText() {
-            return false;
-        }
-
-        public override bool SetMiniMapText(TextMeshProUGUI text) {
-            if (!base.SetMiniMapText(text)) {
-                text.text = "";
-                text.color = new Color32(0, 0, 0, 0);
-                return false;
-            }
-            text.text = "o";
-            text.color = Color.gray;
-            return true;
-        }
-
         public void Despawn() {
             //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.Despawn()");
 

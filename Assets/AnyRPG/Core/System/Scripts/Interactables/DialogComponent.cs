@@ -89,26 +89,10 @@ namespace AnyRPG {
             uIManager.dialogWindow.CloseWindow();
         }
 
-        public override bool HasMiniMapText() {
-            return true;
-        }
-
-        public override bool SetMiniMapText(TextMeshProUGUI text) {
-            if (!base.SetMiniMapText(text)) {
-                text.text = "";
-                text.color = new Color32(0, 0, 0, 0);
-                return false;
-            }
-            text.text = "o";
-            text.color = Color.white;
-            return true;
-        }
-
         public override int GetCurrentOptionCount() {
             //Debug.Log($"{gameObject.name}.DialogInteractable.GetCurrentOptionCount(): " + GetCurrentOptionList().Count);
             return GetCurrentOptionList().Count;
         }
-
 
         public override void HandlePlayerUnitSpawn() {
             UpdateDialogStatuses();

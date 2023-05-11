@@ -205,22 +205,6 @@ namespace AnyRPG {
             uIManager.lootWindow.CloseWindow();
         }
 
-        public override bool HasMiniMapText() {
-            return true;
-        }
-
-        public override bool SetMiniMapText(TextMeshProUGUI text) {
-            //Debug.Log(interactable.gameObject.name + ".LootableNode.SetMiniMapText()");
-            if (!base.SetMiniMapText(text)) {
-                text.text = "";
-                text.color = new Color32(0, 0, 0, 0);
-                return false;
-            }
-            text.text = "o";
-            text.color = Color.blue;
-            return true;
-        }
-
         public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f, bool processNonCombatCheck = true) {
             //Debug.Log(interactable.gameObject.name + ".LootableNode.CanInteract()");
             bool returnValue = base.CanInteract(processRangeCheck, passedRangeCheck, factionValue, processNonCombatCheck);

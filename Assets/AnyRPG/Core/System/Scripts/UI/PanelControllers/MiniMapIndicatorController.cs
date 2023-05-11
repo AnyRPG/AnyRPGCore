@@ -18,9 +18,11 @@ namespace AnyRPG {
         [SerializeField]
         private Transform contentParent = null;
 
-        private Dictionary<InteractableOptionComponent, GameObject> miniMapLayers = new Dictionary<InteractableOptionComponent, GameObject>();
+        private Dictionary<InteractableOptionComponent, MiniMapIndicatorLayerController> miniMapLayers = new Dictionary<InteractableOptionComponent, MiniMapIndicatorLayerController>();
 
         private Interactable interactable = null;
+        private InteractableOptionComponent highestPriorityInteractable = null;
+        private int highestPriorityValue = 0;
 
         private bool setupComplete = false;
 
@@ -36,29 +38,54 @@ namespace AnyRPG {
 
         public void SetupMiniMap() {
             //Debug.Log(transform.parent.gameObject.name + ".MiniMapIndicatorController.SetupMiniMap(): interactable: " + (interactable == null ? "null" : interactable.name));
+
             if (setupComplete == true) {
                 return;
             }
             if (interactable == null) {
                 return;
             }
-            foreach (InteractableOptionComponent _interactable in interactable.Interactables) {
+            foreach (InteractableOptionComponent interactableOptionComponent in interactable.Interactables) {
                 // prioritize images - DICTIONARY DOESN'T CURRENTLY SUPPORT BOTH
-                if (_interactable.HasMiniMapIcon()) {
-                    //else if (_interactable.HasMiniMapIcon()) {
-                    // do both now!
+                if (interactableOptionComponent.HasMiniMapIcon()) {
                     GameObject go = objectPooler.GetPooledObject(miniMapImageLayerPrefab, contentParent);
-                    Image _image = go.GetComponent<Image>();
-                    _interactable.SetMiniMapIcon(_image);
-                    miniMapLayers.Add(_interactable, go);
-                } else if (_interactable.HasMiniMapText()) {
+                    MiniMapIndicatorLayerController miniMapIndicatorLayerController = go.GetComponent<MiniMapIndicatorLayerController>();
+                    miniMapIndicatorLayerController.Setup(interactableOptionComponent);
+                    miniMapLayers.Add(interactableOptionComponent, miniMapIndicatorLayerController);
+                } else if (interactableOptionComponent.HasMiniMapText()) {
                     GameObject go = objectPooler.GetPooledObject(miniMapTextLayerPrefab, contentParent);
-                    TextMeshProUGUI _text = go.GetComponent<TextMeshProUGUI>();
-                    _interactable.SetMiniMapText(_text);
-                    miniMapLayers.Add(_interactable, go);
+                    MiniMapIndicatorLayerController miniMapIndicatorLayerController = go.GetComponent<MiniMapIndicatorLayerController>();
+                    miniMapIndicatorLayerController.Setup(interactableOptionComponent);
+                    miniMapLayers.Add(interactableOptionComponent, miniMapIndicatorLayerController);
                 }
             }
+            EnableHighestPriorityLayer();
             setupComplete = true;
+        }
+
+        private void EnableHighestPriorityLayer() {
+            highestPriorityValue = 0;
+            highestPriorityInteractable = null;
+            foreach (KeyValuePair<InteractableOptionComponent, MiniMapIndicatorLayerController> keyValuePair in miniMapLayers) {
+                if (keyValuePair.Value.IsActive == false) {
+                    continue;
+                }
+                if (keyValuePair.Key.PriorityValue > highestPriorityValue || highestPriorityInteractable == null) {
+                    highestPriorityValue = keyValuePair.Key.PriorityValue;
+                    highestPriorityInteractable = keyValuePair.Key;
+                }
+            }
+
+            if (highestPriorityInteractable == null) {
+                return;
+            }
+            foreach (KeyValuePair<InteractableOptionComponent, MiniMapIndicatorLayerController> keyValuePair in miniMapLayers) {
+                if (keyValuePair.Key == highestPriorityInteractable) {
+                    keyValuePair.Value.gameObject.SetActive(true);
+                } else {
+                    keyValuePair.Value.gameObject.SetActive(false);
+                }
+            }
         }
 
         public void SetInteractable(Interactable interactable) {
@@ -75,15 +102,17 @@ namespace AnyRPG {
             }
             // this only supports one or the other too - prioritizing images
             if (_interactable.HasMiniMapIcon()) {
-                _interactable.SetMiniMapIcon(miniMapLayers[_interactable].GetComponent<Image>());
+                miniMapLayers[_interactable].ConfigureDisplay();
             } else if (_interactable.HasMiniMapText()) {
-                _interactable.SetMiniMapText(miniMapLayers[_interactable].GetComponent<TextMeshProUGUI>());
+                miniMapLayers[_interactable].ConfigureDisplay();
             }
+
+            EnableHighestPriorityLayer();
         }
 
         public void ResetSettings() {
-            foreach (GameObject go in miniMapLayers.Values) {
-                objectPooler.ReturnObjectToPool(go);
+            foreach (MiniMapIndicatorLayerController miniMapIndicatorLayerController in miniMapLayers.Values) {
+                objectPooler.ReturnObjectToPool(miniMapIndicatorLayerController.gameObject);
             }
             miniMapLayers.Clear();
             interactable = null;

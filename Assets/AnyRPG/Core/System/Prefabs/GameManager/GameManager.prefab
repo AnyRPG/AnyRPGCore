@@ -6456,7 +6456,9 @@ MonoBehaviour:
   maxChatTextDistance: 25
   UI:
     autoPixelsPerMeter: 10
-    playerMiniMapIcon: {fileID: 21300000, guid: 2f39e3921edeb8c4991f2e809481b8d6,
+    playerMiniMapIcon: {fileID: 21300000, guid: f542cc4b241c71c42a50cb6c7869aefa,
+      type: 3}
+    characterMiniMapIcon: {fileID: 21300000, guid: f96be044c49b60e46a636d0569bbaf98,
       type: 3}
     playerMiniMapIconRotation: 90
     realTimeUnitFrameCamera: 0
@@ -6546,7 +6548,6 @@ MonoBehaviour:
   - sourceColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     projectorMaterial: {fileID: 2100000, guid: e0adbcbf43af54c45b048a9e7b2ebf79, type: 2}
     tintMaterial: 1
-  temporaryMaterial: {fileID: 2100000, guid: 41a797d66a16d984e9d7de6fc6b78a57, type: 2}
   multipleInteractionNamePlateImage: {fileID: 21300000, guid: cd62bacdc6666fa4c88ff42d8cb179fa,
     type: 3}
   multipleCraftNamePlateImage: {fileID: 0}

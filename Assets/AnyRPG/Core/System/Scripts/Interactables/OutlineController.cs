@@ -71,9 +71,10 @@ namespace AnyRPG {
 
             if (interactable.ObjectMaterialController.MeshRenderers != null && interactable.ObjectMaterialController.MeshRenderers.Length > 0) {
                 cameraManager.MainCameraHighlighter.AddOutlinedObject(interactable, outlineColor, interactable.ObjectMaterialController.MeshRenderers);
-            } else {
-                Debug.Log($"{interactable.gameObject.name}.OutlineController.SendRequestToCameraHighlighter() no mesh renderers found");
-            }
+            }/* else {
+                // this can happen in the case where the interactable is made entirely out of particle effects
+                //Debug.Log($"{interactable.gameObject.name}.OutlineController.SendRequestToCameraHighlighter() no mesh renderers found");
+            }*/
         }
 
         public void TurnOnOutline() {

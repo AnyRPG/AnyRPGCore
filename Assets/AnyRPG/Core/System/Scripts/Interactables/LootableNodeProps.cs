@@ -22,6 +22,8 @@ namespace AnyRPG {
         [SerializeField]
         protected float spawnTimer = 5f;
 
+        public override Sprite Icon { get => (systemConfigurationManager.LootableCharacterInteractionPanelImage != null ? systemConfigurationManager.LootableCharacterInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (systemConfigurationManager.LootableCharacterNamePlateImage != null ? systemConfigurationManager.LootableCharacterNamePlateImage : base.NamePlateImage); }
         public float SpawnTimer { get => spawnTimer; set => spawnTimer = value; }
         public List<LootTable> LootTables { get => lootTables; set => lootTables = value; }
 

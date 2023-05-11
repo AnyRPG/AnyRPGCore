@@ -153,7 +153,7 @@ namespace AnyRPG {
         }
 
         public void HandleIndicatorRotation(Interactable interactable) {
-            mapIndicatorControllers[interactable].transform.rotation = Quaternion.Euler(0, 0, (interactable.transform.eulerAngles.y - systemConfigurationManager.UIConfiguration.PlayerMiniMapIconRotation) * -1f);
+            mapIndicatorControllers[interactable].transform.rotation = Quaternion.Euler(0, 0, interactable.transform.eulerAngles.y * -1f);
         }
 
         public void HandleInteractableStatusUpdate(Interactable interactable, InteractableOptionComponent interactableOptionComponent) {

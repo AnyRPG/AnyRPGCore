@@ -25,10 +25,9 @@ namespace AnyRPG {
         [SerializeField]
         private Sprite playerMiniMapIcon = null;
 
-        [Tooltip("If the icon does not face up on the screen, enter the number of clockwise degrees the image is naturally rotated.  This will be subtracted from the player angle at run-time.")]
+        [Tooltip("The icon to show on the mini map to represent all NPC and PC characters that are not the current player.")]
         [SerializeField]
-        private float playerMiniMapIconRotation = 0f;
-
+        private Sprite characterMiniMapIcon = null;
 
         [Header("UNIT FRAMES")]
 
@@ -292,7 +291,7 @@ namespace AnyRPG {
         public Sprite DefaultFactionIcon { get => defaultFactionIcon; set => defaultFactionIcon = value; }
 
         public Sprite PlayerMiniMapIcon { get => playerMiniMapIcon; set => playerMiniMapIcon = value; }
-        public float PlayerMiniMapIconRotation { get => playerMiniMapIconRotation; set => playerMiniMapIconRotation = value; }
+        public Sprite CharacterMiniMapIcon { get => characterMiniMapIcon; set => characterMiniMapIcon = value; }
         public bool RealTimeUnitFrameCamera { get => realTimeUnitFrameCamera; set => realTimeUnitFrameCamera = value; }
 
         public int AutoPixelsPerMeter { get => autoPixelsPerMeter; set => autoPixelsPerMeter = value; }

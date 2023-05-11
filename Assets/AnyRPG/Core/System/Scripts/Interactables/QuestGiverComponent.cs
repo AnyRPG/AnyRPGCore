@@ -17,7 +17,7 @@ namespace AnyRPG {
         private DialogManager dialogManager = null;
 
         public QuestGiverProps Props { get => interactableOptionProps as QuestGiverProps; }
-
+        public override int PriorityValue { get => 1; }
         public InteractableOptionComponent InteractableOptionComponent { get => this; }
 
         public QuestGiverComponent(Interactable interactable, QuestGiverProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {

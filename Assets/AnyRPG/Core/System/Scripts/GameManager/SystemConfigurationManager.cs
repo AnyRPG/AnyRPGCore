@@ -448,9 +448,6 @@ namespace AnyRPG {
         [SerializeField]
         private List<ProjectorColorMapNode> highlightCircleColorMap = new List<ProjectorColorMapNode>();
 
-        [SerializeField]
-        private Material temporaryMaterial = null;
-
         [Tooltip("An image to use on a nameplate if there is more than 1 valid interactable option.")]
         [SerializeField]
         private Sprite multipleInteractionNamePlateImage = null;
@@ -597,7 +594,6 @@ namespace AnyRPG {
         SystemDataFactory systemDataFactory = null;
 
         public AbilityEffect LootSparkleEffect { get => lootSparkleEffect; set => lootSparkleEffect = value; }
-        public Material TemporaryMaterial { get => temporaryMaterial; set => temporaryMaterial = value; }
         public AbilityEffect LevelUpEffect { get => levelUpEffect; set => levelUpEffect = value; }
         public Sprite QuestGiverInteractionPanelImage { get => questGiverInteractionPanelImage; set => questGiverInteractionPanelImage = value; }
         public Sprite QuestGiverNamePlateImage { get => questGiverNamePlateImage; set => questGiverNamePlateImage = value; }

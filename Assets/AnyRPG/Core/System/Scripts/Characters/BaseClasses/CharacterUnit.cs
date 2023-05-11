@@ -17,8 +17,10 @@ namespace AnyRPG {
         private Coroutine despawnCoroutine = null;
 
         private BaseCharacter baseCharacter = null;
+        private UnitController unitController = null;
 
         public override string DisplayName { get => (BaseCharacter != null ? BaseCharacter.CharacterName : interactableOptionProps.GetInteractionPanelTitle()); }
+        public override int PriorityValue { get => -1; }
         public BaseCharacter BaseCharacter {
             get => baseCharacter;
         }
@@ -27,7 +29,8 @@ namespace AnyRPG {
 
         public float HitBoxSize { get => hitBoxSize; set => hitBoxSize = value; }
 
-        public CharacterUnit(Interactable interactable, InteractableOptionProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public CharacterUnit(UnitController unitController, InteractableOptionProps interactableOptionProps, SystemGameManager systemGameManager) : base(unitController, interactableOptionProps, systemGameManager) {
+            this.unitController = unitController;
             if (interactable.Collider != null) {
                 hitBoxSize = interactable.Collider.bounds.extents.y * 1.5f;
             }
@@ -123,20 +126,27 @@ namespace AnyRPG {
             base.StopInteract();
         }
 
-        public override bool HasMiniMapText() {
-            if (baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Preview
-                || baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Mount
-                || baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
+        public override bool CanShowMiniMapIcon() {
+            if (unitController.UnitControllerMode == UnitControllerMode.Mount) {
                 return false;
             }
-            return true;
+            
+            if (interactable.CombatOnly) {
+                return true;
+            }
+            return base.CanShowMiniMapIcon();
+        }
+
+        public override Sprite GetMiniMapIcon() {
+            if (interactable.CombatOnly) {
+                return systemConfigurationManager.UIConfiguration.PlayerMiniMapIcon;
+            }
+
+            return systemConfigurationManager.UIConfiguration.CharacterMiniMapIcon;
         }
 
         public override bool HasMiniMapIcon() {
-            if (baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
-                return true;
-            }
-            return base.HasMiniMapIcon();
+            return true;
         }
 
         public override bool HasMainMapIcon() {
@@ -146,18 +156,12 @@ namespace AnyRPG {
             return base.HasMainMapIcon();
         }
 
-        public override bool SetMiniMapText(TextMeshProUGUI text) {
-            //Debug.Log($"{gameObject.name}.CharacterUnit.SetMiniMapText()");
-            if (!base.SetMiniMapText(text)) {
-                text.text = "";
-                text.color = new Color32(0, 0, 0, 0);
-                return false;
+        public override Color GetMiniMapIconColor() {
+            if (baseCharacter != null && baseCharacter != playerManager.MyCharacter) {
+                return Faction.GetFactionColor(playerManager, playerManager.MyCharacter, baseCharacter);
             }
-            text.text = "o";
-            if (baseCharacter != null && baseCharacter.Faction != null) {
-                text.color = Faction.GetFactionColor(playerManager, playerManager.MyCharacter, baseCharacter);
-            }
-            return true;
+
+            return base.GetMiniMapIconColor();
         }
 
         public void Despawn(float despawnDelay = 0f, bool addSystemDefaultTime = true, bool forceDespawn = false) {
@@ -207,21 +211,6 @@ namespace AnyRPG {
                 //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): unit is alive or reviving !! NOT DESPAWNING");
             }
             despawnCoroutine = null;
-        }
-
-        public override bool CanShowMiniMapIcon() {
-            if (interactable.CombatOnly) {
-                return true;
-            }
-            return base.CanShowMiniMapIcon();
-        }
-
-        public override Sprite GetMiniMapIcon() {
-            if (interactable.CombatOnly) {
-                return systemConfigurationManager.UIConfiguration.PlayerMiniMapIcon;
-            }
-
-            return base.GetMiniMapIcon();
         }
 
         /*

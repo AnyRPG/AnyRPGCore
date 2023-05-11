@@ -82,10 +82,25 @@ namespace AnyRPG {
             GetComponentReferences();
             SetupScriptableObjects();
             CreateEventSubscriptions();
+            ConfigureComponents();
+            CreateComponents();
+            LateConfigure();
             if (playerManager.PlayerUnitSpawned == false) {
                 // this allows us to spawn things with no prerequisites that don't need to check against the player
                 PrerequisiteCheck();
             }
+        }
+
+        protected virtual void LateConfigure() {
+            // nothing here yet
+        }
+
+        protected virtual void ConfigureComponents() {
+            // nothing here yet
+        }
+
+        protected virtual void CreateComponents() {
+            // nothing here yet
         }
 
         public override void SetGameManagerReferences() {

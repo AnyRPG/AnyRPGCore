@@ -174,7 +174,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineColor: {r: 1, g: 0, b: 0, a: 0.5}
-  occludedOutlineOpacity: 0.3
+  occludedOutlineOpacity: 0
   blurSize: 1
   alphaCutoff: 0.1
   bufferDrawEvent: 18

@@ -20,6 +20,7 @@ namespace AnyRPG {
 
         public Interactable Interactable { get => interactable; set => interactable = value; }
         public virtual InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; }
+        public virtual int PriorityValue { get => 0; }
         public virtual string DisplayName {
             get {
                 if (interactableOptionProps.GetInteractionPanelTitle() != null && interactableOptionProps.GetInteractionPanelTitle() != string.Empty) {
@@ -207,7 +208,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.InteractableOption.SetMiniMapIcon()");
             if (CanShowMiniMapIcon()) {
                 icon.sprite = GetMiniMapIcon();
-                icon.color = Color.white;
+                icon.color = GetMiniMapIconColor();
             } else {
                 icon.sprite = null;
                 icon.color = new Color32(0, 0, 0, 0);
@@ -217,6 +218,10 @@ namespace AnyRPG {
 
         public virtual Sprite GetMiniMapIcon() {
             return interactableOptionProps.NamePlateImage;
+        }
+
+        public virtual Color GetMiniMapIconColor() {
+            return Color.white;
         }
 
         public virtual bool CanShowMiniMapIcon() {

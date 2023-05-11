@@ -29,29 +29,9 @@ namespace AnyRPG {
         [SerializeField]
         protected bool glowOnMouseOver = true;
 
-        [Tooltip("If true, the glow emits light on objects around it.")]
-        [SerializeField]
-        protected bool lightEmission = false;
-
-        [Tooltip("The time period in seconds between high and low intensity of the glow strength.")]
-        [SerializeField]
-        protected float glowFlashSpeed = 1.5f;
-
-        [Tooltip("The minimum intensity the object should glow with.")]
-        [SerializeField]
-        protected float glowMinIntensity = 4.5f;
-
-        [Tooltip("The maximum intensity the object should glow with.")]
-        [SerializeField]
-        protected float glowMaxIntensity = 6f;
-
         [Tooltip("The color of light to emit when glowing.")]
         [SerializeField]
         protected Color glowColor = Color.yellow;
-
-        [Tooltip("The glow material that should replace any normal materials on this object while glowing.")]
-        [SerializeField]
-        protected Material temporaryMaterial = null;
 
         [Header("Interaction Options")]
 
@@ -209,9 +189,19 @@ namespace AnyRPG {
         public OutlineController OutlineController { get => outlineController; }
         public ObjectMaterialController ObjectMaterialController { get => objectMaterialController; }
 
+        /*
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log($"{gameObject.name}.Interactable.Configure()");
             base.Configure(systemGameManager);
+        }
+        */
+
+        protected override void LateConfigure() {
+            DisableInteraction();
+        }
+
+        protected override void ConfigureComponents() {
+            base.ConfigureComponents();
             if (componentController != null) {
                 componentController.Configure(systemGameManager);
                 componentController.SetInteractable(this);
@@ -219,21 +209,18 @@ namespace AnyRPG {
             if (unitComponentController != null) {
                 unitComponentController.Configure(systemGameManager);
             }
-            dialogController = new DialogController(this, systemGameManager);
-            DisableInteraction();
-            if (temporaryMaterial == null) {
-                temporaryMaterial = systemConfigurationManager.TemporaryMaterial;
-            }
-            if (temporaryMaterial == null) {
-                //Debug.Log("No glow materials available. overrideing glowOnMouseover to false");
-                glowOnMouseOver = false;
-            }
+        }
 
+        protected override void CreateComponents() {
+            base.CreateComponents();
+            dialogController = new DialogController(this, systemGameManager);
             outlineController = new OutlineController(this, systemGameManager);
             CreateMaterialController();
         }
 
         protected virtual void CreateMaterialController() {
+            //Debug.Log($"{gameObject.name}.Interactable.CreateMaterialController()");
+
             objectMaterialController = new ObjectMaterialController(this, systemGameManager);
         }
 
@@ -439,6 +426,7 @@ namespace AnyRPG {
 
         public override void Spawn() {
             //Debug.Log($"{gameObject.name}.Interactable.Spawn()");
+
             base.Spawn();
 
             EnableInteraction();
