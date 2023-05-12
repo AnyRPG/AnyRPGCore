@@ -327,7 +327,7 @@ namespace AnyRPG {
         /// </summary>
         public void AutoConfigureMonoBehaviours() {
             foreach (AutoConfiguredMonoBehaviour autoConfiguredMonoBehaviour in GameObject.FindObjectsOfType<AutoConfiguredMonoBehaviour>()) {
-                autoConfiguredMonoBehaviour.Configure(this);
+                autoConfiguredMonoBehaviour.AutoConfigure(this);
             }
         }
 

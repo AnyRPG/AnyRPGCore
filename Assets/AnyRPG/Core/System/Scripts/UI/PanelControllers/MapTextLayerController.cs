@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 
 namespace AnyRPG {
-    public class MiniMapTextLayerController : MiniMapIndicatorLayerController {
+    public class MapTextLayerController : MiniMapIndicatorLayerController {
 
         [SerializeField]
         private TextMeshProUGUI text = null;
@@ -18,7 +18,7 @@ namespace AnyRPG {
         }
 
         public override void ConfigureDisplay() {
-            //Debug.Log($"MiniMapTextLayerController.ConfigureDisplay()  InstanceID: {GetInstanceID()}");
+            //Debug.Log($"{interactableOptionComponent.Interactable.DisplayName}.{interactableOptionComponent.GetType().Name}.MiniMapTextLayerController.ConfigureDisplay()  InstanceID: {GetInstanceID()}");
 
             interactableOptionComponent.SetMiniMapText(text);
 

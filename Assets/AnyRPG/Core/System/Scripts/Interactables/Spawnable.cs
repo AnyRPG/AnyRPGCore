@@ -77,6 +77,7 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log($"{gameObject.name}.Spawnable.Configure()");
+
             base.Configure(systemGameManager);
 
             GetComponentReferences();
@@ -111,7 +112,14 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
         }
 
+        protected override void PostConfigure() {
+            base.PostConfigure();
+            Init();
+        }
+
         public virtual void Init() {
+            //Debug.Log($"{gameObject.name}.Spawnable.Init()");
+
             if (initialized == true) {
                 return;
             }

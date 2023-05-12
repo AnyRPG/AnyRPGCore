@@ -459,6 +459,7 @@ namespace AnyRPG {
 
         public bool InstantiateMiniMapIndicator() {
             //Debug.Log($"{gameObject.name}.Interactable.InstantiateMiniMapIndicator()");
+
             if (!playerManager.PlayerUnitSpawned) {
                 //Debug.Log($"{gameObject.name}.Interactable.InstantiateMiniMapIndicator(): player unit not spawned yet.  returning");
                 return false;

@@ -224,7 +224,8 @@ namespace AnyRPG {
         }
 
         public void SetIndicatorText(string indicatorType, TextMeshProUGUI text) {
-            //Debug.Log(interactable.gameObject.name + ".QuestGiver.SetIndicatorText(" + indicatorType + ")");
+            //Debug.Log($"{interactable.gameObject.name}.QuestGiver.SetIndicatorText({indicatorType})");
+
             if (indicatorType == "complete") {
                 text.text = "?";
                 text.color = Color.yellow;
@@ -241,7 +242,8 @@ namespace AnyRPG {
         }
 
         public override bool HasMiniMapText() {
-            //Debug.Log($"{gameObject.name}.QuestGiverComponent.HasMiniMapText()");
+            //Debug.Log($"{interactable.gameObject.name}.QuestGiverComponent.HasMiniMapText()");
+
             return true;
         }
 
@@ -252,6 +254,7 @@ namespace AnyRPG {
 
         public override bool SetMiniMapText(TextMeshProUGUI text) {
             //Debug.Log(interactable.gameObject.name + ".QuestGiver.SetMiniMapText()");
+
             if (!base.SetMiniMapText(text)) {
                 //Debug.Log(interactable.gameObject.name + ".QuestGiver.SetMiniMapText(): hiding text");
                 text.text = "";

@@ -37,7 +37,7 @@ namespace AnyRPG {
         }
 
         public void SetupMiniMap() {
-            //Debug.Log(transform.parent.gameObject.name + ".MiniMapIndicatorController.SetupMiniMap(): interactable: " + (interactable == null ? "null" : interactable.name));
+            //Debug.Log($"{interactable.gameObject.name}.MiniMapIndicatorController.SetupMiniMap()");
 
             if (setupComplete == true) {
                 return;
@@ -64,10 +64,13 @@ namespace AnyRPG {
         }
 
         private void EnableHighestPriorityLayer() {
+            //Debug.Log($"{interactable.gameObject.name}.MiniMapIndicatorController.EnableHighestPriorityLayer()");
+
             highestPriorityValue = 0;
             highestPriorityInteractable = null;
             foreach (KeyValuePair<InteractableOptionComponent, MiniMapIndicatorLayerController> keyValuePair in miniMapLayers) {
                 if (keyValuePair.Value.IsActive == false) {
+                    //Debug.Log($"{interactable.gameObject.name}.MiniMapIndicatorController.EnableHighestPriorityLayer() {keyValuePair.Key.GetType().Name} IsActive == false");
                     continue;
                 }
                 if (keyValuePair.Key.PriorityValue > highestPriorityValue || highestPriorityInteractable == null) {
@@ -81,8 +84,10 @@ namespace AnyRPG {
             }
             foreach (KeyValuePair<InteractableOptionComponent, MiniMapIndicatorLayerController> keyValuePair in miniMapLayers) {
                 if (keyValuePair.Key == highestPriorityInteractable) {
+                    //Debug.Log($"{interactable.gameObject.name}.MiniMapIndicatorController.EnableHighestPriorityLayer() {keyValuePair.Key.GetType().Name} setting active");
                     keyValuePair.Value.gameObject.SetActive(true);
                 } else {
+                    //Debug.Log($"{interactable.gameObject.name}.MiniMapIndicatorController.EnableHighestPriorityLayer() {keyValuePair.Key.GetType().Name} setting NOT active");
                     keyValuePair.Value.gameObject.SetActive(false);
                 }
             }
@@ -94,17 +99,18 @@ namespace AnyRPG {
             SetupMiniMap();
         }
 
-        public void HandleMiniMapStatusUpdate(InteractableOptionComponent _interactable) {
-            //Debug.Log(_interactable.Interactable.gameObject.name + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate()");
-            if (miniMapLayers.ContainsKey(_interactable) == false || miniMapLayers[_interactable] == null) {
+        public void HandleMiniMapStatusUpdate(InteractableOptionComponent interactableOptionComponent) {
+            //Debug.Log(interactableOptionComponent.Interactable.gameObject.name + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate()");
+
+            if (miniMapLayers.ContainsKey(interactableOptionComponent) == false || miniMapLayers[interactableOptionComponent] == null) {
                 //Debug.Log(_interactable.DisplayName + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate(): miniMapLayers[_interactable] is null! Exiting");
                 return;
             }
             // this only supports one or the other too - prioritizing images
-            if (_interactable.HasMiniMapIcon()) {
-                miniMapLayers[_interactable].ConfigureDisplay();
-            } else if (_interactable.HasMiniMapText()) {
-                miniMapLayers[_interactable].ConfigureDisplay();
+            if (interactableOptionComponent.HasMiniMapIcon()) {
+                miniMapLayers[interactableOptionComponent].ConfigureDisplay();
+            } else if (interactableOptionComponent.HasMiniMapText()) {
+                miniMapLayers[interactableOptionComponent].ConfigureDisplay();
             }
 
             EnableHighestPriorityLayer();
