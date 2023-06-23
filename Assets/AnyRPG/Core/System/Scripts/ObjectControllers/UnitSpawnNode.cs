@@ -361,7 +361,8 @@ namespace AnyRPG {
 
             // lookup persistent position, or use navmesh agent to get a valid position (in case this spawner was not placed on walkable terrain)
             if (unitController.PersistentObjectComponent.PersistObjectPosition == true) {
-                //Debug.Log($"{gameObject.name}.UnitSpawnNode.CommonSpawn(): persist ojbect position is true");
+                //Debug.Log($"{gameObject.name}.UnitSpawnNode.CommonSpawn(): persist ojbect position is true on {unitController.gameObject.name}");
+
                 PersistentState persistentState = unitController.PersistentObjectComponent.GetPersistentState();
                 if (persistentState != null) {
                     // since we will be using navMeshAgent.warp, do not attempt to move unit manually

@@ -1003,7 +1003,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="unitProfile"></param>
         public void SetUnitProfile(UnitProfile unitProfile, UnitControllerMode unitControllerMode, int unitLevel = -1) {
-            //Debug.Log($"{gameObject.name}UnitController.SetUnitProfile()");
+            //Debug.Log($"{gameObject.name}.UnitController.SetUnitProfile()");
 
             this.unitProfile = unitProfile;
 

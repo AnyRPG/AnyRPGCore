@@ -50,6 +50,7 @@ namespace AnyRPG {
         }
 
         public void Setup(IPersistentObjectOwner persistentObjectOwner, SystemGameManager systemGameManager) {
+            //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.Setup() setting UUID {persistentObjectOwner.UUID.ID}");
             this.persistentObjectOwner = persistentObjectOwner;
             Configure(systemGameManager);
             CreateEventSubscriptions();
@@ -60,6 +61,8 @@ namespace AnyRPG {
         }
 
         public void Init() {
+            //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.Init() UUID is {persistentObjectOwner.UUID.ID}");
+
             if (persistObjectPosition == false) {
                 return;
             }
@@ -94,6 +97,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}PersistentObject.LoadPersistentState()");
             PersistentState persistentState = GetPersistentState();
             if (persistentState != null) {
+                //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObject.LoadPersistentState() setting transform.position on UUID {persistentObjectOwner.UUID.ID}");
                 persistentObjectOwner.transform.position = persistentState.Position;
                 persistentObjectOwner.transform.forward = persistentState.Forward;
             }
@@ -145,7 +149,7 @@ namespace AnyRPG {
         }
 
         public void SaveProperties() {
-            //Debug.Log(persistentObjectOwner.gameObject.name + "PersistentObjectComponent.SaveProperties()");
+            //Debug.Log($"{ persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties()");
 
             // since all units automatically have this component, give it a chance to not save based on configuration
             if (persistObjectPosition == false) {
@@ -157,6 +161,7 @@ namespace AnyRPG {
             storedForwardDirection = persistentObjectOwner.transform.forward;
             if (persistentObjectOwner.UUID != null) {
                 storedUUID = persistentObjectOwner.UUID.ID;
+                //Debug.Log($"{ persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties() UUID: {storedUUID}");
             }
 
             // save this data to the scene node that is active
