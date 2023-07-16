@@ -24,17 +24,24 @@ namespace AnyRPG {
 
         public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
-            bool checkResult = playerManager.MyCharacter.CharacterSkillManager.HasSkill(prerequisiteSkill);
+            bool checkResult = false;
+
+            if (playerManager.MyCharacter != null) {
+                checkResult = playerManager.MyCharacter.CharacterSkillManager.HasSkill(prerequisiteSkill);
+            }
+
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
-                if (notify == true) {
+                if (notify) {
                     OnStatusUpdated();
                 }
             }
         }
 
         public void HandleSkillListChanged(Skill newSkill) {
-            UpdateStatus();
+            if (prerequisiteSkill != null) {
+                UpdateStatus();
+            }
         }
 
         public virtual bool IsMet(BaseCharacter baseCharacter) {
@@ -56,7 +63,7 @@ namespace AnyRPG {
                 if (tmpPrerequisiteSkill != null) {
                     prerequisiteSkill = tmpPrerequisiteSkill;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find skill : " + prerequisiteName + " while inititalizing a prerequisite for " + ownerName + ".  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find skill: " + prerequisiteName + " while initializing a prerequisite for " + ownerName + ". CHECK INSPECTOR");
                 }
             }
             systemEventManager.OnSkillListChanged += HandleSkillListChanged;
@@ -66,5 +73,4 @@ namespace AnyRPG {
             systemEventManager.OnSkillListChanged -= HandleSkillListChanged;
         }
     }
-
 }
