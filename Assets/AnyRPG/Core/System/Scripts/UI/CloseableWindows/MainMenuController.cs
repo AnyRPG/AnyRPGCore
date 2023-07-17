@@ -46,13 +46,24 @@ namespace AnyRPG {
             uIManager.exitMenuWindow.CloseWindow();
             uIManager.deleteGameMenuWindow.CloseWindow();
             uIManager.settingsMenuWindow.CloseWindow();
+            uIManager.networkLoginWindow.CloseWindow();
             uIManager.playMenuWindow.OpenWindow();
+        }
+
+        public void NetworkLoginMenu() {
+            //Debug.Log("MainMenuController.NetworkMenu()");
+            uIManager.exitMenuWindow.CloseWindow();
+            uIManager.playMenuWindow.CloseWindow();
+            uIManager.deleteGameMenuWindow.CloseWindow();
+            uIManager.settingsMenuWindow.CloseWindow();
+            uIManager.networkLoginWindow.OpenWindow();
         }
 
         public void ExitMenu() {
             //Debug.Log("MainMenuController.ExitMenu()");
             uIManager.playMenuWindow.CloseWindow();
             uIManager.deleteGameMenuWindow.CloseWindow();
+            uIManager.networkLoginWindow.CloseWindow();
             uIManager.exitMenuWindow.OpenWindow();
         }
 
@@ -61,6 +72,7 @@ namespace AnyRPG {
             uIManager.playMenuWindow.CloseWindow();
             uIManager.deleteGameMenuWindow.CloseWindow();
             //systemWindowManager.mainMenuWindow.CloseWindow();
+            uIManager.networkLoginWindow.CloseWindow();
             uIManager.settingsMenuWindow.OpenWindow();
         }
 
@@ -70,6 +82,7 @@ namespace AnyRPG {
             uIManager.deleteGameMenuWindow.CloseWindow();
             //systemWindowManager.mainMenuWindow.CloseWindow();
             uIManager.settingsMenuWindow.CloseWindow();
+            uIManager.networkLoginWindow.CloseWindow();
             uIManager.creditsWindow.OpenWindow();
         }
 

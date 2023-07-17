@@ -349,7 +349,7 @@ namespace AnyRPG {
             }
 
             int _unitLevel = (dynamicLevel ? playerManager.MyCharacter.CharacterStats.Level : unitLevel) + extraLevels;
-            UnitController unitController = unitProfile.SpawnUnitPrefab(null, transform.position, transform.forward, UnitControllerMode.AI, _unitLevel);
+            UnitController unitController = systemGameManager.CharacterManager.SpawnUnitPrefab(GameMode.Local, unitProfile, null, transform.position, transform.forward, UnitControllerMode.AI, _unitLevel);
 
             if (unitController == null) {
                 // something went wrong.  None of the code below will work, so might as well return

@@ -125,7 +125,7 @@ namespace AnyRPG {
                 // can't add the same dictionary key twice
                 return;
             }
-            UnitController unitController = unitProfile.SpawnUnitPrefab(baseCharacter.UnitController.transform.parent, baseCharacter.UnitController.transform.position, baseCharacter.UnitController.transform.forward, UnitControllerMode.Pet);
+            UnitController unitController = systemGameManager.CharacterManager.SpawnUnitPrefab(systemGameManager.GameMode, unitProfile, baseCharacter.UnitController.transform.parent, baseCharacter.UnitController.transform.position, baseCharacter.UnitController.transform.forward, UnitControllerMode.Pet);
             if (unitController != null) {
                 unitController.SetPetMode(baseCharacter);
                 unitController.Init();

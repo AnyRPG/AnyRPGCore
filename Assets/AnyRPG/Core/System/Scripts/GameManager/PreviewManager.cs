@@ -65,7 +65,7 @@ namespace AnyRPG {
         protected virtual void SpawnUnit() {
             //Debug.Log("PreviewManager.SpawnUnit()");
 
-            unitController = unitProfile.SpawnUnitPrefab(transform, transform.position, transform.forward, UnitControllerMode.Preview);
+            unitController = systemGameManager.CharacterManager.SpawnUnitPrefab(GameMode.Local, unitProfile, transform, transform.position, transform.forward, UnitControllerMode.Preview);
             if (unitController != null) {
                 if (unitController.UnitModelController != null) {
                     unitController.UnitModelController.SetAttachmentProfile(unitProfile.UnitPrefabProps.AttachmentProfile);

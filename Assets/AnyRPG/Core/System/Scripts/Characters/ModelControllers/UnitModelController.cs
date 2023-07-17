@@ -101,7 +101,7 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SpawnUnitModel()");
 
             if (unitController.UnitProfile?.UnitPrefabProps?.ModelPrefab != null) {
-                unitModel = unitController.UnitProfile.SpawnModelPrefab(unitController.transform, unitController.transform.position, unitController.transform.forward);
+                unitModel = systemGameManager.CharacterManager.SpawnModelPrefab(unitController, unitController.UnitProfile, unitController.transform, unitController.transform.position, unitController.transform.forward);
             }
         }
 

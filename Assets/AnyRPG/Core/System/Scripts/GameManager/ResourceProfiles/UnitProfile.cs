@@ -389,50 +389,6 @@ namespace AnyRPG {
     }
     */
 
-        /// <summary>
-        /// spawn unit with parent. rotation and position from settings
-        /// </summary>
-        /// <param name="parentTransform"></param>
-        /// <param name="settingsTransform"></param>
-        /// <returns></returns>
-        public UnitController SpawnUnitPrefab(Transform parentTransform, Vector3 position, Vector3 forward, UnitControllerMode unitControllerMode, int unitLevel = -1) {
-            GameObject prefabObject = SpawnPrefab(UnitPrefabProps.UnitPrefab, parentTransform, position, forward);
-            UnitController unitController = null;
-            if (prefabObject != null) {
-                unitController = prefabObject.GetComponent<UnitController>();
-                if (unitController != null) {
-
-                    // give this unit a unique name
-                    unitController.gameObject.name = ResourceName.Replace(" ", "") + systemGameManager.GetSpawnCount();
-                    unitController.Configure(systemGameManager);
-                    // test - set unitprofile first so we don't overwrite players baseCharacter settings
-                    unitController.SetUnitProfile(this, unitControllerMode, unitLevel);
-                }
-            }
-
-            return unitController;
-        }
-
-        /// <summary>
-        /// spawn unit with parent. rotation and position from settings
-        /// </summary>
-        /// <param name="parentTransform"></param>
-        /// <param name="settingsTransform"></param>
-        /// <returns></returns>
-        public GameObject SpawnModelPrefab(Transform parentTransform, Vector3 position, Vector3 forward) {
-            return SpawnPrefab(UnitPrefabProps.ModelPrefab, parentTransform, position, forward);
-        }
-
-        public GameObject SpawnPrefab(GameObject spawnPrefab, Transform parentTransform, Vector3 position, Vector3 forward) {
-            if (spawnPrefab == null) {
-                return null;
-            }
-
-            GameObject prefabObject = objectPooler.GetPooledObject(spawnPrefab, position, (forward == Vector3.zero ? Quaternion.identity : Quaternion.LookRotation(forward)), parentTransform);
-
-            return prefabObject;
-        }
-
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
             /*

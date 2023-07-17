@@ -45,6 +45,7 @@ namespace AnyRPG {
         private CameraManager cameraManager = null;
         private PlayerManager playerManager = null;
         private MapManager mapManager = null;
+        private NetworkManager networkManager = null;
 
         public bool NavMeshAvailable { get => navMeshAvailable; set => navMeshAvailable = value; }
         //public Vector3 SpawnRotationOverride { get => spawnRotationOverride; set => spawnRotationOverride = value; }
@@ -68,6 +69,7 @@ namespace AnyRPG {
             audioManager = systemGameManager.AudioManager;
             cameraManager = systemGameManager.CameraManager;
             playerManager = systemGameManager.PlayerManager;
+            networkManager = systemGameManager.NetworkManager;
         }
 
         public void PerformSetupActivities() {
@@ -455,11 +457,21 @@ namespace AnyRPG {
             //StartCoroutine(LoadAsynchronously(levelName.Replace(" ", string.Empty)));
             SceneNode sceneNode = systemDataFactory.GetResource<SceneNode>(levelName);
             if (sceneNode != null) {
-                StartCoroutine(LoadAsynchronously(sceneNode.SceneFile));
+                StartLoadAsync(sceneNode.SceneFile);
             } else {
-                StartCoroutine(LoadAsynchronously(levelName));
+                StartLoadAsync(levelName);
                 //Debug.LogError("LevelManager.LoadLevel(" + levelName + "): could not find scene node with that name!");
             }
+        }
+
+        private void StartLoadAsync(string sceneName) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                StartCoroutine(LoadAsynchronously(sceneName));
+                return;
+            }
+
+            // network load
+            networkManager.LoadScene(sceneName);
         }
 
         public void LoadDefaultStartingZone() {
@@ -490,7 +502,8 @@ namespace AnyRPG {
 
 
         IEnumerator LoadAsynchronously(string sceneName) { // scene name is just the name of the current scene being loaded
-            //Debug.Log("LevelManager.LoadAsynchronously(" + sceneName + ")");
+            Debug.Log("LevelManager.LoadAsynchronously(" + sceneName + ")");
+
             uIManager.ActivateLoadingUI();
             // try initial value
             loadBar.value = 0.1f;

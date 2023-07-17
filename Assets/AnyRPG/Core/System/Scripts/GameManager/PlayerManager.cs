@@ -375,7 +375,7 @@ namespace AnyRPG {
 
             // spawn the player unit and set references
             Vector3 spawnRotation = levelManager.GetSpawnRotation();
-            activeCharacter.UnitProfile.SpawnUnitPrefab(playerUnitParent.transform, spawnLocation, spawnRotation, UnitControllerMode.Player);
+            systemGameManager.CharacterManager.SpawnUnitPrefab(systemGameManager.GameMode, activeCharacter.UnitProfile, playerUnitParent.transform, spawnLocation, spawnRotation, UnitControllerMode.Player);
             if (activeUnitController == null) {
                 Debug.LogError("PlayerManager.SpawnPlayerUnit(): No UnitController could be found, or player unit was not spawned properly");
                 return;

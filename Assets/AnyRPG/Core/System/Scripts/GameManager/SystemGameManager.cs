@@ -6,10 +6,10 @@ using UnityEngine;
 namespace AnyRPG {
     public class SystemGameManager : MonoBehaviour {
 
-        private void Awake() {
-            Init();
-        }
+        // private fields
+        private GameMode gameMode = GameMode.Local;
 
+        // serialized fields
         [Header("Configuration")]
 
         // configuration monobehavior
@@ -157,6 +157,12 @@ namespace AnyRPG {
         [SerializeField]
         private CharacterCreatorInteractableManager characterCreatorInteractableManager = null;
 
+        [SerializeField]
+        private NetworkManager networkManager = null;
+
+        [SerializeField]
+        private CharacterManager characterManager = null;
+
         // system scripts
         private SystemEventManager systemEventManager = null;
 
@@ -214,6 +220,29 @@ namespace AnyRPG {
         public UnitSpawnManager UnitSpawnManager { get => unitSpawnManager; set => unitSpawnManager = value; }
         public VendorManager VendorManager { get => vendorManager; set => vendorManager = value; }
         public CharacterCreatorInteractableManager CharacterCreatorInteractableManager { get => characterCreatorInteractableManager; set => characterCreatorInteractableManager = value; }
+        public NetworkManager NetworkManager { get => networkManager; set => networkManager = value; }
+        public CharacterManager CharacterManager { get => characterManager; set => characterManager = value; }
+        public GameMode GameMode { get => gameMode; }
+
+        private void Awake() {
+            Init();
+        }
+
+        private void Start() {
+            //Debug.Log("SystemGameManager.Start()");
+
+            // due to "intended" but not officially documented behavior, audio updates will be overwritten if called in Awake() so they must be called in Start()
+            // https://fogbugz.unity3d.com/default.asp?1197165_nik4gg1io942ae13#bugevent_1071843210
+
+            audioManager.Configure(this);
+
+            // first turn off the UI
+            UIManager.PerformSetupActivities();
+
+            // then launch level manager to start loading the game
+            LevelManager.PerformSetupActivities();
+
+        }
 
         private void Init() {
             //Debug.Log("SystemGameManager.Init()");
@@ -277,6 +306,8 @@ namespace AnyRPG {
             unitSpawnManager.Configure(this);
             vendorManager.Configure(this);
             characterCreatorInteractableManager.Configure(this);
+            networkManager.Configure(this);
+            characterManager.Configure(this);
         }
 
         private void SetupPermanentObjects() {
@@ -296,22 +327,6 @@ namespace AnyRPG {
             }
         }
 
-        private void Start() {
-            //Debug.Log("SystemGameManager.Start()");
-
-            // due to "intended" but not officially documented behavior, audio updates will be overwritten if called in Awake() so they must be called in Start()
-            // https://fogbugz.unity3d.com/default.asp?1197165_nik4gg1io942ae13#bugevent_1071843210
-
-            audioManager.Configure(this);
-
-            // first turn off the UI
-            UIManager.PerformSetupActivities();
-
-            // then launch level manager to start loading the game
-            LevelManager.PerformSetupActivities();
-
-        }
-
         public int GetSpawnCount() {
             spawnCount++;
             return spawnCount;
@@ -320,6 +335,11 @@ namespace AnyRPG {
         private void OnApplicationQuit() {
             //Debug.Log("SystemGameManager.OnApplicationQuit()");
             isShuttingDown = true;
+        }
+
+        public void SetGameMode(GameMode gameMode) {
+            Debug.Log($"SystemGameManager.SetGameMode({gameMode})");
+            this.gameMode = gameMode;
         }
 
         /// <summary>
@@ -332,5 +352,7 @@ namespace AnyRPG {
         }
 
     }
+
+    public enum GameMode { Local, Network }
 
 }

@@ -9,13 +9,21 @@ namespace AnyRPG {
 
         [Header("Prefab")]
 
-        [Tooltip("The prefab to use for the base unit")]
+        [Tooltip("The prefab to use for the base unit when spawned locally")]
         [SerializeField]
         private GameObject unitPrefab = null;
+
+        [Tooltip("The prefab to use for the base unit when spawned over a network connection")]
+        [SerializeField]
+        private GameObject networkUnitPrefab = null;
 
         [Tooltip("The prefab to use for the model, if the unit prefab doesn't already have a model.")]
         [SerializeField]
         private GameObject modelPrefab = null;
+
+        [Tooltip("The prefab to use for the model, if the unit prefab doesn't already have a model, and is being spawned over a network connection")]
+        [SerializeField]
+        private GameObject networkModelPrefab = null;
 
         [Tooltip("The type of character model for the purpose of character customization")]
         [SerializeReference]
@@ -120,6 +128,8 @@ namespace AnyRPG {
         public bool UseInlineAnimationProps { get => useInlineAnimationProps; set => useInlineAnimationProps = value; }
         public string AttachmentProfileName { get => attachmentProfileName; set => attachmentProfileName = value; }
         public CharacterModelProvider ModelProvider { get => modelProvider; set => modelProvider = value; }
+        public GameObject NetworkModelPrefab { get => networkModelPrefab; set => networkModelPrefab = value; }
+        public GameObject NetworkUnitPrefab { get => networkUnitPrefab; set => networkUnitPrefab = value; }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
             //Debug.Log($"UnitPrefabProps.SetupScriptableObjects({describable.ResourceName})");

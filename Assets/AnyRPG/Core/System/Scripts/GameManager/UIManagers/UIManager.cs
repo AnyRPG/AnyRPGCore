@@ -198,6 +198,7 @@ namespace AnyRPG {
         public CloseableWindow confirmCancelCutsceneMenuWindow;
         public CloseableWindow confirmSellItemMenuWindow;
         public CloseableWindow nameChangeWindow;
+        public CloseableWindow networkLoginWindow;
         public CloseableWindow exitToMainMenuWindow;
         public CloseableWindow confirmNewGameMenuWindow;
         public CloseableWindow onScreenKeyboardWindow;
@@ -386,6 +387,7 @@ namespace AnyRPG {
             confirmCancelCutsceneMenuWindow.Configure(systemGameManager);
             confirmSellItemMenuWindow.Configure(systemGameManager);
             nameChangeWindow.Configure(systemGameManager);
+            networkLoginWindow.Configure(systemGameManager);
             exitToMainMenuWindow.Configure(systemGameManager);
             confirmNewGameMenuWindow.Configure(systemGameManager);
             onScreenKeyboardWindow.Configure(systemGameManager);
@@ -826,6 +828,7 @@ namespace AnyRPG {
             copyGameMenuWindow.CloseWindow();
             creditsWindow.CloseWindow();
             deleteGameMenuWindow.CloseWindow();
+            networkLoginWindow.CloseWindow();
             exitMenuWindow.CloseWindow();
             gamepadHintWindow.CloseWindow();
             gamepadMainMenuWindow.CloseWindow();
@@ -1410,6 +1413,7 @@ namespace AnyRPG {
             int opacityLevel = (int)(PlayerPrefs.GetFloat("SystemMenuOpacity") * 255);
             mainMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             nameChangeWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            networkLoginWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             deleteGameMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             characterCreatorWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             exitMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
