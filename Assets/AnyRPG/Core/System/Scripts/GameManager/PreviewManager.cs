@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 
 namespace AnyRPG {
-    public abstract class PreviewManager : ConfiguredMonoBehaviour {
+    public abstract class PreviewManager : ConfiguredMonoBehaviour, ICharacterRequestor {
 
         public event System.Action OnUnitCreated = delegate { };
         public event System.Action OnModelCreated = delegate { };
@@ -64,24 +64,27 @@ namespace AnyRPG {
 
         protected virtual void SpawnUnit() {
             //Debug.Log("PreviewManager.SpawnUnit()");
-
-            unitController = systemGameManager.CharacterManager.SpawnUnitPrefab(GameMode.Local, unitProfile, transform, transform.position, transform.forward, UnitControllerMode.Preview);
+            CharacterRequestData characterRequestData = new CharacterRequestData(
+                this,
+                GameMode.Local,
+                unitProfile,
+                UnitControllerMode.Preview
+                );
+            unitController = systemGameManager.CharacterManager.SpawnUnitPrefab(characterRequestData, transform, transform.position, transform.forward);
             if (unitController != null) {
-                if (unitController.UnitModelController != null) {
-                    unitController.UnitModelController.SetAttachmentProfile(unitProfile.UnitPrefabProps.AttachmentProfile);
-                    unitController.UnitModelController.OnModelCreated += HandleModelCreated;
-                }
-                BroadcastUnitCreated();
-                unitController.Init();
-
-                // theoretically this next statement is no longer needed because OnModelCreated is only fired after running Init() and we are already subscribed by that point
-                /*
-                if (unitController.UnitModelController.ModelCreated == true) {
-                    HandleModelCreated();
-                }
-                */
+                ConfigureSpawnedCharacter(unitController, characterRequestData);
             }
         }
+
+        public void ConfigureSpawnedCharacter(UnitController unitController, CharacterRequestData characterRequestData) {
+            if (unitController.UnitModelController != null) {
+                unitController.UnitModelController.SetAttachmentProfile(unitProfile.UnitPrefabProps.AttachmentProfile);
+                unitController.UnitModelController.OnModelCreated += HandleModelCreated;
+            }
+            BroadcastUnitCreated();
+            unitController.Init();
+        }
+
 
         protected virtual void BroadcastUnitCreated() {
             //Debug.Log("PreviewManager.BroadcastUnitCreated()");

@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class UnitSpawnNode : AutoConfiguredMonoBehaviour, IPrerequisiteOwner {
+    public class UnitSpawnNode : AutoConfiguredMonoBehaviour, IPrerequisiteOwner, ICharacterRequestor {
 
         [Header("Spawn GameObject")]
 
@@ -111,11 +111,15 @@ namespace AnyRPG {
 
         protected bool disabled = false;
 
+        // keep track of spawn requests so that they can be configured after spawning
+        private Dictionary<int, UnitSpawnNodeSpawnRequestData> networkSpawnRequests = new Dictionary<int, UnitSpawnNodeSpawnRequestData>();
+
         private List<UnitController> spawnReferences = new List<UnitController>();
 
         // game manager references
         private PlayerManager playerManager = null;
         private SystemDataFactory systemDataFactory = null;
+        private CharacterManager characterManager = null;
 
         // later on make this spawn mob as player walks into collider ;>
         //private BoxCollider boxCollider;
@@ -349,12 +353,31 @@ namespace AnyRPG {
             }
 
             int _unitLevel = (dynamicLevel ? playerManager.MyCharacter.CharacterStats.Level : unitLevel) + extraLevels;
-            UnitController unitController = systemGameManager.CharacterManager.SpawnUnitPrefab(GameMode.Local, unitProfile, null, transform.position, transform.forward, UnitControllerMode.AI, _unitLevel);
+            CharacterRequestData characterRequestData = new CharacterRequestData(this,
+                GameMode.Local, 
+                unitProfile,
+                UnitControllerMode.AI,
+                _unitLevel
+                );
+            UnitController unitController = characterManager.SpawnUnitPrefab(characterRequestData,null, transform.position, transform.forward);
+            networkSpawnRequests.Add(characterRequestData.spawnRequestId, new UnitSpawnNodeSpawnRequestData(toughness));
 
             if (unitController == null) {
-                // something went wrong.  None of the code below will work, so might as well return
+                // this unit was spawned over the network, and will get that function called 
                 return;
             }
+
+            ConfigureSpawnedCharacter(unitController, characterRequestData);
+        }
+
+        public void ConfigureSpawnedCharacter(UnitController unitController, CharacterRequestData characterRequestData) {
+
+            if (networkSpawnRequests.ContainsKey(characterRequestData.spawnRequestId) == false) {
+                return;
+            }
+            UnitToughness toughness = networkSpawnRequests[characterRequestData.spawnRequestId].unitToughness;
+            // clean up the unneeded request data
+            networkSpawnRequests.Remove(characterRequestData.spawnRequestId);
 
             Vector3 newSpawnLocation = Vector3.zero;
             Vector3 newSpawnForward = Vector3.forward;
@@ -417,6 +440,7 @@ namespace AnyRPG {
             unitController.Init();
             spawnReferences.Add(unitController);
         }
+
 
         /// <summary>
         /// if the maximum unit count is not exceeded and the prerequisites are met, return true
@@ -646,6 +670,13 @@ namespace AnyRPG {
             }
         }
 
+    }
+
+    public class UnitSpawnNodeSpawnRequestData {
+        public UnitToughness unitToughness;
+        public UnitSpawnNodeSpawnRequestData(UnitToughness unitToughness) {
+            this.unitToughness = unitToughness;
+        }
     }
 
     public enum respawnCondition { Despawn, Loot, Death };

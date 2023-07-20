@@ -37,7 +37,7 @@ namespace AnyRPG {
         }
 
         public void SetBaseCharacter(BaseCharacter baseCharacter) {
-            //Debug.Log(interactable.gameObject.name + ".CharacterUnit.SetBaseCharacter: " + baseCharacter.gameObject.name);
+            Debug.Log(interactable.gameObject.name + ".CharacterUnit.SetBaseCharacter(" + (baseCharacter == null ? "null" : baseCharacter.gameObject.name) + ")");
             this.baseCharacter = baseCharacter;
 
         }
@@ -150,6 +150,10 @@ namespace AnyRPG {
         }
 
         public override bool HasMainMapIcon() {
+            Debug.Log($"{baseCharacter.gameObject.name}.CharacterUnit.HasMainMapIcon()");
+            if (baseCharacter.UnitController == null) {
+                Debug.Log($"{baseCharacter.gameObject.name}.CharacterUnit.HasMainMapIcon() baseCharacter.unitController is null");
+            }
             if (baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
                 return true;
             }

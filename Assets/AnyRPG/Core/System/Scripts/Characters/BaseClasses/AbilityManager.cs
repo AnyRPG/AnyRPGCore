@@ -88,7 +88,7 @@ namespace AnyRPG {
             return null;
         }
 
-        public virtual void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
+        public virtual void SetMountedState(UnitProfile mountUnitProfile) {
             // nothing here for now
         }
 

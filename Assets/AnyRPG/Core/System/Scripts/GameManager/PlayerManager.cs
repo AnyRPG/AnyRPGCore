@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace AnyRPG {
-    public class PlayerManager : ConfiguredMonoBehaviour {
+    public class PlayerManager : ConfiguredMonoBehaviour, ICharacterRequestor {
 
         [SerializeField]
         private int initialLevel = 1;
@@ -91,6 +91,7 @@ namespace AnyRPG {
         protected MessageFeedManager messageFeedManager = null;
         protected ObjectPooler objectPooler = null;
         protected ControlsManager controlsManager = null;
+        protected NetworkManager networkManager = null;
 
         public BaseCharacter MyCharacter { get => character; set => character = value; }
 
@@ -126,6 +127,7 @@ namespace AnyRPG {
             inventoryManager = systemGameManager.InventoryManager;
             objectPooler = systemGameManager.ObjectPooler;
             controlsManager = systemGameManager.ControlsManager;
+            networkManager = systemGameManager.NetworkManager;
 
             PerformRequiredPropertyChecks();
             CreateEventSubscriptions();
@@ -218,34 +220,42 @@ namespace AnyRPG {
         }
 
         public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
-            //Debug.Log("PlayerManager.OnLevelLoad()");
-            bool loadCharacter = true;
+            Debug.Log("PlayerManager.HandleLevelLoad()");
+
             SceneNode activeSceneNode = levelManager.GetActiveSceneNode();
+            
+            if (activeSceneNode == null) {
+                if (levelManager.IsMainMenu()) {
+                    return;
+                }
+            }
+
+            if (autoSpawnPlayerOnLevelLoad == false) {
+                return;
+            }
+
+            //Debug.Log("PlayerManager.OnLevelLoad(): we have a scene node");
+            // fix to allow character to spawn after cutscene is viewed on next level load - and another fix to prevent character from spawning on a pure cutscene
             if (activeSceneNode != null) {
-                //Debug.Log("PlayerManager.OnLevelLoad(): we have a scene node");
-                // fix to allow character to spawn after cutscene is viewed on next level load - and another fix to prevent character from spawning on a pure cutscene
                 if ((activeSceneNode.AutoPlayCutscene != null && (activeSceneNode.AutoPlayCutscene.Viewed == false || activeSceneNode.AutoPlayCutscene.Repeatable == true))
                     || activeSceneNode.SuppressCharacterSpawn) {
                     //Debug.Log("PlayerManager.OnLevelLoad(): character spawn is suppressed");
-                    loadCharacter = false;
-
-                    // testing - remove all camera activation code from here
-                    //cameraManager.DeactivateMainCamera();
-
-                    //cameraManager.MyCharacterCreatorCamera.gameObject.SetActive(true);
-                }
-            } else {
-                if (levelManager.IsMainMenu()) {
-                    loadCharacter = false;
+                    return;
                 }
             }
-            if (autoSpawnPlayerOnLevelLoad == true && loadCharacter) {
-                //cameraManager.MyCharacterCreatorCamera.gameObject.SetActive(false);
-                Vector3 spawnLocation = SpawnPlayerUnit();
-                // testing - remove all camera code from here
-                //cameraManager.ActivateMainCamera(true);
-                cameraManager.MainCameraController.SetTargetPositionRaw(spawnLocation, activeUnitController.transform.forward);
+
+            if (systemGameManager.GameMode == GameMode.Network  && CanSpawnPlayerOverNetwork() == false) {
+                return;
             }
+
+            Vector3 spawnRotation = levelManager.GetSpawnRotation();
+            Vector3 spawnLocation = SpawnPlayerUnit();
+            //cameraManager.MainCameraController.SetTargetPositionRaw(spawnLocation, activeUnitController.transform.forward);
+            cameraManager.MainCameraController.SetTargetPositionRaw(spawnLocation, spawnRotation);
+        }
+
+        private bool CanSpawnPlayerOverNetwork() {
+            return networkManager.CanSpawnPlayerOverNetwork();
         }
 
         public void PlayLevelUpEffects(int newLevel) {
@@ -315,6 +325,8 @@ namespace AnyRPG {
         }
 
         public void SubscribeToTargetReady() {
+            Debug.Log($"PlayerManager.SubscribeToTargetReady()");
+
             activeUnitController.OnCameraTargetReady += HandleTargetReady;
             subscribeToTargetReady = false;
         }
@@ -326,13 +338,13 @@ namespace AnyRPG {
         }
 
         public void HandleTargetReady() {
-            //Debug.Log($"{gameObject.name}.UnitFrameController.HandleTargetReady()");
+            Debug.Log($"PlayerManager.HandleTargetReady()");
 
             waitForPlayerReadyCoroutine = StartCoroutine(WaitForPlayerReady());
         }
 
         private IEnumerator WaitForPlayerReady() {
-            //Debug.Log("PlayerManager.WaitForPlayerReady()");
+            Debug.Log("PlayerManager.WaitForPlayerReady()");
             //private IEnumerator WaitForCamera(int frameNumber) {
             yield return null;
             //Debug.Log($"{gameObject.name}.UnitFrameController.WaitForCamera(): about to render " + namePlateController.Interactable.GetInstanceID() + "; initial frame: " + frameNumber + "; current frame: " + lastWaitFrame);
@@ -348,7 +360,7 @@ namespace AnyRPG {
         }
 
         public Vector3 SpawnPlayerUnit() {
-            //Debug.Log("PlayerManager.SpawnPlayerUnit()");
+            Debug.Log("PlayerManager.SpawnPlayerUnit()");
 
             cameraManager.HidePlayers();
             subscribeToTargetReady = true;
@@ -358,7 +370,7 @@ namespace AnyRPG {
         }
 
         public void SpawnPlayerUnit(Vector3 spawnLocation) {
-            //Debug.Log("PlayerManager.SpawnPlayerUnit(" + spawnLocation + ")");
+            //Debug.Log($"PlayerManager.SpawnPlayerUnit({spawnLocation}");
 
             if (activeUnitController != null) {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Player Unit already exists");
@@ -375,33 +387,57 @@ namespace AnyRPG {
 
             // spawn the player unit and set references
             Vector3 spawnRotation = levelManager.GetSpawnRotation();
-            systemGameManager.CharacterManager.SpawnUnitPrefab(systemGameManager.GameMode, activeCharacter.UnitProfile, playerUnitParent.transform, spawnLocation, spawnRotation, UnitControllerMode.Player);
-            if (activeUnitController == null) {
-                Debug.LogError("PlayerManager.SpawnPlayerUnit(): No UnitController could be found, or player unit was not spawned properly");
-                return;
+            CharacterRequestData characterRequestData = new CharacterRequestData(this,
+                systemGameManager.GameMode,
+                activeCharacter.UnitProfile,
+                UnitControllerMode.Player);
+            UnitController unitController = systemGameManager.CharacterManager.SpawnUnitPrefab(characterRequestData, playerUnitParent.transform, spawnLocation, spawnRotation);
+            if (unitController != null) {
+                ConfigureSpawnedCharacter(unitController, characterRequestData);
+            }
+        }
+
+        private bool OwnPlayer(UnitController unitController, CharacterRequestData characterRequestData) {
+            if (characterRequestData.requestMode == GameMode.Local) {
+                return true;
+            }
+
+            // network mode, so ask if unitController is owned by us
+            //return networkManager.OwnPlayer(unitController);
+            
+            // testing - for now this can always return true because we will not perform configuration on things we didn't request anyway
+            return true;
+        }
+
+        public void ConfigureSpawnedCharacter(UnitController unitController, CharacterRequestData characterRequestData) {
+            Debug.Log("PlayerManager.ConfigureSpawnedCharacter(" + unitController.gameObject.name + ")");
+
+            if (OwnPlayer(unitController, characterRequestData) == true) {
+                SetUnitController(unitController);
             }
 
             if (levelManager.NavMeshAvailable == true && autoDetectNavMeshes) {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Enabling NavMeshAgent()");
-                activeUnitController.EnableAgent();
+                unitController.EnableAgent();
                 if (playerUnitMovementController != null) {
                     playerUnitMovementController.useMeshNav = true;
                 }
             } else {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Disabling NavMeshAgent()");
-                activeUnitController.DisableAgent();
+                unitController.DisableAgent();
                 if (playerUnitMovementController != null) {
                     playerUnitMovementController.useMeshNav = false;
                 }
             }
 
-            activeUnitController.UnitModelController.SetInitialSavedAppearance(saveManager.CurrentSaveData);
+            unitController.UnitModelController.SetInitialSavedAppearance(saveManager.CurrentSaveData);
             if (subscribeToTargetReady) {
                 SubscribeToTargetReady();
             }
-            activeUnitController.Init();
 
-            if (activeUnitController?.UnitModelController?.ModelCreated == false) {
+            unitController.Init();
+
+            if (unitController.UnitModelController.ModelCreated == false) {
                 // do UMA spawn stuff to wait for UMA to spawn
                 SubscribeToModelReady();
             } else {
@@ -428,7 +464,7 @@ namespace AnyRPG {
         }
 
         public void SetUnitController(UnitController unitController) {
-            //Debug.Log("PlayerManager.SetUnitController(" + unitController.gameObject.name + ")");
+            Debug.Log("PlayerManager.SetUnitController(" + unitController.gameObject.name + ")");
 
             this.unitController = unitController;
             activeUnitController = unitController;
@@ -452,14 +488,14 @@ namespace AnyRPG {
         }
 
         public void HandleModelReady() {
-            //Debug.Log("PlayerManager.HandleModelReady()");
+            Debug.Log("PlayerManager.HandleModelReady()");
             UnsubscribeFromModelReady();
 
             HandlePlayerUnitSpawn();
         }
 
         private void HandlePlayerUnitSpawn() {
-            //Debug.Log("PlayerManager.HandlePlayerUnitSpawn()");
+            Debug.Log("PlayerManager.HandlePlayerUnitSpawn()");
             playerUnitSpawned = true;
 
             // inform any subscribers that we just spawned a player unit
@@ -475,25 +511,28 @@ namespace AnyRPG {
         }
 
         public void DisableMovementControllers() {
+            Debug.Log("PlayerManager.DisableMovementControllers()");
             playerUnitMovementController.enabled = false;
             playerUnitMovementController.MovementStateController.enabled = false;
         }
 
         public void EnableMovementControllers() {
-            //Debug.Log("PlayerManager.EnableMovementControllers()");
+            Debug.Log("PlayerManager.EnableMovementControllers()");
             playerUnitMovementController.enabled = true;
             playerUnitMovementController.MovementStateController.enabled = true;
             playerUnitMovementController.Init();
         }
 
         public void SubscribeToModelReady() {
-            //Debug.Log("PlayerManager.SubscribeToModelReady()");
+            Debug.Log("PlayerManager.SubscribeToModelReady()");
 
             //activeUnitController.UnitModelController.OnModelUpdated += HandleModelReady;
             activeUnitController.UnitModelController.OnModelCreated += HandleModelReady;
         }
 
         public void UnsubscribeFromModelReady() {
+            Debug.Log("PlayerManager.UnsubscribeFromModelReady()");
+
             //activeUnitController.UnitModelController.OnModelUpdated -= HandleModelReady;
             activeUnitController.UnitModelController.OnModelCreated -= HandleModelReady;
         }

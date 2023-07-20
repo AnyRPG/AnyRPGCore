@@ -142,12 +142,14 @@ namespace AnyRPG {
 
         protected virtual void Start() {
             //Debug.Log($"{gameObject.name}.Spawnable.Start()");
-            if (systemGameManager == null) {
-                Debug.LogError(gameObject.name + ": SystemGameManager not found. Is the Game Manager in the scene?");
-                return;
-            }
 
-            Init();
+            //if (systemGameManager == null) {
+            //    Debug.LogError(gameObject.name + ": SystemGameManager not found. Is the Game Manager in the scene?");
+            //    return;
+            //}
+
+            // FIXME : REMOVED FOR NETWORK COMPATIBILITY
+            //Init();
         }
 
         public void CreateEventSubscriptions() {
@@ -212,6 +214,7 @@ namespace AnyRPG {
 
         public virtual void ResetSettings() {
             //Debug.Log($"{gameObject.name}.Spawnable.ResetSettings()");
+
             CleanupEventSubscriptions();
             CleanupEverything();
 
@@ -232,7 +235,7 @@ namespace AnyRPG {
         }
 
         public virtual void GetComponentReferences() {
-            //Debug.Log($"{gameObject.name}.Spawnable.InitializeComponents()");
+            //Debug.Log($"{gameObject.name}.Spawnable.GetComponentReferences()");
 
             if (componentReferencesInitialized == true) {
                 return;

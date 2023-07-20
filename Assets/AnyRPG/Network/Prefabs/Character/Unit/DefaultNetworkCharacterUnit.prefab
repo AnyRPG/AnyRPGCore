@@ -7,10 +7,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -2928320751916093757, guid: ba09f14eb0109ba459f4520b82c3fadc,
+        type: 3}
+      propertyPath: unitControllerMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
         type: 3}
       propertyPath: m_Name
       value: DefaultNetworkCharacterUnit
+      objectReference: {fileID: 0}
+    - target: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2692339740015506124, guid: ba09f14eb0109ba459f4520b82c3fadc,
         type: 3}
@@ -67,10 +77,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5439310620421005911, guid: ba09f14eb0109ba459f4520b82c3fadc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7989242567668304555, guid: ba09f14eb0109ba459f4520b82c3fadc,
         type: 3}
       propertyPath: m_UUID
-      value: 2a3b6d87-25dd-4e86-a074-d8cafaff7c05
+      value: 654456ac-f412-4d31-949e-82cabdfac09b
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba09f14eb0109ba459f4520b82c3fadc, type: 3}
@@ -107,7 +122,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   _clientAuthoritative: 1
   _sendToOwner: 1
-  _useNetworkLod: 1
+  _enableNetworkLod: 1
   _interval: 1
   _synchronizePosition: 1
   _positionSnapping:
@@ -139,6 +154,7 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 8873413205694323065}
   _networkObjectCache: {fileID: 8873413205694323065}
+  spawnRequestId: 0
 --- !u!114 &8873413205694323065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,59 +184,8 @@ MonoBehaviour:
   _initializeOrder: 0
   _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
-  <PrefabId>k__BackingField: 0
+  <PrefabId>k__BackingField: 2
   <SpawnableCollectionId>k__BackingField: 0
   _scenePathHash: 0
   <SceneId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 1636328252640607343
-  _sceneNetworkObjects: []
---- !u!23 &6546594749566876217
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4649811912837811180}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &8421574379701155829
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4649811912837811180}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}

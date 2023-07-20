@@ -126,7 +126,11 @@ namespace AnyRPG {
             currentZoomDistance = initialZOffset;
 
             targetPosition = rawTargetPosition + Vector3.up * pitch;
-            transform.position = targetPosition - (Quaternion.LookRotation(forwardDirection) * new Vector3(0, 0, currentZoomDistance));
+            if (forwardDirection == Vector3.zero) {
+                transform.position = targetPosition - new Vector3(0, 0, currentZoomDistance);
+            } else {
+                transform.position = targetPosition - (Quaternion.LookRotation(forwardDirection) * new Vector3(0, 0, currentZoomDistance));
+            }
 
             // this next line will give an exact duplicate of where the camera was in relation to the player at the time they changed scenes
             // it's disabled for now because it actually makes a bit more sense to have the camera behind the player so they can see the level they are zoning into

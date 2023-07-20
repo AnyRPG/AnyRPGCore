@@ -396,6 +396,11 @@ namespace AnyRPG {
         public bool CanFlyOverride { get => canFlyOverride; set => canFlyOverride = value; }
         public bool CanGlideOverride { get => canGlideOverride; set => canGlideOverride = value; }
 
+        public override void AutoConfigure(SystemGameManager systemGameManager) {
+            // don't do anything here.  Unitcontrollers should never be autoconfigured
+            //base.AutoConfigure(systemGameManager);
+        }
+
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             // create components here instead?  which ones rely on other things like unit profile being set before start?
@@ -800,9 +805,11 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.UnitController.SetUnitControllerMode(" + unitControllerMode + ")");
 
             this.unitControllerMode = unitControllerMode;
-            if (unitControllerMode == UnitControllerMode.Player) {
-                ConfigurePlayer();
-            }
+            
+            // testing - do this in playerManager instead *after* the model has spawned
+            //if (unitControllerMode == UnitControllerMode.Player) {
+            //    ConfigurePlayer();
+            //}
         }
 
         public void ActivateUnitControllerMode() {
@@ -950,13 +957,17 @@ namespace AnyRPG {
 
         // for interactions
         public override float PerformFactionCheck(BaseCharacter sourceCharacter) {
+            if (characterUnit == null) {
+                Debug.LogWarning($"{gameObject.name}.UnitController.PerformFactionCheck({sourceCharacter.gameObject.name}) characterUnit is null");
+            }
             return Faction.RelationWith(sourceCharacter, characterUnit.BaseCharacter);
         }
 
         public override void GetComponentReferences() {
-            //Debug.Log($"{gameObject.name}.UnitController.GetComponentReferences()");
+            Debug.Log($"{gameObject.name}.UnitController.GetComponentReferences()");
 
             if (componentReferencesInitialized == true) {
+                Debug.Log($"{gameObject.name}.UnitController.GetComponentReferences() already initialized");
                 return;
             }
 
@@ -1003,7 +1014,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="unitProfile"></param>
         public void SetUnitProfile(UnitProfile unitProfile, UnitControllerMode unitControllerMode, int unitLevel = -1) {
-            //Debug.Log($"{gameObject.name}.UnitController.SetUnitProfile()");
+            Debug.Log($"{gameObject.name}.UnitController.SetUnitProfile()");
 
             this.unitProfile = unitProfile;
 
@@ -1083,7 +1094,7 @@ namespace AnyRPG {
         }
 
         public void ConfigureAnimator() {
-            //Debug.Log($"{gameObject.name}.UnitController.ConfigureAnimator(" + (newUnitModel == null ? "null" : newUnitModel.name) + ")");
+            Debug.Log($"{gameObject.name}.UnitController.ConfigureAnimator()");
 
             // most (but not all) units have animators
             // find an animator if one exists and initialize it

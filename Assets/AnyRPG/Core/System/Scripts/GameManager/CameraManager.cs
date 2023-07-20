@@ -127,7 +127,7 @@ namespace AnyRPG {
         }
 
         public void ShowPlayers() {
-            //Debug.Log("CameraManager.ShowPlayers()");
+            Debug.Log("CameraManager.ShowPlayers()");
             mainCamera.cullingMask = mainCamera.cullingMask | hideLayers;
         }
 

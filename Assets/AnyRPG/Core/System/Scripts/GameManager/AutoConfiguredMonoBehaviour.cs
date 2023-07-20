@@ -7,7 +7,7 @@ namespace AnyRPG {
     /// </summary>
     public class AutoConfiguredMonoBehaviour : ConfiguredMonoBehaviour {
         
-        public void AutoConfigure(SystemGameManager systemGameManager) {
+        public virtual void AutoConfigure(SystemGameManager systemGameManager) {
             Configure(systemGameManager);
             PostConfigure();
         }

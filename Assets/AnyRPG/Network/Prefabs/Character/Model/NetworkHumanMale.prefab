@@ -128,7 +128,22 @@ MonoBehaviour:
   _scenePathHash: 0
   <SceneId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 91366275090861618
-  _sceneNetworkObjects: []
+--- !u!114 &-7309775362673279277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 216510896445684654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6fc7cb308a137f41b18fdb48773834f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 1186824742570145722}
+  _networkObjectCache: {fileID: 0}
+  spawnRequestId: 0
 --- !u!95 &6821493264687364974 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 1437869231629315627, guid: 0b163976c97d00a47bde453dc1ff0798,

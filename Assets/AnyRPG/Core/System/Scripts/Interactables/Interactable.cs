@@ -684,6 +684,9 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.Interactable.GetCurrentInteractables()");
 
             if (sourceCharacter == null) {
+                if (playerManager.ActiveCharacter == null) {
+                    Debug.LogWarning($"{gameObject.name}.Interactable.GetCurrentInteractables(): playerManager.ActiveCharacter is null");
+                }
                 sourceCharacter = playerManager.ActiveCharacter;
             }
 

@@ -65,11 +65,8 @@ namespace AnyRPG {
             }
             Dictionary<PrefabProfile, List<GameObject>> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
 
-            UnitController mountUnitController = systemGameManager.CharacterManager.SpawnUnitPrefab(systemGameManager.GameMode, unitProfile, source.AbilityManager.UnitGameObject.transform.parent, source.AbilityManager.UnitGameObject.transform.position, source.AbilityManager.UnitGameObject.transform.forward, UnitControllerMode.Mount);
-            if (mountUnitController != null) {
-                mountUnitController.Init();
-                source.AbilityManager.SetMountedState(mountUnitController, unitProfile);
-            }
+            source.AbilityManager.SetMountedState(unitProfile);
+            
             return returnObjects;
         }
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class CharacterAbilityManager : AbilityManager {
+    public class CharacterAbilityManager : AbilityManager, ICharacterRequestor {
 
         public event System.Action<BaseCharacter> OnAttack = delegate { };
         public event System.Action<IAbilityCaster, BaseAbilityProperties, float> OnCastTimeChanged = delegate { };
@@ -188,10 +188,27 @@ namespace AnyRPG {
             return baseCharacter?.UnitController?.CharacterUnit;
         }
 
-        public override void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
-            base.SetMountedState(mountUnitController, mountUnitProfile);
+        public override void SetMountedState(UnitProfile mountUnitProfile) {
+            base.SetMountedState(mountUnitProfile);
+
+            CharacterRequestData characterRequestData = new CharacterRequestData(this,
+                systemGameManager.GameMode,
+                mountUnitProfile,
+                UnitControllerMode.Mount
+                );
+            UnitController mountUnitController = systemGameManager.CharacterManager.SpawnUnitPrefab(characterRequestData, UnitGameObject.transform.parent, UnitGameObject.transform.position, UnitGameObject.transform.forward);
+            
+            if (mountUnitController == null) {
+                // request got sent to network
+                return;
+            }
+        }
+
+        public void ConfigureSpawnedCharacter(UnitController unitController, CharacterRequestData characterRequestData) {
+            unitController.Init();
+
             if (baseCharacter != null && baseCharacter.UnitController != null) {
-                baseCharacter.UnitController.SetMountedState(mountUnitController, mountUnitProfile);
+                baseCharacter.UnitController.SetMountedState(unitController, characterRequestData.unitProfile);
             }
         }
 

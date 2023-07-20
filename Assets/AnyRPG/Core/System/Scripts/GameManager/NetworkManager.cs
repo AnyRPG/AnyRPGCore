@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,14 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class NetworkManager : ConfiguredMonoBehaviour {
 
+        // serialized
+        //[SerializeField]
+        //[Tooltip("If not empty, this object will be spawned")]
+        //private GameObject spawnPrefab = null;
+
+        [SerializeField]
         private NetworkController networkController = null;
+
 
         // game manager references
         private SystemDataFactory systemDataFactory = null;
@@ -17,8 +25,10 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             // hard coded to use FishNet for now - update in the future to accept from configuration?
-            networkController = new FishNetNetworkController();
+            //networkController = new FishNetNetworkController();
             networkController.Configure(systemGameManager);
+            //networkController.SetConnectionPrefab(spawnPrefab);
+
         }
 
         public override void SetGameManagerReferences() {
@@ -35,19 +45,26 @@ namespace AnyRPG {
         }
 
         public void LoadScene(string sceneName) {
-            Debug.Log($"NetworkManager.LoadScene({sceneName})");
+            //Debug.Log($"NetworkManager.LoadScene({sceneName})");
 
             networkController.LoadScene(sceneName);
         }
 
-        public GameObject SpawnPlayer(UnitProfile unitProfile, GameObject playerPrefab, Transform parentTransform, Vector3 position, Vector3 forward, UnitControllerMode unitControllerMode, int level) {
-            return networkController.SpawnPlayer(unitProfile, playerPrefab, parentTransform, position, forward, unitControllerMode, level);
+        public void SpawnPlayer(CharacterRequestData characterRequestData, GameObject playerPrefab, Transform parentTransform, Vector3 position, Vector3 forward) {
+            networkController.SpawnPlayer(characterRequestData, playerPrefab, parentTransform, position, forward);
         }
 
-        public GameObject SpawnPrefab(GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward) {
-            return networkController.SpawnPrefab(prefab, parentTransform, position, forward);
+        public GameObject SpawnModelPrefab(int spawnRequestId, GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward) {
+            return networkController.SpawnModelPrefab(spawnRequestId, prefab, parentTransform, position, forward);
         }
 
+        public bool CanSpawnPlayerOverNetwork() {
+            return networkController.CanSpawnCharacterOverNetwork();
+        }
+
+        public bool OwnPlayer(UnitController unitController) {
+            return networkController.OwnPlayer(unitController);
+        }
     }
 
 }

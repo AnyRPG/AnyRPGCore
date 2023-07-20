@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace AnyRPG {
-    public class CharacterPetManager : ConfiguredClass {
+    public class CharacterPetManager : ConfiguredClass, ICharacterRequestor {
 
         private List<UnitProfile> unitProfiles = new List<UnitProfile>();
 
@@ -125,14 +125,26 @@ namespace AnyRPG {
                 // can't add the same dictionary key twice
                 return;
             }
-            UnitController unitController = systemGameManager.CharacterManager.SpawnUnitPrefab(systemGameManager.GameMode, unitProfile, baseCharacter.UnitController.transform.parent, baseCharacter.UnitController.transform.position, baseCharacter.UnitController.transform.forward, UnitControllerMode.Pet);
+
+            CharacterRequestData characterRequestData = new CharacterRequestData(this,
+                systemGameManager.GameMode,
+                unitProfile,
+                UnitControllerMode.Pet);
+
+            UnitController unitController = systemGameManager.CharacterManager.SpawnUnitPrefab(characterRequestData, baseCharacter.UnitController.transform.parent, baseCharacter.UnitController.transform.position, baseCharacter.UnitController.transform.forward);
             if (unitController != null) {
-                unitController.SetPetMode(baseCharacter);
-                unitController.Init();
-                unitController.UnitEventController.OnUnitDestroy += HandleUnitDestroy;
-                activeUnitProfiles.Add(unitProfile, unitController);
+                ConfigureSpawnedCharacter(unitController, characterRequestData);
             }
+
         }
+
+        public void ConfigureSpawnedCharacter(UnitController unitController, CharacterRequestData characterRequestData) {
+            unitController.SetPetMode(baseCharacter);
+            unitController.Init();
+            unitController.UnitEventController.OnUnitDestroy += HandleUnitDestroy;
+            activeUnitProfiles.Add(characterRequestData.unitProfile, unitController);
+        }
+
 
         //public void ProcessLevelUnload() {
         public void HandleCharacterUnitDespawn() {
@@ -142,7 +154,6 @@ namespace AnyRPG {
         public void HandleDie() {
             DespawnAllPets();
         }
-
 
     }
 

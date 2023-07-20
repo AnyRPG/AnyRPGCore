@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -85,6 +86,8 @@ namespace AnyRPG {
             //DontDestroyOnLoad(this.gameObject);
             //Debug.Log("LevelManager.InitializeLevelManager(): setting scenemanager onloadlevel");
             SceneManager.sceneLoaded += OnLoadLevel;
+            SceneManager.sceneUnloaded += HandleSceneUnloaded;
+            SceneManager.activeSceneChanged += HandleActiveSceneChanged;
             terrainDetector = new TerrainDetector();
             levelManagerInitialized = true;
 
@@ -95,6 +98,7 @@ namespace AnyRPG {
                 }
             }
         }
+
 
         public static Bounds GetSceneBounds() {
             Renderer[] renderers;
@@ -224,14 +228,31 @@ namespace AnyRPG {
         /// <param name="newScene"></param>
         /// <param name="loadSceneMode"></param>
         public void OnLoadLevel(Scene newScene, LoadSceneMode loadSceneMode) {
-            //Debug.Log("Levelmanager.OnLoadLevel(): Finding Scene Settings. SceneManager.GetActiveScene().name: " + SceneManager.GetActiveScene().name);
+            //Debug.Log($"Levelmanager.OnLoadLevel({newScene.name}): Finding Scene Settings. SceneManager.GetActiveScene().name: {SceneManager.GetActiveScene().name}");
             if (!levelManagerInitialized) {
                 //Debug.Log("Levelmanager.OnLoadLevel(): Start has not run yet, returning!");
                 return;
             }
+            if (systemGameManager.GameMode == GameMode.Local) {
+                ProcessLevelLoad();
+            }
+        }
+
+        public void ProcessLevelLoad() {
+            Debug.Log($"Levelmanager.ProcessLevelLoad(): {SceneManager.GetActiveScene().name}");
+
             PerformLevelLoadActivities();
             NavMesh.pathfindingIterationsPerFrame = 500;
         }
+
+        private void HandleSceneUnloaded(Scene scene) {
+            //Debug.Log($"Levelmanager.HandleSceneUnloaded({scene.name}): Finding Scene Settings. SceneManager.GetActiveScene().name: {SceneManager.GetActiveScene().name}");
+        }
+
+        private void HandleActiveSceneChanged(Scene oldScene, Scene newScene) {
+            //Debug.Log($"Levelmanager.HandleActiveSceneChanged({oldScene.name}, {newScene.name})");
+        }
+
 
         public void SetActiveSceneNode() {
 
@@ -265,8 +286,7 @@ namespace AnyRPG {
         }
 
         public void PerformLevelLoadActivities() {
-            // determine if this is the game manager loading scene
-            //Debug.Log("Levelmanager.PerformLevelLoadActivities(): Finding Scene Settings. SceneManager.GetActiveScene().name: " + SceneManager.GetActiveScene().name + " == " + initializationScene);
+            //Debug.Log($"Levelmanager.PerformLevelLoadActivities(): Finding Scene Settings. SceneManager.GetActiveScene().name: {SceneManager.GetActiveScene().name}");
             loadingLevel = false;
             SetActiveSceneNode();
             if (activeSceneNode != null) {
@@ -275,6 +295,8 @@ namespace AnyRPG {
             terrainDetector.LoadSceneSettings();
             systemGameManager.AutoConfigureMonoBehaviours();
             cameraManager.CheckForCutsceneCamera();
+
+            // determine if this is the game manager loading scene
             if (IsInitializationScene()) {
                 LoadMainMenu();
                 return;
@@ -502,7 +524,7 @@ namespace AnyRPG {
 
 
         IEnumerator LoadAsynchronously(string sceneName) { // scene name is just the name of the current scene being loaded
-            Debug.Log("LevelManager.LoadAsynchronously(" + sceneName + ")");
+            //Debug.Log("LevelManager.LoadAsynchronously(" + sceneName + ")");
 
             uIManager.ActivateLoadingUI();
             // try initial value
