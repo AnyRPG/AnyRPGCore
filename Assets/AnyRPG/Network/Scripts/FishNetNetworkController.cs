@@ -127,19 +127,19 @@ namespace AnyRPG {
         }
 
         private void HandleLoadPercentChange(SceneLoadPercentEventArgs obj) {
-            Debug.Log($"FishNetNetworkController.HandleLoadPercentChange() percent: {obj.Percent} AsServer: {obj.QueueData.AsServer}");
+            //Debug.Log($"FishNetNetworkController.HandleLoadPercentChange() percent: {obj.Percent} AsServer: {obj.QueueData.AsServer}");
         }
 
         private void HandleLoadStart(SceneLoadStartEventArgs obj) {
-            Debug.Log($"FishNetNetworkController.HandleLoadStart() name: {obj.QueueData.SceneLoadData.SceneLookupDatas[0].Name} AsServer: {obj.QueueData.AsServer}");
+            //Debug.Log($"FishNetNetworkController.HandleLoadStart() name: {obj.QueueData.SceneLoadData.SceneLookupDatas[0].Name} AsServer: {obj.QueueData.AsServer}");
         }
 
         private void HandleLoadEnd(SceneLoadEndEventArgs obj) {
-            Debug.Log($"FishNetNetworkController.HandleLoadEnd() AsServer: {obj.QueueData.AsServer}");
-            foreach (Scene scene in obj.LoadedScenes) {
-                Debug.Log($"FishNetNetworkController.HandleLoadEnd() {scene.name}");
-            }
-            Debug.Log($"FishNetNetworkController.HandleLoadEnd() skipped: {string.Join(',', obj.SkippedSceneNames.ToList())}");
+            //Debug.Log($"FishNetNetworkController.HandleLoadEnd() AsServer: {obj.QueueData.AsServer}");
+            //foreach (Scene scene in obj.LoadedScenes) {
+            //    Debug.Log($"FishNetNetworkController.HandleLoadEnd() {scene.name}");
+            //}
+            //Debug.Log($"FishNetNetworkController.HandleLoadEnd() skipped: {string.Join(',', obj.SkippedSceneNames.ToList())}");
 
             // the level loading code should only be processed on the client
             if (obj.QueueData.AsServer == true) {
@@ -153,7 +153,7 @@ namespace AnyRPG {
         }
 
         private void HandleActiveSceneSet(bool userInitiated) {
-            Debug.Log($"FishNetNetworkController.HandleActiveSceneSet({userInitiated}) current scene: {UnityEngine.SceneManagement.SceneManager.GetActiveScene().name}");
+            //Debug.Log($"FishNetNetworkController.HandleActiveSceneSet({userInitiated}) current scene: {UnityEngine.SceneManagement.SceneManager.GetActiveScene().name}");
 
             //if (systemGameManager.GameMode == GameMode.Network) {
             //    levelManager.ProcessLevelLoad();
@@ -186,14 +186,14 @@ namespace AnyRPG {
         public override void SpawnPlayer(CharacterRequestData characterRequestData, GameObject playerPrefab, Transform parentTransform, Vector3 position, Vector3 forward) {
             //Debug.Log($"FishNetNetworkController.SpawnPlayer({unitProfile.ResourceName}, {playerPrefab.name})");
 
-            networkConnector.SpawnPlayer(networkManager.ClientManager.Connection, characterRequestData.spawnRequestId, characterRequestData.unitProfile.ResourceName, playerPrefab, parentTransform, position, forward, characterRequestData.unitControllerMode, characterRequestData.unitLevel);
+            networkConnector.SpawnCharacterUnit(characterRequestData.spawnRequestId, characterRequestData.unitProfile.ResourceName, playerPrefab, parentTransform, position, forward, characterRequestData.unitControllerMode, characterRequestData.unitLevel);
             //return null;
         }
 
         public override GameObject SpawnModelPrefab(int spawnRequestId, GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward) {
             Debug.Log($"FishNetNetworkController.SpawnModelPrefab({spawnRequestId})");
 
-            networkConnector.SpawnModelPrefab(networkManager.ClientManager.Connection, spawnRequestId, prefab, parentTransform, position, forward);
+            networkConnector.SpawnModelPrefab(spawnRequestId, prefab, parentTransform, position, forward);
             return null;
         }
 
@@ -204,6 +204,7 @@ namespace AnyRPG {
         }
 
         public override bool CanSpawnCharacterOverNetwork() {
+            Debug.Log($"FishNetNetworkController.CanSpawnCharacterOverNetwork() isClient: {networkManager.IsClient}");
             return networkManager.IsClient;
         }
 

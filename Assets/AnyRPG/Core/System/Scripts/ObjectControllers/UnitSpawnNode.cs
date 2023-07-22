@@ -112,7 +112,7 @@ namespace AnyRPG {
         protected bool disabled = false;
 
         // keep track of spawn requests so that they can be configured after spawning
-        private Dictionary<int, UnitSpawnNodeSpawnRequestData> networkSpawnRequests = new Dictionary<int, UnitSpawnNodeSpawnRequestData>();
+        private Dictionary<int, UnitSpawnNodeSpawnRequestData> spawnRequests = new Dictionary<int, UnitSpawnNodeSpawnRequestData>();
 
         private List<UnitController> spawnReferences = new List<UnitController>();
 
@@ -360,24 +360,26 @@ namespace AnyRPG {
                 _unitLevel
                 );
             UnitController unitController = characterManager.SpawnUnitPrefab(characterRequestData,null, transform.position, transform.forward);
-            networkSpawnRequests.Add(characterRequestData.spawnRequestId, new UnitSpawnNodeSpawnRequestData(toughness));
+            spawnRequests.Add(characterRequestData.spawnRequestId, new UnitSpawnNodeSpawnRequestData(toughness));
 
+            /*
             if (unitController == null) {
                 // this unit was spawned over the network, and will get that function called 
                 return;
             }
 
             ConfigureSpawnedCharacter(unitController, characterRequestData);
+            */
         }
 
         public void ConfigureSpawnedCharacter(UnitController unitController, CharacterRequestData characterRequestData) {
 
-            if (networkSpawnRequests.ContainsKey(characterRequestData.spawnRequestId) == false) {
+            if (spawnRequests.ContainsKey(characterRequestData.spawnRequestId) == false) {
                 return;
             }
-            UnitToughness toughness = networkSpawnRequests[characterRequestData.spawnRequestId].unitToughness;
+            UnitToughness toughness = spawnRequests[characterRequestData.spawnRequestId].unitToughness;
             // clean up the unneeded request data
-            networkSpawnRequests.Remove(characterRequestData.spawnRequestId);
+            spawnRequests.Remove(characterRequestData.spawnRequestId);
 
             Vector3 newSpawnLocation = Vector3.zero;
             Vector3 newSpawnForward = Vector3.forward;
@@ -437,10 +439,11 @@ namespace AnyRPG {
                 //Debug.Log("UnitSpawnNode.Spawn(): setting toughness to null on gameObject: " + spawnReference.name);
                 _characterUnit.BaseCharacter.SetUnitToughness(toughness, true);
             }
-            unitController.Init();
             spawnReferences.Add(unitController);
         }
 
+        public void PostInit(UnitController unitController, CharacterRequestData characterRequestData) {
+        }
 
         /// <summary>
         /// if the maximum unit count is not exceeded and the prerequisites are met, return true

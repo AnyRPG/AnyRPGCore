@@ -198,15 +198,18 @@ namespace AnyRPG {
                 );
             UnitController mountUnitController = systemGameManager.CharacterManager.SpawnUnitPrefab(characterRequestData, UnitGameObject.transform.parent, UnitGameObject.transform.position, UnitGameObject.transform.forward);
             
+            /*
             if (mountUnitController == null) {
                 // request got sent to network
                 return;
             }
+            */
         }
 
         public void ConfigureSpawnedCharacter(UnitController unitController, CharacterRequestData characterRequestData) {
-            unitController.Init();
+        }
 
+        public void PostInit(UnitController unitController, CharacterRequestData characterRequestData) {
             if (baseCharacter != null && baseCharacter.UnitController != null) {
                 baseCharacter.UnitController.SetMountedState(unitController, characterRequestData.unitProfile);
             }

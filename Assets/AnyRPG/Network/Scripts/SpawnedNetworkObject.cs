@@ -9,7 +9,10 @@ namespace AnyRPG {
     public class SpawnedNetworkObject : NetworkBehaviour {
 
         [SyncVar]
-        public int spawnRequestId;
+        public int clientSpawnRequestId;
+
+        [SyncVar]
+        public int serverRequestId;
 
         public override void OnStartClient() {
             base.OnStartClient();

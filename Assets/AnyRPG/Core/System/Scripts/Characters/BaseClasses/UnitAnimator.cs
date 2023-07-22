@@ -9,6 +9,7 @@ namespace AnyRPG {
     public class UnitAnimator : ConfiguredClass {
 
         // events
+        public event System.Action OnInitializeAnimator = delegate { };
         public event System.Action OnReviveComplete = delegate { };
         public event System.Action<bool> OnStartCasting = delegate { };
         public event System.Action<bool> OnEndCasting = delegate { };
@@ -297,6 +298,8 @@ namespace AnyRPG {
             SetAnimationProfileOverride(defaultAnimationProps);
 
             initialized = true;
+
+            OnInitializeAnimator();
         }
 
         public void SetCorrectOverrideController(bool runUpdate = true) {

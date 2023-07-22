@@ -92,6 +92,7 @@ namespace AnyRPG {
         protected ObjectPooler objectPooler = null;
         protected ControlsManager controlsManager = null;
         protected NetworkManager networkManager = null;
+        protected CharacterManager characterManager = null;
 
         public BaseCharacter MyCharacter { get => character; set => character = value; }
 
@@ -128,6 +129,7 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
             controlsManager = systemGameManager.ControlsManager;
             networkManager = systemGameManager.NetworkManager;
+            characterManager = systemGameManager.CharacterManager;
 
             PerformRequiredPropertyChecks();
             CreateEventSubscriptions();
@@ -391,30 +393,34 @@ namespace AnyRPG {
                 systemGameManager.GameMode,
                 activeCharacter.UnitProfile,
                 UnitControllerMode.Player);
-            UnitController unitController = systemGameManager.CharacterManager.SpawnUnitPrefab(characterRequestData, playerUnitParent.transform, spawnLocation, spawnRotation);
+            UnitController unitController = characterManager.SpawnUnitPrefab(characterRequestData, playerUnitParent.transform, spawnLocation, spawnRotation);
+            /*
             if (unitController != null) {
+                characterManager.CompleteCharacterRequest(unitController.gameObject, characterRequestData.spawnRequestId, true);
                 ConfigureSpawnedCharacter(unitController, characterRequestData);
             }
+            */
         }
 
         private bool OwnPlayer(UnitController unitController, CharacterRequestData characterRequestData) {
-            if (characterRequestData.requestMode == GameMode.Local) {
-                return true;
-            }
+            //if (characterRequestData.requestMode == GameMode.Local) {
+            //    return true;
+            //}
 
             // network mode, so ask if unitController is owned by us
             //return networkManager.OwnPlayer(unitController);
-            
+
             // testing - for now this can always return true because we will not perform configuration on things we didn't request anyway
-            return true;
+            //return true;
+            return characterManager.HasUnitSpawnRequest(characterRequestData.spawnRequestId);
         }
 
         public void ConfigureSpawnedCharacter(UnitController unitController, CharacterRequestData characterRequestData) {
-            Debug.Log("PlayerManager.ConfigureSpawnedCharacter(" + unitController.gameObject.name + ")");
+            Debug.Log($"PlayerManager.ConfigureSpawnedCharacter({unitController.gameObject.name})");
 
-            if (OwnPlayer(unitController, characterRequestData) == true) {
+            //if (OwnPlayer(unitController, characterRequestData) == true) {
                 SetUnitController(unitController);
-            }
+            //}
 
             if (levelManager.NavMeshAvailable == true && autoDetectNavMeshes) {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Enabling NavMeshAgent()");
@@ -434,9 +440,9 @@ namespace AnyRPG {
             if (subscribeToTargetReady) {
                 SubscribeToTargetReady();
             }
+        }
 
-            unitController.Init();
-
+        public void PostInit(UnitController unitController, CharacterRequestData characterRequestData) {
             if (unitController.UnitModelController.ModelCreated == false) {
                 // do UMA spawn stuff to wait for UMA to spawn
                 SubscribeToModelReady();
