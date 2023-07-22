@@ -20,8 +20,16 @@ namespace AnyRPG {
             systemGameManager = GameObject.FindObjectOfType<SystemGameManager>();
             networkAnimator = GetComponent<NetworkAnimator>();
             unitController = GetComponentInParent<UnitController>();
-            unitController.UnitAnimator.OnInitializeAnimator += HandleInitializeAnimator;
             animator = GetComponent<Animator>();
+            unitController.UnitAnimator.OnInitializeAnimator += HandleInitializeAnimator;
+
+            if (base.IsOwner) {
+                unitController.UnitAnimator.OnSetTrigger += HandleSetTrigger;
+            }
+        }
+
+        private void HandleSetTrigger(string triggerName) {
+            networkAnimator.SetTrigger(triggerName);
         }
 
         private void HandleInitializeAnimator() {

@@ -10,6 +10,7 @@ namespace AnyRPG {
 
         // events
         public event System.Action OnInitializeAnimator = delegate { };
+        public event System.Action<string> OnSetTrigger = delegate { };
         public event System.Action OnReviveComplete = delegate { };
         public event System.Action<bool> OnStartCasting = delegate { };
         public event System.Action<bool> OnEndCasting = delegate { };
@@ -1037,6 +1038,7 @@ namespace AnyRPG {
             if (animator != null && ParameterExists(varName)) {
                 animator.ResetTrigger(varName);
                 animator.SetTrigger(varName);
+                OnSetTrigger(varName);
             }
         }
 
