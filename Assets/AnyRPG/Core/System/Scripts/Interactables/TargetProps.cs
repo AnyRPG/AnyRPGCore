@@ -95,8 +95,8 @@ namespace AnyRPG {
             if (targetable.GetTargetOptions(sourceCharacter).RequiresGroundTarget == true
                 && targetable.GetTargetOptions(sourceCharacter).MaxRange > 0
                 && target != null
-                && ((sourceCharacter as BaseCharacter) is BaseCharacter)
-                && ((sourceCharacter as BaseCharacter).UnitController.UnitControllerMode == UnitControllerMode.AI || (sourceCharacter as BaseCharacter).UnitController.UnitControllerMode == UnitControllerMode.Pet)
+                && ((sourceCharacter as UnitController) is UnitController)
+                && ((sourceCharacter as UnitController).UnitControllerMode == UnitControllerMode.AI || (sourceCharacter as UnitController).UnitControllerMode == UnitControllerMode.Pet)
                 && Vector3.Distance(sourceCharacter.AbilityManager.UnitGameObject.transform.position, target.transform.position) > targetable.GetTargetOptions(sourceCharacter).MaxRange) {
                 return false;
             }
@@ -147,13 +147,13 @@ namespace AnyRPG {
                 }
 
                 // liveness checks
-                if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == false && targetable.GetTargetOptions(sourceCharacter).RequireLiveTarget == true && targetable.GetTargetOptions(sourceCharacter).RequireDeadTarget == false) {
+                if (targetCharacterUnit.UnitController.CharacterStats.IsAlive == false && targetable.GetTargetOptions(sourceCharacter).RequireLiveTarget == true && targetable.GetTargetOptions(sourceCharacter).RequireDeadTarget == false) {
                     if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
                         sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " requires a live target!");
                     }
                     return false;
                 }
-                if (targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == true && targetable.GetTargetOptions(sourceCharacter).RequireDeadTarget == true && targetable.GetTargetOptions(sourceCharacter).RequireLiveTarget == false) {
+                if (targetCharacterUnit.UnitController.CharacterStats.IsAlive == true && targetable.GetTargetOptions(sourceCharacter).RequireDeadTarget == true && targetable.GetTargetOptions(sourceCharacter).RequireLiveTarget == false) {
                     if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
                         sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " requires a dead target!");
                     }
@@ -169,7 +169,7 @@ namespace AnyRPG {
 
                 // check unit type restrictions
                 if (unitTypeRestrictions.Count > 0) {
-                    if (targetCharacterUnit.BaseCharacter.UnitType == null || !unitTypeRestrictions.Contains(targetCharacterUnit.BaseCharacter.UnitType.ResourceName)) {
+                    if (targetCharacterUnit.UnitController.BaseCharacter.UnitType == null || !unitTypeRestrictions.Contains(targetCharacterUnit.UnitController.BaseCharacter.UnitType.ResourceName)) {
                         //Debug.Log(MyDisplayName + ".CapturePetEffect.CanUseOn(): pet was not allowed by your restrictions ");
                         if (playerInitiated) {
                             sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + targetable.DisplayName + " on target. Pet type was not allowed");

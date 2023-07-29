@@ -269,7 +269,7 @@ namespace AnyRPG {
             PerformAbilityCompleteEffects(source, target, abilityEffectInput);
         }
 
-        public virtual void CancelEffect(BaseCharacter targetCharacter) {
+        public virtual void CancelEffect(UnitController unitController) {
             //Debug.Log(DisplayName + ".LengthEffect.CancelEffect(" + targetCharacter.DisplayName + ")");
         }
 

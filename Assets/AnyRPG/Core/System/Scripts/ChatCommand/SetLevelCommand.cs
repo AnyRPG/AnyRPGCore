@@ -48,10 +48,10 @@ namespace AnyRPG {
         private void SetLevel(int newLevel) {
             //Debug.Log("SetLevelCommand.SetLevel(" + newLevel + ")");
 
-            newLevel = Mathf.Clamp(newLevel, playerManager.ActiveCharacter.CharacterStats.Level, systemConfigurationManager.MaxLevel);
-            if (newLevel > playerManager.ActiveCharacter.CharacterStats.Level) {
-                while (playerManager.ActiveCharacter.CharacterStats.Level < newLevel) {
-                    playerManager.ActiveCharacter.CharacterStats.GainLevel();
+            newLevel = Mathf.Clamp(newLevel, playerManager.UnitController.CharacterStats.Level, systemConfigurationManager.MaxLevel);
+            if (newLevel > playerManager.UnitController.CharacterStats.Level) {
+                while (playerManager.UnitController.CharacterStats.Level < newLevel) {
+                    playerManager.UnitController.CharacterStats.GainLevel();
                 }
             }
         }

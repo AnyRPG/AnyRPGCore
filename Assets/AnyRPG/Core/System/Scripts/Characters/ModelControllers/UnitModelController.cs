@@ -55,7 +55,7 @@ namespace AnyRPG {
         public void Initialize() {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.Initialize()");
 
-            characterEquipmentManager = unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
+            characterEquipmentManager = unitController.CharacterEquipmentManager;
             if (characterEquipmentManager == null) {
                 Debug.LogWarning("CharacterEquipmentManager was null");
             }
@@ -77,7 +77,7 @@ namespace AnyRPG {
         }
 
         public void SetAppearanceController(UnitProfile unitProfile) {
-            Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetAppearanceController(" + (unitProfile == null ? "null" : unitProfile.ResourceName) + ")");
+            //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetAppearanceController(" + (unitProfile == null ? "null" : unitProfile.ResourceName) + ")");
 
             if (unitProfile?.UnitPrefabProps.ModelProvider != null) {
                 modelAppearanceController = unitProfile.UnitPrefabProps.ModelProvider.GetAppearanceController(unitController, this, systemGameManager);
@@ -98,7 +98,7 @@ namespace AnyRPG {
         }
 
         public void SpawnUnitModel() {
-            Debug.Log($"{unitController.gameObject.name}.UnitModelController.SpawnUnitModel()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SpawnUnitModel()");
 
             if (unitController.UnitProfile?.UnitPrefabProps?.ModelPrefab != null) {
                 unitModel = systemGameManager.CharacterManager.SpawnModelPrefab(unitController, unitController.UnitProfile, unitController.transform, unitController.transform.position, unitController.transform.forward);
@@ -293,7 +293,7 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetModelReady()");
 
             if (modelCreated == false) {
-                unitController.CharacterUnit.BaseCharacter.HandleCharacterUnitSpawn();
+                unitController.BaseCharacter.HandleCharacterUnitSpawn();
             }
 
             //RebuildModelAppearance();

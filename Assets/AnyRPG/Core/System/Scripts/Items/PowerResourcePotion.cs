@@ -26,7 +26,7 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".PowerResourcePotion.Use()");
             int fullcount = 0;
             foreach (ResourceAmountNode resourceAmountNode in healEffect.ResourceAmounts) {
-                if (playerManager.MyCharacter.CharacterStats.GetPowerResourceAmount(resourceAmountNode.PowerResource) >= playerManager.MyCharacter.CharacterStats.GetPowerResourceMaxAmount(resourceAmountNode.PowerResource)) {
+                if (playerManager.UnitController.CharacterStats.GetPowerResourceAmount(resourceAmountNode.PowerResource) >= playerManager.UnitController.CharacterStats.GetPowerResourceMaxAmount(resourceAmountNode.PowerResource)) {
                     fullcount++;
                 }
             }
@@ -41,7 +41,7 @@ namespace AnyRPG {
             }
 
             // perform heal effect
-            healEffect.Cast(playerManager.ActiveCharacter, playerManager.UnitController, null, null);
+            healEffect.Cast(playerManager.UnitController, playerManager.UnitController, null, null);
 
             return returnValue;
 

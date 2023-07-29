@@ -301,7 +301,7 @@ namespace AnyRPG {
 
         /*
         public int PreloadEquipmentModels(bool resetWardrobe = false) {
-            return PreloadEquipmentModels(unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager, resetWardrobe);
+            return PreloadEquipmentModels(unitController.CharacterEquipmentManager, resetWardrobe);
         }
         */
 

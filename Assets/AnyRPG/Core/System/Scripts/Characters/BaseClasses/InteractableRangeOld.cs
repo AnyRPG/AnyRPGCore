@@ -57,8 +57,8 @@ namespace AnyRPG {
 
             Interactable _interactable = collider.GetComponent<Interactable>();
             if (_interactable != null) {
-                if (playerManager.MyCharacter == null) {
-                    //Debug.Log("playerManager.MyCharacter == null: true");
+                if (playerManager.UnitController == null) {
+                    //Debug.Log("playerManager.UnitController == null: true");
                     return;
                 }
                 if (playerManager.PlayerController.Interactables.Count != 0) {
@@ -75,7 +75,7 @@ namespace AnyRPG {
                     //Debug.Log($"{gameObject.name} adding new entry " + target.name + " to aggro table");
                     playerManager.PlayerController.Interactables.Add(_interactable);
                 }
-                //Debug.Log("OnTriggerEnter(): Rangetable size: " + playerManager.MyCharacter.MyCharacterController.MyInteractables.Count);
+                //Debug.Log("OnTriggerEnter(): Rangetable size: " + playerManager.UnitController.MyCharacterController.MyInteractables.Count);
             }
         }
 
@@ -99,7 +99,7 @@ namespace AnyRPG {
                     }
                 }
             }
-            //Debug.Log("OnTriggerExit(): Rangetable size: " + playerManager.MyCharacter.MyCharacterController.MyInteractables.Count);
+            //Debug.Log("OnTriggerExit(): Rangetable size: " + playerManager.UnitController.MyCharacterController.MyInteractables.Count);
         }
 
 

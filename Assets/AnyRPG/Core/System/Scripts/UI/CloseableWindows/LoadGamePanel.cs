@@ -79,7 +79,7 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.RecieveClosedWindowNotification()");
 
             characterPreviewPanel.OnUnitCreated -= HandleUnitCreated;
-            characterPreviewPanel.CapabilityConsumer = null;
+            characterPreviewPanel.CharacterConfigurationProvider = null;
             characterPreviewPanel.ReceiveClosedWindowNotification();
             //saveManager.ClearSharedData();
 
@@ -98,7 +98,7 @@ namespace AnyRPG {
 
             // inform the preview panel so the character can be rendered
             characterPreviewPanel.OnUnitCreated += HandleUnitCreated;
-            characterPreviewPanel.CapabilityConsumer = loadGameManager;
+            characterPreviewPanel.CharacterConfigurationProvider = loadGameManager;
             characterPreviewPanel.ReceiveOpenWindowNotification();
 
             // This is down here so re-used UMA units don't trigger handleTargetCreated before we can subscribe to it
@@ -124,7 +124,7 @@ namespace AnyRPG {
             //LoadSavedAppearanceSettings();
 
             // apply capabilities to it so equipment can work
-            //characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
+            //characterCreatorManager.PreviewUnitController.BaseCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
 
             loadGameButton.Button.interactable = true;
             copyGameButton.Button.interactable = true;
@@ -191,8 +191,6 @@ namespace AnyRPG {
                 characterCreatorManager.PreviewUnitController?.UnitModelController.SetInitialSavedAppearance(loadGameManager.AnyRPGSaveData);
             }
 
-            // set level before attempting to load equipment in case equipment has level restrictions
-            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.Initialize(loadGameManager.AnyRPGSaveData.playerName, loadGameManager.AnyRPGSaveData.PlayerLevel);
             LoadEquipmentData();
         }
 
@@ -213,13 +211,7 @@ namespace AnyRPG {
             if (characterCreatorManager.PreviewUnitController != null) {
                 //Debug.Log("LoadGamePanel.LoadEquipmentData(): preview controller found");
 
-                // apply capabilities to it so equipment can work
-                characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.ApplyCapabilityConsumerSnapshot(loadGameManager.CapabilityConsumerSnapshot);
-
-                BaseCharacter baseCharacter = characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter;
-                if (baseCharacter != null) {
-                    saveManager.LoadEquipmentData(loadGameManager.AnyRPGSaveData, baseCharacter.CharacterEquipmentManager);
-                }
+                saveManager.LoadEquipmentData(loadGameManager.AnyRPGSaveData, characterCreatorManager.PreviewUnitController.CharacterEquipmentManager);
             }
         }
 

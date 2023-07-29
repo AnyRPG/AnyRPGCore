@@ -126,7 +126,7 @@ namespace AnyRPG {
                     return interactableName;
                 }
                 if (characterUnit != null) {
-                    return characterUnit.BaseCharacter.CharacterName;
+                    return characterUnit.UnitController.BaseCharacter.CharacterName;
                 }
                 return base.DisplayName;
             }
@@ -467,7 +467,7 @@ namespace AnyRPG {
 
             List<InteractableOptionComponent> validInteractables = GetValidInteractables();
             if (validInteractables.Count == 0) {
-                //if (GetValidInteractables(playerManager.MyCharacter.MyCharacterUnit).Count == 0) {
+                //if (GetValidInteractables(playerManager.UnitController.MyCharacterUnit).Count == 0) {
                 //Debug.Log($"{gameObject.name}.Interactable.InstantiateMiniMapIndicator(): No valid Interactables.  Not spawning indicator.");
                 return false;
             }
@@ -545,7 +545,7 @@ namespace AnyRPG {
                 return false;
             }
             List<InteractableOptionComponent> validInteractables = GetValidInteractables();
-            //List<InteractableOptionComponent> validInteractables = GetValidInteractables(playerManager.MyCharacter.MyCharacterUnit);
+            //List<InteractableOptionComponent> validInteractables = GetValidInteractables(playerManager.UnitController.MyCharacterUnit);
             if (validInteractables.Count > 0) {
                 return true;
             } else {
@@ -588,10 +588,10 @@ namespace AnyRPG {
                 }
             }
 
-            float factionValue = PerformFactionCheck(source.BaseCharacter);
+            float factionValue = PerformFactionCheck(source.UnitController);
 
             // get a list of valid interactables to determine if there is an action we can treat as default
-            List<InteractableOptionComponent> validInteractables = GetCurrentInteractables(source.BaseCharacter, true, factionValue);
+            List<InteractableOptionComponent> validInteractables = GetCurrentInteractables(source.UnitController, true, factionValue);
             List<InteractableOptionComponent> finalInteractables = new List<InteractableOptionComponent>();
             if (processRangeCheck) {
                 foreach (InteractableOptionComponent validInteractable in validInteractables) {
@@ -620,7 +620,7 @@ namespace AnyRPG {
             }
             if (validInteractables.Count > 0 && finalInteractables.Count == 0) {
                 if (processRangeCheck == true && passedRangeCheck == false) {
-                    source.BaseCharacter.UnitController.UnitEventController.NotifyOnMessageFeed(DisplayName + " is out of range");
+                    source.UnitController.UnitEventController.NotifyOnMessageFeed(DisplayName + " is out of range");
                 }
             }
             return false;
@@ -674,24 +674,24 @@ namespace AnyRPG {
             return validInteractables;
         }
 
-        public virtual float PerformFactionCheck(BaseCharacter sourceCharacter) {
+        public virtual float PerformFactionCheck(UnitController sourceUnitController) {
             // interactables allow everything to interact by default.
             // characters will override this
             return 0;
         }
 
-        public List<InteractableOptionComponent> GetCurrentInteractables(BaseCharacter sourceCharacter = null, bool overrideFactionValue = false, float factionValue = 0f) {
+        public List<InteractableOptionComponent> GetCurrentInteractables(UnitController sourceUnitController = null, bool overrideFactionValue = false, float factionValue = 0f) {
             //Debug.Log($"{gameObject.name}.Interactable.GetCurrentInteractables()");
 
-            if (sourceCharacter == null) {
-                if (playerManager.ActiveCharacter == null) {
+            if (sourceUnitController == null) {
+                if (playerManager.UnitController == null) {
                     Debug.LogWarning($"{gameObject.name}.Interactable.GetCurrentInteractables(): playerManager.ActiveCharacter is null");
                 }
-                sourceCharacter = playerManager.ActiveCharacter;
+                sourceUnitController = playerManager.UnitController;
             }
 
             if (overrideFactionValue == false) {
-                factionValue = PerformFactionCheck(sourceCharacter);
+                factionValue = PerformFactionCheck(sourceUnitController);
             }
 
             if (notInteractable == true) {
@@ -781,7 +781,7 @@ namespace AnyRPG {
             uIManager.ShowToolTip(new Vector2(0, 1), uIManager.MouseOverWindow.transform.position, this);
 
             if (GetCurrentInteractables().Count == 0) {
-                //if (GetValidInteractables(playerManager.MyCharacter.MyCharacterUnit).Count == 0) {
+                //if (GetValidInteractables(playerManager.UnitController.MyCharacterUnit).Count == 0) {
                 //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): No current Interactables.  Not glowing.");
                 return;
             }
@@ -946,7 +946,7 @@ namespace AnyRPG {
 
 
             // switched this to current interactables so that we don't see mouseover options that we can't current interact with
-            //List<InteractableOptionComponent> validInteractables = GetValidInteractables(playerManager.MyCharacter.MyCharacterUnit);
+            //List<InteractableOptionComponent> validInteractables = GetValidInteractables(playerManager.UnitController.MyCharacterUnit);
             List<InteractableOptionComponent> currentInteractables = GetCurrentInteractables();
 
             // perform default interaction or open a window if there are multiple valid interactions

@@ -144,7 +144,7 @@ namespace AnyRPG {
                 QuestGiverQuestScript qs = go.GetComponent<QuestGiverQuestScript>();
                 qs.MyText.text = "[" + questNode.MyQuest.MyExperienceLevel + "] " + questNode.MyQuest.DisplayName;
                 //Debug.Log("QuestGiverUI.ShowQuestsCommon(" + questGiver.name + "): " + questNode.MyQuest.MyTitle);
-                qs.MyText.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.MyCharacterStats.MyLevel, questNode.MyQuest.MyExperienceLevel);
+                qs.MyText.color = LevelEquations.GetTargetColor(playerManager.UnitController.MyCharacterStats.MyLevel, questNode.MyQuest.MyExperienceLevel);
                 qs.MyQuest = questNode.MyQuest;
                 questNode.MyGameObject = go;
                 //quests.Add(go);
@@ -170,7 +170,7 @@ namespace AnyRPG {
             foreach (QuestNode questNode in questGiver.MyQuests) {
                 QuestGiverQuestScript qs = questNode.MyGameObject.GetComponent<QuestGiverQuestScript>();
                 qs.MyText.text = "[" + questNode.MyQuest.MyExperienceLevel + "] " + questNode.MyQuest.DisplayName;
-                qs.MyText.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.MyCharacterStats.MyLevel, questNode.MyQuest.MyExperienceLevel);
+                qs.MyText.color = LevelEquations.GetTargetColor(playerManager.UnitController.MyCharacterStats.MyLevel, questNode.MyQuest.MyExperienceLevel);
                 //Debug.Log("Evaluating quest: " + qs.MyQuest.MyTitle + "; turnedin: " + qs.MyQuest.TurnedIn.ToString());
                 string questStatus = qs.MyQuest.GetStatus();
                 if (questStatus == "completed" && questNode.MyEndQuest == true) {
@@ -461,7 +461,7 @@ namespace AnyRPG {
             // currency rewards
             List<CurrencyNode> currencyNodes = currentQuest.GetCurrencyReward();
             foreach (CurrencyNode currencyNode in currencyNodes) {
-                playerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.Amount);
+                playerManager.UnitController.CharacterCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.Amount);
                 List<CurrencyNode> tmpCurrencyNode = new List<CurrencyNode>();
                 tmpCurrencyNode.Add(currencyNode);
                 logManager.WriteSystemMessage("Gained " + currencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", "));
@@ -470,7 +470,7 @@ namespace AnyRPG {
             // item rewards first in case not enough space in inventory
             // TO FIX: THIS CODE DOES NOT DEAL WITH PARTIAL STACKS AND WILL REQUEST ONE FULL SLOT FOR EVERY REWARD
             if (questDetailsArea.GetHighlightedItemRewardIcons().Count > 0) {
-                if (playerManager.MyCharacter.CharacterInventoryManager.EmptySlotCount() < questDetailsArea.GetHighlightedItemRewardIcons().Count) {
+                if (playerManager.UnitController.CharacterInventoryManager.EmptySlotCount() < questDetailsArea.GetHighlightedItemRewardIcons().Count) {
                     messageFeedManager.WriteMessage("Not enough room in inventory!");
                     return;
                 }
@@ -515,7 +515,7 @@ namespace AnyRPG {
             }
 
             // xp reward
-            playerManager.MyCharacter.CharacterStats.GainXP(LevelEquations.GetXPAmountForQuest(playerManager.MyCharacter.CharacterStats.Level, currentQuest, systemConfigurationManager));
+            playerManager.UnitController.CharacterStats.GainXP(LevelEquations.GetXPAmountForQuest(playerManager.UnitController.CharacterStats.Level, currentQuest, systemConfigurationManager));
 
             UpdateButtons(currentQuest);
 

@@ -42,11 +42,11 @@ namespace AnyRPG {
         }
 
         public void GiveReward() {
-            playerManager.MyCharacter.CharacterSkillManager.LearnSkill(this);
+            playerManager.UnitController.CharacterSkillManager.LearnSkill(this);
         }
 
         public bool HasReward() {
-            return playerManager.MyCharacter.CharacterSkillManager.HasSkill(this);
+            return playerManager.UnitController.CharacterSkillManager.HasSkill(this);
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {

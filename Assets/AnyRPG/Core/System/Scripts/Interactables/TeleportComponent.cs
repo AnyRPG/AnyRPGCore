@@ -17,7 +17,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.PortalInteractable.Interact()");
             base.Interact(source, optionIndex);
 
-            source.BaseCharacter.CharacterAbilityManager.BeginAbility(TeleportProps.BaseAbility.AbilityProperties);
+            source.UnitController.CharacterAbilityManager.BeginAbility(TeleportProps.BaseAbility.AbilityProperties);
             return true;
         }
 

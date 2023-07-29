@@ -62,25 +62,20 @@ namespace AnyRPG {
             return null;
         }
 
-        protected virtual void SpawnUnit() {
-            Debug.Log("PreviewManager.SpawnUnit()");
+        public virtual void SpawnUnit(CharacterConfigurationRequest characterConfigurationRequest) {
+            unitProfile = characterConfigurationRequest.unitProfile;
+            //Debug.Log("PreviewManager.SpawnUnit()");
+            characterConfigurationRequest.unitControllerMode = UnitControllerMode.Preview;
             CharacterRequestData characterRequestData = new CharacterRequestData(
                 this,
                 GameMode.Local,
-                unitProfile,
-                UnitControllerMode.Preview
+                characterConfigurationRequest
                 );
             systemGameManager.CharacterManager.SpawnUnitPrefab(characterRequestData, transform, transform.position, transform.forward);
-            
-            if (unitController != null) {
-                Debug.Log("PreviewManager.SpawnUnit() unitController is not null");
-                //ConfigureSpawnedCharacter(unitController, characterRequestData);
-            }
-
         }
 
         public void ConfigureSpawnedCharacter(UnitController unitController, CharacterRequestData characterRequestData) {
-            Debug.Log($"PreviewManager.ConfigureSpawnedCharacter({unitController.gameObject.name})");
+            //Debug.Log($"PreviewManager.ConfigureSpawnedCharacter({unitController.gameObject.name})");
             this.unitController = unitController;
             if (unitController.UnitModelController != null) {
                 unitController.UnitModelController.SetAttachmentProfile(unitProfile.UnitPrefabProps.AttachmentProfile);

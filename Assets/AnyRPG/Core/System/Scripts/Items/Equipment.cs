@@ -210,12 +210,12 @@ namespace AnyRPG {
         }
 
         public override bool Use() {
-            if (playerManager.MyCharacter?.CharacterEquipmentManager != null) {
+            if (playerManager.UnitController?.CharacterEquipmentManager != null) {
                 bool returnValue = base.Use();
                 if (returnValue == false) {
                     return false;
                 }
-                if (playerManager.MyCharacter.CharacterEquipmentManager.Equip(this) == true) {
+                if (playerManager.UnitController.CharacterEquipmentManager.Equip(this) == true) {
                     playerManager.UnitController.UnitModelController.RebuildModelAppearance();
                     Remove();
                     return true;
@@ -226,17 +226,17 @@ namespace AnyRPG {
             return false;
         }
 
-        public virtual bool CanEquip(BaseCharacter baseCharacter) {
+        public virtual bool CanEquip(UnitController unitController) {
             //Debug.Log(DisplayName + ".Equipment.CanEquip(" + baseCharacter.gameObject.name + ")");
-            if (!CharacterClassRequirementIsMet(baseCharacter)) {
+            if (!CharacterClassRequirementIsMet(unitController.BaseCharacter)) {
                 //Debug.Log(baseCharacter.gameObject.name + "." + DisplayName + ".Equipment.CanEquip(): not the right character class");
                 return false;
             }
-            if (!CapabilityConsumerSupported(baseCharacter)) {
+            if (!CapabilityConsumerSupported(unitController.BaseCharacter)) {
                 //Debug.Log(baseCharacter.gameObject.name + "." + DisplayName + ".Equipment.CanEquip(): CapabilityConsumer unsupported");
                 return false;
             }
-            if (GetItemLevel(baseCharacter.CharacterStats.Level) > baseCharacter.CharacterStats.Level) {
+            if (GetItemLevel(unitController.CharacterStats.Level) > unitController.CharacterStats.Level) {
                 //Debug.Log(baseCharacter.gameObject.name + "." + DisplayName + ".Equipment.CanEquip(): character level too low (" + baseCharacter.CharacterStats.Level + ")");
                 return false;
             }
@@ -297,21 +297,21 @@ namespace AnyRPG {
             if (dynamicLevel == true && freezeDropLevel == false) {
                 itemRange = " (1 - " + (levelCap > 0 ? levelCap : systemConfigurationManager.MaxLevel) + ")";
             }
-            if (GetItemLevel(playerManager.MyCharacter.CharacterStats.Level) > playerManager.MyCharacter.CharacterStats.Level) {
+            if (GetItemLevel(playerManager.UnitController.CharacterStats.Level) > playerManager.UnitController.CharacterStats.Level) {
                 colorstring = "red";
             } else {
                 colorstring = "white";
             }
-            summaryLines.Add(string.Format("<color={0}>Item Level: {1}{2}</color>", colorstring, GetItemLevel(playerManager.MyCharacter.CharacterStats.Level), itemRange));
+            summaryLines.Add(string.Format("<color={0}>Item Level: {1}{2}</color>", colorstring, GetItemLevel(playerManager.UnitController.CharacterStats.Level), itemRange));
 
             // armor
             if (useArmorModifier) {
-                summaryLines.Add(string.Format(" +{0} Armor", GetArmorModifier(playerManager.MyCharacter.CharacterStats.Level, usedItemQuality)));
+                summaryLines.Add(string.Format(" +{0} Armor", GetArmorModifier(playerManager.UnitController.CharacterStats.Level, usedItemQuality)));
             }
 
             // primary stats
             foreach (ItemPrimaryStatNode itemPrimaryStatNode in primaryStats) {
-                float primaryStatModifier = GetPrimaryStatModifier(itemPrimaryStatNode.StatName, playerManager.MyCharacter.CharacterStats.Level, playerManager.MyCharacter, usedItemQuality);
+                float primaryStatModifier = GetPrimaryStatModifier(itemPrimaryStatNode.StatName, playerManager.UnitController.CharacterStats.Level, playerManager.UnitController.BaseCharacter, usedItemQuality);
                 if (primaryStatModifier > 0f) {
                     summaryLines.Add(string.Format(" +{0} {1}",
                         primaryStatModifier,
@@ -322,7 +322,7 @@ namespace AnyRPG {
             // secondary stats
             foreach (ItemSecondaryStatNode itemSecondaryStatNode in SecondaryStats) {
                 summaryLines.Add(string.Format("<color=green> +{0} {1}</color>",
-                                   GetSecondaryStatAddModifier(itemSecondaryStatNode.SecondaryStat, playerManager.MyCharacter.CharacterStats.Level),
+                                   GetSecondaryStatAddModifier(itemSecondaryStatNode.SecondaryStat, playerManager.UnitController.CharacterStats.Level),
                                    itemSecondaryStatNode.SecondaryStat.ToString()));
             }
 
@@ -335,11 +335,11 @@ namespace AnyRPG {
             }
 
             if (equipmentSet != null) {
-                int equipmentCount = playerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
+                int equipmentCount = playerManager.UnitController.CharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
                 summaryLines.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.DisplayName, equipmentCount, equipmentSet.EquipmentList.Count));
                 foreach (Equipment equipment in equipmentSet.EquipmentList) {
                     string colorName = "#888888";
-                    if (playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.ResourceName)) {
+                    if (playerManager.UnitController.CharacterEquipmentManager.HasEquipment(equipment.ResourceName)) {
                         colorName = "yellow";
                     }
                     summaryLines.Add(string.Format("  <color={0}>{1}</color>", colorName, equipment.DisplayName));

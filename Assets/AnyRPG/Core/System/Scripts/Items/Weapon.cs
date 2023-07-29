@@ -185,7 +185,7 @@ namespace AnyRPG {
             List<string> abilitiesList = new List<string>();
 
             if (addScaledDamagePerSecond) {
-                abilitiesList.Add(string.Format("Damage Per Second: {0}", GetDamagePerSecond(playerManager.MyCharacter.CharacterStats.Level, usedItemQuality)));
+                abilitiesList.Add(string.Format("Damage Per Second: {0}", GetDamagePerSecond(playerManager.UnitController.CharacterStats.Level, usedItemQuality)));
             }
             if (onHitEffectList != null) {
                 foreach (AbilityEffectProperties abilityEffect in onHitEffectList) {
@@ -199,7 +199,7 @@ namespace AnyRPG {
 
             if (weaponSkill != null && requireWeaponSkill == true) {
                 string colorString = "white";
-                if (!CanEquip(playerManager.ActiveCharacter)) {
+                if (!CanEquip(playerManager.UnitController)) {
                     colorString = "red";
                 }
                 abilitiesString += string.Format("\n<color={0}>Required Skill: {1}</color>", colorString, weaponSkill.DisplayName);

@@ -25,7 +25,7 @@ namespace AnyRPG {
         private List<InventorySlot> inventorySlots = new List<InventorySlot>();
         private List<InventorySlot> bankSlots = new List<InventorySlot>();
 
-        private BaseCharacter baseCharacter = null;
+        private UnitController unitController = null;
 
         // game manager references
         private HandScript handScript = null;
@@ -76,17 +76,10 @@ namespace AnyRPG {
         public List<InventorySlot> InventorySlots { get => inventorySlots; set => inventorySlots = value; }
         public List<InventorySlot> BankSlots { get => bankSlots; set => bankSlots = value; }
 
-        public CharacterInventoryManager(BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
+        public CharacterInventoryManager(UnitController unitController, SystemGameManager systemGameManager) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats()");
-            this.baseCharacter = baseCharacter;
+            this.unitController = unitController;
             Configure(systemGameManager);
-        }
-
-        public override void Configure(SystemGameManager systemGameManager) {
-            //Debug.Log("InventoryManager.Awake()");
-            base.Configure(systemGameManager);
-
-            //PerformSetupActivities();
         }
 
         public override void SetGameManagerReferences() {

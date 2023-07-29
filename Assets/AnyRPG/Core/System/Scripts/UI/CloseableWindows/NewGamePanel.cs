@@ -219,7 +219,7 @@ namespace AnyRPG {
             characterCreatorManager.OnUnitCreated += HandleUnitCreated;
             characterCreatorManager.OnModelCreated += HandleModelCreated;
 
-            characterPreviewPanel.CapabilityConsumer = newGameManager;
+            characterPreviewPanel.CharacterConfigurationProvider = newGameManager;
             characterPreviewPanel.ReceiveOpenWindowNotification();
 
             //Debug.Log("Preview Unit Ready: " + characterCreatorManager?.PreviewUnitController?.CameraTargetReady);
@@ -604,19 +604,6 @@ namespace AnyRPG {
             uINavigationControllers[0].UnHightlightButtonBackgrounds(specializationButton);
         }
 
-        public void SetCharacterProperties() {
-            //Debug.Log("NewGameCharacterPanelController.SetCharacterProperties()");
-
-            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitProfile(newGameManager.UnitProfile, true, -1, false, false);
-            //characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitProfile(newGameManager.UnitProfile, true, -1, false, false);
-            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitType(newGameManager.UnitType, true, true, false);
-            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterRace(newGameManager.CharacterRace, true, true, false);
-            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterClass(newGameManager.CharacterClass, true, true, false);
-            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetClassSpecialization(newGameManager.ClassSpecialization, true, true, false);
-            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterFaction(newGameManager.Faction, true, true, false);
-
-        }
-
         public void HandleUnitCreated() {
             //Debug.Log("NewGamePanel.HandleUnitCreated()");
 
@@ -642,11 +629,8 @@ namespace AnyRPG {
                 return;
             }
 
-            // set character class etc first so preview works and can equip character
-            SetCharacterProperties();
-
             int changes = 0;
-            CharacterEquipmentManager characterEquipmentManager = characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
+            CharacterEquipmentManager characterEquipmentManager = characterCreatorManager.PreviewUnitController.CharacterEquipmentManager;
             if (characterEquipmentManager != null) {
                 //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): found equipment manager");
 

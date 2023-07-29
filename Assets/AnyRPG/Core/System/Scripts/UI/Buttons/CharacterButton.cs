@@ -99,9 +99,9 @@ namespace AnyRPG {
                     Equipment tmp = (Equipment)handScript.Moveable;
                     if (equipmentSlotProfile.EquipmentSlotTypeList.Contains(tmp.EquipmentSlotType)) {
                         // unequip any existing item in this slot
-                        playerManager.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
+                        playerManager.UnitController.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
                         // equip new item to this slot
-                        playerManager.MyCharacter.CharacterEquipmentManager.Equip(tmp, equipmentSlotProfile);
+                        playerManager.UnitController.CharacterEquipmentManager.Equip(tmp, equipmentSlotProfile);
                         playerManager.UnitController.UnitModelController.RebuildModelAppearance();
 
                         // call remove
@@ -133,16 +133,16 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}CharacterButton.UpdateVisual()");
 
             Equipment tmpEquipment = equippedEquipment;
-            if (equipmentSlotProfile != null && playerManager.MyCharacter != null && playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment.ContainsKey(equipmentSlotProfile)) {
+            if (equipmentSlotProfile != null && playerManager.UnitController != null && playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment.ContainsKey(equipmentSlotProfile)) {
                 //Debug.Log($"{gameObject.name}CharacterButton.UpdateVisual(): equipmentslotprofile was not null and player has quipment in this slot");
-                equippedEquipment = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile];
+                equippedEquipment = playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile];
             } else {
                 /*
                 if (equipmentSlotProfile == null) {
                     //Debug.Log($"{gameObject.name}CharacterButton.UpdateVisual(): equipmentslotprofile was null");
                 }
-                if (!playerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(equipmentSlotProfile)) {
-                    //Debug.Log($"{gameObject.name}CharacterButton.UpdateVisual(): player had no equipment in this slot: " + equipmentSlotProfile + "; " + equipmentSlotProfile.GetInstanceID() + "; equipmentCount: " + playerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.Count);
+                if (!playerManager.UnitController.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(equipmentSlotProfile)) {
+                    //Debug.Log($"{gameObject.name}CharacterButton.UpdateVisual(): player had no equipment in this slot: " + equipmentSlotProfile + "; " + equipmentSlotProfile.GetInstanceID() + "; equipmentCount: " + playerManager.UnitController.MyCharacterEquipmentManager.MyCurrentEquipment.Count);
                 }*/
                 equippedEquipment = null;
             }
@@ -252,7 +252,7 @@ namespace AnyRPG {
         public override void Accept() {
             base.Accept();
             if (equippedEquipment != null) {
-                playerManager.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
+                playerManager.UnitController.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
                 playerManager.UnitController.UnitModelController.RebuildModelAppearance();
                 ShowContextInfo();
             }

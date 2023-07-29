@@ -151,7 +151,7 @@ namespace AnyRPG {
                                 qs.Text.text = displayText;
 
                                 //Debug.Log("QuestTrackerUI.ShowQuestsCommon(" + questGiver.name + "): " + questNode.MyQuest.MyTitle);
-                                qs.Text.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, quest.ExperienceLevel);
+                                qs.Text.color = LevelEquations.GetTargetColor(playerManager.UnitController.CharacterStats.Level, quest.ExperienceLevel);
                                 questScripts.Add(qs);
                                 // disabled this next bit because it was causing repeatables with no objectives to be marked as complete
                                 /*

@@ -32,18 +32,18 @@ namespace AnyRPG {
         }
         */
 
-        public override void CancelEffect(BaseCharacter targetCharacter) {
+        public override void CancelEffect(UnitController targetUnitController) {
             //Debug.Log(displayName +  ".MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
             if (SystemGameManager.IsShuttingDown == true) {
                 // game is in the middle of exiting
                 return;
             }
-            if (targetCharacter.UnitController == null) {
+            if (targetUnitController == null) {
                 return;
             }
-            targetCharacter.UnitController.DeActivateMountedState();
+            targetUnitController.DeActivateMountedState();
             
-            base.CancelEffect(targetCharacter);
+            base.CancelEffect(targetUnitController);
         }
 
         public override bool CanCast() {

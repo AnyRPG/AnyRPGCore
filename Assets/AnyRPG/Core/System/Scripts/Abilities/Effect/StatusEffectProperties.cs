@@ -287,22 +287,22 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
         }
 
-        public override void CancelEffect(BaseCharacter targetCharacter) {
+        public override void CancelEffect(UnitController targetCharacter) {
             base.CancelEffect(targetCharacter);
             RemoveControlEffects(targetCharacter);
             UndoMaterialChange(targetCharacter);
         }
 
-        private void UndoMaterialChange(BaseCharacter targetCharacter) {
+        private void UndoMaterialChange(UnitController targetCharacter) {
             if (effectMaterial == null) {
                 return;
             }
             
-            if (targetCharacter.UnitController == null) {
+            if (targetCharacter == null) {
                 return;
             }
 
-            targetCharacter.UnitController.UnitMaterialController.RevertTemporaryMaterialChange();
+            targetCharacter.UnitMaterialController.RevertTemporaryMaterialChange();
         }
 
         // bypass the creation of the status effect and just make its visual prefab
@@ -353,11 +353,11 @@ namespace AnyRPG {
             Dictionary<PrefabProfile, List<GameObject>> returnObjects = null;
             CharacterStats targetCharacterStats = null;
 
-            if ((classTrait || abilityEffectContext.savedEffect) && (source as BaseCharacter) is BaseCharacter) {
-                targetCharacterStats = (source as BaseCharacter).CharacterStats;
+            if ((classTrait || abilityEffectContext.savedEffect) && (source as UnitController) is UnitController) {
+                targetCharacterStats = (source as UnitController).CharacterStats;
             } else {
-                if (target.CharacterUnit != null && target.CharacterUnit.BaseCharacter != null) {
-                    targetCharacterStats = target.CharacterUnit.BaseCharacter.CharacterStats;
+                if (target.CharacterUnit != null) {
+                    targetCharacterStats = target.CharacterUnit.UnitController.CharacterStats;
                 }
             }
 
@@ -499,8 +499,8 @@ namespace AnyRPG {
 
             if (limitedDuration == true && classTrait == false) {
                 float remainingDuration = 0f;
-                if (playerManager.MyCharacter?.CharacterStats?.HasStatusEffect(this) == true) {
-                    remainingDuration = playerManager.MyCharacter.CharacterStats.GetStatusEffectNode(this).RemainingDuration;
+                if (playerManager.UnitController?.CharacterStats?.HasStatusEffect(this) == true) {
+                    remainingDuration = playerManager.UnitController.CharacterStats.GetStatusEffectNode(this).RemainingDuration;
                 }
                 if (remainingDuration != 0f) {
                     durationLabel = "Remaining Duration: ";
@@ -517,48 +517,48 @@ namespace AnyRPG {
             return base.GetDescription() + string.Format("{0}{1}", descriptionFinal, durationString);
         }
 
-        public void ApplyControlEffects(BaseCharacter targetCharacter) {
+        public void ApplyControlEffects(UnitController unitController) {
             //Debug.Log(DisplayName + ".StatusEffect.ApplyControlEffects(" + (targetCharacter == null ? "null" : targetCharacter.CharacterName) + ")");
-            if (targetCharacter == null) {
+            if (unitController == null) {
                 //Debug.Log(DisplayName + ".StatusEffect.ApplyControlEffects() targetCharacter is null");
                 return;
             }
 
             if (DisableAnimator == true) {
                 //Debug.Log(abilityEffectName + ".StatusEffect.Tick() disabling animator and motor (freezing)");
-                targetCharacter.UnitController.FreezeCharacter();
+                unitController.FreezeCharacter();
             }
 
             if (Stun == true) {
-                targetCharacter.UnitController.StunCharacter();
+                unitController.StunCharacter();
             }
             if (Levitate == true) {
                 //Debug.Log(abilityEffectName + ".StatusEffect.Tick() levitating");
-                targetCharacter.UnitController.LevitateCharacter();
+                unitController.LevitateCharacter();
             }
-            if (canFly == true && targetCharacter.UnitController != null) {
-                targetCharacter.UnitController.CanFlyOverride = true;
+            if (canFly == true) {
+                unitController.CanFlyOverride = true;
             }
-            if (canGlide == true && targetCharacter.UnitController != null) {
-                targetCharacter.UnitController.CanGlideOverride = true;
+            if (canGlide == true) {
+                unitController.CanGlideOverride = true;
             }
             if (stealth == true) {
-                targetCharacter.CharacterStats.ActivateStealth();
+                unitController.CharacterStats.ActivateStealth();
             }
         }
 
-        public void RemoveControlEffects(BaseCharacter targetCharacter) {
+        public void RemoveControlEffects(UnitController targetCharacter) {
             if (targetCharacter == null) {
                 return;
             }
             if (DisableAnimator == true) {
-                targetCharacter.UnitController.UnFreezeCharacter();
+                targetCharacter.UnFreezeCharacter();
             }
             if (Stun == true) {
-                targetCharacter.UnitController.UnStunCharacter();
+                targetCharacter.UnStunCharacter();
             }
             if (Levitate == true) {
-                targetCharacter.UnitController.UnLevitateCharacter();
+                targetCharacter.UnLevitateCharacter();
             }
             /*
             if (stealth == true) {

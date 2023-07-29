@@ -72,7 +72,7 @@ namespace AnyRPG {
                 rewardIcon.SetOptions(rectTransform, false);
                 rewardIcon.SetDescribable(capabilityProps.AbilityList[i]);
                 abilityRewardIcons.Add(rewardIcon);
-                if (capabilityProps.AbilityList[i].RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
+                if (capabilityProps.AbilityList[i].RequiredLevel > playerManager.UnitController.CharacterStats.Level) {
                     rewardIcon.StackSizeText.text = "Level\n" + capabilityProps.AbilityList[i].RequiredLevel;
                     rewardIcon.HighlightIcon.color = new Color32(255, 255, 255, 80);
                 }

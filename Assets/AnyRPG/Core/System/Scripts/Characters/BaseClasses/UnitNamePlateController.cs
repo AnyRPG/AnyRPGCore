@@ -18,20 +18,20 @@ namespace AnyRPG {
 
         public override string UnitDisplayName {
             get {
-                return (unitController.CharacterUnit.BaseCharacter != null ? unitController.CharacterUnit.BaseCharacter.CharacterName : base.UnitDisplayName);
+                return (unitController.BaseCharacter != null ? unitController.BaseCharacter.CharacterName : base.UnitDisplayName);
             }
         }
         public override Faction Faction {
             get {
-                if (unitController.CharacterUnit.BaseCharacter != null) {
-                    return unitController.CharacterUnit.BaseCharacter.Faction;
+                if (unitController.BaseCharacter != null) {
+                    return unitController.BaseCharacter.Faction;
                 }
                 return base.Faction;
             }
         }
         public override string Title {
             get {
-                return (unitController.CharacterUnit.BaseCharacter != null ? unitController.CharacterUnit.BaseCharacter.Title : base.Title); }
+                return (unitController.BaseCharacter != null ? unitController.BaseCharacter.Title : base.Title); }
         }
 
         public override Transform NamePlateTransform {
@@ -47,16 +47,16 @@ namespace AnyRPG {
         }
         public override int Level {
             get {
-                if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
-                    return unitController.CharacterUnit.BaseCharacter.CharacterStats.Level;
+                if (unitController.BaseCharacter != null && unitController.CharacterStats != null) {
+                    return unitController.CharacterStats.Level;
                 }
                 return base.Level;
             }
         }
         public override List<PowerResource> PowerResourceList {
             get {
-                if (unitController != null && unitController.CharacterUnit.BaseCharacter != null) {
-                    return unitController.CharacterUnit.BaseCharacter.CharacterStats.PowerResourceList;
+                if (unitController != null && unitController.BaseCharacter != null) {
+                    return unitController.CharacterStats.PowerResourceList;
                 }
                 return base.PowerResourceList;
             }
@@ -79,9 +79,9 @@ namespace AnyRPG {
                 return;
             }
             if (unitController != null) {
-                if (unitController.CharacterUnit.BaseCharacter.CharacterStats != null
-                    && unitController.CharacterUnit.BaseCharacter.CharacterStats.IsAlive == false
-                    && unitController.CharacterUnit.BaseCharacter.SpawnDead == false) {
+                if (unitController.CharacterStats != null
+                    && unitController.CharacterStats.IsAlive == false
+                    && unitController.BaseCharacter.SpawnDead == false) {
                     // if this is not a character that spawns dead, and is currently dead, then there is no reason to display a nameplate as dead characters usually cannot have nameplates
                     return;
                 }
@@ -142,9 +142,9 @@ namespace AnyRPG {
             if (unitController == null) {
                 return false;
             }
-            if (unitController.CharacterUnit.BaseCharacter.CharacterStats != null
-                                && unitController.CharacterUnit.BaseCharacter.CharacterStats.IsAlive == false
-                                && unitController.CharacterUnit.BaseCharacter.SpawnDead == false) {
+            if (unitController.CharacterStats != null
+                                && unitController.CharacterStats.IsAlive == false
+                                && unitController.BaseCharacter.SpawnDead == false) {
                 // if this is not a character that spawns dead, and is currently dead, then there is no reason to display a nameplate as dead characters usually cannot have nameplates
                 return false;
             }
@@ -157,32 +157,32 @@ namespace AnyRPG {
         }
 
         public override int CurrentHealth() {
-            if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
-                return unitController.CharacterUnit.BaseCharacter.CharacterStats.CurrentPrimaryResource;
+            if (unitController.BaseCharacter != null && unitController.CharacterStats != null) {
+                return unitController.CharacterStats.CurrentPrimaryResource;
             }
             return base.CurrentHealth();
         }
 
         public override int MaxHealth() {
             //Debug.Log($"{gameObject.name}.CharacterUnit.MaxHealth()");
-            if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
-                return unitController.CharacterUnit.BaseCharacter.CharacterStats.MaxPrimaryResource;
+            if (unitController.BaseCharacter != null && unitController.CharacterStats != null) {
+                return unitController.CharacterStats.MaxPrimaryResource;
             }
             return base.MaxHealth();
         }
 
         public override bool HasPrimaryResource() {
             //Debug.Log($"{gameObject.name}.CharacterUnit.HasHealth(): return true");
-            if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
-                return unitController.CharacterUnit.BaseCharacter.CharacterStats.HasPrimaryResource;
+            if (unitController.BaseCharacter != null && unitController.CharacterStats != null) {
+                return unitController.CharacterStats.HasPrimaryResource;
             }
             return base.HasPrimaryResource();
         }
 
         public override bool HasSecondaryResource() {
             //Debug.Log($"{gameObject.name}.CharacterUnit.HasHealth(): return true");
-            if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
-                return unitController.CharacterUnit.BaseCharacter.CharacterStats.HasSecondaryResource;
+            if (unitController.BaseCharacter != null && unitController.CharacterStats != null) {
+                return unitController.CharacterStats.HasSecondaryResource;
             }
             return base.HasSecondaryResource();
         }
@@ -195,22 +195,22 @@ namespace AnyRPG {
             if (unitController.CharacterUnit == null) {
                 Debug.Log(unitController.gameObject.name + ".UnitNamePlateController.HasHealth(): unitcontroller.CharacterUnit is null");
             }
-            if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
-                return unitController.CharacterUnit.BaseCharacter.CharacterStats.HasHealthResource;
+            if (unitController.BaseCharacter != null && unitController.CharacterStats != null) {
+                return unitController.CharacterStats.HasHealthResource;
             }
             return base.HasHealth();
         }
 
         public override float GetPowerResourceMaxAmount(PowerResource powerResource) {
-            if (unitController != null && unitController.CharacterUnit.BaseCharacter != null) {
-                return unitController.CharacterUnit.BaseCharacter.CharacterStats.GetPowerResourceMaxAmount(powerResource);
+            if (unitController != null && unitController.BaseCharacter != null) {
+                return unitController.CharacterStats.GetPowerResourceMaxAmount(powerResource);
             }
             return base.GetPowerResourceMaxAmount(powerResource);
         }
 
         public override float GetPowerResourceAmount(PowerResource powerResource) {
-            if (unitController != null && unitController.CharacterUnit.BaseCharacter != null) {
-                return unitController.CharacterUnit.BaseCharacter.CharacterStats.GetPowerResourceAmount(powerResource);
+            if (unitController != null && unitController.BaseCharacter != null) {
+                return unitController.CharacterStats.GetPowerResourceAmount(powerResource);
             }
             return base.GetPowerResourceAmount(powerResource);
         }

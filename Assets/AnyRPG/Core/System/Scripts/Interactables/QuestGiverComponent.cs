@@ -149,7 +149,7 @@ namespace AnyRPG {
 
         public void UpdateQuestStatus() {
             //Debug.Log(interactable.gameObject.name + ".QuestGiver.UpdateQuestStatus()");
-            if (playerManager.MyCharacter == null) {
+            if (playerManager.UnitController == null) {
                 //Debug.Log($"{gameObject.name}.QuestGiver.UpdateQuestStatus(): player has no character");
                 return;
             }
@@ -170,12 +170,12 @@ namespace AnyRPG {
         public string GetIndicatorType() {
             //Debug.Log($"{gameObject.name}.QuestGiver.GetIndicatorType()");
 
-            if (playerManager.MyCharacter == null) {
-                //Debug.Log($"{gameObject.name}.QuestGiver.GetIndicatorType(): playerManager.MyCharacter is null. returning empty");
+            if (playerManager.UnitController == null) {
+                //Debug.Log($"{gameObject.name}.QuestGiver.GetIndicatorType(): playerManager.UnitController is null. returning empty");
                 return string.Empty;
             }
 
-            float relationValue = interactable.PerformFactionCheck(playerManager.MyCharacter);
+            float relationValue = interactable.PerformFactionCheck(playerManager.UnitController);
             if (CanInteract(false, false, relationValue) == false) {
                 //Debug.Log($"{gameObject.name}.QuestGiver.GetIndicatorType(): Cannot interact.  Return empty string");
                 return string.Empty;

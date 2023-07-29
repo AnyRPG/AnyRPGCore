@@ -104,7 +104,7 @@ namespace AnyRPG {
             options.Clear();
 
             // EXTRA LEVELS
-            for (int i = 0; i < systemConfigurationManager.MaxLevel - playerManager.MyCharacter.CharacterStats.Level; i++) {
+            for (int i = 0; i < systemConfigurationManager.MaxLevel - playerManager.UnitController.CharacterStats.Level; i++) {
                 options.Add(i.ToString());
             }
             extraLevelsDropdown.AddOptions(options);

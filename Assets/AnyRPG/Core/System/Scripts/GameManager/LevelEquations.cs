@@ -48,7 +48,7 @@ namespace AnyRPG {
             }
         }
 
-        public static int GetXPAmountForKill(int sourceLevel, BaseCharacter targetCharacter, SystemConfigurationManager systemConfigurationManager) {
+        public static int GetXPAmountForKill(int sourceLevel, UnitController targetCharacter, SystemConfigurationManager systemConfigurationManager) {
 
             float multiplierValue = 1f;
             float toughnessMultiplierValue = 1f;
@@ -56,8 +56,8 @@ namespace AnyRPG {
             if (systemConfigurationManager.UseKillXPLevelMultiplierDemoninator == true) {
                 multiplierValue = 1f / Mathf.Clamp(sourceLevel, 0, (systemConfigurationManager.KillXPMultiplierLevelCap > 0 ? systemConfigurationManager.KillXPMultiplierLevelCap : Mathf.Infinity));
             }
-            if (targetCharacter.CharacterStats.Toughness != null) {
-                toughnessMultiplierValue = targetCharacter.CharacterStats.Toughness.ExperienceMultiplier;
+            if (targetCharacter.BaseCharacter.UnitToughness != null) {
+                toughnessMultiplierValue = targetCharacter.BaseCharacter.UnitToughness.ExperienceMultiplier;
             }
 
             int baseXP = (int)((((sourceLevel * systemConfigurationManager.KillXPPerLevel) * multiplierValue) + systemConfigurationManager.BaseKillXP) * toughnessMultiplierValue);
@@ -168,19 +168,19 @@ namespace AnyRPG {
             return systemConfigurationManager.StatBudgetPerLevel + extraStatPerLevel;
         }
 
-        public static float GetBaseSecondaryStatForCharacter(SecondaryStatType secondaryStatType, CharacterStats characterStats) {
+        public static float GetBaseSecondaryStatForCharacter(SecondaryStatType secondaryStatType, UnitController unitController) {
             //Debug.Log("LevelEquations.GetSecondaryStatForCharacter(" + secondaryStatType.ToString() + ", " + sourceCharacter.AbilityManager.CharacterName + ")");
             float returnValue = 0f;
 
-            foreach (IStatProvider statProvider in characterStats.BaseCharacter.StatProviders) {
+            foreach (IStatProvider statProvider in unitController.BaseCharacter.StatProviders) {
                 if (statProvider != null) {
                     foreach (StatScalingNode statScalingNode in statProvider.PrimaryStats) {
                         foreach (PrimaryToSecondaryStatNode primaryToSecondaryStatNode in statScalingNode.PrimaryToSecondaryConversion) {
                             if (primaryToSecondaryStatNode.SecondaryStatType == secondaryStatType) {
                                 if (primaryToSecondaryStatNode.RatedConversion == true) {
-                                    returnValue += primaryToSecondaryStatNode.ConversionRatio * (characterStats.PrimaryStats[statScalingNode.StatName].CurrentValue / characterStats.Level);
+                                    returnValue += primaryToSecondaryStatNode.ConversionRatio * (unitController.CharacterStats.PrimaryStats[statScalingNode.StatName].CurrentValue / unitController.CharacterStats.Level);
                                 } else {
-                                    returnValue += primaryToSecondaryStatNode.ConversionRatio * characterStats.PrimaryStats[statScalingNode.StatName].CurrentValue;
+                                    returnValue += primaryToSecondaryStatNode.ConversionRatio * unitController.CharacterStats.PrimaryStats[statScalingNode.StatName].CurrentValue;
                                 }
                             }
                         }
@@ -188,15 +188,15 @@ namespace AnyRPG {
                 }
             }
 
-            returnValue += characterStats.SecondaryStats[secondaryStatType].DefaultAddValue;
+            returnValue += unitController.CharacterStats.SecondaryStats[secondaryStatType].DefaultAddValue;
             return returnValue;
         }
 
-        public static float GetSecondaryStatForCharacter(SecondaryStatType secondaryStatType, CharacterStats characterStats) {
+        public static float GetSecondaryStatForCharacter(SecondaryStatType secondaryStatType, UnitController unitController) {
             //Debug.Log("LevelEquations.GetSecondaryStatForCharacter(" + sourceCharacter.AbilityManager.CharacterName + ")");
-            float returnValue = GetBaseSecondaryStatForCharacter(secondaryStatType, characterStats);
-            returnValue += characterStats.GetSecondaryAddModifiers(secondaryStatType);
-            returnValue *= characterStats.GetSecondaryMultiplyModifiers(secondaryStatType);
+            float returnValue = GetBaseSecondaryStatForCharacter(secondaryStatType, unitController);
+            returnValue += unitController.CharacterStats.GetSecondaryAddModifiers(secondaryStatType);
+            returnValue *= unitController.CharacterStats.GetSecondaryMultiplyModifiers(secondaryStatType);
             return returnValue;
         }
 

@@ -33,19 +33,22 @@ namespace AnyRPG {
         }
 
         private void HandleInitializeAnimator() {
-            Debug.Log($"{gameObject.name}.NetworkCharacterModel.HandleInitializeAnimator()");
+            //Debug.Log($"{gameObject.name}.NetworkCharacterModel.HandleInitializeAnimator()");
             networkAnimator.SetAnimator(animator);
         }
 
         private void CompleteModelRequest(bool isOwner) {
-            
-            CharacterRequestData characterRequestData = new CharacterRequestData(null, 
+            /*
+            CharacterRequestData characterRequestData;
+            characterRequestData = new CharacterRequestData(null, 
                 GameMode.Network,
                 null, // does not matter since it's unused to the CompleteModelRequest() process
-                UnitControllerMode.Preview // does not matter since it's unused to the CompleteModelRequest() process
-                );
+                UnitControllerMode.Preview, // does not matter since it's unused to the CompleteModelRequest() process
+                new CharacterConfigurationRequest());
             characterRequestData.spawnRequestId = clientSpawnRequestId;
             systemGameManager.CharacterManager.CompleteModelRequest(characterRequestData, unitController, isOwner);
+            */
+            systemGameManager.CharacterManager.CompleteModelRequest(clientSpawnRequestId, unitController, isOwner);
         }
 
         public override void OnStartClient() {

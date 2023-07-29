@@ -1,5 +1,6 @@
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,28 +19,74 @@ namespace AnyRPG {
         [SyncVar]
         public UnitControllerMode unitControllerMode = UnitControllerMode.Preview;
 
-        UnitProfile unitProfile = null;
+        [SyncVar(OnChange = nameof(HandleNameSync), ReadPermissions = ReadPermission.ExcludeOwner)]
+        public string characterName = string.Empty;
+
+        
+        private UnitProfile unitProfile = null;
+        private UnitController unitController = null;
 
         // game manager references
         SystemGameManager systemGameManager = null;
 
-        private void FindSystemGameManager() {
+        private void Configure() {
             // call character manager with spawnRequestId to complete configuration
             systemGameManager = GameObject.FindObjectOfType<SystemGameManager>();
+            unitController = GetComponent<UnitController>();
+            //if (base.IsOwner && unitController != null) {
+            //    unitController.UnitEventController.OnNameChange += HandleUnitNameChange;
+            //}
+        }
+
+        private void HandleUnitNameChange(string characterName) {
+            Debug.Log($"{gameObject.name}.NetworkCharacterUnit.HandleUnitNameChange({characterName})");
+
+            HandleUnitNameChangeServer(characterName);
+        }
+
+        [ServerRpc]
+        private void HandleUnitNameChangeServer(string characterName) {
+            Debug.Log($"{gameObject.name}.NetworkCharacterUnit.HandleUnitNameChangeServer({characterName})");
+
+            this.characterName = characterName;
+        }
+
+        private void HandleNameSync(string oldValue, string newValue, bool asServer) {
+            Debug.Log($"{gameObject.name}.NetworkCharacterUnit.HandleNameSync({oldValue}, {newValue}, {asServer})");
+
+            unitController.BaseCharacter.ChangeCharacterName(newValue);
         }
 
         private void CompleteCharacterRequest(bool isOwner) {
+            Debug.Log($"{gameObject.name}.NetworkCharacterUnit.CompleteCharacterRequest({isOwner})");
+
             unitProfile = systemGameManager.SystemDataFactory.GetResource<UnitProfile>(unitProfileName);
-            CharacterRequestData characterRequestData = new CharacterRequestData(null, GameMode.Network, unitProfile, unitControllerMode, unitLevel);
-            characterRequestData.spawnRequestId = clientSpawnRequestId;
-            systemGameManager.CharacterManager.CompleteCharacterRequest(gameObject, characterRequestData, isOwner);
+            CharacterConfigurationRequest characterConfigurationRequest;
+            if (isOwner && systemGameManager.CharacterManager.HasUnitSpawnRequest(clientSpawnRequestId)) {
+                systemGameManager.CharacterManager.CompleteCharacterRequest(gameObject, clientSpawnRequestId, isOwner);
+            } else {
+                characterConfigurationRequest = new CharacterConfigurationRequest(unitProfile);
+                characterConfigurationRequest.characterName = characterName;
+                characterConfigurationRequest.unitLevel = unitLevel;
+                characterConfigurationRequest.unitControllerMode = unitControllerMode;
+                CharacterRequestData characterRequestData = new CharacterRequestData(null, GameMode.Network, characterConfigurationRequest);
+                characterRequestData.spawnRequestId = clientSpawnRequestId;
+                systemGameManager.CharacterManager.CompleteCharacterRequest(gameObject, characterRequestData, isOwner);
+            }
+
+            if (base.IsOwner && unitController != null) {
+                unitController.UnitEventController.OnNameChange += HandleUnitNameChange;
+
+                // OnNameChange is not called during initialization, so we have to pass the proper name to the network manually
+                HandleUnitNameChange(unitController.BaseCharacter.CharacterName);
+            }
         }
 
         public override void OnStartClient() {
             base.OnStartClient();
-            Debug.Log($"{gameObject.name}.NetworkCharacterUnit.OnStartClient()");
+            //Debug.Log($"{gameObject.name}.NetworkCharacterUnit.OnStartClient()");
 
-            FindSystemGameManager();
+            Configure();
             if (systemGameManager == null) {
                 return;
             }
@@ -51,13 +98,15 @@ namespace AnyRPG {
             base.OnStartServer();
             Debug.Log($"{gameObject.name}.NetworkCharacterUnit.OnStartServer()");
 
-            FindSystemGameManager();
+            Configure();
             if (systemGameManager == null) {
                 return;
             }
             CompleteCharacterRequest(false);
             //systemGameManager.CharacterManager.CompleteCharacterRequest(gameObject, serverRequestId, false);
         }
+
+
 
     }
 }

@@ -58,7 +58,7 @@ namespace AnyRPG {
             if (target != null) {
                 CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(target);
                 if (_characterUnit != null) {
-                    targetStats = _characterUnit.BaseCharacter.CharacterStats;
+                    targetStats = _characterUnit.UnitController.CharacterStats;
                 }
             } else {
                 nullTarget = true;

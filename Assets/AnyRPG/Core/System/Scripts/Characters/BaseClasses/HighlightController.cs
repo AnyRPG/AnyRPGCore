@@ -10,7 +10,7 @@ namespace AnyRPG {
         [SerializeField]
         private MeshRenderer meshRenderer = null;
 
-        CharacterUnit characterUnit = null;
+        UnitController unitController = null;
 
         private Dictionary<string, ProjectorColorMapNode> colorDictionary = new Dictionary<string, ProjectorColorMapNode>();
 
@@ -45,21 +45,21 @@ namespace AnyRPG {
             meshRenderer.enabled = false;
         }
 
-        public void ConfigureOwner(CharacterUnit characterUnit) {
-            this.characterUnit = characterUnit;
+        public void ConfigureOwner(UnitController unitController) {
+            this.unitController = unitController;
         }
 
         public void HandleSetTarget() {
             //Debug.Log("FocusTargettingController.HandleSetTarget()");
-            if (characterUnit == null) {
+            if (unitController == null) {
                 // don't show this under inanimate units
                 HandleClearTarget();
                 return;
             }
             meshRenderer.enabled = true;
             colorOverrideDictionary.Clear();
-            if (characterUnit.BaseCharacter.CharacterStats.Toughness != null && characterUnit.BaseCharacter.CharacterStats.Toughness.FocusProjectorOverrideMap != null) {
-                foreach (ProjectorColorMapNode colorMapNode in characterUnit.BaseCharacter.CharacterStats.Toughness.FocusProjectorOverrideMap) {
+            if (unitController.BaseCharacter.UnitToughness != null && unitController.BaseCharacter.UnitToughness.FocusProjectorOverrideMap != null) {
+                foreach (ProjectorColorMapNode colorMapNode in unitController.BaseCharacter.UnitToughness.FocusProjectorOverrideMap) {
                     colorOverrideDictionary[ColorUtility.ToHtmlStringRGBA(colorMapNode.SourceColor)] = colorMapNode;
                     //Debug.Log("FocusTargettingController.SetupController(): added override " + ColorUtility.ToHtmlStringRGBA(colorMapNode.MySourceColor));
                 }
@@ -68,7 +68,7 @@ namespace AnyRPG {
             UpdateColors();
 
             // multiply by 2 to account for circles only being half the width of the plane, and then 2 again
-            SetCircleRadius(characterUnit.HitBoxSize * 2f);
+            SetCircleRadius(unitController.CharacterUnit.HitBoxSize * 2f);
         }
 
         public void HandleClearTarget() {
@@ -89,7 +89,7 @@ namespace AnyRPG {
                 Debug.Log("Dictionary contains key: " + tmpColor.ToString());
             }
             */
-            if (colorOverrideDictionary.ContainsKey(ColorUtility.ToHtmlStringRGBA(materialColor)) && characterUnit?.BaseCharacter?.CharacterStats?.IsAlive == true) {
+            if (colorOverrideDictionary.ContainsKey(ColorUtility.ToHtmlStringRGBA(materialColor)) && unitController.CharacterStats.IsAlive == true) {
                 meshRenderer.material = new Material(colorOverrideDictionary[ColorUtility.ToHtmlStringRGBA(materialColor)].ProjectorMaterial);
                 ProcessTint(colorOverrideDictionary[ColorUtility.ToHtmlStringRGBA(materialColor)]);
                 //Debug.Log("FocusTargettingController.SetMaterial(): override dictionary contained color  " + ColorUtility.ToHtmlStringRGBA(materialColor));
@@ -119,10 +119,10 @@ namespace AnyRPG {
                 return;
             }
 
-            if (characterUnit?.BaseCharacter?.CharacterStats?.IsAlive == false) {
+            if (unitController.CharacterStats?.IsAlive == false) {
                 SetMaterial(Color.gray);
             } else {
-                Color newColor = Faction.GetFactionColor(playerManager, characterUnit.BaseCharacter.UnitController);
+                Color newColor = Faction.GetFactionColor(playerManager, unitController);
                 SetMaterial(newColor);
             }
         }

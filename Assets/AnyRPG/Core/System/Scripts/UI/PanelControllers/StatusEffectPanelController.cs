@@ -36,9 +36,9 @@ namespace AnyRPG {
         public void SetTarget(UnitController unitController) {
             //Debug.Log($"{gameObject.name}.StatusEffectPanelController.SetTarget(" + unitController.DisplayName + ")");
             this.targetUnitController = unitController;
-            if (targetUnitController.CharacterUnit.BaseCharacter != null && targetUnitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
+            if (targetUnitController.BaseCharacter != null && targetUnitController.CharacterStats != null) {
                 //Debug.Log("StatusEffectPanelController.SetTarget(" + characterUnit.MyDisplayName + "): checking status effects");
-                foreach (StatusEffectNode statusEffectNode in targetUnitController.CharacterUnit.BaseCharacter.CharacterStats.StatusEffects.Values) {
+                foreach (StatusEffectNode statusEffectNode in targetUnitController.CharacterStats.StatusEffects.Values) {
                     AddStatusNode(statusEffectNode);
                 }
                 CreateEventSubscriptions();

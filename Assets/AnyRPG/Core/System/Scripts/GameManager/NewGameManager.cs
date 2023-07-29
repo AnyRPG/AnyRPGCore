@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class NewGameManager : ConfiguredMonoBehaviour, ICharacterEditor, ISaveDataOwner {
+    public class NewGameManager : ConfiguredMonoBehaviour, ICharacterEditor, ISaveDataOwner, ICharacterConfigurationProvider {
 
         public event System.Action<UnitProfile> OnSetUnitProfile = delegate { };
         public event System.Action<string> OnSetPlayerName = delegate { };
@@ -690,17 +690,6 @@ namespace AnyRPG {
 
         }
 
-        public void SetCharacterProperties() {
-            //Debug.Log("NewGameCharacterPanelController.SetCharacterProperties()");
-
-            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitProfile(UnitProfile, true, -1, false);
-            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitType(UnitType);
-            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterRace(CharacterRace);
-            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterClass(CharacterClass);
-            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetClassSpecialization(ClassSpecialization);
-            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterFaction(Faction);
-        }
-
         public void SaveEquipmentData() {
             if (equipmentManager.CurrentEquipment == null) {
                 // nothing to save
@@ -724,6 +713,13 @@ namespace AnyRPG {
 
         public void SetSaveData(AnyRPGSaveData saveData) {
             this.saveData = saveData;
+        }
+
+        public CharacterConfigurationRequest GetCharacterConfigurationRequest() {
+            CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(this);
+            characterConfigurationRequest.unitControllerMode = UnitControllerMode.Preview;
+            characterConfigurationRequest.characterName = playerName;
+            return characterConfigurationRequest;
         }
     }
 

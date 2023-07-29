@@ -101,7 +101,7 @@ namespace AnyRPG {
         private void AddCurrency(Currency currency, int amount) {
             //Debug.Log("GainCurrencyCommand.AddCurrency(" + currency.DisplayName + ", " + amount + ")");
 
-            playerManager.ActiveCharacter.CharacterCurrencyManager.AddCurrency(currency, amount);
+            playerManager.UnitController.CharacterCurrencyManager.AddCurrency(currency, amount);
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {

@@ -240,7 +240,7 @@ namespace AnyRPG {
 
             HandleMouseOver();
 
-            if (playerManager?.MyCharacter?.CharacterStats?.IsAlive == false) {
+            if (playerManager.ActiveUnitController?.CharacterStats.IsAlive == false) {
                 // can't interact, perform abilities or handle movement when dead
                 return;
             }
@@ -539,7 +539,7 @@ namespace AnyRPG {
             // no crossbar was activated, buttons will perform their native functions
             if (inputManager.KeyBindWasPressed("ACCEPT")) {
                 // accept button when targeting should just confirm target and nothing else
-                if (playerManager.ActiveCharacter?.CharacterAbilityManager?.WaitingForTarget() == false) {
+                if (playerManager.ActiveUnitController?.CharacterAbilityManager.WaitingForTarget() == false) {
 
                     if (interactables.Count > 0) {
                         // range interactables are priority
@@ -566,8 +566,8 @@ namespace AnyRPG {
             Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(targetPosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100, movementMask)) {
-                if (playerManager.ActiveCharacter.CharacterAbilityManager.WaitingForTarget()) {
-                    playerManager.ActiveCharacter.CharacterAbilityManager.SetGroundTarget(hit.point);
+                if (playerManager.ActiveUnitController.CharacterAbilityManager.WaitingForTarget()) {
+                    playerManager.ActiveUnitController.CharacterAbilityManager.SetGroundTarget(hit.point);
                 }
             }
         }
@@ -675,8 +675,8 @@ namespace AnyRPG {
         private bool ValidEnemyTarget(Interactable interactable) {
             UnitController targetCharacterUnit = interactable.GetComponent<UnitController>();
             if (targetCharacterUnit != null
-                && targetCharacterUnit.CharacterUnit.BaseCharacter.CharacterStats.IsAlive == true
-                && Faction.RelationWith(targetCharacterUnit.CharacterUnit.BaseCharacter, playerManager.MyCharacter.Faction) <= -1) {
+                && targetCharacterUnit.CharacterStats.IsAlive == true
+                && Faction.RelationWith(targetCharacterUnit, playerManager.UnitController.BaseCharacter.Faction) <= -1) {
                 return true;
             }
             return false;
@@ -947,12 +947,12 @@ namespace AnyRPG {
             if (inputManager.KeyBindWasPressed("CANCELALL")
                 || (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1") && controlsManager.RightTriggerDown == false && controlsManager.LeftTriggerDown == false)) {
                 playerManager.UnitController.ClearTarget();
-                if (playerManager.ActiveCharacter.CharacterStats.IsAlive != false) {
+                if (playerManager.ActiveUnitController.CharacterStats.IsAlive != false) {
                     // prevent character from swapping to third party controller while dead
-                    playerManager.ActiveCharacter.CharacterAbilityManager.TryToStopAnyAbility();
+                    playerManager.ActiveUnitController.CharacterAbilityManager.TryToStopAnyAbility();
                     playerManager.UnitController.UnitActionManager.TryToStopAction();
                 }
-                playerManager.ActiveCharacter.CharacterAbilityManager.DeActivateTargettingMode();
+                playerManager.ActiveUnitController.CharacterAbilityManager.DeActivateTargettingMode();
             }
         }
 
@@ -1046,7 +1046,7 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleDie(CharacterStats characterStats) {
+        public void HandleDie() {
             //Debug.Log($"{gameObject.name}.PlayerController.HandleDeath()");
             Lock(true, true, false, 0.1f, 0f);
         }
@@ -1156,7 +1156,7 @@ namespace AnyRPG {
             saveManager.SaveAppearanceData();
         }
 
-        public void HandleCastCancel(BaseCharacter baseCharacter) {
+        public void HandleCastCancel() {
             //Debug.Log("PlayerController.HandleCastCancel()");
             craftingManager.ClearCraftingQueue();
         }

@@ -66,7 +66,7 @@ namespace AnyRPG {
                 //markedComplete = false;
                 //Text.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName;
             }
-            Text.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, quest.ExperienceLevel);
+            Text.color = LevelEquations.GetTargetColor(playerManager.UnitController.CharacterStats.Level, quest.ExperienceLevel);
         }
 
 

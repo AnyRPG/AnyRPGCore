@@ -17,7 +17,7 @@ namespace AnyRPG {
             get {
                 /*
                  * moved this option to getValidOptions because this should spawn even if the character doesn't have the ability
-                if (playerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility.AbilityProperties) == false) {
+                if (playerManager.UnitController.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility.AbilityProperties) == false) {
                     return false;
                 }
                 */
@@ -76,7 +76,7 @@ namespace AnyRPG {
                 // this call is safe, it will internally check if loot is already dropped and just pickup instead
                 Gather(optionIndex);
             } else {
-                source.BaseCharacter.CharacterAbilityManager.BeginAbility(GatheringNodeProps.BaseAbility.AbilityProperties, interactable);
+                source.UnitController.CharacterAbilityManager.BeginAbility(GatheringNodeProps.BaseAbility.AbilityProperties, interactable);
             }
             uIManager.interactionWindow.CloseWindow();
             return true;
@@ -93,7 +93,7 @@ namespace AnyRPG {
         /*
         public override void DropLoot() {
             Debug.Log(gameObject.name + ".GatheringNode.DropLoot()");
-            base.Interact(playerManager.MyCharacter.CharacterUnit);
+            base.Interact(playerManager.UnitController.CharacterUnit);
             //base.DropLoot();
             //PickUp();
         }
@@ -101,7 +101,7 @@ namespace AnyRPG {
 
         public override int GetCurrentOptionCount() {
             //Debug.Log($"{gameObject.name}.GatheringNode.GetCurrentOptionCount()");
-            return ((playerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility.AbilityProperties) == true
+            return ((playerManager.UnitController.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility.AbilityProperties) == true
                 && interactable.SpawnReference != null
                 && currentTimer <= 0f) ? 1 : 0);
         }

@@ -113,7 +113,7 @@ namespace AnyRPG {
             // next check custom gained faction for either character
             if (namePlateUnit.CharacterUnit != null && playerManager.UnitController != null) {
                 //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ") : nameplate unit is a character unit AND PLAYER UNIT IS SPAWNED");
-                return GetFactionColor(playerManager, playerManager.MyCharacter, namePlateUnit.CharacterUnit.BaseCharacter);
+                return GetFactionColor(playerManager, playerManager.UnitController, namePlateUnit.CharacterUnit.UnitController);
             } else {
                 //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ") : nameplate unit is NOT a character unit");
             }
@@ -122,7 +122,7 @@ namespace AnyRPG {
             return GetFactionColor(playerManager, namePlateUnit.NamePlateController.Faction);
         }
 
-        public static Color GetFactionColor(PlayerManager playerManager, BaseCharacter characterToCheck, BaseCharacter myCharacter) {
+        public static Color GetFactionColor(PlayerManager playerManager, UnitController characterToCheck, UnitController myCharacter) {
             //Debug.Log("Faction.GetFactionColor(): " + myCharacter.MyCharacterName + " checking color for: "  + characterToCheck.MyCharacterName);
             float relationValue = Faction.RelationWith(characterToCheck, myCharacter);
             //Debug.Log("Faction.GetFactionColor(): " + myCharacter.MyCharacterName + " checking color for: "  + characterToCheck.MyCharacterName + "; relationValue: " + relationValue);
@@ -135,7 +135,7 @@ namespace AnyRPG {
         /// <param name="otherFaction"></param>
         /// <returns></returns>
         public static Color GetFactionColor(PlayerManager playerManager, Faction sourceFaction) {
-            if (playerManager?.MyCharacter == null) {
+            if (playerManager.UnitController == null) {
                 return new Color32(0, 0, 0, 0);
             }
 
@@ -143,7 +143,7 @@ namespace AnyRPG {
                 return Color.yellow;
             }
 
-            float relationValue = Faction.RelationWith(playerManager.MyCharacter, sourceFaction);
+            float relationValue = Faction.RelationWith(playerManager.UnitController, sourceFaction);
             // override relationValue with default if player is not spawned
             return GetColorFromRelationValue(playerManager, relationValue);
         }
@@ -154,7 +154,7 @@ namespace AnyRPG {
 
         public static Color GetColorFromRelationValue(PlayerManager playerManager, float relationValue) {
             //Debug.Log("GetColorFromRelationValue(" + relationValue + ")");
-            if (playerManager.MyCharacter == null) {
+            if (playerManager.UnitController == null) {
                 return new Color32(0, 0, 0, 0);
             }
 
@@ -179,17 +179,17 @@ namespace AnyRPG {
 
         // return the summary of relationship between the player and the source faction
         public string GetReputationSummary(Faction sourceFaction) {
-            float relationValue = RelationWith(playerManager.MyCharacter, sourceFaction);
+            float relationValue = RelationWith(playerManager.UnitController, sourceFaction);
             return string.Format("Reputation: {0}", relationValue);
         }
 
         // return the relationship between the target characters faction and the source characters faction
-        public static float RelationWith(BaseCharacter characterToCheck, BaseCharacter myCharacter) {
+        public static float RelationWith(UnitController characterToCheck, UnitController myCharacter) {
             //Debug.Log("Faction.RelationWith(" + (characterToCheck == null ? "null" : characterToCheck.gameObject.name) + ", " + (myCharacter != null ? myCharacter.MyCharacterName : "null" ) + ")");
             Faction otherFaction;
             Faction thisFaction;
-            otherFaction = characterToCheck.Faction;
-            thisFaction = myCharacter.Faction;
+            otherFaction = characterToCheck.BaseCharacter.Faction;
+            thisFaction = myCharacter.BaseCharacter.Faction;
             if (otherFaction != null && thisFaction != null) {
                 // first, checking if mycharacter has a reputation modifier for the other faction
                 if (myCharacter.CharacterFactionManager != null && myCharacter.CharacterFactionManager.HasReputationModifier(otherFaction)) {
@@ -201,16 +201,16 @@ namespace AnyRPG {
             }
 
             // neither had a special gained reputation with the other, go on to default dispositions
-            return RelationWith(characterToCheck, myCharacter.Faction);
+            return RelationWith(characterToCheck, myCharacter.BaseCharacter.Faction);
         }
 
         // return the relationship between the target characters faction and the source faction
-        public static float RelationWith(BaseCharacter targetCharacter, Faction sourceFaction) {
+        public static float RelationWith(UnitController targetCharacter, Faction sourceFaction) {
             //Debug.Log("Faction.RelationWith(" + (targetCharacter == null ? "null" : targetCharacter.gameObject.name) + ", " + sourceFactionName + ")");
             Faction thisFaction = sourceFaction;
 
             if (targetCharacter != null) {
-                Faction otherFaction = targetCharacter.Faction;
+                Faction otherFaction = targetCharacter.BaseCharacter.Faction;
                 // this is duplicated but needs to be here because you can check colors for ui panels and stuff
                 if (targetCharacter.CharacterFactionManager != null && targetCharacter.CharacterFactionManager.HasReputationModifier(thisFaction)) {
                     //Debug.Log("Faction.RelationWith(" + (targetCharacter == null ? "null" : targetCharacter.gameObject.name) + ", " + sourceFactionName + "): target had reputation modifer, returning it");

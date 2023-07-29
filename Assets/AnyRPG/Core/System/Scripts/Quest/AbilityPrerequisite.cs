@@ -33,7 +33,7 @@ namespace AnyRPG {
 
         public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
-            prerequisiteMet = playerManager.MyCharacter.CharacterAbilityManager.HasAbility(prerequisiteAbility);
+            prerequisiteMet = playerManager.UnitController.CharacterAbilityManager.HasAbility(prerequisiteAbility);
             if (prerequisiteMet != originalResult) {
                 if (notify == true) {
                     OnStatusUpdated();

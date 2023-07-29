@@ -239,7 +239,7 @@ namespace AnyRPG {
         }
 
         public void ProcessLevelLoad() {
-            Debug.Log($"Levelmanager.ProcessLevelLoad(): {SceneManager.GetActiveScene().name}");
+            //Debug.Log($"Levelmanager.ProcessLevelLoad(): {SceneManager.GetActiveScene().name}");
 
             PerformLevelLoadActivities();
             NavMesh.pathfindingIterationsPerFrame = 500;

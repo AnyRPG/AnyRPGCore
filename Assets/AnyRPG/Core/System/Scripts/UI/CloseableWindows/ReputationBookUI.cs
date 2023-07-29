@@ -24,8 +24,8 @@ namespace AnyRPG {
         protected override void PopulatePages() {
             //Debug.Log("ReputationBookUI.CreatePages()");
             FactionDispositionContentList page = new FactionDispositionContentList();
-            for (int i = 0; i < playerManager.MyCharacter.CharacterFactionManager.DispositionDictionary.Count; i++) {
-                page.factionDispositions.Add(playerManager.MyCharacter.CharacterFactionManager.DispositionDictionary[i]);
+            for (int i = 0; i < playerManager.UnitController.CharacterFactionManager.DispositionDictionary.Count; i++) {
+                page.factionDispositions.Add(playerManager.UnitController.CharacterFactionManager.DispositionDictionary[i]);
                 if (page.factionDispositions.Count == pageSize) {
                     pages.Add(page);
                     page = new FactionDispositionContentList();

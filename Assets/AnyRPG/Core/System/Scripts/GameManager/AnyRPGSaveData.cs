@@ -8,7 +8,7 @@ namespace AnyRPG {
     [Serializable]
     public class AnyRPGSaveData {
 
-        public int PlayerLevel;
+        public int PlayerLevel = 1;
         public int currentExperience;
 
         public string playerName = string.Empty;

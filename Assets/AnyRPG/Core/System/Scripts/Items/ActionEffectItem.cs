@@ -36,7 +36,7 @@ namespace AnyRPG {
             }
 
             // perform heal effect
-            abilityEffectProperties.Cast(playerManager.ActiveCharacter, playerManager.UnitController, null, null);
+            abilityEffectProperties.Cast(playerManager.ActiveUnitController, playerManager.UnitController, null, null);
 
             return returnValue;
 

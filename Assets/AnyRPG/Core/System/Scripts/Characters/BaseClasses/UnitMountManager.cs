@@ -101,16 +101,16 @@ namespace AnyRPG {
 
         public void ConfigureCharacterMountedPhysics() {
             unitController.RigidBody.WakeUp();
-            //playerManager.MyCharacter.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.Discrete;
+            //playerManager.UnitController.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.Discrete;
             // DO NOT EVER USE CONTINUOUS SPECULATIVE.  IT WILL MESS THINGS UP EVEN WHEN YOUR RIGIDBODY IS KINEMATIC
             // UNITY ERROR MESSAGE IS MISLEADING AND WRONG HERE....
-            //playerManager.MyCharacter.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+            //playerManager.UnitController.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
             unitController.RigidBody.interpolation = RigidbodyInterpolation.None;
             unitController.RigidBody.detectCollisions = false;
             unitController.RigidBody.isKinematic = true;
             unitController.RigidBody.useGravity = false;
             unitController.FreezeAll();
-            //playerManager.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.None;
+            //playerManager.UnitController.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.None;
 
             // TODO : should this just set to trigger instead so player go through portals and be attacked on mount?
             //playerManager.ActiveUnitController.Collider.enabled = false;
@@ -147,7 +147,7 @@ namespace AnyRPG {
                 }
                 */
                 unitController.UnitAnimator.SetRiding(false);
-                //playerManager.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);
+                //playerManager.UnitController.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);
 
                 unitController.UnitEventController.NotifyOnDeActivateMountedState();
             }
@@ -160,8 +160,8 @@ namespace AnyRPG {
                 mountUnitController = null;
                 mountUnitProfile = null;
             }
-            if (unitController?.CharacterUnit?.BaseCharacter?.CharacterCombat?.GetInCombat() == true) {
-                unitController?.UnitModelController?.HoldWeapons();
+            if (unitController.CharacterCombat.GetInCombat() == true) {
+                unitController.UnitModelController.HoldWeapons();
             }
         }
 

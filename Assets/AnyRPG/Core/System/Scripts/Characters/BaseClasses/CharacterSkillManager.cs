@@ -6,7 +6,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class CharacterSkillManager : ConfiguredClass {
 
-        private BaseCharacter baseCharacter;
+        UnitController unitController;
 
         private Dictionary<string, Skill> skillList = new Dictionary<string, Skill>();
 
@@ -17,8 +17,8 @@ namespace AnyRPG {
         public Dictionary<string, Skill> MySkillList { get => skillList; }
 
         //public List<string> MySkillList { get => skillList;}
-        public CharacterSkillManager(BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
-            this.baseCharacter = baseCharacter;
+        public CharacterSkillManager(UnitController unitController, SystemGameManager systemGameManager) {
+            this.unitController = unitController;
             Configure(systemGameManager);
         }
 
@@ -26,10 +26,6 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             playerManager = systemGameManager.PlayerManager;
             systemEventManager = systemGameManager.SystemEventManager;
-        }
-
-        public void Init() {
-            UpdateSkillList(baseCharacter.CharacterStats.Level);
         }
 
         public void UpdateSkillList(int newLevel) {
@@ -55,11 +51,11 @@ namespace AnyRPG {
             if (!skillList.ContainsValue(newSkill)) {
                 skillList[SystemDataUtility.PrepareStringForMatch(newSkill.ResourceName)] = newSkill;
                 foreach (BaseAbilityProperties ability in newSkill.AbilityList) {
-                    baseCharacter.CharacterAbilityManager.LearnAbility(ability);
+                    unitController.CharacterAbilityManager.LearnAbility(ability);
                 }
                 foreach (Recipe recipe in systemDataFactory.GetResourceList<Recipe>()) {
-                    if (baseCharacter.CharacterStats.Level >= recipe.RequiredLevel && recipe.AutoLearn == true && newSkill.AbilityList.Contains(recipe.CraftAbility)) {
-                        playerManager.MyCharacter.CharacterRecipeManager.LearnRecipe(recipe);
+                    if (unitController.CharacterStats.Level >= recipe.RequiredLevel && recipe.AutoLearn == true && newSkill.AbilityList.Contains(recipe.CraftAbility)) {
+                        playerManager.UnitController.CharacterRecipeManager.LearnRecipe(recipe);
                     }
                 }
 
@@ -85,7 +81,7 @@ namespace AnyRPG {
             if (skillList.ContainsValue(oldSkill)) {
                 skillList.Remove(SystemDataUtility.PrepareStringForMatch(oldSkill.ResourceName));
                 foreach (BaseAbilityProperties ability in oldSkill.AbilityList) {
-                    baseCharacter.CharacterAbilityManager.UnlearnAbility(ability);
+                    unitController.CharacterAbilityManager.UnlearnAbility(ability);
                 }
             }
         }

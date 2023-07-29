@@ -161,7 +161,7 @@ namespace AnyRPG {
             if (uIManager.vendorWindow.IsOpen == false) {
                 return;
             }
-            Dictionary<Currency, int> playerBaseCurrency = playerManager.MyCharacter.CharacterCurrencyManager.GetRedistributedCurrency();
+            Dictionary<Currency, int> playerBaseCurrency = playerManager.UnitController.CharacterCurrencyManager.GetRedistributedCurrency();
             if (playerBaseCurrency != null) {
                 //Debug.Log("VendorUI.UpdateCurrencyAmount(): " + playerBaseCurrency.Count);
                 KeyValuePair<Currency, int> keyValuePair = playerBaseCurrency.First();
@@ -225,7 +225,7 @@ namespace AnyRPG {
             }
             KeyValuePair<Currency, int> sellAmount = item.GetSellPrice();
 
-            playerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(sellAmount.Key, sellAmount.Value);
+            playerManager.UnitController.CharacterCurrencyManager.AddCurrency(sellAmount.Key, sellAmount.Value);
             AddToBuyBackCollection(item);
             item.Slot.RemoveItem(item);
 

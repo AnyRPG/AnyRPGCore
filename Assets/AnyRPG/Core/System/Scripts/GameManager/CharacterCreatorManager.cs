@@ -63,6 +63,7 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
         }
 
+        /*
         public void SpawnUnit(UnitProfile unitProfile) {
             //Debug.Log("CharacterCreatorManager.SpawnUnit(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ")");
 
@@ -72,8 +73,9 @@ namespace AnyRPG {
             }
             this.unitProfile = unitProfile;
 
-            SpawnUnit();
+            //SpawnUnit();
         }
+        */
 
         public void SetPlatformMaterial(Material material) {
             platformRenderer.material = material;

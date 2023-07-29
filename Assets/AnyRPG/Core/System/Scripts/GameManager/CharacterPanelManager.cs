@@ -57,10 +57,19 @@ namespace AnyRPG {
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn()");
             unitProfile = playerManager.ActiveUnitController.UnitProfile;
-            SpawnUnit();
+            CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(unitProfile);
+            // commented out these next two because they should have come from the unit profile
+            //characterConfigurationRequest.unitType = playerManager.UnitController.BaseCharacter.UnitType;
+            //characterConfigurationRequest.characterRace = playerManager.UnitController.BaseCharacter.CharacterRace;
+            characterConfigurationRequest.faction = playerManager.UnitController.BaseCharacter.Faction;
+            characterConfigurationRequest.characterClass = playerManager.UnitController.BaseCharacter.CharacterClass;
+            characterConfigurationRequest.classSpecialization = playerManager.UnitController.BaseCharacter.ClassSpecialization;
+            characterConfigurationRequest.unitLevel = playerManager.UnitController.CharacterStats.Level;
+
+            SpawnUnit(characterConfigurationRequest);
             systemEventManager.OnEquipmentChanged += HandleEquipmentChanged;
             playerManager.ActiveUnitController.UnitEventController.OnUnitTypeChange += HandleUnitTypeChange;
-            playerManager.ActiveUnitController.UnitEventController.OnRaceChange += HandleRaceChange;
+            //playerManager.ActiveUnitController.UnitEventController.OnRaceChange += HandleRaceChange;
             playerManager.ActiveUnitController.UnitEventController.OnFactionChange += HandleFactionChange;
             playerManager.ActiveUnitController.UnitEventController.OnClassChange += HandleClassChange;
             playerManager.ActiveUnitController.UnitEventController.OnSpecializationChange += HandleSpecializationChange;
@@ -69,34 +78,36 @@ namespace AnyRPG {
 
         public void HandleUnitTypeChange(UnitType newUnitType, UnitType oldUnitType) {
             //Debug.Log("CharacterPanelManager.HandleUnitTypeChange()");
-            unitController.CharacterUnit.BaseCharacter.SetUnitType(newUnitType, true, false, false);
+            unitController.BaseCharacter.ChangeUnitType(newUnitType);
         }
 
+        /*
         public void HandleRaceChange(CharacterRace newRace, CharacterRace oldRace) {
             //Debug.Log("CharacterPanelManager.HandleRaceChange()");
-            unitController.CharacterUnit.BaseCharacter.SetCharacterRace(newRace, true, false, false);
+            unitController.BaseCharacter.ChangeCharacterRace(newRace);
         }
+        */
 
         public void HandleFactionChange(Faction newFaction, Faction oldFaction) {
             //Debug.Log("CharacterPanelManager.HandleFactionChange()");
-            unitController.CharacterUnit.BaseCharacter.SetCharacterFaction(newFaction, true, false, false);
+            unitController.BaseCharacter.ChangeCharacterFaction(newFaction);
         }
 
         public void HandleClassChange(CharacterClass newClass, CharacterClass oldClass) {
             //Debug.Log("CharacterPanelManager.HandleClassChange()");
-            unitController.CharacterUnit.BaseCharacter.SetCharacterClass(newClass, true, false, false);
+            unitController.BaseCharacter.ChangeCharacterClass(newClass);
         }
 
         public void HandleSpecializationChange(ClassSpecialization newSpecialization, ClassSpecialization oldSpecialization) {
             //Debug.Log("CharacterPanelManager.HandleSpecializationChange()");
-            unitController.CharacterUnit.BaseCharacter.SetClassSpecialization(newSpecialization, true, false, false);
+            unitController.BaseCharacter.ChangeClassSpecialization(newSpecialization);
         }
 
         public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("CharacterPanel.HandlePlayerUnitDespawn()");
             systemEventManager.OnEquipmentChanged -= HandleEquipmentChanged;
             playerManager.ActiveUnitController.UnitEventController.OnUnitTypeChange -= HandleUnitTypeChange;
-            playerManager.ActiveUnitController.UnitEventController.OnRaceChange -= HandleRaceChange;
+            //playerManager.ActiveUnitController.UnitEventController.OnRaceChange -= HandleRaceChange;
             playerManager.ActiveUnitController.UnitEventController.OnFactionChange -= HandleFactionChange;
             playerManager.ActiveUnitController.UnitEventController.OnClassChange -= HandleClassChange;
             playerManager.ActiveUnitController.UnitEventController.OnSpecializationChange -= HandleSpecializationChange;
@@ -106,16 +117,16 @@ namespace AnyRPG {
         }
 
         public void HandleLevelChanged(int newLevel) {
-            unitController.CharacterUnit.BaseCharacter.CharacterStats.SetLevel(newLevel);
+            unitController.CharacterStats.SetLevel(newLevel);
         }
 
         public void HandleEquipmentChanged(Equipment newEquipment, Equipment oldEquipment) {
             //Debug.Log("CharacterPanelManager.HandleEquipmentChanged(" + (newEquipment == null ? "null" : newEquipment.DisplayName) + ", " + (oldEquipment == null ? "null" : oldEquipment.DisplayName) + ")");
             if (oldEquipment != null) {
-                unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.Unequip(oldEquipment);
+                unitController.CharacterEquipmentManager.Unequip(oldEquipment);
             }
             if (newEquipment != null) {
-                unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.Equip(newEquipment, null);
+                unitController.CharacterEquipmentManager.Equip(newEquipment, null);
             }
             //unitController.UnitModelController.BuildModelAppearance();
             unitController.UnitModelController.RebuildModelAppearance();
@@ -129,24 +140,16 @@ namespace AnyRPG {
         public void HandleTargetCreated() {
             //Debug.Log("CharacterPanel.HandleTargetCreated()");
             unitController?.UnitModelController.SetInitialSavedAppearance(saveManager.CurrentSaveData);
-            CharacterEquipmentManager characterEquipmentManager = unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
-
-            // providers need to be set or equipment won't be able to be equipped
-            unitController.CharacterUnit.BaseCharacter.SetUnitType(playerManager.MyCharacter.UnitType, true, false, false);
-            unitController.CharacterUnit.BaseCharacter.SetCharacterRace(playerManager.MyCharacter.CharacterRace, true, false, false);
-            unitController.CharacterUnit.BaseCharacter.SetCharacterFaction(playerManager.MyCharacter.Faction, true, false, false);
-            unitController.CharacterUnit.BaseCharacter.SetCharacterClass(playerManager.MyCharacter.CharacterClass, true, false, false);
-            unitController.CharacterUnit.BaseCharacter.SetClassSpecialization(playerManager.MyCharacter.ClassSpecialization, true, false, false);
-            unitController.CharacterUnit.BaseCharacter.CharacterStats.SetLevel(playerManager.MyCharacter.CharacterStats.Level);
+            CharacterEquipmentManager characterEquipmentManager = unitController.CharacterEquipmentManager;
 
             if (characterEquipmentManager != null) {
-                if (playerManager.MyCharacter?.CharacterEquipmentManager != null) {
+                if (playerManager.UnitController?.CharacterEquipmentManager != null) {
 
-                    //characterEquipmentManager.CurrentEquipment = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment;
+                    //characterEquipmentManager.CurrentEquipment = playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment;
                     // testing new code to avoid just making a pointer to the player gear, which results in equip/unequip not working properly
                     characterEquipmentManager.CurrentEquipment.Clear();
-                    foreach (EquipmentSlotProfile equipmentSlotProfile in playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Keys) {
-                        characterEquipmentManager.CurrentEquipment.Add(equipmentSlotProfile, playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
+                    foreach (EquipmentSlotProfile equipmentSlotProfile in playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment.Keys) {
+                        characterEquipmentManager.CurrentEquipment.Add(equipmentSlotProfile, playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
                     }
                 }
             } else {

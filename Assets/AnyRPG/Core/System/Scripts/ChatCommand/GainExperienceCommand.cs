@@ -48,7 +48,7 @@ namespace AnyRPG {
         private void AddExperience(int amount) {
             //Debug.Log("GainCurrencyCommand.AddCurrency(" + currency.DisplayName + ", " + amount + ")");
 
-            playerManager.ActiveCharacter.CharacterStats.GainXP(amount);
+            playerManager.UnitController.CharacterStats.GainXP(amount);
         }
 
     }

@@ -131,25 +131,25 @@ namespace AnyRPG {
 
             if (eventData.button == PointerEventData.InputButton.Left) {
                 //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED");
-                if (handScript.Moveable != null && handScript.Moveable is Bag && (playerManager.MyCharacter.CharacterInventoryManager.FromSlot != null || (handScript.Moveable as Bag).BagNode != null)) {
+                if (handScript.Moveable != null && handScript.Moveable is Bag && (playerManager.UnitController.CharacterInventoryManager.FromSlot != null || (handScript.Moveable as Bag).BagNode != null)) {
                     if (bagNode.Bag != null) {
                         // bag was moved from a bag bar slot to another bag bar slot with a bag in it, swap bags
-                        playerManager.MyCharacter.CharacterInventoryManager.SwapBags(BagNode.Bag, handScript.Moveable as Bag);
+                        playerManager.UnitController.CharacterInventoryManager.SwapBags(BagNode.Bag, handScript.Moveable as Bag);
                     } else {
                         Bag tmp = (Bag)handScript.Moveable;
                         if (tmp.BagNode != null) {
                             // bag was moved from a bag bar slot, to an empty bag bar slot, ensure there is enough space to remove bag from old slot before dropping in this slot
-                            if (playerManager.MyCharacter.CharacterInventoryManager.EmptySlotCount(tmp.BagNode.IsBankNode) - tmp.Slots >= 0) {
-                                playerManager.MyCharacter.CharacterInventoryManager.RemoveBag(tmp);
-                                playerManager.MyCharacter.CharacterInventoryManager.AddBag(tmp, bagNode);
+                            if (playerManager.UnitController.CharacterInventoryManager.EmptySlotCount(tmp.BagNode.IsBankNode) - tmp.Slots >= 0) {
+                                playerManager.UnitController.CharacterInventoryManager.RemoveBag(tmp);
+                                playerManager.UnitController.CharacterInventoryManager.AddBag(tmp, bagNode);
                                 handScript.Drop();
                             }
                         } else {
                             // bag came from an inventory slot
-                            playerManager.MyCharacter.CharacterInventoryManager.AddBag(tmp, bagNode);
+                            playerManager.UnitController.CharacterInventoryManager.AddBag(tmp, bagNode);
                             tmp.Remove();
                             handScript.Drop();
-                            playerManager.MyCharacter.CharacterInventoryManager.FromSlot = null;
+                            playerManager.UnitController.CharacterInventoryManager.FromSlot = null;
 
                         }
 
@@ -224,10 +224,10 @@ namespace AnyRPG {
             if (bagNode?.Bag == null) {
                 return;
             }
-            if (playerManager.MyCharacter.CharacterInventoryManager.EmptySlotCount((bagPanel is BankPanel)) - bagNode.Bag.Slots > 0) {
+            if (playerManager.UnitController.CharacterInventoryManager.EmptySlotCount((bagPanel is BankPanel)) - bagNode.Bag.Slots > 0) {
                 //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory. There is enough empty space.");
-                playerManager.MyCharacter.CharacterInventoryManager.AddItem(bagNode.Bag, (bagPanel is BankPanel));
-                playerManager.MyCharacter.CharacterInventoryManager.RemoveBag(bagNode.Bag);
+                playerManager.UnitController.CharacterInventoryManager.AddItem(bagNode.Bag, (bagPanel is BankPanel));
+                playerManager.UnitController.CharacterInventoryManager.RemoveBag(bagNode.Bag);
                 ShowGamepadTooltip();
             } else {
                 messageFeedManager.WriteMessage("Not enough free inventory slots");

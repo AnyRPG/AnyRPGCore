@@ -23,7 +23,8 @@ namespace AnyRPG {
         private bool windowOpened = false;
 
         // need a reference to the capabilityConsumer calling window to get Unit Profile
-        private ICapabilityConsumer capabilityConsumer = null;
+        //private ICapabilityConsumer capabilityConsumer = null;
+        private ICharacterConfigurationProvider characterConfigurationProvider = null;
 
         // game manager references
         private CharacterCreatorManager characterCreatorManager = null;
@@ -31,7 +32,7 @@ namespace AnyRPG {
 
         public CharacterPreviewCameraController PreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
         public bool CharacterReady { get => characterReady; }
-        public ICapabilityConsumer CapabilityConsumer { get => capabilityConsumer; set => capabilityConsumer = value; }
+        public ICharacterConfigurationProvider CharacterConfigurationProvider { get => characterConfigurationProvider; set => characterConfigurationProvider = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -84,14 +85,15 @@ namespace AnyRPG {
         private void SetPreviewTarget() {
             //Debug.Log("CharacterPreviewPanelController.SetPreviewTarget()");
             if (characterCreatorManager.PreviewUnitController != null
-                || capabilityConsumer == null
-                || capabilityConsumer.UnitProfile == null) {
+                || characterConfigurationProvider == null
+                //|| capabilityConsumer.UnitProfile == null
+                ) {
                 //Debug.Log("CharacterPreviewPanelController.SetPreviewTarget() character is already spawned!");
                 return;
             }
 
             //spawn correct preview unit
-            characterCreatorManager.SpawnUnit(capabilityConsumer.UnitProfile);
+            characterCreatorManager.SpawnUnit(characterConfigurationProvider.GetCharacterConfigurationRequest());
 
             if (cameraManager.CharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");

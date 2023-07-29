@@ -18,10 +18,10 @@ namespace AnyRPG {
 
         public List<CombatStrategyNode> PhaseNodes { get => phaseNodes; set => phaseNodes = value; }
 
-        public BaseAbilityProperties GetValidAbility(BaseCharacter sourceCharacter) {
+        public BaseAbilityProperties GetValidAbility(UnitController sourceCharacter) {
             List<BaseAbilityProperties> returnList = new List<BaseAbilityProperties>();
 
-            if (sourceCharacter != null && sourceCharacter.AbilityManager != null) {
+            if (sourceCharacter != null) {
                 //Debug.Log($"{gameObject.name}.AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
                 List<CombatStrategyNode> validPhaseNodes = GetValidPhaseNodes(sourceCharacter);
 
@@ -34,7 +34,7 @@ namespace AnyRPG {
                         if (sourceCharacter.AbilityManager.HasAbility(baseAbility)) {
                             if (!sourceCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataUtility.PrepareStringForMatch(baseAbility.GetAbilityEffects(sourceCharacter)[0].DisplayName))
                                 && sourceCharacter.AbilityManager.CanCastAbility(baseAbility)
-                                && baseAbility.CanUseOn(sourceCharacter.UnitController, sourceCharacter)) {
+                                && baseAbility.CanUseOn(sourceCharacter, sourceCharacter)) {
                                 return baseAbility;
                             }
                         }
@@ -44,8 +44,8 @@ namespace AnyRPG {
                     foreach (BaseAbilityProperties baseAbility in validPhaseNode.AttackAbilityList) {
                         if (sourceCharacter.AbilityManager.HasAbility(baseAbility)) {
                             if (sourceCharacter.AbilityManager.CanCastAbility(baseAbility)
-                                && baseAbility.CanUseOn(sourceCharacter.UnitController.Target, sourceCharacter)
-                                && sourceCharacter.AbilityManager.PerformLOSCheck(sourceCharacter.UnitController.Target, baseAbility)) {
+                                && baseAbility.CanUseOn(sourceCharacter.Target, sourceCharacter)
+                                && sourceCharacter.AbilityManager.PerformLOSCheck(sourceCharacter.Target, baseAbility)) {
                                 returnList.Add(baseAbility);
                             }
                         }
@@ -63,7 +63,7 @@ namespace AnyRPG {
 
         }
 
-        public BaseAbilityProperties GetMeleeAbility(BaseCharacter sourceCharacter) {
+        public BaseAbilityProperties GetMeleeAbility(UnitController sourceCharacter) {
 
             if (sourceCharacter != null && sourceCharacter.AbilityManager != null) {
                 //Debug.Log($"{gameObject.name}.AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
@@ -90,18 +90,18 @@ namespace AnyRPG {
 
         }
 
-        public void AttempStartPhase(BaseCharacter sourceCharacter, CombatStrategyNode validPhaseNode) {
-            if ((sourceCharacter.UnitController as UnitController).StartCombatPhase(validPhaseNode)) {
+        public void AttempStartPhase(UnitController sourceCharacter, CombatStrategyNode validPhaseNode) {
+            if (sourceCharacter.StartCombatPhase(validPhaseNode)) {
                 validPhaseNode.StartPhase();
             }
         }
 
-        public List<BaseAbilityProperties> GetAttackRangeAbilityList(BaseCharacter sourceCharacter) {
+        public List<BaseAbilityProperties> GetAttackRangeAbilityList(UnitController sourceCharacter) {
             //Debug.Log(sourceCharacter.gameObject.name + ".CombatStrategy.GetAttackRangeAbilityList()");
 
             List<BaseAbilityProperties> returnList = new List<BaseAbilityProperties>();
 
-            if (sourceCharacter != null && sourceCharacter.AbilityManager != null) {
+            if (sourceCharacter != null) {
                 //Debug.Log($"{gameObject.name}.AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
                 List<CombatStrategyNode> validPhaseNodes = GetValidPhaseNodes(sourceCharacter);
 
@@ -122,7 +122,7 @@ namespace AnyRPG {
 
         }
 
-        public List<CombatStrategyNode> GetValidPhaseNodes(BaseCharacter sourceCharacter) {
+        public List<CombatStrategyNode> GetValidPhaseNodes(UnitController sourceCharacter) {
             List<CombatStrategyNode> returnList = new List<CombatStrategyNode>();
             foreach (CombatStrategyNode phaseNode in phaseNodes) {
                 if (sourceCharacter != null && sourceCharacter.CharacterStats != null) {

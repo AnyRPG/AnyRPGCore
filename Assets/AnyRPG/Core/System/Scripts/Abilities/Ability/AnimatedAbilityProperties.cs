@@ -115,8 +115,8 @@ namespace AnyRPG {
         public override bool HadSpecialIcon(ActionButton actionButton) {
             if (systemConfigurationManager.AllowAutoAttack == true && IsAutoAttack == true) {
 
-                if (playerManager.MyCharacter.CharacterCombat.GetInCombat() == true
-                    && playerManager.MyCharacter.CharacterCombat.AutoAttackActive == true) {
+                if (playerManager.UnitController.CharacterCombat.GetInCombat() == true
+                    && playerManager.UnitController.CharacterCombat.AutoAttackActive == true) {
                     if (actionButton.CoolDownIcon.isActiveAndEnabled == false) {
                         actionButton.CoolDownIcon.enabled = true;
                     }
@@ -154,13 +154,13 @@ namespace AnyRPG {
             // auto-attack buttons are special and display the current weapon of the character
             if (IsAutoAttack == true) {
                 //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
-                foreach (EquipmentSlotProfile equipmentSlotProfile in playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Keys) {
+                foreach (EquipmentSlotProfile equipmentSlotProfile in playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment.Keys) {
                     //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
                     if (equipmentSlotProfile.MainWeaponSlot == true
-                        && playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile] != null
-                        && playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile] is Weapon) {
-                        if (actionButton.Icon.sprite != playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].Icon) {
-                            actionButton.Icon.sprite = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].Icon;
+                        && playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile] != null
+                        && playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile] is Weapon) {
+                        if (actionButton.Icon.sprite != playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].Icon) {
+                            actionButton.Icon.sprite = playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].Icon;
                             break;
                         }
                     }
@@ -242,15 +242,15 @@ namespace AnyRPG {
                     if (target != null) {
                         targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
                     }
-                    BaseCharacter targetBaseCharacter = null;
+                    UnitController targetUnitController = null;
                     if (targetCharacterUnit != null) {
-                        targetBaseCharacter = targetCharacterUnit.BaseCharacter;
+                        targetUnitController = targetCharacterUnit.UnitController;
                     }
 
                     int attackIndex = UnityEngine.Random.Range(0, usedAnimationClips.Count);
                     if (usedAnimationClips[attackIndex] != null) {
                         // perform the actual animation
-                        float animationLength = sourceCharacter.AbilityManager.PerformAnimatedAbility(usedAnimationClips[attackIndex], this, targetBaseCharacter, abilityEffectContext);
+                        float animationLength = sourceCharacter.AbilityManager.PerformAnimatedAbility(usedAnimationClips[attackIndex], this, targetUnitController, abilityEffectContext);
 
                         sourceCharacter.AbilityManager.ProcessAbilityCoolDowns(this, animationLength, abilityCoolDown);
                     }

@@ -542,8 +542,8 @@ namespace AnyRPG {
         public void HandleLevelChanged(int _level) {
             CalculateResourceColors();
             unitLevelText.text = _level.ToString();
-            if (playerManager.MyCharacter?.CharacterStats != null) {
-                unitLevelText.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, _level);
+            if (playerManager.UnitController?.CharacterStats != null) {
+                unitLevelText.color = LevelEquations.GetTargetColor(playerManager.UnitController.CharacterStats.Level, _level);
             }
         }
 

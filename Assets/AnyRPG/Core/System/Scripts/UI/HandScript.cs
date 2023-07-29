@@ -97,14 +97,14 @@ namespace AnyRPG {
         public void Drop() {
             //Debug.Log("HandScript.Drop()");
             ClearMoveable();
-            playerManager.MyCharacter.CharacterInventoryManager.FromSlot = null;
+            playerManager.UnitController.CharacterInventoryManager.FromSlot = null;
             actionBarManager.FromButton = null;
         }
 
         private void ClearMoveable() {
             //Debug.Log("HandScript.ClearMoveable()");
-            if (playerManager.MyCharacter.CharacterInventoryManager.FromSlot?.InventorySlot != null) {
-                playerManager.MyCharacter.CharacterInventoryManager.FromSlot.PutItemBack();
+            if (playerManager.UnitController.CharacterInventoryManager.FromSlot?.InventorySlot != null) {
+                playerManager.UnitController.CharacterInventoryManager.FromSlot.PutItemBack();
             }
             Moveable = null;
 
@@ -134,7 +134,7 @@ namespace AnyRPG {
                     // next we want to query the equipmentmanager on the charcter to see if he has an item in this items slot, and if it is the item we are dropping
                     // if it is, then we will unequip it, and then destroy it
                     if (item is Equipment) {
-                        playerManager.MyCharacter.CharacterEquipmentManager.Unequip(item as Equipment);
+                        playerManager.UnitController.CharacterEquipmentManager.Unequip(item as Equipment);
                         if (item.Slot != null) {
                             item.Slot.Clear();
                         }

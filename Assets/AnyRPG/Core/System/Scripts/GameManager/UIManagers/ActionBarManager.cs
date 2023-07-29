@@ -313,7 +313,7 @@ namespace AnyRPG {
             //Debug.Log("ActionBarmanager.UpdateTargetRange()");
             //float distanceToTarget = 0f;
             while (HasTarget()) {
-                if (playerManager.MyCharacter == null || playerManager.ActiveUnitController == null) {
+                if (playerManager.UnitController == null || playerManager.ActiveUnitController == null) {
                     break;
                 }
                 //Debug.Log("ActionBarmanager.UpdateTargetRange(): still have target at distance: " + distanceToTarget);
@@ -341,9 +341,9 @@ namespace AnyRPG {
 
         public void UpdateAbilityTargetRange(BaseAbilityProperties baseAbilityProperties, ActionButton actionButton) {
 
-            Interactable finalTarget = baseAbilityProperties.ReturnTarget(playerManager.MyCharacter, target, false);
+            Interactable finalTarget = baseAbilityProperties.ReturnTarget(playerManager.UnitController, target, false);
 
-            if (finalTarget == null || playerManager.MyCharacter.CharacterAbilityManager.IsTargetInRange(finalTarget, baseAbilityProperties) == false) {
+            if (finalTarget == null || playerManager.UnitController.CharacterAbilityManager.IsTargetInRange(finalTarget, baseAbilityProperties) == false) {
                 /*
                 if (actionButton.KeyBindText.color != Color.red) {
                     actionButton.KeyBindText.color = Color.red;
@@ -560,9 +560,9 @@ namespace AnyRPG {
                 return;
             }
             // TODO: set maximum size of loop to less of abilitylist count or button count
-            int abilityListCount = playerManager.MyCharacter.CharacterAbilityManager.AbilityList.Count;
+            int abilityListCount = playerManager.UnitController.CharacterAbilityManager.AbilityList.Count;
             //Debug.Log("Updating ability bar with " + abilityListCount.ToString() + " abilities");
-            foreach (BaseAbilityProperties newAbility in playerManager.MyCharacter.CharacterAbilityManager.AbilityList.Values) {
+            foreach (BaseAbilityProperties newAbility in playerManager.UnitController.CharacterAbilityManager.AbilityList.Values) {
                 AddNewAbility(newAbility);
             }
             abilityBarsPopulated = true;

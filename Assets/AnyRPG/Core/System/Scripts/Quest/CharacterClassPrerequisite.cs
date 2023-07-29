@@ -26,7 +26,7 @@ namespace AnyRPG {
 
         public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
-            bool checkResult = (playerManager.MyCharacter.CharacterClass == prerequisiteCharacterClass);
+            bool checkResult = (playerManager.UnitController.BaseCharacter.CharacterClass == prerequisiteCharacterClass);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
                 if (notify == true) {

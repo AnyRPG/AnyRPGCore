@@ -28,7 +28,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (baseController.CharacterUnit.BaseCharacter.CharacterAbilityManager.PerformingAnyAbility() == true) {
+            if (baseController.CharacterAbilityManager.PerformingAnyAbility() == true) {
                 //Debug.Log(baseController.gameObject.name + ".AttackState.Update() WaitingForAnimatedAbility is true");
                 // nothing to do, other attack or ability in progress
                 return;

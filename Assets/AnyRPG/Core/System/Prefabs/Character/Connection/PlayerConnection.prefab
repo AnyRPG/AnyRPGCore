@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2692339740015506124}
-  - component: {fileID: 1989923567832405290}
   - component: {fileID: 1250077380304456852}
   - component: {fileID: 2692339740015506112}
   - component: {fileID: 8825756018799624975}
@@ -30,23 +29,11 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1989923567832405290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2692339740015506113}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54ab02dbc88264e4992ae4c3e9e339f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  unitProfileName: 
 --- !u!114 &1250077380304456852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,6 +67,7 @@ MonoBehaviour:
   inputTurn: 0
   inputVertical: 0
   allowedInput: 1
+  autorunActive: 0
   canMove: 0
   canAction: 0
   NormalizedMoveInput: {x: 0, y: 0, z: 0}
@@ -106,10 +94,11 @@ MonoBehaviour:
   gravity: 50
   jumpAcceleration: 5
   jumpHeight: 3
-  currentMoveVelocity: {x: 0, y: 0, z: 0}
+  localMoveVelocity: {x: 0, y: 0, z: 0}
+  adjustedlocalMoveVelocity: {x: 0, y: 0, z: 0}
   currentTurnVelocity: {x: 0, y: 0, z: 0}
   rotationSpeed: 360
   inAirSpeed: 6
   stepHeight: 0.5
-  maxGroundAngle: 120
+  slopeLimit: 60
   debug: 1

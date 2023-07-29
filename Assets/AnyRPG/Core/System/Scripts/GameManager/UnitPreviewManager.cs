@@ -19,7 +19,8 @@ namespace AnyRPG {
                 return;
             }
 
-            SpawnUnit();
+            CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(unitProfile);
+            SpawnUnit(characterConfigurationRequest);
         }
 
 

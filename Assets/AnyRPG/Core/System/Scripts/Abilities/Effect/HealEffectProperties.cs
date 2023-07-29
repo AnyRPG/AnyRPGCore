@@ -39,7 +39,7 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".HealEffect.ProcessAbilityHit(" + (target == null ? "null" : target.gameObject.name) + ", " + finalAmount + ", " + source.AbilityManager.UnitGameObject.name + ")");
 
             abilityEffectContext.powerResource = powerResource;
-            bool returnValue = CharacterUnit.GetCharacterUnit(target).BaseCharacter.CharacterStats.RecoverResource(abilityEffectContext, powerResource, finalAmount, source, true, combatMagnitude);
+            bool returnValue = CharacterUnit.GetCharacterUnit(target).UnitController.CharacterStats.RecoverResource(abilityEffectContext, powerResource, finalAmount, source, true, combatMagnitude);
             if (returnValue == false) {
                 return false;
             }

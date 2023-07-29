@@ -25,7 +25,7 @@ namespace AnyRPG {
             List<Skill> returnList = new List<Skill>();
 
             foreach (Skill skill in skillTrainer.Props.Skills) {
-                if (!playerManager.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
+                if (!playerManager.UnitController.CharacterSkillManager.HasSkill(skill)) {
                     returnList.Add(skill);
                 }
             }
@@ -34,17 +34,17 @@ namespace AnyRPG {
         }
 
         public void LearnSkill(Skill skill) {
-            playerManager.MyCharacter.CharacterSkillManager.LearnSkill(skill);
+            playerManager.UnitController.CharacterSkillManager.LearnSkill(skill);
 
             ConfirmAction();
         }
 
         public void UnlearnSkill(Skill skill) {
-            playerManager.MyCharacter.CharacterSkillManager.UnlearnSkill(skill);
+            playerManager.UnitController.CharacterSkillManager.UnlearnSkill(skill);
         }
 
         public bool SkillIsKnown(Skill skill) {
-            return playerManager.MyCharacter.CharacterSkillManager.HasSkill(skill);
+            return playerManager.UnitController.CharacterSkillManager.HasSkill(skill);
         }
 
         public override void EndInteraction() {

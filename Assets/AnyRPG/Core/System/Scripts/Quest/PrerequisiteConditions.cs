@@ -108,7 +108,7 @@ namespace AnyRPG {
                 tempCount = 0;
                 foreach (IPrerequisite prerequisite in prerequisiteList) {
                     prerequisiteCount++;
-                    bool checkResult = prerequisite.IsMet(playerManager.MyCharacter);
+                    bool checkResult = prerequisite.IsMet(playerManager.UnitController.BaseCharacter);
                     if (requireAny && checkResult == true) {
                         returnValue = true;
                         break;

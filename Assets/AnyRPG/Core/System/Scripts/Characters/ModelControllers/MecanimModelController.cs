@@ -145,7 +145,7 @@ namespace AnyRPG {
                             LayerUtility.SetMeshRendererLayerRecursive(newEquipmentPrefab, equipmentLayer, setLayerIgnoreMask);
                         }
                         newEquipmentPrefab.transform.localScale = attachmentNode.HoldableObject.Scale;
-                        if (unitController?.CharacterUnit?.BaseCharacter.CharacterCombat != null && unitController?.CharacterUnit?.BaseCharacter.CharacterCombat.GetInCombat() == true) {
+                        if (unitController.CharacterCombat.GetInCombat() == true) {
                             HoldObject(newEquipmentPrefab, attachmentNode, unitController.gameObject);
                         } else {
                             SheathObject(newEquipmentPrefab, attachmentNode, unitController.gameObject);
@@ -211,9 +211,9 @@ namespace AnyRPG {
                 return attachmentPointNode;
             } else {
                 // find unit profile, find prefab profile, find universal attachment profile, find universal attachment node
-                if (unitController?.CharacterUnit?.BaseCharacter?.UnitProfile?.UnitPrefabProps?.AttachmentProfile != null) {
-                    if (unitController.CharacterUnit.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.PrimaryAttachmentName)) {
-                        return unitController.CharacterUnit.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary[attachmentNode.PrimaryAttachmentName];
+                if (unitController.UnitProfile?.UnitPrefabProps?.AttachmentProfile != null) {
+                    if (unitController.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.PrimaryAttachmentName)) {
+                        return unitController.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary[attachmentNode.PrimaryAttachmentName];
                     }
                 } else if (attachmentProfile != null) {
                     if (attachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.PrimaryAttachmentName)) {
@@ -240,9 +240,9 @@ namespace AnyRPG {
                 return attachmentPointNode;
             } else {
                 // find unit profile, find prefab profile, find universal attachment profile, find universal attachment node
-                if (unitController?.CharacterUnit?.BaseCharacter?.UnitProfile?.UnitPrefabProps?.AttachmentProfile != null) {
-                    if (unitController.CharacterUnit.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.UnsheathedAttachmentName)) {
-                        return unitController.CharacterUnit.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary[attachmentNode.UnsheathedAttachmentName];
+                if (unitController.UnitProfile?.UnitPrefabProps?.AttachmentProfile != null) {
+                    if (unitController.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.UnsheathedAttachmentName)) {
+                        return unitController.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary[attachmentNode.UnsheathedAttachmentName];
                     }
                 }
             }

@@ -36,7 +36,7 @@ namespace AnyRPG {
         AudioClip GetAnimatedAbilityHitSound();
 
         //Interactable ReturnTarget(AbilityEffect abilityEffect, Interactable target);
-        float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbilityProperties animatedAbility, BaseCharacter targetBaseCharacter, AbilityEffectContext abilityEffectContext);
+        float PerformAnimatedAbility(AnimationClip animationClip, AnimatedAbilityProperties animatedAbility, UnitController targetUnitController, AbilityEffectContext abilityEffectContext);
 
         void SetMountedState(UnitProfile mountUnitProfile);
 

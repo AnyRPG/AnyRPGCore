@@ -21,7 +21,7 @@ namespace AnyRPG {
             }
         }
 
-        public void UpdateKillCount(BaseCharacter character, float creditPercent) {
+        public void UpdateKillCount(UnitController unitController, float creditPercent) {
             //Debug.Log("KillObjective.UpdateKillCount()");
 
             bool completeBefore = IsComplete;
@@ -30,7 +30,7 @@ namespace AnyRPG {
             }
 
             // INVESTIGATE IF STRING MATCH CAN BE REPLACED WITH TYPE.GETTYPE DIRECT MATCH
-            if (character.GetType() == Type.GetType(targetName) || SystemDataUtility.MatchResource(character.CharacterName, targetName) || SystemDataUtility.MatchResource(character.Faction.ResourceName, targetName)) {
+            if (unitController.GetType() == Type.GetType(targetName) || SystemDataUtility.MatchResource(unitController.BaseCharacter.CharacterName, targetName) || SystemDataUtility.MatchResource(unitController.BaseCharacter.Faction.ResourceName, targetName)) {
                 CurrentAmount++;
                 questBase.CheckCompletion();
                 if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages && CurrentAmount != 0) {
@@ -47,13 +47,13 @@ namespace AnyRPG {
             base.OnAcceptQuest(quest, printMessages);
 
             // don't forget to remove these later
-            playerManager.MyCharacter.CharacterCombat.OnKillEvent += UpdateKillCount;
+            playerManager.UnitController.UnitEventController.OnKillEvent += UpdateKillCount;
         }
 
         public override void OnAbandonQuest() {
             base.OnAbandonQuest();
-            if (playerManager?.MyCharacter?.CharacterCombat != null) {
-                playerManager.MyCharacter.CharacterCombat.OnKillEvent -= UpdateKillCount;
+            if (playerManager?.UnitController?.CharacterCombat != null) {
+                playerManager.UnitController.UnitEventController.OnKillEvent -= UpdateKillCount;
             }
         }
 

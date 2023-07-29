@@ -85,13 +85,13 @@ namespace AnyRPG {
             Vector3 targetPosition = target.transform.position;
 
             CharacterUnit targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
-            targetCharacterUnit?.BaseCharacter?.CharacterAbilityManager?.TryToStopAnyAbility();
-            targetCharacterUnit?.BaseCharacter?.UnitController?.UnitActionManager?.TryToStopAction();
+            targetCharacterUnit?.UnitController.CharacterAbilityManager.TryToStopAnyAbility();
+            targetCharacterUnit?.UnitController.UnitActionManager.TryToStopAction();
 
             if (knockbackType == KnockbackType.Knockback) {
-                if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter.UnitController.UnitMotor != null) {
+                if (targetCharacterUnit != null && targetCharacterUnit.UnitController.UnitMotor != null) {
                     //Debug.Log("KnockBackEffect.Cast(): casting on character");
-                    targetCharacterUnit.BaseCharacter.UnitController.UnitMotor.Move(GetKnockBackVelocity(sourcePosition, targetPosition), true);
+                    targetCharacterUnit.UnitController.UnitMotor.Move(GetKnockBackVelocity(sourcePosition, targetPosition), true);
                 } else {
                     Rigidbody rigidbody = target.GetComponent<Rigidbody>();
                     if (rigidbody != null) {

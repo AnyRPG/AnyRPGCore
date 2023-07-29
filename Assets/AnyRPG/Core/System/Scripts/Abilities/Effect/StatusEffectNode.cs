@@ -15,7 +15,7 @@ namespace AnyRPG {
         private AbilityEffectContext abilityEffectContext = null;
 
         // the reference to the character stats this node sits on
-        private CharacterStats characterStats = null;
+        private UnitController unitController = null;
 
         // track state
         private int currentStacks = 1;
@@ -47,8 +47,8 @@ namespace AnyRPG {
         }
 
         //public void Setup(CharacterStats characterStats, StatusEffect _statusEffect, Coroutine newCoroutine) {
-        public void Setup(CharacterStats characterStats, StatusEffectProperties statusEffect, AbilityEffectContext abilityEffectContext) {
-            this.characterStats = characterStats;
+        public void Setup(UnitController unitController, StatusEffectProperties statusEffect, AbilityEffectContext abilityEffectContext) {
+            this.unitController = unitController;
             this.statusEffect = statusEffect;
             this.abilityEffectContext = abilityEffectContext;
             //this.monitorCoroutine = newCoroutine;
@@ -72,8 +72,8 @@ namespace AnyRPG {
         public void CancelStatusEffect() {
             //Debug.Log("StatusEffectNode.CancelStatusEffect(): " + StatusEffect.DisplayName);
             ClearEffectPrefabs();
-            StatusEffect.CancelEffect(characterStats.BaseCharacter);
-            characterStats.HandleStatusEffectRemoval(statusEffect);
+            StatusEffect.CancelEffect(unitController);
+            unitController.CharacterStats.HandleStatusEffectRemoval(statusEffect);
             ClearNodeScripts();
         }
 

@@ -112,7 +112,7 @@ namespace AnyRPG {
         protected bool disabled = false;
 
         // keep track of spawn requests so that they can be configured after spawning
-        private Dictionary<int, UnitSpawnNodeSpawnRequestData> spawnRequests = new Dictionary<int, UnitSpawnNodeSpawnRequestData>();
+        //private Dictionary<int, UnitSpawnNodeSpawnRequestData> spawnRequests = new Dictionary<int, UnitSpawnNodeSpawnRequestData>();
 
         private List<UnitController> spawnReferences = new List<UnitController>();
 
@@ -348,38 +348,31 @@ namespace AnyRPG {
             if (disabled == true) {
                 return;
             }
-            if (unitProfile == null || playerManager.MyCharacter == null) {
+            if (unitProfile == null || playerManager.UnitController == null) {
                 return;
             }
 
-            int _unitLevel = (dynamicLevel ? playerManager.MyCharacter.CharacterStats.Level : unitLevel) + extraLevels;
+            int _unitLevel = (dynamicLevel ? playerManager.UnitController.CharacterStats.Level : unitLevel) + extraLevels;
+            CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(unitProfile);
+            characterConfigurationRequest.unitLevel = _unitLevel;
+            characterConfigurationRequest.unitToughness = (toughness != null ? toughness : unitProfile.DefaultToughness);
+            characterConfigurationRequest.unitControllerMode = UnitControllerMode.AI;
             CharacterRequestData characterRequestData = new CharacterRequestData(this,
                 GameMode.Local, 
-                unitProfile,
-                UnitControllerMode.AI,
-                _unitLevel
+                characterConfigurationRequest
                 );
-            UnitController unitController = characterManager.SpawnUnitPrefab(characterRequestData,null, transform.position, transform.forward);
-            spawnRequests.Add(characterRequestData.spawnRequestId, new UnitSpawnNodeSpawnRequestData(toughness));
-
-            /*
-            if (unitController == null) {
-                // this unit was spawned over the network, and will get that function called 
-                return;
-            }
-
-            ConfigureSpawnedCharacter(unitController, characterRequestData);
-            */
+            UnitController unitController = characterManager.SpawnUnitPrefab(characterRequestData, null, transform.position, transform.forward);
+            //spawnRequests.Add(characterRequestData.spawnRequestId, new UnitSpawnNodeSpawnRequestData(toughness));
         }
 
         public void ConfigureSpawnedCharacter(UnitController unitController, CharacterRequestData characterRequestData) {
 
-            if (spawnRequests.ContainsKey(characterRequestData.spawnRequestId) == false) {
-                return;
-            }
-            UnitToughness toughness = spawnRequests[characterRequestData.spawnRequestId].unitToughness;
+            //if (spawnRequests.ContainsKey(characterRequestData.spawnRequestId) == false) {
+            //    return;
+            //}
+            //UnitToughness toughness = spawnRequests[characterRequestData.spawnRequestId].unitToughness;
             // clean up the unneeded request data
-            spawnRequests.Remove(characterRequestData.spawnRequestId);
+            //spawnRequests.Remove(characterRequestData.spawnRequestId);
 
             Vector3 newSpawnLocation = Vector3.zero;
             Vector3 newSpawnForward = Vector3.forward;
@@ -410,16 +403,10 @@ namespace AnyRPG {
 
 
             //Debug.Log("UnitSpawnNode.Spawn(): afterMove: navhaspath: " + navMeshAgent.hasPath + "; isOnNavMesh: " + navMeshAgent.isOnNavMesh + "; pathpending: " + navMeshAgent.pathPending);
-            CharacterUnit _characterUnit = null;
-            CharacterUnit tmpCharacterUnit = unitController.CharacterUnit;
-            if (tmpCharacterUnit == null) {
-                Debug.LogError("Interactable had no characterUnit");
-                return;
-            }
-            _characterUnit = tmpCharacterUnit;
+            CharacterUnit characterUnit = unitController.CharacterUnit;
 
             if (respawnOn == respawnCondition.Despawn) {
-                _characterUnit.OnDespawn += HandleDespawn;
+                characterUnit.OnDespawn += HandleDespawn;
             } else if (respawnOn == respawnCondition.Loot) {
                 LootableCharacterComponent tmpLootableCharacter = LootableCharacterComponent.GetLootableCharacterComponent(unitController);
                 if (tmpLootableCharacter != null) {
@@ -430,15 +417,16 @@ namespace AnyRPG {
                 }
 
             } else if (respawnOn == respawnCondition.Death) {
-                if (_characterUnit.BaseCharacter != null && _characterUnit.BaseCharacter.CharacterStats != null) {
-                    _characterUnit.BaseCharacter.CharacterStats.OnDie += HandleDie;
-                }
+                unitController.UnitEventController.OnBeforeDie += HandleDie;
             }
+            
+            /*
             // don't override an existing toughness
-            if (_characterUnit.BaseCharacter.UnitToughness == null && toughness != null) {
+            if (unitController.BaseCharacter.UnitToughness == null && toughness != null) {
                 //Debug.Log("UnitSpawnNode.Spawn(): setting toughness to null on gameObject: " + spawnReference.name);
-                _characterUnit.BaseCharacter.SetUnitToughness(toughness, true);
+                unitController.BaseCharacter.SetUnitToughness(toughness, true);
             }
+            */
             spawnReferences.Add(unitController);
         }
 
@@ -591,13 +579,13 @@ namespace AnyRPG {
             ProcessRespawn(unitController);
         }
 
-        public void HandleDie(CharacterStats characterStats) {
+        public void HandleDie(UnitController unitController) {
             //Debug.Log($"{gameObject.name}.UnitSpawnNode.HandleDie(): timer: " + respawnTimer);
             if (respawnOn != respawnCondition.Death) {
                 return;
             }
             // this works because unit spawn nodes do not spawn players.  If they ever do, this will need to reference stats->unit->gameobject instead
-            ProcessRespawn(characterStats.BaseCharacter.UnitController);
+            ProcessRespawn(unitController);
         }
 
         public void OnTriggerEnter(Collider other) {
@@ -675,12 +663,14 @@ namespace AnyRPG {
 
     }
 
+    /*
     public class UnitSpawnNodeSpawnRequestData {
         public UnitToughness unitToughness;
         public UnitSpawnNodeSpawnRequestData(UnitToughness unitToughness) {
             this.unitToughness = unitToughness;
         }
     }
+    */
 
     public enum respawnCondition { Despawn, Loot, Death };
 

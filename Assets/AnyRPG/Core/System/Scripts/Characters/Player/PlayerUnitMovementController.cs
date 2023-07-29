@@ -308,7 +308,7 @@ namespace AnyRPG {
         public void AnimatorMoveUpdate() {
             //If alive and is moving, set animator.
             if (useMeshNav == false
-                && playerManager?.MyCharacter?.CharacterStats?.IsAlive == true
+                && playerManager.ActiveUnitController?.CharacterStats.IsAlive == true
                 && playerManager?.PlayerController?.canMove == true) {
 
                 // handle movement
@@ -343,7 +343,7 @@ namespace AnyRPG {
             }
 
 
-            if (playerManager?.MyCharacter?.CharacterStats?.IsAlive == true && playerManager?.PlayerController?.canMove == true) {
+            if (playerManager.ActiveUnitController?.CharacterStats.IsAlive == true && playerManager.PlayerController?.canMove == true) {
                 // code to prevent turning when clicking on UI elements
                 // if (inputManager.rightMouseButtonDown && playerManager.PlayerController.HasMoveInput()
                 if (
@@ -390,7 +390,7 @@ namespace AnyRPG {
 
         public void CalculateFallDamage() {
             if (useFallDamage && currentFallDistance > fallDamageMinDistance) {
-                playerManager.ActiveCharacter.CharacterStats.TakeFallDamage(currentFallDistance * fallDamagePerMeter);
+                playerManager.ActiveUnitController.CharacterStats.TakeFallDamage(currentFallDistance * fallDamagePerMeter);
             }
             currentFallDistance = 0f;
         }

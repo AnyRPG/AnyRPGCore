@@ -88,8 +88,8 @@ namespace AnyRPG {
         public void EnableProjector(BaseAbilityProperties baseAbility) {
             //Debug.Log("CastTargettingmanager.EnableProjector()");
             castTargetController.gameObject.SetActive(true);
-            castTargetController.SetCircleColor((baseAbility.GetTargetOptions(playerManager.MyCharacter) as AbilityTargetProps).GroundTargetColor);
-            castTargetController.SetCircleRadius((baseAbility.GetTargetOptions(playerManager.MyCharacter) as AbilityTargetProps).GroundTargetRadius);
+            castTargetController.SetCircleColor((baseAbility.GetTargetOptions(playerManager.UnitController) as AbilityTargetProps).GroundTargetColor);
+            castTargetController.SetCircleRadius((baseAbility.GetTargetOptions(playerManager.UnitController) as AbilityTargetProps).GroundTargetRadius);
         }
 
         public bool ProjectorIsActive() {

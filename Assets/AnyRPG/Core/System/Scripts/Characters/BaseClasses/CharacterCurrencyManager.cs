@@ -7,7 +7,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class CharacterCurrencyManager : ConfiguredClass {
 
-        private BaseCharacter baseCharacter;
+        private UnitController unitController;
 
         private Dictionary<string, CurrencyNode> currencyList = new Dictionary<string, CurrencyNode>();
 
@@ -16,8 +16,8 @@ namespace AnyRPG {
 
         public Dictionary<string, CurrencyNode> CurrencyList { get => currencyList; }
 
-        public CharacterCurrencyManager (BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
-            this.baseCharacter = baseCharacter;
+        public CharacterCurrencyManager (UnitController unitController, SystemGameManager systemGameManager) {
+            this.unitController = unitController;
             Configure(systemGameManager);
         }
 

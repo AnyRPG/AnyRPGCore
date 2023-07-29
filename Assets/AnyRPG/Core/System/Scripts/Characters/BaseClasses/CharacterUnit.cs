@@ -16,18 +16,15 @@ namespace AnyRPG {
 
         private Coroutine despawnCoroutine = null;
 
-        private BaseCharacter baseCharacter = null;
         private UnitController unitController = null;
 
-        public override string DisplayName { get => (BaseCharacter != null ? BaseCharacter.CharacterName : interactableOptionProps.GetInteractionPanelTitle()); }
+        public override string DisplayName { get => unitController.BaseCharacter.CharacterName; }
         public override int PriorityValue { get => -1; }
-        public BaseCharacter BaseCharacter {
-            get => baseCharacter;
-        }
 
         protected float DespawnDelay { get => despawnDelay; set => despawnDelay = value; }
 
         public float HitBoxSize { get => hitBoxSize; set => hitBoxSize = value; }
+        public UnitController UnitController { get => unitController; }
 
         public CharacterUnit(UnitController unitController, InteractableOptionProps interactableOptionProps, SystemGameManager systemGameManager) : base(unitController, interactableOptionProps, systemGameManager) {
             this.unitController = unitController;
@@ -36,20 +33,14 @@ namespace AnyRPG {
             }
         }
 
-        public void SetBaseCharacter(BaseCharacter baseCharacter) {
-            Debug.Log(interactable.gameObject.name + ".CharacterUnit.SetBaseCharacter(" + (baseCharacter == null ? "null" : baseCharacter.gameObject.name) + ")");
-            this.baseCharacter = baseCharacter;
-
-        }
-
         public void SetCharacterStatsCapabilities() {
             // there are some properties that can come from buffs that we want to store on the unitController to avoid expensive lookups every frame
             // if this is a player those may have been saved in buffs from a loaded game before the actual unit spawn, so set them now
-            if (baseCharacter.CharacterStats.HasFlight() == true) {
-                baseCharacter.UnitController.CanFlyOverride = true;
+            if (unitController.CharacterStats.HasFlight() == true) {
+                unitController.CanFlyOverride = true;
             }
-            if (baseCharacter.CharacterStats.HasGlide() == true) {
-                baseCharacter.UnitController.CanGlideOverride = true;
+            if (unitController.CharacterStats.HasGlide() == true) {
+                unitController.CanGlideOverride = true;
             }
         }
 
@@ -59,18 +50,6 @@ namespace AnyRPG {
                 return null;
             }
             return searchInteractable.CharacterUnit;
-        }
-
-        public void EnableCollider() {
-            if (interactable.Collider != null) {
-                interactable.Collider.enabled = true;
-            }
-        }
-
-        public void DisableCollider() {
-            if (interactable.Collider != null) {
-                interactable.Collider.enabled = false;
-            }
         }
 
         public void HandleReviveComplete() {
@@ -96,7 +75,7 @@ namespace AnyRPG {
         /// <param name="targetCharacter"></param>
         /// <returns></returns>
         public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f, bool processNonCombatCheck = true) {
-            if (ProcessFactionValue(factionValue) == true && baseCharacter.CharacterStats.IsAlive == true) {
+            if (ProcessFactionValue(factionValue) == true && unitController.CharacterStats.IsAlive == true) {
                 //Debug.Log(source.name + " can interact with us!");
                 return true;
             }
@@ -107,12 +86,12 @@ namespace AnyRPG {
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(interactable.gameObject.name + ".CharacterUnit.Interact(" + source.DisplayName + ")");
 
-            float relationValue = interactable.PerformFactionCheck(playerManager.MyCharacter);
+            float relationValue = interactable.PerformFactionCheck(playerManager.UnitController);
             if (CanInteract(false, false, relationValue)) {
                 base.Interact(source, optionIndex);
 
                 // attempt to put the caster in combat so it can unsheath bows, wands, etc
-                source.BaseCharacter.CharacterCombat.Attack(baseCharacter, true);
+                source.UnitController.CharacterCombat.Attack(unitController, true);
 
                 uIManager.interactionWindow.CloseWindow();
                 return true;
@@ -150,19 +129,16 @@ namespace AnyRPG {
         }
 
         public override bool HasMainMapIcon() {
-            Debug.Log($"{baseCharacter.gameObject.name}.CharacterUnit.HasMainMapIcon()");
-            if (baseCharacter.UnitController == null) {
-                Debug.Log($"{baseCharacter.gameObject.name}.CharacterUnit.HasMainMapIcon() baseCharacter.unitController is null");
-            }
-            if (baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
+            //Debug.Log($"{baseCharacter.gameObject.name}.CharacterUnit.HasMainMapIcon()");
+            if (unitController.UnitControllerMode == UnitControllerMode.Player) {
                 return true;
             }
             return base.HasMainMapIcon();
         }
 
         public override Color GetMiniMapIconColor() {
-            if (baseCharacter != null && baseCharacter != playerManager.MyCharacter) {
-                return Faction.GetFactionColor(playerManager, playerManager.MyCharacter, baseCharacter);
+            if (unitController != playerManager.UnitController) {
+                return Faction.GetFactionColor(playerManager, playerManager.UnitController, unitController);
             }
 
             return base.GetMiniMapIconColor();
@@ -205,12 +181,12 @@ namespace AnyRPG {
                 }
             }
 
-            if ((baseCharacter.CharacterStats.IsAlive == false && baseCharacter.CharacterStats.IsReviving == false) || forceDespawn == true) {
+            if ((unitController.CharacterStats.IsAlive == false && unitController.CharacterStats.IsReviving == false) || forceDespawn == true) {
                 //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): despawning");
                 // this character could have been ressed while waiting to despawn.  don't let it despawn if that happened unless forceDesapwn is true (such as at the end of a patrol)
                 // we are going to send this ondespawn call now to allow another unit to respawn from a spawn node without a long wait during events that require rapid mob spawning
-                OnDespawn(baseCharacter.UnitController);
-                baseCharacter.UnitController.Despawn();
+                OnDespawn(unitController);
+                unitController.Despawn();
             } else {
                 //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): unit is alive or reviving !! NOT DESPAWNING");
             }
@@ -233,7 +209,7 @@ namespace AnyRPG {
         // CHARACTER UNIT ALIVE IS ALWAYS VALID AND CURRENT TO ALLOW ATTACKS
         public override int GetValidOptionCount() {
             //Debug.Log($"{gameObject.name}.CharacterUnit.GetValidOptionCount()");
-            return (BaseCharacter.CharacterStats.IsAlive == true ? 1 : 0);
+            return (unitController.CharacterStats.IsAlive == true ? 1 : 0);
         }
 
         public override int GetCurrentOptionCount() {

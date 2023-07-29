@@ -48,7 +48,7 @@ namespace AnyRPG {
         private void LearnAbility(string abilityName) {
             BaseAbility tmpAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
             if (tmpAbility != null) {
-                playerManager.ActiveCharacter.CharacterAbilityManager.LearnAbility(tmpAbility.AbilityProperties);
+                playerManager.UnitController.CharacterAbilityManager.LearnAbility(tmpAbility.AbilityProperties);
             }
         }
 

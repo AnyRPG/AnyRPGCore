@@ -7,10 +7,9 @@ using UnityEngine;
 namespace AnyRPG {
     public class CharacterEquipmentManager : EquipmentManager {
 
-        public System.Action<Equipment, Equipment, int> OnEquipmentChanged = delegate { };
 
         // component references
-        protected BaseCharacter baseCharacter = null;
+        protected UnitController unitController = null;
 
         //protected EquipmentManager equipmentManager = null;
 
@@ -25,8 +24,8 @@ namespace AnyRPG {
         public List<AbilityAttachmentNode> WeaponAbilityAnimationObjects { get => weaponAbilityAnimationObjects; }
         public List<AbilityAttachmentNode> WeaponAbilityObjects { get => weaponAbilityObjects; }
 
-        public CharacterEquipmentManager(BaseCharacter baseCharacter, SystemGameManager systemGameManager) : base(systemGameManager) {
-            this.baseCharacter = baseCharacter;
+        public CharacterEquipmentManager(UnitController unitController, SystemGameManager systemGameManager) : base(systemGameManager) {
+            this.unitController = unitController;
             //Configure(systemGameManager);
 
             //equipmentManager = new EquipmentManager(systemGameManager);
@@ -35,7 +34,7 @@ namespace AnyRPG {
         public void HandleCapabilityConsumerChange() {
             List<Equipment> equipmentToRemove = new List<Equipment>();
             foreach (Equipment equipment in CurrentEquipment.Values) {
-                if (equipment != null && equipment.CanEquip(baseCharacter) == false) {
+                if (equipment != null && equipment.CanEquip(unitController) == false) {
                     equipmentToRemove.Add(equipment);
                 }
             }
@@ -43,15 +42,13 @@ namespace AnyRPG {
                 foreach (Equipment equipment in equipmentToRemove) {
                     Unequip(equipment);
                 }
-                if (baseCharacter.UnitController != null) {
-                    baseCharacter.UnitController.UnitModelController.RebuildModelAppearance();
-                }
+                unitController.UnitModelController.RebuildModelAppearance();
             }
 
             // since all status effects were cancelled on the change, it is necessary to re-apply set bonuses
             foreach (Equipment equipment in CurrentEquipment.Values) {
                 if (equipment != null) {
-                    baseCharacter.CharacterAbilityManager.UpdateEquipmentTraits(equipment);
+                    unitController.CharacterAbilityManager.UpdateEquipmentTraits(equipment);
                 }
             }
         }
@@ -60,7 +57,7 @@ namespace AnyRPG {
             float returnValue = 0f;
             foreach (EquipmentSlotProfile equipmentSlotProfile in CurrentEquipment.Keys) {
                 if (CurrentEquipment[equipmentSlotProfile] != null && CurrentEquipment[equipmentSlotProfile] is Weapon) {
-                    returnValue += (CurrentEquipment[equipmentSlotProfile] as Weapon).GetDamagePerSecond(baseCharacter.CharacterStats.Level);
+                    returnValue += (CurrentEquipment[equipmentSlotProfile] as Weapon).GetDamagePerSecond(unitController.CharacterStats.Level);
                 }
             }
             return returnValue;
@@ -72,39 +69,39 @@ namespace AnyRPG {
         public void LoadDefaultEquipment(bool loadProviderEquipment) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment(" + loadProviderEquipment + ")");
 
-            if (baseCharacter?.UnitProfile?.EquipmentList == null) {
+            if (unitController?.UnitProfile?.EquipmentList == null) {
                 return;
             }
 
             // load the unit profile equipment
-            foreach (Equipment equipment in baseCharacter.UnitProfile.EquipmentList) {
+            foreach (Equipment equipment in unitController.UnitProfile.EquipmentList) {
                 if (equipment != null) {
                     Equip(equipment, null);
                 }
             }
 
-            if (loadProviderEquipment == false || baseCharacter.UnitProfile.UseProviderEquipment == false) {
+            if (loadProviderEquipment == false || unitController.UnitProfile.UseProviderEquipment == false) {
                 return;
             }
 
-            if (baseCharacter.Faction != null) {
-                foreach (Equipment equipment in baseCharacter.Faction.EquipmentList) {
+            if (unitController.BaseCharacter.Faction != null) {
+                foreach (Equipment equipment in unitController.BaseCharacter.Faction.EquipmentList) {
                     Equip(equipment, null);
                 }
             }
 
-            if (baseCharacter.CharacterRace != null) {
-                foreach (Equipment equipment in baseCharacter.CharacterRace.EquipmentList) {
+            if (unitController.BaseCharacter.CharacterRace != null) {
+                foreach (Equipment equipment in unitController.BaseCharacter.CharacterRace.EquipmentList) {
                     Equip(equipment, null);
                 }
             }
 
-            if (baseCharacter.CharacterClass != null) {
-                foreach (Equipment equipment in baseCharacter.CharacterClass.EquipmentList) {
+            if (unitController.BaseCharacter.CharacterClass != null) {
+                foreach (Equipment equipment in unitController.BaseCharacter.CharacterClass.EquipmentList) {
                     Equip(equipment, null);
                 }
-                if (baseCharacter.ClassSpecialization != null) {
-                    foreach (Equipment equipment in baseCharacter.ClassSpecialization.EquipmentList) {
+                if (unitController.BaseCharacter.ClassSpecialization != null) {
+                    foreach (Equipment equipment in unitController.BaseCharacter.ClassSpecialization.EquipmentList) {
                         Equip(equipment, null);
                     }
                 }
@@ -121,11 +118,11 @@ namespace AnyRPG {
             }
 
             if (newItem.EquipmentSlotType == null) {
-                Debug.LogError(baseCharacter.gameObject.name + "CharacterEquipmentManager.Equip() " + newItem.ResourceName + " could not be equipped because it had no equipment slot.  CHECK INSPECTOR.");
+                Debug.LogError(unitController.gameObject.name + "CharacterEquipmentManager.Equip() " + newItem.ResourceName + " could not be equipped because it had no equipment slot.  CHECK INSPECTOR.");
                 return false;
             }
 
-            if (newItem.CanEquip(baseCharacter) == false) {
+            if (newItem.CanEquip(unitController) == false) {
                 //Debug.Log(baseCharacter.gameObject.name + "CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.DisplayName : "null") + "; could not equip");
                 return false;
             }
@@ -134,7 +131,7 @@ namespace AnyRPG {
             equipmentSlotProfile = base.EquipEquipment(newItem, equipmentSlotProfile);
 
             if (equipmentSlotProfile == null) {
-                Debug.LogError(baseCharacter.gameObject.name + "CharacterEquipmentManager.Equip() " + newItem.ResourceName + " equipmentSlotProfile is null.  CHECK INSPECTOR.");
+                Debug.LogError(unitController.gameObject.name + "CharacterEquipmentManager.Equip() " + newItem.ResourceName + " equipmentSlotProfile is null.  CHECK INSPECTOR.");
                 return false;
             }
 
@@ -192,15 +189,13 @@ namespace AnyRPG {
         public void NotifyEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex, EquipmentSlotProfile equipmentSlotProfile) {
             HandleWeaponHoldableObjects(newItem, oldItem);
             //OnEquipmentChanged(newItem, oldItem, slotIndex);
-            baseCharacter.CharacterStats.HandleEquipmentChanged(newItem, oldItem, slotIndex);
-            baseCharacter.CharacterCombat.HandleEquipmentChanged(newItem, oldItem, slotIndex, equipmentSlotProfile);
-            baseCharacter.CharacterAbilityManager.HandleEquipmentChanged(newItem, oldItem, slotIndex);
-            if (baseCharacter.UnitController != null) {
-                baseCharacter.UnitController.UnitAnimator.HandleEquipmentChanged(newItem, oldItem, slotIndex);
-            }
+            unitController.CharacterStats.HandleEquipmentChanged(newItem, oldItem, slotIndex);
+            unitController.CharacterCombat.HandleEquipmentChanged(newItem, oldItem, slotIndex, equipmentSlotProfile);
+            unitController.CharacterAbilityManager.HandleEquipmentChanged(newItem, oldItem, slotIndex);
+            unitController.UnitAnimator.HandleEquipmentChanged(newItem, oldItem, slotIndex);
 
             // now that all stats have been recalculated, it's safe to fire this event, so things that listen will show the correct values
-            OnEquipmentChanged(newItem, oldItem, slotIndex);
+            unitController.UnitEventController.OnEquipmentChanged(newItem, oldItem, slotIndex);
         }
 
         /*
@@ -256,7 +251,7 @@ namespace AnyRPG {
             if (weaponCount == 0) {
                 // there are no weapons equipped
                 // check if the character class is set and contains a weapon skill that is considered to be active when no weapon is equipped
-                if (weaponAffinity.WeaponSkillProps.DefaultWeaponSkill && baseCharacter.CapabilityConsumerProcessor.IsWeaponSkillSupported(weaponAffinity)) {
+                if (weaponAffinity.WeaponSkillProps.DefaultWeaponSkill && unitController.BaseCharacter.CapabilityConsumerProcessor.IsWeaponSkillSupported(weaponAffinity)) {
                     return true;
                 }
             }

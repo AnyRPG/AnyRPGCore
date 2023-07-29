@@ -602,7 +602,6 @@ namespace AnyRPG {
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.StartListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
             SystemEventManager.StartListening("OnBeforePlayerConnectionSpawn", HandleBeforePlayerConnectionSpawn);
-            SystemEventManager.StartListening("OnPlayerConnectionSpawn", HandlePlayerConnectionSpawn);
             SystemEventManager.StartListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
             eventSubscriptionsInitialized = true;
         }
@@ -617,7 +616,6 @@ namespace AnyRPG {
             SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
             //SystemEventManager.StopListening("OnPlayerUnitSpawn", HandleMainCamera);
             SystemEventManager.StopListening("OnBeforePlayerConnectionSpawn", HandleBeforePlayerConnectionSpawn);
-            SystemEventManager.StopListening("OnPlayerConnectionSpawn", HandlePlayerConnectionSpawn);
             SystemEventManager.StopListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
             eventSubscriptionsInitialized = false;
         }
@@ -751,7 +749,7 @@ namespace AnyRPG {
                 CloseSystemPopupWindows();
 
                 // do not allow accidentally closing this while dead
-                if (playerManager.PlayerUnitSpawned == true && playerManager.MyCharacter.CharacterStats.IsAlive != false) {
+                if (playerManager.PlayerUnitSpawned == true && playerManager.UnitController.CharacterStats.IsAlive != false) {
                     playerOptionsMenuWindow.CloseWindow();
                 }
             }
@@ -962,18 +960,13 @@ namespace AnyRPG {
             systemEventManager.OnAbilityListChanged += HandleAbilityListChanged;
         }
 
-        public void HandlePlayerConnectionSpawn(string eventName, EventParamProperties eventParamProperties) {
-            SetupDeathPopup();
-        }
-
         public void HandlePlayerConnectionDespawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("UIManager.HandlePlayerConnectionDespawn()");
-            RemoveDeathPopup();
 
             systemEventManager.OnAbilityListChanged -= HandleAbilityListChanged;
         }
 
-        public void PlayerDeathHandler(CharacterStats characterStats) {
+        public void PlayerDeathHandler(UnitController unitController) {
             //Debug.Log("PopupWindowManager.PlayerDeathHandler()");
             StartCoroutine(PerformDeathWindowDelay());
         }
@@ -985,16 +978,6 @@ namespace AnyRPG {
                 timeCount += Time.deltaTime;
             }
             playerOptionsMenuWindow.OpenWindow();
-        }
-
-        public void SetupDeathPopup() {
-            //Debug.Log("PopupWindowmanager.SetupDeathPopup()");
-            playerManager.MyCharacter.CharacterStats.OnDie += PlayerDeathHandler;
-        }
-
-        public void RemoveDeathPopup() {
-            //Debug.Log("PopupWindowmanager.RemoveDeathPopup()");
-            playerManager.MyCharacter.CharacterStats.OnDie -= PlayerDeathHandler;
         }
 
         public void ProcessPlayerUnitSpawn() {

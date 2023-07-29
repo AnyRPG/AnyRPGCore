@@ -75,10 +75,10 @@ namespace AnyRPG {
         // specialization is a special type of prerequisite
         public override bool PrerequisitesMet {
             get {
-                if (playerManager.MyCharacter.ClassSpecialization == Props.ClassSpecialization) {
+                if (playerManager.UnitController.BaseCharacter.ClassSpecialization == Props.ClassSpecialization) {
                     return false;
                 }
-                if (Props.ClassSpecialization.CharacterClasses.Contains(playerManager.MyCharacter.CharacterClass) == false) {
+                if (Props.ClassSpecialization.CharacterClasses.Contains(playerManager.UnitController.BaseCharacter.CharacterClass) == false) {
                     return false;
                 }
                 return base.PrerequisitesMet;

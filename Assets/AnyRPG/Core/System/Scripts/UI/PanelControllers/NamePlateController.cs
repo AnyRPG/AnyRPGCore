@@ -317,9 +317,9 @@ namespace AnyRPG {
         public void HandleResourceAmountChanged(PowerResource powerResource, int currentHealth, int maxHealth) {
             //Debug.Log(unitNamePlateController.NamePlateUnit.gameObject.name + ".CharacterUnit.HandleResourceAmountChanged(" + currentHealth + ", " + maxHealth + ")");
             if (unitNamePlateController.HasHealth()
-                && (unitNamePlateController as UnitNamePlateController).UnitController.CharacterUnit.BaseCharacter != null
-                && (unitNamePlateController as UnitNamePlateController).UnitController.CharacterUnit.BaseCharacter.CharacterStats != null
-                && (unitNamePlateController as UnitNamePlateController).UnitController.CharacterUnit.BaseCharacter.CharacterStats.PrimaryResource == powerResource) {
+                && (unitNamePlateController as UnitNamePlateController).UnitController.BaseCharacter != null
+                && (unitNamePlateController as UnitNamePlateController).UnitController.CharacterStats != null
+                && (unitNamePlateController as UnitNamePlateController).UnitController.CharacterStats.PrimaryResource == powerResource) {
                 ProcessHealthChanged(currentHealth, maxHealth);
             }
         }
@@ -332,9 +332,9 @@ namespace AnyRPG {
             //Debug.Log(unitNamePlateController.UnitDisplayName + ".NamePlateController.CheckForDisableHealthBar()");
             if (unitNamePlateController.HasHealth() && isPlayerUnitNamePlate) {
                 //Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  CHECK IF MAX HEALTH: ");
-                if (playerManager != null && playerManager.MyCharacter != null && playerManager.MyCharacter.CharacterStats != null) {
-                    //Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  ABOUT TO CHECK PRIMARY RESOURCE: hidebar: " + PlayerPrefs.GetInt("HideFullHealthBar") + " current: " + playerManager.MyCharacter.CharacterStats.CurrentPrimaryResource + "; max: " + playerManager.MyCharacter.CharacterStats.MaxPrimaryResource);
-                    if (playerManager.MyCharacter.CharacterStats.CurrentPrimaryResource == playerManager.MyCharacter.CharacterStats.MaxPrimaryResource && PlayerPrefs.GetInt("HideFullHealthBar") == 1) {
+                if (playerManager != null && playerManager.UnitController != null && playerManager.UnitController.CharacterStats != null) {
+                    //Debug.Log("CheckForDisableHealthBar() THIS IS THE PLAYER UNIT NAMEPLATE.  ABOUT TO CHECK PRIMARY RESOURCE: hidebar: " + PlayerPrefs.GetInt("HideFullHealthBar") + " current: " + playerManager.UnitController.CharacterStats.CurrentPrimaryResource + "; max: " + playerManager.UnitController.CharacterStats.MaxPrimaryResource);
+                    if (playerManager.UnitController.CharacterStats.CurrentPrimaryResource == playerManager.UnitController.CharacterStats.MaxPrimaryResource && PlayerPrefs.GetInt("HideFullHealthBar") == 1) {
                         DisableHealthBar();
                         return;
                     }
@@ -453,7 +453,7 @@ namespace AnyRPG {
                 return;
             }
             // the last condition was preventing inanimate units from setting their nameplate name color properly
-            if (unitNamePlateController == null || playerManager.MyCharacter == null) {
+            if (unitNamePlateController == null || playerManager.UnitController == null) {
                 //Debug.Log(namePlateUnit.DisplayName + "NamePlateController.SetFactionColor() characterunit or player instance is null. returning!");
                 return;
             }

@@ -98,7 +98,7 @@ namespace AnyRPG {
                 qs.Text.text += "\n<size=12>" + quest.GetUnformattedObjectiveList() + "</size>";
 
                 //Debug.Log("QuestTrackerUI.ShowQuestsCommon(" + questGiver.name + "): " + questNode.MyQuest.MyTitle);
-                qs.Text.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, quest.ExperienceLevel);
+                qs.Text.color = LevelEquations.GetTargetColor(playerManager.UnitController.CharacterStats.Level, quest.ExperienceLevel);
                 //quests.Add(go);
                 questScripts.Add(qs);
                 uINavigationControllers[0].AddActiveButton(qs);

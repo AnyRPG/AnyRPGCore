@@ -127,7 +127,7 @@ namespace AnyRPG {
             get => true;
         }
 
-        public virtual int ExperienceLevel { get => ((dynamicLevel == true ? playerManager.MyCharacter.CharacterStats.Level : experienceLevel) + extraLevels); }
+        public virtual int ExperienceLevel { get => ((dynamicLevel == true ? playerManager.UnitController.CharacterStats.Level : experienceLevel) + extraLevels); }
 
         public virtual List<Item> ItemRewards { get => itemRewardList; }
         public virtual List<FactionNode> FactionRewards { get => factionRewards; }
@@ -233,7 +233,7 @@ namespace AnyRPG {
         }
 
         protected override Color GetTitleColor() {
-            return LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, ExperienceLevel);
+            return LevelEquations.GetTargetColor(playerManager.UnitController.CharacterStats.Level, ExperienceLevel);
         }
 
         protected override void ProcessAcceptQuest() {

@@ -34,7 +34,7 @@ namespace AnyRPG {
 
         public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
-            bool checkResult = (Faction.RelationWith(playerManager.MyCharacter, prerequisiteFaction) >= prerequisiteDisposition);
+            bool checkResult = (Faction.RelationWith(playerManager.UnitController, prerequisiteFaction) >= prerequisiteDisposition);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
                 if (notify == true) {

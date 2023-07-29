@@ -39,7 +39,7 @@ namespace AnyRPG {
 
         public bool IsDead {
             get {
-                if (unitController.CharacterUnit.BaseCharacter.CharacterStats.IsAlive == false) {
+                if (unitController.CharacterStats.IsAlive == false) {
                     return true;
                 }
                 return false;
@@ -68,9 +68,9 @@ namespace AnyRPG {
                 return attachmentPointNode;
             } else {
                 // find unit profile, find prefab profile, find universal attachment profile, find universal attachment node
-                if (unitController.CharacterUnit.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile != null) {
-                    if (unitController.CharacterUnit.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.AttachmentName)) {
-                        return unitController.CharacterUnit.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary[attachmentNode.AttachmentName];
+                if (unitController.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile != null) {
+                    if (unitController.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary.ContainsKey(attachmentNode.AttachmentName)) {
+                        return unitController.BaseCharacter.UnitProfile.UnitPrefabProps.AttachmentProfile.AttachmentPointDictionary[attachmentNode.AttachmentName];
                     }
                 }
             }
@@ -180,8 +180,8 @@ namespace AnyRPG {
 
         public AnimationProps GetUnitAnimationProps() {
             //Debug.Log($"{gameObject.name}.GetDefaultAttackAnimations()");
-            if (unitController.CharacterUnit.BaseCharacter.UnitProfile?.UnitPrefabProps?.AnimationProps != null) {
-                return unitController.CharacterUnit.BaseCharacter.UnitProfile.UnitPrefabProps.AnimationProps;
+            if (unitController.BaseCharacter.UnitProfile?.UnitPrefabProps?.AnimationProps != null) {
+                return unitController.BaseCharacter.UnitProfile.UnitPrefabProps.AnimationProps;
             }
             if (systemConfigurationManager.DefaultAnimationProfile != null) {
                 return systemConfigurationManager.DefaultAnimationProfile.AnimationProps;
@@ -407,14 +407,14 @@ namespace AnyRPG {
         }
 
         private bool NotCasting() {
-            if (unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.PerformingAnyAbility() == true) {
+            if (unitController.CharacterAbilityManager.PerformingAnyAbility() == true) {
                 return false;
             }
             return true;
         }
 
         private bool NotDead() {
-            if (!unitController.CharacterUnit.BaseCharacter.CharacterStats.IsAlive) {
+            if (!unitController.CharacterStats.IsAlive) {
                 return false;
             }
             return true;

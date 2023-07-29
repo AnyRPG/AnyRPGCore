@@ -122,13 +122,13 @@ namespace AnyRPG {
 
         protected bool CanAfford() {
             if (buyBackButton == false) {
-                if (currencyConverter.GetBaseCurrencyAmount(vendorItem.Item.Currency, vendorItem.BuyPrice()) <= playerManager.MyCharacter.CharacterCurrencyManager.GetBaseCurrencyValue(vendorItem.Item.Currency)) {
+                if (currencyConverter.GetBaseCurrencyAmount(vendorItem.Item.Currency, vendorItem.BuyPrice()) <= playerManager.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(vendorItem.Item.Currency)) {
                     return true;
                 }
                 return false;
             }
 
-            if (vendorItem.Item.GetSellPrice().Value <= playerManager.MyCharacter.CharacterCurrencyManager.GetBaseCurrencyValue(vendorItem.Item.Currency)) {
+            if (vendorItem.Item.GetSellPrice().Value <= playerManager.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(vendorItem.Item.Currency)) {
                 return true;
             }
             return false;
@@ -161,9 +161,9 @@ namespace AnyRPG {
                     //Debug.Log("Instantiated an item with id: " + tmpItem.GetInstanceID().ToString());
                 }
 
-                if (playerManager.MyCharacter.CharacterInventoryManager.AddItem(tmpItem, false)) {
+                if (playerManager.UnitController.CharacterInventoryManager.AddItem(tmpItem, false)) {
                     if (buyBackButton == false) {
-                        tmpItem.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
+                        tmpItem.DropLevel = playerManager.UnitController.CharacterStats.Level;
                     }
                     SellItem();
                     if (tmpItem is CurrencyItem) {
@@ -221,7 +221,7 @@ namespace AnyRPG {
                     usedSellPrice = vendorItem.Item.GetSellPrice();
                     priceString = currencyConverter.GetCombinedPriceString(usedSellPrice);
                 }
-                playerManager.MyCharacter.CharacterCurrencyManager.SpendCurrency(usedSellPrice.Key, usedSellPrice.Value);
+                playerManager.UnitController.CharacterCurrencyManager.SpendCurrency(usedSellPrice.Key, usedSellPrice.Value);
             }
             if (systemConfigurationManager.VendorAudioClip != null) {
                 audioManager.PlayEffect(systemConfigurationManager.VendorAudioClip);

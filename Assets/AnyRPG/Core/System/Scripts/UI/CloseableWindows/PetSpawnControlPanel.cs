@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class PetSpawnControlPanel : WindowContentController, ICapabilityConsumer {
+    public class PetSpawnControlPanel : WindowContentController, ICapabilityConsumer, ICharacterConfigurationProvider {
 
         public event System.Action OnConfirmAction = delegate { };
         public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
@@ -138,7 +138,7 @@ namespace AnyRPG {
             if (petSpawnButton.MyUnitProfile != null) {
                 spawnButton.gameObject.SetActive(true);
                 despawnButton.gameObject.SetActive(true);
-                if (playerManager.MyCharacter.CharacterPetManager.ActiveUnitProfiles.ContainsKey(petSpawnButton.MyUnitProfile)) {
+                if (playerManager.UnitController.CharacterPetManager.ActiveUnitProfiles.ContainsKey(petSpawnButton.MyUnitProfile)) {
                     spawnButton.Button.interactable = false;
                     despawnButton.Button.interactable = true;
                 } else {
@@ -185,14 +185,14 @@ namespace AnyRPG {
             base.ProcessOpenWindowNotification();
             ClearPanel();
 
-            if (playerManager.MyCharacter.CharacterPetManager != null) {
-                unitProfileList = playerManager.MyCharacter.CharacterPetManager.UnitProfiles;
+            if (playerManager.UnitController.CharacterPetManager != null) {
+                unitProfileList = playerManager.UnitController.CharacterPetManager.UnitProfiles;
             }
             ShowPreviewButtonsCommon();
 
             // inform the preview panel so the character can be rendered
             //characterPreviewPanel.OnTargetReady += HandleTargetReady;
-            characterPreviewPanel.CapabilityConsumer = this;
+            characterPreviewPanel.CharacterConfigurationProvider = this;
             characterPreviewPanel.ReceiveOpenWindowNotification();
             characterCreatorManager.EnableLight();
         }
@@ -204,7 +204,7 @@ namespace AnyRPG {
 
             foreach (UnitProfile unitProfile in unitProfileList) {
                 //Debug.Log("PetSpawnControlPanel.ShowLoadButtonsCommon() unitprofile: " + unitProfile.DisplayName);
-                if (playerManager.MyCharacter.CharacterPetManager.ValidPetTypeList.Contains(unitProfile.UnitType) == true) {
+                if (playerManager.UnitController.CharacterPetManager.ValidPetTypeList.Contains(unitProfile.UnitType) == true) {
                     GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
                     PetSpawnButton petSpawnButton = go.GetComponent<PetSpawnButton>();
                     if (petSpawnButton != null) {
@@ -240,16 +240,20 @@ namespace AnyRPG {
         }
 
         public void SpawnUnit() {
-            playerManager.MyCharacter.CharacterPetManager.SpawnPet(SelectedPetSpawnButton.MyUnitProfile);
+            playerManager.UnitController.CharacterPetManager.SpawnPet(SelectedPetSpawnButton.MyUnitProfile);
             ClosePanel();
         }
 
         public void DespawnUnit() {
-            playerManager.MyCharacter.CharacterPetManager.DespawnPet(SelectedPetSpawnButton.MyUnitProfile);
+            playerManager.UnitController.CharacterPetManager.DespawnPet(SelectedPetSpawnButton.MyUnitProfile);
             UpdateButtons(selectedPetSpawnButton);
             //ClosePanel();
         }
 
+        public CharacterConfigurationRequest GetCharacterConfigurationRequest() {
+            CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(this);
+            return characterConfigurationRequest;
+        }
     }
 
 }

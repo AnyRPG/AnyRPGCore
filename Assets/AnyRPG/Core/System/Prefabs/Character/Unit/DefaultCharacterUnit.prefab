@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2692339740015506124}
   - component: {fileID: 2692339740015506125}
   - component: {fileID: 2692339740015506115}
-  - component: {fileID: 4302159625522003019}
   - component: {fileID: -2928320751916093757}
   - component: {fileID: 7989242567668304555}
   - component: {fileID: 581519027303314695}
@@ -32,6 +31,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 565477750004378721}
   m_Father: {fileID: 0}
@@ -75,19 +75,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 2
---- !u!114 &4302159625522003019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2692339740015506113}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54ab02dbc88264e4992ae4c3e9e339f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  unitProfileName: 
 --- !u!114 &-2928320751916093757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,16 +91,11 @@ MonoBehaviour:
   spawnDelay: 0
   spawnReference: {fileID: 0}
   despawnObject: 0
-  prerequisiteConditions: []
+  spawnPrerequisites: []
   showTooltip: 1
   interactableName: 
   glowOnMouseOver: 1
-  lightEmission: 0
-  glowFlashSpeed: 1.5
-  glowMinIntensity: 4.5
-  glowMaxIntensity: 6
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  temporaryMaterial: {fileID: 0}
   interactionTooltipText: 
   notInteractable: 0
   interactWithAny: 0
@@ -132,6 +114,7 @@ MonoBehaviour:
     suppressFaction: 1
     overrideNameplatePosition: 0
     namePlatePosition: {x: 0, y: 0, z: 0}
+    useSnapShot: 1
     unitFrameTarget: 
     unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
     unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0}
@@ -139,7 +122,6 @@ MonoBehaviour:
     unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
     unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
   unitControllerMode: 2
-  faceInteractionTarget: 1
   patrolNames: []
   behaviorNames: []
   useBehaviorCopy: 0
@@ -159,7 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UUID: 5262e776-ce46-4e3a-ada8-b17f780135a4
+  m_UUID: 6bcbff2c-dc1b-4919-8646-279f293a425a
   forceUpdateUUID: 0
 --- !u!136 &581519027303314695
 CapsuleCollider:

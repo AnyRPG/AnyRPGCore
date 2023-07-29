@@ -51,7 +51,7 @@ namespace AnyRPG {
         private void AddItem(string itemName) {
             Item tmpItem = systemItemManager.GetNewResource(itemName);
             if (tmpItem != null) {
-                playerManager.ActiveCharacter.CharacterInventoryManager.AddItem(tmpItem, false);
+                playerManager.UnitController.CharacterInventoryManager.AddItem(tmpItem, false);
             }
         }
 

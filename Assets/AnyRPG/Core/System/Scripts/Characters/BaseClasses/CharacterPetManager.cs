@@ -13,23 +13,18 @@ namespace AnyRPG {
 
         protected Dictionary<UnitProfile, UnitController> activeUnitProfiles = new Dictionary<UnitProfile, UnitController>();
 
-        protected BaseCharacter baseCharacter;
+        protected UnitController unitController;
 
         private List<UnitType> validPetTypeList = new List<UnitType>();
 
         protected bool eventSubscriptionsInitialized = false;
 
-        public BaseCharacter BaseCharacter {
-            get => baseCharacter;
-            set => baseCharacter = value;
-        }
-
         public List<UnitProfile> UnitProfiles { get => unitProfiles; set => unitProfiles = value; }
         public Dictionary<UnitProfile, UnitController> ActiveUnitProfiles { get => activeUnitProfiles; set => activeUnitProfiles = value; }
         public List<UnitType> ValidPetTypeList { get => validPetTypeList; set => validPetTypeList = value; }
 
-        public CharacterPetManager(BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
-            this.baseCharacter = baseCharacter;
+        public CharacterPetManager(UnitController unitController, SystemGameManager systemGameManager) {
+            this.unitController = unitController;
             Configure(systemGameManager);
         }
 
@@ -42,16 +37,16 @@ namespace AnyRPG {
             }
         }
 
-        public void AddTemporaryPet(UnitProfile unitProfile, UnitController unitController) {
+        public void AddTemporaryPet(UnitProfile unitProfile, UnitController petUnitController) {
 
-            if (unitController == null) {
+            if (petUnitController == null) {
                 return;
             }
 
             if (activeUnitProfiles.ContainsKey(unitProfile) == false) {
-                activeUnitProfiles.Add(unitProfile, unitController);
-                unitController.SetPetMode(baseCharacter, true);
-                unitController.UnitEventController.OnUnitDestroy += HandleUnitDestroy;
+                activeUnitProfiles.Add(unitProfile, petUnitController);
+                petUnitController.SetPetMode(unitController, true);
+                petUnitController.UnitEventController.OnUnitDestroy += HandleUnitDestroy;
             }
         }
 
@@ -65,7 +60,7 @@ namespace AnyRPG {
             // you can only have one of the same pet active at a time
             if (activeUnitProfiles.ContainsKey(unitProfile) == false) {
                 activeUnitProfiles.Add(unitProfile, unitController);
-                unitController.SetPetMode(baseCharacter, true);
+                unitController.SetPetMode(this.unitController, true);
                 unitController.UnitEventController.OnUnitDestroy += HandleUnitDestroy;
             }
 
@@ -86,7 +81,7 @@ namespace AnyRPG {
             if (unitProfile != null) {
                 AddPet(unitProfile);
             } else {
-                Debug.LogWarning(baseCharacter.gameObject.name + ".CharacterPetManager.AddPet() Could not find unitProfile: " + unitProfileName);
+                Debug.LogWarning(unitController.gameObject.name + ".CharacterPetManager.AddPet() Could not find unitProfile: " + unitProfileName);
             }
         }
 
@@ -125,27 +120,22 @@ namespace AnyRPG {
                 // can't add the same dictionary key twice
                 return;
             }
-
+            CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(unitProfile);
+            characterConfigurationRequest.unitControllerMode = UnitControllerMode.Pet;
             CharacterRequestData characterRequestData = new CharacterRequestData(this,
                 systemGameManager.GameMode,
-                unitProfile,
-                UnitControllerMode.Pet);
+                characterConfigurationRequest);
 
-            UnitController unitController = systemGameManager.CharacterManager.SpawnUnitPrefab(characterRequestData, baseCharacter.UnitController.transform.parent, baseCharacter.UnitController.transform.position, baseCharacter.UnitController.transform.forward);
-            /*
-            if (unitController != null) {
-                ConfigureSpawnedCharacter(unitController, characterRequestData);
-            }
-            */
+            systemGameManager.CharacterManager.SpawnUnitPrefab(characterRequestData, unitController.transform.parent, unitController.transform.position, unitController.transform.forward);
         }
 
         public void ConfigureSpawnedCharacter(UnitController unitController, CharacterRequestData characterRequestData) {
-            unitController.SetPetMode(baseCharacter);
+            unitController.SetPetMode(this.unitController);
         }
 
         public void PostInit(UnitController unitController, CharacterRequestData characterRequestData) {
             unitController.UnitEventController.OnUnitDestroy += HandleUnitDestroy;
-            activeUnitProfiles.Add(characterRequestData.unitProfile, unitController);
+            activeUnitProfiles.Add(characterRequestData.characterConfigurationRequest.unitProfile, unitController);
         }
 
 

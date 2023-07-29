@@ -6,11 +6,8 @@ using UnityEngine;
 namespace AnyRPG {
     public class CharacterFactionManager {
 
-        public event System.Action OnReputationChange = delegate { };
+        private UnitController unitController;
 
-        private BaseCharacter baseCharacter;
-
-        //[SerializeField]
         protected List<FactionDisposition> dispositionDictionary = new List<FactionDisposition>();
 
         //public Dictionary<Faction, float> dispositionDictionary = new Dictionary<Faction, float>();
@@ -20,16 +17,13 @@ namespace AnyRPG {
             }
         }
 
-        public CharacterFactionManager(BaseCharacter baseCharacter) {
-            this.baseCharacter = baseCharacter;
+        public CharacterFactionManager(UnitController unitController) {
+            this.unitController = unitController;
         }
 
         public virtual void NotifyOnReputationChange() {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterFactionmanager.NotifyOnReputationChange()");
-            OnReputationChange();
-            if (baseCharacter.UnitController != null) {
-                baseCharacter.UnitController.UnitEventController.NotifyOnReputationChange();
-            }
+            unitController.UnitEventController.NotifyOnReputationChange();
         }
 
         // ignores if existing, otherwise sets to amount.  This allows leaving and re-joining factions without losing reputation with them
@@ -42,7 +36,7 @@ namespace AnyRPG {
             }
             FactionDisposition _factionDisposition = new FactionDisposition();
             _factionDisposition.Faction = newFaction;
-            _factionDisposition.disposition = Faction.RelationWith(baseCharacter, newFaction);
+            _factionDisposition.disposition = Faction.RelationWith(unitController, newFaction);
             DispositionDictionary.Add(_factionDisposition);
             NotifyOnReputationChange();
         }
@@ -84,7 +78,7 @@ namespace AnyRPG {
             if (!foundReputation) {
                 FactionDisposition _factionDisposition = new FactionDisposition();
                 _factionDisposition.Faction = faction;
-                _factionDisposition.disposition = Faction.RelationWith(baseCharacter, faction) + (float)reputationAmount;
+                _factionDisposition.disposition = Faction.RelationWith(unitController, faction) + (float)reputationAmount;
                 DispositionDictionary.Add(_factionDisposition);
             }
             if (notify) {
@@ -99,8 +93,8 @@ namespace AnyRPG {
 
             // checking dictionary first
             List<FactionDisposition> usedDictionary = DispositionDictionary;
-            if (baseCharacter.UnitController != null && baseCharacter.UnitController.UnderControl == true) {
-                usedDictionary = baseCharacter.UnitController.MasterUnit.CharacterFactionManager.DispositionDictionary;
+            if (unitController.UnderControl == true) {
+                usedDictionary = unitController.MasterUnit.CharacterFactionManager.DispositionDictionary;
             }
             foreach (FactionDisposition factionDisposition in usedDictionary) {
                 if (factionDisposition.Faction == faction) {
@@ -109,8 +103,8 @@ namespace AnyRPG {
             }
 
             // checking status effects next
-            if (baseCharacter != null && baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects != null) {
-                foreach (StatusEffectNode statusEffectNode in baseCharacter.CharacterStats.StatusEffects.Values) {
+            if (unitController.CharacterStats.StatusEffects != null) {
+                foreach (StatusEffectNode statusEffectNode in unitController.CharacterStats.StatusEffects.Values) {
                     if (statusEffectNode != null && statusEffectNode.StatusEffect != null && statusEffectNode.StatusEffect.FactionModifiers != null) {
                         foreach (FactionDisposition factionDisposition in statusEffectNode.StatusEffect.FactionModifiers) {
                             if (factionDisposition.Faction == faction) {
@@ -128,8 +122,8 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.CharacterFactionManager.RelationWith(" + faction.DisplayName + "): checking personal status dictionary and status effects to get special dispositions toward faction");
 
             List<FactionDisposition> usedDictionary = DispositionDictionary;
-            if (baseCharacter?.UnitController?.UnderControl == true) {
-                usedDictionary = baseCharacter.UnitController.MasterUnit.CharacterFactionManager.DispositionDictionary;
+            if (unitController.UnderControl == true) {
+                usedDictionary = unitController.MasterUnit.CharacterFactionManager.DispositionDictionary;
             }
 
             // checking personal dictionary before status effects?
@@ -140,9 +134,9 @@ namespace AnyRPG {
                 }
             }
 
-            if (baseCharacter != null && baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects != null) {
+            if (unitController.CharacterStats.StatusEffects != null) {
                 // checking status effect disposition modifiers
-                foreach (StatusEffectNode statusEffectNode in baseCharacter.CharacterStats.StatusEffects.Values) {
+                foreach (StatusEffectNode statusEffectNode in unitController.CharacterStats.StatusEffects.Values) {
                     foreach (FactionDisposition factionDisposition in statusEffectNode.StatusEffect.FactionModifiers) {
                         if (factionDisposition.Faction == faction) {
                             return factionDisposition.disposition;

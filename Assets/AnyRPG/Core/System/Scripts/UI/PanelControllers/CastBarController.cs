@@ -104,7 +104,7 @@ namespace AnyRPG {
 
         }
 
-        void OnCastStop(BaseCharacter source) {
+        void OnCastStop() {
             //Debug.Log($"{gameObject.name}.CastBarController.OnCastStop();");
             DisableCastBar();
         }

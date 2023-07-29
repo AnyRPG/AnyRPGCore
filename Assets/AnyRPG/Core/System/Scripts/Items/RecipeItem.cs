@@ -18,15 +18,15 @@ namespace AnyRPG {
 
         public override bool Use() {
             //Debug.Log(MyDisplayName + ".RecipeItem.Use()");
-            if (!playerManager.MyCharacter.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {
+            if (!playerManager.UnitController.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {
                 //Debug.Log(MyDisplayName + ".RecipeItem.Use(): Player does not have the recipe: " + recipe.MyDisplayName);
                 bool returnValue = base.Use();
                 if (returnValue == false) {
                     return false;
                 }
                 // learn recipe if the character has the right skill
-                if (playerManager.MyCharacter.CharacterAbilityManager.AbilityList.ContainsValue(recipe.CraftAbility)) {
-                    playerManager.MyCharacter.CharacterRecipeManager.LearnRecipe(recipe);
+                if (playerManager.UnitController.CharacterAbilityManager.AbilityList.ContainsValue(recipe.CraftAbility)) {
+                    playerManager.UnitController.CharacterRecipeManager.LearnRecipe(recipe);
                     messageFeedManager.WriteMessage("You learned the recipe " + recipe.DisplayName);
                     Remove();
                 } else {
@@ -43,11 +43,11 @@ namespace AnyRPG {
             string returnString = base.GetDescription(usedItemQuality);
             if (recipe != null) {
                 string alreadyKnownString = string.Empty;
-                if (playerManager.MyCharacter.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {
+                if (playerManager.UnitController.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {
                     alreadyKnownString = "<color=red>already known</color>\n";
                 }
                 string abilityKnownString = string.Empty;
-                if (playerManager.MyCharacter.CharacterAbilityManager.AbilityList.ContainsValue(recipe.CraftAbility)) {
+                if (playerManager.UnitController.CharacterAbilityManager.AbilityList.ContainsValue(recipe.CraftAbility)) {
                     abilityKnownString = "<color=white>Requires: " + recipe.CraftAbility.DisplayName  + "</color>\n";
                 } else {
                     abilityKnownString = "<color=red>Requires: " + recipe.CraftAbility.DisplayName + "</color>\n";

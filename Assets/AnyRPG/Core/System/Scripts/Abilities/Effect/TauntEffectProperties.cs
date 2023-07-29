@@ -20,7 +20,7 @@ namespace AnyRPG {
         }
         */
 
-        public override void CancelEffect(BaseCharacter targetCharacter) {
+        public override void CancelEffect(UnitController targetCharacter) {
             //Debug.Log("MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
             if (targetCharacter != null && targetCharacter.CharacterCombat != null && targetCharacter.CharacterCombat.AggroTable != null) {
                 targetCharacter.CharacterCombat.AggroTable.UnLockAgro();
@@ -45,9 +45,9 @@ namespace AnyRPG {
             // make ourselves the top threat in his threat table
             CharacterUnit targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
             if (targetCharacterUnit != null) {
-                if (targetCharacterUnit.BaseCharacter != null && targetCharacterUnit.BaseCharacter.CharacterCombat != null && targetCharacterUnit.BaseCharacter.CharacterCombat.AggroTable != null) {
+                if (targetCharacterUnit.UnitController.CharacterCombat.AggroTable != null) {
                     //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target ? target.name : "null") + ") CHARACTER COMBAT IS NOT NULL");
-                    AggroNode AgroNode = targetCharacterUnit.BaseCharacter.CharacterCombat.AggroTable.TopAgroNode;
+                    AggroNode AgroNode = targetCharacterUnit.UnitController.CharacterCombat.AggroTable.TopAgroNode;
                     float usedAgroValue = 0f;
                     if (AgroNode != null) {
                         usedAgroValue = AgroNode.aggroValue;

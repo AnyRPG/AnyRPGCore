@@ -11,10 +11,8 @@ namespace AnyRPG {
             //Debug.Log(baseController.gameObject.name + ".DeathState.Enter(): entered death state");
             this.baseController = baseController;
             //this.aiController.BaseCharacter.MyCharacterUnit.GetComponentInChildren<Animator>().enabled = false;
-            if (this.baseController.CharacterUnit.BaseCharacter != null && this.baseController != null) {
-                this.baseController.DisableAgent();
-                this.baseController.DisableMotor();
-            }
+            this.baseController.DisableAgent();
+            this.baseController.DisableMotor();
             this.baseController.DisableAggro();
             this.baseController.ClearTarget();
 
@@ -23,7 +21,7 @@ namespace AnyRPG {
             }
 
             // handle despawn
-            baseController.CharacterUnit.BaseCharacter.TryToDespawn();
+            baseController.BaseCharacter.TryToDespawn();
 
         }
 
@@ -35,7 +33,7 @@ namespace AnyRPG {
         }
 
         public void Update() {
-            if (baseController.CharacterUnit.BaseCharacter.CharacterStats.IsAlive) {
+            if (baseController.CharacterStats.IsAlive) {
                 //Debug.Log("No Longer Dead!");
                 baseController.ChangeState(new ReturnState());
                 return;

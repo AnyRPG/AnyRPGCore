@@ -40,7 +40,7 @@ namespace AnyRPG {
             if (returnValue == false) {
                 return false;
             }
-            if (playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(Ability)) {
+            if (playerManager.UnitController.CharacterAbilityManager.BeginAbility(Ability)) {
                 Remove();
             }
             return returnValue;

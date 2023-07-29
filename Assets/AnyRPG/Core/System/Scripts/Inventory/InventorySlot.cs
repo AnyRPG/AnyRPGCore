@@ -112,16 +112,16 @@ namespace AnyRPG {
             if (!IsEmpty) {
                 Items.Remove(item);
                 UpdateSlot();
-                playerManager.MyCharacter.CharacterInventoryManager.OnItemCountChanged(item);
+                playerManager.UnitController.CharacterInventoryManager.OnItemCountChanged(item);
             }
         }
 
         /*
         public void DropItemFromInventorySlot() {
             //Debug.Log("Dropping an item from an inventory slot");
-            if (PutItemBack() || MergeItems(playerManager.MyCharacter.CharacterInventoryManager.FromSlot.InventorySlot) || SwapItems(playerManager.MyCharacter.CharacterInventoryManager.FromSlot.InventorySlot) || AddItems(playerManager.MyCharacter.CharacterInventoryManager.FromSlot.InventorySlot.Items)) {
+            if (PutItemBack() || MergeItems(playerManager.UnitController.CharacterInventoryManager.FromSlot.InventorySlot) || SwapItems(playerManager.UnitController.CharacterInventoryManager.FromSlot.InventorySlot) || AddItems(playerManager.UnitController.CharacterInventoryManager.FromSlot.InventorySlot.Items)) {
                 handScript.Drop();
-                playerManager.MyCharacter.CharacterInventoryManager.FromSlot = null;
+                playerManager.UnitController.CharacterInventoryManager.FromSlot = null;
             }
         }
         */
@@ -134,13 +134,13 @@ namespace AnyRPG {
         public void SendItemToHandScript() {
             //Debug.Log("SlotScript.SendItemToHandScript(): setting inventorymanager.myinstance.fromslot to this");
             handScript.TakeMoveable(Item as IMoveable);
-            playerManager.MyCharacter.CharacterInventoryManager.FromSlot = this;
+            playerManager.UnitController.CharacterInventoryManager.FromSlot = this;
         }
         */
 
         public int GetCurrentSlotIndex() {
-            for (int i = 0; i < playerManager.MyCharacter.CharacterInventoryManager.InventorySlots.Count; i++) {
-                if (playerManager.MyCharacter.CharacterInventoryManager.InventorySlots[i] == this) {
+            for (int i = 0; i < playerManager.UnitController.CharacterInventoryManager.InventorySlots.Count; i++) {
+                if (playerManager.UnitController.CharacterInventoryManager.InventorySlots[i] == this) {
                     return i;
                 }
             }
@@ -153,7 +153,7 @@ namespace AnyRPG {
             if (Items.Count > 0) {
                 Item tmpItem = Items[0];
                 Items.Clear();
-                playerManager.MyCharacter.CharacterInventoryManager.OnItemCountChanged(tmpItem);
+                playerManager.UnitController.CharacterInventoryManager.OnItemCountChanged(tmpItem);
                 UpdateSlot();
             }
         }
@@ -183,7 +183,7 @@ namespace AnyRPG {
         /*
         public bool PutItemBack() {
             //Debug.Log("attempting to put an item back in a slot");
-            if (playerManager.MyCharacter.CharacterInventoryManager.FromSlot == this) {
+            if (playerManager.UnitController.CharacterInventoryManager.FromSlot == this) {
                 //Debug.Log("Confirmed that the item came from this slot.  now returning it.");
                 UpdateSlot();
                 return true;

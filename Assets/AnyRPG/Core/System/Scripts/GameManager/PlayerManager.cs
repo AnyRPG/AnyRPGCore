@@ -8,9 +8,6 @@ namespace AnyRPG {
     public class PlayerManager : ConfiguredMonoBehaviour, ICharacterRequestor {
 
         [SerializeField]
-        private int initialLevel = 1;
-
-        [SerializeField]
         private float maxMovementSpeed = 20f;
 
         [SerializeField]
@@ -56,12 +53,6 @@ namespace AnyRPG {
 
         private bool playerConnectionSpawned = false;
 
-        // a reference to the 'main' character.  This should remain constant as long as the player is logged in
-        private BaseCharacter character = null;
-
-        // a reference to the active character.  This can change the player mind controls a unit to allow things like action bar ability updates
-        private BaseCharacter activeCharacter = null;
-
         // a reference to the 'main' unit.  This should be the main character when spawned, and null when not spawned
         private UnitController unitController = null;
 
@@ -93,21 +84,17 @@ namespace AnyRPG {
         protected ControlsManager controlsManager = null;
         protected NetworkManager networkManager = null;
         protected CharacterManager characterManager = null;
-
-        public BaseCharacter MyCharacter { get => character; set => character = value; }
+        protected SystemDataFactory systemDataFactory = null;
 
         public GameObject PlayerConnectionObject { get => playerConnectionObject; set => playerConnectionObject = value; }
-        //public GameObject PlayerUnitObject { get => playerUnitObject; set => playerUnitObject = value; }
         public float MaxMovementSpeed { get => maxMovementSpeed; set => maxMovementSpeed = value; }
         public bool PlayerUnitSpawned { get => playerUnitSpawned; }
         public bool PlayerConnectionSpawned { get => playerConnectionSpawned; }
-        public int InitialLevel { get => initialLevel; set => initialLevel = value; }
         public GameObject AIUnitParent { get => aiUnitParent; set => aiUnitParent = value; }
         public GameObject EffectPrefabParent { get => effectPrefabParent; set => effectPrefabParent = value; }
         public GameObject PlayerUnitParent { get => playerUnitParent; set => playerUnitParent = value; }
         public LayerMask DefaultGroundMask { get => defaultGroundMask; set => defaultGroundMask = value; }
         public PlayerUnitMovementController PlayerUnitMovementController { get => playerUnitMovementController; set => playerUnitMovementController = value; }
-        public BaseCharacter ActiveCharacter { get => activeCharacter; set => activeCharacter = value; }
         public UnitController UnitController { get => unitController; set => unitController = value; }
         public UnitController ActiveUnitController { get => activeUnitController; }
         public PlayerController PlayerController { get => playerController; set => playerController = value; }
@@ -130,6 +117,7 @@ namespace AnyRPG {
             controlsManager = systemGameManager.ControlsManager;
             networkManager = systemGameManager.NetworkManager;
             characterManager = systemGameManager.CharacterManager;
+            systemDataFactory = systemGameManager.SystemDataFactory;
 
             PerformRequiredPropertyChecks();
             CreateEventSubscriptions();
@@ -176,10 +164,6 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
-        public void ResetInitialLevel() {
-            initialLevel = 1;
-        }
-
         public void ProcessExitToMainMenu() {
             //Debug.Log("PlayerManager.ProcessExitToMainMenu()");
             DespawnPlayerUnit();
@@ -190,39 +174,37 @@ namespace AnyRPG {
         public void SetPlayerName(string newName) {
             //Debug.Log("PlayerManager.SetPlayerName()");
             if (newName != null && newName != string.Empty) {
-                character.SetCharacterName(newName);
+                unitController.BaseCharacter.ChangeCharacterName(newName);
             }
 
             SystemEventManager.TriggerEvent("OnPlayerNameChanged", new EventParamProperties());
-            if (playerUnitSpawned) {
-                uIManager.PlayerUnitFrameController.SetTarget(UnitController.NamePlateController);
-            }
+            uIManager.PlayerUnitFrameController.SetTarget(UnitController.NamePlateController);
         }
 
         public void SetPlayerCharacterClass(CharacterClass newCharacterClass) {
             //Debug.Log("PlayerManager.SetPlayerCharacterClass(" + characterClassName + ")");
             if (newCharacterClass != null) {
-                activeCharacter.ChangeCharacterClass(newCharacterClass);
+                unitController.BaseCharacter.ChangeCharacterClass(newCharacterClass);
             }
         }
 
         public void SetPlayerCharacterSpecialization(ClassSpecialization newClassSpecialization) {
             //Debug.Log("PlayerManager.SetPlayerCharacterClass(" + characterClassName + ")");
             if (newClassSpecialization != null) {
-                character.ChangeClassSpecialization(newClassSpecialization);
+                unitController.BaseCharacter.ChangeClassSpecialization(newClassSpecialization);
             }
         }
 
         public void SetPlayerFaction(Faction newFaction) {
             //Debug.Log("PlayerManager.SetPlayerFaction(" + factionName + ")");
             if (newFaction != null) {
-                character.JoinFaction(newFaction);
+                unitController.BaseCharacter.ChangeCharacterFaction(newFaction);
             }
             SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
         }
 
         public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
-            Debug.Log("PlayerManager.HandleLevelLoad()");
+            //Debug.Log("PlayerManager.HandleLevelLoad()");
 
             SceneNode activeSceneNode = levelManager.GetActiveSceneNode();
             
@@ -316,18 +298,18 @@ namespace AnyRPG {
             DespawnPlayerUnit();
             SpawnPlayerUnit();
 
-            if (activeCharacter.CharacterStats.IsAlive == false) {
-                activeCharacter.CharacterStats.ReviveComplete();
+            if (unitController.CharacterStats.IsAlive == false) {
+                unitController.CharacterStats.ReviveComplete();
             }
         }
 
         public void RevivePlayerUnit() {
             //Debug.Log("PlayerManager.RevivePlayerUnit()");
-            activeCharacter.CharacterStats.Revive();
+            unitController.CharacterStats.Revive();
         }
 
         public void SubscribeToTargetReady() {
-            Debug.Log($"PlayerManager.SubscribeToTargetReady()");
+            //Debug.Log($"PlayerManager.SubscribeToTargetReady()");
 
             activeUnitController.OnCameraTargetReady += HandleTargetReady;
             subscribeToTargetReady = false;
@@ -340,13 +322,13 @@ namespace AnyRPG {
         }
 
         public void HandleTargetReady() {
-            Debug.Log($"PlayerManager.HandleTargetReady()");
+            //Debug.Log($"PlayerManager.HandleTargetReady()");
 
             waitForPlayerReadyCoroutine = StartCoroutine(WaitForPlayerReady());
         }
 
         private IEnumerator WaitForPlayerReady() {
-            Debug.Log("PlayerManager.WaitForPlayerReady()");
+            //Debug.Log("PlayerManager.WaitForPlayerReady()");
             //private IEnumerator WaitForCamera(int frameNumber) {
             yield return null;
             //Debug.Log($"{gameObject.name}.UnitFrameController.WaitForCamera(): about to render " + namePlateController.Interactable.GetInstanceID() + "; initial frame: " + frameNumber + "; current frame: " + lastWaitFrame);
@@ -383,23 +365,15 @@ namespace AnyRPG {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): playerConnectionObject is null, instantiating connection!");
                 SpawnPlayerConnection();
             }
-            if (activeCharacter.UnitProfile == null) {
-                activeCharacter.SetUnitProfile(systemConfigurationManager.DefaultPlayerUnitProfileName, true, -1, false);
-            }
 
             // spawn the player unit and set references
             Vector3 spawnRotation = levelManager.GetSpawnRotation();
+            CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(systemDataFactory, saveManager.CurrentSaveData);
+            characterConfigurationRequest.unitControllerMode = UnitControllerMode.Player;
             CharacterRequestData characterRequestData = new CharacterRequestData(this,
                 systemGameManager.GameMode,
-                activeCharacter.UnitProfile,
-                UnitControllerMode.Player);
-            UnitController unitController = characterManager.SpawnUnitPrefab(characterRequestData, playerUnitParent.transform, spawnLocation, spawnRotation);
-            /*
-            if (unitController != null) {
-                characterManager.CompleteCharacterRequest(unitController.gameObject, characterRequestData.spawnRequestId, true);
-                ConfigureSpawnedCharacter(unitController, characterRequestData);
-            }
-            */
+                characterConfigurationRequest);
+            characterManager.SpawnUnitPrefab(characterRequestData, playerUnitParent.transform, spawnLocation, spawnRotation);
         }
 
         private bool OwnPlayer(UnitController unitController, CharacterRequestData characterRequestData) {
@@ -416,7 +390,7 @@ namespace AnyRPG {
         }
 
         public void ConfigureSpawnedCharacter(UnitController unitController, CharacterRequestData characterRequestData) {
-            Debug.Log($"PlayerManager.ConfigureSpawnedCharacter({unitController.gameObject.name})");
+            //Debug.Log($"PlayerManager.ConfigureSpawnedCharacter({unitController.gameObject.name})");
 
             //if (OwnPlayer(unitController, characterRequestData) == true) {
                 SetUnitController(unitController);
@@ -451,6 +425,13 @@ namespace AnyRPG {
                 HandlePlayerUnitSpawn();
             }
 
+            // load player data from saveManager
+            saveManager.LoadSaveDataToCharacter();
+
+            SubscribeToPlayerInventoryEvents();
+            unitController.BaseCharacter.Initialize();
+            SubscribeToPlayerEvents();
+
 
             if (PlayerPrefs.HasKey("ShowNewPlayerHints") == false) {
                 if (controlsManager.GamePadModeActive == true) {
@@ -475,22 +456,12 @@ namespace AnyRPG {
             this.unitController = unitController;
             activeUnitController = unitController;
 
-            activeCharacter.SetUnitController(activeUnitController);
-
             if (unitController == null) {
                 playerUnitSpawned = false;
                 return;
             }
 
-            if (unitController.CharacterUnit != null) {
-                // erase the connection from the base character on the unit, back to its unit controller so it doesn't fire events
-                unitController.CharacterUnit.BaseCharacter.SetUnitController(null);
-                // connect the characterUnit back to the baseCharacter that the playerManager owns so we get logged in character settings, not the unit settings
-                unitController.CharacterUnit.SetBaseCharacter(activeCharacter);
-                unitController.CharacterUnit.SetCharacterStatsCapabilities();
-            } else {
-                Debug.LogError("UnitProfile.SpawnUnitPrefab(): active unit controller had no characterUnit!");
-            }
+            unitController.CharacterUnit.SetCharacterStatsCapabilities();
         }
 
         public void HandleModelReady() {
@@ -501,7 +472,7 @@ namespace AnyRPG {
         }
 
         private void HandlePlayerUnitSpawn() {
-            Debug.Log("PlayerManager.HandlePlayerUnitSpawn()");
+            //Debug.Log("PlayerManager.HandlePlayerUnitSpawn()");
             playerUnitSpawned = true;
 
             // inform any subscribers that we just spawned a player unit
@@ -550,22 +521,15 @@ namespace AnyRPG {
                 return;
             }
             playerConnectionObject = objectPooler.GetPooledObject(playerConnectionPrefab, playerConnectionParent.transform);
-            character = playerConnectionObject.GetComponent<BaseCharacter>();
-            character.Configure(systemGameManager);
-            activeCharacter = character;
             playerController = playerConnectionObject.GetComponent<PlayerController>();
             playerController.Configure(systemGameManager);
             playerUnitMovementController = playerConnectionObject.GetComponent<PlayerUnitMovementController>();
             playerUnitMovementController.Configure(systemGameManager);
 
             SystemEventManager.TriggerEvent("OnBeforePlayerConnectionSpawn", new EventParamProperties());
-            activeCharacter.Init();
-            SubscribeToPlayerInventoryEvents();
-            activeCharacter.Initialize(systemConfigurationManager.DefaultPlayerName, initialLevel);
             playerConnectionSpawned = true;
             SystemEventManager.TriggerEvent("OnPlayerConnectionSpawn", new EventParamProperties());
 
-            SubscribeToPlayerEvents();
         }
 
         public void DespawnPlayerConnection() {
@@ -578,96 +542,94 @@ namespace AnyRPG {
             SystemEventManager.TriggerEvent("OnPlayerConnectionDespawn", new EventParamProperties());
             objectPooler.ReturnObjectToPool(playerConnectionObject);
             playerConnectionObject = null;
-            character = null;
-            activeCharacter = null;
             playerUnitMovementController = null;
             playerConnectionSpawned = false;
         }
 
         public void SubscribeToPlayerInventoryEvents() {
-            activeCharacter.CharacterInventoryManager.OnAddInventoryBagNode += HandleAddInventoryBagNode;
-            activeCharacter.CharacterInventoryManager.OnAddBankBagNode += HandleAddBankBagNode;
-            activeCharacter.CharacterInventoryManager.OnAddInventorySlot += HandleAddInventorySlot;
-            activeCharacter.CharacterInventoryManager.OnAddBankSlot += HandleAddBankSlot;
-            activeCharacter.CharacterInventoryManager.OnRemoveInventorySlot += HandleRemoveInventorySlot;
-            activeCharacter.CharacterInventoryManager.OnRemoveBankSlot += HandleRemoveBankSlot;
+            unitController.CharacterInventoryManager.OnAddInventoryBagNode += HandleAddInventoryBagNode;
+            unitController.CharacterInventoryManager.OnAddBankBagNode += HandleAddBankBagNode;
+            unitController.CharacterInventoryManager.OnAddInventorySlot += HandleAddInventorySlot;
+            unitController.CharacterInventoryManager.OnAddBankSlot += HandleAddBankSlot;
+            unitController.CharacterInventoryManager.OnRemoveInventorySlot += HandleRemoveInventorySlot;
+            unitController.CharacterInventoryManager.OnRemoveBankSlot += HandleRemoveBankSlot;
         }
 
         public void UnsubscribeFromPlayerInventoryEvents() {
-            activeCharacter.CharacterInventoryManager.OnAddInventoryBagNode -= HandleAddInventoryBagNode;
-            activeCharacter.CharacterInventoryManager.OnAddBankBagNode -= HandleAddBankBagNode;
-            activeCharacter.CharacterInventoryManager.OnAddInventorySlot -= HandleAddInventorySlot;
-            activeCharacter.CharacterInventoryManager.OnAddBankSlot -= HandleAddBankSlot;
-            activeCharacter.CharacterInventoryManager.OnRemoveInventorySlot -= HandleRemoveInventorySlot;
-            activeCharacter.CharacterInventoryManager.OnRemoveBankSlot -= HandleRemoveBankSlot;
+            unitController.CharacterInventoryManager.OnAddInventoryBagNode -= HandleAddInventoryBagNode;
+            unitController.CharacterInventoryManager.OnAddBankBagNode -= HandleAddBankBagNode;
+            unitController.CharacterInventoryManager.OnAddInventorySlot -= HandleAddInventorySlot;
+            unitController.CharacterInventoryManager.OnAddBankSlot -= HandleAddBankSlot;
+            unitController.CharacterInventoryManager.OnRemoveInventorySlot -= HandleRemoveInventorySlot;
+            unitController.CharacterInventoryManager.OnRemoveBankSlot -= HandleRemoveBankSlot;
         }
 
         public void SubscribeToPlayerEvents() {
-            activeCharacter.CharacterStats.OnImmuneToEffect += HandleImmuneToEffect;
-            activeCharacter.CharacterStats.OnDie += HandleDie;
-            activeCharacter.CharacterStats.OnReviveBegin += HandleReviveBegin;
-            activeCharacter.CharacterStats.OnReviveComplete += HandleReviveComplete;
-            activeCharacter.CharacterStats.OnLevelChanged += HandleLevelChanged;
-            activeCharacter.CharacterStats.OnGainXP += HandleGainXP;
-            activeCharacter.CharacterStats.OnStatusEffectAdd += HandleStatusEffectAdd;
-            activeCharacter.CharacterStats.OnRecoverResource += HandleRecoverResource;
-            activeCharacter.CharacterStats.OnResourceAmountChanged += HandleResourceAmountChanged;
-            activeCharacter.CharacterStats.OnCalculateRunSpeed += HandleCalculateRunSpeed;
-            activeCharacter.CharacterCombat.OnKillEvent += HandleKillEvent;
-            activeCharacter.CharacterCombat.OnEnterCombat += HandleEnterCombat;
-            activeCharacter.CharacterCombat.OnDropCombat += HandleDropCombat;
-            activeCharacter.CharacterCombat.OnUpdate += HandleCombatUpdate;
-            activeCharacter.CharacterCombat.OnReceiveCombatMiss += HandleCombatMiss;
-            activeCharacter.CharacterEquipmentManager.OnEquipmentChanged += HandleEquipmentChanged;
-            activeCharacter.CharacterAbilityManager.OnUnlearnAbilities += HandleUnlearnClassAbilities;
-            activeCharacter.CharacterAbilityManager.OnLearnedCheckFail += HandleLearnedCheckFail;
-            activeCharacter.CharacterAbilityManager.OnPowerResourceCheckFail += HandlePowerResourceCheckFail;
-            activeCharacter.CharacterAbilityManager.OnCombatCheckFail += HandleCombatCheckFail;
-            activeCharacter.CharacterAbilityManager.OnStealthCheckFail += HandleStealthCheckFail;
-            activeCharacter.CharacterAbilityManager.OnAnimatedAbilityCheckFail += HandleAnimatedAbilityCheckFail;
-            activeCharacter.CharacterAbilityManager.OnPerformAbility += HandlePerformAbility;
-            activeCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown += HandleBeginAbilityCoolDown;
-            activeCharacter.CharacterAbilityManager.OnTargetInAbilityRangeFail += HandleTargetInAbilityRangeFail;
-            activeCharacter.CharacterFactionManager.OnReputationChange += HandleReputationChange;
-            activeCharacter.CharacterAbilityManager.OnUnlearnAbility += HandleUnlearnAbility;
-            activeCharacter.CharacterAbilityManager.OnLearnAbility += HandleLearnAbility;
-            activeCharacter.CharacterAbilityManager.OnActivateTargetingMode += HandleActivateTargetingMode;
-            activeCharacter.CharacterAbilityManager.OnCombatMessage += HandleCombatMessage;
-            activeCharacter.CharacterAbilityManager.OnMessageFeedMessage += HandleMessageFeedMessage;
+            unitController.UnitEventController.OnImmuneToEffect += HandleImmuneToEffect;
+            unitController.UnitEventController.OnBeforeDie += HandleDie;
+            unitController.UnitEventController.OnReviveBegin += HandleReviveBegin;
+            unitController.UnitEventController.OnReviveComplete += HandleReviveComplete;
+            unitController.UnitEventController.OnLevelChanged += HandleLevelChanged;
+            unitController.UnitEventController.OnGainXP += HandleGainXP;
+            unitController.UnitEventController.OnStatusEffectAdd += HandleStatusEffectAdd;
+            unitController.UnitEventController.OnRecoverResource += HandleRecoverResource;
+            unitController.UnitEventController.OnResourceAmountChanged += HandleResourceAmountChanged;
+            unitController.UnitEventController.OnCalculateRunSpeed += HandleCalculateRunSpeed;
+            unitController.UnitEventController.OnKillEvent += HandleKillEvent;
+            unitController.UnitEventController.OnEnterCombat += HandleEnterCombat;
+            unitController.UnitEventController.OnDropCombat += HandleDropCombat;
+            unitController.UnitEventController.OnCombatUpdate += HandleCombatUpdate;
+            unitController.UnitEventController.OnReceiveCombatMiss += HandleCombatMiss;
+            unitController.UnitEventController.OnEquipmentChanged += HandleEquipmentChanged;
+            unitController.UnitEventController.OnUnlearnAbilities += HandleUnlearnClassAbilities;
+            unitController.UnitEventController.OnLearnedCheckFail += HandleLearnedCheckFail;
+            unitController.UnitEventController.OnPowerResourceCheckFail += HandlePowerResourceCheckFail;
+            unitController.UnitEventController.OnCombatCheckFail += HandleCombatCheckFail;
+            unitController.UnitEventController.OnStealthCheckFail += HandleStealthCheckFail;
+            unitController.UnitEventController.OnAnimatedAbilityCheckFail += HandleAnimatedAbilityCheckFail;
+            unitController.UnitEventController.OnPerformAbility += HandlePerformAbility;
+            unitController.UnitEventController.OnBeginAbilityCoolDown += HandleBeginAbilityCoolDown;
+            //unitController.UnitEventController.OnTargetInAbilityRangeFail += HandleTargetInAbilityRangeFail;
+            unitController.UnitEventController.OnReputationChange += HandleReputationChange;
+            unitController.UnitEventController.OnUnlearnAbility += HandleUnlearnAbility;
+            unitController.UnitEventController.OnLearnAbility += HandleLearnAbility;
+            unitController.UnitEventController.OnActivateTargetingMode += HandleActivateTargetingMode;
+            unitController.UnitEventController.OnCombatMessage += HandleCombatMessage;
+            unitController.UnitEventController.OnMessageFeedMessage += HandleMessageFeedMessage;
         }
 
         public void UnsubscribeFromPlayerEvents() {
-            activeCharacter.CharacterStats.OnImmuneToEffect -= HandleImmuneToEffect;
-            activeCharacter.CharacterStats.OnDie -= HandleDie;
-            activeCharacter.CharacterStats.OnReviveBegin -= HandleReviveBegin;
-            activeCharacter.CharacterStats.OnReviveComplete -= HandleReviveComplete;
-            activeCharacter.CharacterStats.OnLevelChanged -= HandleLevelChanged;
-            activeCharacter.CharacterStats.OnGainXP -= HandleGainXP;
-            activeCharacter.CharacterStats.OnStatusEffectAdd -= HandleStatusEffectAdd;
-            activeCharacter.CharacterStats.OnRecoverResource -= HandleRecoverResource;
-            activeCharacter.CharacterStats.OnResourceAmountChanged -= HandleResourceAmountChanged;
-            activeCharacter.CharacterStats.OnCalculateRunSpeed -= HandleCalculateRunSpeed;
-            activeCharacter.CharacterCombat.OnKillEvent -= HandleKillEvent;
-            activeCharacter.CharacterCombat.OnEnterCombat -= HandleEnterCombat;
-            activeCharacter.CharacterCombat.OnDropCombat -= HandleDropCombat;
-            activeCharacter.CharacterCombat.OnUpdate -= HandleCombatUpdate;
-            activeCharacter.CharacterCombat.OnReceiveCombatMiss -= HandleCombatMiss;
-            activeCharacter.CharacterEquipmentManager.OnEquipmentChanged -= HandleEquipmentChanged;
-            activeCharacter.CharacterAbilityManager.OnUnlearnAbilities -= HandleUnlearnClassAbilities;
-            activeCharacter.CharacterAbilityManager.OnLearnedCheckFail -= HandleLearnedCheckFail;
-            activeCharacter.CharacterAbilityManager.OnPowerResourceCheckFail -= HandlePowerResourceCheckFail;
-            activeCharacter.CharacterAbilityManager.OnCombatCheckFail -= HandleCombatCheckFail;
-            activeCharacter.CharacterAbilityManager.OnStealthCheckFail -= HandleStealthCheckFail;
-            activeCharacter.CharacterAbilityManager.OnAnimatedAbilityCheckFail -= HandleAnimatedAbilityCheckFail;
-            activeCharacter.CharacterAbilityManager.OnPerformAbility -= HandlePerformAbility;
-            activeCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown -= HandleBeginAbilityCoolDown;
-            activeCharacter.CharacterAbilityManager.OnTargetInAbilityRangeFail -= HandleTargetInAbilityRangeFail;
-            activeCharacter.CharacterFactionManager.OnReputationChange -= HandleReputationChange;
-            activeCharacter.CharacterAbilityManager.OnUnlearnAbility -= HandleUnlearnAbility;
-            activeCharacter.CharacterAbilityManager.OnLearnAbility -= HandleLearnAbility;
-            activeCharacter.CharacterAbilityManager.OnActivateTargetingMode -= HandleActivateTargetingMode;
-            activeCharacter.CharacterAbilityManager.OnCombatMessage -= HandleCombatMessage;
-            activeCharacter.CharacterAbilityManager.OnMessageFeedMessage -= HandleMessageFeedMessage;
+            unitController.UnitEventController.OnImmuneToEffect -= HandleImmuneToEffect;
+            unitController.UnitEventController.OnBeforeDie -= HandleDie;
+            unitController.UnitEventController.OnReviveBegin -= HandleReviveBegin;
+            unitController.UnitEventController.OnReviveComplete -= HandleReviveComplete;
+            unitController.UnitEventController.OnLevelChanged -= HandleLevelChanged;
+            unitController.UnitEventController.OnGainXP -= HandleGainXP;
+            unitController.UnitEventController.OnStatusEffectAdd -= HandleStatusEffectAdd;
+            unitController.UnitEventController.OnRecoverResource -= HandleRecoverResource;
+            unitController.UnitEventController.OnResourceAmountChanged -= HandleResourceAmountChanged;
+            unitController.UnitEventController.OnCalculateRunSpeed -= HandleCalculateRunSpeed;
+            unitController.UnitEventController.OnKillEvent -= HandleKillEvent;
+            unitController.UnitEventController.OnEnterCombat -= HandleEnterCombat;
+            unitController.UnitEventController.OnDropCombat -= HandleDropCombat;
+            unitController.UnitEventController.OnCombatUpdate -= HandleCombatUpdate;
+            unitController.UnitEventController.OnReceiveCombatMiss -= HandleCombatMiss;
+            unitController.UnitEventController.OnEquipmentChanged -= HandleEquipmentChanged;
+            unitController.UnitEventController.OnUnlearnAbilities -= HandleUnlearnClassAbilities;
+            unitController.UnitEventController.OnLearnedCheckFail -= HandleLearnedCheckFail;
+            unitController.UnitEventController.OnPowerResourceCheckFail -= HandlePowerResourceCheckFail;
+            unitController.UnitEventController.OnCombatCheckFail -= HandleCombatCheckFail;
+            unitController.UnitEventController.OnStealthCheckFail -= HandleStealthCheckFail;
+            unitController.UnitEventController.OnAnimatedAbilityCheckFail -= HandleAnimatedAbilityCheckFail;
+            unitController.UnitEventController.OnPerformAbility -= HandlePerformAbility;
+            unitController.UnitEventController.OnBeginAbilityCoolDown -= HandleBeginAbilityCoolDown;
+            //unitController.UnitEventController.OnTargetInAbilityRangeFail -= HandleTargetInAbilityRangeFail;
+            unitController.UnitEventController.OnReputationChange -= HandleReputationChange;
+            unitController.UnitEventController.OnUnlearnAbility -= HandleUnlearnAbility;
+            unitController.UnitEventController.OnLearnAbility -= HandleLearnAbility;
+            unitController.UnitEventController.OnActivateTargetingMode -= HandleActivateTargetingMode;
+            unitController.UnitEventController.OnCombatMessage -= HandleCombatMessage;
+            unitController.UnitEventController.OnMessageFeedMessage -= HandleMessageFeedMessage;
         }
 
         public void HandleAddInventoryBagNode(BagNode bagNode) {
@@ -732,7 +694,7 @@ namespace AnyRPG {
         }
 
         public void HandleCombatUpdate() {
-            activeCharacter.CharacterCombat.HandleAutoAttack();
+            activeUnitController.CharacterCombat.HandleAutoAttack();
         }
 
         public void HandleDropCombat() {
@@ -791,9 +753,9 @@ namespace AnyRPG {
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
             if (PlayerUnitSpawned) {
                 if (slotIndex != -1) {
-                    MyCharacter.CharacterInventoryManager.AddInventoryItem(oldItem, slotIndex);
+                    UnitController.CharacterInventoryManager.AddInventoryItem(oldItem, slotIndex);
                 } else if (oldItem != null) {
-                    MyCharacter.CharacterInventoryManager.AddItem(oldItem, false);
+                    UnitController.CharacterInventoryManager.AddItem(oldItem, false);
                 }
             }
             systemEventManager.NotifyOnEquipmentChanged(newItem, oldItem);
@@ -821,12 +783,12 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleKillEvent(BaseCharacter sourceCharacter, float creditPercent) {
+        public void HandleKillEvent(UnitController sourceCharacter, float creditPercent) {
             if (creditPercent == 0) {
                 return;
             }
             //Debug.Log($"{gameObject.name}: About to gain xp from kill with creditPercent: " + creditPercent);
-            MyCharacter.CharacterStats.GainXP((int)(LevelEquations.GetXPAmountForKill(activeCharacter.CharacterStats.Level, sourceCharacter, systemConfigurationManager) * creditPercent));
+            UnitController.CharacterStats.GainXP((int)(LevelEquations.GetXPAmountForKill(unitController.CharacterStats.Level, sourceCharacter, systemConfigurationManager) * creditPercent));
         }
 
 
@@ -884,8 +846,9 @@ namespace AnyRPG {
             playerController.HandleReviveBegin();
         }
 
-        public void HandleDie(CharacterStats characterStats) {
-            playerController.HandleDie(characterStats);
+        public void HandleDie(UnitController deadUnitController) {
+            playerController.HandleDie();
+            uIManager.PlayerDeathHandler(deadUnitController);
             SystemEventManager.TriggerEvent("OnPlayerDeath", new EventParamProperties());
         }
 

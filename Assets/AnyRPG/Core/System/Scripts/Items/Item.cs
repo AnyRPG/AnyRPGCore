@@ -120,8 +120,8 @@ namespace AnyRPG {
 
         public int BuyPrice(ItemQuality usedItemQuality) {
             if (dynamicCurrencyAmount) {
-                //Debug.Log(DisplayName + ".Item.BuyPrice(" + (usedItemQuality == null ? "null" : usedItemQuality.DisplayName) + "): return: " + (int)(((pricePerLevel * GetItemLevel(playerManager.MyCharacter.CharacterStats.Level)) + basePrice) * (usedItemQuality == null ? 1 : usedItemQuality.BuyPriceMultiplier)));
-                return (int)(((pricePerLevel * GetItemLevel(playerManager.MyCharacter.CharacterStats.Level)) + basePrice) * (usedItemQuality == null ? 1 : usedItemQuality.BuyPriceMultiplier));
+                //Debug.Log(DisplayName + ".Item.BuyPrice(" + (usedItemQuality == null ? "null" : usedItemQuality.DisplayName) + "): return: " + (int)(((pricePerLevel * GetItemLevel(playerManager.UnitController.CharacterStats.Level)) + basePrice) * (usedItemQuality == null ? 1 : usedItemQuality.BuyPriceMultiplier)));
+                return (int)(((pricePerLevel * GetItemLevel(playerManager.UnitController.CharacterStats.Level)) + basePrice) * (usedItemQuality == null ? 1 : usedItemQuality.BuyPriceMultiplier));
             }
             //Debug.Log(DisplayName + ".Item.BuyPrice(" + (usedItemQuality == null ? "null" : usedItemQuality.DisplayName) + "): return: " + (int)(basePrice * (usedItemQuality == null ? 1 : usedItemQuality.BuyPriceMultiplier)));
             return (int)(basePrice * (usedItemQuality == null ? 1 : usedItemQuality.BuyPriceMultiplier));
@@ -167,8 +167,8 @@ namespace AnyRPG {
             Item newItem = systemItemManager.GetNewResource(ResourceName);
             if (newItem != null) {
                 //Debug.Log("RewardButton.CompleteQuest(): newItem is not null, adding to inventory");
-                newItem.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
-                playerManager.MyCharacter.CharacterInventoryManager.AddItem(newItem, false);
+                newItem.DropLevel = playerManager.UnitController.CharacterStats.Level;
+                playerManager.UnitController.CharacterInventoryManager.AddItem(newItem, false);
             }
         }
 
@@ -180,7 +180,7 @@ namespace AnyRPG {
 
         public virtual void UpdateChargeCount(ActionButton actionButton) {
             //Debug.Log(DisplayName + ".Item.UpdateChargeCount()");
-            int chargeCount = playerManager.MyCharacter.CharacterInventoryManager.GetUseableCount(this);
+            int chargeCount = playerManager.UnitController.CharacterInventoryManager.GetUseableCount(this);
             uIManager.UpdateStackSize(actionButton, chargeCount, true);
         }
 
@@ -190,10 +190,10 @@ namespace AnyRPG {
 
         public void AssignToActionButton(ActionButton actionButton) {
             //Debug.Log("the useable is an item");
-            if (playerManager.MyCharacter.CharacterInventoryManager.FromSlot != null) {
+            if (playerManager.UnitController.CharacterInventoryManager.FromSlot != null) {
                 // white, really?  this doesn't actually happen...
-                playerManager.MyCharacter.CharacterInventoryManager.FromSlot.Icon.color = Color.white;
-                playerManager.MyCharacter.CharacterInventoryManager.FromSlot = null;
+                playerManager.UnitController.CharacterInventoryManager.FromSlot.Icon.color = Color.white;
+                playerManager.UnitController.CharacterInventoryManager.FromSlot = null;
             } else {
                 //Debug.Log("ActionButton.SetUseable(): This must have come from another actionbar, not the inventory");
             }
@@ -207,7 +207,7 @@ namespace AnyRPG {
         }
 
         public virtual void UpdateActionButtonVisual(ActionButton actionButton) {
-            int count = playerManager.MyCharacter.CharacterInventoryManager.GetUseableCount(this);
+            int count = playerManager.UnitController.CharacterInventoryManager.GetUseableCount(this);
             // we have to do this to ensure we have a reference to the top item on the stack, otherwise we will try to use an item that has been used already
             //if ((count == 0 && removeStaleActions) || count > 0) {
             /*
@@ -247,7 +247,7 @@ namespace AnyRPG {
             int sellPrice = 0;
 
             if (dynamicCurrencyAmount) {
-                sellPrice = (pricePerLevel * GetItemLevel(playerManager.MyCharacter.CharacterStats.Level)) + basePrice;
+                sellPrice = (pricePerLevel * GetItemLevel(playerManager.UnitController.CharacterStats.Level)) + basePrice;
             } else {
                 sellPrice = basePrice;
             }
@@ -286,7 +286,7 @@ namespace AnyRPG {
             int sellPrice = 0;
 
             if (dynamicCurrencyAmount) {
-                sellPrice = (pricePerLevel * GetItemLevel(playerManager.MyCharacter.CharacterStats.Level)) + basePrice;
+                sellPrice = (pricePerLevel * GetItemLevel(playerManager.UnitController.CharacterStats.Level)) + basePrice;
             } else {
                 sellPrice = basePrice;
             }
@@ -328,7 +328,7 @@ namespace AnyRPG {
         }
 
         public bool ActionButtonUse() {
-            List<Item> itemList = playerManager.MyCharacter.CharacterInventoryManager?.GetItems(ResourceName, 1);
+            List<Item> itemList = playerManager.UnitController.CharacterInventoryManager?.GetItems(ResourceName, 1);
             if (itemList == null || itemList.Count == 0) {
                 return false;
             }
@@ -351,12 +351,12 @@ namespace AnyRPG {
 
         public virtual bool Use() {
             //Debug.Log("Base item class: using " + itemName);
-            if (!CharacterClassRequirementIsMet(playerManager.MyCharacter)) {
+            if (!CharacterClassRequirementIsMet(playerManager.UnitController.BaseCharacter)) {
                 messageFeedManager.WriteMessage("You are not the right character class to use " + DisplayName);
                 return false;
             }
-            //if (GetItemLevel(playerManager.MyCharacter.CharacterStats.Level) > playerManager.MyCharacter.CharacterStats.Level) {
-            if (useLevel > playerManager.MyCharacter.CharacterStats.Level) {
+            //if (GetItemLevel(playerManager.UnitController.CharacterStats.Level) > playerManager.UnitController.CharacterStats.Level) {
+            if (useLevel > playerManager.UnitController.CharacterStats.Level) {
                 messageFeedManager.WriteMessage("You are too low level use " + DisplayName);
                 return false;
             }
@@ -386,7 +386,7 @@ namespace AnyRPG {
             // NOTE : currently this is only called from places that apply to characters (quest and loot)
             // if in the future this function is called from somewhere an npc or preview character is used, it would be better to accept the
             // character as a parameter, rather than hard coding to the player
-            if (!CharacterClassRequirementIsMet(playerManager.MyCharacter)) {
+            if (!CharacterClassRequirementIsMet(playerManager.UnitController.BaseCharacter)) {
                 //Debug.Log(DisplayName + ".Item.RequirementsAreMet(): return false");
                 return false;
             }
@@ -426,7 +426,7 @@ namespace AnyRPG {
             }
             if (characterClassRequirementList.Count > 0) {
                 string colorString = "red";
-                if (realCharacterClassRequirementList.Contains(playerManager.MyCharacter.CharacterClass)) {
+                if (realCharacterClassRequirementList.Contains(playerManager.UnitController.BaseCharacter.CharacterClass)) {
                     colorString = "white";
                 }
                 descriptionString += string.Format("\n\n<color={0}>Required Classes: {1}</color>", colorString, string.Join(",", characterClassRequirementList));

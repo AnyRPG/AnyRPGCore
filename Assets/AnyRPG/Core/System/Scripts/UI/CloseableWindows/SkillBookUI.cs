@@ -25,7 +25,7 @@ namespace AnyRPG {
         protected override void PopulatePages() {
             //Debug.Log("SkillBookUI.CreatePages()");
             SkillContentList page = new SkillContentList();
-            foreach (Skill playerSkill in playerManager.MyCharacter.CharacterSkillManager.MySkillList.Values) {
+            foreach (Skill playerSkill in playerManager.UnitController.CharacterSkillManager.MySkillList.Values) {
                 page.skills.Add(playerSkill);
                 if (page.skills.Count == pageSize) {
                     pages.Add(page);

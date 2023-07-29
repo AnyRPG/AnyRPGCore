@@ -6,29 +6,20 @@ using UnityEngine;
 namespace AnyRPG {
     public class CharacterRecipeManager : ConfiguredClass {
 
-        protected BaseCharacter baseCharacter;
+        protected UnitController unitController;
 
         protected Dictionary<string, Recipe> recipeList = new Dictionary<string, Recipe>();
 
-        public BaseCharacter BaseCharacter {
-            get => baseCharacter;
-            set => baseCharacter = value;
-        }
-
         public Dictionary<string, Recipe> RecipeList { get => recipeList; }
 
-        public CharacterRecipeManager(BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
-            this.baseCharacter = baseCharacter;
+        public CharacterRecipeManager(UnitController unitController, SystemGameManager systemGameManager) {
+            this.unitController = unitController;
             Configure(systemGameManager);
-        }
-
-        public void Init() {
-            UpdateRecipeList(baseCharacter.CharacterStats.Level);
         }
 
         public virtual void UpdateRecipeList(int newLevel) {
             foreach (Recipe recipe in systemDataFactory.GetResourceList<Recipe>()) {
-                foreach (Skill skill in baseCharacter.CharacterSkillManager.MySkillList.Values) {
+                foreach (Skill skill in unitController.CharacterSkillManager.MySkillList.Values) {
                     if (!HasRecipe(recipe) && recipe.RequiredLevel <= newLevel && recipe.AutoLearn == true && skill.AbilityList.Contains(recipe.CraftAbility)) {
                         LearnRecipe(recipe);
                     }

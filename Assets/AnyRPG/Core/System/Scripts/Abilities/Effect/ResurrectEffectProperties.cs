@@ -41,7 +41,7 @@ namespace AnyRPG {
                 //Debug.Log("CharacterUnit is null? target despawn during cast?");
                 return;
             }
-            characterUnit.BaseCharacter.CharacterStats.Revive();
+            characterUnit.UnitController.CharacterStats.Revive();
         }
 
         public override bool CanUseOn(Interactable target, IAbilityCaster source, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
@@ -52,15 +52,15 @@ namespace AnyRPG {
             if (characterUnit == null) {
                 return false;
             }
-            if (characterUnit.BaseCharacter.CharacterStats.IsAlive == false && characterUnit.BaseCharacter.CharacterStats.IsReviving == false) {
+            if (characterUnit.UnitController.CharacterStats.IsAlive == false && characterUnit.UnitController.CharacterStats.IsReviving == false) {
                 return true;
             }
-            if (characterUnit.BaseCharacter.CharacterStats.IsAlive == true) {
+            if (characterUnit.UnitController.CharacterStats.IsAlive == true) {
                 if (playerInitiated) {
                     source.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". Target is already alive");
                 }
             }
-            if (characterUnit.BaseCharacter.CharacterStats.IsReviving == true) {
+            if (characterUnit.UnitController.CharacterStats.IsReviving == true) {
                 if (playerInitiated) {
                     source.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". Target is already reviving");
                 }

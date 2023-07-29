@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class LoadGameManager : ConfiguredMonoBehaviour, ICapabilityConsumer {
+    public class LoadGameManager : ConfiguredMonoBehaviour, ICapabilityConsumer, ICharacterConfigurationProvider {
 
         //public event System.Action<LoadGameButton> OnSetSavedGame = delegate { };
         public event System.Action OnDeleteGame = delegate { };
@@ -105,6 +105,10 @@ namespace AnyRPG {
             OnCopyGame();
         }
 
+        public CharacterConfigurationRequest GetCharacterConfigurationRequest() {
+            CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(this);
+            return characterConfigurationRequest;
+        }
     }
 
 }

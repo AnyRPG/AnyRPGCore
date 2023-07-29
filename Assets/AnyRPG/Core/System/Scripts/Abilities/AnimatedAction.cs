@@ -87,7 +87,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (!CanCast(playerManager.MyCharacter)) {
+            if (!CanCast(playerManager.UnitController)) {
                 //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): can't cast due to spell restrictions");
                 actionButton.EnableFullCoolDownIcon();
                 return;
@@ -145,7 +145,7 @@ namespace AnyRPG {
             string requireString = string.Empty;
             string colorString = string.Empty;
 
-            //string abilityRange = (GetTargetOptions(playerManager.MyCharacter).UseMeleeRange == true ? "melee" : GetTargetOptions(playerManager.MyCharacter).MaxRange + " meters");
+            //string abilityRange = (GetTargetOptions(playerManager.UnitController).UseMeleeRange == true ? "melee" : GetTargetOptions(playerManager.UnitController).MaxRange + " meters");
 
             return string.Format("<color=#ffff00ff>{0}</color>",
                 description);
@@ -166,9 +166,9 @@ namespace AnyRPG {
         public bool Use() {
             //Debug.Log(DisplayName + ".BaseAbility.Use()");
             // prevent casting any ability without the proper weapon affinity
-            if (CanCast(playerManager.MyCharacter, true)) {
+            if (CanCast(playerManager.UnitController, true)) {
                 //Debug.Log(DisplayName + ".BaseAbility.Use(): cancast is true");
-                //playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(this, true);
+                //playerManager.UnitController.CharacterAbilityManager.BeginAbility(this, true);
                 //playerManager.ActiveUnitController.UnitActionManager.BeginAction(this, true);
                 return true;
             }

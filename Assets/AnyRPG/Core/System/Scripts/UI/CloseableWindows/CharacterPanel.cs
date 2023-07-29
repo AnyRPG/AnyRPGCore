@@ -115,9 +115,9 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn()");
-            if (playerManager != null && playerManager.MyCharacter != null && playerManager.MyCharacter.CharacterStats != null) {
+            if (playerManager != null && playerManager.UnitController != null && playerManager.UnitController.CharacterStats != null) {
                 //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): subscribing to statChanged event");
-                playerManager.MyCharacter.CharacterStats.OnStatChanged += UpdateStatsDescription;
+                playerManager.UnitController.UnitEventController.OnStatChanged += UpdateStatsDescription;
             } else {
                 //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): could not find characterstats");
             }
@@ -127,8 +127,8 @@ namespace AnyRPG {
 
         public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("CharacterPanel.HandlePlayerUnitDespawn()");
-            if (playerManager != null && playerManager.MyCharacter != null && playerManager.MyCharacter.CharacterStats != null) {
-                playerManager.MyCharacter.CharacterStats.OnStatChanged -= UpdateStatsDescription;
+            if (playerManager != null && playerManager.UnitController != null && playerManager.UnitController.CharacterStats != null) {
+                playerManager.UnitController.UnitEventController.OnStatChanged -= UpdateStatsDescription;
             }
             systemEventManager.OnEquipmentChanged -= HandleEquipmentChanged;
         }
@@ -155,8 +155,8 @@ namespace AnyRPG {
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             //SetPreviewTarget();
             UpdateStatsDescription();
-            if (playerManager.MyCharacter != null) {
-                uIManager.characterPanelWindow.SetWindowTitle(playerManager.MyCharacter.CharacterName);
+            if (playerManager.UnitController != null) {
+                uIManager.characterPanelWindow.SetWindowTitle(playerManager.UnitController.BaseCharacter.CharacterName);
             }
             SetPreviewTarget();
         }
@@ -208,21 +208,21 @@ namespace AnyRPG {
                 Debug.LogError("Must set statsdescription text in inspector!");
             }
             string updateString = string.Empty;
-            updateString += "Name: " + playerManager.MyCharacter.CharacterName + "\n";
-            updateString += "Class: " + (playerManager.MyCharacter.CharacterClass == null ? "None" : playerManager.MyCharacter.CharacterClass.DisplayName) + "\n";
-            updateString += "Specialization: " + (playerManager.MyCharacter.ClassSpecialization == null ? "None" : playerManager.MyCharacter.ClassSpecialization.DisplayName) + "\n";
-            updateString += "Faction: " + (playerManager.MyCharacter.Faction == null ? "None" : playerManager.MyCharacter.Faction.DisplayName) + "\n";
-            updateString += "Unit Type: " + (playerManager.MyCharacter.UnitType == null ? "None" : playerManager.MyCharacter.UnitType.DisplayName) + "\n";
-            updateString += "Race: " + (playerManager.MyCharacter.CharacterRace == null ? "None" : playerManager.MyCharacter.CharacterRace.DisplayName) + "\n";
-            updateString += "Level: " + playerManager.MyCharacter.CharacterStats.Level + "\n";
-            updateString += "Experience: " + playerManager.MyCharacter.CharacterStats.CurrentXP + " / " + LevelEquations.GetXPNeededForLevel(playerManager.MyCharacter.CharacterStats.Level, systemConfigurationManager) + "\n\n";
+            updateString += "Name: " + playerManager.UnitController.BaseCharacter.CharacterName + "\n";
+            updateString += "Class: " + (playerManager.UnitController.BaseCharacter.CharacterClass == null ? "None" : playerManager.UnitController.BaseCharacter.CharacterClass.DisplayName) + "\n";
+            updateString += "Specialization: " + (playerManager.UnitController.BaseCharacter.ClassSpecialization == null ? "None" : playerManager.UnitController.BaseCharacter.ClassSpecialization.DisplayName) + "\n";
+            updateString += "Faction: " + (playerManager.UnitController.BaseCharacter.Faction == null ? "None" : playerManager.UnitController.BaseCharacter.Faction.DisplayName) + "\n";
+            updateString += "Unit Type: " + (playerManager.UnitController.BaseCharacter.UnitType == null ? "None" : playerManager.UnitController.BaseCharacter.UnitType.DisplayName) + "\n";
+            updateString += "Race: " + (playerManager.UnitController.BaseCharacter.CharacterRace == null ? "None" : playerManager.UnitController.BaseCharacter.CharacterRace.DisplayName) + "\n";
+            updateString += "Level: " + playerManager.UnitController.CharacterStats.Level + "\n";
+            updateString += "Experience: " + playerManager.UnitController.CharacterStats.CurrentXP + " / " + LevelEquations.GetXPNeededForLevel(playerManager.UnitController.CharacterStats.Level, systemConfigurationManager) + "\n\n";
 
-            foreach (string statName in playerManager.MyCharacter.CharacterStats.PrimaryStats.Keys) {
-                updateString += statName + ": " + playerManager.MyCharacter.CharacterStats.PrimaryStats[statName].CurrentValue;
-                if (playerManager.MyCharacter.CharacterStats.PrimaryStats[statName].CurrentValue != playerManager.MyCharacter.CharacterStats.PrimaryStats[statName].BaseValue) {
-                    updateString += " ( " + playerManager.MyCharacter.CharacterStats.PrimaryStats[statName].BaseValue +
-                        ((playerManager.MyCharacter.CharacterStats.PrimaryStats[statName].CurrentValue - playerManager.MyCharacter.CharacterStats.PrimaryStats[statName].BaseValue) > 0 ? " <color=green>+" : " <color=red>") +
-                        (playerManager.MyCharacter.CharacterStats.PrimaryStats[statName].CurrentValue - playerManager.MyCharacter.CharacterStats.PrimaryStats[statName].BaseValue) +
+            foreach (string statName in playerManager.UnitController.CharacterStats.PrimaryStats.Keys) {
+                updateString += statName + ": " + playerManager.UnitController.CharacterStats.PrimaryStats[statName].CurrentValue;
+                if (playerManager.UnitController.CharacterStats.PrimaryStats[statName].CurrentValue != playerManager.UnitController.CharacterStats.PrimaryStats[statName].BaseValue) {
+                    updateString += " ( " + playerManager.UnitController.CharacterStats.PrimaryStats[statName].BaseValue +
+                        ((playerManager.UnitController.CharacterStats.PrimaryStats[statName].CurrentValue - playerManager.UnitController.CharacterStats.PrimaryStats[statName].BaseValue) > 0 ? " <color=green>+" : " <color=red>") +
+                        (playerManager.UnitController.CharacterStats.PrimaryStats[statName].CurrentValue - playerManager.UnitController.CharacterStats.PrimaryStats[statName].BaseValue) +
                         "</color> )";
                 }
                 updateString += "\n";
@@ -230,75 +230,75 @@ namespace AnyRPG {
 
             updateString += "\n";
 
-            if (playerManager.MyCharacter.CharacterStats.PrimaryResource != null) {
-                updateString += playerManager.MyCharacter.CharacterStats.PrimaryResource.DisplayName + ": " + playerManager.MyCharacter.CharacterStats.CurrentPrimaryResource + " / " + playerManager.MyCharacter.CharacterStats.MaxPrimaryResource + "\n\n";
+            if (playerManager.UnitController.CharacterStats.PrimaryResource != null) {
+                updateString += playerManager.UnitController.CharacterStats.PrimaryResource.DisplayName + ": " + playerManager.UnitController.CharacterStats.CurrentPrimaryResource + " / " + playerManager.UnitController.CharacterStats.MaxPrimaryResource + "\n\n";
             }
 
-            updateString += "Amor: " + playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue + "\n";
+            updateString += "Amor: " + playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue + "\n";
             /*
-            updateString += "Armor: " + playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue;
-            if (playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue != playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].BaseValue) {
-                updateString += " ( " + playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].BaseValue + " + <color=green>" + playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].GetAddValue() + "</color> )";
+            updateString += "Armor: " + playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue;
+            if (playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue != playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Armor].BaseValue) {
+                updateString += " ( " + playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Armor].BaseValue + " + <color=green>" + playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Armor].GetAddValue() + "</color> )";
             }
             */
 
             updateString += "Physical Power: " +
-                (playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue +
-                playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue);
-            if (playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue != playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue ||
-                playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue != playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) {
+                (playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue +
+                playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue);
+            if (playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue != playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue ||
+                playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue != playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) {
                 updateString += " ( " +
-                    (playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue + playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) +
-                    (((playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue + playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue) - (playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue + playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue)) > 0 ? " <color=green>+" : " <color=red>") +
-                    ((playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue + playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue) - (playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue + playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue)) +
+                    (playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue + playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) +
+                    (((playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue + playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue) - (playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue + playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue)) > 0 ? " <color=green>+" : " <color=red>") +
+                    ((playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue + playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue) - (playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue + playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue)) +
                     "</color> )";
             }
             updateString += "\n";
 
             updateString += "SpellPower: " +
-                (playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue +
-                playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue);
-            if (playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue != playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue ||
-                playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue != playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) {
+                (playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue +
+                playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue);
+            if (playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue != playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue ||
+                playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue != playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) {
                 updateString += " ( " +
-                    (playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue + playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) +
-                    (((playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue + playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue) - (playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue + playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue)) > 0 ? " <color=green>+" : " <color=red>") +
-                    ((playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue + playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue) - (playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue + playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue)) +
+                    (playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue + playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) +
+                    (((playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue + playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue) - (playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue + playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue)) > 0 ? " <color=green>+" : " <color=red>") +
+                    ((playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue + playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue) - (playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue + playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue)) +
                     "</color> )";
             }
             updateString += "\n";
 
             updateString += "Critical Hit Chance: " +
-                playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue + "%";
-            if (playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue != playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue) {
+                playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue + "%";
+            if (playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue != playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue) {
                 updateString += " ( " +
-                    playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue +
-                    ((playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue - playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue) > 0 ? " <color=green>+" : " <color=red>")
-                    + (playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue - playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue) + "</color> )";
+                    playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue +
+                    ((playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue - playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue) > 0 ? " <color=green>+" : " <color=red>")
+                    + (playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue - playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue) + "</color> )";
             }
             updateString += "\n";
 
             updateString += "Accuracy: " +
-                LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.Accuracy, playerManager.MyCharacter.CharacterStats) +"%";
-            if (playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].CurrentValue != playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue) {
+                LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.Accuracy, playerManager.UnitController) +"%";
+            if (playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].CurrentValue != playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue) {
                 updateString += " ( " +
-                    playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue +
-                    ((playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].CurrentValue - playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue) > 0 ? " <color=green>+" : " <color=red>")
-                    + (playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].CurrentValue - playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue) + "</color> )";
+                    playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue +
+                    ((playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].CurrentValue - playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue) > 0 ? " <color=green>+" : " <color=red>")
+                    + (playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].CurrentValue - playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue) + "</color> )";
             }
             updateString += "\n";
 
             updateString += "Attack/Casting Speed: " +
-                LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.Speed, playerManager.MyCharacter.CharacterStats) + "%";
-            if (playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].CurrentValue != playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue) {
+                LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.Speed, playerManager.UnitController) + "%";
+            if (playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Speed].CurrentValue != playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue) {
                 updateString += " ( "
-                    //playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue +
-                    + ((playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].CurrentValue - playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue) > 0 ? "<color=green>+" : " + <color=red>")
-                    + (playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].CurrentValue - playerManager.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue) + "%</color> )";
+                    //playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue +
+                    + ((playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Speed].CurrentValue - playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue) > 0 ? "<color=green>+" : " + <color=red>")
+                    + (playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Speed].CurrentValue - playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue) + "%</color> )";
             }
             updateString += "\n";
 
-            updateString += "Movement Speed: " + Mathf.Clamp(playerManager.MyCharacter.CharacterStats.RunSpeed, 0, playerManager.MaxMovementSpeed).ToString("F2") + " (m/s)\n\n";
+            updateString += "Movement Speed: " + Mathf.Clamp(playerManager.UnitController.CharacterStats.RunSpeed, 0, playerManager.MaxMovementSpeed).ToString("F2") + " (m/s)\n\n";
 
             statsDescription.text = updateString;
         }

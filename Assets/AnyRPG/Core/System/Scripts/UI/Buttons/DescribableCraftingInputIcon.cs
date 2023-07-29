@@ -40,7 +40,7 @@ namespace AnyRPG {
             description.text = Describable.DisplayName;
 
             //if (count > 1) {
-            stackSize.text = playerManager.MyCharacter.CharacterInventoryManager.GetItemCount(Describable.DisplayName) + " / " + count.ToString();
+            stackSize.text = playerManager.UnitController.CharacterInventoryManager.GetItemCount(Describable.DisplayName) + " / " + count.ToString();
             //} else {
             //stackSize.text = "";
             //}
@@ -60,7 +60,7 @@ namespace AnyRPG {
                 return;
             }
             base.OnDisable();
-            if (playerManager.MyCharacter.CharacterInventoryManager != null) {
+            if (playerManager.UnitController.CharacterInventoryManager != null) {
                 systemEventManager.OnItemCountChanged -= UpdateVisual;
             }
 

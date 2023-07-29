@@ -98,7 +98,7 @@ namespace AnyRPG {
 
         protected void CheckSetMoveDestination() {
             //Debug.Log($"{unitController.gameObject.name}: UnitMotor.CheckSetMoveDestination()");
-            if (unitController?.CharacterUnit?.BaseCharacter?.CharacterStats.IsReviving == true) {
+            if (unitController.CharacterStats.IsReviving == true) {
                 // cannot issue move command while revive in progress
                 return;
             }
@@ -213,9 +213,9 @@ namespace AnyRPG {
             OnMovement();
             if (unitController != null
                 && unitController.CharacterUnit != null
-                && unitController.CharacterUnit.BaseCharacter != null
-                && unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager != null) {
-                unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.HandleManualMovement();
+                && unitController.BaseCharacter != null
+                && unitController.CharacterAbilityManager != null) {
+                unitController.CharacterAbilityManager.HandleManualMovement();
                 unitController.UnitActionManager.HandleManualMovement();
             }
         }
@@ -370,7 +370,6 @@ namespace AnyRPG {
         public void Move(Vector3 moveDirection, bool isKnockBack = false) {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.Move(" + moveDirection.x + ", " + moveDirection.y + ", " + moveDirection.z + "). current position: " + unitController.transform.position + "; Rigidbody velocity: " + unitController.RigidBody.velocity);
             if (isKnockBack
-                && unitController != null
                 && unitController.UnitControllerMode == UnitControllerMode.Player) {
                 if (playerManager.PlayerUnitMovementController != null) {
                     playerManager.PlayerUnitMovementController.KnockBack();

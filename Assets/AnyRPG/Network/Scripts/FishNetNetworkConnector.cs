@@ -32,7 +32,7 @@ namespace AnyRPG {
 
         [ServerRpc(RequireOwnership = false)]
         public void SpawnCharacterUnit(int clientSpawnRequestId, string unitProfileName, GameObject playerPrefab, Transform parentTransform, Vector3 position, Vector3 forward, UnitControllerMode unitControllerMode, int unitLevel, NetworkConnection networkConnection = null) {
-            Debug.Log($"FishNetNetworkConnector.SpawnPlayer({clientSpawnRequestId}, {unitProfileName}, {playerPrefab.name})");
+            //Debug.Log($"FishNetNetworkConnector.SpawnPlayer({clientSpawnRequestId}, {unitProfileName}, {playerPrefab.name})");
 
             NetworkObject networkPrefab = playerPrefab.GetComponent<NetworkObject>();
             if (networkPrefab == null) {
@@ -41,7 +41,10 @@ namespace AnyRPG {
             }
             int serverSpawnRequestId = characterManager.GetServerSpawnRequestId();
             UnitProfile unitProfile = systemDataFactory.GetResource<UnitProfile>(unitProfileName);
-            CharacterRequestData characterRequestData = new CharacterRequestData(null, GameMode.Network, unitProfile, unitControllerMode, unitLevel);
+            CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(unitProfile);
+            characterConfigurationRequest.unitLevel = unitLevel;
+            characterConfigurationRequest.unitControllerMode = unitControllerMode;
+            CharacterRequestData characterRequestData = new CharacterRequestData(null, GameMode.Network, characterConfigurationRequest);
             //characterManager.AddUnitSpawnRequest(serverSpawnRequestId, characterRequestData);
             NetworkObject nob = GetSpawnablePrefab(networkConnection, clientSpawnRequestId, serverSpawnRequestId, playerPrefab, parentTransform, position, forward);
             // update syncvars
@@ -108,7 +111,7 @@ namespace AnyRPG {
 
         [ServerRpc(RequireOwnership = false)]
         public void LoadSceneServer(NetworkConnection networkConnection, string sceneName) {
-            Debug.Log($"FishNetNetworkConnector.LoadSceneServer({networkConnection.ClientId}, {sceneName})");
+            //Debug.Log($"FishNetNetworkConnector.LoadSceneServer({networkConnection.ClientId}, {sceneName})");
 
             SceneLoadData sceneLoadData = new SceneLoadData(sceneName);
             sceneLoadData.ReplaceScenes = ReplaceOption.All;

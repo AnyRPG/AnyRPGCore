@@ -61,10 +61,10 @@ namespace AnyRPG {
             if (returnValue == false) {
                 return false;
             }
-            if (playerManager.MyCharacter.AbilityManager.ControlLocked) {
+            if (playerManager.UnitController.AbilityManager.ControlLocked) {
                 return false;
             }
-            if (playerManager.MyCharacter.AbilityManager.IsOnCoolDown(ResourceName)) {
+            if (playerManager.UnitController.AbilityManager.IsOnCoolDown(ResourceName)) {
                 messageFeedManager.WriteMessage("Item is on cooldown");
                 return false;
             }
@@ -74,7 +74,7 @@ namespace AnyRPG {
                 playerManager.UnitController.UnitActionManager.BeginAction(actionProperties);
             }
 
-            BeginAbilityCoolDown(playerManager.MyCharacter, coolDown);
+            BeginAbilityCoolDown(playerManager.UnitController, coolDown);
             Remove();
 
             return returnValue;
@@ -129,11 +129,11 @@ namespace AnyRPG {
 
         public string GetCooldownTimeString() {
             string coolDownString = string.Empty;
-            if (playerManager?.MyCharacter?.CharacterAbilityManager != null
-                && playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(ResourceName)) {
+            if (playerManager?.UnitController?.CharacterAbilityManager != null
+                && playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(ResourceName)) {
                 float dictionaryCooldown = 0f;
-                if (playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(ResourceName)) {
-                    dictionaryCooldown = playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary[ResourceName].RemainingCoolDown;
+                if (playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(ResourceName)) {
+                    dictionaryCooldown = playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary[ResourceName].RemainingCoolDown;
                 }
                 coolDownString = "\n\nCooldown Remaining: " + SystemAbilityController.GetTimeText(dictionaryCooldown);
             }
@@ -146,12 +146,12 @@ namespace AnyRPG {
             // set cooldown icon on abilities that don't have enough resources to cast
             base.UpdateActionButtonVisual(actionButton);
 
-            if (playerManager.MyCharacter.AbilityManager.ControlLocked) {
+            if (playerManager.UnitController.AbilityManager.ControlLocked) {
                 actionButton.EnableFullCoolDownIcon();
                 return;
             }
 
-            if (playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(ResourceName)) {
+            if (playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(ResourceName)) {
                 //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): Ability is on cooldown");
                 if (actionButton.CoolDownIcon.isActiveAndEnabled != true) {
                     //Debug.Log("ActionButton.UpdateVisual(): coolDownIcon is not enabled: " + (useable == null ? "null" : useable.DisplayName));
@@ -165,9 +165,9 @@ namespace AnyRPG {
                 }
                 float remainingAbilityCoolDown = 0f;
                 float initialCoolDown = 0f;
-                if (playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(ResourceName)) {
-                    remainingAbilityCoolDown = playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary[ResourceName].RemainingCoolDown;
-                    initialCoolDown = playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary[ResourceName].InitialCoolDown;
+                if (playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(ResourceName)) {
+                    remainingAbilityCoolDown = playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary[ResourceName].RemainingCoolDown;
+                    initialCoolDown = playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary[ResourceName].InitialCoolDown;
                 } else {
                     initialCoolDown = coolDown;
                 }

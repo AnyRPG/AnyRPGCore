@@ -10,7 +10,7 @@ namespace AnyRPG {
         [SerializeField]
         private SphereCollider aggroCollider = null;
 
-        private BaseCharacter baseCharacter = null;
+        private UnitController unitController = null;
 
         [SerializeField]
         private float aggroRadius = 20f;
@@ -18,7 +18,7 @@ namespace AnyRPG {
         [SerializeField]
         private bool autoEnableAgro = true;
 
-        public BaseCharacter BaseCharacter { get => baseCharacter; set => baseCharacter = value; }
+        public UnitController UnitController { get => unitController; set => unitController = value; }
 
         private void OnEnable() {
             SetLayer();
@@ -35,7 +35,7 @@ namespace AnyRPG {
         public void StartEnableAggro() {
             //Debug.Log("AggroRange.StartEnableAggro()");
             if (autoEnableAgro
-                || (baseCharacter?.UnitController?.UnitProfile != null && baseCharacter.UnitController.UnitProfile.IsAggressive == true)) {
+                || (unitController.UnitProfile != null && unitController.UnitProfile.IsAggressive == true)) {
                 EnableAggro();
             }
         }
@@ -49,9 +49,9 @@ namespace AnyRPG {
             aggroCollider.radius = aggroRadius;
         }
 
-        public void SetAgroRange(float newRange, BaseCharacter baseCharacter) {
+        public void SetAgroRange(float newRange, UnitController unitController) {
             //Debug.Log("AggroRange.SetAgroRange(" + newRange + ")");
-            this.baseCharacter = baseCharacter;
+            this.unitController = unitController;
             aggroRadius = newRange;
             if (aggroCollider != null) {
                 aggroCollider.radius = aggroRadius;
@@ -68,7 +68,7 @@ namespace AnyRPG {
         }
 
         private void OnTriggerEnter(Collider collider) {
-            if (baseCharacter == null) {
+            if (unitController == null) {
                 return;
             }
             // if a player enters our sphere, target him (which has the effect of agro because the idle state will follow any target the enemycontroller has)
@@ -84,20 +84,20 @@ namespace AnyRPG {
             }
 
             // cannot agro characters that are stealthed
-            if (_characterUnit.BaseCharacter.CharacterStats.IsStealthed == true) {
+            if (_characterUnit.UnitController.CharacterStats.IsStealthed == true) {
                 return;
             }
 
-            BaseCharacter otherBaseCharacter = _characterUnit.BaseCharacter;
+            UnitController otherUnitController = _characterUnit.UnitController;
             // remove requirement for other character to have faction because a neutral character would not get attacked by hostile factions
-            //if (otherBaseCharacter != null && otherBaseCharacter.CharacterCombat != null && otherBaseCharacter.CharacterStats.IsAlive == true && otherBaseCharacter.Faction != null && baseCharacter != null && baseCharacter.Faction != null) {
-            if (otherBaseCharacter != null && otherBaseCharacter.CharacterCombat != null
-                && otherBaseCharacter.CharacterStats.IsAlive == true
-                && baseCharacter?.Faction != null) {
-                if (Faction.RelationWith(otherBaseCharacter, BaseCharacter) <= -1) {
+            //if (otherBaseCharacter != null && otherBaseCharacter.CharacterCombat != null && otherunitController.CharacterStats.IsAlive == true && otherBaseCharacter.Faction != null && baseCharacter != null && baseCharacter.Faction != null) {
+            if (otherUnitController != null
+                && otherUnitController.CharacterStats.IsAlive == true
+                && unitController.BaseCharacter.Faction != null) {
+                if (Faction.RelationWith(otherUnitController, UnitController) <= -1) {
                     //baseCharacter.CharacterCombat.MyAggroTable.AddToAggroTable(_characterUnit, -1);
                     //baseCharacter.CharacterCombat.EnterCombat(targetInteractable);
-                    baseCharacter.UnitController.ProximityAggro(_characterUnit);
+                    unitController.ProximityAggro(_characterUnit);
 
                 }
             }

@@ -42,7 +42,7 @@ namespace AnyRPG {
             if (completeBefore) {
                 return;
             }
-            if (playerManager.MyCharacter.CharacterStats.GetStatusEffectNode(statusEffect) != null) {
+            if (playerManager.UnitController.CharacterStats.GetStatusEffectNode(statusEffect) != null) {
                 CurrentAmount++;
                 questBase.CheckCompletion(true, printMessages);
                 if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages && printMessages == true) {

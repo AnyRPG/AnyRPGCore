@@ -43,8 +43,8 @@ namespace AnyRPG {
             if (completeBefore) {
                 return;
             }
-            CurrentAmount = playerManager.MyCharacter.CharacterInventoryManager.GetItemCount(itemName, partialMatch);
-            CurrentAmount += playerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentCount(itemName, partialMatch);
+            CurrentAmount = playerManager.UnitController.CharacterInventoryManager.GetItemCount(itemName, partialMatch);
+            CurrentAmount += playerManager.UnitController.CharacterEquipmentManager.GetEquipmentCount(itemName, partialMatch);
 
             questBase.CheckCompletion(true, printMessages);
             if (CurrentAmount <= Amount && questBase.PrintObjectiveCompletionMessages && printMessages == true && CurrentAmount != 0) {
@@ -57,7 +57,7 @@ namespace AnyRPG {
         }
 
         public void Complete() {
-            List<Item> items = playerManager.MyCharacter.CharacterInventoryManager.GetItems(itemName, Amount);
+            List<Item> items = playerManager.UnitController.CharacterInventoryManager.GetItems(itemName, Amount);
             foreach (Item item in items) {
                 item.Remove();
             }

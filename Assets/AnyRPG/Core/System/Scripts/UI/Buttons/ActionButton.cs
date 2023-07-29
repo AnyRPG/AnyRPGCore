@@ -229,9 +229,9 @@ namespace AnyRPG {
         public void SetUseable(IUseable useable, bool monitor = true) {
             //Debug.Log($"{gameObject.name}.ActionButton.SetUsable(" + (useable == null ? "null" : useable.DisplayName) + ")");
 
-            playerManager.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility -= OnAttemptUseableUse;
-            playerManager.MyCharacter.CharacterAbilityManager.OnPerformAbility -= OnUseableUse;
-            playerManager.MyCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown -= HandleBeginAbilityCooldown;
+            playerManager.UnitController.UnitEventController.OnAttemptPerformAbility -= OnAttemptUseableUse;
+            playerManager.UnitController.UnitEventController.OnPerformAbility -= OnUseableUse;
+            playerManager.UnitController.UnitEventController.OnBeginAbilityCoolDown -= HandleBeginAbilityCooldown;
 
             UnsubscribeFromCombatEvents();
 
@@ -243,9 +243,9 @@ namespace AnyRPG {
             //Useable = useable;
             LoadUseable(useable);
 
-            playerManager.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility += OnAttemptUseableUse;
-            playerManager.MyCharacter.CharacterAbilityManager.OnPerformAbility += OnUseableUse;
-            playerManager.MyCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown += HandleBeginAbilityCooldown;
+            playerManager.UnitController.UnitEventController.OnAttemptPerformAbility += OnAttemptUseableUse;
+            playerManager.UnitController.UnitEventController.OnPerformAbility += OnUseableUse;
+            playerManager.UnitController.UnitEventController.OnBeginAbilityCoolDown += HandleBeginAbilityCooldown;
 
             SubscribeToCombatEvents();
             SubscribeToStealthEvents();
@@ -269,15 +269,15 @@ namespace AnyRPG {
 
         public void SubscribeToCombatEvents() {
             if (Useable != null && Useable.RequireOutOfCombat == true) {
-                playerManager.MyCharacter.CharacterCombat.OnEnterCombat += HandleEnterCombat;
-                playerManager.MyCharacter.CharacterCombat.OnDropCombat += HandleDropCombat;
+                playerManager.ActiveUnitController.UnitEventController.OnEnterCombat += HandleEnterCombat;
+                playerManager.ActiveUnitController.UnitEventController.OnDropCombat += HandleDropCombat;
             }
         }
 
         public void SubscribeToStealthEvents() {
             if (Useable != null && Useable.RequireStealth == true) {
-                playerManager.MyCharacter.CharacterStats.OnEnterStealth += HandleEnterStealth;
-                playerManager.MyCharacter.CharacterStats.OnLeaveStealth += HandleLeaveStealth;
+                playerManager.ActiveUnitController.UnitEventController.OnEnterStealth += HandleEnterStealth;
+                playerManager.ActiveUnitController.UnitEventController.OnLeaveStealth += HandleLeaveStealth;
             }
         }
 
@@ -320,8 +320,8 @@ namespace AnyRPG {
             yield return null;
 
             while (Useable != null
-                && playerManager.MyCharacter.CharacterCombat.GetInCombat() == true
-                && playerManager.MyCharacter.CharacterCombat.AutoAttackActive == true) {
+                && playerManager.UnitController.CharacterCombat.GetInCombat() == true
+                && playerManager.UnitController.CharacterCombat.AutoAttackActive == true) {
                 UpdateVisual();
                 yield return new WaitForSeconds(0.5f);
             }
@@ -337,7 +337,7 @@ namespace AnyRPG {
         public IEnumerator MonitorCooldown(IUseable useable) {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + ")");
             while (Useable != null
-                && playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(useable.DisplayName)) {
+                && playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(useable.DisplayName)) {
                 UpdateVisual();
                 yield return null;
             }
@@ -354,8 +354,8 @@ namespace AnyRPG {
         public IEnumerator MonitorAbility(string abilityName) {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + ")");
             while (Useable != null
-                && (playerManager.MyCharacter.CharacterAbilityManager.RemainingGlobalCoolDown > 0f
-                || playerManager.MyCharacter.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(abilityName))) {
+                && (playerManager.UnitController.CharacterAbilityManager.RemainingGlobalCoolDown > 0f
+                || playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(abilityName))) {
                 UpdateVisual();
                 yield return null;
             }
@@ -395,7 +395,7 @@ namespace AnyRPG {
         /// </summary>
         public void UpdateVisual() {
             //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.UpdateVisual() useable: " + (useable == null ? "null" : useable.DisplayName));
-            if (playerManager == null || playerManager.MyCharacter == null) {
+            if (playerManager == null || playerManager.UnitController == null) {
                 return;
             }
 
@@ -494,15 +494,15 @@ namespace AnyRPG {
 
         public void UnsubscribeFromCombatEvents() {
             if (Useable != null && Useable.RequireOutOfCombat == true) {
-                playerManager.MyCharacter.CharacterCombat.OnEnterCombat -= HandleEnterCombat;
-                playerManager.MyCharacter.CharacterCombat.OnDropCombat -= HandleDropCombat;
+                playerManager.ActiveUnitController.UnitEventController.OnEnterCombat -= HandleEnterCombat;
+                playerManager.ActiveUnitController.UnitEventController.OnDropCombat -= HandleDropCombat;
             }
         }
 
         public void UnsubscribeFromStealthEvents() {
             if (Useable != null && Useable.RequireStealth == true) {
-                playerManager.MyCharacter.CharacterStats.OnEnterStealth -= HandleEnterStealth;
-                playerManager.MyCharacter.CharacterStats.OnLeaveStealth -= HandleLeaveStealth;
+                playerManager.ActiveUnitController.UnitEventController.OnEnterStealth -= HandleEnterStealth;
+                playerManager.ActiveUnitController.UnitEventController.OnLeaveStealth -= HandleLeaveStealth;
             }
         }
 

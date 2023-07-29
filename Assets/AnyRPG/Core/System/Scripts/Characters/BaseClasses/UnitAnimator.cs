@@ -502,10 +502,10 @@ namespace AnyRPG {
             lastAnimationHits = GetAnimationHitCount(animationClip);
 
             // tell the animator to play the animation
-            SetAttacking(true, true, unitController.CharacterUnit.BaseCharacter.CharacterStats.GetSpeedModifiers() / 100f);
+            SetAttacking(true, true, unitController.CharacterStats.GetSpeedModifiers() / 100f);
 
             // there were 2 pieces of code that were setting animation speed.  One was using 1f / and one was not.  Not sure which one is correct?!!!
-            //SetAttacking(true, true, 1f / (unitController.CharacterUnit.BaseCharacter.CharacterStats.GetSpeedModifiers() / 100f));
+            //SetAttacking(true, true, 1f / (unitController.CharacterStats.GetSpeedModifiers() / 100f));
 
             //return speedNormalizedAnimationLength;
         }
@@ -524,14 +524,14 @@ namespace AnyRPG {
                 float animationLength = animationClip.length;
             }
 
-            if (baseAbility.GetUnitAnimationProps(unitController.CharacterUnit.BaseCharacter)?.UseRootMotion == true) {
+            if (baseAbility.GetUnitAnimationProps(unitController)?.UseRootMotion == true) {
                 unitController.SetUseRootMotion(true);
             } else {
                 unitController.SetUseRootMotion(false);
             }
 
-            if (baseAbility.GetAbilityCastingTime(unitController.CharacterUnit.BaseCharacter) > 0f) {
-                SetCasting(true, true, (baseAbility.UseSpeedMultipliers == true ? (unitController.CharacterUnit.BaseCharacter.CharacterStats.GetSpeedModifiers() / 100f) : 1f));
+            if (baseAbility.GetAbilityCastingTime(unitController) > 0f) {
+                SetCasting(true, true, (baseAbility.UseSpeedMultipliers == true ? (unitController.CharacterStats.GetSpeedModifiers() / 100f) : 1f));
             }
         }
 
@@ -553,7 +553,7 @@ namespace AnyRPG {
             }
 
             /*
-            if (baseAbility.GetUnitAnimationProps(unitController.CharacterUnit.BaseCharacter).UseRootMotion == true) {
+            if (baseAbility.GetUnitAnimationProps(unitController.BaseCharacter).UseRootMotion == true) {
                 unitController.SetUseRootMotion(true);
             } else {
                 unitController.SetUseRootMotion(false);
@@ -622,8 +622,8 @@ namespace AnyRPG {
             }
             //Debug.Log($"{gameObject.name}Setting waitingforhits to false after countdown down");
             SetBool("IsDead", false);
-            if (unitController != null && unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
-                unitController.CharacterUnit.BaseCharacter.CharacterStats.ReviveComplete();
+            if (unitController != null && unitController.BaseCharacter != null && unitController.CharacterStats != null) {
+                unitController.CharacterStats.ReviveComplete();
             }
             OnReviveComplete();
             SetCorrectOverrideController();
@@ -795,7 +795,7 @@ namespace AnyRPG {
             }
 
             // testing, no real need to restrict this to player.  anything should be able to rotate instead of strafe?
-            //if (unitController.UnitProfile.UnitPrefabProps.RotateModel && unitController.UnitControllerMode == UnitControllerMode.Player) {
+            //if (unitController.UnitProfile.UnitPrefabProps.RotateModel && unitControllerMode == UnitControllerMode.Player) {
             if (unitController.UnitProfile.UnitPrefabProps.RotateModel || controlsManager.GamePadModeActive == true) {
                 //Debug.Log($"{gameObject.name}.CharacterAnimator.SetVelocity(" + varValue + "): rotating model");
 
@@ -807,7 +807,7 @@ namespace AnyRPG {
                     Vector3 normalizedVector = varValue.normalized;
                     if (normalizedVector.x != 0 || normalizedVector.z != 0) {
                         Vector3 newDirection;
-                        //if (controlsManager.GamePadModeActive == true && unitController.UnitControllerMode == UnitControllerMode.Player) {
+                        //if (controlsManager.GamePadModeActive == true && unitControllerMode == UnitControllerMode.Player) {
                         //newDirection = Quaternion.LookRotation(new Vector3(cameraManager.ActiveMainCamera.transform.forward.x, 0f, cameraManager.ActiveMainCamera.transform.forward.z).normalized) * new Vector3(normalizedVector.x, 0, normalizedVector.z);
                         //newDirection = cameraManager.MainCameraGameObject.transform.TransformDirection
                         //} else {
@@ -853,10 +853,7 @@ namespace AnyRPG {
                 float usedBaseStrafeForwardRightAnimationSpeed;
 
 
-                if (unitController != null
-                    && unitController.CharacterUnit.BaseCharacter != null
-                    && unitController.CharacterUnit.BaseCharacter.CharacterCombat != null
-                    && unitController.CharacterUnit.BaseCharacter.CharacterCombat.GetInCombat() == true) {
+                if (unitController.CharacterCombat.GetInCombat() == true) {
                     // in combat
                     usedBaseMoveForwardAnimationSpeed = (absValue >= 2 ? baseCombatRunAnimationSpeed : baseCombatWalkAnimationSpeed);
                     usedbaseWalkBackAnimationSpeed = (absValue >= 2 ? baseCombatRunBackAnimationSpeed : baseCombatWalkBackAnimationSpeed);

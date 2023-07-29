@@ -119,7 +119,7 @@ namespace AnyRPG {
             unitComponentController.PlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomVictory);
         }
 
-        public void HandleBeforeDie(CharacterStats characterStats) {
+        public void HandleBeforeDie(UnitController targetUnitController) {
             if (unitController.UnitProfile == null) {
                 return;
             }

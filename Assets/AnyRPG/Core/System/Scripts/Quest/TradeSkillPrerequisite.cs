@@ -24,7 +24,7 @@ namespace AnyRPG {
 
         public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
-            bool checkResult = playerManager.MyCharacter.CharacterSkillManager.HasSkill(prerequisiteSkill);
+            bool checkResult = playerManager.UnitController.CharacterSkillManager.HasSkill(prerequisiteSkill);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
                 if (notify == true) {

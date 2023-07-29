@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class CharacterCreatorWindowPanel : CloseableWindowContents, ICharacterEditor {
+    public class CharacterCreatorWindowPanel : CloseableWindowContents, ICharacterEditor, ICharacterConfigurationProvider {
 
         [Header("Character Creator")]
 
@@ -142,7 +142,7 @@ namespace AnyRPG {
             characterCreatorManager.OnUnitCreated += HandleUnitCreated;
             characterCreatorManager.OnModelCreated += HandleModelCreated;
 
-            characterPreviewPanel.CapabilityConsumer = this;
+            characterPreviewPanel.CharacterConfigurationProvider = this;
             characterPreviewPanel.ReceiveOpenWindowNotification();
 
             defaultAppearancePanel.ReceiveOpenWindowNotification();
@@ -169,17 +169,17 @@ namespace AnyRPG {
             // set unit profile to default
             if (characterCreatorInteractableManager.CharacterCreator.Props.UnitProfileList.Count == 0) {
                 if (characterCreatorInteractableManager.CharacterCreator.Props.AllowGenderChange == true) {
-                    characterRace = playerManager.ActiveCharacter.UnitProfile.CharacterRace;
+                    characterRace = playerManager.UnitController.UnitProfile.CharacterRace;
                 }
-                UpdateUnitProfile(playerManager.ActiveCharacter.UnitProfile);
+                UpdateUnitProfile(playerManager.UnitController.UnitProfile);
                 return;
             }
 
-            if (characterCreatorInteractableManager.CharacterCreator.Props.UnitProfileList.Contains(playerManager.ActiveCharacter.UnitProfile)) {
+            if (characterCreatorInteractableManager.CharacterCreator.Props.UnitProfileList.Contains(playerManager.UnitController.UnitProfile)) {
                 if (characterCreatorInteractableManager.CharacterCreator.Props.AllowGenderChange == true) {
-                    characterRace = playerManager.ActiveCharacter.UnitProfile.CharacterRace;
+                    characterRace = playerManager.UnitController.UnitProfile.CharacterRace;
                 }
-                UpdateUnitProfile(playerManager.ActiveCharacter.UnitProfile);
+                UpdateUnitProfile(playerManager.UnitController.UnitProfile);
             } else {
                 if (characterCreatorInteractableManager.CharacterCreator.Props.AllowGenderChange == true) {
                     characterRace = characterCreatorInteractableManager.CharacterCreator.Props.UnitProfileList[0].CharacterRace;
@@ -254,10 +254,10 @@ namespace AnyRPG {
             Vector3 currentPlayerLocation = playerManager.ActiveUnitController.transform.position;
             levelManager.SetSpawnRotationOverride(playerManager.ActiveUnitController.transform.forward);
             playerManager.DespawnPlayerUnit();
-            playerManager.MyCharacter.SetUnitProfile(unitProfile.ResourceName, true, -1, false);
+            saveManager.CurrentSaveData.unitProfileName = unitProfile.ResourceName;
             playerManager.SpawnPlayerUnit(currentPlayerLocation);
-            if (playerManager.MyCharacter.CharacterAbilityManager != null) {
-                playerManager.MyCharacter.CharacterAbilityManager.LearnDefaultAutoAttackAbility();
+            if (playerManager.UnitController.CharacterAbilityManager != null) {
+                playerManager.UnitController.CharacterAbilityManager.LearnDefaultAutoAttackAbility();
             }
 
             characterCreatorInteractableManager.ConfirmAction();
@@ -289,12 +289,12 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorWindowPanel.EquipCharacter()");
 
             // only set saved appearance if displaying the same unit as the existing player unit
-            if (playerManager.ActiveCharacter.UnitProfile == UnitProfile) {
+            if (playerManager.UnitController.UnitProfile == UnitProfile) {
                 characterCreatorManager.PreviewUnitController.UnitModelController.SetInitialSavedAppearance(saveManager.CurrentSaveData);
             }
 
-            foreach (EquipmentSlotProfile equipmentSlotProfile in playerManager.ActiveCharacter.CharacterEquipmentManager.CurrentEquipment.Keys) {
-                characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.CurrentEquipment.Add(equipmentSlotProfile, playerManager.ActiveCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
+            foreach (EquipmentSlotProfile equipmentSlotProfile in playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment.Keys) {
+                characterCreatorManager.PreviewUnitController.CharacterEquipmentManager.CurrentEquipment.Add(equipmentSlotProfile, playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
             }
 
         }
@@ -320,6 +320,11 @@ namespace AnyRPG {
             }
             */
 
+        }
+
+        public CharacterConfigurationRequest GetCharacterConfigurationRequest() {
+            CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(this);
+            return characterConfigurationRequest;
         }
 
         /*

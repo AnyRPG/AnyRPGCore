@@ -39,7 +39,7 @@ namespace AnyRPG {
         }
 
         public void GiveReward() {
-            playerManager.MyCharacter.CharacterFactionManager.AddReputation(Faction, reputationAmount);
+            playerManager.UnitController.CharacterFactionManager.AddReputation(Faction, reputationAmount);
         }
 
         public bool HasReward() {

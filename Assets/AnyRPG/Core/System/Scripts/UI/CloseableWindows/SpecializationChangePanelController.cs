@@ -59,7 +59,7 @@ namespace AnyRPG {
 
             ClearTraitRewardIcons();
             // show trait rewards
-            CapabilityProps capabilityProps = specializationChangeManager.ClassSpecialization.GetFilteredCapabilities(playerManager.ActiveCharacter);
+            CapabilityProps capabilityProps = specializationChangeManager.ClassSpecialization.GetFilteredCapabilities(playerManager.UnitController.BaseCharacter);
             if (capabilityProps.TraitList.Count > 0) {
                 traitsArea.gameObject.SetActive(true);
             } else {
@@ -73,7 +73,7 @@ namespace AnyRPG {
                     rewardIcon.SetOptions(rectTransform, false);
                     rewardIcon.SetDescribable(capabilityProps.TraitList[i]);
                     traitRewardIcons.Add(rewardIcon);
-                    if ((capabilityProps.TraitList[i].AbilityEffectProperties as StatusEffectProperties).RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
+                    if ((capabilityProps.TraitList[i].AbilityEffectProperties as StatusEffectProperties).RequiredLevel > playerManager.UnitController.CharacterStats.Level) {
                         rewardIcon.StackSizeText.text = "Level\n" + (capabilityProps.TraitList[i].AbilityEffectProperties as StatusEffectProperties).RequiredLevel;
                         rewardIcon.HighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
@@ -86,7 +86,7 @@ namespace AnyRPG {
 
             ClearRewardIcons();
             // show ability rewards
-            CapabilityProps capabilityProps = specializationChangeManager.ClassSpecialization.GetFilteredCapabilities(playerManager.ActiveCharacter);
+            CapabilityProps capabilityProps = specializationChangeManager.ClassSpecialization.GetFilteredCapabilities(playerManager.UnitController.BaseCharacter);
             if (capabilityProps.AbilityList.Count > 0) {
                 abilitiesArea.gameObject.SetActive(true);
             } else {
@@ -100,7 +100,7 @@ namespace AnyRPG {
                     rewardIcon.SetOptions(rectTransform, false);
                     rewardIcon.SetDescribable(capabilityProps.AbilityList[i]);
                     abilityRewardIcons.Add(rewardIcon);
-                    if (capabilityProps.AbilityList[i].RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
+                    if (capabilityProps.AbilityList[i].RequiredLevel > playerManager.UnitController.CharacterStats.Level) {
                         rewardIcon.StackSizeText.text = "Level\n" + capabilityProps.AbilityList[i].RequiredLevel;
                         rewardIcon.HighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
