@@ -92,8 +92,14 @@ namespace AnyRPG {
                 return;
             }
 
+            CharacterConfigurationRequest characterConfigurationRequest = characterConfigurationProvider.GetCharacterConfigurationRequest();
+
             //spawn correct preview unit
-            characterCreatorManager.SpawnUnit(characterConfigurationProvider.GetCharacterConfigurationRequest());
+            if (characterConfigurationRequest.unitProfile == null) {
+                // if this window is opened before a unit profile is available from the provider, there will be no character to spawn
+                return;
+            }
+            characterCreatorManager.SpawnUnit(characterConfigurationRequest);
 
             if (cameraManager.CharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");

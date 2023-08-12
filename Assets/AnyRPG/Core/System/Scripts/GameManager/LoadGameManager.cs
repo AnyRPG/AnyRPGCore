@@ -62,7 +62,7 @@ namespace AnyRPG {
 
 
         public void SetSavedGame(AnyRPGSaveData saveData) {
-            //Debug.Log("LoadGameManager.SetSavedGame()");
+            Debug.Log("LoadGameManager.SetSavedGame()");
 
             anyRPGSaveData = saveData;
             capabilityConsumerSnapshot = saveManager.GetCapabilityConsumerSnapshot(anyRPGSaveData);
@@ -106,6 +106,8 @@ namespace AnyRPG {
         }
 
         public CharacterConfigurationRequest GetCharacterConfigurationRequest() {
+            Debug.Log("LoadGameManager.GetCharacterConfigurationRequest()");
+
             CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(this);
             return characterConfigurationRequest;
         }

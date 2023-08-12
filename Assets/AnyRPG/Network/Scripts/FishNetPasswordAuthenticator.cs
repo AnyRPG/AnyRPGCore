@@ -42,7 +42,7 @@ namespace AnyRPG
         {
             base.InitializeOnce(networkManager);
 
-            Debug.Log("FishNetPasswordAuthenticator.InitializeOnce()");
+            //Debug.Log("FishNetPasswordAuthenticator.InitializeOnce()");
 
             // create instance of GameServerClient
             gameServerClient = new GameServerClient(serverAddress);
