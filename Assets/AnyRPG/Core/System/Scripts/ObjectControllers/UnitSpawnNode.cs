@@ -403,10 +403,10 @@ namespace AnyRPG {
 
 
             //Debug.Log("UnitSpawnNode.Spawn(): afterMove: navhaspath: " + navMeshAgent.hasPath + "; isOnNavMesh: " + navMeshAgent.isOnNavMesh + "; pathpending: " + navMeshAgent.pathPending);
-            CharacterUnit characterUnit = unitController.CharacterUnit;
+            //CharacterUnit characterUnit = unitController.CharacterUnit;
 
             if (respawnOn == respawnCondition.Despawn) {
-                characterUnit.OnDespawn += HandleDespawn;
+                unitController.UnitEventController.OnDespawn += HandleDespawn;
             } else if (respawnOn == respawnCondition.Loot) {
                 LootableCharacterComponent tmpLootableCharacter = LootableCharacterComponent.GetLootableCharacterComponent(unitController);
                 if (tmpLootableCharacter != null) {
@@ -516,7 +516,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.UnitSpawnNode.DestroySpawn(): Destroying spawns");
             foreach (UnitController unitController in spawnReferences) {
                 //Debug.Log($"{gameObject.name}.UnitSpawnNode.DestroySpawn(): Destroying spawn: " + unitController.gameObject.name + "; delay: " + despawnDelay);
-                unitController.Despawn(despawnDelay);
+                unitController.Despawn(despawnDelay, false, true);
                 //ObjectPooler.Instance.ReturnObjectToPool(unitController.gameObject, despawnDelay);
             }
             spawnReferences.Clear();

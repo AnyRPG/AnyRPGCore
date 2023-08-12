@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -60,6 +61,14 @@ namespace AnyRPG {
             }
 
             return unitController;
+        }
+
+
+        public void ProcessStopClient(UnitController unitController) {
+            Debug.Log($"CharacterManager.ProcessStopClient({unitController.gameObject.name})");
+            networkOwnedUnits.Remove(unitController);
+            networkUnownedUnits.Remove(unitController);
+            unitController.Despawn(0f, false, true);
         }
 
         public void CompleteCharacterRequest(GameObject characterGameObject, int spawnRequestId, bool isOwner) {
@@ -236,6 +245,14 @@ namespace AnyRPG {
             }
 
             return null;
+        }
+
+        public void PoolUnitController(UnitController unitController) {
+            if (localUnits.Contains(unitController)) {
+                objectPooler.ReturnObjectToPool(unitController.gameObject);
+                return;
+            }
+            // in network case do nothing because the network manager is handling the pooling
         }
     }
 

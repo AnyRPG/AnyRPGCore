@@ -71,6 +71,7 @@ namespace AnyRPG {
         public event System.Action<BaseAbilityProperties> OnStealthCheckFail = delegate { };
         public event System.Action<BaseAbilityProperties, IAbilityCaster> OnPowerResourceCheckFail = delegate { };
         public event System.Action<BaseAbilityProperties> OnPerformAbility = delegate { };
+        public event System.Action<UnitController> OnDespawn = delegate { };
         //public event System.Action<BaseAbilityProperties, Interactable> OnTargetInAbilityRangeFail = delegate { };
 
 
@@ -83,6 +84,10 @@ namespace AnyRPG {
         }
 
         #region EventNotifications
+
+        public void NotifyOnDespawn(UnitController despawnController) {
+            OnDespawn(despawnController);
+        }
 
         public void NotifyOnPerformAbility(BaseAbilityProperties abilityProperties) {
             OnPerformAbility(abilityProperties);

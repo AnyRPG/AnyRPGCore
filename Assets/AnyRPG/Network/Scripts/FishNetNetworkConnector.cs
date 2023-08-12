@@ -124,8 +124,6 @@ namespace AnyRPG {
             base.OnStartClient();
             //Debug.Log($"FishNetNetworkConnector.OnStartClient()");
 
-            //FishNetNetworkController fishNetNetworkController = GameObject.FindObjectOfType<FishNetNetworkController>();
-            //fishNetNetworkController.RegisterConnector(this);
             //Debug.Log($"FishNetNetworkConnector.OnStartClient() ClientId: {networkManager.ClientManager.Connection.ClientId}");
         }
 

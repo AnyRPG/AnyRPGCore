@@ -8,20 +8,12 @@ using UnityEngine;
 namespace AnyRPG {
     public class CharacterUnit : InteractableOptionComponent {
 
-        public event System.Action<UnitController> OnDespawn = delegate { };
-
-        protected float despawnDelay = 20f;
-
         private float hitBoxSize = 1.5f;
-
-        private Coroutine despawnCoroutine = null;
 
         private UnitController unitController = null;
 
         public override string DisplayName { get => unitController.BaseCharacter.CharacterName; }
         public override int PriorityValue { get => -1; }
-
-        protected float DespawnDelay { get => despawnDelay; set => despawnDelay = value; }
 
         public float HitBoxSize { get => hitBoxSize; set => hitBoxSize = value; }
         public UnitController UnitController { get => unitController; }
@@ -142,55 +134,6 @@ namespace AnyRPG {
             }
 
             return base.GetMiniMapIconColor();
-        }
-
-        public void Despawn(float despawnDelay = 0f, bool addSystemDefaultTime = true, bool forceDespawn = false) {
-            //Debug.Log($"{BaseCharacter.gameObject.name}.CharacterUnit.Despawn({despawnDelay}, {addSystemDefaultTime}, {forceDespawn})");
-
-            //gameObject.SetActive(false);
-            // TEST ADDING A MANDATORY DELAY
-            if (despawnCoroutine == null && interactable.gameObject.activeSelf == true && interactable.isActiveAndEnabled) {
-                //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.Despawn(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ") starting despawn coroutine");
-                despawnCoroutine = interactable.StartCoroutine(PerformDespawnDelay(despawnDelay, addSystemDefaultTime, forceDespawn));
-            } else {
-                //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.Despawn(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ") despawncoroutine was not null");
-            }
-        }
-
-        public void CancelDespawnDelay() {
-            //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.CancelDespawnDelay()");
-            if (despawnCoroutine != null) {
-                interactable.StopCoroutine(despawnCoroutine);
-                despawnCoroutine = null;
-            }
-        }
-
-        public IEnumerator PerformDespawnDelay(float despawnDelay, bool addSystemDefaultTime = true, bool forceDespawn = false) {
-            //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ") " + this.despawnDelay);
-
-            if (forceDespawn == false) {
-                // add all possible delays together
-                float extraTime = 0f;
-                if (addSystemDefaultTime) {
-                    extraTime = systemConfigurationManager.DefaultDespawnTimer;
-                }
-                float totalDelay = despawnDelay + this.despawnDelay + extraTime;
-                while (totalDelay > 0f) {
-                    yield return null;
-                    totalDelay -= Time.deltaTime;
-                }
-            }
-
-            if ((unitController.CharacterStats.IsAlive == false && unitController.CharacterStats.IsReviving == false) || forceDespawn == true) {
-                //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): despawning");
-                // this character could have been ressed while waiting to despawn.  don't let it despawn if that happened unless forceDesapwn is true (such as at the end of a patrol)
-                // we are going to send this ondespawn call now to allow another unit to respawn from a spawn node without a long wait during events that require rapid mob spawning
-                OnDespawn(unitController);
-                unitController.Despawn();
-            } else {
-                //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): unit is alive or reviving !! NOT DESPAWNING");
-            }
-            despawnCoroutine = null;
         }
 
         /*

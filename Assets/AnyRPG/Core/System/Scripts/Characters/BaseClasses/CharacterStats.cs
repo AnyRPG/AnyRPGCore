@@ -358,6 +358,9 @@ namespace AnyRPG {
             return false;
         }
 
+        /// <summary>
+        /// spawn the physical prefabs associated with any status effects on this character
+        /// </summary>
         public void HandleCharacterUnitSpawn() {
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.StatusEffect.GetPrefabProfileList(unitController).Count > 0
@@ -1331,7 +1334,7 @@ namespace AnyRPG {
             }
             unitController.UnitAnimator.EnableAnimator();
             isReviving = true;
-            unitController.CharacterUnit.CancelDespawnDelay();
+            unitController.CancelDespawnDelay();
             unitController.UnitEventController.NotifyOnReviveBegin();
             unitController.UnitAnimator.HandleReviveBegin();
 

@@ -102,7 +102,7 @@ namespace AnyRPG {
         }
 
         public void SetCharacterName(string newName) {
-            Debug.Log($"{unitController.gameObject.name}.BaseCharacter.SetCharactername({newName})");
+            //Debug.Log($"{unitController.gameObject.name}.BaseCharacter.SetCharactername({newName})");
 
             if (string.IsNullOrEmpty(newName)) {
                 return;
@@ -282,45 +282,8 @@ namespace AnyRPG {
             unitController.CharacterPetManager.ProcessCapabilityProviderChange(newSnapshot);
         }
 
-        public void HandleCharacterUnitSpawn() {
-            //Debug.Log($"{gameObject.name}.BaseCharacter.HandleCharacterUnitSpawn()");
-            // no longer necessary - moved to UnitModel -> UnitModelController
-            //characterEquipmentManager.HandleCharacterUnitSpawn();
-            unitController.CharacterStats.HandleCharacterUnitSpawn();
-        }
-
-        public void DespawnImmediate() {
-            //Debug.Log($"{gameObject.name}.BaseCharacter.DespawnImmediate()");
-            if (unitController != null && unitController.CharacterUnit != null) {
-                unitController.CharacterUnit.Despawn(0, false, true);
-            }
-        }
-
-        public void Despawn() {
-            //Debug.Log($"{gameObject.name}.BaseCharacter.Despawn()");
-
-            if (unitController != null && unitController.CharacterUnit != null) {
-                unitController.CharacterUnit.Despawn();
-            }
-        }
-
-        public void TryToDespawn() {
-            //Debug.Log($"{gameObject.name}.BaseCharacter.TryToDespawn()");
-
-            if (unitController.UnitProfile != null && unitController.UnitProfile.PreventAutoDespawn == true) {
-                return;
-            }
-            if (unitController != null && unitController.LootableCharacter != null) {
-                // lootable character handles its own despawn logic
-                return;
-            } else {
-
-            }
-
-            Despawn();
-        }
-
-        private void ResetSettings() {
+        /*
+        public void ResetSettings() {
             //Debug.Log($"{gameObject.name}.BaseCharacter.ResetSettings()");
             characterName = string.Empty;
             title = string.Empty;
@@ -340,6 +303,7 @@ namespace AnyRPG {
 
             //characterInitialized = false;
         }
+        */
 
     }
 

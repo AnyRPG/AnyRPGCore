@@ -352,7 +352,7 @@ namespace AnyRPG {
             //gameObject.SetActive(false);
             //ResetLootTableStates();
             if (CharacterUnit != null) {
-                CharacterUnit.Despawn();
+                CharacterUnit.UnitController.Despawn(0, true, false);
             }
         }
 

@@ -1,4 +1,5 @@
 using AnyRPG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -74,6 +75,7 @@ namespace AnyRPG {
         protected LevelManager levelManager = null;
         protected CameraManager cameraManager = null;
         protected SystemAbilityController systemAbilityController = null;
+
         protected LogManager logManager = null;
         protected CastTargettingManager castTargettingManager = null;
         protected CombatTextManager combatTextManager = null;
@@ -163,6 +165,15 @@ namespace AnyRPG {
             }
             CleanupEventSubscriptions();
         }
+
+        /// <summary>
+        /// called when network client is stopped on the player unit
+        /// </summary>
+        public void ProcessStopClient() {
+            Debug.Log("PlayerManager.ProcessStopClient()");
+            DespawnPlayerUnit();
+        }
+
 
         public void ProcessExitToMainMenu() {
             //Debug.Log("PlayerManager.ProcessExitToMainMenu()");
@@ -285,7 +296,9 @@ namespace AnyRPG {
                 //Debug.Log("Player Unit is not spawned.  Nothing to despawn.  returning");
                 return;
             }
-            unitController.Despawn();
+            UnsubscribeFromPlayerInventoryEvents();
+            UnsubscribeFromPlayerEvents();
+            unitController.Despawn(0f, false, true);
         }
 
         public void HandlePlayerDeath(string eventName, EventParamProperties eventParam) {
@@ -451,7 +464,7 @@ namespace AnyRPG {
         }
 
         public void SetUnitController(UnitController unitController) {
-            Debug.Log("PlayerManager.SetUnitController(" + unitController.gameObject.name + ")");
+            Debug.Log("PlayerManager.SetUnitController(" + (unitController == null ? "null" : unitController.gameObject.name) + ")");
 
             this.unitController = unitController;
             activeUnitController = unitController;
@@ -537,8 +550,6 @@ namespace AnyRPG {
                 //Debug.Log("PlayerManager.SpawnPlayerConnection(): The Player Connection is null.  exiting.");
                 return;
             }
-            UnsubscribeFromPlayerInventoryEvents();
-            UnsubscribeFromPlayerEvents();
             SystemEventManager.TriggerEvent("OnPlayerConnectionDespawn", new EventParamProperties());
             objectPooler.ReturnObjectToPool(playerConnectionObject);
             playerConnectionObject = null;

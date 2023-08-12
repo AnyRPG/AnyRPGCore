@@ -189,6 +189,8 @@ namespace AnyRPG {
         public CloseableWindow keyboardHintWindow;
         public CloseableWindow creditsWindow;
         public CloseableWindow exitMenuWindow;
+        public CloseableWindow disconnectedWindow;
+        public CloseableWindow loginFailedWindow;
         public CloseableWindow deleteGameMenuWindow;
         public CloseableWindow copyGameMenuWindow;
         public CloseableWindow loadGameWindow;
@@ -225,6 +227,8 @@ namespace AnyRPG {
         private bool hadMoveable = false;
 
         protected bool eventSubscriptionsInitialized = false;
+
+        private List<CloseableWindow> openWindowQueue = new List<CloseableWindow>();
 
         /*
         // ui opacity defaults
@@ -378,6 +382,8 @@ namespace AnyRPG {
             playMenuWindow.Configure(systemGameManager);
             creditsWindow.Configure(systemGameManager);
             exitMenuWindow.Configure(systemGameManager);
+            disconnectedWindow.Configure(systemGameManager);
+            loginFailedWindow.Configure(systemGameManager);
             deleteGameMenuWindow.Configure(systemGameManager);
             copyGameMenuWindow.Configure(systemGameManager);
             loadGameWindow.Configure(systemGameManager);
@@ -622,6 +628,14 @@ namespace AnyRPG {
 
         public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
             dragInProgress = false;
+            foreach (CloseableWindow closeableWindow in openWindowQueue) {
+                closeableWindow.OpenWindow();
+            }
+            openWindowQueue.Clear();
+        }
+
+        public void AddPopupWindowToQueue(CloseableWindow closeableWindow) {
+            openWindowQueue.Add(closeableWindow);
         }
 
         public void OnDisable() {
@@ -827,6 +841,8 @@ namespace AnyRPG {
             creditsWindow.CloseWindow();
             deleteGameMenuWindow.CloseWindow();
             networkLoginWindow.CloseWindow();
+            disconnectedWindow.CloseWindow();
+            loginFailedWindow.CloseWindow();
             exitMenuWindow.CloseWindow();
             gamepadHintWindow.CloseWindow();
             gamepadMainMenuWindow.CloseWindow();
@@ -1398,6 +1414,8 @@ namespace AnyRPG {
             nameChangeWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             networkLoginWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             deleteGameMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            disconnectedWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            loginFailedWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             characterCreatorWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             exitMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             inGameMainMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));

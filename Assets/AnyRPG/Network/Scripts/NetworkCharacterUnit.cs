@@ -58,7 +58,7 @@ namespace AnyRPG {
         }
 
         private void CompleteCharacterRequest(bool isOwner) {
-            Debug.Log($"{gameObject.name}.NetworkCharacterUnit.CompleteCharacterRequest({isOwner})");
+            //Debug.Log($"{gameObject.name}.NetworkCharacterUnit.CompleteCharacterRequest({isOwner})");
 
             unitProfile = systemGameManager.SystemDataFactory.GetResource<UnitProfile>(unitProfileName);
             CharacterConfigurationRequest characterConfigurationRequest;
@@ -80,6 +80,12 @@ namespace AnyRPG {
                 // OnNameChange is not called during initialization, so we have to pass the proper name to the network manually
                 HandleUnitNameChange(unitController.BaseCharacter.CharacterName);
             }
+        }
+
+        public override void OnStopClient() {
+            base.OnStopClient();
+            Debug.Log($"{gameObject.name}.NetworkCharacterUnit.OnStopClient()");
+            systemGameManager.NetworkManager.ProcessStopClient(unitController);
         }
 
         public override void OnStartClient() {
@@ -106,7 +112,9 @@ namespace AnyRPG {
             //systemGameManager.CharacterManager.CompleteCharacterRequest(gameObject, serverRequestId, false);
         }
 
-
+        void OnDisable() {
+            Debug.Log($"{gameObject.name}.NetworkCharacterUnit.OnDisable()");
+        }
 
     }
 }

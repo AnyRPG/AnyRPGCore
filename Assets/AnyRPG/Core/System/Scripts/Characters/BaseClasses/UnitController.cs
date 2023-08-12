@@ -109,6 +109,8 @@ namespace AnyRPG {
 
         private List<WaterBody> currentWater = new List<WaterBody>();
 
+        private Coroutine despawnCoroutine = null;
+
         // unit configuration
         private float floatHeight = 1.5f;
 
@@ -145,6 +147,7 @@ namespace AnyRPG {
         protected LevelManager levelManager = null;
         protected KeyBindManager keyBindManager = null;
         protected AudioManager audioManager = null;
+        protected CharacterManager characterManager = null;
 
         //public INamePlateTarget NamePlateTarget { get => namePlateTarget; set => namePlateTarget = value; }
         public NavMeshAgent NavMeshAgent { get => agent; set => agent = value; }
@@ -467,6 +470,7 @@ namespace AnyRPG {
             levelManager = systemGameManager.LevelManager;
             keyBindManager = systemGameManager.KeyBindManager;
             audioManager = systemGameManager.AudioManager;
+            characterManager = systemGameManager.CharacterManager;
         }
 
         protected override void CreateMaterialController() {
@@ -853,24 +857,68 @@ namespace AnyRPG {
             }
         }
 
-       
+        public void TryToDespawn() {
+            //Debug.Log($"{gameObject.name}.BaseCharacter.TryToDespawn()");
 
-        public void Despawn(float delayTime = 0f) {
-            if (delayTime == 0f) {
+            if (UnitProfile != null && unitProfile.PreventAutoDespawn == true) {
+                return;
+            }
+            if (lootableCharacter != null) {
+                // lootable character handles its own despawn logic
+                return;
+            }
+
+            Despawn(0, true, false);
+        }
+
+
+        public void CancelDespawnDelay() {
+            //Debug.Log($"{gameObject.name}.CharacterUnit.CancelDespawnDelay()");
+            if (despawnCoroutine != null) {
+                StopCoroutine(despawnCoroutine);
+                despawnCoroutine = null;
+            }
+        }
+
+        public void Despawn(float delayTime = 0f, bool addSystemDefaultTime = true, bool forceDespawn = false) {
+            Debug.Log($"{gameObject.name}.UnitController.Despawn({delayTime}, {addSystemDefaultTime}, {forceDespawn})");
+
+            if (forceDespawn == true) {
                 DespawnImmediate();
                 return;
             }
-            StartCoroutine(DespawnDelay(delayTime));
+
+            if (despawnCoroutine == null && gameObject.activeSelf == true && isActiveAndEnabled) {
+                //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.Despawn(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ") starting despawn coroutine");
+                despawnCoroutine = StartCoroutine(DespawnDelay(delayTime, addSystemDefaultTime));
+            }
         }
 
-        private IEnumerator DespawnDelay(float delayTime) {
-            yield return new WaitForSeconds(delayTime);
-            DespawnImmediate();
+        private IEnumerator DespawnDelay(float delayTime, bool addSystemDefaultTime) {
+            // add all possible delays together
+            float extraTime = 0f;
+            if (addSystemDefaultTime) {
+                extraTime = systemConfigurationManager.DefaultDespawnTimer;
+            }
+            float totalDelay = delayTime + extraTime;
+            while (totalDelay > 0f) {
+                yield return null;
+                totalDelay -= Time.deltaTime;
+            }
+
+            despawnCoroutine = null;
+            if (characterStats.IsAlive == false && characterStats.IsReviving == false) {
+                //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): despawning");
+                // this character could have been ressed while waiting to despawn.  don't let it despawn if that happened unless forceDesapwn is true (such as at the end of a patrol)
+                // we are going to send this ondespawn call now to allow another unit to respawn from a spawn node without a long wait during events that require rapid mob spawning
+                DespawnImmediate();
+            }
         }
 
         private void DespawnImmediate() {
             //Debug.Log($"{gameObject.name}.UnitController.DespawnImmediate()");
             despawning = true;
+            unitEventController.NotifyOnDespawn(this);
 
             ClearTarget();
             CancelMountEffects();
@@ -896,7 +944,7 @@ namespace AnyRPG {
             }
             UnitEventController.NotifyOnUnitDestroy(unitProfile);
             ResetSettings();
-            objectPooler.ReturnObjectToPool(gameObject);
+            characterManager.PoolUnitController(this);
         }
 
         /// <summary>
@@ -931,6 +979,7 @@ namespace AnyRPG {
 
             uuid = null;
 
+            baseCharacter = null;
             characterCombat = null;
             characterAbilityManager = null;
             characterSkillManager = null;
@@ -1043,14 +1092,13 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="unitProfile"></param>
         public void SetCharacterConfiguration(CharacterConfigurationRequest characterConfigurationRequest) {
-            Debug.Log($"{gameObject.name}.UnitController.SetCharacterConfiguration()");
+            //Debug.Log($"{gameObject.name}.UnitController.SetCharacterConfiguration()");
 
             // get a snapshot of the current state
             CapabilityConsumerSnapshot oldSnapshot = new CapabilityConsumerSnapshot(baseCharacter, systemGameManager);
 
             unitProfile = characterConfigurationRequest.unitProfile;
             if (string.IsNullOrEmpty(characterConfigurationRequest.characterName) == false) {
-                Debug.Log($"{gameObject.name}.UnitController.SetUnitProfile() setting name to {characterConfigurationRequest.characterName}");
                 baseCharacter.SetCharacterName(characterConfigurationRequest.characterName);
             }
             if (string.IsNullOrEmpty(characterConfigurationRequest.characterTitle) == false) {
@@ -1760,7 +1808,7 @@ namespace AnyRPG {
             // this could be a mount which has no base character - check for nulls
             characterUnit?.BaseCharacter?.ProcessLevelUnload();
             */
-            Despawn();
+            Despawn(0f, false, true);
         }
 
         /// <summary>

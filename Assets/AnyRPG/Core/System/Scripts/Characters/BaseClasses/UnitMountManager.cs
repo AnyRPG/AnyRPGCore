@@ -155,7 +155,7 @@ namespace AnyRPG {
                 // reset the character unit before despawn so the mount doesn't send despawn events to the player that was riding it
                 mountUnitController.CharacterUnit = mountUnitController.GetFirstInteractableOption(typeof(CharacterUnit)) as CharacterUnit;
 
-                mountUnitController.Despawn();
+                mountUnitController.Despawn(0f, false, true);
 
                 mountUnitController = null;
                 mountUnitProfile = null;

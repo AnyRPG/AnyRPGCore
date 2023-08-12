@@ -53,7 +53,7 @@ namespace AnyRPG {
 
             unitController.UnitModelController.OnModelCreated -= HandleModelCreated;
 
-            unitController.Despawn();
+            unitController.Despawn(0f, false, true);
             unitController = null;
         }
 

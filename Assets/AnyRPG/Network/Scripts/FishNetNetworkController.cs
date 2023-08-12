@@ -85,6 +85,8 @@ namespace AnyRPG {
         }
 
         public override bool Login(string username, string password, string server) {
+            Debug.Log($"FishNetNetworkController.Login({username}, {password})");
+
             if (networkManager == null) {
                 return false;
             }
@@ -95,7 +97,7 @@ namespace AnyRPG {
             }
 
             bool connectionResult = networkManager.ClientManager.StartConnection();
-            Debug.Log($"FishNetNetworkController.Login() Result of connection attempt: {connectionResult}");
+            //Debug.Log($"FishNetNetworkController.Login() Result of connection attempt: {connectionResult}");
 
             return connectionResult;
         }
@@ -121,9 +123,17 @@ namespace AnyRPG {
                 //networkManager.SceneManager.OnLoadPercentChange += HandleLoadPercentChange;
                 //networkManager.SceneManager.OnLoadEnd += HandleLoadEnd;
                 //InstantiateNetworkConnector();
+            } else if (clientState == LocalConnectionState.Stopping) {
+                Debug.Log("FishNetNetworkController.OnClientConnectionState() Disconnected from server. Stopping");
+                //systemGameManager.SetGameMode(GameMode.Local);
+                /*
+                if (levelManager.GetActiveSceneNode() != systemConfigurationManager.MainMenuSceneNode) {
+                    levelManager.LoadMainMenu();
+                }
+                */
             } else if (clientState == LocalConnectionState.Stopped) {
-                //Debug.Log("FishNetNetworkController.OnClientConnectionState() Disconnected from server. Setting mode to local");
-                systemGameManager.SetGameMode(GameMode.Local);
+                Debug.Log("FishNetNetworkController.OnClientConnectionState() Disconnected from server. Setting mode to local");
+                systemGameManager.NetworkManager.ProcessStopConnection();
             }
         }
 

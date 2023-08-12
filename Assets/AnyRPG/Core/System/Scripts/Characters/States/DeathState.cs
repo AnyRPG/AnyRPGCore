@@ -21,7 +21,7 @@ namespace AnyRPG {
             }
 
             // handle despawn
-            baseController.BaseCharacter.TryToDespawn();
+            baseController.TryToDespawn();
 
         }
 

@@ -293,7 +293,7 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetModelReady()");
 
             if (modelCreated == false) {
-                unitController.BaseCharacter.HandleCharacterUnitSpawn();
+                unitController.CharacterStats.HandleCharacterUnitSpawn();
             }
 
             //RebuildModelAppearance();
