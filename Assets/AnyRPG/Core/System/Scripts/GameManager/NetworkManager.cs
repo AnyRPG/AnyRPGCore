@@ -16,7 +16,11 @@ namespace AnyRPG {
 
         private string username = string.Empty;
         private string password = string.Empty;
-        private string clientToken = string.Empty;
+
+        private Dictionary<int, string> clientTokens = new Dictionary<int, string>();
+
+        private GameServerClient gameServerClient = null;
+
 
         [SerializeField]
         private NetworkController networkController = null;
@@ -93,9 +97,9 @@ namespace AnyRPG {
             }
         }
 
-        public void SetClientToken(string token) {
-            Debug.Log($"NetworkManager.SetClientToken({token})");
-            clientToken = token;
+        public void SetClientToken(int clientId, string token) {
+            Debug.Log($"NetworkManager.SetClientToken({clientId}, {token})");
+            clientTokens.Add(clientId, token);
         }
 
         public void ProcessStopConnection() {
@@ -114,6 +118,44 @@ namespace AnyRPG {
         public void ProcessLoginSuccess() {
             Debug.Log($"NetworkManager.ProcessLoginSuccess()");
 
+        }
+
+        public void CreatePlayerCharacterClient(AnyRPGSaveData anyRPGSaveData) {
+            Debug.Log($"NetworkManager.CreatePlayerCharacterClient(AnyRPGSaveData)");
+            networkController.CreatePlayerCharacter(anyRPGSaveData);
+        }
+
+        public void OnSetGameMode(GameMode gameMode) {
+            Debug.Log($"NetworkManager.OnSetGameMode({gameMode})");
+            
+            if (gameMode == GameMode.Network) {
+                // create instance of GameServerClient
+                gameServerClient = new GameServerClient(systemConfigurationManager.ApiServerAddress);
+            }
+        }
+
+        public (bool, string) GetLoginTokenServer(string username, string password) {
+            Debug.Log($"NetworkManager.GetLoginTokenServer({username}, {password})");
+            return gameServerClient.Login(username, password);
+        }
+
+        public void CreatePlayerCharacterServer(int clientId, AnyRPGSaveData anyRPGSaveData) {
+            Debug.Log($"NetworkManager.CreatePlayerCharacterServer(AnyRPGSaveData)");
+            if (clientTokens.ContainsKey(clientId) == false) {
+                // can't do anything without a token
+                return;
+            }
+
+            gameServerClient.CreatePlayerCharacter(clientTokens[clientId], anyRPGSaveData);
+        }
+
+        public string GetClientToken(int clientId) {
+            Debug.Log($"NetworkManager.GetClientToken({clientId})");
+
+            if (clientTokens.ContainsKey(clientId)) {
+                return clientTokens[clientId];
+            }
+            return string.Empty;
         }
     }
 

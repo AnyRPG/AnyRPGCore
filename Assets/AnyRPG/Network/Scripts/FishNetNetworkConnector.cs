@@ -2,6 +2,7 @@ using FishNet.Connection;
 using FishNet.Managing.Scened;
 using FishNet.Object;
 using FishNet.Transporting;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -118,6 +119,13 @@ namespace AnyRPG {
             sceneLoadData.PreferredActiveScene = sceneLoadData.SceneLookupDatas[0];
 
             networkManager.SceneManager.LoadConnectionScenes(networkConnection, sceneLoadData);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void CreatePlayerCharacter(AnyRPGSaveData anyRPGSaveData, NetworkConnection networkConnection = null) {
+            Debug.Log($"FishNetNetworkConnector.CreatePlayerCharacter(AnyRPGSaveData)");
+
+            systemGameManager.NetworkManager.CreatePlayerCharacterServer(networkConnection.ClientId, anyRPGSaveData);
         }
 
         public override void OnStartClient() {

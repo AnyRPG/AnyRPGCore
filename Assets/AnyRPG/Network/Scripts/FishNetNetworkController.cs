@@ -227,6 +227,12 @@ namespace AnyRPG {
             return false;
         }
 
+        public override void CreatePlayerCharacter(AnyRPGSaveData anyRPGSaveData) {
+            Debug.Log($"FishNetNetworkController.CreatePlayerCharacter(AnyRPGSaveData)");
+
+            networkConnector.CreatePlayerCharacter(anyRPGSaveData);
+        }
+
         //internal override void SetConnectionPrefab(GameObject spawnPrefab) {
         //    this.networkConnectorSpawnPrefab = spawnPrefab;
         //}

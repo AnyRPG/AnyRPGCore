@@ -61,11 +61,8 @@ namespace AnyRPG {
             uIManager.confirmNewGameMenuWindow.CloseWindow();
             uIManager.loadGameWindow.CloseWindow();
             uIManager.newGameWindow.CloseWindow();
-            if (systemConfigurationManager.UseNewGameWindow == true) {
-                saveManager.NewGameFromSaveData(newGameManager.SaveData);
-            } else {
-                saveManager.TryNewGame();
-            }
+            newGameManager.NewGame();
+            
         }
 
     }

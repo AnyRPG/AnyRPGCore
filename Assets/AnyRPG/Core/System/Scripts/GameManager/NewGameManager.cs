@@ -42,6 +42,7 @@ namespace AnyRPG {
 
         private GameObject environmentPreviewPrefab = null;
         private Material platformMaterial = null;
+
         private Material topMaterial = null;
         private Material bottomMaterial = null;
         private Material northMaterial = null;
@@ -104,6 +105,17 @@ namespace AnyRPG {
             GetDefaultMaterials();
         }
 
+        public void NewGame() {
+            if (saveData == null) {
+                // this could have come from a button press
+                InitializeData();
+            }
+            saveManager.NewGame(saveData);
+            
+            // reset to null so next button press doesn't start game with same data again
+            saveData = null;
+        }
+
         private void GetDefaultMaterials() {
             defaultPlatformMaterial = characterCreatorManager.PlatformRenderer.material;
             defaultTopMaterial = characterCreatorManager.TopRenderer.material;
@@ -141,7 +153,7 @@ namespace AnyRPG {
             OnSetPlayerName(newPlayerName);
         }
 
-        public void ClearData() {
+        public void InitializeData() {
             //Debug.Log("NewGameManager.ClearData()");
 
             playerName = string.Empty;
@@ -163,13 +175,9 @@ namespace AnyRPG {
                 ResetPlayerName(defaultPlayerName);
             }
 
-            saveData.PlayerLevel = 1;
-            saveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
-            
             // testing - this is done later by updateUnitProfileList() anyway
             //unitProfile = systemConfigurationManager.DefaultUnitProfile;
 
-            saveData.unitProfileName = systemConfigurationManager.DefaultUnitProfileName;
 
             if (systemConfigurationManager.NewGameFaction == true) {
                 UpdateFactionList();

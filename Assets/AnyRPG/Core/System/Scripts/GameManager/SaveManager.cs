@@ -22,6 +22,8 @@ namespace AnyRPG {
         private SystemDataFactory systemDataFactory = null;
         private UIManager uIManager = null;
         private SystemAchievementManager systemAchievementManager = null;
+        private NewGameManager newGameManager = null;
+        private NetworkManager networkManager = null;
 
         private string jsonSavePath = string.Empty;
 
@@ -80,6 +82,8 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
             actionBarManager = uIManager.ActionBarManager;
+            newGameManager = systemGameManager.NewGameManager;
+            networkManager = systemGameManager.NetworkManager;
         }
 
         public List<AnyRPGSaveData> GetSaveDataList() {
@@ -375,10 +379,6 @@ namespace AnyRPG {
 
             //Debug.Log("Savemanager.SaveQuestData(): size: " + anyRPGSaveData.questSaveData.Count);
 
-            string saveDate = string.Empty;
-            if (anyRPGSaveData.DataCreatedOn == null || anyRPGSaveData.DataCreatedOn == string.Empty) {
-                anyRPGSaveData.DataCreatedOn = DateTime.Now.ToLongDateString();
-            }
             SaveDataFile(anyRPGSaveData);
 
             PlayerPrefs.SetString("LastSaveDataFileName", anyRPGSaveData.DataFileName);
@@ -1140,53 +1140,34 @@ namespace AnyRPG {
             }
         }
 
-        public void TryNewGame() {
-            //Debug.Log("Savemanager.TryNewGame()");
+        public void NewGame(AnyRPGSaveData anyRPGSaveData) {
+            Debug.Log("Savemanager.NewGame()");
 
-            NewGame();
-        }
+            ClearSystemManagedCharacterData();
 
-        public AnyRPGSaveData InitalizeNewGameSettings(AnyRPGSaveData anyRPGSaveData) {
-            //Debug.Log("Savemanager.InitalizeNewGameSettings()");
-
-            // initialize inventory
-            anyRPGSaveData = PerformInventorySetup(anyRPGSaveData);
-
-            // set initial scene
-            if (anyRPGSaveData.CurrentScene == null || anyRPGSaveData.CurrentScene == string.Empty) {
-                SceneNode sceneNode = systemDataFactory.GetResource<SceneNode>(systemConfigurationManager.DefaultStartingZone);
-                if (sceneNode != null) {
-                    anyRPGSaveData.CurrentScene = sceneNode.SceneFile;
-                } else {
-                    anyRPGSaveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
-                    //Debug.LogError("LevelManager.LoadLevel(" + levelName + "): could not find scene node with that name!");
-                }
+            if (anyRPGSaveData.DataCreatedOn == null || anyRPGSaveData.DataCreatedOn == string.Empty) {
+                anyRPGSaveData.DataCreatedOn = DateTime.Now.ToLongDateString();
             }
 
-            // set level
-            anyRPGSaveData.PlayerLevel = 1;
+            if (systemGameManager.GameMode == GameMode.Local) {
+                CreateLocalGame(anyRPGSaveData);
+            } else {
+                CreateNetworkGame(anyRPGSaveData);
+            }
 
-            return anyRPGSaveData;
         }
 
-        public void NewGameFromSaveData(AnyRPGSaveData anyRPGSaveData) {
-            //Debug.Log("Savemanager.NewGameFromSaveData()");
+        private void CreateNetworkGame(AnyRPGSaveData anyRPGSaveData) {
+            Debug.Log("Savemanager.CreateNetworkGame(AnyRPGSaveData)");
 
-            anyRPGSaveData = InitalizeNewGameSettings(anyRPGSaveData);
+            networkManager.CreatePlayerCharacterClient(anyRPGSaveData);
+        }
+
+        private void CreateLocalGame(AnyRPGSaveData anyRPGSaveData) {
+            SaveDataFile(anyRPGSaveData);
+            PlayerPrefs.SetString("LastSaveDataFileName", anyRPGSaveData.DataFileName);
 
             LoadGame(anyRPGSaveData);
-        }
-
-        public void NewGame() {
-            //Debug.Log("Savemanager.NewGame()");
-
-            uIManager.loadGameWindow.CloseWindow();
-            uIManager.newGameWindow.CloseWindow();
-
-            ClearSharedData();
-            currentSaveData = InitalizeNewGameSettings(currentSaveData);
-
-            LoadGame(currentSaveData);
         }
 
         public AnyRPGSaveData PerformInventorySetup(AnyRPGSaveData anyRPGSaveData) {
@@ -1272,7 +1253,7 @@ namespace AnyRPG {
                     }
                 }
             }
-            NewGame();
+            newGameManager.NewGame();
         }
 
         public CapabilityConsumerSnapshot GetCapabilityConsumerSnapshot(AnyRPGSaveData saveData) {
@@ -1297,8 +1278,23 @@ namespace AnyRPG {
         public AnyRPGSaveData CreateSaveData() {
             AnyRPGSaveData newSaveData = new AnyRPGSaveData();
             newSaveData.playerName = systemConfigurationManager.DefaultPlayerName;
-            //newSaveData = InitializeSaveDataProperties(newSaveData);
+            newSaveData.PlayerLevel = 1;
+            newSaveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
+            newSaveData.unitProfileName = systemConfigurationManager.DefaultUnitProfileName;
+
+            SceneNode sceneNode = systemDataFactory.GetResource<SceneNode>(systemConfigurationManager.DefaultStartingZone);
+            if (sceneNode != null) {
+                newSaveData.CurrentScene = sceneNode.SceneFile;
+            } else {
+                newSaveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
+                //Debug.LogError("LevelManager.LoadLevel(" + levelName + "): could not find scene node with that name!");
+            }
+
             newSaveData = InitializeSaveDataResourceLists(newSaveData, false);
+
+            // initialize inventory
+            newSaveData = PerformInventorySetup(newSaveData);
+            //newSaveData = InitializeSaveDataProperties(newSaveData);
 
             return newSaveData;
         }

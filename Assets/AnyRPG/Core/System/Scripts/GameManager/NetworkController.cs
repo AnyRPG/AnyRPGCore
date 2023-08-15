@@ -27,6 +27,8 @@ namespace AnyRPG {
         public abstract bool CanSpawnCharacterOverNetwork();
         public abstract bool OwnPlayer(UnitController unitController);
 
+        public abstract void CreatePlayerCharacter(AnyRPGSaveData anyRPGSaveData);
+
         //internal abstract void SetConnectionPrefab(GameObject spawnPrefab);
     }
 

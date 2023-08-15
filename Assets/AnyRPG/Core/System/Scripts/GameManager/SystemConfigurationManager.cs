@@ -590,6 +590,12 @@ namespace AnyRPG {
         [SerializeField]
         private Gradient defaultSunGradient;
 
+        [Header("NETWORK")]
+
+        [Tooltip("This is the address of the API server that the dedicated game server will connect to for login and character save / load operations. Do not use a trailing slash.")]
+        [SerializeField]
+        private string apiServerAddress = "https://account.anyrpg.org";
+
         // game manager references
         SystemDataFactory systemDataFactory = null;
 
@@ -747,6 +753,7 @@ namespace AnyRPG {
         public string DefaultPreviewUnitLayer { get => defaultPreviewUnitLayer; set => defaultPreviewUnitLayer = value; }
         public bool EditPlayerName { get => editPlayerName; set => editPlayerName = value; }
         public PlayerNameSource PlayerNameSource { get => playerNameSource; set => playerNameSource = value; }
+        public string ApiServerAddress { get => apiServerAddress; set => apiServerAddress = value; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }
 

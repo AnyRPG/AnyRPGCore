@@ -14,7 +14,6 @@ namespace AnyRPG
     /// </summary>
     public class FishNetPasswordAuthenticator : Authenticator
     {
-        private const string serverAddress = "https://account.anyrpg.org";
         private SystemGameManager systemGameManager = null;
 
         #region Public.
@@ -36,16 +35,12 @@ namespace AnyRPG
         #endregion
         */
 
-        private GameServerClient gameServerClient;
 
         public override void InitializeOnce(FishNet.Managing.NetworkManager networkManager)
         {
             base.InitializeOnce(networkManager);
 
             //Debug.Log("FishNetPasswordAuthenticator.InitializeOnce()");
-
-            // create instance of GameServerClient
-            gameServerClient = new GameServerClient(serverAddress);
 
             // get reference to system game manager
             systemGameManager = GameObject.FindObjectOfType<SystemGameManager>();
@@ -102,10 +97,10 @@ namespace AnyRPG
                 return;
             }
 
-            (bool correctPassword, string token) = gameServerClient.Login(pb.Username, pb.Password);
+            (bool correctPassword, string token) = systemGameManager.NetworkManager.GetLoginTokenServer(pb.Username, pb.Password);
             SendAuthenticationResponse(conn, correctPassword);
             if (correctPassword == true) {
-                systemGameManager.NetworkManager.SetClientToken(token);
+                systemGameManager.NetworkManager.SetClientToken(conn.ClientId, token);
             }
             /* Invoke result. This is handled internally to complete the connection or kick client.
              * It's important to call this after sending the broadcast so that the broadcast

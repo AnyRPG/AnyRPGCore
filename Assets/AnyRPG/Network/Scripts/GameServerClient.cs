@@ -14,6 +14,7 @@ namespace AnyRPG {
 
         private const double clientTimeout = 30;
         private const string loginPath = "api/login";
+        private const string createPlayerCharacterPath = "api/createplayercharacter";
 
         private string serverAddress = string.Empty;
 
@@ -46,8 +47,6 @@ namespace AnyRPG {
             loginTokenResult.Wait();
             string token = loginTokenResult.Result;
             
-            //string token = "1234";
-
             if (token == null) {
                 return (false, string.Empty);
             }
@@ -72,10 +71,60 @@ namespace AnyRPG {
                     return null;
                 var resourceJson = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
                 Debug.Log($"GameServerClient.GetLoginToken(): {resourceJson}");
-                return resourceJson;
+                LoginResponse loginResponse = JsonUtility.FromJson<LoginResponse>(resourceJson);
+                return loginResponse.token;
             }
         }
 
+        public bool CreatePlayerCharacter(string token, AnyRPGSaveData anyRPGSaveData) {
+            Debug.Log($"GameServerClient.CreatePlayerCharacter({token})");
+
+            CreatePlayerCharacterRequest createPlayerCharacterRequest = new CreatePlayerCharacterRequest(anyRPGSaveData);
+
+            Task<bool> createPlayerCharacterResult = CreatePlayerCharacterAsync(token, createPlayerCharacterRequest);
+            createPlayerCharacterResult.Wait();
+            bool result = createPlayerCharacterResult.Result;
+
+            return result;
+        }
+
+        public async Task<bool> CreatePlayerCharacterAsync(string token, CreatePlayerCharacterRequest createPlayerCharacterRequest) {
+            Debug.Log($"GameServerClient.CreatePlayerCharacterAsync({token})");
+
+            using (var httpClient = new HttpClient()) {
+                string requestURL = $"{serverAddress}/{createPlayerCharacterPath}";
+                httpClient.BaseAddress = new Uri(requestURL);
+                httpClient.Timeout = TimeSpan.FromSeconds(clientTimeout);
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                Debug.Log(httpClient.DefaultRequestHeaders.ToString());
+                var payload = JsonUtility.ToJson(createPlayerCharacterRequest);
+                var content = new StringContent(payload, Encoding.UTF8, "application/json");
+                var result = await httpClient.PostAsync(requestURL, content).ConfigureAwait(false);
+                //var result = await httpClient.PostAsJsonAsync("Create", otherPerson);
+                Debug.Log($"GameServerClient.CreatePlayerCharacterAsync() url: {requestURL} payload: {payload} statusCode: {result.StatusCode}");
+                if (result.StatusCode != HttpStatusCode.OK)
+                    return false;
+                string resourceJson = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
+                //Debug.Log($"GameServerClient.CreatePlayerCharacterAsync(): {resourceJson}");
+                return true;
+            }
+        }
+    }
+
+    public class LoginResponse {
+        public string token = string.Empty;
+    }
+
+    public class CreatePlayerCharacterRequest {
+        public string Name = string.Empty;
+        public string SaveData = string.Empty;
+        
+        public CreatePlayerCharacterRequest(AnyRPGSaveData anyRPGSaveData) {
+            Name = anyRPGSaveData.playerName;
+            SaveData = JsonUtility.ToJson(anyRPGSaveData);
+        }
     }
 
     public class LoginRequest {

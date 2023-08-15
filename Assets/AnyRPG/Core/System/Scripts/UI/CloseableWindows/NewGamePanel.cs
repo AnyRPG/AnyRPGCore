@@ -311,7 +311,7 @@ namespace AnyRPG {
 
         private void ClearData() {
             //Debug.Log("NewGamePanel.ClearData()");
-            newGameManager.ClearData();
+            newGameManager.InitializeData();
 
             //detailsPanel.ResetInputText(newGameManager.PlayerName);
         }
