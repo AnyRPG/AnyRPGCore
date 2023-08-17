@@ -163,16 +163,16 @@ namespace AnyRPG {
     }
 
     [Serializable]
-    public struct PlayerCharacterData {
+    public class PlayerCharacterData {
         public int id;
         public int accountId;
         public string name;
         public string saveData;
 
-        //public PlayerCharacterData() {
-        //    name = string.Empty;
-        //    saveData = string.Empty;
-        //}
+        public PlayerCharacterData() {
+            name = string.Empty;
+            saveData = string.Empty;
+        }
     }
 
     public class PlayerCharacterSaveData {

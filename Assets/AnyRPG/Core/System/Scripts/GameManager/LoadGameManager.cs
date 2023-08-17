@@ -98,8 +98,10 @@ namespace AnyRPG {
 
 
         public void LoadGame(PlayerCharacterSaveData playerCharacterSaveData) {
+            Debug.Log("LoadGameManager.LoadGame()");
+
             //if (systemGameManager.GameMode == GameMode.Local) {
-                saveManager.LoadGame(playerCharacterSaveData.SaveData);
+            saveManager.LoadGame(playerCharacterSaveData.SaveData);
             //} else {
             //    networkManager.LoadGame(playerCharacterSaveData);
             //}

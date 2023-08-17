@@ -1329,7 +1329,7 @@ namespace AnyRPG {
 
 
         public void LoadGame(AnyRPGSaveData anyRPGSaveData) {
-            //Debug.Log("Savemanager.LoadGame()");
+            Debug.Log("Savemanager.LoadGame()");
 
             ClearSharedData();
             currentSaveData = anyRPGSaveData;

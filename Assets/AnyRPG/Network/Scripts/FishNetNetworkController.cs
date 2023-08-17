@@ -194,10 +194,10 @@ namespace AnyRPG {
         }
         */
 
-        public override void SpawnPlayer(CharacterRequestData characterRequestData, GameObject playerPrefab, Transform parentTransform, Vector3 position, Vector3 forward) {
-            //Debug.Log($"FishNetNetworkController.SpawnPlayer({unitProfile.ResourceName}, {playerPrefab.name})");
+        public override void SpawnPlayer(CharacterRequestData characterRequestData, /*GameObject playerPrefab,*/ Transform parentTransform, Vector3 position, Vector3 forward) {
+            Debug.Log($"FishNetNetworkController.SpawnPlayer({characterRequestData.characterConfigurationRequest.unitProfile.ResourceName})");
 
-            networkConnector.SpawnCharacterUnit(characterRequestData.spawnRequestId, characterRequestData.characterConfigurationRequest.unitProfile.ResourceName, playerPrefab, parentTransform, position, forward, characterRequestData.characterConfigurationRequest.unitControllerMode, characterRequestData.unitLevel);
+            networkConnector.SpawnCharacterUnit(characterRequestData.spawnRequestId, characterRequestData.characterConfigurationRequest.unitProfile.ResourceName, /*playerPrefab,*/ parentTransform, position, forward, characterRequestData.characterConfigurationRequest.unitControllerMode, characterRequestData.unitLevel);
             //return null;
         }
 

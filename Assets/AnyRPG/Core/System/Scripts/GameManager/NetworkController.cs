@@ -19,7 +19,7 @@ namespace AnyRPG {
 
         public abstract void Logout();
 
-        public abstract void SpawnPlayer(CharacterRequestData characterRequestData, GameObject playerPrefab, Transform parentTransform, Vector3 position, Vector3 forward);
+        public abstract void SpawnPlayer(CharacterRequestData characterRequestData, /*GameObject playerPrefab,*/ Transform parentTransform, Vector3 position, Vector3 forward);
         
         public abstract GameObject SpawnModelPrefab(int spawnRequestId, GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward);
 

@@ -46,13 +46,13 @@ namespace AnyRPG {
         public UnitController SpawnUnitPrefab(CharacterRequestData characterRequestData, Transform parentTransform, Vector3 position, Vector3 forward) {
             //Debug.Log($"CharacterManager.SpawnUnitPrefab({spawnMode}, {unitProfile.ResourceName})");
             characterRequestData.spawnRequestId = GetSpawnRequestId();
-            GameObject spawnPrefab;
-            if (characterRequestData.requestMode == GameMode.Local) {
-                spawnPrefab = characterRequestData.characterConfigurationRequest.unitProfile.UnitPrefabProps.UnitPrefab;
-            } else {
-                spawnPrefab = characterRequestData.characterConfigurationRequest.unitProfile.UnitPrefabProps.NetworkUnitPrefab;
-            }
-            GameObject prefabObject = SpawnCharacterPrefab(characterRequestData, spawnPrefab, parentTransform, position, forward);
+            //GameObject spawnPrefab;
+            //if (characterRequestData.requestMode == GameMode.Local) {
+            //    spawnPrefab = characterRequestData.characterConfigurationRequest.unitProfile.UnitPrefabProps.UnitPrefab;
+            //} else {
+            //    spawnPrefab = characterRequestData.characterConfigurationRequest.unitProfile.UnitPrefabProps.NetworkUnitPrefab;
+            //}
+            GameObject prefabObject = SpawnCharacterPrefab(characterRequestData, /*spawnPrefab,*/ parentTransform, position, forward);
             UnitController unitController = null;
             if (characterRequestData.requestMode == GameMode.Local) {
                 //unitController = ConfigureUnitController(characterRequestData, prefabObject, true);
@@ -184,16 +184,16 @@ namespace AnyRPG {
             return prefabObject;
         }
 
-        private GameObject SpawnCharacterPrefab(CharacterRequestData characterRequestData, GameObject spawnPrefab, Transform parentTransform, Vector3 position, Vector3 forward) {
+        private GameObject SpawnCharacterPrefab(CharacterRequestData characterRequestData, /*GameObject spawnPrefab,*/ Transform parentTransform, Vector3 position, Vector3 forward) {
             //Debug.Log($"CharacterManager.SpawnCharacterPrefab({spawnPrefab.name})");
 
             AddUnitSpawnRequest(characterRequestData.spawnRequestId, characterRequestData);
             if (characterRequestData.requestMode == GameMode.Network) {
                 //Debug.Log($"CharacterManager.SpawnCharacterPrefab({spawnPrefab.name}) adding {characterRequestData.spawnRequestId} to networkSpawnRequests");
-                networkManager.SpawnPlayer(characterRequestData, spawnPrefab, parentTransform, position, forward);
+                networkManager.SpawnPlayer(characterRequestData, /*spawnPrefab,*/ parentTransform, position, forward);
                 return null;
             }
-            return LocalSpawnPrefab(spawnPrefab, parentTransform, position, forward);
+            return LocalSpawnPrefab(characterRequestData.characterConfigurationRequest.unitProfile.UnitPrefabProps.UnitPrefab, parentTransform, position, forward);
         }
 
         public void AddUnitSpawnRequest(int spawnRequestId, CharacterRequestData characterRequestData) {

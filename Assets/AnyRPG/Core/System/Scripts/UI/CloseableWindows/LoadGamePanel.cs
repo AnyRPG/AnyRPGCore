@@ -20,10 +20,12 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject buttonArea = null;
 
-        /*
+        
         [SerializeField]
         private HighlightButton returnButton = null;
-        */
+
+        [SerializeField]
+        private HighlightButton logoutButton = null;
 
         [SerializeField]
         private HighlightButton loadGameButton = null;
@@ -52,6 +54,7 @@ namespace AnyRPG {
         private CharacterCreatorManager characterCreatorManager = null;
         private UIManager uIManager = null;
         private LoadGameManager loadGameManager = null;
+        private NetworkManager networkManager = null;
 
         public LoadGameButton SelectedLoadGameButton { get => selectedLoadGameButton; }
 
@@ -74,6 +77,7 @@ namespace AnyRPG {
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
             uIManager = systemGameManager.UIManager;
             loadGameManager = systemGameManager.LoadGameManager;
+            networkManager = systemGameManager.NetworkManager;
         }
 
         public override void ReceiveClosedWindowNotification() {
@@ -112,14 +116,31 @@ namespace AnyRPG {
             //LoadSavedAppearanceSettings();
 
             characterCreatorManager.EnableLight();
+
+            UpdateNavigationButtons();
+        }
+
+        private void UpdateNavigationButtons() {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                returnButton.gameObject.SetActive(true);
+                deleteGameButton.gameObject.SetActive(true);
+                copyGameButton.gameObject.SetActive(true);
+                logoutButton.gameObject.SetActive(false);
+            } else {
+                returnButton.gameObject.SetActive(false);
+                deleteGameButton.gameObject.SetActive(false);
+                copyGameButton.gameObject.SetActive(false);
+                logoutButton.gameObject.SetActive(true);
+            }
+            uINavigationControllers[1].UpdateNavigationList();
         }
 
         public void ShowSavedGame(LoadGameButton loadButton) {
-            //Debug.Log("LoadGamePanel.ShowSavedGame()");
+            Debug.Log($"LoadGamePanel.ShowSavedGame({loadButton.gameObject.name})");
 
             selectedLoadGameButton = loadButton;
 
-            loadGameManager.SetSavedGame(loadButton.SaveData);
+            loadGameManager.SetSavedGame(loadButton.PlayerCharacterSaveData);
 
             // ensure the correct unit and character model is spawned
             characterPreviewPanel.ReloadUnit();
@@ -141,7 +162,8 @@ namespace AnyRPG {
 
 
         public void ClearLoadButtons() {
-            //Debug.Log("LoadGamePanel.ClearLoadButtons()");
+            Debug.Log("LoadGamePanel.ClearLoadButtons()");
+
             // clear the quest list so any quests left over from a previous time opening the window aren't shown
             foreach (LoadGameButton loadGameButton in loadGameButtons) {
                 if (loadGameButton != null) {
@@ -233,9 +255,12 @@ namespace AnyRPG {
         */
 
         public void LoadGame() {
-            if (SelectedLoadGameButton != null) {
+            Debug.Log("LoadGamePanel.LoadGame()");
+            if (selectedLoadGameButton != null) {
+                // this variable will be set to null in the Close() call so save the property we need first
+                PlayerCharacterSaveData playerCharacterSaveData = selectedLoadGameButton.PlayerCharacterSaveData;
                 Close();
-                loadGameManager.LoadGame(SelectedLoadGameButton.SaveData);
+                loadGameManager.LoadGame(playerCharacterSaveData);
             }
         }
 
@@ -250,7 +275,7 @@ namespace AnyRPG {
         }
 
         public void DeleteGame() {
-            if (SelectedLoadGameButton != null) {
+            if (selectedLoadGameButton != null) {
                 uIManager.deleteGameMenuWindow.OpenWindow();
             }
         }
@@ -261,7 +286,7 @@ namespace AnyRPG {
         }
 
         public void CopyGame() {
-            if (SelectedLoadGameButton != null) {
+            if (selectedLoadGameButton != null) {
                 uIManager.copyGameMenuWindow.OpenWindow();
             }
         }
@@ -270,6 +295,11 @@ namespace AnyRPG {
             uIManager.copyGameMenuWindow.CloseWindow();
             //ShowLoadButtonsCommon(SelectedLoadGameButton.SaveData.SaveData.DataFileName);
             ShowLoadButtonsCommon();
+        }
+
+        public void Logout() {
+            networkManager.Logout();
+            Close();
         }
 
     }

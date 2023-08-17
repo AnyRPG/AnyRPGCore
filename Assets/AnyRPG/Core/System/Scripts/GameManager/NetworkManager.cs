@@ -16,6 +16,8 @@ namespace AnyRPG {
 
         private string username = string.Empty;
         private string password = string.Empty;
+        
+        private bool isLoggingInOrOut = false;
 
         private Dictionary<int, string> clientTokens = new Dictionary<int, string>();
         private Dictionary<int, List<PlayerCharacterSaveData>> playerCharacterDataDict = new Dictionary<int, List<PlayerCharacterSaveData>>();
@@ -60,6 +62,8 @@ namespace AnyRPG {
 
         public bool Login(string username, string password, string server) {
             Debug.Log($"NetworkManager.Login({username}, {password})");
+            
+            isLoggingInOrOut = true;
 
             this.username = username;
             this.password = password;
@@ -67,17 +71,22 @@ namespace AnyRPG {
         }
 
         public void Logout() {
+            isLoggingInOrOut = true;
             networkController.Logout();
         }
 
         public void LoadScene(string sceneName) {
-            //Debug.Log($"NetworkManager.LoadScene({sceneName})");
+            Debug.Log($"NetworkManager.LoadScene({sceneName})");
 
             networkController.LoadScene(sceneName);
         }
 
-        public void SpawnPlayer(CharacterRequestData characterRequestData, GameObject playerPrefab, Transform parentTransform, Vector3 position, Vector3 forward) {
-            networkController.SpawnPlayer(characterRequestData, playerPrefab, parentTransform, position, forward);
+        public void SpawnPlayer(CharacterRequestData characterRequestData, /*GameObject playerPrefab,*/ Transform parentTransform, Vector3 position, Vector3 forward) {
+            Debug.Log($"NetworkManager.SpawnPlayer()");
+            if (characterRequestData.characterConfigurationRequest.unitProfile.UnitPrefabProps.NetworkUnitPrefab == null) {
+                Debug.LogWarning($"NetworkManager.SpawnPlayer({characterRequestData.characterConfigurationRequest.unitProfile.ResourceName}) On UnitProfile Network Unit Prefab is null ");
+            }
+            networkController.SpawnPlayer(characterRequestData, /*playerPrefab,*/ parentTransform, position, forward);
         }
 
         public GameObject SpawnModelPrefab(int spawnRequestId, GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward) {
@@ -106,11 +115,21 @@ namespace AnyRPG {
         }
 
         public void ProcessStopConnection() {
+            Debug.Log($"NetworkManager.ProcessStopConnection()");
             systemGameManager.SetGameMode(GameMode.Local);
             if (levelManager.GetActiveSceneNode() != systemConfigurationManager.MainMenuSceneNode) {
                 uIManager.AddPopupWindowToQueue(uIManager.disconnectedWindow);
                 levelManager.LoadMainMenu();
+                return;
             }
+
+            // don't open disconnected window if this was an expected logout;
+            if (isLoggingInOrOut == true) {
+                isLoggingInOrOut = false;
+                return;
+            }
+            // main menu, just open the disconnected window
+            uIManager.disconnectedWindow.OpenWindow();
         }
 
         public void ProcessLoginFailure() {
@@ -122,6 +141,7 @@ namespace AnyRPG {
             Debug.Log($"NetworkManager.ProcessLoginSuccess()");
             // not doing this here because the connector has not spawned yet.
             //uIManager.ProcessLoginSuccess();
+            isLoggingInOrOut = false;
         }
 
         public void CreatePlayerCharacterClient(AnyRPGSaveData anyRPGSaveData) {

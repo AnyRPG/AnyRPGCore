@@ -30,7 +30,7 @@ namespace AnyRPG {
         // game manager references
         protected SystemDataFactory systemDataFactory = null;
 
-        public PlayerCharacterSaveData SaveData { get => playerCharacterData; set => playerCharacterData = value; }
+        public PlayerCharacterSaveData PlayerCharacterSaveData { get => playerCharacterData; set => playerCharacterData = value; }
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -45,7 +45,7 @@ namespace AnyRPG {
             this.playerCharacterData = playerCharacterData;
 
             icon.sprite = null;
-            if (playerCharacterData.SaveData.playerFaction != null && SaveData.SaveData.playerFaction != string.Empty) {
+            if (playerCharacterData.SaveData.playerFaction != null && PlayerCharacterSaveData.SaveData.playerFaction != string.Empty) {
                 Faction playerFaction = systemDataFactory.GetResource<Faction>(playerCharacterData.SaveData.playerFaction);
                 // needs to be checked anyway.  could have invalid faction in save data
                 if (playerFaction != null) {
