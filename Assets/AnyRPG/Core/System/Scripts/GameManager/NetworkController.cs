@@ -26,8 +26,8 @@ namespace AnyRPG {
         public abstract void LoadScene(string sceneName);
         public abstract bool CanSpawnCharacterOverNetwork();
         public abstract bool OwnPlayer(UnitController unitController);
-
         public abstract void CreatePlayerCharacter(AnyRPGSaveData anyRPGSaveData);
+        public abstract void LoadCharacterList();
 
         //internal abstract void SetConnectionPrefab(GameObject spawnPrefab);
     }

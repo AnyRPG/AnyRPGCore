@@ -98,7 +98,16 @@ namespace AnyRPG {
         }
 
         public AnyRPGSaveData LoadSaveDataFromFile(string fileName) {
-            AnyRPGSaveData anyRPGSaveData = JsonUtility.FromJson<AnyRPGSaveData>(File.ReadAllText(fileName));
+            Debug.Log($"SaveManager.LoadSaveDataFromFile({fileName})");
+
+            string fileContents = File.ReadAllText(fileName);
+            return LoadSaveDataFromString(fileContents);
+        }
+
+        public AnyRPGSaveData LoadSaveDataFromString(string fileContents) {
+            Debug.Log($"SaveManager.LoadSaveDataFromString({fileContents})");
+
+            AnyRPGSaveData anyRPGSaveData = JsonUtility.FromJson<AnyRPGSaveData>(fileContents);
 
             // when loaded from file, overrides should always be true because the file may have been saved before these were added
             anyRPGSaveData.OverrideLocation = true;
@@ -136,9 +145,11 @@ namespace AnyRPG {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): CurrentScene is null.  Setting to default");
                 anyRPGSaveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
             }
+            /*
             if (anyRPGSaveData.DataFileName == null || anyRPGSaveData.DataFileName == string.Empty) {
                 anyRPGSaveData.DataFileName = Path.GetFileName(fileName);
             }
+            */
             anyRPGSaveData = InitializeSaveDataResourceLists(anyRPGSaveData, false);
 
             string saveDate = string.Empty;
@@ -1331,7 +1342,6 @@ namespace AnyRPG {
             // disable auto-accept achievements since we haven't loaded the data that tells us if they are complete yet
             systemAchievementManager.CleanupEventSubscriptions();
 
-            // spawn player connection so all the data can be loaded
             playerManager.SpawnPlayerConnection();
 
             // load things that are stored in SaveManager, not on the unit controller

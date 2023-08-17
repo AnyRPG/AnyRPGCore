@@ -233,6 +233,15 @@ namespace AnyRPG {
             networkConnector.CreatePlayerCharacter(anyRPGSaveData);
         }
 
+        public override void LoadCharacterList() {
+            Debug.Log($"FishNetNetworkController.LoadCharacterList()");
+            if (networkConnector == null) {
+                Debug.LogWarning($"FishNetNetworkController.LoadCharacterList(): networkConnector is null");
+                return;
+            }
+            networkConnector.LoadCharacterList();
+        }
+
         //internal override void SetConnectionPrefab(GameObject spawnPrefab) {
         //    this.networkConnectorSpawnPrefab = spawnPrefab;
         //}

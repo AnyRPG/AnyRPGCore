@@ -128,16 +128,33 @@ namespace AnyRPG {
             systemGameManager.NetworkManager.CreatePlayerCharacterServer(networkConnection.ClientId, anyRPGSaveData);
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void LoadCharacterList(NetworkConnection networkConnection = null) {
+            Debug.Log($"FishNetNetworkConnector.LoadCharacterList()");
+
+            List<PlayerCharacterSaveData> playerCharacterSaveDataList = systemGameManager.NetworkManager.LoadCharacterListServer(networkConnection.ClientId);
+
+            Debug.Log($"FishNetNetworkConnector.LoadCharacterList() list size: {playerCharacterSaveDataList.Count}");
+            SetCharacterList(networkConnection, playerCharacterSaveDataList);
+        }
+
+        [TargetRpc]
+        public void SetCharacterList(NetworkConnection networkConnection, List<PlayerCharacterSaveData> playerCharacterSaveDataList) {
+            Debug.Log($"FishNetNetworkConnector.SetCharacterList({playerCharacterSaveDataList.Count})");
+
+            systemGameManager.LoadGameManager.SetCharacterList(playerCharacterSaveDataList);
+        }
+
         public override void OnStartClient() {
             base.OnStartClient();
-            //Debug.Log($"FishNetNetworkConnector.OnStartClient()");
+            Debug.Log($"FishNetNetworkConnector.OnStartClient() ClientId: {networkManager.ClientManager.Connection.ClientId}");
 
-            //Debug.Log($"FishNetNetworkConnector.OnStartClient() ClientId: {networkManager.ClientManager.Connection.ClientId}");
+            systemGameManager.UIManager.ProcessLoginSuccess();
         }
 
         public override void OnStartNetwork() {
             base.OnStartNetwork();
-            //Debug.Log($"FishNetNetworkConnector.OnStartNetwork()");
+            Debug.Log($"FishNetNetworkConnector.OnStartNetwork()");
 
             FishNetNetworkController fishNetNetworkController = GameObject.FindObjectOfType<FishNetNetworkController>();
             fishNetNetworkController.RegisterConnector(this);

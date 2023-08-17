@@ -18,6 +18,7 @@ namespace AnyRPG {
         private string password = string.Empty;
 
         private Dictionary<int, string> clientTokens = new Dictionary<int, string>();
+        private Dictionary<int, List<PlayerCharacterSaveData>> playerCharacterDataDict = new Dictionary<int, List<PlayerCharacterSaveData>>();
 
         private GameServerClient gameServerClient = null;
 
@@ -32,6 +33,7 @@ namespace AnyRPG {
         private CharacterManager characterManager = null;
         private UIManager uIManager = null;
         private LevelManager levelManager = null;
+        private SaveManager saveManager = null;
 
         public string Username { get => username; }
         public string Password { get => password; }
@@ -53,6 +55,7 @@ namespace AnyRPG {
             characterManager = systemGameManager.CharacterManager;
             levelManager = systemGameManager.LevelManager;
             uIManager = systemGameManager.UIManager;
+            saveManager = systemGameManager.SaveManager;
         }
 
         public bool Login(string username, string password, string server) {
@@ -117,12 +120,17 @@ namespace AnyRPG {
 
         public void ProcessLoginSuccess() {
             Debug.Log($"NetworkManager.ProcessLoginSuccess()");
-
+            // not doing this here because the connector has not spawned yet.
+            //uIManager.ProcessLoginSuccess();
         }
 
         public void CreatePlayerCharacterClient(AnyRPGSaveData anyRPGSaveData) {
             Debug.Log($"NetworkManager.CreatePlayerCharacterClient(AnyRPGSaveData)");
             networkController.CreatePlayerCharacter(anyRPGSaveData);
+        }
+
+        public void LoadCharacterList() {
+            networkController.LoadCharacterList();
         }
 
         public void OnSetGameMode(GameMode gameMode) {
@@ -147,6 +155,31 @@ namespace AnyRPG {
             }
 
             gameServerClient.CreatePlayerCharacter(clientTokens[clientId], anyRPGSaveData);
+        }
+
+        public List<PlayerCharacterSaveData> LoadCharacterListServer(int clientId) {
+            Debug.Log($"NetworkManager.LoadCharacterListServer({clientId})");
+            if (clientTokens.ContainsKey(clientId) == false) {
+                // can't do anything without a token
+                return new List<PlayerCharacterSaveData>();
+            }
+            List<PlayerCharacterData> playerCharacterDataList = gameServerClient.LoadCharacterList(clientTokens[clientId]);
+            Debug.Log($"NetworkManager.LoadCharacterListServer({clientId}) list size: {playerCharacterDataList.Count}");
+
+            List<PlayerCharacterSaveData> playerCharacterSaveDataList = new List<PlayerCharacterSaveData>();
+            foreach (PlayerCharacterData playerCharacterData in playerCharacterDataList) {
+                playerCharacterSaveDataList.Add(new PlayerCharacterSaveData() {
+                    PlayerCharacterId = playerCharacterData.id,
+                    SaveData = saveManager.LoadSaveDataFromString(playerCharacterData.saveData)
+                });
+            }
+            if (playerCharacterDataDict.ContainsKey(clientId)) {
+                playerCharacterDataDict[clientId] = playerCharacterSaveDataList;
+            } else {
+                playerCharacterDataDict.Add(clientId, playerCharacterSaveDataList);
+            }
+
+            return playerCharacterSaveDataList;
         }
 
         public string GetClientToken(int clientId) {

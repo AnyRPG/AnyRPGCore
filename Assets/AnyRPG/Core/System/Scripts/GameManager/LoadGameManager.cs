@@ -12,7 +12,9 @@ namespace AnyRPG {
         //public event System.Action<LoadGameButton> OnSetSavedGame = delegate { };
         public event System.Action OnDeleteGame = delegate { };
         public event System.Action OnCopyGame = delegate { };
+        public event System.Action OnLoadCharacterList = delegate { };
 
+        private List<PlayerCharacterSaveData> characterList = new List<PlayerCharacterSaveData>();
         private UnitProfile unitProfile = null;
         private UnitType unitType = null;
         private CharacterRace characterRace = null;
@@ -22,7 +24,7 @@ namespace AnyRPG {
 
         private CapabilityConsumerProcessor capabilityConsumerProcessor = null;
 
-        private AnyRPGSaveData anyRPGSaveData;
+        private PlayerCharacterSaveData playerCharacterSaveData;
 
         //private LoadGameButton selectedLoadGameButton = null;
 
@@ -33,7 +35,9 @@ namespace AnyRPG {
         private ObjectPooler objectPooler = null;
         private CharacterCreatorManager characterCreatorManager = null;
         private UIManager uIManager = null;
+        private NetworkManager networkManager = null;
 
+        // public properties
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
         public UnitType UnitType { get => unitType; set => unitType = value; }
         public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
@@ -41,10 +45,9 @@ namespace AnyRPG {
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
         public Faction Faction { get => faction; set => faction = value; }
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
-
-        //public LoadGameButton SelectedLoadGameButton { get => selectedLoadGameButton; set => selectedLoadGameButton = value; }
-        public AnyRPGSaveData AnyRPGSaveData { get => anyRPGSaveData; set => anyRPGSaveData = value; }
+        public PlayerCharacterSaveData PlayerCharacterSaveData { get => playerCharacterSaveData; set => playerCharacterSaveData = value; }
         public CapabilityConsumerSnapshot CapabilityConsumerSnapshot { get => capabilityConsumerSnapshot; set => capabilityConsumerSnapshot = value; }
+        public List<PlayerCharacterSaveData> CharacterList { get => characterList; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -58,14 +61,15 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
             uIManager = systemGameManager.UIManager;
+            networkManager = systemGameManager.NetworkManager;
         }
 
 
-        public void SetSavedGame(AnyRPGSaveData saveData) {
+        public void SetSavedGame(PlayerCharacterSaveData saveData) {
             Debug.Log("LoadGameManager.SetSavedGame()");
 
-            anyRPGSaveData = saveData;
-            capabilityConsumerSnapshot = saveManager.GetCapabilityConsumerSnapshot(anyRPGSaveData);
+            playerCharacterSaveData = saveData;
+            capabilityConsumerSnapshot = saveManager.GetCapabilityConsumerSnapshot(playerCharacterSaveData.SaveData);
 
             unitProfile = capabilityConsumerSnapshot.UnitProfile;
             UnitType = capabilityConsumerSnapshot.UnitProfile?.UnitType;
@@ -77,7 +81,6 @@ namespace AnyRPG {
             saveManager.ClearSharedData();
         }
 
-
         public void ResetData() {
             //Debug.Log("LoadGameManager.ResetData()");
             unitProfile = null;
@@ -86,23 +89,59 @@ namespace AnyRPG {
             characterClass = null;
             classSpecialization = null;
             faction = null;
-            anyRPGSaveData = saveManager.CreateSaveData();
+            playerCharacterSaveData = new PlayerCharacterSaveData() {
+                PlayerCharacterId = 0,
+                SaveData = saveManager.CreateSaveData()
+            };
             capabilityConsumerSnapshot = null;
         }
 
 
-        public void LoadGame(AnyRPGSaveData saveData) {
-            saveManager.LoadGame(saveData);
+        public void LoadGame(PlayerCharacterSaveData playerCharacterSaveData) {
+            //if (systemGameManager.GameMode == GameMode.Local) {
+                saveManager.LoadGame(playerCharacterSaveData.SaveData);
+            //} else {
+            //    networkManager.LoadGame(playerCharacterSaveData);
+            //}
         }
 
         public void DeleteGame() {
-            saveManager.DeleteGame(anyRPGSaveData);
+            saveManager.DeleteGame(playerCharacterSaveData.SaveData);
             OnDeleteGame();
         }
 
         public void CopyGame() {
-            saveManager.CopyGame(anyRPGSaveData);
+            saveManager.CopyGame(playerCharacterSaveData.SaveData);
             OnCopyGame();
+        }
+
+        public void LoadCharacterList() {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                LoadCharacterListLocal();
+            } else {
+                networkManager.LoadCharacterList();
+            }
+        }
+
+        private void LoadCharacterListLocal() {
+
+            characterList.Clear();
+            List<AnyRPGSaveData> saveDataList = saveManager.GetSaveDataList();
+            foreach (AnyRPGSaveData saveData in saveDataList) {
+                characterList.Add(new PlayerCharacterSaveData() {
+                    PlayerCharacterId = 0,
+                    SaveData = saveData
+                });
+            }
+            OnLoadCharacterList();
+        }
+
+        public void SetCharacterList(List<PlayerCharacterSaveData> playerCharacterSaveDataList) {
+            Debug.Log("LoadGameManager.SetCharacterList()");
+
+            characterList.Clear();
+            characterList.AddRange(playerCharacterSaveDataList);
+            OnLoadCharacterList();
         }
 
         public CharacterConfigurationRequest GetCharacterConfigurationRequest() {

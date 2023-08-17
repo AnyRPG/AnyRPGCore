@@ -166,6 +166,7 @@ namespace AnyRPG {
         public CloseableWindow interactionWindow;
         public CloseableWindow craftingWindow;
         public CloseableWindow mainMapWindow;
+
         public CloseableWindow dialogWindow;
         public CloseableWindow factionChangeWindow;
         public CloseableWindow classChangeWindow;
@@ -1547,6 +1548,12 @@ namespace AnyRPG {
                 activeNavigableInterfaceElements.Remove(navigableInterfaceElement);
             }
         }
+
+        public void ProcessLoginSuccess() {
+            networkLoginWindow.CloseWindow();
+            loadGameWindow.OpenWindow();
+        }
+
     }
 
 }

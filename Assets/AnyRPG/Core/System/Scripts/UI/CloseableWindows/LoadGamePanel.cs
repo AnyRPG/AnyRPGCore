@@ -60,6 +60,7 @@ namespace AnyRPG {
 
             loadGameManager.OnDeleteGame += HandleDeleteGame;
             loadGameManager.OnCopyGame += HandleCopyGame;
+            loadGameManager.OnLoadCharacterList += HandleLoadCharacterList;
 
             characterPreviewPanel.Configure(systemGameManager);
             characterPreviewPanel.SetParentPanel(this);
@@ -96,10 +97,13 @@ namespace AnyRPG {
 
             base.ProcessOpenWindowNotification();
 
+            loadGameManager.LoadCharacterList();
+
             // inform the preview panel so the character can be rendered
             characterPreviewPanel.OnUnitCreated += HandleUnitCreated;
             characterPreviewPanel.CharacterConfigurationProvider = loadGameManager;
             characterPreviewPanel.ReceiveOpenWindowNotification();
+
 
             // This is down here so re-used UMA units don't trigger handleTargetCreated before we can subscribe to it
             ShowLoadButtonsCommon();
@@ -132,7 +136,7 @@ namespace AnyRPG {
             uINavigationControllers[1].UpdateNavigationList();
             uINavigationControllers[0].UnHightlightButtonBackgrounds(loadButton);
 
-            nameText.text = loadGameManager.AnyRPGSaveData.playerName;
+            nameText.text = loadGameManager.PlayerCharacterSaveData.SaveData.playerName;
         }
 
 
@@ -156,23 +160,14 @@ namespace AnyRPG {
         }
 
 
-        public void ShowLoadButtonsCommon(string fileName = "") {
-            //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon()");
+        public void ShowLoadButtonsCommon() {
+            Debug.Log("LoadGamePanel.ShowLoadButtonsCommon()");
             ClearLoadButtons();
             characterPreviewPanel.ClearPreviewTarget();
-            int selectedButton = 0;
             int count = 0;
-            foreach (AnyRPGSaveData anyRPGSaveData in saveManager.GetSaveDataList()) {
-                //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
-                GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
-                LoadGameButton loadGameButton = go.GetComponent<LoadGameButton>();
-                loadGameButton.Configure(systemGameManager);
-                loadGameButton.AddSaveData(this, anyRPGSaveData);
-                loadGameButtons.Add(loadGameButton);
-                uINavigationControllers[0].AddActiveButton(loadGameButton);
-                if (anyRPGSaveData.DataFileName == fileName) {
-                    selectedButton = count;
-                }
+            foreach (PlayerCharacterSaveData playerCharacterSaveData in loadGameManager.CharacterList) {
+                Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
+                AddLoadButton(playerCharacterSaveData);
                 count++;
             }
             uINavigationControllers[1].UpdateNavigationList();
@@ -184,11 +179,26 @@ namespace AnyRPG {
             //SetPreviewTarget();
         }
 
+        private void AddLoadButton(PlayerCharacterSaveData playerCharacterSaveData) {
+            GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
+            LoadGameButton loadGameButton = go.GetComponent<LoadGameButton>();
+            loadGameButton.Configure(systemGameManager);
+            loadGameButton.AddSaveData(this, playerCharacterSaveData);
+            loadGameButtons.Add(loadGameButton);
+            uINavigationControllers[0].AddActiveButton(loadGameButton);
+        }
+
+        public void HandleLoadCharacterList() {
+            Debug.Log("LoadGamePanel.HandleLoadCharacterList()");
+
+            ShowLoadButtonsCommon();
+        }
+
         public void HandleUnitCreated() {
             //Debug.Log("LoadGamePanel.HandleTargetCreated()");
 
             if (characterCreatorManager.PreviewUnitController?.UnitModelController != null) {
-                characterCreatorManager.PreviewUnitController?.UnitModelController.SetInitialSavedAppearance(loadGameManager.AnyRPGSaveData);
+                characterCreatorManager.PreviewUnitController?.UnitModelController.SetInitialSavedAppearance(loadGameManager.PlayerCharacterSaveData.SaveData);
             }
 
             LoadEquipmentData();
@@ -211,7 +221,7 @@ namespace AnyRPG {
             if (characterCreatorManager.PreviewUnitController != null) {
                 //Debug.Log("LoadGamePanel.LoadEquipmentData(): preview controller found");
 
-                saveManager.LoadEquipmentData(loadGameManager.AnyRPGSaveData, characterCreatorManager.PreviewUnitController.CharacterEquipmentManager);
+                saveManager.LoadEquipmentData(loadGameManager.PlayerCharacterSaveData.SaveData, characterCreatorManager.PreviewUnitController.CharacterEquipmentManager);
             }
         }
 
@@ -224,9 +234,8 @@ namespace AnyRPG {
 
         public void LoadGame() {
             if (SelectedLoadGameButton != null) {
-                AnyRPGSaveData saveData = SelectedLoadGameButton.SaveData;
                 Close();
-                loadGameManager.LoadGame(saveData);
+                loadGameManager.LoadGame(SelectedLoadGameButton.SaveData);
             }
         }
 
@@ -259,7 +268,8 @@ namespace AnyRPG {
 
         public void HandleCopyGame() {
             uIManager.copyGameMenuWindow.CloseWindow();
-            ShowLoadButtonsCommon(SelectedLoadGameButton.SaveData.DataFileName);
+            //ShowLoadButtonsCommon(SelectedLoadGameButton.SaveData.SaveData.DataFileName);
+            ShowLoadButtonsCommon();
         }
 
     }
