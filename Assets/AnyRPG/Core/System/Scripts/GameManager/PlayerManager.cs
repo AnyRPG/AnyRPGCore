@@ -84,7 +84,7 @@ namespace AnyRPG {
         protected MessageFeedManager messageFeedManager = null;
         protected ObjectPooler objectPooler = null;
         protected ControlsManager controlsManager = null;
-        protected NetworkManager networkManager = null;
+        protected NetworkManagerClient networkManager = null;
         protected CharacterManager characterManager = null;
         protected SystemDataFactory systemDataFactory = null;
 
@@ -117,7 +117,7 @@ namespace AnyRPG {
             inventoryManager = systemGameManager.InventoryManager;
             objectPooler = systemGameManager.ObjectPooler;
             controlsManager = systemGameManager.ControlsManager;
-            networkManager = systemGameManager.NetworkManager;
+            networkManager = systemGameManager.NetworkManagerClient;
             characterManager = systemGameManager.CharacterManager;
             systemDataFactory = systemGameManager.SystemDataFactory;
 

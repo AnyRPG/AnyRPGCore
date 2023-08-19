@@ -46,7 +46,7 @@ namespace AnyRPG {
         private CameraManager cameraManager = null;
         private PlayerManager playerManager = null;
         private MapManager mapManager = null;
-        private NetworkManager networkManager = null;
+        private NetworkManagerClient networkManager = null;
 
         public bool NavMeshAvailable { get => navMeshAvailable; set => navMeshAvailable = value; }
         //public Vector3 SpawnRotationOverride { get => spawnRotationOverride; set => spawnRotationOverride = value; }
@@ -70,7 +70,7 @@ namespace AnyRPG {
             audioManager = systemGameManager.AudioManager;
             cameraManager = systemGameManager.CameraManager;
             playerManager = systemGameManager.PlayerManager;
-            networkManager = systemGameManager.NetworkManager;
+            networkManager = systemGameManager.NetworkManagerClient;
         }
 
         public void PerformSetupActivities() {

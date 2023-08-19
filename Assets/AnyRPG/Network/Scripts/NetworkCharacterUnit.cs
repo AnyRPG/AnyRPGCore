@@ -85,7 +85,7 @@ namespace AnyRPG {
         public override void OnStopClient() {
             base.OnStopClient();
             Debug.Log($"{gameObject.name}.NetworkCharacterUnit.OnStopClient()");
-            systemGameManager.NetworkManager.ProcessStopClient(unitController);
+            systemGameManager.NetworkManagerClient.ProcessStopClient(unitController);
         }
 
         public override void OnStartClient() {

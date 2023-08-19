@@ -40,6 +40,7 @@ namespace AnyRPG {
         public void ConfirmAction() {
             //Debug.Log("NewGameMenuController.ConfirmAction()");
             loadGameManager.DeleteGame();
+            uIManager.deleteGameMenuWindow.CloseWindow();
         }
 
     }

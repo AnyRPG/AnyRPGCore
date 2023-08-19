@@ -35,7 +35,7 @@ namespace AnyRPG {
         private ObjectPooler objectPooler = null;
         private CharacterCreatorManager characterCreatorManager = null;
         private UIManager uIManager = null;
-        private NetworkManager networkManager = null;
+        private NetworkManagerClient networkManager = null;
 
         // public properties
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
@@ -61,7 +61,7 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
             uIManager = systemGameManager.UIManager;
-            networkManager = systemGameManager.NetworkManager;
+            networkManager = systemGameManager.NetworkManagerClient;
         }
 
 
@@ -108,8 +108,12 @@ namespace AnyRPG {
         }
 
         public void DeleteGame() {
-            saveManager.DeleteGame(playerCharacterSaveData.SaveData);
-            OnDeleteGame();
+            if (systemGameManager.GameMode == GameMode.Local) {
+                saveManager.DeleteGame(playerCharacterSaveData.SaveData);
+                OnDeleteGame();
+            } else {
+                networkManager.DeletePlayerCharacter(playerCharacterSaveData.PlayerCharacterId);
+            }
         }
 
         public void CopyGame() {

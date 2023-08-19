@@ -54,7 +54,7 @@ namespace AnyRPG {
         private CharacterCreatorManager characterCreatorManager = null;
         private UIManager uIManager = null;
         private LoadGameManager loadGameManager = null;
-        private NetworkManager networkManager = null;
+        private NetworkManagerClient networkManager = null;
 
         public LoadGameButton SelectedLoadGameButton { get => selectedLoadGameButton; }
 
@@ -77,7 +77,7 @@ namespace AnyRPG {
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
             uIManager = systemGameManager.UIManager;
             loadGameManager = systemGameManager.LoadGameManager;
-            networkManager = systemGameManager.NetworkManager;
+            networkManager = systemGameManager.NetworkManagerClient;
         }
 
         public override void ReceiveClosedWindowNotification() {
@@ -123,12 +123,12 @@ namespace AnyRPG {
         private void UpdateNavigationButtons() {
             if (systemGameManager.GameMode == GameMode.Local) {
                 returnButton.gameObject.SetActive(true);
-                deleteGameButton.gameObject.SetActive(true);
+                //deleteGameButton.gameObject.SetActive(true);
                 copyGameButton.gameObject.SetActive(true);
                 logoutButton.gameObject.SetActive(false);
             } else {
                 returnButton.gameObject.SetActive(false);
-                deleteGameButton.gameObject.SetActive(false);
+                //deleteGameButton.gameObject.SetActive(false);
                 copyGameButton.gameObject.SetActive(false);
                 logoutButton.gameObject.SetActive(true);
             }
@@ -281,7 +281,6 @@ namespace AnyRPG {
         }
 
         public void HandleDeleteGame() {
-            uIManager.deleteGameMenuWindow.CloseWindow();
             ShowLoadButtonsCommon();
         }
 

@@ -23,7 +23,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private SystemAchievementManager systemAchievementManager = null;
         private NewGameManager newGameManager = null;
-        private NetworkManager networkManager = null;
+        private NetworkManagerClient networkManager = null;
 
         private string jsonSavePath = string.Empty;
 
@@ -83,7 +83,7 @@ namespace AnyRPG {
             messageFeedManager = uIManager.MessageFeedManager;
             actionBarManager = uIManager.ActionBarManager;
             newGameManager = systemGameManager.NewGameManager;
-            networkManager = systemGameManager.NetworkManager;
+            networkManager = systemGameManager.NetworkManagerClient;
         }
 
         public List<AnyRPGSaveData> GetSaveDataList() {
@@ -1171,7 +1171,7 @@ namespace AnyRPG {
         private void CreateNetworkGame(AnyRPGSaveData anyRPGSaveData) {
             Debug.Log("Savemanager.CreateNetworkGame(AnyRPGSaveData)");
 
-            networkManager.CreatePlayerCharacterClient(anyRPGSaveData);
+            networkManager.CreatePlayerCharacter(anyRPGSaveData);
         }
 
         private void CreateLocalGame(AnyRPGSaveData anyRPGSaveData) {

@@ -158,7 +158,10 @@ namespace AnyRPG {
         private CharacterCreatorInteractableManager characterCreatorInteractableManager = null;
 
         [SerializeField]
-        private NetworkManager networkManager = null;
+        private NetworkManagerClient networkManagerClient = null;
+
+        [SerializeField]
+        private NetworkManagerServer networkManagerServer = null;
 
         [SerializeField]
         private CharacterManager characterManager = null;
@@ -220,7 +223,8 @@ namespace AnyRPG {
         public UnitSpawnManager UnitSpawnManager { get => unitSpawnManager; set => unitSpawnManager = value; }
         public VendorManager VendorManager { get => vendorManager; set => vendorManager = value; }
         public CharacterCreatorInteractableManager CharacterCreatorInteractableManager { get => characterCreatorInteractableManager; set => characterCreatorInteractableManager = value; }
-        public NetworkManager NetworkManager { get => networkManager; set => networkManager = value; }
+        public NetworkManagerClient NetworkManagerClient { get => networkManagerClient; set => networkManagerClient = value; }
+        public NetworkManagerServer NetworkManagerServer { get => networkManagerServer; set => networkManagerServer = value; }
         public CharacterManager CharacterManager { get => characterManager; set => characterManager = value; }
         public GameMode GameMode { get => gameMode; }
 
@@ -306,7 +310,8 @@ namespace AnyRPG {
             unitSpawnManager.Configure(this);
             vendorManager.Configure(this);
             characterCreatorInteractableManager.Configure(this);
-            networkManager.Configure(this);
+            networkManagerClient.Configure(this);
+            networkManagerServer.Configure(this);
             characterManager.Configure(this);
         }
 
@@ -340,7 +345,7 @@ namespace AnyRPG {
         public void SetGameMode(GameMode gameMode) {
             //Debug.Log($"SystemGameManager.SetGameMode({gameMode})");
             this.gameMode = gameMode;
-            networkManager.OnSetGameMode(gameMode);
+            networkManagerServer.OnSetGameMode(gameMode);
         }
 
         /// <summary>

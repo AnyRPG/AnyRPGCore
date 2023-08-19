@@ -22,7 +22,7 @@ namespace AnyRPG {
         // game manager references
         private UIManager uIManager = null;
         private PlayerManager playerManager = null;
-        private NetworkManager networkManager = null;
+        private NetworkManagerClient networkManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -32,7 +32,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
-            networkManager = systemGameManager.NetworkManager;
+            networkManager = systemGameManager.NetworkManagerClient;
         }
 
         /// <summary>

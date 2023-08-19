@@ -16,20 +16,15 @@ namespace AnyRPG {
         public virtual bool Login(string username, string password, string server) {
             return false;
         }
-
         public abstract void Logout();
-
         public abstract void SpawnPlayer(CharacterRequestData characterRequestData, /*GameObject playerPrefab,*/ Transform parentTransform, Vector3 position, Vector3 forward);
-        
         public abstract GameObject SpawnModelPrefab(int spawnRequestId, GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward);
-
         public abstract void LoadScene(string sceneName);
         public abstract bool CanSpawnCharacterOverNetwork();
         public abstract bool OwnPlayer(UnitController unitController);
         public abstract void CreatePlayerCharacter(AnyRPGSaveData anyRPGSaveData);
+        public abstract void DeletePlayerCharacter(int playerCharacterId);
         public abstract void LoadCharacterList();
-
-        //internal abstract void SetConnectionPrefab(GameObject spawnPrefab);
     }
 
 }

@@ -23,7 +23,7 @@ namespace AnyRPG {
 
         // game manager references
         private ObjectPooler objectPooler = null;
-        private NetworkManager networkManager = null;
+        private NetworkManagerClient networkManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -32,7 +32,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
-            networkManager = systemGameManager.NetworkManager;
+            networkManager = systemGameManager.NetworkManagerClient;
         }
 
         public int GetSpawnRequestId() {

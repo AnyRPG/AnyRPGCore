@@ -4,6 +4,7 @@ using FishNet.Managing;
 using FishNet.Managing.Logging;
 using FishNet.Transporting;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG
@@ -15,6 +16,8 @@ namespace AnyRPG
     public class FishNetPasswordAuthenticator : Authenticator
     {
         private SystemGameManager systemGameManager = null;
+
+        //private Dictionary<int, NetworkConnection> connectionRequests = new Dictionary<int, NetworkConnection>();
 
         #region Public.
         /// <summary>
@@ -40,10 +43,13 @@ namespace AnyRPG
         {
             base.InitializeOnce(networkManager);
 
-            //Debug.Log("FishNetPasswordAuthenticator.InitializeOnce()");
+            Debug.Log("FishNetPasswordAuthenticator.InitializeOnce()");
 
             // get reference to system game manager
             systemGameManager = GameObject.FindObjectOfType<SystemGameManager>();
+
+            //Listen for authentication result
+            systemGameManager.NetworkManagerServer.OnAuthenticationResult += HandleAuthenticationResult;
 
             //Listen for connection state change as client.
             base.NetworkManager.ClientManager.OnClientConnectionState += ClientManager_OnClientConnectionState;
@@ -52,6 +58,13 @@ namespace AnyRPG
             //Listen to response from server.
             base.NetworkManager.ClientManager.RegisterBroadcast<ResponseBroadcast>(OnResponseBroadcast);
         }
+
+        /*
+        public void Start() {
+            //Listen for authentication result
+            systemGameManager.NetworkManagerServer.OnAuthenticationResult += HandleAuthenticationResult;
+        }
+        */
 
         /// <summary>
         /// Called when a connection state changes for the local client.
@@ -70,8 +83,8 @@ namespace AnyRPG
 
             PasswordBroadcast pb = new PasswordBroadcast()
             {
-                Username = systemGameManager.NetworkManager.Username,
-                Password = systemGameManager.NetworkManager.Password
+                Username = systemGameManager.NetworkManagerClient.Username,
+                Password = systemGameManager.NetworkManagerClient.Password
             };
 
             Debug.Log($"FishNetPasswordAuthenticator.ClientManager_OnClientConnectionState(): sending password broadcast: {pb.Username}, {pb.Password}");
@@ -93,19 +106,35 @@ namespace AnyRPG
              * already be considered authenticated. */
             if (conn.Authenticated)
             {
+                NetworkManager.Log($"Client with ID {conn.ClientId} is already authenticated.  Disconnecting");
                 conn.Disconnect(true);
                 return;
             }
 
-            (bool correctPassword, string token) = systemGameManager.NetworkManager.GetLoginTokenServer(pb.Username, pb.Password);
-            SendAuthenticationResponse(conn, correctPassword);
-            if (correctPassword == true) {
-                systemGameManager.NetworkManager.SetClientToken(conn.ClientId, token);
+            //bool correctPassword = systemGameManager.NetworkManagerServer.GetLoginToken(conn.ClientId, pb.Username, pb.Password);
+            /*
+            if (connectionRequests.ContainsKey(conn.ClientId) == true) {
+                connectionRequests[conn.ClientId] = conn;
+            } else {
+                connectionRequests.Add(conn.ClientId, conn);
             }
+            */
+            systemGameManager.NetworkManagerServer.GetLoginToken(conn.ClientId, pb.Username, pb.Password);
+        }
+
+        public void HandleAuthenticationResult(int clientId, bool authenticationPassed) {
+            Debug.Log($"FishNetPasswordAuthenticator.HandleAuthenticationResult({clientId}, {authenticationPassed})");
+            if (base.NetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
+                //if (base.NetworkManager.ClientManager.Clients.ContainsKey(clientId) == false) {
+                Debug.Log($"FishNetPasswordAuthenticator.HandleAuthenticationResult({clientId}, {authenticationPassed}) COULD NOT FIND CONNECTION FOR CLIENT ID");
+                return;
+            }
+            
+            SendAuthenticationResponse(base.NetworkManager.ServerManager.Clients[clientId], authenticationPassed);
             /* Invoke result. This is handled internally to complete the connection or kick client.
              * It's important to call this after sending the broadcast so that the broadcast
              * makes it out to the client before the kick. */
-            OnAuthenticationResult?.Invoke(conn, correctPassword);
+            OnAuthenticationResult?.Invoke(base.NetworkManager.ServerManager.Clients[clientId], authenticationPassed);
         }
 
         /// <summary>
@@ -119,9 +148,9 @@ namespace AnyRPG
             string result = (rb.Passed) ? "Authentication complete." : "Authentication failed.";
             NetworkManager.Log(result);
             if (rb.Passed == false) {
-                systemGameManager.NetworkManager.ProcessLoginFailure();
+                systemGameManager.NetworkManagerClient.ProcessLoginFailure();
             } else {
-                systemGameManager.NetworkManager.ProcessLoginSuccess();
+                systemGameManager.NetworkManagerClient.ProcessLoginSuccess();
             }
         }
 
@@ -141,6 +170,7 @@ namespace AnyRPG
             };
             base.NetworkManager.ServerManager.Broadcast(conn, rb, false);
         }
+
     }
 
 

@@ -133,7 +133,7 @@ namespace AnyRPG {
                 */
             } else if (clientState == LocalConnectionState.Stopped) {
                 Debug.Log("FishNetNetworkController.OnClientConnectionState() Disconnected from server. Setting mode to local");
-                systemGameManager.NetworkManager.ProcessStopConnection();
+                systemGameManager.NetworkManagerClient.ProcessStopConnection();
             }
         }
 
@@ -233,6 +233,12 @@ namespace AnyRPG {
             networkConnector.CreatePlayerCharacter(anyRPGSaveData);
         }
 
+        public override void DeletePlayerCharacter(int playerCharacterId) {
+            Debug.Log($"FishNetNetworkController.DeletePlayerCharacter({playerCharacterId})");
+
+            networkConnector.DeletePlayerCharacter(playerCharacterId);
+        }
+
         public override void LoadCharacterList() {
             Debug.Log($"FishNetNetworkController.LoadCharacterList()");
             if (networkConnector == null) {
@@ -242,8 +248,5 @@ namespace AnyRPG {
             networkConnector.LoadCharacterList();
         }
 
-        //internal override void SetConnectionPrefab(GameObject spawnPrefab) {
-        //    this.networkConnectorSpawnPrefab = spawnPrefab;
-        //}
     }
 }

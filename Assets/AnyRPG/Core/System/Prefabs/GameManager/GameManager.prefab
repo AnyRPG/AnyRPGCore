@@ -6328,6 +6328,7 @@ GameObject:
   - component: {fileID: 2881472931833898085}
   - component: {fileID: 3998034025469170594}
   - component: {fileID: 11118596274410494}
+  - component: {fileID: 8065635434469254371}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -6641,6 +6642,7 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 7
     m_NumAlphaKeys: 6
+  apiServerAddress: https://account.anyrpg.org
 --- !u!114 &1383451363317585712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6699,7 +6701,8 @@ MonoBehaviour:
   unitSpawnManager: {fileID: 3190184857422777412}
   vendorManager: {fileID: 959829967936156170}
   characterCreatorInteractableManager: {fileID: 2881472931833898085}
-  networkManager: {fileID: 3998034025469170594}
+  networkManagerClient: {fileID: 3998034025469170594}
+  networkManagerServer: {fileID: 8065635434469254371}
   characterManager: {fileID: 11118596274410494}
 --- !u!114 &5684895214070870786
 MonoBehaviour:
@@ -7215,6 +7218,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3ca1f683f20325488258b47e107a57f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8065635434469254371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5684895214070870814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474521bfebb46544a83c5d5075163427, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5742173228335772782
