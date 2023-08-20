@@ -89,10 +89,7 @@ namespace AnyRPG {
             characterClass = null;
             classSpecialization = null;
             faction = null;
-            playerCharacterSaveData = new PlayerCharacterSaveData() {
-                PlayerCharacterId = 0,
-                SaveData = saveManager.CreateSaveData()
-            };
+            playerCharacterSaveData = saveManager.CreateSaveData();
             capabilityConsumerSnapshot = null;
         }
 
@@ -101,7 +98,7 @@ namespace AnyRPG {
             Debug.Log("LoadGameManager.LoadGame()");
 
             //if (systemGameManager.GameMode == GameMode.Local) {
-            saveManager.LoadGame(playerCharacterSaveData.SaveData);
+            saveManager.LoadGame(playerCharacterSaveData);
             //} else {
             //    networkManager.LoadGame(playerCharacterSaveData);
             //}
@@ -132,13 +129,7 @@ namespace AnyRPG {
         private void LoadCharacterListLocal() {
 
             characterList.Clear();
-            List<AnyRPGSaveData> saveDataList = saveManager.GetSaveDataList();
-            foreach (AnyRPGSaveData saveData in saveDataList) {
-                characterList.Add(new PlayerCharacterSaveData() {
-                    PlayerCharacterId = 0,
-                    SaveData = saveData
-                });
-            }
+            characterList.AddRange(saveManager.GetSaveDataList());
             OnLoadCharacterList();
         }
 

@@ -43,6 +43,8 @@ namespace AnyRPG {
         /// </summary>
         private GameObject playerConnectionObject = null;
 
+        private PlayerCharacterSaveData playerCharacterSaveData = null;
+
         private PlayerUnitMovementController playerUnitMovementController = null;
 
         private PlayerController playerController = null;
@@ -100,6 +102,7 @@ namespace AnyRPG {
         public UnitController UnitController { get => unitController; set => unitController = value; }
         public UnitController ActiveUnitController { get => activeUnitController; }
         public PlayerController PlayerController { get => playerController; set => playerController = value; }
+        public PlayerCharacterSaveData PlayerCharacterSaveData { get => playerCharacterSaveData; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -164,6 +167,10 @@ namespace AnyRPG {
                 return;
             }
             CleanupEventSubscriptions();
+        }
+
+        public void SetCharacterSaveData(PlayerCharacterSaveData playerCharacterSaveData) {
+            this.playerCharacterSaveData = playerCharacterSaveData;
         }
 
         /// <summary>
@@ -374,19 +381,21 @@ namespace AnyRPG {
                 return;
             }
 
+            /*
             if (playerConnectionObject == null) {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): playerConnectionObject is null, instantiating connection!");
                 SpawnPlayerConnection();
             }
+            */
 
             // spawn the player unit and set references
             Vector3 spawnRotation = levelManager.GetSpawnRotation();
-            CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(systemDataFactory, saveManager.CurrentSaveData);
+            CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(systemDataFactory, playerCharacterSaveData.SaveData);
             characterConfigurationRequest.unitControllerMode = UnitControllerMode.Player;
             CharacterRequestData characterRequestData = new CharacterRequestData(this,
                 systemGameManager.GameMode,
                 characterConfigurationRequest);
-            characterManager.SpawnUnitPrefab(characterRequestData, playerUnitParent.transform, spawnLocation, spawnRotation);
+            characterManager.SpawnPlayer(playerCharacterSaveData, characterRequestData, playerUnitParent.transform, spawnLocation, spawnRotation);
         }
 
         private bool OwnPlayer(UnitController unitController, CharacterRequestData characterRequestData) {
@@ -423,7 +432,7 @@ namespace AnyRPG {
                 }
             }
 
-            unitController.UnitModelController.SetInitialSavedAppearance(saveManager.CurrentSaveData);
+            unitController.UnitModelController.SetInitialSavedAppearance(playerCharacterSaveData.SaveData);
             if (subscribeToTargetReady) {
                 SubscribeToTargetReady();
             }
@@ -439,7 +448,7 @@ namespace AnyRPG {
             }
 
             // load player data from saveManager
-            saveManager.LoadSaveDataToCharacter();
+            saveManager.LoadSaveDataToCharacter(playerCharacterSaveData.SaveData);
 
             SubscribeToPlayerInventoryEvents();
             unitController.BaseCharacter.Initialize();
@@ -527,12 +536,14 @@ namespace AnyRPG {
             activeUnitController.UnitModelController.OnModelCreated -= HandleModelReady;
         }
 
-        public void SpawnPlayerConnection() {
+        public void SpawnPlayerConnection(PlayerCharacterSaveData playerCharacterSaveData) {
             //Debug.Log("PlayerManager.SpawnPlayerConnection()");
             if (playerConnectionObject != null) {
                 //Debug.Log("PlayerManager.SpawnPlayerConnection(): The Player Connection is not null.  exiting.");
                 return;
             }
+            SetCharacterSaveData(playerCharacterSaveData);
+
             playerConnectionObject = objectPooler.GetPooledObject(playerConnectionPrefab, playerConnectionParent.transform);
             playerController = playerConnectionObject.GetComponent<PlayerController>();
             playerController.Configure(systemGameManager);

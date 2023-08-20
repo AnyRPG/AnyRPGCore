@@ -677,7 +677,7 @@ namespace AnyRPG {
         public void NewGame() {
             //Debug.Log("NewGamePanel.NewGame()");
 
-            SaveAppearanceData(newGameManager.SaveData);
+            SaveAppearanceData(newGameManager.PlayerCharacterSaveData.SaveData);
 
             uIManager.confirmNewGameMenuWindow.OpenWindow();
         }
@@ -688,7 +688,7 @@ namespace AnyRPG {
             if (characterCreatorManager.PreviewUnitController?.UnitModelController == null) {
                 return;
             }
-            characterCreatorManager.PreviewUnitController.UnitModelController.SaveAppearanceSettings(newGameManager, saveData);
+            characterCreatorManager.PreviewUnitController.UnitModelController.SaveAppearanceSettings(/*newGameManager, */saveData);
         }
 
 

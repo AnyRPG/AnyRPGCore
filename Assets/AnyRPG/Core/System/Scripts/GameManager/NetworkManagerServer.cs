@@ -12,9 +12,10 @@ namespace AnyRPG {
         public event Action<int, bool> OnAuthenticationResult = delegate { };
         public event Action<int, List<PlayerCharacterSaveData>> OnLoadCharacterList = delegate { };
         public event Action<int> OnDeletePlayerCharacter = delegate { };
+        public event Action<int> OnCreatePlayerCharacter = delegate { };
 
         private Dictionary<int, string> clientTokens = new Dictionary<int, string>();
-        private Dictionary<int, List<PlayerCharacterSaveData>> playerCharacterDataDict = new Dictionary<int, List<PlayerCharacterSaveData>>();
+        private Dictionary<int, Dictionary<int, PlayerCharacterSaveData>> playerCharacterDataDict = new Dictionary<int, Dictionary<int, PlayerCharacterSaveData>>();
 
         private GameServerClient gameServerClient = null;
 
@@ -68,8 +69,15 @@ namespace AnyRPG {
                 return;
             }
 
-            gameServerClient.CreatePlayerCharacter(clientTokens[clientId], anyRPGSaveData);
+            gameServerClient.CreatePlayerCharacter(clientId, clientTokens[clientId], anyRPGSaveData);
         }
+
+        public void ProcessCreatePlayerCharacterResponse(int clientId) {
+            Debug.Log($"NetworkManagerServer.ProcessCreatePlayerCharacterResponse({clientId})");
+
+            OnCreatePlayerCharacter(clientId);
+        }
+
 
         public void DeletePlayerCharacter(int clientId, int playerCharacterId) {
             Debug.Log($"NetworkManagerServer.DeletePlayerCharacter({playerCharacterId})");
@@ -83,7 +91,7 @@ namespace AnyRPG {
         }
 
         public void ProcessDeletePlayerCharacterResponse(int clientId) {
-            Debug.Log($"NetworkManagerServer.ProcessLoadCharacterListResponse({clientId})");
+            Debug.Log($"NetworkManagerServer.ProcessDeletePlayerCharacterResponse({clientId})");
 
             OnDeletePlayerCharacter(clientId);
         }
@@ -126,13 +134,27 @@ namespace AnyRPG {
                     SaveData = saveManager.LoadSaveDataFromString(playerCharacterData.saveData)
                 });
             }
+            Dictionary<int, PlayerCharacterSaveData> playerCharacterSaveDataDict = new Dictionary<int, PlayerCharacterSaveData>();
+            foreach (PlayerCharacterSaveData playerCharacterSaveData in playerCharacterSaveDataList) {
+                playerCharacterSaveDataDict.Add(playerCharacterSaveData.PlayerCharacterId, playerCharacterSaveData);
+            }
             if (playerCharacterDataDict.ContainsKey(clientId)) {
-                playerCharacterDataDict[clientId] = playerCharacterSaveDataList;
+                playerCharacterDataDict[clientId] = playerCharacterSaveDataDict;
             } else {
-                playerCharacterDataDict.Add(clientId, playerCharacterSaveDataList);
+                playerCharacterDataDict.Add(clientId, playerCharacterSaveDataDict);
             }
 
             OnLoadCharacterList(clientId, playerCharacterSaveDataList);
+        }
+
+        public PlayerCharacterSaveData GetPlayerCharacterSaveData(int clientId, int playerCharacterId) {
+            if (playerCharacterDataDict.ContainsKey(clientId) == false) {
+                return null;
+            }
+            if (playerCharacterDataDict[clientId].ContainsKey(playerCharacterId) == false) {
+                return null;
+            }
+            return playerCharacterDataDict[clientId][playerCharacterId];
         }
 
         public string GetClientToken(int clientId) {

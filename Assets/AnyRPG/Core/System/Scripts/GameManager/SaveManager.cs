@@ -7,7 +7,7 @@ using UnityEngine;
 using System.Text.RegularExpressions;
 
 namespace AnyRPG {
-    public class SaveManager : ConfiguredMonoBehaviour, ISaveDataOwner {
+    public class SaveManager : ConfiguredMonoBehaviour /*, ISaveDataOwner*/ {
 
         // game manager references
         private SystemEventManager systemEventManager = null;
@@ -24,6 +24,7 @@ namespace AnyRPG {
         private SystemAchievementManager systemAchievementManager = null;
         private NewGameManager newGameManager = null;
         private NetworkManagerClient networkManager = null;
+        private LoadGameManager loadGameManager = null;
 
         private string jsonSavePath = string.Empty;
 
@@ -32,10 +33,10 @@ namespace AnyRPG {
 
         private string saveFileName = "AnyRPGPlayerSaveData";
 
-        private AnyRPGSaveData currentSaveData = null;
+        //private AnyRPGSaveData currentSaveData = null;
 
         // data to turn into json for save
-        private List<AnyRPGSaveData> anyRPGSaveDataList = new List<AnyRPGSaveData>();
+        //private List<AnyRPGSaveData> anyRPGSaveDataList = new List<AnyRPGSaveData>();
 
         // keep track of mutable properties on scriptableObjects
         private Dictionary<string, QuestSaveData> questSaveDataDictionary = new Dictionary<string, QuestSaveData>();
@@ -57,7 +58,7 @@ namespace AnyRPG {
         public Dictionary<string, CutsceneSaveData> CutsceneSaveDataDictionary { get => cutsceneSaveDataDictionary; set => cutsceneSaveDataDictionary = value; }
         public Dictionary<string, Dictionary<string, Dictionary<string, QuestObjectiveSaveData>>> QuestObjectiveSaveDataDictionary { get => questObjectiveSaveDataDictionary; set => questObjectiveSaveDataDictionary = value; }
         //public string RecipeString { get => recipeString; }
-        public AnyRPGSaveData CurrentSaveData { get => currentSaveData; }
+        //public AnyRPGSaveData CurrentSaveData { get => currentSaveData; }
 
         protected bool eventSubscriptionsInitialized = false;
 
@@ -84,17 +85,22 @@ namespace AnyRPG {
             actionBarManager = uIManager.ActionBarManager;
             newGameManager = systemGameManager.NewGameManager;
             networkManager = systemGameManager.NetworkManagerClient;
+            loadGameManager = systemGameManager.LoadGameManager;
         }
 
-        public List<AnyRPGSaveData> GetSaveDataList() {
+        public List<PlayerCharacterSaveData> GetSaveDataList() {
             //Debug.Log("GetSaveDataList()");
-            anyRPGSaveDataList.Clear();
+            List<PlayerCharacterSaveData> saveDataList = new List<PlayerCharacterSaveData>();
+            //anyRPGSaveDataList.Clear();
             foreach (FileInfo fileInfo in GetSaveFileList()) {
                 //Debug.Log("GetSaveDataList(): fileInfo.Name: " + fileInfo.Name);
                 AnyRPGSaveData anyRPGSaveData = LoadSaveDataFromFile(Application.persistentDataPath + "/" + makeSaveDirectoryName() + "/" + fileInfo.Name);
-                anyRPGSaveDataList.Add(anyRPGSaveData);
+                saveDataList.Add(new PlayerCharacterSaveData() {
+                    PlayerCharacterId = 0,
+                    SaveData = anyRPGSaveData
+                });
             }
-            return anyRPGSaveDataList;
+            return saveDataList;
         }
 
         public AnyRPGSaveData LoadSaveDataFromFile(string fileName) {
@@ -252,29 +258,6 @@ namespace AnyRPG {
             return returnList;
         }
 
-        // save a game for the first time
-        public bool SaveGame() {
-            bool foundValidName = false;
-            if (currentSaveData.DataFileName == null || currentSaveData.DataFileName == string.Empty) {
-                //Debug.Log("Savemanager.SaveGame(): Current save data is empty, creating new save file");
-                string finalSaveFileName = GetNewSaveFileName();
-                if (finalSaveFileName != string.Empty) {
-                    foundValidName = true;
-                }
-                if (foundValidName) {
-                    currentSaveData.DataFileName = finalSaveFileName;
-                }
-            } else {
-                foundValidName = true;
-            }
-            if (foundValidName) {
-                return SaveGame(currentSaveData);
-            } else {
-                Debug.Log("Too Many save files(" + maxSaveFiles + "), delete some");
-                return false;
-            }
-        }
-
         public string GetNewSaveFileName() {
             bool foundValidName = false;
             List<FileInfo> fileInfoList = GetSaveFileList();
@@ -301,6 +284,8 @@ namespace AnyRPG {
 
         public bool SaveGame(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveGame()");
+
+            
 
             // check if the player is inside a trigger
             // disallow saving if they are because we don't want to trigger boss spawns
@@ -390,21 +375,42 @@ namespace AnyRPG {
 
             //Debug.Log("Savemanager.SaveQuestData(): size: " + anyRPGSaveData.questSaveData.Count);
 
-            SaveDataFile(anyRPGSaveData);
+            bool saveResult = SaveDataFile(anyRPGSaveData);
+            if (saveResult) {
+                PlayerPrefs.SetString("LastSaveDataFileName", anyRPGSaveData.DataFileName);
+            }
 
-            PlayerPrefs.SetString("LastSaveDataFileName", anyRPGSaveData.DataFileName);
-
-            return true;
+            return saveResult;
         }
 
-        public void SaveDataFile(AnyRPGSaveData dataToSave) {
+        public bool SaveDataFile(AnyRPGSaveData dataToSave) {
+
+            bool foundValidName = false;
+            if (dataToSave.DataFileName == null || dataToSave.DataFileName == string.Empty) {
+                //Debug.Log("Savemanager.SaveGame(): Current save data is empty, creating new save file");
+                string finalSaveFileName = GetNewSaveFileName();
+                if (finalSaveFileName != string.Empty) {
+                    foundValidName = true;
+                }
+                if (foundValidName) {
+                    dataToSave.DataFileName = finalSaveFileName;
+                }
+            } else {
+                foundValidName = true;
+            }
+            if (foundValidName == false) {
+                Debug.Log("Too Many save files(" + maxSaveFiles + "), delete some");
+                return false;
+            }
+
             dataToSave.DataSavedOn = DateTime.Now.ToLongDateString();
 
             string jsonString = JsonUtility.ToJson(dataToSave);
             //Debug.Log(jsonString);
             string jsonSavePath = Application.persistentDataPath + "/" + makeSaveDirectoryName() + "/" + dataToSave.DataFileName;
             File.WriteAllText(jsonSavePath, jsonString);
-
+            
+            return true;
         }
 
         public void SaveResourcePowerData(AnyRPGSaveData anyRPGSaveData) {
@@ -416,12 +422,8 @@ namespace AnyRPG {
             }
         }
 
-        public void SaveAppearanceData() {
-            SaveAppearanceData(currentSaveData);
-        }
-
         public void SaveAppearanceData(AnyRPGSaveData anyRPGSaveData) {
-            playerManager.ActiveUnitController.UnitModelController.SaveAppearanceSettings(this, anyRPGSaveData);
+            playerManager.ActiveUnitController.UnitModelController.SaveAppearanceSettings(/*this,*/ anyRPGSaveData);
         }
 
         public void SetQuestSaveData(string questName, QuestSaveData questSaveData) {
@@ -1151,34 +1153,31 @@ namespace AnyRPG {
             }
         }
 
-        public void NewGame(AnyRPGSaveData anyRPGSaveData) {
+        public void NewGame(PlayerCharacterSaveData playerCharacterSaveData) {
             Debug.Log("Savemanager.NewGame()");
 
             ClearSystemManagedCharacterData();
 
-            if (anyRPGSaveData.DataCreatedOn == null || anyRPGSaveData.DataCreatedOn == string.Empty) {
-                anyRPGSaveData.DataCreatedOn = DateTime.Now.ToLongDateString();
-            }
 
             if (systemGameManager.GameMode == GameMode.Local) {
-                CreateLocalGame(anyRPGSaveData);
+                CreateLocalGame(playerCharacterSaveData);
             } else {
-                CreateNetworkGame(anyRPGSaveData);
+                CreateNetworkGame(playerCharacterSaveData);
             }
 
         }
 
-        private void CreateNetworkGame(AnyRPGSaveData anyRPGSaveData) {
+        private void CreateNetworkGame(PlayerCharacterSaveData playerCharacterSaveData) {
             Debug.Log("Savemanager.CreateNetworkGame(AnyRPGSaveData)");
 
-            networkManager.CreatePlayerCharacter(anyRPGSaveData);
+            networkManager.CreatePlayerCharacter(playerCharacterSaveData.SaveData);
         }
 
-        private void CreateLocalGame(AnyRPGSaveData anyRPGSaveData) {
-            SaveDataFile(anyRPGSaveData);
-            PlayerPrefs.SetString("LastSaveDataFileName", anyRPGSaveData.DataFileName);
+        private void CreateLocalGame(PlayerCharacterSaveData playerCharacterSaveData) {
+            SaveDataFile(playerCharacterSaveData.SaveData);
+            PlayerPrefs.SetString("LastSaveDataFileName", playerCharacterSaveData.SaveData.DataFileName);
 
-            LoadGame(anyRPGSaveData);
+            LoadGame(playerCharacterSaveData);
         }
 
         public AnyRPGSaveData PerformInventorySetup(AnyRPGSaveData anyRPGSaveData) {
@@ -1255,11 +1254,11 @@ namespace AnyRPG {
             //Debug.Log("SaveManager.LoadGame()");
             if (PlayerPrefs.HasKey("LastSaveDataFileName")) {
                 //Debug.Log("SaveManager.LoadGame(): Last Save Data: " + PlayerPrefs.GetString("LastSaveDataFileName"));
-                GetSaveDataList();
-                foreach (AnyRPGSaveData anyRPGSaveData in anyRPGSaveDataList) {
-                    if (anyRPGSaveData.DataFileName != null && anyRPGSaveData.DataFileName == PlayerPrefs.GetString("LastSaveDataFileName")) {
+                loadGameManager.LoadCharacterList();
+                foreach (PlayerCharacterSaveData playerCharacterSaveData in loadGameManager.CharacterList) {
+                    if (playerCharacterSaveData.SaveData.DataFileName != null && playerCharacterSaveData.SaveData.DataFileName == PlayerPrefs.GetString("LastSaveDataFileName")) {
                         //Debug.Log("SaveManager.LoadGame(): Last Save Data: " + PlayerPrefs.GetString("LastSaveDataFileName") + " was found.  Loading Game...");
-                        LoadGame(anyRPGSaveData);
+                        LoadGame(playerCharacterSaveData);
                         return;
                     }
                 }
@@ -1283,15 +1282,19 @@ namespace AnyRPG {
             ClearSystemManagedCharacterData();
 
             // prevent overwriting existing save file after going to main menu after saving game and starting new game
-            currentSaveData = CreateSaveData();
+            //currentSaveData = CreateSaveData();
         }
 
-        public AnyRPGSaveData CreateSaveData() {
+        public PlayerCharacterSaveData CreateSaveData() {
             AnyRPGSaveData newSaveData = new AnyRPGSaveData();
             newSaveData.playerName = systemConfigurationManager.DefaultPlayerName;
             newSaveData.PlayerLevel = 1;
             newSaveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
             newSaveData.unitProfileName = systemConfigurationManager.DefaultUnitProfileName;
+
+            if (newSaveData.DataCreatedOn == null || newSaveData.DataCreatedOn == string.Empty) {
+                newSaveData.DataCreatedOn = DateTime.Now.ToLongDateString();
+            }
 
             SceneNode sceneNode = systemDataFactory.GetResource<SceneNode>(systemConfigurationManager.DefaultStartingZone);
             if (sceneNode != null) {
@@ -1307,7 +1310,10 @@ namespace AnyRPG {
             newSaveData = PerformInventorySetup(newSaveData);
             //newSaveData = InitializeSaveDataProperties(newSaveData);
 
-            return newSaveData;
+            return new PlayerCharacterSaveData() {
+            PlayerCharacterId = 0,
+            SaveData = newSaveData
+            };
         }
 
         /*
@@ -1328,77 +1334,76 @@ namespace AnyRPG {
         */
 
 
-        public void LoadGame(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadGame(PlayerCharacterSaveData playerCharacterSaveData) {
             Debug.Log("Savemanager.LoadGame()");
 
             ClearSharedData();
-            currentSaveData = anyRPGSaveData;
 
             // scene and location
-            Vector3 playerLocation = new Vector3(anyRPGSaveData.PlayerLocationX, anyRPGSaveData.PlayerLocationY, anyRPGSaveData.PlayerLocationZ);
-            Vector3 playerRotation = new Vector3(anyRPGSaveData.PlayerRotationX, anyRPGSaveData.PlayerRotationY, anyRPGSaveData.PlayerRotationZ);
+            Vector3 playerLocation = new Vector3(playerCharacterSaveData.SaveData.PlayerLocationX, playerCharacterSaveData.SaveData.PlayerLocationY, playerCharacterSaveData.SaveData.PlayerLocationZ);
+            Vector3 playerRotation = new Vector3(playerCharacterSaveData.SaveData.PlayerRotationX, playerCharacterSaveData.SaveData.PlayerRotationY, playerCharacterSaveData.SaveData.PlayerRotationZ);
             //Debug.Log("Savemanager.LoadGame() rotation: " + anyRPGSaveData.PlayerRotationX + ", " + anyRPGSaveData.PlayerRotationY + ", " + anyRPGSaveData.PlayerRotationZ);
 
             // disable auto-accept achievements since we haven't loaded the data that tells us if they are complete yet
             systemAchievementManager.CleanupEventSubscriptions();
 
-            playerManager.SpawnPlayerConnection();
+            playerManager.SpawnPlayerConnection(playerCharacterSaveData);
 
             // load things that are stored in SaveManager, not on the unit controller
-            LoadDialogData(anyRPGSaveData);
-            LoadBehaviorData(anyRPGSaveData);
-            LoadSceneNodeData(anyRPGSaveData);
-            LoadCutsceneData(anyRPGSaveData);
+            LoadDialogData(playerCharacterSaveData.SaveData);
+            LoadBehaviorData(playerCharacterSaveData.SaveData);
+            LoadSceneNodeData(playerCharacterSaveData.SaveData);
+            LoadCutsceneData(playerCharacterSaveData.SaveData);
 
             // quest data gets loaded last because it could rely on other data such as dialog completion status, which don't get saved because they are inferred
-            LoadQuestData(anyRPGSaveData);
-            LoadAchievementData(anyRPGSaveData);
+            LoadQuestData(playerCharacterSaveData.SaveData);
+            LoadAchievementData(playerCharacterSaveData.SaveData);
 
             LoadWindowPositions();
 
-            CapabilityConsumerSnapshot capabilityConsumerSnapshot = GetCapabilityConsumerSnapshot(anyRPGSaveData);
+            CapabilityConsumerSnapshot capabilityConsumerSnapshot = GetCapabilityConsumerSnapshot(playerCharacterSaveData.SaveData);
 
             uIManager.loadGameWindow.CloseWindow();
 
             // configure location and rotation overrides
-            if (anyRPGSaveData.OverrideLocation == true) {
+            if (playerCharacterSaveData.SaveData.OverrideLocation == true) {
                 levelManager.SetSpawnLocationOverride(playerLocation);
             }
-            if (anyRPGSaveData.OverrideRotation == true) {
+            if (playerCharacterSaveData.SaveData.OverrideRotation == true) {
                 levelManager.SetSpawnRotationOverride(playerRotation);
             }
             //levelManager.LoadLevel(anyRPGSaveData.CurrentScene, playerLocation, playerRotation);
             // load the proper level now that everything should be setup
-            levelManager.LoadLevel(anyRPGSaveData.CurrentScene);
+            levelManager.LoadLevel(playerCharacterSaveData.SaveData.CurrentScene);
         }
 
-        public void LoadSaveDataToCharacter() {
+        public void LoadSaveDataToCharacter(AnyRPGSaveData saveData) {
             // complex data
-            LoadEquippedBagData(currentSaveData);
-            LoadInventorySlotData(currentSaveData);
-            LoadBankSlotData(currentSaveData);
-            LoadAbilityData(currentSaveData);
+            LoadEquippedBagData(saveData);
+            LoadInventorySlotData(saveData);
+            LoadBankSlotData(saveData);
+            LoadAbilityData(saveData);
 
             // THIS NEEDS TO BE DOWN HERE SO THE PLAYERSTATS EXISTS TO SUBSCRIBE TO THE EQUIP EVENTS AND INCREASE STATS
             // testing - move here to prevent learning auto-attack ability twice
-            LoadEquipmentData(currentSaveData, playerManager.UnitController.CharacterEquipmentManager);
+            LoadEquipmentData(saveData, playerManager.UnitController.CharacterEquipmentManager);
 
-            LoadSkillData(currentSaveData);
-            LoadRecipeData(currentSaveData);
-            LoadReputationData(currentSaveData);
+            LoadSkillData(saveData);
+            LoadRecipeData(saveData);
+            LoadReputationData(saveData);
 
             // test loading this earlier to avoid having duplicates on bars
-            LoadActionBarData(currentSaveData);
+            LoadActionBarData(saveData);
 
-            LoadCurrencyData(currentSaveData);
-            LoadStatusEffectData(currentSaveData);
-            LoadPetData(currentSaveData);
+            LoadCurrencyData(saveData);
+            LoadStatusEffectData(saveData);
+            LoadPetData(saveData);
 
             // now that we have loaded the quest data, we can re-enable references
             systemAchievementManager.CreateEventSubscriptions();
 
             // set resources last after equipment loaded for modifiers
-            LoadResourcePowerData(currentSaveData);
+            LoadResourcePowerData(saveData);
         }
 
         public void ClearSystemManagedCharacterData() {
@@ -1624,9 +1629,6 @@ namespace AnyRPG {
             return replaceString;
         }
 
-        public void SetSaveData(AnyRPGSaveData saveData) {
-            currentSaveData = saveData;
-        }
     }
 
 }

@@ -597,7 +597,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public override void SaveAppearanceSettings(ISaveDataOwner saveDataOwner, AnyRPGSaveData saveData) {
+        public override void SaveAppearanceSettings(/*ISaveDataOwner saveDataOwner,*/ AnyRPGSaveData saveData) {
             //Debug.Log($"{unitController.gameObject.name}.UMAModelController.SaveAppearanceSettings()");
 
             if (dynamicCharacterAvatar == null) {
@@ -605,7 +605,7 @@ namespace AnyRPG {
             }
 
             saveData.appearanceString = GetAppearanceString();
-            saveDataOwner.SetSaveData(saveData);
+            //saveDataOwner.SetSaveData(saveData);
         }
 
         public override void ConfigureUnitModel() {

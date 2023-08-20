@@ -30,6 +30,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private SaveManager saveManager = null;
         private MessageFeedManager messageFeedManager = null;
+        private PlayerManager playerManager = null;
         //private InventoryManager inventoryManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -56,6 +57,7 @@ namespace AnyRPG {
             saveManager = systemGameManager.SaveManager;
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
+            playerManager = systemGameManager.PlayerManager;
             //inventoryManager = systemGameManager.InventoryManager;
         }
 
@@ -92,7 +94,7 @@ namespace AnyRPG {
         public void SaveGame() {
             //Debug.Log("MainMenuController.SaveGame()");
             currentNavigationController?.CurrentNavigableElement?.DeSelect();
-            if (saveManager.SaveGame()) {
+            if (saveManager.SaveGame(playerManager.PlayerCharacterSaveData.SaveData)) {
                 uIManager.CloseSystemPopupWindows();
                 messageFeedManager.WriteMessage("Game Saved");
             }

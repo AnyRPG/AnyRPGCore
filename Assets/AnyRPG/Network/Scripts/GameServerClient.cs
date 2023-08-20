@@ -51,6 +51,7 @@ namespace AnyRPG {
             //return (true, string.Empty);
         }
 
+        /*
         public async Task<string> GetLoginTokenAsync(LoginRequest loginRequest) {
             Debug.Log($"GameServerClient.GetLoginToken()");
 
@@ -73,22 +74,17 @@ namespace AnyRPG {
                 return loginResponse.token;
             }
         }
+        */
 
         public IEnumerator GetLoginTokenEnumerator(int clientId, LoginRequest loginRequest) {
             Debug.Log($"GameServerClient.GetLoginTokenEnumerator({clientId})");
 
             string requestURL = $"{serverAddress}/{loginPath}";
             var payload = JsonUtility.ToJson(loginRequest);
-
             UploadHandler uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(payload));
             DownloadHandler downloadHandler = new DownloadHandlerBuffer();
-            //UnityWebRequest www = UnityWebRequest.Post(requestURL, string.Empty);
-            //using (UnityWebRequest www = UnityWebRequest.Post(requestURL, payload)) {
+
             using (UnityWebRequest webRequest = new UnityWebRequest(requestURL, UnityWebRequest.kHttpVerbPOST, downloadHandler, uploadHandler)) {
-                //byte[] bodyRaw = Encoding.UTF8.GetBytes(payload);
-                //www.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
-                //www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-                //www.SetRequestHeader("Content-Type", "application/json");
                 webRequest.SetRequestHeader("Content-Type", "application/json");
                 webRequest.SetRequestHeader("Accept", "application/json");
                 webRequest.uploadHandler.contentType = "application/json";
@@ -101,17 +97,15 @@ namespace AnyRPG {
                     networkManagerServer.ProcessLoginResponse(clientId, true, loginResponse.token);
                 }
             }
-            //www.Dispose();
-
         }
 
 
-        public void CreatePlayerCharacter(string token, AnyRPGSaveData anyRPGSaveData) {
+        public void CreatePlayerCharacter(int clientId, string token, AnyRPGSaveData anyRPGSaveData) {
             Debug.Log($"GameServerClient.CreatePlayerCharacter({token})");
 
             CreatePlayerCharacterRequest createPlayerCharacterRequest = new CreatePlayerCharacterRequest(anyRPGSaveData);
 
-            networkManagerServer.StartCoroutine(CreatePlayerCharacterEnumerator(token, createPlayerCharacterRequest));
+            networkManagerServer.StartCoroutine(CreatePlayerCharacterEnumerator(clientId, token, createPlayerCharacterRequest));
             /*
             Task<bool> createPlayerCharacterResult = CreatePlayerCharacterAsync(token, createPlayerCharacterRequest);
             createPlayerCharacterResult.Wait();
@@ -121,6 +115,7 @@ namespace AnyRPG {
             */
         }
 
+        /*
         public async Task<bool> CreatePlayerCharacterAsync(string token, CreatePlayerCharacterRequest createPlayerCharacterRequest) {
             Debug.Log($"GameServerClient.CreatePlayerCharacterAsync({token})");
 
@@ -144,9 +139,10 @@ namespace AnyRPG {
                 return true;
             }
         }
+        */
 
-        public IEnumerator CreatePlayerCharacterEnumerator(string token, CreatePlayerCharacterRequest createPlayerCharacterRequest) {
-            Debug.Log($"GameServerClient.CreatePlayerCharacterEnumerator({token})");
+        public IEnumerator CreatePlayerCharacterEnumerator(int clientId, string token, CreatePlayerCharacterRequest createPlayerCharacterRequest) {
+            Debug.Log($"GameServerClient.CreatePlayerCharacterEnumerator({clientId}, {token})");
 
             string requestURL = $"{serverAddress}/{createPlayerCharacterPath}";
             var payload = JsonUtility.ToJson(createPlayerCharacterRequest);
@@ -154,24 +150,20 @@ namespace AnyRPG {
             DownloadHandler downloadHandler = new DownloadHandlerBuffer();
 
             using (UnityWebRequest webRequest = new UnityWebRequest(requestURL, UnityWebRequest.kHttpVerbPOST, downloadHandler, uploadHandler)) {
-                //byte[] bodyRaw = Encoding.UTF8.GetBytes(payload);
-                //www.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
-                //www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-                //www.SetRequestHeader("Content-Type", "application/json");
                 webRequest.SetRequestHeader("Content-Type", "application/json");
                 webRequest.SetRequestHeader("Accept", "application/json");
                 webRequest.SetRequestHeader("Authorization", $"Bearer {token}");
                 webRequest.uploadHandler.contentType = "application/json";
                 yield return webRequest.SendWebRequest();
                 Debug.Log($"GameServerClient.GetLoginTokenEnumerator() status code: {webRequest.responseCode} body: {webRequest.downloadHandler.text}");
-                /*
+                
                 if (webRequest.responseCode != (long)HttpStatusCode.OK) {
-                    networkManagerServer.ProcessLoginResponse(clientId, false, string.Empty);
+                    //networkManagerServer.ProcessCreatePlayerCharacterResponse(clientId, false, string.Empty);
                 } else {
                     LoginResponse loginResponse = JsonUtility.FromJson<LoginResponse>(webRequest.downloadHandler.text);
-                    networkManagerServer.ProcessLoginResponse(clientId, true, loginResponse.token);
+                    networkManagerServer.ProcessCreatePlayerCharacterResponse(clientId);
                 }
-                */
+                
             }
 
         }
@@ -191,6 +183,7 @@ namespace AnyRPG {
             */
         }
 
+        /*
         public async Task<bool> DeletePlayerCharacterAsync(string token, DeletePlayerCharacterRequest deletePlayerCharacterRequest) {
             Debug.Log($"GameServerClient.CreatePlayerCharacterAsync({token}, {deletePlayerCharacterRequest.Id})");
 
@@ -214,6 +207,7 @@ namespace AnyRPG {
                 return true;
             }
         }
+        */
 
         public IEnumerator DeletePlayerCharacterEnumerator(int clientId, string token, DeletePlayerCharacterRequest deletePlayerCharacterRequest) {
             Debug.Log($"GameServerClient.DeletePlayerCharacterEnumerator({token}, {deletePlayerCharacterRequest.Id})");
@@ -224,10 +218,6 @@ namespace AnyRPG {
             DownloadHandler downloadHandler = new DownloadHandlerBuffer();
 
             using (UnityWebRequest webRequest = new UnityWebRequest(requestURL, UnityWebRequest.kHttpVerbPOST, downloadHandler, uploadHandler)) {
-                //byte[] bodyRaw = Encoding.UTF8.GetBytes(payload);
-                //www.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
-                //www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-                //www.SetRequestHeader("Content-Type", "application/json");
                 webRequest.SetRequestHeader("Content-Type", "application/json");
                 webRequest.SetRequestHeader("Accept", "application/json");
                 webRequest.SetRequestHeader("Authorization", $"Bearer {token}");
@@ -248,41 +238,6 @@ namespace AnyRPG {
             Debug.Log($"GameServerClient.LoadCharacterList({token})");
 
             networkManagerServer.StartCoroutine(LoadCharacterListEnumerator(clientId, token));
-            /*
-            Task<List<PlayerCharacterData>> loadCharacterListResult = LoadCharacterListAsync(token);
-            loadCharacterListResult.Wait();
-            List<PlayerCharacterData> result = loadCharacterListResult.Result;
-
-            Debug.Log($"GameServerClient.LoadCharacterList() list size: {result.Count}");
-            return result;
-            */
-        }
-
-        public async Task<List<PlayerCharacterData>> LoadCharacterListAsync(string token) {
-            Debug.Log($"GameServerClient.LoadCharacterListAsync({token})");
-
-            using (var httpClient = new HttpClient()) {
-                string requestURL = $"{serverAddress}/{GetPlayerCharactersPath}";
-                httpClient.BaseAddress = new Uri(requestURL);
-                httpClient.Timeout = TimeSpan.FromSeconds(clientTimeout);
-                httpClient.DefaultRequestHeaders.Accept.Clear();
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                Debug.Log(httpClient.DefaultRequestHeaders.ToString());
-                string payload = string.Empty;
-                var content = new StringContent(payload, Encoding.UTF8, "application/json");
-                var result = await httpClient.PostAsync(requestURL, content).ConfigureAwait(false);
-                //var result = await httpClient.PostAsJsonAsync("Create", otherPerson);
-                Debug.Log($"GameServerClient.LoadCharacterListAsync() url: {requestURL} payload: {payload} statusCode: {result.StatusCode}");
-                if (result.StatusCode != HttpStatusCode.OK)
-                    return new List<PlayerCharacterData>();
-                string resourceJson = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
-                Debug.Log($"GameServerClient.LoadCharacterListAsync(): {resourceJson}");
-                PlayerCharacterListResponse playerCharacterListResponse = JsonUtility.FromJson<PlayerCharacterListResponse>(resourceJson);
-
-                Debug.Log($"GameServerClient.LoadCharacterListAsync(): list size: {playerCharacterListResponse.playerCharacters.Count}");
-                return playerCharacterListResponse.playerCharacters;
-            }
         }
 
         public IEnumerator LoadCharacterListEnumerator(int clientId, string token) {
@@ -294,10 +249,6 @@ namespace AnyRPG {
             DownloadHandler downloadHandler = new DownloadHandlerBuffer();
 
             using (UnityWebRequest webRequest = new UnityWebRequest(requestURL, UnityWebRequest.kHttpVerbPOST, downloadHandler, uploadHandler)) {
-                //byte[] bodyRaw = Encoding.UTF8.GetBytes(payload);
-                //www.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
-                //www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-                //www.SetRequestHeader("Content-Type", "application/json");
                 webRequest.SetRequestHeader("Content-Type", "application/json");
                 webRequest.SetRequestHeader("Accept", "application/json");
                 webRequest.SetRequestHeader("Authorization", $"Bearer {token}");

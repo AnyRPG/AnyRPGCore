@@ -247,14 +247,14 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorPanel.SaveCharacter()");
 
             if (characterCreatorManager.PreviewUnitController.UnitModelController != null) {
-                characterCreatorManager.PreviewUnitController.UnitModelController.SaveAppearanceSettings(saveManager, saveManager.CurrentSaveData);
+                characterCreatorManager.PreviewUnitController.UnitModelController.SaveAppearanceSettings(/*saveManager,*/ playerManager.PlayerCharacterSaveData.SaveData);
             }
 
             // Always despawn units if their appearance changes.
             Vector3 currentPlayerLocation = playerManager.ActiveUnitController.transform.position;
             levelManager.SetSpawnRotationOverride(playerManager.ActiveUnitController.transform.forward);
             playerManager.DespawnPlayerUnit();
-            saveManager.CurrentSaveData.unitProfileName = unitProfile.ResourceName;
+            playerManager.PlayerCharacterSaveData.SaveData.unitProfileName = unitProfile.ResourceName;
             playerManager.SpawnPlayerUnit(currentPlayerLocation);
             if (playerManager.UnitController.CharacterAbilityManager != null) {
                 playerManager.UnitController.CharacterAbilityManager.LearnDefaultAutoAttackAbility();
@@ -290,7 +290,7 @@ namespace AnyRPG {
 
             // only set saved appearance if displaying the same unit as the existing player unit
             if (playerManager.UnitController.UnitProfile == UnitProfile) {
-                characterCreatorManager.PreviewUnitController.UnitModelController.SetInitialSavedAppearance(saveManager.CurrentSaveData);
+                characterCreatorManager.PreviewUnitController.UnitModelController.SetInitialSavedAppearance(playerManager.PlayerCharacterSaveData.SaveData);
             }
 
             foreach (EquipmentSlotProfile equipmentSlotProfile in playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment.Keys) {

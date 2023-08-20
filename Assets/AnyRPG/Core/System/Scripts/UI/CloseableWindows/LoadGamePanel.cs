@@ -63,7 +63,6 @@ namespace AnyRPG {
 
             loadGameManager.OnDeleteGame += HandleDeleteGame;
             loadGameManager.OnCopyGame += HandleCopyGame;
-            loadGameManager.OnLoadCharacterList += HandleLoadCharacterList;
 
             characterPreviewPanel.Configure(systemGameManager);
             characterPreviewPanel.SetParentPanel(this);
@@ -81,9 +80,10 @@ namespace AnyRPG {
         }
 
         public override void ReceiveClosedWindowNotification() {
-            //Debug.Log("LoadGamePanel.RecieveClosedWindowNotification()");
+            Debug.Log("LoadGamePanel.RecieveClosedWindowNotification()");
 
             characterPreviewPanel.OnUnitCreated -= HandleUnitCreated;
+            loadGameManager.OnLoadCharacterList -= HandleLoadCharacterList;
             characterPreviewPanel.CharacterConfigurationProvider = null;
             characterPreviewPanel.ReceiveClosedWindowNotification();
             //saveManager.ClearSharedData();
@@ -105,6 +105,7 @@ namespace AnyRPG {
 
             // inform the preview panel so the character can be rendered
             characterPreviewPanel.OnUnitCreated += HandleUnitCreated;
+            loadGameManager.OnLoadCharacterList += HandleLoadCharacterList;
             characterPreviewPanel.CharacterConfigurationProvider = loadGameManager;
             characterPreviewPanel.ReceiveOpenWindowNotification();
 

@@ -17,7 +17,7 @@ namespace AnyRPG {
             return false;
         }
         public abstract void Logout();
-        public abstract void SpawnPlayer(CharacterRequestData characterRequestData, /*GameObject playerPrefab,*/ Transform parentTransform, Vector3 position, Vector3 forward);
+        public abstract void SpawnPlayer(int playerCharacterId, CharacterRequestData characterRequestData, Transform parentTransform);
         public abstract GameObject SpawnModelPrefab(int spawnRequestId, GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward);
         public abstract void LoadScene(string sceneName);
         public abstract bool CanSpawnCharacterOverNetwork();

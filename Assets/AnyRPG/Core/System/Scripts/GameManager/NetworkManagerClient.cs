@@ -61,12 +61,13 @@ namespace AnyRPG {
             networkController.LoadScene(sceneName);
         }
 
-        public void SpawnPlayer(CharacterRequestData characterRequestData, /*GameObject playerPrefab,*/ Transform parentTransform, Vector3 position, Vector3 forward) {
-            Debug.Log($"NetworkManagerClient.SpawnPlayer()");
+        public void SpawnPlayer(int playerCharacterId, CharacterRequestData characterRequestData, Transform parentTransform) {
+            Debug.Log($"NetworkManagerClient.SpawnPlayer({playerCharacterId})");
+
             if (characterRequestData.characterConfigurationRequest.unitProfile.UnitPrefabProps.NetworkUnitPrefab == null) {
                 Debug.LogWarning($"NetworkManagerClient.SpawnPlayer({characterRequestData.characterConfigurationRequest.unitProfile.ResourceName}) On UnitProfile Network Unit Prefab is null ");
             }
-            networkController.SpawnPlayer(characterRequestData, /*playerPrefab,*/ parentTransform, position, forward);
+            networkController.SpawnPlayer(playerCharacterId, characterRequestData, parentTransform);
         }
 
         public GameObject SpawnModelPrefab(int spawnRequestId, GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward) {

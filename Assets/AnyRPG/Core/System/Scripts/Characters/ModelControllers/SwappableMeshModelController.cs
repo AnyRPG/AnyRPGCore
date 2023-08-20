@@ -73,7 +73,7 @@ namespace AnyRPG {
             return this as T;
         }
 
-        public override void SaveAppearanceSettings(ISaveDataOwner saveDataOwner, AnyRPGSaveData saveData) {
+        public override void SaveAppearanceSettings(/*ISaveDataOwner saveDataOwner,*/ AnyRPGSaveData saveData) {
             //Debug.Log($"{unitController.gameObject.name}.SwappableMeshModelController.SaveAppearanceSettings()");
 
             saveData.swappableMeshSaveData.Clear();
@@ -83,7 +83,7 @@ namespace AnyRPG {
                 swappableMeshSaveData.optionName = optionGroupChoices[groupName];
                 saveData.swappableMeshSaveData.Add(swappableMeshSaveData);
             }
-            saveDataOwner.SetSaveData(saveData);
+            //saveDataOwner.SetSaveData(saveData);
         }
 
         private void SetupAppliedConfiguration() {

@@ -22,6 +22,7 @@ namespace AnyRPG {
 
             networkManagerServer.OnLoadCharacterList += HandleLoadCharacterList;
             networkManagerServer.OnDeletePlayerCharacter += HandleDeletePlayerCharacter;
+            networkManagerServer.OnCreatePlayerCharacter += HandleCreatePlayerCharacter;
         }
 
         public override void SetGameManagerReferences() {
@@ -37,7 +38,60 @@ namespace AnyRPG {
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void SpawnCharacterUnit(int clientSpawnRequestId, string unitProfileName, /*GameObject playerPrefab,*/ Transform parentTransform, Vector3 position, Vector3 forward, UnitControllerMode unitControllerMode, int unitLevel, NetworkConnection networkConnection = null) {
+        public void SpawnPlayer(int clientSpawnRequestId, int playerCharacterId, Transform parentTransform, NetworkConnection networkConnection = null) {
+            Debug.Log($"FishNetNetworkConnector.SpawnPlayer({clientSpawnRequestId}, {playerCharacterId})");
+
+
+            PlayerCharacterSaveData playerCharacterSaveData = networkManagerServer.GetPlayerCharacterSaveData(networkConnection.ClientId, playerCharacterId);
+            if (playerCharacterSaveData == null) {
+                Debug.LogWarning($"FishNetNetworkConnector.SpawnPlayer({clientSpawnRequestId}, {playerCharacterId}) could not find playerCharacterId");
+                return;
+            }
+
+            UnitControllerMode unitControllerMode = UnitControllerMode.Player;
+            UnitProfile unitProfile = systemDataFactory.GetResource<UnitProfile>(playerCharacterSaveData.SaveData.unitProfileName);
+            if (unitProfile == null) {
+                return;
+            }
+            NetworkObject networkPrefab = unitProfile.UnitPrefabProps.NetworkUnitPrefab.GetComponent<NetworkObject>();
+            if (networkPrefab == null) {
+                Debug.LogWarning($"Could not find NetworkObject component on {unitProfile.UnitPrefabProps.NetworkUnitPrefab.name}");
+                return;
+            }
+            int serverSpawnRequestId = characterManager.GetServerSpawnRequestId();
+            /*
+            CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(unitProfile);
+            characterConfigurationRequest.unitLevel = playerCharacterSaveData.SaveData.PlayerLevel;
+            characterConfigurationRequest.unitControllerMode = unitControllerMode;
+            CharacterRequestData characterRequestData = new CharacterRequestData(null, GameMode.Network, characterConfigurationRequest);
+            */
+            //characterManager.AddUnitSpawnRequest(serverSpawnRequestId, characterRequestData);
+            Vector3 position = new Vector3(
+                playerCharacterSaveData.SaveData.PlayerLocationX,
+                playerCharacterSaveData.SaveData.PlayerLocationY,
+                playerCharacterSaveData.SaveData.PlayerLocationZ);
+            Vector3 forward = new Vector3(
+                playerCharacterSaveData.SaveData.PlayerRotationX,
+                playerCharacterSaveData.SaveData.PlayerRotationY,
+                playerCharacterSaveData.SaveData.PlayerRotationZ);
+            NetworkObject nob = GetSpawnablePrefab(networkConnection, clientSpawnRequestId, serverSpawnRequestId, unitProfile.UnitPrefabProps.NetworkUnitPrefab, parentTransform, position, forward);
+            // update syncvars
+            NetworkCharacterUnit networkCharacterUnit = nob.gameObject.GetComponent<NetworkCharacterUnit>();
+            if (networkCharacterUnit != null) {
+                networkCharacterUnit.unitProfileName = playerCharacterSaveData.SaveData.unitProfileName;
+                networkCharacterUnit.unitControllerMode = unitControllerMode;
+                networkCharacterUnit.unitLevel = playerCharacterSaveData.SaveData.PlayerLevel;
+                networkCharacterUnit.serverRequestId = serverSpawnRequestId;
+            }
+
+            SpawnPrefab(nob, networkConnection);
+            if (nob == null) {
+                return;
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SpawnCharacterUnit(int clientSpawnRequestId, string unitProfileName, Transform parentTransform, Vector3 position, Vector3 forward, UnitControllerMode unitControllerMode, int unitLevel, NetworkConnection networkConnection = null) {
             Debug.Log($"FishNetNetworkConnector.SpawnPlayer({clientSpawnRequestId}, {unitProfileName})");
 
             UnitProfile unitProfile = systemDataFactory.GetResource<UnitProfile>(unitProfileName);
@@ -69,15 +123,6 @@ namespace AnyRPG {
             if (nob == null) {
                 return;
             }
-
-            // the client will configure the unit controller itself, so this should only be done if we are on only a server
-            //if (base.IsClient == true) {
-            /*
-            if (networkConnection == base.LocalConnection) {
-                return;
-            }
-            systemGameManager.CharacterManager.ConfigureUnitController(new CharacterRequestData(null, GameMode.Network, unitProfile, unitControllerMode, unitLevel), nob.gameObject, false);
-            */
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -136,6 +181,19 @@ namespace AnyRPG {
             systemGameManager.NetworkManagerServer.CreatePlayerCharacter(networkConnection.ClientId, anyRPGSaveData);
         }
 
+        public void HandleCreatePlayerCharacter(int clientId) {
+            Debug.Log($"FishNetNetworkConnector.HandleCreatePlayerCharacter({clientId})");
+
+            if (networkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
+                Debug.Log($"FishNetNetworkConnector.HandleCreatePlayerCharacter() could not find client id {clientId}");
+                return;
+            }
+
+            //LoadCharacterList(networkManager.ServerManager.Clients[clientId]);
+            systemGameManager.NetworkManagerServer.LoadCharacterList(clientId);
+        }
+
+
         [ServerRpc(RequireOwnership = false)]
         public void DeletePlayerCharacter(int playerCharacterId, NetworkConnection networkConnection = null) {
             Debug.Log($"FishNetNetworkConnector.DeletePlayerCharacter({playerCharacterId})");
@@ -147,10 +205,10 @@ namespace AnyRPG {
         }
 
         public void HandleDeletePlayerCharacter(int clientId) {
-            Debug.Log($"FishNetNetworkConnector.LoadCharacterList()");
+            Debug.Log($"FishNetNetworkConnector.HandleDeletePlayerCharacter({clientId})");
 
             if (networkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
-                Debug.Log($"FishNetNetworkConnector.LoadCharacterList() could not find client id {clientId}");
+                Debug.Log($"FishNetNetworkConnector.HandleDeletePlayerCharacter() could not find client id {clientId}");
                 return;
             }
 

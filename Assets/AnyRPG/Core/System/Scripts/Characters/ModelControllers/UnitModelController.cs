@@ -139,10 +139,10 @@ namespace AnyRPG {
         }
         */
 
-        public void SaveAppearanceSettings(ISaveDataOwner saveDataOwner, AnyRPGSaveData saveData) {
+        public void SaveAppearanceSettings(/*ISaveDataOwner saveDataOwner, */AnyRPGSaveData saveData) {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SaveAppearanceSettings()");
 
-            modelAppearanceController.SaveAppearanceSettings(saveDataOwner, saveData);
+            modelAppearanceController.SaveAppearanceSettings(/*saveDataOwner, */saveData);
         }
 
         public void SetAnimatorOverrideController(AnimatorOverrideController animatorOverrideController) {

@@ -43,24 +43,37 @@ namespace AnyRPG {
             return serverSpawnRequestId++;
         }
 
-        public UnitController SpawnUnitPrefab(CharacterRequestData characterRequestData, Transform parentTransform, Vector3 position, Vector3 forward) {
-            //Debug.Log($"CharacterManager.SpawnUnitPrefab({spawnMode}, {unitProfile.ResourceName})");
+        private void SetupUnitSpawnRequest(CharacterRequestData characterRequestData) {
             characterRequestData.spawnRequestId = GetSpawnRequestId();
-            //GameObject spawnPrefab;
-            //if (characterRequestData.requestMode == GameMode.Local) {
-            //    spawnPrefab = characterRequestData.characterConfigurationRequest.unitProfile.UnitPrefabProps.UnitPrefab;
-            //} else {
-            //    spawnPrefab = characterRequestData.characterConfigurationRequest.unitProfile.UnitPrefabProps.NetworkUnitPrefab;
-            //}
-            GameObject prefabObject = SpawnCharacterPrefab(characterRequestData, /*spawnPrefab,*/ parentTransform, position, forward);
-            UnitController unitController = null;
-            if (characterRequestData.requestMode == GameMode.Local) {
-                //unitController = ConfigureUnitController(characterRequestData, prefabObject, true);
-                //unitController = CompleteCharacterRequest(prefabObject, characterRequestData.spawnRequestId, true);
-                unitController = CompleteCharacterRequest(prefabObject, characterRequestData, true);
+            AddUnitSpawnRequest(characterRequestData.spawnRequestId, characterRequestData);
+
+        }
+
+        public void SpawnPlayer(PlayerCharacterSaveData playerCharacterSaveData, CharacterRequestData characterRequestData, Transform parentTransform, Vector3 position, Vector3 forward) {
+
+            SetupUnitSpawnRequest(characterRequestData);
+
+            if (systemGameManager.GameMode == GameMode.Network) {
+                networkManager.SpawnPlayer(playerCharacterSaveData.PlayerCharacterId, characterRequestData, parentTransform);
+                return;
             }
 
-            return unitController;
+            SpawnCharacterPrefab(characterRequestData, parentTransform, position, forward);
+        }
+
+        public UnitController SpawnUnitPrefab(CharacterRequestData characterRequestData, Transform parentTransform, Vector3 position, Vector3 forward) {
+            //Debug.Log($"CharacterManager.SpawnUnitPrefab({spawnMode}, {unitProfile.ResourceName})");
+
+            SetupUnitSpawnRequest(characterRequestData);
+
+            /*
+            if (characterRequestData.requestMode == GameMode.Network) {
+                networkManager.SpawnPlayer(characterRequestData, parentTransform, position, forward);
+                return null;
+            }
+            */
+
+            return SpawnCharacterPrefab(characterRequestData, parentTransform, position, forward);
         }
 
 
@@ -80,29 +93,16 @@ namespace AnyRPG {
         public UnitController CompleteCharacterRequest(GameObject characterGameObject, CharacterRequestData characterRequestData, bool isOwner) {
             //Debug.Log($"CharacterManager.CompleteCharacterRequest({gameObject.name}, {isOwner})");
 
-
-            //if (unitSpawnRequests.ContainsKey(characterRequestId) == false) {
-            //    Debug.Log($"CharacterManager.CompleteCharacterRequest({gameObject.name}, {characterRequestId}, {isOwner}) network spawn requests does not contain request id");
-            //    return null;
-            //}
-            // gamemode is always network here because this call only happens when a network object is spawned
-            //UnitController unitController = ConfigureUnitController(unitSpawnRequests[characterRequestId], gameObject, isOwner);
             UnitController unitController = ConfigureUnitController(characterRequestData, characterGameObject, isOwner);
             if (unitController == null) {
                 return null;
             }
 
-            // can't run ConfigureSpawnedCharacter before the model is spawned.
-            // check if UnitProfile contains a network model.  If not, go ahead since the model is probably integrated with the unit
-            // If a model is specified, then complete configuration when it spawns so that Init can properly find the animator
-            //if (unitSpawnRequests[characterRequestId].unitProfile.UnitPrefabProps.NetworkModelPrefab != null) {
-
-            // change logic because preview unit profiles always have networkmodel prefabs even if they are being spawned in preview mode
             if (characterRequestData.requestMode == GameMode.Network) {
+                // if this is being spawned over the network, the model is not spawned yet, so return and wait for it to spawn
                 return null;
             }
 
-            //CompleteModelRequest(characterRequestData.spawnRequestId, unitController, isOwner);
             CompleteModelRequest(characterRequestData.spawnRequestId, unitController, isOwner);
 
             return unitController;
@@ -184,16 +184,15 @@ namespace AnyRPG {
             return prefabObject;
         }
 
-        private GameObject SpawnCharacterPrefab(CharacterRequestData characterRequestData, /*GameObject spawnPrefab,*/ Transform parentTransform, Vector3 position, Vector3 forward) {
+        private UnitController SpawnCharacterPrefab(CharacterRequestData characterRequestData, Transform parentTransform, Vector3 position, Vector3 forward) {
             //Debug.Log($"CharacterManager.SpawnCharacterPrefab({spawnPrefab.name})");
 
-            AddUnitSpawnRequest(characterRequestData.spawnRequestId, characterRequestData);
-            if (characterRequestData.requestMode == GameMode.Network) {
-                //Debug.Log($"CharacterManager.SpawnCharacterPrefab({spawnPrefab.name}) adding {characterRequestData.spawnRequestId} to networkSpawnRequests");
-                networkManager.SpawnPlayer(characterRequestData, /*spawnPrefab,*/ parentTransform, position, forward);
-                return null;
+            GameObject prefabObject = LocalSpawnPrefab(characterRequestData.characterConfigurationRequest.unitProfile.UnitPrefabProps.UnitPrefab, parentTransform, position, forward);
+            UnitController unitController = null;
+            if (characterRequestData.requestMode == GameMode.Local) {
+                unitController = CompleteCharacterRequest(prefabObject, characterRequestData, true);
             }
-            return LocalSpawnPrefab(characterRequestData.characterConfigurationRequest.unitProfile.UnitPrefabProps.UnitPrefab, parentTransform, position, forward);
+            return unitController;
         }
 
         public void AddUnitSpawnRequest(int spawnRequestId, CharacterRequestData characterRequestData) {

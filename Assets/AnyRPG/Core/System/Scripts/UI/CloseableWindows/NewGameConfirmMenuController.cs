@@ -43,7 +43,7 @@ namespace AnyRPG {
             if (systemConfigurationManager.UseNewGameWindow == true) {
                 divider.SetActive(false);
                 confirmGameButton.gameObject.SetActive(true);
-                confirmGameButton.AddSaveData(newGameManager.SaveData);
+                confirmGameButton.AddSaveData(newGameManager.PlayerCharacterSaveData.SaveData);
             } else {
                 divider.SetActive(true);
                 confirmGameButton.gameObject.SetActive(false);
@@ -59,8 +59,11 @@ namespace AnyRPG {
             //Debug.Log("NewGameMenuController.ConfirmAction()");
 
             uIManager.confirmNewGameMenuWindow.CloseWindow();
-            uIManager.loadGameWindow.CloseWindow();
+            //uIManager.loadGameWindow.CloseWindow();
             uIManager.newGameWindow.CloseWindow();
+            if (systemGameManager.GameMode == GameMode.Network) {
+                uIManager.loadGameWindow.OpenWindow();
+            }
             newGameManager.NewGame();
             
         }

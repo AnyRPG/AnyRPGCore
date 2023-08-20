@@ -55,6 +55,34 @@ namespace AnyRPG {
             levelManager = systemGameManager.LevelManager;
         }
 
+        public override bool Login(string username, string password, string server) {
+            Debug.Log($"FishNetNetworkController.Login({username}, {password})");
+
+            if (networkManager == null) {
+                return false;
+            }
+
+            if (clientState != LocalConnectionState.Stopped) {
+                Debug.Log("FishNetNetworkController.Login() Already connected to the server!");
+                return false;
+            }
+
+            bool connectionResult = networkManager.ClientManager.StartConnection();
+            //Debug.Log($"FishNetNetworkController.Login() Result of connection attempt: {connectionResult}");
+
+            return connectionResult;
+        }
+
+        public override void Logout() {
+            if (clientState == LocalConnectionState.Stopped) {
+                Debug.Log("FishNetNetworkController.Login() Already disconnected from the server!");
+                return;
+            }
+
+            bool connectionResult = networkManager.ClientManager.StopConnection();
+            Debug.Log($"FishNetNetworkController.Login() Result of disconnection attempt: {connectionResult}");
+        }
+
         private void HandleUnloadEnd(SceneUnloadEndEventArgs obj) {
             //Debug.Log($"FishNetNetworkController.HandleUnloadEnd()");
             //foreach (Scene scene in obj.UnloadedScenes) {
@@ -82,34 +110,6 @@ namespace AnyRPG {
             //Debug.Log("FishNetNetworkController.HandleClientLoadedStartScenes()");
             //networkManager.SceneManager.AddConnectionToScene(networkConnection, UnityEngine.SceneManagement.SceneManager.GetSceneByName("DontDestroyOnLoad"));
             //networkManager.SceneManager.AddConnectionToScene(networkConnection, UnityEngine.SceneManagement.SceneManager.GetActiveScene());
-        }
-
-        public override bool Login(string username, string password, string server) {
-            Debug.Log($"FishNetNetworkController.Login({username}, {password})");
-
-            if (networkManager == null) {
-                return false;
-            }
-
-            if (clientState != LocalConnectionState.Stopped) {
-                Debug.Log("FishNetNetworkController.Login() Already connected to the server!");
-                return false;
-            }
-
-            bool connectionResult = networkManager.ClientManager.StartConnection();
-            //Debug.Log($"FishNetNetworkController.Login() Result of connection attempt: {connectionResult}");
-
-            return connectionResult;
-        }
-
-        public override void Logout() {
-            if (clientState == LocalConnectionState.Stopped) {
-                Debug.Log("FishNetNetworkController.Login() Already disconnected from the server!");
-                return;
-            }
-            
-            bool connectionResult = networkManager.ClientManager.StopConnection();
-            Debug.Log($"FishNetNetworkController.Login() Result of disconnection attempt: {connectionResult}");
         }
 
         private void HandleClientConnectionState(ClientConnectionStateArgs obj) {
@@ -194,10 +194,10 @@ namespace AnyRPG {
         }
         */
 
-        public override void SpawnPlayer(CharacterRequestData characterRequestData, /*GameObject playerPrefab,*/ Transform parentTransform, Vector3 position, Vector3 forward) {
+        public override void SpawnPlayer(int playerCharacterId, CharacterRequestData characterRequestData, Transform parentTransform) {
             Debug.Log($"FishNetNetworkController.SpawnPlayer({characterRequestData.characterConfigurationRequest.unitProfile.ResourceName})");
 
-            networkConnector.SpawnCharacterUnit(characterRequestData.spawnRequestId, characterRequestData.characterConfigurationRequest.unitProfile.ResourceName, /*playerPrefab,*/ parentTransform, position, forward, characterRequestData.characterConfigurationRequest.unitControllerMode, characterRequestData.unitLevel);
+            networkConnector.SpawnPlayer(characterRequestData.spawnRequestId, playerCharacterId, parentTransform);
             //return null;
         }
 

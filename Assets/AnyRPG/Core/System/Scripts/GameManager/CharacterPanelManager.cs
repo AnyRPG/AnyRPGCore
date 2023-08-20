@@ -139,7 +139,7 @@ namespace AnyRPG {
 
         public void HandleTargetCreated() {
             //Debug.Log("CharacterPanel.HandleTargetCreated()");
-            unitController?.UnitModelController.SetInitialSavedAppearance(saveManager.CurrentSaveData);
+            unitController?.UnitModelController.SetInitialSavedAppearance(playerManager.PlayerCharacterSaveData.SaveData);
             CharacterEquipmentManager characterEquipmentManager = unitController.CharacterEquipmentManager;
 
             if (characterEquipmentManager != null) {

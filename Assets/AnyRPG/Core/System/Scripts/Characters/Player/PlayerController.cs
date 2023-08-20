@@ -1153,7 +1153,7 @@ namespace AnyRPG {
         }
 
         public void HandleModelUpdated() {
-            saveManager.SaveAppearanceData();
+            saveManager.SaveAppearanceData(playerManager.PlayerCharacterSaveData.SaveData);
         }
 
         public void HandleCastCancel() {

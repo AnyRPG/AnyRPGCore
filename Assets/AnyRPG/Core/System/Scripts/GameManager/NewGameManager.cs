@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class NewGameManager : ConfiguredMonoBehaviour, ICharacterEditor, ISaveDataOwner, ICharacterConfigurationProvider {
+    public class NewGameManager : ConfiguredMonoBehaviour, ICharacterEditor, /*ISaveDataOwner,*/ ICharacterConfigurationProvider {
 
         public event System.Action<UnitProfile> OnSetUnitProfile = delegate { };
         public event System.Action<string> OnSetPlayerName = delegate { };
@@ -52,7 +52,7 @@ namespace AnyRPG {
 
         private CapabilityConsumerProcessor capabilityConsumerProcessor = null;
 
-        private AnyRPGSaveData saveData = null;
+        private PlayerCharacterSaveData playerCharacterSaveData = null;
 
         //private Dictionary<EquipmentSlotType, Equipment> equipmentList = new Dictionary<EquipmentSlotType, Equipment>();
         private EquipmentManager equipmentManager = null;
@@ -76,7 +76,7 @@ namespace AnyRPG {
         public CharacterClass CharacterClass { get => characterClass; }
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
         public UnitProfile UnitProfile { get => unitProfile; }
-        public AnyRPGSaveData SaveData { get => saveData; set => saveData = value; }
+        public PlayerCharacterSaveData PlayerCharacterSaveData { get => playerCharacterSaveData; set => playerCharacterSaveData = value; }
         public Dictionary<EquipmentSlotProfile, Equipment> EquipmentList { get => equipmentManager.CurrentEquipment; }
         public UnitType UnitType { get => unitType; set => unitType = value; }
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
@@ -106,14 +106,14 @@ namespace AnyRPG {
         }
 
         public void NewGame() {
-            if (saveData == null) {
+            if (playerCharacterSaveData == null) {
                 // this could have come from a button press
                 InitializeData();
             }
-            saveManager.NewGame(saveData);
+            saveManager.NewGame(playerCharacterSaveData);
             
             // reset to null so next button press doesn't start game with same data again
-            saveData = null;
+            playerCharacterSaveData = null;
         }
 
         private void GetDefaultMaterials() {
@@ -142,7 +142,7 @@ namespace AnyRPG {
             }
 
             playerName = newPlayerName;
-            saveData.playerName = playerName;
+            playerCharacterSaveData.SaveData.playerName = playerName;
         }
 
         public void EditPlayerName(string newPlayerName) {
@@ -164,7 +164,7 @@ namespace AnyRPG {
             classSpecialization = null;
             faction = null;
             capabilityConsumerProcessor = null;
-            saveData = saveManager.CreateSaveData();
+            playerCharacterSaveData = saveManager.CreateSaveData();
 
         }
 
@@ -372,7 +372,7 @@ namespace AnyRPG {
             }
 
             unitProfile = newUnitProfile;
-            saveData.unitProfileName = unitProfile.ResourceName;
+            playerCharacterSaveData.SaveData.unitProfileName = unitProfile.ResourceName;
 
             OnSetUnitProfile(newUnitProfile);
 
@@ -503,7 +503,7 @@ namespace AnyRPG {
             }
 
             characterClass = newCharacterClass;
-            saveData.characterClass = characterClass.ResourceName;
+            playerCharacterSaveData.SaveData.characterClass = characterClass.ResourceName;
             OnSetCharacterClass(newCharacterClass);
 
             UpdateClassSpecializationList();
@@ -526,9 +526,9 @@ namespace AnyRPG {
             if (classSpecialization !=  newClassSpecialization || newClassSpecialization == null) {
                 classSpecialization = newClassSpecialization;
                 if (classSpecialization != null) {
-                    saveData.classSpecialization = classSpecialization.ResourceName;
+                    playerCharacterSaveData.SaveData.classSpecialization = classSpecialization.ResourceName;
                 } else {
-                    saveData.classSpecialization = string.Empty;
+                    playerCharacterSaveData.SaveData.classSpecialization = string.Empty;
                 }
 
                 UpdateEquipmentList();
@@ -567,12 +567,12 @@ namespace AnyRPG {
 
             UpdateEquipmentList();
 
-            saveData.playerFaction = faction.ResourceName;
+            playerCharacterSaveData.SaveData.playerFaction = faction.ResourceName;
 
             if (faction != null && faction.DefaultStartingZone != null && faction.DefaultStartingZone != string.Empty) {
-                saveData.CurrentScene = faction.DefaultStartingZone;
+                playerCharacterSaveData.SaveData.CurrentScene = faction.DefaultStartingZone;
             } else {
-                saveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
+                playerCharacterSaveData.SaveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
             }
             if (faction != null) {
                 levelManager.OverrideSpawnLocationTag = faction.DefaultStartingLocationTag;
@@ -606,12 +606,12 @@ namespace AnyRPG {
 
             UpdateEquipmentList();
 
-            saveData.characterRace = characterRace.ResourceName;
+            playerCharacterSaveData.SaveData.characterRace = characterRace.ResourceName;
 
             if (faction != null && faction.DefaultStartingZone != string.Empty) {
-                saveData.CurrentScene = faction.DefaultStartingZone;
+                playerCharacterSaveData.SaveData.CurrentScene = faction.DefaultStartingZone;
             } else {
-                saveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
+                playerCharacterSaveData.SaveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
             }
             if (faction != null) {
                 levelManager.OverrideSpawnLocationTag = faction.DefaultStartingLocationTag;
@@ -703,7 +703,7 @@ namespace AnyRPG {
                 // nothing to save
                 return;
             }
-            saveData.equipmentSaveData = new List<EquipmentSaveData>();
+            playerCharacterSaveData.SaveData.equipmentSaveData = new List<EquipmentSaveData>();
             foreach (Equipment equipment in equipmentManager.CurrentEquipment.Values) {
                 EquipmentSaveData tmpSaveData = new EquipmentSaveData();
                 tmpSaveData.EquipmentName = (equipment == null ? string.Empty : equipment.ResourceName);
@@ -715,12 +715,12 @@ namespace AnyRPG {
                     tmpSaveData.dropLevel = equipment.DropLevel;
                     tmpSaveData.randomSecondaryStatIndexes = (equipment == null ? null : equipment.RandomStatIndexes);
                 }
-                saveData.equipmentSaveData.Add(tmpSaveData);
+                playerCharacterSaveData.SaveData.equipmentSaveData.Add(tmpSaveData);
             }
         }
 
-        public void SetSaveData(AnyRPGSaveData saveData) {
-            this.saveData = saveData;
+        public void SetSaveData(PlayerCharacterSaveData playerCharacterSaveData) {
+            this.playerCharacterSaveData = playerCharacterSaveData;
         }
 
         public CharacterConfigurationRequest GetCharacterConfigurationRequest() {
