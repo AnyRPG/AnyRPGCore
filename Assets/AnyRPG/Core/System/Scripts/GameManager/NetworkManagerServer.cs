@@ -14,10 +14,16 @@ namespace AnyRPG {
         public event Action<int> OnDeletePlayerCharacter = delegate { };
         public event Action<int> OnCreatePlayerCharacter = delegate { };
 
+        // jwt for each client so the server can make API calls to the api server on their behalf
         private Dictionary<int, string> clientTokens = new Dictionary<int, string>();
+        
+        // cached list of player character save data from client lookups used for loading games
         private Dictionary<int, Dictionary<int, PlayerCharacterSaveData>> playerCharacterDataDict = new Dictionary<int, Dictionary<int, PlayerCharacterSaveData>>();
 
+        private Dictionary<int, PlayerCharacterMonitor> activePlayerCharacters = new Dictionary<int, PlayerCharacterMonitor>();
+
         private GameServerClient gameServerClient = null;
+        private Coroutine monitorPlayerCharactersCoroutine = null;
 
         // game manager references
         private SaveManager saveManager = null;
@@ -39,6 +45,39 @@ namespace AnyRPG {
             if (gameMode == GameMode.Network) {
                 // create instance of GameServerClient
                 gameServerClient = new GameServerClient(systemGameManager, systemConfigurationManager.ApiServerAddress);
+                if (monitorPlayerCharactersCoroutine == null) {
+                    monitorPlayerCharactersCoroutine = StartCoroutine(MonitorPlayerCharacters());
+                }
+                return;
+            }
+
+            // local mode
+            if (monitorPlayerCharactersCoroutine != null) {
+                StopCoroutine(monitorPlayerCharactersCoroutine);
+            }
+        }
+
+        public IEnumerator MonitorPlayerCharacters() {
+            while (systemGameManager.GameMode == GameMode.Network) {
+                foreach (PlayerCharacterMonitor playerCharacterMonitor in activePlayerCharacters.Values) {
+                    SavePlayerCharacter(playerCharacterMonitor);
+                }
+                yield return new WaitForSeconds(10);
+            }
+        }
+
+        private void SavePlayerCharacter(PlayerCharacterMonitor playerCharacterMonitor) {
+            playerCharacterMonitor.SavePlayerLocation();
+            if (playerCharacterMonitor.saveDataDirty == true) {
+                if (clientTokens.ContainsKey(playerCharacterMonitor.clientId) == false) {
+                    // can't do anything without a token
+                    return;
+                }
+                gameServerClient.SavePlayerCharacter(
+                    playerCharacterMonitor.clientId,
+                    clientTokens[playerCharacterMonitor.clientId],
+                    playerCharacterMonitor.playerCharacterSaveData.PlayerCharacterId,
+                    playerCharacterMonitor.playerCharacterSaveData.SaveData);
             }
         }
 
@@ -122,6 +161,24 @@ namespace AnyRPG {
             //}
 
             //return playerCharacterSaveDataList;
+        }
+
+        public void MonitorPlayerUnit(int clientId,  PlayerCharacterSaveData playerCharacterSaveData, UnitController unitController) {
+            activePlayerCharacters.Add(playerCharacterSaveData.PlayerCharacterId, new PlayerCharacterMonitor(
+                systemGameManager,
+                clientId,
+                playerCharacterSaveData,
+                unitController
+            ));
+        }
+
+        public void StopMonitoringPlayerUnit(int playerCharacterId) {
+            if (activePlayerCharacters.ContainsKey(playerCharacterId)) {
+                activePlayerCharacters[playerCharacterId].StopMonitoring();
+                // flush data to database before stop monitoring
+                SavePlayerCharacter(activePlayerCharacters[playerCharacterId]);
+                activePlayerCharacters.Remove(playerCharacterId);
+            }
         }
 
         public void ProcessLoadCharacterListResponse(int clientId, List<PlayerCharacterData> playerCharacters) {

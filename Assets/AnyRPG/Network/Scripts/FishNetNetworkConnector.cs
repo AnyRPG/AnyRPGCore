@@ -84,6 +84,11 @@ namespace AnyRPG {
                 networkCharacterUnit.serverRequestId = serverSpawnRequestId;
             }
 
+            UnitController unitController = nob.gameObject.GetComponent<UnitController>();
+            if (unitController != null) {
+                networkManagerServer.MonitorPlayerUnit(networkConnection.ClientId, playerCharacterSaveData, unitController);
+            }
+
             SpawnPrefab(nob, networkConnection);
             if (nob == null) {
                 return;

@@ -16,6 +16,7 @@ namespace AnyRPG {
         private const double clientTimeout = 30;
         private const string loginPath = "api/login";
         private const string createPlayerCharacterPath = "api/createplayercharacter";
+        private const string savePlayerCharacterPath = "api/saveplayercharacter";
         private const string deletePlayerCharacterPath = "api/deleteplayercharacter";
         private const string GetPlayerCharactersPath = "api/getplayercharacters";
 
@@ -106,40 +107,7 @@ namespace AnyRPG {
             CreatePlayerCharacterRequest createPlayerCharacterRequest = new CreatePlayerCharacterRequest(anyRPGSaveData);
 
             networkManagerServer.StartCoroutine(CreatePlayerCharacterEnumerator(clientId, token, createPlayerCharacterRequest));
-            /*
-            Task<bool> createPlayerCharacterResult = CreatePlayerCharacterAsync(token, createPlayerCharacterRequest);
-            createPlayerCharacterResult.Wait();
-            bool result = createPlayerCharacterResult.Result;
-
-            return result;
-            */
         }
-
-        /*
-        public async Task<bool> CreatePlayerCharacterAsync(string token, CreatePlayerCharacterRequest createPlayerCharacterRequest) {
-            Debug.Log($"GameServerClient.CreatePlayerCharacterAsync({token})");
-
-            using (var httpClient = new HttpClient()) {
-                string requestURL = $"{serverAddress}/{createPlayerCharacterPath}";
-                httpClient.BaseAddress = new Uri(requestURL);
-                httpClient.Timeout = TimeSpan.FromSeconds(clientTimeout);
-                httpClient.DefaultRequestHeaders.Accept.Clear();
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                Debug.Log(httpClient.DefaultRequestHeaders.ToString());
-                var payload = JsonUtility.ToJson(createPlayerCharacterRequest);
-                var content = new StringContent(payload, Encoding.UTF8, "application/json");
-                var result = await httpClient.PostAsync(requestURL, content).ConfigureAwait(false);
-                //var result = await httpClient.PostAsJsonAsync("Create", otherPerson);
-                Debug.Log($"GameServerClient.CreatePlayerCharacterAsync() url: {requestURL} payload: {payload} statusCode: {result.StatusCode}");
-                if (result.StatusCode != HttpStatusCode.OK)
-                    return false;
-                string resourceJson = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
-                //Debug.Log($"GameServerClient.CreatePlayerCharacterAsync(): {resourceJson}");
-                return true;
-            }
-        }
-        */
 
         public IEnumerator CreatePlayerCharacterEnumerator(int clientId, string token, CreatePlayerCharacterRequest createPlayerCharacterRequest) {
             Debug.Log($"GameServerClient.CreatePlayerCharacterEnumerator({clientId}, {token})");
@@ -168,46 +136,48 @@ namespace AnyRPG {
 
         }
 
+        public void SavePlayerCharacter(int clientId, string token, int playerCharacterId, AnyRPGSaveData saveData) {
+            Debug.Log($"GameServerClient.SavePlayerCharacter({clientId}, {token}, {playerCharacterId})");
+
+            SavePlayerCharacterRequest savePlayerCharacterRequest = new SavePlayerCharacterRequest(playerCharacterId, saveData.playerName, saveData);
+
+            networkManagerServer.StartCoroutine(SavePlayerCharacterEnumerator(clientId, token, savePlayerCharacterRequest));
+        }
+
+        public IEnumerator SavePlayerCharacterEnumerator(int clientId, string token, SavePlayerCharacterRequest savePlayerCharacterRequest) {
+            Debug.Log($"GameServerClient.SavePlayerCharacterEnumerator({token}, {savePlayerCharacterRequest.Id})");
+
+            string requestURL = $"{serverAddress}/{savePlayerCharacterPath}";
+            var payload = JsonUtility.ToJson(savePlayerCharacterRequest);
+            UploadHandler uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(payload));
+            DownloadHandler downloadHandler = new DownloadHandlerBuffer();
+
+            using (UnityWebRequest webRequest = new UnityWebRequest(requestURL, UnityWebRequest.kHttpVerbPOST, downloadHandler, uploadHandler)) {
+                webRequest.SetRequestHeader("Content-Type", "application/json");
+                webRequest.SetRequestHeader("Accept", "application/json");
+                webRequest.SetRequestHeader("Authorization", $"Bearer {token}");
+                webRequest.uploadHandler.contentType = "application/json";
+                yield return webRequest.SendWebRequest();
+                Debug.Log($"GameServerClient.SavePlayerCharacterEnumerator() status code: {webRequest.responseCode} body: {webRequest.downloadHandler.text}");
+
+                /*
+                if (webRequest.responseCode != (long)HttpStatusCode.OK) {
+                    //networkManagerServer.ProcessLoginResponse(clientId, false, string.Empty);
+                } else {
+                    //LoginResponse loginResponse = JsonUtility.FromJson<LoginResponse>(webRequest.downloadHandler.text);
+                    networkManagerServer.ProcessDeletePlayerCharacterResponse(clientId);
+                }
+                */
+            }
+        }
+
         public void DeletePlayerCharacter(int clientId, string token, int playerCharacterId) {
             Debug.Log($"GameServerClient.DeletePlayerCharacter({clientId}, {token}, {playerCharacterId})");
 
             DeletePlayerCharacterRequest deletePlayerCharacterRequest = new DeletePlayerCharacterRequest(playerCharacterId);
 
             networkManagerServer.StartCoroutine(DeletePlayerCharacterEnumerator(clientId, token, deletePlayerCharacterRequest));
-            /*
-            Task<bool> deletePlayerCharacterResult = DeletePlayerCharacterAsync(token, deletePlayerCharacterRequest);
-            deletePlayerCharacterResult.Wait();
-            bool result = deletePlayerCharacterResult.Result;
-
-            return result;
-            */
         }
-
-        /*
-        public async Task<bool> DeletePlayerCharacterAsync(string token, DeletePlayerCharacterRequest deletePlayerCharacterRequest) {
-            Debug.Log($"GameServerClient.CreatePlayerCharacterAsync({token}, {deletePlayerCharacterRequest.Id})");
-
-            using (var httpClient = new HttpClient()) {
-                string requestURL = $"{serverAddress}/{deletePlayerCharacterPath}";
-                httpClient.BaseAddress = new Uri(requestURL);
-                httpClient.Timeout = TimeSpan.FromSeconds(clientTimeout);
-                httpClient.DefaultRequestHeaders.Accept.Clear();
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                Debug.Log(httpClient.DefaultRequestHeaders.ToString());
-                var payload = JsonUtility.ToJson(deletePlayerCharacterRequest);
-                var content = new StringContent(payload, Encoding.UTF8, "application/json");
-                var result = await httpClient.PostAsync(requestURL, content).ConfigureAwait(false);
-                //var result = await httpClient.PostAsJsonAsync("Create", otherPerson);
-                Debug.Log($"GameServerClient.CreatePlayerCharacterAsync() url: {requestURL} payload: {payload} statusCode: {result.StatusCode}");
-                if (result.StatusCode != HttpStatusCode.OK)
-                    return false;
-                string resourceJson = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
-                //Debug.Log($"GameServerClient.CreatePlayerCharacterAsync(): {resourceJson}");
-                return true;
-            }
-        }
-        */
 
         public IEnumerator DeletePlayerCharacterEnumerator(int clientId, string token, DeletePlayerCharacterRequest deletePlayerCharacterRequest) {
             Debug.Log($"GameServerClient.DeletePlayerCharacterEnumerator({token}, {deletePlayerCharacterRequest.Id})");
@@ -307,6 +277,19 @@ namespace AnyRPG {
             SaveData = JsonUtility.ToJson(anyRPGSaveData);
         }
     }
+
+    public class SavePlayerCharacterRequest {
+        public int Id;
+        public string Name;
+        public string SaveData;
+
+        public SavePlayerCharacterRequest(int playerCharacterId, string name, AnyRPGSaveData anyRPGSaveData) {
+            Id = playerCharacterId;
+            Name = name;
+            SaveData = JsonUtility.ToJson(anyRPGSaveData);
+        }
+    }
+
 
     public class DeletePlayerCharacterRequest {
         public int Id;

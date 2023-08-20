@@ -8,7 +8,8 @@ using UnityEngine;
 
 namespace AnyRPG {
     public class NetworkCharacterUnit : SpawnedNetworkObject {
-        // This is an empty class that is just there to ensure the object gets moved for everyone
+
+        public event System.Action OnCompleteCharacterRequest = delegate { };
 
         [SyncVar]
         public string unitProfileName = string.Empty;
@@ -80,6 +81,8 @@ namespace AnyRPG {
                 // OnNameChange is not called during initialization, so we have to pass the proper name to the network manually
                 HandleUnitNameChange(unitController.BaseCharacter.CharacterName);
             }
+
+            OnCompleteCharacterRequest();
         }
 
         public override void OnStopClient() {

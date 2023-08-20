@@ -332,14 +332,7 @@ namespace AnyRPG {
             }
             anyRPGSaveData.unitProfileName = playerManager.UnitController.UnitProfile.ResourceName;
 
-            anyRPGSaveData.OverrideLocation = true;
-            anyRPGSaveData.OverrideRotation = true;
-            anyRPGSaveData.PlayerLocationX = playerManager.ActiveUnitController.transform.position.x;
-            anyRPGSaveData.PlayerLocationY = playerManager.ActiveUnitController.transform.position.y;
-            anyRPGSaveData.PlayerLocationZ = playerManager.ActiveUnitController.transform.position.z;
-            anyRPGSaveData.PlayerRotationX = playerManager.ActiveUnitController.transform.forward.x;
-            anyRPGSaveData.PlayerRotationY = playerManager.ActiveUnitController.transform.forward.y;
-            anyRPGSaveData.PlayerRotationZ = playerManager.ActiveUnitController.transform.forward.z;
+            SavePlayerLocation(anyRPGSaveData, playerManager.ActiveUnitController);
             //Debug.Log("Savemanager.SaveGame() rotation: " + anyRPGSaveData.PlayerRotationX + ", " + anyRPGSaveData.PlayerRotationY + ", " + anyRPGSaveData.PlayerRotationZ);
             anyRPGSaveData.CurrentScene = levelManager.ActiveSceneName;
             anyRPGSaveData.GamepadActionButtonSet = actionBarManager.CurrentActionBarSet;
@@ -381,6 +374,18 @@ namespace AnyRPG {
             }
 
             return saveResult;
+        }
+
+        public void SavePlayerLocation(AnyRPGSaveData saveData, UnitController unitController) {
+            saveData.OverrideLocation = true;
+            saveData.OverrideRotation = true;
+            saveData.PlayerLocationX = unitController.transform.position.x;
+            saveData.PlayerLocationY = unitController.transform.position.y;
+            saveData.PlayerLocationZ = unitController.transform.position.z;
+            saveData.PlayerRotationX = unitController.transform.forward.x;
+            saveData.PlayerRotationY = unitController.transform.forward.y;
+            saveData.PlayerRotationZ = unitController.transform.forward.z;
+
         }
 
         public bool SaveDataFile(AnyRPGSaveData dataToSave) {
