@@ -144,6 +144,7 @@ namespace AnyRPG {
 
             characterPreviewPanel.CharacterConfigurationProvider = this;
             characterPreviewPanel.ReceiveOpenWindowNotification();
+            characterPreviewPanel.ReloadUnit();
 
             defaultAppearancePanel.ReceiveOpenWindowNotification();
 
@@ -288,11 +289,6 @@ namespace AnyRPG {
         private void EquipCharacter() {
             //Debug.Log("CharacterCreatorWindowPanel.EquipCharacter()");
 
-            // only set saved appearance if displaying the same unit as the existing player unit
-            if (playerManager.UnitController.UnitProfile == UnitProfile) {
-                characterCreatorManager.PreviewUnitController.UnitModelController.SetInitialSavedAppearance(playerManager.PlayerCharacterSaveData.SaveData);
-            }
-
             foreach (EquipmentSlotProfile equipmentSlotProfile in playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment.Keys) {
                 characterCreatorManager.PreviewUnitController.CharacterEquipmentManager.CurrentEquipment.Add(equipmentSlotProfile, playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
             }
@@ -324,6 +320,12 @@ namespace AnyRPG {
 
         public CharacterConfigurationRequest GetCharacterConfigurationRequest() {
             CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(this);
+            
+            // only set saved appearance if displaying the same unit as the existing player unit
+            if (playerManager.UnitController.UnitProfile == UnitProfile) {
+                characterConfigurationRequest.characterAppearanceData = new CharacterAppearanceData(playerManager.PlayerCharacterSaveData.SaveData);
+            }
+
             return characterConfigurationRequest;
         }
 

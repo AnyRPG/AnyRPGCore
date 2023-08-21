@@ -41,7 +41,7 @@ namespace AnyRPG {
         }
 
         public bool Login(string username, string password, string server) {
-            Debug.Log($"NetworkManagerClient.Login({username}, {password})");
+            //Debug.Log($"NetworkManagerClient.Login({username}, {password})");
             
             isLoggingInOrOut = true;
 
@@ -133,7 +133,7 @@ namespace AnyRPG {
         }
 
         public void LoadCharacterList() {
-            Debug.Log($"NetworkManagerClient.LoadCharacterList()");
+            //Debug.Log($"NetworkManagerClient.LoadCharacterList()");
 
             networkController.LoadCharacterList();
         }

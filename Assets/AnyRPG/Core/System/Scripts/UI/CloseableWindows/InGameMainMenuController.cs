@@ -8,10 +8,9 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class InGameMainMenuController : WindowContentController {
 
-        /*
-        [SerializeField]
-        private HighlightButton saveButton = null;
+        [Header("Main Menu")]
 
+        /*
         [SerializeField]
         private HighlightButton settingsButton = null;
 
@@ -22,6 +21,12 @@ namespace AnyRPG {
         [SerializeField]
         private HighlightButton mainMenuButton = null;
 
+        [SerializeField]
+        private HighlightButton logoutButton = null;
+
+        [SerializeField]
+        private HighlightButton saveGameButton = null;
+
         /*
         [SerializeField]
         private HighlightButton exitGameButton = null;
@@ -31,7 +36,6 @@ namespace AnyRPG {
         private SaveManager saveManager = null;
         private MessageFeedManager messageFeedManager = null;
         private PlayerManager playerManager = null;
-        //private InventoryManager inventoryManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -58,7 +62,22 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
             playerManager = systemGameManager.PlayerManager;
-            //inventoryManager = systemGameManager.InventoryManager;
+        }
+
+        public override void ProcessOpenWindowNotification() {
+            base.ProcessOpenWindowNotification();
+            if (systemGameManager.GameMode == GameMode.Local) {
+                mainMenuButton.gameObject.SetActive(true);
+                saveGameButton.gameObject.SetActive(true);
+                logoutButton.gameObject.SetActive(false);
+            } else if (systemGameManager.GameMode == GameMode.Network) {
+                mainMenuButton.gameObject.SetActive(false);
+                saveGameButton.gameObject.SetActive(false);
+                logoutButton.gameObject.SetActive(true);
+            }
+            foreach (UINavigationController uINavigation in uINavigationControllers) {
+                uINavigation.UpdateNavigationList();
+            }
         }
 
 
@@ -98,7 +117,13 @@ namespace AnyRPG {
                 uIManager.CloseSystemPopupWindows();
                 messageFeedManager.WriteMessage("Game Saved");
             }
+        }
 
+        public void Logout() {
+            //Debug.Log("MainMenuController.ContinueGame()");
+            currentNavigationController?.CurrentNavigableElement?.DeSelect();
+            uIManager.CloseSystemPopupWindows();
+            uIManager.confirmLogoutWindow.OpenWindow();
         }
 
         public void ContinueGame() {

@@ -108,6 +108,11 @@ namespace AnyRPG {
             return unitController;
         }
 
+        public void CompleteNetworkModelRequest(int spawnRequestId, UnitController unitController, GameObject unitModel, bool isOwner) {
+            unitController.UnitModelController.SetUnitModel(unitModel);
+            CompleteModelRequest(spawnRequestId, unitController, isOwner);
+        }
+
         public void CompleteModelRequest(int spawnRequestId, UnitController unitController, bool isOwner) {
             //Debug.Log($"CharacterManager.CompleteModelRequest({unitController.gameObject.name}, {isOwner})");
 
@@ -122,6 +127,8 @@ namespace AnyRPG {
                                 characterConfigurationRequest);
                 characterRequestData.spawnRequestId = clientSpawnRequestId;
             }
+
+            unitController.UnitModelController.SetInitialSavedAppearance();
 
             if (unitSpawnRequests.ContainsKey(spawnRequestId) == true && isOwner) {
                 //Debug.Log($"CharacterManager.CompleteModelRequest({characterRequestData.spawnRequestId}, {isOwner}) unitSpawnRequests contains the key");
@@ -190,6 +197,7 @@ namespace AnyRPG {
             GameObject prefabObject = LocalSpawnPrefab(characterRequestData.characterConfigurationRequest.unitProfile.UnitPrefabProps.UnitPrefab, parentTransform, position, forward);
             UnitController unitController = null;
             if (characterRequestData.requestMode == GameMode.Local) {
+                // this should always be true in this function because it's only called if not network mode
                 unitController = CompleteCharacterRequest(prefabObject, characterRequestData, true);
             }
             return unitController;

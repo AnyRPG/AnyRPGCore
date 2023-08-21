@@ -63,7 +63,9 @@ namespace AnyRPG {
                 uIManager.nameChangeWindow.CloseWindow();
             }
             */
+            uIManager.loginInProgressWindow.OpenWindow();
             networkManager.Login(username, password, server);
+
         }
 
         public override void ProcessOpenWindowNotification() {

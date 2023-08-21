@@ -62,7 +62,7 @@ namespace AnyRPG {
             windowOpened = true;
             characterReady = false;
             characterCreatorManager.OnUnitCreated += HandleUnitCreated;
-            SetPreviewTarget();
+            //SetPreviewTarget();
         }
 
         public void ReloadUnit() {

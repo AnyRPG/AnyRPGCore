@@ -134,7 +134,7 @@ namespace AnyRPG {
         }
 
         public void SetCharacterList(List<PlayerCharacterSaveData> playerCharacterSaveDataList) {
-            Debug.Log("LoadGameManager.SetCharacterList()");
+            //Debug.Log("LoadGameManager.SetCharacterList()");
 
             characterList.Clear();
             characterList.AddRange(playerCharacterSaveDataList);
@@ -142,9 +142,10 @@ namespace AnyRPG {
         }
 
         public CharacterConfigurationRequest GetCharacterConfigurationRequest() {
-            Debug.Log("LoadGameManager.GetCharacterConfigurationRequest()");
+            //Debug.Log("LoadGameManager.GetCharacterConfigurationRequest()");
 
             CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(this);
+            characterConfigurationRequest.characterAppearanceData = new CharacterAppearanceData(playerCharacterSaveData.SaveData);
             return characterConfigurationRequest;
         }
     }

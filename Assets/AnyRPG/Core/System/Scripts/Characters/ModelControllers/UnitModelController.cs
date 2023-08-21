@@ -28,6 +28,8 @@ namespace AnyRPG {
         // options
         private bool suppressEquipment = false;
 
+        private CharacterAppearanceData characterAppearanceData = null;
+
         // game manager references
         private ObjectPooler objectPooler = null;
         private UIManager uIManager = null;
@@ -95,6 +97,10 @@ namespace AnyRPG {
 
         public void ResetSettings() {
             modelAppearanceController.ResetSettings();
+        }
+
+        public void SetUnitModel(GameObject go) {
+            unitModel = go;
         }
 
         public void SpawnUnitModel() {
@@ -216,16 +222,21 @@ namespace AnyRPG {
         }
         */
 
-        public void SetInitialSavedAppearance(AnyRPGSaveData saveData) {
+        public void LoadInitialSavedAppearance(CharacterAppearanceData characterAppearanceData) {
+            this.characterAppearanceData = characterAppearanceData;
+        }
+
+        public void SetInitialSavedAppearance() {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetInitialSavedAppearance()");
-            if (saveData == null) {
+
+            if (characterAppearanceData == null) {
                 // in empty game mode, this can be null
                 return;
             }
             if (modelAppearanceController == null) {
                 Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetInitialSavedAppearance() model appearance controller is null");
             }
-            modelAppearanceController.SetInitialSavedAppearance(saveData);
+            modelAppearanceController.SetInitialSavedAppearance(characterAppearanceData);
         }
 
         public void ConfigureUnitModel() {

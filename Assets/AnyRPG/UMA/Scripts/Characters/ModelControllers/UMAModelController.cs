@@ -93,11 +93,11 @@ namespace AnyRPG {
             }
         }
 
-        public override void SetInitialSavedAppearance(AnyRPGSaveData saveData) {
+        public override void SetInitialSavedAppearance(CharacterAppearanceData characterAppearanceData) {
             //Debug.Log($"{unitController.gameObject.name}.UMAModelController.SetInitialSavedAppearance()");
 
-            if (saveData.appearanceString != string.Empty) {
-                initialAppearance = saveData.appearanceString;
+            if (characterAppearanceData.appearanceString != string.Empty) {
+                initialAppearance = characterAppearanceData.appearanceString;
             }
         }
 

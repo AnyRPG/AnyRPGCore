@@ -82,6 +82,7 @@ namespace AnyRPG {
                 networkCharacterUnit.unitControllerMode = unitControllerMode;
                 networkCharacterUnit.unitLevel = playerCharacterSaveData.SaveData.PlayerLevel;
                 networkCharacterUnit.serverRequestId = serverSpawnRequestId;
+                networkCharacterUnit.characterAppearanceData = new CharacterAppearanceData(playerCharacterSaveData.SaveData);
             }
 
             UnitController unitController = nob.gameObject.GetComponent<UnitController>();

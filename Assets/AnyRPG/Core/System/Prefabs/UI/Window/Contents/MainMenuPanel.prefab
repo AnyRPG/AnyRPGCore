@@ -413,7 +413,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: NETWORK
+  m_text: PLAY ONLINE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9ff1637cc53af0c4f9d93e4706904ea7, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 9ff1637cc53af0c4f9d93e4706904ea7, type: 2}
@@ -498,7 +498,7 @@ GameObject:
   - component: {fileID: 5023078815692856689}
   - component: {fileID: 5617014415577041170}
   m_Layer: 5
-  m_Name: MainMenuNetworkButton
+  m_Name: MainMenuOnlineButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -801,6 +801,8 @@ MonoBehaviour:
   - {fileID: 7443191746069571763}
   subPanels: []
   hintBarController: {fileID: 0}
+  playOnlineButton: {fileID: 5617014415577041170}
+  playOfflineButton: {fileID: 4070994050795251088}
 --- !u!114 &7443191746069571763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1807,7 +1809,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PLAY
+  m_text: PLAY OFFLINE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9ff1637cc53af0c4f9d93e4706904ea7, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 9ff1637cc53af0c4f9d93e4706904ea7, type: 2}

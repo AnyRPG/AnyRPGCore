@@ -23,7 +23,7 @@ namespace AnyRPG {
         public override void SaveAppearanceSettings(/*ISaveDataOwner saveDataOwner, */AnyRPGSaveData saveData) {
         }
 
-        public override void SetInitialSavedAppearance(AnyRPGSaveData saveData) {
+        public override void SetInitialSavedAppearance(CharacterAppearanceData characterAppearanceData) {
             // do nothing
         }
 

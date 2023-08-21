@@ -65,6 +65,7 @@ namespace AnyRPG {
             characterConfigurationRequest.characterClass = playerManager.UnitController.BaseCharacter.CharacterClass;
             characterConfigurationRequest.classSpecialization = playerManager.UnitController.BaseCharacter.ClassSpecialization;
             characterConfigurationRequest.unitLevel = playerManager.UnitController.CharacterStats.Level;
+            characterConfigurationRequest.characterAppearanceData = new CharacterAppearanceData(playerManager.PlayerCharacterSaveData.SaveData);
 
             SpawnUnit(characterConfigurationRequest);
             systemEventManager.OnEquipmentChanged += HandleEquipmentChanged;
@@ -139,7 +140,7 @@ namespace AnyRPG {
 
         public void HandleTargetCreated() {
             //Debug.Log("CharacterPanel.HandleTargetCreated()");
-            unitController?.UnitModelController.SetInitialSavedAppearance(playerManager.PlayerCharacterSaveData.SaveData);
+            //unitController?.UnitModelController.SetInitialSavedAppearance(playerManager.PlayerCharacterSaveData.SaveData);
             CharacterEquipmentManager characterEquipmentManager = unitController.CharacterEquipmentManager;
 
             if (characterEquipmentManager != null) {

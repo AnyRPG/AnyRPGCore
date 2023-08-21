@@ -20,6 +20,9 @@ namespace AnyRPG {
         [SyncVar]
         public UnitControllerMode unitControllerMode = UnitControllerMode.Preview;
 
+        [SyncVar]
+        public CharacterAppearanceData characterAppearanceData = null;
+
         [SyncVar(OnChange = nameof(HandleNameSync), ReadPermissions = ReadPermission.ExcludeOwner)]
         public string characterName = string.Empty;
 
@@ -70,6 +73,7 @@ namespace AnyRPG {
                 characterConfigurationRequest.characterName = characterName;
                 characterConfigurationRequest.unitLevel = unitLevel;
                 characterConfigurationRequest.unitControllerMode = unitControllerMode;
+                characterConfigurationRequest.characterAppearanceData = characterAppearanceData;
                 CharacterRequestData characterRequestData = new CharacterRequestData(null, GameMode.Network, characterConfigurationRequest);
                 characterRequestData.spawnRequestId = clientSpawnRequestId;
                 systemGameManager.CharacterManager.CompleteCharacterRequest(gameObject, characterRequestData, isOwner);

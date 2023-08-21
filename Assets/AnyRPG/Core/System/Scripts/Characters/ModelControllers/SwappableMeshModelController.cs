@@ -110,12 +110,12 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.SwappableMeshModelController.LoadGroupChoice({groupName}, {optionChoice})");
 
             if (optionGroups.ContainsKey(groupName) == false) {
-                // option group did not exist
+                Debug.Log($"{unitController.gameObject.name}.SwappableMeshModelController.LoadGroupChoice({groupName}, {optionChoice}) option group did not exist");
                 return false;
             }
 
             if (unitModelController.UnitModel == null) {
-                // could not find the model to search
+                Debug.Log($"{unitController.gameObject.name}.SwappableMeshModelController.LoadGroupChoice({groupName}, {optionChoice}) could not find the model to search");
                 return false;
             }
 
@@ -179,10 +179,10 @@ namespace AnyRPG {
 
         }
 
-        public override void SetInitialSavedAppearance(AnyRPGSaveData saveData) {
+        public override void SetInitialSavedAppearance(CharacterAppearanceData characterAppearanceData) {
             //Debug.Log($"{unitController.gameObject.name}.SwappableMeshModelController.SetInitialSavedAppearance()");
 
-            foreach (SwappableMeshSaveData swappableMeshSaveData in saveData.swappableMeshSaveData) {
+            foreach (SwappableMeshSaveData swappableMeshSaveData in characterAppearanceData.swappableMeshSaveDataList) {
                 LoadGroupChoice(swappableMeshSaveData.groupName, swappableMeshSaveData.optionName);
             }
 
@@ -260,7 +260,7 @@ namespace AnyRPG {
         }
 
         public override void ConfigureUnitModel() {
-            //Debug.Log($"{unitController.gameObject.name}.SwappableMeshModelController.ConfigureUnitModel()");
+            Debug.Log($"{unitController.gameObject.name}.SwappableMeshModelController.ConfigureUnitModel()");
 
             if (unitModelController.UnitModel == null) {
                 return;
@@ -278,6 +278,8 @@ namespace AnyRPG {
         }
 
         private void GetMeshRenderers() {
+            //Debug.Log($"{unitController.gameObject.name}.SwappableMeshModelController.GetMeshRenderers()");
+
             foreach (Transform childTransform in unitModelController.UnitModel.transform) {
                 if (childTransform.GetComponent<SkinnedMeshRenderer>() != null) {
                     meshRenderers.Add(childTransform.gameObject);

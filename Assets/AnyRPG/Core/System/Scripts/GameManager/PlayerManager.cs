@@ -170,6 +170,8 @@ namespace AnyRPG {
         }
 
         public void SetCharacterSaveData(PlayerCharacterSaveData playerCharacterSaveData) {
+            Debug.Log("PlayerManager.SetCharacterSaveData()");
+
             this.playerCharacterSaveData = playerCharacterSaveData;
         }
 
@@ -392,6 +394,7 @@ namespace AnyRPG {
             Vector3 spawnRotation = levelManager.GetSpawnRotation();
             CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(systemDataFactory, playerCharacterSaveData.SaveData);
             characterConfigurationRequest.unitControllerMode = UnitControllerMode.Player;
+            characterConfigurationRequest.characterAppearanceData = new CharacterAppearanceData(playerCharacterSaveData.SaveData);
             CharacterRequestData characterRequestData = new CharacterRequestData(this,
                 systemGameManager.GameMode,
                 characterConfigurationRequest);
@@ -432,7 +435,7 @@ namespace AnyRPG {
                 }
             }
 
-            unitController.UnitModelController.SetInitialSavedAppearance(playerCharacterSaveData.SaveData);
+            //unitController.UnitModelController.SetInitialSavedAppearance(playerCharacterSaveData.SaveData);
             if (subscribeToTargetReady) {
                 SubscribeToTargetReady();
             }
@@ -473,7 +476,7 @@ namespace AnyRPG {
         }
 
         public void SetUnitController(UnitController unitController) {
-            Debug.Log("PlayerManager.SetUnitController(" + (unitController == null ? "null" : unitController.gameObject.name) + ")");
+            //Debug.Log("PlayerManager.SetUnitController(" + (unitController == null ? "null" : unitController.gameObject.name) + ")");
 
             this.unitController = unitController;
             activeUnitController = unitController;
@@ -537,7 +540,8 @@ namespace AnyRPG {
         }
 
         public void SpawnPlayerConnection(PlayerCharacterSaveData playerCharacterSaveData) {
-            //Debug.Log("PlayerManager.SpawnPlayerConnection()");
+            Debug.Log("PlayerManager.SpawnPlayerConnection()");
+
             if (playerConnectionObject != null) {
                 //Debug.Log("PlayerManager.SpawnPlayerConnection(): The Player Connection is not null.  exiting.");
                 return;

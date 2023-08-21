@@ -17,6 +17,7 @@ namespace AnyRPG {
         public int unitLevel = 1;
         public int currentExperience = 0;
         public UnitControllerMode unitControllerMode;
+        public CharacterAppearanceData characterAppearanceData = null;
 
         public CharacterConfigurationRequest(ICapabilityConsumer capabilityConsumer) {
             SetUnitProfileProperties(capabilityConsumer.UnitProfile);
@@ -39,6 +40,7 @@ namespace AnyRPG {
             faction = systemDataFactory.GetResource<Faction>(saveData.playerFaction);
             unitLevel = saveData.PlayerLevel;
             currentExperience = saveData.currentExperience;
+            characterAppearanceData = new CharacterAppearanceData(saveData);
         }
 
         private void SetUnitProfileProperties(UnitProfile unitProfile) {

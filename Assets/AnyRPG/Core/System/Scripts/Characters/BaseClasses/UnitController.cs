@@ -1094,6 +1094,8 @@ namespace AnyRPG {
         public void SetCharacterConfiguration(CharacterConfigurationRequest characterConfigurationRequest) {
             //Debug.Log($"{gameObject.name}.UnitController.SetCharacterConfiguration()");
 
+            unitModelController.LoadInitialSavedAppearance(characterConfigurationRequest.characterAppearanceData);
+
             // get a snapshot of the current state
             CapabilityConsumerSnapshot oldSnapshot = new CapabilityConsumerSnapshot(baseCharacter, systemGameManager);
 

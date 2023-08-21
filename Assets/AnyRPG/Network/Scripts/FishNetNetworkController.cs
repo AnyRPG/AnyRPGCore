@@ -56,7 +56,7 @@ namespace AnyRPG {
         }
 
         public override bool Login(string username, string password, string server) {
-            Debug.Log($"FishNetNetworkController.Login({username}, {password})");
+            //Debug.Log($"FishNetNetworkController.Login({username}, {password})");
 
             if (networkManager == null) {
                 return false;
@@ -240,7 +240,8 @@ namespace AnyRPG {
         }
 
         public override void LoadCharacterList() {
-            Debug.Log($"FishNetNetworkController.LoadCharacterList()");
+            //Debug.Log($"FishNetNetworkController.LoadCharacterList()");
+
             if (networkConnector == null) {
                 Debug.LogWarning($"FishNetNetworkController.LoadCharacterList(): networkConnector is null");
                 return;

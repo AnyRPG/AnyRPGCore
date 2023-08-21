@@ -17,6 +17,12 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> loadResourcesFolders = new List<string>();
 
+        [SerializeField]
+        private bool allowOfflinePlay = true;
+
+        [SerializeField]
+        private bool allowOnlinePlay = false;
+
         [Header("Scenes")]
 
         [Tooltip("The name of the scene that loads the game manager into memory, and then proceeds to the main menu")]
@@ -754,6 +760,8 @@ namespace AnyRPG {
         public bool EditPlayerName { get => editPlayerName; set => editPlayerName = value; }
         public PlayerNameSource PlayerNameSource { get => playerNameSource; set => playerNameSource = value; }
         public string ApiServerAddress { get => apiServerAddress; set => apiServerAddress = value; }
+        public bool AllowOfflinePlay { get => allowOfflinePlay; set => allowOfflinePlay = value; }
+        public bool AllowOnlinePlay { get => allowOnlinePlay; set => allowOnlinePlay = value; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }
 

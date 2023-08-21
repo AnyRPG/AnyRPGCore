@@ -43,7 +43,7 @@ namespace AnyRPG
         {
             base.InitializeOnce(networkManager);
 
-            Debug.Log("FishNetPasswordAuthenticator.InitializeOnce()");
+            //Debug.Log("FishNetPasswordAuthenticator.InitializeOnce()");
 
             // get reference to system game manager
             systemGameManager = GameObject.FindObjectOfType<SystemGameManager>();

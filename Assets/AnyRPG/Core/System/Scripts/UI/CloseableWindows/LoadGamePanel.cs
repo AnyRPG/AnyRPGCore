@@ -163,7 +163,7 @@ namespace AnyRPG {
 
 
         public void ClearLoadButtons() {
-            Debug.Log("LoadGamePanel.ClearLoadButtons()");
+            //Debug.Log("LoadGamePanel.ClearLoadButtons()");
 
             // clear the quest list so any quests left over from a previous time opening the window aren't shown
             foreach (LoadGameButton loadGameButton in loadGameButtons) {
@@ -184,12 +184,12 @@ namespace AnyRPG {
 
 
         public void ShowLoadButtonsCommon() {
-            Debug.Log("LoadGamePanel.ShowLoadButtonsCommon()");
+            //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon()");
             ClearLoadButtons();
             characterPreviewPanel.ClearPreviewTarget();
             int count = 0;
             foreach (PlayerCharacterSaveData playerCharacterSaveData in loadGameManager.CharacterList) {
-                Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
+                //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
                 AddLoadButton(playerCharacterSaveData);
                 count++;
             }
@@ -212,17 +212,13 @@ namespace AnyRPG {
         }
 
         public void HandleLoadCharacterList() {
-            Debug.Log("LoadGamePanel.HandleLoadCharacterList()");
+            //Debug.Log("LoadGamePanel.HandleLoadCharacterList()");
 
             ShowLoadButtonsCommon();
         }
 
         public void HandleUnitCreated() {
             //Debug.Log("LoadGamePanel.HandleTargetCreated()");
-
-            if (characterCreatorManager.PreviewUnitController?.UnitModelController != null) {
-                characterCreatorManager.PreviewUnitController?.UnitModelController.SetInitialSavedAppearance(loadGameManager.PlayerCharacterSaveData.SaveData);
-            }
 
             LoadEquipmentData();
         }

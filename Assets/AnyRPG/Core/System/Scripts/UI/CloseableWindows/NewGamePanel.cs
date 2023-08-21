@@ -221,6 +221,7 @@ namespace AnyRPG {
 
             characterPreviewPanel.CharacterConfigurationProvider = newGameManager;
             characterPreviewPanel.ReceiveOpenWindowNotification();
+            characterPreviewPanel.ReloadUnit();
 
             //Debug.Log("Preview Unit Ready: " + characterCreatorManager?.PreviewUnitController?.CameraTargetReady);
 

@@ -6,11 +6,17 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class MainMenuController : WindowContentController {
+    public class MainMenuPanel : WindowContentController {
+
+        [Header("Main Menu")]
+
+        [SerializeField]
+        private HighlightButton playOnlineButton = null;
+
+        [SerializeField]
+        private HighlightButton playOfflineButton = null;
 
         /*
-        [SerializeField]
-        private HighlightButton playButton = null;
 
         [SerializeField]
         private HighlightButton settingsButton = null;
@@ -39,6 +45,20 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             uIManager = systemGameManager.UIManager;
+        }
+
+        public override void ProcessOpenWindowNotification() {
+            base.ProcessOpenWindowNotification();
+            if (systemConfigurationManager.AllowOfflinePlay == true) {
+                playOfflineButton.gameObject.SetActive(true);
+            } else {
+                playOfflineButton.gameObject.SetActive(false);
+            }
+            if (systemConfigurationManager.AllowOnlinePlay == true) {
+                playOnlineButton.gameObject.SetActive(true);
+            } else {
+                playOnlineButton.gameObject.SetActive(false);
+            }
         }
 
         public void PlayMenu() {
