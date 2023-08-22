@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class LoginFailedPanelController : WindowContentController {
+    public class LoginFailedPanel : WindowContentController {
 
         /*
         [SerializeField]

@@ -9,6 +9,8 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class NetworkManagerClient : ConfiguredMonoBehaviour {
 
+        public event Action<string> OnClientVersionFailure = delegate { };
+
         private string username = string.Empty;
         private string password = string.Empty;
         
@@ -111,9 +113,18 @@ namespace AnyRPG {
             uIManager.disconnectedWindow.OpenWindow();
         }
 
-        public void ProcessLoginFailure() {
-            Debug.Log($"NetworkManagerClient.ProcessLoginFailure()");
+        public void ProcessClientVersionFailure(string requiredClientVersion) {
+            Debug.Log($"NetworkManagerClient.ProcessClientVersionFailure()");
 
+            uIManager.loginInProgressWindow.CloseWindow();
+            uIManager.wrongClientVersionWindow.OpenWindow();
+            OnClientVersionFailure(requiredClientVersion);
+        }
+
+        public void ProcessAuthenticationFailure() {
+            Debug.Log($"NetworkManagerClient.ProcessAuthenticationFailure()");
+
+            uIManager.loginInProgressWindow.CloseWindow();
             uIManager.loginFailedWindow.OpenWindow();
         }
 

@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class NetworkLoginPanelController : WindowContentController {
+    public class NetworkLoginPanel : WindowContentController {
 
         [SerializeField]
         private TMP_InputField userNameInput = null;
@@ -26,6 +26,7 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            serverInput.text = systemConfigurationManager.GameServerAddress;
         }
 
         public override void SetGameManagerReferences() {
@@ -71,7 +72,6 @@ namespace AnyRPG {
         public override void ProcessOpenWindowNotification() {
             //Debug.Log("NetworkLoginPanelController.ProcessOpenWindowNotification()");
             base.ProcessOpenWindowNotification();
-            //textInput.text = playerManager.UnitController.BaseCharacter.CharacterName;
         }
 
         public override void ReceiveClosedWindowNotification() {

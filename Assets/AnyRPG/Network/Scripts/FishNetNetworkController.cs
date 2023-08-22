@@ -62,12 +62,33 @@ namespace AnyRPG {
                 return false;
             }
 
+            bool customPort = false;
+            int port = 0;
+            string serverAddress = server;
+            if (string.IsNullOrEmpty(server)) {
+                server = "localhost";
+            } else {
+                if (server.Contains(':')) {
+                    string[] splitList = server.Split(":");
+                    serverAddress = splitList[0];
+                    if (int.TryParse(splitList[1], out port)) {
+                        customPort = true;
+                    }
+                }
+            }
+
             if (clientState != LocalConnectionState.Stopped) {
                 Debug.Log("FishNetNetworkController.Login() Already connected to the server!");
                 return false;
             }
 
-            bool connectionResult = networkManager.ClientManager.StartConnection();
+            bool connectionResult;
+            if (customPort) {
+                connectionResult = networkManager.ClientManager.StartConnection(server, (ushort)port);
+            } else {
+                connectionResult = networkManager.ClientManager.StartConnection(server);
+            }
+            
             //Debug.Log($"FishNetNetworkController.Login() Result of connection attempt: {connectionResult}");
 
             return connectionResult;

@@ -602,6 +602,19 @@ namespace AnyRPG {
         [SerializeField]
         private string apiServerAddress = "https://account.anyrpg.org";
 
+        [Tooltip("This is the address (and optionally port) of the dedicated authoritative game server that all clients connect to.")]
+        [SerializeField]
+        private string gameServerAddress = "localhost";
+
+        [Tooltip("If the server and client both do not have this version, the client will be told to upgrade.")]
+        [SerializeField]
+        private string clientVersion = "1";
+
+        [Tooltip("This is the address of a web page where the latest client can be downloaded.")]
+        [SerializeField]
+        private string clientDownloadUrl = "https://www.anyrpg.org/downloads";
+
+
         // game manager references
         SystemDataFactory systemDataFactory = null;
 
@@ -762,6 +775,9 @@ namespace AnyRPG {
         public string ApiServerAddress { get => apiServerAddress; set => apiServerAddress = value; }
         public bool AllowOfflinePlay { get => allowOfflinePlay; set => allowOfflinePlay = value; }
         public bool AllowOnlinePlay { get => allowOnlinePlay; set => allowOnlinePlay = value; }
+        public string ClientDownloadUrl { get => clientDownloadUrl; set => clientDownloadUrl = value; }
+        public string ClientVersion { get => clientVersion; set => clientVersion = value; }
+        public string GameServerAddress { get => gameServerAddress; set => gameServerAddress = value; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }
 

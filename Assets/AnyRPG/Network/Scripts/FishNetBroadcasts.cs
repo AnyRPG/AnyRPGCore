@@ -6,11 +6,14 @@ namespace AnyRPG
     {
         public string Username;
         public string Password;
+        public string ClientVersion;
     }
 
     public struct ResponseBroadcast : IBroadcast
     {
-        public bool Passed;
+        public bool AuthenticationPassed;
+        public bool ClientPassed;
+        public string RequiredClientVersion;
     }
 
 }

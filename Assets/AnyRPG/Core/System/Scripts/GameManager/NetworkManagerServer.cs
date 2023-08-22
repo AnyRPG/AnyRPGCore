@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class NetworkManagerServer : ConfiguredMonoBehaviour {
 
-        public event Action<int, bool> OnAuthenticationResult = delegate { };
+        public event Action<int, bool, bool> OnAuthenticationResult = delegate { };
         public event Action<int, List<PlayerCharacterSaveData>> OnLoadCharacterList = delegate { };
         public event Action<int> OnDeletePlayerCharacter = delegate { };
         public event Action<int> OnCreatePlayerCharacter = delegate { };
@@ -98,7 +98,7 @@ namespace AnyRPG {
             if (correctPassword == true) {
                 SetClientToken(clientId, token);
             }
-            OnAuthenticationResult(clientId, correctPassword);
+            OnAuthenticationResult(clientId, true, correctPassword);
         }
 
         public void CreatePlayerCharacter(int clientId, AnyRPGSaveData anyRPGSaveData) {
