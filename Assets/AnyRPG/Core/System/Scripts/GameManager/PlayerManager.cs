@@ -170,7 +170,7 @@ namespace AnyRPG {
         }
 
         public void SetCharacterSaveData(PlayerCharacterSaveData playerCharacterSaveData) {
-            Debug.Log("PlayerManager.SetCharacterSaveData()");
+            //Debug.Log("PlayerManager.SetCharacterSaveData()");
 
             this.playerCharacterSaveData = playerCharacterSaveData;
         }
@@ -179,7 +179,8 @@ namespace AnyRPG {
         /// called when network client is stopped on the player unit
         /// </summary>
         public void ProcessStopClient() {
-            Debug.Log("PlayerManager.ProcessStopClient()");
+            //Debug.Log("PlayerManager.ProcessStopClient()");
+
             DespawnPlayerUnit();
         }
 
@@ -366,7 +367,7 @@ namespace AnyRPG {
         }
 
         public Vector3 SpawnPlayerUnit() {
-            Debug.Log("PlayerManager.SpawnPlayerUnit()");
+            //Debug.Log("PlayerManager.SpawnPlayerUnit()");
 
             cameraManager.HidePlayers();
             subscribeToTargetReady = true;
@@ -540,7 +541,7 @@ namespace AnyRPG {
         }
 
         public void SpawnPlayerConnection(PlayerCharacterSaveData playerCharacterSaveData) {
-            Debug.Log("PlayerManager.SpawnPlayerConnection()");
+            //Debug.Log("PlayerManager.SpawnPlayerConnection()");
 
             if (playerConnectionObject != null) {
                 //Debug.Log("PlayerManager.SpawnPlayerConnection(): The Player Connection is not null.  exiting.");

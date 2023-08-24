@@ -111,7 +111,7 @@ namespace AnyRPG {
         }
 
         public AnyRPGSaveData LoadSaveDataFromString(string fileContents) {
-            Debug.Log($"SaveManager.LoadSaveDataFromString({fileContents})");
+            //Debug.Log($"SaveManager.LoadSaveDataFromString({fileContents})");
 
             AnyRPGSaveData anyRPGSaveData = JsonUtility.FromJson<AnyRPGSaveData>(fileContents);
 
@@ -1340,7 +1340,7 @@ namespace AnyRPG {
 
 
         public void LoadGame(PlayerCharacterSaveData playerCharacterSaveData) {
-            Debug.Log("Savemanager.LoadGame()");
+            //Debug.Log("Savemanager.LoadGame()");
 
             ClearSharedData();
 

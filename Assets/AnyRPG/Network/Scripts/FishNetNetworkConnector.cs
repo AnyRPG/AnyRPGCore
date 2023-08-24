@@ -41,6 +41,19 @@ namespace AnyRPG {
         public void SpawnPlayer(int clientSpawnRequestId, int playerCharacterId, Transform parentTransform, NetworkConnection networkConnection = null) {
             Debug.Log($"FishNetNetworkConnector.SpawnPlayer({clientSpawnRequestId}, {playerCharacterId})");
 
+            // check if character is already spawned
+            if (networkManagerServer.PlayerCharacterIsActive(playerCharacterId)) {
+                int otherClientId = networkManagerServer.GetPlayerCharacterClientId(playerCharacterId);
+                if (otherClientId == -1) {
+                    Debug.LogError($"FishNetNetworkConnector.SpawnPlayer({ clientSpawnRequestId}, { playerCharacterId}) got invalid clientId for an active player character");
+                    return;
+                }
+                if (networkManager.ServerManager.Clients.ContainsKey(otherClientId)) {
+                    // manually stop monitoring here because the actual despawn of the unit won't happen until later after we attempt to spawn the new unit
+                    networkManagerServer.StopMonitoringPlayerUnit(playerCharacterId);
+                    networkManager.ServerManager.Clients[otherClientId].Kick(FishNet.Managing.Server.KickReason.Unset);
+                }
+            }
 
             PlayerCharacterSaveData playerCharacterSaveData = networkManagerServer.GetPlayerCharacterSaveData(networkConnection.ClientId, playerCharacterId);
             if (playerCharacterSaveData == null) {
@@ -259,14 +272,14 @@ namespace AnyRPG {
 
         [TargetRpc]
         public void SetCharacterList(NetworkConnection networkConnection, List<PlayerCharacterSaveData> playerCharacterSaveDataList) {
-            Debug.Log($"FishNetNetworkConnector.SetCharacterList({playerCharacterSaveDataList.Count})");
+            //Debug.Log($"FishNetNetworkConnector.SetCharacterList({playerCharacterSaveDataList.Count})");
 
             systemGameManager.LoadGameManager.SetCharacterList(playerCharacterSaveDataList);
         }
 
         public override void OnStartClient() {
             base.OnStartClient();
-            Debug.Log($"FishNetNetworkConnector.OnStartClient() ClientId: {networkManager.ClientManager.Connection.ClientId}");
+            //Debug.Log($"FishNetNetworkConnector.OnStartClient() ClientId: {networkManager.ClientManager.Connection.ClientId}");
 
             //systemGameManager.NetworkManager.ProcessLoginSuccess();
             systemGameManager.UIManager.ProcessLoginSuccess();
@@ -274,7 +287,7 @@ namespace AnyRPG {
 
         public override void OnStartNetwork() {
             base.OnStartNetwork();
-            Debug.Log($"FishNetNetworkConnector.OnStartNetwork()");
+            //Debug.Log($"FishNetNetworkConnector.OnStartNetwork()");
 
             FishNetNetworkController fishNetNetworkController = GameObject.FindObjectOfType<FishNetNetworkController>();
             fishNetNetworkController.RegisterConnector(this);
@@ -285,7 +298,7 @@ namespace AnyRPG {
             //Debug.Log($"FishNetNetworkConnector.OnStartServer()");
 
             // on server gameMode should always bet set to network
-            Debug.Log($"FishNetNetworkConnector.OnStartServer(): setting gameMode to network");
+            //Debug.Log($"FishNetNetworkConnector.OnStartServer(): setting gameMode to network");
             systemGameManager.SetGameMode(GameMode.Network);
         }
     }

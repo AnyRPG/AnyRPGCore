@@ -102,7 +102,8 @@ namespace AnyRPG {
         }
 
         public NamePlateController AddNamePlate(NamePlateUnit interactable, bool usePositionOffset) {
-            //Debug.Log("NamePlateManager.AddNamePlate(" + interactable.gameObject.name + ")");
+            //Debug.Log($"NamePlateManager.AddNamePlate({interactable.gameObject.name})");
+
             if (namePlates.ContainsKey(interactable) == false) {
                 return SpawnNamePlate(interactable, usePositionOffset);
             }
@@ -111,12 +112,19 @@ namespace AnyRPG {
         }
 
         public void RemoveNamePlate(NamePlateUnit namePlateUnit) {
-            //Debug.Log("NamePlatemanager.RemoveNamePlate(" + namePlateUnit.DisplayName + ")");
+            //Debug.Log($"NamePlatemanager.RemoveNamePlate({namePlateUnit.gameObject.name})");
+
             if (namePlates.ContainsKey(namePlateUnit)) {
+                //Debug.Log($"NamePlatemanager.RemoveNamePlate({namePlateUnit.gameObject.name}) namePlates contains key");
                 if (namePlates[namePlateUnit] != null && namePlates[namePlateUnit].gameObject != null) {
+                    namePlates[namePlateUnit].OnSendObjectToPoolManual();
                     objectPooler.ReturnObjectToPool(namePlates[namePlateUnit].gameObject);
+                } else {
+                    //Debug.Log($"NamePlatemanager.RemoveNamePlate({namePlateUnit.gameObject.name}) could not find nameplate gameobject");
                 }
                 namePlates.Remove(namePlateUnit);
+            } else {
+                //Debug.Log($"NamePlatemanager.RemoveNamePlate({namePlateUnit.gameObject.name}) namePlates did not contain key");
             }
         }
 

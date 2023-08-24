@@ -165,7 +165,8 @@ namespace AnyRPG {
         }
 
         public virtual void RemoveNamePlate() {
-            //Debug.Log(namePlateUnit.gameObject.name + ".BasenamePlateController.RemoveNamePlate()");
+            //Debug.Log($"{namePlateUnit.gameObject.name}.BasenamePlateController.RemoveNamePlate()");
+
             namePlateManager.RemoveNamePlate(namePlateUnit);
         }
 

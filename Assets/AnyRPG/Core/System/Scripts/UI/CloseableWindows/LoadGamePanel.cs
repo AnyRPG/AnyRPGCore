@@ -80,7 +80,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveClosedWindowNotification() {
-            Debug.Log("LoadGamePanel.RecieveClosedWindowNotification()");
+            //Debug.Log("LoadGamePanel.RecieveClosedWindowNotification()");
 
             characterPreviewPanel.OnUnitCreated -= HandleUnitCreated;
             loadGameManager.OnLoadCharacterList -= HandleLoadCharacterList;
@@ -137,7 +137,7 @@ namespace AnyRPG {
         }
 
         public void ShowSavedGame(LoadGameButton loadButton) {
-            Debug.Log($"LoadGamePanel.ShowSavedGame({loadButton.gameObject.name})");
+            //Debug.Log($"LoadGamePanel.ShowSavedGame({loadButton.gameObject.name})");
 
             selectedLoadGameButton = loadButton;
 
@@ -252,7 +252,7 @@ namespace AnyRPG {
         */
 
         public void LoadGame() {
-            Debug.Log("LoadGamePanel.LoadGame()");
+            //Debug.Log("LoadGamePanel.LoadGame()");
             if (selectedLoadGameButton != null) {
                 // this variable will be set to null in the Close() call so save the property we need first
                 PlayerCharacterSaveData playerCharacterSaveData = selectedLoadGameButton.PlayerCharacterSaveData;

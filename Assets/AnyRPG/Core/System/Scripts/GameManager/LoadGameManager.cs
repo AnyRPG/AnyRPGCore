@@ -66,7 +66,7 @@ namespace AnyRPG {
 
 
         public void SetSavedGame(PlayerCharacterSaveData saveData) {
-            Debug.Log("LoadGameManager.SetSavedGame()");
+            //Debug.Log("LoadGameManager.SetSavedGame()");
 
             playerCharacterSaveData = saveData;
             capabilityConsumerSnapshot = saveManager.GetCapabilityConsumerSnapshot(playerCharacterSaveData.SaveData);
@@ -95,7 +95,7 @@ namespace AnyRPG {
 
 
         public void LoadGame(PlayerCharacterSaveData playerCharacterSaveData) {
-            Debug.Log("LoadGameManager.LoadGame()");
+            //Debug.Log("LoadGameManager.LoadGame()");
 
             //if (systemGameManager.GameMode == GameMode.Local) {
             saveManager.LoadGame(playerCharacterSaveData);

@@ -195,6 +195,7 @@ namespace AnyRPG {
 
         public void RemoveNamePlate() {
             //Debug.Log($"{gameObject.name}.NamePlateUnit.RemoveNamePlate()");
+
             namePlateController?.RemoveNamePlate();
             namePlateReady = false;
         }

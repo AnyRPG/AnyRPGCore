@@ -71,7 +71,7 @@ namespace AnyRPG
         /// </summary>
         private void ClientManager_OnClientConnectionState(ClientConnectionStateArgs args)
         {
-            Debug.Log($"FishNetPasswordAuthenticator.ClientManager_OnClientConnectionState(): {args.ConnectionState}");
+            //Debug.Log($"FishNetPasswordAuthenticator.ClientManager_OnClientConnectionState(): {args.ConnectionState}");
 
             /* If anything but the started state then exit early.
              * Only try to authenticate on started state. The server

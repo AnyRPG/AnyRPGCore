@@ -744,6 +744,7 @@ namespace AnyRPG {
         /// </summary>
         private void EnablePlayer() {
             //Debug.Log($"{gameObject.name}.UnitController.EnablePlayer()");
+
             InitializeNamePlateController();
 
             unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultPlayerUnitLayer);
@@ -881,7 +882,7 @@ namespace AnyRPG {
         }
 
         public void Despawn(float delayTime = 0f, bool addSystemDefaultTime = true, bool forceDespawn = false) {
-            Debug.Log($"{gameObject.name}.UnitController.Despawn({delayTime}, {addSystemDefaultTime}, {forceDespawn})");
+            //Debug.Log($"{gameObject.name}.UnitController.Despawn({delayTime}, {addSystemDefaultTime}, {forceDespawn})");
 
             if (forceDespawn == true) {
                 DespawnImmediate();
@@ -917,6 +918,7 @@ namespace AnyRPG {
 
         private void DespawnImmediate() {
             //Debug.Log($"{gameObject.name}.UnitController.DespawnImmediate()");
+
             despawning = true;
             unitEventController.NotifyOnDespawn(this);
 

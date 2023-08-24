@@ -47,13 +47,17 @@ namespace AnyRPG {
             SubscribeToUnitEvents();
         }
 
+        /*
         public void HandleDespawn(UnitController unitController) {
             networkManagerServer.StopMonitoringPlayerUnit(playerCharacterSaveData.PlayerCharacterId);
         }
+        */
 
+        
         private void SubscribeToUnitEvents() {
-            unitController.UnitEventController.OnDespawn += HandleDespawn;
+            //unitController.UnitEventController.OnDespawn += HandleDespawn;
         }
+        
 
         public void StopMonitoring() {
             unitController.OnCameraTargetReady -= HandleCameraTargetReady;

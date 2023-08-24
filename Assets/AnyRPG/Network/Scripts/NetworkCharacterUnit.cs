@@ -89,12 +89,6 @@ namespace AnyRPG {
             OnCompleteCharacterRequest();
         }
 
-        public override void OnStopClient() {
-            base.OnStopClient();
-            Debug.Log($"{gameObject.name}.NetworkCharacterUnit.OnStopClient()");
-            systemGameManager.NetworkManagerClient.ProcessStopClient(unitController);
-        }
-
         public override void OnStartClient() {
             base.OnStartClient();
             //Debug.Log($"{gameObject.name}.NetworkCharacterUnit.OnStartClient()");
@@ -105,6 +99,12 @@ namespace AnyRPG {
             }
             CompleteCharacterRequest(base.IsOwner);
             //systemGameManager.CharacterManager.CompleteCharacterRequest(gameObject, spawnRequestId, base.isOwner);
+        }
+
+        public override void OnStopClient() {
+            base.OnStopClient();
+            Debug.Log($"{gameObject.name}.NetworkCharacterUnit.OnStopClient()");
+            systemGameManager.NetworkManagerClient.ProcessStopClient(unitController);
         }
 
         public override void OnStartServer() {
@@ -119,8 +119,15 @@ namespace AnyRPG {
             //systemGameManager.CharacterManager.CompleteCharacterRequest(gameObject, serverRequestId, false);
         }
 
+        public override void OnStopServer() {
+            base.OnStopClient();
+            //Debug.Log($"{gameObject.name}.NetworkCharacterUnit.OnStopServer()");
+
+            systemGameManager.NetworkManagerServer.ProcessStopServer(unitController);
+        }
+
         void OnDisable() {
-            Debug.Log($"{gameObject.name}.NetworkCharacterUnit.OnDisable()");
+            //Debug.Log($"{gameObject.name}.NetworkCharacterUnit.OnDisable()");
         }
 
     }

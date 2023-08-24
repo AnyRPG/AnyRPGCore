@@ -85,7 +85,7 @@ PrefabInstance:
     - target: {fileID: 7989242567668304555, guid: ba09f14eb0109ba459f4520b82c3fadc,
         type: 3}
       propertyPath: m_UUID
-      value: 654456ac-f412-4d31-949e-82cabdfac09b
+      value: f04636ea-f8c9-4cbc-9516-bb7e3e829814
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba09f14eb0109ba459f4520b82c3fadc, type: 3}
@@ -154,7 +154,15 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 8873413205694323065}
   _networkObjectCache: {fileID: 8873413205694323065}
-  spawnRequestId: 0
+  clientSpawnRequestId: 0
+  serverRequestId: 0
+  unitProfileName: 
+  unitLevel: 0
+  unitControllerMode: 0
+  characterAppearanceData:
+    appearanceString: 
+    swappableMeshSaveDataList: []
+  characterName: 
 --- !u!114 &8873413205694323065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,7 +189,7 @@ MonoBehaviour:
     LocalScale: {x: 1, y: 1, z: 1}
   _isNetworked: 1
   _isGlobal: 0
-  _initializeOrder: 0
+  _initializeOrder: -1
   _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
   <PrefabId>k__BackingField: 2

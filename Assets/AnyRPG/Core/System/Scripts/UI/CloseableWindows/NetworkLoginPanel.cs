@@ -27,6 +27,7 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             serverInput.text = systemConfigurationManager.GameServerAddress;
+            passwordInput.inputType = TMP_InputField.InputType.Password;
         }
 
         public override void SetGameManagerReferences() {

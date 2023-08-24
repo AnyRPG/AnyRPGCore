@@ -58,13 +58,13 @@ namespace AnyRPG {
         }
 
         public void LoadScene(string sceneName) {
-            Debug.Log($"NetworkManagerClient.LoadScene({sceneName})");
+            //Debug.Log($"NetworkManagerClient.LoadScene({sceneName})");
 
             networkController.LoadScene(sceneName);
         }
 
         public void SpawnPlayer(int playerCharacterId, CharacterRequestData characterRequestData, Transform parentTransform) {
-            Debug.Log($"NetworkManagerClient.SpawnPlayer({playerCharacterId})");
+            //Debug.Log($"NetworkManagerClient.SpawnPlayer({playerCharacterId})");
 
             if (characterRequestData.characterConfigurationRequest.unitProfile.UnitPrefabProps.NetworkUnitPrefab == null) {
                 Debug.LogWarning($"NetworkManagerClient.SpawnPlayer({characterRequestData.characterConfigurationRequest.unitProfile.ResourceName}) On UnitProfile Network Unit Prefab is null ");
@@ -96,7 +96,10 @@ namespace AnyRPG {
             Debug.Log($"NetworkManagerClient.ProcessStopConnection()");
             systemGameManager.SetGameMode(GameMode.Local);
             if (levelManager.GetActiveSceneNode() != systemConfigurationManager.MainMenuSceneNode) {
-                uIManager.AddPopupWindowToQueue(uIManager.disconnectedWindow);
+                if (isLoggingInOrOut == false) {
+                    uIManager.AddPopupWindowToQueue(uIManager.disconnectedWindow);
+                }
+                isLoggingInOrOut = false;
                 levelManager.LoadMainMenu();
                 return;
             }

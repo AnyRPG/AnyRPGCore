@@ -137,7 +137,7 @@ namespace AnyRPG {
         }
 
         public void SavePlayerCharacter(int clientId, string token, int playerCharacterId, AnyRPGSaveData saveData) {
-            Debug.Log($"GameServerClient.SavePlayerCharacter({clientId}, {token}, {playerCharacterId})");
+            //Debug.Log($"GameServerClient.SavePlayerCharacter({clientId}, {token}, {playerCharacterId})");
 
             SavePlayerCharacterRequest savePlayerCharacterRequest = new SavePlayerCharacterRequest(playerCharacterId, saveData.playerName, saveData);
 
@@ -145,7 +145,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator SavePlayerCharacterEnumerator(int clientId, string token, SavePlayerCharacterRequest savePlayerCharacterRequest) {
-            Debug.Log($"GameServerClient.SavePlayerCharacterEnumerator({token}, {savePlayerCharacterRequest.Id})");
+            //Debug.Log($"GameServerClient.SavePlayerCharacterEnumerator({token}, {savePlayerCharacterRequest.Id})");
 
             string requestURL = $"{serverAddress}/{savePlayerCharacterPath}";
             var payload = JsonUtility.ToJson(savePlayerCharacterRequest);
@@ -158,7 +158,7 @@ namespace AnyRPG {
                 webRequest.SetRequestHeader("Authorization", $"Bearer {token}");
                 webRequest.uploadHandler.contentType = "application/json";
                 yield return webRequest.SendWebRequest();
-                Debug.Log($"GameServerClient.SavePlayerCharacterEnumerator() status code: {webRequest.responseCode} body: {webRequest.downloadHandler.text}");
+                //Debug.Log($"GameServerClient.SavePlayerCharacterEnumerator() status code: {webRequest.responseCode} body: {webRequest.downloadHandler.text}");
 
                 /*
                 if (webRequest.responseCode != (long)HttpStatusCode.OK) {
@@ -205,13 +205,13 @@ namespace AnyRPG {
         }
 
         public void LoadCharacterList(int clientId, string token) {
-            Debug.Log($"GameServerClient.LoadCharacterList({token})");
+            //Debug.Log($"GameServerClient.LoadCharacterList({token})");
 
             networkManagerServer.StartCoroutine(LoadCharacterListEnumerator(clientId, token));
         }
 
         public IEnumerator LoadCharacterListEnumerator(int clientId, string token) {
-            Debug.Log($"GameServerClient.LoadCharacterListEnumerator({token})");
+            //Debug.Log($"GameServerClient.LoadCharacterListEnumerator({token})");
 
             string requestURL = $"{serverAddress}/{GetPlayerCharactersPath}";
             string payload = string.Empty;
@@ -224,7 +224,7 @@ namespace AnyRPG {
                 webRequest.SetRequestHeader("Authorization", $"Bearer {token}");
                 webRequest.uploadHandler.contentType = "application/json";
                 yield return webRequest.SendWebRequest();
-                Debug.Log($"GameServerClient.GetLoginTokenEnumerator() status code: {webRequest.responseCode} body: {webRequest.downloadHandler.text}");
+                //Debug.Log($"GameServerClient.GetLoginTokenEnumerator() status code: {webRequest.responseCode} body: {webRequest.downloadHandler.text}");
                 
                 if (webRequest.responseCode != (long)HttpStatusCode.OK) {
                     //networkManagerServer.ProcessLoginResponse(clientId, false, string.Empty);

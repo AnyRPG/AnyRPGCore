@@ -165,6 +165,14 @@ namespace AnyRPG {
         public void ReturnObjectToPool(GameObject pooledGameObject) {
             //Debug.Log($"ObjectPooler.ReturnObjectToPool({pooledGameObject.name}) instanceID: {pooledGameObject.GetInstanceID()}");
 
+            /*
+            if (pooledGameObject.activeInHierarchy == false) {
+                Debug.Log($"ObjectPooler.ReturnObjectToPool({pooledGameObject.name}) instanceID: {pooledGameObject.GetInstanceID()} RETURNING INACTIVE OBJECT");
+            } else {
+                Debug.Log($"ObjectPooler.ReturnObjectToPool({pooledGameObject.name}) instanceID: {pooledGameObject.GetInstanceID()} RETURNING ACTIVE OBJECT");
+            }
+            */
+
             if (pooledGameObject == null) {
                 return;
             }

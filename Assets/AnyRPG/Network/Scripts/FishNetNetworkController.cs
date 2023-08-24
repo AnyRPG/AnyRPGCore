@@ -26,6 +26,8 @@ namespace AnyRPG {
 
         // game manager references
         private LevelManager levelManager = null;
+        private NetworkManagerClient networkManagerClient = null;
+        private NetworkManagerServer networkManagerServer = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -53,6 +55,8 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             levelManager = systemGameManager.LevelManager;
+            networkManagerServer = systemGameManager.NetworkManagerServer;
+            networkManagerClient = systemGameManager.NetworkManagerClient;
         }
 
         public override bool Login(string username, string password, string server) {
@@ -119,8 +123,12 @@ namespace AnyRPG {
             //}
         }
 
-        private void HandleRemoteConnectionState(NetworkConnection arg1, RemoteConnectionStateArgs arg2) {
-            //Debug.Log($"FishNetNetworkController.HandleRemoteConnectionState({arg2.ConnectionState.ToString()})");
+        private void HandleRemoteConnectionState(NetworkConnection networkConnection, RemoteConnectionStateArgs args) {
+            Debug.Log($"FishNetNetworkController.HandleRemoteConnectionState({args.ConnectionState.ToString()})");
+
+            if (args.ConnectionState == RemoteConnectionState.Stopped) {
+                networkManagerServer.ProcessClientDisconnect(networkConnection.ClientId);
+            }
         }
 
         private void HandleClientKick(NetworkConnection arg1, int arg2, KickReason kickReason) {
@@ -146,12 +154,6 @@ namespace AnyRPG {
                 //InstantiateNetworkConnector();
             } else if (clientState == LocalConnectionState.Stopping) {
                 Debug.Log("FishNetNetworkController.OnClientConnectionState() Disconnected from server. Stopping");
-                //systemGameManager.SetGameMode(GameMode.Local);
-                /*
-                if (levelManager.GetActiveSceneNode() != systemConfigurationManager.MainMenuSceneNode) {
-                    levelManager.LoadMainMenu();
-                }
-                */
             } else if (clientState == LocalConnectionState.Stopped) {
                 Debug.Log("FishNetNetworkController.OnClientConnectionState() Disconnected from server. Setting mode to local");
                 systemGameManager.NetworkManagerClient.ProcessStopConnection();
@@ -216,14 +218,14 @@ namespace AnyRPG {
         */
 
         public override void SpawnPlayer(int playerCharacterId, CharacterRequestData characterRequestData, Transform parentTransform) {
-            Debug.Log($"FishNetNetworkController.SpawnPlayer({characterRequestData.characterConfigurationRequest.unitProfile.ResourceName})");
+            //Debug.Log($"FishNetNetworkController.SpawnPlayer({characterRequestData.characterConfigurationRequest.unitProfile.ResourceName})");
 
             networkConnector.SpawnPlayer(characterRequestData.spawnRequestId, playerCharacterId, parentTransform);
             //return null;
         }
 
         public override GameObject SpawnModelPrefab(int spawnRequestId, GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward) {
-            Debug.Log($"FishNetNetworkController.SpawnModelPrefab({spawnRequestId})");
+            //Debug.Log($"FishNetNetworkController.SpawnModelPrefab({spawnRequestId})");
 
             networkConnector.SpawnModelPrefab(spawnRequestId, prefab, parentTransform, position, forward);
             return null;

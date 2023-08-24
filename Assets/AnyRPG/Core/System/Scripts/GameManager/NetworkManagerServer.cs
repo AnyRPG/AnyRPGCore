@@ -20,6 +20,7 @@ namespace AnyRPG {
         // cached list of player character save data from client lookups used for loading games
         private Dictionary<int, Dictionary<int, PlayerCharacterSaveData>> playerCharacterDataDict = new Dictionary<int, Dictionary<int, PlayerCharacterSaveData>>();
 
+        // playerCharacterId
         private Dictionary<int, PlayerCharacterMonitor> activePlayerCharacters = new Dictionary<int, PlayerCharacterMonitor>();
 
         private GameServerClient gameServerClient = null;
@@ -36,11 +37,16 @@ namespace AnyRPG {
         public void SetClientToken(int clientId, string token) {
             Debug.Log($"NetworkManagerServer.SetClientToken({clientId}, {token})");
 
-            clientTokens.Add(clientId, token);
+            if (clientTokens.ContainsKey(clientId)) {
+                Debug.Log($"NetworkManagerServer.SetClientToken({clientId}, {token}) Client tokens contained key");
+                clientTokens[clientId] = token;
+            } else {
+                clientTokens.Add(clientId, token);
+            }
         }
 
         public void OnSetGameMode(GameMode gameMode) {
-            Debug.Log($"NetworkManagerServer.OnSetGameMode({gameMode})");
+            //Debug.Log($"NetworkManagerServer.OnSetGameMode({gameMode})");
             
             if (gameMode == GameMode.Network) {
                 // create instance of GameServerClient
@@ -129,6 +135,18 @@ namespace AnyRPG {
             gameServerClient.DeletePlayerCharacter(clientId, clientTokens[clientId], playerCharacterId);
         }
 
+        public void ProcessStopServer(UnitController unitController) {
+            Debug.Log($"NetworkManagerServer.ProcessStopServer({unitController.gameObject.name})");
+
+            foreach (int playerCharacterId in activePlayerCharacters.Keys) {
+                if (activePlayerCharacters[playerCharacterId].unitController == unitController) {
+                    StopMonitoringPlayerUnit(playerCharacterId);
+                    unitController.Despawn(0f, false, true);
+                    break;
+                }
+            }
+        }
+
         public void ProcessDeletePlayerCharacterResponse(int clientId) {
             Debug.Log($"NetworkManagerServer.ProcessDeletePlayerCharacterResponse({clientId})");
 
@@ -163,6 +181,17 @@ namespace AnyRPG {
             //return playerCharacterSaveDataList;
         }
 
+        public bool PlayerCharacterIsActive(int playerCharacterId) {
+            return activePlayerCharacters.ContainsKey(playerCharacterId);
+        }
+
+        public int GetPlayerCharacterClientId(int playerCharacterId) {
+            if (activePlayerCharacters.ContainsKey(playerCharacterId)) {
+                return activePlayerCharacters[playerCharacterId].clientId;
+            }
+            return -1;
+        }
+
         public void MonitorPlayerUnit(int clientId,  PlayerCharacterSaveData playerCharacterSaveData, UnitController unitController) {
             activePlayerCharacters.Add(playerCharacterSaveData.PlayerCharacterId, new PlayerCharacterMonitor(
                 systemGameManager,
@@ -173,6 +202,8 @@ namespace AnyRPG {
         }
 
         public void StopMonitoringPlayerUnit(int playerCharacterId) {
+            Debug.Log($"NetworkManagerServer.StopMonitoringPlayerUnit({playerCharacterId})");
+
             if (activePlayerCharacters.ContainsKey(playerCharacterId)) {
                 activePlayerCharacters[playerCharacterId].StopMonitoring();
                 // flush data to database before stop monitoring
@@ -221,6 +252,14 @@ namespace AnyRPG {
                 return clientTokens[clientId];
             }
             return string.Empty;
+        }
+
+        public void ProcessClientDisconnect(int clientId) {
+            Debug.Log($"NetworkManagerServer.ProcessClientDisconnect({clientId})");
+
+            if (clientTokens.ContainsKey(clientId)) {
+                clientTokens.Remove(clientId);
+            }
         }
 
     }

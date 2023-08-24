@@ -91,7 +91,8 @@ namespace AnyRPG {
         }
 
         private void OnEnable() {
-            //Debug.Log("NamePlateController.OnEnable()");
+            //Debug.Log($"NamePlateController.OnEnable() InstanceId: {GetInstanceID()}");
+
             /*
             CreateEventSubscriptions();
             HideSpeechBubble();
@@ -99,7 +100,7 @@ namespace AnyRPG {
         }
 
         private void CreateEventSubscriptions() {
-            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.CreateEventSubscriptions()");
+            //Debug.Log($"{unitNamePlateController.NamePlateUnit.gameObject.name}.NamePlateController.CreateEventSubscriptions() InstanceId: {GetInstanceID()}");
 
             if (eventSubscriptionsInitialized) {
                 return;
@@ -113,7 +114,7 @@ namespace AnyRPG {
         }
 
         private void CleanupEventSubscriptions() {
-            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.CleanupEventSubscriptions()");
+            Debug.Log($"{unitNamePlateController.NamePlateUnit.gameObject.name}.NamePlateController.CleanupEventSubscriptions() InstanceId: {GetInstanceID()}");
 
             if (!eventSubscriptionsInitialized) {
                 return;
@@ -147,13 +148,15 @@ namespace AnyRPG {
         }
 
         public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
-            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.HandlePlayerUnitSpawn()");
+            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.HandlePlayerUnitSpawn() instanceId: {GetInstanceID()}");
 
             ProcessPlayerUnitSpawn();
         }
 
 
         public void ProcessPlayerUnitSpawn() {
+            //Debug.Log($"NamePlateController.ProcessPlayerUnitSpawn() instanceId: {GetInstanceID()}");
+
             CreatePlayerEventSubscriptions();
             SetFactionColor();
         }
@@ -284,12 +287,14 @@ namespace AnyRPG {
         }
 
         public void SetNamePlateUnit(NamePlateUnit namePlateUnit, bool usePositionOffset) {
-            //Debug.Log("NamePlateController.SetNamePlateUnit(" + namePlateUnit.DisplayName + ") setting namePlateUnit on nameplate in instanceid" + GetInstanceID().ToString());
+            //Debug.Log($"NamePlateController.SetNamePlateUnit({namePlateUnit.gameObject.name} setting namePlateUnit on nameplate in instanceid {GetInstanceID()}");
+
+            unitNamePlateController = namePlateUnit.NamePlateController;
+
             // moved code here from awake since a nameplate always has to be initialized so this method will always be called before anything else
             CreateEventSubscriptions();
             HideSpeechBubble();
 
-            unitNamePlateController = namePlateUnit.NamePlateController;
             if (usePositionOffset == false) {
                 positionOffset = 0f;
             }
@@ -560,10 +565,13 @@ namespace AnyRPG {
             }
         }
 
-        // name plates can be disabled by hiding the ui with the '.' button, so this should only be done when sending them to the pool
-        //public void OnDisable() {
-        public void OnSendObjectToPool() {
-            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.OnSendObjectToPool()");
+        public void OnDisable() {
+            Debug.Log($"NamePlateController.OnDisable() InstanceId: {GetInstanceID()}");
+        }
+
+        // name plates can be disabled by hiding the ui with the '.' button, so this cleanup should only be done when sending them to the pool
+        public void OnSendObjectToPoolManual() {
+            Debug.Log($"{unitNamePlateController.NamePlateUnit.gameObject.name}.NamePlateController.OnSendObjectToPoolManual() instanceId: {GetInstanceID()}");
 
             if (SystemGameManager.IsShuttingDown) {
                 return;
