@@ -46,7 +46,7 @@ namespace AnyRPG {
         }
 
         public void OnSetGameMode(GameMode gameMode) {
-            //Debug.Log($"NetworkManagerServer.OnSetGameMode({gameMode})");
+            Debug.Log($"NetworkManagerServer.OnSetGameMode({gameMode})");
             
             if (gameMode == GameMode.Network) {
                 // create instance of GameServerClient
@@ -88,7 +88,7 @@ namespace AnyRPG {
         }
 
         public void GetLoginToken(int clientId, string username, string password) {
-            Debug.Log($"NetworkManagerServer.GetLoginToken({username}, {password})");
+            Debug.Log($"NetworkManagerServer.GetLoginToken({clientId}, {username}, {password})");
             //(bool correctPassword, string token) = gameServerClient.Login(clientId, username, password);
             gameServerClient.Login(clientId, username, password);
             //if (correctPassword == true) {

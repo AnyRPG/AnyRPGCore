@@ -6647,10 +6647,10 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 7
     m_NumAlphaKeys: 6
-  apiServerAddress: https://account.anyrpg.org
+  apiServerAddress: https://account.anymmo.org
   gameServerAddress: localhost
   clientVersion: 1
-  clientDownloadUrl: https://account.anyrpg.org
+  clientDownloadUrl: https://www.anymmo.org/downloads
 --- !u!114 &1383451363317585712
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -295,7 +295,7 @@ namespace AnyRPG {
 
         public override void OnStartServer() {
             base.OnStartServer();
-            //Debug.Log($"FishNetNetworkConnector.OnStartServer()");
+            Debug.Log($"FishNetNetworkConnector.OnStartServer()");
 
             // on server gameMode should always bet set to network
             //Debug.Log($"FishNetNetworkConnector.OnStartServer(): setting gameMode to network");

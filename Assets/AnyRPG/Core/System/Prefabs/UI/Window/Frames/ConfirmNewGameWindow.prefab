@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4759218684814125540}
   - component: {fileID: 6238625657946701999}
   m_Layer: 5
-  m_Name: ConfirmNewGameMenuWindow
+  m_Name: ConfirmNewGameWindow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27,6 +27,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5120163514250653680}
   m_Father: {fileID: 0}
@@ -49,13 +50,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e9366657eed2f441ada58dc8f743501, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dragHandle: {fileID: 0}
   contentParent: {fileID: 7883348060532690562}
-  contentPrefab: {fileID: 2382909202382707832, guid: b302e05e93c09364a8c67e99b7d2ed5d,
-    type: 3}
-  contentGameObject: {fileID: 0}
+  contentPrefab: {fileID: 0}
+  contentGameObject: {fileID: 8771664438799281761}
   windowTitle: 
   windowText: {fileID: 0}
   backGroundImage: {fileID: 0}
+  rectTransform: {fileID: 0}
+  hintBarController: {fileID: 0}
 --- !u!1 &7883348060532690562
 GameObject:
   m_ObjectHideFlags: 0
@@ -82,6 +85,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8771664438799281788}
   m_Father: {fileID: 4759218684814125540}
@@ -132,10 +136,16 @@ PrefabInstance:
     - target: {fileID: 2382909202382707832, guid: b302e05e93c09364a8c67e99b7d2ed5d,
         type: 3}
       propertyPath: m_Name
-      value: NewGamePanel
+      value: ConfirmNewGamePanel
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b302e05e93c09364a8c67e99b7d2ed5d, type: 3}
+--- !u!1 &8771664438799281761 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2382909202382707832, guid: b302e05e93c09364a8c67e99b7d2ed5d,
+    type: 3}
+  m_PrefabInstance: {fileID: 6389197328540594713}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &8771664438799281788 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2382909202382707813, guid: b302e05e93c09364a8c67e99b7d2ed5d,

@@ -6,8 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Games/NetworkGame/Scenes/NetworkGame/NetworkGame.unity
+    path: Assets/Games/AnyMMODemo/Scenes/AnyMMODemo/AnyMMODemo.unity
     guid: b7fb33761beeeed4788e336cf62749ff
+  - enabled: 1
+    path: Assets/Games/AnyMMODemo/Scenes/AnyMMODemoMainMenu/AnyMMODemoMainMenu.unity
+    guid: 6ed45b86da4feb242b6078edb8b27494
+  - enabled: 1
+    path: Assets/Games/AnyMMODemo/Scenes/AnyMMODemoZone/AnyMMODemoZone.unity
+    guid: a4e25a50af95a074d9e4de888405899c
+  - enabled: 1
+    path: Assets/Games/AnyMMODemo/Scenes/AnyMMODemoCutsceneZone/AnyMMODemoCutsceneZone.unity
+    guid: 2bf73607b2e28c14bbd71bf11f391ef1
+  - enabled: 1
+    path: Assets/Games/AnyMMODemo/Scenes/AnyMMODemoDungeon/AnyMMODemoDungeon.unity
+    guid: 920aa2cbf156e4544bbd39d771dc0be9
   - enabled: 0
     path: Assets/ALostSoul/Games/ALostSoulStoryDemo/Scenes/Game/ALostSoulStoryDemoGame/ALostSoulStoryDemoGame.unity
     guid: 0a6a387f1a640604ab86081d60dd1ead
@@ -89,10 +101,4 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/AnyRPG/Core/Games/MovementTestGame/Scenes/Content/MovementTestZone/MovementTestZone.unity
     guid: a847437ee17c7aa4f98c2d363f671f1d
-  - enabled: 1
-    path: Assets/Games/NetworkGame/Scenes/NetworkGameMainMenu/NetworkGameMainMenu.unity
-    guid: a419561952f4b5a4f88e457ae841763d
-  - enabled: 1
-    path: Assets/Games/NetworkGame/Scenes/NewScene/NewScene.unity
-    guid: 20a350f9bb42a7745af796a35b23fd80
   m_configObjects: {}

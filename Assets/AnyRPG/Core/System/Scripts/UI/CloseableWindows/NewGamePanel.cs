@@ -74,6 +74,9 @@ namespace AnyRPG {
         [SerializeField]
         private HighlightButton specializationButton = null;
 
+        [SerializeField]
+        private TMP_Text startButtonText = null;
+
         private Dictionary<GameObject, AppearancePanel> appearanceEditorPanels = new Dictionary<GameObject, AppearancePanel>();
         private Dictionary<Type, GameObject> appearanceEditorPanelTypes = new Dictionary<Type, GameObject>();
         private AppearancePanel currentAppearanceEditorPanel = null;
@@ -244,6 +247,12 @@ namespace AnyRPG {
             }
 
             characterCreatorManager.EnableLight();
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                startButtonText.text = "Start Game";
+            } else {
+                startButtonText.text = "Create Character";
+            }
         }
 
         public void ClearButtons() {

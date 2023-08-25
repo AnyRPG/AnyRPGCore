@@ -343,7 +343,7 @@ namespace AnyRPG {
         }
 
         public void SetGameMode(GameMode gameMode) {
-            //Debug.Log($"SystemGameManager.SetGameMode({gameMode})");
+            Debug.Log($"SystemGameManager.SetGameMode({gameMode})");
             this.gameMode = gameMode;
             networkManagerServer.OnSetGameMode(gameMode);
         }
@@ -352,6 +352,8 @@ namespace AnyRPG {
         /// configure all classes of type AutoConfiguredMonoBehavior in the scene
         /// </summary>
         public void AutoConfigureMonoBehaviours() {
+            Debug.Log($"SystemGameManager.AutoConfigureMonoBehaviours()");
+
             foreach (AutoConfiguredMonoBehaviour autoConfiguredMonoBehaviour in GameObject.FindObjectsOfType<AutoConfiguredMonoBehaviour>()) {
                 autoConfiguredMonoBehaviour.AutoConfigure(this);
             }

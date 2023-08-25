@@ -228,7 +228,8 @@ namespace AnyRPG {
         /// <param name="newScene"></param>
         /// <param name="loadSceneMode"></param>
         public void OnLoadLevel(Scene newScene, LoadSceneMode loadSceneMode) {
-            //Debug.Log($"Levelmanager.OnLoadLevel({newScene.name}): Finding Scene Settings. SceneManager.GetActiveScene().name: {SceneManager.GetActiveScene().name}");
+            Debug.Log($"Levelmanager.OnLoadLevel({newScene.name}): Finding Scene Settings. SceneManager.GetActiveScene().name: {SceneManager.GetActiveScene().name}");
+
             if (!levelManagerInitialized) {
                 //Debug.Log("Levelmanager.OnLoadLevel(): Start has not run yet, returning!");
                 return;

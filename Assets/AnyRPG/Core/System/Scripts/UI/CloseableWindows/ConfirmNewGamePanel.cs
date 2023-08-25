@@ -2,10 +2,16 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class NewGameConfirmMenuController : WindowContentController {
+    public class ConfirmNewGamePanel : WindowContentController {
+
+        [Header("Confirm New Game")]
+
+        [SerializeField]
+        private TMP_Text messageText = null;
 
         [SerializeField]
         private GameObject divider = null;
@@ -47,6 +53,12 @@ namespace AnyRPG {
             } else {
                 divider.SetActive(true);
                 confirmGameButton.gameObject.SetActive(false);
+            }
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                messageText.text = "Start a new game?";
+            } else {
+                messageText.text = "Create new character?";
             }
         }
 

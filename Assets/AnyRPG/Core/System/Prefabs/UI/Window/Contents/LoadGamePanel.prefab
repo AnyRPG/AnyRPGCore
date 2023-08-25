@@ -36,11 +36,11 @@ RectTransform:
   m_Children:
   - {fileID: 8002938979642740669}
   m_Father: {fileID: 6128172153887052996}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 780, y: -113}
+  m_AnchoredPosition: {x: 400, y: -113}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &587849407044145373
@@ -609,11 +609,11 @@ RectTransform:
   m_Children:
   - {fileID: 5139942057287678484}
   m_Father: {fileID: 6128172153887052996}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1160, y: -113}
+  m_AnchoredPosition: {x: 780, y: -113}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &6609082746554230414
@@ -1388,7 +1388,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1540, y: -113}
+  m_AnchoredPosition: {x: 1160, y: -113}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &9140530246540889840
@@ -2824,9 +2824,9 @@ RectTransform:
   m_Children:
   - {fileID: 2151063822202330558}
   - {fileID: 1516284632350487887}
-  - {fileID: 9018499298044460082}
   - {fileID: 4231810503459451557}
   - {fileID: 9049204028029276007}
+  - {fileID: 9018499298044460082}
   - {fileID: 6409952090725525273}
   m_Father: {fileID: 7389602725390465841}
   m_RootOrder: 2
@@ -3303,7 +3303,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Load
+  m_text: Start
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9ff1637cc53af0c4f9d93e4706904ea7, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 9ff1637cc53af0c4f9d93e4706904ea7, type: 2}
@@ -3388,7 +3388,7 @@ GameObject:
   - component: {fileID: 8171119267749175720}
   - component: {fileID: 5226171536529183247}
   m_Layer: 5
-  m_Name: LoadGameBtn_Load
+  m_Name: LoadGameBtn_Start
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3408,11 +3408,11 @@ RectTransform:
   m_Children:
   - {fileID: 9018499297676560293}
   m_Father: {fileID: 6128172153887052996}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 400, y: -113}
+  m_AnchoredPosition: {x: 1540, y: -113}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &9018499298044460086

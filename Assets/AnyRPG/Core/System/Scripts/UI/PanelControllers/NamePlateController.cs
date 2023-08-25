@@ -114,7 +114,7 @@ namespace AnyRPG {
         }
 
         private void CleanupEventSubscriptions() {
-            Debug.Log($"{unitNamePlateController.NamePlateUnit.gameObject.name}.NamePlateController.CleanupEventSubscriptions() InstanceId: {GetInstanceID()}");
+            //Debug.Log($"{unitNamePlateController.NamePlateUnit.gameObject.name}.NamePlateController.CleanupEventSubscriptions() InstanceId: {GetInstanceID()}");
 
             if (!eventSubscriptionsInitialized) {
                 return;
@@ -565,13 +565,15 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public void OnDisable() {
-            Debug.Log($"NamePlateController.OnDisable() InstanceId: {GetInstanceID()}");
+            //Debug.Log($"NamePlateController.OnDisable() InstanceId: {GetInstanceID()}");
         }
+        */
 
         // name plates can be disabled by hiding the ui with the '.' button, so this cleanup should only be done when sending them to the pool
         public void OnSendObjectToPoolManual() {
-            Debug.Log($"{unitNamePlateController.NamePlateUnit.gameObject.name}.NamePlateController.OnSendObjectToPoolManual() instanceId: {GetInstanceID()}");
+            //Debug.Log($"{unitNamePlateController.NamePlateUnit.gameObject.name}.NamePlateController.OnSendObjectToPoolManual() instanceId: {GetInstanceID()}");
 
             if (SystemGameManager.IsShuttingDown) {
                 return;

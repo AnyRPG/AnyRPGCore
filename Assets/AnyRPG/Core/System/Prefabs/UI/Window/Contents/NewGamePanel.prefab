@@ -16657,6 +16657,7 @@ MonoBehaviour:
   raceButton: {fileID: 3909684229141119487}
   classButton: {fileID: 605341228961935955}
   specializationButton: {fileID: 4556489472843252539}
+  startButtonText: {fileID: 699545410589581107}
 --- !u!114 &3027280789261577762
 MonoBehaviour:
   m_ObjectHideFlags: 0
