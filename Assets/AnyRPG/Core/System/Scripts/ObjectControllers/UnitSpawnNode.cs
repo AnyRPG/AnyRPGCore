@@ -369,13 +369,13 @@ namespace AnyRPG {
             return spawnLocation;
         }
 
-        public void ManualSpawn(int unitLevel, int extraLevels, bool dynamicLevel, UnitProfile unitProfile, UnitToughness toughness) {
+        public void ManualSpawn(int unitLevel, int extraLevels, bool dynamicLevel, UnitProfile unitProfile, UnitToughness toughness, UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.UnitSpawnNode.ManualSpawn({unitLevel}, {extraLevels}, {dynamicLevel}, {unitProfile.ResourceName})");
 
-            CommonSpawn(unitLevel, extraLevels, dynamicLevel, unitProfile, toughness);
+            CommonSpawn(unitLevel, extraLevels, dynamicLevel, unitProfile, toughness, sourceUnitController);
         }
 
-        public void Spawn() {
+        public void Spawn(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.UnitSpawnNode.Spawn(): GetMaxUnits(): {GetMaxUnits()}");
 
             if (unitProfiles.Count == 0) {
@@ -384,12 +384,12 @@ namespace AnyRPG {
             if (CanTriggerSpawn()) {
                 int spawnIndex = UnityEngine.Random.Range(0, unitProfiles.Count);
                 if (unitProfiles[spawnIndex] != null) {
-                    CommonSpawn(unitLevel, extraLevels, dynamicLevel, unitProfiles[spawnIndex], unitToughness);
+                    CommonSpawn(unitLevel, extraLevels, dynamicLevel, unitProfiles[spawnIndex], unitToughness, sourceUnitController);
                 }
             }
         }
 
-        public void CommonSpawn(int unitLevel, int extraLevels, bool dynamicLevel, UnitProfile unitProfile, UnitToughness toughness = null) {
+        public void CommonSpawn(int unitLevel, int extraLevels, bool dynamicLevel, UnitProfile unitProfile, UnitToughness toughness, UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.UnitSpawnNode.CommonSpawn({unitLevel}, {extraLevels}, {dynamicLevel}, {unitProfile.ResourceName})");
 
             // prevent a coroutine that finished during a level load from spawning a character
@@ -406,8 +406,8 @@ namespace AnyRPG {
             */
 
             int _unitLevel = unitLevel;
-            if (systemGameManager.GameMode == GameMode.Local && levelManager.IsCutscene() == false) {
-                _unitLevel = (dynamicLevel ? playerManager.UnitController.CharacterStats.Level : unitLevel) + extraLevels;
+            if (sourceUnitController != null) {
+                _unitLevel = (dynamicLevel ? sourceUnitController.CharacterStats.Level : unitLevel) + extraLevels;
             }
             CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(unitProfile);
             characterConfigurationRequest.unitLevel = _unitLevel;
@@ -567,7 +567,7 @@ namespace AnyRPG {
             // clearing the coroutine so the next round can start
             delayRoutine = null;
             if (disabled == false) {
-                Spawn();
+                Spawn(null);
             }
         }
 
@@ -680,7 +680,7 @@ namespace AnyRPG {
             }
 
             // all check passed, safe to spawn
-            Spawn();
+            Spawn(other.GetComponent<UnitController>());
         }
 
         public void SetupScriptableObjects() {

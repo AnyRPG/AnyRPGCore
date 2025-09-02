@@ -52,7 +52,7 @@ namespace AnyRPG {
 
             foreach (UnitSpawnNode unitSpawnNode in Props.UnitSpawnNodeList) {
                 if (unitSpawnNode != null) {
-                    unitSpawnNode.ManualSpawn(unitLevel, extraLevels, useDynamicLevel, unitProfile, unitToughness);
+                    unitSpawnNode.ManualSpawn(unitLevel, extraLevels, useDynamicLevel, unitProfile, unitToughness, sourceUnitController);
                 }
             }
             NotifyOnConfirmAction(sourceUnitController);
