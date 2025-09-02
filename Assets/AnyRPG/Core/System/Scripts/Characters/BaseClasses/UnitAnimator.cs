@@ -627,7 +627,7 @@ namespace AnyRPG {
         }
 
         public void ResetTrigger(string triggerName) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.ResetTrigger({triggerName})");
+            Debug.Log($"{unitController.gameObject.name}.UnitAnimator.ResetTrigger({triggerName})");
 
             if (animator != null && ParameterExists(triggerName)) {
                 animator.ResetTrigger(triggerName);
@@ -981,6 +981,7 @@ namespace AnyRPG {
         }
 
         public void SetBool(string varName, bool varValue) {
+            Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetBool({varName}, {varValue})");
 
             if (animator != null) {
                 if (ParameterExists(varName)) {
@@ -1032,7 +1033,7 @@ namespace AnyRPG {
         }
 
         public void SetTrigger(string varName) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetTrigger({varName})");
+            Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetTrigger({varName})");
 
             if (animator != null && ParameterExists(varName)) {
                 ResetTrigger(varName);

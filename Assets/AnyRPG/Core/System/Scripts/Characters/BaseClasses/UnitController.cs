@@ -1772,17 +1772,22 @@ namespace AnyRPG {
             // PUT CODE HERE TO CHECK IF THIS ACTUALLY HAS MUSIC PROFILE, OTHERWISE MOBS WITH A STRATEGY BUT NO PROFILE THAT DIE MID BOSS FIGHT CAN RESET MUSIC
 
             if (CombatStrategy != null) {
-                if (CombatStrategy.HasMusic() == true) {
+                if (CombatStrategy.HasMusic() == true && networkManagerServer.ServerModeActive == false) {
                     //Debug.Log($"{gameObject.name}.AIController.ResetCombat(): attempting to turn off fight music");
-                    AudioClip musicClip = levelManager.GetActiveSceneNode().BackgroundMusicAudio;
-                    if (musicClip != null) {
-                        //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): music profile was set");
-                        if (audioManager.MusicAudioSource.clip != musicClip) {
-                            //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): playing default music");
-                            audioManager.PlayMusic(musicClip);
+                    SceneNode sceneNode = levelManager.SceneDictionary[gameObject.scene.name];
+                    if (sceneNode != null) {
+                        AudioClip musicClip = sceneNode.BackgroundMusicAudio;
+                        if (musicClip != null) {
+                            //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): music profile was set");
+                            if (audioManager.MusicAudioSource.clip != musicClip) {
+                                //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): playing default music");
+                                audioManager.PlayMusic(musicClip);
+                            }
+                        } else {
+                            // There was no music, turn it off instead
+                            audioManager.StopMusic();
                         }
                     } else {
-                        // There was no music, turn it off instead
                         audioManager.StopMusic();
                     }
                 }
@@ -2029,7 +2034,7 @@ namespace AnyRPG {
         }
 
         public void FreezeCharacter() {
-            //Debug.Log($"{gameObject.name}.UnitController.FreezeCharacter()");
+            Debug.Log($"{gameObject.name}.UnitController.FreezeCharacter()");
 
             ApplyControlLock();
             frozen = true;
@@ -2043,7 +2048,7 @@ namespace AnyRPG {
         }
 
         public void UnFreezeCharacter() {
-            //Debug.Log($"{gameObject.name}.UnitController.UnFreezeCharacter()");
+            Debug.Log($"{gameObject.name}.UnitController.UnFreezeCharacter()");
 
             frozen = false;
             FreezeRotation();

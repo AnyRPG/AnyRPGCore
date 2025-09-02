@@ -164,7 +164,7 @@ namespace AnyRPG {
         }
 
         public override string GetSummary() {
-            Debug.Log($"{ResourceName}.Item.GetSummary() itemQualityRef: {(itemQualityRef == null ? "null" : itemQualityRef.ResourceName)} player: {(playerManager?.UnitController == null ? "null" : "not null")}");
+            //Debug.Log($"{ResourceName}.Item.GetSummary() itemQualityRef: {(itemQualityRef == null ? "null" : itemQualityRef.ResourceName)} player: {(playerManager?.UnitController == null ? "null" : "not null")}");
             return GetSummary(itemQualityRef, GetItemLevel(playerManager.UnitController.CharacterStats.Level));
         }
 

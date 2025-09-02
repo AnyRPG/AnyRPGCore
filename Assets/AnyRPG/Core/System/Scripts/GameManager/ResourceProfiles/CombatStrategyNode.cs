@@ -1,10 +1,6 @@
-using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.Serialization;
-using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
     [System.Serializable]
@@ -57,17 +53,20 @@ namespace AnyRPG {
         public List<AbilityProperties> AttackAbilityList { get => attackAbilityList; set => attackAbilityList = value; }
         public List<AbilityProperties> MaintainBuffList { get => maintainBuffList; set => maintainBuffList = value; }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            audioManager = systemGameManager.AudioManager;
+        }
+
         public void StartPhase() {
+            if (networkManagerServer.ServerModeActive == true) {
+                return;
+            }
             if (phaseMusicProfile != null) {
                 if (phaseMusicProfile.AudioClip != null) {
                     audioManager.PlayMusic(phaseMusicProfile.AudioClip);
                 }
             }
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            audioManager = systemGameManager.AudioManager;
         }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
