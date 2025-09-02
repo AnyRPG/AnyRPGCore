@@ -1184,6 +1184,8 @@ namespace AnyRPG {
         }
 
         public void PerformDeathCheck() {
+            Debug.Log($"{unitController.gameObject.name}.CharacterStats.PerformDeathCheck()");
+
             bool shouldLive = false;
             foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
                 if (powerResourceDictionary[powerResource].currentValue > 0f && powerResource.IsHealth == true) {
@@ -1346,7 +1348,7 @@ namespace AnyRPG {
         */
 
         public void Die() {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.Die()");
+            Debug.Log($"{unitController.gameObject.name}.CharacterStats.Die()");
 
             if (isAlive) {
                 isAlive = false;

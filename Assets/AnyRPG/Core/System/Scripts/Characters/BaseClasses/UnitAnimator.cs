@@ -611,7 +611,7 @@ namespace AnyRPG {
         }
 
         public void HandleDie() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.HandleDie()");
+            Debug.Log($"{unitController.gameObject.name}.UnitAnimator.HandleDie()");
 
             // add these to prevent characters from dying floating or upright
             HandleUnLevitated();
@@ -659,7 +659,7 @@ namespace AnyRPG {
         }
 
         public void HandleTakeDamage() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitAnimatior.HandleTakeDamage()");
+            Debug.Log($"{unitController.gameObject.name}.UnitAnimatior.HandleTakeDamage()");
 
             if (WaitingForCastOrAttackAnimation() == true) {
                 // only activate the take damage animation if not in the middle of a swing / cast

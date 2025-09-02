@@ -2011,6 +2011,10 @@ namespace AnyRPG {
                 return false;
             }
 
+            if (characterCombat.AggroTable.AggroTableContains(aggroTarget)) {
+                return true;
+            }
+
             // moved liveness check into EnterCombat to centralize logic because there are multiple entry points to EnterCombat
             aggroTarget.UnitController.CharacterCombat.PullIntoCombat(this);
 

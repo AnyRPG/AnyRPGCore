@@ -1895,7 +1895,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         public void HandleBeforeDieClient() {
-            //Debug.Log($"{gameObject.name}.HandleBeforeDieClient()");
+            Debug.Log($"{gameObject.name}.HandleBeforeDieClient()");
 
             unitController.CharacterStats.Die();
         }

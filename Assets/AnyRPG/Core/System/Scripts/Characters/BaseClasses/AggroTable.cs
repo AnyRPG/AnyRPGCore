@@ -93,7 +93,7 @@ namespace AnyRPG {
         /// <param name="aggroAmount"></param>
         /// return true if new entry to the table
         public bool AddToAggroTable(CharacterUnit targetCharacterUnit, int aggroAmount) {
-            //Debug.Log(baseCharacter.gameObject.name + ".AggroTable.AddToAggroTable(): target: " + targetCharacterUnit.DisplayName + "; amount: " + aggroAmount);
+            Debug.Log($"{unitController.gameObject.name}.AggroTable.AddToAggroTable({(targetCharacterUnit == null ? "null" : targetCharacterUnit.UnitController.gameObject.name)}, {aggroAmount})");
 
             if (targetCharacterUnit.UnitController.CharacterStats.IsAlive == false) {
                 return false;

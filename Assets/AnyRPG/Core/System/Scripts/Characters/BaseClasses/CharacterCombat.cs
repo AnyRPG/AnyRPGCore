@@ -624,8 +624,8 @@ namespace AnyRPG {
         }
 
         public virtual bool TakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster sourceCharacter, CombatMagnitude combatMagnitude, AttackEffectProperties abilityEffect) {
-            //public virtual bool TakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffectProperties abilityEffect) {
-            //Debug.Log($"{unitController.gameObject.name}.TakeDamage(" + damage + ", " + sourcePosition + ", " + source.name + ")");
+            Debug.Log($"{unitController.gameObject.name}.TakeDamage({damage}, {sourceCharacter.gameObject.name})");
+
             if (unitController.UnitControllerMode == UnitControllerMode.AI || unitController.UnitControllerMode == UnitControllerMode.Pet) {
                 if (unitController.CurrentState is EvadeState || unitController.CurrentState is DeathState) {
                     return false;
