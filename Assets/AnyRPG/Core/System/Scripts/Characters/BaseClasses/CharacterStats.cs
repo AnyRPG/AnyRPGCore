@@ -916,7 +916,7 @@ namespace AnyRPG {
         }
 
         public StatusEffectNode AddNewStatusEffect(StatusEffectProperties statusEffectProperties, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterStats.AddNewStatusEffect({statusEffectProperties.ResourceName}, {sourceCharacter.AbilityManager.Name})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.AddNewStatusEffect({statusEffectProperties.ResourceName}, {sourceCharacter.AbilityManager.Name})");
 
             StatusEffectNode newStatusEffectNode = new StatusEffectNode(systemGameManager);
             statusEffects.Add(statusEffectProperties.ResourceName, newStatusEffectNode);

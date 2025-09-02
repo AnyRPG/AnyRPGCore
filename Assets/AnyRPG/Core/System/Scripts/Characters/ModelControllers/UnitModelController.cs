@@ -325,6 +325,8 @@ namespace AnyRPG {
         }
 
         public void HoldWeapons() {
+            //Debug.Log($"{unitController.gameObject.name}.UnitModelController.HoldWeapons()");
+
             mecanimModelController.HoldWeapons();
         }
 

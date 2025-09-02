@@ -1246,7 +1246,7 @@ namespace AnyRPG {
         }
 
         public void AddAvailableDroppedLoot(int accountId, List<LootDrop> items) {
-            Debug.Log($"FishNetClientConnector.AddAvailableDroppedLoot({accountId}, {items.Count})");
+            //Debug.Log($"FishNetClientConnector.AddAvailableDroppedLoot({accountId}, {items.Count})");
 
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
                 Debug.Log($"FishNetClientConnector.AddAvailableDroppedLoot() could not find client id {accountId}");
@@ -1268,13 +1268,13 @@ namespace AnyRPG {
 
         [TargetRpc]
         public void AddAvailableDroppedLootClient(NetworkConnection networkConnection, List<int> lootDropIds) {
-            Debug.Log($"FishNetClientConnector.AddAvailableDroppedLootClient({networkConnection.ClientId}, count: {lootDropIds.Count})");
+            //Debug.Log($"FishNetClientConnector.AddAvailableDroppedLootClient({networkConnection.ClientId}, count: {lootDropIds.Count})");
 
             networkManagerClient.AddAvailableDroppedLoot(lootDropIds);
         }
 
         public void AdvertiseTakeLoot(int accountId, int lootDropId) {
-            Debug.Log($"FishNetClientConnector.AdvertiseTakeLoot({accountId}, {lootDropId})");
+            //Debug.Log($"FishNetClientConnector.AdvertiseTakeLoot({accountId}, {lootDropId})");
 
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
                 Debug.Log($"FishNetClientConnector.AdvertiseTakeLoot() could not find client id {accountId}");
@@ -1289,7 +1289,7 @@ namespace AnyRPG {
 
         [TargetRpc]
         public void AdvertiseTakeLootClient(NetworkConnection networkConnection, int lootDropId) {
-            Debug.Log($"FishNetClientConnector.AdvertiseTakeLootClient({networkConnection.ClientId}, {lootDropId})");
+            //Debug.Log($"FishNetClientConnector.AdvertiseTakeLootClient({networkConnection.ClientId}, {lootDropId})");
 
             networkManagerClient.AdvertiseTakeLoot(lootDropId);
         }

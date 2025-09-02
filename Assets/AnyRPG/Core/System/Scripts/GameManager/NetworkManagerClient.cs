@@ -547,19 +547,19 @@ namespace AnyRPG {
         }
 
         public void AddAvailableDroppedLoot(List<int> lootDropIds) {
-            Debug.Log($"NetworkManagerClient.AddAvailableDroppedLoot(count: {lootDropIds.Count})");
+            //Debug.Log($"NetworkManagerClient.AddAvailableDroppedLoot(count: {lootDropIds.Count})");
 
             lootManager.AddAvailableLoot(accountId, lootDropIds);
         }
 
         public void AdvertiseTakeLoot(int lootDropId) {
-            Debug.Log($"NetworkManagerClient.AdvertiseTakeLoot({lootDropId})");
+            //Debug.Log($"NetworkManagerClient.AdvertiseTakeLoot({lootDropId})");
 
             lootManager.TakeLoot(accountId, lootDropId);
         }
 
         public void RequestTakeLoot(int lootDropId) {
-            Debug.Log($"NetworkManagerClient.RequestTakeLoot({lootDropId})");
+            //Debug.Log($"NetworkManagerClient.RequestTakeLoot({lootDropId})");
 
             networkController.RequestTakeLoot(lootDropId);
         }

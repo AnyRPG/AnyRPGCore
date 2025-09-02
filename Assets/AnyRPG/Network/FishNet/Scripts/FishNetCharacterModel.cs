@@ -128,6 +128,20 @@ namespace AnyRPG {
             FindGameManager();
         }
 
+        public override void OnSpawnServer(NetworkConnection connection) {
+            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.OnSpawnServer() owner: {base.OwnerId}");
+
+            base.OnSpawnServer(connection);
+
+            HandleSpawnServerClient(connection);
+        }
+
+        [TargetRpc]
+        private void HandleSpawnServerClient(NetworkConnection networkConnection) {
+            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.HandleSpawnServerClient() owner: {base.OwnerId}");
+        }
+
+
         private void CompleteServerConfiguration() {
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.CompleteServerConfiguration() owner: {base.OwnerId}");
 

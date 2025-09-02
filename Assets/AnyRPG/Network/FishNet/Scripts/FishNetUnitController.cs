@@ -5,9 +5,7 @@ using FishNet.Object.Synchronizing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 
 namespace AnyRPG {
@@ -41,6 +39,7 @@ namespace AnyRPG {
 
         public override void OnStartClient() {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStartClient()");
+
             base.OnStartClient();
 
             Configure();
@@ -51,8 +50,8 @@ namespace AnyRPG {
                 || unitControllerMode.Value == UnitControllerMode.Pet
                 || unitControllerMode.Value == UnitControllerMode.AI) {
                 BeginCharacterRequest();
-                GetClientSaveData();
-            }else {
+                //GetClientSaveData();
+            } else {
                 BeginCharacterRequest();
                 CompleteClientCharacterRequest(null);
             }
@@ -97,6 +96,25 @@ namespace AnyRPG {
                 unitController.IsDisconnected = true;
             }
             systemGameManager.NetworkManagerServer.ProcessStopNetworkUnitServer(unitController);
+        }
+
+        public override void OnSpawnServer(NetworkConnection connection) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnSpawnServer()");
+
+            base.OnSpawnServer(connection);
+
+            HandleSpawnServerClient(connection, unitController.CharacterSaveManager.SaveData);
+        }
+
+        [TargetRpc]
+        private void HandleSpawnServerClient(NetworkConnection networkConnection, AnyRPGSaveData saveData) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnServerClient() owner: {base.OwnerId}");
+
+            if (unitControllerMode.Value == UnitControllerMode.Player
+                || unitControllerMode.Value == UnitControllerMode.Pet
+                || unitControllerMode.Value == UnitControllerMode.AI) {
+                CompleteClientCharacterRequest(saveData);
+            }
         }
 
         public void CompleteClientCharacterRequest(AnyRPGSaveData saveData) {
@@ -1407,7 +1425,7 @@ namespace AnyRPG {
         }
 
         public void HandleGetNewInstantiatedItem(InstantiatedItem instantiatedItem) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleGetNewInstantiatedItem({instantiatedItem.ResourceName}) instanceId: {instantiatedItem.InstanceId}");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleGetNewInstantiatedItem({instantiatedItem.ResourceName}) instanceId: {instantiatedItem.InstanceId}");
             
             InventorySlotSaveData inventorySlotSaveData = instantiatedItem.GetSlotSaveData();
             HandleGetNewInstantiatedItemClient(instantiatedItem.InstanceId, inventorySlotSaveData);
@@ -2113,6 +2131,7 @@ namespace AnyRPG {
             unitController.UnitActionManager.BeginActionInternal(animatedAction, playerInitiated);
         }
 
+        /*
         [ServerRpc(RequireOwnership = false)]
         public void GetClientSaveData(NetworkConnection networkConnection = null) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.GetClientSaveData()");
@@ -2126,6 +2145,7 @@ namespace AnyRPG {
 
             CompleteClientCharacterRequest(saveData);
         }
+        */
 
 
     }

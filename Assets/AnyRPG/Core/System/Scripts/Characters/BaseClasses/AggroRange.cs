@@ -33,7 +33,8 @@ namespace AnyRPG {
         /// detect if agro should be enabled based on monobehavior setting or unit profile
         /// </summary>
         public void StartEnableAggro() {
-            //Debug.Log("AggroRange.StartEnableAggro()");
+            //Debug.Log($"{unitController.gameObject.name}.AggroRange.StartEnableAggro()");
+
             if (autoEnableAgro
                 || (unitController.UnitProfile != null && unitController.UnitProfile.IsAggressive == true)) {
                 EnableAggro();
@@ -44,13 +45,15 @@ namespace AnyRPG {
         /// Enable the collider attached to this script
         /// </summary>
         public void EnableAggro() {
-            //Debug.Log("AggroRange.EnableAggro()");
+            //Debug.Log($"{unitController.gameObject.name}.AggroRange.EnableAggro()");
+
             aggroCollider.enabled = true;
             aggroCollider.radius = aggroRadius;
         }
 
         public void SetAgroRange(float newRange, UnitController unitController) {
-            //Debug.Log("AggroRange.SetAgroRange(" + newRange + ")");
+            //Debug.Log($"{unitController.gameObject.name}.AggroRange.SetAgroRange({newRange})");
+
             this.unitController = unitController;
             aggroRadius = newRange;
             if (aggroCollider != null) {
@@ -64,6 +67,8 @@ namespace AnyRPG {
         /// Disable the collider attached to this script
         /// </summary>
         public void DisableAggro() {
+            //Debug.Log($"{(unitController == null ? "null" : unitController.gameObject.name)}.AggroRange.DisableAggro()");
+
             aggroCollider.enabled = false;
         }
 

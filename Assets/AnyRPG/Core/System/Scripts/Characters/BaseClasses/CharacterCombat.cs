@@ -635,7 +635,7 @@ namespace AnyRPG {
             if (unitController.CharacterStats.IsAlive) {
 
                 CharacterUnit _characterUnit = sourceCharacter.AbilityManager.GetCharacterUnit();
-                if (_characterUnit != null) {
+                if (_characterUnit != null && aggroTable.AggroTableContains(_characterUnit) == false) {
                     unitController.Aggro(_characterUnit);
                 }
                 //Debug.Log($"{unitController.gameObject.name} about to take " + damage.ToString() + " damage. Character is alive");

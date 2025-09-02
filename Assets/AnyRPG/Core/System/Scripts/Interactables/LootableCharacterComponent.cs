@@ -536,7 +536,7 @@ namespace AnyRPG {
         */
 
         private void HandleRemoveDroppedItemClient(int lootDropId, int accountId) {
-            Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.HandleRemoveDroppedItemClient({lootDropId}, {accountId})");
+            //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.HandleRemoveDroppedItemClient({lootDropId}, {accountId})");
 
             if (lootDropIdLookup.ContainsKey(accountId)) {
                 lootDropIdLookup[accountId].Remove(lootDropId);

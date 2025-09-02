@@ -302,7 +302,7 @@ namespace AnyRPG {
         }
 
         public void HoldWeapons() {
-            //Debug.Log(baseCharacter.gameObject.name + ".MecanimModelController.HoldWeapons()");
+            Debug.Log($"{unitController.gameObject.name}.MecanimModelController.HoldWeapons()");
 
             // when mounted, weapons should stay sheathed
             if (unitController?.IsMounted == true) {

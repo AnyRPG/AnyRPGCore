@@ -11,7 +11,6 @@ namespace AnyRPG {
 
         private AnyRPGSaveData saveData = null;
 
-
         private Dictionary<string, BehaviorSaveData> behaviorSaveDataDictionary = new Dictionary<string, BehaviorSaveData>();
         private Dictionary<string, DialogSaveData> dialogSaveDataDictionary = new Dictionary<string, DialogSaveData>();
 
