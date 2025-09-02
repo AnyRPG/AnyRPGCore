@@ -64,13 +64,12 @@ namespace AnyRPG {
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager) {
             Configure(systemGameManager);
-            item = null;
-            if (itemName != null) {
+            if (itemName != string.Empty) {
                 Item tmpItem = systemDataFactory.GetResource<Item>(itemName);
                 if (tmpItem != null) {
                     item = tmpItem;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing a loot.  CHECK INSPECTOR");
+                    Debug.LogError($"Loot.SetupScriptableObjects(): Could not find item : {itemName} while inititalizing a loot.  CHECK INSPECTOR");
                 }
             }
 

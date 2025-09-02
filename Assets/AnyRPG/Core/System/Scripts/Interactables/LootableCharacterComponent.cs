@@ -144,6 +144,7 @@ namespace AnyRPG {
                 loot.Item = lootManager.CurrencyLootItem;
                 lootGroup.Loot.Add(loot);
                 currencyLootTable.LootGroups.Add(lootGroup);
+                currencyLootTable.SetupScriptableObjects(systemGameManager);
                 LootHolder.AddLootTableState(currencyLootTable);
             }
             foreach (string lootTableName in Props.LootTableNames) {

@@ -21,7 +21,9 @@ namespace AnyRPG {
         public VendorComponent(Interactable interactable, VendorProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             interactionPanelTitle = "Purchase Items";
             // pre populate collection zero so vendor UI works in single player game
-            buyBackCollection.Add(0, ScriptableObject.CreateInstance(typeof(VendorCollection)) as VendorCollection);
+            VendorCollection tmpVendorCollection = ScriptableObject.CreateInstance(typeof(VendorCollection)) as VendorCollection;
+            tmpVendorCollection.SetupScriptableObjects(systemGameManager);
+            buyBackCollection.Add(0, tmpVendorCollection);
         }
 
         public override void SetGameManagerReferences() {
@@ -87,7 +89,9 @@ namespace AnyRPG {
             if (playerManagerServer.ActivePlayerLookup.ContainsKey(sourceUnitController) == true) {
                 int accountId = playerManagerServer.ActivePlayerLookup[sourceUnitController];
                 if (buyBackCollection.ContainsKey(accountId) == false) {
-                    buyBackCollection.Add(accountId, ScriptableObject.CreateInstance(typeof(VendorCollection)) as VendorCollection);
+                    VendorCollection tmpVendorCollection = ScriptableObject.CreateInstance(typeof(VendorCollection)) as VendorCollection;
+                    tmpVendorCollection.SetupScriptableObjects(systemGameManager);
+                    buyBackCollection.Add(accountId, tmpVendorCollection);
                 }
                 buyBackCollection[accountId].VendorItems.Add(newVendorItem);
                 interactable.InteractableEventController.NotifyOnAddToBuyBackCollection(sourceUnitController, newInstantiatedItem);
