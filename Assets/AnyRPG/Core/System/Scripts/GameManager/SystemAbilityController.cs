@@ -32,26 +32,33 @@ namespace AnyRPG {
 
         // ensure that no coroutine continues or other spell effects exist past the end of a level
         public void HandleLevelUnload(int sceneHandle, string sceneName) {
-            foreach (Coroutine coroutine in abilityManager.DestroyAbilityEffectObjectCoroutines) {
-                StopCoroutine(coroutine);
-            }
-            abilityManager.DestroyAbilityEffectObjectCoroutines.Clear();
-
-            foreach (GameObject go in abilityManager.AbilityEffectGameObjects) {
-                if (go != null) {
-                    objectPooler.ReturnObjectToPool(go);
+            if (abilityManager.DestroyAbilityEffectObjectCoroutines.ContainsKey(sceneHandle) == true) {
+                foreach (Coroutine coroutine in abilityManager.DestroyAbilityEffectObjectCoroutines[sceneHandle]) {
+                    StopCoroutine(coroutine);
                 }
+                abilityManager.DestroyAbilityEffectObjectCoroutines.Remove(sceneHandle);
             }
-            abilityManager.AbilityEffectGameObjects.Clear();
+
+            if (abilityManager.AbilityEffectGameObjects.ContainsKey(sceneHandle) == true) {
+                foreach (GameObject go in abilityManager.AbilityEffectGameObjects[sceneHandle]) {
+                    if (go != null) {
+                        objectPooler.ReturnObjectToPool(go);
+                    }
+                }
+                abilityManager.AbilityEffectGameObjects.Remove(sceneHandle);
+            }
         }
 
         public void BeginDestroyAbilityEffectObject(Dictionary<PrefabProfile, List<GameObject>> abilityEffectObjects, IAbilityCaster source, Interactable target, float timer, AbilityEffectContext abilityEffectInput, FixedLengthEffectProperties fixedLengthEffect) {
+            if (abilityManager.AbilityEffectGameObjects.ContainsKey(source.gameObject.scene.handle) == false) {
+                abilityManager.AbilityEffectGameObjects.Add(source.gameObject.scene.handle, new List<GameObject>());
+            }
             foreach (List<GameObject> gameObjectList in abilityEffectObjects.Values) {
                 foreach (GameObject go in gameObjectList) {
-                    abilityManager.AbilityEffectGameObjects.Add(go);
+                    abilityManager.AbilityEffectGameObjects[source.gameObject.scene.handle].Add(go);
                 }
             }
-            abilityManager.AddDestroyAbilityEffectObjectCoroutine(StartCoroutine(DestroyAbilityEffectObject(abilityEffectObjects, source, target, timer, abilityEffectInput, fixedLengthEffect)));
+            abilityManager.AddDestroyAbilityEffectObjectCoroutine(source.gameObject.scene.handle, StartCoroutine(DestroyAbilityEffectObject(abilityEffectObjects, source, target, timer, abilityEffectInput, fixedLengthEffect)));
         }
 
         public IEnumerator DestroyAbilityEffectObject(Dictionary<PrefabProfile, List<GameObject>> abilityEffectObjects, IAbilityCaster source, Interactable target, float timer, AbilityEffectContext abilityEffectInput, FixedLengthEffectProperties fixedLengthEffect) {
@@ -126,8 +133,8 @@ namespace AnyRPG {
             }
             foreach (List<GameObject> gameObjectList in abilityEffectObjects.Values) {
                 foreach (GameObject go in gameObjectList) {
-                    if (abilityManager.AbilityEffectGameObjects.Contains(go)) {
-                        abilityManager.AbilityEffectGameObjects.Remove(go);
+                    if (abilityManager.AbilityEffectGameObjects.ContainsKey(go.scene.handle)) {
+                        abilityManager.AbilityEffectGameObjects[source.gameObject.scene.handle].Remove(go);
                     }
                     if (go != null) {
                         //Debug.Log($"SystemAbilityController.DestroyAbilityEffectObject(objectCount: {abilityEffectObjects.Count}, {(source == null ? "null" : source.AbilityManager.Name)}, {(target == null ? "null" : target.gameObject.name)}, {timer}, {fixedLengthEffect.ResourceName}) DESTROYING AT END OF TIMER : {go.name} ({go.GetInstanceID()})");
@@ -135,7 +142,9 @@ namespace AnyRPG {
                     }
                 }
             }
-            abilityEffectObjects.Clear();
+
+            // this should not be necessary because it's a local variable
+            //abilityEffectObjects.Clear();
         }
 
         public static string GetTimeText(float durationSeconds) {

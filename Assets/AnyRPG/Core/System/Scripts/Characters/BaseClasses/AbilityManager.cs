@@ -10,11 +10,13 @@ namespace AnyRPG {
         protected Coroutine globalCoolDownCoroutine = null;
         protected Coroutine currentCastCoroutine = null;
         protected Coroutine abilityHitDelayCoroutine = null;
-        protected List<Coroutine> destroyAbilityEffectObjectCoroutines = new List<Coroutine>();
+        // sceneHandle, coroutine
+        protected Dictionary<int, List<Coroutine>> destroyAbilityEffectObjectCoroutines = new Dictionary<int, List<Coroutine>>();
 
         protected bool eventSubscriptionsInitialized = false;
 
-        protected List<GameObject> abilityEffectGameObjects = new List<GameObject>();
+        // sceneHandle, gameObject
+        protected Dictionary<int, List<GameObject>> abilityEffectGameObjects = new Dictionary<int, List<GameObject>>();
         protected Dictionary<string, AbilityCoolDownNode> abilityCoolDownDictionary = new Dictionary<string, AbilityCoolDownNode>();
 
         protected IAbilityCaster abilityCaster = null;
@@ -70,8 +72,8 @@ namespace AnyRPG {
             get => new Dictionary<string, AbilityProperties>();
         }
 
-        public List<GameObject> AbilityEffectGameObjects { get => abilityEffectGameObjects; set => abilityEffectGameObjects = value; }
-        public List<Coroutine> DestroyAbilityEffectObjectCoroutines { get => destroyAbilityEffectObjectCoroutines; set => destroyAbilityEffectObjectCoroutines = value; }
+        public Dictionary<int, List<GameObject>> AbilityEffectGameObjects { get => abilityEffectGameObjects; set => abilityEffectGameObjects = value; }
+        public Dictionary<int, List<Coroutine>> DestroyAbilityEffectObjectCoroutines { get => destroyAbilityEffectObjectCoroutines; set => destroyAbilityEffectObjectCoroutines = value; }
         public AbilityProperties CurrentCastAbility { get => currentCastAbility; }
 
         public AbilityManager(IAbilityCaster abilityCaster, SystemGameManager systemGameManager) {
@@ -98,8 +100,11 @@ namespace AnyRPG {
             // nothing here for now
         }
 
-        public virtual void AddDestroyAbilityEffectObjectCoroutine(Coroutine coroutine) {
-            destroyAbilityEffectObjectCoroutines.Add(coroutine);
+        public virtual void AddDestroyAbilityEffectObjectCoroutine(int sceneHandle, Coroutine coroutine) {
+            if (destroyAbilityEffectObjectCoroutines.ContainsKey(sceneHandle) == false) {
+                destroyAbilityEffectObjectCoroutines[sceneHandle] = new List<Coroutine>();
+            }
+            destroyAbilityEffectObjectCoroutines[sceneHandle].Add(coroutine);
         }
 
 
@@ -254,9 +259,11 @@ namespace AnyRPG {
 
 
         public virtual void CleanupAbilityEffectGameObjects() {
-            foreach (GameObject go in abilityEffectGameObjects) {
-                if (go != null) {
-                    objectPooler.ReturnObjectToPool(go);
+            foreach (List<GameObject> goList in abilityEffectGameObjects.Values) {
+                foreach (GameObject go in goList) {
+                    if (go != null) {
+                        objectPooler.ReturnObjectToPool(go);
+                    }
                 }
             }
             abilityEffectGameObjects.Clear();
@@ -272,8 +279,10 @@ namespace AnyRPG {
                 abilityCasterMonoBehaviour.StopCoroutine(abilityHitDelayCoroutine);
                 abilityHitDelayCoroutine = null;
             }
-            foreach (Coroutine coroutine in destroyAbilityEffectObjectCoroutines) {
-                abilityCasterMonoBehaviour.StopCoroutine(coroutine);
+            foreach (List<Coroutine> coroutineList in destroyAbilityEffectObjectCoroutines.Values) {
+                foreach (Coroutine coroutine in coroutineList) {
+                    abilityCasterMonoBehaviour.StopCoroutine(coroutine);
+                }
             }
             destroyAbilityEffectObjectCoroutines.Clear();
             CleanupCoolDownRoutines();
