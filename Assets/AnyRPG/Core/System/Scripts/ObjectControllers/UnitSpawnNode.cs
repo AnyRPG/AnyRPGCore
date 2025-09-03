@@ -193,7 +193,8 @@ namespace AnyRPG {
         }
 
         private void CreateEventSubscriptions() {
-            //Debug.Log($"{gameObject.name}.UnitSpawnNode.CreateEventSubscriptions()");
+            Debug.Log($"{gameObject.name}.UnitSpawnNode.CreateEventSubscriptions()");
+
             if (eventSubscriptionsInitialized) {
                 return;
             }
@@ -211,7 +212,7 @@ namespace AnyRPG {
         }
 
         private void CleanupEventSubscriptions() {
-            //Debug.Log("UnitSpawnNode.CleanupEventSubscriptions()");
+            //Debug.Log($"{gameObject.name}.UnitSpawnNode.CleanupEventSubscriptions()");
             if (!eventSubscriptionsInitialized) {
                 return;
             }
@@ -223,7 +224,8 @@ namespace AnyRPG {
         }
 
         private void CreateServerEventSubscriptions() {
-            //Debug.Log($"{gameObject.name}.UnitSpawnNode.CreateEventSubscriptions()");
+            //Debug.Log($"{gameObject.name}.UnitSpawnNode.CreateServerEventSubscriptions()");
+
             if (serverEventSubscriptionsInitialized) {
                 return;
             }
@@ -236,7 +238,7 @@ namespace AnyRPG {
         }
 
         private void CleanupServerEventSubscriptions() {
-            //Debug.Log("UnitSpawnNode.CleanupEventSubscriptions()");
+            Debug.Log($"{gameObject.name}.UnitSpawnNode.CleanupServerEventSubscriptions()");
             if (!serverEventSubscriptionsInitialized) {
                 return;
             }
@@ -253,7 +255,7 @@ namespace AnyRPG {
         }
 
         public void HandleLevelUnload(int sceneHandle, string sceneName) {
-            //Debug.Log($"{gameObject.name}.UnitSpawnNode.HandleLevelUnload()");
+            //Debug.Log($"{gameObject.name}.UnitSpawnNode.HandleLevelUnload({sceneHandle}, {sceneName})");
             Cleanup();
         }
 

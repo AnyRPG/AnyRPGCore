@@ -732,10 +732,13 @@ namespace AnyRPG {
             return networkController.GetServerPort();
         }
 
-        public void AdvertiseTeleport(int accountId, TeleportEffectProperties teleportEffectProperties) {
+        public void AdvertiseTeleport(int accountId, UnitController sourceUnitController, TeleportEffectProperties teleportEffectProperties) {
             //Debug.Log($"NetworkManagerServer.AdvertiseTeleport({accountId}, {teleportEffectProperties.LevelName})");
 
+            string oldSceneName = sourceUnitController.gameObject.scene.name;
+            int oldSceneHandle = sourceUnitController.gameObject.scene.handle;
             DespawnPlayerUnit(accountId);
+            systemEventManager.NotifyOnLevelUnloadServer(oldSceneHandle, oldSceneName);
             networkController.AdvertiseLoadScene(teleportEffectProperties.LevelName, accountId);
         }
 

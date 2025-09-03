@@ -33,7 +33,7 @@ namespace AnyRPG {
 
         // ensure that no coroutine continues or other spell effects exist past the end of a level
         public void HandleLevelUnload(int sceneHandle, string sceneName) {
-            Debug.Log($"SystemAbilityController.HandleLevelUnload({sceneHandle}, {sceneName})");
+            //Debug.Log($"SystemAbilityController.HandleLevelUnload({sceneHandle}, {sceneName})");
 
             if (abilityManager.DestroyAbilityEffectObjectCoroutines.ContainsKey(sceneHandle) == true) {
                 foreach (Coroutine coroutine in abilityManager.DestroyAbilityEffectObjectCoroutines[sceneHandle]) {

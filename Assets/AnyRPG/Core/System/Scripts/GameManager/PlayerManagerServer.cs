@@ -331,7 +331,7 @@ namespace AnyRPG {
             }
 
             if (networkManagerServer.ServerModeActive == true) {
-                networkManagerServer.AdvertiseTeleport(accountId, teleportEffectProperties);
+                networkManagerServer.AdvertiseTeleport(accountId, unitController, teleportEffectProperties);
                 return;
             }
 
