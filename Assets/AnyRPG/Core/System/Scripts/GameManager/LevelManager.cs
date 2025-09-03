@@ -1,11 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace AnyRPG {
     public class LevelManager : ConfiguredMonoBehaviour {
@@ -423,7 +420,7 @@ namespace AnyRPG {
 
         public void ProcessBeforeLevelUnload() {
             mapManager.ProcessLevelUnload();
-            systemEventManager.NotifyOnLevelUnload(SceneManager.GetActiveScene().handle, SceneManager.GetActiveScene().name);
+            systemEventManager.NotifyOnLevelUnloadClient(SceneManager.GetActiveScene().handle, SceneManager.GetActiveScene().name);
 
             uIManager.DeactivatePlayerUI();
             uIManager.DeactivateInGameUI();

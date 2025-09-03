@@ -20,7 +20,8 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             abilityManager = new AbilityManager(this, systemGameManager);
-            systemEventManager.OnLevelUnload += HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
+            systemEventManager.OnLevelUnloadServer += HandleLevelUnload;
         }
 
         public override void SetGameManagerReferences() {
@@ -32,6 +33,8 @@ namespace AnyRPG {
 
         // ensure that no coroutine continues or other spell effects exist past the end of a level
         public void HandleLevelUnload(int sceneHandle, string sceneName) {
+            Debug.Log($"SystemAbilityController.HandleLevelUnload({sceneHandle}, {sceneName})");
+
             if (abilityManager.DestroyAbilityEffectObjectCoroutines.ContainsKey(sceneHandle) == true) {
                 foreach (Coroutine coroutine in abilityManager.DestroyAbilityEffectObjectCoroutines[sceneHandle]) {
                     StopCoroutine(coroutine);
@@ -173,7 +176,8 @@ namespace AnyRPG {
 
         public void OnDestroy() {
             StopAllCoroutines();
-            systemEventManager.OnLevelUnload -= HandleLevelUnload;
+            //systemEventManager.OnLevelUnloadClient -= HandleLevelUnload;
+            //systemEventManager.OnLevelUnloadClient -= HandleLevelUnload;
         }
     }
 

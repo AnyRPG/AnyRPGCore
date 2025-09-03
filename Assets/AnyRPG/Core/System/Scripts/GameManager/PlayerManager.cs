@@ -159,7 +159,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            systemEventManager.OnLevelUnload += HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
             systemEventManager.OnLevelLoad += HandleLevelLoad;
             systemEventManager.OnLevelChanged += PlayLevelUpEffects;
             systemEventManager.OnPlayerDeath += HandlePlayerDeath;
@@ -171,7 +171,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            systemEventManager.OnLevelUnload -= HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient -= HandleLevelUnload;
             systemEventManager.OnLevelLoad -= HandleLevelLoad;
             systemEventManager.OnLevelChanged -= PlayLevelUpEffects;
             systemEventManager.OnPlayerDeath -= HandlePlayerDeath;

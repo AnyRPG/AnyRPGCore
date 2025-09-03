@@ -78,7 +78,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            systemEventManager.OnLevelUnload += HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
             eventSubscriptionsInitialized = true;
         }
 
@@ -87,7 +87,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            systemEventManager.OnLevelUnload -= HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient -= HandleLevelUnload;
             eventSubscriptionsInitialized = false;
         }
 

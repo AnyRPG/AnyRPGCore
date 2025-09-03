@@ -31,7 +31,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
-            systemEventManager.OnLevelUnload += HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
         }
 
         public override void SetGameManagerReferences() {
@@ -150,7 +150,7 @@ namespace AnyRPG {
 
         public void CleanupEventSubscriptions() {
             SystemEventManager.StopListening("AfterCameraUpdate", HandleAfterCameraUpdate);
-            systemEventManager.OnLevelUnload -= HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient -= HandleLevelUnload;
         }
 
         public void OnDestroy() {

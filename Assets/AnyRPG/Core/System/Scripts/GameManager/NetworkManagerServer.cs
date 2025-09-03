@@ -687,10 +687,13 @@ namespace AnyRPG {
             playerManagerServer.PlayerCharacterMonitors[accountId].unitController.UnitEventController.NotifyOnBeginChatMessage(addedText);
         }
 
-        public void AdvertiseLoadScene(string sceneName, int accountId) {
-            Debug.Log($"NetworkManagerServer.AdvertiseLoadScene({sceneName}, {accountId})");
+        public void AdvertiseLoadScene(UnitController sourceUnitController, string sceneName, int accountId) {
+            Debug.Log($"NetworkManagerServer.AdvertiseLoadScene({sourceUnitController.gameObject.name}, {sceneName}, {accountId})");
             
+            string oldSceneName = sourceUnitController.gameObject.scene.name;
+            int oldSceneHandle = sourceUnitController.gameObject.scene.handle;
             DespawnPlayerUnit(accountId);
+            systemEventManager.NotifyOnLevelUnloadServer(oldSceneHandle, oldSceneName);
             networkController.AdvertiseLoadScene(sceneName, accountId);
         }
 

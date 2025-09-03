@@ -31,7 +31,7 @@ namespace AnyRPG {
 
             //Debug.Log("NamePlateManager.Awake(): " + SystemGameManager.Instance.UIManager.NamePlateManager.gameObject.name);
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
-            systemEventManager.OnLevelUnload += HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
         }
 
         public override void SetGameManagerReferences() {

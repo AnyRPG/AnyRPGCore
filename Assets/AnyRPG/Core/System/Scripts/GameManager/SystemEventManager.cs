@@ -40,7 +40,8 @@ namespace AnyRPG {
         public event System.Action OnStartServer = delegate { };
         public event System.Action OnStopServer = delegate { };
         public event System.Action OnLevelLoad = delegate { };
-        public event System.Action<int, string> OnLevelUnload = delegate { };
+        public event System.Action<int, string> OnLevelUnloadClient = delegate { };
+        public event System.Action<int, string> OnLevelUnloadServer = delegate { };
         public event System.Action<int, string> OnRemoveLoadedScene = delegate { };
         public event System.Action<int, string> OnAddLoadedScene = delegate { };
         public event System.Action<int, WeatherProfile, bool> OnEndWeather = delegate { };
@@ -227,8 +228,12 @@ namespace AnyRPG {
             OnLevelLoad();
         }
 
-        public void NotifyOnLevelUnload(int sceneHandle, string sceneName) {
-            OnLevelUnload(sceneHandle, sceneName);
+        public void NotifyOnLevelUnloadClient(int sceneHandle, string sceneName) {
+            OnLevelUnloadClient(sceneHandle, sceneName);
+        }
+
+        public void NotifyOnLevelUnloadServer(int sceneHandle, string sceneName) {
+            OnLevelUnloadServer(sceneHandle, sceneName);
         }
 
         public void NotifyOnRemoveLoadedScene(int sceneHandle, string sceneName) {

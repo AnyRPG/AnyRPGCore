@@ -981,9 +981,12 @@ namespace AnyRPG {
         }
 
         public void SetBool(string varName, bool varValue) {
-            Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetBool({varName}, {varValue})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetBool({varName}, {varValue})");
 
             if (animator != null) {
+                if (animator.enabled == false) {
+                    Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetBool({varName}, {varValue}) animator is disabled");
+                }
                 if (ParameterExists(varName)) {
                     animator.SetBool(varName, varValue);
                 }

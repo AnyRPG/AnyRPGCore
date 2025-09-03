@@ -1067,7 +1067,7 @@ namespace AnyRPG {
         public virtual void ProcessCreateEventSubscriptions() {
             //Debug.Log($"{gameObject.name}.Interactable.ProcessCreateEventSubscriptions()");
 
-            systemEventManager.OnLevelUnload += HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
                 systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             }
@@ -1092,7 +1092,7 @@ namespace AnyRPG {
         public virtual void ProcessCleanupEventSubscriptions() {
             //Debug.Log($"{gameObject.name}.Interactable.ProcessCleanupEventSubscriptions()");
 
-            systemEventManager.OnLevelUnload -= HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient -= HandleLevelUnload;
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
                 systemEventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
             }

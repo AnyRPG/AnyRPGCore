@@ -262,22 +262,28 @@ namespace AnyRPG {
         public void LoadScene(string sceneName, UnitController sourceUnitController) {
             //Debug.Log($"PlayerManagerServer.LoadScene({sceneName}, {sourceUnitController.gameObject.name})");
 
-            if (activePlayerLookup.ContainsKey(sourceUnitController)) {
-                LoadScene(sceneName, activePlayerLookup[sourceUnitController]);
+            if (activePlayerLookup.ContainsKey(sourceUnitController) == false) {
+                return;
             }
+            LoadScene(sceneName, sourceUnitController, activePlayerLookup[sourceUnitController]);
         }
 
         public void LoadScene(string sceneName, int accountId) {
             //Debug.Log($"PlayerManagerServer.LoadScene({sceneName}, {accountId})");
-            
+
             if (activePlayers.ContainsKey(accountId) == false) {
                 return;
             }
-            //AddSpawnRequest(accountId, new SpawnPlayerRequest());
+            LoadScene(sceneName, activePlayers[accountId], accountId);
+        }
+
+        public void LoadScene(string sceneName, UnitController sourceUnitController, int accountId) {
+            //Debug.Log($"PlayerManagerServer.LoadScene({sceneName}, {accountId})");
+            
             if (systemGameManager.GameMode == GameMode.Local) {
                 levelManager.LoadLevel(sceneName);
             } else if (networkManagerServer.ServerModeActive) {
-                networkManagerServer.AdvertiseLoadScene(sceneName, accountId);
+                networkManagerServer.AdvertiseLoadScene(sourceUnitController, sceneName, accountId);
             }
         }
 

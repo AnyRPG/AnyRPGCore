@@ -48,7 +48,7 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            systemEventManager.OnLevelUnload += HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
             systemEventManager.OnLevelLoad += HandleLevelLoad;
 
             systemEventManager.OnStartServer += HandleStartServer;

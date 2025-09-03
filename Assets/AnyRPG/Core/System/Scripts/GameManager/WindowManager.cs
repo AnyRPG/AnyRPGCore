@@ -34,7 +34,7 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            systemEventManager.OnLevelUnload += HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
         }
 
         public override void SetGameManagerReferences() {
@@ -47,7 +47,7 @@ namespace AnyRPG {
         }
 
         public void OnDestroy() {
-            systemEventManager.OnLevelUnload -= HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient -= HandleLevelUnload;
         }
 
         public void HandleLevelUnload(int sceneHandle, string sceneName) {

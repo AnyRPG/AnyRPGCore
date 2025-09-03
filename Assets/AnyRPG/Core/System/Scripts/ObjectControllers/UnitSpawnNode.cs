@@ -202,7 +202,7 @@ namespace AnyRPG {
                 return;
             }
             systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
-            systemEventManager.OnLevelUnload += HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
             if (playerManager.PlayerUnitSpawned == true) {
                 //Debug.Log($"{gameObject.name}.UnitSpawnNode.CreateEventSubscriptions(): player unit already spawned.  Handling player unit spawn");
                 ProcessPlayerUnitSpawn(playerManager.UnitController);
@@ -217,7 +217,7 @@ namespace AnyRPG {
             }
 
             systemEventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
-            systemEventManager.OnLevelUnload -= HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient -= HandleLevelUnload;
 
             eventSubscriptionsInitialized = false;
         }
@@ -231,7 +231,7 @@ namespace AnyRPG {
                 Debug.LogError(gameObject.name + ".UnitSpawnNode.CreateEventSubscriptions(): systemGameManager not found.  Is the GameManager in the scene?");
                 return;
             }
-            systemEventManager.OnLevelUnload += HandleLevelUnload;
+            systemEventManager.OnLevelUnloadServer += HandleLevelUnload;
             serverEventSubscriptionsInitialized = true;
         }
 
@@ -241,7 +241,7 @@ namespace AnyRPG {
                 return;
             }
 
-            systemEventManager.OnLevelUnload -= HandleLevelUnload;
+            systemEventManager.OnLevelUnloadServer -= HandleLevelUnload;
 
             serverEventSubscriptionsInitialized = false;
         }

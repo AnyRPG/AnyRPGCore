@@ -119,7 +119,7 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessCreateEventSubscriptions() {
-            systemEventManager.OnLevelUnload += HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
             SystemEventManager.StartListening("OnSaveGame", HandleSaveGame);
         }
 
@@ -132,7 +132,7 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessCleanupEventSubscriptions() {
-            systemEventManager.OnLevelUnload -= HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient -= HandleLevelUnload;
             SystemEventManager.StopListening("OnSaveGame", HandleSaveGame);
         }
 
