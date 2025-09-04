@@ -75,12 +75,8 @@ namespace AnyRPG {
         private ObjectPooler objectPooler = null;
         private MessageFeedManager messageFeedManager = null;
         private PlayerManager playerManager = null;
-        private LogManager logManager = null;
-        private SystemItemManager systemItemManager = null;
-        private CurrencyConverter currencyConverter = null;
-        private DialogManagerClient dialogManager = null;
+        private DialogManagerClient dialogManagerClient = null;
         private SystemEventManager systemEventManager = null;
-        private QuestGiverManagerClient questGiverManager = null;
 
         public QuestGiverQuestScript SelectedQuestGiverQuestScript { get => selectedQuestGiverQuestScript; set => selectedQuestGiverQuestScript = value; }
         //public Interactable MyInteractable { get => interactable; set => interactable = value; }
@@ -103,12 +99,8 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
             messageFeedManager = uIManager.MessageFeedManager;
             playerManager = systemGameManager.PlayerManager;
-            logManager = systemGameManager.LogManager;
-            systemItemManager = systemGameManager.SystemItemManager;
-            currencyConverter = systemGameManager.CurrencyConverter;
-            dialogManager = systemGameManager.DialogManagerClient;
+            dialogManagerClient = systemGameManager.DialogManagerClient;
             systemEventManager = systemGameManager.SystemEventManager;
-            questGiverManager = systemGameManager.QuestGiverManagerClient;
         }
 
         private void HandlePlayerUnitSpawn(UnitController unitController) {
@@ -311,7 +303,7 @@ namespace AnyRPG {
                 if (quest.OpeningDialog != null && quest.OpeningDialog.TurnedIn(playerManager.UnitController) == false) {
                     //Debug.Log("QuestGiverUI.ShowDescription(): opening dialog is not complete, showing dialog");
                     // FIX ME - that 0 should be the optionIndex of the interactableOption, but some quests can start from items.  There is no interactableOption in that case...
-                    dialogManager.SetQuestDialog(quest, interactable, questGiver.InteractableOptionComponent, 0, 0);
+                    dialogManagerClient.SetQuestDialog(quest, interactable, questGiver.InteractableOptionComponent, 0, 0);
                     uIManager.dialogWindow.OpenWindow();
                     //Debug.Log("QuestGiverUI.ShowDescription(): about to close window because of dialog");
                     if (uIManager.questGiverWindow.IsOpen) {
@@ -400,13 +392,10 @@ namespace AnyRPG {
                 // DO THIS HERE SO IT DOESN'T INSTA-CLOSE ANY AUTO-POPUP BACK TO HERE ON ACCEPT QUEST CAUSING STATUS CHANGE
                 uIManager.questGiverWindow.CloseWindow();
 
-                questGiverManager.RequestAcceptQuest(playerManager.UnitController, currentQuest);
-
                 if (questGiver != null) {
                     // notify a bag item so it can remove itself
                     //Debug.Log("QuestGiverUI.AcceptQuest() questgiver was not null");
-                    // FIX ME - how do to this on server ?  send instantiated item id with AcceptQuest() ?
-                    questGiver.HandleAcceptQuest();
+                    questGiver.RequestAcceptQuest(playerManager.UnitController, currentQuest);
                 } else {
                     //Debug.Log("QuestGiverUI.AcceptQuest() questgiver was null");
                 }
@@ -511,7 +500,7 @@ namespace AnyRPG {
             // DO THIS HERE OR TURNING THE QUEST RESULTING IN THIS WINDOW RE-OPENING WOULD JUST INSTA-CLOSE IT INSTEAD
             uIManager.questGiverWindow.CloseWindow();
 
-            questGiverManager.RequestCompleteQuest(playerManager.UnitController, currentQuest, questRewardChoices);
+            questGiver.RequestCompleteQuest(playerManager.UnitController, currentQuest, questRewardChoices);
             //playerManager.UnitController.CharacterQuestLog.TurnInQuest(currentQuest);
 
         }

@@ -627,7 +627,7 @@ namespace AnyRPG {
         }
 
         public void ResetTrigger(string triggerName) {
-            Debug.Log($"{unitController.gameObject.name}.UnitAnimator.ResetTrigger({triggerName})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.ResetTrigger({triggerName})");
 
             if (animator != null && ParameterExists(triggerName)) {
                 animator.ResetTrigger(triggerName);
@@ -659,7 +659,7 @@ namespace AnyRPG {
         }
 
         public void HandleTakeDamage() {
-            Debug.Log($"{unitController.gameObject.name}.UnitAnimatior.HandleTakeDamage()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimatior.HandleTakeDamage()");
 
             if (WaitingForCastOrAttackAnimation() == true) {
                 // only activate the take damage animation if not in the middle of a swing / cast
@@ -1036,7 +1036,7 @@ namespace AnyRPG {
         }
 
         public void SetTrigger(string varName) {
-            Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetTrigger({varName})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetTrigger({varName})");
 
             if (animator != null && ParameterExists(varName)) {
                 ResetTrigger(varName);

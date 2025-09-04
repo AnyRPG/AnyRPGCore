@@ -1348,7 +1348,7 @@ namespace AnyRPG {
         */
 
         public void Die() {
-            Debug.Log($"{unitController.gameObject.name}.CharacterStats.Die()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.Die()");
 
             if (isAlive) {
                 isAlive = false;

@@ -238,7 +238,7 @@ namespace AnyRPG {
         }
 
         private void CleanupServerEventSubscriptions() {
-            Debug.Log($"{gameObject.name}.UnitSpawnNode.CleanupServerEventSubscriptions()");
+            //Debug.Log($"{gameObject.name}.UnitSpawnNode.CleanupServerEventSubscriptions()");
             if (!serverEventSubscriptionsInitialized) {
                 return;
             }

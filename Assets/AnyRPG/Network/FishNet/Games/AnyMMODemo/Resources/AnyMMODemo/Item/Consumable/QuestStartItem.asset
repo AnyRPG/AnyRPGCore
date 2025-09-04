@@ -36,5 +36,5 @@ MonoBehaviour:
   characterClassRequirementList: []
   quests:
   - startQuest: 1
-    endQuest: 1
-    questName: Choose Reward
+    endQuest: 0
+    questName: Choose Faction Reward

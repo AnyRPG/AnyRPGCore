@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 93798227b94ebb046be960ccf026ca60, type: 3}
-  m_Name: QuestStartItem
+  m_Name: QuestStartAndTurnInItem
   m_EditorClassIdentifier: 
-  resourceName: Quest Start
+  resourceName: Quest Start And Turn In
   displayName: 
   icon: {fileID: 21300000, guid: 698b5c5707df75a41b6693ab49e10768, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: This item starts a quest
+  description: This item starts a quest and ends that quest without a quest giver
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -37,4 +37,4 @@ MonoBehaviour:
   quests:
   - startQuest: 1
     endQuest: 1
-    questName: Choose Faction Reward
+    questName: Choose Reward

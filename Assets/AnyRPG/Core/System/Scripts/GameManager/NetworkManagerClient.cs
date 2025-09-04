@@ -501,7 +501,7 @@ namespace AnyRPG {
         }
 
         public void RequestSpawnUnit(Interactable interactable, int componentIndex, int unitLevel, int extraLevels, bool useDynamicLevel, string unitProfileName, string unitToughnessName) {
-            Debug.Log($"NetworkManagerClient.RequestSpawnUnit({unitLevel}, {extraLevels}, {useDynamicLevel}, {unitProfileName}, {unitToughnessName})");
+            //Debug.Log($"NetworkManagerClient.RequestSpawnUnit({unitLevel}, {extraLevels}, {useDynamicLevel}, {unitProfileName}, {unitToughnessName})");
 
             networkController.RequestSpawnUnit(interactable, componentIndex, unitLevel, extraLevels, useDynamicLevel, unitProfileName, unitToughnessName);
         }

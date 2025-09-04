@@ -272,4 +272,7 @@ MonoBehaviour:
         - startQuest: 1
           endQuest: 1
           questName: Status Effect
+        - startQuest: 0
+          endQuest: 1
+          questName: Choose Faction Reward
         questGiverProfileNames: []

@@ -74,7 +74,7 @@ namespace AnyRPG {
         }
 
         public void AcceptQuest(Quest newQuest) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterQuestLog.AcceptQuest({newQuest.ResourceName})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterQuestLog.AcceptQuest({newQuest.ResourceName})");
 
             if (quests.Count >= systemConfigurationManager.QuestLogSize) {
                 // quest log is full. we can't accept the quest
@@ -289,7 +289,7 @@ namespace AnyRPG {
         }
 
         public QuestObjectiveSaveData GetQuestObjectiveSaveData(string questName, string objectiveType, string objectiveName) {
-            
+
             return GetObjectiveSaveData(questObjectiveSaveDataDictionary, questName, objectiveType, objectiveName);
         }
 
@@ -382,6 +382,42 @@ namespace AnyRPG {
             ClearQuestLog();
             ClearAchievementLog();
         }
-    }
 
+        public void InteractWithQuestStartItem(Quest quest, int slotIndex, int instanceId) {
+            if (uIManager.questGiverWindow.IsOpen) {
+                // safety to prevent deletion
+                return;
+            }
+            if (unitController.CharacterInventoryManager.InventorySlots.Count > slotIndex
+                && unitController.CharacterInventoryManager.InventorySlots[slotIndex].InstantiatedItem.InstanceId == instanceId) {
+                ShowQuestGiverDescription(quest, unitController.CharacterInventoryManager.InventorySlots[slotIndex].InstantiatedItem as InstantiatedQuestStartItem);
+            }
+
+        }
+
+        public void RequestAcceptQuestItemQuest(InstantiatedQuestStartItem instantiatedQuestStartItem, Quest currentQuest) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                AcceptQuestItemQuest(instantiatedQuestStartItem, currentQuest);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestAcceptQuestItemQuest(instantiatedQuestStartItem.Slot.GetCurrentInventorySlotIndex(unitController), instantiatedQuestStartItem.InstanceId, currentQuest);
+            }
+        }
+
+        public void AcceptQuestItemQuest(InstantiatedQuestStartItem instantiatedQuestStartItem, Quest currentQuest) {
+            AcceptQuest(currentQuest);
+            instantiatedQuestStartItem.HandleAcceptQuest();
+        }
+
+        public void CompleteQuestItemQuest(InstantiatedQuestStartItem instantiatedQuestStartItem, Quest currentQuest, QuestRewardChoices questRewardChoices) {
+            instantiatedQuestStartItem.CompleteQuest(unitController, currentQuest, questRewardChoices);
+        }
+
+        public void RequestCompleteQuestItemQuest(InstantiatedQuestStartItem instantiatedQuestStartItem, Quest currentQuest, QuestRewardChoices questRewardChoices) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                CompleteQuestItemQuest(instantiatedQuestStartItem, currentQuest, questRewardChoices);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestCompleteQuestItemQuest(instantiatedQuestStartItem.Slot.GetCurrentInventorySlotIndex(unitController), instantiatedQuestStartItem.InstanceId, currentQuest, questRewardChoices);
+            }
+        }
+    }
 }

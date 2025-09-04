@@ -16,5 +16,7 @@ namespace AnyRPG {
         void HandleCompleteQuest();
         void HandleAcceptQuest();
         bool EndsQuest(string questName);
+        void RequestAcceptQuest(UnitController unitController, Quest currentQuest);
+        void RequestCompleteQuest(UnitController unitController, Quest currentQuest, QuestRewardChoices questRewardChoices);
     }
 }

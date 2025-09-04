@@ -471,18 +471,20 @@ namespace AnyRPG {
         }
 
         public override void RequestSpawnUnit(Interactable interactable, int componentIndex, int unitLevel, int extraLevels, bool useDynamicLevel, string unitProfileName, string unitToughnessName) {
-            Debug.Log($"FishNetNetworkController.RequestSpawnUnit({unitProfileName}) {interactable.gameObject.name} {componentIndex} {unitLevel} {extraLevels} {useDynamicLevel} {unitToughnessName}");
+            //Debug.Log($"FishNetNetworkController.RequestSpawnUnit({unitProfileName}) {interactable.gameObject.name} {componentIndex} {unitLevel} {extraLevels} {useDynamicLevel} {unitToughnessName}");
 
             clientConnector.RequestSpawnUnit(interactable, componentIndex, unitLevel, extraLevels, useDynamicLevel, unitProfileName, unitToughnessName);
         }
 
         public override void RequestTurnInDialog(Interactable interactable, int componentIndex, Dialog dialog) {
-            Debug.Log($"FishNetNetworkController.RequestTurnInDialog({dialog.ResourceName})");
+            //Debug.Log($"FishNetNetworkController.RequestTurnInDialog({dialog.ResourceName})");
+
             clientConnector.RequestTurnInDialog(interactable, componentIndex, dialog);
         }
 
         public override void RequestTurnInQuestDialog(Dialog dialog) {
-            Debug.Log($"FishNetNetworkController.RequestTurnInQuestDialog({dialog.ResourceName})");
+            //Debug.Log($"FishNetNetworkController.RequestTurnInQuestDialog({dialog.ResourceName})");
+
             clientConnector.RequestTurnInQuestDialog(dialog);
         }
 

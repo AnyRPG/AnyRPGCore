@@ -165,6 +165,14 @@ namespace AnyRPG {
 
         public void HandleAttemptSelect(RewardButton rewardButton) {
             //Debug.Log("QuestDetailsArea.HandleAttemptSelect()");
+
+            string questStatus = quest.GetStatus(playerManager.UnitController);
+            if (questStatus != "completed" && questStatus != "complete" && quest.AllowRawComplete == false) {
+                // this should not be possible, but just in case
+                rewardButton.Unselect();
+                return;
+            }
+
             if (GetHighlightedItemRewardIcons().ContainsValue(rewardButton)) {
                 //Debug.Log("QuestDetailsArea.HandleAttemptSelect(): it's an item reward; current count of highlighted icons: " + GetHighlightedItemRewardIcons().Count + "; max: " + quest.MyMaxItemRewards);
                 if (quest.MaxItemRewards == 0

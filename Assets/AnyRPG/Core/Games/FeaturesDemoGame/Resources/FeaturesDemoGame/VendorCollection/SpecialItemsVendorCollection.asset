@@ -25,11 +25,19 @@ MonoBehaviour:
     quantity: 0
     unlimited: 1
     itemQualityName: 
+    itemIndex: 0
+  - itemName: Quest Start And Turn In
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+    itemIndex: 0
   - itemName: Gain Currency
     quantity: 0
     unlimited: 1
     itemQualityName: 
+    itemIndex: 0
   - itemName: Level 5 Green Necklace
     quantity: 0
     unlimited: 1
     itemQualityName: 
+    itemIndex: 0

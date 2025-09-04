@@ -98,7 +98,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetCurrentStep(UnitController sourceUnitController, int value) {
-            Debug.Log($"{ResourceName}.QuestBase.SetCurrentStep({sourceUnitController.gameObject.name}, {value})");
+            //Debug.Log($"{ResourceName}.QuestBase.SetCurrentStep({sourceUnitController.gameObject.name}, {value})");
 
             QuestSaveData saveData = GetSaveData(sourceUnitController);
             saveData.questStep = value;

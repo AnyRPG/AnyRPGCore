@@ -1081,7 +1081,7 @@ namespace AnyRPG {
         }
 
         public void RequestSpawnUnit(Interactable interactable, int componentIndex, int unitLevel, int extraLevels, bool useDynamicLevel, string unitProfileName, string unitToughnessName) {
-            Debug.Log($"FishNetClientConnector.RequestSpawnUnit({interactable.gameObject.name}, {componentIndex}, {unitLevel}, {extraLevels}, {useDynamicLevel}, {unitProfileName}, {unitToughnessName})");
+            //Debug.Log($"FishNetClientConnector.RequestSpawnUnit({interactable.gameObject.name}, {componentIndex}, {unitLevel}, {extraLevels}, {useDynamicLevel}, {unitProfileName}, {unitToughnessName})");
 
             FishNetInteractable networkInteractable = null;
             if (interactable != null) {
@@ -1092,7 +1092,8 @@ namespace AnyRPG {
 
         [ServerRpc(RequireOwnership = false)]
         public void RequestSpawnUnitServer(FishNetInteractable targetNetworkInteractable, int componentIndex, int unitLevel, int extraLevels, bool useDynamicLevel, string unitProfileName, string unitToughnessName, NetworkConnection networkConnection = null) {
-            Debug.Log($"FishNetClientConnector.RequestSpawnUnitServer({componentIndex}, {unitLevel}, {extraLevels}, {useDynamicLevel}, {unitProfileName}, {unitToughnessName})");
+            //Debug.Log($"FishNetClientConnector.RequestSpawnUnitServer({componentIndex}, {unitLevel}, {extraLevels}, {useDynamicLevel}, {unitProfileName}, {unitToughnessName})");
+
             if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
                 Debug.LogWarning($"FishNetClientConnector.RequestSpawnUnitServer() could not find clientId {networkConnection.ClientId} in logged in accounts");
                 return;

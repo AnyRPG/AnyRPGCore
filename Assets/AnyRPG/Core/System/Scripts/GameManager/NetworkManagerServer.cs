@@ -688,7 +688,7 @@ namespace AnyRPG {
         }
 
         public void AdvertiseLoadScene(UnitController sourceUnitController, string sceneName, int accountId) {
-            Debug.Log($"NetworkManagerServer.AdvertiseLoadScene({sourceUnitController.gameObject.name}, {sceneName}, {accountId})");
+            //Debug.Log($"NetworkManagerServer.AdvertiseLoadScene({sourceUnitController.gameObject.name}, {sceneName}, {accountId})");
             
             string oldSceneName = sourceUnitController.gameObject.scene.name;
             int oldSceneHandle = sourceUnitController.gameObject.scene.handle;

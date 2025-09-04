@@ -158,6 +158,8 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestClearMouseUseable += HandleRequestClearMouseUseable;
                 unitController.UnitEventController.OnSetParent += HandleSetParent;
                 unitController.UnitEventController.OnDeactivateMountedState += HandleDeactivateMountedStateOwner;
+                unitController.UnitEventController.OnRequestAcceptQuestItemQuest += HandleRequestAcceptQuestItemQuest;
+                unitController.UnitEventController.OnRequestCompleteQuestItemQuest += HandleRequestCompleteQuestItemQuest;
             }
             // all clients
             unitController.UnitEventController.OnUnsetParent += HandleUnsetParent;
@@ -196,6 +198,8 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestClearMouseUseable -= HandleRequestClearMouseUseable;
                 unitController.UnitEventController.OnSetParent -= HandleSetParent;
                 unitController.UnitEventController.OnDeactivateMountedState -= HandleDeactivateMountedStateOwner;
+                unitController.UnitEventController.OnRequestAcceptQuestItemQuest -= HandleRequestAcceptQuestItemQuest;
+                unitController.UnitEventController.OnRequestCompleteQuestItemQuest -= HandleRequestCompleteQuestItemQuest;
             }
             // all clients
             unitController.UnitEventController.OnUnsetParent -= HandleUnsetParent;
@@ -305,6 +309,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnDespawnMountUnit += HandleDespawnMountUnitServer;
             unitController.UnitEventController.OnWriteMessageFeedMessage += HandleWriteMessageFeedMessageServer;
             unitController.UnitEventController.OnDialogCompleted += HandleDialogCompletedServer;
+            unitController.UnitEventController.OnInteractWithQuestStartItem += HandleInteractWithQuestStartItemServer;
         }
 
 
@@ -400,11 +405,25 @@ namespace AnyRPG {
             unitController.UnitEventController.OnActivateMountedState -= HandleActivateMountedStateServer;
             unitController.UnitEventController.OnDeactivateMountedState -= HandleDeactivateMountedState;
             //unitController.UnitEventController.OnSetParent -= HandleSetParent;
-            unitController.UnitEventController.OnUnsetParent += HandleUnsetParent;
+            unitController.UnitEventController.OnUnsetParent -= HandleUnsetParent;
             //unitController.UnitEventController.OnMountUnitSpawn -= HandleMountUnitSpawnServer;
             unitController.UnitEventController.OnDespawnMountUnit -= HandleDespawnMountUnitServer;
             unitController.UnitEventController.OnWriteMessageFeedMessage -= HandleWriteMessageFeedMessageServer;
             unitController.UnitEventController.OnDialogCompleted -= HandleDialogCompletedServer;
+            unitController.UnitEventController.OnInteractWithQuestStartItem -= HandleInteractWithQuestStartItemServer;
+        }
+
+        private void HandleInteractWithQuestStartItemServer(Quest quest, int slotIndex, int instanceId) {
+            HandleInteractWithQuestStartItemClient(base.Owner, quest.ResourceName, slotIndex, instanceId);
+        }
+
+        [TargetRpc]
+        private void HandleInteractWithQuestStartItemClient(NetworkConnection networkConnection, string questResourceName, int slotIndex, int instanceId) {
+            Quest quest = systemDataFactory.GetResource<Quest>(questResourceName);
+            if (quest == null) {
+                return;
+            }
+            unitController.CharacterQuestLog.InteractWithQuestStartItem(quest, slotIndex, instanceId);
         }
 
         private void HandleDialogCompletedServer(UnitController controller, Dialog dialog) {
@@ -694,6 +713,53 @@ namespace AnyRPG {
         public void HandleNameChangeClient(string newName) {
             unitController.BaseCharacter.ChangeCharacterName(newName);
         }
+
+        private void HandleRequestAcceptQuestItemQuest(int slotIndex, int instanceId, Quest quest) {
+            HandleRequestAcceptQuestItemQuestServer(slotIndex, instanceId, quest.ResourceName);
+        }
+
+        [ServerRpc]
+        private void HandleRequestAcceptQuestItemQuestServer(int slotIndex, int instanceId, string questResourceName) {
+            Quest quest = systemDataFactory.GetResource<Quest>(questResourceName);
+            if (quest == null) {
+                return;
+            }
+            if (unitController.CharacterInventoryManager.InventorySlots.Count <= slotIndex) {
+                return;
+            }
+            InstantiatedItem instantiatedItem = unitController.CharacterInventoryManager.InventorySlots[slotIndex].InstantiatedItem;
+            if (!(instantiatedItem is InstantiatedQuestStartItem)) {
+                return;
+            }
+            if (instantiatedItem.InstanceId != instanceId) {
+                return;
+            }
+            unitController.CharacterQuestLog.AcceptQuestItemQuest(instantiatedItem as InstantiatedQuestStartItem, quest);
+        }
+
+        private void HandleRequestCompleteQuestItemQuest(int slotIndex, int instanceId, Quest quest, QuestRewardChoices questRewardChoices) {
+            HandleRequestCompleteQuestItemQuestServer(slotIndex, instanceId, quest.ResourceName, questRewardChoices);
+        }
+
+        [ServerRpc]
+        private void HandleRequestCompleteQuestItemQuestServer(int slotIndex, int instanceId, string questResourceName, QuestRewardChoices questRewardChoices) {
+            Quest quest = systemDataFactory.GetResource<Quest>(questResourceName);
+            if (quest == null) {
+                return;
+            }
+            if (unitController.CharacterInventoryManager.InventorySlots.Count <= slotIndex) {
+                return;
+            }
+            InstantiatedItem instantiatedItem = unitController.CharacterInventoryManager.InventorySlots[slotIndex].InstantiatedItem;
+            if (!(instantiatedItem is InstantiatedQuestStartItem)) {
+                return;
+            }
+            if (instantiatedItem.InstanceId != instanceId) {
+                return;
+            }
+            unitController.CharacterQuestLog.CompleteQuestItemQuest(instantiatedItem as InstantiatedQuestStartItem, quest, questRewardChoices);
+        }
+
 
 
         public void HandleRequestClearMouseUseable(int buttonIndex) {
@@ -1471,7 +1537,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         public void HandleQuestObjectiveStatusUpdatedClient(string questName) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleQuestObjectiveStatusUpdatedClient({questName})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleQuestObjectiveStatusUpdatedClient({questName})");
 
             Quest quest = systemDataFactory.GetResource<Quest>(questName);
             if (quest == null) {
@@ -1487,7 +1553,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         public void HandleAchievementObjectiveStatusUpdatedClient(string resourceName) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleAchievementObjectiveStatusUpdatedClient({resourceName})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleAchievementObjectiveStatusUpdatedClient({resourceName})");
 
             Achievement achievement = systemDataFactory.GetResource<Achievement>(resourceName);
             if (achievement == null) {
@@ -1895,7 +1961,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         public void HandleBeforeDieClient() {
-            Debug.Log($"{gameObject.name}.HandleBeforeDieClient()");
+            //Debug.Log($"{gameObject.name}.HandleBeforeDieClient()");
 
             unitController.CharacterStats.Die();
         }

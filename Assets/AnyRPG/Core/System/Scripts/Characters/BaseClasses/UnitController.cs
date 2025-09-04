@@ -2034,7 +2034,7 @@ namespace AnyRPG {
         }
 
         public void FreezeCharacter() {
-            Debug.Log($"{gameObject.name}.UnitController.FreezeCharacter()");
+            //Debug.Log($"{gameObject.name}.UnitController.FreezeCharacter()");
 
             ApplyControlLock();
             frozen = true;
@@ -2048,7 +2048,7 @@ namespace AnyRPG {
         }
 
         public void UnFreezeCharacter() {
-            Debug.Log($"{gameObject.name}.UnitController.UnFreezeCharacter()");
+            //Debug.Log($"{gameObject.name}.UnitController.UnFreezeCharacter()");
 
             frozen = false;
             FreezeRotation();

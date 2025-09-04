@@ -24,7 +24,7 @@ namespace AnyRPG {
 
 
         public void SetQuestGiver(QuestGiverComponent questGiverComponent, int componentIndex, int choiceIndex, bool notify) {
-            Debug.Log($"QuestGiverManagerClient.SetQuestGiver({questGiverComponent.Interactable.gameObject.name}, {componentIndex}, {choiceIndex})");
+            //Debug.Log($"QuestGiverManagerClient.SetQuestGiver({questGiverComponent.Interactable.gameObject.name}, {componentIndex}, {choiceIndex})");
 
             this.questGiverComponent = questGiverComponent;
             
@@ -32,7 +32,7 @@ namespace AnyRPG {
         }
 
         public void RequestAcceptQuest(UnitController sourceUnitController, Quest quest) {
-            Debug.Log($"QuestGiverManagerClient.AcceptQuestClient({sourceUnitController.gameObject.name}, {quest.ResourceName})");
+            //Debug.Log($"QuestGiverManagerClient.AcceptQuestClient({sourceUnitController.gameObject.name}, {quest.ResourceName})");
 
             if (systemGameManager.GameMode == GameMode.Local) {
                 questGiverComponent.AcceptQuest(sourceUnitController, quest);

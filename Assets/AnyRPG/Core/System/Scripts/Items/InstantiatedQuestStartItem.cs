@@ -45,6 +45,7 @@ namespace AnyRPG {
                     }
                     //OpenQuestGiverWindow();
                     sourceUnitController.CharacterQuestLog.ShowQuestGiverDescription(QuestGiverProps.Quests[0].Quest, this);
+                    sourceUnitController.UnitEventController.NotifyOnInteractWithQuestStartItem(QuestGiverProps.Quests[0].Quest, slot.GetCurrentInventorySlotIndex(sourceUnitController), instanceId);
                 }
             }
             return returnValue;
@@ -143,6 +144,24 @@ namespace AnyRPG {
             return false;
         }
 
+        public void RequestAcceptQuest(UnitController unitController, Quest currentQuest) {
+            unitController.CharacterQuestLog.RequestAcceptQuestItemQuest(this, currentQuest);
+        }
+
+        public void RequestCompleteQuest(UnitController unitController, Quest currentQuest, QuestRewardChoices questRewardChoices) {
+            unitController.CharacterQuestLog.RequestCompleteQuestItemQuest(this, currentQuest, questRewardChoices);
+        }
+
+        public void CompleteQuest(UnitController sourceUnitController, Quest quest, QuestRewardChoices questRewardChoices) {
+            //Debug.Log("InstantiatedQuestStartItem.CompleteQuest()");
+            if (!quest.IsComplete(sourceUnitController)) {
+                Debug.Log("QuestGiverManager.CompleteQuest(): currentQuest is not complete, exiting!");
+                return;
+            }
+
+            quest.CompleteQuest(sourceUnitController, questRewardChoices);
+            HandleCompleteQuest();
+        }
     }
 
 }
