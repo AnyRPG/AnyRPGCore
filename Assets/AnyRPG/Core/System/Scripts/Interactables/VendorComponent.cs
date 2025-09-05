@@ -7,30 +7,28 @@ using static UnityEngine.Rendering.PostProcessing.SubpixelMorphologicalAntialias
 namespace AnyRPG {
     public class VendorComponent : InteractableOptionComponent {
 
-        // client Id, VendorCollection
-        private Dictionary<int, VendorCollection> buyBackCollection = new Dictionary<int, VendorCollection>();
+        // account Id, VendorCollection
+        private Dictionary<int, VendorCollection> buyBackCollections = new Dictionary<int, VendorCollection>();
 
         // game manager references
         private VendorManagerClient vendorManager = null;
-        private MessageFeedManager messageFeedManager = null;
         private CurrencyConverter currencyConverter = null;
 
         public VendorProps Props { get => interactableOptionProps as VendorProps; }
-        public Dictionary<int, VendorCollection> BuyBackCollection { get => buyBackCollection; set => buyBackCollection = value; }
+        public Dictionary<int, VendorCollection> BuyBackCollections { get => buyBackCollections; set => buyBackCollections = value; }
 
         public VendorComponent(Interactable interactable, VendorProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             interactionPanelTitle = "Purchase Items";
             // pre populate collection zero so vendor UI works in single player game
             VendorCollection tmpVendorCollection = ScriptableObject.CreateInstance(typeof(VendorCollection)) as VendorCollection;
             tmpVendorCollection.SetupScriptableObjects(systemGameManager);
-            buyBackCollection.Add(0, tmpVendorCollection);
+            //buyBackCollection.Add(0, tmpVendorCollection);
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
             vendorManager = systemGameManager.VendorManagerClient;
-            messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
             currencyConverter = systemGameManager.CurrencyConverter;
         }
 
@@ -77,9 +75,18 @@ namespace AnyRPG {
 
         public List<VendorCollection> GetVendorCollections(int accountId) {
             List<VendorCollection> returnList = new List<VendorCollection>();
-            returnList.Add(buyBackCollection[accountId]);
+            returnList.Add(buyBackCollections[accountId]);
             returnList.AddRange(Props.VendorCollections);
             return returnList;
+        }
+
+        public VendorCollection GetBuyBackCollection(int accountId) {
+            if (buyBackCollections.ContainsKey(accountId) == false) {
+                VendorCollection tmpVendorCollection = ScriptableObject.CreateInstance(typeof(VendorCollection)) as VendorCollection;
+                tmpVendorCollection.SetupScriptableObjects(systemGameManager);
+                buyBackCollections.Add(accountId, tmpVendorCollection);
+            }
+            return buyBackCollections[accountId];
         }
 
         public void AddToBuyBackCollection(UnitController sourceUnitController, int componentIndex, InstantiatedItem newInstantiatedItem) {
@@ -88,12 +95,8 @@ namespace AnyRPG {
             newVendorItem.InstantiatedItem = newInstantiatedItem;
             if (playerManagerServer.ActivePlayerLookup.ContainsKey(sourceUnitController) == true) {
                 int accountId = playerManagerServer.ActivePlayerLookup[sourceUnitController];
-                if (buyBackCollection.ContainsKey(accountId) == false) {
-                    VendorCollection tmpVendorCollection = ScriptableObject.CreateInstance(typeof(VendorCollection)) as VendorCollection;
-                    tmpVendorCollection.SetupScriptableObjects(systemGameManager);
-                    buyBackCollection.Add(accountId, tmpVendorCollection);
-                }
-                buyBackCollection[accountId].VendorItems.Add(newVendorItem);
+                VendorCollection buyBackCollection = GetBuyBackCollection(accountId);
+                buyBackCollection.VendorItems.Add(newVendorItem);
                 interactable.InteractableEventController.NotifyOnAddToBuyBackCollection(sourceUnitController, newInstantiatedItem);
                 if (networkManagerServer.ServerModeActive == true) {
                     networkManagerServer.AdvertiseAddToBuyBackCollection(sourceUnitController, interactable, componentIndex, newInstantiatedItem);
