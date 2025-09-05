@@ -139,8 +139,11 @@ namespace AnyRPG {
             if (dialogText != null) {
                 dialogText.text = string.Format("<size={0}>{1}</size>", dialogFontSize, dialogManagerClient.Dialog.DialogNodes[dialogIndex].Description);
             }
-
-            logManager.WriteChatMessageClient(dialogManagerClient.Dialog.DialogNodes[dialogIndex].Description);
+            string chatMessage = dialogManagerClient.Dialog.DialogNodes[dialogIndex].Description;
+            if (dialogManagerClient.Interactable != null) {
+                chatMessage = $"{dialogManagerClient.Interactable.DisplayName}: {chatMessage}";
+            }
+            logManager.WriteChatMessageClient(chatMessage);
             if (dialogManagerClient.Dialog.DialogNodes[dialogIndex].AudioClip != null) {
                 audioManager.PlayVoice(dialogManagerClient.Dialog.DialogNodes[dialogIndex].AudioClip);
             }

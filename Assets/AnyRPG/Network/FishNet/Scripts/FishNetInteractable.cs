@@ -264,7 +264,8 @@ namespace AnyRPG {
 
         [ObserversRpc]
         public void HandlePlayDialogNode(string dialogName, int dialogIndex) {
-            Debug.Log($"{gameObject.name}.NetworkInteractable.HandlePlayDialogNode({dialogName}, {dialogIndex})");
+            //Debug.Log($"{gameObject.name}.NetworkInteractable.HandlePlayDialogNode({dialogName}, {dialogIndex})");
+
             interactable.DialogController.PlayDialogNode(dialogName, dialogIndex);
         }
 

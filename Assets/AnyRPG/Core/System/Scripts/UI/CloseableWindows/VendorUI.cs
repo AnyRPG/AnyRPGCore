@@ -186,7 +186,7 @@ namespace AnyRPG {
             UpdateCurrencyAmount();
             dropDownIndex = 1;
             this.vendorCollections = new List<VendorCollection>(1 + vendorCollections.Count);
-            this.vendorCollections.Add(vendorManager.VendorComponent.BuyBackCollection[0]);
+            this.vendorCollections.Add(vendorManager.VendorComponent.BuyBackCollections[0]);
             this.vendorCollections.AddRange(vendorCollections);
             dropdown.ClearOptions();
             List<string> vendorCollectionNames = new List<string>();

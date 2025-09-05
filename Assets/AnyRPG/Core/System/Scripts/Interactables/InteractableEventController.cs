@@ -43,7 +43,8 @@ namespace AnyRPG {
         #region EventNotifications
 
         public void NotifyOnPlayDialogNode(Dialog dialog, int dialogIndex) {
-            Debug.Log($"{interactable.gameObject.name}.InteractableEventController.NotifyOnPlayDialogNode({dialog.ResourceName}, {dialogIndex})");
+            //Debug.Log($"{interactable.gameObject.name}.InteractableEventController.NotifyOnPlayDialogNode({dialog.ResourceName}, {dialogIndex})");
+
             OnPlayDialogNode(dialog.ResourceName, dialogIndex);
         }
 

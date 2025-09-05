@@ -71,13 +71,13 @@ namespace AnyRPG {
         }
 
         public void WriteChatMessageClient(string newMessage) {
-            Debug.Log($"LogManager.WriteChatMessageClient({newMessage})");
+            //Debug.Log($"LogManager.WriteChatMessageClient({newMessage})");
 
             OnWriteChatMessage(newMessage);
         }
 
         public void WriteChatMessageServer(int accountId, string newMessage) {
-            Debug.Log($"LogManager.WriteChatMessageServer({accountId}, {newMessage})");
+            //Debug.Log($"LogManager.WriteChatMessageServer({accountId}, {newMessage})");
 
             if (newMessage.StartsWith("/") == true) {
                 chatCommandManager.ParseChatCommand(newMessage.Substring(1), accountId);
@@ -92,7 +92,7 @@ namespace AnyRPG {
         }
 
         public void RequestChatMessageClient(string newMessage) {
-            Debug.Log($"LogManager.RequestChatMessageClient({newMessage})");
+            //Debug.Log($"LogManager.RequestChatMessageClient({newMessage})");
 
             if (systemGameManager.GameMode == GameMode.Network) {
                 networkManagerClient.SendSceneChatMessage(newMessage);
@@ -108,7 +108,7 @@ namespace AnyRPG {
         }
 
         public void WriteSystemMessage(UnitController sourceUnitController, string message) {
-            Debug.Log($"LogManager.WriteSystemMessage({sourceUnitController.gameObject.name}, {message})");
+            //Debug.Log($"LogManager.WriteSystemMessage({sourceUnitController.gameObject.name}, {message})");
 
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
                 WriteSystemMessage(message);

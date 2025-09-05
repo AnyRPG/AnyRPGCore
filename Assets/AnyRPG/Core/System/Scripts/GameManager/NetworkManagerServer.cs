@@ -683,15 +683,16 @@ namespace AnyRPG {
         }
 
         public void AdvertiseSceneChatMessage(string messageText, int accountId) {
-            networkController.AdvertiseSendSceneChatMessage(messageText, accountId);
-
             if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId) == false) {
                 // no unit logged in
                 return;
             }
+            // send the modified text with username to the chat window
             string addedText = $"{loggedInAccounts[accountId].username}: {messageText}\n";
+            networkController.AdvertiseSendSceneChatMessage(addedText, accountId);
 
-            playerManagerServer.PlayerCharacterMonitors[accountId].unitController.UnitEventController.NotifyOnBeginChatMessage(addedText);
+            // send original text to the dialog popup over the player's head
+            playerManagerServer.PlayerCharacterMonitors[accountId].unitController.UnitEventController.NotifyOnBeginChatMessage(messageText);
         }
 
         public void AdvertiseLoadScene(UnitController sourceUnitController, string sceneName, int accountId) {

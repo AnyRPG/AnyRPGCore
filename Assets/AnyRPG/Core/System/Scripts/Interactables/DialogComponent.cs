@@ -65,7 +65,7 @@ namespace AnyRPG {
         }
 
         public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex = 0) {
-            Debug.Log($"{interactable.gameObject.name}.DialogComponent.Interact({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex})");
+            //Debug.Log($"{interactable.gameObject.name}.DialogComponent.Interact({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex})");
 
             base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
             List<Dialog> currentList = GetCurrentOptionList(sourceUnitController);

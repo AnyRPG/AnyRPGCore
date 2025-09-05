@@ -64,7 +64,7 @@ namespace AnyRPG {
         }
 
         public void BeginDialog(UnitController sourceUnitController, Dialog dialog, DialogComponent caller = null) {
-            Debug.Log($"{interactable.gameObject.name}.DialogController.BeginDialog({sourceUnitController.gameObject.name}, {dialog.ResourceName})");
+            //Debug.Log($"{interactable.gameObject.name}.DialogController.BeginDialog({sourceUnitController.gameObject.name}, {dialog.ResourceName})");
 
             if (dialog != null && dialogCoroutine == null) {
                 dialogCoroutine = interactable.StartCoroutine(PlayDialog(sourceUnitController, dialog, caller));
@@ -83,7 +83,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator PlayChatMessage(string messageText, float displayTime) {
-            Debug.Log($"{interactable.gameObject.name}.DialogController.PlayChatMessage({messageText}, {displayTime})");
+            //Debug.Log($"{interactable.gameObject.name}.DialogController.PlayChatMessage({messageText}, {displayTime})");
 
             interactable.ProcessBeginDialog();
 
@@ -94,7 +94,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator PlayDialog(UnitController sourceUnitController, Dialog dialog, DialogComponent caller = null) {
-            Debug.Log($"{interactable.gameObject.name}.DialogController.PlayDialog({dialog.DisplayName})");
+            //Debug.Log($"{interactable.gameObject.name}.DialogController.PlayDialog({dialog.DisplayName})");
 
             //interactable.ProcessBeginDialog();
             float elapsedTime = 0f;
@@ -145,7 +145,7 @@ namespace AnyRPG {
         }
 
         public void PlayDialogNode(string dialogName, int dialogIndex) {
-            Debug.Log($"{interactable.gameObject.name}.DialogController.PlayDialogNode({dialogName}, {dialogIndex})");
+            //Debug.Log($"{interactable.gameObject.name}.DialogController.PlayDialogNode({dialogName}, {dialogIndex})");
 
             Dialog dialog = systemDataFactory.GetResource<Dialog>(dialogName);
             if (dialog != null && dialog.DialogNodes.Count > dialogIndex) {
@@ -154,7 +154,7 @@ namespace AnyRPG {
         }
 
         public void PlayDialogNode(DialogNode dialogNode) {
-            Debug.Log($"{interactable.gameObject.name}.DialogController.PlayDialogNode()");
+            //Debug.Log($"{interactable.gameObject.name}.DialogController.PlayDialogNode()");
 
             if (networkManagerServer.ServerModeActive == true) {
                 return;
