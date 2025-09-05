@@ -166,11 +166,12 @@ namespace AnyRPG {
 
             if (loginRequests.ContainsKey(clientId)) {
                 if (loggedInAccounts.ContainsKey(accountId)) {
-                    Debug.Log($"NetworkManagerServer.AddLoggedInAccount({clientId}, {accountId}, {token}) : updating existing object");
+                    //Debug.Log($"NetworkManagerServer.AddLoggedInAccount({clientId}, {accountId}, {token}) : updating existing object");
                     int oldClientId = loggedInAccounts[accountId].clientId;
                     loggedInAccounts[accountId].clientId = clientId;
                     loggedInAccounts[accountId].token = token;
                     loggedInAccounts[accountId].ipAddress = GetClientIPAddress(clientId);
+                    loggedInAccounts[accountId].disconnected = false;
                     loggedInAccountsByClient.Remove(oldClientId);
                     loggedInAccountsByClient.Add(clientId, loggedInAccounts[accountId]);
                 } else {
@@ -258,7 +259,7 @@ namespace AnyRPG {
 
             SpawnPlayerRequest spawnPlayerRequest = null;
             if (correctPassword == true) {
-                if (loggedInAccounts.ContainsKey(accountId)) {
+                if (loggedInAccounts.ContainsKey(accountId) && loggedInAccounts[accountId].disconnected == false) {
                     if (playerManagerServer.ActivePlayers.ContainsKey(accountId)) {
                         // if the player is already logged in, we need to add a spawn request to match the current position and direction of the player
                         spawnPlayerRequest = new SpawnPlayerRequest() {
@@ -272,6 +273,7 @@ namespace AnyRPG {
                     playerManagerServer.DespawnPlayerUnit(accountId);
                     KickPlayer(accountId);
                 } else if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId)) {
+                    //Debug.Log($"NetworkManagerServer.ProcessLoginResponse({clientId}, {accountId}, {correctPassword}, {token}) account was disconnected, using last position");
                     // if the account is disconnected but was already logged in, add a spawn request to match the saved position and direction of the player
                     AnyRPGSaveData saveData = playerManagerServer.PlayerCharacterMonitors[accountId].playerCharacterSaveData.SaveData;
                     spawnPlayerRequest = new SpawnPlayerRequest() {
@@ -405,7 +407,10 @@ namespace AnyRPG {
                 return;
             }
             int accountId = loggedInAccountsByClient[clientId].accountId;
-            ProcessClientLogout(accountId);
+            // don't do this - it will remove them from the lobby game
+            //ProcessClientLogout(accountId);
+            loggedInAccounts[accountId].disconnected = true;
+
             playerManagerServer.ProcessDisconnect(accountId);
         }
 
@@ -487,7 +492,8 @@ namespace AnyRPG {
         }
 
         public void KickPlayer(int accountId) {
-            Debug.Log($"NetworkManagerServer.KickPlayer({accountId})");
+            //Debug.Log($"NetworkManagerServer.KickPlayer({accountId})");
+
             networkController?.KickPlayer(accountId);
         }
 
@@ -589,11 +595,12 @@ namespace AnyRPG {
         }
 
         public void JoinLobbyGameInProgress(int gameId, int accountId) {
-            Debug.Log($"NetworkManagerServer.JoinLobbyGameInProgress({gameId}, {accountId})");
+            //Debug.Log($"NetworkManagerServer.JoinLobbyGameInProgress({gameId}, {accountId})");
 
             string sceneName = string.Empty;
-            if (playerManagerServer.SpawnRequests.ContainsKey(accountId) == false) {
-                Debug.Log($"NetworkManagerServer.JoinLobbyGameInProgress({gameId}, {accountId}) - creating new spawn request");
+            //if (playerManagerServer.SpawnRequests.ContainsKey(accountId) == false) {
+            if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId) == false) {
+                //Debug.Log($"NetworkManagerServer.JoinLobbyGameInProgress({gameId}, {accountId}) - new spawn setting appearance");
                 sceneName = lobbyGames[gameId].sceneResourceName;
                 PlayerCharacterSaveData playerCharacterSaveData = GetNewLobbyGamePlayerCharacterSaveData(gameId, accountId, lobbyGames[gameId].PlayerList[accountId].unitProfileName);
                 playerCharacterSaveData.SaveData.appearanceString = lobbyGames[gameId].PlayerList[accountId].appearanceString;
@@ -602,7 +609,7 @@ namespace AnyRPG {
                 playerManagerServer.AddPlayerMonitor(accountId, playerCharacterSaveData);
             } else {
                 // player already has a spawn request, so this is a rejoin.  Leave it alone because it contains the last correct position and direction
-                Debug.Log($"NetworkManagerServer.JoinLobbyGameInProgress({gameId}, {accountId}) - reusing existing spawn request");
+                //Debug.Log($"NetworkManagerServer.JoinLobbyGameInProgress({gameId}, {accountId}) - reusing existing scene from save data");
                 sceneName = playerManagerServer.PlayerCharacterMonitors[accountId].playerCharacterSaveData.SaveData.CurrentScene;
                 if (levelManager.SceneDictionary.ContainsKey(sceneName)) {
                     sceneName = levelManager.SceneDictionary[sceneName].ResourceName;

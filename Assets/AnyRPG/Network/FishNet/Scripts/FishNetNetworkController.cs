@@ -220,7 +220,7 @@ namespace AnyRPG {
         }
 
         private void HandleClientKick(NetworkConnection arg1, int arg2, KickReason kickReason) {
-            Debug.Log($"FishNetNetworkController.HandleClientKick({kickReason.ToString()})");
+            //Debug.Log($"FishNetNetworkController.HandleClientKick({kickReason.ToString()})");
         }
 
         /*

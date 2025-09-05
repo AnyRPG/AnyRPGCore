@@ -817,6 +817,8 @@ namespace AnyRPG {
         }
 
         public void SavePlayerLocation() {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SavePlayerLocation()");
+
             saveData.OverrideLocation = true;
             saveData.OverrideRotation = true;
             saveData.PlayerLocationX = unitController.transform.position.x;

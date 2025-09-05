@@ -21,7 +21,7 @@ namespace AnyRPG {
         public DateTime StartTime { get => startTime; }
 
         public override void Configure(SystemGameManager systemGameManager) {
-            Debug.Log("TimeOfDayManagerServer.Configure()");
+            //Debug.Log("TimeOfDayManagerServer.Configure()");
 
             base.Configure(systemGameManager);
 

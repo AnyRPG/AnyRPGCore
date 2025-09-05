@@ -619,7 +619,7 @@ namespace AnyRPG {
         }
 
         public void JoinLobbyGameInProgress(int gameId, int accountId, string sceneResourceName) {
-            Debug.Log($"FishNetClientConnector.JoinLobbyGameInProgress({gameId}, {accountId})");
+            //Debug.Log($"FishNetClientConnector.JoinLobbyGameInProgress({gameId}, {accountId})");
 
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
                 return;

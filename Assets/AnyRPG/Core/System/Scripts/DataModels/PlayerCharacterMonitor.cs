@@ -85,7 +85,7 @@ namespace AnyRPG {
         }
 
         public void SetDisconnected() {
-            Debug.Log($"PlayerCharacterMonitor.SetDisconnected() for account {accountId}");
+            //Debug.Log($"PlayerCharacterMonitor.SetDisconnected() for account {accountId}");
 
             ProcessBeforeDespawn();
             this.disconnected = true;

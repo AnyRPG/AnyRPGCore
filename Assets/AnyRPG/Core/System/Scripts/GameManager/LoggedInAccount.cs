@@ -8,6 +8,7 @@ namespace AnyRPG {
         public string username;
         public string token;
         public string ipAddress;
+        public bool disconnected = false;
 
         public LoggedInAccount(int clientId, int accountId, string username, string token, string ipAddress) {
             this.accountId = accountId;
