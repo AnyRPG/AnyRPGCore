@@ -15,7 +15,7 @@ namespace AnyRPG {
         private CurrencyConverter currencyConverter = null;
 
         public VendorProps Props { get => interactableOptionProps as VendorProps; }
-        public Dictionary<int, VendorCollection> BuyBackCollections { get => buyBackCollections; set => buyBackCollections = value; }
+        //public Dictionary<int, VendorCollection> BuyBackCollections { get => buyBackCollections; set => buyBackCollections = value; }
 
         public VendorComponent(Interactable interactable, VendorProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             interactionPanelTitle = "Purchase Items";
@@ -75,7 +75,7 @@ namespace AnyRPG {
 
         public List<VendorCollection> GetVendorCollections(int accountId) {
             List<VendorCollection> returnList = new List<VendorCollection>();
-            returnList.Add(buyBackCollections[accountId]);
+            returnList.Add(GetBuyBackCollection(accountId));
             returnList.AddRange(Props.VendorCollections);
             return returnList;
         }

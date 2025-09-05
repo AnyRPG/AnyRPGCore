@@ -2431,7 +2431,7 @@ namespace AnyRPG {
         }
 
         public void DeactivateStealth() {
-            Debug.Log($"{gameObject.name}.UnitController.DeactivateStealth()");
+            //Debug.Log($"{gameObject.name}.UnitController.DeactivateStealth()");
 
             isStealth = false;
             unitMaterialController.DeactivateStealth();
@@ -2452,7 +2452,7 @@ namespace AnyRPG {
         }
 
         public void WriteMessageFeedMessage(string messageText) {
-            Debug.Log($"{gameObject.name}.UnitController.WriteMessageFeedMessage({messageText})");
+            //Debug.Log($"{gameObject.name}.UnitController.WriteMessageFeedMessage({messageText})");
 
             if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false) {
                 // in network client mode, all messages should come from the server.

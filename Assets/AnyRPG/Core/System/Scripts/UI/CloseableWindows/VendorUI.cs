@@ -38,6 +38,7 @@ namespace AnyRPG {
         protected CurrencyConverter currencyConverter = null;
         protected VendorManagerClient vendorManager = null;
         protected SystemEventManager systemEventManager = null;
+        protected NetworkManagerClient NetworkManagerClient = null;
 
         //protected List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
 
@@ -69,6 +70,7 @@ namespace AnyRPG {
             currencyConverter = systemGameManager.CurrencyConverter;
             vendorManager = systemGameManager.VendorManagerClient;
             systemEventManager = systemGameManager.SystemEventManager;
+            NetworkManagerClient = systemGameManager.NetworkManagerClient;
         }
 
         protected override void ProcessCreateEventSubscriptions() {
@@ -186,7 +188,7 @@ namespace AnyRPG {
             UpdateCurrencyAmount();
             dropDownIndex = 1;
             this.vendorCollections = new List<VendorCollection>(1 + vendorCollections.Count);
-            this.vendorCollections.Add(vendorManager.VendorComponent.BuyBackCollections[0]);
+            this.vendorCollections.Add(vendorManager.VendorComponent.GetBuyBackCollection(NetworkManagerClient.AccountId));
             this.vendorCollections.AddRange(vendorCollections);
             dropdown.ClearOptions();
             List<string> vendorCollectionNames = new List<string>();

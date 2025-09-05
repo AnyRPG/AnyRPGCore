@@ -709,7 +709,7 @@ namespace AnyRPG {
         }
 
         private void HandleWriteMessageFeedMessage(string messageText) {
-            Debug.Log($"PlayerManager.HandleWriteMessageFeedMessage({messageText})");
+            //Debug.Log($"PlayerManager.HandleWriteMessageFeedMessage({messageText})");
 
             messageFeedManager.WriteMessage(messageText);
         }

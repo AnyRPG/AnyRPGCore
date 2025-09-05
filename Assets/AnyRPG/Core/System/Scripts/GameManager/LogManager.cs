@@ -118,7 +118,7 @@ namespace AnyRPG {
         }
 
         public void WriteSystemMessage(string newMessage) {
-            Debug.Log($"LogManager.WriteSystemMessage({newMessage})");
+            //Debug.Log($"LogManager.WriteSystemMessage({newMessage})");
 
             OnWriteSystemMessage(newMessage);
         }

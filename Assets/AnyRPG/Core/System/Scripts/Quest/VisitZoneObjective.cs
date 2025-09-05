@@ -48,7 +48,7 @@ namespace AnyRPG {
         }
 
         public override void OnAcceptQuest(UnitController sourceUnitController, QuestBase quest, bool printMessages = true) {
-            Debug.Log($"VisitZoneObjective.OnAcceptQuest({sourceUnitController.gameObject.name}, {quest.ResourceName}, {printMessages})");
+            //Debug.Log($"VisitZoneObjective.OnAcceptQuest({sourceUnitController.gameObject.name}, {quest.ResourceName}, {printMessages})");
 
             base.OnAcceptQuest(sourceUnitController, quest, printMessages);
 
