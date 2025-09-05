@@ -1,0 +1,106 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 534edf300d8929243a0d291e413e2f0b, type: 3}
+  m_Name: EyesColorTable
+  m_EditorClassIdentifier: 
+  channelCount: 3
+  sharedColorName: Eyes
+  colors:
+  - name: Eyes
+    channelMask:
+    - {r: 0.27450982, g: 1, b: 0.1137255, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.134, g: 0.122, b: 0.122, a: 0.604}
+  - name: Eyes
+    channelMask:
+    - {r: 0.36764705, g: 0.20586254, b: 0.15138407, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.134, g: 0.122, b: 0.122, a: 0.604}
+  - name: Eyes
+    channelMask:
+    - {r: 0.83921576, g: 0.40000004, b: 0.16470589, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.134, g: 0.122, b: 0.122, a: 0.604}
+  - name: Eyes
+    channelMask:
+    - {r: 0.82745105, g: 0.61960787, b: 0.39607847, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.134, g: 0.122, b: 0.122, a: 0.604}
+  - name: Eyes
+    channelMask:
+    - {r: 0.28676468, g: 0.40973648, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.134, g: 0.122, b: 0.122, a: 0.604}
+  - name: Eyes
+    channelMask:
+    - {r: 0.5, g: 0.3958333, b: 0.25, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.134, g: 0.122, b: 0.122, a: 0.604}
+  - name: Eyes
+    channelMask:
+    - {r: 0.99264705, g: 0.265377, b: 0.051092118, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.134, g: 0.122, b: 0.122, a: 0.604}
+  - name: Eyes
+    channelMask:
+    - {r: 0.9264706, g: 0.8304409, b: 0.4291739, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.134, g: 0.122, b: 0.122, a: 0.604}
+  - name: Eyes
+    channelMask:
+    - {r: 0.27467263, g: 0.5514706, b: 0.14192258, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.134, g: 0.122, b: 0.122, a: 0.604}
+  - name: Eyes
+    channelMask:
+    - {r: 0.8366722, g: 0.30622834, b: 0.86764705, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    channelAdditiveMask:
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.134, g: 0.122, b: 0.122, a: 0.604}
