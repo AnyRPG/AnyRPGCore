@@ -64,6 +64,17 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             lootHolder.Configure(systemGameManager);
+            SubscribeToLootHolderEvents();
+        }
+
+        public void SubscribeToLootHolderEvents() {
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                lootHolder.OnRemoveDroppedItem += HandleRemoveDroppedItem;
+            }
+        }
+
+        private void HandleRemoveDroppedItem(LootDrop drop, int accountId) {
+            CheckDropListSize();
         }
 
         public override void Cleanup() {
@@ -143,11 +154,12 @@ namespace AnyRPG {
         public void OpenLootWindow() {
             //Debug.Log($"{interactable.gameObject.name}.LootableNodeComponent.OpenLootWindow()");
 
-            CreateWindowEventSubscriptions();
-            uIManager.lootWindow.CloseableWindowContents.OnCloseWindow += ClearTakeLootHandler;
+            //CreateWindowEventSubscriptions();
+            //uIManager.lootWindow.CloseableWindowContents.OnCloseWindow += ClearTakeLootHandler;
             uIManager.lootWindow.OpenWindow();
         }
 
+        /*
         //public void ClearTakeLootHandler(ICloseableWindowContents windowContents) {
         public void ClearTakeLootHandler(CloseableWindowContents windowContents) {
             //Debug.Log($"{gameObject.name}.LootableNode.ClearTakeLootHandler()");
@@ -178,6 +190,7 @@ namespace AnyRPG {
 
             CheckDropListSize();
         }
+        */
 
         public void ClearLootTables() {
             Props.LootTables.Clear();
@@ -221,7 +234,7 @@ namespace AnyRPG {
         }
 
         private void Despawn() {
-            Debug.Log($"{interactable.gameObject.name}.LootableNode.Despawn()");
+            //Debug.Log($"{interactable.gameObject.name}.LootableNode.Despawn()");
 
             if (Props.SpawnObject != null && Props.SpawnObject.activeSelf == true) {
                 Props.SpawnObject.SetActive(false);

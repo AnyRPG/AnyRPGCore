@@ -5859,6 +5859,16 @@ PrefabInstance:
       propertyPath: <SceneId>k__BackingField
       value: 3045055199
       objectReference: {fileID: 0}
+    - target: {fileID: 1266317173796060978, guid: b59619748da8a184ea069bfda6efc83e,
+        type: 3}
+      propertyPath: <SceneId>k__BackingField
+      value: 3162413255
+      objectReference: {fileID: 0}
+    - target: {fileID: 5430281565079627758, guid: b59619748da8a184ea069bfda6efc83e,
+        type: 3}
+      propertyPath: <SceneId>k__BackingField
+      value: 880523863
+      objectReference: {fileID: 0}
     - target: {fileID: 8704278066669917025, guid: b59619748da8a184ea069bfda6efc83e,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -32217,6 +32227,16 @@ PrefabInstance:
       propertyPath: <SceneId>k__BackingField
       value: 4135558271
       objectReference: {fileID: 0}
+    - target: {fileID: 1266317173796060978, guid: b59619748da8a184ea069bfda6efc83e,
+        type: 3}
+      propertyPath: <SceneId>k__BackingField
+      value: 1073405151
+      objectReference: {fileID: 0}
+    - target: {fileID: 5430281565079627758, guid: b59619748da8a184ea069bfda6efc83e,
+        type: 3}
+      propertyPath: <SceneId>k__BackingField
+      value: 3195779303
+      objectReference: {fileID: 0}
     - target: {fileID: 8704278066669917025, guid: b59619748da8a184ea069bfda6efc83e,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -57450,7 +57470,7 @@ MonoBehaviour:
   RuntimeParentNetworkBehaviour: {fileID: 0}
   RuntimeChildNetworkBehaviours: []
   _isNetworked: 1
-  _isSpawnable: 1
+  _isSpawnable: 0
   _isGlobal: 0
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
@@ -59970,7 +59990,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UUID: e482f94b-4356-4779-a60f-759bf3d0b856
+  m_UUID: b0099d5e-17e5-4e38-a2de-6a4d686bf600
   forceUpdateUUID: 0
 --- !u!54 &1448223535
 Rigidbody:
@@ -74908,6 +74928,16 @@ PrefabInstance:
       propertyPath: <SceneId>k__BackingField
       value: 3024083679
       objectReference: {fileID: 0}
+    - target: {fileID: 1266317173796060978, guid: b59619748da8a184ea069bfda6efc83e,
+        type: 3}
+      propertyPath: <SceneId>k__BackingField
+      value: 3027942503
+      objectReference: {fileID: 0}
+    - target: {fileID: 5430281565079627758, guid: b59619748da8a184ea069bfda6efc83e,
+        type: 3}
+      propertyPath: <SceneId>k__BackingField
+      value: 876281855
+      objectReference: {fileID: 0}
     - target: {fileID: 8704278066669917025, guid: b59619748da8a184ea069bfda6efc83e,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -76879,7 +76909,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UUID: a06a92d0-76dd-4102-9c36-c99d34fe0c1f
+  m_UUID: 08b99553-284a-4fa5-bce3-bd7569c58a29
   forceUpdateUUID: 0
 --- !u!54 &1813795260
 Rigidbody:

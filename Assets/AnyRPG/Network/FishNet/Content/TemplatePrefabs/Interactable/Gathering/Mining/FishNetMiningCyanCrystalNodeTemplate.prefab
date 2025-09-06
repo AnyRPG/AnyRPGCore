@@ -150,7 +150,7 @@ MonoBehaviour:
   RuntimeParentNetworkBehaviour: {fileID: 0}
   RuntimeChildNetworkBehaviours: []
   _isNetworked: 1
-  _isSpawnable: 1
+  _isSpawnable: 0
   _isGlobal: 0
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
@@ -254,7 +254,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2959374158641661918, guid: eeb768e650251d44a828ca90867dea3e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4783741896695357372}
   m_SourcePrefab: {fileID: 100100000, guid: eeb768e650251d44a828ca90867dea3e, type: 3}
 --- !u!1 &1134214200365666669 stripped
 GameObject:
@@ -262,6 +266,21 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2786680130291979955}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4783741896695357372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1134214200365666669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3031df960f211854caec2058304bcc38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 6719637900211664601}
+  _networkObjectCache: {fileID: 0}
 --- !u!4 &1889560428031398101 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4365492045381568102, guid: eeb768e650251d44a828ca90867dea3e,
