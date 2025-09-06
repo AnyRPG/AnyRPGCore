@@ -471,7 +471,7 @@ namespace AnyRPG {
                 return false;
             }
             if (performUniqueCheck == true && instantiatedItem.Item.UniqueItem == true && GetItemCount(instantiatedItem.Item.ResourceName) > 0) {
-                unitController.UnitEventController.NotifyOnMessageFeedMessage($"{instantiatedItem.DisplayName} is unique.  You can only carry one at a time.");
+                unitController.UnitEventController.NotifyOnWriteMessageFeedMessage($"{instantiatedItem.DisplayName} is unique.  You can only carry one at a time.");
                 return false;
             }
             if (instantiatedItem.Item.MaximumStackSize > 0) {
@@ -556,7 +556,7 @@ namespace AnyRPG {
             }
             if (EmptySlotCount(addToBank) == 0) {
                 //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.PlaceInEmpty({instantiatedItem.ResourceName}, {addToBank}): no empty slots");
-                unitController.UnitEventController.NotifyOnMessageFeedMessage($"{(addToBank == false ? "Inventory" : "Bank")} is full!");
+                unitController.UnitEventController.NotifyOnWriteMessageFeedMessage($"{(addToBank == false ? "Inventory" : "Bank")} is full!");
             }
             return false;
         }

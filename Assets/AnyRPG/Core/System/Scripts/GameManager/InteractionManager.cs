@@ -58,10 +58,8 @@ namespace AnyRPG {
             // get reference to name now since interactable could change scene and then target reference is lost
             //string targetDisplayName = target.DisplayName;
 
-            //if (target.Interact(playerManager.ActiveUnitController.CharacterUnit, true)) {
             if (InteractWithInteractable(playerManager.ActiveUnitController, target)) {
                 //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
-                //systemEventManager.NotifyOnInteractionStarted(sourceUnitController, targetDisplayName);
                 return true;
             }
             return false;
@@ -126,7 +124,7 @@ namespace AnyRPG {
 
             if (validInteractables.Count > 0 && inRangeInteractables.Count == 0) {
                 if (passedRangeCheck == false) {
-                    sourceUnitController.UnitEventController.NotifyOnMessageFeedMessage($"{targetInteractable.DisplayName} is out of range");
+                    sourceUnitController.UnitEventController.NotifyOnWriteMessageFeedMessage($"{targetInteractable.DisplayName} is out of range");
                 }
             }
             return false;

@@ -1585,7 +1585,7 @@ namespace AnyRPG {
 
         public override void ReceiveMessageFeedMessage(string messageText) {
             base.ReceiveMessageFeedMessage(messageText);
-            unitController.UnitEventController.NotifyOnMessageFeedMessage(messageText);
+            unitController.UnitEventController.NotifyOnWriteMessageFeedMessage(messageText);
         }
 
 

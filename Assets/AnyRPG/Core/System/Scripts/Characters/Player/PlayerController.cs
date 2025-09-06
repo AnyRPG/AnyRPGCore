@@ -640,12 +640,10 @@ namespace AnyRPG {
                 return false;
             }
 
-            //if (playerManager.UnitController.Target == null) {
             if (target == null) {
                 //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded(): target is null. return false.");
                 return false;
             }
-            //if (IsTargetInHitBox(target)) {
 
             return interactionManager.Interact(playerManager.UnitController, target);
         }
@@ -1168,9 +1166,11 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public void HandleMessageFeed(string message) {
             messageFeedManager.WriteMessage(message);
         }
+        */
 
         public void HandleActivateMountedState(UnitController mountUnitController) {
 

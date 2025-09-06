@@ -75,7 +75,7 @@ namespace AnyRPG {
         public event System.Action<UnitController, AbilityProperties> OnLearnAbility = delegate { };
         public event System.Action<AbilityProperties> OnUnlearnAbility = delegate { };
         public event System.Action<AbilityProperties> OnAttemptPerformAbility = delegate { };
-        public event System.Action<UnitController, string> OnMessageFeedMessage = delegate { };
+        //public event System.Action<UnitController, string> OnMessageFeedMessage = delegate { };
         public event System.Action<AbilityProperties> OnLearnedCheckFail = delegate { };
         public event System.Action<AbilityProperties> OnCombatCheckFail = delegate { };
         public event System.Action<AbilityProperties> OnStealthCheckFail = delegate { };
@@ -225,9 +225,13 @@ namespace AnyRPG {
             OnLearnedCheckFail(abilityProperties);
         }
 
+        /*
         public void NotifyOnMessageFeedMessage(string message) {
+            Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnMessageFeedMessage({message})");
+
             OnMessageFeedMessage(unitController, message);
         }
+        */
 
         public void NotifyOnAttemptPerformAbility(AbilityProperties abilityProperties) {
             OnAttemptPerformAbility(abilityProperties);
