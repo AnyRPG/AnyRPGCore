@@ -1184,7 +1184,7 @@ namespace AnyRPG {
         }
 
         public void PerformDeathCheck() {
-            Debug.Log($"{unitController.gameObject.name}.CharacterStats.PerformDeathCheck()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.PerformDeathCheck()");
 
             bool shouldLive = false;
             foreach (PowerResource powerResource in powerResourceDictionary.Keys) {

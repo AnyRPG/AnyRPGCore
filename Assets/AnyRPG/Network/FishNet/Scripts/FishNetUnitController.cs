@@ -603,7 +603,7 @@ namespace AnyRPG {
         }
 
         private void HandleActivateAutoAttackServer() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleActivateAutoAttackServer()");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleActivateAutoAttackServer()");
 
             HandleActivateAutoAttackClient();
         }
@@ -1318,7 +1318,7 @@ namespace AnyRPG {
 
         [ServerRpc]
         private void RequestUseItemClient(int slotIndex) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.RequestUseItemClient({slotIndex})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.RequestUseItemClient({slotIndex})");
 
             unitController.CharacterInventoryManager.UseItem(slotIndex);
         }
@@ -1336,6 +1336,7 @@ namespace AnyRPG {
 
         public void HandleRequestUnequipToSlot(InstantiatedEquipment equipment, int inventorySlotId) {
             Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRequestUnequipToSlot({equipment.Equipment.ResourceName}, {inventorySlotId}) instanceId: {equipment.InstanceId}");
+            
             RequestUnequipToSlot(equipment.InstanceId, inventorySlotId);
         }
 
@@ -1934,7 +1935,7 @@ namespace AnyRPG {
         }
 
         private void HandleEnterCombatServer(Interactable targetInteractable) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleEnterCombatServer(" + (targetInteractable == null ? "null" : targetInteractable.gameObject.name) + ")");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleEnterCombatServer(" + (targetInteractable == null ? "null" : targetInteractable.gameObject.name) + ")");
 
             FishNetInteractable networkInteractable = null;
             if (targetInteractable != null) {
@@ -2108,7 +2109,7 @@ namespace AnyRPG {
         }
 
         public void HandlePerformAbilityActionAnimationServer(AbilityProperties baseAbility, int clipIndex) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandlePerformAbilityActionAnimationServer({baseAbility.ResourceName}, {clipIndex})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandlePerformAbilityActionAnimationServer({baseAbility.ResourceName}, {clipIndex})");
 
             HandlePerformAbilityActionAnimationClient(baseAbility.ResourceName, clipIndex);
         }

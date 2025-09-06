@@ -221,6 +221,8 @@ namespace AnyRPG {
         }
 
         private void Despawn() {
+            Debug.Log($"{interactable.gameObject.name}.LootableNode.Despawn()");
+
             if (Props.SpawnObject != null && Props.SpawnObject.activeSelf == true) {
                 Props.SpawnObject.SetActive(false);
             }
