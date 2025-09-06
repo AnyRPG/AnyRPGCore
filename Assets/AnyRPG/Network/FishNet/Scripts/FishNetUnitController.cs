@@ -1335,14 +1335,14 @@ namespace AnyRPG {
         }
 
         public void HandleRequestUnequipToSlot(InstantiatedEquipment equipment, int inventorySlotId) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRequestUnequipToSlot({equipment.Equipment.ResourceName}, {inventorySlotId}) instanceId: {equipment.InstanceId}");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRequestUnequipToSlot({equipment.Equipment.ResourceName}, {inventorySlotId}) instanceId: {equipment.InstanceId}");
             
             RequestUnequipToSlot(equipment.InstanceId, inventorySlotId);
         }
 
         [ServerRpc]
         public void RequestUnequipToSlot(int itemInstanceId, int inventorySlotId) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.RequestUnequipToSlot({itemInstanceId}, {inventorySlotId})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.RequestUnequipToSlot({itemInstanceId}, {inventorySlotId})");
 
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) && systemItemManager.InstantiatedItems[itemInstanceId] is InstantiatedEquipment) {
                 unitController.CharacterEquipmentManager.UnequipToSlot(systemItemManager.InstantiatedItems[itemInstanceId] as InstantiatedEquipment, inventorySlotId);
