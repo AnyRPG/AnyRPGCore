@@ -636,7 +636,7 @@ namespace AnyRPG {
         }
 
         public void UpdatePlayerAppearance(int accountId, string unitProfileName, string appearanceString, List<SwappableMeshSaveData> swappableMeshSaveData) {
-            Debug.Log($"PlayerManagerServer.UpdatePlayerAppearance({accountId}, {unitProfileName},swappableMeshSaveData.Count: {swappableMeshSaveData?.Count})");
+            //Debug.Log($"PlayerManagerServer.UpdatePlayerAppearance({accountId}, {unitProfileName},swappableMeshSaveData.Count: {swappableMeshSaveData?.Count})");
 
             // Always despawn units if their appearance changes.
             SpawnPlayerRequest loadSceneRequest = new SpawnPlayerRequest() {
