@@ -18,25 +18,27 @@ MonoBehaviour:
   DisplayValue: Male Simple Trousers
   compatibleRaces:
   - HumanMale
-  - HumanMaleDCS
   wardrobeRecipeThumbs:
   - race: HumanMale
     filename: 
     thumb: {fileID: 0}
-  - race: HumanMaleDCS
-    filename: 
-    thumb: {fileID: 0}
   wardrobeSlot: Legs
+  Appended: 0
   Hides: []
   HideTags: []
   suppressWardrobeSlots: []
   activeWardrobeSet: []
   MeshHideAssets:
   - {fileID: 11400000, guid: 1d2bd5e1ab8f24c80b88993c5a60daaa, type: 2}
+  MeshModifiers: []
   OverrideDNA:
     PreloadValues: []
-  recipeString: '{"version":3,"packedSlotDataList":[],"slotsV2":[],"slotsV3":[{"id":"","scale":1,"copyIdx":-1,"overlays":[],"Tags":[],"Races":[]},{"id":"Male_SimpleTrousers","scale":100,"copyIdx":-1,"overlays":[{"id":"Male_SimpleTrousers_Overlay","colorIdx":0,"rect":[0.0,0.0,0.0,0.0],"isTransformed":false,"scale":{"x":1.0,"y":1.0,"z":1.0},"rotation":0.0}],"Tags":[],"Races":[]}],"colors":[],"fColors":[{"name":"Leg
-    Equipment Color 1","colors":[93,47,30,255,0,0,0,0,255,255,255,255,0,0,0,0,255,255,255,255,0,0,0,0],"ShaderParms":[],"alwaysUpdate":false}],"sharedColorCount":1,"race":"","packedDna":[]}'
+  disabled: 0
+  recipeString: '{"version":3,"packedSlotDataList":[],"slotsV2":[],"slotsV3":[{"id":"","scale":1,"copyIdx":-1,"overlays":[],"Tags":[],"Races":[],"blendShapeTarget":"","overSmoosh":0.0,"smooshDistance":0.0,"smooshInvertX":false,"smooshInvertY":false,"smooshInvertZ":false,"smooshInvertDist":false,"smooshTargetTag":"","smooshableTag":"","isSwapSlot":false,"swapTag":"","uvOverride":0,"isDisabled":false,"expandAlongNormal":0},{"id":"Male_SimpleTrousers","scale":100,"copyIdx":-1,"overlays":[{"id":"Male_SimpleTrousers_Overlay","colorIdx":0,"rect":[0.0,0.0,0.0,0.0],"isTransformed":false,"scale":{"x":1.0,"y":1.0,"z":0.0},"rotation":0.0,"blendModes":[0],"Tags":[],"tiling":[false,false,false],"uvOverride":0,"translate":{"x":0.0,"y":0.0}}],"Tags":[],"Races":[],"blendShapeTarget":"","overSmoosh":0.0,"smooshDistance":0.0,"smooshInvertX":false,"smooshInvertY":false,"smooshInvertZ":false,"smooshInvertDist":false,"smooshTargetTag":"","smooshableTag":"","isSwapSlot":false,"swapTag":"","uvOverride":0,"isDisabled":false,"expandAlongNormal":0}],"colors":[],"fColors":[{"name":"Leg
+    Equipment Color 1","colors":[93,47,30,255,0,0,0,0,255,255,255,255,0,0,0,0,255,255,255,255,0,0,0,0],"ShaderParms":[],"alwaysUpdate":false,"alwaysUpdateParms":false,"isBaseColor":false,"displayColor":-14799011}],"sharedColorCount":1,"race":"HumanMale","packedDna":[],"uvOverride":0}'
+  forceKeep: 0
+  labelLocalFiles: 0
+  noAutoAdd: 0
   IncompatibleRecipes: []
   UserField: 
   replaces: Nothing

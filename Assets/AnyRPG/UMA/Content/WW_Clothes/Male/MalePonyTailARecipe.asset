@@ -18,23 +18,25 @@ MonoBehaviour:
   DisplayValue: Male Pony Tail A
   compatibleRaces:
   - HumanMale
-  - HumanMaleDCS
   wardrobeRecipeThumbs:
   - race: HumanMale
     filename: 
     thumb: {fileID: 0}
-  - race: HumanMaleDCS
-    filename: 
-    thumb: {fileID: 0}
   wardrobeSlot: Hair
+  Appended: 0
   Hides: []
   HideTags: []
   suppressWardrobeSlots: []
   activeWardrobeSet: []
   MeshHideAssets: []
+  MeshModifiers: []
   OverrideDNA:
     PreloadValues: []
-  recipeString: '{"version":3,"packedSlotDataList":[],"slotsV2":[],"slotsV3":[{"id":"Male_PonyTail_a","scale":100,"copyIdx":-1,"overlays":[{"id":"Male_PonyTail_a_Overlay","colorIdx":0,"rect":[0.0,0.0,0.0,0.0],"isTransformed":false,"scale":{"x":0.0,"y":0.0,"z":0.0},"rotation":0.0}],"Tags":[],"Races":[]}],"colors":[],"fColors":[{"name":"Hair","colors":[255,255,255,255,0,0,0,0],"ShaderParms":[],"alwaysUpdate":false}],"sharedColorCount":1,"race":"","packedDna":[]}'
+  disabled: 0
+  recipeString: '{"version":3,"packedSlotDataList":[],"slotsV2":[],"slotsV3":[{"id":"Male_PonyTail_a","scale":100,"copyIdx":-1,"overlays":[{"id":"Male_PonyTail_a_Overlay","colorIdx":0,"rect":[0.0,0.0,0.0,0.0],"isTransformed":false,"scale":{"x":0.0,"y":0.0,"z":0.0},"rotation":0.0,"blendModes":[0],"Tags":[],"tiling":[false],"uvOverride":0,"translate":{"x":0.0,"y":0.0}}],"Tags":[],"Races":[],"blendShapeTarget":"","overSmoosh":0.0,"smooshDistance":0.0,"smooshInvertX":false,"smooshInvertY":false,"smooshInvertZ":false,"smooshInvertDist":false,"smooshTargetTag":"","smooshableTag":"","isSwapSlot":false,"swapTag":"","uvOverride":0,"isDisabled":false,"expandAlongNormal":0}],"colors":[],"fColors":[{"name":"Hair","colors":[255,255,255,255,0,0,0,0],"ShaderParms":[],"alwaysUpdate":false,"alwaysUpdateParms":false,"isBaseColor":false,"displayColor":-1}],"sharedColorCount":1,"race":"HumanMale","packedDna":[],"uvOverride":0}'
+  forceKeep: 0
+  labelLocalFiles: 0
+  noAutoAdd: 0
   IncompatibleRecipes: []
   UserField: 
   replaces: Nothing
