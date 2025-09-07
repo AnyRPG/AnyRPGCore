@@ -48,6 +48,8 @@ namespace AnyRPG {
 
         private CutsceneCameraController currentCutsceneCameraController = null;
 
+        //private MainMapCameraController mainMapCameraController = null;
+
         private int playerLayer;
         private int equipmentLayer;
         private int hideLayers;
@@ -88,6 +90,7 @@ namespace AnyRPG {
 
         public CutsceneCameraController CurrentCutsceneCameraController { get => currentCutsceneCameraController; set => currentCutsceneCameraController = value; }
         public ObjectHighlighter MainCameraHighlighter { get => mainCameraHighlighter; set => mainCameraHighlighter = value; }
+        //public MainMapCameraController MainMapCameraController { get => mainMapCameraController; set => mainMapCameraController = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("CameraManager.Awake()");
@@ -98,6 +101,7 @@ namespace AnyRPG {
             // attach camera to player
             mainCameraController = mainCameraGameObject.GetComponent<AnyRPGCameraController>();
             mainCameraController.Configure(systemGameManager);
+            //mainMapCameraController = mainMapCamera.gameObject.GetComponent<MainMapCameraController>();
 
             /*
             if (thirdPartyCameraGameObject == null && systemConfigurationManager.ThirdPartyCamera != null) {

@@ -263,7 +263,7 @@ namespace AnyRPG {
         }
 
         public void SetLobbyGame(LobbyGame lobbyGame) {
-            Debug.Log($"NetworkManagerClient.SetLobbyGame({lobbyGame.gameId}) accountId: {accountId}");
+            //Debug.Log($"NetworkManagerClient.SetLobbyGame({lobbyGame.gameId}) accountId: {accountId}");
 
             this.lobbyGame = lobbyGame;
         }

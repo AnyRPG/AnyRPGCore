@@ -34,6 +34,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             cameraManager.MainMapCamera.enabled = false;
+
             mapTextureFolder = mapTextureFolderBase + systemConfigurationManager.GameName.Replace(" ", "") + "/Images/MiniMap/";
         }
 
