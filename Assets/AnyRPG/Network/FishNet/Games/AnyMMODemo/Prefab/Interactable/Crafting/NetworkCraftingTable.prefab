@@ -1055,7 +1055,7 @@ MonoBehaviour:
   RuntimeParentNetworkBehaviour: {fileID: 0}
   RuntimeChildNetworkBehaviours: []
   _isNetworked: 1
-  _isSpawnable: 1
+  _isSpawnable: 0
   _isGlobal: 0
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
@@ -1074,7 +1074,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 88
+  <PrefabId>k__BackingField: 90
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 14386378092869132026
   <SceneId>k__BackingField: 0
