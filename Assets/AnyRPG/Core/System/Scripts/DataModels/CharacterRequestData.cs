@@ -10,7 +10,6 @@ namespace AnyRPG {
         public GameMode requestMode;
         public CharacterConfigurationRequest characterConfigurationRequest;
         public bool isServerOwned = false;
-        public bool isServer = false;
         public bool isOwner = false;
         public AnyRPGSaveData saveData = null;
 

@@ -168,7 +168,7 @@ namespace AnyRPG {
         }
 
         public void DespawnActionObjects() {
-            Debug.Log($"{unitController.gameObject.name}.UnitActionManager.DespawnActionObjects()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.DespawnActionObjects()");
 
             if (actionObjects == null || actionObjects.Count == 0) {
                 return;
@@ -210,7 +210,7 @@ namespace AnyRPG {
         */
 
         public void PerformActionAnimation(AnimatedAction animatedAction) {
-            Debug.Log($"{unitController.gameObject.name}.PerformActionAnimation({animatedAction.ResourceName})");
+            //Debug.Log($"{unitController.gameObject.name}.PerformActionAnimation({animatedAction.ResourceName})");
 
             if (animatedAction.ActionProperties.AnimationClip == null) {
                 return;
@@ -241,7 +241,7 @@ namespace AnyRPG {
         /// <param name="target"></param>
         /// <returns></returns>
         public IEnumerator PerformActionCast(AnimatedAction animatedAction, Interactable target) {
-            Debug.Log($"{unitController.gameObject.name}.UnitActionManager.PerformActionCast({animatedAction.ResourceName})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.PerformActionCast({animatedAction.ResourceName})");
             
             float startTime = Time.time;
             isPerformingAction = true;
@@ -285,7 +285,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="actionName"></param>
         public void BeginAction(string actionName) {
-            Debug.Log($"{unitController.gameObject.name}.UnitActionManager.BeginAction({actionName})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.BeginAction({actionName})");
 
             AnimatedAction animatedAction = systemDataFactory.GetResource<AnimatedAction>(actionName);
             if (animatedAction != null) {
@@ -299,11 +299,11 @@ namespace AnyRPG {
         /// </summary>
         /// <returns></returns>
         public void BeginAction(AnimatedAction animatedAction, bool playerInitiated = false) {
-            Debug.Log($"{unitController.gameObject.name}.UnitActionManager.BeginAction({(animatedAction == null ? "null" : animatedAction.DisplayName)}, {playerInitiated})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.BeginAction({(animatedAction == null ? "null" : animatedAction.DisplayName)}, {playerInitiated})");
             
             unitController.UnitEventController.NotifyOnBeginAction(animatedAction.ResourceName, playerInitiated);
             
-            if (systemGameManager.GameMode == GameMode.Local || unitController.IsServer || levelManager.IsCutscene()) {
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManager.IsCutscene()) {
                 BeginActionInternal(animatedAction, playerInitiated);
             }
         }
@@ -313,7 +313,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="animatedAction"></param>
         public void BeginActionInternal(AnimatedAction animatedAction, bool playerInitiated) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.BeginAction(" + (animatedActionProperties == null ? "null" : animatedActionProperties.DisplayName) + ")");
+            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.BeginAction({(animatedAction == null ? "null" : animatedAction.ResourceName)})");
 
             BeginActionCommon(animatedAction, unitController.Target, playerInitiated);
         }

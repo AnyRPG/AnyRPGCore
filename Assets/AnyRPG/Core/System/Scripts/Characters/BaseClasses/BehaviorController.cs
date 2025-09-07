@@ -71,7 +71,7 @@ namespace AnyRPG {
         }
 
         public void TryPlayBehavior(BehaviorProfile behaviorProfile, BehaviorComponent caller = null, UnitController sourceUnitController = null) {
-            Debug.Log($"{unitController.gameObject.name}.BehaviorInteractable.TryPlayBehavior()");
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorInteractable.TryPlayBehavior()");
 
             if (behaviorPlaying == false) {
                 behaviorCoroutine = unitController.StartCoroutine(PlayBehavior(behaviorProfile, caller, sourceUnitController));
@@ -88,7 +88,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator PlayBehavior(BehaviorProfile behaviorProfile, BehaviorComponent caller = null, UnitController sourceUnitController = null) {
-            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.PlayBehavior(" + (behaviorProfile == null ? "null" : behaviorProfile.DisplayName) + ")");
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.PlayBehavior({(behaviorProfile == null ? "null" : behaviorProfile.DisplayName)})");
 
             SetBehaviorPlaying(true);
 

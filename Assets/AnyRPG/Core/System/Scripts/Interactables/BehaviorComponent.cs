@@ -33,7 +33,7 @@ namespace AnyRPG {
 
 
         public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex = 0) {
-            Debug.Log($"{unitController.gameObject.name}.BehaviorInteractable.Interact()");
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorComponent.Interact({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex})");
 
             List<BehaviorProfile> currentList = GetCurrentOptionList(sourceUnitController);
             if (currentList.Count == 0) {
@@ -52,6 +52,8 @@ namespace AnyRPG {
         }
 
         public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorComponent.ClientInteraction({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex})");
+
             base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
             interactable.CloseInteractionWindow();
 

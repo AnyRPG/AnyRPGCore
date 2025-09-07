@@ -151,7 +151,6 @@ namespace AnyRPG {
 
         // network state
         private bool isOwner = false;
-        private bool isServer = false;
         private bool isServerOwned = false;
         private bool isDisconnected = false;
 
@@ -471,7 +470,6 @@ namespace AnyRPG {
         public CharacterSaveManager CharacterSaveManager { get => characterSaveManager; }
         public CharacterDialogManager CharacterDialogManager { get => characterDialogManager; }
         public bool IsOwner { get => isOwner; set => isOwner = value; }
-        public bool IsServer { get => isServer; set => isServer = value; }
         public bool IsServerOwned { get => isServerOwned; set => isServerOwned = value; }
         public CharacterRequestData CharacterRequestData { get => characterRequestData; set => characterRequestData = value; }
         public CharacterActionBarManager CharacterActionBarManager { get => characterActionBarManager; }
@@ -1198,7 +1196,6 @@ namespace AnyRPG {
 
             CharacterConfigurationRequest characterConfigurationRequest = characterRequestData.characterConfigurationRequest;
 
-            isServer = characterRequestData.isServer;
             isOwner = characterRequestData.isOwner;
             isServerOwned = characterRequestData.isServerOwned;
 
@@ -2477,6 +2474,8 @@ namespace AnyRPG {
         }
 
         public void BeginAction(string actionName) {
+            //Debug.Log($"{gameObject.name}.UnitController.BeginAction({actionName})");
+
             unitActionManager.BeginAction(actionName);
         }
 

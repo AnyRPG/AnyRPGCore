@@ -2060,7 +2060,6 @@ namespace AnyRPG {
                 characterConfigurationRequest = new CharacterConfigurationRequest(unitProfile);
                 characterConfigurationRequest.unitControllerMode = unitControllerMode.Value;
                 CharacterRequestData characterRequestData = new CharacterRequestData(null, GameMode.Network, characterConfigurationRequest);
-                characterRequestData.isServer = false;
                 characterRequestData.isOwner = isOwner;
                 if (isOwner == true && unitControllerMode.Value == UnitControllerMode.Player) {
                     characterRequestData.characterRequestor = systemGameManager.PlayerManager;

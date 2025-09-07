@@ -1577,7 +1577,7 @@ namespace AnyRPG {
         }
 
         public void Update() {
-            if (systemGameManager.GameMode == GameMode.Local || unitController.IsServer || levelManager.IsCutscene()) {
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManager.IsCutscene()) {
                 PerformResourceRegen();
             }
         }

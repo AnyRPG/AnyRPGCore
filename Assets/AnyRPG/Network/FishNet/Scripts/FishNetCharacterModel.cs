@@ -17,7 +17,6 @@ namespace AnyRPG {
         private Animator animator = null;
 
         private bool isClient = false;
-        //private bool isServer = false;
 
         private void FindGameManager() {
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.FindGameManager() ownerId: {base.OwnerId}");
@@ -106,7 +105,6 @@ namespace AnyRPG {
 
             base.OnStartClient();
             isClient = true;
-            //isServer = false;
             FindGameManager();
         }
 
@@ -124,7 +122,6 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.OnStartServer()");
             base.OnStartClient();
             isClient = false;
-            //isServer = true;
             FindGameManager();
         }
 

@@ -517,7 +517,6 @@ namespace AnyRPG {
                 CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(systemDataFactory, playerCharacterMonitors[accountId].playerCharacterSaveData.SaveData);
                 characterConfigurationRequest.unitControllerMode = UnitControllerMode.Player;
                 CharacterRequestData characterRequestData = new CharacterRequestData(this, GameMode.Network, characterConfigurationRequest);
-                characterRequestData.isServer = true;
                 characterRequestData.saveData = playerCharacterMonitors[accountId].playerCharacterSaveData.SaveData;
 
                 if (spawnPlayerRequest.overrideSpawnLocation == false) {
