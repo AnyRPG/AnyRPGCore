@@ -1824,11 +1824,6 @@ PrefabInstance:
       propertyPath: newGameClass
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 8637072580994637002, guid: 39c63c0172009264a819be80493e4805,
-        type: 3}
-      propertyPath: allowOfflinePlay
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8756717087272279751, guid: 39c63c0172009264a819be80493e4805,
         type: 3}
       propertyPath: m_AnchorMax.y

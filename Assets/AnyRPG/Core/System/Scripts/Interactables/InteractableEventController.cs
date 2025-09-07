@@ -22,6 +22,7 @@ namespace AnyRPG {
         public event System.Action<AudioClip> OnPlayVoiceSound = delegate { };
         public event System.Action<AudioClip, bool> OnPlayEffectSound = delegate { };
         public event System.Action<AudioClip, bool> OnPlayCastSound = delegate { };
+        public event System.Action<InteractableOptionComponent> OnMiniMapStatusUpdate = delegate { };
 
         // interactable this controller is attached to
         private Interactable interactable;
@@ -98,6 +99,10 @@ namespace AnyRPG {
 
         public void NotifyOnPlayCastSound(AudioClip audioClip, bool loop) {
             OnPlayCastSound(audioClip, loop);
+        }
+
+        public void NotifyOnMiniMapStatusUpdate(InteractableOptionComponent interactableOptionComponent) {
+            OnMiniMapStatusUpdate(interactableOptionComponent);
         }
 
         // temporarily disabled because this object is not created early enough in the process when its a unitcontroller

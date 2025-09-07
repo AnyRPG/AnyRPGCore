@@ -23,6 +23,7 @@ namespace AnyRPG {
 
         // game manager references
         protected SystemEventManager systemEventManager = null;
+        protected NetworkManagerServer networkManagerServer = null;
 
         public List<Interactable> MapIndicatorControllers { get => mapIndicatorControllers; set => mapIndicatorControllers = value; }
 
@@ -34,6 +35,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             systemEventManager = systemGameManager.SystemEventManager;
+            networkManagerServer = systemGameManager.NetworkManagerServer;
         }
 
         public void HandleLevelUnload(int sceneHandle, string sceneName) {

@@ -95,7 +95,9 @@ namespace AnyRPG {
         public override int GetCurrentOptionCount(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.GatheringNode.GetCurrentOptionCount()");
             return ((sourceUnitController.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility.AbilityProperties) == true
-                && currentTimer <= 0f) ? 1 : 0);
+                && Props.SpawnObject != null
+                && Props.SpawnObject.activeInHierarchy == true) ? 1 : 0);
+
         }
 
         /*

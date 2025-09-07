@@ -329,6 +329,8 @@ namespace AnyRPG {
         /// trigger to update minimap
         /// </summary>
         public void HandleOptionStateChange() {
+            //Debug.Log($"{interactable.gameObject.name}.InteractableOptionComponent.HandleOptionStateChange()");
+
             if (interactable != null) {
                 interactable.HandlePrerequisiteUpdates();
             }
@@ -336,6 +338,8 @@ namespace AnyRPG {
         }
 
         public void CallMiniMapStatusUpdateHandler() {
+            //Debug.Log($"{interactable.gameObject.name}.InteractableOptionComponent.CallMiniMapStatusUpdateHandler()");
+
             interactable?.HandleMiniMapStatusUpdate(this);
         }
 
@@ -350,6 +354,15 @@ namespace AnyRPG {
                 }
             }
             //Debug.Log($"{interactable.gameObject.name}.InteractableOptionComponent.GetSwitchOptionIndex() : no match found return -1");
+            return -1;
+        }
+
+        public int GetOptionIndex() {
+            foreach (int optionIndex in interactable.Interactables.Keys) {
+                if (interactable.Interactables[optionIndex] == this) {
+                    return optionIndex;
+                }
+            }
             return -1;
         }
 

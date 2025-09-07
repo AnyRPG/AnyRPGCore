@@ -983,8 +983,13 @@ namespace AnyRPG {
         #endregion
 
         public void HandleMiniMapStatusUpdate(InteractableOptionComponent interactableOptionComponent) {
-            miniMapManager.InteractableStatusUpdate(this, interactableOptionComponent);
-            mainMapManager.InteractableStatusUpdate(this, interactableOptionComponent);
+            //Debug.Log($"{gameObject.name}.Interactable.HandleMiniMapStatusUpdate({interactableOptionComponent.GetType()})");
+
+            if (networkManagerServer.ServerModeActive == false) {
+                miniMapManager.InteractableStatusUpdate(this, interactableOptionComponent);
+                mainMapManager.InteractableStatusUpdate(this, interactableOptionComponent);
+            }
+            interactableEventController.NotifyOnMiniMapStatusUpdate(interactableOptionComponent);
         }
 
         public virtual void ConfigureDialogPanel(DialogPanelController dialogPanelController) {

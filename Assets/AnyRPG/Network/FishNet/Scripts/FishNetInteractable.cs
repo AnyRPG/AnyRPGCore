@@ -26,7 +26,7 @@ namespace AnyRPG {
         public Interactable Interactable { get => interactable; }
 
         protected virtual void Awake() {
-            //Debug.Log($"{gameObject.name}.NetworkInteractable.Awake() position: { gameObject.transform.position}");
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.Awake() position: { gameObject.transform.position}");
         }
 
         protected virtual void Configure() {
@@ -39,7 +39,7 @@ namespace AnyRPG {
         }
 
         public override void OnStartClient() {
-            //Debug.Log($"{gameObject.name}.NetworkInteractable.OnStartClient()");
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.OnStartClient()");
 
             base.OnStartClient();
 
@@ -59,7 +59,7 @@ namespace AnyRPG {
         }
 
         public override void OnStopClient() {
-            //Debug.Log($"{gameObject.name}.NetworkInteractable.OnStopClient()");
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.OnStopClient()");
 
             base.OnStopClient();
             if (SystemGameManager.IsShuttingDown == true) {
@@ -71,13 +71,13 @@ namespace AnyRPG {
         }
 
         public override void OnStartServer() {
-            //Debug.Log($"{gameObject.name}.NetworkInteractable.OnStartServer()");
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.OnStartServer()");
 
             base.OnStartServer();
 
             Configure();
             if (systemGameManager == null) {
-                Debug.Log($"{gameObject.name}.NetworkInteractable.OnStartServer(): systemGameManager is null");
+                Debug.Log($"{gameObject.name}.FishNetInteractable.OnStartServer(): systemGameManager is null");
                 return;
             }
 
@@ -88,7 +88,7 @@ namespace AnyRPG {
         }
 
         public override void OnStopServer() {
-            //Debug.Log($"{gameObject.name}.NetworkInteractable.OnStopServer()");
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.OnStopServer()");
 
             base.OnStopServer();
 
@@ -100,15 +100,15 @@ namespace AnyRPG {
         }
 
         public void SubscribeToServerInteractableEvents() {
-            //Debug.Log($"{gameObject.name}.NetworkInteractable.SubscribeToServerInteractableEvents()");
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.SubscribeToServerInteractableEvents()");
 
             if (eventRegistrationComplete == true) {
-                Debug.Log($"{gameObject.name}.NetworkInteractable.SubscribeToServerInteractableEvents(): already registered");
+                Debug.Log($"{gameObject.name}.FishNetInteractable.SubscribeToServerInteractableEvents(): already registered");
                 return;
             }
 
             if (interactable == null) {
-                Debug.Log($"{gameObject.name}.NetworkInteractable.SubscribeToServerInteractableEvents(): interactable is null");
+                Debug.Log($"{gameObject.name}.FishNetInteractable.SubscribeToServerInteractableEvents(): interactable is null");
                 // something went wrong
                 return;
             }
@@ -127,7 +127,7 @@ namespace AnyRPG {
             interactable.InteractableEventController.OnPlayEffectSound += HandlePlayEffectSound;
             interactable.InteractableEventController.OnStopVoiceSound += HandleStopVoiceSound;
             interactable.InteractableEventController.OnPlayVoiceSound += HandlePlayVoiceSound;
-
+            interactable.InteractableEventController.OnMiniMapStatusUpdate += HandleMiniMapStatusUpdate;
 
             eventRegistrationComplete = true;
         }
@@ -141,7 +141,7 @@ namespace AnyRPG {
                 return;
             }
             if (eventRegistrationComplete == false) {
-                //Debug.Log($"{gameObject.name}.NetworkInteractable.UnsubscribeFromServerInteractableEvents(): not registered");
+                //Debug.Log($"{gameObject.name}.FishNetInteractable.UnsubscribeFromServerInteractableEvents(): not registered");
                 return;
             }
             //interactable.InteractableEventController.OnAnimatedObjectChooseMovement -= HandleAnimatedObjectChooseMovementServer;
@@ -158,8 +158,25 @@ namespace AnyRPG {
             interactable.InteractableEventController.OnPlayEffectSound -= HandlePlayEffectSound;
             interactable.InteractableEventController.OnStopVoiceSound -= HandleStopVoiceSound;
             interactable.InteractableEventController.OnPlayVoiceSound -= HandlePlayVoiceSound;
+            interactable.InteractableEventController.OnMiniMapStatusUpdate -= HandleMiniMapStatusUpdate;
 
             eventRegistrationComplete = false;
+        }
+
+        private void HandleMiniMapStatusUpdate(InteractableOptionComponent component) {
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleMiniMapStatusUpdate({component.GetType().Name})");
+
+            HandleMiniMapStatusUpdateClient(component.GetOptionIndex());
+        }
+
+        [ObserversRpc]
+        public void HandleMiniMapStatusUpdateClient(int componentIndex) {
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleMiniMapStatusUpdateClient({componentIndex})");
+
+            if (interactable.Interactables.ContainsKey(componentIndex) == false) {
+                return;
+            }
+            interactable.HandleMiniMapStatusUpdate(interactable.Interactables[componentIndex]);
         }
 
         private void HandlePlayVoiceSound(AudioClip clip) {
@@ -264,7 +281,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         public void HandlePlayDialogNode(string dialogName, int dialogIndex) {
-            //Debug.Log($"{gameObject.name}.NetworkInteractable.HandlePlayDialogNode({dialogName}, {dialogIndex})");
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.HandlePlayDialogNode({dialogName}, {dialogIndex})");
 
             interactable.DialogController.PlayDialogNode(dialogName, dialogIndex);
         }
@@ -297,7 +314,7 @@ namespace AnyRPG {
         */
 
         public void HandleInteractionWithOptionStarted(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
-            //Debug.Log($"{gameObject.name}.NetworkInteractable.HandleInteractionWithOptionStarted({(sourceUnitController == null ? "null" : sourceUnitController.gameObject.name)}, {componentIndex}, {choiceIndex})");
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleInteractionWithOptionStarted({(sourceUnitController == null ? "null" : sourceUnitController.gameObject.name)}, {componentIndex}, {choiceIndex})");
 
             FishNetUnitController targetNetworkCharacterUnit = null;
             if (sourceUnitController != null) {
@@ -314,7 +331,7 @@ namespace AnyRPG {
         /// <param name="choiceIndex"></param>
         [ObserversRpc]
         public void HandleInteractionWithOptionStartedClient(FishNetUnitController sourceNetworkCharacterUnit, int componentIndex, int choiceIndex) {
-            //Debug.Log($"{gameObject.name}.NetworkInteractable.HandleInteractionWithOptionStartedClient({(sourceNetworkCharacterUnit == null ? "null" : sourceNetworkCharacterUnit.gameObject.name)}, {componentIndex}, {choiceIndex})");
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleInteractionWithOptionStartedClient({(sourceNetworkCharacterUnit == null ? "null" : sourceNetworkCharacterUnit.gameObject.name)}, {componentIndex}, {choiceIndex})");
 
             UnitController sourceUnitController = null;
             if (sourceNetworkCharacterUnit == null) {
@@ -345,9 +362,9 @@ namespace AnyRPG {
 
         [TargetRpc]
         public void HandleDropLootTarget(NetworkConnection networkConnection, Dictionary<int, List<int>> lootDropIdLookup) {
-            //Debug.Log($"{gameObject.name}.NetworkInteractable.HandleDropLootTarget()");
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleDropLootTarget()");
             if (interactable == null) {
-                Debug.Log($"{gameObject.name}.NetworkInteractable.HandleDropLootTarget(): interactable is null");
+                Debug.Log($"{gameObject.name}.FishNetInteractable.HandleDropLootTarget(): interactable is null");
                 return;
             }
             interactable.InteractableEventController.NotifyOnDropLoot(lootDropIdLookup);
@@ -362,9 +379,9 @@ namespace AnyRPG {
 
         [TargetRpc]
         public void HandleRemoveDroppedItemTarget(NetworkConnection networkConnection, int lootDropId, int accountId) {
-            //Debug.Log($"{gameObject.name}.NetworkInteractable.HandleRemoveDroppedItemTarget({lootDropId}, {accountId})");
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleRemoveDroppedItemTarget({lootDropId}, {accountId})");
             if (interactable == null) {
-                Debug.Log($"{gameObject.name}.NetworkInteractable.HandleRemoveDroppedItemTarget(): interactable is null");
+                Debug.Log($"{gameObject.name}.FishNetInteractable.HandleRemoveDroppedItemTarget(): interactable is null");
                 return;
             }
             interactable.InteractableEventController.NotifyOnRemoveDroppedItemClient(lootDropId, accountId);
