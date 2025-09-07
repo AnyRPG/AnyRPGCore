@@ -90,6 +90,8 @@ namespace AnyRPG {
         }
 
         private void HandleChooseWeather(int sceneHandle, WeatherProfile weatherProfile) {
+            //Debug.Log($"WeatherManagerClient.HandleChooseWeather({sceneHandle}, {(weatherProfile == null ? "null" : weatherProfile.ResourceName)})");
+
             ChooseWeather(weatherProfile);
         }
 
