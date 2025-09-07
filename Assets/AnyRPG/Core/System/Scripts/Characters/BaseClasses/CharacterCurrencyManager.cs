@@ -87,7 +87,8 @@ namespace AnyRPG {
         }
 
         public void RedistributeCurrency(Currency currency) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCurrencyManager.RedistributeCurrency(" + currency.DisplayName + ")");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCurrencyManager.RedistributeCurrency({currency.ResourceName})");
+
             CurrencyGroup currencyGroup = currencyConverter.FindCurrencyGroup(currency);
             if (currencyGroup != null) {
 
@@ -168,10 +169,13 @@ namespace AnyRPG {
         }
 
         public void LoadCurrencyValue(Currency currency, int amount) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCurrencyManager.LoadCurrencyValue({currency.ResourceName}, {amount})");
+
             CurrencyNode newCurrencyNode = new CurrencyNode();
             newCurrencyNode.currency = currency;
             newCurrencyNode.Amount = amount;
             currencyList[currency.ResourceName] = newCurrencyNode;
+            unitController.UnitEventController.NotifyOnCurrencyChange(currency.ResourceName, amount);
         }
     }
 

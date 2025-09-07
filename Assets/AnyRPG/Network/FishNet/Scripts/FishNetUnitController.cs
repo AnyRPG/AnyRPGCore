@@ -931,11 +931,15 @@ namespace AnyRPG {
         }
 
         public void HandleCurrencyChangeServer(string currencyResourceName, int amount) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleCurrencyChangeServer({currencyResourceName}, {amount})");
+
             HandleCurrencyChangeClient(currencyResourceName, amount);
         }
 
         [ObserversRpc]
         public void HandleCurrencyChangeClient(string currencyResourceName, int amount) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleCurrencyChangeClient({currencyResourceName}, {amount})");
+
             Currency currency = systemDataFactory.GetResource<Currency>(currencyResourceName);
             if (currency == null) {
                 return;
