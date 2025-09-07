@@ -61,7 +61,7 @@ PrefabInstance:
     - target: {fileID: 943068409625311753, guid: 022ab4d98a489344283da6d08ddec94c,
         type: 3}
       propertyPath: m_Name
-      value: NetworkBlackDragonModel
+      value: FishNetBlackDragonModel
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -184,7 +184,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 59
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 8918276081532352252
+  <AssetPathHash>k__BackingField: 756193782170691360
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}

@@ -136,7 +136,7 @@ PrefabInstance:
     - target: {fileID: 5647419420616109803, guid: 0b163976c97d00a47bde453dc1ff0798,
         type: 3}
       propertyPath: m_Name
-      value: NetworkHumanMaleClothesHead5
+      value: FishNetHumanMaleClothesHead5
       objectReference: {fileID: 0}
     - target: {fileID: 5648574470234997378, guid: 0b163976c97d00a47bde453dc1ff0798,
         type: 3}
@@ -300,7 +300,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 113
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 18232249358945757034
+  <AssetPathHash>k__BackingField: 13268524192487979668
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}

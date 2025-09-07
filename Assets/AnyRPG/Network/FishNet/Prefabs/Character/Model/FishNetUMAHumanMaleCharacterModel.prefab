@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: 2692339740015506113, guid: 9396e25e38decac4b8b80eb1f92213e2,
         type: 3}
       propertyPath: m_Name
-      value: NetworkUMAHumanMaleCharacterModel
+      value: FishNetUMAHumanMaleCharacterModel
       objectReference: {fileID: 0}
     - target: {fileID: 2692339740015506124, guid: 9396e25e38decac4b8b80eb1f92213e2,
         type: 3}
@@ -165,7 +165,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 111
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 17902563184339547508
+  <AssetPathHash>k__BackingField: 6515862026244700016
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}

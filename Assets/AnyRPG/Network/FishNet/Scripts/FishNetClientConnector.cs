@@ -1552,6 +1552,13 @@ namespace AnyRPG {
             networkManagerClient.AdvertiseLoadCutscene(cutScene);
         }
 
+        [TargetRpc]
+        public void AdvertisePresenceChangeEnd(NetworkConnection connection) {
+            //Debug.Log("FishNetClientConnector.AdvertisePresenceChangeEnd()");
+
+            networkManagerClient.AdvertiseSceneObjectLoadComplete();
+        }
+
         /*
         public override void OnStartServer() {
             base.OnStartServer();

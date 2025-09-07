@@ -16,7 +16,7 @@ PrefabInstance:
     - target: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
         type: 3}
       propertyPath: m_Name
-      value: NetworkDefaultCharacterUnit
+      value: FishNetDefaultCharacterUnit
       objectReference: {fileID: 0}
     - target: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
         type: 3}
@@ -216,7 +216,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 70
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 11266477648363333465
+  <AssetPathHash>k__BackingField: 16091646072967988289
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}

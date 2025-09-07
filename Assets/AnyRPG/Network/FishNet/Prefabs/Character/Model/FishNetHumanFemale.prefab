@@ -66,7 +66,7 @@ PrefabInstance:
     - target: {fileID: 2985534377770187114, guid: 49ede4650496e4f4d9d3d3f4162f7386,
         type: 3}
       propertyPath: m_Name
-      value: NetworkHumanFemale
+      value: FishNetHumanFemale
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -161,7 +161,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 68
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 10093158956710477498
+  <AssetPathHash>k__BackingField: 17828332534025887884
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}

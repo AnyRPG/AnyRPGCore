@@ -47,7 +47,8 @@ namespace AnyRPG {
                 fishNetNetworkManager.ClientManager.OnClientConnectionState += HandleClientConnectionState;
                 //fishNetNetworkManager.SceneManager.OnClientLoadedStartScenes += HandleClientLoadedStartScenes;
                 fishNetNetworkManager.ServerManager.OnServerConnectionState += HandleServerConnectionState;
-                
+                fishNetNetworkManager.SceneManager.OnClientPresenceChangeEnd += HandleClientPresenceChangeEnd;
+
                 // stuff that was previously done only on active connection
                 fishNetNetworkManager.SceneManager.OnActiveSceneSet += HandleActiveSceneSet;
                 fishNetNetworkManager.SceneManager.OnUnloadStart += HandleUnloadStart;
@@ -59,6 +60,19 @@ namespace AnyRPG {
             }
         }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            levelManager = systemGameManager.LevelManager;
+            networkManagerServer = systemGameManager.NetworkManagerServer;
+            networkManagerClient = systemGameManager.NetworkManagerClient;
+        }
+
+        private void HandleClientPresenceChangeEnd(ClientPresenceChangeEventArgs args) {
+            Debug.Log($"FishNetNetworkController.HandleClientPresenceChangeEnd({args.Connection.ClientId})");
+
+            clientConnector.AdvertisePresenceChangeEnd(args.Connection);
+        }
+
         private void HandleQueueEnd() {
             //Debug.Log("FishNetNetworkController.HandleQueueEnd()");
         }
@@ -67,12 +81,6 @@ namespace AnyRPG {
             //Debug.Log("FishNetNetworkController.HandleQueueStart()");
         }
 
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            levelManager = systemGameManager.LevelManager;
-            networkManagerServer = systemGameManager.NetworkManagerServer;
-            networkManagerClient = systemGameManager.NetworkManagerClient;
-        }
 
         private void HandleServerConnectionState(ServerConnectionStateArgs obj) {
             //Debug.Log($"FishNetNetworkController.HandleServerConnectionState() {obj.ConnectionState.ToString()}");

@@ -96,7 +96,7 @@ PrefabInstance:
     - target: {fileID: 5647419420616109803, guid: 0b163976c97d00a47bde453dc1ff0798,
         type: 3}
       propertyPath: m_Name
-      value: NetworkHumanMaleLightArmor
+      value: FishNetHumanMaleLightArmor
       objectReference: {fileID: 0}
     - target: {fileID: 5727086844647112977, guid: 0b163976c97d00a47bde453dc1ff0798,
         type: 3}
@@ -215,7 +215,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 75
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 11719576309868124806
+  <AssetPathHash>k__BackingField: 5086065525672391408
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}

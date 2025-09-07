@@ -254,7 +254,9 @@ namespace AnyRPG {
                 terrainDetector.LoadSceneSettings();
                 if (IsMainMenu() == false) {
                     sceneBounds = GetSceneBounds();
-                    mapManager.ProcessLevelLoad();
+                    if (systemGameManager.GameMode == GameMode.Local) {
+                        mapManager.ProcessLevelLoad();
+                    }
                 }
                 PlayLevelSounds();
                 // activate the correct camera

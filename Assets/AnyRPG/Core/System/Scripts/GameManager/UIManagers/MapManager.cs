@@ -47,6 +47,7 @@ namespace AnyRPG {
 
         public void ProcessLevelLoad() {
             //Debug.Log("MapManager.ProcessLevelLoad()");
+
             //Debug.Log("MapManager.ProcessLevelLoad(): creating Texture2D with size : " + (int)levelManager.SceneBounds.size.x + ", " + (int)levelManager.SceneBounds.size.z);
             UpdateCameraSize();
 

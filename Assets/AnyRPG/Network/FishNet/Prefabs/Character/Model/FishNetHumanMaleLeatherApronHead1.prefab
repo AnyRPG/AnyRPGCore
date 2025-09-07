@@ -151,7 +151,7 @@ PrefabInstance:
     - target: {fileID: 5647419420616109803, guid: 0b163976c97d00a47bde453dc1ff0798,
         type: 3}
       propertyPath: m_Name
-      value: NetworkHumanMaleLeatherApronHead1
+      value: FishNetHumanMaleLeatherApronHead1
       objectReference: {fileID: 0}
     - target: {fileID: 5648574470234997378, guid: 0b163976c97d00a47bde453dc1ff0798,
         type: 3}
@@ -320,7 +320,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 107
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 17619221924913085404
+  <AssetPathHash>k__BackingField: 5821982040828905932
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}

@@ -56,6 +56,7 @@ namespace AnyRPG {
         private SystemEventManager systemEventManager = null;
         private TimeOfDayManagerServer timeOfDayManagerServer = null;
         private WeatherManagerClient weatherManagerClient = null;
+        private MapManager mapManager = null;
 
         public string Username { get => username; }
         public string Password { get => password; }
@@ -86,6 +87,7 @@ namespace AnyRPG {
             playerManagerServer = systemGameManager.PlayerManagerServer;
             timeOfDayManagerServer = systemGameManager.TimeOfDayManagerServer;
             weatherManagerClient = systemGameManager.WeatherManagerClient;
+            mapManager = uIManager.MapManager;
         }
 
         public bool Login(string username, string password, string server) {
@@ -644,6 +646,10 @@ namespace AnyRPG {
 
         public void RequestTurnInQuestDialog(Dialog dialog) {
             networkController.RequestTurnInQuestDialog(dialog);
+        }
+
+        public void AdvertiseSceneObjectLoadComplete() {
+            mapManager.ProcessLevelLoad();
         }
 
         /*
