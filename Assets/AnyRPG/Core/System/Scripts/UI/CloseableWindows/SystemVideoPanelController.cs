@@ -89,7 +89,7 @@ namespace AnyRPG {
             SetGraphicsQuality(PlayerPrefs.GetInt("GraphicsQualityIndex"));
             CheckGraphicsQuality();
 
-            CheckFullScreen();
+            InitializeFullScreen();
             CheckVSync();
 
             // check and set advanced settings which may override main quality setting
@@ -149,7 +149,19 @@ namespace AnyRPG {
             //QualitySettings.
         }
 
+        private void InitializeFullScreen() {
+            //Debug.Log("SystemVideoPanelController.CheckFullScreen()");
+
+            if (PlayerPrefs.GetInt("FullScreen") == 1) {
+                SetFullScreen(true);
+            } else if (PlayerPrefs.GetInt("FullScreen") == 0) {
+                SetFullScreen(false);
+            }
+        }
+
         private void CheckFullScreen() {
+            //Debug.Log("SystemVideoPanelController.CheckFullScreen()");
+
             if (PlayerPrefs.GetInt("FullScreen") == 1) {
                 fullScreenButton.SetOn();
             } else if (PlayerPrefs.GetInt("FullScreen") == 0) {
@@ -158,14 +170,19 @@ namespace AnyRPG {
         }
 
         public void SetFullScreen(bool isFullScreen) {
+            //Debug.Log($"SystemVideoPanelController.SetFullScreen({isFullScreen})");
+
             PlayerPrefs.SetInt("FullScreen", (isFullScreen == true ? 1 : 0));
             Screen.fullScreen = isFullScreen;
             CheckFullScreen();
         }
 
         public void ToggleFullScreen() {
+            //Debug.Log("SystemVideoPanelController.ToggleFullScreen()");
+
+            bool isFullScreen = Screen.fullScreen;
             Screen.fullScreen = !Screen.fullScreen;
-            PlayerPrefs.SetInt("FullScreen", (Screen.fullScreen == true ? 1 : 0));
+            PlayerPrefs.SetInt("FullScreen", (!isFullScreen == true ? 1 : 0));
             CheckFullScreen();
         }
 
