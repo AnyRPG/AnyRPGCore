@@ -152,6 +152,7 @@ namespace AnyRPG {
 
         public Dictionary<Currency, int> GetRedistributedCurrency() {
             //Debug.Log("PlayerCurrencyManager.GetRedistributedCurrency()");
+
             CurrencyGroup currencyGroup = systemConfigurationManager.DefaultCurrencyGroup;
             Dictionary<Currency, int> returnDictionary = new Dictionary<Currency, int>();
             if (currencyGroup != null) {

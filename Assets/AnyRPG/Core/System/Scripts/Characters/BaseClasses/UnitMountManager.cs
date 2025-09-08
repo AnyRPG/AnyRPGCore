@@ -59,17 +59,17 @@ namespace AnyRPG {
         }
 
         public void ConfigureSpawnedCharacter(UnitController mountUnitController) {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureSpawnedCharacter({mountUnitController.gameObject.name})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureSpawnedCharacter({mountUnitController.gameObject.name})");
         }
 
         public void PostInit(UnitController mountUnitController) {
-            Debug.Log($"{mountUnitController.gameObject.name}.CharacterAbilityManager.PostInit()");
+            //Debug.Log($"{mountUnitController.gameObject.name}.CharacterAbilityManager.PostInit()");
 
             SetMountedState(mountUnitController, mountUnitController.CharacterRequestData.characterConfigurationRequest.unitProfile);
         }
 
         public void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SetMountedState({mountUnitController.gameObject.name}, {mountUnitProfile.ResourceName})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SetMountedState({mountUnitController.gameObject.name}, {mountUnitProfile.ResourceName})");
 
             unitController.CharacterPetManager.DespawnAllPets();
 
@@ -96,7 +96,7 @@ namespace AnyRPG {
         }
 
         public void HandleMountModelReady() {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountModelReady()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountModelReady()");
 
             UnsubscribeFromMountModelReady();
             if (lateJoin == true) {
@@ -107,7 +107,7 @@ namespace AnyRPG {
         }
 
         public void UnsubscribeFromMountModelReady() {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.UnsubscribeFromMountModelReady()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.UnsubscribeFromMountModelReady()");
 
             if (mountUnitController?.UnitModelController != null) {
                 //mountUnitController.UnitModelController.OnModelUpdated -= HandleMountModelReady;
@@ -117,7 +117,7 @@ namespace AnyRPG {
 
 
         public void HandleMountUnitSpawn() {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn()");
 
             string originalPrefabSourceBone = mountUnitProfile.UnitPrefabProps.TargetBone;
             // NOTE: mount effects used sheathed position for character position.  do not use regular position to avoid putting mount below ground when spawning
@@ -143,7 +143,7 @@ namespace AnyRPG {
         }
 
         public void ActivateMountedState(bool lateJoin = false) {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ActivateMountedState()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ActivateMountedState()");
 
             unitController?.UnitModelController?.SheathWeapons();
 
@@ -196,7 +196,7 @@ namespace AnyRPG {
         }
 
         public void DeactivateMountedState() {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState()");
 
             lateJoin = false;
             UnsubscribeFromMountModelReady();
@@ -244,7 +244,7 @@ namespace AnyRPG {
         }
 
         public void DespawnMountUnit() {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountUnit() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountUnit() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
 
             if (mountUnitController != null) {
                 if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
@@ -263,7 +263,8 @@ namespace AnyRPG {
         /// </summary>
         /// <returns></returns>
         public IEnumerator DespawnMountDelay () {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
+
             while (unitController.transform.parent != null) {
                 Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
                 yield return null;
@@ -281,7 +282,7 @@ namespace AnyRPG {
             yield return null;
             Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
             */
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {(unitController.transform.parent == null ? "null" : unitController.transform.parent.gameObject.name)}");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {(unitController.transform.parent == null ? "null" : unitController.transform.parent.gameObject.name)}");
 
             // reset the character unit before despawn so the mount doesn't send despawn events to the player that was riding it
             mountUnitController.CharacterUnit = mountUnitController.GetFirstInteractableOption(typeof(CharacterUnit)) as CharacterUnit;
@@ -291,7 +292,7 @@ namespace AnyRPG {
         }
 
         public void ConfigureCharacterRegularPhysics() {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics()");
 
             unitController.RigidBody.WakeUp();
             unitController.RigidBody.detectCollisions = true;
@@ -299,10 +300,10 @@ namespace AnyRPG {
             unitController.RigidBody.isKinematic = false;
             if (networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && unitController.IsOwner == false)) {
                 // movement is client authoritative, so gravity should not be applied on the server
-                Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics() turn OFF gravity");
+                //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics() turn OFF gravity");
                 unitController.RigidBody.useGravity = false;
             } else {
-                Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics() turn ON gravity");
+                //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics() turn ON gravity");
                 unitController.RigidBody.useGravity = true;
             }
             unitController.RigidBody.interpolation = RigidbodyInterpolation.Interpolate;

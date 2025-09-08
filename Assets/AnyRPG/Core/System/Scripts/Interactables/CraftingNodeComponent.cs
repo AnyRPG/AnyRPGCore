@@ -63,7 +63,7 @@ namespace AnyRPG {
         }
 
         public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex = 0) {
-            Debug.Log($"{interactable.gameObject.name}.CraftingNode.ProcessInteract({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex})");
+            //Debug.Log($"{interactable.gameObject.name}.CraftingNode.ProcessInteract({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex})");
 
             base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
 
@@ -75,7 +75,7 @@ namespace AnyRPG {
         }
 
         public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
-            Debug.Log($"{interactable.gameObject.name}.CraftingNodeComponent.ClientInteraction({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex})");
+            //Debug.Log($"{interactable.gameObject.name}.CraftingNodeComponent.ClientInteraction({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex})");
 
             base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
             uIManager.craftingWindow.OpenWindow();

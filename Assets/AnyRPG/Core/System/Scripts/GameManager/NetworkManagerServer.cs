@@ -939,7 +939,7 @@ namespace AnyRPG {
         }
 
         public void RequestTakeLoot(int lootDropId, int accountId) {
-            Debug.Log($"NetworkManagerServer.RequestTakeLoot({lootDropId}, {accountId})");
+            //Debug.Log($"NetworkManagerServer.RequestTakeLoot({lootDropId}, {accountId})");
 
             if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == true) {
                 //lootManager.TakeLoot(accountId, lootDropId);
@@ -951,7 +951,7 @@ namespace AnyRPG {
         }
 
         public void RequestBeginCrafting(Recipe recipe, int craftAmount, int accountId) {
-            Debug.Log($"NetworkManagerServer.RequestBeginCrafting({recipe.DisplayName}, {craftAmount}, {accountId})");
+            //Debug.Log($"NetworkManagerServer.RequestBeginCrafting({recipe.DisplayName}, {craftAmount}, {accountId})");
 
             if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == true) {
                 craftingManager.BeginCrafting(playerManagerServer.ActivePlayers[accountId], recipe, craftAmount);

@@ -937,7 +937,7 @@ namespace AnyRPG {
         }
 
         public void MoveFromBankToInventory(int slotIndex) {
-            Debug.Log($"CharacterInventoryManager.MoveFromBankToInventory({slotIndex})");
+            //Debug.Log($"CharacterInventoryManager.MoveFromBankToInventory({slotIndex})");
 
             if (bankSlots.Count > slotIndex) {
                 MoveFromBankToInventory(bankSlots[slotIndex]);
@@ -965,7 +965,8 @@ namespace AnyRPG {
         }
 
         public void MoveFromInventoryToBank(int slotIndex) {
-            Debug.Log($"CharacterInventoryManager.MoveFromInventoryToBank({slotIndex})");
+            //Debug.Log($"CharacterInventoryManager.MoveFromInventoryToBank({slotIndex})");
+
             if (inventorySlots.Count > slotIndex) {
                 MoveFromInventoryToBank(inventorySlots[slotIndex]);
             }
@@ -1008,13 +1009,14 @@ namespace AnyRPG {
         }
 
         public void UnequipBag(InstantiatedBag instantiatedBag, bool isBank) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.UnequipBag({instantiatedBag.DisplayName}, {isBank})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.UnequipBag({instantiatedBag.DisplayName}, {isBank})");
+
             AddItem(instantiatedBag, isBank);
             RemoveBag(instantiatedBag);
         }
 
         public void RequestUnequipBagToSlot(InstantiatedBag instantiatedBag, InventorySlot inventorySlot, bool isBankSlot) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.RequestUnequipBag({instantiatedBag.DisplayName}, inventoryslot, {isBankSlot})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.RequestUnequipBag({instantiatedBag.DisplayName}, inventoryslot, {isBankSlot})");
 
             if (systemGameManager.GameMode == GameMode.Local) {
                 UnequipBagToSlot(instantiatedBag, inventorySlot);
@@ -1031,7 +1033,7 @@ namespace AnyRPG {
         }
 
         public void UnequipBagToSlot(InstantiatedBag instantiatedBag, int slotIndex, bool isBank) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.UnequipBag({instantiatedBag.DisplayName}, {slotIndex}, {isBank})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.UnequipBag({instantiatedBag.DisplayName}, {slotIndex}, {isBank})");
 
             InventorySlot inventorySlot;
             if (isBank && bankSlots.Count > slotIndex) {
@@ -1045,14 +1047,14 @@ namespace AnyRPG {
         }
 
         public void UnequipBagToSlot(InstantiatedBag instantiatedBag, InventorySlot inventorySlot) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.UnequipBag({instantiatedBag.DisplayName})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.UnequipBag({instantiatedBag.DisplayName})");
 
             inventorySlot.AddItem(instantiatedBag);
             RemoveBag(instantiatedBag);
         }
 
         public void RequestMoveBag(InstantiatedBag bag, BagNode bagNode) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.RequestMoveBag({bag.DisplayName}, {bagNode.NodeIndex})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.RequestMoveBag({bag.DisplayName}, {bagNode.NodeIndex})");
 
             if (systemGameManager.GameMode == GameMode.Local) {
                 MoveBag(bag, bagNode);
@@ -1062,7 +1064,7 @@ namespace AnyRPG {
         }
 
         public void MoveBag(InstantiatedBag bag, BagNode bagNode) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.MoveBag({bag.DisplayName}, {bagNode.NodeIndex})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.MoveBag({bag.DisplayName}, {bagNode.NodeIndex})");
 
             if (EmptySlotCount(bag.BagNode.IsBankNode) - bag.Slots >= 0) {
                 RemoveBag(bag);
@@ -1071,7 +1073,7 @@ namespace AnyRPG {
         }
 
         public void MoveBag(InstantiatedBag instantiatedBag, int nodeIndex, bool isBankNode) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.MoveBag({instantiatedBag.DisplayName}, {nodeIndex}, {isBankNode})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.MoveBag({instantiatedBag.DisplayName}, {nodeIndex}, {isBankNode})");
 
             if (isBankNode) {
                 if (bankNodes.Count > nodeIndex) {
@@ -1085,7 +1087,7 @@ namespace AnyRPG {
         }
 
         public void RequestAddBagFromInventory(InstantiatedBag instantiatedBag, BagNode bagNode) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.RequestAddBagFromInventory({instantiatedBag.DisplayName}, {bagNode})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.RequestAddBagFromInventory({instantiatedBag.DisplayName}, {bagNode})");
 
             if (systemGameManager.GameMode == GameMode.Local) {
                 AddBagFromInventory(instantiatedBag, bagNode);
@@ -1095,14 +1097,14 @@ namespace AnyRPG {
         }
 
         public void AddBagFromInventory(InstantiatedBag instantiatedBag, BagNode bagNode) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.AddBagFromInventory({instantiatedBag.DisplayName}, {bagNode})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.AddBagFromInventory({instantiatedBag.DisplayName}, {bagNode})");
 
             AddBag(instantiatedBag, bagNode);
             instantiatedBag.Remove();
         }
 
         public void AddBagFromInventory(InstantiatedBag instantiatedBag, int nodeIndex, bool isBankNode) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.AddBagFromInventory({instantiatedBag.DisplayName}, {nodeIndex}, {isBankNode})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.AddBagFromInventory({instantiatedBag.DisplayName}, {nodeIndex}, {isBankNode})");
 
             if (isBankNode) {
                 if (bankNodes.Count > nodeIndex) {

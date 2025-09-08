@@ -742,7 +742,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="characterUnit.BaseCharacter"></param>
         public void SetPetMode(UnitController masterUnitController) {
-            Debug.Log($"{gameObject.name}.UnitController.SetPetMode({(masterUnitController == null ? "null" : masterUnitController.gameObject.name)})");
+            //Debug.Log($"{gameObject.name}.UnitController.SetPetMode({(masterUnitController == null ? "null" : masterUnitController.gameObject.name)})");
 
             SetUnitControllerMode(UnitControllerMode.Pet);
             unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultCharacterUnitLayer);
@@ -764,7 +764,7 @@ namespace AnyRPG {
         }
 
         private void EnablePetMode() {
-            Debug.Log($"{gameObject.name}.UnitController.EnablePetMode()");
+            //Debug.Log($"{gameObject.name}.UnitController.EnablePetMode()");
 
             InitializeNamePlateController();
             EnableAICommon();
@@ -1535,7 +1535,7 @@ namespace AnyRPG {
         }
 
         public void ApplyControlEffects(UnitController masterUnitController) {
-            Debug.Log($"{gameObject.name}.UnitController.ApplyControlEffects({masterUnitController.gameObject.name})");
+            //Debug.Log($"{gameObject.name}.UnitController.ApplyControlEffects({masterUnitController.gameObject.name})");
 
             if (!underControl) {
                 underControl = true;

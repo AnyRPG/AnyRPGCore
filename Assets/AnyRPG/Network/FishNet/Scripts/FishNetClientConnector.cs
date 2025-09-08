@@ -1402,7 +1402,7 @@ namespace AnyRPG {
 
         [ServerRpc(RequireOwnership = false)]
         public void RequestDespawnPet(string resourceName, NetworkConnection networkConnection = null) {
-            Debug.Log($"FishNetClientConnector.RequestDespawnPet({resourceName})");
+            //Debug.Log($"FishNetClientConnector.RequestDespawnPet({resourceName})");
 
             UnitProfile unitProfile = systemDataFactory.GetResource<UnitProfile>(resourceName);
             if (unitProfile == null) {

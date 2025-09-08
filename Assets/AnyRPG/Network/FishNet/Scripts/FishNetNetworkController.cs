@@ -68,7 +68,7 @@ namespace AnyRPG {
         }
 
         private void HandleClientPresenceChangeEnd(ClientPresenceChangeEventArgs args) {
-            Debug.Log($"FishNetNetworkController.HandleClientPresenceChangeEnd({args.Connection.ClientId})");
+            //Debug.Log($"FishNetNetworkController.HandleClientPresenceChangeEnd({args.Connection.ClientId})");
 
             clientConnector.AdvertisePresenceChangeEnd(args.Connection);
         }

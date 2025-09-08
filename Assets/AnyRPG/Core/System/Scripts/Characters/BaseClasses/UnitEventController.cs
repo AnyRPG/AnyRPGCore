@@ -506,13 +506,13 @@ namespace AnyRPG {
         }
 
         public void NotifyOnActivateMountedState(UnitController mountUnitController) {
-            Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnActivateMountedState({mountUnitController.gameObject.name})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnActivateMountedState({mountUnitController.gameObject.name})");
 
             OnActivateMountedState(mountUnitController);
         }
 
         public void NotifyOnDeactivateMountedState() {
-            Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnDeactivateMountedState()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnDeactivateMountedState()");
 
             OnDeactivateMountedState();
         }

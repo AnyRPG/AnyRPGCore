@@ -611,7 +611,7 @@ namespace AnyRPG {
         }
 
         public void HandleDie() {
-            Debug.Log($"{unitController.gameObject.name}.UnitAnimator.HandleDie()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.HandleDie()");
 
             // add these to prevent characters from dying floating or upright
             HandleUnLevitated();

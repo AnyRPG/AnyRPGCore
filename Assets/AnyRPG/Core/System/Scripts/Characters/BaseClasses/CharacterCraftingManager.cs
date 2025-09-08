@@ -129,14 +129,14 @@ namespace AnyRPG {
         }
 
         public void CancelCrafting() {
-            Debug.Log($"{unitController.gameObject.name}.CharacterCraftingManager.CancelCrafting()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCraftingManager.CancelCrafting()");
 
             ClearCraftingQueue();
             unitController.CharacterAbilityManager.TryToStopCasting();
         }
 
         public void BeginCrafting(Recipe recipe, int craftAmount) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterCraftingManager.BeginCrafting({recipe.DisplayName}, {craftAmount})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCraftingManager.BeginCrafting({recipe.DisplayName}, {craftAmount})");
 
             for (int i = 0; i < craftAmount; i++) {
                 AddToCraftingQueue(recipe);

@@ -228,7 +228,7 @@ namespace AnyRPG {
         }
 
         public void MoveMouseUseable(int oldIndex, int newIndex) {
-            Debug.Log($"ActionBarManager.MoveMouseUseable({oldIndex}, {newIndex})");
+            //Debug.Log($"ActionBarManager.MoveMouseUseable({oldIndex}, {newIndex})");
 
             IUseable oldUseable = mouseActionButtons[newIndex].Useable;
 

@@ -480,7 +480,7 @@ namespace AnyRPG {
         */
 
         private void HandleSetParent(Transform parentTransform) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({(parentTransform == null ? "null" : parentTransform.gameObject.name)})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({(parentTransform == null ? "null" : parentTransform.gameObject.name)})");
 
             if (networkObject != null && parentTransform != null) {
                 Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({(parentTransform == null ? "null" : parentTransform.gameObject.name)}) networkObject is not null");
@@ -495,48 +495,48 @@ namespace AnyRPG {
         }
 
         private void HandleUnsetParent() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleUnsetParent() setting parent transform to null");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleUnsetParent() setting parent transform to null");
             
             networkObject.UnsetParent();
             unitController.UnitMountManager.ProcessUnsetParent();
         }
 
         private void HandleDeactivateMountedStateOwner() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateOwner()");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateOwner()");
 
             HandleDeactivateMountedStateServer();
         }
 
         [ServerRpc]
         private void HandleDeactivateMountedStateServer() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateServer() frame: {Time.frameCount}");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateServer() frame: {Time.frameCount}");
 
             unitController.UnitMountManager.DespawnMountUnit();
         }
 
         private void HandleDeactivateMountedState() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedState()");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedState()");
 
             HandleDeactivateMountedStateClient();
         }
 
         [ObserversRpc]
         public void HandleDeactivateMountedStateClient() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedState()");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedState()");
 
             unitController.UnitMountManager.DeactivateMountedState();
         }
 
 
         private void HandleActivateMountedStateServer(UnitController mountUnitController) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleActivateMountedStateServer({mountUnitController.gameObject.name})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleActivateMountedStateServer({mountUnitController.gameObject.name})");
 
             HandleActiveateMountedStateClient();
         }
 
         [ObserversRpc]
         public void HandleActiveateMountedStateClient() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleActivateMountedStateClient()");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleActivateMountedStateClient()");
 
             unitController.UnitMountManager.ActivateMountedState();
         }
@@ -579,7 +579,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         private void HandleSpawnActionObjectsClient(string animatedActionResourceName) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnActionObjectsClient({animatedActionResourceName})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnActionObjectsClient({animatedActionResourceName})");
 
             AnimatedAction animatedAction = systemDataFactory.GetResource<AnimatedAction>(animatedActionResourceName);
             if (animatedAction == null) {
@@ -663,7 +663,7 @@ namespace AnyRPG {
 
 
         public void HandleAddActivePetServer(UnitProfile profile, UnitController petUnitController) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleAddActivePetServer({profile?.ResourceName}, {petUnitController?.gameObject.name})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleAddActivePetServer({profile?.ResourceName}, {petUnitController?.gameObject.name})");
 
             FishNetUnitController targetNetworkCharacterUnit = petUnitController.GetComponent<FishNetUnitController>();
             if (targetNetworkCharacterUnit == null) {
@@ -676,7 +676,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         public void HandleAddActivePetClient(string petResourceName, FishNetUnitController targetNetworkCharacterUnit) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleAddActivePetClient({petResourceName}, {targetNetworkCharacterUnit?.gameObject.name})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleAddActivePetClient({petResourceName}, {targetNetworkCharacterUnit?.gameObject.name})");
             
             if (targetNetworkCharacterUnit?.unitController == null) {
                 //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleAddActivePetClient(): targetNetworkCharacterUnit is null");
@@ -1833,7 +1833,7 @@ namespace AnyRPG {
         }
 
         public void HandleSpawnProjectileEffectPrefabsServer(Interactable target, Interactable originalTarget, ProjectileEffectProperties projectileEffectProperties, AbilityEffectContext abilityEffectContext) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnProjectileEffectPrefabsServer({target?.gameObject.name}, {originalTarget?.gameObject.name}, {projectileEffectProperties.ResourceName})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnProjectileEffectPrefabsServer({target?.gameObject.name}, {originalTarget?.gameObject.name}, {projectileEffectProperties.ResourceName})");
 
             FishNetInteractable networkTarget = null;
             if (target != null) {

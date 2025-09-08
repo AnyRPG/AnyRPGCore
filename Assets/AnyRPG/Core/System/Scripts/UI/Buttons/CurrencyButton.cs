@@ -29,6 +29,8 @@ namespace AnyRPG {
         */
 
         public void AddCurrency(Currency currency) {
+            //Debug.Log($"{gameObject.name}.CurrencyButton.AddCurrency({currency.ResourceName})");
+
             this.currency = currency as Currency;
             icon.sprite = this.currency.Icon;
             icon.color = Color.white;
