@@ -8,6 +8,9 @@ namespace AnyRPG {
 
         private AbilityManager abilityManager = null;
 
+        // gameobject, scene handle
+        private Dictionary<GameObject, int> abilityEffectGameObjectLookup = new Dictionary<GameObject, int>();
+
         // game manager references
         private ObjectPooler objectPooler = null;
         private SystemEventManager systemEventManager = null;
@@ -44,6 +47,7 @@ namespace AnyRPG {
 
             if (abilityManager.AbilityEffectGameObjects.ContainsKey(sceneHandle) == true) {
                 foreach (GameObject go in abilityManager.AbilityEffectGameObjects[sceneHandle]) {
+                    abilityEffectGameObjectLookup.Remove(go);
                     if (go != null) {
                         objectPooler.ReturnObjectToPool(go);
                     }
@@ -59,6 +63,7 @@ namespace AnyRPG {
             foreach (List<GameObject> gameObjectList in abilityEffectObjects.Values) {
                 foreach (GameObject go in gameObjectList) {
                     abilityManager.AbilityEffectGameObjects[source.gameObject.scene.handle].Add(go);
+                    abilityEffectGameObjectLookup.Add(go, source.gameObject.scene.handle);
                 }
             }
             abilityManager.AddDestroyAbilityEffectObjectCoroutine(source.gameObject.scene.handle, StartCoroutine(DestroyAbilityEffectObject(abilityEffectObjects, source, target, timer, abilityEffectInput, fixedLengthEffect)));
@@ -136,8 +141,11 @@ namespace AnyRPG {
             }
             foreach (List<GameObject> gameObjectList in abilityEffectObjects.Values) {
                 foreach (GameObject go in gameObjectList) {
-                    if (abilityManager.AbilityEffectGameObjects.ContainsKey(go.scene.handle)) {
-                        abilityManager.AbilityEffectGameObjects[source.gameObject.scene.handle].Remove(go);
+                    if (abilityEffectGameObjectLookup.ContainsKey(go)) {
+                        if (abilityManager.AbilityEffectGameObjects.ContainsKey(abilityEffectGameObjectLookup[go])) {
+                            abilityManager.AbilityEffectGameObjects[abilityEffectGameObjectLookup[go]].Remove(go);
+                        }
+                        abilityEffectGameObjectLookup.Remove(go);
                     }
                     if (go != null) {
                         //Debug.Log($"SystemAbilityController.DestroyAbilityEffectObject(objectCount: {abilityEffectObjects.Count}, {(source == null ? "null" : source.AbilityManager.Name)}, {(target == null ? "null" : target.gameObject.name)}, {timer}, {fixedLengthEffect.ResourceName}) DESTROYING AT END OF TIMER : {go.name} ({go.GetInstanceID()})");
