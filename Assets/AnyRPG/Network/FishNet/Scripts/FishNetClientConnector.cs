@@ -101,7 +101,7 @@ namespace AnyRPG {
 
         [ServerRpc(RequireOwnership = false)]
         public void RequestRespawnPlayerUnit(NetworkConnection networkConnection = null) {
-            Debug.Log($"FishNetClientConnector.RequestRespawnPlayerUnit()");
+            //Debug.Log($"FishNetClientConnector.RequestRespawnPlayerUnit()");
 
             if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
                 return;
@@ -111,7 +111,7 @@ namespace AnyRPG {
 
         [ServerRpc(RequireOwnership = false)]
         public void RequestDespawnPlayerUnit(NetworkConnection networkConnection = null) {
-            Debug.Log($"FishNetClientConnector.RequestDespawnPlayerUnit()");
+            //Debug.Log($"FishNetClientConnector.RequestDespawnPlayerUnit()");
 
             if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
                 return;
@@ -121,7 +121,7 @@ namespace AnyRPG {
 
         [ServerRpc(RequireOwnership = false)]
         public void RequestRevivePlayerUnit(NetworkConnection networkConnection = null) {
-            Debug.Log($"FishNetClientConnector.RequestRevivePlayerUnit()");
+            //Debug.Log($"FishNetClientConnector.RequestRevivePlayerUnit()");
 
             if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
                 return;
@@ -359,15 +359,15 @@ namespace AnyRPG {
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void LoadSceneServer(NetworkConnection networkConnection, string sceneName) {
+        public void RequestReturnFromCutscene(NetworkConnection networkConnection = null) {
             //Debug.Log($"FishNetClientConnector.LoadSceneServer({networkConnection.ClientId}, {sceneName})");
 
-            SceneLoadData sceneLoadData = new SceneLoadData(sceneName);
-            sceneLoadData.ReplaceScenes = ReplaceOption.All;
-            sceneLoadData.Options.LocalPhysics = LocalPhysicsMode.Physics3D;
-            //sceneLoadData.PreferredActiveScene = sceneLoadData.SceneLookupDatas[0];
-            sceneLoadData.PreferredActiveScene = new PreferredScene(SceneLookupData.CreateData(sceneName));
-            fishNetNetworkManager.SceneManager.LoadConnectionScenes(networkConnection, sceneLoadData);
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.CreatePlayerCharacter() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+
+            networkManagerServer.ReturnFromCutscene(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId);
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -646,7 +646,7 @@ namespace AnyRPG {
         }
 
         public void LoadLobbyGameScene(LobbyGame lobbyGame, SceneNode sceneNode, NetworkConnection networkConnection) {
-            //Debug.Log($"FishNetClientConnector.LoadLobbyGameScene({lobbyGame.gameId}, {sceneNode.SceneFile}");
+            //Debug.Log($"FishNetClientConnector.LoadLobbyGameScene({lobbyGame.gameId}, {sceneNode.SceneFile}, {networkConnection.ClientId}");
 
             if (networkManagerServer.LobbyGameSceneHandles.ContainsKey(lobbyGame.gameId) == false || networkManagerServer.LobbyGameSceneHandles[lobbyGame.gameId].ContainsKey(sceneNode.SceneFile) == false) {
                 // load new scene
@@ -784,7 +784,7 @@ namespace AnyRPG {
             //Debug.Log($"FishNetClientConnector.AdvertiseLoadSceneServer({sceneResourceName}, {accountId})");
 
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseLoadSceneServer() could not find client id {accountId}");
+                //Debug.Log($"FishNetClientConnector.AdvertiseLoadSceneServer() could not find client id {accountId}");
                 return;
             }
             int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
@@ -792,10 +792,22 @@ namespace AnyRPG {
                 return;
             }
 
-            // this code works only for lobby game.  It will need to be modified to work with MMO
-            AdvertiseLoadSceneClient(fishNetNetworkManager.ServerManager.Clients[clientId], sceneResourceName);
-            
+            // unload the current scene for the client
             NetworkConnection networkConnection = fishNetNetworkManager.ServerManager.Clients[clientId];
+
+            // this code works only for lobby game.  It will need to be modified to work with MMO
+            AdvertiseLoadSceneClient(networkConnection, sceneResourceName);
+
+            if (networkConnection.Scenes.Count == 0) {
+                //Debug.Log($"FishNetClientConnector.AdvertiseLoadSceneServer() no scenes found for client {clientId}");
+                //return;
+            } else {
+                //Debug.Log($"FishNetClientConnector.AdvertiseLoadSceneServer() unloading current scene {networkConnection.Scenes.First().name}({networkConnection.Scenes.First().handle}) for client {clientId}");
+                SceneUnloadData sceneUnloadData = new SceneUnloadData(networkConnection.Scenes.First());
+                base.NetworkManager.SceneManager.UnloadConnectionScenes(networkConnection, sceneUnloadData);
+            }
+            
+            //NetworkConnection networkConnection = fishNetNetworkManager.ServerManager.Clients[clientId];
             LobbyGame lobbyGame = networkManagerServer.LobbyGames[networkManagerServer.LobbyGameAccountLookup[accountId]];
 
             SceneNode loadingSceneNode = systemDataFactory.GetResource<SceneNode>(sceneResourceName);
@@ -1316,7 +1328,7 @@ namespace AnyRPG {
 
         [ServerRpc(RequireOwnership = false)]
         public void RequestBeginCrafting(string recipeName, int craftAmount, NetworkConnection networkConnection = null) {
-            Debug.Log($"FishNetClientConnector.RequestBeginCrafting({recipeName}, {craftAmount})");
+            //Debug.Log($"FishNetClientConnector.RequestBeginCrafting({recipeName}, {craftAmount})");
             
             if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
                 //Debug.LogWarning($"FishNetClientConnector.RequestBeginCrafting() could not find clientId {networkConnection.ClientId} in logged in accounts");
@@ -1333,7 +1345,8 @@ namespace AnyRPG {
 
         [ServerRpc(RequireOwnership = false)]
         public void RequestCancelCrafting(NetworkConnection networkConnection = null) {
-            Debug.Log($"FishNetClientConnector.RequestCancelCrafting()");
+            //Debug.Log($"FishNetClientConnector.RequestCancelCrafting()");
+
             if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
                 return;
             }
@@ -1521,7 +1534,7 @@ namespace AnyRPG {
         }
 
         public void AdvertiseLoadCutscene(Cutscene cutscene, int accountId) {
-            Debug.Log($"FishNetClientConnector.AdvertiseLoadCutscene({cutscene.ResourceName}, {accountId})");
+            //Debug.Log($"FishNetClientConnector.AdvertiseLoadCutscene({cutscene.ResourceName}, {accountId})");
 
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
                 Debug.Log($"FishNetClientConnector.AdvertiseLoadCutscene() could not find client id {accountId}");

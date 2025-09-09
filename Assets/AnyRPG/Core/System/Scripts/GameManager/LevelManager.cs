@@ -361,7 +361,12 @@ namespace AnyRPG {
                 // so the main camera must be active or Unity will display that "no cameras rendering" message
                 cameraManager.DisableCutsceneCamera();
                 cameraManager.ActivateMainCamera();
-                LoadLevel(returnScene);
+                if (systemGameManager.GameMode == GameMode.Local) {
+                    LoadLevel(returnScene);
+                } else {
+                    ProcessBeforeLevelUnload();
+                    networkManagerClient.RequestReturnFromCutscene();
+                }
             } else {
 
                 //cameraManager.ActivateMainCamera();
@@ -446,9 +451,7 @@ namespace AnyRPG {
                 StartCoroutine(LoadAsynchronously(sceneName));
                 return;
             }
-
-            // network load
-            networkManagerClient.LoadScene(sceneName);
+            Debug.LogWarning("LevelManager.StartLoadAsync(): should not be loading a scene directly in networked mode!");
         }
 
         public bool IsCutscene() {

@@ -1410,13 +1410,15 @@ namespace AnyRPG {
         }
 
         public void HandleRequestAddBagFromInventory(InstantiatedBag instantiatedBag, int nodeIndex, bool isBankNode) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRequestAddBagFromInventory({instantiatedBag.InstanceId}, {nodeIndex}, {isBankNode})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRequestAddBagFromInventory({instantiatedBag.InstanceId}, {nodeIndex}, {isBankNode})");
+
             RequestAddBagFromInventory(instantiatedBag.InstanceId, nodeIndex, isBankNode);
         }
 
         [ServerRpc]
         public void RequestAddBagFromInventory(int itemInstanceId, int nodeIndex, bool isBankNode) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.RequestAddBagFromInventory({itemInstanceId}, {nodeIndex}, {isBankNode})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.RequestAddBagFromInventory({itemInstanceId}, {nodeIndex}, {isBankNode})");
+
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) && systemItemManager.InstantiatedItems[itemInstanceId] is InstantiatedBag) {
                 unitController.CharacterInventoryManager.AddBagFromInventory(systemItemManager.InstantiatedItems[itemInstanceId] as InstantiatedBag, nodeIndex, isBankNode);
             }
@@ -1870,7 +1872,7 @@ namespace AnyRPG {
         }
 
         public void HandleSpawnChanneledEffectPrefabsServer(Interactable target, Interactable originalTarget, ChanneledEffectProperties channeledEffectProperties, AbilityEffectContext abilityEffectContext) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnChanneledEffectPrefabsServer({target?.gameObject.name}, {originalTarget?.gameObject.name}, {channeledEffectProperties.ResourceName})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnChanneledEffectPrefabsServer({target?.gameObject.name}, {originalTarget?.gameObject.name}, {channeledEffectProperties.ResourceName})");
 
             FishNetInteractable networkTarget = null;
             if (target != null) {

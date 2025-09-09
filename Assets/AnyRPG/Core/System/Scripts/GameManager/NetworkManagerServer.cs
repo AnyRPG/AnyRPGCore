@@ -698,11 +698,15 @@ namespace AnyRPG {
         public void AdvertiseLoadScene(UnitController sourceUnitController, string sceneName, int accountId) {
             //Debug.Log($"NetworkManagerServer.AdvertiseLoadScene({sourceUnitController.gameObject.name}, {sceneName}, {accountId})");
             
-            string oldSceneName = sourceUnitController.gameObject.scene.name;
-            int oldSceneHandle = sourceUnitController.gameObject.scene.handle;
+            //string oldSceneName = sourceUnitController.gameObject.scene.name;
+            //int oldSceneHandle = sourceUnitController.gameObject.scene.handle;
             DespawnPlayerUnit(accountId);
-            systemEventManager.NotifyOnLevelUnloadServer(oldSceneHandle, oldSceneName);
+            //systemEventManager.NotifyOnLevelUnloadServer(oldSceneHandle, oldSceneName);
             networkController.AdvertiseLoadScene(sceneName, accountId);
+        }
+
+        public void AdvertiseLoadCutscene(Cutscene cutscene, int accountId) {
+            networkController.AdvertiseLoadCutscene(cutscene, accountId);
         }
 
         public void DespawnPlayerUnit(int accountId) {
@@ -743,10 +747,10 @@ namespace AnyRPG {
         public void AdvertiseTeleport(int accountId, UnitController sourceUnitController, TeleportEffectProperties teleportEffectProperties) {
             //Debug.Log($"NetworkManagerServer.AdvertiseTeleport({accountId}, {teleportEffectProperties.LevelName})");
 
-            string oldSceneName = sourceUnitController.gameObject.scene.name;
-            int oldSceneHandle = sourceUnitController.gameObject.scene.handle;
+            //string oldSceneName = sourceUnitController.gameObject.scene.name;
+            //int oldSceneHandle = sourceUnitController.gameObject.scene.handle;
             DespawnPlayerUnit(accountId);
-            systemEventManager.NotifyOnLevelUnloadServer(oldSceneHandle, oldSceneName);
+            //systemEventManager.NotifyOnLevelUnloadServer(oldSceneHandle, oldSceneName);
             networkController.AdvertiseLoadScene(teleportEffectProperties.LevelName, accountId);
         }
 
@@ -793,6 +797,8 @@ namespace AnyRPG {
         }
 
         private void AddLobbyGameSceneHandle(int lobbyGameId, Scene scene) {
+            //Debug.Log($"NetworkManagerServer.AddLobbyGameSceneHandle({lobbyGameId}, {scene.name}, {scene.handle})");
+
             if (lobbyGameSceneHandles.ContainsKey(lobbyGameId) == false) {
                 lobbyGameSceneHandles.Add(lobbyGameId, new Dictionary<string, int>());
             }
@@ -802,6 +808,11 @@ namespace AnyRPG {
             if (lobbyGameSceneHandleLookup.ContainsKey(scene.handle) == false) {
                 lobbyGameSceneHandleLookup.Add(scene.handle, lobbyGameId);
             }
+        }
+
+        public void HandleSceneUnloadStart(int sceneHandle, string sceneName) {
+            //Debug.Log($"NetworkManagerServer.HandleSceneUnloadStart({sceneName}, {sceneHandle})");
+            systemEventManager.NotifyOnLevelUnloadServer(sceneHandle, sceneName);
         }
 
         public void HandleSceneUnloadEnd(int sceneHandle, string sceneName) {
@@ -815,7 +826,7 @@ namespace AnyRPG {
                 }
                 lobbyGameSceneHandleLookup.Remove(sceneHandle);
             }
-            levelManagerServer.RemoveLoadedScene(sceneHandle, sceneName);
+            //levelManagerServer.RemoveLoadedScene(sceneHandle, sceneName);
         }
 
         public UnitController SpawnCharacterPrefab(CharacterRequestData characterRequestData, Transform parentTransform, Vector3 position, Vector3 forward, Scene scene) {
@@ -980,6 +991,8 @@ namespace AnyRPG {
         }
 
         public void SetLobbyGameLoadRequestHashcode(int gameId, int hashCode) {
+            //Debug.Log($"NetworkManagerServer.SetLobbyGameLoadRequestHashcode({gameId}, {hashCode})");
+
             if (lobbyGameLoadRequestHashCodes.ContainsKey(hashCode) == false) {
                 lobbyGameLoadRequestHashCodes.Add(hashCode, gameId);
             }
@@ -1018,13 +1031,13 @@ namespace AnyRPG {
         }
 
         public void RequestRespawnPlayerUnit(int accountId) {
-            Debug.Log($"NetworkManagerServer.RequestRespawnPlayerUnit({accountId})");
+            //Debug.Log($"NetworkManagerServer.RequestRespawnPlayerUnit({accountId})");
             
             playerManagerServer.RespawnPlayerUnit(accountId);
         }
 
         public void RequestRevivePlayerUnit(int accountId) {
-            Debug.Log($"NetworkManagerServer.RequestRevivePlayerUnit({accountId})");
+            //Debug.Log($"NetworkManagerServer.RequestRevivePlayerUnit({accountId})");
 
             playerManagerServer.RevivePlayerUnit(accountId);
         }
@@ -1067,7 +1080,7 @@ namespace AnyRPG {
 
 
         public void Logout(int accountId) {
-            Debug.Log($"NetworkManagerServer.Logout({accountId})");
+            //Debug.Log($"NetworkManagerServer.Logout({accountId})");
 
             playerManagerServer.StopMonitoringPlayerUnit(accountId);
             KickPlayer(accountId);
@@ -1086,8 +1099,15 @@ namespace AnyRPG {
             return weatherManagerServer.GetSceneWeatherProfile(handle);
         }
 
-        public void AdvertiseLoadCutscene(Cutscene cutscene, int accountId) {
-            networkController.AdvertiseLoadCutscene(cutscene, accountId);
+        public void ReturnFromCutscene(int accountId) {
+            //Debug.Log($"NetworkManagerServer.ReturnFromCutscene({accountId})");
+
+            if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId) == false) {
+                // no spawn request, nothing to do
+                return;
+            }
+            string sceneName = playerManagerServer.PlayerCharacterMonitors[accountId].playerCharacterSaveData.SaveData.CurrentScene;
+            networkController.AdvertiseLoadScene(sceneName, accountId);
         }
     }
 

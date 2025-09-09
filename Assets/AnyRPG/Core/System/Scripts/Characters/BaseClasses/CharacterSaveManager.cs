@@ -154,7 +154,7 @@ namespace AnyRPG {
         }
 
         private void HandleActivateMountedState(UnitController controller) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.HandleActivateMountedState()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.HandleActivateMountedState()");
 
             saveData.isMounted = true;
         }

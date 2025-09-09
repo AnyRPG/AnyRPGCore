@@ -94,10 +94,4 @@ MonoBehaviour:
   minWeatherLength: 10800
   maxWeatherLength: 21600
   noWeatherWeight: 10
-  weatherWeights:
-  - weather: Rain
-    weight: 10
-  - weather: Snow
-    weight: 10
-  - weather: Fog
-    weight: 0
+  weatherWeights: []

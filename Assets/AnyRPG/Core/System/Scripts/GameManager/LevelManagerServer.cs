@@ -47,10 +47,11 @@ namespace AnyRPG {
             }
 
             networkManagerServer.HandleSceneUnloadEnd(scene.handle, scene.name);
+
         }
 
         public void AddLoadedScene(Scene scene) {
-            //Debug.Log($"LevelManagerServer.AddLoadedScene({scene.name})");
+            //Debug.Log($"LevelManagerServer.AddLoadedScene({scene.name} {scene.handle})");
 
             if (loadedScenes.ContainsKey(scene.name) == false) {
                 loadedScenes.Add(scene.name, new Dictionary<int, Scene>());

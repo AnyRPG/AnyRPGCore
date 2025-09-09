@@ -38,7 +38,7 @@ namespace AnyRPG {
         }
 
         public void SummonMount(UnitProfile mountUnitProfile) {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SummonMount({mountUnitProfile.ResourceName})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SummonMount({mountUnitProfile.ResourceName})");
 
             CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(mountUnitProfile);
             characterConfigurationRequest.unitControllerMode = UnitControllerMode.Mount;

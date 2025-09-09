@@ -110,10 +110,10 @@ namespace AnyRPG {
             networkController.Disconnect();
         }
 
-        public void LoadScene(string sceneName) {
-            Debug.Log($"NetworkManagerClient.LoadScene({sceneName})");
+        public void RequestReturnFromCutscene() {
+            Debug.Log($"NetworkManagerClient.ReturnFromCutscene()");
 
-            networkController.LoadScene(sceneName);
+            networkController.RequestReturnFromCutscene();
         }
 
         public void RequestSpawnPlayerUnit(string sceneName) {

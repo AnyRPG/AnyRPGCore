@@ -35,6 +35,7 @@ namespace AnyRPG {
         private LevelManager levelManager = null;
         private NetworkManagerClient networkManagerClient = null;
         private NetworkManagerServer networkManagerServer = null;
+        private SystemEventManager systemEventManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("FishNetNetworkController.Configure()");
@@ -51,7 +52,7 @@ namespace AnyRPG {
 
                 // stuff that was previously done only on active connection
                 fishNetNetworkManager.SceneManager.OnActiveSceneSet += HandleActiveSceneSet;
-                fishNetNetworkManager.SceneManager.OnUnloadStart += HandleUnloadStart;
+                //fishNetNetworkManager.SceneManager.OnUnloadStart += HandleUnloadStartServer;
                 fishNetNetworkManager.SceneManager.OnQueueStart += HandleQueueStart;
                 fishNetNetworkManager.SceneManager.OnQueueEnd += HandleQueueEnd;
 
@@ -65,6 +66,7 @@ namespace AnyRPG {
             levelManager = systemGameManager.LevelManager;
             networkManagerServer = systemGameManager.NetworkManagerServer;
             networkManagerClient = systemGameManager.NetworkManagerClient;
+            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         private void HandleClientPresenceChangeEnd(ClientPresenceChangeEventArgs args) {
@@ -108,7 +110,8 @@ namespace AnyRPG {
             fishNetNetworkManager.SceneManager.OnLoadEnd += HandleSceneLoadEndServer;
             fishNetNetworkManager.ServerManager.OnClientKick += HandleClientKick;
             fishNetNetworkManager.ServerManager.OnRemoteConnectionState += HandleRemoteConnectionState;
-            fishNetNetworkManager.SceneManager.OnUnloadEnd += HandleUnloadEndServer;
+            fishNetNetworkManager.SceneManager.OnUnloadStart += HandleUnloadStartServer;
+            //fishNetNetworkManager.SceneManager.OnUnloadEnd += HandleUnloadEndServer;
         }
 
         public void UnsubscribeFromServerEvents() {
@@ -117,7 +120,8 @@ namespace AnyRPG {
             fishNetNetworkManager.SceneManager.OnLoadEnd -= HandleSceneLoadEndServer;
             fishNetNetworkManager.ServerManager.OnClientKick -= HandleClientKick;
             fishNetNetworkManager.ServerManager.OnRemoteConnectionState -= HandleRemoteConnectionState;
-            fishNetNetworkManager.SceneManager.OnUnloadEnd -= HandleUnloadEndServer;
+            fishNetNetworkManager.SceneManager.OnUnloadStart -= HandleUnloadStartServer;
+            //fishNetNetworkManager.SceneManager.OnUnloadEnd -= HandleUnloadEndServer;
         }
 
         private void HandleClientConnectionState(ClientConnectionStateArgs obj) {
@@ -264,6 +268,7 @@ namespace AnyRPG {
             //}
         }
 
+        /*
         private void HandleUnloadEndServer(SceneUnloadEndEventArgs obj) {
             //Debug.Log($"FishNetNetworkController.HandleUnloadEndServer()");
 
@@ -272,13 +277,12 @@ namespace AnyRPG {
                 networkManagerServer.HandleSceneUnloadEnd(scene.Handle, scene.Name);
             }
         }
+        */
 
-        private void HandleUnloadStart(SceneUnloadStartEventArgs obj) {
+        private void HandleUnloadStartServer(SceneUnloadStartEventArgs obj) {
             //Debug.Log($"FishNetNetworkController.HandleUnloadStart({obj.QueueData.SceneUnloadData.SceneLookupDatas[0].Name})");
 
-            //foreach (SceneLookupData sceneLookupData in obj.QueueData.SceneUnloadData.SceneLookupDatas) {
-            //    Debug.Log($"FishNetNetworkController.HandleUnloadStart() {sceneLookupData.Name}");
-            //}
+            networkManagerServer.HandleSceneUnloadStart(obj.QueueData.SceneUnloadData.SceneLookupDatas[0].Handle, obj.QueueData.SceneUnloadData.SceneLookupDatas[0].Name);
         }
 
 
@@ -347,10 +351,10 @@ namespace AnyRPG {
             return null;
         }
 
-        public override void LoadScene(string sceneName) {
+        public override void RequestReturnFromCutscene() {
             //Debug.Log($"FishNetNetworkController.LoadScene({sceneName})");
 
-            clientConnector.LoadSceneServer(fishNetNetworkManager.ClientManager.Connection, sceneName);
+            clientConnector.RequestReturnFromCutscene();
         }
 
         public override bool CanSpawnCharacterOverNetwork() {

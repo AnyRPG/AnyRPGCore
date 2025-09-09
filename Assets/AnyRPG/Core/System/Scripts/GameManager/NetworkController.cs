@@ -22,7 +22,7 @@ namespace AnyRPG {
         public abstract void RequestDespawnPlayerUnit();
         public abstract void RequestRevivePlayerUnit();
         public abstract GameObject RequestSpawnModelPrefab(/*int spawnRequestId, int serverSpawnRequestId,*/ GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward);
-        public abstract void LoadScene(string sceneName);
+        public abstract void RequestReturnFromCutscene();
         public abstract bool CanSpawnCharacterOverNetwork();
         public abstract bool OwnPlayer(UnitController unitController);
         public abstract void CreatePlayerCharacter(AnyRPGSaveData anyRPGSaveData);

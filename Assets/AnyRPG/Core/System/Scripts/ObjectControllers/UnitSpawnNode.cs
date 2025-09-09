@@ -168,10 +168,10 @@ namespace AnyRPG {
             */
             if (systemGameManager.GameMode == GameMode.Local) {
                 CreateEventSubscriptions();
-            } else if (networkManagerServer.ServerModeActive) {
+            }/* else if (networkManagerServer.ServerModeActive) {
                 CreateServerEventSubscriptions();
             }
-
+            */
 
             if (networkManagerServer.ServerModeActive || isCutscene == true) {
                 // server does not respond to player spawn
@@ -203,7 +203,7 @@ namespace AnyRPG {
                 return;
             }
             systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
-            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient += HandleLevelUnloadClient;
             if (playerManager.PlayerUnitSpawned == true) {
                 //Debug.Log($"{gameObject.name}.UnitSpawnNode.CreateEventSubscriptions(): player unit already spawned.  Handling player unit spawn");
                 ProcessPlayerUnitSpawn(playerManager.UnitController);
@@ -218,11 +218,12 @@ namespace AnyRPG {
             }
 
             systemEventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
-            systemEventManager.OnLevelUnloadClient -= HandleLevelUnload;
+            systemEventManager.OnLevelUnloadClient -= HandleLevelUnloadClient;
 
             eventSubscriptionsInitialized = false;
         }
 
+        /*
         private void CreateServerEventSubscriptions() {
             //Debug.Log($"{gameObject.name}.UnitSpawnNode.CreateServerEventSubscriptions()");
 
@@ -233,7 +234,7 @@ namespace AnyRPG {
                 Debug.LogError(gameObject.name + ".UnitSpawnNode.CreateEventSubscriptions(): systemGameManager not found.  Is the GameManager in the scene?");
                 return;
             }
-            systemEventManager.OnLevelUnloadServer += HandleLevelUnload;
+            systemEventManager.OnLevelUnloadServer += HandleLevelUnloadServer;
             serverEventSubscriptionsInitialized = true;
         }
 
@@ -243,10 +244,11 @@ namespace AnyRPG {
                 return;
             }
 
-            systemEventManager.OnLevelUnloadServer -= HandleLevelUnload;
+            systemEventManager.OnLevelUnloadServer -= HandleLevelUnloadServer;
 
             serverEventSubscriptionsInitialized = false;
         }
+        */
 
 
         public void HandlePlayerUnitSpawn(UnitController sourceUnitController) {
@@ -254,7 +256,17 @@ namespace AnyRPG {
             ProcessPlayerUnitSpawn(sourceUnitController);
         }
 
-        public void HandleLevelUnload(int sceneHandle, string sceneName) {
+        /*
+        public void HandleLevelUnloadServer(int sceneHandle, string sceneName) {
+            //Debug.Log($"{gameObject.name}.UnitSpawnNode.HandleLevelUnload({sceneHandle}, {sceneName})");
+            if (gameObject.scene.handle != sceneHandle) {
+                return;
+            }
+            Cleanup();
+        }
+        */
+
+        public void HandleLevelUnloadClient(int sceneHandle, string sceneName) {
             //Debug.Log($"{gameObject.name}.UnitSpawnNode.HandleLevelUnload({sceneHandle}, {sceneName})");
             Cleanup();
         }
@@ -284,7 +296,7 @@ namespace AnyRPG {
                 return;
             }
             CleanupEventSubscriptions();
-            CleanupServerEventSubscriptions();
+            //CleanupServerEventSubscriptions();
             StopAllCoroutines();
             countDownRoutine = null;
             delayRoutine = null;
@@ -683,6 +695,10 @@ namespace AnyRPG {
 
             // all check passed, safe to spawn
             Spawn(other.GetComponent<UnitController>());
+        }
+
+        private void OnDestroy() {
+            Cleanup();
         }
 
         public void SetupScriptableObjects() {
