@@ -193,7 +193,7 @@ namespace AnyRPG {
         }
 
         private void CreateEventSubscriptions() {
-            Debug.Log($"{gameObject.name}.UnitSpawnNode.CreateEventSubscriptions()");
+            //Debug.Log($"{gameObject.name}.UnitSpawnNode.CreateEventSubscriptions()");
 
             if (eventSubscriptionsInitialized) {
                 return;

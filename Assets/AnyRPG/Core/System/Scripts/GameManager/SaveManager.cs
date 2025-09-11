@@ -29,7 +29,6 @@ namespace AnyRPG {
         private SystemItemManager systemItemManager = null;
         private SystemDataFactory systemDataFactory = null;
         private UIManager uIManager = null;
-        private SystemAchievementManager systemAchievementManager = null;
         private NewGameManager newGameManager = null;
         private NetworkManagerClient networkManagerClient = null;
         private LoadGameManager loadGameManager = null;
@@ -53,7 +52,6 @@ namespace AnyRPG {
             achievementLog = systemGameManager.AchievementLog;
             systemItemManager = systemGameManager.SystemItemManager;
             systemDataFactory = systemGameManager.SystemDataFactory;
-            systemAchievementManager = systemGameManager.SystemAchievementManager;
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
             actionBarManager = uIManager.ActionBarManager;
@@ -349,7 +347,7 @@ namespace AnyRPG {
        
     
         public void NewGame(PlayerCharacterSaveData playerCharacterSaveData) {
-            //Debug.Log("Savemanager.NewGame()");
+            //Debug.Log($"Savemanager.NewGame({playerCharacterSaveData.SaveData.unitProfileName})");
 
             ClearSystemManagedSaveData();
 
@@ -363,13 +361,13 @@ namespace AnyRPG {
         }
 
         private void CreateNetworkGame(PlayerCharacterSaveData playerCharacterSaveData) {
-            Debug.Log("Savemanager.CreateNetworkGame(AnyRPGSaveData)");
+            //Debug.Log("Savemanager.CreateNetworkGame(AnyRPGSaveData)");
 
             networkManagerClient.CreatePlayerCharacter(playerCharacterSaveData.SaveData);
         }
 
         private void CreateLocalGame(PlayerCharacterSaveData playerCharacterSaveData) {
-            //Debug.Log($"Savemanager.CreateLocalGame(player name: {playerCharacterSaveData.SaveData.playerName})");
+            //Debug.Log($"Savemanager.CreateLocalGame({playerCharacterSaveData.SaveData.unitProfileName})");
 
             SaveDataFile(playerCharacterSaveData.SaveData);
             PlayerPrefs.SetString("LastSaveDataFileName", playerCharacterSaveData.SaveData.DataFileName);
@@ -483,12 +481,15 @@ namespace AnyRPG {
         }
 
         public PlayerCharacterSaveData CreateSaveData() {
+            //Debug.Log("SaveManager.CreateSaveData()");
+
             AnyRPGSaveData newSaveData = new AnyRPGSaveData();
             newSaveData.playerName = systemConfigurationManager.DefaultPlayerName;
             newSaveData.PlayerLevel = 1;
             newSaveData.initializeResourceAmounts = true;
             newSaveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
             newSaveData.unitProfileName = systemConfigurationManager.DefaultUnitProfileName;
+            //Debug.Log($"SaveManager.CreateSaveData() unitProfileName: {systemConfigurationManager.DefaultUnitProfileName}");
 
             if (newSaveData.DataCreatedOn == null || newSaveData.DataCreatedOn == string.Empty) {
                 newSaveData.DataCreatedOn = DateTime.Now.ToLongDateString();
@@ -533,7 +534,7 @@ namespace AnyRPG {
 
 
         public void LoadGame(PlayerCharacterSaveData playerCharacterSaveData) {
-            //Debug.Log($"Savemanager.LoadGame(playerName: {playerCharacterSaveData.SaveData.playerName})");
+            //Debug.Log($"Savemanager.LoadGame({playerCharacterSaveData.SaveData.unitProfileName})");
 
             ClearSharedData();
 
@@ -541,9 +542,6 @@ namespace AnyRPG {
             Vector3 playerLocation = new Vector3(playerCharacterSaveData.SaveData.PlayerLocationX, playerCharacterSaveData.SaveData.PlayerLocationY, playerCharacterSaveData.SaveData.PlayerLocationZ);
             Vector3 playerRotation = new Vector3(playerCharacterSaveData.SaveData.PlayerRotationX, playerCharacterSaveData.SaveData.PlayerRotationY, playerCharacterSaveData.SaveData.PlayerRotationZ);
             //Debug.Log("Savemanager.LoadGame() rotation: " + anyRPGSaveData.PlayerRotationX + ", " + anyRPGSaveData.PlayerRotationY + ", " + anyRPGSaveData.PlayerRotationZ);
-
-            // disable auto-accept achievements since we haven't loaded the data that tells us if they are complete yet
-            //systemAchievementManager.CleanupEventSubscriptions();
 
             playerManager.SpawnPlayerConnection(playerCharacterSaveData);
 

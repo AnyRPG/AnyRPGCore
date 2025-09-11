@@ -112,6 +112,8 @@ namespace AnyRPG {
         }
 
         public void NewGame() {
+            //Debug.Log("NewGameManager.NewGame()");
+
             if (playerCharacterSaveData == null) {
                 // this could have come from a button press
                 InitializeData();
@@ -160,7 +162,7 @@ namespace AnyRPG {
         }
 
         public void InitializeData() {
-            //Debug.Log("NewGameManager.ClearData()");
+            //Debug.Log("NewGameManager.InitializeData()");
 
             playerName = string.Empty;
             unitProfile = null;
@@ -371,7 +373,7 @@ namespace AnyRPG {
 
 
         public void SetUnitProfile(UnitProfile newUnitProfile) {
-            //Debug.Log($"NewGameManager.SetUnitProfile({newUnitProfile.DisplayName})");
+            Debug.Log($"NewGameManager.SetUnitProfile({newUnitProfile.ResourceName})");
 
             if (unitProfile == newUnitProfile) {
                 return;

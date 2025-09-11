@@ -571,7 +571,7 @@ namespace AnyRPG {
                     unitPrefabProps = tmpPrefabProfile.UnitPrefabProps;
                     return;
                 } else {
-                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find prefab profile : " + prefabProfileName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                    Debug.LogError($"UnitProfile.SetupScriptableObjects(): Could not find prefab profile : {prefabProfileName} while inititalizing {name}.  CHECK INSPECTOR");
                 }
             }
 

@@ -509,7 +509,7 @@ namespace AnyRPG {
         }
 
         public void SpawnPlayerConnection(PlayerCharacterSaveData playerCharacterSaveData) {
-            //Debug.Log("PlayerManager.SpawnPlayerConnection()");
+            //Debug.Log($"PlayerManager.SpawnPlayerConnection({playerCharacterSaveData.SaveData})");
 
             // this is only called in local mode so we can safely pass zero for account id
             playerManagerServer.AddPlayerMonitor(0, playerCharacterSaveData);

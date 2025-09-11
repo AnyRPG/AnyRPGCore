@@ -721,17 +721,22 @@ namespace AnyRPG {
         public AudioProfile NewGameAudioProfile { get => newGameAudioProfile; set => newGameAudioProfile = value; }
         public string DefaultPlayerName { get => defaultPlayerName; set => defaultPlayerName = value; }
         public string DefaultPlayerUnitProfileName { get => defaultPlayerUnitProfile; set => defaultPlayerUnitProfile = value; }
-        public UnitProfile DefaultPlayerUnitProfile { get => defaultPlayerUnitProfileRef; set => defaultPlayerUnitProfileRef = value; }
         public string DefaultUnitProfileName {
             get {
+                if (defaultPlayerUnitProfileRef != null) {
+                    return defaultPlayerUnitProfileRef.ResourceName;
+                }
                 if (defaultUnitProfiles.Count > 0) {
                     return defaultUnitProfiles[0];
                 }
                 return null;
             }
         }
-        public UnitProfile DefaultUnitProfile {
+        public UnitProfile DefaultPlayerUnitProfile {
             get {
+                if (defaultPlayerUnitProfileRef != null) {
+                    return defaultPlayerUnitProfileRef;
+                }
                 if (defaultUnitProfileList != null && defaultUnitProfileList.Count > 0) {
                     return defaultUnitProfileList[0];
                 }

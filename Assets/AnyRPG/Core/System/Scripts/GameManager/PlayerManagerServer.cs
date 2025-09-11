@@ -539,6 +539,7 @@ namespace AnyRPG {
         }
 
         public void AddPlayerMonitor(int accountId, PlayerCharacterSaveData playerCharacterSaveData) {
+            //Debug.Log($"PlayerManagerServer.AddPlayerMonitor({accountId}, {playerCharacterSaveData.SaveData.unitProfileName})");
 
             if (playerCharacterMonitors.ContainsKey(accountId)) {
                 return;

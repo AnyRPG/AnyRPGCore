@@ -48,6 +48,8 @@ namespace AnyRPG {
         }
 
         private void SetUnitProfileProperties(UnitProfile unitProfile) {
+            //Debug.Log($"CharacterConfigurationRequest.SetUnitProfileProperties({(unitProfile == null ? "null" : unitProfile.name)})");
+
             this.unitProfile = unitProfile;
             if (unitProfile == null) {
                 // this could potentially happen if loading old save data after an upgrade where a unit profile is renamed
