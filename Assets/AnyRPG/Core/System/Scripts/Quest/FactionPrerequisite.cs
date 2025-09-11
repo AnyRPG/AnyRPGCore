@@ -31,6 +31,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             playerManager = systemGameManager.PlayerManager;
+            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         public void HandleReputationChange(UnitController sourceUnitController) {
