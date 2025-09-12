@@ -226,7 +226,7 @@ namespace AnyRPG {
                 return;
             }
 
-            //Debug.Log("PlayerManager.OnLevelLoad(): we have a scene node");
+            //Debug.Log($"PlayerManager.OnLevelLoad(): scene node {(activeSceneNode == null ? "null" : activeSceneNode.ResourceName)}");
             // fix to allow character to spawn after cutscene is viewed on next level load - and another fix to prevent character from spawning on a pure cutscene
             if (activeSceneNode != null) {
                 if ((activeSceneNode.AutoPlayCutscene != null && (activeSceneNode.AutoPlayCutscene.Viewed == false || activeSceneNode.AutoPlayCutscene.Repeatable == true))

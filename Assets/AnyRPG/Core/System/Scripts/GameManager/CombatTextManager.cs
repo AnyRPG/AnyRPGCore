@@ -21,7 +21,7 @@ namespace AnyRPG {
         private CameraManager cameraManager = null;
         private PlayerManager playerManager = null;
         private ObjectPooler objectPooler = null;
-        private CutSceneBarController cutSceneBarController = null;
+        private CutsceneBarController cutSceneBarController = null;
         private SystemEventManager systemEventManager = null;
 
         public Canvas CombatTextCanvas { get => combatTextCanvas; set => combatTextCanvas = value; }

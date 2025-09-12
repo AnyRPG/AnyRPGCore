@@ -92,6 +92,7 @@ namespace AnyRPG {
             // initialize the scene dictionary
             foreach (SceneNode sceneNode in systemDataFactory.GetResourceList<SceneNode>()) {
                 if (sceneNode.SceneFile != null && sceneNode.SceneFile != string.Empty) {
+                    //Debug.Log($"LevelManager.InitializeLevelManager(): adding scene {sceneNode.SceneFile} to scene dictionary from {sceneNode.ResourceName}");
                     sceneDictionary.Add(sceneNode.SceneFile, sceneNode);
                 }
             }
@@ -183,15 +184,18 @@ namespace AnyRPG {
             //Debug.Log($"Levelmanager.HandleActiveSceneChanged({oldScene.name}, {newScene.name})");
         }
 
-
         public void SetActiveSceneNode() {
+            //Debug.Log("Levelmanager.SetActiveSceneNode()");
 
             activeSceneName = SceneManager.GetActiveScene().name;
+            //Debug.Log($"Levelmanager.SetActiveSceneNode(): {activeSceneName}");
 
             if (sceneDictionary.ContainsKey(activeSceneName)) {
                 activeSceneNode = sceneDictionary[activeSceneName];
+                //Debug.Log($"Levelmanager.SetActiveSceneNode(): setting active scene node");
             } else {
                 activeSceneNode = null;
+                //Debug.Log($"Levelmanager.SetActiveSceneNode(): NULLING active scene node");
             }
         }
 
@@ -315,7 +319,7 @@ namespace AnyRPG {
         }
 
         public void LoadCutSceneWithDelay(Cutscene cutscene) {
-            Debug.Log($"Levelmanager.LoadCutSceneWithDelay({(cutscene == null ? null : cutscene.ResourceName)})");
+            //Debug.Log($"Levelmanager.LoadCutSceneWithDelay({(cutscene == null ? null : cutscene.ResourceName)})");
             // doing this so that methods that needs to do something on successful interaction have time before the level unloads
 
             if (loadingLevel == false) {
@@ -325,7 +329,7 @@ namespace AnyRPG {
         }
 
         private IEnumerator LoadCutSceneDelay(Cutscene cutscene) {
-            Debug.Log($"LevelManager.LoadCutSceneDelay({cutscene.ResourceName})");
+            //Debug.Log($"LevelManager.LoadCutSceneDelay({cutscene.ResourceName})");
             //yield return new WaitForSeconds(1);
             yield return null;
             loadCutSceneCoroutine = null;
@@ -333,20 +337,8 @@ namespace AnyRPG {
         }
 
         public void LoadCutScene(Cutscene cutscene) {
-            Debug.Log($"LevelManager.LoadCutScene({cutscene.ResourceName})");
+            //Debug.Log($"LevelManager.LoadCutScene({cutscene.ResourceName})");
 
-            if (playerManager.ActiveUnitController != null) {
-                // with the new save manager code, this should happen automatically on despawn
-                /*
-                SpawnPlayerRequest loadSceneRequest = new SpawnPlayerRequest() {
-                    overrideSpawnDirection = true,
-                    spawnForwardDirection = playerManager.ActiveUnitController.transform.forward,
-                    overrideSpawnLocation = true,
-                    spawnLocation = playerManager.ActiveUnitController.transform.position
-                };
-                playerManagerServer.AddSpawnRequest(networkManagerClient.AccountId, loadSceneRequest);
-                */
-            }
             returnScene = activeSceneNode;
             uIManager.CutSceneBarController.AssignCutScene(cutscene);
             LoadLevel(cutscene.LoadScene);

@@ -17,7 +17,7 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
-        private CutSceneBarController cutSceneBarController = null;
+        private CutsceneBarController cutSceneBarController = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

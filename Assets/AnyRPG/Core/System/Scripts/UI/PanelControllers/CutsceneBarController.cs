@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CutSceneBarController : ConfiguredMonoBehaviour {
+    public class CutsceneBarController : ConfiguredMonoBehaviour {
 
         [SerializeField]
         private GameObject topBar = null;

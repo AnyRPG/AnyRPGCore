@@ -321,7 +321,7 @@ namespace AnyRPG {
                 if (tmpMovementLoop != null) {
                     movementLoopProfile = tmpMovementLoop;
                 } else {
-                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find audio profile : " + movementLoopProfileName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                    Debug.LogError($"SceneNode.SetupScriptableObjects(): Could not find audio profile : {movementLoopProfileName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                 }
             }
 
@@ -330,7 +330,7 @@ namespace AnyRPG {
                 if (tmpMovementHit != null) {
                     movementHitProfile = tmpMovementHit;
                 } else {
-                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find audio profile : " + movementHitProfileName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                    Debug.LogError($"SceneNode.SetupScriptableObjects(): Could not find audio profile : {movementHitProfileName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                 }
             }
 
@@ -338,7 +338,7 @@ namespace AnyRPG {
                 if (audioProfileName != null && audioProfileName != string.Empty) {
                     AudioProfile tmpMovementHit = systemDataFactory.GetResource<AudioProfile>(audioProfileName);
                     if (tmpMovementHit == null) {
-                        Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find audio profile : " + audioProfileName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                        Debug.LogError($"SceneNode.SetupScriptableObjects(): Could not find audio profile : {audioProfileName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                     }
                     footStepProfileReferences.Add(tmpMovementHit);
                 } else {
@@ -353,7 +353,7 @@ namespace AnyRPG {
                 if (tmpAmbientMusicProfile != null) {
                     dayAmbientSoundsProfileReference = tmpAmbientMusicProfile;
                 } else {
-                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find audio profile : " + dayAmbientSoundsProfile + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                    Debug.LogError($"SceneNode.SetupScriptableObjects(): Could not find audio profile : {dayAmbientSoundsProfile} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                 }
             }
 
@@ -367,7 +367,7 @@ namespace AnyRPG {
                 if (tmpAmbientMusicProfile != null) {
                     nightAmbientSoundsProfileReference = tmpAmbientMusicProfile;
                 } else {
-                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find audio profile : " + nightAmbientSoundsProfile + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                    Debug.LogError($"SceneNode.SetupScriptableObjects(): Could not find audio profile : {nightAmbientSoundsProfile} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                 }
             }
 
@@ -382,7 +382,7 @@ namespace AnyRPG {
                 if (tmpBackgroundMusicProfile != null) {
                     backgroundMusicProfileReference = tmpBackgroundMusicProfile;
                 } else {
-                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find music profile : " + backgroundMusicProfile + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                    Debug.LogError($"SceneNode.SetupScriptableObjects(): Could not find music profile : {backgroundMusicProfile} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                 }
             }
 
@@ -395,7 +395,7 @@ namespace AnyRPG {
                 if (tmpCutscene != null) {
                     autoPlayCutscene = tmpCutscene;
                 } else {
-                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find cutscene : " + autoPlayCutsceneName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                    Debug.LogError($"SceneNode.SetupScriptableObjects(): Could not find cutscene : {autoPlayCutsceneName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                 }
             }
 
@@ -405,17 +405,17 @@ namespace AnyRPG {
                     if (tmpProfile != null) {
                         environmentStates.Add(tmpProfile);
                     } else {
-                        Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find environment state : " + environmentStateName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                        Debug.LogError($"SceneNode.SetupScriptableObjects(): Could not find environment state : {environmentStateName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                     }
                 }
             }
 
             if (useRegionalFile == true) {
-                ResourceDescription tmpResourceDescription = systemDataFactory.GetResource<ResourceDescription>(resourceName + "Scene");
+                ResourceDescription tmpResourceDescription = systemDataFactory.GetResource<ResourceDescription>(ResourceName + "Scene");
                 if (tmpResourceDescription != null) {
                     sceneFile = tmpResourceDescription.DisplayName;
                 } else {
-                    Debug.LogError("SceneNode.SetupScriptableObjects(): Could not find scene file resource description : " + resourceName + "Scene while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                    Debug.LogError($"SceneNode.SetupScriptableObjects(): Could not find scene file resource description : {resourceName}Scene while inititalizing {ResourceName}.  CHECK INSPECTOR");
                 }
             }
 

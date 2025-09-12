@@ -80,7 +80,7 @@ namespace AnyRPG {
         private GameObject combatTextCanvas = null;
 
         [SerializeField]
-        private CutSceneBarController cutSceneBarController = null;
+        private CutsceneBarController cutSceneBarController = null;
 
         [SerializeField]
         private InteractionTooltipController interactionTooltipController = null;
@@ -301,7 +301,7 @@ namespace AnyRPG {
         public DraggableWindow SidePanel { get => sidePanel; set => sidePanel = value; }
         public GameObject MouseOverTarget { get => mouseOverTarget; set => mouseOverTarget = value; }
         public DraggableWindow MouseOverWindow { get => mouseOverWindow; set => mouseOverWindow = value; }
-        public CutSceneBarController CutSceneBarController { get => cutSceneBarController; set => cutSceneBarController = value; }
+        public CutsceneBarController CutSceneBarController { get => cutSceneBarController; set => cutSceneBarController = value; }
         public GameObject PlayerInterfaceCanvas { get => playerInterface; set => playerInterface = value; }
         public GameObject PopupWindowContainer { get => popupWindowContainer; set => popupWindowContainer = value; }
         public GameObject PopupPanelContainer { get => popupPanelContainer; set => popupPanelContainer = value; }

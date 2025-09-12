@@ -7,16 +7,16 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CutSceneComponent : InteractableOptionComponent {
+    public class CutsceneComponent : InteractableOptionComponent {
 
         // game manager references
         private LevelManager levelManager = null;
-        private CutSceneBarController cutSceneBarController = null;
+        private CutsceneBarController cutSceneBarController = null;
         private NetworkManagerClient networkManagerClient = null;
 
         public CutsceneProps Props { get => interactableOptionProps as CutsceneProps; }
 
-        public CutSceneComponent(Interactable interactable, CutsceneProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        public CutsceneComponent(Interactable interactable, CutsceneProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override void SetGameManagerReferences() {

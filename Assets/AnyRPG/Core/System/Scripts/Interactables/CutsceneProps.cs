@@ -26,7 +26,7 @@ namespace AnyRPG {
         public Cutscene Cutscene { get => cutscene; set => cutscene = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            InteractableOptionComponent returnValue = new CutSceneComponent(interactable, this, systemGameManager);
+            InteractableOptionComponent returnValue = new CutsceneComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }

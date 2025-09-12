@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CutSceneInteractable : InteractableOption {
+    public class CutsceneInteractable : InteractableOption {
 
         [SerializeField]
         private CutsceneProps cutsceneProps = new CutsceneProps();

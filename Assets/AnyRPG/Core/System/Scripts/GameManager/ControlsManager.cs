@@ -47,7 +47,7 @@ namespace AnyRPG {
         protected WindowManager windowManager = null;
         protected PlayerManager playerManager = null;
         protected ActionBarManager actionBarManager = null;
-        protected CutSceneBarController cutSceneBarController = null;
+        protected CutsceneBarController cutSceneBarController = null;
 
         public bool GamePadModeActive { get => gamePadModeActive; }
         public bool GamePadInputActive { get => gamePadInputActive; }
