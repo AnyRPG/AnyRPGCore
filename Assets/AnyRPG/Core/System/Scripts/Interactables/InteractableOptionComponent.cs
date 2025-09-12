@@ -165,12 +165,15 @@ namespace AnyRPG {
 
             //source.CancelMountEffects();
             bool returnValue = ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
-            ProcessClientNotifications(sourceUnitController, componentIndex, choiceIndex);
+            if (returnValue == true) {
+                ProcessClientNotifications(sourceUnitController, componentIndex, choiceIndex);
+            }
             return returnValue;
         }
 
         public virtual void ProcessClientNotifications(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
             //Debug.Log($"{interactable.gameObject.name}.InteractableOptionComponent.ProcessClientNotifications({sourceUnitController?.gameObject.name}, {componentIndex}, {choiceIndex})");
+
             if (sourceUnitController != null) {
                 // trigger network client interaction
                 interactable.NotifyOnInteractionWithOptionStarted(sourceUnitController, componentIndex, choiceIndex);

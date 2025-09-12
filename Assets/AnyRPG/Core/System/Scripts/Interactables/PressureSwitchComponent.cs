@@ -41,7 +41,7 @@ namespace AnyRPG {
                 base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
             }
 
-            return false;
+            return true;
         }
 
         public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {

@@ -706,7 +706,18 @@ namespace AnyRPG {
             }
         }
 
-        public void LoadCutscene(Cutscene cutscene, UnitController sourceUnitController) {
+        public void LoadCutsceneWithDelay(Cutscene cutscene, UnitController sourceUnitController) {
+            //Debug.Log($"PlayerManagerServer.LoadCutscene({cutscene.ResourceName}, {sourceUnitController?.gameObject.name})");
+
+            StartCoroutine(LoadCutsceneWithDelayCoroutine(cutscene, sourceUnitController));
+        }
+
+        private IEnumerator LoadCutsceneWithDelayCoroutine(Cutscene cutscene, UnitController sourceUnitController) {
+            yield return null;
+            LoadCutscene(cutscene, sourceUnitController);
+        }
+
+        private void LoadCutscene(Cutscene cutscene, UnitController sourceUnitController) {
             //Debug.Log($"PlayerManagerServer.LoadCutscene({cutscene.ResourceName}, {sourceUnitController?.gameObject.name})");
 
             if (activePlayerLookup.ContainsKey(sourceUnitController)) {

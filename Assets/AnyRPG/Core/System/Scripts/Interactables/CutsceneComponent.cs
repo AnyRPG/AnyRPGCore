@@ -12,7 +12,6 @@ namespace AnyRPG {
         // game manager references
         private LevelManager levelManager = null;
         private CutsceneBarController cutSceneBarController = null;
-        private NetworkManagerClient networkManagerClient = null;
 
         public CutsceneProps Props { get => interactableOptionProps as CutsceneProps; }
 
@@ -23,15 +22,16 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             levelManager = systemGameManager.LevelManager;
             cutSceneBarController = uIManager.CutSceneBarController;
-            networkManagerClient = systemGameManager.NetworkManagerClient;
         }
 
         public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            //Debug.Log($"{interactable.gameObject.name}.CutsceneComponent.ProcessInteract({(sourceUnitController == null ? "null" : sourceUnitController.gameObject.name)}, {componentIndex}, {choiceIndex})");
+
             base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
-            if (CanLoadCutScene() == true) {
+            if (CanLoadCutscene() == true) {
                 if (Props.Cutscene.RequirePlayerUnitSpawn == false || (Props.Cutscene.RequirePlayerUnitSpawn == true && playerManager.PlayerUnitSpawned == true)) {
                     if (Props.Cutscene.LoadScene != null) {
-                        playerManagerServer.LoadCutscene(Props.Cutscene, sourceUnitController);
+                        playerManagerServer.LoadCutsceneWithDelay(Props.Cutscene, sourceUnitController);
                     }
                 }
 
@@ -45,7 +45,7 @@ namespace AnyRPG {
             base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
             // save character position and stuff here
             //uIManager.interactionWindow.CloseWindow();
-            if (CanLoadCutScene()) {
+            if (CanLoadCutscene()) {
                 if (Props.Cutscene.RequirePlayerUnitSpawn == false || (Props.Cutscene.RequirePlayerUnitSpawn == true && playerManager.PlayerUnitSpawned == true)) {
                     if (Props.Cutscene.LoadScene != null) {
                         //networkManagerClient.RequestDespawnPlayer();
@@ -61,7 +61,7 @@ namespace AnyRPG {
 
         }
 
-        private bool CanLoadCutScene() {
+        private bool CanLoadCutscene() {
             if (Props.Cutscene == null) {
                 Debug.LogError("CutSceneComponent.CanLoadCutScene(): Props.Cutscene is null");
                 return false;

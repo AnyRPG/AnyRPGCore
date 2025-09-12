@@ -77,7 +77,7 @@ namespace AnyRPG {
                 ChooseMovement();
             }
 
-            return false;
+            return true;
         }
 
         public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {

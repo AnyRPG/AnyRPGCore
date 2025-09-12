@@ -24,20 +24,22 @@ namespace AnyRPG {
         // if just interacting is not enough, but actually finishing using an interactable is required.
         public bool requireCompletion = false;
 
-        public void CheckInteractionComplete(UnitController sourceUnitController, InteractableOptionComponent interactableOption) {
-            Debug.Log($"{interactableName}.UseInteractableObjective.CheckInteractionComplete({sourceUnitController.gameObject.name}, {interactableOption.Interactable.DisplayName})");
+        public void HandleCompleteInteractWithOption(UnitController sourceUnitController, InteractableOptionComponent interactableOption) {
+            //Debug.Log($"{interactableName}.UseInteractableObjective.CheckInteractionComplete({sourceUnitController.gameObject.name}, {interactableOption.Interactable.DisplayName})");
 
             CheckInteractableName(sourceUnitController, interactableOption.DisplayName, true);
             CheckInteractableName(sourceUnitController, interactableOption.Interactable.DisplayName, true);
         }
 
-        public void CheckInteractionWithOptionStart(UnitController sourceUnitController, InteractableOptionComponent interactableOption, int optionIndex, int choiceIndex) {
+        public void HandleStartInteractWithOption(UnitController sourceUnitController, InteractableOptionComponent interactableOption, int optionIndex, int choiceIndex) {
+            //Debug.Log($"{interactableName}.UseInteractableObjective.CheckInteractionWithOptionStart({sourceUnitController.gameObject.name}, {optionIndex}, {choiceIndex})");
+
             CheckInteractableName(sourceUnitController, interactableOption.DisplayName, false);
             CheckInteractableName(sourceUnitController, interactableOption.Interactable.DisplayName, false);
         }
 
         public void CheckInteractableName(UnitController sourceUnitController, string interactableName, bool interactionComplete) {
-            //Debug.Log($"UseInteractableObjective.CheckInteractableName({sourceUnitController}, {interactableName}, {interactionComplete})");
+            //Debug.Log($"{interactableName}.UseInteractableObjective.CheckInteractableName({sourceUnitController}, {interactableName}, {interactionComplete})");
 
             bool completeBefore = IsComplete(sourceUnitController);
             if (completeBefore) {
@@ -71,16 +73,17 @@ namespace AnyRPG {
 
             // don't forget to remove these later
             //systemEventManager.OnInteractionStarted += CheckInteractionStart;
-            sourceUnitController.UnitEventController.OnStartInteractWithOption += CheckInteractionWithOptionStart;
-            sourceUnitController.UnitEventController.OnCompleteInteractWithOption += CheckInteractionComplete;
+            sourceUnitController.UnitEventController.OnStartInteractWithOption += HandleStartInteractWithOption;
+            sourceUnitController.UnitEventController.OnCompleteInteractWithOption += HandleCompleteInteractWithOption;
         }
 
         public override void OnAbandonQuest(UnitController sourceUnitController) {
-            //Debug.Log("UseInteractableObjective.OnAbandonQuest()");
+            //Debug.Log($"{interactableName}.UseInteractableObjective.OnAbandonQuest({sourceUnitController.gameObject.name})");
+
             base.OnAbandonQuest(sourceUnitController);
             //systemEventManager.OnInteractionStarted -= CheckInteractionStart;
-            sourceUnitController.UnitEventController.OnStartInteractWithOption -= CheckInteractionWithOptionStart;
-            sourceUnitController.UnitEventController.OnCompleteInteractWithOption -= CheckInteractionComplete;
+            sourceUnitController.UnitEventController.OnStartInteractWithOption -= HandleStartInteractWithOption;
+            sourceUnitController.UnitEventController.OnCompleteInteractWithOption -= HandleCompleteInteractWithOption;
         }
 
     }

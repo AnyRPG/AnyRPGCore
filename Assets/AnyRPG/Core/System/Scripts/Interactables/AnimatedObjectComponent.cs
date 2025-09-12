@@ -33,7 +33,7 @@ namespace AnyRPG {
             }
             ChooseMovement(sourceUnitController, componentIndex);
 
-            return false;
+            return true;
         }
 
         public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {

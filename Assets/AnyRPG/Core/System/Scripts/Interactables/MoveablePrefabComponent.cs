@@ -68,7 +68,7 @@ namespace AnyRPG {
             }
             // lerp them to the other state, using the values defined in their sheathed and regular positions
 
-            return false;
+            return true;
         }
 
         public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {

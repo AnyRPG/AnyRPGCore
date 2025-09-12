@@ -63,6 +63,7 @@ namespace AnyRPG {
 
 
         public void HandleStartInteractWithOption(UnitController sourceUnitController, InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitVoiceController.HandleStartInteractWithOption({sourceUnitController.gameObject.name}, {interactableOptionComponent.Interactable.DisplayName}, {componentIndex}, {choiceIndex})");
             if (unitController.UnitProfile == null) {
                 return;
             }
