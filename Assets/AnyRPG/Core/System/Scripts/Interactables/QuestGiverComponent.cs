@@ -125,7 +125,7 @@ namespace AnyRPG {
         }
 
         public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
-            Debug.Log($"{interactable.gameObject.name}.QuestGiverComponent.ClientInteraction({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex})");
+            //Debug.Log($"{interactable.gameObject.name}.QuestGiverComponent.ClientInteraction({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex})");
 
             base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
             // this is running locally

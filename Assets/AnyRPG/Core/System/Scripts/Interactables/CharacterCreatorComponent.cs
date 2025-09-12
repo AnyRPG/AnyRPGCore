@@ -59,10 +59,12 @@ namespace AnyRPG {
         }
 
         public void UpdatePlayerAppearance(UnitController sourceUnitController, int accountId, string unitProfileName, string appearanceString, List<SwappableMeshSaveData> swappableMeshSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.CharacterCreatorComponent.UpdatePlayerAppearance({sourceUnitController.gameObject.name}, {accountId}, {unitProfileName})");
 
-            playerManagerServer.UpdatePlayerAppearance(accountId, unitProfileName, appearanceString, swappableMeshSaveData);
+            // notify first because unit controller might no longer exist after update
             NotifyOnConfirmAction(sourceUnitController);
 
+            playerManagerServer.UpdatePlayerAppearance(accountId, unitProfileName, appearanceString, swappableMeshSaveData);
         }
     }
 

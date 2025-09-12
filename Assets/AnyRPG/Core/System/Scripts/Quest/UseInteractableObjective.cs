@@ -25,6 +25,8 @@ namespace AnyRPG {
         public bool requireCompletion = false;
 
         public void CheckInteractionComplete(UnitController sourceUnitController, InteractableOptionComponent interactableOption) {
+            Debug.Log($"{interactableName}.UseInteractableObjective.CheckInteractionComplete({sourceUnitController.gameObject.name}, {interactableOption.Interactable.DisplayName})");
+
             CheckInteractableName(sourceUnitController, interactableOption.DisplayName, true);
             CheckInteractableName(sourceUnitController, interactableOption.Interactable.DisplayName, true);
         }
@@ -35,7 +37,8 @@ namespace AnyRPG {
         }
 
         public void CheckInteractableName(UnitController sourceUnitController, string interactableName, bool interactionComplete) {
-            //Debug.Log("UseInteractableObjective.CheckInteractableName()");
+            //Debug.Log($"UseInteractableObjective.CheckInteractableName({sourceUnitController}, {interactableName}, {interactionComplete})");
+
             bool completeBefore = IsComplete(sourceUnitController);
             if (completeBefore) {
                 return;
@@ -62,7 +65,8 @@ namespace AnyRPG {
 
 
         public override void OnAcceptQuest(UnitController sourceUnitController, QuestBase quest, bool printMessages = true) {
-            //Debug.Log("UseInteractableObjective.OnAcceptQuest()");
+            //Debug.Log($"{interactableName}.UseInteractableObjective.OnAcceptQuest({sourceUnitController.gameObject.name}, {quest.ResourceName})");
+
             base.OnAcceptQuest(sourceUnitController, quest, printMessages);
 
             // don't forget to remove these later

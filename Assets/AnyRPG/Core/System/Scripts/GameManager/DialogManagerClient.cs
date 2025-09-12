@@ -45,7 +45,7 @@ namespace AnyRPG {
         }
 
         public void RequestTurnInQuestDialog(UnitController sourceUnitController) {
-            Debug.Log($"DialogManagerClient.RequestTurnInQuestDialog({sourceUnitController.gameObject.name})");
+            //Debug.Log($"DialogManagerClient.RequestTurnInQuestDialog({sourceUnitController.gameObject.name})");
             if (systemGameManager.GameMode == GameMode.Local) {
                 sourceUnitController.CharacterDialogManager.TurnInDialog(dialog);
             } else {

@@ -115,7 +115,8 @@ namespace AnyRPG {
         }
 
         public virtual void NotifyOnConfirmAction(UnitController sourceUnitController) {
-            //systemEventManager.NotifyOnInteractionWithOptionCompleted(sourceUnitController, this);
+            //Debug.Log($"{interactable.gameObject.name}.InteractableOptionComponent.NotifyOnConfirmAction({sourceUnitController?.gameObject.name})");
+
             sourceUnitController.UnitEventController.NotifyOnCompleteInteractWithOption(this);
         }
 

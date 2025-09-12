@@ -373,7 +373,7 @@ namespace AnyRPG {
 
 
         public void SetUnitProfile(UnitProfile newUnitProfile) {
-            Debug.Log($"NewGameManager.SetUnitProfile({newUnitProfile.ResourceName})");
+            //Debug.Log($"NewGameManager.SetUnitProfile({newUnitProfile.ResourceName})");
 
             if (unitProfile == newUnitProfile) {
                 return;
