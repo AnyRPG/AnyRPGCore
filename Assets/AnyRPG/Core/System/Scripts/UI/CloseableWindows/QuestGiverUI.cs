@@ -485,7 +485,7 @@ namespace AnyRPG {
             // skill rewards
             if (currentQuest.SkillRewards.Count > 0) {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Skill Rewards");
-                questRewardChoices.factionRewardIndexes.AddRange(questDetailsArea.GetHighlightedSkillRewardIcons().Keys);
+                questRewardChoices.skillRewardIndexes.AddRange(questDetailsArea.GetHighlightedSkillRewardIcons().Keys);
                 /*
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedSkillRewardIcons()) {
                     if (rewardButton.Rewardable != null) {
