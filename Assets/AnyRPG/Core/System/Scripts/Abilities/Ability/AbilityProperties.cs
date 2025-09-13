@@ -94,11 +94,11 @@ namespace AnyRPG {
 
         [Tooltip("If true, the choice of whether or not to play the attack voice is controlled by the weapon skill.")]
         [SerializeField]
-        private bool useWeaponSkillAttackVoiceSetting = true;
+        private bool useWeaponSkillAttackVoiceSetting = false;
 
         [Tooltip("If true, the character will play their attack voice clip when this ability is used.")]
         [SerializeField]
-        private bool playAttackVoice = true;
+        private bool playAttackVoice = false;
 
 
         [Header("Audio")]

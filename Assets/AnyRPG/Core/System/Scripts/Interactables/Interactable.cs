@@ -65,19 +65,7 @@ namespace AnyRPG {
         [SerializeField]
         private float interactionMaxRange = 2f;
 
-        [Header("Additional Spawn Options")]
-
-        [Tooltip("If set to true, all interactable options must have prerequisites met, in addition to the interactable prerequisites, in order to spawn")]
-        [SerializeField]
-        protected bool checkOptionsToSpawn = false;
-
-        [Tooltip("Require a valid interactable option in addition to any preqrequisites.  For example, quests on a questgiver, a class changer, and dialogs.")]
-        [SerializeField]
-        protected bool spawnRequiresValidOption = false;
-
-        [Tooltip("Require no valid interactable options in addition to any preqrequisites. For example, quests on a questgiver, a class changer, and dialogs.")]
-        [SerializeField]
-        protected bool despawnRequiresNoValidOption = false;
+        [Header("Controller References")]
 
         [Tooltip("Reference to local component controller prefab with nameplate target, speakers, etc.")]
         [SerializeField]
@@ -164,22 +152,6 @@ namespace AnyRPG {
         public InteractableEventController InteractableEventController { get => interactableEventController; }
         public virtual bool CombatOnly { get => false; }
         public virtual bool NonCombatOptionsAvailable { get => true; }
-
-        /*
-        public override bool SpawnPrerequisitesMet(UnitController sourceUnitController) {
-            bool returnResult = base.SpawnPrerequisitesMet(sourceUnitController);
-            if (returnResult != true) {
-                return returnResult;
-            }
-            if (checkOptionsToSpawn == true) {
-                //Debug.Log($"{gameObject.name}.Interactable.MyPrerequisitesMet()");
-                if (CanInteract(sourceUnitController) == false) {
-                    return false;
-                }
-            }
-            return returnResult;
-        }
-        */
 
         /// <summary>
         /// this is the gameobject that should be targeted by abilities
