@@ -90,7 +90,7 @@ namespace AnyRPG {
         }
 
         public bool AddItem(InstantiatedItem instantiatedItem) {
-            //Debug.Log($"InventorySlot.Additem({instantiatedItem.Item.ResourceName}) (instance: {GetHashCode()})");
+            Debug.Log($"InventorySlot.Additem({instantiatedItem.Item.ResourceName}) (instance: {GetHashCode()})");
 
             InstantiatedItems.Add(instantiatedItem);
             instantiatedItem.Slot = this;

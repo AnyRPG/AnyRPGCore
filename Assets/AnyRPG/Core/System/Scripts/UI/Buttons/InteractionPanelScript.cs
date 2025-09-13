@@ -59,7 +59,7 @@ namespace AnyRPG {
         }
 
         public override void ButtonClickAction() {
-            Debug.Log($"InteractionPanelScript.ButtonClickAction({text.text}, {componentIndex}, {choiceIndex})");
+            //Debug.Log($"InteractionPanelScript.ButtonClickAction({text.text}, {componentIndex}, {choiceIndex})");
 
             base.ButtonClickAction();
             if (playerManager.UnitController != null) {

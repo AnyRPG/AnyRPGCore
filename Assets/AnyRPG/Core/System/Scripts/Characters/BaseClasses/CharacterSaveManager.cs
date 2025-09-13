@@ -545,7 +545,7 @@ namespace AnyRPG {
             }
 
             foreach (QuestSaveData questSaveData in anyRPGSaveData.questSaveData) {
-                //Debug.Log("Savemanager.LoadQuestData(): loading questsavedata");
+                //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadQuestData(): loading questsavedata");
                 unitController.CharacterQuestLog.LoadQuest(questSaveData);
             }
         }
@@ -580,15 +580,15 @@ namespace AnyRPG {
             }
 
             foreach (QuestSaveData questSaveData in anyRPGSaveData.achievementSaveData) {
-                //Debug.Log("Savemanager.LoadQuestData(): loading questsavedata");
+                //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadQuestData(): loading questsavedata");
                 unitController.CharacterQuestLog.LoadAchievement(questSaveData);
             }
         }
         public void LoadResourcePowerData(AnyRPGSaveData anyRPGSaveData) {
-            //Debug.Log("Savemanager.LoadResourcePowerData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadResourcePowerData()");
 
             foreach (ResourcePowerSaveData resourcePowerSaveData in anyRPGSaveData.resourcePowerSaveData) {
-                //Debug.Log("Savemanager.LoadResourcePowerData(): loading questsavedata");
+                //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadResourcePowerData(): loading questsavedata");
                 //unitController.CharacterStats.SetResourceAmount(resourcePowerSaveData.ResourceName, resourcePowerSaveData.amount);
                 unitController.CharacterStats.LoadResourceAmount(resourcePowerSaveData.ResourceName, resourcePowerSaveData.amount);
             }
@@ -596,14 +596,14 @@ namespace AnyRPG {
         }
 
         public void LoadStatusEffectData() {
-            //Debug.Log("Savemanager.LoadStatusEffectData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadStatusEffectData()");
             foreach (StatusEffectSaveData statusEffectSaveData in saveData.statusEffectSaveData) {
                 unitController.CharacterAbilityManager.ApplySavedStatusEffects(statusEffectSaveData);
             }
         }
 
         public void LoadCurrencyData(AnyRPGSaveData anyRPGSaveData) {
-            //Debug.Log("Savemanager.LoadCurrencyData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadCurrencyData()");
             foreach (CurrencySaveData currencySaveData in anyRPGSaveData.currencySaveData) {
                 unitController.CharacterCurrencyManager.AddCurrency(systemDataFactory.GetResource<Currency>(currencySaveData.CurrencyName), currencySaveData.Amount);
             }
@@ -622,13 +622,13 @@ namespace AnyRPG {
         }
 
         public void LoadEquippedBagData(AnyRPGSaveData anyRPGSaveData) {
-            //Debug.Log("Savemanager.LoadEquippedBagData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadEquippedBagData()");
             unitController.CharacterInventoryManager.LoadEquippedBagData(anyRPGSaveData.equippedBagSaveData, false);
             unitController.CharacterInventoryManager.LoadEquippedBagData(anyRPGSaveData.equippedBankBagSaveData, true);
         }
 
         public void LoadInventorySlotData(AnyRPGSaveData anyRPGSaveData) {
-            //Debug.Log("Savemanager.LoadInventorySlotData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadInventorySlotData()");
             int counter = 0;
             foreach (InventorySlotSaveData inventorySlotSaveData in anyRPGSaveData.inventorySlotSaveData) {
                 LoadSlotData(inventorySlotSaveData, counter, false);
@@ -637,7 +637,8 @@ namespace AnyRPG {
         }
 
         public void LoadBankSlotData(AnyRPGSaveData anyRPGSaveData) {
-            //Debug.Log("Savemanager.LoadBankSlotData()");
+            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadBankSlotData()");
+
             int counter = 0;
             foreach (InventorySlotSaveData inventorySlotSaveData in anyRPGSaveData.bankSlotSaveData) {
                 LoadSlotData(inventorySlotSaveData, counter, true);
@@ -646,11 +647,13 @@ namespace AnyRPG {
         }
 
         private void LoadSlotData(InventorySlotSaveData inventorySlotSaveData, int counter, bool bank) {
+            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadSlotData(): loading slot {counter} with item {inventorySlotSaveData.ItemName}");
+
             if (inventorySlotSaveData.ItemName != string.Empty && inventorySlotSaveData.ItemName != null) {
                 for (int i = 0; i < inventorySlotSaveData.stackCount; i++) {
                     InstantiatedItem newInstantiatedItem = unitController.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData(inventorySlotSaveData);
                     if (newInstantiatedItem == null) {
-                        Debug.Log("Savemanager.LoadInventorySlotData(): COULD NOT LOAD ITEM FROM ITEM MANAGER: " + inventorySlotSaveData.ItemName);
+                        Debug.LogWarning("CharacterSavemanager.LoadInventorySlotData(): COULD NOT LOAD ITEM FROM ITEM MANAGER: {inventorySlotSaveData.ItemName}");
                     } else {
                         if (bank == true) {
                             unitController.CharacterInventoryManager.AddBankItem(newInstantiatedItem, counter);
@@ -673,7 +676,7 @@ namespace AnyRPG {
         }
 
         public void LoadEquipmentData(AnyRPGSaveData anyRPGSaveData) {
-            //Debug.Log("Savemanager.LoadEquipmentData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadEquipmentData()");
 
             foreach (EquipmentSaveData equipmentSaveData in anyRPGSaveData.equipmentSaveData) {
                 if (equipmentSaveData.EquipmentName != string.Empty) {
@@ -686,7 +689,7 @@ namespace AnyRPG {
         }
 
         public void LoadReputationData(AnyRPGSaveData anyRPGSaveData) {
-            //Debug.Log("Savemanager.LoadReputationData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadReputationData()");
             //int counter = 0;
             foreach (ReputationSaveData reputationSaveData in anyRPGSaveData.reputationSaveData) {
                 FactionDisposition factionDisposition = new FactionDisposition();
@@ -699,14 +702,14 @@ namespace AnyRPG {
 
 
         public void LoadSkillData(AnyRPGSaveData anyRPGSaveData) {
-            //Debug.Log("Savemanager.LoadSkillData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadSkillData()");
             foreach (SkillSaveData skillSaveData in anyRPGSaveData.skillSaveData) {
                 unitController.CharacterSkillManager.LoadSkill(skillSaveData.SkillName);
             }
         }
 
         public void LoadRecipeData(AnyRPGSaveData anyRPGSaveData) {
-            //Debug.Log("Savemanager.LoadRecipeData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadRecipeData()");
             foreach (RecipeSaveData recipeSaveData in anyRPGSaveData.recipeSaveData) {
                 unitController.CharacterRecipeManager.LoadRecipe(recipeSaveData.RecipeName);
             }
@@ -729,16 +732,16 @@ namespace AnyRPG {
                 useable = null;
                 if (actionBarSaveData.isItem == true) {
                     // find item in bag
-                    //Debug.Log("Savemanager.LoadActionBarData(): searching for usable(" + actionBarSaveData.MyName + ") in inventory");
+                    //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadActionBarData(): searching for usable(" + actionBarSaveData.MyName + ") in inventory");
                     //useable = systemDataFactory.GetResource<Item>(actionBarSaveData.DisplayName);
                     useable = systemItemManager.GetNewInstantiatedItem(actionBarSaveData.DisplayName);
                 } else {
                     // find ability from system ability manager
-                    //Debug.Log("Savemanager.LoadActionBarData(): searching for usable in ability manager");
+                    //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadActionBarData(): searching for usable in ability manager");
                     if (actionBarSaveData.DisplayName != null && actionBarSaveData.DisplayName != string.Empty) {
                         useable = systemDataFactory.GetResource<Ability>(actionBarSaveData.DisplayName).AbilityProperties;
                     } else {
-                        //Debug.Log("Savemanager.LoadActionBarData(): saved action bar had no name");
+                        //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadActionBarData(): saved action bar had no name");
                     }
                     if (actionBarSaveData.savedName != null && actionBarSaveData.savedName != string.Empty) {
                         IUseable savedUseable = systemDataFactory.GetResource<Ability>(actionBarSaveData.savedName).AbilityProperties;
@@ -750,14 +753,14 @@ namespace AnyRPG {
                 if (useable != null) {
                     unitController.CharacterActionBarManager.SetMouseActionButton(useable, counter);
                 } else {
-                    //Debug.Log("Savemanager.LoadActionBarData(): no usable set on this actionbutton");
+                    //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadActionBarData(): no usable set on this actionbutton");
                     // testing remove things that weren't saved, it will prevent duplicate abilities if they are moved
                     // this means if new abilities are added to a class/etc between play sessions they won't be on the bars
                     unitController.CharacterActionBarManager.UnSetMouseActionButton(counter);
                 }
                 counter++;
                 if (counter >= unitController.CharacterActionBarManager.MouseActionButtons.Count) {
-                    //Debug.Log("Savemanager.LoadActionBarData(): counter exceeded action buttons count, breaking");
+                    //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadActionBarData(): counter exceeded action buttons count, breaking");
                     break; // prevent out of bounds
                 }
             }
@@ -772,16 +775,16 @@ namespace AnyRPG {
                 useable = null;
                 if (actionBarSaveData.isItem == true) {
                     // find item in bag
-                    //Debug.Log("Savemanager.LoadActionBarData(): searching for usable(" + actionBarSaveData.MyName + ") in inventory");
+                    //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadActionBarData(): searching for usable(" + actionBarSaveData.MyName + ") in inventory");
                     //useable = systemDataFactory.GetResource<Item>(actionBarSaveData.DisplayName);
                     useable = systemItemManager.GetNewInstantiatedItem(actionBarSaveData.DisplayName);
                 } else {
                     // find ability from system ability manager
-                    //Debug.Log("Savemanager.LoadActionBarData(): searching for usable in ability manager");
+                    //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadActionBarData(): searching for usable in ability manager");
                     if (actionBarSaveData.DisplayName != null && actionBarSaveData.DisplayName != string.Empty) {
                         useable = systemDataFactory.GetResource<Ability>(actionBarSaveData.DisplayName).AbilityProperties;
                     } else {
-                        //Debug.Log("Savemanager.LoadActionBarData(): saved action bar had no name");
+                        //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadActionBarData(): saved action bar had no name");
                     }
                     if (actionBarSaveData.savedName != null && actionBarSaveData.savedName != string.Empty) {
                         IUseable savedUseable = systemDataFactory.GetResource<Ability>(actionBarSaveData.savedName).AbilityProperties;
@@ -793,7 +796,7 @@ namespace AnyRPG {
                 if (useable != null) {
                     unitController.CharacterActionBarManager.SetGamepadActionButton(useable, counter);
                 } else {
-                    //Debug.Log("Savemanager.LoadActionBarData(): no usable set on this actionbutton");
+                    //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadActionBarData(): no usable set on this actionbutton");
                     // testing remove things that weren't saved, it will prevent duplicate abilities if they are moved
                     // this means if new abilities are added to a class/etc between play sessions they won't be on the bars
                     unitController.CharacterActionBarManager.UnSetGamepadActionButton(counter);
@@ -845,7 +848,7 @@ namespace AnyRPG {
         }
 
         public void SaveQuestData() {
-            //Debug.Log("Savemanager.SaveQuestData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveQuestData()");
 
             saveData.questSaveData.Clear();
             foreach (QuestSaveData questSaveData in unitController.CharacterQuestLog.QuestSaveDataDictionary.Values) {
@@ -866,7 +869,7 @@ namespace AnyRPG {
         }
 
         public void SaveAchievementData() {
-            //Debug.Log("CharacterSavemanager.SaveAchievementData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveAchievementData()");
 
             saveData.achievementSaveData.Clear();
             foreach (QuestSaveData achievementSaveData in unitController.CharacterQuestLog.AchievementSaveDataDictionary.Values) {
@@ -891,7 +894,7 @@ namespace AnyRPG {
         }
 
         public void SaveDialogData() {
-            //Debug.Log("Savemanager.SaveDialogData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveDialogData()");
             saveData.dialogSaveData.Clear();
             foreach (DialogSaveData dialogSaveData in dialogSaveDataDictionary.Values) {
                 saveData.dialogSaveData.Add(dialogSaveData);
@@ -899,7 +902,7 @@ namespace AnyRPG {
         }
 
         public void SaveBehaviorData() {
-            //Debug.Log("Savemanager.SaveQuestData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveQuestData()");
             saveData.behaviorSaveData.Clear();
             foreach (BehaviorSaveData behaviorSaveData in behaviorSaveDataDictionary.Values) {
                 saveData.behaviorSaveData.Add(behaviorSaveData);
@@ -907,7 +910,7 @@ namespace AnyRPG {
         }
 
         public void SaveSceneNodeData() {
-            //Debug.Log("Savemanager.SaveSceneNodeData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveSceneNodeData()");
 
             saveData.sceneNodeSaveData.Clear();
             foreach (SceneNodeSaveData sceneNodeSaveData in sceneNodeSaveDataDictionary.Values) {
@@ -916,7 +919,7 @@ namespace AnyRPG {
         }
 
         public void SaveStatusEffectData() {
-            //Debug.Log("Savemanager.SaveSceneNodeData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveSceneNodeData()");
             saveData.statusEffectSaveData.Clear();
             foreach (StatusEffectNode statusEffectNode in unitController.CharacterStats.StatusEffects.Values) {
                 if (statusEffectNode.StatusEffect.ClassTrait == false
@@ -976,7 +979,7 @@ namespace AnyRPG {
         }
 
         public void SaveInventorySlotData() {
-            //Debug.Log("Savemanager.SaveInventorySlotData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveInventorySlotData()");
             saveData.inventorySlotSaveData.Clear();
             foreach (InventorySlot inventorySlot in unitController.CharacterInventoryManager.InventorySlots) {
                 saveData.inventorySlotSaveData.Add(GetSlotSaveData(inventorySlot));
@@ -984,7 +987,8 @@ namespace AnyRPG {
         }
 
         public void SaveBankSlotData() {
-            //Debug.Log("Savemanager.SaveBankSlotData()");
+            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveBankSlotData()");
+
             saveData.bankSlotSaveData.Clear();
             foreach (InventorySlot inventorySlot in unitController.CharacterInventoryManager.BankSlots) {
                 saveData.bankSlotSaveData.Add(GetSlotSaveData(inventorySlot));
@@ -992,15 +996,15 @@ namespace AnyRPG {
         }
 
         public void SaveReputationData() {
-            //Debug.Log("Savemanager.SaveReputationData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveReputationData()");
             saveData.reputationSaveData.Clear();
             foreach (FactionDisposition factionDisposition in unitController.CharacterFactionManager.DispositionDictionary) {
                 if (factionDisposition == null) {
-                    Debug.Log("Savemanager.SaveReputationData(): no disposition");
+                    Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveReputationData(): no disposition");
                     continue;
                 }
                 if (factionDisposition.Faction == null) {
-                    Debug.Log("Savemanager.SaveReputationData() no faction");
+                    Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveReputationData() no faction");
                     continue;
                 }
                 ReputationSaveData reputationSaveData = new ReputationSaveData();
@@ -1011,7 +1015,7 @@ namespace AnyRPG {
         }
 
         public void SaveCurrencyData() {
-            //Debug.Log("Savemanager.SaveCurrencyData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveCurrencyData()");
             saveData.currencySaveData.Clear();
             foreach (CurrencyNode currencyNode in unitController.CharacterCurrencyManager.CurrencyList.Values) {
                 CurrencySaveData currencySaveData = new CurrencySaveData();
@@ -1022,19 +1026,19 @@ namespace AnyRPG {
         }
 
         public void SaveEquippedBagData() {
-            //Debug.Log("Savemanager.SaveEquippedBagData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveEquippedBagData()");
             saveData.equippedBagSaveData.Clear();
             foreach (BagNode bagNode in unitController.CharacterInventoryManager.BagNodes) {
-                //Debug.Log("Savemanager.SaveEquippedBagData(): got bagNode");
+                //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveEquippedBagData(): got bagNode");
                 saveData.equippedBagSaveData.Add(GetBagSaveData(bagNode));
             }
         }
 
         public void SaveEquippedBankBagData() {
-            //Debug.Log("Savemanager.SaveEquippedBagData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveEquippedBagData()");
             saveData.equippedBankBagSaveData.Clear();
             foreach (BagNode bagNode in unitController.CharacterInventoryManager.BankNodes) {
-                //Debug.Log("Savemanager.SaveEquippedBagData(): got bagNode");
+                //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveEquippedBagData(): got bagNode");
                 saveData.equippedBankBagSaveData.Add(GetBagSaveData(bagNode));
             }
         }
@@ -1095,7 +1099,7 @@ namespace AnyRPG {
         }
 
         public void SaveSkillData() {
-            //Debug.Log("Savemanager.SaveSkillData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveSkillData()");
             saveData.skillSaveData.Clear();
             foreach (string skillName in unitController.CharacterSkillManager.MySkillList.Keys) {
                 SkillSaveData skillSaveData = new SkillSaveData();
@@ -1105,7 +1109,7 @@ namespace AnyRPG {
         }
 
         public void SaveRecipeData() {
-            //Debug.Log("Savemanager.SaveRecipeData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveRecipeData()");
             saveData.recipeSaveData.Clear();
             foreach (string recipeName in unitController.CharacterRecipeManager.RecipeList.Keys) {
                 RecipeSaveData recipeSaveData = new RecipeSaveData();

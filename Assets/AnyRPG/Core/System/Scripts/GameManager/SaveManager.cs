@@ -375,7 +375,9 @@ namespace AnyRPG {
             LoadGame(playerCharacterSaveData);
         }
 
-        public AnyRPGSaveData PerformInventorySetup(AnyRPGSaveData anyRPGSaveData) {
+        public void PerformInventorySetup(AnyRPGSaveData anyRPGSaveData) {
+            Debug.Log("SaveManager.PerformInventorySetup()");
+
             // initialize inventory
             int bagCount = 0;
 
@@ -385,7 +387,7 @@ namespace AnyRPG {
                 if (bag == null) {
                     Debug.LogError("SaveManager.PerformInventorySetup(): Check SystemConfigurationManager in inspector and set DefaultBackpack to valid name");
                     // would like to return null here but this is a value type :(
-                    return anyRPGSaveData;
+                    return;
                 }
                 EquippedBagSaveData saveData = new EquippedBagSaveData();
                 saveData.BagName = bag.ResourceName;
@@ -415,13 +417,12 @@ namespace AnyRPG {
                     InventorySlotSaveData inventorySlotSaveData = GetEmptySlotSaveData();
                     InstantiatedItem instantiatedItem = systemItemManager.GetNewInstantiatedItem(systemConfigurationManager.DefaultBankContents[i]);
                     if (instantiatedItem != null) {
+                        Debug.Log($"SaveManager.PerformInventorySetup(): adding default bank item: {instantiatedItem.ResourceName}");
                         inventorySlotSaveData = instantiatedItem.GetSlotSaveData();
                     }
                     anyRPGSaveData.bankSlotSaveData.Add(inventorySlotSaveData);
                 }
             }
-
-            return anyRPGSaveData;
         }
 
         public InventorySlotSaveData GetEmptySlotSaveData() {
@@ -506,8 +507,7 @@ namespace AnyRPG {
             newSaveData = InitializeSaveDataResourceLists(newSaveData, false);
 
             // initialize inventory
-            newSaveData = PerformInventorySetup(newSaveData);
-            //newSaveData = InitializeSaveDataProperties(newSaveData);
+            PerformInventorySetup(newSaveData);
 
             return new PlayerCharacterSaveData() {
                 PlayerCharacterId = 0,

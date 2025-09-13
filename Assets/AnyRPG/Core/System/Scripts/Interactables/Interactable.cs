@@ -233,6 +233,8 @@ namespace AnyRPG {
         }
 
         protected override void PostConfigure() {
+            //Debug.Log($"{gameObject.name}.Interactable.PostConfigure()");
+
             base.PostConfigure();
             Init();
         }

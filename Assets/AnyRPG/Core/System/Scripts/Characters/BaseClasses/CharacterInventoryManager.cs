@@ -497,7 +497,8 @@ namespace AnyRPG {
         }
 
         public bool AddBankItem(InstantiatedItem instantiatedItem, int slotIndex) {
-            //Debug.Log("CharacterInventoryManager.AddBankItem(" + item.DisplayName + ", " + slotIndex + ")");
+            Debug.Log($"CharacterInventoryManager.AddBankItem({instantiatedItem.ResourceName}, {slotIndex})");
+
             if (bankSlots.Count > slotIndex) {
                 return bankSlots[slotIndex].AddItem(instantiatedItem);
             }

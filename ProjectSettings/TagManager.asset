@@ -111,14 +111,14 @@ TagManager:
   - 
   - 
   - Player
-  - Enemy
-  - CompanionAI
+  - 
+  - 
   - Triggers
-  - StopMove
-  - Action
-  - HeadTrack
-  - BodyPart
-  - BlockAIRayCast
+  - 
+  - 
+  - 
+  - 
+  - 
   - Equipment
   - CharacterModel
   - PlayerPreview

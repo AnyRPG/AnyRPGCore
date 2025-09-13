@@ -36,6 +36,7 @@ namespace AnyRPG {
 
         protected bool initialized = false;
         protected bool eventSubscriptionsInitialized = false;
+        //protected bool spawnedByPrefab = false;
 
         // game manager references
 
@@ -217,6 +218,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.Spawnable.Spawn()");
 
             if (spawnReference == null && prefabProfile?.Prefab != null) {
+                Debug.Log($"{gameObject.name}.Spawnable.Spawn() reference is null but prefab is not");
                 Vector3 usedPosition = prefabProfile.SheathedPosition;
                 Vector3 usedScale = prefabProfile.SheathedScale;
                 Vector3 usedRotation = prefabProfile.SheathedRotation;
@@ -234,10 +236,21 @@ namespace AnyRPG {
 
                 //spawnReference.transform.Rotate(usedRotation);
                 spawnReference.transform.localRotation = Quaternion.Euler(usedRotation);
+                //spawnedByPrefab = true;
             } else {
                 if (spawnReference != null && spawnReference.activeSelf == false) {
+                    //Debug.Log($"{gameObject.name}.Spawnable.Spawn() setting {spawnReference.name} active");
                     spawnReference.SetActive(true);
                 }
+            }
+            if (spawnReference != null) {
+                AutoConfiguredMonoBehaviour autoConfiguredMonoBehaviour = spawnReference.GetComponent<AutoConfiguredMonoBehaviour>();
+                if (autoConfiguredMonoBehaviour != null) {
+                    //Debug.Log($"{gameObject.name}.Spawnable.Spawn() found autoconfiguredmonobehaviour: configuring");
+                    autoConfiguredMonoBehaviour.AutoConfigure(systemGameManager);
+                }
+            } else {
+                Debug.LogError($"{gameObject.name}.Spawnable.Spawn(): COULD NOT SPAWN OBJECT");
             }
 
         }
@@ -261,7 +274,9 @@ namespace AnyRPG {
         }
 
         public bool PrerequisiteCheck(UnitController sourceUnitController) {
-            if (spawnPrerequisites != null && spawnPrerequisites.Count > 0) {
+            //Debug.Log($"{gameObject.name}.Spawnable.PrerequisiteCheck({(sourceUnitController == null ? "null" : sourceUnitController.gameObject.name)})");
+
+            if (spawnPrerequisites.Count > 0 && sourceUnitController != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in spawnPrerequisites) {
                     if (tmpPrerequisiteConditions != null) {
                         tmpPrerequisiteConditions.UpdatePrerequisites(sourceUnitController, false);
@@ -271,7 +286,7 @@ namespace AnyRPG {
                     HandlePrerequisiteUpdates(sourceUnitController);
                     return true;
                 }
-            } else {
+            } else if (spawnPrerequisites.Count == 0) {
                 if (SpawnPrerequisitesMet(sourceUnitController)) {
                     HandlePrerequisiteUpdates(sourceUnitController);
                     return true;
@@ -282,13 +297,15 @@ namespace AnyRPG {
         }
 
         public virtual bool UpdateOnPlayerUnitSpawn(UnitController sourceUnitController) {
-            //Debug.Log($"{gameObject.name}.Spawnable.UpdateOnPlayerUnitSpawn()");
+            //Debug.Log($"{gameObject.name}.Spawnable.UpdateOnPlayerUnitSpawn({sourceUnitController.gameObject.name})");
+
             return PrerequisiteCheck(sourceUnitController);
             //HandlePrerequisiteUpdates();
         }
 
         public virtual void SetupScriptableObjects() {
             //Debug.Log($"{gameObject.name}.Spawnable.SetupScriptableObjects()");
+
             if (prefabProfileName != null && prefabProfileName != string.Empty) {
                 PrefabProfile tmpPrefabProfile = systemDataFactory.GetResource<PrefabProfile>(prefabProfileName);
                 if (tmpPrefabProfile != null && tmpPrefabProfile.Prefab != null) {

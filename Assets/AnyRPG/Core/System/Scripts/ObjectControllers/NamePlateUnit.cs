@@ -42,6 +42,7 @@ namespace AnyRPG {
         /// </summary>
         public virtual void InitializeNamePlateController() {
             //Debug.Log($"{gameObject.name}.UnitController.InitializeNamePlateController()");
+
             if (namePlateReady == true) {
                 return;
             }
@@ -68,6 +69,7 @@ namespace AnyRPG {
 
         public override void HandlePrerequisiteUpdates() {
             //Debug.Log($"{gameObject.name}.Interactable.HandlePrerequisiteUpdates()");
+
             base.HandlePrerequisiteUpdates();
             if (!playerManager.PlayerUnitSpawned) {
                 //Debug.Log($"{gameObject.name}.Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");
@@ -79,7 +81,7 @@ namespace AnyRPG {
         public void UpdateNamePlateImage() {
             //Debug.Log($"{gameObject.name}.NamePlateUnit.UpdateNamePlateImage()");
 
-            if (playerManager.UnitController == null || playerManager.UnitController == null) {
+            if (playerManager.UnitController == null) {
                 //Debug.Log($"{gameObject.name}.Interactable.UpdateNamePlateImage(): player has no character");
                 return;
             }
