@@ -45,7 +45,9 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
             currencyLootItem = ScriptableObject.CreateInstance<CurrencyItem>();
             currencyLootItem.ResourceName = "System Currency Loot Item";
-            currencyLootItem.Icon = systemConfigurationManager.KillCurrency.Icon;
+            if (systemConfigurationManager.KillCurrency != null) {
+                currencyLootItem.Icon = systemConfigurationManager.KillCurrency.Icon;
+            }
             // this is normally done by the resource manager when loading from resources, but since we are creating this manually we need to do it ourselves
             currencyLootItem.SetupScriptableObjects(systemGameManager);
             // pre populate client id 0 so this works before loot is dropped
