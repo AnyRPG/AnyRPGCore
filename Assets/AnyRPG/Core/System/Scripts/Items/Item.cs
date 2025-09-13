@@ -314,6 +314,8 @@ namespace AnyRPG {
         /// </summary>
         /// <returns></returns>
         public KeyValuePair<Currency, int> GetSellPrice(InstantiatedItem instantiatedItem, UnitController sourceUnitController) {
+            //Debug.Log($"{ResourceName}.Item.GetSellPrice()");
+
             //Currency currency = Currency;
 
             if (currency == null) {

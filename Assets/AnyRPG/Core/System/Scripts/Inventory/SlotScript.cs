@@ -496,7 +496,7 @@ namespace AnyRPG {
         public void ShowGamepadTooltip() {
             //Debug.Log($"SlotScript.ShowGamepadTooltip() bagPanel: {(BagPanel == null ? "null" : "not null")} inventoryslot: {(inventorySlot.InstantiatedItem == null ? "null" : "not null")}");
 
-            uIManager.ShowGamepadTooltip((BagPanel.ContentArea as RectTransform), transform, inventorySlot.InstantiatedItem.Item, "Sell Price: ");
+            uIManager.ShowGamepadTooltip((BagPanel.ContentArea as RectTransform), transform, inventorySlot.InstantiatedItem, "Sell Price: ");
         }
 
         public override void OnSendObjectToPool() {
