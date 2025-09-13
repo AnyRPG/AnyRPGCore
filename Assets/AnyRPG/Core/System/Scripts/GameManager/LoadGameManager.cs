@@ -32,10 +32,8 @@ namespace AnyRPG {
 
         // game manager references
         private SaveManager saveManager = null;
-        private ObjectPooler objectPooler = null;
-        private CharacterCreatorManager characterCreatorManager = null;
-        private UIManager uIManager = null;
         private NetworkManagerClient networkManager = null;
+        private SystemItemManager systemItemManager = null;
 
         // public properties
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
@@ -58,10 +56,8 @@ namespace AnyRPG {
             //Debug.Log("LoadGameManager.SetGameManagerReferences()");
             base.SetGameManagerReferences();
             saveManager = systemGameManager.SaveManager;
-            objectPooler = systemGameManager.ObjectPooler;
-            characterCreatorManager = systemGameManager.CharacterCreatorManager;
-            uIManager = systemGameManager.UIManager;
             networkManager = systemGameManager.NetworkManagerClient;
+            systemItemManager = systemGameManager.SystemItemManager;
         }
 
 
@@ -83,12 +79,14 @@ namespace AnyRPG {
 
         public void ResetData() {
             //Debug.Log("LoadGameManager.ResetData()");
+
             unitProfile = null;
             unitType = null;
             characterRace = null;
             characterClass = null;
             classSpecialization = null;
             faction = null;
+            systemItemManager.ClientReset();
             playerCharacterSaveData = saveManager.CreateSaveData();
             capabilityConsumerSnapshot = null;
         }

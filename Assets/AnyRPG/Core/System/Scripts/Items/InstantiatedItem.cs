@@ -96,6 +96,8 @@ namespace AnyRPG {
         }
 
         public virtual InventorySlotSaveData GetSlotSaveData() {
+            //Debug.Log($"{ResourceName}.InstantiatedItem.GetSlotSaveData()");
+
             InventorySlotSaveData saveData = new InventorySlotSaveData();
             saveData.ItemName = ResourceName;
             saveData.DisplayName = displayName;

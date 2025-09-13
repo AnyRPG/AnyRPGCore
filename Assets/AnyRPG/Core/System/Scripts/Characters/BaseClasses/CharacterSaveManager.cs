@@ -637,7 +637,7 @@ namespace AnyRPG {
         }
 
         public void LoadBankSlotData(AnyRPGSaveData anyRPGSaveData) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadBankSlotData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadBankSlotData()");
 
             int counter = 0;
             foreach (InventorySlotSaveData inventorySlotSaveData in anyRPGSaveData.bankSlotSaveData) {
@@ -647,7 +647,7 @@ namespace AnyRPG {
         }
 
         private void LoadSlotData(InventorySlotSaveData inventorySlotSaveData, int counter, bool bank) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadSlotData(): loading slot {counter} with item {inventorySlotSaveData.ItemName}");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadSlotData({inventorySlotSaveData.ItemName}, {counter}, {bank}) stack: {inventorySlotSaveData.stackCount}");
 
             if (inventorySlotSaveData.ItemName != string.Empty && inventorySlotSaveData.ItemName != null) {
                 for (int i = 0; i < inventorySlotSaveData.stackCount; i++) {
@@ -968,6 +968,8 @@ namespace AnyRPG {
         }
 
         private InventorySlotSaveData GetSlotSaveData(InventorySlot inventorySlot) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.GetSlotSaveData(): getting slot save data for slot with item {(inventorySlot.InstantiatedItem != null ? inventorySlot.InstantiatedItem.ResourceName : "empty")}");
+
             InventorySlotSaveData saveData = new InventorySlotSaveData();
             if (inventorySlot.InstantiatedItem != null) {
                 saveData = inventorySlot.InstantiatedItem.GetSlotSaveData();
@@ -987,7 +989,7 @@ namespace AnyRPG {
         }
 
         public void SaveBankSlotData() {
-            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveBankSlotData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveBankSlotData()");
 
             saveData.bankSlotSaveData.Clear();
             foreach (InventorySlot inventorySlot in unitController.CharacterInventoryManager.BankSlots) {

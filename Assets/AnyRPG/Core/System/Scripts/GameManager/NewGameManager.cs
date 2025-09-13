@@ -172,6 +172,7 @@ namespace AnyRPG {
             classSpecialization = null;
             faction = null;
             capabilityConsumerProcessor = null;
+            systemItemManager.ClientReset();
             playerCharacterSaveData = saveManager.CreateSaveData();
 
         }

@@ -31,6 +31,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private NewGameManager newGameManager = null;
         private NetworkManagerClient networkManagerClient = null;
+        private NetworkManagerServer networkManagerServer = null;
         private LoadGameManager loadGameManager = null;
 
         public Dictionary<string, CutsceneSaveData> CutsceneSaveDataDictionary { get => cutsceneSaveDataDictionary; set => cutsceneSaveDataDictionary = value; }
@@ -57,6 +58,7 @@ namespace AnyRPG {
             actionBarManager = uIManager.ActionBarManager;
             newGameManager = systemGameManager.NewGameManager;
             networkManagerClient = systemGameManager.NetworkManagerClient;
+            networkManagerServer = systemGameManager.NetworkManagerServer;
             loadGameManager = systemGameManager.LoadGameManager;
         }
 
@@ -376,7 +378,7 @@ namespace AnyRPG {
         }
 
         public void PerformInventorySetup(AnyRPGSaveData anyRPGSaveData) {
-            Debug.Log("SaveManager.PerformInventorySetup()");
+            //Debug.Log("SaveManager.PerformInventorySetup()");
 
             // initialize inventory
             int bagCount = 0;
@@ -417,11 +419,16 @@ namespace AnyRPG {
                     InventorySlotSaveData inventorySlotSaveData = GetEmptySlotSaveData();
                     InstantiatedItem instantiatedItem = systemItemManager.GetNewInstantiatedItem(systemConfigurationManager.DefaultBankContents[i]);
                     if (instantiatedItem != null) {
-                        Debug.Log($"SaveManager.PerformInventorySetup(): adding default bank item: {instantiatedItem.ResourceName}");
+                        //Debug.Log($"SaveManager.PerformInventorySetup(): adding default bank item: {instantiatedItem.ResourceName}");
                         inventorySlotSaveData = instantiatedItem.GetSlotSaveData();
+                        inventorySlotSaveData.stackCount = 1;
                     }
                     anyRPGSaveData.bankSlotSaveData.Add(inventorySlotSaveData);
                 }
+            }
+
+            if (networkManagerServer.ServerModeActive == false) {
+                anyRPGSaveData.ClientItemIdCount = systemItemManager.ClientItemIdCount;
             }
         }
 
@@ -477,7 +484,7 @@ namespace AnyRPG {
         public void ClearSharedData() {
             //Debug.Log("SaveManager.ClearSharedData()");
 
-            systemItemManager.ClearInstantiatedItems();
+            systemItemManager.ClientReset();
             ClearSystemManagedSaveData();
         }
 
@@ -536,6 +543,8 @@ namespace AnyRPG {
         public void LoadGame(PlayerCharacterSaveData playerCharacterSaveData) {
             //Debug.Log($"Savemanager.LoadGame({playerCharacterSaveData.SaveData.unitProfileName})");
 
+            uIManager.loadGameWindow.CloseWindow();
+
             ClearSharedData();
 
             // scene and location
@@ -551,8 +560,6 @@ namespace AnyRPG {
             LoadWindowPositions();
 
             CapabilityConsumerSnapshot capabilityConsumerSnapshot = GetCapabilityConsumerSnapshot(playerCharacterSaveData.SaveData);
-
-            uIManager.loadGameWindow.CloseWindow();
 
             SpawnPlayerRequest loadSceneRequest = new SpawnPlayerRequest();
             // configure location and rotation overrides
@@ -575,6 +582,8 @@ namespace AnyRPG {
         }
 
         private void LoadItemIdData(AnyRPGSaveData saveData) {
+            //Debug.Log("SaveManager.LoadItemIdData()");
+
             systemItemManager.SetClientItemIdCount(saveData.ClientItemIdCount);
         }
 

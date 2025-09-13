@@ -41,12 +41,15 @@ namespace AnyRPG {
         /// <param name="resourceName"></param>
         /// <returns></returns>
         public InstantiatedItem GetNewInstantiatedItem(Item item, ItemQuality usedItemQuality = null) {
-            //Debug.Log(this.GetType().Name + ".GetNewResource(" + resourceName + ")");
+            //Debug.Log($"SystemItemManager.GetNewInstantiatedItem({item.ResourceName})");
+
             InstantiatedItem instantiatedItem = GetNewInstantiatedItem(GetNewItemInstanceId(), item, usedItemQuality);
             return instantiatedItem;
         }
 
         public int GetNewItemInstanceId() {
+            //Debug.Log($"SystemItemManager.GetNewItemInstanceId()");
+
             int returnValue = (networkManagerServer.ServerModeActive == true ? serverItemIdCount : clientItemIdCount);
             if (networkManagerServer.ServerModeActive == true) {
                 serverItemIdCount--;
@@ -66,10 +69,21 @@ namespace AnyRPG {
         }
 
         public void SetClientItemIdCount(int clientItemIdCount) {
+            //Debug.Log($"SystemItemManager.SetClientItemIdCount({clientItemIdCount})");
+
             this.clientItemIdCount = clientItemIdCount;
         }
 
         public void ClearInstantiatedItems() {
+            //Debug.Log($"SystemItemManager.ClearInstantiatedItems()");
+
+            instantiatedItems.Clear();
+        }
+
+        public void ClientReset() {
+            //Debug.Log($"SystemItemManager.ClientReset()");
+
+            clientItemIdCount = 1;
             instantiatedItems.Clear();
         }
 
