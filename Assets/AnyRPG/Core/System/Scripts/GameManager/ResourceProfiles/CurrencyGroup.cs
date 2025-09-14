@@ -25,8 +25,8 @@ namespace AnyRPG {
         [SerializeField]
         private List<CurrencyGroupRate> currencyGroupRates = new List<CurrencyGroupRate>();
 
-        public Currency MyBaseCurrency { get => baseCurrency; set => baseCurrency = value; }
-        public List<CurrencyGroupRate> MyCurrencyGroupRates { get => currencyGroupRates; set => currencyGroupRates = value; }
+        public Currency BaseCurrency { get => baseCurrency; set => baseCurrency = value; }
+        public List<CurrencyGroupRate> CurrencyGroupRates { get => currencyGroupRates; set => currencyGroupRates = value; }
 
         public bool HasCurrency(Currency currency) {
             //Debug.Log("CurrencyGroup.HasCurrency(" + (currency == null ? "null" : currency.DisplayName) + ")");

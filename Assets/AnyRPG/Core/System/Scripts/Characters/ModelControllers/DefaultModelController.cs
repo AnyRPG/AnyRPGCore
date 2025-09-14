@@ -44,6 +44,8 @@ namespace AnyRPG {
         }
 
         public override void ConfigureUnitModel() {
+            //Debug.Log($"{unitController.gameObject.name}.DefaultModelController.ConfigureUnitModel()");
+
             if (unitModelController.UnitModel == null) {
                 return;
             }

@@ -22,14 +22,14 @@ namespace AnyRPG {
             CurrencyGroup currencyGroup = FindCurrencyGroup(currency);
             if (currencyGroup != null) {
                 // attemp redistribution
-                Currency baseCurrency = currencyGroup.MyBaseCurrency;
+                Currency baseCurrency = currencyGroup.BaseCurrency;
                 // convert everything in the group to the base amount
-                if (SystemDataUtility.MatchResource(currency.ResourceName, currencyGroup.MyBaseCurrency.ResourceName)) {
+                if (SystemDataUtility.MatchResource(currency.ResourceName, currencyGroup.BaseCurrency.ResourceName)) {
                     //Debug.Log("CurrencyConverter.GetBaseCurrencyAmount(" + currency.DisplayName + ", " + currencyAmount + ") return: " + currencyAmount);
                     return currencyAmount;
                 }
                 // the currency needs conversion
-                foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
+                foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.CurrencyGroupRates) {
                     if (SystemDataUtility.MatchResource(currencyGroupRate.Currency.ResourceName, currency.ResourceName)) {
                         //Debug.Log("CurrencyConverter.GetBaseCurrencyAmount(" + currency.DisplayName + ", " + currencyAmount + ") return: " + (currencyGroupRate.MyBaseMultiple * currencyAmount));
                         return currencyGroupRate.BaseMultiple * currencyAmount;
@@ -48,7 +48,7 @@ namespace AnyRPG {
             CurrencyGroup currencyGroup = FindCurrencyGroup(currency);
 
             if (currencyGroup != null) {
-                return currencyGroup.MyBaseCurrency;
+                return currencyGroup.BaseCurrency;
             }
             return currency;
         }
@@ -132,14 +132,14 @@ namespace AnyRPG {
             }
 
             // attemp redistribution
-            Currency baseCurrency = currencyGroup.MyBaseCurrency;
+            Currency baseCurrency = currencyGroup.BaseCurrency;
 
             // convert incoming currency to the base amount
             int baseCurrencyAmount = GetBaseCurrencyAmount(currency, currencyAmount);
 
             // create a sorted list of the redistribution of this base currency amount into the higher currencies in the group
             SortedDictionary<int, Currency> sortList = new SortedDictionary<int, Currency>();
-            foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
+            foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.CurrencyGroupRates) {
                 sortList.Add(currencyGroupRate.BaseMultiple, currencyGroupRate.Currency);
             }
             foreach (KeyValuePair<int, Currency> currencyGroupRate in sortList.Reverse()) {
@@ -151,7 +151,7 @@ namespace AnyRPG {
                 }
                 returnDictionary.Add(currencyGroupRate.Value, exchangedAmount);
             }
-            returnDictionary.Add(currencyGroup.MyBaseCurrency, baseCurrencyAmount);
+            returnDictionary.Add(currencyGroup.BaseCurrency, baseCurrencyAmount);
 
             return returnDictionary;
         }

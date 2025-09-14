@@ -74,10 +74,10 @@ namespace AnyRPG {
             CurrencyGroup currencyGroup = currencyConverter.FindCurrencyGroup(currency);
             if (currencyGroup != null) {
                 // attemp redistribution
-                Currency baseCurrency = currencyGroup.MyBaseCurrency;
+                Currency baseCurrency = currencyGroup.BaseCurrency;
                 // convert everything in the group to the base amount
                 int baseCurrencyAmount = GetCurrencyAmount(baseCurrency);
-                foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
+                foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.CurrencyGroupRates) {
                     baseCurrencyAmount += GetCurrencyAmount(currencyGroupRate.Currency) * currencyGroupRate.BaseMultiple;
                 }
                 //Debug.Log("CharacterCurrencyManager.GetBaseCurrencyValue(" + currency.DisplayName + ") return: " + baseCurrencyAmount);
@@ -93,17 +93,17 @@ namespace AnyRPG {
             if (currencyGroup != null) {
 
                 // attemp redistribution
-                Currency baseCurrency = currencyGroup.MyBaseCurrency;
+                Currency baseCurrency = currencyGroup.BaseCurrency;
 
                 // convert everything in the group to the base amount
                 int baseCurrencyAmount = GetCurrencyAmount(baseCurrency);
-                foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
+                foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.CurrencyGroupRates) {
                     baseCurrencyAmount += GetCurrencyAmount(currencyGroupRate.Currency) * currencyGroupRate.BaseMultiple;
                 }
 
                 // create a sorted list and work down from the largest denomination, carrying the remainders
                 SortedDictionary<int, Currency> sortList = new SortedDictionary<int, Currency>();
-                foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
+                foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.CurrencyGroupRates) {
                     sortList.Add(currencyGroupRate.BaseMultiple, currencyGroupRate.Currency);
                 }
                 Dictionary<Currency, int> newAmountList = new Dictionary<Currency, int>();
@@ -119,7 +119,7 @@ namespace AnyRPG {
                     }
                 }
                 // whatever is left over is the base amount
-                newAmountList.Add(currencyGroup.MyBaseCurrency, baseCurrencyAmount);
+                newAmountList.Add(currencyGroup.BaseCurrency, baseCurrencyAmount);
 
                 // replace the original values in the currency list with the redistributed ones
                 foreach (KeyValuePair<Currency, int> newCurrencyValue in newAmountList) {
@@ -157,10 +157,10 @@ namespace AnyRPG {
             Dictionary<Currency, int> returnDictionary = new Dictionary<Currency, int>();
             if (currencyGroup != null) {
                 // attemp redistribution
-                Currency baseCurrency = currencyGroup.MyBaseCurrency;
+                Currency baseCurrency = currencyGroup.BaseCurrency;
                 // convert everything in the group to the base amount
                 int baseCurrencyAmount = GetCurrencyAmount(baseCurrency);
-                foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
+                foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.CurrencyGroupRates) {
                     baseCurrencyAmount += GetCurrencyAmount(currencyGroupRate.Currency) * currencyGroupRate.BaseMultiple;
                 }
                 returnDictionary.Add(baseCurrency, baseCurrencyAmount);

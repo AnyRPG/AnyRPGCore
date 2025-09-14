@@ -161,11 +161,6 @@ namespace AnyRPG {
             }
             SetupScriptableObjects();
 
-            /*
-            if (!triggerBased) {
-                SpawnWithDelay();
-            }
-            */
             if (systemGameManager.GameMode == GameMode.Local) {
                 CreateEventSubscriptions();
             }/* else if (networkManagerServer.ServerModeActive) {
@@ -272,7 +267,8 @@ namespace AnyRPG {
         }
 
         public void ProcessPlayerUnitSpawn(UnitController sourceUnitController) {
-            //Debug.Log($"{gameObject.name}.UnitSpawnNode.HandlePlayerUnitSpawn()");
+            //Debug.Log($"{gameObject.name}.UnitSpawnNode.ProcessPlayerUnitSpawn({sourceUnitController.gameObject.name})");
+
             if (prerequisiteConditions != null && prerequisiteConditions.Count > 0) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
@@ -581,7 +577,11 @@ namespace AnyRPG {
             // clearing the coroutine so the next round can start
             delayRoutine = null;
             if (disabled == false) {
-                Spawn(null);
+                if (systemGameManager.GameMode == GameMode.Local && playerManager.UnitController != null) {
+                    Spawn(playerManager.UnitController);
+                } else {
+                    Spawn(null);
+                }
             }
         }
 

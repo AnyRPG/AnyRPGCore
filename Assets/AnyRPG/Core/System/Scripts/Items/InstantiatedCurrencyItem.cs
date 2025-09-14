@@ -1,6 +1,8 @@
 using AnyRPG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -8,31 +10,49 @@ namespace AnyRPG {
 
         private CurrencyItem currencyItem = null;
 
-        private string gainCurrencyName = string.Empty;
-        private int gainCurrencyAmount = 0;
+        private string gainCurrencyString = string.Empty;
+        //private int gainCurrencyAmount = 0;
         private CurrencyNode currencyNode;
 
-        public string GainCurrencyName { get => gainCurrencyName; }
-        public int GainCurrencyAmount { get => gainCurrencyAmount; }
+        private Sprite overrideIcon = null;
+
+        // game manager references
+        private CurrencyConverter currencyConverter = null;
+
+        //public string GainCurrencyName { get => gainCurrencyName; }
+        //public int GainCurrencyAmount { get => gainCurrencyAmount; }
         public CurrencyNode CurrencyNode { get => currencyNode; }
+
+        public override Sprite Icon {
+            get {
+                return overrideIcon;
+            }
+        }
 
         public InstantiatedCurrencyItem(SystemGameManager systemGameManager, int instanceId, CurrencyItem currencyItem, ItemQuality itemQuality) : base(systemGameManager, instanceId, currencyItem, itemQuality) {
             this.currencyItem = currencyItem;
-            gainCurrencyName = currencyItem.GainCurrencyName;
-            gainCurrencyAmount = currencyItem.GainCurrencyAmount;
+            //gainCurrencyName = currencyItem.GainCurrencyName;
+            //gainCurrencyAmount = currencyItem.GainCurrencyAmount;
             currencyNode = currencyItem.CurrencyNode;
+            RecalculateCurrencyString();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            currencyConverter = systemGameManager.CurrencyConverter;
         }
 
         public void OverrideCurrency(string newGainCurrencyName, int newGainCurrencyAmount) {
-            gainCurrencyName = newGainCurrencyName;
-            gainCurrencyAmount = newGainCurrencyAmount;
+            //gainCurrencyName = newGainCurrencyName;
+            //gainCurrencyAmount = newGainCurrencyAmount;
             Currency tmpCurrency = systemDataFactory.GetResource<Currency>(newGainCurrencyName);
             if (tmpCurrency != null) {
                 currencyNode = new CurrencyNode();
                 currencyNode.currency = tmpCurrency;
                 currencyNode.Amount = newGainCurrencyAmount;
+                RecalculateCurrencyString();
             } else {
-                Debug.LogError($"CurrencyItem.SetupScriptableObjects(): Could not find currency : {gainCurrencyName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
+                Debug.LogError($"CurrencyItem.SetupScriptableObjects(): Could not find currency : {newGainCurrencyName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
             }
         }
 
@@ -53,8 +73,8 @@ namespace AnyRPG {
             //Debug.Log($"InstantiatedCurrencyItem.GetSlotSaveData()");
 
             InventorySlotSaveData saveData = base.GetSlotSaveData();
-            saveData.gainCurrencyName = gainCurrencyName;
-            saveData.gainCurrencyAmount = gainCurrencyAmount;
+            saveData.gainCurrencyName = currencyNode.currency.ResourceName;
+            saveData.gainCurrencyAmount = currencyNode.Amount;
             //Debug.Log($"InstantiatedCurrencyItem.GetSlotSaveData(): gainCurrencyName = {gainCurrencyName}, gainCurrencyAmount = {gainCurrencyAmount}");
             return saveData;
         }
@@ -66,16 +86,80 @@ namespace AnyRPG {
             OverrideCurrency(inventorySlotSaveData.gainCurrencyName, inventorySlotSaveData.gainCurrencyAmount);
         }
 
-        /*
+        
         public override string GetSummary() {
             return base.GetSummary();
         }
-        */
+        
+
+        private void RecalculateCurrencyString() {
+            // if this comes from the system currency item, there will be no currency node
+            if (currencyNode.currency == null) {
+                gainCurrencyString = string.Empty;
+                overrideIcon = base.Icon;
+                return;
+            }
+
+            CurrencyGroup currencyGroup = currencyConverter.FindCurrencyGroup(currencyNode.currency);
+            // this currency is not part of a currency group, so just return the normal string
+            if (currencyGroup == null) {
+                gainCurrencyString = $"{currencyNode.Amount} {currencyNode.currency.DisplayName}";
+                overrideIcon = currencyNode.currency.Icon;
+                return;
+            }
+
+            // attemp redistribution
+            Currency baseCurrency = currencyGroup.BaseCurrency;
+
+            // convert incoming currency to the base amount
+            int baseCurrencyAmount = currencyConverter.GetBaseCurrencyAmount(currencyNode.currency, currencyNode.Amount);
+
+            // create return dictionary
+            //Dictionary<Currency, int> returnDictionary = new Dictionary<Currency, int>();
+
+            // create a sorted list of the redistribution of this base currency amount into the higher currencies in the group
+            SortedDictionary<int, Currency> sortList = new SortedDictionary<int, Currency>();
+            foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.CurrencyGroupRates) {
+                sortList.Add(currencyGroupRate.BaseMultiple, currencyGroupRate.Currency);
+            }
+            gainCurrencyString = string.Empty;
+            int highestConversionRate = 0;
+            Currency highestCurrency = currencyGroup.BaseCurrency;
+            foreach (KeyValuePair<int, Currency> currencyGroupRate in sortList.Reverse()) {
+                int exchangedAmount = 0;
+                if (currencyGroupRate.Key <= baseCurrencyAmount) {
+                    // we can add this currency
+                    exchangedAmount = (int)Mathf.Floor((float)baseCurrencyAmount / (float)currencyGroupRate.Key);
+                    baseCurrencyAmount -= (exchangedAmount * currencyGroupRate.Key);
+                }
+                if (exchangedAmount > 0 && currencyGroupRate.Key > highestConversionRate) {
+                    highestConversionRate = currencyGroupRate.Key;
+                    highestCurrency = currencyGroupRate.Value;
+                }
+                //returnDictionary.Add(currencyGroupRate.Value, exchangedAmount);
+                if (exchangedAmount > 0) {
+                    if (gainCurrencyString != string.Empty) {
+                        gainCurrencyString += ", ";
+                    }
+                    gainCurrencyString += $"{exchangedAmount} {currencyGroupRate.Value.DisplayName}";
+                }
+            }
+            if (baseCurrencyAmount > 0) {
+                if (gainCurrencyString != string.Empty) {
+                    gainCurrencyString += ", ";
+                }
+                gainCurrencyString += $"{baseCurrencyAmount} {currencyGroup.BaseCurrency.DisplayName}";
+            }
+            //returnDictionary.Add(currencyGroup.BaseCurrency, baseCurrencyAmount);
+            displayName = gainCurrencyString;
+            overrideIcon = highestCurrency.Icon;
+        }
+
 
         public override string GetDescription() {
             //Debug.Log($"{item.ResourceName}.InstantiatedCurrencyItem.GetDescription()");
 
-            return base.GetDescription() + currencyItem.GetCurrencyItemDescription(gainCurrencyName, gainCurrencyAmount);
+            return base.GetDescription() + currencyItem.GetCurrencyItemDescription(gainCurrencyString);
         }
 
         /*

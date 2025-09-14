@@ -340,7 +340,7 @@ namespace AnyRPG {
             CurrencyGroup currencyGroup = currencyConverter.FindCurrencyGroup(currency);
             if (currencyGroup != null) {
                 sellPrice = currencyConverter.GetBaseCurrencyAmount(currency, sellPrice);
-                currency = currencyGroup.MyBaseCurrency;
+                currency = currencyGroup.BaseCurrency;
             }
 
             sellPrice = (int)Mathf.Clamp(sellPrice * (itemQuality == null ? 1f : instantiatedItem.ItemQuality.SellPriceMultiplier) * systemConfigurationManager.VendorPriceMultiplier, 1f, Mathf.Infinity);
