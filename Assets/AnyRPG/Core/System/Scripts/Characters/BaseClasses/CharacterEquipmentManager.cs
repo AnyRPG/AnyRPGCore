@@ -353,7 +353,8 @@ namespace AnyRPG {
         }
 
         public void RequestEquipToSlot(InstantiatedEquipment tmp, EquipmentSlotProfile equipmentSlotProfile) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.RequestEquip({tmp.ResourceName}, {(equipmentSlotProfile == null ? "null" : equipmentSlotProfile.DisplayName)})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.RequestEquip({tmp.ResourceName}, {(equipmentSlotProfile == null ? "null" : equipmentSlotProfile.DisplayName)})");
+            
             if (systemGameManager.GameMode == GameMode.Local) {
                 EquipToSlot(tmp, equipmentSlotProfile);
             }
@@ -361,7 +362,8 @@ namespace AnyRPG {
         }
 
         public void EquipToSlot(InstantiatedEquipment tmp, EquipmentSlotProfile equipmentSlotProfile) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.EquipToSlot({tmp.ResourceName}, {(equipmentSlotProfile == null ? "null" : equipmentSlotProfile.DisplayName)})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.EquipToSlot({tmp.ResourceName}, {(equipmentSlotProfile == null ? "null" : equipmentSlotProfile.DisplayName)})");
+            
             if (tmp != null && tmp.Equipment.CanEquip(tmp.GetItemLevel(unitController.CharacterStats.Level), unitController) == true) {
                 // unequip any existing item in this slot
                 Unequip(equipmentSlotProfile);

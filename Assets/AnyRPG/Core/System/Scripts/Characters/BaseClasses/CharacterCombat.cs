@@ -401,7 +401,7 @@ namespace AnyRPG {
         }
 
         public virtual bool PullIntoCombat(UnitController targetUnitController) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.PullIntoCombat()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.PullIntoCombat({(targetUnitController == null ? "null" : targetUnitController.gameObject.name)})");
 
             // cancel things like stealth
             if (inCombat == false) {
@@ -425,7 +425,7 @@ namespace AnyRPG {
         /// <param name="target"></param>
         /// return true if this is a new entry, false if not
         public virtual bool EnterCombat(Interactable target) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.EnterCombat()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.EnterCombat({(target == null ? "null" : target.gameObject.name)})");
 
             CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(target);
             if (_characterUnit == null || _characterUnit.UnitController.CharacterStats.IsAlive == false || unitController.CharacterStats.IsAlive == false) {

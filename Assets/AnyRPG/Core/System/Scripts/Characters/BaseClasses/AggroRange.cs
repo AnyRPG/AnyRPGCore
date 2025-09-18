@@ -73,6 +73,8 @@ namespace AnyRPG {
         }
 
         private void OnTriggerEnter(Collider collider) {
+            //Debug.Log($"{(unitController == null ? "null" : unitController.gameObject.name)}.AggroRange.OnTriggerEnter({collider.gameObject.name})");
+
             if (unitController == null) {
                 return;
             }
@@ -87,6 +89,8 @@ namespace AnyRPG {
                 // this was not a character that entered, and therefore we cannot agro it
                 return;
             }
+
+            //Debug.Log($"{(unitController == null ? "null" : unitController.gameObject.name)}.AggroRange.OnTriggerEnter({collider.gameObject.name})");
 
             // cannot agro characters that are stealthed
             if (_characterUnit.UnitController.CharacterStats.IsStealthed == true) {

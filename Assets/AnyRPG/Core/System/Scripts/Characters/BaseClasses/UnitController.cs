@@ -1629,7 +1629,8 @@ namespace AnyRPG {
         }
 
         public void HandleMasterAttack(UnitController targetUnitController) {
-            //Debug.Log($"{gameObject.name}.OnMasterAttack()");
+            //Debug.Log($"{gameObject.name}.HandleMasterAttack({targetUnitController.gameObject.name})");
+
             SetTarget(targetUnitController);
         }
 
@@ -1978,7 +1979,8 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="aggroTarget"></param>
         public void ProximityAggro(CharacterUnit aggroTarget) {
-            //Debug.Log($"{gameObject.name}.UnitController.ProximityAggro()");
+            //Debug.Log($"{gameObject.name}.UnitController.ProximityAggro({aggroTarget.UnitController.gameObject.name})");
+
             if (characterCombat.GetInCombat() == true) {
                 //Debug.Log($"{gameObject.name}.UnitController.ProximityAggro(): already in combat");
                 // already fighting this target or another target
@@ -1995,7 +1997,8 @@ namespace AnyRPG {
         }
 
         public bool Aggro(CharacterUnit aggroTarget) {
-            //Debug.Log($"{gameObject.name}.UnitController.Aggro(" + aggroTarget.DisplayName + ")");
+            //Debug.Log($"{gameObject.name}.UnitController.Aggro({aggroTarget.DisplayName})");
+
             // at this level, we are just pulling both parties into combat.
 
             if (currentState is DeathState) {
@@ -2118,7 +2121,8 @@ namespace AnyRPG {
 
 
         public void SetTarget(Interactable newTarget) {
-            //Debug.Log($"{gameObject.name}: UnitController: setting target: " + (newTarget == null ? "null" : newTarget.gameObject.name));
+            //Debug.Log($"{gameObject.name}.UnitController.SetTarget({(newTarget == null ? "null" : newTarget.gameObject.name)})");
+
             if (unitControllerMode == UnitControllerMode.AI || unitControllerMode == UnitControllerMode.Pet) {
                 if (currentState is DeathState || currentState is EvadeState) {
                     return;
@@ -2128,7 +2132,6 @@ namespace AnyRPG {
                 }
                 //Debug.Log("my target is " + MyTarget.ToString());
 
-                // moved this whole block inside the evade check because it doesn't make sense to agro anything while you are evading
                 // this next block is disabled for testing because when a player moves into a collider, the aggro call is already called
                 // and we don't want it called twice because it causes an incorrect return value in the first call.
                 /*
@@ -2153,6 +2156,8 @@ namespace AnyRPG {
 
         // receive messages from master and pass them on
         public void HandleClearTarget(Interactable oldTarget) {
+            //Debug.Log($"{gameObject.name}.UnitController.HandleClearTarget({(oldTarget == null ? "null" : oldTarget.gameObject.name)})");
+
             ClearTarget();
         }
 
