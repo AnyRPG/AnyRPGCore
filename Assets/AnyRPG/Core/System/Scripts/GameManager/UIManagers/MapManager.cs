@@ -102,7 +102,21 @@ namespace AnyRPG {
             renderTexture = new RenderTexture((int)cameraSize * systemConfigurationManager.UIConfiguration.AutoPixelsPerMeter, (int)cameraSize * systemConfigurationManager.UIConfiguration.AutoPixelsPerMeter, 16, RenderTextureFormat.ARGB32);
             renderTexture.Create();
             cameraManager.MainMapCamera.targetTexture = renderTexture;
+
+
+            float originalLodBias = QualitySettings.lodBias;
+            int originalMaximumLod = QualitySettings.maximumLODLevel;
+            
+            // Temporarily set LOD settings to force LOD 0 for all cameras
+            QualitySettings.lodBias = 100f; // A high value to force the highest LOD at any distance
+            QualitySettings.maximumLODLevel = 0; // The highest detail LOD
+
             cameraManager.MainMapCamera.Render();
+
+            // Restore original LOD settings
+            QualitySettings.lodBias = originalLodBias;
+            QualitySettings.maximumLODLevel = originalMaximumLod;
+
 
             //yield return new WaitForEndOfFrame();
 

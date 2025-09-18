@@ -232,7 +232,7 @@ namespace AnyRPG {
         */
 
         public bool SwapItems(InventorySlot from) {
-            Debug.Log($"InventorySlot.SwapItems()");
+            //Debug.Log($"InventorySlot.SwapItems()");
 
             // use a temporary list to swap references to the stacks
             List<InstantiatedItem> tmpFrom = new List<InstantiatedItem>(from.InstantiatedItems);
@@ -246,7 +246,7 @@ namespace AnyRPG {
         }
 
         public bool MergeItems(InventorySlot from) {
-            Debug.Log($"InventorySlot.MergeItems()");
+            //Debug.Log($"InventorySlot.MergeItems()");
 
             if (IsEmpty) {
                 //Debug.Log("This slot is empty, there is nothing to merge.");

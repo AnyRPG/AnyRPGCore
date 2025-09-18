@@ -252,7 +252,7 @@ namespace AnyRPG {
         }
 
         public void EnableAnimator() {
-            Debug.Log($"{unitController.gameObject.name}.UnitAnimator.EnableAnimator()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.EnableAnimator()");
 
             if (animator != null) {
                 animator.enabled = true;

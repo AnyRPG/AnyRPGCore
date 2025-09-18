@@ -1436,7 +1436,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator WaitForResurrection(float animationLength) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterStats.WaitForResurrection({animationLength})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.WaitForResurrection({animationLength})");
 
             float remainingTime = animationLength;
             while (remainingTime > 0f) {
