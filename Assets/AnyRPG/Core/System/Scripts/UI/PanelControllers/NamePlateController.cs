@@ -225,7 +225,7 @@ namespace AnyRPG {
                     if (unitNamePlateController.Faction != null) {
                         //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName);
                         Color textColor;
-                        if (uIManager.CutSceneBarController.CurrentCutscene != null/* && uIManager.CutSceneBarController.CurrentCutscene.UseDefaultFactionColors == true*/) {
+                        if (uIManager.CutSceneBarController.CurrentCutscene != null) {
                             /*
                             if (unitNamePlateController.Faction != null) {
                                 //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: USING DEFAULT");
@@ -235,7 +235,15 @@ namespace AnyRPG {
                                 textColor = Faction.GetFactionColor(playerManager, unitNamePlateController.NamePlateUnit);
                             }
                             */
-                            textColor = Color.white;
+                            if (uIManager.CutSceneBarController.CurrentCutscene.UseDefaultFactionColors == true) {
+                                if (unitNamePlateController.Faction != null) {
+                                    textColor = unitNamePlateController.Faction.GetFactionColor();
+                                } else {
+                                    textColor = Color.white;
+                                }
+                            } else {
+                                textColor = Color.white;
+                            }
                         } else {
                             //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: USING UNIT");
                             textColor = Faction.GetFactionColor(playerManager, unitNamePlateController.NamePlateUnit);
@@ -464,7 +472,7 @@ namespace AnyRPG {
             //Debug.Log($"{unitNamePlateController.NamePlateUnit.gameObject.name}.NamePlateController.SetFactionColor()");
 
             if (playerManager.PlayerUnitSpawned == false && uIManager.CutSceneBarController.CurrentCutscene == null) {
-                //Debug.Log(namePlateUnit.DisplayName + "NamePlateController.SetFactionColor(): player unit not spawned yet and this is not a cutscene");
+                //Debug.Log($"{unitNamePlateController.NamePlateUnit.gameObject.name}.NamePlateController.SetFactionColor(): player unit not spawned yet and this is not a cutscene");
                 return;
             }
             // the last condition was preventing inanimate units from setting their nameplate name color properly
@@ -475,7 +483,7 @@ namespace AnyRPG {
             //CheckForPlayerOwnerShip();
             if (unitNamePlateController.HasHealth() == true) {
                 //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor(): nameplateUnit has health, setting bar color");
-                if (uIManager.CutSceneBarController.CurrentCutscene != null/* && uIManager.CutSceneBarController.CurrentCutscene.UseDefaultFactionColors == true*/) {
+                if (uIManager.CutSceneBarController.CurrentCutscene != null) {
                     /*
                     if (unitNamePlateController.Faction != null) {
                         //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: USING DEFAULT");
@@ -485,7 +493,16 @@ namespace AnyRPG {
                         HealthSlider.color = Faction.GetFactionColor(playerManager, (unitNamePlateController as UnitNamePlateController).UnitController);
                     }
                     */
-                    HealthSlider.color = Color.yellow;
+                    if (uIManager.CutSceneBarController.CurrentCutscene.UseDefaultFactionColors == true) {
+                        if (unitNamePlateController.Faction != null) {
+                            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: USING DEFAULT");
+                            HealthSlider.color = unitNamePlateController.Faction.GetFactionColor();
+                        } else {
+                            HealthSlider.color = Color.yellow;
+                        }
+                    } else {
+                        HealthSlider.color = Color.yellow;
+                    }
                 } else {
                     //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: USING UNIT");
                     HealthSlider.color = Faction.GetFactionColor(playerManager, (unitNamePlateController as UnitNamePlateController).UnitController);

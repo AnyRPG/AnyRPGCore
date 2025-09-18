@@ -126,7 +126,7 @@ namespace AnyRPG {
             //Debug.Log("Faction.GetFactionColor(): " + myCharacter.MyCharacterName + " checking color for: "  + characterToCheck.MyCharacterName);
             float relationValue = Faction.RelationWith(characterToCheck, myCharacter);
             //Debug.Log("Faction.GetFactionColor(): " + myCharacter.MyCharacterName + " checking color for: "  + characterToCheck.MyCharacterName + "; relationValue: " + relationValue);
-            return GetColorFromRelationValue(playerManager, relationValue);
+            return GetColorFromRelationValue(/*playerManager, */relationValue);
         }
 
         /// <summary>
@@ -145,19 +145,20 @@ namespace AnyRPG {
 
             float relationValue = Faction.RelationWith(playerManager.UnitController, sourceFaction);
             // override relationValue with default if player is not spawned
-            return GetColorFromRelationValue(playerManager, relationValue);
+            return GetColorFromRelationValue(/*playerManager,*/ relationValue);
         }
 
         public Color GetFactionColor() {
-            return GetColorFromRelationValue(playerManager, defaultDisposition);
+            return GetColorFromRelationValue(/*playerManager, */defaultDisposition);
         }
 
-        public static Color GetColorFromRelationValue(PlayerManager playerManager, float relationValue) {
+        public static Color GetColorFromRelationValue(/*PlayerManager playerManager, */float relationValue) {
             //Debug.Log("GetColorFromRelationValue(" + relationValue + ")");
+            /*
             if (playerManager.UnitController == null) {
                 return new Color32(0, 0, 0, 0);
             }
-
+            */
             if (relationValue < 0 && relationValue > -1) {
                 //Debug.Log("Faction.GetColorFromRelationValue(" + relationValue + "): returning orange");
                 return new Color32(255, 125, 0, 255);

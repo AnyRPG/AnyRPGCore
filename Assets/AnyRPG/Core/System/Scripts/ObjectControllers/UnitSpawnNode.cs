@@ -129,6 +129,10 @@ namespace AnyRPG {
         // later on make this spawn mob as player walks into collider ;>
         //private BoxCollider boxCollider;
         public bool PrerequisitesMet(UnitController sourceUnitController) {
+            if (prerequisiteConditions.Count > 0 && sourceUnitController == null) {
+                // this is not a player triggered check, and there are prerequisites, so we cannot spawn
+                return false;
+            }
             foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
                 if (!prerequisiteCondition.IsMet(sourceUnitController)) {
                     return false;
@@ -168,11 +172,10 @@ namespace AnyRPG {
             }
             */
 
-            if (networkManagerServer.ServerModeActive || isCutscene == true) {
-                // server does not respond to player spawn
+            if (networkManagerServer.ServerModeActive || isCutscene == true || systemGameManager.GameMode == GameMode.Local) {
+                // network client should never spawn
                 CheckPrerequisites(null);
             }
-
         }
 
         public override void SetGameManagerReferences() {
@@ -399,6 +402,13 @@ namespace AnyRPG {
             }
         }
 
+        public int GetUnspawnedPlayerLevel(int defaultLevel) {
+            if (playerManagerServer.PlayerCharacterMonitors.Count > 0) {
+                return playerManagerServer.PlayerCharacterMonitors[0].playerCharacterSaveData.SaveData.PlayerLevel;
+            }
+            return defaultLevel;
+        }
+
         public void CommonSpawn(int unitLevel, int extraLevels, bool dynamicLevel, UnitProfile unitProfile, UnitToughness toughness, UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.UnitSpawnNode.CommonSpawn({unitLevel}, {extraLevels}, {dynamicLevel}, {unitProfile.ResourceName})");
 
@@ -418,6 +428,8 @@ namespace AnyRPG {
             int _unitLevel = unitLevel;
             if (sourceUnitController != null) {
                 _unitLevel = (dynamicLevel ? sourceUnitController.CharacterStats.Level : unitLevel) + extraLevels;
+            } else if (systemGameManager.GameMode == GameMode.Local) {
+                _unitLevel = (dynamicLevel ? GetUnspawnedPlayerLevel(unitLevel) : unitLevel) + extraLevels;
             }
             CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(unitProfile);
             characterConfigurationRequest.unitLevel = _unitLevel;
@@ -569,6 +581,10 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.UnitSpawnNode.StartSpawnDelayCountDown()");
 
             float currentDelayTimer = spawnDelay;
+
+            // add a one frame delay to allow cutscenes to start
+            yield return null;
+
             while (currentDelayTimer > 0) {
                 //Debug.Log("UnitSpawnNode.Spawn Timer: " + currentTimer);
                 yield return new WaitForSeconds(1);
