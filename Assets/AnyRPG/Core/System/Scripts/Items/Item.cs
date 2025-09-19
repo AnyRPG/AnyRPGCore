@@ -170,7 +170,7 @@ namespace AnyRPG {
 
         public virtual string GetSummary(ItemQuality usedItemQuality, int usedItemLevel) {
 
-            return string.Format("<color={0}>{1}</color>{2}", QualityColor.GetQualityColorString(usedItemQuality), DisplayName, GetDescription(usedItemQuality, usedItemLevel));
+            return string.Format("<color={0}>{1}</color>\n{2}", QualityColor.GetQualityColorString(usedItemQuality), DisplayName, GetDescription(usedItemQuality, usedItemLevel));
         }
 
         public override string GetDescription() {
