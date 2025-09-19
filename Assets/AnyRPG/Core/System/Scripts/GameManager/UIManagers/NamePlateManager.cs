@@ -43,12 +43,16 @@ namespace AnyRPG {
         }
 
         public void AddMouseOver(NamePlateController namePlateController) {
+            //Debug.Log($"NamePlateManager.AddMouseOver({namePlateController.gameObject?.name})");
+
             if (!mouseOverList.Contains(namePlateController)) {
                 mouseOverList.Add(namePlateController);
             }
         }
 
         public void RemoveMouseOver(NamePlateController namePlateController) {
+            //Debug.Log($"NamePlateManager.RemoveMouseOver({namePlateController.gameObject?.name})");
+
             mouseOverList.Remove(namePlateController);
         }
 
