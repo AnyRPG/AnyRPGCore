@@ -51,6 +51,13 @@ namespace AnyRPG {
             return returnValue;
         }
 
+        public override string GetDescription() {
+            //Debug.Log($"{item.ResourceName}.InstantiatedCurrencyItem.GetDescription()");
+
+            return base.GetDescription() + questStartItem.GetQuestStartItemDescription();
+        }
+
+
         /*
         public bool QuestRequirementsAreMet(UnitController sourceUnitController) {
             //Debug.Log(DisplayName + ".QuestStartItem.QuestRequirementsAreMet()");

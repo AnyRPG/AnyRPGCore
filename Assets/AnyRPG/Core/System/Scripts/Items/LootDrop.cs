@@ -65,7 +65,7 @@ namespace AnyRPG {
         }
 
         public void SetBackgroundImage(Image backgroundImage) {
-            uIManager.SetItemBackground(InstantiatedItem.Item, backgroundImage, new Color32(0, 0, 0, 255));
+            uIManager.SetItemBackground(InstantiatedItem.Item, backgroundImage, new Color32(0, 0, 0, 255), InstantiatedItem.ItemQuality);
         }
 
         public bool HasItem(Item item) {

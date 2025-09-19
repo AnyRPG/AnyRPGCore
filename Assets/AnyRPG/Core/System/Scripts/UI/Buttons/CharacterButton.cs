@@ -160,7 +160,7 @@ namespace AnyRPG {
                 icon.color = Color.white;
                 icon.sprite = equippedEquipment.Icon;
 
-                uIManager.SetItemBackground(equippedEquipment.Equipment, emptySlotImage, fullBackGroundColor);
+                uIManager.SetItemBackground(equippedEquipment.Equipment, emptySlotImage, fullBackGroundColor, equippedEquipment.ItemQuality);
             }
 
             if (playerManager.PlayerUnitSpawned == false) {

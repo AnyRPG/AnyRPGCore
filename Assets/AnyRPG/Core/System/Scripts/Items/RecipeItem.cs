@@ -27,7 +27,13 @@ namespace AnyRPG {
 
 
         public override string GetDescription(ItemQuality usedItemQuality, int usedItemLevel) {
-            string returnString = base.GetDescription(usedItemQuality, usedItemLevel);
+            //Debug.Log($"CurrencyItem.GetDescription({(usedItemQuality == null ? "null" : usedItemQuality.ResourceName)}, {usedItemLevel});");
+
+            return base.GetDescription(usedItemQuality, usedItemLevel) + GetRecipeItemDescription();
+        }
+
+        public string GetRecipeItemDescription() {
+            string returnString = string.Empty;
             if (recipe != null) {
                 string alreadyKnownString = string.Empty;
                 if (playerManager.UnitController.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {

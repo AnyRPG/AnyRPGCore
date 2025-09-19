@@ -1,4 +1,3 @@
-using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -480,7 +479,7 @@ namespace AnyRPG {
                 }
             } else {
                 // check if the item has a quality.  if not, just do the default color
-                uIManager.SetItemBackground(inventorySlot.InstantiatedItem.Item, backGroundImage, new Color32(0, 0, 0, 255));
+                uIManager.SetItemBackground(inventorySlot.InstantiatedItem.Item, backGroundImage, new Color32(0, 0, 0, 255), inventorySlot.InstantiatedItem.ItemQuality);
 
             }
             //Debug.Log($"{gameObject.name}.WindowContentController.SetBackGroundColor()");

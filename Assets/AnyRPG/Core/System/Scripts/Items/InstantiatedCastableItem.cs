@@ -45,28 +45,11 @@ namespace AnyRPG {
             return systemAbilityController.StartCoroutine(actionButton.MonitorAbility(castableItem.Ability.DisplayName));
         }
 
-        /*
-        public override string GetDescription(ItemQuality usedItemQuality, int usedItemLevel) {
-            //Debug.Log(DisplayName + ".CastableItem.GetSummary()");
-            return base.GetDescription(usedItemQuality, usedItemLevel) + GetCastableInformation() + GetCooldownString();
-        }
+        public override string GetDescription() {
+            //Debug.Log($"{item.ResourceName}.InstantiatedCurrencyItem.GetDescription()");
 
-        public virtual string GetCastableInformation() {
-            string returnString = string.Empty;
-            if (Ability != null) {
-                returnString += string.Format("\n\n<color=green>Use: {0}</color>", toolTip);
-            }
-            return returnString;
+            return base.GetDescription() + castableItem.GetCastableInformation();
         }
-
-        public string GetCooldownString() {
-            string coolDownString = string.Empty;
-            if (Ability != null) {
-                coolDownString = Ability.GetCooldownString();
-            }
-            return coolDownString;
-        }
-        */
 
 
     }

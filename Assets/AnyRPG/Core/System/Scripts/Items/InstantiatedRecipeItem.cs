@@ -35,25 +35,12 @@ namespace AnyRPG {
             }
         }
 
-        /*
-        public override string GetDescription(ItemQuality usedItemQuality, int usedItemLevel) {
-            string returnString = base.GetDescription(usedItemQuality, usedItemLevel);
-            if (recipeItem.Recipe != null) {
-                string alreadyKnownString = string.Empty;
-                if (playerManager.UnitController.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {
-                    alreadyKnownString = "<color=red>already known</color>\n";
-                }
-                string abilityKnownString = string.Empty;
-                if (playerManager.UnitController.CharacterAbilityManager.AbilityList.ContainsValue(recipe.CraftAbility)) {
-                    abilityKnownString = "<color=white>Requires: " + recipe.CraftAbility.DisplayName  + "</color>\n";
-                } else {
-                    abilityKnownString = "<color=red>Requires: " + recipe.CraftAbility.DisplayName + "</color>\n";
-                }
-                returnString += string.Format("\n<color=green>Recipe</color>\n{0}{1}{2}", alreadyKnownString, abilityKnownString, recipe.Output.GetDescription());
-            }
-            return returnString;
+
+        public override string GetDescription() {
+            //Debug.Log($"{item.ResourceName}.InstantiatedCurrencyItem.GetDescription()");
+
+            return base.GetDescription() + recipeItem.GetRecipeItemDescription();
         }
-        */
 
     }
 

@@ -228,7 +228,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log("ActionButton.SetUseable(): This must have come from another actionbar, not the inventory");
             }
-            uIManager.SetItemBackground(item, actionButton.BackgroundImage, new Color32(0, 0, 0, 255));
+            uIManager.SetItemBackground(item, actionButton.BackgroundImage, new Color32(0, 0, 0, 255), ItemQuality);
         }
 
         public void HandleRemoveFromActionButton(ActionButton actionButton) {
@@ -242,7 +242,7 @@ namespace AnyRPG {
         public void AssignToHandScript(Image backgroundImage) {
             //Debug.Log("the useable is an item");
 
-            uIManager.SetItemBackground(item, backgroundImage, new Color32(0, 0, 0, 255));
+            uIManager.SetItemBackground(item, backgroundImage, new Color32(0, 0, 0, 255), ItemQuality);
         }
 
         /// <summary>
@@ -268,7 +268,7 @@ namespace AnyRPG {
         public virtual string GetSummary() {
             //Debug.Log($"{item.ResourceName}.InstantiatedItem.GetSummary()");
 
-            return string.Format("<color={0}>{1}</color>{2}", QualityColor.GetQualityColorString(itemQuality), DisplayName, GetDescription());
+            return string.Format("<color={0}>{1}</color>{2}", QualityColor.GetQualityColorString(ItemQuality), DisplayName, GetDescription());
         }
 
 

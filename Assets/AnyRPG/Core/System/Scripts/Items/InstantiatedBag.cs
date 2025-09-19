@@ -41,6 +41,13 @@ namespace AnyRPG {
             dropLevel = equippedBagSaveData.dropLevel;
         }
 
+        public override string GetDescription() {
+            //Debug.Log($"{item.ResourceName}.InstantiatedCurrencyItem.GetDescription()");
+
+            return base.GetDescription() + bag.GetBagDescription();
+        }
+
+
         /*
         public void Initalize(int slots, string title, Sprite bagIcon) {
             //Debug.Log("Bag.Initialize(" + slots + ", " + title + ")");

@@ -60,7 +60,11 @@ namespace AnyRPG {
         }
 
         public override string GetDescription(ItemQuality usedItemQuality, int usedItemLevel) {
-            return base.GetDescription(usedItemQuality, usedItemLevel) + string.Format("\n<color=green>Use: This item starts a quest</color>");
+            return base.GetDescription(usedItemQuality, usedItemLevel) + GetQuestStartItemDescription();
+        }
+
+        public string GetQuestStartItemDescription() {
+            return string.Format("\n<color=green>Use: This item starts a quest</color>");
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {

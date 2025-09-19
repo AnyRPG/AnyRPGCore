@@ -48,9 +48,14 @@ namespace AnyRPG {
 
         public override string GetDescription(ItemQuality usedItemQuality, int usedItemLevel) {
             //return base.GetSummary(usedItemQuality) + string.Format("\n<color=green>Use: Equip</color>");
-            return base.GetDescription(usedItemQuality, usedItemLevel) + string.Format("\n\n{0} slots", slots);
+            return base.GetDescription(usedItemQuality, usedItemLevel) + GetBagDescription();
         }
-        
+
+        public string GetBagDescription() {
+            return string.Format("\n\n{0} slots", slots);
+        }
+
+
 
     }
 
