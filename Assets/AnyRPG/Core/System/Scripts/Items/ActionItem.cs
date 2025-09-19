@@ -50,7 +50,12 @@ namespace AnyRPG {
 
         public override string GetDescription(ItemQuality usedItemQuality, int usedItemLevel) {
             //Debug.Log(DisplayName + ".CastableItem.GetSummary()");
-            return base.GetDescription(usedItemQuality, usedItemLevel) + GetCastableInformation() + GetCooldownString();
+            return base.GetDescription(usedItemQuality, usedItemLevel) + GetActionItemDescription();
+        }
+
+        public string GetActionItemDescription() {
+            //Debug.Log(DisplayName + ".CastableItem.GetSummary()");
+            return GetCastableInformation() + GetCooldownString();
         }
 
         public virtual string GetCastableInformation() {

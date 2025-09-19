@@ -62,6 +62,14 @@ namespace AnyRPG {
             */
             return systemAbilityController.StartCoroutine(actionButton.MonitorCooldown(this));
         }
+
+        public override string GetDescription() {
+            //Debug.Log($"{item.ResourceName}.InstantiatedCurrencyItem.GetDescription()");
+
+            return base.GetDescription() + actionItem.GetActionItemDescription();
+        }
+
+
         /*
         public override string GetDescription(ItemQuality usedItemQuality, int usedItemLevel) {
             //Debug.Log(DisplayName + ".CastableItem.GetSummary()");

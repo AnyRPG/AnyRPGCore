@@ -31,17 +31,6 @@ namespace AnyRPG {
             return new InstantiatedPowerResourcePotion(systemGameManager, itemId, item as PowerResourcePotion, usedItemQuality);
         }
 
-        /*
-        public override string GetCastableInformation() {
-            //Debug.Log(DisplayName + ".PowerResourcePotion.GetCastableInformation()");
-            string returnString = string.Empty;
-            //if (ability != null) {
-                returnString += string.Format("\n<color=green>Use: {0}</color>", description);
-            //}
-            return returnString;
-        }
-        */
-
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
 

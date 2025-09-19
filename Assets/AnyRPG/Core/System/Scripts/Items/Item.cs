@@ -186,10 +186,7 @@ namespace AnyRPG {
         public virtual string GetItemDescription(ItemQuality usedItemQuality, int usedItemLevel) {
             string descriptionString = base.GetDescription();
             if (descriptionString != string.Empty) {
-                descriptionString = string.Format("\n\n<color=yellow><size=14>{0}</size></color>", descriptionString);
-            }
-            if (descriptionString != string.Empty) {
-                descriptionString = string.Format("\n\n<color=yellow><size=14>{0}</size></color>", descriptionString);
+                descriptionString = string.Format("\n<color=yellow><size=14>{0}</size></color>", descriptionString);
             }
             if (characterClassRequirementList.Count > 0) {
                 string colorString = "red";
@@ -316,11 +313,12 @@ namespace AnyRPG {
         public KeyValuePair<Currency, int> GetSellPrice(InstantiatedItem instantiatedItem, UnitController sourceUnitController) {
             //Debug.Log($"{ResourceName}.Item.GetSellPrice()");
 
-            //Currency currency = Currency;
+            // make a copy of the currency to work with so we don't change the original value later
+            Currency usedCurrency = currency;
 
-            if (currency == null) {
+            if (usedCurrency == null) {
                 // there was no sell currency so this item cannot be sold
-                return new KeyValuePair<Currency, int>(currency, 0);
+                return new KeyValuePair<Currency, int>(usedCurrency, 0);
             }
 
             int sellPrice = 0;
@@ -333,19 +331,19 @@ namespace AnyRPG {
 
             if (sellPrice == 0) {
                 // the item had a currency, but no sell price was set so it cannot be sold
-                return new KeyValuePair<Currency, int>(currency, 0);
+                return new KeyValuePair<Currency, int>(usedCurrency, 0);
             }
 
             // convert currency to base currency to prevent higher level currencies with a value of 1 from not being divided
-            CurrencyGroup currencyGroup = currencyConverter.FindCurrencyGroup(currency);
+            CurrencyGroup currencyGroup = currencyConverter.FindCurrencyGroup(usedCurrency);
             if (currencyGroup != null) {
-                sellPrice = currencyConverter.GetBaseCurrencyAmount(currency, sellPrice);
-                currency = currencyGroup.BaseCurrency;
+                sellPrice = currencyConverter.GetBaseCurrencyAmount(usedCurrency, sellPrice);
+                usedCurrency = currencyGroup.BaseCurrency;
             }
 
             sellPrice = (int)Mathf.Clamp(sellPrice * (itemQuality == null ? 1f : instantiatedItem.ItemQuality.SellPriceMultiplier) * systemConfigurationManager.VendorPriceMultiplier, 1f, Mathf.Infinity);
 
-            return new KeyValuePair<Currency, int>(currency, sellPrice);
+            return new KeyValuePair<Currency, int>(usedCurrency, sellPrice);
         }
 
 

@@ -268,7 +268,7 @@ namespace AnyRPG {
         public virtual string GetSummary() {
             //Debug.Log($"{item.ResourceName}.InstantiatedItem.GetSummary()");
 
-            return string.Format("<color={0}>{1}</color>{2}", QualityColor.GetQualityColorString(ItemQuality), DisplayName, GetDescription());
+            return string.Format("<color={0}>{1}</color>\n{2}", QualityColor.GetQualityColorString(ItemQuality), DisplayName, GetDescription());
         }
 
 
