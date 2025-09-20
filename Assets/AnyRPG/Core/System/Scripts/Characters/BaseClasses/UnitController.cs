@@ -1201,6 +1201,7 @@ namespace AnyRPG {
 
             if (characterRequestData.saveData != null) {
                 characterSaveManager.SetSaveData(characterRequestData);
+                characterSaveManager.VisitSceneNode();
             }
 
             characterInventoryManager.PerformSetupActivities();

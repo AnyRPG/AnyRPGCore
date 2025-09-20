@@ -507,6 +507,8 @@ namespace AnyRPG {
         }
 
         public void LoadSceneNodeData(AnyRPGSaveData anyRPGSaveData) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadSceneNodeData()");
+
             sceneNodeSaveDataDictionary.Clear();
             foreach (SceneNodeSaveData sceneNodeSaveData in anyRPGSaveData.sceneNodeSaveData) {
                 if (sceneNodeSaveData.SceneName != null && sceneNodeSaveData.SceneName != string.Empty) {
@@ -818,8 +820,17 @@ namespace AnyRPG {
             }
         }
 
+        public void VisitSceneNode() {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.VisitSceneNode()");
+
+            SceneNode sceneNode = levelManager.SceneDictionary[unitController.gameObject.scene.name];
+            if (sceneNode != null) {
+                VisitSceneNode(sceneNode);
+            }
+        }
+
         public void VisitSceneNode(SceneNode sceneNode) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.VisitSceneNode({sceneNode.ResourceName})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.VisitSceneNode({sceneNode.ResourceName})");
 
             SceneNodeSaveData saveData = GetSceneNodeSaveData(sceneNode);
             if (saveData.visited == false) {
@@ -925,7 +936,7 @@ namespace AnyRPG {
         }
 
         public void SaveSceneNodeData() {
-            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveSceneNodeData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveSceneNodeData()");
 
             saveData.sceneNodeSaveData.Clear();
             foreach (SceneNodeSaveData sceneNodeSaveData in sceneNodeSaveDataDictionary.Values) {
@@ -935,6 +946,7 @@ namespace AnyRPG {
 
         public void SaveStatusEffectData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveSceneNodeData()");
+
             saveData.statusEffectSaveData.Clear();
             foreach (StatusEffectNode statusEffectNode in unitController.CharacterStats.StatusEffects.Values) {
                 if (statusEffectNode.StatusEffect.ClassTrait == false

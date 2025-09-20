@@ -132,7 +132,7 @@ namespace AnyRPG {
         }
 
         public void MonitorPlayer(UnitController unitController) {
-            Debug.Log($"PlayerManagerServer.MonitorPlayer({unitController.gameObject.name})");
+            //Debug.Log($"PlayerManagerServer.MonitorPlayer({unitController.gameObject.name})");
 
             if (activePlayerLookup.ContainsKey(unitController) == false) {
                 return;
@@ -142,10 +142,14 @@ namespace AnyRPG {
             if (levelManager.SceneDictionary.ContainsKey(unitController.gameObject.scene.name) == false) {
                 return;
             }
+            // commented out for now because it happens too early and the save data is overwritten later
+            // this is now handled in the unitcontroller at the correct time
+            /*
             SceneNode sceneNode = levelManager.SceneDictionary[unitController.gameObject.scene.name];
             if (sceneNode != null) {
                 sceneNode.Visit(unitController);
             }
+            */
         }
 
         public void RemoveActivePlayer(int accountId) {
