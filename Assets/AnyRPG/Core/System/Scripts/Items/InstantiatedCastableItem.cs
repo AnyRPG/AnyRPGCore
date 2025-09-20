@@ -21,7 +21,7 @@ namespace AnyRPG {
         }
 
         public override bool Use(UnitController sourceUnitController) {
-            Debug.Log($"{ResourceName}.InstantiatedCastableItem.Use()");
+            //Debug.Log($"{ResourceName}.InstantiatedCastableItem.Use()");
 
             if (castableItem.Ability == null) {
                 Debug.LogError(ResourceName + ".CastableItem.Use(): ability is null.  Please set it in the inspector!");

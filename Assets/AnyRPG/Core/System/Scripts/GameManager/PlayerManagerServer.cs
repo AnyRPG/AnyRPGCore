@@ -132,6 +132,8 @@ namespace AnyRPG {
         }
 
         public void MonitorPlayer(UnitController unitController) {
+            Debug.Log($"PlayerManagerServer.MonitorPlayer({unitController.gameObject.name})");
+
             if (activePlayerLookup.ContainsKey(unitController) == false) {
                 return;
             }

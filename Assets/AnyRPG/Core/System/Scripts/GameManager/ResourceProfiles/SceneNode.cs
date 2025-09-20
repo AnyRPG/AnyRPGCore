@@ -292,6 +292,8 @@ namespace AnyRPG {
         }
 
         public void Visit(UnitController sourceUnitController) {
+            Debug.Log($"{DisplayName}.SceneNode.Visit({sourceUnitController.gameObject.name})");
+
             sourceUnitController.CharacterSaveManager.VisitSceneNode(this);
             OnVisitZone(sourceUnitController);
         }

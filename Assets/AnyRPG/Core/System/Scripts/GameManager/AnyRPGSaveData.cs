@@ -145,6 +145,7 @@ namespace AnyRPG {
         public string DisplayName;
         public bool isItem;
         public string savedName;
+        public bool savedIsItem;
     }
 
     [Serializable]

@@ -728,29 +728,38 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadActionButtonData(saveDataCount: {actionBarSaveDatas.Count})");
 
             IUseable useable = null;
+            IUseable savedUseable = null;
             int counter = 0;
             foreach (ActionBarSaveData actionBarSaveData in actionBarSaveDatas) {
                 useable = null;
-                if (actionBarSaveData.isItem == true) {
-                    // find item in bag
-                    //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadActionBarData(): searching for usable(" + actionBarSaveData.MyName + ") in inventory");
-                    //useable = systemDataFactory.GetResource<Item>(actionBarSaveData.DisplayName);
-                    useable = systemItemManager.GetNewInstantiatedItem(actionBarSaveData.DisplayName);
-                } else {
-                    // find ability from system ability manager
-                    //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadActionBarData(): searching for usable in ability manager");
-                    if (actionBarSaveData.DisplayName != null && actionBarSaveData.DisplayName != string.Empty) {
-                        useable = systemDataFactory.GetResource<Ability>(actionBarSaveData.DisplayName).AbilityProperties;
+                savedUseable = null;
+                if (actionBarSaveData.DisplayName != string.Empty) {
+                    if (actionBarSaveData.isItem == true) {
+                        // find item in bag
+                        //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadMouseActionButtonData(): searching for usable {actionBarSaveData.DisplayName} as item");
+                        useable = systemItemManager.GetNewInstantiatedItem(actionBarSaveData.DisplayName);
                     } else {
-                        //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadActionBarData(): saved action bar had no name");
-                    }
-                    if (actionBarSaveData.savedName != null && actionBarSaveData.savedName != string.Empty) {
-                        IUseable savedUseable = systemDataFactory.GetResource<Ability>(actionBarSaveData.savedName).AbilityProperties;
-                        if (savedUseable != null) {
-                            unitController.CharacterActionBarManager.MouseActionButtons[counter].SavedUseable = savedUseable;
+                        //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadMouseActionButtonData(): searching for usable {actionBarSaveData.DisplayName} as ability");
+                        Ability ability = systemDataFactory.GetResource<Ability>(actionBarSaveData.DisplayName);
+                        if (ability != null) {
+                            useable = ability.AbilityProperties;
                         }
                     }
                 }
+                if (actionBarSaveData.savedName != string.Empty) {
+                    if (actionBarSaveData.savedIsItem == true) {
+                        // find item in bag
+                        //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadMouseActionButtonData(): searching for saved usable {actionBarSaveData.savedName} as item");
+                        savedUseable = systemItemManager.GetNewInstantiatedItem(actionBarSaveData.savedName);
+                    } else {
+                        //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadMouseActionButtonData(): searching for saved usable {actionBarSaveData.savedName} as ability");
+                        Ability ability = systemDataFactory.GetResource<Ability>(actionBarSaveData.savedName);
+                        if (ability != null) {
+                            savedUseable = ability.AbilityProperties;
+                        }
+                    }
+                }
+
                 if (useable != null) {
                     unitController.CharacterActionBarManager.SetMouseActionButton(useable, counter);
                 } else {
@@ -758,6 +767,9 @@ namespace AnyRPG {
                     // testing remove things that weren't saved, it will prevent duplicate abilities if they are moved
                     // this means if new abilities are added to a class/etc between play sessions they won't be on the bars
                     unitController.CharacterActionBarManager.UnSetMouseActionButton(counter);
+                }
+                if (savedUseable != null) {
+                    unitController.CharacterActionBarManager.MouseActionButtons[counter].SavedUseable = savedUseable;
                 }
                 counter++;
                 if (counter >= unitController.CharacterActionBarManager.MouseActionButtons.Count) {
@@ -807,6 +819,8 @@ namespace AnyRPG {
         }
 
         public void VisitSceneNode(SceneNode sceneNode) {
+            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.VisitSceneNode({sceneNode.ResourceName})");
+
             SceneNodeSaveData saveData = GetSceneNodeSaveData(sceneNode);
             if (saveData.visited == false) {
                 saveData.visited = true;
@@ -911,7 +925,7 @@ namespace AnyRPG {
         }
 
         public void SaveSceneNodeData() {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveSceneNodeData()");
+            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveSceneNodeData()");
 
             saveData.sceneNodeSaveData.Clear();
             foreach (SceneNodeSaveData sceneNodeSaveData in sceneNodeSaveDataDictionary.Values) {
@@ -964,7 +978,16 @@ namespace AnyRPG {
             ActionBarSaveData actionBarSaveData = new ActionBarSaveData();
             actionBarSaveData.DisplayName = (actionButtonNode.Useable == null ? string.Empty : (actionButtonNode.Useable as IDescribable).ResourceName);
             actionBarSaveData.savedName = (actionButtonNode.SavedUseable == null ? string.Empty : (actionButtonNode.SavedUseable as IDescribable).ResourceName);
-            actionBarSaveData.isItem = (actionButtonNode.Useable == null ? false : (actionButtonNode.Useable is InstantiatedItem ? true : false));
+            if (actionButtonNode.Useable != null) {
+                actionBarSaveData.isItem = (actionButtonNode.Useable is InstantiatedItem ? true : false);
+            } else {
+                actionBarSaveData.isItem = false;
+            }
+            if (actionButtonNode.SavedUseable != null) {
+                actionBarSaveData.savedIsItem = (actionButtonNode.SavedUseable is InstantiatedItem ? true : false);
+            } else {
+                actionBarSaveData.savedIsItem = false;
+            }
             actionBarSaveDataList.Add(actionBarSaveData);
         }
 
