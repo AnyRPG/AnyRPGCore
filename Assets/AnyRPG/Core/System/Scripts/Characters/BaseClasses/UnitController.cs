@@ -1201,7 +1201,6 @@ namespace AnyRPG {
 
             if (characterRequestData.saveData != null) {
                 characterSaveManager.SetSaveData(characterRequestData);
-                characterSaveManager.VisitSceneNode();
             }
 
             characterInventoryManager.PerformSetupActivities();
@@ -1253,6 +1252,8 @@ namespace AnyRPG {
 
             if (characterRequestData.saveData != null) {
                 characterSaveManager.LoadSaveDataToCharacter();
+                // safely visit scene node now that save data has been loaded and state will not be overwritten
+                characterSaveManager.VisitSceneNode();
                 characterStats.SetLevelInternal(characterConfigurationRequest.unitLevel);
                 if (characterRequestData.saveData.initializeResourceAmounts == true) {
                     characterStats.SetResourceAmountsToMaximum();
