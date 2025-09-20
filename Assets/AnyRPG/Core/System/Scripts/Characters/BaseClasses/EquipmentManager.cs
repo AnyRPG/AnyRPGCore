@@ -27,8 +27,9 @@ namespace AnyRPG {
             }
         }
 
-        public void AddCurrentEquipmentSlot(EquipmentSlotProfile equipmentSlotProfile, EquipmentInventorySlot equipmentInventorySlot) {
-            Debug.Log($"EquipmentManager.AddCurrentEquipmentSlot({equipmentSlotProfile.DisplayName}, {equipmentInventorySlot})");
+        public virtual void AddCurrentEquipmentSlot(EquipmentSlotProfile equipmentSlotProfile, EquipmentInventorySlot equipmentInventorySlot) {
+            //Debug.Log($"EquipmentManager.AddCurrentEquipmentSlot({equipmentSlotProfile.DisplayName}, {equipmentInventorySlot})");
+
             if (currentEquipment.ContainsKey(equipmentSlotProfile)) {
                 currentEquipment[equipmentSlotProfile] = equipmentInventorySlot;
             } else {
@@ -250,6 +251,8 @@ namespace AnyRPG {
         }
 
         public void ClearEquipmentList() {
+            //Debug.Log($"EquipmentManager.ClearEquipmentList()");
+
             foreach (EquipmentInventorySlot equipmentInventorySlot in currentEquipment.Values) {
                 equipmentInventorySlot.Clear();
             }

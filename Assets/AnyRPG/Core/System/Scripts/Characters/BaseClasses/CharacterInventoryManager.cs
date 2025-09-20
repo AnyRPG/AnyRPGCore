@@ -791,7 +791,7 @@ namespace AnyRPG {
         }
 
         public InstantiatedEquipment GetNewInstantiatedEquipmentFromSaveData(EquipmentSaveData equipmentSaveData) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData({itemInstanceId}, {itemName})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData({equipmentSaveData.EquipmentName}({equipmentSaveData.itemInstanceId}))");
 
             if (systemItemManager.InstantiatedItems.ContainsKey(equipmentSaveData.itemInstanceId)) {
                 //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData() item already exists in instantiated items");

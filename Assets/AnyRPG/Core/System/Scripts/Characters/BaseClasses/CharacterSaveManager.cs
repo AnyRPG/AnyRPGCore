@@ -679,6 +679,7 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadEquipmentData()");
 
             foreach (EquipmentSaveData equipmentSaveData in anyRPGSaveData.equipmentSaveData) {
+                //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadEquipmentData() {(equipmentSaveData.EquipmentName)}");
                 if (equipmentSaveData.EquipmentName != string.Empty) {
                     InstantiatedEquipment newInstantiatedEquipment = unitController.CharacterInventoryManager.GetNewInstantiatedEquipmentFromSaveData(equipmentSaveData);
                     if (newInstantiatedEquipment != null) {

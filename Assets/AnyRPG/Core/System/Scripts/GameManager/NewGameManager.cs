@@ -711,6 +711,8 @@ namespace AnyRPG {
         }
 
         public void SaveEquipmentData() {
+            //Debug.Log("NewGameManager.SaveEquipmentData()");
+
             if (equipmentManager.CurrentEquipment == null) {
                 // nothing to save
                 return;
@@ -725,6 +727,7 @@ namespace AnyRPG {
                         tmpSaveData.itemQuality = (equipmentInventorySlot.InstantiatedEquipment == null ? string.Empty : equipmentInventorySlot.InstantiatedEquipment.ItemQuality.ResourceName);
                     }
                     tmpSaveData.dropLevel = equipmentInventorySlot.InstantiatedEquipment.DropLevel;
+                    tmpSaveData.itemInstanceId = equipmentInventorySlot.InstantiatedEquipment.InstanceId;
                     tmpSaveData.randomSecondaryStatIndexes = (equipmentInventorySlot.InstantiatedEquipment == null ? null : equipmentInventorySlot.InstantiatedEquipment.RandomStatIndexes);
                 }
                 playerCharacterSaveData.SaveData.equipmentSaveData.Add(tmpSaveData);

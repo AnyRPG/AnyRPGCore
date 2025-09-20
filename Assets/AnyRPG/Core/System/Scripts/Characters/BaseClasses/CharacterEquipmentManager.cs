@@ -24,6 +24,8 @@ namespace AnyRPG {
         public UnitController UnitController { get => unitController; }
 
         public CharacterEquipmentManager(UnitController unitController, SystemGameManager systemGameManager) : base(systemGameManager) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.CharacterEquipmentManager()");
+
             this.unitController = unitController;
             CreateSubscriptions();
         }
