@@ -250,7 +250,8 @@ namespace AnyRPG {
 
 
         public void HandlePlayerUnitSpawn(UnitController sourceUnitController) {
-            //Debug.Log($"{gameObject.name}.InanimateUnit.HandlePlayerUnitSpawn()");
+            //Debug.Log($"{gameObject.name}.UnitSpawnNode.HandlePlayerUnitSpawn()");
+
             ProcessPlayerUnitSpawn(sourceUnitController);
         }
 
@@ -312,7 +313,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.UnitSpawnNode.CheckPrerequisites()");
 
             if (PrerequisitesMet(sourceUnitController) && !triggerBased) {
-                SpawnWithDelay();
+                SpawnWithDelay(sourceUnitController);
             }
             if (forceDespawnUnits && !PrerequisitesMet(sourceUnitController)) {
                 StartCoroutine(DestroySpawnsAtEndOfFrame());
@@ -394,12 +395,15 @@ namespace AnyRPG {
             if (unitProfiles.Count == 0) {
                 return;
             }
-            if (CanTriggerSpawn()) {
+            if (CanTriggerSpawn(sourceUnitController)) {
                 int spawnIndex = UnityEngine.Random.Range(0, unitProfiles.Count);
                 if (unitProfiles[spawnIndex] != null) {
                     CommonSpawn(unitLevel, extraLevels, dynamicLevel, unitProfiles[spawnIndex], unitToughness, sourceUnitController);
                 }
+            } else {
+                //Debug.Log($"{gameObject.name}.UnitSpawnNode.Spawn(): cannot trigger spawn.  CanTriggerSpawn() is false.");
             }
+
         }
 
         public int GetUnspawnedPlayerLevel(int defaultLevel) {
@@ -525,8 +529,9 @@ namespace AnyRPG {
         /// if the maximum unit count is not exceeded and the prerequisites are met, return true
         /// </summary>
         /// <returns></returns>
-        private bool CanTriggerSpawn() {
-            if ((spawnReferences.Count < GetMaxUnits() || GetMaxUnits() == -1) && PrerequisitesMet(null)) {
+        private bool CanTriggerSpawn(UnitController sourceUnitController) {
+
+            if ((spawnReferences.Count < GetMaxUnits() || GetMaxUnits() == -1) && PrerequisitesMet(sourceUnitController)) {
                 return true;
             }
             return false;
@@ -535,7 +540,7 @@ namespace AnyRPG {
         /// <summary>
         /// spawn a unit if the trigger conditions are met, then start the countdown for the next spawn
         /// </summary>
-        private void SpawnWithDelay() {
+        private void SpawnWithDelay(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.UnitSpawnNode.SpawnWithDelay()");
 
             if (suppressAutoSpawn) {
@@ -546,7 +551,7 @@ namespace AnyRPG {
                 return;
             }
             // this method is necessary to ensure that the main spawn count cycle is followed and the delay does not get directly added to the restart time
-            if (CanTriggerSpawn()) {
+            if (CanTriggerSpawn(sourceUnitController)) {
                 // if the countdown routine is not null, then there is already a regular spawn count or respawn count in progress
                 if (countDownRoutine == null) {
 
@@ -556,15 +561,17 @@ namespace AnyRPG {
                     }
 
                     // now that we have spawned the mob (or at least started its additional delay timer), we will start the regular countdown
-                    if (CanTriggerCountdown()) {
+                    if (CanTriggerCountdown(sourceUnitController)) {
                         countDownRoutine = StartCoroutine(StartSpawnCountdown(spawnTimer));
                     }
                 }
+            } else {
+                //Debug.Log($"{gameObject.name}.UnitSpawnNode.SpawnWithDelay(): cannot trigger spawn.  CanTriggerSpawn() is false.");
             }
         }
 
-        public bool CanTriggerCountdown() {
-            if (delayRoutine == null && CanTriggerSpawn()) {
+        public bool CanTriggerCountdown(UnitController sourceUnitController) {
+            if (delayRoutine == null && CanTriggerSpawn(sourceUnitController)) {
                 return true;
             }
             if (delayRoutine != null && GetMaxUnits() > (spawnReferences.Count + 1)) {
@@ -641,7 +648,7 @@ namespace AnyRPG {
             //clearing the coroutine so the next timer will be allowed to start
             countDownRoutine = null;
             if (disabled == false) {
-                SpawnWithDelay();
+                SpawnWithDelay(null);
             }
         }
 
