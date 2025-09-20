@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6fda6fdfefd604e44a751298c9631a82, type: 3}
-  m_Name: RestoreManaHealEffect
+  m_Name: RestoreManaHealEffectTemplate
   m_EditorClassIdentifier: 
   resourceName: Restore Mana Heal
   displayName: 

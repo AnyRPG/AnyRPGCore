@@ -9,60 +9,65 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7125135849d1ec246959764160358164, type: 3}
-  m_Name: DragonBreathAOEEffect
+  m_Script: {fileID: 11500000, guid: 6fda6fdfefd604e44a751298c9631a82, type: 3}
+  m_Name: LifeExchangeHealEffectTemplate
   m_EditorClassIdentifier: 
-  resourceName: Dragon Breath AOE
+  resourceName: Life Exchange Heal
   displayName: 
-  icon: {fileID: 21300000, guid: f7220ae174bcfb748bb7cc725dad4238, type: 3}
+  icon: {fileID: 21300000, guid: e83ca1c9f4870be418b87114e4b3811c, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  aoeEffectProperties:
+  healEffectProperties:
     targetOptions:
-      requireTarget: 0
+      requireTarget: 1
       requireLineOfSight: 0
-      requireLiveTarget: 0
+      requireLiveTarget: 1
       requireDeadTarget: 0
-      canCastOnSelf: 0
+      canCastOnSelf: 1
       canCastOnOthers: 0
-      canCastOnEnemy: 1
+      canCastOnEnemy: 0
       canCastOnNeutral: 0
       canCastOnFriendly: 0
-      autoSelfCast: 0
+      autoSelfCast: 1
       unitTypeRestrictions: []
       useMeleeRange: 0
       maxRange: 0
       lineOfSightSourceLocation: 0
       targetRangeSourceLocation: 0
     chanceToCast: 100
-    onHitAudioProfileNames: []
+    onHitAudioProfileNames:
+    - Restore Spell
     randomAudioProfiles: 0
-    hitAbilityEffectNames:
-    - Fire Projectile Attack
-    inputMultiplier: 0
+    hitAbilityEffectNames: []
+    inputMultiplier: 1
     threatMultiplier: 1
     abilityPrefabSource: 1
     randomPrefabs: 0
-    abilityObjectList: []
-    prefabSpawnLocation: 1
-    prefabDestroyDelay: 1
+    abilityObjectList:
+    - holdableObjectName: Red Energy Pulse
+      useUniversalAttachment: 0
+      attachmentName: 
+    prefabSpawnLocation: 2
+    prefabDestroyDelay: 0
     destroyOnEndCast: 0
-    tickRate: 0.25
+    tickRate: 0
     castZeroTick: 0
     tickAbilityEffectNames: []
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
     defaultPrefabLifetime: 1
-    aoeProperties:
-      aoeRadius: 5
-      useRadius: 0
-      useExtents: 1
-      aoeCenter: {x: 0, y: 1, z: 15}
-      aoeExtents: {x: 5, y: 2, z: 30}
-      maxTargets: 0
-      preferClosestTargets: 0
-      interTargetDelay: 0
+    allowCriticalStrike: 0
+    resourceAmounts:
+    - resourceName: Mana
+      inputRemap: Health
+      addPower: 0
+      minAmount: 0
+      baseAmount: 0
+      amountPerLevel: 0
+      maxAmount: 0
+      ignoreCastTime: 0
+    ignoreAccuracy: 0

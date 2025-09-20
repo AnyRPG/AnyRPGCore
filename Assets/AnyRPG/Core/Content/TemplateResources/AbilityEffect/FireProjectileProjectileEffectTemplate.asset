@@ -9,18 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9606a6bfb8cdb204fa16126081317938, type: 3}
-  m_Name: LifeDrainChanneledEffect
+  m_Script: {fileID: 11500000, guid: a308e09b3c44cce4f80ee0eb116ff1d0, type: 3}
+  m_Name: FireProjectileProjectileEffectTemplate
   m_EditorClassIdentifier: 
-  resourceName: Life Drain Channeled
+  resourceName: Fire Projectile Projectile
   displayName: 
-  icon: {fileID: 21300000, guid: 4f4da131e9e4bd64184f00c9f4c7ffa4, type: 3}
+  icon: {fileID: 21300000, guid: a3e5a9705df8e6740b9eec7e3d37706b, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  channeledEffectProperties:
+  projectileEffectProperties:
     targetOptions:
       requireTarget: 1
       requireLineOfSight: 0
@@ -41,23 +41,25 @@ MonoBehaviour:
     onHitAudioProfileNames: []
     randomAudioProfiles: 0
     hitAbilityEffectNames:
-    - Life Drain Attack
-    inputMultiplier: 1
+    - Fire Projectile Attack
+    inputMultiplier: 0
     threatMultiplier: 1
     abilityPrefabSource: 1
     randomPrefabs: 0
     abilityObjectList:
-    - holdableObjectName: Violet Laser
-      useUniversalAttachment: 1
-      attachmentName: Right Hand
+    - holdableObjectName: Fire Projectile
+      useUniversalAttachment: 0
+      attachmentName: 
     prefabSpawnLocation: 1
     prefabDestroyDelay: 0
-    destroyOnEndCast: 1
+    destroyOnEndCast: 0
     tickRate: 0
     castZeroTick: 0
     tickAbilityEffectNames: []
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
-    defaultPrefabLifetime: 1
-    effectDelay: 0
+    defaultPrefabLifetime: 10
+    projectileSpeed: 25
+    flightAudioProfileNames: []
+    randomFlightAudioProfiles: 0

@@ -9,26 +9,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d43aa5652b4c2b346b589d6a398c017a, type: 3}
-  m_Name: GroundSlamInstantEffect
+  m_Script: {fileID: 11500000, guid: 112af3617e1a7764995fb750dc36e2ea, type: 3}
+  m_Name: ReviveEnemyResurrectEffectTemplate
   m_EditorClassIdentifier: 
-  resourceName: Ground Slam Instant
+  resourceName: Revive Enemy Resurrect
   displayName: 
-  icon: {fileID: 21300000, guid: d34e7697a381af94189a9642fd625caf, type: 3}
+  icon: {fileID: 21300000, guid: d19ebdb652186e545ad72b977d82c426, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  instantEffectProperties:
+  resurrectEffectProperties:
     targetOptions:
-      requireTarget: 0
+      requireTarget: 1
       requireLineOfSight: 0
       requireLiveTarget: 0
-      requireDeadTarget: 0
+      requireDeadTarget: 1
       canCastOnSelf: 0
-      canCastOnOthers: 0
-      canCastOnEnemy: 0
+      canCastOnOthers: 1
+      canCastOnEnemy: 1
       canCastOnNeutral: 0
       canCastOnFriendly: 0
       autoSelfCast: 0
@@ -38,21 +38,19 @@ MonoBehaviour:
       lineOfSightSourceLocation: 0
       targetRangeSourceLocation: 0
     chanceToCast: 100
-    onHitAudioProfileNames:
-    - Fire Spell Hit
+    onHitAudioProfileNames: []
     randomAudioProfiles: 0
     hitAbilityEffectNames:
-    - Ground Slam AOE
-    - Ground Slam Directional
+    - Player Control
     inputMultiplier: 0
     threatMultiplier: 1
     abilityPrefabSource: 1
     randomPrefabs: 0
     abilityObjectList:
-    - holdableObjectName: Red Brown Hit
+    - holdableObjectName: Black Resurrection Circle
       useUniversalAttachment: 0
       attachmentName: 
-    prefabSpawnLocation: 6
+    prefabSpawnLocation: 2
     prefabDestroyDelay: 0
     destroyOnEndCast: 0
     tickRate: 0
@@ -61,4 +59,4 @@ MonoBehaviour:
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
-    defaultPrefabLifetime: 10
+    defaultPrefabLifetime: 7

@@ -21,7 +21,7 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   resources:
-  - {fileID: 11400000, guid: 1ba1ef2a08d58894d86f3098680eb42b, type: 2}
+  - {fileID: 11400000, guid: 43755fa3b83618245b4eb5f3eefe177f, type: 2}
   - {fileID: 11400000, guid: 30d509f4f82b4174a8e619f1a095099b, type: 2}
   - {fileID: 11400000, guid: 091e78bbb5912e74f9bee518e0f30c87, type: 2}
   - {fileID: 11400000, guid: f7aeed2baaf647846ac432bc8cb6ab44, type: 2}

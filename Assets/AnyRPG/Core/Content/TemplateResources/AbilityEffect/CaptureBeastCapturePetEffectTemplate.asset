@@ -9,18 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64ae32e0f65707642b93e38c0d965969, type: 3}
-  m_Name: DoubleAttackAttackEffect
+  m_Script: {fileID: 11500000, guid: 7efc1614219f1c04a97f9112ccf4e628, type: 3}
+  m_Name: CaptureBeastCapturePetEffectTemplate
   m_EditorClassIdentifier: 
-  resourceName: Double Attack Attack
+  resourceName: Capture Beast CapturePet
   displayName: 
-  icon: {fileID: 21300000, guid: 12556ce226aefc24a918c883854eb339, type: 3}
-  iconBackgroundImage: {fileID: 0}
+  icon: {fileID: 21300000, guid: 4d8f9bca34650b14abc5246b86202a16, type: 3}
+  iconBackgroundImage: {fileID: 21300000, guid: b69c24628f317f44fbf6403dee2f9db4,
+    type: 3}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  attackEffectProperties:
+  capturePetEffectProperties:
     targetOptions:
       requireTarget: 1
       requireLineOfSight: 0
@@ -29,27 +30,24 @@ MonoBehaviour:
       canCastOnSelf: 0
       canCastOnOthers: 1
       canCastOnEnemy: 1
-      canCastOnNeutral: 0
+      canCastOnNeutral: 1
       canCastOnFriendly: 0
       autoSelfCast: 0
       unitTypeRestrictions: []
-      useMeleeRange: 1
-      maxRange: 0
+      useMeleeRange: 0
+      maxRange: 20
       lineOfSightSourceLocation: 0
       targetRangeSourceLocation: 0
     chanceToCast: 100
     onHitAudioProfileNames: []
     randomAudioProfiles: 0
     hitAbilityEffectNames: []
-    inputMultiplier: 1
+    inputMultiplier: 0
     threatMultiplier: 1
     abilityPrefabSource: 1
     randomPrefabs: 0
-    abilityObjectList:
-    - holdableObjectName: Blue Hit
-      useUniversalAttachment: 0
-      attachmentName: 
-    prefabSpawnLocation: 2
+    abilityObjectList: []
+    prefabSpawnLocation: 0
     prefabDestroyDelay: 0
     destroyOnEndCast: 0
     tickRate: 0
@@ -59,17 +57,5 @@ MonoBehaviour:
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
     defaultPrefabLifetime: 10
-    allowCriticalStrike: 1
-    resourceAmounts:
-    - resourceName: Health
-      inputRemap: 
-      addPower: 1
-      minAmount: 0
-      baseAmount: 0
-      amountPerLevel: 1
-      maxAmount: 0
-      ignoreCastTime: 0
-    ignoreAccuracy: 0
-    weaponAttack: 1
-    damageType: 1
-    ignoreArmorPercent: 0
+    unitTypeRestrictions:
+    - Beast

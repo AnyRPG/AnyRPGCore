@@ -9,22 +9,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a308e09b3c44cce4f80ee0eb116ff1d0, type: 3}
-  m_Name: PenetratingShotProjectileEffect
+  m_Script: {fileID: 11500000, guid: 7125135849d1ec246959764160358164, type: 3}
+  m_Name: IceShardsAOEEffectTemplate
   m_EditorClassIdentifier: 
-  resourceName: Penetrating Shot Projectile
+  resourceName: Ice Shards AOE
   displayName: 
-  icon: {fileID: 21300000, guid: 1f374a0331c8150458c7030cbd13e8e2, type: 3}
+  icon: {fileID: 21300000, guid: 1b719a97d6ea9f94a8de871c79b5a9e9, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  projectileEffectProperties:
+  aoeEffectProperties:
     targetOptions:
-      requireTarget: 1
+      requireTarget: 0
       requireLineOfSight: 0
-      requireLiveTarget: 1
+      requireLiveTarget: 0
       requireDeadTarget: 0
       canCastOnSelf: 0
       canCastOnOthers: 1
@@ -34,30 +34,35 @@ MonoBehaviour:
       autoSelfCast: 0
       unitTypeRestrictions: []
       useMeleeRange: 0
-      maxRange: 40
+      maxRange: 0
       lineOfSightSourceLocation: 0
       targetRangeSourceLocation: 0
     chanceToCast: 100
     onHitAudioProfileNames: []
     randomAudioProfiles: 0
     hitAbilityEffectNames:
-    - Penetrating Shot
+    - Ice Attack
     inputMultiplier: 0
     threatMultiplier: 1
-    abilityPrefabSource: 2
+    abilityPrefabSource: 1
     randomPrefabs: 0
     abilityObjectList: []
     prefabSpawnLocation: 1
-    prefabDestroyDelay: 0
+    prefabDestroyDelay: 1
     destroyOnEndCast: 0
-    tickRate: 0
+    tickRate: 0.25
     castZeroTick: 0
     tickAbilityEffectNames: []
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
-    defaultPrefabLifetime: 10
-    projectileSpeed: 40
-    flightAudioProfileNames:
-    - Arrow Flight
-    randomFlightAudioProfiles: 0
+    defaultPrefabLifetime: 1
+    aoeProperties:
+      aoeRadius: 5
+      useRadius: 0
+      useExtents: 1
+      aoeCenter: {x: 0, y: 1, z: 5}
+      aoeExtents: {x: 2, y: 2, z: 10}
+      maxTargets: 0
+      preferClosestTargets: 0
+      interTargetDelay: 0

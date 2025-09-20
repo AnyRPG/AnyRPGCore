@@ -9,18 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64ae32e0f65707642b93e38c0d965969, type: 3}
-  m_Name: PunchComboAttackEffect
+  m_Script: {fileID: 11500000, guid: a308e09b3c44cce4f80ee0eb116ff1d0, type: 3}
+  m_Name: PiercingShotProjectileEffectTemplate
   m_EditorClassIdentifier: 
-  resourceName: Punch Combo Attack
+  resourceName: Piercing Shot Projectile
   displayName: 
-  icon: {fileID: 21300000, guid: b37873eea38e0a84aab9c69ab5ec6dc2, type: 3}
+  icon: {fileID: 21300000, guid: 8da1cad54df0ad34e98da24421fe78de, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  attackEffectProperties:
+  projectileEffectProperties:
     targetOptions:
       requireTarget: 1
       requireLineOfSight: 0
@@ -33,23 +33,22 @@ MonoBehaviour:
       canCastOnFriendly: 0
       autoSelfCast: 0
       unitTypeRestrictions: []
-      useMeleeRange: 1
-      maxRange: 5
+      useMeleeRange: 0
+      maxRange: 40
       lineOfSightSourceLocation: 0
       targetRangeSourceLocation: 0
     chanceToCast: 100
     onHitAudioProfileNames: []
     randomAudioProfiles: 0
-    hitAbilityEffectNames: []
+    hitAbilityEffectNames:
+    - Reduced Stats
+    - Piercing Shot Attack
     inputMultiplier: 0
     threatMultiplier: 1
-    abilityPrefabSource: 1
+    abilityPrefabSource: 2
     randomPrefabs: 0
-    abilityObjectList:
-    - holdableObjectName: Yellow Hit
-      useUniversalAttachment: 0
-      attachmentName: 
-    prefabSpawnLocation: 2
+    abilityObjectList: []
+    prefabSpawnLocation: 1
     prefabDestroyDelay: 0
     destroyOnEndCast: 0
     tickRate: 0
@@ -59,17 +58,7 @@ MonoBehaviour:
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
     defaultPrefabLifetime: 10
-    allowCriticalStrike: 1
-    resourceAmounts:
-    - resourceName: Health
-      inputRemap: 
-      addPower: 1
-      minAmount: 0
-      baseAmount: 0
-      amountPerLevel: 2
-      maxAmount: 0
-      ignoreCastTime: 0
-    ignoreAccuracy: 0
-    weaponAttack: 1
-    damageType: 1
-    ignoreArmorPercent: 0
+    projectileSpeed: 40
+    flightAudioProfileNames:
+    - Arrow Flight
+    randomFlightAudioProfiles: 0

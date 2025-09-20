@@ -9,31 +9,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1195a5fd6c4192f4e9679039db0df154, type: 3}
-  m_Name: BlizzardDirectEffect
+  m_Script: {fileID: 11500000, guid: 64ae32e0f65707642b93e38c0d965969, type: 3}
+  m_Name: DoubleAttackAttackEffectTemplate
   m_EditorClassIdentifier: 
-  resourceName: Blizzard Direct
+  resourceName: Double Attack Attack
   displayName: 
-  icon: {fileID: 21300000, guid: 402c20b859995ac49ac6ff0a243926ff, type: 3}
+  icon: {fileID: 21300000, guid: 12556ce226aefc24a918c883854eb339, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  directEffectProperties:
+  attackEffectProperties:
     targetOptions:
-      requireTarget: 0
+      requireTarget: 1
       requireLineOfSight: 0
-      requireLiveTarget: 0
+      requireLiveTarget: 1
       requireDeadTarget: 0
       canCastOnSelf: 0
-      canCastOnOthers: 0
-      canCastOnEnemy: 0
+      canCastOnOthers: 1
+      canCastOnEnemy: 1
       canCastOnNeutral: 0
       canCastOnFriendly: 0
       autoSelfCast: 0
       unitTypeRestrictions: []
-      useMeleeRange: 0
+      useMeleeRange: 1
       maxRange: 0
       lineOfSightSourceLocation: 0
       targetRangeSourceLocation: 0
@@ -41,20 +41,35 @@ MonoBehaviour:
     onHitAudioProfileNames: []
     randomAudioProfiles: 0
     hitAbilityEffectNames: []
-    inputMultiplier: 0
+    inputMultiplier: 1
     threatMultiplier: 1
     abilityPrefabSource: 1
     randomPrefabs: 0
-    abilityObjectList: []
-    prefabSpawnLocation: 3
-    prefabDestroyDelay: 2
+    abilityObjectList:
+    - holdableObjectName: Blue Hit
+      useUniversalAttachment: 0
+      attachmentName: 
+    prefabSpawnLocation: 2
+    prefabDestroyDelay: 0
     destroyOnEndCast: 0
     tickRate: 0
     castZeroTick: 0
     tickAbilityEffectNames: []
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
-    completeAbilityEffectNames:
-    - Blizzard Rain
-    - Blizzard AOE
-    defaultPrefabLifetime: 1
+    completeAbilityEffectNames: []
+    defaultPrefabLifetime: 10
+    allowCriticalStrike: 1
+    resourceAmounts:
+    - resourceName: Health
+      inputRemap: 
+      addPower: 1
+      minAmount: 0
+      baseAmount: 0
+      amountPerLevel: 1
+      maxAmount: 0
+      ignoreCastTime: 0
+    ignoreAccuracy: 0
+    weaponAttack: 1
+    damageType: 1
+    ignoreArmorPercent: 0

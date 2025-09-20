@@ -9,49 +9,49 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a308e09b3c44cce4f80ee0eb116ff1d0, type: 3}
-  m_Name: TornadoProjectileEffect
+  m_Script: {fileID: 11500000, guid: 8e9549574de38684191a02bb78f373d2, type: 3}
+  m_Name: CurePoisonRemoveEffectTemplate
   m_EditorClassIdentifier: 
-  resourceName: Tornado Projectile
+  resourceName: Cure Poison Remove
   displayName: 
-  icon: {fileID: 21300000, guid: be7e5e1785cf12d4b9a22ea811b6064b, type: 3}
+  icon: {fileID: 21300000, guid: ecbfc6b4547a7524abd14ace3835e081, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  projectileEffectProperties:
+  removeEffectProperties:
     targetOptions:
       requireTarget: 1
       requireLineOfSight: 0
       requireLiveTarget: 1
       requireDeadTarget: 0
-      canCastOnSelf: 0
-      canCastOnOthers: 1
-      canCastOnEnemy: 1
+      canCastOnSelf: 1
+      canCastOnOthers: 0
+      canCastOnEnemy: 0
       canCastOnNeutral: 0
       canCastOnFriendly: 0
-      autoSelfCast: 0
+      autoSelfCast: 1
       unitTypeRestrictions: []
       useMeleeRange: 0
       maxRange: 0
       lineOfSightSourceLocation: 0
       targetRangeSourceLocation: 0
     chanceToCast: 100
-    onHitAudioProfileNames: []
+    onHitAudioProfileNames:
+    - Cure Spell
     randomAudioProfiles: 0
-    hitAbilityEffectNames:
-    - Levitated Tornado Effect
+    hitAbilityEffectNames: []
     inputMultiplier: 0
     threatMultiplier: 1
     abilityPrefabSource: 1
     randomPrefabs: 0
     abilityObjectList:
-    - holdableObjectName: Tornado Projectile
+    - holdableObjectName: Yellow Energy Pulse
       useUniversalAttachment: 0
       attachmentName: 
-    prefabSpawnLocation: 1
-    prefabDestroyDelay: 3
+    prefabSpawnLocation: 2
+    prefabDestroyDelay: 0
     destroyOnEndCast: 0
     tickRate: 0
     castZeroTick: 0
@@ -59,7 +59,7 @@ MonoBehaviour:
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
-    defaultPrefabLifetime: 30
-    projectileSpeed: 5
-    flightAudioProfileNames: []
-    randomFlightAudioProfiles: 0
+    defaultPrefabLifetime: 10
+    maxClearEffects: 0
+    effectTypeNames:
+    - Poison

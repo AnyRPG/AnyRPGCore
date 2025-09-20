@@ -9,18 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a308e09b3c44cce4f80ee0eb116ff1d0, type: 3}
-  m_Name: IceProjectileProjectileEffect
+  m_Script: {fileID: 11500000, guid: 64ae32e0f65707642b93e38c0d965969, type: 3}
+  m_Name: BerserkerStrikesAttackEffectTemplate
   m_EditorClassIdentifier: 
-  resourceName: Ice Projectile Projectile
+  resourceName: Berserker Strikes Attack
   displayName: 
-  icon: {fileID: 21300000, guid: 299526415c2c352429cde5f2b07aebf8, type: 3}
+  icon: {fileID: 21300000, guid: 2e2e9f77e0139284cbe55b093cf8a4e1, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  projectileEffectProperties:
+  attackEffectProperties:
     targetOptions:
       requireTarget: 1
       requireLineOfSight: 0
@@ -33,24 +33,23 @@ MonoBehaviour:
       canCastOnFriendly: 0
       autoSelfCast: 0
       unitTypeRestrictions: []
-      useMeleeRange: 0
-      maxRange: 40
+      useMeleeRange: 1
+      maxRange: 0
       lineOfSightSourceLocation: 0
       targetRangeSourceLocation: 0
     chanceToCast: 100
     onHitAudioProfileNames: []
     randomAudioProfiles: 0
-    hitAbilityEffectNames:
-    - Ice Attack
-    inputMultiplier: 0
+    hitAbilityEffectNames: []
+    inputMultiplier: 1
     threatMultiplier: 1
     abilityPrefabSource: 1
     randomPrefabs: 0
     abilityObjectList:
-    - holdableObjectName: Ice Projectile
+    - holdableObjectName: Red Hit
       useUniversalAttachment: 0
       attachmentName: 
-    prefabSpawnLocation: 1
+    prefabSpawnLocation: 2
     prefabDestroyDelay: 0
     destroyOnEndCast: 0
     tickRate: 0
@@ -60,6 +59,17 @@ MonoBehaviour:
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
     defaultPrefabLifetime: 10
-    projectileSpeed: 40
-    flightAudioProfileNames: []
-    randomFlightAudioProfiles: 0
+    allowCriticalStrike: 1
+    resourceAmounts:
+    - resourceName: Health
+      inputRemap: 
+      addPower: 1
+      minAmount: 0
+      baseAmount: 0
+      amountPerLevel: 3
+      maxAmount: 0
+      ignoreCastTime: 0
+    ignoreAccuracy: 0
+    weaponAttack: 1
+    damageType: 1
+    ignoreArmorPercent: 0

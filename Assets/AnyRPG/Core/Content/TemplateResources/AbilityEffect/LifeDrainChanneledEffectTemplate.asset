@@ -9,19 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d43aa5652b4c2b346b589d6a398c017a, type: 3}
-  m_Name: CaptureBeastInstantEffect
+  m_Script: {fileID: 11500000, guid: 9606a6bfb8cdb204fa16126081317938, type: 3}
+  m_Name: LifeDrainChanneledEffectTemplate
   m_EditorClassIdentifier: 
-  resourceName: Capture Beast Instant
+  resourceName: Life Drain Channeled
   displayName: 
-  icon: {fileID: 21300000, guid: 4d8f9bca34650b14abc5246b86202a16, type: 3}
-  iconBackgroundImage: {fileID: 21300000, guid: b69c24628f317f44fbf6403dee2f9db4,
-    type: 3}
+  icon: {fileID: 21300000, guid: 4f4da131e9e4bd64184f00c9f4c7ffa4, type: 3}
+  iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  instantEffectProperties:
+  channeledEffectProperties:
     targetOptions:
       requireTarget: 1
       requireLineOfSight: 0
@@ -35,24 +34,25 @@ MonoBehaviour:
       autoSelfCast: 0
       unitTypeRestrictions: []
       useMeleeRange: 0
-      maxRange: 0
+      maxRange: 40
       lineOfSightSourceLocation: 0
       targetRangeSourceLocation: 0
     chanceToCast: 100
     onHitAudioProfileNames: []
     randomAudioProfiles: 0
-    hitAbilityEffectNames: []
-    inputMultiplier: 0
+    hitAbilityEffectNames:
+    - Life Drain Attack
+    inputMultiplier: 1
     threatMultiplier: 1
     abilityPrefabSource: 1
     randomPrefabs: 0
     abilityObjectList:
-    - holdableObjectName: Heart Flash
-      useUniversalAttachment: 0
-      attachmentName: 
-    prefabSpawnLocation: 2
+    - holdableObjectName: Violet Laser
+      useUniversalAttachment: 1
+      attachmentName: Right Hand
+    prefabSpawnLocation: 1
     prefabDestroyDelay: 0
-    destroyOnEndCast: 0
+    destroyOnEndCast: 1
     tickRate: 0
     castZeroTick: 0
     tickAbilityEffectNames: []
@@ -60,3 +60,4 @@ MonoBehaviour:
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
     defaultPrefabLifetime: 1
+    effectDelay: 0
