@@ -648,7 +648,11 @@ namespace AnyRPG {
             //clearing the coroutine so the next timer will be allowed to start
             countDownRoutine = null;
             if (disabled == false) {
-                SpawnWithDelay(null);
+                if (systemGameManager.GameMode == GameMode.Local && playerManager.UnitController != null) {
+                    SpawnWithDelay(playerManager.UnitController);
+                } else {
+                    SpawnWithDelay(null);
+                }
             }
         }
 
