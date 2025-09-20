@@ -248,10 +248,7 @@ namespace AnyRPG {
 
             // add game load scene to build settings
             EditorUtility.DisplayProgressBar("New Game Wizard", "Adding Game Load Scene To Build Settings...", 0.45f);
-            List<EditorBuildSettingsScene> currentSceneList = EditorBuildSettings.scenes.ToList();
-            Debug.Log("Adding " + loadSceneAssetPath + " to build settings");
-            currentSceneList.Add(new EditorBuildSettingsScene(loadSceneAssetPath, true));
-            EditorBuildSettings.scenes = currentSceneList.ToArray();
+            AddSceneToBuildSettings(loadSceneAssetPath);
 
             // copy main mneu scene
             EditorUtility.DisplayProgressBar("New Game Wizard", "Copying Main Menu Scene...", 0.5f);
@@ -262,10 +259,7 @@ namespace AnyRPG {
 
             // add main menu scene to build settings
             EditorUtility.DisplayProgressBar("New Game Wizard", "Adding Main Menu Scene To Build Settings...", 0.55f);
-            currentSceneList = EditorBuildSettings.scenes.ToList();
-            Debug.Log("Adding " + mainMenuSceneAssetPath + " to build settings");
-            currentSceneList.Add(new EditorBuildSettingsScene(mainMenuSceneAssetPath, true));
-            EditorBuildSettings.scenes = currentSceneList.ToArray();
+            AddSceneToBuildSettings(mainMenuSceneAssetPath);
 
             // Open the load scene to add the necessary elements
             EditorUtility.DisplayProgressBar("New Game Wizard", "Modifying loading scene...", 0.6f);
@@ -276,12 +270,6 @@ namespace AnyRPG {
             string fileSystemPrefabFolder = fileSystemNewGameFolder + "/Prefab";
             string prefabPath = FileUtil.GetProjectRelativePath(fileSystemPrefabFolder);
             WizardUtilities.CreateFolderIfNotExists(fileSystemPrefabFolder + "/GameManager");
-
-            /*
-            if (useThirdPartyController == true) {
-                ConfigureThirdPartyController(fileSystemGameName, fileSystemResourcesFolder, fileSystemPrefabFolder);
-            }
-            */
 
             // Create a variant of the GameManager
             EditorUtility.DisplayProgressBar("New Game Wizard", "Making prefab variants...", 0.7f);
@@ -330,6 +318,13 @@ namespace AnyRPG {
             AssetDatabase.Refresh();
 
             return loadSceneAssetPath;
+        }
+
+        protected virtual void AddSceneToBuildSettings(string scenePath) {
+            List<EditorBuildSettingsScene> currentSceneList = EditorBuildSettings.scenes.ToList();
+            Debug.Log($"Adding {scenePath} to build settings");
+            currentSceneList.Add(new EditorBuildSettingsScene(scenePath, true));
+            EditorBuildSettings.scenes = currentSceneList.ToArray();
         }
 
         protected virtual void MakeOptionalContent(string fileSystemGameName, string prefabPath, GameObject gameManagerSceneVariant) {
@@ -688,7 +683,7 @@ namespace AnyRPG {
             // check that game with same name doesn't already exist
             string newGameFolder = WizardUtilities.GetGameFileSystemFolder(gameParentFolder, fileSystemGameName);
             if (GameFolderExists(newGameFolder)) {
-                return "Folder " + newGameFolder + " already exists.  Please delete this directory or choose a new game name";
+                return $"Folder {newGameFolder} already exists.  Please delete this directory or choose a new game name";
             }
 
             // check that first scene name is not empty
@@ -704,7 +699,11 @@ namespace AnyRPG {
 
             // check that scene with same name doesn't already exist in build settings
             if (NewSceneWizard.SceneExists(filesystemSceneName)) {
-                return "A scene with the name " + filesystemSceneName + " already exists in the build settings. Please choose a unique first scene name.";
+                return $"A scene with the name {filesystemSceneName} already exists in the build settings. Please choose a unique first scene name.";
+            }
+
+            if (EditorBuildSettings.scenes.Length > 0) {
+                return "There are already scenes in the current build profile.  Please create a new build profile.";
             }
 
             return null;
