@@ -28,6 +28,7 @@ namespace AnyRPG {
         }
 
         public void AddCurrentEquipmentSlot(EquipmentSlotProfile equipmentSlotProfile, EquipmentInventorySlot equipmentInventorySlot) {
+            Debug.Log($"EquipmentManager.AddCurrentEquipmentSlot({equipmentSlotProfile.DisplayName}, {equipmentInventorySlot})");
             if (currentEquipment.ContainsKey(equipmentSlotProfile)) {
                 currentEquipment[equipmentSlotProfile] = equipmentInventorySlot;
             } else {
@@ -249,7 +250,9 @@ namespace AnyRPG {
         }
 
         public void ClearEquipmentList() {
-            currentEquipment.Clear();
+            foreach (EquipmentInventorySlot equipmentInventorySlot in currentEquipment.Values) {
+                equipmentInventorySlot.Clear();
+            }
         }
 
     }
