@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class ConfirmCancelCutscenePanel : WindowContentController {
+    public class ConfirmStopServerPanel : WindowContentController {
 
         /*
         [SerializeField]
@@ -17,7 +17,7 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
-        private CutsceneBarController cutSceneBarController = null;
+        private NetworkManagerServer networkManagerServer = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -30,20 +30,20 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
-            cutSceneBarController = uIManager.CutSceneBarController;
+            networkManagerServer = systemGameManager.NetworkManagerServer;
         }
 
         public void CancelAction() {
             //Debug.Log("ConfirmCancelCutScenePanelController.CancelAction()");
-            uIManager.confirmCancelCutsceneWindow.CloseWindow();
+            uIManager.confirmStopServerWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
             //Debug.Log("ConfirmCancelCutScenePanelController.ConfirmAction()");
             // might be something better to deactivate cutscene camera
-            cutSceneBarController.EndCutScene();
+            networkManagerServer.StopServer();
             //SystemGameManager.Instance.UIManager.ActivateInGameUI();
-            uIManager.confirmCancelCutsceneWindow.CloseWindow();
+            uIManager.confirmStopServerWindow.CloseWindow();
         }
 
     }

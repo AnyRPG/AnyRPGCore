@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4759218684814125540}
   - component: {fileID: 6238625657946701999}
   m_Layer: 5
-  m_Name: ConfirmCancelCutsceneMenuWindow
+  m_Name: ConfirmCancelCutsceneWindow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

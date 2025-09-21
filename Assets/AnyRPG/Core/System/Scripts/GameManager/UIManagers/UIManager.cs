@@ -209,7 +209,8 @@ namespace AnyRPG {
         public CloseableWindow newGameWindow;
         public CloseableWindow confirmDestroyMenuWindow;
         public CloseableWindow confirmCharacterStuckWindow;
-        public CloseableWindow confirmCancelCutsceneMenuWindow;
+        public CloseableWindow confirmCancelCutsceneWindow;
+        public CloseableWindow confirmStopServerWindow;
         public CloseableWindow confirmSellItemMenuWindow;
         public CloseableWindow nameChangeWindow;
         public CloseableWindow networkLoginWindow;
@@ -413,7 +414,8 @@ namespace AnyRPG {
             newGameWindow.Configure(systemGameManager);
             confirmDestroyMenuWindow.Configure(systemGameManager);
             confirmCharacterStuckWindow.Configure(systemGameManager);
-            confirmCancelCutsceneMenuWindow.Configure(systemGameManager);
+            confirmCancelCutsceneWindow.Configure(systemGameManager);
+            confirmStopServerWindow.Configure(systemGameManager);
             confirmSellItemMenuWindow.Configure(systemGameManager);
             nameChangeWindow.Configure(systemGameManager);
             networkLoginWindow.Configure(systemGameManager);
@@ -868,10 +870,11 @@ namespace AnyRPG {
 
             confirmDestroyMenuWindow.CloseWindow();
             confirmCharacterStuckWindow.CloseWindow();
+            confirmCancelCutsceneWindow.CloseWindow();
+            confirmStopServerWindow.CloseWindow();
             confirmSellItemMenuWindow.CloseWindow();
             copyGameMenuWindow.CloseWindow();
             creditsWindow.CloseWindow();
-            hostServerWindow.CloseWindow();
             clientLobbyWindow.CloseWindow();
             clientLobbyGameWindow.CloseWindow();
             createLobbyGameWindow.CloseWindow();

@@ -95,9 +95,9 @@ namespace AnyRPG {
                 SubscribeToServerEvents();
                 InstantiateNetworkConnector();
             } else if (serverState == LocalConnectionState.Stopping) {
-                Debug.Log("FishNetNetworkController.HandleServerConnectionState() Stopping");
+                //Debug.Log("FishNetNetworkController.HandleServerConnectionState() Stopping");
             } else if (serverState == LocalConnectionState.Stopped) {
-                Debug.Log("FishNetNetworkController.HandleServerConnectionState() Stopped");
+                //Debug.Log("FishNetNetworkController.HandleServerConnectionState() Stopped");
                 systemGameManager.SetGameMode(GameMode.Local);
                 networkManagerServer.DeactivateServerMode();
                 UnsubscribeFromServerEvents();
@@ -115,7 +115,7 @@ namespace AnyRPG {
         }
 
         public void UnsubscribeFromServerEvents() {
-            Debug.Log($"FishNetNetworkController.UnsubscribeFromServerEvents()");
+            //Debug.Log($"FishNetNetworkController.UnsubscribeFromServerEvents()");
 
             fishNetNetworkManager.SceneManager.OnLoadEnd -= HandleSceneLoadEndServer;
             fishNetNetworkManager.ServerManager.OnClientKick -= HandleClientKick;

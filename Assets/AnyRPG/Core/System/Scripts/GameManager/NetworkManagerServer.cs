@@ -444,7 +444,7 @@ namespace AnyRPG {
         }
 
         public void DeactivateServerMode() {
-            Debug.Log($"NetworkManagerServer.DeactivateServerMode()");
+            //Debug.Log($"NetworkManagerServer.DeactivateServerMode()");
 
             serverModeActive = false;
 

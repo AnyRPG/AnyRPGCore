@@ -7,7 +7,7 @@ using TMPro;
 using System;
 
 namespace AnyRPG {
-    public class HostServerPanelController : WindowContentController {
+    public class HostServerPanel : WindowContentController {
 
         [Header("HostGamePanelController")]
 
@@ -117,6 +117,11 @@ namespace AnyRPG {
         }
 
         public void CloseMenu() {
+            if (networkManagerServer.ServerModeActive == true) {
+                uIManager.confirmStopServerWindow.OpenWindow();
+                return;
+            }
+
             uIManager.hostServerWindow.CloseWindow();
         }
 
@@ -129,8 +134,9 @@ namespace AnyRPG {
 
         public void StopServer() {
             //Debug.Log($"HostServerPanelController.StopServer()");
-
-            networkManagerServer.StopServer();
+            
+            uIManager.confirmStopServerWindow.OpenWindow();
+            //networkManagerServer.StopServer();
         }
 
         public void HandleStartServer() {
@@ -230,6 +236,11 @@ namespace AnyRPG {
             networkManagerServer.OnStartLobbyGame -= HandleStartLobbyGame;
 
             ClearPlayerList();
+
+            // ensure you can't accidentally try to run the server and client in the same window
+            if (networkManagerServer.ServerModeActive == true) {
+                StopServer();
+            }
         }
     }
 }

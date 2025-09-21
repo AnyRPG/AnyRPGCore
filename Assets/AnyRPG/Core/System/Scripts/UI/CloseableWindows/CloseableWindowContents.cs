@@ -324,7 +324,8 @@ namespace AnyRPG {
         }
 
         public virtual bool Cancel() {
-            //Debug.Log($"{gameObject.name}.CloseableWindowContents.Cancel()");
+            Debug.Log($"{gameObject.name}.CloseableWindowContents.Cancel()");
+
             if (activeSubPanel != null) {
                 if (activeSubPanel.Cancel()) {
                     activeSubPanel = null;

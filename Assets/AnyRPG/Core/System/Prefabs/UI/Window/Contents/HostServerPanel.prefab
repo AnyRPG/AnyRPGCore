@@ -266,7 +266,7 @@ GameObject:
   - component: {fileID: 4154079068316661478}
   - component: {fileID: 2453065572062217909}
   m_Layer: 5
-  m_Name: Btn_Return
+  m_Name: Btn_Exit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -575,7 +575,7 @@ GameObject:
   - component: {fileID: 4154079068753874293}
   - component: {fileID: 2698383802237378752}
   m_Layer: 0
-  m_Name: Text
+  m_Name: Text_Exit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -628,7 +628,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Return
+  m_text: Exit
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9ff1637cc53af0c4f9d93e4706904ea7, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 9ff1637cc53af0c4f9d93e4706904ea7, type: 2}
@@ -933,7 +933,7 @@ MonoBehaviour:
   captureCamera: 0
   coloredUIElements: []
   addToWindowStack: 1
-  userCloseable: 1
+  userCloseable: 0
   focusFirstButtonOnOpen: 1
   focusCurrentButtonOnOpen: 0
   focusActiveSubPanel: 0
