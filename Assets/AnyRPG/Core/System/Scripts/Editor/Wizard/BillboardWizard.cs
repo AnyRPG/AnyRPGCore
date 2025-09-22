@@ -272,6 +272,18 @@ namespace AnyRPG {
             File.WriteAllBytes(atlasPath, bytes);
             AssetDatabase.Refresh();
 
+            // Get the TextureImporter for the saved asset
+            TextureImporter importer = AssetImporter.GetAtPath(atlasPath) as TextureImporter;
+            if (importer != null) {
+                // Set the desired serialized properties
+                importer.alphaIsTransparency = true;
+                // Trigger the re-import
+                AssetDatabase.ImportAsset(assetPath);
+                //Debug.Log($"Re-imported texture withAlpha is Transparency: {assetPath}");
+            } else {
+                Debug.LogError($"Could not get TextureImporter for asset at path: {atlasPath}");
+            }
+
             // Load the texture back as a Texture2D asset
             Texture2D atlasAsset = AssetDatabase.LoadAssetAtPath<Texture2D>(atlasPath);
             material.mainTexture = atlasAsset;
