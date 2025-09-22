@@ -314,6 +314,7 @@ namespace AnyRPG {
 
         public virtual void Accept() {
             //Debug.Log($"{gameObject.name}.CloseableWindowContents.Accept()");
+
             if (activeSubPanel != null) {
                 activeSubPanel.Accept();
                 return;
@@ -324,7 +325,7 @@ namespace AnyRPG {
         }
 
         public virtual bool Cancel() {
-            Debug.Log($"{gameObject.name}.CloseableWindowContents.Cancel()");
+            //Debug.Log($"{gameObject.name}.CloseableWindowContents.Cancel()");
 
             if (activeSubPanel != null) {
                 if (activeSubPanel.Cancel()) {

@@ -689,6 +689,7 @@ namespace AnyRPG {
 
         public void SetRider(UnitController riderUnitController) {
             this.riderUnitController = riderUnitController;
+            characterStats.CalculateRunSpeed();
         }
 
         public override void EnableInteraction() {

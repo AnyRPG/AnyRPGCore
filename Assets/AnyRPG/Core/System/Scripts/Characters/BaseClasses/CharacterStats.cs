@@ -466,7 +466,11 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.CalculateRunSpeed() current: " + currentRunSpeed);
             float oldRunSpeed = currentRunSpeed;
             float oldSprintSpeed = currentSprintSpeed;
-            currentRunSpeed = (runSpeed + GetSecondaryAddModifiers(SecondaryStatType.MovementSpeed)) * GetSecondaryMultiplyModifiers(SecondaryStatType.MovementSpeed);
+            float usedRunSpeed = runSpeed;
+            if (unitController.RiderUnitController != null) {
+                usedRunSpeed = unitController.RiderUnitController.CharacterStats.RunSpeed;
+            }
+            currentRunSpeed = (usedRunSpeed + GetSecondaryAddModifiers(SecondaryStatType.MovementSpeed)) * GetSecondaryMultiplyModifiers(SecondaryStatType.MovementSpeed);
             currentSprintSpeed = currentRunSpeed * sprintSpeedModifier;
             unitController.UnitEventController.NotifyOnCalculateRunSpeed(oldRunSpeed, currentRunSpeed, oldSprintSpeed, currentSprintSpeed);
             unitController.HandleMovementSpeedUpdate();

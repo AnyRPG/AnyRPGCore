@@ -482,7 +482,7 @@ namespace AnyRPG {
         }
 
         public void StopServer() {
-            Debug.Log($"NetworkManagerServer.StartServer()");
+            //Debug.Log($"NetworkManagerServer.StartServer()");
 
             if (serverModeActive == false) {
                 return;
