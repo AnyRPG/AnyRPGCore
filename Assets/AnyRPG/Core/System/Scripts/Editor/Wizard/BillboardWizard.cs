@@ -278,7 +278,7 @@ namespace AnyRPG {
                 // Set the desired serialized properties
                 importer.alphaIsTransparency = true;
                 // Trigger the re-import
-                AssetDatabase.ImportAsset(assetPath);
+                AssetDatabase.ImportAsset(atlasPath);
                 //Debug.Log($"Re-imported texture withAlpha is Transparency: {assetPath}");
             } else {
                 Debug.LogError($"Could not get TextureImporter for asset at path: {atlasPath}");
@@ -467,6 +467,66 @@ namespace AnyRPG {
                 return;
             }
 
+            // Capture the camera's starting height.
+            float initialY = tempCamera.transform.position.y;
+
+            // Determine the desired direction from the camera to the target.
+            // Use the opposite of the target's forward vector to point *towards* the front.
+            Vector3 desiredDirection = targetTransform.forward;
+            desiredDirection.y = 0; // Ignore vertical component for a horizontal rotation.
+            desiredDirection.Normalize();
+
+            // Get the horizontal distance between the camera and the target.
+            Vector3 cameraPositionHorizontal = new Vector3(tempCamera.transform.position.x, 0, tempCamera.transform.position.z);
+            Vector3 targetPositionHorizontal = new Vector3(targetTransform.position.x, 0, targetTransform.position.z);
+            float distance = Vector3.Distance(cameraPositionHorizontal, targetPositionHorizontal);
+
+            // Calculate the camera's new position based on the desired horizontal direction and distance.
+            Vector3 newPosition = targetTransform.TransformPoint(desiredDirection * distance);
+            newPosition.y = initialY; // Set the y-position to the initial height.
+
+            // Apply the new position.
+            tempCamera.transform.position = newPosition;
+
+            // Make the camera look at the target, but keep its own y-axis unchanged to maintain the same vertical angle.
+            Vector3 lookAtPoint = targetTransform.position;
+            lookAtPoint.y = initialY;
+            tempCamera.transform.LookAt(lookAtPoint);
+        }
+
+
+        /*
+        public void RotateToFront(Camera tempCamera, Transform targetTransform) {
+            if (targetTransform == null) {
+                Debug.LogWarning("Target object not assigned. Cannot rotate camera.");
+                return;
+            }
+
+            // Determine the desired direction from the target to the camera.
+            // This will be the opposite of the target's forward direction.
+            Vector3 desiredDirection = -targetTransform.forward;
+
+            // Get the distance between the camera and the target.
+            float distance = Vector3.Distance(tempCamera.transform.position, targetTransform.position);
+
+            // Calculate the camera's new position based on the desired direction and distance.
+            Vector3 newPosition = targetTransform.position + desiredDirection * distance;
+
+            // Set the camera's position.
+            tempCamera.transform.position = newPosition;
+
+            // Make the camera look at the target. This ensures perfect alignment.
+            tempCamera.transform.LookAt(targetTransform.position);
+        }
+        */
+
+        /*
+        public void RotateToFront(Camera tempCamera, Transform targetTransform) {
+            if (targetTransform == null) {
+                Debug.LogWarning("Target object not assigned. Cannot rotate camera.");
+                return;
+            }
+
             // Calculate the vector from the camera to the target.
             Vector3 currentDirection = tempCamera.transform.position - targetTransform.position;
 
@@ -480,6 +540,7 @@ namespace AnyRPG {
             // We rotate around the global Y-axis to stay on the same horizontal plane.
             tempCamera.transform.RotateAround(targetTransform.position, Vector3.up, angle);
         }
+        */
 
         private Texture2D RenderOneImage(Camera tempCamera, int captureWidth, int captureHeight, int imageCount, string folderName) {
 
