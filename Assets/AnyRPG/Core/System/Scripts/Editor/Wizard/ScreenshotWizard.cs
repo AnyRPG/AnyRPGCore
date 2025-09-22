@@ -14,10 +14,8 @@ namespace AnyRPG {
     public class ScreenshotWizard : ScriptableWizard {
 
         // Will be a subfolder of Application.dataPath and should start with "/"
-        //private const string newGameParentFolder = "/Games/";
         public string parentFolder = "/Screenshots/";
         public string fileName = string.Empty;
-        //private const string imagesFolder = "Images/Screenshot";
 
         private const string wizardTitle = "Screenshot Wizard";
         private const string indicatorFrame = "Assets/AnyRPG/Core/System/Images/UI/Window/Frame2px.png";
@@ -251,11 +249,6 @@ namespace AnyRPG {
             screenShot.ReadPixels(new Rect(sourceX, sourceY, width, height), 0, 0);
 
             screenShot.Apply();
-
-            string folderPath = "Assets/PrefabScreenshots";
-            if (!Directory.Exists(folderPath)) {
-                Directory.CreateDirectory(folderPath);
-            }
 
             string prefabName = Path.GetFileNameWithoutExtension(prefabStage.assetPath);
             //string fileName = Path.Combine(folderPath, prefabName + "_transparent_snapshot.png");
