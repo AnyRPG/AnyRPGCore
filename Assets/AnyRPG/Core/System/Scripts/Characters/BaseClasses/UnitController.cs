@@ -1830,7 +1830,8 @@ namespace AnyRPG {
                 && swimming == false
                 && flying == false
                 //&& (apparentVelocity >= (characterStats.RunSpeed / 2f))) {
-                && unitAnimator.GetBool("Moving") == true) {
+                && unitAnimator.GetBool("Moving") == true
+                && MovementLoopProfile != null) {
                 //Debug.Log($"{gameObject.name}.HandleMovementAudio(): up to run speed");
                 if (!unitComponentController.MovementSoundIsPlaying(true)) {
                     PlayMovementSound(MovementLoopProfile.AudioClip, true);
