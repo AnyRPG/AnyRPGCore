@@ -78,6 +78,10 @@ namespace AnyRPG {
         }
 
         public void SetCompleted(UnitController sourceUnitController, bool value) {
+            // if this behaviour was not triggered by a player, we cannot save the state
+            if (sourceUnitController == null) {
+                return;
+            }
             sourceUnitController.CharacterSaveManager.SetBehaviorCompleted(this, value);
         }
 
