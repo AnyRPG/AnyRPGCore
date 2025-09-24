@@ -389,6 +389,11 @@ namespace AnyRPG {
             CommonSpawn(unitLevel, extraLevels, dynamicLevel, unitProfile, toughness, sourceUnitController);
         }
 
+        // allow for trigger from cutscene
+        public void Spawn() {
+            Spawn(null);
+        }
+
         public void Spawn(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.UnitSpawnNode.Spawn(): GetMaxUnits(): {GetMaxUnits()}");
 
@@ -617,7 +622,7 @@ namespace AnyRPG {
             DestroySpawns();
         }
 
-        private void DestroySpawns() {
+        public void DestroySpawns() {
             //Debug.Log($"{gameObject.name}.UnitSpawnNode.DestroySpawn(): Destroying spawns");
             List<UnitController> tmpSpawnReferences = new List<UnitController>(spawnReferences);
             foreach (UnitController unitController in tmpSpawnReferences) {

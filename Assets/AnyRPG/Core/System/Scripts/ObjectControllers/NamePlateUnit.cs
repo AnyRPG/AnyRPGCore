@@ -143,7 +143,7 @@ namespace AnyRPG {
         }
 
         public override void ProcessDialogTextUpdate(string newText) {
-            Debug.Log($"{gameObject.name}.NamePlateUnit.ProcessDialogTextUpdate({newText})");
+            //Debug.Log($"{gameObject.name}.NamePlateUnit.ProcessDialogTextUpdate({newText})");
 
             base.ProcessDialogTextUpdate(newText);
             if (NamePlateController != null && NamePlateController.NamePlate != null) {
