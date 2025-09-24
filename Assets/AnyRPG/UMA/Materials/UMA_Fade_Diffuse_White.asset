@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac718b8ce852d1445b8fbe5c323134ac, type: 3}
+  m_Name: UMA_Fade_Diffuse_White
+  m_EditorClassIdentifier: 
+  translateSRP: 1
+  AutoSetSRPMaterials: 1
+  _material: {fileID: 2100000, guid: 59c45b29a9adc6d4ea6fc1edc2690e44, type: 2}
+  _secondPass: {fileID: 0}
+  srpMaterials:
+  - SRP: 1
+    material: {fileID: 2100000, guid: 59c45b29a9adc6d4ea6fc1edc2690e44, type: 2}
+    secondPass: {fileID: 0}
+    alternateKeywords:
+    - _BaseMap
+  materialType: 1
+  channels:
+  - channelType: 0
+    textureFormat: 0
+    materialPropertyName: _BaseMap
+    sourceTextureName: 
+    Compression: 0
+    DownSample: 1
+    ConvertRenderTexture: 0
+    NonShaderTexture: 0
+  MipMapBias: 0
+  AnisoLevel: 1
+  MatFilterMode: 1
+  Compression: 0
+  shaderParms: []
+  MaskWithCurrentColor: 0
+  maskMultiplier: {r: 1, g: 1, b: 1, a: 1}
+  MaterialName: 
+  ShaderName: 
