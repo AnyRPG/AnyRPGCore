@@ -26,7 +26,7 @@ namespace AnyRPG {
         }
 
         public void TurnInDialog(Dialog dialog) {
-            //Debug.Log($"CharacterDialogManager.TurnInDialog({dialog.DisplayName})");
+            //Debug.Log($"CharacterDialogManager.TurnInDialog({dialog.ResourceName})");
 
             unitController.CharacterSaveManager.SetDialogTurnedIn(dialog, true);
             unitController.UnitEventController.NotifyOnDialogCompleted(dialog);

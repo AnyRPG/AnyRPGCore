@@ -55,6 +55,8 @@ namespace AnyRPG {
         }
 
         public void NotifyOnDialogCompleted(UnitController sourceUnitController) {
+            //Debug.Log($"{ResourceName}.Dialog.NotifyOnDialogCompleted({sourceUnitController.gameObject.name})");
+
             OnDialogCompleted(sourceUnitController);
         }
 

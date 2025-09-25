@@ -71,7 +71,7 @@ namespace AnyRPG {
         }
 
         public void TryPlayBehavior(BehaviorProfile behaviorProfile, BehaviorComponent caller = null, UnitController sourceUnitController = null) {
-            //Debug.Log($"{unitController.gameObject.name}.BehaviorInteractable.TryPlayBehavior()");
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorInteractable.TryPlayBehavior({behaviorProfile.ResourceName})");
 
             if (behaviorPlaying == false) {
                 behaviorCoroutine = unitController.StartCoroutine(PlayBehavior(behaviorProfile, caller, sourceUnitController));
@@ -160,6 +160,7 @@ namespace AnyRPG {
 
         public void HandlePrerequisiteUpdates(UnitController sourceUnitController) {
             //Debug.Log($"{unitController.gameObject.name}.BehaviorController.HandlePrerequisiteUpdates()");
+
             if (unitController.UnitControllerMode != UnitControllerMode.AI) {
                 return;
             }
@@ -191,6 +192,7 @@ namespace AnyRPG {
 
         public void PlayAutomaticBehaviors() {
             //Debug.Log($"{unitController.gameObject.name}.Controller.PlayAutomaticBehaviors()");
+
             if (networkManagerServer.ServerModeActive == true) {
                 return;
             }
@@ -209,6 +211,7 @@ namespace AnyRPG {
 
         public List<BehaviorProfile> GetCurrentOptionList() {
             //Debug.Log($"{unitController.gameObject.name}.BehaviorController.GetCurrentOptionList()");
+
             List<BehaviorProfile> currentList = new List<BehaviorProfile>();
             foreach (BehaviorProfile behaviorProfile in behaviorList.Keys) {
                 if (behaviorProfile.PrerequisiteConditions.Count == 0
@@ -224,8 +227,11 @@ namespace AnyRPG {
         }
 
         public void AddToBehaviorList(BehaviorProfile behaviorProfile) {
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.AddToBehaviorList({behaviorProfile.ResourceName})");
+
             behaviorList.Add(behaviorProfile, new BehaviorProfileState(behaviorProfile));
             behaviorProfile.OnPrerequisiteUpdates += HandlePrerequisiteUpdates;
+            behaviorProfile.OnEventTriggered += HandleEventTrigger;
         }
 
         public void SetupScriptableObjects() {
@@ -247,7 +253,14 @@ namespace AnyRPG {
         public void CleanupScriptableObjects() {
             foreach (BehaviorProfile behaviorProfile in behaviorList.Keys) {
                 behaviorProfile.OnPrerequisiteUpdates -= HandlePrerequisiteUpdates;
+                behaviorProfile.OnEventTriggered -= HandleEventTrigger;
             }
+        }
+
+        private void HandleEventTrigger(BehaviorProfile behaviorProfile) {
+            //dDebug.Log($"{unitController.gameObject.name}.BehaviorController.HandleEventTrigger({behaviorProfile.ResourceName})");
+
+            TryPlayBehavior(behaviorProfile);
         }
 
         public void StopBackgroundMusic() {

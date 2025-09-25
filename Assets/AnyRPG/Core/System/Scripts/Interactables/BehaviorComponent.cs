@@ -31,6 +31,13 @@ namespace AnyRPG {
             return (Props.BehaviorNames.Count > choiceIndex ? Props.BehaviorNames[choiceIndex] : base.GetInteractionButtonText(sourceUnitController, componentIndex, choiceIndex));
         }
 
+        public override string GetOptionChoiceName(UnitController sourceUnitController, int choiceIndex) {
+            List<BehaviorProfile> currentList = GetCurrentOptionList(sourceUnitController);
+            if (currentList.Count > choiceIndex) {
+                return currentList[choiceIndex].DisplayName;
+            }
+            return string.Empty;
+        }
 
         public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex = 0) {
             //Debug.Log($"{unitController.gameObject.name}.BehaviorComponent.Interact({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex})");
@@ -38,16 +45,12 @@ namespace AnyRPG {
             List<BehaviorProfile> currentList = GetCurrentOptionList(sourceUnitController);
             if (currentList.Count == 0) {
                 return false;
-                //} else if (currentList.Count == 1) {
             } else {
                 if (unitController != null) {
                     unitController.BehaviorController.TryPlayBehavior(currentList[choiceIndex], this, sourceUnitController);
                 }
                 base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
-            }/* else {
-
-                interactable.OpenInteractionWindow();
-            }*/
+            }
             return true;
         }
 

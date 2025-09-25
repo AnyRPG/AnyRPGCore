@@ -34,6 +34,7 @@ namespace AnyRPG {
         public void HandleStartInteractWithOption(UnitController sourceUnitController, InteractableOptionComponent interactableOption, int optionIndex, int choiceIndex) {
             //Debug.Log($"{interactableName}.UseInteractableObjective.CheckInteractionWithOptionStart({sourceUnitController.gameObject.name}, {optionIndex}, {choiceIndex})");
 
+            CheckInteractableName(sourceUnitController, interactableOption.GetOptionChoiceName(sourceUnitController, choiceIndex), false);
             CheckInteractableName(sourceUnitController, interactableOption.DisplayName, false);
             CheckInteractableName(sourceUnitController, interactableOption.Interactable.DisplayName, false);
         }

@@ -140,6 +140,8 @@ namespace AnyRPG {
         }
 
         public void TurnInDialog(UnitController sourceUnitController, Dialog dialog) {
+            //Debug.Log($"{interactable.gameObject.name}.DialogInteractable.TurnInDialog({dialog.ResourceName})");
+
             sourceUnitController.CharacterDialogManager.TurnInDialog(dialog);
             NotifyOnConfirmAction(sourceUnitController);
         }

@@ -9,9 +9,10 @@ using UnityEngine.Serialization;
 namespace AnyRPG {
     //[System.Serializable]
     [CreateAssetMenu(fileName = "New Behavior Profile", menuName = "AnyRPG/BehaviorProfile")]
-    public class BehaviorProfile : DescribableResource, IPrerequisiteOwner {
+    public class BehaviorProfile : DescribableResource, IPrerequisiteOwner, IEventTriggerOwner {
 
         public event System.Action<UnitController> OnPrerequisiteUpdates = delegate { };
+        public event System.Action<BehaviorProfile> OnEventTriggered = delegate { };
 
         [Header("Behavior")]
 
@@ -23,6 +24,12 @@ namespace AnyRPG {
         [Tooltip("Game conditions that must be satisfied for this behavior to be available.")]
         [SerializeField]
         private List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
+
+        [Header("Event Triggers")]
+
+        [Tooltip("Event triggers that will cause this behavior to play.")]
+        [SerializeField]
+        private List<EventTriggers> eventTriggers = new List<EventTriggers>();
 
         [Header("Options")]
 
@@ -69,8 +76,16 @@ namespace AnyRPG {
         }
 
         public void HandlePrerequisiteUpdates(UnitController sourceUnitController) {
+            //Debug.Log($"{ResourceName}.BehaviorProfile.HandlePrerequisiteUpdates()");
+
             // call back to owner
             OnPrerequisiteUpdates(sourceUnitController);
+        }
+
+        public void HandleEventTriggered() {
+            //Debug.Log($"{ResourceName}.BehaviorProfile.HandleEventTriggered()");
+
+            OnEventTriggered(this);
         }
 
         public bool Completed(UnitController sourceUnitController) {
@@ -94,6 +109,12 @@ namespace AnyRPG {
                     }
                 }
             }
+            foreach (EventTriggers _eventTriggers in eventTriggers) {
+                if (_eventTriggers != null) {
+                    _eventTriggers.SetupScriptableObjects(systemGameManager, this);
+                }
+            }
+
         }
 
         public override void CleanupScriptableObjects() {
@@ -103,6 +124,11 @@ namespace AnyRPG {
                     if (tmpPrerequisiteConditions != null) {
                         tmpPrerequisiteConditions.CleanupScriptableObjects(this);
                     }
+                }
+            }
+            foreach (EventTriggers _eventTriggers in eventTriggers) {
+                if (_eventTriggers != null) {
+                    _eventTriggers.CleanupScriptableObjects(this);
                 }
             }
         }

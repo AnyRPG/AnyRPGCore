@@ -47,6 +47,8 @@ namespace AnyRPG {
         public event System.Action<int, WeatherProfile, bool> OnEndWeather = delegate { };
         public event System.Action<int, WeatherProfile> OnChooseWeather = delegate { };
         public event System.Action<int> OnStartWeather = delegate { };
+        public event System.Action<UnitController, InteractableOptionComponent, int, int> OnStartInteractWithOption = delegate { };
+        public event System.Action<UnitController, InteractableOptionComponent> OnCompleteInteractWithOption = delegate { };
 
         // equipment manager
         public System.Action<EquipmentSlotProfile, InstantiatedEquipment> OnAddEquipment = delegate { };
@@ -254,6 +256,18 @@ namespace AnyRPG {
 
         public void NotifyOnStartWeather(int sceneHandle) {
             OnStartWeather(sceneHandle);
+        }
+
+        public void NotifyOnStartInteractWithOption(UnitController sourceUnitController, InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
+            //Debug.Log($"SystemEventManager.NotifyOnStartInteractWithOption({(sourceUnitController == null ? "null" : sourceUnitController.gameObject.name)}, {interactableOptionComponent.DisplayName}, {componentIndex}, {choiceIndex})");
+
+            OnStartInteractWithOption(sourceUnitController, interactableOptionComponent, componentIndex, choiceIndex);
+        }
+
+        public void NotifyOnCompleteInteractWithOption(UnitController sourceUnitController, InteractableOptionComponent interactableOptionComponent) {
+            //Debug.Log($"SystemEventManager.NotifyOnCompleteInteractWithOption({(sourceUnitController == null ? "null" : sourceUnitController.gameObject.name)}, {interactableOptionComponent.DisplayName})");
+
+            OnCompleteInteractWithOption(sourceUnitController, interactableOptionComponent);
         }
     }
 

@@ -21,6 +21,8 @@ namespace AnyRPG {
         private Dialog prerequisiteDialog = null;
 
         public void UpdateStatus(UnitController sourceUnitController, bool notify = true) {
+            //Debug.Log($"{ownerName}.DialogPrerequisite.UpdateStatus()");
+
             bool originalResult = prerequisiteMet;
             //bool checkResult = (prerequisiteDialog.TurnedIn == true);
             // updated to prevent repeatable dialogs from trigger prerequisites in cutscenes and doing things before they should.
@@ -35,6 +37,8 @@ namespace AnyRPG {
 
 
         public void HandleDialogCompleted(UnitController unitController) {
+            //Debug.Log($"{ownerName}.DialogPrerequisite.HandleDialogCompleted({unitController.gameObject.name})");
+
             prerequisiteMet = true;
             OnStatusUpdated(unitController);
         }

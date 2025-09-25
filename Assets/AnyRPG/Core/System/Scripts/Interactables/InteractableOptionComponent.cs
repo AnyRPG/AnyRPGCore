@@ -114,10 +114,15 @@ namespace AnyRPG {
         public virtual void ProcessCleanupEventSubscriptions() {
         }
 
+        public virtual string GetOptionChoiceName(UnitController sourceUnitController, int choiceIndex) {
+            return DisplayName;
+        }
+
         public virtual void NotifyOnConfirmAction(UnitController sourceUnitController) {
             //Debug.Log($"{interactable.gameObject.name}.InteractableOptionComponent.NotifyOnConfirmAction({sourceUnitController?.gameObject.name})");
 
             sourceUnitController.UnitEventController.NotifyOnCompleteInteractWithOption(this);
+            systemEventManager.NotifyOnCompleteInteractWithOption(sourceUnitController, this);
         }
 
         public virtual bool ProcessFactionValue(float factionValue) {
@@ -179,6 +184,8 @@ namespace AnyRPG {
                 interactable.NotifyOnInteractionWithOptionStarted(sourceUnitController, componentIndex, choiceIndex);
                 // trigger local client interaction
                 sourceUnitController.UnitEventController.NotifyOnStartInteractWithOption(this, componentIndex, choiceIndex);
+                // trigger system event notification
+                systemEventManager.NotifyOnStartInteractWithOption(sourceUnitController, this, componentIndex, choiceIndex);
             }
         }
 
