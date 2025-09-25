@@ -391,6 +391,8 @@ namespace AnyRPG {
 
         // allow for trigger from cutscene
         public void Spawn() {
+            //Debug.Log($"{gameObject.name}.UnitSpawnNode.Spawn()");
+
             Spawn(null);
         }
 
