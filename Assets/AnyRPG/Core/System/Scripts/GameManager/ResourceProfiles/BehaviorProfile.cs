@@ -89,6 +89,8 @@ namespace AnyRPG {
         }
 
         public bool Completed(UnitController sourceUnitController) {
+            //Debug.Log($"{ResourceName}.BehaviorProfile.Completed({(sourceUnitController == null ? "null" : sourceUnitController.gameObject.name)})");
+
             return sourceUnitController.CharacterSaveManager.GetBehaviorSaveData(this).completed;
         }
 

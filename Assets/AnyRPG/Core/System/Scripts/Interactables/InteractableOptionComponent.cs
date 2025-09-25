@@ -271,6 +271,9 @@ namespace AnyRPG {
 
         public virtual bool CanShowMiniMapIcon(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.InteractableOption.CanShowMiniMapIcon()");
+            if (sourceUnitController == null) {
+                return false;
+            }
             return (GetCurrentOptionCount(sourceUnitController) > 0);
         }
 
