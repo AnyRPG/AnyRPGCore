@@ -28,6 +28,7 @@ namespace AnyRPG {
         // game manager references
         private AudioManager audioManager = null;
         private LevelManager levelManager = null;
+        private CutsceneBarController cutsceneBarController = null;
 
         public int BehaviorIndex { get => behaviorIndex; }
         public bool BehaviorPlaying { get => behaviorPlaying; set => behaviorPlaying = value; }
@@ -48,6 +49,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             audioManager = systemGameManager.AudioManager;
             levelManager = systemGameManager.LevelManager;
+            cutsceneBarController = systemGameManager.UIManager.CutSceneBarController;
         }
 
         // this should be run after the unit profile is set
@@ -191,18 +193,23 @@ namespace AnyRPG {
 
 
         public void PlayAutomaticBehaviors() {
-            //Debug.Log($"{unitController.gameObject.name}.Controller.PlayAutomaticBehaviors()");
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.PlayAutomaticBehaviors()");
 
             if (networkManagerServer.ServerModeActive == true) {
+                //Debug.Log($"{unitController.gameObject.name}.BehaviorController.PlayAutomaticBehaviors() aborting because server mode");
                 return;
             }
             if (unitController.UnitControllerMode != UnitControllerMode.AI) {
+                //Debug.Log($"{unitController.gameObject.name}.BehaviorController.PlayAutomaticBehaviors() aborting because not AI");
                 return;
             }
 
             foreach (BehaviorProfile behaviorProfile in GetCurrentOptionList()) {
+                //Debug.Log($"{unitController.gameObject.name}.BehaviorController.PlayAutomaticBehaviors() assessing {behaviorProfile.ResourceName}");
+
                 // in order for automatic behaviors to play on the server, we can't check against any state, such as completed
-                if (behaviorProfile.Automatic == true && behaviorProfile.Repeatable == true) {
+                if (behaviorProfile.Automatic == true
+                    && (behaviorProfile.Repeatable == true || cutsceneBarController.CurrentCutscene != null)) {
                     //if (behaviorProfile.Automatic == true && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)) {
                     TryPlayBehavior(behaviorProfile);
                 }
@@ -215,7 +222,7 @@ namespace AnyRPG {
             List<BehaviorProfile> currentList = new List<BehaviorProfile>();
             foreach (BehaviorProfile behaviorProfile in behaviorList.Keys) {
                 if (behaviorProfile.PrerequisiteConditions.Count == 0
-                    && (behaviorProfile.Repeatable == true)) {
+                    && (behaviorProfile.Repeatable == true || cutsceneBarController.CurrentCutscene != null)) {
                     // took away prerequisite check and completed check for multiplayer
                     //&& (behaviorProfile.Completed(sourceUnitController) == false || behaviorProfile.Repeatable == true)) {
                     //Debug.Log("BehaviorInteractable.GetCurrentOptionList() adding behaviorProfile " + behaviorProfile.DisplayName + "; id: " + behaviorProfile.GetInstanceID());
