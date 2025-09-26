@@ -95,6 +95,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool forceDespawnUnits = false;
 
+        [Tooltip("If true, the spawned unit will be parented to the current parent transform of the unit spawn node.")]
+        [SerializeField]
+        private bool parentUnit = false;
+
         [Header("Prerequisites")]
 
         [Tooltip("conditions must be met for spawner to spawn nodes")]
@@ -456,7 +460,7 @@ namespace AnyRPG {
                 characterRequestData.requestMode = GameMode.Network;
                 unitController = characterManager.SpawnUnitPrefab(characterRequestData, null, transform.position, transform.forward, gameObject.scene);
             } else {
-                unitController = characterManager.SpawnUnitPrefabLocal(characterRequestData, null, transform.position, transform.forward);
+                unitController = characterManager.SpawnUnitPrefabLocal(characterRequestData, (parentUnit == false ? null : transform.parent), transform.position, transform.forward);
             }
             if (unitController != null) {
                 spawnReferences.Add(unitController);
