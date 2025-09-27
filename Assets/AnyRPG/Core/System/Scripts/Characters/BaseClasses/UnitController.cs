@@ -2489,7 +2489,8 @@ namespace AnyRPG {
         }
 
         public void BeginAbility(string abilityName) {
-            //Debug.Log($"{gameObject.name}.UnitController.BeginAbility(" + abilityName + ")");
+            //Debug.Log($"{gameObject.name}.UnitController.BeginAbility({abilityName})");
+
             characterAbilityManager.BeginAbility(abilityName);
         }
 

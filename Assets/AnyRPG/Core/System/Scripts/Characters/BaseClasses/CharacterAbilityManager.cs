@@ -46,10 +46,14 @@ namespace AnyRPG {
         // the holdable objects spawned during an ability cast and removed when the cast is complete
         protected Dictionary<AbilityAttachmentNode, List<GameObject>> abilityObjects = new Dictionary<AbilityAttachmentNode, List<GameObject>>();
 
+        // the holdable objects spawned during ability effects and removed when the cast is complete
+        protected Dictionary<AbilityAttachmentNode, List<GameObject>> abilityEffectObjects = new Dictionary<AbilityAttachmentNode, List<GameObject>>();
+
         // game manager references
         private PlayerManager playerManager = null;
         private CastTargettingManager castTargettingManager = null;
         private CharacterManager characterManager = null;
+        private SystemAbilityController systemAbilityController = null;
 
         public float InitialGlobalCoolDown { get => initialGlobalCoolDown; set => initialGlobalCoolDown = value; }
         public float RemainingGlobalCoolDown { get => remainingGlobalCoolDown; set => remainingGlobalCoolDown = value; }
@@ -131,6 +135,7 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             castTargettingManager = systemGameManager.CastTargettingManager;
             characterManager = systemGameManager.CharacterManager;
+            systemAbilityController = systemGameManager.SystemAbilityController;
         }
 
         public bool PerformingAnyAbility() {
@@ -301,7 +306,7 @@ namespace AnyRPG {
                                 newEquipmentPrefab.transform.localScale = abilityAttachmentNode.HoldableObject.Scale;
                                 HoldObject(newEquipmentPrefab, abilityAttachmentNode, unitController.gameObject);
                             } else {
-                                Debug.Log(unitController.gameObject.name + "CharacterAbilityManager.SpawnAbilityObjects(). We could not find the target bone " + attachmentPointNode.TargetBone + " while attempting to hold " + abilityAttachmentNode.HoldableObject.ResourceName);
+                                Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.SpawnAbilityObjects(). We could not find the target bone {attachmentPointNode.TargetBone} while attempting to hold {abilityAttachmentNode.HoldableObject.ResourceName}");
                             }
                         }
                     }
@@ -325,10 +330,41 @@ namespace AnyRPG {
             }
         }
 
+        public override void AddAbilityEffectObject(AbilityAttachmentNode abilityAttachmentNode, GameObject go) {
+            base.AddAbilityEffectObject(abilityAttachmentNode, go);
+            if (abilityEffectObjects.ContainsKey(abilityAttachmentNode)) {
+                abilityEffectObjects[abilityAttachmentNode].Add(go);
+            } else {
+                abilityEffectObjects.Add(abilityAttachmentNode, new List<GameObject>() { go });
+            }
+        }
+
+        private void DespawnAbilityEffectObjects() {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.DespawnAbilityObjects()");
+
+            if (abilityEffectObjects == null || abilityEffectObjects.Count == 0) {
+                return;
+            }
+
+            foreach (List<GameObject> abilityObjectPrefabs in abilityEffectObjects.Values) {
+                if (abilityObjectPrefabs != null) {
+                    foreach (GameObject abilityObject in abilityObjectPrefabs) {
+                        if (abilityObject != null) {
+                            systemAbilityController.CancelDestroyAbilityEffectObject(abilityObject);
+                            objectPooler.ReturnObjectToPool(abilityObject);
+                        }
+                    }
+                }
+            }
+            abilityObjects.Clear();
+        }
+
         public override void DespawnAbilityObjects() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.DespawnAbilityObjects()");
 
             base.DespawnAbilityObjects();
+
+            DespawnAbilityEffectObjects();
 
             if (abilityObjects == null || abilityObjects.Count == 0) {
                 return;

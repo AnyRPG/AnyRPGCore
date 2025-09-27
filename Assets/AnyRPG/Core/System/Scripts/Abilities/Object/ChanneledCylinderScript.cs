@@ -36,6 +36,7 @@ namespace AnyRPG {
 
         // game manager references
         private ObjectPooler objectPooler = null;
+        private SystemAbilityController systemAbilityController = null;
 
         public GameObject StartObject { get => startObject;
             set {
@@ -68,12 +69,17 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
+            systemAbilityController = systemGameManager.SystemAbilityController;
         }
 
         private void Update() {
 
             if (StartObject == null || (nullEndObject == false && (endObject == null || endObject.activeInHierarchy == false))) {
                 // need to be able to shoot at ground, but should still exit if we had an actual original target
+                
+                // this is anunexpected despawn, so inform the system ability controller
+                systemAbilityController.CancelDestroyAbilityEffectObject(gameObject);
+
                 objectPooler.ReturnObjectToPool(gameObject);
                 return;
             }

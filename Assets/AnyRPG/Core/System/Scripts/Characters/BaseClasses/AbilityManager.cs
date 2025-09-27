@@ -40,6 +40,10 @@ namespace AnyRPG {
             // do nothing
         }
 
+        public virtual void AddAbilityEffectObject(AbilityAttachmentNode abilityAttachmentNode, GameObject go) {
+            // do nothing
+        }
+
         public virtual GameObject UnitGameObject {
             get {
                 if (abilityCasterMonoBehaviour != null) {
@@ -523,7 +527,7 @@ namespace AnyRPG {
                             }
                             prefabObjects[abilityAttachmentNode.HoldableObject].Add(prefabObject);
                             if (fixedLengthEffectProperties.DestroyOnEndCast) {
-                                AddAbilityObject(abilityAttachmentNode, prefabObject);
+                                AddAbilityEffectObject(abilityAttachmentNode, prefabObject);
                             }
                         }
                     }
