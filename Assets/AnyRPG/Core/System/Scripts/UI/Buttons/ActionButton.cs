@@ -416,7 +416,8 @@ namespace AnyRPG {
         /// Updates the visual representation of the actionbutton
         /// </summary>
         public void UpdateVisual() {
-            //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.UpdateVisual() useable: " + (useable == null ? "null" : useable.DisplayName));
+            //Debug.Log($"{gameObject.name} ({GetInstanceID()}).ActionButton.UpdateVisual() useable: {(useable == null ? "null" : useable.DisplayName)}");
+
             if (playerManager == null || playerManager.UnitController == null) {
                 return;
             }
@@ -468,7 +469,8 @@ namespace AnyRPG {
         }
 
         public void EnableFullCoolDownIcon() {
-            //Debug.Log("ActionButton.EnableFullCoolDownIcon(): useable: " + (useable == null ? "null" : useable.DisplayName));
+            //Debug.Log($"ActionButton.EnableFullCoolDownIcon(): useable: {(useable == null ? "null" : useable.DisplayName)}");
+
             if (coolDownIcon.isActiveAndEnabled == false) {
                 coolDownIcon.enabled = true;
             }

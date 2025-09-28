@@ -604,7 +604,7 @@ namespace AnyRPG {
         }
 
         public virtual void UpdateActionButtonVisual(ActionButton actionButton) {
-            //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual()");
+            //Debug.Log($"{ResourceName}.AbilityProperties.UpdateActionButtonVisual()");
 
             // this must happen first because it's an image update that doesn't rely on cooldowns
             // auto-attack buttons are special and display the current weapon of the character
@@ -625,7 +625,7 @@ namespace AnyRPG {
 
             // set cooldown icon on abilities that don't have enough resources to cast
             if (PowerResource != null
-                && (GetResourceCost(playerManager.ActiveUnitController) >= playerManager.ActiveUnitController.CharacterStats.GetPowerResourceAmount(PowerResource))) {
+                && (GetResourceCost(playerManager.UnitController) >= playerManager.UnitController.CharacterStats.GetPowerResourceAmount(PowerResource))) {
                 //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): not enough resources to cast this ability.  enabling full cooldown");
                 actionButton.EnableFullCoolDownIcon();
                 return;
