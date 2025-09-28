@@ -177,7 +177,7 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessClientNotifications(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
-            //Debug.Log($"{interactable.gameObject.name}.InteractableOptionComponent.ProcessClientNotifications({sourceUnitController?.gameObject.name}, {componentIndex}, {choiceIndex})");
+            //Debug.Log($"{interactable.gameObject.name}.InteractableOptionComponent.ProcessClientNotifications({(sourceUnitController == null ? "null" : sourceUnitController.gameObject.name)}, {componentIndex}, {choiceIndex})");
 
             if (sourceUnitController != null) {
                 // trigger network client interaction

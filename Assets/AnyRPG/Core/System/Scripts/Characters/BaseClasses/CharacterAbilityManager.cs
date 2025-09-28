@@ -1012,8 +1012,6 @@ namespace AnyRPG {
             StatusEffect savedEffect = systemDataFactory.GetResource<AbilityEffect>(statusEffectSaveData.StatusEffectName) as StatusEffect;
             if (savedEffect != null && savedEffect.StatusEffectProperties.ZoneRequirementMet(unitController)) {
                 ApplyStatusEffect(savedEffect.AbilityEffectProperties, statusEffectSaveData.remainingSeconds);
-            } else {
-                Debug.LogWarning($"{unitController.gameObject.name}.CharacterAbilityManager.ApplySavedStatusEffects() could not find effect in database with name {statusEffectSaveData.StatusEffectName}");
             }
         }
 

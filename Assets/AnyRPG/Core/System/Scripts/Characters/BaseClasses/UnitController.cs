@@ -1591,7 +1591,7 @@ namespace AnyRPG {
         }
 
         private void HandleMasterLevelChanged(int newLevel) {
-            Debug.Log($"{gameObject.name}.UnitController.HandleMasterLevelChanged({newLevel})");
+            //Debug.Log($"{gameObject.name}.UnitController.HandleMasterLevelChanged({newLevel})");
 
             characterStats.SetLevel(newLevel);
         }
