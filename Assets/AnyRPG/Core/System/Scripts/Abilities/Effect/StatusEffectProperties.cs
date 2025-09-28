@@ -330,20 +330,25 @@ namespace AnyRPG {
             if (classTrait == true && sourceCharacter.AbilityManager.Level >= requiredLevel) {
                 return true;
             }
-            if (!ZoneRequirementMet()) {
+            if (!ZoneRequirementMet(target)) {
                 if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". You are in the wrong zone");
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage($"Cannot cast {DisplayName}. You are in the wrong zone");
                 }
                 return false;
             }
             return base.CanUseOn(target, sourceCharacter, abilityEffectContext, playerInitiated, performRangeCheck);
         }
 
-        public bool ZoneRequirementMet() {
+        public bool ZoneRequirementMet(Interactable target) {
             if (SceneNames.Count > 0) {
                 bool sceneFound = false;
                 foreach (string sceneName in SceneNames) {
-                    if (sceneName == levelManager.GetActiveSceneNode().SceneName || sceneName == levelManager.GetActiveSceneNode().SceneFile || sceneName == levelManager.GetActiveSceneNode().ResourceName) {
+                    SceneNode sceneNode = null;
+                    if (levelManager.SceneDictionary.ContainsKey(target.gameObject.scene.name)) {
+                        sceneNode = levelManager.SceneDictionary[target.gameObject.scene.name];
+                    }
+                    if (sceneName == target.gameObject.scene.name
+                        || (sceneNode != null && (sceneName == sceneNode.SceneFile || sceneName == sceneNode.ResourceName))) {
                         sceneFound = true;
                     }
                 }
