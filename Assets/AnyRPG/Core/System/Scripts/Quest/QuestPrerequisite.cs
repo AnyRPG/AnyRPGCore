@@ -37,10 +37,11 @@ namespace AnyRPG {
         }
 
         public void UpdateStatus(UnitController sourceUnitController, bool notify = true) {
-            //Debug.Log("QuestPrerequisite.UpdateStatus(" + notify + "): " + prerequisiteQuest.DisplayName);
+            //Debug.Log($"QuestPrerequisite.UpdateStatus({sourceUnitController.gameObject.name}, {notify}): quest: {prerequisiteQuest.ResourceName} stepIndex: {stepIndex} player stepIndex: {prerequisiteQuest.CurrentStep(sourceUnitController)}");
+
             bool originalResult = prerequisiteMet;
             if (prerequisiteQuest == null) {
-                Debug.LogError("QuestPrerequisite.IsMet(): prerequisiteQuest IS NULL FOR " + prerequisiteName + "!  FIX THIS!  DO NOT COMMENT THIS LINE");
+                Debug.LogError($"QuestPrerequisite.IsMet(): prerequisiteQuest IS NULL FOR {prerequisiteName}!  FIX THIS!  DO NOT COMMENT THIS LINE");
                 return;
             }
             if (requireTurnedIn && prerequisiteQuest.TurnedIn(sourceUnitController) == true) {

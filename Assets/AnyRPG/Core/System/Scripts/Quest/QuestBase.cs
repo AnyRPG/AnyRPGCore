@@ -297,12 +297,14 @@ namespace AnyRPG {
                 return;
             }
 
-            // since this method only gets called as a result of a quest objective status updating, we need to notify for that
-            NotifyOnObjectiveStatusUpdated(sourceUnitController);
-            OnQuestBaseObjectiveStatusUpdated(sourceUnitController);
-
             if (StepsComplete(sourceUnitController, printMessages)) {
                 MarkComplete(sourceUnitController, notifyOnUpdate, printMessages);
+            } else {
+                // TESTING - moved these notifications to after StepsComplete() so things that get notified have the correct step
+                // since this method only gets called as a result of a quest objective status updating, we need to notify for that
+                // anything subscribing to this will also subscribe to the complete above so it's redundant to call both
+                OnQuestBaseObjectiveStatusUpdated(sourceUnitController);
+                NotifyOnObjectiveStatusUpdated(sourceUnitController);
             }
         }
 
