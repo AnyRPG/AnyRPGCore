@@ -319,6 +319,7 @@ namespace AnyRPG {
         Dictionary<PrefabProfile, List<GameObject>> SpawnProjectileEffectPrefabs(Interactable target, Interactable originalTarget, ProjectileEffectProperties projectileEffectProperties, AbilityEffectContext abilityEffectContext);
         Dictionary<PrefabProfile, List<GameObject>> SpawnChanneledEffectPrefabs(Interactable target, Interactable originalTarget, ChanneledEffectProperties channeledEffectProperties, AbilityEffectContext abilityEffectContext);
         void ReceiveCombatTextEvent(UnitController unitController, int damage, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext);
+        void ProcessAbilityEffectPooled(GameObject go);
     }
 
 }

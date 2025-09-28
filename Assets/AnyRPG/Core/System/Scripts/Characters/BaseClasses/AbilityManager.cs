@@ -10,13 +10,9 @@ namespace AnyRPG {
         protected Coroutine globalCoolDownCoroutine = null;
         protected Coroutine currentCastCoroutine = null;
         protected Coroutine abilityHitDelayCoroutine = null;
-        // sceneHandle, coroutine
-        protected Dictionary<int, List<Coroutine>> destroyAbilityEffectObjectCoroutines = new Dictionary<int, List<Coroutine>>();
 
         protected bool eventSubscriptionsInitialized = false;
 
-        // sceneHandle, gameObject
-        protected Dictionary<int, List<GameObject>> abilityEffectGameObjects = new Dictionary<int, List<GameObject>>();
         protected Dictionary<string, AbilityCoolDownNode> abilityCoolDownDictionary = new Dictionary<string, AbilityCoolDownNode>();
 
         protected IAbilityCaster abilityCaster = null;
@@ -76,8 +72,6 @@ namespace AnyRPG {
             get => new Dictionary<string, AbilityProperties>();
         }
 
-        public Dictionary<int, List<GameObject>> AbilityEffectGameObjects { get => abilityEffectGameObjects; set => abilityEffectGameObjects = value; }
-        public Dictionary<int, List<Coroutine>> DestroyAbilityEffectObjectCoroutines { get => destroyAbilityEffectObjectCoroutines; set => destroyAbilityEffectObjectCoroutines = value; }
         public AbilityProperties CurrentCastAbility { get => currentCastAbility; }
 
         public AbilityManager(IAbilityCaster abilityCaster, SystemGameManager systemGameManager) {
@@ -103,14 +97,6 @@ namespace AnyRPG {
         public virtual void AddTemporaryPet(UnitProfile unitProfile, UnitController unitController) {
             // nothing here for now
         }
-
-        public virtual void AddDestroyAbilityEffectObjectCoroutine(int sceneHandle, Coroutine coroutine) {
-            if (destroyAbilityEffectObjectCoroutines.ContainsKey(sceneHandle) == false) {
-                destroyAbilityEffectObjectCoroutines[sceneHandle] = new List<Coroutine>();
-            }
-            destroyAbilityEffectObjectCoroutines[sceneHandle].Add(coroutine);
-        }
-
 
         public virtual AttachmentPointNode GetHeldAttachmentPointNode(AbilityAttachmentNode attachmentNode) {
             if (attachmentNode.UseUniversalAttachment == false) {
@@ -261,7 +247,7 @@ namespace AnyRPG {
             // do nothing, we can't have pets
         }
 
-
+        /*
         public virtual void CleanupAbilityEffectGameObjects() {
             foreach (List<GameObject> goList in abilityEffectGameObjects.Values) {
                 foreach (GameObject go in goList) {
@@ -272,6 +258,7 @@ namespace AnyRPG {
             }
             abilityEffectGameObjects.Clear();
         }
+        */
 
         public virtual void CleanupCoroutines() {
             //Debug.Log(abilityCaster.gameObject.name + ".Abilitymanager.CleanupCoroutines()");
@@ -283,12 +270,6 @@ namespace AnyRPG {
                 abilityCasterMonoBehaviour.StopCoroutine(abilityHitDelayCoroutine);
                 abilityHitDelayCoroutine = null;
             }
-            foreach (List<Coroutine> coroutineList in destroyAbilityEffectObjectCoroutines.Values) {
-                foreach (Coroutine coroutine in coroutineList) {
-                    abilityCasterMonoBehaviour.StopCoroutine(coroutine);
-                }
-            }
-            destroyAbilityEffectObjectCoroutines.Clear();
             CleanupCoolDownRoutines();
 
             if (globalCoolDownCoroutine != null) {
@@ -319,7 +300,7 @@ namespace AnyRPG {
             }
             CleanupEventSubscriptions();
             CleanupCoroutines();
-            CleanupAbilityEffectGameObjects();
+            //CleanupAbilityEffectGameObjects();
         }
 
         public virtual void CleanupEventSubscriptions() {
@@ -681,6 +662,10 @@ namespace AnyRPG {
         }
 
         public virtual void ReceiveCombatTextEvent(UnitController unitController, int damage, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
+        }
+
+        public virtual void ProcessAbilityEffectPooled(GameObject go) {
+            // nothing here
         }
     }
 }

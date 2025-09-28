@@ -48,6 +48,7 @@ namespace AnyRPG {
 
         // the holdable objects spawned during ability effects and removed when the cast is complete
         protected Dictionary<AbilityAttachmentNode, List<GameObject>> abilityEffectObjects = new Dictionary<AbilityAttachmentNode, List<GameObject>>();
+        protected Dictionary<GameObject, AbilityAttachmentNode> abilityEffectObjectLookup = new Dictionary<GameObject, AbilityAttachmentNode>();
 
         // game manager references
         private PlayerManager playerManager = null;
@@ -337,6 +338,7 @@ namespace AnyRPG {
             } else {
                 abilityEffectObjects.Add(abilityAttachmentNode, new List<GameObject>() { go });
             }
+            abilityEffectObjectLookup.Add(go, abilityAttachmentNode);
         }
 
         private void DespawnAbilityEffectObjects() {
@@ -356,7 +358,8 @@ namespace AnyRPG {
                     }
                 }
             }
-            abilityObjects.Clear();
+            abilityEffectObjects.Clear();
+            abilityEffectObjectLookup.Clear();
         }
 
         public override void DespawnAbilityObjects() {
@@ -2031,6 +2034,16 @@ namespace AnyRPG {
         public override void ReceiveCombatTextEvent(UnitController targetUnitController, int damage, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
             unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(targetUnitController, damage, combatTextType, combatMagnitude, abilityEffectContext);
             base.ReceiveCombatTextEvent(targetUnitController, damage, combatTextType, combatMagnitude, abilityEffectContext);
+        }
+
+        public override void ProcessAbilityEffectPooled(GameObject go) {
+            base.ProcessAbilityEffectPooled(go);
+            if (abilityEffectObjectLookup.ContainsKey(go) == false) {
+                return;
+            }
+            AbilityAttachmentNode abilityAttachmentNode = abilityEffectObjectLookup[go];
+            abilityEffectObjects[abilityAttachmentNode].Remove(go);
+            abilityEffectObjectLookup.Remove(go);
         }
 
     }
