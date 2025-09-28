@@ -834,7 +834,7 @@ namespace AnyRPG {
                 }
 
                 UnitController unitController = other.gameObject.GetComponent<UnitController>();
-                if (unitController != null) {
+                if (unitController?.UnitEventController != null) {
                     unitController.UnitEventController.NotifyOnEnterInteractableTrigger(this);
                 } else if (interactWithAny) {
                     Interact();
