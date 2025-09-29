@@ -790,6 +790,8 @@ namespace AnyRPG {
         }
 
         public void HandleLearnSkill(UnitController sourceUnitController, Skill skill) {
+            //Debug.Log($"PlayerManager.HandleLearnSkill({sourceUnitController.gameObject.name}, {skill.ResourceName})");
+
             systemEventManager.NotifyOnLearnSkill(unitController, skill);
         }
 

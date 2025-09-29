@@ -159,6 +159,7 @@ namespace AnyRPG {
 
         public void ClearDescription() {
             //Debug.Log("SkillTrainerUI.ClearDescription()");
+            currentSkill = null;
             skillDescription.text = string.Empty;
             ClearRewardButtons();
             DeselectSkillScripts();
@@ -195,8 +196,6 @@ namespace AnyRPG {
             //Debug.Log("SkillTrainerUI.LearnSkill()");
             if (currentSkill != null) {
                 skillTrainerManagerClient.RequestLearnSkill(playerManager.UnitController, selectedSkillTrainerSkillScript.SkillId);
-                selectedSkillTrainerSkillScript = null;
-                ClearDescription();
                 //ShowSkills();
             }
         }
@@ -238,6 +237,10 @@ namespace AnyRPG {
         }
 
         private void HandleLearnSkill(UnitController controller, Skill skill) {
+            //Debug.Log("SkillTrainerUI.HandleLearnSkill()");
+
+            selectedSkillTrainerSkillScript = null;
+            ClearDescription();
             ShowSkills();
         }
 

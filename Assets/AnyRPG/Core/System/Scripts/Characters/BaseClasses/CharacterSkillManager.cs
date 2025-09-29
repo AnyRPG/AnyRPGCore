@@ -46,7 +46,7 @@ namespace AnyRPG {
         }
 
         public void LearnSkill(Skill newSkill) {
-            //Debug.Log("CharacterSkillManager.LearnSkill(" + newSkill.DisplayName + ")");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSkillManager.LearnSkill({newSkill.ResourceName})");
 
             if (!skillList.ContainsValue(newSkill)) {
                 skillList[newSkill.ResourceName] = newSkill;
