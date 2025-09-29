@@ -199,7 +199,10 @@ namespace AnyRPG {
                     if (go != null) {
                         //Debug.Log($"SystemAbilityController.DestroyAbilityEffectObject(objectCount: {abilityEffectObjects.Count}, {(source == null ? "null" : source.AbilityManager.Name)}, {(target == null ? "null" : target.gameObject.name)}, {timer}, {fixedLengthEffect.ResourceName}) DESTROYING AT END OF TIMER : {go.name} ({go.GetInstanceID()})");
                         objectPooler.ReturnObjectToPool(go, fixedLengthEffect.PrefabDestroyDelay);
-                        source.AbilityManager.ProcessAbilityEffectPooled(go);
+                        // since effects can persist beyond death (like aoe clouds etc), the source could be dead or despawned by the time we get here
+                        if (source?.AbilityManager != null) {
+                            source.AbilityManager.ProcessAbilityEffectPooled(go);
+                        }
                     }
                 }
             }
