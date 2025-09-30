@@ -56,6 +56,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             currencyBarController.Configure(systemGameManager);
+            currencyBarController.HideNonZeroAmounts = true;
         }
 
         public override void SetGameManagerReferences() {

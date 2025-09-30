@@ -19,11 +19,15 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        private bool hideNonZeroAmounts = false;
+
         // game manager references
         private CurrencyConverter currencyConverter = null;
 
         [SerializeField]
         protected List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
+
+        public bool HideNonZeroAmounts { get => hideNonZeroAmounts; set => hideNonZeroAmounts = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -78,16 +82,28 @@ namespace AnyRPG {
                 }
             }
             int counter = 0;
+            bool nonZeroFound = false;
             foreach (KeyValuePair<Currency, int> currencyPair in currencyList) {
                 //Debug.Log($"{gameObject.name}.CurrencyBarController.UpdateCurrencyAmount(" + currency.DisplayName + ", " + currencyAmount + "): currencyPair.Key: " + currencyPair.Key + "; currencyPair.Value: " + currencyPair.Value);
                 if (currencyAmountControllers.Count > counter) {
                     CurrencyAmountController currencyAmountController = currencyAmountControllers[counter];
                     currencyAmountController.gameObject.SetActive(true);
+                    if (currencyPair.Value > 0 && nonZeroFound == false) {
+                        nonZeroFound = true;
+                    }
                     if (currencyAmountController.CurrencyIcon != null) {
-                        currencyAmountController.CurrencyIcon.SetDescribable(currencyPair.Key);
+                        if (currencyPair.Value == 0 && (nonZeroFound == false && hideNonZeroAmounts == true)) {
+                            currencyAmountController.CurrencyIcon.SetDescribable(null);
+                        } else {
+                            currencyAmountController.CurrencyIcon.SetDescribable(currencyPair.Key);
+                        }
                     }
                     if (currencyAmountController.AmountText != null) {
-                        currencyAmountController.AmountText.text = currencyPair.Value.ToString();
+                        if (currencyPair.Value == 0 && (nonZeroFound == false && hideNonZeroAmounts == true)) {
+                            currencyAmountController.AmountText.text = string.Empty;
+                        } else {
+                            currencyAmountController.AmountText.text = currencyPair.Value.ToString();
+                        }
                     }
                 }
                 counter += 1;
