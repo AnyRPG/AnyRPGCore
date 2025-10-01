@@ -60,6 +60,11 @@ namespace AnyRPG {
                 return null;
             }
             */
+            int count = playerManager.UnitController.CharacterInventoryManager.GetUseableCount(this);
+            if (count == 0) {
+                // don't start monitoring if there are no charges
+                return null;
+            }
             return systemAbilityController.StartCoroutine(actionButton.MonitorCooldown(this));
         }
 
@@ -105,11 +110,8 @@ namespace AnyRPG {
             return coolDownString;
         }
         */
-        public override void UpdateActionButtonVisual(ActionButton actionButton) {
+        public override void ProcessUpdateActionButtonVisual(ActionButton actionButton) {
             //Debug.Log(DisplayName + ".ActionItem.UpdateActionButtonVisual()");
-
-            // set cooldown icon on abilities that don't have enough resources to cast
-            base.UpdateActionButtonVisual(actionButton);
 
             if (playerManager.UnitController.AbilityManager.ControlLocked) {
                 actionButton.EnableFullCoolDownIcon();

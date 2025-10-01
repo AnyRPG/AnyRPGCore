@@ -187,16 +187,12 @@ namespace AnyRPG {
 
 
         public virtual void UpdateActionButtonVisual(ActionButton actionButton) {
-            int count = playerManager.UnitController.CharacterInventoryManager.GetUseableCount(this);
-            // we have to do this to ensure we have a reference to the top item on the stack, otherwise we will try to use an item that has been used already
-            //if ((count == 0 && removeStaleActions) || count > 0) {
-            /*
-            if (count > 0) {
-                Useable = inventoryManager.GetUseable(Useable as IUseable);
-            }
-            */
-            uIManager.UpdateStackSize(actionButton, count, true);
+            //Debug.Log($"{ResourceName}.InstantiatedItem.UpdateActionButtonVisual({actionButton.gameObject.name})");
 
+            int count = playerManager.UnitController.CharacterInventoryManager.GetUseableCount(this);
+
+            // redundant since this is already done in ActionButton.UpdateVisual()
+            //uIManager.UpdateStackSize(actionButton, count, true);
 
             if (count == 0) {
                 actionButton.EnableFullCoolDownIcon();
@@ -205,8 +201,14 @@ namespace AnyRPG {
                 // check for ability cooldown here and only disable if no cooldown exists
                 if (!item.HadSpecialIcon(actionButton)) {
                     actionButton.DisableCoolDownIcon();
+                } else {
+                    ProcessUpdateActionButtonVisual(actionButton);
                 }
             }
+        }
+
+        public virtual void ProcessUpdateActionButtonVisual(ActionButton actionButton) {
+            // do nothing, override in subclasses
         }
 
         public virtual int GetChargeCount() {

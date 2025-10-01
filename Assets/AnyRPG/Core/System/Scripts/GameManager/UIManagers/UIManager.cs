@@ -1094,7 +1094,8 @@ namespace AnyRPG {
         }
 
         public void UpdateStackSize(IClickable clickable, int count, bool alwaysDisplayCount = false) {
-            //Debug.Log("UpdateStackSize(" + count + ", " + alwaysDisplayCount + ")");
+            //Debug.Log($"UIManager.UpdateStackSize({count}, {alwaysDisplayCount})");
+
             if (count > 1 || alwaysDisplayCount == true) {
                 if (clickable.StackSizeText.text != count.ToString()) {
                     clickable.StackSizeText.text = count.ToString();

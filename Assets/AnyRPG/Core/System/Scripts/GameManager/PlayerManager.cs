@@ -611,7 +611,6 @@ namespace AnyRPG {
             unitController.UnitEventController.OnCombatCheckFail += HandleCombatCheckFail;
             unitController.UnitEventController.OnStealthCheckFail += HandleStealthCheckFail;
             unitController.UnitEventController.OnAbilityActionCheckFail += HandleAbilityActionCheckFail;
-            unitController.UnitEventController.OnBeginAbilityCoolDown += HandleBeginAbilityCoolDown;
             //unitController.UnitEventController.OnTargetInAbilityRangeFail += HandleTargetInAbilityRangeFail;
             unitController.UnitEventController.OnReputationChange += HandleReputationChange;
             //unitController.UnitEventController.OnUnlearnAbility += HandleUnlearnAbility;
@@ -671,7 +670,6 @@ namespace AnyRPG {
             unitController.UnitEventController.OnCombatCheckFail -= HandleCombatCheckFail;
             unitController.UnitEventController.OnStealthCheckFail -= HandleStealthCheckFail;
             unitController.UnitEventController.OnAbilityActionCheckFail -= HandleAbilityActionCheckFail;
-            unitController.UnitEventController.OnBeginAbilityCoolDown -= HandleBeginAbilityCoolDown;
             //unitController.UnitEventController.OnTargetInAbilityRangeFail -= HandleTargetInAbilityRangeFail;
             unitController.UnitEventController.OnReputationChange -= HandleReputationChange;
             //unitController.UnitEventController.OnUnlearnAbility -= HandleUnlearnAbility;
@@ -849,10 +847,6 @@ namespace AnyRPG {
 
         public void HandleRemoveBankSlot(InventorySlot inventorySlot) {
             inventoryManager.RemoveBankSlot(inventorySlot);
-        }
-
-        public void HandleBeginAbilityCoolDown(AbilityProperties abilityProperties, float coolDownLength) {
-            SystemEventManager.TriggerEvent("OnBeginAbilityCooldown", new EventParamProperties());
         }
 
         public void HandleCombatMessage(string messageText) {

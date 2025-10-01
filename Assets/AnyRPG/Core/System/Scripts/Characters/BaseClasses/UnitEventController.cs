@@ -264,6 +264,8 @@ namespace AnyRPG {
         }
 
         public void NotifyOnBeginAbilityCoolDown(AbilityProperties baseAbility, float coolDownLength) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnBeginAbilityCoolDown({baseAbility.ResourceName}, {coolDownLength})");
+
             OnBeginAbilityCoolDown(baseAbility, coolDownLength);
         }
 
@@ -581,7 +583,7 @@ namespace AnyRPG {
         }
 
         public void NotifyOnSpawnActionObjects(AnimatedAction animatedAction) {
-            Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnSpawnActionObjects({animatedAction.ResourceName})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnSpawnActionObjects({animatedAction.ResourceName})");
 
             OnSpawnActionObjects(animatedAction);
         }
