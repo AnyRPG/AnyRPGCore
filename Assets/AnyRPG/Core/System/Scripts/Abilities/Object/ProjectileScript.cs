@@ -114,7 +114,10 @@ namespace AnyRPG {
             //Debug.Log("ProjectileScript.MoveTowardTarget()");
             UpdateTargetPosition();
             if (target != null) {
-                projectileGameObject.transform.forward = (targetPosition - projectileGameObject.transform.position).normalized;
+                Vector3 forwardDirection = (targetPosition - projectileGameObject.transform.position).normalized;
+                if (forwardDirection != Vector3.zero) {
+                    projectileGameObject.transform.forward = forwardDirection;
+                }
             } else {
                 //transform.forward = Vector3.down;
             }
