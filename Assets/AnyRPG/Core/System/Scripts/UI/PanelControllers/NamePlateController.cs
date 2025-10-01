@@ -542,6 +542,9 @@ namespace AnyRPG {
         }
 
         public void OnPointerExit(PointerEventData eventData) {
+            if (SystemGameManager.IsShuttingDown == true) {
+                return;
+            }
             ProcessPointerExit();
         }
 
