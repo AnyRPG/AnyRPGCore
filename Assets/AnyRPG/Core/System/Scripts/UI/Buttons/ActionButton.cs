@@ -233,7 +233,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="newUseable"></param>
         public void SetUseable(IUseable newUseable, bool monitor = true) {
-            Debug.Log($"{gameObject.name}.ActionButton.SetUsable({(useable == null ? "null" : useable.ResourceName)}, {monitor})");
+            //Debug.Log($"{gameObject.name}.ActionButton.SetUsable({(useable == null ? "null" : useable.ResourceName)}, {monitor})");
 
             ClearUseable();
 
