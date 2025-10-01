@@ -233,7 +233,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="newUseable"></param>
         public void SetUseable(IUseable newUseable, bool monitor = true) {
-            //Debug.Log($"{gameObject.name}.ActionButton.SetUsable({(useable == null ? "null" : useable.DisplayName)}, {monitor})");
+            Debug.Log($"{gameObject.name}.ActionButton.SetUsable({(useable == null ? "null" : useable.ResourceName)}, {monitor})");
 
             ClearUseable();
 
@@ -260,9 +260,12 @@ namespace AnyRPG {
         }
 
         public void SubscribeToAbilityEvents() {
+            //Debug.Log($"{gameObject.name}.ActionButton.SubscribeToAbilityEvents()");
+
             playerManager.UnitController.UnitEventController.OnAttemptPerformAbility += HandleAttemptPerformAbility;
             playerManager.UnitController.UnitEventController.OnPerformAbility += HandlePerformAbility;
             playerManager.UnitController.UnitEventController.OnBeginAbilityCoolDown += HandleBeginAbilityCooldown;
+            playerManager.UnitController.UnitEventController.OnBeginActionCoolDown += HandleBeginActionCooldown;
         }
 
         public void SubscribeToAutoAttackEvents() {
@@ -306,9 +309,17 @@ namespace AnyRPG {
         }
 
         public void HandleBeginAbilityCooldown(AbilityProperties abilityProperties, float coolDownLength) {
-            //Debug.Log("ActionButton.OnUseableUse(" + ability.DisplayName + ")");
+            //Debug.Log($"{gameObject.name}.ActionButton.HandleBeginAbilityCooldown({abilityProperties.ResourceName}, {coolDownLength})");
+
             ChooseMonitorCoroutine();
         }
+
+        private void HandleBeginActionCooldown(InstantiatedActionItem item, float coolDownLength) {
+            //Debug.Log($"{gameObject.name}.ActionButton.HandleBeginActionCooldown({item.ResourceName}, {coolDownLength})");
+
+            ChooseMonitorCoroutine();
+        }
+
 
         public void ChooseMonitorCoroutine() {
             // if this action button is empty, there is nothing to monitor
@@ -553,9 +564,12 @@ namespace AnyRPG {
         }
 
         public void UnsubscribeFromAbilityEvents() {
+            //Debug.Log($"{gameObject.name}.ActionButton.UnsubscribeFromAbilityEvents()");
+
             playerManager.UnitController.UnitEventController.OnAttemptPerformAbility -= HandleAttemptPerformAbility;
             playerManager.UnitController.UnitEventController.OnPerformAbility -= HandlePerformAbility;
             playerManager.UnitController.UnitEventController.OnBeginAbilityCoolDown -= HandleBeginAbilityCooldown;
+            playerManager.UnitController.UnitEventController.OnBeginActionCoolDown -= HandleBeginActionCooldown;
         }
 
         public override void Select() {
