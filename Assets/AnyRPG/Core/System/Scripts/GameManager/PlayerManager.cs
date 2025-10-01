@@ -447,17 +447,26 @@ namespace AnyRPG {
                 return;
             }
             SubscribeToPlayerEvents();
-            SubscribeToPlayerInventoryEvents();
             unitController.CharacterUnit.SetCharacterStatsCapabilities();
             //playerManagerServer.AddActivePlayer(0, unitController);
         }
 
         public void HandleModelReady() {
             //Debug.Log("PlayerManager.HandleModelReady()");
-
+            SubscribeToModelEvents();
             UnsubscribeFromModelReady();
 
             HandlePlayerUnitSpawn();
+        }
+
+        public void SubscribeToModelEvents() {
+            //Debug.Log("PlayerManager.SubscribeToModelEvents()");
+            unitController.UnitEventController.OnStatusEffectAdd += HandleStatusEffectAdd;
+        }
+
+        public void UnsubscribeFromModelEvents() {
+            //Debug.Log("PlayerManager.SubscribeToModelEvents()");
+            unitController.UnitEventController.OnStatusEffectAdd -= HandleStatusEffectAdd;
         }
 
         private void HandlePlayerUnitSpawn() {
@@ -564,28 +573,6 @@ namespace AnyRPG {
             playerConnectionSpawned = false;
         }
 
-        public void SubscribeToPlayerInventoryEvents() {
-            //Debug.Log("PlayerManager.SubscribeToPlayerInventoryEvents()");
-
-            unitController.CharacterInventoryManager.OnAddInventoryBagNode += HandleAddInventoryBagNode;
-            unitController.CharacterInventoryManager.OnAddBankBagNode += HandleAddBankBagNode;
-            unitController.CharacterInventoryManager.OnAddInventorySlot += HandleAddInventorySlot;
-            unitController.CharacterInventoryManager.OnAddBankSlot += HandleAddBankSlot;
-            unitController.CharacterInventoryManager.OnRemoveInventorySlot += HandleRemoveInventorySlot;
-            unitController.CharacterInventoryManager.OnRemoveBankSlot += HandleRemoveBankSlot;
-            unitController.UnitEventController.OnAddBag += HandleAddBag;
-        }
-
-        public void UnsubscribeFromPlayerInventoryEvents() {
-            unitController.CharacterInventoryManager.OnAddInventoryBagNode -= HandleAddInventoryBagNode;
-            unitController.CharacterInventoryManager.OnAddBankBagNode -= HandleAddBankBagNode;
-            unitController.CharacterInventoryManager.OnAddInventorySlot -= HandleAddInventorySlot;
-            unitController.CharacterInventoryManager.OnAddBankSlot -= HandleAddBankSlot;
-            unitController.CharacterInventoryManager.OnRemoveInventorySlot -= HandleRemoveInventorySlot;
-            unitController.CharacterInventoryManager.OnRemoveBankSlot -= HandleRemoveBankSlot;
-            unitController.UnitEventController.OnAddBag -= HandleAddBag;
-        }
-
         public void SubscribeToPlayerEvents() {
             //Debug.Log("PlayerManager.SubscribeToPlayerEvents()");
 
@@ -596,7 +583,6 @@ namespace AnyRPG {
             unitController.UnitEventController.OnReviveComplete += HandleReviveComplete;
             unitController.UnitEventController.OnLevelChanged += HandleLevelChanged;
             unitController.UnitEventController.OnGainXP += HandleGainXP;
-            unitController.UnitEventController.OnStatusEffectAdd += HandleStatusEffectAdd;
             unitController.UnitEventController.OnRecoverResource += HandleRecoverResource;
             unitController.UnitEventController.OnResourceAmountChanged += HandleResourceAmountChanged;
             unitController.UnitEventController.OnEnterCombat += HandleEnterCombat;
@@ -643,6 +629,13 @@ namespace AnyRPG {
             unitController.UnitEventController.OnMarkAchievementComplete += HandleMarkAchievementComplete;
             unitController.UnitEventController.OnWriteMessageFeedMessage += HandleWriteMessageFeedMessage;
             unitController.UnitEventController.OnItemCountChanged += HandleItemCountChanged;
+            unitController.CharacterInventoryManager.OnAddInventoryBagNode += HandleAddInventoryBagNode;
+            unitController.CharacterInventoryManager.OnAddBankBagNode += HandleAddBankBagNode;
+            unitController.CharacterInventoryManager.OnAddInventorySlot += HandleAddInventorySlot;
+            unitController.CharacterInventoryManager.OnAddBankSlot += HandleAddBankSlot;
+            unitController.CharacterInventoryManager.OnRemoveInventorySlot += HandleRemoveInventorySlot;
+            unitController.CharacterInventoryManager.OnRemoveBankSlot += HandleRemoveBankSlot;
+            unitController.UnitEventController.OnAddBag += HandleAddBag;
         }
 
         public void UnsubscribeFromPlayerEvents() {
@@ -655,7 +648,6 @@ namespace AnyRPG {
             unitController.UnitEventController.OnReviveComplete -= HandleReviveComplete;
             unitController.UnitEventController.OnLevelChanged -= HandleLevelChanged;
             unitController.UnitEventController.OnGainXP -= HandleGainXP;
-            unitController.UnitEventController.OnStatusEffectAdd -= HandleStatusEffectAdd;
             unitController.UnitEventController.OnRecoverResource -= HandleRecoverResource;
             unitController.UnitEventController.OnResourceAmountChanged -= HandleResourceAmountChanged;
             unitController.UnitEventController.OnEnterCombat -= HandleEnterCombat;
@@ -702,6 +694,13 @@ namespace AnyRPG {
             unitController.UnitEventController.OnMarkAchievementComplete -= HandleMarkAchievementComplete;
             unitController.UnitEventController.OnWriteMessageFeedMessage -= HandleWriteMessageFeedMessage;
             unitController.UnitEventController.OnItemCountChanged -= HandleItemCountChanged;
+            unitController.CharacterInventoryManager.OnAddInventoryBagNode -= HandleAddInventoryBagNode;
+            unitController.CharacterInventoryManager.OnAddBankBagNode -= HandleAddBankBagNode;
+            unitController.CharacterInventoryManager.OnAddInventorySlot -= HandleAddInventorySlot;
+            unitController.CharacterInventoryManager.OnAddBankSlot -= HandleAddBankSlot;
+            unitController.CharacterInventoryManager.OnRemoveInventorySlot -= HandleRemoveInventorySlot;
+            unitController.CharacterInventoryManager.OnRemoveBankSlot -= HandleRemoveBankSlot;
+            unitController.UnitEventController.OnAddBag -= HandleAddBag;
         }
 
         private void HandleItemCountChanged(UnitController controller, Item item) {
@@ -748,8 +747,8 @@ namespace AnyRPG {
         }
 
         public void HandleDespawn(UnitController controller) {
-            UnsubscribeFromPlayerInventoryEvents();
             UnsubscribeFromPlayerEvents();
+            UnsubscribeFromModelEvents();
             systemEventManager.NotifyOnPlayerUnitDespawn(controller);
             SetUnitController(null);
         }

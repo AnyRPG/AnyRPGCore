@@ -16,6 +16,7 @@ namespace AnyRPG {
         //private List<CombatTextController> combatTextControllers = new List<CombatTextController>();
 
         private List<CombatTextController> inUseCombatTextControllers = new List<CombatTextController>();
+        private List<CombatTextController> returnList = new List<CombatTextController>();
 
         // game manager references
         private CameraManager cameraManager = null;
@@ -61,7 +62,7 @@ namespace AnyRPG {
             List<CombatTextController> removeList = new List<CombatTextController>();
             removeList.AddRange(inUseCombatTextControllers);
             foreach (CombatTextController combatTextController in removeList) {
-                returnControllerToPool(combatTextController);
+                ReturnControllerToPool(combatTextController);
             }
         }
 
@@ -74,6 +75,12 @@ namespace AnyRPG {
             }
             foreach (CombatTextController combatTextController in inUseCombatTextControllers) {
                 combatTextController.RunCombatTextUpdate();
+            }
+            if (returnList.Count > 0) {
+                foreach (CombatTextController combatTextController in returnList) {
+                    ReturnControllerToPool(combatTextController);
+                }
+                returnList.Clear();
             }
         }
 
@@ -90,19 +97,18 @@ namespace AnyRPG {
         /// wait until the end of the frame and then return the object to the pool to avoid modifying the collection in the foreach loop
         /// </summary>
         /// <param name="combatTextController"></param>
-        public void returnControllerToPool(CombatTextController combatTextController) {
-            StartCoroutine(ReturnAtEndOfFrame(combatTextController));
+        public void RequestReturnControllerToPool(CombatTextController combatTextController) {
+            returnList.Add(combatTextController);
         }
 
-        public IEnumerator ReturnAtEndOfFrame(CombatTextController combatTextController) {
-            yield return new WaitForEndOfFrame();
+        public void ReturnControllerToPool(CombatTextController combatTextController) {
             inUseCombatTextControllers.Remove(combatTextController);
             objectPooler.ReturnObjectToPool(combatTextController.gameObject);
-
         }
 
         public void SpawnCombatText(Interactable target, int damage, CombatTextType combatType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log("CombatTextManager.SpawnCombatText(" + target.name + ", " + damage + ", " + combatType + ", " + combatMagnitude + ")");
+            //Debug.Log($"CombatTextManager.SpawnCombatText({target.gameObject.name}, {damage}, {combatType}, {combatMagnitude})");
+
             if (PlayerPrefs.GetInt("UseFloatingCombatText") == 0) {
                 return;
             }
@@ -138,6 +144,8 @@ namespace AnyRPG {
         }
 
         public void SpawnCombatText(Interactable target, StatusEffectProperties statusEffect, bool gainEffect) {
+            //Debug.Log($"CombatTextManager.SpawnCombatText({target.gameObject.name}, {statusEffect.ResourceName}, {gainEffect})");
+
             if (PlayerPrefs.GetInt("UseFloatingCombatText") == 0) {
                 return;
             }

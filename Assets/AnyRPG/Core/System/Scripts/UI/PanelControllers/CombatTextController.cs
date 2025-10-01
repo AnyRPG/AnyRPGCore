@@ -103,7 +103,7 @@ namespace AnyRPG {
 
             // if the combat text ui is not active, then we should just immediately disable this
             if (gameObject.activeInHierarchy == false) {
-                combatTextManager.returnControllerToPool(this);
+                combatTextManager.RequestReturnControllerToPool(this);
                 return;
             }
 
@@ -261,7 +261,7 @@ namespace AnyRPG {
                 //randomY += (movementSpeed * directionMultiplier);
                 yUIOffset = distanceToMove * (((fadeOutTimer - fadeTime) * -1) / fadeTime) * directionMultiplier;
             } else {
-                combatTextManager.returnControllerToPool(this);
+                combatTextManager.RequestReturnControllerToPool(this);
             }
 
         }
