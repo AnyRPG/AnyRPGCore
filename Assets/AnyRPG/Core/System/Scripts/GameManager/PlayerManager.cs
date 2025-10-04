@@ -939,7 +939,7 @@ namespace AnyRPG {
             combatTextManager.SpawnCombatText(activeUnitController, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
         }
 
-        public void HandleResourceAmountChanged(PowerResource powerResource, int amount, int amount2) {
+        public void HandleResourceAmountChanged(PowerResource powerResource, int maxAmount, int currentAmount) {
             actionBarManager.UpdateVisuals();
         }
 

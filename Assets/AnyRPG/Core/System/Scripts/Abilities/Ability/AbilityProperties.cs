@@ -625,7 +625,7 @@ namespace AnyRPG {
 
             // set cooldown icon on abilities that don't have enough resources to cast
             if (PowerResource != null
-                && (GetResourceCost(playerManager.UnitController) >= playerManager.UnitController.CharacterStats.GetPowerResourceAmount(PowerResource))) {
+                && (GetResourceCost(playerManager.UnitController) > playerManager.UnitController.CharacterStats.GetPowerResourceAmount(PowerResource))) {
                 //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): not enough resources to cast this ability.  enabling full cooldown");
                 actionButton.EnableFullCoolDownIcon();
                 return;
