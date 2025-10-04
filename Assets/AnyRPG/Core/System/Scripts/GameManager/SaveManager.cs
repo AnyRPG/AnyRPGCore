@@ -262,8 +262,6 @@ namespace AnyRPG {
         public bool SaveGame(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveGame()");
 
-            
-
             // check if the player is inside a trigger
             // disallow saving if they are because we don't want to trigger boss spawns
             // or cutscenes when the player loads back in the game
