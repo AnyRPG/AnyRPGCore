@@ -1203,7 +1203,7 @@ namespace AnyRPG {
             }
 
             cameraManager.ActivateMainCamera();
-            cameraManager.MainCameraController.InitializeCamera(playerManager.ActiveUnitController.transform);
+            cameraManager.MainCameraController.InitializeCamera(playerManager.UnitController.transform);
 
             EventParamProperties eventParam = new EventParamProperties();
             SystemEventManager.TriggerEvent("OnEndRiding", eventParam);
