@@ -500,8 +500,9 @@ namespace AnyRPG {
         }
 
         public void UpdateItemCount(UnitController unitController, Item item) {
+            //Debug.Log($"{gameObject.name}.ActionButton.UpdateItemCount({unitController.gameObject.name}, {(item == null ? "null" : item.ResourceName)})");
 
-            if (item is IUseable) {
+            if (useable != null && useable is InstantiatedItem && (useable as InstantiatedItem).Item == item) {
                 UpdateVisual();
             }
         }
