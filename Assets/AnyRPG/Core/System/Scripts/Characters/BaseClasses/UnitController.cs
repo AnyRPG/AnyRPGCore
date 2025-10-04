@@ -1012,9 +1012,11 @@ namespace AnyRPG {
             // clear target before notify despawn or nothing will be subscribed clearTarget event
             ClearTarget();
 
+            // cancel mount effects before notify because the notify will clear the PlayerManager.UnitController if this is a player
+            CancelMountEffects();
+
             unitEventController.NotifyOnDespawn(this);
 
-            CancelMountEffects();
             // this could be a mount which has no base character - check for nulls
             characterStats.HandleCharacterUnitDespawn();
             characterAbilityManager.HandleCharacterUnitDespawn();
