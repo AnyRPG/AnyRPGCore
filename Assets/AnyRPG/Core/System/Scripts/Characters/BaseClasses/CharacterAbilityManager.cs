@@ -562,13 +562,16 @@ namespace AnyRPG {
             TargetProps targetProps = targetable.GetTargetOptions(unitController);
             if (targetProps.UseMeleeRange) {
                 if (!IsTargetInMeleeRange(target)) {
+                    //Debug.Log($"{unitController.gameObject.name}.IsTargetInRange(): target {target.DisplayName} is out of melee range");
                     return false;
                 }
             } else {
                 if (!IsTargetInMaxRange(target, targetProps.MaxRange, targetable, abilityEffectContext)) {
+                    //Debug.Log($"{unitController.gameObject.name}.IsTargetInRange(): target {target.DisplayName} is out of max range ({targetProps.MaxRange})");
                     return false;
                 }
                 if (targetProps.RequireLineOfSight == true && !PerformLOSCheck(target, targetable, abilityEffectContext)) {
+                    //Debug.Log($"{unitController.gameObject.name}.IsTargetInRange(): target {target.DisplayName} is not in line of sight");
                     return false;
                 }
             }
@@ -635,7 +638,8 @@ namespace AnyRPG {
         }
 
         public IEnumerator WaitForAbilityActionToComplete(AbilityProperties baseAbilityProperties, AbilityEffectContext abilityEffectContext, UnitController targetUnitController, float animationLength) {
-            //Debug.Log($"{unitController.gameObject.name}.WaitForAnimation(" + baseAbility + ", " + animationLength + ", " + clearAutoAttack + ", " + clearAnimatedAttack + ", " + clearCasting + ")");
+            //Debug.Log($"{unitController.gameObject.name}.WaitForAbilityActionToComplete({baseAbilityProperties.ResourceName}, {animationLength})");
+            
             float remainingTime = animationLength;
             //Debug.Log($"{gameObject.name}waitforanimation remainingtime: " + remainingTime + "; MyWaitingForHits: " + PerformingAutoAttack + "; PerformingAnimatedAbility: " + performingAnimatedAbility);
             while (remainingTime > 0f && PerformingAnyAbility() == true) {
@@ -1873,6 +1877,8 @@ namespace AnyRPG {
         }
 
         private void ProcessAbilityActionEnd() {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.ProcessAbilityActionEnd()");
+
             attackCoroutine = null;
             if (performingAutoAttack == true) {
                 performingAutoAttack = false;

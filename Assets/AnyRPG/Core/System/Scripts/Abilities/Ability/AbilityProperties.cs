@@ -1121,20 +1121,24 @@ namespace AnyRPG {
         }
 
         public virtual bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
-            //Debug.Log(DisplayName + ".BaseAbility.CanUseOn(" + (target != null ? target.name : "null") + ", " + (sourceCharacter != null ? sourceCharacter.AbilityManager.Name : "null") + ")");
+            //Debug.Log($"{ResourceName}.AbilityProperties.CanUseOn({(target != null ? target.name : "null")}, {(sourceCharacter != null ? sourceCharacter.AbilityManager.Name : "null")}, {performCooldownChecks})");
+            
             if (performCooldownChecks && !sourceCharacter.AbilityManager.PerformAbilityActionCheck(this)) {
+                //Debug.Log($"{ResourceName}.AbilityProperties.CanUseOn(): failed cooldown check");
                 return false;
             }
 
             if (!CanUseOnBase(target, sourceCharacter, performCooldownChecks, abilityEffectContext, playerInitiated, performRangeCheck)) {
+                //Debug.Log($"{ResourceName}.AbilityProperties.CanUseOn(): failed base check");
                 return false;
             }
 
             if (!CanSimultaneousCast) {
-                if (sourceCharacter.AbilityManager.PerformingAbility) {
+                if (performCooldownChecks == true && sourceCharacter.AbilityManager.PerformingAbility) {
                     if (playerInitiated) {
-                        sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + describableData.DisplayName + ". another cast is in progress");
+                        sourceCharacter.AbilityManager.ReceiveCombatMessage($"Cannot cast {describableData.DisplayName}. Another cast is in progress");
                     }
+                    //Debug.Log($"{ResourceName}.AbilityProperties.CanUseOn(): failed in-progress check");
                     return false;
                 }
             }

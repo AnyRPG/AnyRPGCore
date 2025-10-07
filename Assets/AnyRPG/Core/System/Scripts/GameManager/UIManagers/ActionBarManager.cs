@@ -355,19 +355,6 @@ namespace AnyRPG {
                 //Debug.Log("ActionBarmanager.UpdateTargetRange(): still have target at distance: " + distanceToTarget);
                 foreach (ActionButton actionButton in GetCurrentActionButtons()) {
                     actionButton.Useable?.UpdateTargetRange(this, actionButton);
-                    //if ((actionButton.Useable as BaseAbility) is BaseAbility) {
-                    //} else {
-                        /*
-                        if (actionButton.KeyBindText.color != Color.white) {
-                            actionButton.KeyBindText.color = Color.white;
-                        }
-                        */
-                        /*
-                        if (actionButton.RangeIndicator.color != Color.white && actionButton.Useable != null) {
-                            actionButton.RangeIndicator.color = Color.white;
-                        }
-                        */
-                    //}
                 }
                 yield return null;
             }
@@ -376,35 +363,21 @@ namespace AnyRPG {
         }
 
         public void UpdateAbilityTargetRange(AbilityProperties baseAbilityProperties, ActionButton actionButton) {
+            //Debug.Log($"ActionBarmanager.UpdateAbilityTargetRange({baseAbilityProperties.DisplayName})");
 
             Interactable finalTarget = baseAbilityProperties.ReturnTarget(playerManager.UnitController, target, false);
 
             if (finalTarget == null || playerManager.UnitController.CharacterAbilityManager.IsTargetInRange(finalTarget, baseAbilityProperties) == false) {
-                /*
-                if (actionButton.KeyBindText.color != Color.red) {
-                    actionButton.KeyBindText.color = Color.red;
-                }
-                */
+                //Debug.Log($"ActionBarmanager.UpdateAbilityTargetRange({baseAbilityProperties.DisplayName}) finalTarget: {(finalTarget == null ? "null" : finalTarget.gameObject.name)}");
                 if (actionButton.RangeIndicator.color != Color.red && actionButton.Useable != null) {
                     actionButton.RangeIndicator.color = Color.red;
                 }
 
             } else {
-                /*
-                if (actionButton.KeyBindText.color != Color.white) {
-                    actionButton.KeyBindText.color = Color.white;
-                }
-                */
-                /*
-                if (actionButton.RangeIndicator.color != Color.white && actionButton.Useable != null) {
-                    actionButton.RangeIndicator.color = Color.white;
-                }
-                */
+                //Debug.Log($"ActionBarmanager.UpdateAbilityTargetRange({baseAbilityProperties.DisplayName}) hiding range indicator");
                 if (actionButton.RangeIndicator.color != hiddenColor) {
-                    //actionButton.RangeIndicator.color = hiddenColor;
                     actionButton.HideRangeIndicator();
                 }
-
             }
 
         }
