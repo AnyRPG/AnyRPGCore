@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using UnityEngine;
 
 namespace AnyRPG {
     public class TeleportComponent : PortalComponent {
@@ -10,7 +11,8 @@ namespace AnyRPG {
         }
 
         public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
-            //Debug.Log($"{gameObject.name}.PortalInteractable.Interact()");
+            //Debug.Log($"{interactable.gameObject.name}.TeleportComponent.ProcessInteract({sourceUnitController.gameObject.name}, {componentIndex})");
+
             base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
 
             sourceUnitController.CharacterAbilityManager.BeginAbility(TeleportProps.BaseAbility.AbilityProperties);

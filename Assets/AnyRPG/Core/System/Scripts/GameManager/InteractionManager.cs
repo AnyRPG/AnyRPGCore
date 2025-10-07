@@ -58,7 +58,7 @@ namespace AnyRPG {
             // get reference to name now since interactable could change scene and then target reference is lost
             //string targetDisplayName = target.DisplayName;
 
-            if (InteractWithInteractable(playerManager.ActiveUnitController, target)) {
+            if (InteractWithInteractable(playerManager.UnitController, target)) {
                 //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
                 return true;
             }
