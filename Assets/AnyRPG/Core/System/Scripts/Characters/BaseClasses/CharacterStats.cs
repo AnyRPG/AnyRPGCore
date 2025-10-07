@@ -1547,12 +1547,12 @@ namespace AnyRPG {
                 statusEffectNode.SetRemainingDuration(statusEffect.Duration);
             }
             if (statusEffect.CastZeroTick) {
-                if (characterSource != null && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManager.IsCutscene())) {
+                if (characterSource?.AbilityManager != null && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManager.IsCutscene())) {
                     statusEffect.CastTick(characterSource, unitController, abilityEffectContext);
                 }
             }
 
-            while ((statusEffect.LimitedDuration == false || statusEffect.ClassTrait == true || statusEffectNode.GetRemainingDuration() > 0f) && unitController != null) {
+            while ((statusEffect.LimitedDuration == false || statusEffect.ClassTrait == true || statusEffectNode.GetRemainingDuration() > 0f) && unitController != null && characterSource?.AbilityManager != null) {
                 yield return null;
                 if (statusEffect.LimitedDuration == true && statusEffect.ClassTrait == false) {
                     statusEffectNode.SetRemainingDuration(statusEffectNode.GetRemainingDuration() - Time.deltaTime);
@@ -1562,16 +1562,16 @@ namespace AnyRPG {
                 // check for tick first so we can do final tick;
 
                 if (elapsedTime >= statusEffect.TickRate && statusEffect.TickRate != 0) {
-                    if (characterSource != null) {
+                    if (characterSource?.AbilityManager != null) {
                         if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManager.IsCutscene()) {
                             statusEffect.CastTick(characterSource, unitController, abilityEffectContext);
                         }
-                        elapsedTime -= statusEffect.TickRate;
                     }
+                    elapsedTime -= statusEffect.TickRate;
                 }
                 statusEffectNode.UpdateStatusNode();
             }
-            if (characterSource != null && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManager.IsCutscene())) {
+            if (characterSource?.AbilityManager != null && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManager.IsCutscene())) {
                 statusEffect.CastComplete(characterSource, unitController, abilityEffectContext);
             }
 
