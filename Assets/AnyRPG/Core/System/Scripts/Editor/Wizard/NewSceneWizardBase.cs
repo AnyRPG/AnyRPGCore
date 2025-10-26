@@ -20,7 +20,6 @@ namespace AnyRPG {
 
         protected const string sceneTemplatePath = "/AnyRPG/Core/Templates/Game/Scenes/FirstScene/FirstScene.unity";
         protected const string lightingSettingsTemplatePath = "/AnyRPG/Core/Templates/Game/Scenes/FirstScene/FirstSceneSettings.lighting";
-        protected const string portalTemplatePath = "/AnyRPG/Core/Templates/Prefabs/Portal/StonePortal.prefab";
         protected const string defaultSpawnLocationPath = "/AnyRPG/Core/Templates/Prefabs/SpawnPoints/DefaultSpawnLocation.prefab";
         protected const string zoneCollidersPath = "/AnyRPG/Core/Templates/Prefabs/Colliders/ZoneColliders.prefab";
 
@@ -60,18 +59,26 @@ namespace AnyRPG {
                 return;
             }
 
-            string newSceneAssetPath = CreateScene(gameParentFolder, gameName, sceneName, copyExistingScene, existingScene, newSceneDayAmbientSounds, newSceneNightAmbientSounds, newSceneMusic, this);
+            string newSceneAssetPath = CreateScene(gameParentFolder, gameName, sceneName, copyExistingScene, existingScene, newSceneDayAmbientSounds, newSceneNightAmbientSounds, newSceneMusic, this, GetPortalTemplatePath());
 
             EditorUtility.ClearProgressBar();
             EditorUtility.DisplayDialog("New Scene Wizard", "New Scene Wizard Complete! The scene can be found at " + newSceneAssetPath, "OK");
 
         }
 
+        public virtual string GetPortalTemplatePath() {
+            return string.Empty;
+        }
+
+        public virtual bool CheckRequiredTemplatesExist() {
+            return CheckRequiredBaseTemplatesExist();
+        }
+
         public virtual void ModifyScene() {
             // nothing needed here
         }
 
-        public static bool CheckRequiredTemplatesExist() {
+        public static bool CheckRequiredBaseTemplatesExist() {
 
             // Check for presence of scene template
             if (WizardUtilities.CheckFileExists(sceneTemplatePath, "scene template") == false) {
@@ -80,11 +87,6 @@ namespace AnyRPG {
 
             // Check for presence of lighting template
             if (WizardUtilities.CheckFileExists(lightingSettingsTemplatePath, "lighting settings template") == false) {
-                return false;
-            }
-
-            // Check for presence of portal template
-            if (WizardUtilities.CheckFileExists(portalTemplatePath, "portal template") == false) {
                 return false;
             }
 
@@ -143,7 +145,8 @@ namespace AnyRPG {
             AudioClip newSceneDayAmbientSounds,
             AudioClip newSceneNightAmbientSounds,
             AudioClip newSceneMusic,
-            ICreateSceneRequestor createSceneRequestor) {
+            ICreateSceneRequestor createSceneRequestor,
+            string portalTemplatePath) {
 
             string fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
             string fileSystemSceneName = WizardUtilities.GetFilesystemSceneName(sceneName);
@@ -221,7 +224,7 @@ namespace AnyRPG {
 
             // creating portal
             EditorUtility.DisplayProgressBar("New Scene Wizard", "Creating Portal...", 0.98f);
-            CreatePortal(gameParentFolder, gameName, sceneName, fileSystemGameName, fileSystemSceneName);
+            CreatePortal(gameParentFolder, gameName, sceneName, fileSystemGameName, fileSystemSceneName, portalTemplatePath);
 
             // create scenenode and audio profiles
             EditorUtility.DisplayProgressBar("New Scene Wizard", "Configuring Scene...", 0.99f);
@@ -232,7 +235,7 @@ namespace AnyRPG {
             return newSceneAssetPath;
         }
 
-        public static void CreatePortal(string gameParentFolder, string gameName, string sceneName, string fileSystemGameName, string fileSystemSceneName) {
+        public static void CreatePortal(string gameParentFolder, string gameName, string sceneName, string fileSystemGameName, string fileSystemSceneName, string portalTemplatePath) {
             
             string destinationPartialPath = gameParentFolder + fileSystemGameName + "/Prefab/Portal/" + fileSystemSceneName + "StonePortal.prefab";
             string destinationAssetpath = "Assets" + destinationPartialPath;
@@ -240,8 +243,8 @@ namespace AnyRPG {
 
             WizardUtilities.CreateFolderIfNotExists(Application.dataPath + gameParentFolder + fileSystemGameName + "/Prefab/Portal");
             if (System.IO.File.Exists(destinationFilesystemPath) == false) {
-                Debug.Log("Copying Resource from '" + portalTemplatePath + "' to '" + destinationAssetpath + "'");
-                if (AssetDatabase.CopyAsset("Assets" + portalTemplatePath, destinationAssetpath)) {
+                Debug.Log($"Copying Resource from '{portalTemplatePath}' to '{destinationAssetpath}'");
+                if (AssetDatabase.CopyAsset($"Assets{portalTemplatePath}", destinationAssetpath)) {
                 }
             } else {
                 Debug.Log("Skipping copy. Prefab '" + destinationAssetpath + "' already exists");

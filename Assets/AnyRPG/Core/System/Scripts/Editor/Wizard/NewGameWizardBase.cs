@@ -153,7 +153,7 @@ namespace AnyRPG {
             //thirdPartyCharacterUnit = Selection.activeGameObject;
 
             SetNewGameTitle();
-            firstSceneName = NewSceneWizard.GetNewSceneTitle(firstSceneName);
+            firstSceneName = NewSceneWizardBase.GetNewSceneTitle(firstSceneName);
         }
 
         protected void OnWizardCreate() {
@@ -174,7 +174,12 @@ namespace AnyRPG {
             }
 
             EditorUtility.ClearProgressBar();
-            EditorUtility.DisplayDialog("New Game Wizard", "New Game Wizard Complete! The game loading scene can be found at " + gameLoadScenePath, "OK");
+            if (gameLoadScenePath == string.Empty) {
+                EditorUtility.DisplayDialog("New Game Wizard", "New Game Wizard encountered an error.  Check the console log for details.", "OK");
+            } else {
+                EditorUtility.DisplayDialog("New Game Wizard", "New Game Wizard Complete! The game loading scene can be found at " + gameLoadScenePath, "OK");
+            }
+
             Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.ScriptOnly);
 
         }
@@ -214,7 +219,7 @@ namespace AnyRPG {
             }
 
             // check that the templates used by the new scene wizard exist
-            if (NewSceneWizard.CheckRequiredTemplatesExist() == false) {
+            if (CheckRequiredTemplatesExist() == false) {
                 return string.Empty;
             }
 
@@ -312,12 +317,26 @@ namespace AnyRPG {
             EditorUtility.DisplayProgressBar("New Game Wizard", "Configuring Main Menu...", 0.99f);
             ConfigureMainMenuScriptableObjects(fileSystemGameName);
 
-            // create first scene
-            NewSceneWizard.CreateScene(gameParentFolder, gameName, firstSceneName, copyExistingScene, existingScene, firstSceneDayAmbientSounds, firstSceneNightAmbientSounds, firstSceneMusic, this);
+            CreateFirstScene(gameParentFolder, gameName, firstSceneName, copyExistingScene, existingScene, firstSceneDayAmbientSounds, firstSceneNightAmbientSounds, firstSceneMusic, this);
 
             AssetDatabase.Refresh();
 
             return loadSceneAssetPath;
+        }
+
+        public virtual bool CheckRequiredTemplatesExist() {
+            return true;
+        }
+
+        public virtual void CreateFirstScene(string gameParentFolder,
+            string gameName,
+            string sceneName,
+            bool copyExistingScene,
+            SceneAsset existingScene,
+            AudioClip newSceneDayAmbientSounds,
+            AudioClip newSceneNightAmbientSounds,
+            AudioClip newSceneMusic,
+            ICreateSceneRequestor createSceneRequestor) {
         }
 
         protected virtual void AddSceneToBuildSettings(string scenePath) {

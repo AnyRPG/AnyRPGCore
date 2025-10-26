@@ -21,6 +21,16 @@ namespace AnyRPG {
             ScriptableWizard.DisplayWizard<FishNetNewGameWizard>("FishNet New Game Wizard", "Create");
         }
 
+        
+        public override void CreateFirstScene(string gameParentFolder, string gameName, string sceneName, bool copyExistingScene, SceneAsset existingScene, AudioClip newSceneDayAmbientSounds, AudioClip newSceneNightAmbientSounds, AudioClip newSceneMusic, ICreateSceneRequestor createSceneRequestor) {
+            // create first scene
+            NewSceneWizardBase.CreateScene(gameParentFolder, gameName, firstSceneName, copyExistingScene, existingScene, firstSceneDayAmbientSounds, firstSceneNightAmbientSounds, firstSceneMusic, this, FishNetNewSceneWizard.PortalTemplatePath);
+        }
+
+        public override bool CheckRequiredTemplatesExist() {
+            return FishNetNewSceneWizard.CheckRequiredTemplatesExistStatic();
+        }
+
         protected override bool CheckFilesExist() {
 
             // check for presence of the FishNet Network Manager prefab
