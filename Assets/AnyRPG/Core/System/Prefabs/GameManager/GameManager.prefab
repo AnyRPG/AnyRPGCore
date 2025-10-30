@@ -6589,7 +6589,6 @@ GameObject:
   - component: {fileID: 5686319901837456897}
   - component: {fileID: 3046640833035445865}
   - component: {fileID: 7625830832623991421}
-  - component: {fileID: 7577693937512578360}
   - component: {fileID: 8511082740355230216}
   - component: {fileID: 8577629670151495976}
   - component: {fileID: 1630861930056385854}
@@ -6986,7 +6985,6 @@ MonoBehaviour:
   logManager: {fileID: 5686319901837456897}
   newGameManager: {fileID: 3046640833035445865}
   loadGameManager: {fileID: 7625830832623991421}
-  saveManager: {fileID: 7577693937512578360}
   keyBindManager: {fileID: 8511082740355230216}
   achievementLog: {fileID: 8577629670151495976}
   systemEnvironmentManager: {fileID: 1630861930056385854}
@@ -7199,18 +7197,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 116243de021d6a84891286423e36444a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7577693937512578360
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5684895214070870814}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be172693880cab74b9cd99dede5f9e14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &8511082740355230216

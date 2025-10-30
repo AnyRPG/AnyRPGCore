@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class SaveManager : ConfiguredMonoBehaviour /*, ISaveDataOwner*/ {
+    public class SaveManager : ConfiguredClass {
 
         private Dictionary<string, CutsceneSaveData> cutsceneSaveDataDictionary = new Dictionary<string, CutsceneSaveData>();
 
@@ -27,22 +27,12 @@ namespace AnyRPG {
         private AchievementLog achievementLog = null;
         private ActionBarManager actionBarManager = null;
         private SystemItemManager systemItemManager = null;
-        private SystemDataFactory systemDataFactory = null;
         private UIManager uIManager = null;
         private NewGameManager newGameManager = null;
         private NetworkManagerClient networkManagerClient = null;
-        private NetworkManagerServer networkManagerServer = null;
         private LoadGameManager loadGameManager = null;
 
         public Dictionary<string, CutsceneSaveData> CutsceneSaveDataDictionary { get => cutsceneSaveDataDictionary; set => cutsceneSaveDataDictionary = value; }
-
-        public override void Configure(SystemGameManager systemGameManager) {
-            base.Configure(systemGameManager);
-
-            //CreateEventSubscriptions();
-            // this is done on load game window opening anyway,
-            //GetSaveDataList();
-        }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -52,13 +42,11 @@ namespace AnyRPG {
             levelManager = systemGameManager.LevelManager;
             achievementLog = systemGameManager.AchievementLog;
             systemItemManager = systemGameManager.SystemItemManager;
-            systemDataFactory = systemGameManager.SystemDataFactory;
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
             actionBarManager = uIManager.ActionBarManager;
             newGameManager = systemGameManager.NewGameManager;
             networkManagerClient = systemGameManager.NetworkManagerClient;
-            networkManagerServer = systemGameManager.NetworkManagerServer;
             loadGameManager = systemGameManager.LoadGameManager;
         }
 
@@ -257,7 +245,6 @@ namespace AnyRPG {
 
             return string.Empty;
         }
-
 
         public bool SaveGame(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveGame()");

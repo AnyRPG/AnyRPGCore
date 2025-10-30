@@ -1447,7 +1447,7 @@ namespace AnyRPG {
 
         [ServerRpc(RequireOwnership = false)]
         public void RequestLogout(NetworkConnection networkConnection = null) {
-            Debug.Log($"FishNetClientConnector.RequestLogout()");
+            //Debug.Log($"FishNetClientConnector.RequestLogout()");
 
             if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
                 Debug.LogWarning($"FishNetClientConnector.RequestLogout() could not find clientId {networkConnection.ClientId} in logged in accounts");

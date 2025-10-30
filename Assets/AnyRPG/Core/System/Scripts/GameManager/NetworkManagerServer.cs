@@ -49,11 +49,6 @@ namespace AnyRPG {
         /// </summary>
         private Dictionary<int, string> loginRequests = new Dictionary<int, string>();
 
-        /// <summary>
-        /// username, temporarylobbyaccount
-        /// </summary>
-        private Dictionary<string, TemporaryLobbyAccount> lobbyAccounts = new Dictionary<string, TemporaryLobbyAccount>();
-
         // list of lobby games
         private Dictionary<int, LobbyGame> lobbyGames = new Dictionary<int, LobbyGame>();
 
@@ -78,7 +73,6 @@ namespace AnyRPG {
         private Dictionary<int, int> lobbyGameSceneHandleLookup = new Dictionary<int, int>();
 
         private int lobbyGameCounter = 0;
-        private int lobbyGameAccountCounter = 0;
         private int maxLobbyChatTextSize = 64000;
 
         // lobby chat
@@ -116,6 +110,7 @@ namespace AnyRPG {
         private QuestGiverManagerServer questGiverManagerServer = null;
         private CharacterAppearanceManagerServer characterAppearanceManagerServer = null;
         private DialogManagerServer dialogManagerServer = null;
+        private AuthenticationService authenticationService = null;
 
         public bool ServerModeActive { get => serverModeActive; }
         public NetworkClientMode ClientMode { get => clientMode; set => clientMode = value; }
@@ -159,6 +154,7 @@ namespace AnyRPG {
             characterAppearanceManagerServer = systemGameManager.CharacterAppearanceManagerServer;
             dialogManagerServer = systemGameManager.DialogManagerServer;
             questGiverManagerServer = systemGameManager.QuestGiverManagerServer;
+            authenticationService = systemGameManager.AuthenticationService;
         }
 
         public void AddLoggedInAccount(int clientId, int accountId, string token) {
@@ -225,33 +221,7 @@ namespace AnyRPG {
 
         public void LobbyLogin(int clientId, string username, string password) {
             //Debug.Log($"NetworkManagerServer.LobbyLogin({clientId}, {username}, {password})");
-            if (lobbyAccounts.ContainsKey(username) == false) {
-                int accountId = CreateLobbyAccount(username, password);
-                ProcessLoginResponse(clientId, accountId, true, string.Empty);
-                return;
-            } else {
-                if (lobbyAccounts[username].password == password) {
-                    // password correct
-                    ProcessLoginResponse(clientId, lobbyAccounts[username].accountId, true, string.Empty);
-                    return;
-                } else {
-                    // password incorrect
-                    ProcessLoginResponse(clientId, -1, false, string.Empty);
-                    return;
-                }
-            }
-        }
-
-        private int CreateLobbyAccount(string username, string password) {
-            TemporaryLobbyAccount temporaryLobbyAccount = new TemporaryLobbyAccount(GetNewLobbyAccountId(), username, password);
-            lobbyAccounts.Add(username, temporaryLobbyAccount);
-            return temporaryLobbyAccount.accountId;
-        }
-
-        private int GetNewLobbyAccountId() {
-            int returnValue = lobbyGameAccountCounter;
-            lobbyGameAccountCounter++;
-            return returnValue;
+            authenticationService.LoginOrCreateAccount(clientId, username, password);
         }
 
         public void ProcessLoginResponse(int clientId, int accountId, bool correctPassword, string token) {

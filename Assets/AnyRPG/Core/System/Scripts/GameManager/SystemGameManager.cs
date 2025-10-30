@@ -92,9 +92,6 @@ namespace AnyRPG {
         private LoadGameManager loadGameManager = null;
 
         [SerializeField]
-        private SaveManager saveManager = null;
-
-        [SerializeField]
         private KeyBindManager keyBindManager = null;
 
         [SerializeField]
@@ -207,6 +204,9 @@ namespace AnyRPG {
 
         // system scripts
         private SystemEventManager systemEventManager = null;
+        private AuthenticationService authenticationService = null;
+        private UserAccountService userAccountService = null;
+        private SaveManager saveManager = null;
 
         // application state
         private int spawnCount = 0;
@@ -214,13 +214,15 @@ namespace AnyRPG {
 
         public static bool IsShuttingDown { get => isShuttingDown; }
 
-        public SystemEventManager SystemEventManager { get => systemEventManager; set => systemEventManager = value; }
+        public SystemEventManager SystemEventManager { get => systemEventManager; }
+        public AuthenticationService AuthenticationService { get => authenticationService; }
+        public UserAccountService UserAccountService { get => userAccountService; }
         public SystemEnvironmentManager SystemEnvironmentManager { get => systemEnvironmentManager; set => systemEnvironmentManager = value; }
         public CraftingManager CraftingManager { get => craftingManager; set => craftingManager = value; }
         public InteractionManager InteractionManager { get => interactionManager; set => interactionManager = value; }
         public LootManager LootManager { get => lootManager; set => lootManager = value; }
         public SystemPlayableDirectorManager SystemPlayableDirectorManager { get => systemPlayableDirectorManager; set => systemPlayableDirectorManager = value; }
-        public SaveManager SaveManager { get => saveManager; set => saveManager = value; }
+        public SaveManager SaveManager { get => saveManager; }
         public KeyBindManager KeyBindManager { get => keyBindManager; set => keyBindManager = value; }
         public AchievementLog AchievementLog { get => achievementLog; set => achievementLog = value; }
 
@@ -318,7 +320,14 @@ namespace AnyRPG {
             // then everything else that relies on system configuration and data resources
             objectPooler.Configure(this);
 
+            // create services
+            saveManager = new SaveManager();
+            userAccountService = new UserAccountService();
+            authenticationService = new AuthenticationService();
 
+            // configure services and managers
+            userAccountService.Configure(this);
+            authenticationService.Configure(this);
             controlsManager.Configure(this);
             windowManager.Configure(this);
             cameraManager.Configure(this);
