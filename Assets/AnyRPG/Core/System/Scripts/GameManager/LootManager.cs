@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class LootManager : ConfiguredMonoBehaviour {
+    public class LootManager : ConfiguredClass {
 
         public event System.Action OnTakeLoot = delegate { };
         public event Action OnAvailableLootAdded = delegate { };
@@ -33,7 +33,6 @@ namespace AnyRPG {
         private PlayerManager playerManager = null;
         private PlayerManagerServer playerManagerServer = null;
         private NetworkManagerClient networkManagerClient = null;
-        private NetworkManagerServer networkManagerServer = null;
         private SystemItemManager systemItemManager = null;
         private SystemEventManager systemEventManager = null;
 
@@ -60,7 +59,6 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             networkManagerClient = systemGameManager.NetworkManagerClient;
-            networkManagerServer = systemGameManager.NetworkManagerServer;
             systemItemManager = systemGameManager.SystemItemManager;
             systemEventManager = systemGameManager.SystemEventManager;
         }

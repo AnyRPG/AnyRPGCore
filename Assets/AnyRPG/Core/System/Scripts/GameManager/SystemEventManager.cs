@@ -49,6 +49,15 @@ namespace AnyRPG {
         public event System.Action<int> OnStartWeather = delegate { };
         public event System.Action<UnitController, InteractableOptionComponent, int, int> OnStartInteractWithOption = delegate { };
         public event System.Action<UnitController, InteractableOptionComponent> OnCompleteInteractWithOption = delegate { };
+        public event System.Action<BagNode> OnAddInventoryBagNode = delegate { };
+        public event System.Action<BagNode> OnAddBankBagNode = delegate { };
+        public event System.Action<InventorySlot> OnAddInventorySlot = delegate { };
+        public event System.Action<InventorySlot> OnAddBankSlot = delegate { };
+        public event System.Action<InventorySlot> OnRemoveInventorySlot = delegate { };
+        public event System.Action<InventorySlot> OnRemoveBankSlot = delegate { };
+        public event System.Action OnSetSlotBackgroundColor = delegate { };
+
+
 
         // equipment manager
         public System.Action<EquipmentSlotProfile, InstantiatedEquipment> OnAddEquipment = delegate { };
@@ -92,6 +101,40 @@ namespace AnyRPG {
                 }
                 // OR USE  instance.eventDictionary[eventName](eventParam);
             }
+        }
+
+        public void NotifyOnAddInventoryBagNode(BagNode bagNode) {
+            //Debug.Log("SystemEventManager.AddInventoryBagNode()");
+
+            OnAddInventoryBagNode(bagNode);
+        }
+
+        public void NotifyOnAddBankBagNode(BagNode bagNode) {
+            OnAddBankBagNode(bagNode);
+        }
+
+        public void NotifyOnAddInventorySlot(InventorySlot inventorySlot) {
+            //Debug.Log("SystemEventManager.AddInventorySlot()");
+
+            OnAddInventorySlot(inventorySlot);
+        }
+
+        public void NotifyOnAddBankSlot(InventorySlot inventorySlot) {
+            OnAddBankSlot(inventorySlot);
+        }
+
+        public void NotifyOnRemoveInventorySlot(InventorySlot inventorySlot) {
+            //Debug.Log("SystemEventManager.RemoveInventorySlot()");
+
+            OnRemoveInventorySlot(inventorySlot);
+        }
+
+        public void NotifyOnRemoveBankSlot(InventorySlot inventorySlot) {
+            OnRemoveBankSlot(inventorySlot);
+        }
+
+        public void NotifyOnSetSlotBackgroundColor() {
+            OnSetSlotBackgroundColor();
         }
 
         public void NotifyOnReputationChange(UnitController sourceUnitController) {

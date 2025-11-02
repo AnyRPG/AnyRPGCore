@@ -60,7 +60,7 @@ namespace AnyRPG {
 
         public string Username { get => username; }
         public string Password { get => password; }
-        public NetworkClientMode ClientMode { get => clientMode; set => clientMode = value; }
+        public NetworkClientMode ClientMode { get => clientMode; }
         public Dictionary<int, LoggedInAccount> LobbyGamePlayerList { get => lobbyGamePlayerList; }
         public LobbyGame LobbyGame { get => lobbyGame; }
         public int AccountId { get => accountId; }
@@ -216,11 +216,12 @@ namespace AnyRPG {
             uIManager.loginFailedWindow.OpenWindow();
         }
 
-        public void ProcessLoginSuccess(int accountId) {
+        public void ProcessLoginSuccess(int accountId, NetworkClientMode clientMode) {
             //Debug.Log($"NetworkManagerClient.ProcessLoginSuccess({accountId})");
 
             // not doing this here because the connector has not spawned yet.
             //uIManager.ProcessLoginSuccess();
+            this.clientMode = clientMode;
             this.accountId = accountId;
             isLoggingInOrOut = false;
         }

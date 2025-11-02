@@ -7,7 +7,7 @@ using TMPro;
 using System;
 
 namespace AnyRPG {
-    public class HostServerPanel : WindowContentController {
+    public class HostServerPanel : WindowPanel {
 
         [Header("HostGamePanelController")]
 
@@ -26,9 +26,29 @@ namespace AnyRPG {
         [SerializeField]
         protected Transform gameListingContainer = null;
 
+        [SerializeField]
+        private TMP_Dropdown serverModeDropdown = null;
+
+        [SerializeField]
+        private WindowPanel optionsPanel = null;
+
+        [SerializeField]
+        private WindowPanel playersPanel = null;
+
+        [SerializeField]
+        private WindowPanel lobbyGamesPanel = null;
 
         //[SerializeField]
         //protected HighlightButton returnButton = null;
+
+        [SerializeField]
+        protected HighlightButton optionsButton = null;
+
+        [SerializeField]
+        protected HighlightButton playersButton = null;
+
+        [SerializeField]
+        protected HighlightButton lobbyGamesButton = null;
 
         [SerializeField]
         protected HighlightButton startServerButton = null;
@@ -242,5 +262,71 @@ namespace AnyRPG {
                 StopServer();
             }
         }
+
+        public void SetServerMode(int dropdownIndex) {
+            //Debug.Log("UnitSpawnControlPanel.SetLevelType(" + dropdownIndex + ")");
+            if (serverModeDropdown.options[serverModeDropdown.value].text == "Lobby") {
+                networkManagerServer.ClientMode = NetworkClientMode.Lobby;
+            } else {
+                networkManagerServer.ClientMode = NetworkClientMode.MMO;
+            }
+        }
+
+        public void SetServerPort(string newServerPort) {
+            /*
+            if (isResettingInputText == true) {
+                return;
+            }
+            */
+            ushort port = 7770;
+            if (ushort.TryParse(newServerPort, out port) == false) {
+                return;
+            }
+            networkManagerServer.SetServerPort(port);
+        }
+
+        private void ClosePanels(CloseableWindowContents skipPanel) {
+            if (skipPanel != optionsPanel) {
+                optionsPanel.HidePanel();
+            }
+            if (skipPanel != playersPanel) {
+                playersPanel.HidePanel();
+            }
+            if (skipPanel != lobbyGamesPanel) {
+                lobbyGamesPanel.HidePanel();
+            }
+        }
+
+        public void OpenOptionsPanel() {
+            if (openSubPanel != optionsPanel) {
+                ClosePanels(optionsPanel);
+                optionsPanel.ShowPanel();
+                SetOpenSubPanel(optionsPanel, false);
+            }
+
+            optionsButton.HighlightBackground();
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(optionsButton);
+        }
+
+        public void OpenPlayersPanel() {
+            if (openSubPanel != playersPanel) {
+                ClosePanels(playersPanel);
+                playersPanel.ShowPanel();
+                SetOpenSubPanel(playersPanel, false);
+            }
+            playersButton.HighlightBackground();
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(playersButton);
+        }
+
+        public void OpenLobbyGamesPanel() {
+            if (openSubPanel != lobbyGamesPanel) {
+                ClosePanels(lobbyGamesPanel);
+                lobbyGamesPanel.ShowPanel();
+                SetOpenSubPanel(lobbyGamesPanel, false);
+            }
+            lobbyGamesButton.HighlightBackground();
+            uINavigationControllers[0].UnHightlightButtonBackgrounds(lobbyGamesButton);
+        }
+
     }
 }

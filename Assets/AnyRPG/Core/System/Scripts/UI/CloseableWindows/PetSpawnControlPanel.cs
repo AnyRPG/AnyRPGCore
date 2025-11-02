@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class PetSpawnControlPanel : WindowContentController, ICapabilityConsumer, ICharacterConfigurationProvider {
+    public class PetSpawnControlPanel : WindowPanel, ICapabilityConsumer, ICharacterConfigurationProvider {
 
         public event System.Action OnConfirmAction = delegate { };
         public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };

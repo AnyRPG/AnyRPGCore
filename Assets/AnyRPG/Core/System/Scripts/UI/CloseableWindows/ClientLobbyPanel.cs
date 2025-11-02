@@ -7,7 +7,7 @@ using TMPro;
 using System;
 
 namespace AnyRPG {
-    public class ClientLobbyPanel : WindowContentController {
+    public class ClientLobbyPanel : WindowPanel {
 
         [Header("ClientLobbyPanelController")]
 

@@ -242,7 +242,7 @@ namespace AnyRPG {
         }
         */
 
-        public override void ConfigureDialogPanel(DialogPanelController dialogPanelController) {
+        public override void ConfigureDialogPanel(DialogPanel dialogPanelController) {
             dialogPanelController.ConfigureSnapshotPortrait();
         }
     }

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace AnyRPG {
 
-    public class CharacterPreviewPanel : WindowContentController {
+    public class CharacterPreviewPanel : WindowPanel {
 
         // events
         public event Action OnTargetReady = delegate { };

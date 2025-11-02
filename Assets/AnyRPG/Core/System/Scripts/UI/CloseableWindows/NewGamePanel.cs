@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class NewGamePanel : WindowContentController {
+    public class NewGamePanel : WindowPanel {
 
         public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
@@ -24,25 +24,25 @@ namespace AnyRPG {
         private CharacterPreviewPanel characterPreviewPanel = null;
 
         [SerializeField]
-        private NewGameDetailsPanelController detailsPanel = null;
+        private NewGameDetailsPanel detailsPanel = null;
 
         [SerializeField]
-        private NewGameMecanimCharacterPanelController characterPanel = null;
+        private NewGameMecanimCharacterPanel characterPanel = null;
 
         [SerializeField]
         private DefaultAppearancePanel defaultAppearancePanel = null;
 
         [SerializeField]
-        private NewGameFactionPanelController factionPanel = null;
+        private NewGameFactionPanel factionPanel = null;
 
         [SerializeField]
-        private NewGameRacePanelController racePanel = null;
+        private NewGameRacePanel racePanel = null;
 
         [SerializeField]
-        private NewGameClassPanelController classPanel = null;
+        private NewGameClassPanel classPanel = null;
 
         [SerializeField]
-        private NewGameSpecializationPanelController specializationPanel = null;
+        private NewGameSpecializationPanel specializationPanel = null;
 
         [Header("Bottom Buttons")]
         /*

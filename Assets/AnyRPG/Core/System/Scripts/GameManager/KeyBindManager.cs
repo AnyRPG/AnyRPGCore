@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class KeyBindManager : ConfiguredMonoBehaviour {
+    public class KeyBindManager : ConfiguredClass {
 
         [SerializeField]
         private Dictionary<string, KeyBindNode> keyBinds = new Dictionary<string, KeyBindNode>();

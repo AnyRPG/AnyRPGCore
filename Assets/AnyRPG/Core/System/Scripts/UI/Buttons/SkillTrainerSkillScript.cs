@@ -14,12 +14,12 @@ namespace AnyRPG {
 
         protected string skillName;
 
-        protected SkillTrainerUI skillTrainerUI = null;
+        protected SkillTrainerPanel skillTrainerUI = null;
 
         public Skill Skill { get => skill; }
         public int SkillId { get => skillId; }
 
-        public void SetSkill(SkillTrainerUI skillTrainerUI, KeyValuePair<int, Skill> newSkillPair) {
+        public void SetSkill(SkillTrainerPanel skillTrainerUI, KeyValuePair<int, Skill> newSkillPair) {
             this.skillTrainerUI = skillTrainerUI;
             if (newSkillPair.Value != null) {
                 this.skill = newSkillPair.Value;

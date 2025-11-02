@@ -15,6 +15,7 @@ namespace AnyRPG
         public bool AuthenticationPassed;
         public bool ClientPassed;
         public string RequiredClientVersion;
+        public NetworkClientMode ClientMode;
     }
 
 }

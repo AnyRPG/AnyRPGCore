@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CharacterManager : ConfiguredMonoBehaviour {
+    public class CharacterManager : ConfiguredClass {
 
         // keep track of which request spawned something
         //private int clientSpawnRequestIdCounter;
@@ -27,7 +27,6 @@ namespace AnyRPG {
         private ObjectPooler objectPooler = null;
         private NetworkManagerClient networkManagerClient = null;
         private PlayerManager playerManager = null;
-        private NetworkManagerServer networkManagerServer = null;
         private PlayerManagerServer playerManagerServer = null;
 
         public List<UnitController> LocalUnits { get => localUnits; }
@@ -41,7 +40,6 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
             networkManagerClient = systemGameManager.NetworkManagerClient;
             playerManager = systemGameManager.PlayerManager;
-            networkManagerServer = systemGameManager.NetworkManagerServer;
             playerManagerServer = systemGameManager.PlayerManagerServer;
         }
 

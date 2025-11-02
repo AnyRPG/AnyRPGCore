@@ -566,10 +566,10 @@ namespace AnyRPG {
 
         }
 
-        public override void StartServer() {
+        public override void StartServer(ushort port) {
             //Debug.Log($"FishNetNetworkController.StartServer()");
 
-            fishNetNetworkManager.ServerManager.StartConnection();
+            fishNetNetworkManager.ServerManager.StartConnection(port);
         }
 
         public override void StopServer() {

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class LoadGamePanel : WindowContentController {
+    public class LoadGamePanel : WindowPanel {
 
         public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 

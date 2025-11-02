@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class LogManager : ConfiguredMonoBehaviour {
+    public class LogManager : ConfiguredClass {
 
         public event System.Action<string> OnWriteChatMessage = delegate { };
         public event System.Action<string> OnWriteSystemMessage = delegate { };
@@ -14,7 +14,6 @@ namespace AnyRPG {
         public event System.Action OnClearChatMessages = delegate { };
         public event System.Action OnClearSystemMessages = delegate { };
         public event System.Action OnClearCombatMessages = delegate { };
-
 
         private string welcomeString = "Welcome to";
         private string completeWelcomeString = string.Empty;
@@ -41,7 +40,6 @@ namespace AnyRPG {
         PlayerManager playerManager = null;
         NetworkManagerClient networkManagerClient = null;
         ChatCommandManager chatCommandManager = null;
-        NetworkManagerServer networkManagerServer = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("CombatLogUI.Awake()");
@@ -51,7 +49,6 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             networkManagerClient = systemGameManager.NetworkManagerClient;
             chatCommandManager = systemGameManager.ChatCommandManager;
-            networkManagerServer = systemGameManager.NetworkManagerServer;
 
             SetWelcomeString();
             ClearLog();

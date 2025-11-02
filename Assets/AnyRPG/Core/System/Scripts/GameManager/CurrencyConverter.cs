@@ -6,15 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CurrencyConverter : ConfiguredMonoBehaviour {
-
-        // game manager references
-        private SystemDataFactory systemDataFactory = null;
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
-        }
+    public class CurrencyConverter : ConfiguredClass {
 
         // converts the currency amount to its base currency and returns it
         public int GetBaseCurrencyAmount(Currency currency, int currencyAmount) {

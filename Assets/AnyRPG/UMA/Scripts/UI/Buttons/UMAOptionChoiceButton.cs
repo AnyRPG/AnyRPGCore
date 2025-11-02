@@ -16,11 +16,11 @@ namespace AnyRPG {
         [SerializeField]
         protected Image icon = null;
 
-        private UMAAppearanceEditorPanelController appearancePanelController = null;
+        private UMAAppearanceEditorPanel appearancePanelController = null;
         private string optionGroupName = string.Empty;
         private string optionChoice = string.Empty;
 
-        public void ConfigureButton(UMAAppearanceEditorPanelController appearancePanelController, string groupName, Sprite image, string optionName, string optionChoice) {
+        public void ConfigureButton(UMAAppearanceEditorPanel appearancePanelController, string groupName, Sprite image, string optionName, string optionChoice) {
             this.appearancePanelController = appearancePanelController;
             optionGroupName = groupName;
             if (icon != null) {

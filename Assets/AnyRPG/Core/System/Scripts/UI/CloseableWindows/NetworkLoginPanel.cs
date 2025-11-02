@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class NetworkLoginPanel : WindowContentController {
+    public class NetworkLoginPanel : WindowPanel {
 
         [SerializeField]
         private TMP_InputField userNameInput = null;

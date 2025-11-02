@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class NewGameManager : ConfiguredMonoBehaviour, ICharacterEditor, /*ISaveDataOwner,*/ ICharacterConfigurationProvider {
+    public class NewGameManager : ConfiguredClass, ICharacterEditor, ICharacterConfigurationProvider {
 
         public event System.Action<UnitProfile> OnSetUnitProfile = delegate { };
         public event System.Action<string> OnSetPlayerName = delegate { };
@@ -66,7 +66,6 @@ namespace AnyRPG {
 
         // game manager references
         private SaveManager saveManager = null;
-        private SystemDataFactory systemDataFactory = null;
         private CharacterCreatorManager characterCreatorManager = null;
         private UIManager uIManager = null;
         private LevelManager levelManager = null;
@@ -104,7 +103,6 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             saveManager = systemGameManager.SaveManager;
-            systemDataFactory = systemGameManager.SystemDataFactory;
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
             uIManager = systemGameManager.UIManager;
             levelManager = systemGameManager.LevelManager;

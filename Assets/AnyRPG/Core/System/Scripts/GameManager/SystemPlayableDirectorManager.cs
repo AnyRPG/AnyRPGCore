@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 
 namespace AnyRPG {
-    public class SystemPlayableDirectorManager : ConfiguredMonoBehaviour {
+    public class SystemPlayableDirectorManager : ConfiguredClass {
 
         // key is the timeline name as a string
         private Dictionary<string, PlayableDirector> playableDirectorDictionary = new Dictionary<string, PlayableDirector>();

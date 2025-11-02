@@ -194,7 +194,7 @@ namespace AnyRPG {
                         (uIManager.confirmSellItemMenuWindow.CloseableWindowContents as ConfirmSellItemPanel).MyItem = inventorySlot.InstantiatedItem;
                         return;
                     }
-                    if ((uIManager.vendorWindow.CloseableWindowContents as VendorUI).SellItem(inventorySlot.InstantiatedItem)) {
+                    if ((uIManager.vendorWindow.CloseableWindowContents as VendorPanel).SellItem(inventorySlot.InstantiatedItem)) {
                         return;
                     }
 

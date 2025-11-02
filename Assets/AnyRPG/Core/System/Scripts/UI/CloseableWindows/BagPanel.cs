@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class BagPanel : WindowContentController {
+    public class BagPanel : WindowPanel {
 
         [Header("Bag Panel")]
 
@@ -22,8 +22,8 @@ namespace AnyRPG {
 
         // game manager references
         protected ObjectPooler objectPooler = null;
-        protected InventoryManager inventoryManager = null;
         protected PlayerManager playerManager = null;
+        protected SystemEventManager systemEventManager = null;
 
         public List<SlotScript> Slots { get => slots; }
         public Transform ContentArea { get => contentArea; }
@@ -32,21 +32,20 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             objectPooler = systemGameManager.ObjectPooler;
-            inventoryManager = systemGameManager.InventoryManager;
             playerManager = systemGameManager.PlayerManager;
+            systemEventManager = systemGameManager.SystemEventManager;
         }
         
         protected override void ProcessCreateEventSubscriptions() {
             base.ProcessCreateEventSubscriptions();
 
-            inventoryManager.OnSetSlotBackgroundColor += HandleSetSlotBackgroundColor;
-
+            systemEventManager.OnSetSlotBackgroundColor += HandleSetSlotBackgroundColor;
         }
 
         protected override void ProcessCleanupEventSubscriptions() {
             base.ProcessCleanupEventSubscriptions();
 
-            inventoryManager.OnSetSlotBackgroundColor -= HandleSetSlotBackgroundColor;
+            systemEventManager.OnSetSlotBackgroundColor -= HandleSetSlotBackgroundColor;
         }
 
         public void HandleSetSlotBackgroundColor() {

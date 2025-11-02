@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 
 namespace AnyRPG {
-    public class PlayerManagerServer : ConfiguredMonoBehaviour, ICharacterRequestor {
+    public class PlayerManagerServer : ConfiguredClass, ICharacterRequestor {
 
 
         /// <summary>
@@ -42,8 +41,6 @@ namespace AnyRPG {
         // game manager references
         protected SaveManager saveManager = null;
         protected SystemItemManager systemItemManager = null;
-        protected SystemDataFactory systemDataFactory = null;
-        protected NetworkManagerServer networkManagerServer = null;
         protected LevelManager levelManager = null;
         protected InteractionManager interactionManager = null;
         protected PlayerManager playerManager = null;
@@ -64,7 +61,7 @@ namespace AnyRPG {
 
             CreateEventSubscriptions();
             if (monitorPlayerCharactersCoroutine == null) {
-                monitorPlayerCharactersCoroutine = StartCoroutine(MonitorPlayerCharacters());
+                monitorPlayerCharactersCoroutine = systemGameManager.StartCoroutine(MonitorPlayerCharacters());
             }
 
         }
@@ -74,8 +71,6 @@ namespace AnyRPG {
 
             saveManager = systemGameManager.SaveManager;
             systemItemManager = systemGameManager.SystemItemManager;
-            systemDataFactory = systemGameManager.SystemDataFactory;
-            networkManagerServer = systemGameManager.NetworkManagerServer;
             levelManager = systemGameManager.LevelManager;
             interactionManager = systemGameManager.InteractionManager;
             playerManager = systemGameManager.PlayerManager;
@@ -294,7 +289,7 @@ namespace AnyRPG {
         }
 
         public void Teleport(UnitController unitController, TeleportEffectProperties teleportEffectProperties) {
-            StartCoroutine(TeleportDelay(unitController, teleportEffectProperties));
+            systemGameManager.StartCoroutine(TeleportDelay(unitController, teleportEffectProperties));
         }
 
 
@@ -715,7 +710,7 @@ namespace AnyRPG {
         public void LoadCutsceneWithDelay(Cutscene cutscene, UnitController sourceUnitController) {
             //Debug.Log($"PlayerManagerServer.LoadCutscene({cutscene.ResourceName}, {sourceUnitController?.gameObject.name})");
 
-            StartCoroutine(LoadCutsceneWithDelayCoroutine(cutscene, sourceUnitController));
+            systemGameManager.StartCoroutine(LoadCutsceneWithDelayCoroutine(cutscene, sourceUnitController));
         }
 
         private IEnumerator LoadCutsceneWithDelayCoroutine(Cutscene cutscene, UnitController sourceUnitController) {

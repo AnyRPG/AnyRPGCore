@@ -1,0 +1,208 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace AnyRPG {
+    public class NewGameClassPanel : WindowPanel {
+
+        [Header("Class Panel")]
+
+        [SerializeField]
+        private GameObject classRightPane = null;
+
+        [SerializeField]
+        private GameObject buttonPrefab = null;
+
+        [SerializeField]
+        private GameObject buttonArea = null;
+
+        [SerializeField]
+        private GameObject rewardIconPrefab = null;
+
+        [SerializeField]
+        private GameObject abilityLabel = null;
+
+        [SerializeField]
+        private GameObject traitLabel = null;
+
+        [SerializeField]
+        private GameObject abilityButtonArea = null;
+
+        private List<NewGameAbilityButton> abilityRewardIcons = new List<NewGameAbilityButton>();
+
+        private List<NewGameAbilityButton> traitRewardIcons = new List<NewGameAbilityButton>();
+
+        private NewGameCharacterClassButton selectedClassButton = null;
+
+        //private CharacterClass characterClass;
+
+        private List<NewGameCharacterClassButton> optionButtons = new List<NewGameCharacterClassButton>();
+
+        private NewGamePanel newGamePanel = null;
+
+        // game manager references
+        private ObjectPooler objectPooler = null;
+        private NewGameManager newGameManager = null;
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            objectPooler = systemGameManager.ObjectPooler;
+            newGameManager = systemGameManager.NewGameManager;
+        }
+
+        public void SetNewGamePanel(NewGamePanel newGamePanel) {
+            this.newGamePanel = newGamePanel;
+        }
+
+        public void ClearOptionButtons() {
+            // clear the quest list so any quests left over from a previous time opening the window aren't shown
+            //Debug.Log("LoadGamePanel.ClearLoadButtons()");
+            foreach (NewGameCharacterClassButton optionButton in optionButtons) {
+                if (optionButton != null) {
+                    optionButton.DeSelect();
+                    objectPooler.ReturnObjectToPool(optionButton.gameObject);
+                }
+            }
+            uINavigationControllers[0].ClearActiveButtons();
+            optionButtons.Clear();
+        }
+
+        public void ShowOptionButtons() {
+            //Debug.Log("NewGameClassPanelController.ShowOptionButtons()");
+            
+            ClearOptionButtons();
+
+            for (int i = 0; i < newGameManager.CharacterClassList.Count; i++) {
+                //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
+                GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
+                NewGameCharacterClassButton optionButton = go.GetComponent<NewGameCharacterClassButton>();
+                optionButton.Configure(systemGameManager);
+                optionButton.AddCharacterClass(newGameManager.CharacterClassList[i]);
+                optionButtons.Add(optionButton);
+                uINavigationControllers[0].AddActiveButton(optionButton);
+                if (newGameManager.CharacterClassList[i] == newGameManager.CharacterClass) {
+                    uINavigationControllers[0].SetCurrentIndex(i);
+                }
+            }
+        }
+
+        public void SetCharacterClass(CharacterClass newCharacterClass) {
+            //Debug.Log("NewGameClassPanelController.SetCharacterClass()");
+
+            // deselect old button
+            if (selectedClassButton != null && newCharacterClass != selectedClassButton.CharacterClass) {
+                selectedClassButton.DeSelect();
+                selectedClassButton.UnHighlightBackground();
+            }
+
+            // select new button
+            for (int i = 0; i < optionButtons.Count; i++) {
+                if (optionButtons[i].CharacterClass == newCharacterClass) {
+                    selectedClassButton = optionButtons[i];
+                    uINavigationControllers[0].SetCurrentIndex(i);
+                    optionButtons[uINavigationControllers[0].CurrentIndex].HighlightBackground();
+                }
+            }
+
+            ShowAbilityRewards();
+            ShowTraitRewards();
+            if (abilityLabel.activeSelf == false && traitLabel.activeSelf == false) {
+                classRightPane.SetActive(false);
+            } else {
+                classRightPane.SetActive(true);
+            }
+
+        }
+
+        public void ShowTraitRewards() {
+            //Debug.Log("ClassChangePanelController.ShowTraitRewards()");
+
+            ClearTraitRewardIcons();
+            // show trait rewards
+            if (newGameManager.CharacterClass != null && newGameManager.CharacterClass.GetFilteredCapabilities(newGameManager).TraitList.Count > 0) {
+                CapabilityProps capabilityProps = newGameManager.CharacterClass.GetFilteredCapabilities(newGameManager);
+                traitLabel.SetActive(true);
+                // move to bottom of list before putting traits below it
+                traitLabel.transform.SetAsLastSibling();
+                for (int i = 0; i < capabilityProps.TraitList.Count; i++) {
+                    if (capabilityProps.TraitList[i] != null) {
+                        NewGameAbilityButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, abilityButtonArea.transform).GetComponent<NewGameAbilityButton>();
+                        rewardIcon.Configure(systemGameManager);
+                        rewardIcon.AddAbility(capabilityProps.TraitList[i].AbilityEffectProperties as StatusEffectProperties);
+                        traitRewardIcons.Add(rewardIcon);
+                        /*
+                        if ((characterClass.TraitList[i] as StatusEffectBase).MyRequiredLevel > 1) {
+                            rewardIcon.StackSizeText.text = "Level\n" + (characterClass.TraitList[i] as StatusEffectBase).MyRequiredLevel;
+                            rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
+                        }
+                        */
+                    }
+                }
+            } else {
+                traitLabel.SetActive(false);
+            }
+        }
+
+        public void ShowAbilityRewards() {
+            //Debug.Log("ClassChangePanelController.ShowAbilityRewards()");
+
+            ClearRewardIcons();
+            // show ability rewards
+            if (newGameManager.CharacterClass != null && newGameManager.CharacterClass.GetFilteredCapabilities(newGameManager).AbilityList.Count > 0) {
+                CapabilityProps capabilityProps = newGameManager.CharacterClass.GetFilteredCapabilities(newGameManager);
+                abilityLabel.SetActive(true);
+                abilityLabel.transform.SetAsFirstSibling();
+                for (int i = 0; i < capabilityProps.AbilityList.Count; i++) {
+                    if (capabilityProps.AbilityList[i] != null) {
+                        NewGameAbilityButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, abilityButtonArea.transform).GetComponent<NewGameAbilityButton>();
+                        rewardIcon.Configure(systemGameManager);
+                        rewardIcon.AddAbility(capabilityProps.AbilityList[i]);
+                        abilityRewardIcons.Add(rewardIcon);
+                        /*
+                        if (characterClass.AbilityList[i].MyRequiredLevel > 1) {
+                            rewardIcon.StackSizeText.text = "Level\n" + characterClass.AbilityList[i].MyRequiredLevel;
+                            rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
+                        }
+                        */
+                    }
+                }
+            } else {
+                abilityLabel.SetActive(false);
+            }
+        }
+
+        private void ClearTraitRewardIcons() {
+            //Debug.Log("ClassChangePanelController.ClearRewardIcons()");
+
+            foreach (NewGameAbilityButton rewardIcon in traitRewardIcons) {
+                objectPooler.ReturnObjectToPool(rewardIcon.gameObject);
+            }
+            traitRewardIcons.Clear();
+        }
+
+        private void ClearRewardIcons() {
+            //Debug.Log("ClassChangePanelController.ClearRewardIcons()");
+
+            foreach (NewGameAbilityButton rewardIcon in abilityRewardIcons) {
+                objectPooler.ReturnObjectToPool(rewardIcon.gameObject);
+            }
+            abilityRewardIcons.Clear();
+        }
+
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("ClassChangePanelController.OnOpenWindow()");
+            base.ProcessOpenWindowNotification();
+            abilityLabel.SetActive(false);
+            traitLabel.SetActive(false);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(abilityButtonArea.GetComponent<RectTransform>());
+
+            ShowOptionButtons();
+
+        }
+
+    }
+
+}

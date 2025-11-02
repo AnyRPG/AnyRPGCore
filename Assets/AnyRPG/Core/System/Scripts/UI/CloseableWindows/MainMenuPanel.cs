@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class MainMenuPanel : WindowContentController {
+    public class MainMenuPanel : WindowPanel {
 
         [Header("Main Menu")]
 

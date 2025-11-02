@@ -16,11 +16,11 @@ namespace AnyRPG {
         [SerializeField]
         protected Image icon = null;
 
-        private SwappableMeshAppearancePanelController appearancePanelController = null;
+        private SwappableMeshAppearancePanel appearancePanelController = null;
         private string optionGroupName = string.Empty;
         private string optionName = string.Empty;
 
-        public void ConfigureButton(SwappableMeshAppearancePanelController appearancePanelController, string groupName, Sprite image, string displayName, string optionName) {
+        public void ConfigureButton(SwappableMeshAppearancePanel appearancePanelController, string groupName, Sprite image, string displayName, string optionName) {
             this.appearancePanelController = appearancePanelController;
             optionGroupName = groupName;
             if (icon != null) {

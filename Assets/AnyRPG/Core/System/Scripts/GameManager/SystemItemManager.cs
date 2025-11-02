@@ -5,26 +5,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class SystemItemManager : ConfiguredMonoBehaviour {
+    public class SystemItemManager : ConfiguredClass {
 
         private int clientItemIdCount = 1;
         private int serverItemIdCount = -1;
 
         private Dictionary<int, InstantiatedItem> instantiatedItems = new Dictionary<int, InstantiatedItem>();
 
-        // game manager references
-        SystemDataFactory systemDataFactory = null;
-        NetworkManagerServer networkManagerServer = null;
-
         public Dictionary<int, InstantiatedItem> InstantiatedItems { get => instantiatedItems; set => instantiatedItems = value; }
         public int ClientItemIdCount { get => clientItemIdCount; }
-
-        public override void Configure(SystemGameManager systemGameManager) {
-            base.Configure(systemGameManager);
-
-            systemDataFactory = systemGameManager.SystemDataFactory;
-            networkManagerServer = systemGameManager.NetworkManagerServer;
-        }
 
         public InstantiatedItem GetNewInstantiatedItem(string itemName, ItemQuality usedItemQuality = null) {
             //Debug.Log(this.GetType().Name + ".GetNewResource(" + resourceName + ")");

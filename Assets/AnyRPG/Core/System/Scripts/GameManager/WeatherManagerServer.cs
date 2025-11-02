@@ -6,19 +6,17 @@ using UnityEngine;
 
 namespace AnyRPG {
 
-    public class WeatherManagerServer : ConfiguredMonoBehaviour {
+    public class WeatherManagerServer : ConfiguredClass {
 
 
         private Dictionary<int, WeatherMonitor> weatherMonitors = new Dictionary<int, WeatherMonitor>();
 
         // game manager references
-        protected SystemDataFactory systemDataFactory = null;
         protected LevelManager levelManager = null;
         protected PlayerManager playerManager = null;
         protected CameraManager cameraManager = null;
         protected TimeOfDayManagerServer timeOfDayManagerServer = null;
         protected TimeOfDayManagerClient timeOfDayManagerClient = null;
-        protected NetworkManagerServer networkManagerServer = null;
         protected SystemEventManager systemEventManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -33,13 +31,11 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            systemDataFactory = systemGameManager.SystemDataFactory;
             levelManager = systemGameManager.LevelManager;
             playerManager = systemGameManager.PlayerManager;
             cameraManager = systemGameManager.CameraManager;
             timeOfDayManagerServer = systemGameManager.TimeOfDayManagerServer;
             timeOfDayManagerClient = systemGameManager.TimeOfDayManagerClient;
-            networkManagerServer = systemGameManager.NetworkManagerServer;
             systemEventManager = systemGameManager.SystemEventManager;
         }
 

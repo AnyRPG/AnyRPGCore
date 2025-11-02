@@ -20,17 +20,6 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject playerConnectionPrefab = null;
 
-        [SerializeField]
-        private GameObject playerUnitParent = null;
-
-        [SerializeField]
-        private GameObject aiUnitParent = null;
-
-        [SerializeField]
-        private GameObject effectPrefabParent = null;
-
-        private string currentPlayerName = string.Empty;
-
         [Tooltip("If true, the system will enable the nav mesh agent for character navigation if a nav mesh exists in the scene")]
         [SerializeField]
         private bool autoDetectNavMeshes = false;
@@ -43,14 +32,9 @@ namespace AnyRPG {
         /// </summary>
         private GameObject playerConnectionObject = null;
 
-        //private PlayerCharacterSaveData playerCharacterSaveData = null;
-
         private PlayerUnitMovementController playerUnitMovementController = null;
 
         private PlayerController playerController = null;
-
-        // The actual movable rendered unit in the game world that we will be moving around
-        //private GameObject playerUnitObject = null;
 
         private bool playerUnitSpawned = false;
 
@@ -61,9 +45,6 @@ namespace AnyRPG {
 
         // a reference to the active unit.  This could change in cases of both mind control and mounted states
         private UnitController activeUnitController = null;
-
-        // for network mode
-        private List<UnitController> activePlayers = new List<UnitController>();
 
         // track if subscription to target ready should happen
         // only used when loading new level or respawning
@@ -87,7 +68,6 @@ namespace AnyRPG {
         protected LogManager logManager = null;
         protected CastTargettingManager castTargettingManager = null;
         protected CombatTextManager combatTextManager = null;
-        protected InventoryManager inventoryManager = null;
         protected ActionBarManager actionBarManager = null;
         protected MessageFeedManager messageFeedManager = null;
         protected ObjectPooler objectPooler = null;
@@ -103,9 +83,6 @@ namespace AnyRPG {
         public float MaxMovementSpeed { get => maxMovementSpeed; set => maxMovementSpeed = value; }
         public bool PlayerUnitSpawned { get => playerUnitSpawned; }
         public bool PlayerConnectionSpawned { get => playerConnectionSpawned; }
-        public GameObject AIUnitParent { get => aiUnitParent; set => aiUnitParent = value; }
-        public GameObject EffectPrefabParent { get => effectPrefabParent; set => effectPrefabParent = value; }
-        public GameObject PlayerUnitParent { get => playerUnitParent; set => playerUnitParent = value; }
         public LayerMask DefaultGroundMask { get => defaultGroundMask; set => defaultGroundMask = value; }
         public PlayerUnitMovementController PlayerUnitMovementController { get => playerUnitMovementController; set => playerUnitMovementController = value; }
         public UnitController UnitController { get => unitController; set => unitController = value; }
@@ -116,7 +93,6 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            PerformRequiredPropertyChecks();
             CreateEventSubscriptions();
         }
 
@@ -134,7 +110,6 @@ namespace AnyRPG {
             systemAbilityController = systemGameManager.SystemAbilityController;
             logManager = systemGameManager.LogManager;
             castTargettingManager = systemGameManager.CastTargettingManager;
-            inventoryManager = systemGameManager.InventoryManager;
             objectPooler = systemGameManager.ObjectPooler;
             controlsManager = systemGameManager.ControlsManager;
             networkManagerClient = systemGameManager.NetworkManagerClient;
@@ -143,15 +118,6 @@ namespace AnyRPG {
             networkManagerServer = systemGameManager.NetworkManagerServer;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             systemAchievementManager = systemGameManager.SystemAchievementManager;
-        }
-
-        public void PerformRequiredPropertyChecks() {
-            if (aiUnitParent == null) {
-                Debug.LogError("PlayerManager.Awake(): the ai unit parent is null.  Please set it in the inspector");
-            }
-            if (effectPrefabParent == null) {
-                Debug.LogError("PlayerManager.Awake(): the effect prefab parent is null.  Please set it in the inspector");
-            }
         }
 
         private void CreateEventSubscriptions() {
@@ -821,31 +787,31 @@ namespace AnyRPG {
         }
 
         public void HandleAddInventoryBagNode(BagNode bagNode) {
-            inventoryManager.AddInventoryBagNode(bagNode);
+            systemEventManager.NotifyOnAddInventoryBagNode(bagNode);
         }
 
         public void HandleAddBankBagNode(BagNode bagNode) {
-            inventoryManager.AddBankBagNode(bagNode);
+            systemEventManager.NotifyOnAddBankBagNode(bagNode);
         }
 
         public void HandleAddInventorySlot(InventorySlot inventorySlot) {
             //Debug.Log("PlayerManager.HandleAddInventorySlot()");
 
-            inventoryManager.AddInventorySlot(inventorySlot);
+            systemEventManager.NotifyOnAddInventorySlot(inventorySlot);
         }
 
         public void HandleAddBankSlot(InventorySlot inventorySlot) {
             //Debug.Log("PlayerManager.HandleAddBankSlot()");
 
-            inventoryManager.AddBankSlot(inventorySlot);
+            systemEventManager.NotifyOnAddBankSlot(inventorySlot);
         }
 
         public void HandleRemoveInventorySlot(InventorySlot inventorySlot) {
-            inventoryManager.RemoveInventorySlot(inventorySlot);
+            systemEventManager.NotifyOnRemoveInventorySlot(inventorySlot);
         }
 
         public void HandleRemoveBankSlot(InventorySlot inventorySlot) {
-            inventoryManager.RemoveBankSlot(inventorySlot);
+            systemEventManager.NotifyOnRemoveBankSlot(inventorySlot);
         }
 
         public void HandleCombatMessage(string messageText) {

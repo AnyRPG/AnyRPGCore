@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class UnitSpawnControlPanel : WindowContentController {
+    public class UnitSpawnControlPanel : WindowPanel {
 
         private UnitSpawnButton selectedUnitSpawnButton;
 

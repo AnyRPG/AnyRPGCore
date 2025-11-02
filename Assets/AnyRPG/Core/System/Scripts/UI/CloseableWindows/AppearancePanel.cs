@@ -6,15 +6,12 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class AppearancePanel : WindowContentController {
+    public class AppearancePanel : WindowPanel {
 
         [Header("Appearance")]
 
         [SerializeField]
         protected GameObject mainNoOptionsArea = null;
-
-        [SerializeField]
-        protected CanvasGroup canvasGroup = null;
 
         [Header("Buttons")]
 
@@ -58,38 +55,22 @@ namespace AnyRPG {
             this.characterEditor = characterEditor;
         }
 
-        public virtual void HidePanel() {
+        public override void HidePanel() {
             //Debug.Log($"{gameObject.name}.AppearancePanel.HidePanel()");
 
             if (canvasGroup.alpha == 1) {
-                DisablePanelDisplay();
+                base.HidePanel();
                 ShowEquipment();
             }
         }
 
-        public void DisablePanelDisplay() {
-            //Debug.Log($"{gameObject.name}.AppearancePanel.DisablePanelDisplay()");
-
-            canvasGroup.alpha = 0;
-            canvasGroup.blocksRaycasts = false;
-            canvasGroup.interactable = false;
-        }
-
-        public virtual void ShowPanel() {
+        public override void ShowPanel() {
             //Debug.Log($"{gameObject.name}.AppearancePanel.ShowPanel()");
 
             if (canvasGroup.alpha == 0) {
                 HideEquipment();
-                EnablePanelDisplay();
+                base.ShowPanel();
             }
-        }
-
-        public void EnablePanelDisplay() {
-            //Debug.Log($"{gameObject.name}.AppearancePanel.EnablePanelDisplay()");
-
-            canvasGroup.alpha = 1;
-            canvasGroup.blocksRaycasts = true;
-            canvasGroup.interactable = true;
         }
 
         public virtual void SetupOptions() {

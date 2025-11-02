@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace AnyRPG {
 
-    public class WindowManager : ConfiguredMonoBehaviour {
+    public class WindowManager : ConfiguredClass {
 
         private List<CloseableWindowContents> windowStack = new List<CloseableWindowContents>();
         //private List<UINavigationController> navigationStack = new List<UINavigationController>();

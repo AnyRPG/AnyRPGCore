@@ -19,20 +19,11 @@ namespace AnyRPG {
         [Header("Objects and Data")]
 
         [SerializeField]
-        private SystemDataFactory systemDataFactory = null;
-
-        [SerializeField]
         private ObjectPooler objectPooler = null;
 
         [Header("Monobehavior Managers")]
 
         // sub manager monobehaviors
-
-        [SerializeField]
-        private ControlsManager controlsManager = null;
-
-        [SerializeField]
-        private WindowManager windowManager = null;
 
         [SerializeField]
         private CameraManager cameraManager = null;
@@ -62,136 +53,10 @@ namespace AnyRPG {
         private InputManager inputManager = null;
 
         [SerializeField]
-        private LevelManager levelManager = null;
-
-        [SerializeField]
-        private LevelManagerServer levelManagerServer = null;
-
-        [SerializeField]
-        private InventoryManager inventoryManager = null;
-
-        [SerializeField]
         private PlayerManager playerManager = null;
 
         [SerializeField]
-        private PlayerManagerServer playerManagerServer = null;
-
-        [SerializeField]
-        private SystemItemManager systemItemManager = null;
-
-        [SerializeField]
-        private SystemAchievementManager systemAchievementManager = null;
-
-        [SerializeField]
-        private LogManager logManager = null;
-
-        [SerializeField]
-        private NewGameManager newGameManager = null;
-
-        [SerializeField]
-        private LoadGameManager loadGameManager = null;
-
-        [SerializeField]
-        private KeyBindManager keyBindManager = null;
-
-        [SerializeField]
-        private AchievementLog achievementLog = null;
-
-        [SerializeField]
-        private SystemEnvironmentManager systemEnvironmentManager = null;
-
-        [SerializeField]
-        private CraftingManager craftingManager = null;
-
-        [SerializeField]
-        private InteractionManager interactionManager = null;
-
-        [SerializeField]
-        private LootManager lootManager = null;
-
-        [SerializeField]
-        private SystemPlayableDirectorManager systemPlayableDirectorManager = null;
-
-        [SerializeField]
         private UIManager uIManager = null;
-
-        [SerializeField]
-        private CurrencyConverter currencyConverter = null;
-
-        [SerializeField]
-        private ChatCommandManager chatCommandManager = null;
-
-        [SerializeField]
-        private TimeOfDayManagerClient timeOfDayManagerClient = null;
-
-        [SerializeField]
-        private TimeOfDayManagerServer timeOfDayManagerServer = null;
-
-        [SerializeField]
-        private WeatherManagerClient weatherManagerClient = null;
-
-        [SerializeField]
-        private WeatherManagerServer weatherManagerServer = null;
-
-        [SerializeField]
-        private DialogManagerClient dialogManagerClient = null;
-
-        [SerializeField]
-        private DialogManagerServer dialogManagerServer = null;
-
-        [SerializeField]
-        private ClassChangeManagerClient classChangeManagerClient = null;
-
-        [SerializeField]
-        private ClassChangeManagerServer classChangeManagerServer = null;
-
-        [SerializeField]
-        private FactionChangeManagerClient factionChangeManagerClient = null;
-
-        [SerializeField]
-        private FactionChangeManagerServer factionChangeManagerServer = null;
-
-        [SerializeField]
-        private SpecializationChangeManagerClient specializationChangeManagerClient = null;
-
-        [SerializeField]
-        private SpecializationChangeManagerServer specializationChangeManagerServer = null;
-
-        [SerializeField]
-        private MusicPlayerManager musicPlayerManager = null;
-
-        [SerializeField]
-        private NameChangeManagerClient nameChangeManagerClient = null;
-
-        [SerializeField]
-        private NameChangeManagerServer nameChangeManagerServer = null;
-
-        [SerializeField]
-        private SkillTrainerManagerClient skillTrainerManagerClient = null;
-
-        [SerializeField]
-        private SkillTrainerManagerServer skillTrainerManagerServer = null;
-
-        [SerializeField]
-        private QuestGiverManagerClient questGiverManagerClient = null;
-
-        [SerializeField]
-        private QuestGiverManagerServer questGiverManagerServer = null;
-
-        [SerializeField]
-        private UnitSpawnManager unitSpawnManager = null;
-
-        [SerializeField]
-        private VendorManagerClient vendorManagerClient = null;
-
-        [SerializeField]
-        private VendorManagerServer vendorManagerServer = null;
-
-        [SerializeField]
-        private CharacterAppearanceManagerClient characterAppearanceManagerClient = null;
-
-        [SerializeField]
-        private CharacterAppearanceManagerServer characterAppearanceManagerServer = null;
 
         [SerializeField]
         private NetworkManagerClient networkManagerClient = null;
@@ -199,14 +64,55 @@ namespace AnyRPG {
         [SerializeField]
         private NetworkManagerServer networkManagerServer = null;
 
-        [SerializeField]
-        private CharacterManager characterManager = null;
-
         // system scripts
-        private SystemEventManager systemEventManager = null;
-        private AuthenticationService authenticationService = null;
-        private UserAccountService userAccountService = null;
-        private SaveManager saveManager = null;
+        private AuthenticationService authenticationService = new AuthenticationService();
+        private CharacterAppearanceManagerClient characterAppearanceManagerClient = new CharacterAppearanceManagerClient();
+        private CharacterAppearanceManagerServer characterAppearanceManagerServer = new CharacterAppearanceManagerServer();
+        private CharacterManager characterManager = new CharacterManager();
+        private ChatCommandManager chatCommandManager = new ChatCommandManager();
+        private ClassChangeManagerClient classChangeManagerClient = new ClassChangeManagerClient();
+        private ClassChangeManagerServer classChangeManagerServer = new ClassChangeManagerServer();
+        private ControlsManager controlsManager = new ControlsManager();
+        private CraftingManager craftingManager = new CraftingManager();
+        private CurrencyConverter currencyConverter = new CurrencyConverter();
+        private DialogManagerClient dialogManagerClient = new DialogManagerClient();
+        private DialogManagerServer dialogManagerServer = new DialogManagerServer();
+        private FactionChangeManagerClient factionChangeManagerClient = new FactionChangeManagerClient();
+        private FactionChangeManagerServer factionChangeManagerServer = new FactionChangeManagerServer();
+        private InteractionManager interactionManager = new InteractionManager();
+        private KeyBindManager keyBindManager = new KeyBindManager();
+        private LevelManager levelManager = new LevelManager();
+        private LevelManagerServer levelManagerServer = new LevelManagerServer();
+        private LoadGameManager loadGameManager = new LoadGameManager();
+        private LogManager logManager = new LogManager();
+        private LootManager lootManager = new LootManager();
+        private MusicPlayerManager musicPlayerManager = new MusicPlayerManager();
+        private NameChangeManagerClient nameChangeManagerClient = new NameChangeManagerClient();
+        private NameChangeManagerServer nameChangeManagerServer = new NameChangeManagerServer();
+        private NewGameManager newGameManager = new NewGameManager();
+        private PlayerManagerServer playerManagerServer = new PlayerManagerServer();
+        private QuestGiverManagerClient questGiverManagerClient = new QuestGiverManagerClient();
+        private QuestGiverManagerServer questGiverManagerServer = new QuestGiverManagerServer();
+        private SaveManager saveManager = new SaveManager();
+        private SkillTrainerManagerClient skillTrainerManagerClient = new SkillTrainerManagerClient();
+        private SkillTrainerManagerServer skillTrainerManagerServer = new SkillTrainerManagerServer();
+        private SpecializationChangeManagerClient specializationChangeManagerClient = new SpecializationChangeManagerClient();
+        private SpecializationChangeManagerServer specializationChangeManagerServer = new SpecializationChangeManagerServer();
+        private SystemAchievementManager systemAchievementManager = new SystemAchievementManager();
+        private SystemDataFactory systemDataFactory = new SystemDataFactory();
+        private SystemEnvironmentManager systemEnvironmentManager = new SystemEnvironmentManager();
+        private SystemEventManager systemEventManager = new SystemEventManager();
+        private SystemItemManager systemItemManager = new SystemItemManager();
+        private SystemPlayableDirectorManager systemPlayableDirectorManager = new SystemPlayableDirectorManager();
+        private TimeOfDayManagerClient timeOfDayManagerClient = new TimeOfDayManagerClient();
+        private TimeOfDayManagerServer timeOfDayManagerServer = new TimeOfDayManagerServer();
+        private UnitSpawnManager unitSpawnManager = new UnitSpawnManager();
+        private UserAccountService userAccountService = new UserAccountService();
+        private VendorManagerClient vendorManagerClient = new VendorManagerClient();
+        private VendorManagerServer vendorManagerServer = new VendorManagerServer();
+        private WeatherManagerClient weatherManagerClient = new WeatherManagerClient();
+        private WeatherManagerServer weatherManagerServer = new WeatherManagerServer();
+        private WindowManager windowManager = new WindowManager();
 
         // application state
         private int spawnCount = 0;
@@ -224,7 +130,6 @@ namespace AnyRPG {
         public SystemPlayableDirectorManager SystemPlayableDirectorManager { get => systemPlayableDirectorManager; set => systemPlayableDirectorManager = value; }
         public SaveManager SaveManager { get => saveManager; }
         public KeyBindManager KeyBindManager { get => keyBindManager; set => keyBindManager = value; }
-        public AchievementLog AchievementLog { get => achievementLog; set => achievementLog = value; }
 
         public SystemConfigurationManager SystemConfigurationManager { get => systemConfigurationManager; set => systemConfigurationManager = value; }
         public ControlsManager ControlsManager { get => controlsManager; }
@@ -240,9 +145,8 @@ namespace AnyRPG {
         public SystemAbilityController SystemAbilityController { get => systemAbilityController; set => systemAbilityController = value; }
         public CastTargettingManager CastTargettingManager { get => castTargettingManager; set => castTargettingManager = value; }
         public InputManager InputManager { get => inputManager; set => inputManager = value; }
-        public LevelManager LevelManager { get => levelManager; set => levelManager = value; }
+        public LevelManager LevelManager { get => levelManager; }
         public LevelManagerServer LevelManagerServer { get => levelManagerServer; set => levelManagerServer = value; }
-        public InventoryManager InventoryManager { get => inventoryManager; set => inventoryManager = value; }
         public PlayerManager PlayerManager { get => playerManager; set => playerManager = value; }
         public PlayerManagerServer PlayerManagerServer { get => playerManagerServer; set => playerManagerServer = value; }
         public SystemItemManager SystemItemManager { get => systemItemManager; set => systemItemManager = value; }
@@ -320,11 +224,6 @@ namespace AnyRPG {
             // then everything else that relies on system configuration and data resources
             objectPooler.Configure(this);
 
-            // create services
-            saveManager = new SaveManager();
-            userAccountService = new UserAccountService();
-            authenticationService = new AuthenticationService();
-
             // configure services and managers
             userAccountService.Configure(this);
             authenticationService.Configure(this);
@@ -341,7 +240,6 @@ namespace AnyRPG {
             inputManager.Configure(this);
             levelManager.Configure(this);
             levelManagerServer.Configure(this);
-            inventoryManager.Configure(this);
             playerManager.Configure(this);
             playerManagerServer.Configure(this);
             systemItemManager.Configure(this);
@@ -351,7 +249,6 @@ namespace AnyRPG {
             loadGameManager.Configure(this);
             saveManager.Configure(this);
             KeyBindManager.Configure(this);
-            achievementLog.Configure(this);
             systemEnvironmentManager.Configure(this);
             craftingManager.Configure(this);
             interactionManager.Configure(this);
@@ -383,9 +280,14 @@ namespace AnyRPG {
             vendorManagerClient.Configure(this);
             vendorManagerServer.Configure(this);
             characterAppearanceManagerClient.Configure(this);
+            characterAppearanceManagerServer.Configure(this);
             networkManagerClient.Configure(this);
             networkManagerServer.Configure(this);
             characterManager.Configure(this);
+        }
+
+        private void Update() {
+            timeOfDayManagerServer.Tick();
         }
 
         private void SetupPermanentObjects() {

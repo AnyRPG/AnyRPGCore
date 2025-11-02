@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
 
-    public class TimeOfDayManagerClient : ConfiguredMonoBehaviour {
+    public class TimeOfDayManagerClient : ConfiguredClass {
 
         private bool nightTime = true;
 
@@ -37,11 +37,9 @@ namespace AnyRPG {
         //private float elapsedSeconds = 0f;
 
         // game manager references
-        protected SystemDataFactory systemDataFactory = null;
         protected LevelManager levelManager = null;
         protected AudioManager audioManager = null;
         protected WeatherManagerClient weatherManager = null;
-        protected NetworkManagerServer networkManagerServer = null;
         protected TimeOfDayManagerServer timeOfDayManagerServer = null;
         protected SystemEventManager systemEventManager = null;
 
@@ -67,11 +65,9 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            systemDataFactory = systemGameManager.SystemDataFactory;
             levelManager = systemGameManager.LevelManager;
             audioManager = systemGameManager.AudioManager;
             weatherManager = systemGameManager.WeatherManagerClient;
-            networkManagerServer = systemGameManager.NetworkManagerServer;
             timeOfDayManagerServer = systemGameManager.TimeOfDayManagerServer;
             systemEventManager = systemGameManager.SystemEventManager;
         }

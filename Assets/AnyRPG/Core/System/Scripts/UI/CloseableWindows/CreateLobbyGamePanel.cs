@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class CreateLobbyGamePanel : WindowContentController {
+    public class CreateLobbyGamePanel : WindowPanel {
 
         public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 

@@ -24,7 +24,6 @@ namespace AnyRPG {
         private PlayerManagerServer playerManagerServer = null;
         private MessageFeedManager messageFeedManager = null;
         private LevelManager levelManager = null;
-        private AchievementLog achievementLog = null;
         private ActionBarManager actionBarManager = null;
         private SystemItemManager systemItemManager = null;
         private UIManager uIManager = null;
@@ -40,7 +39,6 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             levelManager = systemGameManager.LevelManager;
-            achievementLog = systemGameManager.AchievementLog;
             systemItemManager = systemGameManager.SystemItemManager;
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;

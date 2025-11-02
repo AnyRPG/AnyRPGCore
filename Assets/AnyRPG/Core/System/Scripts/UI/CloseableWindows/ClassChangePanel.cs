@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class ClassChangePanel : WindowContentController {
+    public class ClassChangePanel : WindowPanel {
 
         [SerializeField]
         private GameObject rewardIconPrefab = null;

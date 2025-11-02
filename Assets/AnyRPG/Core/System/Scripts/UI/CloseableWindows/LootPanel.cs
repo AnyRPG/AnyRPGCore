@@ -1,0 +1,174 @@
+using AnyRPG;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace AnyRPG {
+    public class LootPanel : PagedWindowContents {
+
+        public override event System.Action<bool> OnPageCountUpdate = delegate { };
+        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
+
+        [Header("Loot UI")]
+
+        [SerializeField]
+        protected List<LootButton> lootButtons = new List<LootButton>();
+
+        [SerializeField]
+        protected HighlightButton takeAllButton = null;
+
+        // game manager references
+        private LootManager lootManager = null;
+        private PlayerManager playerManager = null;
+        private NetworkManagerClient networkManagerClient = null;
+
+        public List<LootButton> LootButtons { get => lootButtons; set => lootButtons = value; }
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            foreach (LootButton lootButton in lootButtons) {
+                lootButton.Configure(systemGameManager);
+                //lootButton.SetLootUI(this);
+            }
+            takeAllButton.Configure(systemGameManager);
+            pageSize = 4;
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            lootManager = systemGameManager.LootManager;
+            playerManager = systemGameManager.PlayerManager;
+            networkManagerClient = systemGameManager.NetworkManagerClient;
+        }
+
+        protected override void PopulatePages() {
+            //Debug.Log("LootUI.PopulatePages()");
+
+            base.PopulatePages();
+
+            pages.Clear();
+            LootDropContentList page = new LootDropContentList();
+            if (!lootManager.AvailableDroppedLoot.ContainsKey(networkManagerClient.AccountId)) {
+                return;
+            }
+            foreach (LootDrop lootDrop in lootManager.AvailableDroppedLoot[networkManagerClient.AccountId]) {
+                page.lootDrops.Add(lootDrop);
+                if (page.lootDrops.Count == pageSize) {
+                    pages.Add(page);
+                    page = new LootDropContentList();
+                }
+            }
+            if (page.lootDrops.Count > 0) {
+                pages.Add(page);
+            }
+            AddLoot();
+        }
+
+        public void AddLoot() {
+            //Debug.Log("LootUI.AddLoot()");
+            if (pages.Count > 0) {
+                if (pageIndex >= pages.Count) {
+                    pageIndex = pages.Count - 1;
+                }
+                for (int i = 0; i < pageSize; i++) {
+                    //for (int i = 0; i < pages[pageIndex].Count - 1; i++) {
+                    //Debug.Log("SkillBookUI.AddSkills(): i: " + i);
+                    if (i < (pages[pageIndex] as LootDropContentList).lootDrops.Count) {
+                        //Debug.Log("adding skill");
+                        lootButtons[i].gameObject.SetActive(true);
+                        lootButtons[i].SetLootDrop((pages[pageIndex] as LootDropContentList).lootDrops[i]);
+                        uINavigationControllers[0].AddActiveButton(lootButtons[i]);
+
+                    } else {
+                        //Debug.Log("clearing skill");
+                        lootButtons[i].ClearLootDrop();
+                        lootButtons[i].gameObject.SetActive(false);
+                    }
+                }
+                currentNavigationController.FocusCurrentButton();
+            }
+        }
+
+        public void TakeAllLoot() {
+            //Debug.Log("LootUI.TakeAllLoot()");
+            lootManager.TakeAllLoot(playerManager.UnitController);
+            BroadcastPageCountUpdate();
+        }
+
+        public void BroadcastPageCountUpdate() {
+            //Debug.Log("LootUI.BroadcastPageCountUpdate()");
+            OnPageCountUpdate(true);
+        }
+
+        public override void ClearButtons() {
+            //Debug.Log("LootUI.ClearButtons()");
+            foreach (LootButton button in lootButtons) {
+                button.DeSelect();
+                button.gameObject.SetActive(false);
+            }
+            uINavigationControllers[0].ClearActiveButtons();
+        }
+
+        public override void ReceiveClosedWindowNotification() {
+            //Debug.Log("LootUI.ReceiveClosedWindowNotification()");
+
+            base.ReceiveClosedWindowNotification();
+            foreach (LootButton lootButton in lootButtons) {
+                lootButton.CheckMouse();
+            }
+            lootManager.OnTakeLoot -= HandleTakeLoot;
+            lootManager.OnAvailableLootAdded -= HandleAvailableLootAdded;
+            lootManager.ClearAvailableDroppedLoot();
+            OnCloseWindow(this);
+        }
+
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("LootUI.ProcessOpenWindowNotification()");
+
+            base.ProcessOpenWindowNotification();
+            SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
+            //BroadcastPageCountUpdate();
+            lootManager.OnTakeLoot += HandleTakeLoot;
+            lootManager.OnAvailableLootAdded += HandleAvailableLootAdded;
+        }
+
+        public override void AddPageContent() {
+            //Debug.Log("LootUI.AddPageContent()");
+            base.AddPageContent();
+            AddLoot();
+        }
+
+        /*
+        public override int GetPageCount() {
+            //Debug.Log("LootUI.GetPageCount()");
+
+            return lootManager.Pages.Count;
+        }
+        */
+
+        public void HandleTakeLoot() {
+            //Debug.Log("LootUI.HandleTakeLoot()");
+
+            ClearButtons();
+            PopulatePages();
+            uINavigationControllers[0].FocusCurrentButton();
+            BroadcastPageCountUpdate();
+        }
+
+        public void HandleAvailableLootAdded() {
+            //Debug.Log("LootUI.HandleAvailableLootAdded()");
+
+            CreatePages();
+            BroadcastPageCountUpdate();
+        }
+    }
+
+    public class LootDropContentList : PagedContentList {
+        public List<LootDrop> lootDrops = new List<LootDrop>();
+    }
+
+}

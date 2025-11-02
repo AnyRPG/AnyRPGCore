@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
 
-    public class WeatherManagerClient : ConfiguredMonoBehaviour {
+    public class WeatherManagerClient : ConfiguredClass {
 
         // state tracking
         private WeatherProfile previousWeather = null;
@@ -13,6 +13,7 @@ namespace AnyRPG {
         private WeatherEffectController weatherEffectController = null;
         private Coroutine fogCoroutine = null;
         private Coroutine shadowCoroutine = null;
+        private Coroutine weatherCoroutine = null;
         private AudioClip currentAmbientSound = null;
         private FogSettings defaultFogSettings = new FogSettings();
         private FogSettings weatherFogSettings = new FogSettings();
@@ -25,7 +26,6 @@ namespace AnyRPG {
         private Light sunLight = null;
 
         // game manager references
-        protected SystemDataFactory systemDataFactory = null;
         protected LevelManager levelManager = null;
         protected AudioManager audioManager = null;
         protected ObjectPooler objectPooler = null;
@@ -33,7 +33,6 @@ namespace AnyRPG {
         protected CameraManager cameraManager = null;
         protected TimeOfDayManagerServer timeOfDayManagerServer = null;
         protected TimeOfDayManagerClient timeOfDayManagerClient = null;
-        protected NetworkManagerServer networkManagerServer = null;
         protected SystemEventManager systemEventManager = null;
         protected NetworkManagerClient networkManagerClient = null;
 
@@ -55,7 +54,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            systemDataFactory = systemGameManager.SystemDataFactory;
             levelManager = systemGameManager.LevelManager;
             audioManager = systemGameManager.AudioManager;
             objectPooler = systemGameManager.ObjectPooler;
@@ -63,7 +61,6 @@ namespace AnyRPG {
             cameraManager = systemGameManager.CameraManager;
             timeOfDayManagerServer = systemGameManager.TimeOfDayManagerServer;
             timeOfDayManagerClient = systemGameManager.TimeOfDayManagerClient;
-            networkManagerServer = systemGameManager.NetworkManagerServer;
             systemEventManager = systemGameManager.SystemEventManager;
             networkManagerClient = systemGameManager.NetworkManagerClient;
         }
@@ -188,7 +185,7 @@ namespace AnyRPG {
             //Debug.Log($"WeatherManagerClient.ActivateCurrentFogSettings()");
 
             if (fogCoroutine != null) {
-                StopCoroutine(fogCoroutine);
+                systemGameManager.StopCoroutine(fogCoroutine);
             }
             RenderSettings.fog = currentFogSettings.UseFog;
             RenderSettings.fogColor = currentFogSettings.FogColor;
@@ -197,9 +194,9 @@ namespace AnyRPG {
 
         private void FadeToFogSettings() {
             if (fogCoroutine != null) {
-                StopCoroutine(fogCoroutine);
+                systemGameManager.StopCoroutine(fogCoroutine);
             }
-            fogCoroutine = StartCoroutine(FogFade(3f));
+            fogCoroutine = systemGameManager.StartCoroutine(FogFade(3f));
         }
 
         private void FadeToShadowSettings() {
@@ -210,9 +207,9 @@ namespace AnyRPG {
             }
 
             if (shadowCoroutine != null) {
-                StopCoroutine(shadowCoroutine);
+                systemGameManager.StopCoroutine(shadowCoroutine);
             }
-            shadowCoroutine = StartCoroutine(ShadowFade(3f));
+            shadowCoroutine = systemGameManager.StartCoroutine(ShadowFade(3f));
         }
 
         private IEnumerator ShadowFade(float fadeTime) {
@@ -340,7 +337,7 @@ namespace AnyRPG {
             if (immediate == true) {
                 // this is only done on level unload because shadow fading is normally done in StartWeather()
                 if (shadowCoroutine != null) {
-                    StopCoroutine(shadowCoroutine);
+                    systemGameManager.StopCoroutine(shadowCoroutine);
                     shadowCoroutine = null;
                 }
             }
@@ -361,7 +358,7 @@ namespace AnyRPG {
                     weatherEffectController.StopPlaying(immediate);
                     objectPooler.ReturnObjectToPool(weatherEffectController.gameObject);
                 } else {
-                    StartCoroutine(WeatherFade(weatherEffectController, weatherEffectController.FadeTime));
+                    weatherCoroutine = systemGameManager.StartCoroutine(WeatherFade(weatherEffectController, weatherEffectController.FadeTime));
                 }
                 weatherEffectController = null;
             }
@@ -381,12 +378,21 @@ namespace AnyRPG {
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
+            weatherCoroutine = null;
             fadingControllers.Remove(weatherEffectController);
             objectPooler.ReturnObjectToPool(weatherEffectController.gameObject);
         }
 
         private void CleanupWeatherEffectControllers() {
-            StopAllCoroutines();
+            if (fogCoroutine != null) {
+                systemGameManager.StopCoroutine(fogCoroutine);
+            }
+            if (shadowCoroutine != null) {
+                systemGameManager.StopCoroutine(shadowCoroutine);
+            }
+            if (weatherCoroutine != null) {
+                systemGameManager.StopCoroutine(weatherCoroutine);
+            }
             foreach (WeatherEffectController weatherEffectController in fadingControllers) {
                 weatherEffectController.StopPlaying(true);
                 objectPooler.ReturnObjectToPool(weatherEffectController.gameObject);

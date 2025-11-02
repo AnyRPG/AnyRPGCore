@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class NameChangePanel : WindowContentController {
+    public class NameChangePanel : WindowPanel {
 
         [SerializeField]
         private TMP_InputField textInput = null;

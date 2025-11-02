@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class ConfirmDestroyPanel : WindowContentController {
+    public class ConfirmDestroyPanel : WindowPanel {
 
         /*
         [SerializeField]

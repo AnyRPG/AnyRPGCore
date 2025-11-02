@@ -281,8 +281,6 @@ namespace AnyRPG {
         private PlayerManager playerManager = null;
         private KeyBindManager keyBindManager = null;
         private InputManager inputManager = null;
-        private CameraManager cameraManager = null;
-        private InventoryManager inventoryManager = null;
         private SystemEventManager systemEventManager = null;
         private ControlsManager controlsManager = null;
         private WindowManager windowManager = null;
@@ -447,8 +445,6 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             keyBindManager = systemGameManager.KeyBindManager;
             inputManager = systemGameManager.InputManager;
-            cameraManager = systemGameManager.CameraManager;
-            inventoryManager = systemGameManager.InventoryManager;
             systemEventManager = systemGameManager.SystemEventManager;
             controlsManager = systemGameManager.ControlsManager;
             windowManager = systemGameManager.WindowManager;
@@ -1414,7 +1410,7 @@ namespace AnyRPG {
 
             int opacityLevel = (int)(PlayerPrefs.GetFloat("InventoryOpacity") * 255);
             //int slotOpacityLevel = (int)(PlayerPrefs.GetFloat("InventorySlotOpacity") * 255);
-            inventoryManager.SetSlotBackgroundColor();
+            systemEventManager.NotifyOnSetSlotBackgroundColor();
             if (bankWindow.CloseableWindowContents != null) {
                 bankWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             }

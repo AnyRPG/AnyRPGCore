@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class LoadGameManager : ConfiguredMonoBehaviour, ICapabilityConsumer, ICharacterConfigurationProvider {
+    public class LoadGameManager : ConfiguredClass, ICapabilityConsumer, ICharacterConfigurationProvider {
 
         //public event System.Action<LoadGameButton> OnSetSavedGame = delegate { };
         public event System.Action OnDeleteGame = delegate { };

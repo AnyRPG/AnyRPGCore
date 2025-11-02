@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class ConfirmSellItemPanel : WindowContentController {
+    public class ConfirmSellItemPanel : WindowPanel {
 
         /*
         [SerializeField]
@@ -44,7 +44,7 @@ namespace AnyRPG {
             //Debug.Log("NewGameMenuController.ConfirmAction()");
             //SystemGameManager.Instance.UIManager.HandScript.DeleteItem();
             if (instantiatedItem != null) {
-                (uIManager.vendorWindow.CloseableWindowContents as VendorUI).SellItem(MyItem);
+                (uIManager.vendorWindow.CloseableWindowContents as VendorPanel).SellItem(MyItem);
             }
             uIManager.confirmSellItemMenuWindow.CloseWindow();
         }

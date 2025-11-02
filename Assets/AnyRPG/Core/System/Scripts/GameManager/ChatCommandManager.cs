@@ -6,13 +6,12 @@ using UnityEngine.EventSystems;
 
 namespace AnyRPG {
 
-    public class ChatCommandManager : ConfiguredMonoBehaviour {
+    public class ChatCommandManager : ConfiguredClass {
 
 
         protected Dictionary<string, ChatCommand> commandDictionary = new Dictionary<string, ChatCommand>();
 
         // game manager references
-        protected SystemDataFactory systemDataFactory = null;
         protected LogManager logManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -27,7 +26,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            systemDataFactory = systemGameManager.SystemDataFactory;
             logManager = systemGameManager.LogManager;
         }
 

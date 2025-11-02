@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class InteractableOptionManager : ConfiguredMonoBehaviour {
+    public class InteractableOptionManager : ConfiguredClass {
 
         //public event System.Action OnConfirmAction = delegate { };
         //public event System.Action OnEndInteraction = delegate { };

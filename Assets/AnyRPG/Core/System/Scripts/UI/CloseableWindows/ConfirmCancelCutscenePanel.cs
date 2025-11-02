@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class ConfirmCancelCutscenePanel : WindowContentController {
+    public class ConfirmCancelCutscenePanel : WindowPanel {
 
         /*
         [SerializeField]

@@ -970,7 +970,7 @@ namespace AnyRPG {
             interactableEventController.NotifyOnMiniMapStatusUpdate(interactableOptionComponent);
         }
 
-        public virtual void ConfigureDialogPanel(DialogPanelController dialogPanelController) {
+        public virtual void ConfigureDialogPanel(DialogPanel dialogPanelController) {
             // only needed in namePlateUnit and above
         }
 

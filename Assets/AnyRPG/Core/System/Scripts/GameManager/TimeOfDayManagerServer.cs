@@ -5,16 +5,14 @@ using UnityEngine;
 
 namespace AnyRPG {
 
-    public class TimeOfDayManagerServer : ConfiguredMonoBehaviour {
+    public class TimeOfDayManagerServer : ConfiguredClass {
 
         // track the passage of in-game time
         private DateTime startTime;
         private DateTime inGameTime;
 
         // game manager references
-        protected SystemDataFactory systemDataFactory = null;
         protected WeatherManagerClient weatherManager = null;
-        protected NetworkManagerServer networkManagerServer = null;
         protected SystemEventManager systemEventManager = null;
 
         public DateTime InGameTime { get => inGameTime; }
@@ -32,13 +30,11 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            systemDataFactory = systemGameManager.SystemDataFactory;
             weatherManager = systemGameManager.WeatherManagerClient;
-            networkManagerServer = systemGameManager.NetworkManagerServer;
             systemEventManager = systemGameManager.SystemEventManager;
         }
 
-        private void Update() {
+        public void Tick() {
             CalculateRelativeTime();
         }
 

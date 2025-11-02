@@ -16,7 +16,7 @@ namespace AnyRPG {
 
         //protected bool markedComplete = false;
 
-        protected QuestLogUI questLogUI = null;
+        protected QuestLogPanel questLogUI = null;
 
         // game manager references
         protected PlayerManager playerManager = null;
@@ -29,7 +29,7 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
         }
 
-        public void SetQuest(QuestLogUI questLogUI, Quest newQuest) {
+        public void SetQuest(QuestLogPanel questLogUI, Quest newQuest) {
             this.questLogUI = questLogUI;
             if (newQuest != null) {
                 quest = newQuest;

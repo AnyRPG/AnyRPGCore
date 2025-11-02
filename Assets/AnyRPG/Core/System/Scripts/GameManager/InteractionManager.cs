@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 
 namespace AnyRPG {
-    public class InteractionManager : ConfiguredMonoBehaviour {
+    public class InteractionManager : ConfiguredClass {
 
         public event System.Action<Interactable> OnSetInteractable = delegate { };
 
@@ -17,39 +17,16 @@ namespace AnyRPG {
         private InteractableOptionManager interactableOptionManager = null;
 
         private PlayerManager playerManager = null;
-        private PlayerManagerServer playerManagerServer = null;
-        private SystemEventManager systemEventManager = null;
-        private NetworkManagerServer networkManagerServer = null;
         private NetworkManagerClient networkManagerClient = null;
-        private ClassChangeManagerClient classChangeManager = null;
         private UIManager uIManager = null;
-        private DialogManagerClient dialogManager = null;
-        private SkillTrainerManagerClient skillTrainerManager = null;
-
-        /*
-        public Interactable CurrentInteractable {
-            get => currentInteractable;
-            set {
-                //Debug.Log("CurrentInteractable");
-                currentInteractable = value;
-                OnSetInteractable(currentInteractable);
-            }
-        }
-        */
 
         public override void SetGameManagerReferences() {
             //Debug.Log($"InteractionManager.SetGameManagerReferences()");
 
             base.SetGameManagerReferences();
-            systemEventManager = systemGameManager.SystemEventManager;
             playerManager = systemGameManager.PlayerManager;
-            playerManagerServer = systemGameManager.PlayerManagerServer;
             uIManager = systemGameManager.UIManager;
-            networkManagerServer = systemGameManager.NetworkManagerServer;
             networkManagerClient = systemGameManager.NetworkManagerClient;
-            classChangeManager = systemGameManager.ClassChangeManager;
-            dialogManager = systemGameManager.DialogManagerClient;
-            skillTrainerManager = systemGameManager.SkillTrainerManagerClient;
         }
 
         public bool Interact(UnitController sourceUnitController, Interactable target) {

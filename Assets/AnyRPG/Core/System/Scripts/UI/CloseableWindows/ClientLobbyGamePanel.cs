@@ -7,7 +7,7 @@ using System;
 using FishNet.Serializing;
 
 namespace AnyRPG {
-    public class ClientLobbyGamePanel : WindowContentController {
+    public class ClientLobbyGamePanel : WindowPanel {
 
         [Header("Client Lobby Game Panel")]
 

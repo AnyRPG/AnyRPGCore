@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class PlayerDeathPanel : WindowContentController {
+    public class PlayerDeathPanel : WindowPanel {
 
         //public override event Action<ICloseableWindowContents> OnOpenWindow;
 

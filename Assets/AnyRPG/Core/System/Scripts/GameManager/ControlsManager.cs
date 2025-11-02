@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace AnyRPG {
 
-    public class ControlsManager : ConfiguredMonoBehaviour {
+    public class ControlsManager : ConfiguredClass {
 
         private float inputHorizontal = 0f;
         private float inputVertical = 0f;

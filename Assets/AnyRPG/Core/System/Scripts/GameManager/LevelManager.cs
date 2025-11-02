@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
-    public class LevelManager : ConfiguredMonoBehaviour {
+    public class LevelManager : ConfiguredClass {
 
         public event System.Action<float> OnSetLoadingProgress = delegate { };
         public event System.Action<string> OnBeginLoadingLevel = delegate { };
@@ -31,7 +31,6 @@ namespace AnyRPG {
         private Dictionary<string, SceneNode> sceneDictionary = new Dictionary<string, SceneNode>();
 
         // game manager references
-        private SystemDataFactory systemDataFactory = null;
         private UIManager uIManager = null;
         private AudioManager audioManager = null;
         private CameraManager cameraManager = null;
@@ -39,7 +38,6 @@ namespace AnyRPG {
         private PlayerManagerServer playerManagerServer = null;
         private MapManager mapManager = null;
         private NetworkManagerClient networkManagerClient = null;
-        private NetworkManagerServer networkManagerServer = null;
         private SystemEventManager systemEventManager = null;
 
         public bool NavMeshAvailable { get => navMeshAvailable; set => navMeshAvailable = value; }
@@ -59,7 +57,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
             uIManager = systemGameManager.UIManager;
             mapManager = uIManager.MapManager;
             audioManager = systemGameManager.AudioManager;
@@ -67,7 +64,6 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             networkManagerClient = systemGameManager.NetworkManagerClient;
-            networkManagerServer = systemGameManager.NetworkManagerServer;
             systemEventManager = systemGameManager.SystemEventManager;
         }
 
@@ -324,7 +320,7 @@ namespace AnyRPG {
 
             if (loadingLevel == false) {
                 loadingLevel = true;
-                loadCutSceneCoroutine = StartCoroutine(LoadCutSceneDelay(cutscene));
+                loadCutSceneCoroutine = systemGameManager.StartCoroutine(LoadCutSceneDelay(cutscene));
             }
         }
 
@@ -430,7 +426,7 @@ namespace AnyRPG {
             //Debug.Log($"LevelManager.StartLoadAsync({loadSceneNode.ResourceName}) cutscene: {loadSceneNode.IsCutScene}");
 
             if (systemGameManager.GameMode == GameMode.Local || loadSceneNode.IsCutScene) {
-                StartCoroutine(LoadAsynchronously(loadSceneNode.SceneFile));
+                systemGameManager.StartCoroutine(LoadAsynchronously(loadSceneNode.SceneFile));
                 return;
             }
             StartLoadAsync(loadSceneNode.SceneFile);
@@ -440,7 +436,7 @@ namespace AnyRPG {
             //Debug.Log($"LevelManager.StartLoadAsync({sceneName})");
 
             if (systemGameManager.GameMode == GameMode.Local) {
-                StartCoroutine(LoadAsynchronously(sceneName));
+                systemGameManager.StartCoroutine(LoadAsynchronously(sceneName));
                 return;
             }
             Debug.LogWarning("LevelManager.StartLoadAsync(): should not be loading a scene directly in networked mode!");

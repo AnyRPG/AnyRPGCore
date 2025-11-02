@@ -14,10 +14,6 @@ namespace AnyRPG {
         [SerializeField]
         protected BagBarController bagBarController;
 
-        // game manager references
-        //protected PlayerManager playerManager = null;
-        protected SystemEventManager systemEventManager = null;
-
         public BagBarController BagBarController { get => bagBarController; set => bagBarController = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -27,29 +23,23 @@ namespace AnyRPG {
             bagBarController.SetBagPanel(this);
         }
 
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            //playerManager = systemGameManager.PlayerManager;
-            systemEventManager = systemGameManager.SystemEventManager;
-        }
-
         protected override void ProcessCreateEventSubscriptions() {
             //Debug.Log("InventoryPanel.ProcessCreateEventSubscriptions()");
             base.ProcessCreateEventSubscriptions();
 
             systemEventManager.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
-            inventoryManager.OnAddInventoryBagNode += HandleAddInventoryBagNode;
-            inventoryManager.OnAddInventorySlot += HandleAddSlot;
-            inventoryManager.OnRemoveInventorySlot += HandleRemoveSlot;
+            systemEventManager.OnAddInventoryBagNode += HandleAddInventoryBagNode;
+            systemEventManager.OnAddInventorySlot += HandleAddSlot;
+            systemEventManager.OnRemoveInventorySlot += HandleRemoveSlot;
         }
 
         protected override void ProcessCleanupEventSubscriptions() {
             base.ProcessCleanupEventSubscriptions();
 
             systemEventManager.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
-            inventoryManager.OnAddInventoryBagNode -= HandleAddInventoryBagNode;
-            inventoryManager.OnAddInventorySlot -= HandleAddSlot;
-            inventoryManager.OnRemoveInventorySlot -= HandleRemoveSlot;
+            systemEventManager.OnAddInventoryBagNode -= HandleAddInventoryBagNode;
+            systemEventManager.OnAddInventorySlot -= HandleAddSlot;
+            systemEventManager.OnRemoveInventorySlot -= HandleRemoveSlot;
         }
 
         public void HandlePlayerUnitDespawn(UnitController unitController) {

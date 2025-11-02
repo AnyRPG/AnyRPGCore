@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class CraftingManager : ConfiguredMonoBehaviour {
+    public class CraftingManager : ConfiguredClass {
 
         public event System.Action<Recipe> OnSelectRecipe = delegate { };
 

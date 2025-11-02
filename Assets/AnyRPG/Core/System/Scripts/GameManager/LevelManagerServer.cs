@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
-    public class LevelManagerServer : ConfiguredMonoBehaviour {
+    public class LevelManagerServer : ConfiguredClass {
 
         // dictionary of loaded scenes, where the key is the scene name and the value is a list of scene handles
         private Dictionary<string, Dictionary<int, Scene>> loadedScenes = new Dictionary<string, Dictionary<int, Scene>>();
@@ -13,7 +13,6 @@ namespace AnyRPG {
         // game manager references
         private LevelManager levelManager = null;
         private NetworkManagerClient networkManagerClient = null;
-        private NetworkManagerServer networkManagerServer = null;
         private CameraManager cameraManager = null;
         private SystemEventManager systemEventManager = null;
 
@@ -26,7 +25,6 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             levelManager = systemGameManager.LevelManager;
             networkManagerClient = systemGameManager.NetworkManagerClient;
-            networkManagerServer = systemGameManager.NetworkManagerServer;
             cameraManager = systemGameManager.CameraManager;
             systemEventManager = systemGameManager.SystemEventManager;
         }

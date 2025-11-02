@@ -610,8 +610,8 @@ namespace AnyRPG {
             actionBarManager.StartUseableAssignment(useable, actionButtonIndex);
 
             // ensure the assignment window is set to the same navigation controller and element index so the move starts in the same spot on the screen
-            (uIManager.assignToActionBarsWindow.CloseableWindowContents as AssignToActionBarsUI).SetNavigationControllerByIndex(windowPanel.GetNavigationControllerIndex());
-            (uIManager.assignToActionBarsWindow.CloseableWindowContents as AssignToActionBarsUI).CurrentNavigationController.SetCurrentIndex(windowPanel.CurrentNavigationController.CurrentIndex);
+            (uIManager.assignToActionBarsWindow.CloseableWindowContents as AssignToActionBarsPanel).SetNavigationControllerByIndex(windowPanel.GetNavigationControllerIndex());
+            (uIManager.assignToActionBarsWindow.CloseableWindowContents as AssignToActionBarsPanel).CurrentNavigationController.SetCurrentIndex(windowPanel.CurrentNavigationController.CurrentIndex);
 
             uIManager.assignToActionBarsWindow.OpenWindow();
         }

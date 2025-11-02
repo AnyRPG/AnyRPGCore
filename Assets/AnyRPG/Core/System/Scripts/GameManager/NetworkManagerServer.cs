@@ -74,6 +74,7 @@ namespace AnyRPG {
 
         private int lobbyGameCounter = 0;
         private int maxLobbyChatTextSize = 64000;
+        private ushort port = 7770;
 
         // lobby chat
         private string lobbyChatText = string.Empty;
@@ -448,7 +449,7 @@ namespace AnyRPG {
                 return;
             }
 
-            networkController?.StartServer();
+            networkController?.StartServer(port);
         }
 
         public void StopServer() {
@@ -1078,6 +1079,10 @@ namespace AnyRPG {
             }
             string sceneName = playerManagerServer.PlayerCharacterMonitors[accountId].playerCharacterSaveData.SaveData.CurrentScene;
             networkController.AdvertiseLoadScene(sceneName, accountId);
+        }
+
+        public void SetServerPort(ushort port) {
+            this.port = port;
         }
     }
 

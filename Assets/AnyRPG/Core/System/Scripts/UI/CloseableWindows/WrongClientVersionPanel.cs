@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class WrongClientVersionPanel : WindowContentController {
+    public class WrongClientVersionPanel : WindowPanel {
 
         [Header("Wrong Client Version")]
 

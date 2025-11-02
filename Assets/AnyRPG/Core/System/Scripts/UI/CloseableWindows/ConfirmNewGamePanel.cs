@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class ConfirmNewGamePanel : WindowContentController {
+    public class ConfirmNewGamePanel : WindowPanel {
 
         [Header("Confirm New Game")]
 

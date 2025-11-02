@@ -7,7 +7,7 @@ namespace AnyRPG {
     /// <summary>
     /// store and retrieve all scriptable objects from the Resources folders defined in the GameManager
     /// </summary>
-    public class SystemDataFactory : ConfiguredMonoBehaviour {
+    public class SystemDataFactory : ConfiguredClass {
 
         private Dictionary<Type, FactoryDataAccess> dataDictionary = new Dictionary<Type, FactoryDataAccess>();
 

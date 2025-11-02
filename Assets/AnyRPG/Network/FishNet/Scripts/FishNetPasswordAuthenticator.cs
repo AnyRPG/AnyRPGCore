@@ -143,7 +143,7 @@ namespace AnyRPG
                 return;
             }
 
-            systemGameManager.NetworkManagerClient.ProcessLoginSuccess(rb.AccountId);
+            systemGameManager.NetworkManagerClient.ProcessLoginSuccess(rb.AccountId, rb.ClientMode);
         }
 
         /// <summary>
@@ -159,7 +159,8 @@ namespace AnyRPG
                 AccountId = accountId,
                 AuthenticationPassed = authenticated,
                 ClientPassed = clientPassed,
-                RequiredClientVersion = systemGameManager.SystemConfigurationManager.ClientVersion
+                RequiredClientVersion = systemGameManager.SystemConfigurationManager.ClientVersion,
+                ClientMode = systemGameManager.NetworkManagerServer.ClientMode
             };
             base.NetworkManager.ServerManager.Broadcast(conn, rb, false);
         }

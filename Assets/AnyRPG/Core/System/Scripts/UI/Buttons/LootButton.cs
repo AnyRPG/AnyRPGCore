@@ -20,7 +20,7 @@ namespace AnyRPG {
         [SerializeField]
         protected TextMeshProUGUI title = null;
 
-        protected LootUI lootWindow = null;
+        protected LootPanel lootWindow = null;
 
         protected LootDrop lootDrop = null;
 

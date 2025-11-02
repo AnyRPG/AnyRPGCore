@@ -65,7 +65,7 @@ namespace AnyRPG {
         public abstract void RequestSceneWeather();
 
         // server functions
-        public abstract void StartServer();
+        public abstract void StartServer(ushort port);
         public abstract void StopServer();
         public abstract void KickPlayer(int accountId);
         public abstract string GetClientIPAddress(int accountId);

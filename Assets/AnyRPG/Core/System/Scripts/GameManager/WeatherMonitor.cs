@@ -97,14 +97,14 @@ namespace AnyRPG {
         private void StartWeatherMonitoring() {
             //Debug.Log($"WeatherMonitor.StartWeatherMonitoring()");
 
-            weatherCoroutine = weatherManagerServer.StartCoroutine(MonitorWeather(sceneNode.RandomWeatherLength));
+            weatherCoroutine = systemGameManager.StartCoroutine(MonitorWeather(sceneNode.RandomWeatherLength));
         }
 
         private void EndWeatherMonitoring() {
             //Debug.Log($"WeatherMonitor.EndWeatherMonitoring()");
 
             if (weatherCoroutine != null) {
-                weatherManagerServer.StopCoroutine(weatherCoroutine);
+                systemGameManager.StopCoroutine(weatherCoroutine);
                 weatherCoroutine = null;
             }
         }
