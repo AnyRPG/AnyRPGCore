@@ -151,162 +151,198 @@ namespace AnyRPG {
             SaveSceneNodeData();
             SaveStatusEffectData();
             SavePetData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleActivateMountedState(UnitController controller) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.HandleActivateMountedState()");
 
             saveData.isMounted = true;
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
 
         private void HandleReviveComplete(UnitController controller) {
             saveData.isDead = false;
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleBeforeDie(UnitController controller) {
             saveData.isDead = true;
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleSetReputationAmount(Faction faction, float amount) {
             SaveReputationData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         public void HandleAddPet(UnitProfile profile) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.HandleAddPet({profile.ResourceName})");
 
             SavePetData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         public void HandleAddStatusEffectStack(string obj) {
             SaveStatusEffectData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         public void HandleCancelStatusEffect(StatusEffectProperties properties) {
             SaveStatusEffectData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         public void HandleStatusEffectAdd(UnitController sourceUnitController, StatusEffectNode node) {
             SaveStatusEffectData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         public void HandleCurrencyChange(string currencyResourceName, int amount) {
             SaveCurrencyData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         public void HandleRemoveEquipment(EquipmentSlotProfile profile, InstantiatedEquipment equipment) {
             SaveEquipmentData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         public void HandleAddEquipment(EquipmentSlotProfile profile, InstantiatedEquipment equipment) {
             SaveEquipmentData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         public void HandleReputationChange(UnitController sourceUnitController) {
             SaveReputationData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         public void HandleUnlearnRecipe(Recipe recipe) {
             SaveRecipeData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         public void HandleLearnRecipe(Recipe recipe) {
             SaveRecipeData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleRemoveBag(InstantiatedBag bag) {
             SaveEquippedBagData();
             SaveEquippedBankBagData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleAddBag(InstantiatedBag bag, BagNode node) {
             SaveEquippedBagData();
             SaveEquippedBankBagData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
 
         private void HandleRemoveItemFromBankSlot(InventorySlot slot, InstantiatedItem item) {
             SaveBankSlotData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleAddItemToBankSlot(InventorySlot slot, InstantiatedItem item) {
             SaveBankSlotData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
 
         private void HandleRemoveItemFromInventorySlot(InventorySlot slot, InstantiatedItem item) {
             SaveInventorySlotData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleAddItemToInventorySlot(InventorySlot slot, InstantiatedItem item) {
             SaveInventorySlotData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
 
         private void HandleSetQuestObjectiveCurrentAmount(string arg1, string arg2, string arg3, int amount) {
             SaveQuestData();
             //SaveAchievementData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleSetAchievementObjectiveCurrentAmount(string arg1, string arg2, string arg3, int amount) {
             //SaveQuestData();
             SaveAchievementData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleQuestObjectiveStatusUpdated(UnitController controller, Quest quest) {
             SaveQuestData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleAchievementObjectiveStatusUpdated(UnitController controller, Achievement achievement) {
             SaveQuestData();
             SaveAchievementData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleMarkQuestComplete(UnitController controller, QuestBase questBase) {
             SaveQuestData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleMarkAchievementComplete(UnitController controller, Achievement achievement) {
             SaveAchievementData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleTurnInQuest(UnitController controller, QuestBase questBase) {
             SaveQuestData();
             SaveAchievementData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleAcceptQuest(UnitController controller, QuestBase questBase) {
             SaveQuestData();
             SaveAchievementData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleAbandonQuest(UnitController controller, QuestBase questBase) {
             SaveQuestData();
             SaveAchievementData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleRebuildModelAppearance() {
             SaveAppearanceData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleResourceAmountChanged(PowerResource resource, int arg2, int arg3) {
             SaveResourcePowerData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleUnLearnSkill(UnitController controller, Skill skill) {
             SaveSkillData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleLearnSkill(UnitController controller, Skill skill) {
             SaveSkillData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleUnlearnAbility(AbilityProperties abilityProperties) {
             SaveAbilityData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleLearnAbility(UnitController controller, AbilityProperties properties) {
             SaveAbilityData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleSpecializationChange(UnitController sourceUnitController, ClassSpecialization newSpecialization, ClassSpecialization oldSpecialization) {
@@ -315,6 +351,7 @@ namespace AnyRPG {
             } else {
                 saveData.classSpecialization = string.Empty;
             }
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleClassChange(UnitController sourceUnitController, CharacterClass newClass, CharacterClass oldClass) {
@@ -323,6 +360,7 @@ namespace AnyRPG {
             } else {
                 saveData.characterClass = string.Empty;
             }
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleRaceChange(CharacterRace newRace, CharacterRace oldRace) {
@@ -331,6 +369,7 @@ namespace AnyRPG {
             } else {
                 saveData.characterRace = string.Empty;
             }
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleFactionChange(Faction newFaction, Faction oldFaction) {
@@ -341,20 +380,24 @@ namespace AnyRPG {
             } else {
                 saveData.playerFaction = string.Empty;
             }
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleNameChange(string newName) {
             saveData.playerName = newName;
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleGainXP(UnitController sourceUnitController, int gainedXP, int currentXP) {
             saveData.currentExperience = currentXP;
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         public void HandleLevelChanged(int newLevel) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.HandleLevelChanged({newLevel})");
 
             saveData.PlayerLevel = newLevel;
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         public void SetSaveData(CharacterRequestData characterRequestData) {

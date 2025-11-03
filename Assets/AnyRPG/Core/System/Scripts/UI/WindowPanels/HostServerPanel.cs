@@ -83,7 +83,6 @@ namespace AnyRPG {
         public void StartServer() {
             //Debug.Log($"HostServerPanelController.StartServer()");
 
-            networkManagerServer.ClientMode = NetworkClientMode.Lobby;
             networkManagerServer.StartServer();
         }
 

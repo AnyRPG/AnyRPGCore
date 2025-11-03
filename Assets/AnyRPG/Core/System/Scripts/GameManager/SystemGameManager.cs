@@ -90,6 +90,7 @@ namespace AnyRPG {
         private NameChangeManagerClient nameChangeManagerClient = new NameChangeManagerClient();
         private NameChangeManagerServer nameChangeManagerServer = new NameChangeManagerServer();
         private NewGameManager newGameManager = new NewGameManager();
+        private PlayerCharacterService playerCharacterService = new PlayerCharacterService();
         private PlayerManagerServer playerManagerServer = new PlayerManagerServer();
         private QuestGiverManagerClient questGiverManagerClient = new QuestGiverManagerClient();
         private QuestGiverManagerServer questGiverManagerServer = new QuestGiverManagerServer();
@@ -123,6 +124,7 @@ namespace AnyRPG {
         public SystemEventManager SystemEventManager { get => systemEventManager; }
         public AuthenticationService AuthenticationService { get => authenticationService; }
         public UserAccountService UserAccountService { get => userAccountService; }
+        public PlayerCharacterService PlayerCharacterService { get => playerCharacterService; }
         public SystemEnvironmentManager SystemEnvironmentManager { get => systemEnvironmentManager; set => systemEnvironmentManager = value; }
         public CraftingManager CraftingManager { get => craftingManager; set => craftingManager = value; }
         public InteractionManager InteractionManager { get => interactionManager; set => interactionManager = value; }
@@ -226,6 +228,7 @@ namespace AnyRPG {
 
             // configure services and managers
             userAccountService.Configure(this);
+            playerCharacterService.Configure(this);
             authenticationService.Configure(this);
             controlsManager.Configure(this);
             windowManager.Configure(this);

@@ -91,11 +91,13 @@ namespace AnyRPG {
                 return;
             }
             int accountId = networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId;
-            
+
             if (networkManagerServer.ClientMode == NetworkClientMode.Lobby) {
                 if (networkManagerServer.LobbyGameAccountLookup.ContainsKey(accountId)) {
                     networkManagerServer.RequestSpawnLobbyGamePlayer(accountId, networkManagerServer.LobbyGameAccountLookup[accountId], sceneName);
                 }
+            } else if (networkManagerServer.ClientMode == NetworkClientMode.MMO) {
+                networkManagerServer.RequestSpawnPlayer(accountId, sceneName);
             }
         }
 
@@ -241,6 +243,7 @@ namespace AnyRPG {
         }
 
         // currently unused 
+        /*
         [ServerRpc(RequireOwnership = false)]
         public void SpawnCharacterUnit(string unitProfileName, Transform parentTransform, Vector3 position, Vector3 forward, UnitControllerMode unitControllerMode, int unitLevel, string sceneName, NetworkConnection networkConnection = null) {
             Debug.Log($"FishNetClientConnector.SpawnPlayer({unitProfileName}, {position}, {forward})");
@@ -270,6 +273,7 @@ namespace AnyRPG {
 
             SpawnPrefab(nob, networkConnection, GetConnectionScene(networkConnection, sceneName));
         }
+        */
 
         [ServerRpc(RequireOwnership = false)]
         public void RequestSpawnModelPrefab(GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward, NetworkConnection networkConnection = null) {
@@ -645,6 +649,18 @@ namespace AnyRPG {
             LoadLobbyGameScene(lobbyGame, loadingSceneNode, networkConnection);
         }
 
+        public void LoadMMOGameScene(SceneNode sceneNode, NetworkConnection networkConnection) {
+            //Debug.Log($"FishNetClientConnector.LoadLobbyGameScene({lobbyGame.gameId}, {sceneNode.SceneFile}, {networkConnection.ClientId}");
+
+                // load new scene
+                SceneLoadData sceneLoadData = new SceneLoadData(sceneNode.SceneFile);
+                sceneLoadData.ReplaceScenes = ReplaceOption.All;
+                sceneLoadData.Options.LocalPhysics = LocalPhysicsMode.Physics3D;
+                sceneLoadData.Options.AllowStacking = false;
+                sceneLoadData.PreferredActiveScene = new PreferredScene(SceneLookupData.CreateData(sceneNode.SceneFile));
+                fishNetNetworkManager.SceneManager.LoadConnectionScenes(networkConnection, sceneLoadData);
+        }
+
         public void LoadLobbyGameScene(LobbyGame lobbyGame, SceneNode sceneNode, NetworkConnection networkConnection) {
             //Debug.Log($"FishNetClientConnector.LoadLobbyGameScene({lobbyGame.gameId}, {sceneNode.SceneFile}, {networkConnection.ClientId}");
 
@@ -806,16 +822,18 @@ namespace AnyRPG {
                 SceneUnloadData sceneUnloadData = new SceneUnloadData(networkConnection.Scenes.First());
                 base.NetworkManager.SceneManager.UnloadConnectionScenes(networkConnection, sceneUnloadData);
             }
-            
-            //NetworkConnection networkConnection = fishNetNetworkManager.ServerManager.Clients[clientId];
-            LobbyGame lobbyGame = networkManagerServer.LobbyGames[networkManagerServer.LobbyGameAccountLookup[accountId]];
 
             SceneNode loadingSceneNode = systemDataFactory.GetResource<SceneNode>(sceneResourceName);
             if (loadingSceneNode == null) {
                 return;
             }
 
-            LoadLobbyGameScene(lobbyGame, loadingSceneNode, networkConnection);
+            if (networkManagerServer.ClientMode == NetworkClientMode.MMO) {
+                LoadMMOGameScene(loadingSceneNode, networkConnection);
+            } else if (networkManagerServer.ClientMode == NetworkClientMode.Lobby) {
+                LobbyGame lobbyGame = networkManagerServer.LobbyGames[networkManagerServer.LobbyGameAccountLookup[accountId]];
+                LoadLobbyGameScene(lobbyGame, loadingSceneNode, networkConnection);
+            }
         }
 
         [TargetRpc]

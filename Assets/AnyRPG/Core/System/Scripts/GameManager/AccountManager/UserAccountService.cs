@@ -13,7 +13,6 @@ namespace AnyRPG {
         private Dictionary<string, UserAccount> userAccounts = new Dictionary<string, UserAccount>();
 
         private int accountIdCounter = 1;
-        private string gameNameString = string.Empty;
         private string saveFolderName = string.Empty;
 
         // game manager references
@@ -60,7 +59,7 @@ namespace AnyRPG {
             //Debug.Log("UserAccountService.MakeSaveFolder()");
 
             Regex regex = new Regex("[^a-zA-Z0-9]");
-            gameNameString = regex.Replace(systemConfigurationManager.GameName, "");
+            string gameNameString = regex.Replace(systemConfigurationManager.GameName, "");
             if (gameNameString == string.Empty) {
                 return;
             }

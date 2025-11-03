@@ -34,6 +34,7 @@ namespace AnyRPG {
             //Debug.Log($"PlayerCharacterMonitor.ProcessBeforeDespawn() for account {accountId}");
 
             unitController.CharacterSaveManager.SaveGameData();
+            unitController.UnitEventController.OnSaveDataUpdated -= HandleSaveDataUpdated;
             unitController = null;
         }
 
@@ -82,6 +83,11 @@ namespace AnyRPG {
 
             this.unitController = unitController;
             disconnected = false;
+            unitController.UnitEventController.OnSaveDataUpdated += HandleSaveDataUpdated;
+        }
+
+        private void HandleSaveDataUpdated() {
+            saveDataDirty = true;
         }
 
         public void SetDisconnected() {

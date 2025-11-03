@@ -112,6 +112,7 @@ namespace AnyRPG {
         private CharacterAppearanceManagerServer characterAppearanceManagerServer = null;
         private DialogManagerServer dialogManagerServer = null;
         private AuthenticationService authenticationService = null;
+        private PlayerCharacterService playerCharacterService = null;
 
         public bool ServerModeActive { get => serverModeActive; }
         public NetworkClientMode ClientMode { get => clientMode; set => clientMode = value; }
@@ -156,6 +157,7 @@ namespace AnyRPG {
             dialogManagerServer = systemGameManager.DialogManagerServer;
             questGiverManagerServer = systemGameManager.QuestGiverManagerServer;
             authenticationService = systemGameManager.AuthenticationService;
+            playerCharacterService = systemGameManager.PlayerCharacterService;
         }
 
         public void AddLoggedInAccount(int clientId, int accountId, string token) {
@@ -196,15 +198,19 @@ namespace AnyRPG {
             }
             if (playerCharacterMonitor.saveDataDirty == true) {
                 if (clientMode == NetworkClientMode.MMO) {
-                    if (loggedInAccounts.ContainsKey(playerCharacterMonitor.accountId) == false) {
-                        // can't do anything without a token
-                        return;
+                    if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
+                        if (loggedInAccounts.ContainsKey(playerCharacterMonitor.accountId) == false) {
+                            // can't do anything without a token
+                            return;
+                        }
+                        gameServerClient.SavePlayerCharacter(
+                            playerCharacterMonitor.accountId,
+                            loggedInAccounts[playerCharacterMonitor.accountId].token,
+                            playerCharacterMonitor.playerCharacterSaveData.PlayerCharacterId,
+                            playerCharacterMonitor.playerCharacterSaveData.SaveData);
+                    } else if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
+                        playerCharacterService.SavePlayerCharacter(playerCharacterMonitor.accountId, playerCharacterMonitor.playerCharacterSaveData);
                     }
-                    gameServerClient.SavePlayerCharacter(
-                        playerCharacterMonitor.accountId,
-                        loggedInAccounts[playerCharacterMonitor.accountId].token,
-                        playerCharacterMonitor.playerCharacterSaveData.PlayerCharacterId,
-                        playerCharacterMonitor.playerCharacterSaveData.SaveData);
                 }
             }
         }
@@ -214,13 +220,17 @@ namespace AnyRPG {
 
             loginRequests.Add(clientId, username);
             if (clientMode == NetworkClientMode.MMO) {
-                gameServerClient.Login(clientId, username, password);
+                if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
+                    gameServerClient.Login(clientId, username, password);
+                } else if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
+                    LocalLogin(clientId, username, password);
+                }
             } else {
-                LobbyLogin(clientId, username, password);
+                LocalLogin(clientId, username, password);
             }
         }
 
-        public void LobbyLogin(int clientId, string username, string password) {
+        public void LocalLogin(int clientId, string username, string password) {
             //Debug.Log($"NetworkManagerServer.LobbyLogin({clientId}, {username}, {password})");
             authenticationService.LoginOrCreateAccount(clientId, username, password);
         }
@@ -278,8 +288,12 @@ namespace AnyRPG {
                 // can't do anything without a token
                 return;
             }
-
-            gameServerClient.CreatePlayerCharacter(accountId, loggedInAccounts[accountId].token, anyRPGSaveData);
+            if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
+                gameServerClient.CreatePlayerCharacter(accountId, loggedInAccounts[accountId].token, anyRPGSaveData);
+            } else if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
+                playerCharacterService.AddPlayerCharacter(accountId, anyRPGSaveData);
+                ProcessCreatePlayerCharacterResponse(accountId);
+            }
         }
 
         public void ProcessCreatePlayerCharacterResponse(int accountId) {
@@ -296,8 +310,12 @@ namespace AnyRPG {
                 // can't do anything without a token
                 return;
             }
-
-            gameServerClient.DeletePlayerCharacter(accountId, loggedInAccounts[accountId].token, playerCharacterId);
+            if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
+                playerCharacterService.DeletePlayerCharacter(accountId, playerCharacterId);
+                ProcessDeletePlayerCharacterResponse(accountId);
+            } else if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
+                gameServerClient.DeletePlayerCharacter(accountId, loggedInAccounts[accountId].token, playerCharacterId);
+            }
         }
 
         public void ProcessStopNetworkUnitServer(UnitController unitController) {
@@ -326,7 +344,12 @@ namespace AnyRPG {
                 //return new List<PlayerCharacterSaveData>();
                 return;
             }
-            gameServerClient.LoadCharacterList(accountId, loggedInAccounts[accountId].token);
+            if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
+                PlayerCharacterListResponse playerCharacterListResponse = playerCharacterService.GetPlayerCharacters(accountId);
+                ProcessLoadCharacterListResponse(accountId, playerCharacterListResponse.playerCharacters);
+            } else if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
+                gameServerClient.LoadCharacterList(accountId, loggedInAccounts[accountId].token);
+            }
         }
 
         public void ProcessLoadCharacterListResponse(int accountId, List<PlayerCharacterData> playerCharacters) {
@@ -970,6 +993,12 @@ namespace AnyRPG {
         }
 
         public void RequestSpawnLobbyGamePlayer(int accountId, int gameId, string sceneName) {
+            //Debug.Log($"NetworkManagerServer.RequestSpawnLobbyGamePlayer({accountId}, {gameId}, {sceneName})");
+
+            playerManagerServer.RequestSpawnPlayerUnit(accountId, sceneName);
+        }
+
+        public void RequestSpawnPlayer(int accountId, string sceneName) {
             //Debug.Log($"NetworkManagerServer.RequestSpawnLobbyGamePlayer({accountId}, {gameId}, {sceneName})");
 
             playerManagerServer.RequestSpawnPlayerUnit(accountId, sceneName);

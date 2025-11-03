@@ -185,6 +185,7 @@ namespace AnyRPG {
         public event System.Action<Quest, int, int> OnInteractWithQuestStartItem = delegate { };
         public event System.Action<int, int, Quest> OnRequestAcceptQuestItemQuest = delegate { };
         public event System.Action<int, int, Quest, QuestRewardChoices> OnRequestCompleteQuestItemQuest = delegate { };
+        public event System.Action OnSaveDataUpdated = delegate { };
 
         //public event System.Action<BaseAbilityProperties, Interactable> OnTargetInAbilityRangeFail = delegate { };
 
@@ -1008,6 +1009,10 @@ namespace AnyRPG {
 
         public void NotifyOnRequestCompleteQuestItemQuest(int slotIndex, int instanceId, Quest currentQuest, QuestRewardChoices questRewardChoices) {
             OnRequestCompleteQuestItemQuest(slotIndex, instanceId, currentQuest, questRewardChoices);
+        }
+
+        public void NotifyOnSaveDataUpdated() {
+            OnSaveDataUpdated();
         }
 
         #endregion

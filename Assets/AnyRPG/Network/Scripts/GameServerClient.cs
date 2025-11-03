@@ -252,6 +252,7 @@ namespace AnyRPG {
         }
     }
 
+    [Serializable]
     public class PlayerCharacterSaveData {
         public int PlayerCharacterId;
         public AnyRPGSaveData SaveData;

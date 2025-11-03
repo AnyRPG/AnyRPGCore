@@ -606,6 +606,10 @@ namespace AnyRPG {
 
         [Header("NETWORK")]
 
+        [Tooltip("Select the backend that will be used to store and retrieve player and account data.")]
+        [SerializeField]
+        private ServerBackend serverBackend = ServerBackend.File;
+
         [Tooltip("This is the address of the API server that the dedicated game server will connect to for login and character save / load operations. Do not use a trailing slash.")]
         [SerializeField]
         private string apiServerAddress = "https://account.anyrpg.org";
@@ -800,6 +804,7 @@ namespace AnyRPG {
         public string GameServerAddress { get => gameServerAddress; set => gameServerAddress = value; }
         public List<SceneNode> LobbyGameScenes { get => lobbyGameScenes; }
         public bool EnableLeashing { get => enableLeashing; set => enableLeashing = value; }
+        public ServerBackend ServerBackend { get => serverBackend; set => serverBackend = value; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }
 

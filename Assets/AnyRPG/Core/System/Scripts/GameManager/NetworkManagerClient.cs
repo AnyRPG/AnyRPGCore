@@ -660,6 +660,4 @@ namespace AnyRPG {
         */
     }
 
-    public enum NetworkClientMode { Lobby, MMO }
-
 }
