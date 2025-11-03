@@ -358,7 +358,7 @@ GameObject:
   - component: {fileID: 2683270139370700843}
   - component: {fileID: 1261242653943376326}
   m_Layer: 0
-  m_Name: ServerPlayerLobbyConnectionButton
+  m_Name: ServerPlayerConnectionButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -2921,20 +2921,17 @@ MonoBehaviour:
   - {fileID: 7994819743669621666}
   subPanels:
   - {fileID: 8154995545396871793}
-  - {fileID: 3383872000394151702}
+  - {fileID: 499967877900311848}
   - {fileID: 8625566476377913871}
   hintBarController: {fileID: 0}
   canvasGroup: {fileID: 0}
   serverStatusText: {fileID: 3414227744206962600}
-  playerConnectionTemplate: {fileID: 3129540725068152788, guid: 9f35a63c0996a134fb84328b3f33e795,
-    type: 3}
-  playerConnectionContainer: {fileID: 8400903935940789668}
   gameListingTemplate: {fileID: 3129540725068152788, guid: d13e3542a25026b47ad81fa85a532ca4,
     type: 3}
   gameListingContainer: {fileID: 566885263067184435}
   serverModeDropdown: {fileID: 6820380729921024259}
   optionsPanel: {fileID: 8154995545396871793}
-  playersPanel: {fileID: 3383872000394151702}
+  playersPanel: {fileID: 499967877900311848}
   lobbyGamesPanel: {fileID: 8625566476377913871}
   optionsButton: {fileID: 7475890485728621084}
   playersButton: {fileID: 5104533297437653583}
@@ -3703,9 +3700,9 @@ GameObject:
   - component: {fileID: 5912610079627168753}
   - component: {fileID: 1298638072278685855}
   - component: {fileID: 179697353679662647}
-  - component: {fileID: 3209957080387787074}
-  - component: {fileID: 3383872000394151702}
   - component: {fileID: 5070211794882940263}
+  - component: {fileID: 499967877900311848}
+  - component: {fileID: 2881176375193611861}
   m_Layer: 5
   m_Name: PlayersPanel
   m_TagString: Untagged
@@ -3785,7 +3782,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d01d4f237c435947ada6ebde8e36d50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3209957080387787074
+--- !u!225 &5070211794882940263
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6134400192395149418}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!114 &499967877900311848
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3794,7 +3803,36 @@ MonoBehaviour:
   m_GameObject: {fileID: 6134400192395149418}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30e086dccacef8d45959cb3d8f7ea6b1, type: 3}
+  m_Script: {fileID: 11500000, guid: 08dc040c65da8244aa882b5b88bc8195, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backGroundImage: {fileID: 0}
+  captureCamera: 0
+  coloredUIElements: []
+  addToWindowStack: 0
+  userCloseable: 0
+  focusFirstButtonOnOpen: 1
+  focusCurrentButtonOnOpen: 0
+  focusActiveSubPanel: 0
+  uINavigationControllers:
+  - {fileID: 2881176375193611861}
+  subPanels: []
+  hintBarController: {fileID: 0}
+  canvasGroup: {fileID: 5070211794882940263}
+  playerConnectionTemplate: {fileID: 3129540725068152788, guid: 9f35a63c0996a134fb84328b3f33e795,
+    type: 3}
+  playerConnectionContainer: {fileID: 8400903935940789668}
+  playerListNavigationController: {fileID: 2881176375193611861}
+--- !u!114 &2881176375193611861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6134400192395149418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   leaveLeftOption: 0
@@ -3811,49 +3849,10 @@ MonoBehaviour:
   downControllers:
   - {fileID: 7994819743669621666}
   acceptController: {fileID: 0}
-  scrollRect: {fileID: 4885900671330896347}
-  updateActiveListOnOpen: 0
-  pruneInactiveElements: 0
+  scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 1
+  pruneInactiveElements: 1
   navigableButtons: []
-  numRows: 0
-  numColumns: 2
-  reverseLeftRight: 0
---- !u!114 &3383872000394151702
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6134400192395149418}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a37f9a9108e9fc4887beab24821061a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  backGroundImage: {fileID: 0}
-  captureCamera: 0
-  coloredUIElements: []
-  addToWindowStack: 0
-  userCloseable: 0
-  focusFirstButtonOnOpen: 1
-  focusCurrentButtonOnOpen: 0
-  focusActiveSubPanel: 0
-  uINavigationControllers: []
-  subPanels: []
-  hintBarController: {fileID: 0}
-  canvasGroup: {fileID: 5070211794882940263}
---- !u!225 &5070211794882940263
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6134400192395149418}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
 --- !u!1 &6423239886189811076
 GameObject:
   m_ObjectHideFlags: 0
@@ -4802,8 +4801,7 @@ MonoBehaviour:
   upPanel: {fileID: 0}
   upControllers:
   - {fileID: 8031704773426608335}
-  - {fileID: 3209957080387787074}
-  - {fileID: 3643487434834576594}
+  - {fileID: 2881176375193611861}
   leaveDownOption: 0
   downPanel: {fileID: 0}
   downControllers: []
@@ -6662,7 +6660,6 @@ GameObject:
   - component: {fileID: 724524645004860718}
   - component: {fileID: 2374958746257589906}
   - component: {fileID: 8082479199086604676}
-  - component: {fileID: 3643487434834576594}
   - component: {fileID: 8625566476377913871}
   - component: {fileID: 8194154014896539034}
   m_Layer: 5
@@ -6744,39 +6741,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d01d4f237c435947ada6ebde8e36d50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3643487434834576594
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9190218987914893444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30e086dccacef8d45959cb3d8f7ea6b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leaveLeftOption: 0
-  leftPanel: {fileID: 0}
-  leftControllers: []
-  leaveRightOption: 0
-  rightPanel: {fileID: 0}
-  rightControllers: []
-  leaveUpOption: 0
-  upPanel: {fileID: 0}
-  upControllers: []
-  leaveDownOption: 0
-  downPanel: {fileID: 0}
-  downControllers:
-  - {fileID: 0}
-  acceptController: {fileID: 0}
-  scrollRect: {fileID: 2896844598539817435}
-  updateActiveListOnOpen: 0
-  pruneInactiveElements: 0
-  navigableButtons: []
-  numRows: 0
-  numColumns: 2
-  reverseLeftRight: 0
 --- !u!114 &8625566476377913871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6962,7 +6926,7 @@ PrefabInstance:
     - target: {fileID: 3129540725068152788, guid: 9f35a63c0996a134fb84328b3f33e795,
         type: 3}
       propertyPath: m_Name
-      value: ServerPlayerLobbyConnectionButton
+      value: ServerPlayerConnectionButton
       objectReference: {fileID: 0}
     - target: {fileID: 5212089768738589162, guid: 9f35a63c0996a134fb84328b3f33e795,
         type: 3}

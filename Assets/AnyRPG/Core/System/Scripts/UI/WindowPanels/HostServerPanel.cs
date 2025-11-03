@@ -1,10 +1,6 @@
-using AnyRPG;
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI;
 using TMPro;
-using System;
 
 namespace AnyRPG {
     public class HostServerPanel : WindowPanel {
@@ -13,12 +9,6 @@ namespace AnyRPG {
 
         [SerializeField]
         protected TextMeshProUGUI serverStatusText = null;
-
-        [SerializeField]
-        protected GameObject playerConnectionTemplate = null;
-
-        [SerializeField]
-        protected Transform playerConnectionContainer = null;
 
         [SerializeField]
         protected GameObject gameListingTemplate = null;
@@ -33,7 +23,7 @@ namespace AnyRPG {
         private WindowPanel optionsPanel = null;
 
         [SerializeField]
-        private WindowPanel playersPanel = null;
+        private HostServerPlayersPanel playersPanel = null;
 
         [SerializeField]
         private WindowPanel lobbyGamesPanel = null;
@@ -56,10 +46,6 @@ namespace AnyRPG {
         [SerializeField]
         protected HighlightButton stopServerButton = null;
 
-        /// <summary>
-        /// accountId, PlayerConnectionButtonController
-        /// </summary>
-        private Dictionary<int, PlayerConnectionButtonController> playerButtons = new Dictionary<int, PlayerConnectionButtonController>();
 
         private Dictionary<int, ServerLobbyGameConnectionButtonController> lobbyGameButtons = new Dictionary<int, ServerLobbyGameConnectionButtonController>();
 
@@ -83,57 +69,6 @@ namespace AnyRPG {
             systemDataFactory = systemGameManager.SystemDataFactory;
             networkManagerServer = systemGameManager.NetworkManagerServer;
             systemEventManager = systemGameManager.SystemEventManager;
-        }
-
-
-        public void PopulatePlayerList() {
-            //Debug.Log($"HostServerPanelController.PopulatePlayerList()");
-
-            foreach (KeyValuePair<int, LoggedInAccount> loggedInAccount in networkManagerServer.LoggedInAccounts) {
-                AddPlayerToList(loggedInAccount.Value.accountId, loggedInAccount.Value.username);
-            }
-        }
-
-        public void AddPlayerToList(int accountId, string userName) {
-            //Debug.Log($"HostServerPanelController.AddPlayerToList({accountId}, {userName})");
-
-            if (playerButtons.ContainsKey(accountId)) {
-                //Debug.Warning($"HostServerPanelController.AddPlayerToList() - player was already connected, and is reconnecting");
-                playerButtons[accountId].UpdateIPAddress(networkManagerServer.LoggedInAccounts[accountId].ipAddress);
-                return;
-            }
-            GameObject go = objectPooler.GetPooledObject(playerConnectionTemplate, playerConnectionContainer);
-            PlayerConnectionButtonController playerConnectionButtonController = go.GetComponent<PlayerConnectionButtonController>();
-            playerConnectionButtonController.Configure(systemGameManager);
-            playerConnectionButtonController.SetAccountId(accountId, userName, networkManagerServer.LoggedInAccounts[accountId].ipAddress);
-            uINavigationControllers[1].AddActiveButton(playerConnectionButtonController.KickButton);
-            playerButtons.Add(accountId, playerConnectionButtonController);
-        }
-
-        public void RemovePlayerFromList(int accountId) {
-            //Debug.Log($"HostServerPanelController.RemovePlayerFromList({accountId})");
-
-            if (playerButtons.ContainsKey(accountId)) {
-                uINavigationControllers[1].ClearActiveButton(playerButtons[accountId].KickButton);
-                if (playerButtons[accountId].gameObject != null) {
-                    playerButtons[accountId].gameObject.transform.SetParent(null);
-                    objectPooler.ReturnObjectToPool(playerButtons[accountId].gameObject);
-                }
-                playerButtons.Remove(accountId);
-            }
-        }
-
-        public void ClearPlayerList() {
-
-            // clear the skill list so any skill left over from a previous time opening the window aren't shown
-            foreach (PlayerConnectionButtonController playerConnectionButtonController in playerButtons.Values) {
-                if (playerConnectionButtonController.gameObject != null) {
-                    playerConnectionButtonController.gameObject.transform.SetParent(null);
-                    objectPooler.ReturnObjectToPool(playerConnectionButtonController.gameObject);
-                }
-            }
-            playerButtons.Clear();
-            uINavigationControllers[1].ClearActiveButtons();
         }
 
         public void CloseMenu() {
@@ -169,19 +104,19 @@ namespace AnyRPG {
             serverStatusText.text = "Server Status: Offline";
             startServerButton.Button.interactable = true;
             stopServerButton.Button.interactable = false;
-            ClearPlayerList();
+            playersPanel.ClearPlayerList();
         }
 
         public void HandleLobbyLogin(int accountId) {
             //Debug.Log($"HostServerPanelController.HandleLobbyLogin({accountId})");
 
-            AddPlayerToList(accountId, networkManagerServer.LoggedInAccounts[accountId].username);
+            playersPanel.AddPlayerToList(accountId, networkManagerServer.LoggedInAccounts[accountId].username);
         }
 
         public void HandleLobbyLogout(int accountId) {
             //Debug.Log($"HostServerPanelController.HandleLobbyLogout({accountId})");
 
-            RemovePlayerFromList(accountId);
+            playersPanel.RemovePlayerFromList(accountId);
         }
 
         public void HandleCreateLobbyGame(LobbyGame lobbyGame) {
@@ -231,7 +166,7 @@ namespace AnyRPG {
 
         public override void ProcessOpenWindowNotification() {
             base.ProcessOpenWindowNotification();
-            PopulatePlayerList();
+            playersPanel.PopulatePlayerList();
             systemEventManager.OnStartServer += HandleStartServer;
             systemEventManager.OnStopServer += HandleStopServer;
             networkManagerServer.OnLobbyLogin += HandleLobbyLogin;
@@ -255,7 +190,7 @@ namespace AnyRPG {
             networkManagerServer.OnLeaveLobbyGame -= HandleLeaveLobbyGame;
             networkManagerServer.OnStartLobbyGame -= HandleStartLobbyGame;
 
-            ClearPlayerList();
+            playersPanel.ClearPlayerList();
 
             // ensure you can't accidentally try to run the server and client in the same window
             if (networkManagerServer.ServerModeActive == true) {

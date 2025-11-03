@@ -187,9 +187,9 @@ namespace AnyRPG {
 
             bool connectionResult;
             if (customPort) {
-                connectionResult = fishNetNetworkManager.ClientManager.StartConnection(server, (ushort)port);
+                connectionResult = fishNetNetworkManager.ClientManager.StartConnection(serverAddress, (ushort)port);
             } else {
-                connectionResult = fishNetNetworkManager.ClientManager.StartConnection(server);
+                connectionResult = fishNetNetworkManager.ClientManager.StartConnection(serverAddress);
             }
             
             //Debug.Log($"FishNetNetworkController.Login() Result of connection attempt: {connectionResult}");
