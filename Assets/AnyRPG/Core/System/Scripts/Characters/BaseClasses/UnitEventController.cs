@@ -193,7 +193,7 @@ namespace AnyRPG {
         // unit controller of controlling unit
         private UnitController unitController;
 
-        public UnitEventController(UnitController unitController, SystemGameManager systemGameManager) {
+        public void Configure(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
             Configure(systemGameManager);
         }

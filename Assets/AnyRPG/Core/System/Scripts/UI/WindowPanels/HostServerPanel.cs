@@ -55,6 +55,7 @@ namespace AnyRPG {
         protected SystemDataFactory systemDataFactory = null;
         protected NetworkManagerServer networkManagerServer = null;
         protected SystemEventManager systemEventManager = null;
+        protected LevelManager levelManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -78,6 +79,9 @@ namespace AnyRPG {
             }
 
             uIManager.hostServerWindow.CloseWindow();
+            if (levelManager.IsMainMenu() == false) {
+                levelManager.LoadMainMenu(false);
+            }
         }
 
         public void StartServer() {
@@ -198,11 +202,12 @@ namespace AnyRPG {
         }
 
         public void SetServerMode(int dropdownIndex) {
-            //Debug.Log("UnitSpawnControlPanel.SetLevelType(" + dropdownIndex + ")");
+            //Debug.Log($"HostServerPanel.SetServerMode({dropdownIndex})");
+
             if (serverModeDropdown.options[serverModeDropdown.value].text == "Lobby") {
-                networkManagerServer.ClientMode = NetworkClientMode.Lobby;
+                networkManagerServer.SetServerMode(NetworkServerMode.Lobby);
             } else {
-                networkManagerServer.ClientMode = NetworkClientMode.MMO;
+                networkManagerServer.SetServerMode(NetworkServerMode.MMO);
             }
         }
 

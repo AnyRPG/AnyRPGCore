@@ -1583,11 +1583,13 @@ namespace AnyRPG {
         }
 
         public void ProcessLoginSuccess() {
+            //Debug.Log("UIManager.ProcessLoginSuccess()");
+
             networkLoginWindow.CloseWindow();
             loginInProgressWindow.CloseWindow();
-            if (networkManagerClient.ClientMode == NetworkClientMode.Lobby) {
+            if (networkManagerClient.ClientMode == NetworkServerMode.Lobby) {
                 clientLobbyWindow.OpenWindow();
-            } else {
+            } else if (networkManagerClient.ClientMode == NetworkServerMode.MMO) {
                 loadGameWindow.OpenWindow();
             }
         }

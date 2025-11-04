@@ -291,6 +291,7 @@ namespace AnyRPG {
 
         private void Update() {
             timeOfDayManagerServer.Tick();
+            controlsManager.Update();
         }
 
         private void SetupPermanentObjects() {

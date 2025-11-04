@@ -83,7 +83,7 @@ namespace AnyRPG {
 
         private GameServerClient gameServerClient = null;
         private bool serverModeActive = false;
-        private NetworkClientMode clientMode = NetworkClientMode.Lobby;
+        private NetworkServerMode serverMode = NetworkServerMode.MMO;
 
         // game manager references
         private SaveManager saveManager = null;
@@ -115,7 +115,7 @@ namespace AnyRPG {
         private PlayerCharacterService playerCharacterService = null;
 
         public bool ServerModeActive { get => serverModeActive; }
-        public NetworkClientMode ClientMode { get => clientMode; set => clientMode = value; }
+        public NetworkServerMode ServerMode { get => serverMode; }
         public Dictionary<int, LoggedInAccount> LoggedInAccounts { get => loggedInAccounts; }
         public Dictionary<int, LoggedInAccount> LoggedInAccountsByClient { get => loggedInAccountsByClient; }
         public Dictionary<int, LobbyGame> LobbyGames { get => lobbyGames; }
@@ -197,7 +197,7 @@ namespace AnyRPG {
                 playerCharacterMonitor.SavePlayerLocation();
             }
             if (playerCharacterMonitor.saveDataDirty == true) {
-                if (clientMode == NetworkClientMode.MMO) {
+                if (serverMode == NetworkServerMode.MMO) {
                     if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                         if (loggedInAccounts.ContainsKey(playerCharacterMonitor.accountId) == false) {
                             // can't do anything without a token
@@ -219,7 +219,7 @@ namespace AnyRPG {
             //Debug.Log($"NetworkManagerServer.GetLoginToken({clientId}, {username}, {password})");
 
             loginRequests.Add(clientId, username);
-            if (clientMode == NetworkClientMode.MMO) {
+            if (serverMode == NetworkServerMode.MMO) {
                 if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                     gameServerClient.Login(clientId, username, password);
                 } else if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
@@ -297,7 +297,7 @@ namespace AnyRPG {
         }
 
         public void ProcessCreatePlayerCharacterResponse(int accountId) {
-            Debug.Log($"NetworkManagerServer.ProcessCreatePlayerCharacterResponse({accountId})");
+            //Debug.Log($"NetworkManagerServer.ProcessCreatePlayerCharacterResponse({accountId})");
 
             OnCreatePlayerCharacter(accountId);
         }
@@ -338,7 +338,8 @@ namespace AnyRPG {
         }
 
         public void LoadCharacterList(int accountId) {
-            Debug.Log($"NetworkManagerServer.LoadCharacterList({accountId})");
+            //Debug.Log($"NetworkManagerServer.LoadCharacterList({accountId})");
+
             if (loggedInAccounts.ContainsKey(accountId) == false) {
                 // can't do anything without a token
                 //return new List<PlayerCharacterSaveData>();
@@ -690,7 +691,7 @@ namespace AnyRPG {
         }
 
         public void AdvertiseLoadScene(UnitController sourceUnitController, string sceneName, int accountId) {
-            //Debug.Log($"NetworkManagerServer.AdvertiseLoadScene({sourceUnitController.gameObject.name}, {sceneName}, {accountId})");
+            Debug.Log($"NetworkManagerServer.AdvertiseLoadScene({sourceUnitController.gameObject.name}, {sceneName}, {accountId})");
             
             //string oldSceneName = sourceUnitController.gameObject.scene.name;
             //int oldSceneHandle = sourceUnitController.gameObject.scene.handle;
@@ -1111,7 +1112,32 @@ namespace AnyRPG {
         }
 
         public void SetServerPort(ushort port) {
+            //Debug.Log($"NetworkManagerServer.SetServerPort({port})");
+
             this.port = port;
+        }
+
+        public void SetServerMode(NetworkServerMode networkServerMode) {
+            //Debug.Log($"NetworkManagerServer.SetServerMode({networkServerMode})");
+
+            this.serverMode = networkServerMode;
+        }
+
+        public void RequestLoadPlayerCharacter(int accountId, int playerCharacterId) {
+            string sceneName = string.Empty;
+            //if (playerManagerServer.SpawnRequests.ContainsKey(accountId) == false) {
+            if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId) == false) {
+                
+                PlayerCharacterSaveData playerCharacterSaveData = playerCharacterService.GetPlayerCharacterSaveData(accountId, playerCharacterId);
+                sceneName = playerCharacterSaveData.SaveData.CurrentScene;
+                playerManagerServer.AddPlayerMonitor(accountId, playerCharacterSaveData);
+            } else {
+                sceneName = playerManagerServer.PlayerCharacterMonitors[accountId].playerCharacterSaveData.SaveData.CurrentScene;
+                if (levelManager.SceneDictionary.ContainsKey(sceneName)) {
+                    sceneName = levelManager.SceneDictionary[sceneName].ResourceName;
+                }
+            }
+            networkController.AdvertiseLoadPlayerCharacter(accountId, sceneName);
         }
     }
 

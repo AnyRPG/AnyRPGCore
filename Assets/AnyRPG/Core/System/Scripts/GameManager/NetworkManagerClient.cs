@@ -29,7 +29,7 @@ namespace AnyRPG {
         
         private bool isLoggingInOrOut = false;
 
-        private NetworkClientMode clientMode = NetworkClientMode.Lobby;
+        private NetworkServerMode clientMode = NetworkServerMode.Lobby;
         private int accountId;
         private LobbyGame lobbyGame;
 
@@ -60,7 +60,7 @@ namespace AnyRPG {
 
         public string Username { get => username; }
         public string Password { get => password; }
-        public NetworkClientMode ClientMode { get => clientMode; }
+        public NetworkServerMode ClientMode { get => clientMode; }
         public Dictionary<int, LoggedInAccount> LobbyGamePlayerList { get => lobbyGamePlayerList; }
         public LobbyGame LobbyGame { get => lobbyGame; }
         public int AccountId { get => accountId; }
@@ -202,7 +202,7 @@ namespace AnyRPG {
         }
 
         public void ProcessClientVersionFailure(string requiredClientVersion) {
-            Debug.Log($"NetworkManagerClient.ProcessClientVersionFailure()");
+            //Debug.Log($"NetworkManagerClient.ProcessClientVersionFailure()");
 
             uIManager.loginInProgressWindow.CloseWindow();
             uIManager.wrongClientVersionWindow.OpenWindow();
@@ -210,14 +210,14 @@ namespace AnyRPG {
         }
 
         public void ProcessAuthenticationFailure() {
-            Debug.Log($"NetworkManagerClient.ProcessAuthenticationFailure()");
+            //Debug.Log($"NetworkManagerClient.ProcessAuthenticationFailure()");
 
             uIManager.loginInProgressWindow.CloseWindow();
             uIManager.loginFailedWindow.OpenWindow();
         }
 
-        public void ProcessLoginSuccess(int accountId, NetworkClientMode clientMode) {
-            //Debug.Log($"NetworkManagerClient.ProcessLoginSuccess({accountId})");
+        public void ProcessLoginSuccess(int accountId, NetworkServerMode clientMode) {
+            //Debug.Log($"NetworkManagerClient.ProcessLoginSuccess({accountId}, {clientMode})");
 
             // not doing this here because the connector has not spawned yet.
             //uIManager.ProcessLoginSuccess();
@@ -385,6 +385,14 @@ namespace AnyRPG {
             LaunchLobbyGame(gameId);
         }
 
+        public void AdvertiseJoinMMOGameInProgress() {
+            //Debug.Log($"NetworkManagerClient.AdvertiseJoinMMOGameInProgress()");
+
+            uIManager.loadGameWindow.CloseWindow();
+            LaunchNetworkGame();
+        }
+
+
         public void AdvertiseStartLobbyGame(int gameId) {
             if (lobbyGames.ContainsKey(gameId) == false) {
                 // lobby game does not exist
@@ -394,6 +402,14 @@ namespace AnyRPG {
             OnStartLobbyGame(gameId);
 
             LaunchLobbyGame(gameId);
+        }
+
+        public void LaunchNetworkGame() {
+            //Debug.Log($"NetworkManagerClient.LaunchNetworkGame()");
+
+            systemItemManager.ClearInstantiatedItems();
+            playerManager.SpawnPlayerConnection();
+            levelManager.ProcessBeforeLevelUnload();
         }
 
         public void LaunchLobbyGame(int gameId) {
@@ -406,10 +422,7 @@ namespace AnyRPG {
 
             // this is our lobby game
             uIManager.clientLobbyGameWindow.CloseWindow();
-            systemItemManager.ClearInstantiatedItems();
-            playerManager.SpawnPlayerConnection();
-            //levelManager.LoadLevel(sceneName);
-            levelManager.ProcessBeforeLevelUnload();
+            LaunchNetworkGame();
         }
 
         public void AdvertiseSetLobbyGameReadyStatus(int gameId, int accountId, bool ready) {
@@ -428,12 +441,6 @@ namespace AnyRPG {
 
             levelManager.ProcessBeforeLevelUnload();
         }
-
-        /*
-        public void AdvertiseInteractWithQuestGiver(Interactable interactable, int optionIndex) {
-            interactionManager.InteractWithQuestGiverClient(interactable, optionIndex, playerManager.UnitController);
-        }
-        */
 
         public void InteractWithOption(UnitController sourceUnitController, Interactable targetInteractable, int componentIndex, int choiceIndex) {
             //Debug.Log($"NetworkManagerClient.InteractWithOption({targetInteractable.gameObject.name}, {componentIndex}, {choiceIndex})");
@@ -455,12 +462,6 @@ namespace AnyRPG {
             levelManager.SetLoadingProgress(percent);
         }
 
-        /*
-        public void AdvertiseInteractWithClassChangeComponent(Interactable interactable, int optionIndex) {
-            interactionManager.InteractWithClassChangeComponentClient(interactable, optionIndex);
-        }
-        */
-
         public void RequestSetPlayerCharacterClass(Interactable interactable, int componentIndex) {
             networkController.RequestSetPlayerCharacterClass(interactable, componentIndex);
         }
@@ -472,12 +473,6 @@ namespace AnyRPG {
         public void RequestSetPlayerFaction(Interactable interactable, int componentIndex) {
             networkController.RequestSetPlayerFaction(interactable, componentIndex);
         }
-
-        /*
-        public void AdvertiseInteractWithSkillTrainerComponent(Interactable interactable, int optionIndex) {
-            interactionManager.InteractWithSkillTrainerComponentClient(interactable, optionIndex);
-        }
-        */
 
         public void RequestLearnSkill(Interactable interactable, int componentIndex, int skillId) {
             networkController.RequestLearnSkill(interactable, componentIndex, skillId);
@@ -567,14 +562,6 @@ namespace AnyRPG {
             networkController.RequestTakeLoot(lootDropId);
         }
 
-        /*
-        public void SetCraftingManagerAbility(CraftAbility craftAbility) {
-            Debug.Log($"NetworkManagerClient.SetCraftingManagerAbility({craftAbility.DisplayName})");
-
-            craftingManager.SetAbility(playerManager.UnitController, craftAbility.CraftAbilityProperties);
-        }
-        */
-
         public void RequestBeginCrafting(Recipe recipe, int craftAmount) {
             Debug.Log($"NetworkManagerClient.RequestBeginCrafting({recipe.DisplayName}, {craftAmount})");
 
@@ -653,11 +640,10 @@ namespace AnyRPG {
             mapManager.ProcessLevelLoad();
         }
 
-        /*
-        public void AdvertiseInteractWithAnimatedObjectComponent(Interactable interactable, int optionIndex) {
-            interactionManager.InteractWithAnimatedObjectComponentClient(interactable, optionIndex);
+        public void RequestLoadPlayerCharacter(int playerCharacterId) {
+            networkController.RequestLoadPlayerCharacter(playerCharacterId);
         }
-        */
+
     }
 
 }

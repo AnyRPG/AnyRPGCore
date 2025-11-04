@@ -133,6 +133,16 @@ namespace AnyRPG {
             return playerCharacterListResponse;
         }
 
+        public PlayerCharacterSaveData GetPlayerCharacterSaveData(int accountId, int playerCharacterId) {
+            string jsonSavePath = $"{GetAccountSaveFolder(accountId)}/{playerCharacterId}.json";
+            if (File.Exists(jsonSavePath)) {
+                string jsonString = File.ReadAllText(jsonSavePath);
+                PlayerCharacterSaveData playerCharacterSaveData = JsonUtility.FromJson<PlayerCharacterSaveData>(jsonString);
+                return playerCharacterSaveData;
+            }
+            return null;
+        }
+
     }
 
 }

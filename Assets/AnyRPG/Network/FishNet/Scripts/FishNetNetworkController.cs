@@ -19,7 +19,8 @@ namespace AnyRPG {
         
         [SerializeField]
         private GameObject networkConnectorSpawnPrefab = null;
-        private GameObject networkConnectorSpawnReference = null;
+        
+        //private GameObject networkConnectorSpawnReference = null;
 
         /// <summary>
         /// Current state of client socket.
@@ -301,12 +302,14 @@ namespace AnyRPG {
         public void InstantiateNetworkConnector() {
             //Debug.Log("FishNetNetworkController.InstantiateNetworkConnector()");
 
-            networkConnectorSpawnReference = GameObject.Instantiate(networkConnectorSpawnPrefab);
+            //networkConnectorSpawnReference = GameObject.Instantiate(networkConnectorSpawnPrefab);
+            /*
             clientConnector = networkConnectorSpawnReference.gameObject.GetComponentInChildren<FishNetClientConnector>();
             if (clientConnector != null) {
                 clientConnector.Configure(systemGameManager);
                 clientConnector.SetNetworkManager(fishNetNetworkManager);
             }
+            */
 
             NetworkObject networkPrefab = networkConnectorSpawnPrefab.GetComponent<NetworkObject>();
             if (networkPrefab == null) {
@@ -548,6 +551,10 @@ namespace AnyRPG {
             clientConnector.RequestSceneWeather();
         }
 
+        public override void RequestLoadPlayerCharacter(int playerCharacterId) {
+            clientConnector.RequestLoadPlayerCharacter(playerCharacterId);
+        }
+
         #endregion
 
         #region server functions
@@ -650,6 +657,10 @@ namespace AnyRPG {
             clientConnector.JoinLobbyGameInProgress(gameId, accountId, sceneResourceName);
         }
 
+        public override void AdvertiseLoadPlayerCharacter(int accountId, string sceneName) {
+            clientConnector.JoinMMOGameInProgress(accountId, sceneName);
+        }
+
         public override void AdvertiseSetLobbyGameReadyStatus(int gameId, int accountId, bool ready) {
             clientConnector.AdvertiseSetLobbyGameReadyStatus(gameId, accountId, ready);
         }
@@ -659,7 +670,7 @@ namespace AnyRPG {
         }
 
         public override void AdvertiseLoadScene(string sceneResourceName, int accountId) {
-            //Debug.Log($"FishNetNetworkController.AdvertiseLoadScene({sceneResourceName}, {accountId})");
+            Debug.Log($"FishNetNetworkController.AdvertiseLoadScene({sceneResourceName}, {accountId})");
 
             clientConnector.AdvertiseLoadSceneServer(sceneResourceName, accountId);
         }

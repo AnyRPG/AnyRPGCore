@@ -163,7 +163,7 @@ namespace AnyRPG {
             }
         }
 
-        void Update() {
+        public void Update() {
             if (playerManager.PlayerController != null) {
                 playerManager.PlayerController.ResetMoveInput();
             }

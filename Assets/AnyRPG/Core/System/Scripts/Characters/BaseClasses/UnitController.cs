@@ -50,7 +50,7 @@ namespace AnyRPG {
 
 
         // components
-        private UnitEventController unitEventController = null;
+        private UnitEventController unitEventController = new UnitEventController();
         private NavMeshAgent agent = null;
         private Rigidbody rigidBody = null;
         private UnitMotor unitMotor = null;
@@ -489,7 +489,10 @@ namespace AnyRPG {
 
             base.Configure(systemGameManager);
             // create components here instead?  which ones rely on other things like unit profile being set before start?
-            unitEventController = new UnitEventController(this, systemGameManager);
+            if (unitEventController == null) {
+                unitEventController = new UnitEventController();
+            }
+            unitEventController.Configure(this, systemGameManager);
             namePlateController = new UnitNamePlateController(this, systemGameManager);
             unitMotor = new UnitMotor(this, systemGameManager);
             unitAnimator = new UnitAnimator(this, systemGameManager);

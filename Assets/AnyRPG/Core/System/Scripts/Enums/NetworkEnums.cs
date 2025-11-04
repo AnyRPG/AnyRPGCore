@@ -1,4 +1,4 @@
 namespace AnyRPG {
-    public enum NetworkClientMode { Lobby, MMO }
+    public enum NetworkServerMode { Lobby, MMO }
     public enum ServerBackend { File, APIServer }
 }

@@ -63,6 +63,7 @@ namespace AnyRPG {
         public abstract void RequestSpawnPet(UnitProfile unitProfile);
         public abstract void RequestDespawnPet(UnitProfile unitProfile);
         public abstract void RequestSceneWeather();
+        public abstract void RequestLoadPlayerCharacter(int playerCharacterId);
 
         // server functions
         public abstract void StartServer(ushort port);
@@ -104,6 +105,7 @@ namespace AnyRPG {
         public abstract void AdvertiseChooseWeather(int sceneHandle, WeatherProfile profile);
         public abstract void AdvertiseStartWeather(int sceneHandle);
         public abstract void AdvertiseLoadCutscene(Cutscene cutscene, int accountId);
+        public abstract void AdvertiseLoadPlayerCharacter(int accountId, string sceneName);
 
         //public abstract void SetCraftingManagerAbility(int accountId, string abilityName);
         //public abstract void AdvertiseInteractWithSkillTrainerComponentServer(int accountId, Interactable interactable, int optionIndex);

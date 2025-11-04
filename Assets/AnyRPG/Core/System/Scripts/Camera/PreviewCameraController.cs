@@ -293,7 +293,7 @@ namespace AnyRPG {
                 float yInput = Input.GetAxis("Mouse Y") * yawSpeed;
                 currentYDegrees += yInput;
 
-                //Debug.Log("currentYDegrees: " + currentYDegrees + "; currentXDegrees: " + currentXDegrees + "xInput: " + xInput + "; yInput: " + yInput + "; initialCameraOffset: " + initialCameraOffset + "; currentCameraOffset: " + currentCameraOffset);
+                //Debug.Log($"currentYDegrees: {currentYDegrees}; currentXDegrees: {currentXDegrees}; xInput: {xInput}; yInput: {yInput}");
                 cameraPan = true;
             }
 

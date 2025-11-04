@@ -256,7 +256,7 @@ namespace AnyRPG {
                 startButtonText.text = "Start Game";
             } else {
                 // network mode
-                if (networkManagerClient.ClientMode == NetworkClientMode.Lobby) {
+                if (networkManagerClient.ClientMode == NetworkServerMode.Lobby) {
                     startButtonText.text = "Select Character";
                 } else {
                     // MMO mode
@@ -712,7 +712,7 @@ namespace AnyRPG {
 
             SaveAppearanceData(newGameManager.PlayerCharacterSaveData.SaveData);
 
-            if (systemGameManager.GameMode == GameMode.Network && networkManagerClient.ClientMode == NetworkClientMode.Lobby) {
+            if (systemGameManager.GameMode == GameMode.Network && networkManagerClient.ClientMode == NetworkServerMode.Lobby) {
                 networkManagerClient.ChooseLobbyGameCharacter(newGameManager.PlayerCharacterSaveData.SaveData.unitProfileName, newGameManager.PlayerCharacterSaveData.SaveData.appearanceString, newGameManager.PlayerCharacterSaveData.SaveData.swappableMeshSaveData);
             } else {
                 uIManager.confirmNewGameMenuWindow.OpenWindow();

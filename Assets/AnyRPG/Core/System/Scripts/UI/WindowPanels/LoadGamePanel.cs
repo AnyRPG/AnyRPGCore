@@ -281,9 +281,9 @@ namespace AnyRPG {
 
         public void LoadGame() {
             //Debug.Log("LoadGamePanel.LoadGame()");
+
             if (selectedLoadGameButton != null) {
                 loadGameManager.LoadGame(selectedLoadGameButton.PlayerCharacterSaveData);
-                //Close();
             }
         }
 

@@ -608,7 +608,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Lobby
+  m_text: MMO
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9ff1637cc53af0c4f9d93e4706904ea7, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 9ff1637cc53af0c4f9d93e4706904ea7, type: 2}
@@ -6592,18 +6592,18 @@ MonoBehaviour:
   m_MultiSelect: 0
   m_Options:
     m_Options:
-    - m_Text: Lobby
+    - m_Text: MMO
       m_Image: {fileID: 0}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
-    - m_Text: MMO
+    - m_Text: Lobby
       m_Image: {fileID: 0}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4154079069261091182}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: SetLevelType
+      - m_Target: {fileID: 1150328900514945216}
+        m_TargetAssemblyTypeName: AnyRPG.HostServerPanel, Assembly-CSharp
+        m_MethodName: SetServerMode
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

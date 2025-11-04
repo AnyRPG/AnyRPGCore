@@ -160,7 +160,7 @@ namespace AnyRPG
                 AuthenticationPassed = authenticated,
                 ClientPassed = clientPassed,
                 RequiredClientVersion = systemGameManager.SystemConfigurationManager.ClientVersion,
-                ClientMode = systemGameManager.NetworkManagerServer.ClientMode
+                ClientMode = systemGameManager.NetworkManagerServer.ServerMode
             };
             base.NetworkManager.ServerManager.Broadcast(conn, rb, false);
         }

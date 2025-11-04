@@ -32,7 +32,7 @@ namespace AnyRPG {
 
         // game manager references
         private SaveManager saveManager = null;
-        private NetworkManagerClient networkManager = null;
+        private NetworkManagerClient networkManagerClient = null;
         private SystemItemManager systemItemManager = null;
 
         // public properties
@@ -56,7 +56,7 @@ namespace AnyRPG {
             //Debug.Log("LoadGameManager.SetGameManagerReferences()");
             base.SetGameManagerReferences();
             saveManager = systemGameManager.SaveManager;
-            networkManager = systemGameManager.NetworkManagerClient;
+            networkManagerClient = systemGameManager.NetworkManagerClient;
             systemItemManager = systemGameManager.SystemItemManager;
         }
 
@@ -95,11 +95,11 @@ namespace AnyRPG {
         public void LoadGame(PlayerCharacterSaveData playerCharacterSaveData) {
             //Debug.Log("LoadGameManager.LoadGame()");
 
-            //if (systemGameManager.GameMode == GameMode.Local) {
-            saveManager.LoadGame(playerCharacterSaveData);
-            //} else {
-            //    networkManager.LoadGame(playerCharacterSaveData);
-            //}
+            if (systemGameManager.GameMode == GameMode.Local) {
+                saveManager.LoadGame(playerCharacterSaveData);
+            } else {
+                networkManagerClient.RequestLoadPlayerCharacter(playerCharacterSaveData.PlayerCharacterId);
+            }
         }
 
         public void DeleteGame() {
@@ -109,7 +109,7 @@ namespace AnyRPG {
                 saveManager.DeleteGame(playerCharacterSaveData.SaveData);
                 OnDeleteGame();
             } else {
-                networkManager.DeletePlayerCharacter(playerCharacterSaveData.PlayerCharacterId);
+                networkManagerClient.DeletePlayerCharacter(playerCharacterSaveData.PlayerCharacterId);
             }
         }
 
@@ -122,7 +122,7 @@ namespace AnyRPG {
             if (systemGameManager.GameMode == GameMode.Local) {
                 LoadCharacterListLocal();
             } else {
-                networkManager.LoadCharacterList();
+                networkManagerClient.LoadCharacterList();
             }
         }
 
