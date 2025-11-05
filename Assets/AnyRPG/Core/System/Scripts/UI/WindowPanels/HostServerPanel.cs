@@ -70,6 +70,7 @@ namespace AnyRPG {
             systemDataFactory = systemGameManager.SystemDataFactory;
             networkManagerServer = systemGameManager.NetworkManagerServer;
             systemEventManager = systemGameManager.SystemEventManager;
+            levelManager = systemGameManager.LevelManager;
         }
 
         public void CloseMenu() {
@@ -110,13 +111,13 @@ namespace AnyRPG {
             playersPanel.ClearPlayerList();
         }
 
-        public void HandleLobbyLogin(int accountId) {
-            //Debug.Log($"HostServerPanelController.HandleLobbyLogin({accountId})");
+        public void HandleAccountLogin(int accountId) {
+            //Debug.Log($"HostServerPanelController.HandlePlayerLogin({accountId})");
 
             playersPanel.AddPlayerToList(accountId, networkManagerServer.LoggedInAccounts[accountId].username);
         }
 
-        public void HandleLobbyLogout(int accountId) {
+        public void HandleAccountLogout(int accountId) {
             //Debug.Log($"HostServerPanelController.HandleLobbyLogout({accountId})");
 
             playersPanel.RemovePlayerFromList(accountId);
@@ -172,8 +173,8 @@ namespace AnyRPG {
             playersPanel.PopulatePlayerList();
             systemEventManager.OnStartServer += HandleStartServer;
             systemEventManager.OnStopServer += HandleStopServer;
-            networkManagerServer.OnLobbyLogin += HandleLobbyLogin;
-            networkManagerServer.OnLobbyLogout += HandleLobbyLogout;
+            networkManagerServer.OnAccountLogin += HandleAccountLogin;
+            networkManagerServer.OnAccountLogout += HandleAccountLogout;
             networkManagerServer.OnCreateLobbyGame += HandleCreateLobbyGame;
             networkManagerServer.OnCancelLobbyGame += HandleCancelLobbyGame;
             networkManagerServer.OnJoinLobbyGame += HandleJoinLobbyGame;
@@ -185,8 +186,8 @@ namespace AnyRPG {
             base.ReceiveClosedWindowNotification();
             systemEventManager.OnStartServer -= HandleStartServer;
             systemEventManager.OnStopServer -= HandleStopServer;
-            networkManagerServer.OnLobbyLogin -= HandleLobbyLogin;
-            networkManagerServer.OnLobbyLogout -= HandleLobbyLogout;
+            networkManagerServer.OnAccountLogin -= HandleAccountLogin;
+            networkManagerServer.OnAccountLogout -= HandleAccountLogout;
             networkManagerServer.OnCreateLobbyGame -= HandleCreateLobbyGame;
             networkManagerServer.OnCancelLobbyGame -= HandleCancelLobbyGame;
             networkManagerServer.OnJoinLobbyGame -= HandleJoinLobbyGame;

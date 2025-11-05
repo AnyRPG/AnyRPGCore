@@ -14,6 +14,7 @@ namespace AnyRPG {
 
         private int accountIdCounter = 1;
         private string saveFolderName = string.Empty;
+        private const string accountIdCounterKey = "Server.AccountIdCounter";
 
         // game manager references
         SystemEventManager systemEventManager = null;
@@ -52,7 +53,7 @@ namespace AnyRPG {
         private void LoadAccountIdCounter() {
             //Debug.Log("UserAccountService.LoadAccountIdCounter()");
 
-            accountIdCounter = PlayerPrefs.GetInt("Server.AccountIdCounter", 1);
+            accountIdCounter = PlayerPrefs.GetInt(accountIdCounterKey, 1);
         }
 
         private void MakeSaveFolder() {
@@ -164,7 +165,7 @@ namespace AnyRPG {
 
             int returnValue = accountIdCounter;
             accountIdCounter++;
-            PlayerPrefs.SetInt("Server.AccountIdCounter", accountIdCounter);
+            PlayerPrefs.SetInt(accountIdCounterKey, accountIdCounter);
             return returnValue;
         }
 

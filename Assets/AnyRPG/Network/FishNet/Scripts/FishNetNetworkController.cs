@@ -373,10 +373,10 @@ namespace AnyRPG {
             return false;
         }
 
-        public override void CreatePlayerCharacter(AnyRPGSaveData anyRPGSaveData) {
+        public override void RequestCreatePlayerCharacter(AnyRPGSaveData saveData) {
             Debug.Log($"FishNetNetworkController.CreatePlayerCharacter(AnyRPGSaveData)");
 
-            clientConnector.CreatePlayerCharacter(anyRPGSaveData);
+            clientConnector.RequestCreatePlayerCharacter(saveData);
         }
 
         public override void DeletePlayerCharacter(int playerCharacterId) {

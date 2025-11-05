@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 
 namespace AnyRPG {
     public class NetworkManagerServer : ConfiguredMonoBehaviour {
@@ -13,8 +11,8 @@ namespace AnyRPG {
         public event Action<int, List<PlayerCharacterSaveData>> OnLoadCharacterList = delegate { };
         public event Action<int> OnDeletePlayerCharacter = delegate { };
         public event Action<int> OnCreatePlayerCharacter = delegate { };
-        public event Action<int> OnLobbyLogin = delegate { };
-        public event Action<int> OnLobbyLogout = delegate { };
+        public event Action<int> OnAccountLogin = delegate { };
+        public event Action<int> OnAccountLogout = delegate { };
         public event Action<LobbyGame> OnCreateLobbyGame = delegate { };
         public event Action<int> OnCancelLobbyGame = delegate { };
         public event Action<int, int, string> OnJoinLobbyGame = delegate { };
@@ -87,7 +85,6 @@ namespace AnyRPG {
 
         // game manager references
         private SaveManager saveManager = null;
-        private ChatCommandManager chatCommandManager = null;
         private LogManager logManager = null;
         private PlayerManagerServer playerManagerServer = null;
         private CharacterManager characterManager = null;
@@ -113,6 +110,7 @@ namespace AnyRPG {
         private DialogManagerServer dialogManagerServer = null;
         private AuthenticationService authenticationService = null;
         private PlayerCharacterService playerCharacterService = null;
+        private NewGameManager newGameManager = null;
 
         public bool ServerModeActive { get => serverModeActive; }
         public NetworkServerMode ServerMode { get => serverMode; }
@@ -132,7 +130,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             saveManager = systemGameManager.SaveManager;
-            chatCommandManager = systemGameManager.ChatCommandManager;
             logManager = systemGameManager.LogManager;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             characterManager = systemGameManager.CharacterManager;
@@ -158,6 +155,7 @@ namespace AnyRPG {
             questGiverManagerServer = systemGameManager.QuestGiverManagerServer;
             authenticationService = systemGameManager.AuthenticationService;
             playerCharacterService = systemGameManager.PlayerCharacterService;
+            newGameManager = systemGameManager.NewGameManager;
         }
 
         public void AddLoggedInAccount(int clientId, int accountId, string token) {
@@ -278,20 +276,26 @@ namespace AnyRPG {
             //if (spawnPlayerRequest != null) {
             //}
 
-            OnLobbyLogin(accountId);
-            networkController.AdvertiseLobbyLogin(accountId, loggedInAccounts[accountId].username);
+            OnAccountLogin(accountId);
+            if (serverMode == NetworkServerMode.Lobby) {
+                networkController.AdvertiseLobbyLogin(accountId, loggedInAccounts[accountId].username);
+            }
         }
 
-        public void CreatePlayerCharacter(int accountId, AnyRPGSaveData anyRPGSaveData) {
-            Debug.Log($"NetworkManagerServer.CreatePlayerCharacter(AnyRPGSaveData)");
+        public void RequestCreatePlayerCharacter(int accountId, AnyRPGSaveData requestedSaveData) {
+            //Debug.Log($"NetworkManagerServer.CreatePlayerCharacter(AnyRPGSaveData)");
+
             if (loggedInAccounts.ContainsKey(accountId) == false) {
                 // can't do anything without a token
                 return;
             }
+            PlayerCharacterSaveData playerCharacterSaveData = newGameManager.CreateNewPlayerSaveData(requestedSaveData);
+
+            // create save data from parameters
             if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
-                gameServerClient.CreatePlayerCharacter(accountId, loggedInAccounts[accountId].token, anyRPGSaveData);
+                gameServerClient.CreatePlayerCharacter(accountId, loggedInAccounts[accountId].token, playerCharacterSaveData.SaveData);
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                playerCharacterService.AddPlayerCharacter(accountId, anyRPGSaveData);
+                playerCharacterService.AddPlayerCharacter(accountId, playerCharacterSaveData.SaveData);
                 ProcessCreatePlayerCharacterResponse(accountId);
             }
         }
@@ -424,8 +428,10 @@ namespace AnyRPG {
             loggedInAccounts.Remove(accountId);
             loggedInAccountsByClient.Remove(clientId);
 
-            OnLobbyLogout(accountId);
-            networkController?.AdvertiseLobbyLogout(accountId);
+            OnAccountLogout(accountId);
+            if (serverMode == NetworkServerMode.Lobby) {
+                networkController?.AdvertiseLobbyLogout(accountId);
+            }
         }
 
         public void ActivateServerMode() {
@@ -1131,12 +1137,27 @@ namespace AnyRPG {
                 PlayerCharacterSaveData playerCharacterSaveData = playerCharacterService.GetPlayerCharacterSaveData(accountId, playerCharacterId);
                 sceneName = playerCharacterSaveData.SaveData.CurrentScene;
                 playerManagerServer.AddPlayerMonitor(accountId, playerCharacterSaveData);
+                // configure location and rotation overrides
+                SpawnPlayerRequest spawnPlayerRequest = new SpawnPlayerRequest();
+                if (playerCharacterSaveData.SaveData.OverrideLocation == true) {
+                    spawnPlayerRequest.overrideSpawnLocation = true;
+                    spawnPlayerRequest.spawnLocation = new Vector3(playerCharacterSaveData.SaveData.PlayerLocationX, playerCharacterSaveData.SaveData.PlayerLocationY, playerCharacterSaveData.SaveData.PlayerLocationZ);
+                    //Debug.Log($"NetworkManagerServer.RequestLoadPlayerCharacter() overrideSpawnLocation: {loadSceneRequest.overrideSpawnLocation} location: {loadSceneRequest.spawnLocation}");
+                }
+                if (playerCharacterSaveData.SaveData.OverrideRotation == true) {
+                    spawnPlayerRequest.overrideSpawnDirection = true;
+                    spawnPlayerRequest.spawnForwardDirection = new Vector3(playerCharacterSaveData.SaveData.PlayerRotationX, playerCharacterSaveData.SaveData.PlayerRotationY, playerCharacterSaveData.SaveData.PlayerRotationZ);
+                    //Debug.Log($"Savemanager.LoadGame() overrideRotation: {loadSceneRequest.overrideSpawnDirection} location: {loadSceneRequest.spawnForwardDirection}");
+                }
+                playerManagerServer.AddSpawnRequest(accountId, spawnPlayerRequest, true);
             } else {
+                AnyRPGSaveData saveData = playerManagerServer.PlayerCharacterMonitors[accountId].playerCharacterSaveData.SaveData;
                 sceneName = playerManagerServer.PlayerCharacterMonitors[accountId].playerCharacterSaveData.SaveData.CurrentScene;
                 if (levelManager.SceneDictionary.ContainsKey(sceneName)) {
                     sceneName = levelManager.SceneDictionary[sceneName].ResourceName;
                 }
             }
+
             networkController.AdvertiseLoadPlayerCharacter(accountId, sceneName);
         }
     }

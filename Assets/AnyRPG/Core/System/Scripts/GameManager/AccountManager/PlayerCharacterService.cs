@@ -7,6 +7,7 @@ namespace AnyRPG {
 
         private int playerCharacterIdCounter = 1;
         private string baseSaveFolderName = string.Empty;
+        private const string playerIdCounterKey = "Server.PlayerCharacterIdCounter";
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -17,7 +18,7 @@ namespace AnyRPG {
         private void LoadPlayerCharacterIdCounter() {
             //Debug.Log("UserAccountService.LoadAccountIdCounter()");
 
-            playerCharacterIdCounter = PlayerPrefs.GetInt("Server.PlayerCharacterIdCounter", 1);
+            playerCharacterIdCounter = PlayerPrefs.GetInt(playerIdCounterKey, 1);
         }
 
 
@@ -82,7 +83,7 @@ namespace AnyRPG {
 
             int returnValue = playerCharacterIdCounter;
             playerCharacterIdCounter++;
-            PlayerPrefs.SetInt("Server.AccountIdCounter", playerCharacterIdCounter);
+            PlayerPrefs.SetInt(playerIdCounterKey, playerCharacterIdCounter);
             return returnValue;
         }
 

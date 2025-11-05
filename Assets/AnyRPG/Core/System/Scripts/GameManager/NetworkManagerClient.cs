@@ -226,10 +226,10 @@ namespace AnyRPG {
             isLoggingInOrOut = false;
         }
 
-        public void CreatePlayerCharacter(AnyRPGSaveData anyRPGSaveData) {
+        public void RequestCreatePlayerCharacter(AnyRPGSaveData saveData) {
             //Debug.Log($"NetworkManagerClient.CreatePlayerCharacterClient(AnyRPGSaveData)");
 
-            networkController.CreatePlayerCharacter(anyRPGSaveData);
+            networkController.RequestCreatePlayerCharacter(saveData);
         }
 
         public void RequestLobbyGameList() {

@@ -377,15 +377,15 @@ namespace AnyRPG {
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void CreatePlayerCharacter(AnyRPGSaveData anyRPGSaveData, NetworkConnection networkConnection = null) {
-            Debug.Log($"FishNetClientConnector.CreatePlayerCharacter(AnyRPGSaveData)");
+        public void RequestCreatePlayerCharacter(AnyRPGSaveData saveData, NetworkConnection networkConnection = null) {
+            //Debug.Log($"FishNetClientConnector.RequestCreatePlayerCharacter()");
 
             if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
                 Debug.LogWarning($"FishNetClientConnector.CreatePlayerCharacter() could not find clientId {networkConnection.ClientId} in logged in accounts");
                 return;
             }
             
-            networkManagerServer.CreatePlayerCharacter(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, anyRPGSaveData);
+            networkManagerServer.RequestCreatePlayerCharacter(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, saveData);
         }
 
         public void HandleCreatePlayerCharacter(int accountId) {
@@ -673,7 +673,7 @@ namespace AnyRPG {
 
 
         public void LoadMMOGameScene(SceneNode sceneNode, NetworkConnection networkConnection) {
-            Debug.Log($"FishNetClientConnector.LoadMMOGameScene({sceneNode.SceneFile}, {networkConnection.ClientId}");
+            //Debug.Log($"FishNetClientConnector.LoadMMOGameScene({sceneNode.SceneFile}, {networkConnection.ClientId}");
 
                 // load new scene
                 SceneLoadData sceneLoadData = new SceneLoadData(sceneNode.SceneFile);

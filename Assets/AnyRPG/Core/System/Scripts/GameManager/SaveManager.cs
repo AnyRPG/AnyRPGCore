@@ -336,7 +336,6 @@ namespace AnyRPG {
 
             ClearSystemManagedSaveData();
 
-
             if (systemGameManager.GameMode == GameMode.Local) {
                 CreateLocalGame(playerCharacterSaveData);
             } else {
@@ -348,7 +347,7 @@ namespace AnyRPG {
         private void CreateNetworkGame(PlayerCharacterSaveData playerCharacterSaveData) {
             //Debug.Log("Savemanager.CreateNetworkGame(AnyRPGSaveData)");
 
-            networkManagerClient.CreatePlayerCharacter(playerCharacterSaveData.SaveData);
+            networkManagerClient.RequestCreatePlayerCharacter(playerCharacterSaveData.SaveData);
         }
 
         private void CreateLocalGame(PlayerCharacterSaveData playerCharacterSaveData) {
