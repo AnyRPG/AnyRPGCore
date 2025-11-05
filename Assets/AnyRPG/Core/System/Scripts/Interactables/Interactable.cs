@@ -1081,10 +1081,6 @@ namespace AnyRPG {
             }
         }
 
-        private void OnDestroy() {
-            //Debug.Log($"{gameObject.name}.Interactable.OnDestroy(): {GetInstanceID()}");
-        }
-
         #region events
 
         public void NotifyOnInteractionWithOptionStarted(UnitController sourceUnitController, int componentIndex, int choiceIndex) {

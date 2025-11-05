@@ -705,6 +705,9 @@ namespace AnyRPG {
             //Debug.Log("NewGamePanel.ClosePanel()");
             uIManager.newGameWindow.CloseWindow();
             levelManager.PlayLevelSounds();
+            if (systemGameManager.GameMode == GameMode.Network) {
+                uIManager.loadGameWindow.OpenWindow();
+            }
         }
 
         public void NewGame() {

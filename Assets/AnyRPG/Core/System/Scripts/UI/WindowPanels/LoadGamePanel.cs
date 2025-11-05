@@ -243,6 +243,12 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.HandleLoadCharacterList()");
 
             ShowLoadButtonsCommon();
+            /*
+            if (loadGameManager.CharacterList.Count == 0 && systemConfigurationManager.UseNewGameWindow == true) {
+                Close();
+                uIManager.newGameWindow.OpenWindow();
+            }
+            */
         }
 
         public void HandleUnitCreated() {
