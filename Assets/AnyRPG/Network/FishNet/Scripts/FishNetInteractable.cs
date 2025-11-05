@@ -85,6 +85,7 @@ namespace AnyRPG {
             //interactable.AutoConfigure(systemGameManager);
 
             SubscribeToServerInteractableEvents();
+            SubscribeToSystemEvents();
         }
 
         public override void OnStopServer() {
@@ -97,6 +98,21 @@ namespace AnyRPG {
             }
             //UnsubscribeFromServerInteractableEvents();
             //systemGameManager.NetworkManagerServer.ProcessStopServer(unitController);
+        }
+
+        private void SubscribeToSystemEvents() {
+            systemGameManager.SystemEventManager.OnBeforeStopServer += HandleBeforeStopServer;
+        }
+
+        private void UnsubscribeFromSystemEvents() {
+            systemGameManager.SystemEventManager.OnBeforeStopServer -= HandleBeforeStopServer;
+        }
+
+        private void HandleBeforeStopServer() {
+            // stopping the server results in the objects being destroyed without levelUnload being called, which is the usual way to initiate cleanup
+            UnsubscribeFromSystemEvents();
+            UnsubscribeFromServerInteractableEvents();
+            interactable.ProcessLevelUnload();
         }
 
         public void SubscribeToServerInteractableEvents() {
@@ -134,6 +150,7 @@ namespace AnyRPG {
 
         public void HandleInteractableDisableServer() {
             UnsubscribeFromServerInteractableEvents();
+            UnsubscribeFromSystemEvents();
         }
 
         public void UnsubscribeFromServerInteractableEvents() {

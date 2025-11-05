@@ -224,6 +224,7 @@ namespace AnyRPG {
         }
 
         public virtual void OnDisable() {
+            //Debug.Log($"NamePlateUnit.OnDisable() instanceId: {GetInstanceID()}");
             // characters can get disabled by cutscenes, so need to remove nameplate
             RemoveNamePlate();
         }

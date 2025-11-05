@@ -1048,7 +1048,7 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessCreateEventSubscriptions() {
-            //Debug.Log($"{gameObject.name}.Interactable.ProcessCreateEventSubscriptions()");
+            //Debug.Log($"{gameObject.name}.Interactable.ProcessCreateEventSubscriptions() Interactable instance: {GetInstanceID()}");
 
             systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
@@ -1063,7 +1063,7 @@ namespace AnyRPG {
         }
 
         public void CleanupEventSubscriptions() {
-            //Debug.Log($"{gameObject.name}.Interactable.CleanupEventSubscriptions()");
+            //Debug.Log($"{gameObject.name}.Interactable.CleanupEventSubscriptions(): {GetInstanceID()}");
 
             if (!eventSubscriptionsInitialized) {
                 return;
@@ -1073,12 +1073,16 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessCleanupEventSubscriptions() {
-            //Debug.Log($"{gameObject.name}.Interactable.ProcessCleanupEventSubscriptions()");
+            //Debug.Log($"{gameObject.name}.Interactable.ProcessCleanupEventSubscriptions() Interactable Instance: {GetInstanceID()}");
 
             systemEventManager.OnLevelUnloadClient -= HandleLevelUnload;
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
                 systemEventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
             }
+        }
+
+        private void OnDestroy() {
+            //Debug.Log($"{gameObject.name}.Interactable.OnDestroy(): {GetInstanceID()}");
         }
 
         #region events

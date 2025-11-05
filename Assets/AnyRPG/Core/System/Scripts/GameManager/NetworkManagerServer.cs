@@ -308,7 +308,7 @@ namespace AnyRPG {
 
 
         public void DeletePlayerCharacter(int accountId, int playerCharacterId) {
-            Debug.Log($"NetworkManagerServer.DeletePlayerCharacter({playerCharacterId})");
+            //Debug.Log($"NetworkManagerServer.DeletePlayerCharacter({playerCharacterId})");
 
             if (loggedInAccounts.ContainsKey(accountId) == false) {
                 // can't do anything without a token
@@ -336,7 +336,7 @@ namespace AnyRPG {
         }
 
         public void ProcessDeletePlayerCharacterResponse(int accountId) {
-            Debug.Log($"NetworkManagerServer.ProcessDeletePlayerCharacterResponse({accountId})");
+            //Debug.Log($"NetworkManagerServer.ProcessDeletePlayerCharacterResponse({accountId})");
 
             OnDeletePlayerCharacter(accountId);
         }
@@ -488,7 +488,7 @@ namespace AnyRPG {
             if (serverModeActive == false) {
                 return;
             }
-
+            systemEventManager.NotifyOnBeforeStopServer();
             networkController?.StopServer();
         }
 

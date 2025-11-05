@@ -398,7 +398,8 @@ namespace AnyRPG {
 
         [ServerRpc(RequireOwnership = false)]
         public void DeletePlayerCharacter(int playerCharacterId, NetworkConnection networkConnection = null) {
-            Debug.Log($"FishNetClientConnector.DeletePlayerCharacter({playerCharacterId})");
+            //Debug.Log($"FishNetClientConnector.DeletePlayerCharacter({playerCharacterId})");
+
             if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
                 Debug.LogWarning($"FishNetClientConnector.DeletePlayerCharacter() could not find clientId {networkConnection.ClientId} in logged in accounts");
                 return;
@@ -411,7 +412,7 @@ namespace AnyRPG {
         }
 
         public void HandleDeletePlayerCharacter(int accountId) {
-            Debug.Log($"FishNetClientConnector.HandleDeletePlayerCharacter({accountId})");
+            //Debug.Log($"FishNetClientConnector.HandleDeletePlayerCharacter({accountId})");
 
             networkManagerServer.LoadCharacterList(accountId);
         }

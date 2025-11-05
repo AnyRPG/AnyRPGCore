@@ -38,6 +38,7 @@ namespace AnyRPG {
         public event System.Action OnPlayerDeath = delegate { };
         public event System.Action OnCalculateRelativeTime = delegate { };
         public event System.Action OnStartServer = delegate { };
+        public event System.Action OnBeforeStopServer = delegate { };
         public event System.Action OnStopServer = delegate { };
         public event System.Action OnLevelLoad = delegate { };
         public event System.Action<int, string> OnLevelUnloadClient = delegate { };
@@ -266,6 +267,10 @@ namespace AnyRPG {
         public void NotifyOnStartServer() {
             OnStartServer();
         }
+        
+        public void NotifyOnBeforeStopServer() {
+            OnBeforeStopServer();
+        }
 
         public void NotifyOnStopServer() {
             OnStopServer();
@@ -314,6 +319,7 @@ namespace AnyRPG {
 
             OnCompleteInteractWithOption(sourceUnitController, interactableOptionComponent);
         }
+
     }
 
     [System.Serializable]

@@ -489,9 +489,6 @@ namespace AnyRPG {
 
             base.Configure(systemGameManager);
             // create components here instead?  which ones rely on other things like unit profile being set before start?
-            if (unitEventController == null) {
-                unitEventController = new UnitEventController();
-            }
             unitEventController.Configure(this, systemGameManager);
             namePlateController = new UnitNamePlateController(this, systemGameManager);
             unitMotor = new UnitMotor(this, systemGameManager);
@@ -1065,6 +1062,7 @@ namespace AnyRPG {
             unitProfile = null;
 
             // components
+            unitEventController = new UnitEventController();
             agent = null;
             rigidBody = null;
             unitMotor = null;
@@ -1972,6 +1970,7 @@ namespace AnyRPG {
         }
 
         public override void ProcessLevelUnload() {
+            //Debug.Log($"UnitController.ProcessLevelUnload() {GetInstanceID()}");
             //Debug.Log($"{gameObject.name}.UnitController.ProcessLevelUnload()");
 
             if (gameObject == null || gameObject.activeSelf == false) {
