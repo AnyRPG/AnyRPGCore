@@ -142,7 +142,8 @@ namespace AnyRPG {
         /// Hide the tooltip
         /// </summary>
         public void HideToolTip() {
-            //Debug.Log("UIManager.HideToolTip()");
+            //Debug.Log("TooltipController.HideToolTip()");
+
             gameObject.SetActive(false);
             toolTipVisible = false;
         }
@@ -161,7 +162,8 @@ namespace AnyRPG {
         }
 
         public void ShowGamepadTooltip(RectTransform paneltransform, Transform buttonTransform, IDescribable describable, string sellPriceString) {
-            //Debug.Log("UIManager.ShowGamepadTooltip()");
+            //Debug.Log("TooltopController.ShowGamepadTooltip()");
+
             //Rect panelRect = RectTransformToScreenSpace((BagPanel.ContentArea as RectTransform));
             toolTipPanelTransform = paneltransform;
             toolTipButtonTransform = buttonTransform;

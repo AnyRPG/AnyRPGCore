@@ -15,7 +15,7 @@ namespace AnyRPG {
 
         // buttons
         [SerializeField]
-        private List<CharacterButton> characterButtons = new List<CharacterButton>();
+        private List<CharacterEquipmentButton> characterButtons = new List<CharacterEquipmentButton>();
 
         /*
         [SerializeField]
@@ -54,22 +54,23 @@ namespace AnyRPG {
         private SaveManager saveManager = null;
         private CharacterPanelManager characterPanelManager = null;
 
-        public CharacterButton SelectedButton { get; set; }
+        public CharacterEquipmentButton SelectedButton { get; set; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            foreach (CharacterButton characterButton in characterButtons) {
+            foreach (CharacterEquipmentButton characterButton in characterButtons) {
                 //characterButton.Configure(systemGameManager);
                 characterButton.EmptyBackGroundColor = emptySlotColor;
                 characterButton.FullBackGroundColor = fullSlotColor;
                 characterButton.CharacterPanel = this;
+                characterButton.ParentPanel = this;
                 //Debug.Log("CharacterPanel.Start(): checking icon");
                 if (characterButton.EquipmentSlotProfile != null && characterButton.EquipmentSlotProfile.Icon != null) {
                     //Debug.Log("CharacterPanel.Start(): equipment slot profile is not null, setting icon");
                     characterButton.EmptySlotImage.sprite = characterButton.EquipmentSlotProfile.Icon;
                 }
-                characterButton.UpdateVisual();
+                characterButton.UpdateVisual(null);
             }
 
             previewCameraController.Configure(systemGameManager);
@@ -136,9 +137,9 @@ namespace AnyRPG {
 
         public void UpdateCharacterButtons() {
             //Debug.Log("CharacterPanel.UpdateCharacterButtons");
-            foreach (CharacterButton characterButton in characterButtons) {
+            foreach (CharacterEquipmentButton characterButton in characterButtons) {
                 if (characterButton != null) {
-                    characterButton.UpdateVisual();
+                    characterButton.UpdateVisual(playerManager.UnitController);
                 }
             }
         }

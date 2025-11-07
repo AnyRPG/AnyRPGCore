@@ -157,6 +157,7 @@ namespace AnyRPG {
         public PagedWindow currencyListWindow;
         public PagedWindow achievementListWindow;
         public CloseableWindow characterPanelWindow;
+        public CloseableWindow inspectCharacterPanelWindow;
         public PagedWindow lootWindow;
         public PagedWindow vendorWindow;
         //public CloseableWindow chestWindow;
@@ -175,6 +176,7 @@ namespace AnyRPG {
         public CloseableWindow classChangeWindow;
         public CloseableWindow specializationChangeWindow;
         public CloseableWindow assignToActionBarsWindow;
+        public CloseableWindow contextMenuWindow;
 
         [Header("System Windows")]
 
@@ -366,6 +368,7 @@ namespace AnyRPG {
             currencyListWindow.Configure(systemGameManager);
             achievementListWindow.Configure(systemGameManager);
             characterPanelWindow.Configure(systemGameManager);
+            inspectCharacterPanelWindow.Configure(systemGameManager);
             lootWindow.Configure(systemGameManager);
             vendorWindow.Configure(systemGameManager);
             //chestWindow.Configure(systemGameManager);
@@ -382,6 +385,7 @@ namespace AnyRPG {
             factionChangeWindow.Configure(systemGameManager);
             classChangeWindow.Configure(systemGameManager);
             specializationChangeWindow.Configure(systemGameManager);
+            contextMenuWindow.Configure(systemGameManager);
             assignToActionBarsWindow.Configure(systemGameManager);
 
             // initialize system windows
@@ -511,6 +515,8 @@ namespace AnyRPG {
 
             defaultWindowPositions.Add("CharacterPanelWindowX", characterPanelWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("CharacterPanelWindowY", characterPanelWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("InspectCharacterPanelWindowX", inspectCharacterPanelWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("InspectCharacterPanelWindowY", inspectCharacterPanelWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("LootWindowX", lootWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("LootWindowY", lootWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("VendorWindowX", vendorWindow.RectTransform.anchoredPosition.x);
@@ -585,6 +591,7 @@ namespace AnyRPG {
             reputationBookWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["ReputationBookWindowX"], defaultWindowPositions["ReputationBookWindowY"], 0);
             currencyListWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["CurrencyListWindowX"], defaultWindowPositions["CurrencyListWindowY"], 0);
             characterPanelWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["CharacterPanelWindowX"], defaultWindowPositions["CharacterPanelWindowY"], 0);
+            inspectCharacterPanelWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["InspectCharacterPanelWindowX"], defaultWindowPositions["InspectCharacterPanelWindowY"], 0);
             lootWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["LootWindowX"], defaultWindowPositions["LootWindowY"], 0);
             vendorWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["VendorWindowX"], defaultWindowPositions["VendorWindowY"], 0);
             //chestWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["ChestWindowX"], defaultWindowPositions["ChestWindowY"], 0);
@@ -831,8 +838,10 @@ namespace AnyRPG {
             assignToActionBarsWindow.CloseWindow();
             bankWindow.CloseWindow();
             characterPanelWindow.CloseWindow();
+            inspectCharacterPanelWindow.CloseWindow();
             //chestWindow.CloseWindow();
             classChangeWindow.CloseWindow();
+            contextMenuWindow.CloseWindow();
             craftingWindow.CloseWindow();
             currencyListWindow.CloseWindow();
             dialogWindow.CloseWindow();
@@ -1430,6 +1439,7 @@ namespace AnyRPG {
             skillTrainerWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             musicPlayerWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             characterPanelWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            inspectCharacterPanelWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             craftingWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             currencyListWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             interactionWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));

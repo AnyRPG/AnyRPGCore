@@ -1,13 +1,12 @@
-using AnyRPG;
-using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class UnitFrameController : NavigableInterfaceElement {
+    public class UnitFrameController : NavigableInterfaceElement, IPointerClickHandler {
 
         [Header("Unit Name")]
 
@@ -115,6 +114,7 @@ namespace AnyRPG {
         // game manager references
         protected PlayerManager playerManager = null;
         protected SystemEventManager systemEventManager = null;
+        protected ContextMenuService contextMenuService = null;
 
         public BaseNamePlateController UnitNamePlateController { get => namePlateController; set => namePlateController = value; }
 
@@ -139,6 +139,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             playerManager = systemGameManager.PlayerManager;
             systemEventManager = systemGameManager.SystemEventManager;
+            contextMenuService = systemGameManager.ContextMenuService;
         }
 
         public void InitializeController() {
@@ -621,6 +622,23 @@ namespace AnyRPG {
             }
             UnsubscribeFromTargetReady();
         }
+
+        public void OnPointerClick(PointerEventData pointerEventData) {
+            //Debug.Log("UnitFrameController.OnPointerClick()");
+
+            if (pointerEventData.button == PointerEventData.InputButton.Right) {
+                HandleRightClick(pointerEventData.position);
+            }
+        }
+
+        private void HandleRightClick(Vector2 mousePosition) {
+            //Debug.Log($"UnitFrameController.HandleRightClick({mousePosition})");
+
+            if (namePlateController?.NamePlateUnit != null && namePlateController.NamePlateUnit is UnitController) {
+                contextMenuService.ShowContextMenu(namePlateController.NamePlateUnit as UnitController, mousePosition);
+            }
+        }
+
     }
 
 }

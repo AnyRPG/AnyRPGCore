@@ -72,6 +72,7 @@ namespace AnyRPG {
         private ChatCommandManager chatCommandManager = new ChatCommandManager();
         private ClassChangeManagerClient classChangeManagerClient = new ClassChangeManagerClient();
         private ClassChangeManagerServer classChangeManagerServer = new ClassChangeManagerServer();
+        private ContextMenuService contextMenuService = new ContextMenuService();
         private ControlsManager controlsManager = new ControlsManager();
         private CraftingManager craftingManager = new CraftingManager();
         private CurrencyConverter currencyConverter = new CurrencyConverter();
@@ -79,6 +80,7 @@ namespace AnyRPG {
         private DialogManagerServer dialogManagerServer = new DialogManagerServer();
         private FactionChangeManagerClient factionChangeManagerClient = new FactionChangeManagerClient();
         private FactionChangeManagerServer factionChangeManagerServer = new FactionChangeManagerServer();
+        private InspectCharacterService inspectCharacterService = new InspectCharacterService();
         private InteractionManager interactionManager = new InteractionManager();
         private KeyBindManager keyBindManager = new KeyBindManager();
         private LevelManager levelManager = new LevelManager();
@@ -167,8 +169,10 @@ namespace AnyRPG {
         public DialogManagerServer DialogManagerServer { get => dialogManagerServer; set => dialogManagerServer = value; }
         public ClassChangeManagerClient ClassChangeManager { get => classChangeManagerClient; set => classChangeManagerClient = value; }
         public ClassChangeManagerServer ClassChangeManagerServer { get => classChangeManagerServer; set => classChangeManagerServer = value; }
+        public ContextMenuService ContextMenuService { get => contextMenuService; set => contextMenuService = value; }
         public FactionChangeManagerClient FactionChangeManagerClient { get => factionChangeManagerClient; set => factionChangeManagerClient = value; }
         public FactionChangeManagerServer FactionChangeManagerServer { get => factionChangeManagerServer; set => factionChangeManagerServer = value; }
+        public InspectCharacterService InspectCharacterService { get => inspectCharacterService; set => inspectCharacterService = value; }
         public SpecializationChangeManagerClient SpecializationChangeManagerClient { get => specializationChangeManagerClient; set => specializationChangeManagerClient = value; }
         public SpecializationChangeManagerServer SpecializationChangeManagerServer { get => specializationChangeManagerServer; set => specializationChangeManagerServer = value; }
         public MusicPlayerManager MusicPlayerManager { get => musicPlayerManager; set => musicPlayerManager = value; }
@@ -268,8 +272,10 @@ namespace AnyRPG {
             dialogManagerServer.Configure(this);
             classChangeManagerClient.Configure(this);
             classChangeManagerServer.Configure(this);
+            contextMenuService.Configure(this);
             factionChangeManagerClient.Configure(this);
             factionChangeManagerServer.Configure(this);
+            inspectCharacterService.Configure(this);
             specializationChangeManagerClient.Configure(this);
             specializationChangeManagerServer.Configure(this);
             musicPlayerManager.Configure(this);

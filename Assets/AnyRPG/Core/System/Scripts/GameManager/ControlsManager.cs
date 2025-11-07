@@ -64,6 +64,7 @@ namespace AnyRPG {
         public float InputHorizontal { get => inputHorizontal; }
         public float InputVertical { get => inputVertical; }
         public bool MouseDisabled { get => mouseDisabled; }
+        public int WindowStackCount { get => windowStackCount; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -197,6 +198,9 @@ namespace AnyRPG {
                 }
             }
 
+            // taking window stack count here because window could be closed in uIManager.ProcessInput()
+            windowStackCount = windowManager.WindowStack.Count;
+
             // only send input to the next block if the name change window is not open
             if (textInputActive == false) {
                 uIManager.ProcessInput();
@@ -213,7 +217,6 @@ namespace AnyRPG {
             // don't send input to the player controller if windows are open
             // because the input could close the window, and accidentally do something like select the nearest target
             // by passing the input to the player controller after the window manager
-            windowStackCount = windowManager.WindowStack.Count;
             if (windowStackCount > 0) {
                 windowManager.Navigate();
             }

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 namespace AnyRPG {
-    public class NamePlateController : ConfiguredMonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
+    public class NamePlateController : ConfiguredMonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler {
 
         [SerializeField]
         private GameObject healthBar = null;
@@ -516,8 +516,10 @@ namespace AnyRPG {
             CheckForDisabledHealthBar();
         }
 
+        /*
         public void OnClick(BaseEventData eventData) {
             //Debug.Log("NamePlateController: OnClick()");
+
             if (playerManager.PlayerUnitSpawned == false) {
                 return;
             }
@@ -530,6 +532,22 @@ namespace AnyRPG {
                 HandleRightClick();
             }
         }
+        */
+
+        public void OnPointerClick(PointerEventData pointerEventData) {
+            //Debug.Log("NamePlateController.OnPointerClick()");
+
+            if (playerManager.PlayerUnitSpawned == false) {
+                return;
+            }
+            if (pointerEventData.button == PointerEventData.InputButton.Left) {
+                HandleLeftClick();
+            }
+            if (pointerEventData.button == PointerEventData.InputButton.Right) {
+                HandleRightClick();
+            }
+        }
+
 
         public void OnPointerEnter(PointerEventData eventData) {
             if (unitNamePlateController?.Interactable != playerManager?.UnitController?.gameObject) {

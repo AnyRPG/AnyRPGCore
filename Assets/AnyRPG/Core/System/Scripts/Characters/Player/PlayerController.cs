@@ -1,4 +1,3 @@
-using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -945,6 +944,11 @@ namespace AnyRPG {
 
         private void HandleCancelButtonPressed() {
             //Debug.Log("HandleCancelButtonPressed()");
+            if (controlsManager.WindowStackCount > 0) {
+                // escape / cancel key should go to the window, if one is open
+                return;
+            }
+
             if (inputManager.KeyBindWasPressed("CANCELALL")
                 || (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1") && controlsManager.RightTriggerDown == false && controlsManager.LeftTriggerDown == false)) {
                 playerManager.UnitController.ClearTarget();

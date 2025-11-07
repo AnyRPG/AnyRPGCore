@@ -124,7 +124,6 @@ namespace AnyRPG {
             unitController.CharacterStats.SetLevelInternal(newLevel);
         }
 
-
         public void HandleAddEquipment(EquipmentSlotProfile profile, InstantiatedEquipment equipment) {
             //Debug.Log($"CharacterPanel.HandleAddEquipment({profile.ResourceName}, {equipment.ResourceName})");
 
@@ -143,7 +142,8 @@ namespace AnyRPG {
         }
 
         public void HandleTargetCreated() {
-            //Debug.Log("CharacterPanel.HandleTargetCreated()");
+            //Debug.Log("CharacterPanelManager.HandleTargetCreated()");
+
             //unitController?.UnitModelController.SetInitialSavedAppearance(playerManager.PlayerCharacterSaveData.SaveData);
             CharacterEquipmentManager characterEquipmentManager = unitController.CharacterEquipmentManager;
 

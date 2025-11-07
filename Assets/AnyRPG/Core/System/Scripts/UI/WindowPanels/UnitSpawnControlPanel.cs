@@ -62,7 +62,7 @@ namespace AnyRPG {
         private ObjectPooler objectPooler = null;
         private UnitSpawnManager unitSpawnManager = null;
 
-        public UnitPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
+        public UnitPreviewCameraController PreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
         public UnitSpawnButton SelectedUnitSpawnButton { get => selectedUnitSpawnButton; set => selectedUnitSpawnButton = value; }
         //public List<UnitProfile> UnitProfileList { get => unitProfileList; set => unitProfileList = value; }
         //public List<UnitSpawnNode> UnitSpawnNodeList { get => unitSpawnNodeList; set => unitSpawnNodeList = value; }
@@ -177,10 +177,10 @@ namespace AnyRPG {
 
             if (cameraManager.UnitPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
-                if (MyPreviewCameraController != null) {
-                    MyPreviewCameraController.InitializeCamera(unitPreviewManager.PreviewUnitController);
+                if (PreviewCameraController != null) {
+                    PreviewCameraController.InitializeCamera(unitPreviewManager.PreviewUnitController);
                     //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting Target Ready Callback");
-                    MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
+                    PreviewCameraController.OnTargetReady += TargetReadyCallback;
                 } else {
                     Debug.LogError("UnitSpawnController.SetPreviewTarget(): Character Preview Camera Controller is null. Please set it in the inspector");
                 }
@@ -189,7 +189,7 @@ namespace AnyRPG {
 
         public void TargetReadyCallback() {
             //Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
-            MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
+            PreviewCameraController.OnTargetReady -= TargetReadyCallback;
         }
 
         public void ClosePanel() {
