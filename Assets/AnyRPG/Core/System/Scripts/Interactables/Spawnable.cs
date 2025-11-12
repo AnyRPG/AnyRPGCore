@@ -43,7 +43,6 @@ namespace AnyRPG {
         protected PlayerManager playerManager = null;
         protected SystemDataFactory systemDataFactory = null;
         protected ObjectPooler objectPooler = null;
-        protected SystemEventManager systemEventManager = null;
 
         public GameObject SpawnReference { get => spawnReference; set => spawnReference = value; }
         public PrefabProfile PrefabProfile { get => prefabProfile; set => prefabProfile = value; }
@@ -85,7 +84,6 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             systemDataFactory = systemGameManager.SystemDataFactory;
             objectPooler = systemGameManager.ObjectPooler;
-            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         protected override void PostConfigure() {

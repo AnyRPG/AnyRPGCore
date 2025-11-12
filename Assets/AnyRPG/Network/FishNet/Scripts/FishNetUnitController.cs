@@ -16,6 +16,7 @@ namespace AnyRPG {
         public readonly SyncVar<string> unitProfileName = new SyncVar<string>();
 
         public readonly SyncVar<UnitControllerMode> unitControllerMode = new SyncVar<UnitControllerMode>();
+        public readonly SyncVar<int> characterId = new SyncVar<int>();
 
         private UnitProfile unitProfile = null;
         private UnitController unitController = null;
@@ -310,6 +311,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnWriteMessageFeedMessage += HandleWriteMessageFeedMessageServer;
             unitController.UnitEventController.OnDialogCompleted += HandleDialogCompletedServer;
             unitController.UnitEventController.OnInteractWithQuestStartItem += HandleInteractWithQuestStartItemServer;
+            unitController.UnitEventController.OnNameChangeFail += HandleNameChangeFailServer;
         }
 
 
@@ -411,6 +413,16 @@ namespace AnyRPG {
             unitController.UnitEventController.OnWriteMessageFeedMessage -= HandleWriteMessageFeedMessageServer;
             unitController.UnitEventController.OnDialogCompleted -= HandleDialogCompletedServer;
             unitController.UnitEventController.OnInteractWithQuestStartItem -= HandleInteractWithQuestStartItemServer;
+            unitController.UnitEventController.OnNameChangeFail += HandleNameChangeFailServer;
+        }
+
+        private void HandleNameChangeFailServer() {
+            HandleNameChangeFailClient(base.Owner);
+        }
+
+        [TargetRpc]
+        private void HandleNameChangeFailClient(NetworkConnection networkConnection) {
+            unitController.UnitEventController.NotifyOnNameChangeFail();
         }
 
         private void HandleInteractWithQuestStartItemServer(Quest quest, int slotIndex, int instanceId) {
@@ -702,8 +714,6 @@ namespace AnyRPG {
             
             unitController.CharacterPetManager.AddPet(unitProfile);
         }
-
-
 
         public void HandleNameChangeServer(string newName) {
             HandleNameChangeClient(newName);
@@ -2063,6 +2073,7 @@ namespace AnyRPG {
                 characterConfigurationRequest.unitControllerMode = unitControllerMode.Value;
                 CharacterRequestData characterRequestData = new CharacterRequestData(null, GameMode.Network, characterConfigurationRequest);
                 characterRequestData.isOwner = isOwner;
+                characterRequestData.characterId = characterId.Value;
                 if (isOwner == true && unitControllerMode.Value == UnitControllerMode.Player) {
                     characterRequestData.characterRequestor = systemGameManager.PlayerManager;
                 }
@@ -2070,9 +2081,8 @@ namespace AnyRPG {
                     characterRequestData.saveData = saveData;
                     //Debug.Log($"{gameObject.name}.FishNetUnitController.CompleteCharacterRequest({isOwner}, isMounted: {saveData.isMounted})");
                 }
-                unitController.CharacterRequestData = characterRequestData;
+                unitController.SetCharacterRequestData(characterRequestData);
                 systemGameManager.CharacterManager.CompleteNetworkCharacterRequest(unitController);
-                
             }
 
             OnCompleteCharacterRequest();

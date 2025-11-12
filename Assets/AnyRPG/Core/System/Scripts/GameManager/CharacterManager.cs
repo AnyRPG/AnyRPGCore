@@ -19,13 +19,29 @@ namespace AnyRPG {
         private List<UnitController> networkOwnedUnits = new List<UnitController>();
         private List<UnitController> serverOwnedUnits = new List<UnitController>();
 
+        private Dictionary<UnitControllerMode, Dictionary<int, UnitController>> unitControllerIdLookup = new Dictionary<UnitControllerMode, Dictionary<int, UnitController>>();
+        private Dictionary<int, UnitController> playerIdLookup = new Dictionary<int, UnitController>();
+        private Dictionary<int, UnitController> aiIdLookup = new Dictionary<int, UnitController>();
+        private Dictionary<int, UnitController> petIdLookup = new Dictionary<int, UnitController>();
+        private Dictionary<int, UnitController> mountIdLookup = new Dictionary<int, UnitController>();
+        private Dictionary<int, UnitController> previewIdLookup = new Dictionary<int, UnitController>();
+        private Dictionary<int, UnitController> inanimateIdLookup = new Dictionary<int, UnitController>();
+
+        private Dictionary<UnitControllerMode, int> characterIdCounters = new Dictionary<UnitControllerMode, int>();
+        /*
+        private int aiIdCounter = 1;
+        private int petIdCounter = 1;
+        private int mountIdCounter = 1;
+        private int previewIdCounter = 1;
+        private int inanimateIdCounter = 1;
+        */
+
         // keep track of spawn requests so that they can be configured after spawning
         //private Dictionary<int, CharacterRequestData> unitSpawnRequests = new Dictionary<int, CharacterRequestData>();
         //private Dictionary<UnitController, CharacterRequestData> modelSpawnRequests = new Dictionary<UnitController, CharacterRequestData>();
 
         // game manager references
         private ObjectPooler objectPooler = null;
-        private NetworkManagerClient networkManagerClient = null;
         private PlayerManager playerManager = null;
         private PlayerManagerServer playerManagerServer = null;
 
@@ -33,14 +49,35 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            unitControllerIdLookup[UnitControllerMode.Player] = playerIdLookup;
+            unitControllerIdLookup[UnitControllerMode.AI] = aiIdLookup;
+            unitControllerIdLookup[UnitControllerMode.Pet] = petIdLookup;
+            unitControllerIdLookup[UnitControllerMode.Preview] = previewIdLookup;
+            unitControllerIdLookup[UnitControllerMode.Mount] = mountIdLookup;
+            unitControllerIdLookup[UnitControllerMode.Inanimate] = inanimateIdLookup;
+
+            characterIdCounters[UnitControllerMode.Player] = 1;
+            characterIdCounters[UnitControllerMode.AI] = 1;
+            characterIdCounters[UnitControllerMode.Pet] = 1;
+            characterIdCounters[UnitControllerMode.Mount] = 1;
+            characterIdCounters[UnitControllerMode.Preview] = 1;
+            characterIdCounters[UnitControllerMode.Inanimate] = 1;
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
-            networkManagerClient = systemGameManager.NetworkManagerClient;
             playerManager = systemGameManager.PlayerManager;
             playerManagerServer = systemGameManager.PlayerManagerServer;
+        }
+
+        public int GetNewCharacterId(UnitControllerMode unitControllerMode) {
+            int returnValue = -1;
+            if (characterIdCounters.ContainsKey(unitControllerMode)) {
+                returnValue = characterIdCounters[unitControllerMode];
+                characterIdCounters[unitControllerMode]++;
+            }
+            return returnValue;
         }
 
         /*
@@ -178,6 +215,16 @@ namespace AnyRPG {
             unitController.Configure(systemGameManager);
         }
 
+        public UnitController GetUnitController(UnitControllerMode unitControllerMode, int characterId) {
+            //Debug.Log($"CharacterManager.GetUnitController({unitControllerMode}, {characterId})");
+            if (unitControllerIdLookup.ContainsKey(unitControllerMode) == true) {
+                if (unitControllerIdLookup[unitControllerMode].ContainsKey(characterId) == true) {
+                    return unitControllerIdLookup[unitControllerMode][characterId];
+                }
+            }
+            return null;
+        }
+
         public UnitController SetUnitControllerConfiguration(UnitController unitController) {
             //Debug.Log($"CharacterManager.ConfigureUnitController({unitController.gameObject.name})");
 
@@ -189,6 +236,15 @@ namespace AnyRPG {
                 //Debug.Log($"CharacterManager.ConfigureUnitController({unitProfile.ResourceName}, {prefabObject.name}) renaming gameobject from {unitController.gameObject.name}");
                 unitController.gameObject.name = unitController.CharacterRequestData.characterConfigurationRequest.unitProfile.ResourceName.Replace(" ", "") + systemGameManager.GetSpawnCount();
                 //ConfigureUnitController(unitController);
+
+                // add to lookup dictionaries
+                if (unitControllerIdLookup.ContainsKey(unitController.CharacterRequestData.characterConfigurationRequest.unitControllerMode) == true) {
+                    if (unitControllerIdLookup[unitController.CharacterRequestData.characterConfigurationRequest.unitControllerMode].ContainsKey(unitController.CharacterId)) {
+                        unitControllerIdLookup[unitController.CharacterRequestData.characterConfigurationRequest.unitControllerMode][unitController.CharacterId] = unitController;
+                    } else {
+                        unitControllerIdLookup[unitController.CharacterRequestData.characterConfigurationRequest.unitControllerMode].Add(unitController.CharacterId, unitController);
+                    }
+                }
 
                 if (unitController.CharacterRequestData.requestMode == GameMode.Local) {
                     //Debug.Log($"adding {unitController.gameObject.name} to local owned units");
@@ -241,21 +297,33 @@ namespace AnyRPG {
             unitController.UnitEventController.OnDespawn -= HandleLocalUnitDespawn;
             unitController.UnitEventController.OnAfterDie -= HandleAfterDie;
             localUnits.Remove(unitController);
+            RemoveUnitControllerFromLookups(unitController);
         }
 
         private void HandleNetworkOwnedUnitDespawn(UnitController unitController) {
             unitController.UnitEventController.OnDespawn -= HandleNetworkOwnedUnitDespawn;
             networkOwnedUnits.Remove(unitController);
+            RemoveUnitControllerFromLookups(unitController);
         }
 
         private void HandleNetworkUnownedUnitDespawn(UnitController unitController) {
             unitController.UnitEventController.OnDespawn -= HandleNetworkUnownedUnitDespawn;
             networkUnownedUnits.Remove(unitController);
+            RemoveUnitControllerFromLookups(unitController);
         }
 
         private void HandleServerOwnedUnitDespawn(UnitController unitController) {
             unitController.UnitEventController.OnDespawn -= HandleServerOwnedUnitDespawn;
             serverOwnedUnits.Remove(unitController);
+            RemoveUnitControllerFromLookups(unitController);
+        }
+
+        private void RemoveUnitControllerFromLookups(UnitController unitController) {
+            if (unitControllerIdLookup.ContainsKey(unitController.CharacterRequestData.characterConfigurationRequest.unitControllerMode) == true) {
+                if (unitControllerIdLookup[unitController.CharacterRequestData.characterConfigurationRequest.unitControllerMode].ContainsKey(unitController.CharacterId)) {
+                    unitControllerIdLookup[unitController.CharacterRequestData.characterConfigurationRequest.unitControllerMode].Remove(unitController.CharacterId);
+                }
+            }
         }
 
         private GameObject LocalSpawnPrefab(GameObject spawnPrefab, Transform parentTransform, Vector3 position, Vector3 forward) {
@@ -279,7 +347,7 @@ namespace AnyRPG {
                 //Debug.Log($"CharacterManager.SpawnCharacterPrefab() spawning local unit");
                 // this should always be true in this function because it's only called if not network mode
                 unitController = prefabObject.GetComponent<UnitController>();
-                unitController.CharacterRequestData = characterRequestData;
+                unitController.SetCharacterRequestData(characterRequestData);
                 BeginCharacterRequest(unitController);
                 CompleteCharacterRequest(unitController);
             }
@@ -367,6 +435,15 @@ namespace AnyRPG {
                     unitController.gameObject.SetActive(false);
                 }
             }
+        }
+
+        public string GetCharacterName(int characterId) {
+            foreach (UnitControllerMode unitControllerMode in unitControllerIdLookup.Keys) {
+                if (unitControllerIdLookup[unitControllerMode].ContainsKey(characterId)) {
+                    return unitControllerIdLookup[unitControllerMode][characterId].DisplayName;
+                }
+            }
+            return "Unknown";
         }
 
         /*

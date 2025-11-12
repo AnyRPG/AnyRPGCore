@@ -81,7 +81,6 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private PlayerManager playerManager = null;
         private CameraManager cameraManager = null;
-        private SystemEventManager systemEventManager = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -89,7 +88,6 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
             cameraManager = systemGameManager.CameraManager;
-            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         private void OnEnable() {

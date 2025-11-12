@@ -21,7 +21,7 @@ namespace AnyRPG {
         public abstract void RequestRespawnPlayerUnit();
         public abstract void RequestDespawnPlayerUnit();
         public abstract void RequestRevivePlayerUnit();
-        public abstract GameObject RequestSpawnModelPrefab(/*int spawnRequestId, int serverSpawnRequestId,*/ GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward);
+        public abstract GameObject RequestSpawnModelPrefab(GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward);
         public abstract void RequestReturnFromCutscene();
         public abstract bool CanSpawnCharacterOverNetwork();
         public abstract bool OwnPlayer(UnitController unitController);
@@ -64,6 +64,13 @@ namespace AnyRPG {
         public abstract void RequestDespawnPet(UnitProfile unitProfile);
         public abstract void RequestSceneWeather();
         public abstract void RequestLoadPlayerCharacter(int playerCharacterId);
+        public abstract void AcceptCharacterGroupInvite(int inviteGroupId);
+        public abstract void DeclineCharacterGroupInvite();
+        public abstract void RequestLeaveCharacterGroup();
+        public abstract void RequestRemoveCharacterFromGroup(int playerCharacterId);
+        public abstract void RequestInviteCharacterToGroup(int playerCharacterId);
+        public abstract void RequestDisbandCharacterGroup(int characterGroupId);
+
 
         // server functions
         public abstract void StartServer(ushort port);
@@ -98,7 +105,7 @@ namespace AnyRPG {
         public abstract void AddAvailableDroppedLoot(int accountId, List<LootDrop> items);
         public abstract void AddLootDrop(int accountId, int lootDropId, int itemId);
         public abstract void AdvertiseTakeLoot(int accountId, int lootDropId);
-        public abstract void SpawnLobbyGamePlayer(int accountId, CharacterRequestData characterRequestData, Vector3 position, Vector3 forward, string sceneName);
+        public abstract void SpawnPlayer(int accountId, CharacterRequestData characterRequestData, Vector3 position, Vector3 forward, string sceneName);
         public abstract Scene GetAccountScene(int accountId, string sceneName);
         public abstract void AdvertiseAddSpawnRequest(int accountId, SpawnPlayerRequest loadSceneRequest);
         public abstract void AdvertiseEndWeather(int sceneHandle, WeatherProfile profile, bool immediate);
@@ -106,12 +113,15 @@ namespace AnyRPG {
         public abstract void AdvertiseStartWeather(int sceneHandle);
         public abstract void AdvertiseLoadCutscene(Cutscene cutscene, int accountId);
         public abstract void AdvertiseLoadPlayerCharacter(int accountId, string sceneName);
-
-        //public abstract void SetCraftingManagerAbility(int accountId, string abilityName);
-        //public abstract void AdvertiseInteractWithSkillTrainerComponentServer(int accountId, Interactable interactable, int optionIndex);
-        //public abstract void AdvertiseInteractWithAnimatedObjectComponentServer(int accountId, Interactable interactable, int optionIndex);
-        //public abstract void AdvertiseInteractWithClassChangeComponentServer(int accountId, Interactable interactable, int optionIndex);
-        //public abstract void AdvertiseInteractWithQuestGiver(Interactable interactable, int componentIndex, int accountId);
+        public abstract void AdvertiseAddCharacterToGroup(int playerCharacterId, CharacterGroup characterGroup);
+        public abstract void AdvertiseCharacterGroup(int accountId, CharacterGroup characterGroup);
+        public abstract void AdvertiseRemoveCharacterFromGroup(int characterId, CharacterGroup characterGroup);
+        public abstract void AdvertiseCharacterGroupInvite(int invitedAccountId, CharacterGroup characterGroup, string leaderName);
+        public abstract void AdvertiseDisbandCharacterGroup(CharacterGroup characterGroup);
+        public abstract void AdvertisePlayerNameNotAvailable(int accountId);
+        public abstract void AdvertiseLoadCharacterList(int accountId, List<PlayerCharacterSaveData> playerCharacterSaveDataList);
+        public abstract void AdvertiseDeletePlayerCharacter(int accountId);
+        public abstract void AdvertiseDeclineCharacterGroupInvite(int leaderAccountId, string decliningPlayerName);
     }
 
 }

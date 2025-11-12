@@ -38,7 +38,6 @@ namespace AnyRPG {
         // game manager references
         SystemEventManager systemEventManager = null;
         PlayerManager playerManager = null;
-        NetworkManagerClient networkManagerClient = null;
         ChatCommandManager chatCommandManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -47,7 +46,6 @@ namespace AnyRPG {
 
             systemEventManager = systemGameManager.SystemEventManager;
             playerManager = systemGameManager.PlayerManager;
-            networkManagerClient = systemGameManager.NetworkManagerClient;
             chatCommandManager = systemGameManager.ChatCommandManager;
 
             SetWelcomeString();

@@ -68,6 +68,8 @@ namespace AnyRPG {
         private AuthenticationService authenticationService = new AuthenticationService();
         private CharacterAppearanceManagerClient characterAppearanceManagerClient = new CharacterAppearanceManagerClient();
         private CharacterAppearanceManagerServer characterAppearanceManagerServer = new CharacterAppearanceManagerServer();
+        private CharacterGroupServiceClient characterGroupServiceClient = new CharacterGroupServiceClient();
+        private CharacterGroupServiceServer characterGroupServiceServer = new CharacterGroupServiceServer();
         private CharacterManager characterManager = new CharacterManager();
         private ChatCommandManager chatCommandManager = new ChatCommandManager();
         private ClassChangeManagerClient classChangeManagerClient = new ClassChangeManagerClient();
@@ -191,6 +193,8 @@ namespace AnyRPG {
         public GameMode GameMode { get => gameMode; }
         public QuestGiverManagerClient QuestGiverManagerClient { get => questGiverManagerClient; set => questGiverManagerClient = value; }
         public QuestGiverManagerServer QuestGiverManagerServer { get => questGiverManagerServer; set => questGiverManagerServer = value; }
+        public CharacterGroupServiceClient CharacterGroupServiceClient { get => characterGroupServiceClient; set => characterGroupServiceClient = value; }
+        public CharacterGroupServiceServer CharacterGroupServiceServer { get => characterGroupServiceServer; set => characterGroupServiceServer = value; }
 
         private void Awake() {
             Init();
@@ -293,6 +297,8 @@ namespace AnyRPG {
             networkManagerClient.Configure(this);
             networkManagerServer.Configure(this);
             characterManager.Configure(this);
+            characterGroupServiceClient.Configure(this);
+            characterGroupServiceServer.Configure(this);
         }
 
         private void Update() {

@@ -47,7 +47,8 @@ namespace AnyRPG {
         // unit profile and settings
         private UnitProfile unitProfile = null;
 
-
+        // unique instance identifier
+        private int characterId = -1;
 
         // components
         private UnitEventController unitEventController = new UnitEventController();
@@ -471,13 +472,14 @@ namespace AnyRPG {
         public CharacterDialogManager CharacterDialogManager { get => characterDialogManager; }
         public bool IsOwner { get => isOwner; set => isOwner = value; }
         public bool IsServerOwned { get => isServerOwned; set => isServerOwned = value; }
-        public CharacterRequestData CharacterRequestData { get => characterRequestData; set => characterRequestData = value; }
+        public CharacterRequestData CharacterRequestData { get => characterRequestData; }
         public CharacterActionBarManager CharacterActionBarManager { get => characterActionBarManager; }
         public bool CharacterConfigured { get => characterConfigured; }
         public bool EnableLeashing { get => enableLeashing; set => enableLeashing = value; }
         public UnitController RiderUnitController { get => riderUnitController; set => riderUnitController = value; }
         public bool IsDisconnected { get => isDisconnected; set => isDisconnected = value; }
         public bool IsStealth { get => isStealth; set => isStealth = value; }
+        public int CharacterId { get => characterId; set => characterId = value; }
 
         public override void AutoConfigure(SystemGameManager systemGameManager) {
             // don't do anything here.  Unitcontrollers should never be autoconfigured
@@ -530,6 +532,11 @@ namespace AnyRPG {
             systemAchievementManager = systemGameManager.SystemAchievementManager;
         }
 
+        public void SetCharacterRequestData(CharacterRequestData characterRequestData) {
+            this.characterRequestData = characterRequestData;
+            this.characterId = characterRequestData.characterId;
+        }
+
         protected override void CreateMaterialController() {
             // intentionally not calling base
             unitMaterialController = new UnitMaterialController(this, systemGameManager);
@@ -574,14 +581,14 @@ namespace AnyRPG {
             }
         }
 
-        public override void ConfigureUnitFrame(UnitFrameController unitFrameController) {
+        public override void ConfigureUnitFrame(UnitFramePanelBase unitFramePanelBase, bool previewCameraExists) {
 
-            if (unitProfile != null && unitProfile.UnitPrefabProps.NamePlateProps.UseSnapShot == false) {
-                unitFrameController.ConfigurePortrait(unitProfile.Icon);
+            if (unitProfile != null && (unitProfile.UnitPrefabProps.NamePlateProps.UseSnapShot == false || previewCameraExists == false)) {
+                unitFramePanelBase.ConfigurePortrait(unitProfile.Icon);
                 return;
             }
 
-            base.ConfigureUnitFrame(unitFrameController);
+            base.ConfigureUnitFrame(unitFramePanelBase, previewCameraExists);
         }
 
         public override void ConfigureDialogPanel(DialogPanel dialogPanelController) {

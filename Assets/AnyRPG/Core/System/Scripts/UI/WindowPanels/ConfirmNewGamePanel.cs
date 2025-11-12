@@ -72,12 +72,13 @@ namespace AnyRPG {
 
             uIManager.confirmNewGameMenuWindow.CloseWindow();
             //uIManager.loadGameWindow.CloseWindow();
-            uIManager.newGameWindow.CloseWindow();
-            if (systemGameManager.GameMode == GameMode.Network) {
-                uIManager.loadGameWindow.OpenWindow();
+            if (systemGameManager.GameMode == GameMode.Local) {
+                uIManager.newGameWindow.CloseWindow();
+                newGameManager.NewLocalGame();
+            } else {
+                newGameManager.CreateNetworkCharacter();
             }
-            newGameManager.NewGame();
-            
+
         }
 
     }

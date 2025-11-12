@@ -11,6 +11,7 @@ namespace AnyRPG {
         // game manager references
         protected SystemGameManager systemGameManager = null;
         protected SystemConfigurationManager systemConfigurationManager = null;
+        protected SystemEventManager systemEventManager = null;
 
         protected int configureCount = 0;
 
@@ -23,6 +24,7 @@ namespace AnyRPG {
 
         public virtual void SetGameManagerReferences() {
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            systemEventManager = systemGameManager.SystemEventManager;
         }
 
     }

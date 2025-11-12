@@ -20,7 +20,6 @@ namespace AnyRPG {
 
         // game manager references
         private PlayerManager playerManager = null;
-        private SystemEventManager systemEventManager = null;
 
         public Color CircleColor { get => circleColor; set => circleColor = value; }
         public CastTargetController CastTargetController { get => castTargetController; }
@@ -38,7 +37,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             playerManager = systemGameManager.PlayerManager;
-            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         private void CreateEventSubscriptions() {

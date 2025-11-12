@@ -32,7 +32,6 @@ namespace AnyRPG {
 
         // game manager references
         private SaveManager saveManager = null;
-        private NetworkManagerClient networkManagerClient = null;
         private SystemItemManager systemItemManager = null;
 
         // public properties
@@ -56,7 +55,6 @@ namespace AnyRPG {
             //Debug.Log("LoadGameManager.SetGameManagerReferences()");
             base.SetGameManagerReferences();
             saveManager = systemGameManager.SaveManager;
-            networkManagerClient = systemGameManager.NetworkManagerClient;
             systemItemManager = systemGameManager.SystemItemManager;
         }
 

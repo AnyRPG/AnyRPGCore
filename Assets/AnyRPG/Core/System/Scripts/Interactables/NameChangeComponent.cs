@@ -10,6 +10,7 @@ namespace AnyRPG {
 
         // game manager references
         NameChangeManagerClient nameChangeManager = null;
+        PlayerCharacterService playerCharacterService = null;
 
         public NameChangeProps Props { get => interactableOptionProps as NameChangeProps; }
 
@@ -20,6 +21,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             nameChangeManager = systemGameManager.NameChangeManagerClient;
+            playerCharacterService = systemGameManager.PlayerCharacterService;
         }
 
         public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
@@ -48,7 +50,11 @@ namespace AnyRPG {
 
         public void SetPlayerName(UnitController sourceUnitController, string newName) {
             if (newName != null && newName != string.Empty) {
-                sourceUnitController.BaseCharacter.ChangeCharacterName(newName);
+                if (playerCharacterService.RenamePlayerCharacter(sourceUnitController.CharacterId, newName)) {
+                    sourceUnitController.BaseCharacter.ChangeCharacterName(newName);
+                } else {
+                    sourceUnitController.UnitEventController.NotifyOnNameChangeFail();
+                }
             }
 
             NotifyOnConfirmAction(sourceUnitController);

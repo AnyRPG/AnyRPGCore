@@ -57,8 +57,9 @@ namespace AnyRPG {
         public event System.Action<InventorySlot> OnRemoveInventorySlot = delegate { };
         public event System.Action<InventorySlot> OnRemoveBankSlot = delegate { };
         public event System.Action OnSetSlotBackgroundColor = delegate { };
-
-
+        public event System.Action OnNameChangeFail = delegate { };
+        public event System.Action<string> OnNameChange = delegate { };
+        public event System.Action OnPlayerNameNotAvailable = delegate { };
 
         // equipment manager
         public System.Action<EquipmentSlotProfile, InstantiatedEquipment> OnAddEquipment = delegate { };
@@ -320,6 +321,17 @@ namespace AnyRPG {
             OnCompleteInteractWithOption(sourceUnitController, interactableOptionComponent);
         }
 
+        public void NotifyOnNameChangeFail() {
+            OnNameChangeFail();
+        }
+
+        public void NotifyOnNameChange(string newName) {
+            OnNameChange(newName);
+        }
+
+        public void NotifyOnPlayerNameNotAvailable() {
+            OnPlayerNameNotAvailable();
+        }
     }
 
     [System.Serializable]

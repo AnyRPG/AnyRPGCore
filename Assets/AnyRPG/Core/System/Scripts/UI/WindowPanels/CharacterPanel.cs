@@ -48,7 +48,6 @@ namespace AnyRPG {
 
         // game manager references
         private PlayerManager playerManager = null;
-        private SystemEventManager systemEventManager = null;
         private UIManager uIManager = null;
         private CameraManager cameraManager = null;
         private SaveManager saveManager = null;
@@ -85,7 +84,6 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             playerManager = systemGameManager.PlayerManager;
-            systemEventManager = systemGameManager.SystemEventManager;
             uIManager = systemGameManager.UIManager;
             cameraManager = systemGameManager.CameraManager;
             saveManager = systemGameManager.SaveManager;

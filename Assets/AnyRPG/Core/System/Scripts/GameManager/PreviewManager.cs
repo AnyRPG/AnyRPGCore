@@ -31,12 +31,20 @@ namespace AnyRPG {
 
         //public int PreviewLayer { get => previewLayer; set => previewLayer = value; }
 
+        // game manager references
+        protected CharacterManager characterManager = null;
+
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
             if (previewSpawnLocation == null) {
                 previewSpawnLocation = Vector3.zero;
             }
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            characterManager = systemGameManager.CharacterManager;
         }
 
         public void HandleCloseWindow() {
@@ -73,6 +81,7 @@ namespace AnyRPG {
                 GameMode.Local,
                 characterConfigurationRequest
                 );
+            characterRequestData.characterId = characterManager.GetNewCharacterId(UnitControllerMode.Preview);
             systemGameManager.CharacterManager.SpawnUnitPrefabLocal(characterRequestData, transform, transform.position, transform.forward);
         }
 

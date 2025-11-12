@@ -54,6 +54,7 @@ namespace AnyRPG {
             //Debug.Log("UserAccountService.LoadAccountIdCounter()");
 
             accountIdCounter = PlayerPrefs.GetInt(accountIdCounterKey, 1);
+            Debug.Log($"UserAccountService.LoadAccountIdCounter(): {accountIdCounter}");
         }
 
         private void MakeSaveFolder() {
@@ -77,7 +78,7 @@ namespace AnyRPG {
         }
 
         private void LoadAllUserAccounts() {
-            //Debug.Log("UserAccountService.LoadAllUserAccounts()");
+            Debug.Log("UserAccountService.LoadAllUserAccounts()");
 
             // load all user accounts from storage
             string[] fileEntries = Directory.GetFiles(saveFolderName, "*.json");
@@ -94,6 +95,7 @@ namespace AnyRPG {
                     Debug.LogWarning($"UserAccountService.LoadAllUserAccounts(): Duplicate user account name {userAccount.UserName} found in file {fileName}.  This account will be skipped.");
                     continue;
                 }
+                Debug.Log($"UserAccountService.LoadAllUserAccounts(): Adding user account {userAccount.UserName} with id {userAccount.Id} to in memory lookup.");
                 userAccounts.Add(userAccount.UserName, userAccount);
             }
         }
@@ -115,9 +117,10 @@ namespace AnyRPG {
         /// <param name="userName"></param>
         /// <returns></returns>
         public UserAccount GetUserAccount(string userName) {
-            //Debug.Log($"UserAccountService.GetUserAccount({userName})");
+            Debug.Log($"UserAccountService.GetUserAccount({userName})");
 
             if (userAccounts.ContainsKey(userName)) {
+                Debug.Log($"UserAccountService.GetUserAccount({userName}) return id: {userAccounts[userName].Id}");
                 return userAccounts[userName];
             }
 
@@ -129,13 +132,13 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="userAccount"></param>
         private void SaveNewAccountLocal(UserAccount userAccount) {
-            //Debug.Log($"UserAccountService.SaveNewAccountLocal({userAccount.UserName})");
+            Debug.Log($"UserAccountService.SaveNewAccountLocal({userAccount.UserName})");
 
             SaveDataFile(userAccount);
         }
         
         public UserAccount CreateNewAccount(string username, string password) {
-            //Debug.Log($"UserAccountService.CreateNewAccount({username}, ****)");
+            Debug.Log($"UserAccountService.CreateNewAccount({username}, {password})");
 
             // check if username is not taken
             if (AccountExists(username)) {
@@ -164,13 +167,31 @@ namespace AnyRPG {
             //Debug.Log("UserAccountService.GetNewAccountId()");
 
             int returnValue = accountIdCounter;
+            // loop until accountIdCounter is found that is not in use, using the in memory dictionary for speed
+            while (true) {
+                bool idInUse = false;
+                foreach (KeyValuePair<string, UserAccount> entry in userAccounts) {
+                    if (entry.Value.Id == accountIdCounter) {
+                        Debug.LogWarning($"UserAccountService.GetNewAccountId(): id {accountIdCounter} is already in use, trying next");
+                        idInUse = true;
+                        break;
+                    }
+                }
+                if (!idInUse) {
+                    break;
+                }
+                accountIdCounter++;
+            }
+            returnValue = accountIdCounter;
             accountIdCounter++;
             PlayerPrefs.SetInt(accountIdCounterKey, accountIdCounter);
+
+            Debug.Log($"UserAccountService.GetNewAccountId() return {returnValue}");
             return returnValue;
         }
 
         public bool SaveDataFile(UserAccount userAccount) {
-            //Debug.Log($"UserAccountService.SaveDataFile({userAccount.UserName})");
+            Debug.Log($"UserAccountService.SaveDataFile({userAccount.UserName}, {userAccount.Id})");
 
             string jsonString = JsonUtility.ToJson(userAccount);
             string jsonSavePath = $"{saveFolderName}/{userAccount.Id}.json";

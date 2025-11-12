@@ -24,20 +24,12 @@ namespace AnyRPG {
         // indicators
         private List<Interactable> mapIndicatorControllers = new List<Interactable>();
 
-        // game manager references
-        protected SystemEventManager systemEventManager = null;
-
         public List<Interactable> MapIndicatorControllers { get => mapIndicatorControllers; set => mapIndicatorControllers = value; }
         public GameObject MapIndicatorPrefab { get => mapIndicatorPrefab; set => mapIndicatorPrefab = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             CreateEventSubscriptions();
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         public void HandleLevelUnload(int sceneHandle, string sceneName) {

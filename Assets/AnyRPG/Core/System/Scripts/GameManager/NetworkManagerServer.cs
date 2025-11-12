@@ -8,9 +8,6 @@ namespace AnyRPG {
     public class NetworkManagerServer : ConfiguredMonoBehaviour {
 
         public event Action<int, int, bool, bool> OnAuthenticationResult = delegate { };
-        public event Action<int, List<PlayerCharacterSaveData>> OnLoadCharacterList = delegate { };
-        public event Action<int> OnDeletePlayerCharacter = delegate { };
-        public event Action<int> OnCreatePlayerCharacter = delegate { };
         public event Action<int> OnAccountLogin = delegate { };
         public event Action<int> OnAccountLogout = delegate { };
         public event Action<LobbyGame> OnCreateLobbyGame = delegate { };
@@ -98,7 +95,6 @@ namespace AnyRPG {
         private UnitSpawnManager unitSpawnManager = null;
         private LevelManager levelManager = null;
         private TimeOfDayManagerServer timeOfDayManagerServer = null;
-        private SystemEventManager systemEventManager = null;
         private WeatherManagerServer weatherManagerServer = null;
         private ClassChangeManagerServer classChangeManagerServer = null;
         private FactionChangeManagerServer factionChangeManagerServer = null;
@@ -111,6 +107,7 @@ namespace AnyRPG {
         private AuthenticationService authenticationService = null;
         private PlayerCharacterService playerCharacterService = null;
         private NewGameManager newGameManager = null;
+        private CharacterGroupServiceServer characterGroupServiceServer = null;
 
         public bool ServerModeActive { get => serverModeActive; }
         public NetworkServerMode ServerMode { get => serverMode; }
@@ -143,7 +140,6 @@ namespace AnyRPG {
             unitSpawnManager = systemGameManager.UnitSpawnManager;
             levelManager = systemGameManager.LevelManager;
             timeOfDayManagerServer = systemGameManager.TimeOfDayManagerServer;
-            systemEventManager = systemGameManager.SystemEventManager;
             weatherManagerServer = systemGameManager.WeatherManagerServer;
             classChangeManagerServer = systemGameManager.ClassChangeManagerServer;
             factionChangeManagerServer = systemGameManager.FactionChangeManagerServer;
@@ -156,6 +152,7 @@ namespace AnyRPG {
             authenticationService = systemGameManager.AuthenticationService;
             playerCharacterService = systemGameManager.PlayerCharacterService;
             newGameManager = systemGameManager.NewGameManager;
+            characterGroupServiceServer = systemGameManager.CharacterGroupServiceServer;
         }
 
         public void AddLoggedInAccount(int clientId, int accountId, string token) {
@@ -295,15 +292,20 @@ namespace AnyRPG {
             if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 gameServerClient.CreatePlayerCharacter(accountId, loggedInAccounts[accountId].token, playerCharacterSaveData.SaveData);
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                playerCharacterService.AddPlayerCharacter(accountId, playerCharacterSaveData.SaveData);
-                ProcessCreatePlayerCharacterResponse(accountId);
+                
+                if (playerCharacterService.AddPlayerCharacter(accountId, playerCharacterSaveData.SaveData)) {
+                    ProcessCreatePlayerCharacterResponse(accountId);
+                } else {
+                    networkController.AdvertisePlayerNameNotAvailable(accountId);
+                }
             }
         }
 
         public void ProcessCreatePlayerCharacterResponse(int accountId) {
             //Debug.Log($"NetworkManagerServer.ProcessCreatePlayerCharacterResponse({accountId})");
 
-            OnCreatePlayerCharacter(accountId);
+            //networkController.AdvertiseCreatePlayerCharacter(accountId);
+            LoadCharacterList(accountId);
         }
 
 
@@ -338,7 +340,7 @@ namespace AnyRPG {
         public void ProcessDeletePlayerCharacterResponse(int accountId) {
             //Debug.Log($"NetworkManagerServer.ProcessDeletePlayerCharacterResponse({accountId})");
 
-            OnDeletePlayerCharacter(accountId);
+            networkController.AdvertiseDeletePlayerCharacter(accountId);
         }
 
         public void LoadCharacterList(int accountId) {
@@ -377,7 +379,7 @@ namespace AnyRPG {
                 playerCharacterDataDict.Add(accountId, playerCharacterSaveDataDict);
             }
 
-            OnLoadCharacterList(accountId, playerCharacterSaveDataList);
+            networkController.AdvertiseLoadCharacterList(accountId, playerCharacterSaveDataList);
         }
 
         public PlayerCharacterSaveData GetPlayerCharacterSaveData(int accountId, int playerCharacterId) {
@@ -1012,7 +1014,8 @@ namespace AnyRPG {
         }
 
         public void SpawnPlayer(int accountId, CharacterRequestData characterRequestData, Vector3 position, Vector3 forward, string sceneName) {
-            networkController.SpawnLobbyGamePlayer(accountId, characterRequestData, position, forward, sceneName);
+            
+            networkController.SpawnPlayer(accountId, characterRequestData, position, forward, sceneName);
         }
 
         private PlayerCharacterSaveData GetNewLobbyGamePlayerCharacterSaveData(int gameId, int accountId, string unitProfileName) {
@@ -1136,6 +1139,7 @@ namespace AnyRPG {
                 
                 PlayerCharacterSaveData playerCharacterSaveData = playerCharacterService.GetPlayerCharacterSaveData(accountId, playerCharacterId);
                 sceneName = playerCharacterSaveData.SaveData.CurrentScene;
+                characterGroupServiceServer.SendCharacterGroupInfo(accountId, playerCharacterId);
                 playerManagerServer.AddPlayerMonitor(accountId, playerCharacterSaveData);
                 // configure location and rotation overrides
                 SpawnPlayerRequest spawnPlayerRequest = new SpawnPlayerRequest();
@@ -1159,6 +1163,65 @@ namespace AnyRPG {
             }
 
             networkController.AdvertiseLoadPlayerCharacter(accountId, sceneName);
+        }
+
+        public void AcceptCharacterGroupInvite(int accountId, int characterGroupId) {
+            Debug.Log($"NetworkManagerServer.AcceptCharacterGroupInvite({accountId}, {characterGroupId})");
+            characterGroupServiceServer.AcceptCharacterGroupInvite(accountId, characterGroupId);
+        }
+
+        public void DeclineCharacterGroupInvite(int accountId) {
+            Debug.Log($"NetworkManagerServer.DeclineCharacterGroupInvite({accountId})");
+            characterGroupServiceServer.DeclineCharacterGroupInvite(accountId);
+        }
+
+        public void AdvertiseAddCharacterToGroup(int playerCharacterId, CharacterGroup characterGroup) {
+            Debug.Log($"NetworkManagerServer.AdvertiseAddCharacterToGroup({playerCharacterId}, {characterGroup.characterGroupId})");
+
+            networkController.AdvertiseAddCharacterToGroup(playerCharacterId, characterGroup);
+        }
+
+        public void AdvertiseCharacterGroup(int accountId, CharacterGroup characterGroup) {
+            Debug.Log($"NetworkManagerServer.AdvertiseCharacterGroup({accountId}, {characterGroup.characterGroupId})");
+
+            networkController.AdvertiseCharacterGroup(accountId, characterGroup);
+        }
+
+        public void RequestLeaveCharacterGroup(int accountId) {
+            characterGroupServiceServer.RequestLeaveCharacterGroup(accountId);
+        }
+
+        public void AdvertiseRemoveCharacterFromGroup(int characterId, CharacterGroup characterGroup) {
+            Debug.Log($"NetworkManagerServer.AdvertiseRemoveCharacterFromGroup({characterId}, {characterGroup.characterGroupId})");
+
+            networkController.AdvertiseRemoveCharacterFromGroup(characterId, characterGroup);
+        }
+
+        public void RequestRemoveCharacterFromGroup(int accountId, int playerCharacterId) {
+            characterGroupServiceServer.RequestRemoveCharacterFromGroup(accountId, playerCharacterId);
+        }
+
+        public void RequestInviteCharacterToGroup(int accountId, int invitedCharacterId) {
+            Debug.Log($"NetworkManagerServer.RequestInviteCharacterToGroup({accountId}, {invitedCharacterId})");
+            characterGroupServiceServer.RequestInviteCharacterToGroup(accountId, invitedCharacterId);
+        }
+
+        public void AdvertiseCharacterGroupInvite(int invitedCharacterId, CharacterGroup characterGroup, string leaderName) {
+            Debug.Log($"NetworkManagerServer.AdvertiseCharacterGroupInvite({invitedCharacterId}, {characterGroup.characterGroupId}, {leaderName})");
+
+            networkController.AdvertiseCharacterGroupInvite(invitedCharacterId, characterGroup, leaderName);
+        }
+
+        public void RequestDisbandCharacterGroup(int accountId, int characterGroupId) {
+            characterGroupServiceServer.DisbandGroup(accountId, characterGroupId);
+        }
+
+        public void AdvertiseDisbandCharacterGroup(CharacterGroup characterGroup) {
+            networkController.AdvertiseDisbandCharacterGroup(characterGroup);
+        }
+
+        public void AdvertiseDeclineCharacterGroupInvite(int leaderAccountId, string decliningPlayerName) {
+            networkController.AdvertiseDeclineCharacterGroupInvite(leaderAccountId, decliningPlayerName);
         }
     }
 

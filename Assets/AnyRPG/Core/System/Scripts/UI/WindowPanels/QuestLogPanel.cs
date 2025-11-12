@@ -41,7 +41,6 @@ namespace AnyRPG {
         // game manager references
         private ObjectPooler objectPooler = null;
         private PlayerManager playerManager = null;
-        private SystemEventManager systemEventManager = null;
 
         public QuestScript SelectedQuestScript { get => selectedQuestScript; set => selectedQuestScript = value; }
 
@@ -64,7 +63,6 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
             playerManager = systemGameManager.PlayerManager;
-            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         private void HandlePlayerUnitSpawn(UnitController unitController) {

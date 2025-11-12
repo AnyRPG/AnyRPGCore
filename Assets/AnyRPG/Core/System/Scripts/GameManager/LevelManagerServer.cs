@@ -11,8 +11,6 @@ namespace AnyRPG {
         private Dictionary<string, Dictionary<int, Scene>> loadedScenes = new Dictionary<string, Dictionary<int, Scene>>();
 
         // game manager references
-        private LevelManager levelManager = null;
-        private NetworkManagerClient networkManagerClient = null;
         private CameraManager cameraManager = null;
         private SystemEventManager systemEventManager = null;
 
@@ -23,8 +21,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            levelManager = systemGameManager.LevelManager;
-            networkManagerClient = systemGameManager.NetworkManagerClient;
             cameraManager = systemGameManager.CameraManager;
             systemEventManager = systemGameManager.SystemEventManager;
         }

@@ -58,7 +58,6 @@ namespace AnyRPG {
 
         // game manager references
         protected SaveManager saveManager = null;
-        protected SystemEventManager systemEventManager = null;
         protected UIManager uIManager = null;
         protected LevelManager levelManager = null;
         protected CameraManager cameraManager = null;
@@ -100,7 +99,6 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             saveManager = systemGameManager.SaveManager;
-            systemEventManager = systemGameManager.SystemEventManager;
             uIManager = systemGameManager.UIManager;
             combatTextManager = uIManager.CombatTextManager;
             actionBarManager = uIManager.ActionBarManager;
@@ -602,6 +600,7 @@ namespace AnyRPG {
             unitController.CharacterInventoryManager.OnRemoveInventorySlot += HandleRemoveInventorySlot;
             unitController.CharacterInventoryManager.OnRemoveBankSlot += HandleRemoveBankSlot;
             unitController.UnitEventController.OnAddBag += HandleAddBag;
+            unitController.UnitEventController.OnNameChangeFail += HandleNameChangeFail;
         }
 
         public void UnsubscribeFromPlayerEvents() {
@@ -667,6 +666,11 @@ namespace AnyRPG {
             unitController.CharacterInventoryManager.OnRemoveInventorySlot -= HandleRemoveInventorySlot;
             unitController.CharacterInventoryManager.OnRemoveBankSlot -= HandleRemoveBankSlot;
             unitController.UnitEventController.OnAddBag -= HandleAddBag;
+            unitController.UnitEventController.OnNameChangeFail -= HandleNameChangeFail;
+        }
+
+        private void HandleNameChangeFail() {
+            systemEventManager.NotifyOnNameChangeFail();
         }
 
         private void HandleItemCountChanged(UnitController controller, Item item) {
@@ -688,6 +692,7 @@ namespace AnyRPG {
         }
 
         public void HandleNameChange(string newName) {
+            systemEventManager.NotifyOnNameChange(newName);
             uIManager.PlayerUnitFrameController.SetTarget(unitController.NamePlateController);
         }
 

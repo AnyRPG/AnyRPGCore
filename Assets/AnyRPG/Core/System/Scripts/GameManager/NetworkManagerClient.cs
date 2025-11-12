@@ -22,6 +22,7 @@ namespace AnyRPG {
         public event Action<int, int, string> OnChooseLobbyGameCharacter = delegate { };
         public event Action<int, int, bool> OnSetLobbyGameReadyStatus = delegate { };
         public event Action<int> OnStartLobbyGame = delegate { };
+        public event Action OnClientConnectionStopped = delegate { };
 
 
         private string username = string.Empty;
@@ -53,10 +54,11 @@ namespace AnyRPG {
         private SystemItemManager systemItemManager = null;
         private LootManager lootManager = null;
         private CraftingManager craftingManager = null;
-        private SystemEventManager systemEventManager = null;
         private TimeOfDayManagerServer timeOfDayManagerServer = null;
         private WeatherManagerClient weatherManagerClient = null;
         private MapManager mapManager = null;
+        private CharacterGroupServiceClient characterGroupServiceClient = null;
+        private LoadGameManager loadGameManager = null;
 
         public string Username { get => username; }
         public string Password { get => password; }
@@ -83,11 +85,12 @@ namespace AnyRPG {
             systemItemManager = systemGameManager.SystemItemManager;
             lootManager = systemGameManager.LootManager;
             craftingManager = systemGameManager.CraftingManager;
-            systemEventManager = systemGameManager.SystemEventManager;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             timeOfDayManagerServer = systemGameManager.TimeOfDayManagerServer;
             weatherManagerClient = systemGameManager.WeatherManagerClient;
             mapManager = uIManager.MapManager;
+            characterGroupServiceClient = systemGameManager.CharacterGroupServiceClient;
+            loadGameManager = systemGameManager.LoadGameManager;
         }
 
         public bool Login(string username, string password, string server) {
@@ -177,6 +180,7 @@ namespace AnyRPG {
             //Debug.Log($"NetworkManagerClient.ProcessStopConnection()");
 
             systemGameManager.SetGameMode(GameMode.Local);
+            OnClientConnectionStopped();
             if (levelManager.GetActiveSceneNode() != systemConfigurationManager.MainMenuSceneNode) {
                 if (isLoggingInOrOut == false) {
                     uIManager.AddPopupWindowToQueue(uIManager.disconnectedWindow);
@@ -644,6 +648,65 @@ namespace AnyRPG {
             networkController.RequestLoadPlayerCharacter(playerCharacterId);
         }
 
+        public void AcceptCharacterGroupInvite(int inviteGroupId) {
+            networkController.AcceptCharacterGroupInvite(inviteGroupId);
+        }
+
+        public void DeclineCharacterGroupInvite() {
+            networkController.DeclineCharacterGroupInvite();
+        }
+
+        public void ProcessCharacterJoinGroup(int playerCharacterId, CharacterGroup characterGroup) {
+            Debug.Log($"NetworkManagerClient.ProcessCharacterJoinGroup({playerCharacterId}, {characterGroup.characterGroupId})");
+
+            characterGroupServiceClient.ProcessJoinGroup(playerCharacterId, characterGroup);
+        }
+
+        public void ProcessLoadCharacterGroup(CharacterGroup characterGroup) {
+            Debug.Log($"NetworkManagerClient.ProcessCharacterJoinGroup({characterGroup.characterGroupId})");
+
+            characterGroupServiceClient.ProcessLoadGroup(characterGroup);
+        }
+
+        public void RequestLeaveCharacterGroup() {
+            networkController.RequestLeaveCharacterGroup();
+        }
+
+        public void ProcessCharacterLeaveGroup(int removedPlayerId, int characterGroupId) {
+            characterGroupServiceClient.RemoveCharacterFromGroup(removedPlayerId, characterGroupId);
+        }
+
+        public void RequestRemoveCharacterFromGroup(int playerCharacterId) {
+            networkController.RequestRemoveCharacterFromGroup(playerCharacterId);
+        }
+
+        public void RequestInviteCharacterToGroup(int characterId) {
+            networkController.RequestInviteCharacterToGroup(characterId);
+        }
+
+        public void ProcessCharacterGroupInvite(CharacterGroup characterGroup, string leaderName) {
+            characterGroupServiceClient.DisplayCharacterGroupInvite(characterGroup.characterGroupId, leaderName);
+        }
+
+        public void RequestDisbandCharacterGroup(int characterGroupId) {
+            networkController.RequestDisbandCharacterGroup(characterGroupId);
+        }
+
+        public void ProcessDisbandCharacterGroup(int characterGroupId) {
+            characterGroupServiceClient.ProcessDisbandGroup(characterGroupId);
+        }
+
+        public void AdvertisePlayerNameNotAvailable() {
+            systemEventManager.NotifyOnPlayerNameNotAvailable();
+        }
+
+        public void SetCharacterList(List<PlayerCharacterSaveData> playerCharacterSaveDataList) {
+            loadGameManager.SetCharacterList(playerCharacterSaveDataList);
+        }
+
+        public void ProcessDeclineCharacterGroupInvite(string decliningPlayerName) {
+            logManager.WriteSystemMessage($"{decliningPlayerName} has declined the group invite.");
+        }
     }
 
 }

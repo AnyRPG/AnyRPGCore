@@ -58,7 +58,6 @@ namespace AnyRPG {
         protected MessageFeedManager messageFeedManager = null;
         protected NamePlateManager namePlateManager = null;
         protected CameraManager cameraManager = null;
-        protected SystemEventManager systemEventManager = null;
         protected KeyBindManager keyBindManager = null;
         protected CraftingManager craftingManager = null;
         protected UIManager uIManager = null;
@@ -79,7 +78,6 @@ namespace AnyRPG {
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
             namePlateManager = systemGameManager.UIManager.NamePlateManager;
             cameraManager = systemGameManager.CameraManager;
-            systemEventManager = systemGameManager.SystemEventManager;
             keyBindManager = systemGameManager.KeyBindManager;
             craftingManager = systemGameManager.CraftingManager;
             uIManager = systemGameManager.UIManager;

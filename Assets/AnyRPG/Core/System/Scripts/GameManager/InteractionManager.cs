@@ -17,7 +17,6 @@ namespace AnyRPG {
         private InteractableOptionManager interactableOptionManager = null;
 
         private PlayerManager playerManager = null;
-        private NetworkManagerClient networkManagerClient = null;
         private UIManager uIManager = null;
 
         public override void SetGameManagerReferences() {
@@ -26,7 +25,6 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             playerManager = systemGameManager.PlayerManager;
             uIManager = systemGameManager.UIManager;
-            networkManagerClient = systemGameManager.NetworkManagerClient;
         }
 
         public bool Interact(UnitController sourceUnitController, Interactable target) {

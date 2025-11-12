@@ -32,7 +32,6 @@ namespace AnyRPG {
         private MessageFeedManager messageFeedManager = null;
         private PlayerManager playerManager = null;
         private PlayerManagerServer playerManagerServer = null;
-        private NetworkManagerClient networkManagerClient = null;
         private SystemItemManager systemItemManager = null;
         private SystemEventManager systemEventManager = null;
 
@@ -58,7 +57,6 @@ namespace AnyRPG {
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
             playerManager = systemGameManager.PlayerManager;
             playerManagerServer = systemGameManager.PlayerManagerServer;
-            networkManagerClient = systemGameManager.NetworkManagerClient;
             systemItemManager = systemGameManager.SystemItemManager;
             systemEventManager = systemGameManager.SystemEventManager;
         }

@@ -76,7 +76,6 @@ namespace AnyRPG {
         private MessageFeedManager messageFeedManager = null;
         private PlayerManager playerManager = null;
         private DialogManagerClient dialogManagerClient = null;
-        private SystemEventManager systemEventManager = null;
 
         public QuestGiverQuestScript SelectedQuestGiverQuestScript { get => selectedQuestGiverQuestScript; set => selectedQuestGiverQuestScript = value; }
         //public Interactable MyInteractable { get => interactable; set => interactable = value; }
@@ -100,7 +99,6 @@ namespace AnyRPG {
             messageFeedManager = uIManager.MessageFeedManager;
             playerManager = systemGameManager.PlayerManager;
             dialogManagerClient = systemGameManager.DialogManagerClient;
-            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         private void HandlePlayerUnitSpawn(UnitController unitController) {

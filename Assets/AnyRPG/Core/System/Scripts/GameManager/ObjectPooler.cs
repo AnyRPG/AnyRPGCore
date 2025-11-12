@@ -18,9 +18,6 @@ namespace AnyRPG {
         [SerializeField]
         private List<PooledObjectConfig> pooledObjectConfigs = new List<PooledObjectConfig>();
 
-        // game manager references
-        private SystemEventManager systemEventManager = null;
-
         private Dictionary<GameObject, List<GameObject>> freeObjects = new Dictionary<GameObject, List<GameObject>>();
         private Dictionary<GameObject, List<GameObject>> usedObjects = new Dictionary<GameObject, List<GameObject>>();
 
@@ -28,11 +25,6 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         private void Start() {

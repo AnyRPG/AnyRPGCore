@@ -59,7 +59,6 @@ namespace AnyRPG {
         // game manager references
         LevelManager levelManager = null;
         PlayerManager playerManager = null;
-        SystemEventManager systemEventManager = null;
 
         public Camera MainCamera { get => mainCamera; set => mainCamera = value; }
         public GameObject MainCameraGameObject { get => mainCameraGameObject; }
@@ -132,7 +131,6 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             levelManager = systemGameManager.LevelManager;
             playerManager = systemGameManager.PlayerManager;
-            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         public void HidePlayers() {

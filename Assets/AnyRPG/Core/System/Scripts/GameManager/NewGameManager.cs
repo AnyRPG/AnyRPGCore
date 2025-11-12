@@ -109,11 +109,11 @@ namespace AnyRPG {
             systemItemManager = systemGameManager.SystemItemManager;
         }
 
-        public void NewGame() {
-            //Debug.Log("NewGameManager.NewGame()");
+        public void NewLocalGame() {
+            Debug.Log("NewGameManager.NewGame()");
 
             if (defaultPlayerCharacterSaveData == null) {
-                // this could have come from a button press
+                // this could have come from a main menu button press
                 InitializeData();
             }
             saveManager.NewGame(defaultPlayerCharacterSaveData);
@@ -121,6 +121,13 @@ namespace AnyRPG {
             // reset to null so next button press doesn't start game with same data again
             defaultPlayerCharacterSaveData = null;
         }
+
+        public void CreateNetworkCharacter() {
+            //Debug.Log("Savemanager.CreateNetworkGame(AnyRPGSaveData)");
+
+            networkManagerClient.RequestCreatePlayerCharacter(defaultPlayerCharacterSaveData.SaveData);
+        }
+
 
         private void GetDefaultMaterials() {
             defaultPlatformMaterial = characterCreatorManager.PlatformRenderer.material;
@@ -141,7 +148,7 @@ namespace AnyRPG {
         }
 
         private void SetPlayerName(string newPlayerName) {
-            //Debug.Log($"NewGameManager.SetPlayerName({newPlayerName})");
+            Debug.Log($"NewGameManager.SetPlayerName({newPlayerName})");
 
             if (newPlayerName == "") {
                 return;

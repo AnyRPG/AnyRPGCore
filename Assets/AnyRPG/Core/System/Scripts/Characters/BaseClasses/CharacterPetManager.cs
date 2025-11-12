@@ -143,7 +143,7 @@ namespace AnyRPG {
             CharacterRequestData characterRequestData = new CharacterRequestData(this,
                 systemGameManager.GameMode,
                 characterConfigurationRequest);
-
+            characterRequestData.characterId = characterManager.GetNewCharacterId(UnitControllerMode.Pet);
             if (networkManagerServer.ServerModeActive == true) {
                 characterRequestData.isServerOwned = true;
                 characterRequestData.requestMode = GameMode.Network;

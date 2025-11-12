@@ -25,7 +25,6 @@ namespace AnyRPG {
         private CameraManager cameraManager = null;
         private PlayerManager playerManager = null;
         private ObjectPooler objectPooler = null;
-        private SystemEventManager systemEventManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -39,7 +38,6 @@ namespace AnyRPG {
             cameraManager = systemGameManager.CameraManager;
             playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
-            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         public void AddMouseOver(NamePlateController namePlateController) {

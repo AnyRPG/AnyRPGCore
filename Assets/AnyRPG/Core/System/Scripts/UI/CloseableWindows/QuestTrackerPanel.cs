@@ -23,14 +23,12 @@ namespace AnyRPG {
         // game manager references
         protected PlayerManager playerManager = null;
         protected ObjectPooler objectPooler = null;
-        protected SystemEventManager systemEventManager = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
             playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
-            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         protected override void ProcessCreateEventSubscriptions() {
@@ -154,13 +152,15 @@ namespace AnyRPG {
         }
 
         public override void ReceiveClosedWindowNotification() {
-            //Debug.Log("QuestTrackerUI.OnCloseWindow()");
+            Debug.Log("QuestTrackerPanel.ReceiveClosedWindowNotification()");
+
             base.ReceiveClosedWindowNotification();
             //CleanupEventSubscriptions();
         }
 
         public override void ProcessOpenWindowNotification() {
-            //Debug.Log("QuestTrackerUI.OnOpenWindow()");
+            //Debug.Log("QuestTrackerPanel.ProcessOpenWindowNotification()");
+
             base.ProcessOpenWindowNotification();
 
             // prevent attempting to show quests if no player is logged in
@@ -169,7 +169,6 @@ namespace AnyRPG {
             }
             ShowQuests();
         }
-
 
     }
 

@@ -6,6 +6,7 @@ namespace AnyRPG {
     public class CharacterRequestData {
 
         public int accountId = -1;
+        public int characterId = -1;
         public ICharacterRequestor characterRequestor;
         public GameMode requestMode;
         public CharacterConfigurationRequest characterConfigurationRequest;

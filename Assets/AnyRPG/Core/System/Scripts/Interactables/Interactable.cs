@@ -112,7 +112,6 @@ namespace AnyRPG {
         protected MainMapManager mainMapManager = null;
         protected InteractionManager interactionManager = null;
         protected NetworkManagerServer networkManagerServer = null;
-        protected SystemEventManager systemEventManager = null;
 
         // properties
         public bool IsInteracting { get => isInteracting; }
@@ -274,7 +273,6 @@ namespace AnyRPG {
             interactionManager = systemGameManager.InteractionManager;
             networkManagerServer = systemGameManager.NetworkManagerServer;
             playerManager = systemGameManager.PlayerManager;
-            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         public virtual void GetComponentReferences() {

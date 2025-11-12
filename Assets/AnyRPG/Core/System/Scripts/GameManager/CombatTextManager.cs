@@ -23,7 +23,6 @@ namespace AnyRPG {
         private PlayerManager playerManager = null;
         private ObjectPooler objectPooler = null;
         private CutsceneBarController cutSceneBarController = null;
-        private SystemEventManager systemEventManager = null;
 
         public Canvas CombatTextCanvas { get => combatTextCanvas; set => combatTextCanvas = value; }
 
@@ -41,7 +40,6 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
             cutSceneBarController = systemGameManager.UIManager.CutSceneBarController;
-            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         public void HandleAfterCameraUpdate(string eventName, EventParamProperties eventParamProperties) {

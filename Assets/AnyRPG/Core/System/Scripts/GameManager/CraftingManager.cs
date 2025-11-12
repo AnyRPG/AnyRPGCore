@@ -12,13 +12,10 @@ namespace AnyRPG {
 
         // game manager references
         private PlayerManager playerManager = null;
-        private NetworkManagerClient networkManagerClient = null;
-
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             playerManager = systemGameManager.PlayerManager;
-            networkManagerClient = systemGameManager.NetworkManagerClient;
         }
 
         public void ClearSelectedRecipe() {

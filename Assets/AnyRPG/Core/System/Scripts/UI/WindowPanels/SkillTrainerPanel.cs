@@ -38,7 +38,6 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private SkillTrainerManagerClient skillTrainerManagerClient = null;
         private PlayerManager playerManager = null;
-        private SystemEventManager systemEventManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -57,7 +56,6 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             skillTrainerManagerClient = systemGameManager.SkillTrainerManagerClient;
             playerManager = systemGameManager.PlayerManager;
-            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         public void SetSelectedButton(SkillTrainerSkillScript selectedSkillTrainerSkillScript) {

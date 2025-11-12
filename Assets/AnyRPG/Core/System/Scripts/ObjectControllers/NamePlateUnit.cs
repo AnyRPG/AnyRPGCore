@@ -171,8 +171,8 @@ namespace AnyRPG {
             return Faction.GetFactionColor(playerManager, this);
         }
 
-        public virtual void ConfigureUnitFrame(UnitFrameController unitFrameController) {
-            unitFrameController.ConfigureSnapshotPortrait();
+        public virtual void ConfigureUnitFrame(UnitFramePanelBase unitFramePanelBase, bool previewCameraExists) {
+            unitFramePanelBase.ConfigureSnapshotPortrait();
         }
 
         public override Color GetDescriptionColor() {

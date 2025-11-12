@@ -28,7 +28,6 @@ namespace AnyRPG {
         private SystemItemManager systemItemManager = null;
         private UIManager uIManager = null;
         private NewGameManager newGameManager = null;
-        private NetworkManagerClient networkManagerClient = null;
         private LoadGameManager loadGameManager = null;
 
         public Dictionary<string, CutsceneSaveData> CutsceneSaveDataDictionary { get => cutsceneSaveDataDictionary; set => cutsceneSaveDataDictionary = value; }
@@ -44,7 +43,6 @@ namespace AnyRPG {
             messageFeedManager = uIManager.MessageFeedManager;
             actionBarManager = uIManager.ActionBarManager;
             newGameManager = systemGameManager.NewGameManager;
-            networkManagerClient = systemGameManager.NetworkManagerClient;
             loadGameManager = systemGameManager.LoadGameManager;
         }
 
@@ -332,22 +330,11 @@ namespace AnyRPG {
        
     
         public void NewGame(PlayerCharacterSaveData playerCharacterSaveData) {
-            //Debug.Log($"Savemanager.NewGame({playerCharacterSaveData.SaveData.unitProfileName})");
+            Debug.Log($"Savemanager.NewGame({playerCharacterSaveData.SaveData.unitProfileName})");
 
             ClearSystemManagedSaveData();
 
-            if (systemGameManager.GameMode == GameMode.Local) {
-                CreateLocalGame(playerCharacterSaveData);
-            } else {
-                CreateNetworkGame(playerCharacterSaveData);
-            }
-
-        }
-
-        private void CreateNetworkGame(PlayerCharacterSaveData playerCharacterSaveData) {
-            //Debug.Log("Savemanager.CreateNetworkGame(AnyRPGSaveData)");
-
-            networkManagerClient.RequestCreatePlayerCharacter(playerCharacterSaveData.SaveData);
+            CreateLocalGame(playerCharacterSaveData);
         }
 
         private void CreateLocalGame(PlayerCharacterSaveData playerCharacterSaveData) {
@@ -450,7 +437,7 @@ namespace AnyRPG {
                     }
                 }
             }
-            newGameManager.NewGame();
+            newGameManager.NewLocalGame();
         }
 
         public CapabilityConsumerSnapshot GetCapabilityConsumerSnapshot(AnyRPGSaveData saveData) {
@@ -640,6 +627,9 @@ namespace AnyRPG {
             if (PlayerPrefs.HasKey("FocusUnitFrameControllerX") && PlayerPrefs.HasKey("FocusUnitFrameControllerY"))
                 uIManager.FocusUnitFrameWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("FocusUnitFrameControllerX"), PlayerPrefs.GetFloat("FocusUnitFrameControllerY"), 0);
 
+            if (PlayerPrefs.HasKey("GroupUnitFramesWindowX") && PlayerPrefs.HasKey("GroupUnitFramesWindowY"))
+                uIManager.GroupUnitFramesWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("GroupUnitFramesWindowX"), PlayerPrefs.GetFloat("GroupUnitFramesWindowY"), 0);
+
             if (PlayerPrefs.HasKey("MiniMapControllerX") && PlayerPrefs.HasKey("MiniMapControllerY"))
                 uIManager.MiniMapWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("MiniMapControllerX"), PlayerPrefs.GetFloat("MiniMapControllerY"), 0);
 
@@ -726,6 +716,9 @@ namespace AnyRPG {
 
             PlayerPrefs.SetFloat("FocusUnitFrameControllerX", uIManager.FocusUnitFrameWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("FocusUnitFrameControllerY", uIManager.FocusUnitFrameWindow.RectTransform.anchoredPosition.y);
+
+            PlayerPrefs.SetFloat("GroupUnitFramesWindowX", uIManager.GroupUnitFramesWindow.RectTransform.anchoredPosition.x);
+            PlayerPrefs.SetFloat("GroupUnitFramesWindowY", uIManager.GroupUnitFramesWindow.RectTransform.anchoredPosition.y);
 
             PlayerPrefs.SetFloat("MiniMapControllerX", uIManager.MiniMapWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("MiniMapControllerY", uIManager.MiniMapWindow.RectTransform.anchoredPosition.y);

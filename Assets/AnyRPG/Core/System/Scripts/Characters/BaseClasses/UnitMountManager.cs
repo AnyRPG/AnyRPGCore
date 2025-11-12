@@ -45,7 +45,7 @@ namespace AnyRPG {
             CharacterRequestData characterRequestData = new CharacterRequestData(this,
                 systemGameManager.GameMode,
                 characterConfigurationRequest);
-
+            characterRequestData.characterId = characterManager.GetNewCharacterId(UnitControllerMode.Mount);
             if (networkManagerServer.ServerModeActive == true) {
                 characterRequestData.requestMode = GameMode.Network;
                 if (playerManagerServer.ActivePlayerLookup.ContainsKey(unitController)) {

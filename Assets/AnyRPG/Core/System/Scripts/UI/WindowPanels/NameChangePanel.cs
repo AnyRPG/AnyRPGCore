@@ -14,17 +14,20 @@ namespace AnyRPG {
         private TMP_InputField textInput = null;
 
         // game manager references
-        private UIManager uIManager = null;
         private PlayerManager playerManager = null;
         private NameChangeManagerClient nameChangeManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            systemEventManager.OnNameChange += HandleNameChange;
+        }
+
+        private void HandleNameChange(string newName) {
+            Close();
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
             nameChangeManager = systemGameManager.NameChangeManagerClient;
         }
@@ -43,14 +46,13 @@ namespace AnyRPG {
 
         public void CancelAction() {
             //Debug.Log("NameChangePanelController.CancelAction()");
-            uIManager.nameChangeWindow.CloseWindow();
+            Close();
         }
 
         public void ConfirmAction() {
             //Debug.Log("NameChangePanelController.ConfirmAction()");
             if (textInput.text != null && textInput.text != string.Empty) {
                 nameChangeManager.RequestChangePlayerName(playerManager.UnitController, textInput.text);
-                uIManager.nameChangeWindow.CloseWindow();
             }
         }
 

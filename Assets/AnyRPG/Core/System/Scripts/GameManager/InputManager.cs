@@ -36,7 +36,6 @@ namespace AnyRPG {
         private KeyBindManager keyBindManager = null;
         private UIManager uIManager = null;
         private NamePlateManager namePlateManager = null;
-        private SystemEventManager systemEventManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -48,7 +47,6 @@ namespace AnyRPG {
             keyBindManager = systemGameManager.KeyBindManager;
             uIManager = systemGameManager.UIManager;
             namePlateManager = uIManager.NamePlateManager;
-            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         public void HandleLevelLoad() {

@@ -55,7 +55,6 @@ namespace AnyRPG {
 
         // game manager references
         protected UIManager uIManager = null;
-        protected SystemEventManager systemEventManager = null;
         protected PlayerManager playerManager = null;
         protected HandScript handScript = null;
         protected ActionBarManager actionBarManager = null;
@@ -80,7 +79,6 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
-            systemEventManager = systemGameManager.SystemEventManager;
             playerManager = systemGameManager.PlayerManager;
             handScript = uIManager.HandScript;
             actionBarManager = uIManager.ActionBarManager;

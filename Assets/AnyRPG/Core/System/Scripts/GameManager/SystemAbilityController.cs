@@ -28,7 +28,6 @@ namespace AnyRPG {
 
         // game manager references
         private ObjectPooler objectPooler = null;
-        private SystemEventManager systemEventManager = null;
         private NetworkManagerServer networkManagerServer = null;
 
         public IAbilityManager AbilityManager { get => abilityManager; }
@@ -45,7 +44,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
-            systemEventManager = systemGameManager.SystemEventManager;
             networkManagerServer = systemGameManager.NetworkManagerServer;
         }
 

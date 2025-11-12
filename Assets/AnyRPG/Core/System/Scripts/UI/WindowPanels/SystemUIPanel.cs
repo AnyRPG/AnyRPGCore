@@ -30,6 +30,8 @@ namespace AnyRPG {
         public OnOffTextButton useFocusUnitFrameButton;
         public GameObject usePlayerUnitFrameLine;
         public OnOffTextButton usePlayerUnitFrameButton;
+        public GameObject useGroupUnitFramesLine;
+        public OnOffTextButton useGroupUnitFramesButton;
         public GameObject useFloatingCastBarLine;
         public OnOffTextButton useFloatingCastBarButton;
         public GameObject useMiniMapLine;
@@ -90,6 +92,7 @@ namespace AnyRPG {
         private int defaultUseActionBar7 = 1;
         private int defaultUseFocusUnitFrameButton = 1;
         private int defaultUsePlayerUnitFrameButton = 1;
+        private int defaultUseGroupUnitFramesButton = 1;
         private int defaultUseFloatingCastBarButton = 1;
         private int defaultUseMiniMapButton = 1;
         private int defaultUseExperienceBarButton = 1;
@@ -108,7 +111,6 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private SaveManager saveManager = null;
         private SystemUIConfiguration uiConfiguration = null;
-        private SystemEventManager systemEventManager = null;
         private PlayerManager playerManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -127,7 +129,6 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             saveManager = systemGameManager.SaveManager;
             uiConfiguration = systemConfigurationManager.UIConfiguration;
-            systemEventManager = systemGameManager.SystemEventManager;
             playerManager = systemGameManager.PlayerManager;
         }
 
@@ -261,6 +262,17 @@ namespace AnyRPG {
                 // user choice
                 defaultUsePlayerUnitFrameButton = uiConfiguration.UsePlayerUnitFrameDefault ? 1 : 0;
             }
+
+            if (uiConfiguration.UseGroupUnitFrames == UIElementUsage.Always) {
+                useGroupUnitFramesLine.SetActive(false);
+            } else if (uiConfiguration.UseGroupUnitFrames == UIElementUsage.Never) {
+                useGroupUnitFramesLine.SetActive(false);
+                defaultUseGroupUnitFramesButton = 0;
+            } else {
+                // user choice
+                defaultUseGroupUnitFramesButton = uiConfiguration.UseGroupUnitFramesDefault ? 1 : 0;
+            }
+
 
             if (uiConfiguration.UseFloatingCastBar == UIElementUsage.Always) {
                 useFloatingCastBarLine.SetActive(false);
@@ -448,6 +460,14 @@ namespace AnyRPG {
                 PlayerPrefs.SetInt("UsePlayerUnitFrame", 1);
             } else if (PlayerPrefs.HasKey("UsePlayerUnitFrame") == false) {
                 PlayerPrefs.SetInt("UsePlayerUnitFrame", defaultUsePlayerUnitFrameButton);
+            }
+
+            if (uiConfiguration.UseGroupUnitFrames == UIElementUsage.Never) {
+                PlayerPrefs.SetInt("UseGroupUnitFrames", 0);
+            } else if (uiConfiguration.UseGroupUnitFrames == UIElementUsage.Always) {
+                PlayerPrefs.SetInt("UseGroupUnitFrames", 1);
+            } else if (PlayerPrefs.HasKey("UseGroupUnitFrames") == false) {
+                PlayerPrefs.SetInt("UseGroupUnitFrames", defaultUseGroupUnitFramesButton);
             }
 
             if (uiConfiguration.UseFloatingCastBar == UIElementUsage.Never) {
@@ -653,6 +673,12 @@ namespace AnyRPG {
                 useFocusUnitFrameButton.SetOff();
             } else if (PlayerPrefs.GetInt("UseFocusUnitFrame") == 1) {
                 useFocusUnitFrameButton.SetOn();
+            }
+
+            if (PlayerPrefs.GetInt("UseGroupUnitFrames") == 0) {
+                useGroupUnitFramesButton.SetOff();
+            } else if (PlayerPrefs.GetInt("UseGroupUnitFrames") == 1) {
+                useGroupUnitFramesButton.SetOn();
             }
 
             if (PlayerPrefs.GetInt("UseStatusEffectBar") == 0) {
@@ -862,6 +888,19 @@ namespace AnyRPG {
                 usePlayerUnitFrameButton.SetOff();
             }
             uIManager.UpdatePlayerUnitFrame();
+        }
+
+        public void ToggleUseGroupUnitFramesButton() {
+            if (PlayerPrefs.GetInt("UseGroupUnitFrames") == 0) {
+                PlayerPrefs.SetInt("UseGroupUnitFrames", 1);
+                uIManager.MessageFeedManager.WriteMessage("Group Unit Frames: on");
+                useGroupUnitFramesButton.SetOn();
+            } else {
+                PlayerPrefs.SetInt("UseGroupUnitFrames", 0);
+                uIManager.MessageFeedManager.WriteMessage("Group Unit Frames: off");
+                useGroupUnitFramesButton.SetOff();
+            }
+            uIManager.CheckGroupUnitFramesPanelSettings();
         }
 
         public void ToggleUseFloatingCastBarButton() {

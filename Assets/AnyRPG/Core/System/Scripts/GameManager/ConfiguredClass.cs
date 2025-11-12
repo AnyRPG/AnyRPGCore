@@ -6,6 +6,7 @@ namespace AnyRPG {
         protected SystemGameManager systemGameManager = null;
         protected SystemConfigurationManager systemConfigurationManager = null;
         protected SystemDataFactory systemDataFactory = null;
+        protected NetworkManagerClient networkManagerClient = null;
         protected NetworkManagerServer networkManagerServer = null;
 
         public virtual void Configure(SystemGameManager systemGameManager) {
@@ -18,6 +19,7 @@ namespace AnyRPG {
             //Debug.Log("ConfiguredClass.SetGameManagerReferences() systemGameManager = " + (systemGameManager == null ? "null" : systemGameManager.gameObject.name));
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             systemDataFactory = systemGameManager.SystemDataFactory;
+            networkManagerClient = systemGameManager.NetworkManagerClient;
             networkManagerServer = systemGameManager.NetworkManagerServer;
         }
 

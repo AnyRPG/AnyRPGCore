@@ -92,6 +92,7 @@ namespace AnyRPG {
         protected ObjectPooler objectPooler = null;
         protected NetworkManagerClient networkManagerClient = null;
         protected SystemItemManager systemItemManager = null;
+        protected LoadGameManager loadGameManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -121,6 +122,7 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
             networkManagerClient = systemGameManager.NetworkManagerClient;
             systemItemManager = systemGameManager.SystemItemManager;
+            loadGameManager = systemGameManager.LoadGameManager;
         }
 
         private void AddDefaultAppearancePanel() {
@@ -153,6 +155,7 @@ namespace AnyRPG {
             newGameManager.OnUpdateCharacterClassList -= HandleUpdateCharacterClassList;
             newGameManager.OnUpdateClassSpecializationList -= HandleUpdateClassSpecializationList;
             newGameManager.OnUpdateUnitProfileList -= HandleUpdateUnitProfileList;
+            loadGameManager.OnLoadCharacterList -= HandleLoadCharacterList;
 
             saveManager.ClearSharedData();
             //characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
@@ -180,6 +183,13 @@ namespace AnyRPG {
             OnCloseWindow(this);
         }
 
+        private void HandleLoadCharacterList() {
+            if (closeableWindow.IsOpen == true) {
+                Close();
+                uIManager.loadGameWindow.OpenWindow();
+            }
+        }
+
         public override void ProcessOpenWindowNotification() {
             //Debug.Log("NewGamePanel.ProcessOpenWindowNotification()");
 
@@ -204,6 +214,8 @@ namespace AnyRPG {
             newGameManager.OnUpdateCharacterClassList += HandleUpdateCharacterClassList;
             newGameManager.OnUpdateClassSpecializationList += HandleUpdateClassSpecializationList;
             newGameManager.OnUpdateUnitProfileList += HandleUpdateUnitProfileList;
+            loadGameManager.OnLoadCharacterList += HandleLoadCharacterList;
+
 
             ClearData();
 

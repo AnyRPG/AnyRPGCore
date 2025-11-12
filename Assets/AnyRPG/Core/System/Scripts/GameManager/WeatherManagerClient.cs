@@ -34,7 +34,6 @@ namespace AnyRPG {
         protected TimeOfDayManagerServer timeOfDayManagerServer = null;
         protected TimeOfDayManagerClient timeOfDayManagerClient = null;
         protected SystemEventManager systemEventManager = null;
-        protected NetworkManagerClient networkManagerClient = null;
 
         public AudioClip CurrentAmbientSound { get => currentAmbientSound; set => currentAmbientSound = value; }
 
@@ -62,7 +61,6 @@ namespace AnyRPG {
             timeOfDayManagerServer = systemGameManager.TimeOfDayManagerServer;
             timeOfDayManagerClient = systemGameManager.TimeOfDayManagerClient;
             systemEventManager = systemGameManager.SystemEventManager;
-            networkManagerClient = systemGameManager.NetworkManagerClient;
         }
 
         private void HandleStartServer() {

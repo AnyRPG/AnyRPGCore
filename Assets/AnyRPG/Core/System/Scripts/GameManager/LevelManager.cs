@@ -35,9 +35,7 @@ namespace AnyRPG {
         private AudioManager audioManager = null;
         private CameraManager cameraManager = null;
         private PlayerManager playerManager = null;
-        private PlayerManagerServer playerManagerServer = null;
         private MapManager mapManager = null;
-        private NetworkManagerClient networkManagerClient = null;
         private SystemEventManager systemEventManager = null;
 
         public bool NavMeshAvailable { get => navMeshAvailable; set => navMeshAvailable = value; }
@@ -62,8 +60,6 @@ namespace AnyRPG {
             audioManager = systemGameManager.AudioManager;
             cameraManager = systemGameManager.CameraManager;
             playerManager = systemGameManager.PlayerManager;
-            playerManagerServer = systemGameManager.PlayerManagerServer;
-            networkManagerClient = systemGameManager.NetworkManagerClient;
             systemEventManager = systemGameManager.SystemEventManager;
         }
 

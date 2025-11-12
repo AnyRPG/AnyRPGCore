@@ -74,7 +74,6 @@ namespace AnyRPG {
         private ObjectPooler objectPooler = null;
         protected CharacterCreatorManager characterCreatorManager = null;
         //protected NetworkManagerClient networkManagerClient = null;
-        protected SystemEventManager systemEventManager = null;
 
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
         public UnitType UnitType { get => unitType; set => unitType = value; }
@@ -103,7 +102,6 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
             //networkManagerClient = systemGameManager.NetworkManagerClient;
-            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         public void ShowUnit(PetSpawnButton petSpawnButton) {

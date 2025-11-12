@@ -51,7 +51,6 @@ namespace AnyRPG {
 
         protected PlayerManager playerManager = null;
         protected KeyBindManager keyBindManager = null;
-        protected SystemEventManager systemEventManager = null;
         protected ControlsManager controlsManager = null;
         protected InputManager inputManager = null;
         protected UIManager uIManager = null;
@@ -69,7 +68,6 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
             playerManager = systemGameManager.PlayerManager;
             keyBindManager = systemGameManager.KeyBindManager;
-            systemEventManager = systemGameManager.SystemEventManager;
             controlsManager = systemGameManager.ControlsManager;
             inputManager = systemGameManager.InputManager;
             uIManager = systemGameManager.UIManager;

@@ -34,6 +34,7 @@ namespace AnyRPG {
         private UINavigationController uINavigationController = null;
 
         // game manager references
+        private CharacterGroupServiceClient characterGroupServiceClient = null;
         private ContextMenuService contextMenuService = null;
         private InspectCharacterService inspectCharacterService = null;
         private NetworkManagerClient networkManagerClient = null;
@@ -42,6 +43,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
+            characterGroupServiceClient = systemGameManager.CharacterGroupServiceClient;
             contextMenuService = systemGameManager.ContextMenuService;
             inspectCharacterService = systemGameManager.InspectCharacterService;
             playerManager = systemGameManager.PlayerManager;
@@ -76,10 +78,10 @@ namespace AnyRPG {
                 //}
             }
 
-            inviteButton.gameObject.SetActive(false);
-            kickButton.gameObject.SetActive(false);
-            disbandButton.gameObject.SetActive(false);
-            leaveButton.gameObject.SetActive(false);
+            SetupInviteButton();
+            SetupKickButton();
+            SetupDisbandButton();
+            SetupLeaveButton();
             tradeButton.gameObject.SetActive(false);
             messageButton.gameObject.SetActive(false);
 
@@ -90,35 +92,182 @@ namespace AnyRPG {
             }
         }
 
+        private void SetupInviteButton() {
+            if (contextMenuService.TargetUnitController == playerManager.UnitController) {
+                // invite button should not be available if the target is the player
+                inviteButton.gameObject.SetActive(false);
+                return;
+            }
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                // can only invite in network mode
+                inviteButton.gameObject.SetActive(false);
+                return;
+            }
+
+            if (contextMenuService.TargetUnitController.UnitControllerMode != UnitControllerMode.Player) {
+                // can only invite players
+                inviteButton.gameObject.SetActive(false);
+                return;
+            }
+
+            if (Faction.RelationWith(contextMenuService.TargetUnitController, playerManager.UnitController) < 0) {
+                // can only invite neutral or better
+                inviteButton.gameObject.SetActive(false);
+                return;
+            }
+
+            if (characterGroupServiceClient.CurrentCharacterGroup != null) {
+                // check if the target is already in a group
+                if (characterGroupServiceClient.CurrentCharacterGroup.CharacterIdList[UnitControllerMode.Player].Contains(contextMenuService.TargetUnitController.CharacterId)) {
+                    // target is already in our group
+                    inviteButton.gameObject.SetActive(false);
+                    return;
+                }
+            }
+
+            // all checks passed.  this character can be invited
+            inviteButton.gameObject.SetActive(true);
+        }
+
+        private void SetupKickButton() {
+            if (contextMenuService.TargetUnitController == playerManager.UnitController) {
+                // invite button should not be available if the target is the player
+                kickButton.gameObject.SetActive(false);
+                return;
+            }
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                // can only invite in network mode
+                kickButton.gameObject.SetActive(false);
+                return;
+            }
+
+            // check if the player is in a group
+            CharacterGroup characterGroup = characterGroupServiceClient.CurrentCharacterGroup;
+            if (characterGroup == null) {
+                // player is not in a group
+                kickButton.gameObject.SetActive(false);
+                return;
+            }
+
+            // check if the player is the leader
+            if (characterGroup.leaderPlayerCharacterId != playerManager.UnitController.CharacterId) {
+                // player is not the leader
+                kickButton.gameObject.SetActive(false);
+                return;
+            }
+
+            // check if the target is in the group
+            if (characterGroup.CharacterIdList[UnitControllerMode.Player].Contains(contextMenuService.TargetUnitController.CharacterId) == false) {
+                // target is not in the group
+                kickButton.gameObject.SetActive(false);
+                return;
+            }
+            // all checks passed.  this character can be kicked
+            kickButton.gameObject.SetActive(true);
+        }
+
+        private void SetupDisbandButton() {
+            if (contextMenuService.TargetUnitController != playerManager.UnitController) {
+                // only the leader can disband themselves
+                disbandButton.gameObject.SetActive(false);
+                return;
+            }
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                // can only invite in network mode
+                disbandButton.gameObject.SetActive(false);
+                return;
+            }
+
+            // check if the player is in a group
+            CharacterGroup characterGroup = characterGroupServiceClient.CurrentCharacterGroup;
+            if (characterGroup == null) {
+                // player is not in a group
+                disbandButton.gameObject.SetActive(false);
+                return;
+            }
+
+            // check if the player is the leader
+            if (characterGroup.leaderPlayerCharacterId != playerManager.UnitController.CharacterId) {
+                // player is not the leader
+                disbandButton.gameObject.SetActive(false);
+                return;
+            }
+
+            // all checks passed.  this character can be kicked
+            disbandButton.gameObject.SetActive(true);
+        }
+
+        private void SetupLeaveButton() {
+            if (contextMenuService.TargetUnitController != playerManager.UnitController) {
+                // only the leader can leave themselves
+                leaveButton.gameObject.SetActive(false);
+                return;
+            }
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                // can only invite in network mode
+                leaveButton.gameObject.SetActive(false);
+                return;
+            }
+
+            // check if the player is in a group
+            CharacterGroup characterGroup = characterGroupServiceClient.CurrentCharacterGroup;
+            if (characterGroup == null) {
+                // player is not in a group
+                leaveButton.gameObject.SetActive(false);
+                return;
+            }
+
+            // all checks passed.  this character can be kicked
+            leaveButton.gameObject.SetActive(true);
+        }
+
         public void Inspect() {
             //Debug.Log("ContextMenuPanel.Inspect()");
 
-            uIManager.contextMenuWindow.CloseWindow();
             inspectCharacterService.SetTargetUnitController(systemGameManager.ContextMenuService.TargetUnitController);
+            uIManager.contextMenuWindow.CloseWindow();
         }
 
         public void Trade() {
             Debug.Log("ContextMenuPanel.Trade()");
+            uIManager.contextMenuWindow.CloseWindow();
         }
 
         public void Message() {
             Debug.Log("ContextMenuPanel.Message()");
+            uIManager.contextMenuWindow.CloseWindow();
         }
 
         public void Invite() {
             Debug.Log("ContextMenuPanel.Invite()");
+
+            characterGroupServiceClient.RequestInviteCharacterToGroup(contextMenuService.TargetUnitController.CharacterId);
+            uIManager.contextMenuWindow.CloseWindow();
         }
 
         public void Kick() {
             Debug.Log("ContextMenuPanel.Kick()");
+
+            characterGroupServiceClient.RequestRemoveCharacterFromGroup(contextMenuService.TargetUnitController.CharacterId);
+            uIManager.contextMenuWindow.CloseWindow();
         }
 
         public void Disband() {
             Debug.Log("ContextMenuPanel.Disband()");
+
+            characterGroupServiceClient.RequestDisbandGroup();
+            uIManager.contextMenuWindow.CloseWindow();
         }
 
         public void Leave() {
             Debug.Log("ContextMenuPanel.Leave()");
+
+            characterGroupServiceClient.RequestLeaveGroup();
+            uIManager.contextMenuWindow.CloseWindow();
         }
 
     }

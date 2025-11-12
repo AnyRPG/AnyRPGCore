@@ -54,7 +54,6 @@ namespace AnyRPG {
         protected ObjectPooler objectPooler = null;
         protected SystemDataFactory systemDataFactory = null;
         protected NetworkManagerServer networkManagerServer = null;
-        protected SystemEventManager systemEventManager = null;
         protected LevelManager levelManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -69,7 +68,6 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
             systemDataFactory = systemGameManager.SystemDataFactory;
             networkManagerServer = systemGameManager.NetworkManagerServer;
-            systemEventManager = systemGameManager.SystemEventManager;
             levelManager = systemGameManager.LevelManager;
         }
 

@@ -186,6 +186,7 @@ namespace AnyRPG {
         public event System.Action<int, int, Quest> OnRequestAcceptQuestItemQuest = delegate { };
         public event System.Action<int, int, Quest, QuestRewardChoices> OnRequestCompleteQuestItemQuest = delegate { };
         public event System.Action OnSaveDataUpdated = delegate { };
+        public event System.Action OnNameChangeFail = delegate { };
 
         //public event System.Action<BaseAbilityProperties, Interactable> OnTargetInAbilityRangeFail = delegate { };
 
@@ -1013,6 +1014,10 @@ namespace AnyRPG {
 
         public void NotifyOnSaveDataUpdated() {
             OnSaveDataUpdated();
+        }
+
+        public void NotifyOnNameChangeFail() {
+            OnNameChangeFail();
         }
 
         #endregion

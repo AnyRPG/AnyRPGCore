@@ -36,7 +36,6 @@ namespace AnyRPG {
         private LevelManager levelManager = null;
         private NetworkManagerClient networkManagerClient = null;
         private NetworkManagerServer networkManagerServer = null;
-        private SystemEventManager systemEventManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("FishNetNetworkController.Configure()");
@@ -67,7 +66,6 @@ namespace AnyRPG {
             levelManager = systemGameManager.LevelManager;
             networkManagerServer = systemGameManager.NetworkManagerServer;
             networkManagerClient = systemGameManager.NetworkManagerClient;
-            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         private void HandleClientPresenceChangeEnd(ClientPresenceChangeEventArgs args) {
@@ -555,6 +553,30 @@ namespace AnyRPG {
             clientConnector.RequestLoadPlayerCharacter(playerCharacterId);
         }
 
+        public override void AcceptCharacterGroupInvite(int inviteGroupId) {
+            clientConnector.AcceptCharacterGroupInvite(inviteGroupId);
+        }
+
+        public override void DeclineCharacterGroupInvite() {
+            clientConnector.DeclineCharacterGroupInvite();
+        }
+
+        public override void RequestLeaveCharacterGroup() {
+            clientConnector.RequestLeaveCharacterGroup();
+        }
+
+        public override void RequestRemoveCharacterFromGroup(int playerCharacterId) {
+            clientConnector.RequestRemoveCharacterFromGroup(playerCharacterId);
+        }
+
+        public override void RequestInviteCharacterToGroup(int characterId) {
+            clientConnector.RequestInviteCharacterToGroup(characterId);
+        }
+
+        public override void RequestDisbandCharacterGroup(int characterGroupId) {
+            clientConnector.RequestDisbandCharacterGroup(characterGroupId);
+        }
+
         #endregion
 
         #region server functions
@@ -660,6 +682,43 @@ namespace AnyRPG {
         public override void AdvertiseLoadPlayerCharacter(int accountId, string sceneName) {
             clientConnector.JoinMMOGameInProgress(accountId, sceneName);
         }
+
+        public override void AdvertiseAddCharacterToGroup(int playerCharacterId, CharacterGroup characterGroup) {
+            clientConnector.AdvertiseAddCharacterToGroup(playerCharacterId, characterGroup);
+        }
+
+        public override void AdvertiseCharacterGroup(int accountId, CharacterGroup characterGroup) {
+            clientConnector.AdvertiseCharacterGroup(accountId, characterGroup);
+        }
+
+        public override void AdvertiseRemoveCharacterFromGroup(int characterId, CharacterGroup characterGroup) {
+            clientConnector.AdvertiseRemoveCharacterFromGroup(characterId, characterGroup);
+        }
+
+        public override void AdvertiseCharacterGroupInvite(int invitedCharacterId, CharacterGroup characterGroup, string leaderName) {
+            clientConnector.AdvertiseCharacterGroupInvite(invitedCharacterId, characterGroup, leaderName);
+        }
+
+        public override void AdvertiseDisbandCharacterGroup(CharacterGroup characterGroup) {
+            clientConnector.AdvertiseDisbandCharacterGroup(characterGroup);
+        }
+
+        public override void AdvertisePlayerNameNotAvailable(int accountId) {
+            clientConnector.AdvertisePlayerNameNotAvailable(accountId);
+        }
+
+        public override void AdvertiseLoadCharacterList(int accountId, List<PlayerCharacterSaveData> playerCharacterSaveDataList) {
+            clientConnector.AdvertiseLoadCharacterList(accountId, playerCharacterSaveDataList);
+        }
+
+        public override void AdvertiseDeletePlayerCharacter(int accountId) {
+            clientConnector.AdvertiseDeletePlayerCharacter(accountId);
+        }
+
+        public override void AdvertiseDeclineCharacterGroupInvite(int leaderAccountId, string decliningPlayerName) {
+            clientConnector.AdvertiseDeclineCharacterGroupInvite(leaderAccountId, decliningPlayerName);
+        }
+
 
         public override void AdvertiseSetLobbyGameReadyStatus(int gameId, int accountId, bool ready) {
             clientConnector.AdvertiseSetLobbyGameReadyStatus(gameId, accountId, ready);
@@ -781,8 +840,8 @@ namespace AnyRPG {
             clientConnector.AdvertiseEndWeather(sceneHandle, weatherProfile, immediate);
         }
 
-        public override void SpawnLobbyGamePlayer(int accountId, CharacterRequestData characterRequestData, Vector3 position, Vector3 forward, string sceneName) {
-            clientConnector.SpawnLobbyGamePlayer(accountId, characterRequestData, position, forward, sceneName);
+        public override void SpawnPlayer(int accountId, CharacterRequestData characterRequestData, Vector3 position, Vector3 forward, string sceneName) {
+            clientConnector.SpawnPlayer(accountId, characterRequestData, position, forward, sceneName);
         }
 
         public override Scene GetAccountScene(int accountId, string sceneName) {

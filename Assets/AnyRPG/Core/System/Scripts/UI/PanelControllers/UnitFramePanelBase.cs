@@ -6,15 +6,13 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class UnitFrameController : NavigableInterfaceElement, IPointerClickHandler {
+    public class UnitFramePanelBase : NavigableInterfaceElement, IPointerClickHandler {
 
         [Header("Unit Name")]
 
         [SerializeField]
         protected TextMeshProUGUI unitNameText = null;
 
-        [SerializeField]
-        protected TextMeshProUGUI unitLevelText = null;
 
         [SerializeField]
         protected Image unitNameBackground = null;
@@ -113,7 +111,6 @@ namespace AnyRPG {
 
         // game manager references
         protected PlayerManager playerManager = null;
-        protected SystemEventManager systemEventManager = null;
         protected ContextMenuService contextMenuService = null;
 
         public BaseNamePlateController UnitNamePlateController { get => namePlateController; set => namePlateController = value; }
@@ -126,7 +123,9 @@ namespace AnyRPG {
 
             InitializeController();
             statusEffectPanelController.Configure(systemGameManager);
-            previewCamera.enabled = false;
+            if (previewCamera != null) {
+                previewCamera.enabled = false;
+            }
             if (!targetInitialized) {
                 this.gameObject.SetActive(false);
             }
@@ -138,7 +137,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             playerManager = systemGameManager.PlayerManager;
-            systemEventManager = systemGameManager.SystemEventManager;
             contextMenuService = systemGameManager.ContextMenuService;
         }
 
@@ -200,8 +198,8 @@ namespace AnyRPG {
                 return;
             }
 
-            namePlateController.NamePlateUnit.ConfigureUnitFrame(this);
-            
+            namePlateController.NamePlateUnit.ConfigureUnitFrame(this, previewCamera != null);
+
         }
 
         public void ConfigurePortrait(Sprite icon) {
@@ -269,7 +267,7 @@ namespace AnyRPG {
         }
 
         public void SetTarget(BaseNamePlateController namePlateController) {
-            //Debug.Log($"{gameObject.name}.UnitFrameController.SetTarget(" + namePlateController.Interactable.name + ")");
+            Debug.Log($"{gameObject.name}.UnitFrameController.SetTarget({namePlateController.Interactable.name})");
 
             // prevent old target from still sending us updates while we are focused on a new target
             ClearTarget(false);
@@ -297,7 +295,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log($"{gameObject.name}.UnitFrameController.SetTarget(): Unit Frame Not active after activate command.  Likely gameobject under inactive canvas.  Will run TargetInitialization() on enable instead.");
             }
-            if (systemConfigurationManager.UIConfiguration.RealTimeUnitFrameCamera == true) {
+            if (systemConfigurationManager.UIConfiguration.RealTimeUnitFrameCamera == true && previewCamera != null) {
                 previewCamera.enabled = true;
             }/* else {
             // this code disabled because it is handled by TargetInitialization(), which results in an extra render request here
@@ -355,7 +353,8 @@ namespace AnyRPG {
         }
 
         public void ClearTarget(bool closeWindowOnClear = true) {
-            //Debug.Log($"{gameObject.name}.UnitFrameController.ClearTarget(" + closeWindowOnClear + ")");
+            Debug.Log($"{gameObject.name}.UnitFrameController.ClearTarget({closeWindowOnClear})");
+
             if (waitForCameraCoroutine != null) {
                 StopCoroutine(waitForCameraCoroutine);
             }
@@ -382,7 +381,9 @@ namespace AnyRPG {
             if (closeWindowOnClear) {
                 gameObject.SetActive(false);
             }
-            previewCamera.enabled = false;
+            if (previewCamera != null) {
+                previewCamera.enabled = false;
+            }
         }
 
         public void HandleReviveComplete(UnitController sourceUnitController) {
@@ -548,12 +549,8 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleLevelChanged(int _level) {
+        public virtual void HandleLevelChanged(int _level) {
             CalculateResourceColors();
-            unitLevelText.text = _level.ToString();
-            if (playerManager.UnitController?.CharacterStats != null) {
-                unitLevelText.color = LevelEquations.GetTargetColor(playerManager.UnitController.CharacterStats.Level, _level);
-            }
         }
 
         public void HandleNameChange(string newName) {
@@ -628,6 +625,8 @@ namespace AnyRPG {
 
             if (pointerEventData.button == PointerEventData.InputButton.Right) {
                 HandleRightClick(pointerEventData.position);
+            } else if (pointerEventData.button == PointerEventData.InputButton.Left) {
+                HandleLeftClick(pointerEventData.position);
             }
         }
 
@@ -639,6 +638,10 @@ namespace AnyRPG {
             }
         }
 
-    }
+        protected virtual void HandleLeftClick(Vector2 mousePosition) {
+            Debug.Log($"UnitFrameController.HandleLeftClick({mousePosition})");
+            // nothing here, overridden in derived classes
+        }
 
+    }
 }

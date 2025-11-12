@@ -37,7 +37,6 @@ namespace AnyRPG {
         protected MessageFeedManager messageFeedManager = null;
         protected CurrencyConverter currencyConverter = null;
         protected VendorManagerClient vendorManager = null;
-        protected SystemEventManager systemEventManager = null;
         protected NetworkManagerClient NetworkManagerClient = null;
 
         //protected List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
@@ -69,7 +68,6 @@ namespace AnyRPG {
             messageFeedManager = uIManager.MessageFeedManager;
             currencyConverter = systemGameManager.CurrencyConverter;
             vendorManager = systemGameManager.VendorManagerClient;
-            systemEventManager = systemGameManager.SystemEventManager;
             NetworkManagerClient = systemGameManager.NetworkManagerClient;
         }
 

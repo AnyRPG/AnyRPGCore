@@ -17,13 +17,11 @@ namespace AnyRPG {
 
         // game manager references
         protected InteractionManager interactionManager = null;
-        protected NetworkManagerClient networkManagerClient = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
             interactionManager = systemGameManager.InteractionManager;
-            networkManagerClient = systemGameManager.NetworkManagerClient;
         }
 
         public virtual void EndInteraction() {

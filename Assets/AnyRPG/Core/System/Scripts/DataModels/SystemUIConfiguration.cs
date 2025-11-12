@@ -219,6 +219,14 @@ namespace AnyRPG {
         [SerializeField]
         private bool useTargetUnitFrameDefault = true;
 
+        [Tooltip("Whether or not to display the group unit frames.")]
+        [SerializeField]
+        private UIElementUsage useGroupUnitFrames = UIElementUsage.UserChoice;
+
+        [Tooltip("Whether or not to display the group unit frames by default if user choice is selected.")]
+        [SerializeField]
+        private bool useGroupUnitFramesDefault = true;
+
         [Tooltip("Whether or not to display the floating cast bar.")]
         [SerializeField]
         private UIElementUsage useFloatingCastBar = UIElementUsage.UserChoice;
@@ -315,6 +323,7 @@ namespace AnyRPG {
         public UIElementUsage UseActionBar7 { get => useActionBar7; set => useActionBar7 = value; }
         public UIElementUsage UsePlayerUnitFrame { get => usePlayerUnitFrame; set => usePlayerUnitFrame = value; }
         public UIElementUsage UseTargetUnitFrame { get => useTargetUnitFrame; set => useTargetUnitFrame = value; }
+        public UIElementUsage UseGroupUnitFrames { get => useGroupUnitFrames; set => useGroupUnitFrames = value; }
         public UIElementUsage UseFloatingCastBar { get => useFloatingCastBar; set => useFloatingCastBar = value; }
         public UIElementUsage UseMiniMap { get => useMiniMap; set => useMiniMap = value; }
         public UIElementUsage UseExperienceBar { get => useExperienceBar; set => useExperienceBar = value; }
@@ -333,6 +342,7 @@ namespace AnyRPG {
         public bool UseActionBar7Default { get => useActionBar7Default; set => useActionBar7Default = value; }
         public bool UsePlayerUnitFrameDefault { get => usePlayerUnitFrameDefault; set => usePlayerUnitFrameDefault = value; }
         public bool UseTargetUnitFrameDefault { get => useTargetUnitFrameDefault; set => useTargetUnitFrameDefault = value; }
+        public bool UseGroupUnitFramesDefault { get => useGroupUnitFramesDefault; set => useGroupUnitFramesDefault = value; }
         public bool UseFloatingCastBarDefault { get => useFloatingCastBarDefault; set => useFloatingCastBarDefault = value; }
         public bool UseMiniMapDefault { get => useMiniMapDefault; set => useMiniMapDefault = value; }
         public bool UseExperienceBarDefault { get => useExperienceBarDefault; set => useExperienceBarDefault = value; }

@@ -126,7 +126,6 @@ namespace AnyRPG {
         private SystemDataFactory systemDataFactory = null;
         private CharacterManager characterManager = null;
         private NetworkManagerServer networkManagerServer = null;
-        private SystemEventManager systemEventManager = null;
         private LevelManager levelManager = null;
         private PlayerManagerServer playerManagerServer = null;
 
@@ -189,7 +188,6 @@ namespace AnyRPG {
             systemDataFactory = systemGameManager.SystemDataFactory;
             characterManager = systemGameManager.CharacterManager;
             networkManagerServer = systemGameManager.NetworkManagerServer;
-            systemEventManager = systemGameManager.SystemEventManager;
             levelManager = systemGameManager.LevelManager;
             playerManagerServer = systemGameManager.PlayerManagerServer;
         }
@@ -454,6 +452,7 @@ namespace AnyRPG {
                 GameMode.Local, 
                 characterConfigurationRequest
                 );
+            characterRequestData.characterId = characterManager.GetNewCharacterId(UnitControllerMode.AI);
             UnitController unitController = null;
             if (networkManagerServer.ServerModeActive == true) {
                 characterRequestData.isServerOwned = true;

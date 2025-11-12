@@ -23,13 +23,11 @@ namespace AnyRPG {
         protected float originalXPSliderWidth = 0f;
 
         // game manager references
-        protected SystemEventManager systemEventManager = null;
         protected PlayerManager playerManager = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            systemEventManager = systemGameManager.SystemEventManager;
             playerManager = systemGameManager.PlayerManager;
         }
 

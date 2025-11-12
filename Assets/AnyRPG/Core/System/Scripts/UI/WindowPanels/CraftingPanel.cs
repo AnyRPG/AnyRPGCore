@@ -84,7 +84,6 @@ namespace AnyRPG {
         private PlayerManager playerManager = null;
         private ObjectPooler objectPooler = null;
         private UIManager uIManager = null;
-        private SystemEventManager systemEventManager = null;
 
         public RecipeScript SelectedRecipeScript { get => selectedRecipeScript; }
 
@@ -109,7 +108,6 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
             uIManager = systemGameManager.UIManager;
-            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         private void HandleCraftItem() {
