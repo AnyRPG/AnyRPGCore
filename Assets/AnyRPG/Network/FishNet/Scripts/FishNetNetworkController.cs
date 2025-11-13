@@ -577,6 +577,10 @@ namespace AnyRPG {
             clientConnector.RequestDisbandCharacterGroup(characterGroupId);
         }
 
+        public override void RequestPromoteCharacterToLeader(int characterId) {
+            clientConnector.RequestPromoteCharacterToLeader(characterId);
+        }
+
         #endregion
 
         #region server functions
@@ -719,6 +723,9 @@ namespace AnyRPG {
             clientConnector.AdvertiseDeclineCharacterGroupInvite(leaderAccountId, decliningPlayerName);
         }
 
+        public override void AdvertisePromoteGroupLeader(CharacterGroup characterGroup, int newLeaderCharacterId) {
+            clientConnector.AdvertisePromoteGroupLeader(characterGroup, newLeaderCharacterId);
+        }
 
         public override void AdvertiseSetLobbyGameReadyStatus(int gameId, int accountId, bool ready) {
             clientConnector.AdvertiseSetLobbyGameReadyStatus(gameId, accountId, ready);

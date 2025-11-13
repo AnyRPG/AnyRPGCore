@@ -54,7 +54,7 @@ namespace AnyRPG {
                 //GetClientSaveData();
             } else {
                 BeginCharacterRequest();
-                CompleteClientCharacterRequest(null);
+                CompleteClientCharacterRequest(null, -1);
             }
         }
 
@@ -80,7 +80,7 @@ namespace AnyRPG {
                 return;
             }
             BeginCharacterRequest();
-            CompleteCharacterRequest(false, null);
+            CompleteCharacterRequest(false, null, -1);
             SubscribeToServerUnitEvents();
         }
 
@@ -104,24 +104,24 @@ namespace AnyRPG {
 
             base.OnSpawnServer(connection);
 
-            HandleSpawnServerClient(connection, unitController.CharacterSaveManager.SaveData);
+            HandleSpawnServerClient(connection, unitController.CharacterSaveManager.SaveData, unitController.CharacterGroupManager.GroupId);
         }
 
         [TargetRpc]
-        private void HandleSpawnServerClient(NetworkConnection networkConnection, AnyRPGSaveData saveData) {
+        private void HandleSpawnServerClient(NetworkConnection networkConnection, AnyRPGSaveData saveData, int characterGroupId) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnServerClient() owner: {base.OwnerId}");
 
             if (unitControllerMode.Value == UnitControllerMode.Player
                 || unitControllerMode.Value == UnitControllerMode.Pet
                 || unitControllerMode.Value == UnitControllerMode.AI) {
-                CompleteClientCharacterRequest(saveData);
+                CompleteClientCharacterRequest(saveData, characterGroupId);
             }
         }
 
-        public void CompleteClientCharacterRequest(AnyRPGSaveData saveData) {
+        public void CompleteClientCharacterRequest(AnyRPGSaveData saveData, int characterGroupId) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.CompleteClientCharacterRequest()");
 
-            CompleteCharacterRequest(base.IsOwner, saveData);
+            CompleteCharacterRequest(base.IsOwner, saveData, characterGroupId);
             SubscribeToClientUnitEvents();
         }
 
@@ -312,6 +312,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnDialogCompleted += HandleDialogCompletedServer;
             unitController.UnitEventController.OnInteractWithQuestStartItem += HandleInteractWithQuestStartItemServer;
             unitController.UnitEventController.OnNameChangeFail += HandleNameChangeFailServer;
+            unitController.UnitEventController.OnSetGroupId += HandleSetGroupId;
         }
 
 
@@ -413,7 +414,13 @@ namespace AnyRPG {
             unitController.UnitEventController.OnWriteMessageFeedMessage -= HandleWriteMessageFeedMessageServer;
             unitController.UnitEventController.OnDialogCompleted -= HandleDialogCompletedServer;
             unitController.UnitEventController.OnInteractWithQuestStartItem -= HandleInteractWithQuestStartItemServer;
-            unitController.UnitEventController.OnNameChangeFail += HandleNameChangeFailServer;
+            unitController.UnitEventController.OnNameChangeFail -= HandleNameChangeFailServer;
+            unitController.UnitEventController.OnSetGroupId -= HandleSetGroupId;
+        }
+
+        [ObserversRpc]
+        private void HandleSetGroupId(int newGroupId) {
+            unitController.CharacterGroupManager.SetGroupId(newGroupId);
         }
 
         private void HandleNameChangeFailServer() {
@@ -2055,7 +2062,7 @@ namespace AnyRPG {
             systemGameManager.CharacterManager.BeginCharacterRequest(unitController);
         }
 
-        private void CompleteCharacterRequest(bool isOwner, AnyRPGSaveData saveData) {
+        private void CompleteCharacterRequest(bool isOwner, AnyRPGSaveData saveData, int characterGroupId) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.CompleteCharacterRequest({isOwner}, {(saveData == null ? "null" : "valid save data")})");
 
             /*
@@ -2074,6 +2081,7 @@ namespace AnyRPG {
                 CharacterRequestData characterRequestData = new CharacterRequestData(null, GameMode.Network, characterConfigurationRequest);
                 characterRequestData.isOwner = isOwner;
                 characterRequestData.characterId = characterId.Value;
+                characterRequestData.characterGroupId = characterGroupId;
                 if (isOwner == true && unitControllerMode.Value == UnitControllerMode.Player) {
                     characterRequestData.characterRequestor = systemGameManager.PlayerManager;
                 }

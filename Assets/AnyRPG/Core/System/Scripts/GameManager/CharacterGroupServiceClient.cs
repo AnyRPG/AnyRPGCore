@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 namespace AnyRPG {
     public class CharacterGroupServiceClient : ConfiguredClass {
@@ -10,6 +11,7 @@ namespace AnyRPG {
         public event Action OnAddMember = delegate { };
         public event Action OnRemoveMember = delegate { };
         public event Action OnDisbandGroup = delegate { };
+        public event Action OnPromoteGroupLeader = delegate { };
 
         private int inviteGroupId = 0;
         private string inviteLeaderName = string.Empty;
@@ -176,6 +178,26 @@ namespace AnyRPG {
             currentCharacterGroup = null;
             OnDisbandGroup();
             logManager.WriteSystemMessage("Your group has been disbanded.");
+        }
+
+        public void ProcessPromoteGroupLeader(int characterGroupId, int newLeaderCharacterId) {
+            if (currentCharacterGroup == null || currentCharacterGroup.characterGroupId != characterGroupId) {
+                //Debug.Log("CharacterGroupService.ProcessPromoteGroupLeader: character group not found");
+                return;
+            }
+
+            currentCharacterGroup.leaderPlayerCharacterId = newLeaderCharacterId;
+
+            if (newLeaderCharacterId == playerManager.UnitController.CharacterId) {
+                logManager.WriteSystemMessage("You are now the group leader.");
+            } else {
+                logManager.WriteSystemMessage($"{characterManager.GetCharacterName(newLeaderCharacterId)} is now the group leader.");
+            }
+            OnPromoteGroupLeader();
+        }
+
+        public void RequestPromoteCharacterToLeader(int characterId) {
+            networkManagerClient.RequestPromoteCharacterToLeader(characterId);
         }
     }
 

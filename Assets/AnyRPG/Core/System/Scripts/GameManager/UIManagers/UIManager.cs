@@ -294,11 +294,12 @@ namespace AnyRPG {
         private WindowManager windowManager = null;
         private LevelManager levelManager = null;
         private NetworkManagerClient networkManagerClient = null;
+        private CharacterGroupServiceClient characterGroupServiceClient = null;
 
         public CloseableWindow StatusEffectWindow { get => statusEffectWindow; }
-        public UnitFramePanel FocusUnitFrameController { get => focusUnitFramePanel; }
+        public UnitFramePanel FocusUnitFramePanel { get => focusUnitFramePanel; }
         public ActionBarManager ActionBarManager { get => actionBarManager; set => actionBarManager = value; }
-        public UnitFramePanel PlayerUnitFrameController { get => playerUnitFramePanel; set => playerUnitFramePanel = value; }
+        public UnitFramePanel PlayerUnitFramePanel { get => playerUnitFramePanel; set => playerUnitFramePanel = value; }
         public GroupUnitFramesPanel GroupUnitFramesPanel { get => groupUnitFramesPanel; set => groupUnitFramesPanel = value; }
         public CloseableWindow QuestTrackerWindow { get => questTrackerWindow; }
         public CloseableWindow CombatLogWindow { get => combatLogWindow; set => combatLogWindow = value; }
@@ -464,6 +465,7 @@ namespace AnyRPG {
             windowManager = systemGameManager.WindowManager;
             levelManager = systemGameManager.LevelManager;
             networkManagerClient = systemGameManager.NetworkManagerClient;
+            characterGroupServiceClient = systemGameManager.CharacterGroupServiceClient;
         }
 
         public void PerformSetupActivities() {
@@ -656,6 +658,10 @@ namespace AnyRPG {
             systemEventManager.OnAddBag += HandleAddBag;
             systemEventManager.OnNameChangeFail += HandleNameChangeFail;
             systemEventManager.OnPlayerNameNotAvailable += HandlePlayerNameNotAvailable;
+            characterGroupServiceClient.OnJoinGroup += HandleJoinGroup;
+            characterGroupServiceClient.OnPromoteGroupLeader += HandlePromoteGroupLeader;
+            characterGroupServiceClient.OnLeaveGroup += HandleLeaveGroup;
+            characterGroupServiceClient.OnDisbandGroup += HandleDisbandGroup;
             eventSubscriptionsInitialized = true;
         }
 
@@ -676,7 +682,27 @@ namespace AnyRPG {
             SystemEventManager.StopListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
             systemEventManager.OnNameChangeFail -= HandleNameChangeFail;
             systemEventManager.OnPlayerNameNotAvailable -= HandlePlayerNameNotAvailable;
+            characterGroupServiceClient.OnJoinGroup -= HandleJoinGroup;
+            characterGroupServiceClient.OnPromoteGroupLeader -= HandlePromoteGroupLeader;
+            characterGroupServiceClient.OnLeaveGroup -= HandleLeaveGroup;
+            characterGroupServiceClient.OnDisbandGroup -= HandleDisbandGroup;
             eventSubscriptionsInitialized = false;
+        }
+
+        private void HandleJoinGroup() {
+            playerUnitFramePanel.UpdateLeaderIcon();
+        }
+
+        private void HandleDisbandGroup() {
+            playerUnitFramePanel.UpdateLeaderIcon();
+        }
+
+        private void HandleLeaveGroup() {
+            playerUnitFramePanel.UpdateLeaderIcon();
+        }
+
+        private void HandlePromoteGroupLeader() {
+            playerUnitFramePanel.UpdateLeaderIcon();
         }
 
         private void HandleNameChangeFail() {

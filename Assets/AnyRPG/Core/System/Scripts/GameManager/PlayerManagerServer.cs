@@ -56,6 +56,7 @@ namespace AnyRPG {
         protected MessageFeedManager messageFeedManager = null;
         protected CharacterManager characterManager = null;
         protected SystemEventManager systemEventManager = null;
+        protected CharacterGroupServiceServer characterGroupServiceServer = null;
 
         /// <summary>
         /// accountId, PlayerCharacterMonitor
@@ -105,6 +106,7 @@ namespace AnyRPG {
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
             characterManager = systemGameManager.CharacterManager;
             systemEventManager = systemGameManager.SystemEventManager;
+            characterGroupServiceServer = systemGameManager.CharacterGroupServiceServer;
         }
 
 
@@ -553,6 +555,7 @@ namespace AnyRPG {
                 characterConfigurationRequest.unitControllerMode = UnitControllerMode.Player;
                 CharacterRequestData characterRequestData = new CharacterRequestData(this, GameMode.Network, characterConfigurationRequest);
                 characterRequestData.characterId = playerCharacterMonitors[accountId].playerCharacterSaveData.PlayerCharacterId;
+                characterRequestData.characterGroupId = characterGroupServiceServer.GetCharacterGroupIdFromCharacterId(characterRequestData.characterId);
                 characterRequestData.saveData = playerCharacterMonitors[accountId].playerCharacterSaveData.SaveData;
 
                 if (spawnPlayerRequest.overrideSpawnLocation == false) {
@@ -575,7 +578,7 @@ namespace AnyRPG {
         }
 
         public void AddPlayerMonitor(int accountId, PlayerCharacterSaveData playerCharacterSaveData) {
-            Debug.Log($"PlayerManagerServer.AddPlayerMonitor({accountId}, {playerCharacterSaveData.SaveData.unitProfileName})");
+            //Debug.Log($"PlayerManagerServer.AddPlayerMonitor({accountId}, {playerCharacterSaveData.SaveData.unitProfileName})");
 
             if (playerCharacterMonitors.ContainsKey(accountId)) {
                 return;

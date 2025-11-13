@@ -54,7 +54,7 @@ namespace AnyRPG {
             //Debug.Log("UserAccountService.LoadAccountIdCounter()");
 
             accountIdCounter = PlayerPrefs.GetInt(accountIdCounterKey, 1);
-            Debug.Log($"UserAccountService.LoadAccountIdCounter(): {accountIdCounter}");
+            //Debug.Log($"UserAccountService.LoadAccountIdCounter(): {accountIdCounter}");
         }
 
         private void MakeSaveFolder() {
@@ -78,7 +78,7 @@ namespace AnyRPG {
         }
 
         private void LoadAllUserAccounts() {
-            Debug.Log("UserAccountService.LoadAllUserAccounts()");
+            //Debug.Log("UserAccountService.LoadAllUserAccounts()");
 
             // load all user accounts from storage
             string[] fileEntries = Directory.GetFiles(saveFolderName, "*.json");
@@ -95,7 +95,7 @@ namespace AnyRPG {
                     Debug.LogWarning($"UserAccountService.LoadAllUserAccounts(): Duplicate user account name {userAccount.UserName} found in file {fileName}.  This account will be skipped.");
                     continue;
                 }
-                Debug.Log($"UserAccountService.LoadAllUserAccounts(): Adding user account {userAccount.UserName} with id {userAccount.Id} to in memory lookup.");
+                //Debug.Log($"UserAccountService.LoadAllUserAccounts(): Adding user account {userAccount.UserName} with id {userAccount.Id} to in memory lookup.");
                 userAccounts.Add(userAccount.UserName, userAccount);
             }
         }
@@ -117,10 +117,10 @@ namespace AnyRPG {
         /// <param name="userName"></param>
         /// <returns></returns>
         public UserAccount GetUserAccount(string userName) {
-            Debug.Log($"UserAccountService.GetUserAccount({userName})");
+            //Debug.Log($"UserAccountService.GetUserAccount({userName})");
 
             if (userAccounts.ContainsKey(userName)) {
-                Debug.Log($"UserAccountService.GetUserAccount({userName}) return id: {userAccounts[userName].Id}");
+                //Debug.Log($"UserAccountService.GetUserAccount({userName}) return id: {userAccounts[userName].Id}");
                 return userAccounts[userName];
             }
 

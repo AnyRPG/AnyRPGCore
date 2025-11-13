@@ -70,6 +70,7 @@ namespace AnyRPG {
         public abstract void RequestRemoveCharacterFromGroup(int playerCharacterId);
         public abstract void RequestInviteCharacterToGroup(int playerCharacterId);
         public abstract void RequestDisbandCharacterGroup(int characterGroupId);
+        public abstract void RequestPromoteCharacterToLeader(int characterId);
 
 
         // server functions
@@ -122,6 +123,7 @@ namespace AnyRPG {
         public abstract void AdvertiseLoadCharacterList(int accountId, List<PlayerCharacterSaveData> playerCharacterSaveDataList);
         public abstract void AdvertiseDeletePlayerCharacter(int accountId);
         public abstract void AdvertiseDeclineCharacterGroupInvite(int leaderAccountId, string decliningPlayerName);
+        public abstract void AdvertisePromoteGroupLeader(CharacterGroup characterGroup, int newLeaderCharacterId);
     }
 
 }

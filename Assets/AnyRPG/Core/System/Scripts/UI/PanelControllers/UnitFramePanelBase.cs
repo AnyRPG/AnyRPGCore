@@ -58,6 +58,9 @@ namespace AnyRPG {
         protected Camera previewCamera = null;
 
         [SerializeField]
+        protected Image leaderIcon = null;
+
+        [SerializeField]
         protected Texture portraitTexture = null;
 
         [SerializeField]
@@ -112,6 +115,7 @@ namespace AnyRPG {
         // game manager references
         protected PlayerManager playerManager = null;
         protected ContextMenuService contextMenuService = null;
+        protected CharacterGroupServiceClient characterGroupServiceClient = null;
 
         public BaseNamePlateController UnitNamePlateController { get => namePlateController; set => namePlateController = value; }
 
@@ -138,6 +142,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             playerManager = systemGameManager.PlayerManager;
             contextMenuService = systemGameManager.ContextMenuService;
+            characterGroupServiceClient = systemGameManager.CharacterGroupServiceClient;
         }
 
         public void InitializeController() {
@@ -281,6 +286,7 @@ namespace AnyRPG {
             this.namePlateController = namePlateController;
 
             CalculateResourceColors();
+            UpdateLeaderIcon();
             if (namePlateController.Interactable.CharacterUnit != null) {
                 castBarController.SetTarget(namePlateController as UnitNamePlateController);
                 statusEffectPanelController.SetTarget((namePlateController as UnitNamePlateController).UnitController);
@@ -305,6 +311,33 @@ namespace AnyRPG {
                     waitForCameraCoroutine = StartCoroutine(WaitForCamera(lastWaitFrame));
                 //}
             }*/
+        }
+
+        public void UpdateLeaderIcon() {
+            if (leaderIcon == null || namePlateController == null) {
+                // no icon or no target, nothing to do
+                return;
+            }
+
+            if (characterGroupServiceClient.CurrentCharacterGroup == null) {
+                // no group, hide icon
+                leaderIcon.gameObject.SetActive(false);
+                return;
+            }
+
+            if (namePlateController.Interactable.CharacterUnit == null) {
+                // no character unit, hide icon
+                leaderIcon.gameObject.SetActive(false);
+                return;
+            }
+
+            if (characterGroupServiceClient.CurrentCharacterGroup.leaderPlayerCharacterId == namePlateController.Interactable.CharacterUnit.UnitController.CharacterId) {
+                // this unit is the leader, show icon
+                leaderIcon.gameObject.SetActive(true);
+            } else {
+                // not the leader, hide icon
+                leaderIcon.gameObject.SetActive(false);
+            }
         }
 
         public void CalculateResourceColors() {
@@ -353,7 +386,7 @@ namespace AnyRPG {
         }
 
         public void ClearTarget(bool closeWindowOnClear = true) {
-            Debug.Log($"{gameObject.name}.UnitFrameController.ClearTarget({closeWindowOnClear})");
+            //Debug.Log($"{gameObject.name}.UnitFrameController.ClearTarget({closeWindowOnClear})");
 
             if (waitForCameraCoroutine != null) {
                 StopCoroutine(waitForCameraCoroutine);

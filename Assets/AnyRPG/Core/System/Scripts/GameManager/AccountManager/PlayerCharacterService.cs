@@ -50,7 +50,7 @@ namespace AnyRPG {
         }
 
         private void LoadPlayerNameMap() {
-            Debug.Log("PlayerCharacterService.LoadPlayerNameMap()");
+            //Debug.Log("PlayerCharacterService.LoadPlayerNameMap()");
 
             if (Directory.Exists(baseSaveFolderName)) {
                 string[] accountDirectories = Directory.GetDirectories(baseSaveFolderName);
@@ -61,7 +61,7 @@ namespace AnyRPG {
                             string jsonString = File.ReadAllText(fileName);
                             PlayerCharacterSaveData playerCharacterSaveData = JsonUtility.FromJson<PlayerCharacterSaveData>(jsonString);
                             if (!playerNameMap.ContainsKey(playerCharacterSaveData.SaveData.playerName) && !playerNameLookupMap.ContainsKey(playerCharacterSaveData.PlayerCharacterId)) {
-                                Debug.Log($"PlayerCharacterService.LoadPlayerNameMap(): Loaded player ({playerCharacterSaveData.SaveData.playerName}) with ID ({playerCharacterSaveData.PlayerCharacterId})");
+                                //Debug.Log($"PlayerCharacterService.LoadPlayerNameMap(): Loaded player ({playerCharacterSaveData.SaveData.playerName}) with ID ({playerCharacterSaveData.PlayerCharacterId})");
                                 playerNameMap.Add(playerCharacterSaveData.SaveData.playerName, playerCharacterSaveData.PlayerCharacterId);
                                 playerNameLookupMap.Add(playerCharacterSaveData.PlayerCharacterId, playerCharacterSaveData.SaveData.playerName);
                             } else {
@@ -82,7 +82,7 @@ namespace AnyRPG {
             //Debug.Log("PlayerCharacterService.LoadPlayerCharacterIdCounter()");
 
             playerCharacterIdCounter = PlayerPrefs.GetInt(playerIdCounterKey, 1);
-            Debug.Log($"PlayerCharacterService.LoadPlayerCharacterIdCounter(): {playerCharacterIdCounter}");
+            //Debug.Log($"PlayerCharacterService.LoadPlayerCharacterIdCounter(): {playerCharacterIdCounter}");
         }
 
 

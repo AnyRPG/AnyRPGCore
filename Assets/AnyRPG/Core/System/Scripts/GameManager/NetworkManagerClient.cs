@@ -707,6 +707,14 @@ namespace AnyRPG {
         public void ProcessDeclineCharacterGroupInvite(string decliningPlayerName) {
             logManager.WriteSystemMessage($"{decliningPlayerName} has declined the group invite.");
         }
+
+        public void ProcessPromoteGroupLeader(int characterGroupId, int newLeaderCharacterId) {
+            characterGroupServiceClient.ProcessPromoteGroupLeader(characterGroupId, newLeaderCharacterId);
+        }
+
+        public void RequestPromoteCharacterToLeader(int characterId) {
+            networkController.RequestPromoteCharacterToLeader(characterId);
+        }
     }
 
 }

@@ -31,6 +31,9 @@ namespace AnyRPG {
         private HighlightButton leaveButton = null;
 
         [SerializeField]
+        private HighlightButton promoteButton = null;
+
+        [SerializeField]
         private UINavigationController uINavigationController = null;
 
         // game manager references
@@ -82,6 +85,7 @@ namespace AnyRPG {
             SetupKickButton();
             SetupDisbandButton();
             SetupLeaveButton();
+            SetupPromoteButton();
             tradeButton.gameObject.SetActive(false);
             messageButton.gameObject.SetActive(false);
 
@@ -117,17 +121,48 @@ namespace AnyRPG {
                 return;
             }
 
-            if (characterGroupServiceClient.CurrentCharacterGroup != null) {
-                // check if the target is already in a group
-                if (characterGroupServiceClient.CurrentCharacterGroup.CharacterIdList[UnitControllerMode.Player].Contains(contextMenuService.TargetUnitController.CharacterId)) {
-                    // target is already in our group
-                    inviteButton.gameObject.SetActive(false);
-                    return;
-                }
+            if (contextMenuService.TargetUnitController.CharacterGroupManager.IsInGroup()) {
+                // target is already in a group
+                inviteButton.gameObject.SetActive(false);
+                return;
             }
 
             // all checks passed.  this character can be invited
             inviteButton.gameObject.SetActive(true);
+        }
+
+        private void SetupPromoteButton() {
+            // check if the player is in a group
+            CharacterGroup characterGroup = characterGroupServiceClient.CurrentCharacterGroup;
+            if (characterGroup == null) {
+                // player is not in a group
+                promoteButton.gameObject.SetActive(false);
+                return;
+            }
+
+            // check if the player is the leader
+            if (characterGroup.leaderPlayerCharacterId != playerManager.UnitController.CharacterId) {
+                // player is not the leader
+                promoteButton.gameObject.SetActive(false);
+                return;
+            }
+
+            // check that the target is not the player
+            if (contextMenuService.TargetUnitController == playerManager.UnitController) {
+                // cannot promote yourself
+                promoteButton.gameObject.SetActive(false);
+                return;
+            }
+
+            // check if the target is in the group
+            if (characterGroup.CharacterIdList[UnitControllerMode.Player].Contains(contextMenuService.TargetUnitController.CharacterId) == false) {
+                // target is not in the group
+                promoteButton.gameObject.SetActive(false);
+                return;
+            }
+
+            // all checks passed.  this character can be promoted
+            promoteButton.gameObject.SetActive(true);
         }
 
         private void SetupKickButton() {
@@ -253,6 +288,13 @@ namespace AnyRPG {
             Debug.Log("ContextMenuPanel.Kick()");
 
             characterGroupServiceClient.RequestRemoveCharacterFromGroup(contextMenuService.TargetUnitController.CharacterId);
+            uIManager.contextMenuWindow.CloseWindow();
+        }
+
+        public void Promote() {
+            Debug.Log("ContextMenuPanel.Promote()");
+
+            characterGroupServiceClient.RequestPromoteCharacterToLeader(contextMenuService.TargetUnitController.CharacterId);
             uIManager.contextMenuWindow.CloseWindow();
         }
 

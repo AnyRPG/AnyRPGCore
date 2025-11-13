@@ -27,6 +27,7 @@ namespace AnyRPG {
             characterGroupServiceClient.OnAddMember += HandleAddMember;
             characterGroupServiceClient.OnRemoveMember += HandleRemoveMember;
             characterGroupServiceClient.OnDisbandGroup += HandleDisbandGroup;
+            characterGroupServiceClient.OnPromoteGroupLeader += HandlePromoteGroupLeader;
             systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
         }
 
@@ -34,6 +35,10 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             characterGroupServiceClient = systemGameManager.CharacterGroupServiceClient;
+        }
+
+        private void HandlePromoteGroupLeader() {
+            UpdateCharacterGroupDisplay();
         }
 
         private void HandlePlayerUnitSpawn(UnitController unitController) {

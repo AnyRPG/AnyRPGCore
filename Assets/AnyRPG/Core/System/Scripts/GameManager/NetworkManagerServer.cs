@@ -1133,13 +1133,13 @@ namespace AnyRPG {
         }
 
         public void RequestLoadPlayerCharacter(int accountId, int playerCharacterId) {
+            Debug.Log($"NetworkManagerServer.RequestLoadPlayerCharacter({accountId}, {playerCharacterId})");
+
             string sceneName = string.Empty;
-            //if (playerManagerServer.SpawnRequests.ContainsKey(accountId) == false) {
             if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId) == false) {
-                
+                // no existing monitor, so this is a fresh login
                 PlayerCharacterSaveData playerCharacterSaveData = playerCharacterService.GetPlayerCharacterSaveData(accountId, playerCharacterId);
                 sceneName = playerCharacterSaveData.SaveData.CurrentScene;
-                characterGroupServiceServer.SendCharacterGroupInfo(accountId, playerCharacterId);
                 playerManagerServer.AddPlayerMonitor(accountId, playerCharacterSaveData);
                 // configure location and rotation overrides
                 SpawnPlayerRequest spawnPlayerRequest = new SpawnPlayerRequest();
@@ -1155,34 +1155,38 @@ namespace AnyRPG {
                 }
                 playerManagerServer.AddSpawnRequest(accountId, spawnPlayerRequest, true);
             } else {
+                // there is an existing monitor, so the player must have been disconnected
                 AnyRPGSaveData saveData = playerManagerServer.PlayerCharacterMonitors[accountId].playerCharacterSaveData.SaveData;
                 sceneName = playerManagerServer.PlayerCharacterMonitors[accountId].playerCharacterSaveData.SaveData.CurrentScene;
                 if (levelManager.SceneDictionary.ContainsKey(sceneName)) {
                     sceneName = levelManager.SceneDictionary[sceneName].ResourceName;
                 }
+                characterGroupServiceServer.SendCharacterGroupInfo(accountId, playerCharacterId);
             }
 
             networkController.AdvertiseLoadPlayerCharacter(accountId, sceneName);
         }
 
         public void AcceptCharacterGroupInvite(int accountId, int characterGroupId) {
-            Debug.Log($"NetworkManagerServer.AcceptCharacterGroupInvite({accountId}, {characterGroupId})");
+            //Debug.Log($"NetworkManagerServer.AcceptCharacterGroupInvite({accountId}, {characterGroupId})");
+
             characterGroupServiceServer.AcceptCharacterGroupInvite(accountId, characterGroupId);
         }
 
         public void DeclineCharacterGroupInvite(int accountId) {
-            Debug.Log($"NetworkManagerServer.DeclineCharacterGroupInvite({accountId})");
+            //Debug.Log($"NetworkManagerServer.DeclineCharacterGroupInvite({accountId})");
+
             characterGroupServiceServer.DeclineCharacterGroupInvite(accountId);
         }
 
         public void AdvertiseAddCharacterToGroup(int playerCharacterId, CharacterGroup characterGroup) {
-            Debug.Log($"NetworkManagerServer.AdvertiseAddCharacterToGroup({playerCharacterId}, {characterGroup.characterGroupId})");
+            //Debug.Log($"NetworkManagerServer.AdvertiseAddCharacterToGroup({playerCharacterId}, {characterGroup.characterGroupId})");
 
             networkController.AdvertiseAddCharacterToGroup(playerCharacterId, characterGroup);
         }
 
         public void AdvertiseCharacterGroup(int accountId, CharacterGroup characterGroup) {
-            Debug.Log($"NetworkManagerServer.AdvertiseCharacterGroup({accountId}, {characterGroup.characterGroupId})");
+            Debug.Log($"NetworkManagerServer.AdvertiseCharacterGroup(accountId: {accountId}, groupId: {characterGroup.characterGroupId})");
 
             networkController.AdvertiseCharacterGroup(accountId, characterGroup);
         }
@@ -1192,7 +1196,7 @@ namespace AnyRPG {
         }
 
         public void AdvertiseRemoveCharacterFromGroup(int characterId, CharacterGroup characterGroup) {
-            Debug.Log($"NetworkManagerServer.AdvertiseRemoveCharacterFromGroup({characterId}, {characterGroup.characterGroupId})");
+            //Debug.Log($"NetworkManagerServer.AdvertiseRemoveCharacterFromGroup({characterId}, {characterGroup.characterGroupId})");
 
             networkController.AdvertiseRemoveCharacterFromGroup(characterId, characterGroup);
         }
@@ -1202,12 +1206,13 @@ namespace AnyRPG {
         }
 
         public void RequestInviteCharacterToGroup(int accountId, int invitedCharacterId) {
-            Debug.Log($"NetworkManagerServer.RequestInviteCharacterToGroup({accountId}, {invitedCharacterId})");
+            //Debug.Log($"NetworkManagerServer.RequestInviteCharacterToGroup({accountId}, {invitedCharacterId})");
+
             characterGroupServiceServer.RequestInviteCharacterToGroup(accountId, invitedCharacterId);
         }
 
         public void AdvertiseCharacterGroupInvite(int invitedCharacterId, CharacterGroup characterGroup, string leaderName) {
-            Debug.Log($"NetworkManagerServer.AdvertiseCharacterGroupInvite({invitedCharacterId}, {characterGroup.characterGroupId}, {leaderName})");
+            //Debug.Log($"NetworkManagerServer.AdvertiseCharacterGroupInvite({invitedCharacterId}, {characterGroup.characterGroupId}, {leaderName})");
 
             networkController.AdvertiseCharacterGroupInvite(invitedCharacterId, characterGroup, leaderName);
         }
@@ -1222,6 +1227,14 @@ namespace AnyRPG {
 
         public void AdvertiseDeclineCharacterGroupInvite(int leaderAccountId, string decliningPlayerName) {
             networkController.AdvertiseDeclineCharacterGroupInvite(leaderAccountId, decliningPlayerName);
+        }
+
+        public void AdvertisePromoteLeader(CharacterGroup characterGroup, int newLeaderCharacterId) {
+            networkController.AdvertisePromoteGroupLeader(characterGroup, newLeaderCharacterId);
+        }
+
+        public void RequestPromoteCharacterToLeader(int accountId, int characterId) {
+            characterGroupServiceServer.RequestPromoteCharacterToLeader(accountId, characterId);
         }
     }
 

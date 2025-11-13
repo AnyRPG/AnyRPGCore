@@ -72,6 +72,7 @@ namespace AnyRPG {
         private CharacterPetManager characterPetManager = null;
         private CharacterFactionManager characterFactionManager = null;
         private CharacterEquipmentManager characterEquipmentManager = null;
+        private CharacterGroupManager characterGroupManager = null;
         private CharacterStats characterStats = null;
         private CharacterCurrencyManager characterCurrencyManager = null;
         private CharacterRecipeManager characterRecipeManager = null;
@@ -462,6 +463,7 @@ namespace AnyRPG {
         public CharacterSkillManager CharacterSkillManager { get => characterSkillManager; }
         public CharacterFactionManager CharacterFactionManager { get => characterFactionManager; set => characterFactionManager = value; }
         public CharacterEquipmentManager CharacterEquipmentManager { get => characterEquipmentManager; set => characterEquipmentManager = value; }
+        public CharacterGroupManager CharacterGroupManager { get => characterGroupManager; set => characterGroupManager = value; }
         public CharacterInventoryManager CharacterInventoryManager { get => characterInventoryManager; }
         public CharacterQuestLog CharacterQuestLog { get => characterQuestLog; }
         public CharacterPetManager CharacterPetManager { get => characterPetManager; set => characterPetManager = value; }
@@ -509,6 +511,7 @@ namespace AnyRPG {
             characterInventoryManager = new CharacterInventoryManager(this, systemGameManager);
             characterEquipmentManager = new CharacterEquipmentManager(this, systemGameManager);
             characterFactionManager = new CharacterFactionManager(this, systemGameManager);
+            characterGroupManager = new CharacterGroupManager(this, systemGameManager);
             characterPetManager = new CharacterPetManager(this, systemGameManager);
             characterCombat = new CharacterCombat(this, systemGameManager);
             characterSkillManager = new CharacterSkillManager(this, systemGameManager);
@@ -1091,6 +1094,7 @@ namespace AnyRPG {
             characterPetManager = null;
             characterFactionManager = null;
             characterEquipmentManager = null;
+            characterGroupManager = null;
             characterStats = null;
             characterCurrencyManager = null;
             characterRecipeManager = null;
@@ -1213,6 +1217,8 @@ namespace AnyRPG {
             if (characterRequestData.saveData != null) {
                 characterSaveManager.SetSaveData(characterRequestData);
             }
+
+            characterGroupManager.SetGroupId(characterRequestData.characterGroupId);
 
             characterInventoryManager.PerformSetupActivities();
 
