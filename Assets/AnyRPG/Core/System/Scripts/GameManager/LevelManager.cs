@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -51,6 +52,7 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            systemEventManager.OnStopServer += HandleStopServer;
         }
 
         public override void SetGameManagerReferences() {
@@ -61,6 +63,12 @@ namespace AnyRPG {
             cameraManager = systemGameManager.CameraManager;
             playerManager = systemGameManager.PlayerManager;
             systemEventManager = systemGameManager.SystemEventManager;
+        }
+
+        private void HandleStopServer() {
+            if (IsMainMenu() == false) {
+                LoadMainMenu(false);
+            }
         }
 
         public void PerformSetupActivities() {

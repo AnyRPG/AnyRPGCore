@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
@@ -417,7 +418,7 @@ namespace AnyRPG {
 
         public int GetUnspawnedPlayerLevel(int defaultLevel) {
             if (playerManagerServer.PlayerCharacterMonitors.Count > 0) {
-                return playerManagerServer.PlayerCharacterMonitors[0].playerCharacterSaveData.SaveData.PlayerLevel;
+                return playerManagerServer.PlayerCharacterMonitors.First().Value.playerCharacterSaveData.SaveData.PlayerLevel;
             }
             return defaultLevel;
         }

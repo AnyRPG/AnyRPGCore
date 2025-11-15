@@ -223,6 +223,7 @@ namespace AnyRPG {
         }
 
         public void UpdatePowerResourceList() {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.UpdatePowerResourceList()");
 
             // since this is just a list and contains no values, it is safe to overwrite
             powerResourceList = new List<PowerResource>();
@@ -238,6 +239,7 @@ namespace AnyRPG {
                 if (statProvider != null) {
                     foreach (PowerResource powerResource in statProvider.PowerResourceList) {
                         if (!powerResourceList.Contains(powerResource)) {
+                            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.UpdatePowerResourceList(): adding resource: {powerResource.DisplayName}");
                             powerResourceList.Add(powerResource);
                         }
                     }

@@ -707,6 +707,10 @@ namespace AnyRPG {
             clientConnector.AdvertiseDisbandCharacterGroup(characterGroup);
         }
 
+        public override void AdvertiseRenameCharacterInGroup(CharacterGroup characterGroup, int characterId, string newName) {
+            clientConnector.AdvertiseRenameCharacterInGroup(characterGroup, characterId, newName);
+        }
+
         public override void AdvertisePlayerNameNotAvailable(int accountId) {
             clientConnector.AdvertisePlayerNameNotAvailable(accountId);
         }
@@ -736,7 +740,7 @@ namespace AnyRPG {
         }
 
         public override void AdvertiseLoadScene(string sceneResourceName, int accountId) {
-            Debug.Log($"FishNetNetworkController.AdvertiseLoadScene({sceneResourceName}, {accountId})");
+            //Debug.Log($"FishNetNetworkController.AdvertiseLoadScene({sceneResourceName}, {accountId})");
 
             clientConnector.AdvertiseLoadSceneServer(sceneResourceName, accountId);
         }

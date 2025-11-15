@@ -1114,8 +1114,8 @@ namespace AnyRPG {
 
             // enable things that track the character
             // initialize unit frame
-            playerUnitFramePanel.SetTarget(playerManager.ActiveUnitController.NamePlateController);
-            floatingCastBarController.SetTarget(playerManager.ActiveUnitController.NamePlateController as UnitNamePlateController);
+            playerUnitFramePanel.SetTarget(playerManager.ActiveUnitController);
+            floatingCastBarController.SetTarget(playerManager.ActiveUnitController);
             (statusEffectWindow.CloseableWindowContents as StatusEffectWindowPanel).SetTarget(playerManager.ActiveUnitController);
 
             // intialize mini map
@@ -1449,7 +1449,7 @@ namespace AnyRPG {
                     RemoveNavigableInterfaceElement(playerUnitFramePanel);
                     RemoveNavigableInterfaceElement(focusUnitFramePanel);
                     RemoveNavigableInterfaceElement(groupUnitFramesPanel);
-                    if (focusUnitFramePanel.UnitNamePlateController == null) {
+                    if (focusUnitFramePanel.UnitController == null) {
                         focusUnitFramePanel.ClearTarget();
                     }
                     RemoveNavigableInterfaceElement(messageFeedManager.MessageFeedWindow.CloseableWindowContents as NavigableInterfaceElement);

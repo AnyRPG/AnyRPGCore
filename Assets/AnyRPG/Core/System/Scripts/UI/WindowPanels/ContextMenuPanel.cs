@@ -40,9 +40,7 @@ namespace AnyRPG {
         private CharacterGroupServiceClient characterGroupServiceClient = null;
         private ContextMenuService contextMenuService = null;
         private InspectCharacterService inspectCharacterService = null;
-        private NetworkManagerClient networkManagerClient = null;
         private PlayerManager playerManager = null;
-        private UIManager uIManager = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -50,8 +48,6 @@ namespace AnyRPG {
             contextMenuService = systemGameManager.ContextMenuService;
             inspectCharacterService = systemGameManager.InspectCharacterService;
             playerManager = systemGameManager.PlayerManager;
-            uIManager = systemGameManager.UIManager;
-            networkManagerClient = systemGameManager.NetworkManagerClient;
         }
 
         public override void ProcessOpenWindowNotification() {
@@ -61,7 +57,7 @@ namespace AnyRPG {
             if (contextMenuService.TargetUnitController != null) {
                 SetupButtons();
             } else {
-                uIManager.contextMenuWindow.CloseWindow();
+                contextMenuService.CloseContextMenu();
             }
         }
 
@@ -92,37 +88,42 @@ namespace AnyRPG {
             uINavigationController.UpdateNavigationList();
 
             if (uINavigationController.ActiveNavigableButtonCount == 0) {
-                uIManager.contextMenuWindow.CloseWindow();
+                contextMenuService.CloseContextMenu();
             }
         }
 
         private void SetupInviteButton() {
             if (contextMenuService.TargetUnitController == playerManager.UnitController) {
                 // invite button should not be available if the target is the player
+                //Debug.Log("ContextMenuPanel.SetupInviteButton() target is player, disabling invite button");
                 inviteButton.gameObject.SetActive(false);
                 return;
             }
 
             if (systemGameManager.GameMode == GameMode.Local) {
                 // can only invite in network mode
+                //Debug.Log("ContextMenuPanel.SetupInviteButton() game mode is local, disabling invite button");
                 inviteButton.gameObject.SetActive(false);
                 return;
             }
 
             if (contextMenuService.TargetUnitController.UnitControllerMode != UnitControllerMode.Player) {
                 // can only invite players
+                //Debug.Log("ContextMenuPanel.SetupInviteButton() target is not player, disabling invite button");
                 inviteButton.gameObject.SetActive(false);
                 return;
             }
 
             if (Faction.RelationWith(contextMenuService.TargetUnitController, playerManager.UnitController) < 0) {
                 // can only invite neutral or better
+                //Debug.Log("ContextMenuPanel.SetupInviteButton() target faction relationship is negative, disabling invite button");
                 inviteButton.gameObject.SetActive(false);
                 return;
             }
 
             if (contextMenuService.TargetUnitController.CharacterGroupManager.IsInGroup()) {
                 // target is already in a group
+                //Debug.Log("ContextMenuPanel.SetupInviteButton() target is already in a group, disabling invite button");
                 inviteButton.gameObject.SetActive(false);
                 return;
             }
@@ -155,7 +156,7 @@ namespace AnyRPG {
             }
 
             // check if the target is in the group
-            if (characterGroup.CharacterIdList[UnitControllerMode.Player].Contains(contextMenuService.TargetUnitController.CharacterId) == false) {
+            if (characterGroup.CharacterIdList[UnitControllerMode.Player].ContainsKey(contextMenuService.TargetUnitController.CharacterId) == false) {
                 // target is not in the group
                 promoteButton.gameObject.SetActive(false);
                 return;
@@ -194,7 +195,7 @@ namespace AnyRPG {
             }
 
             // check if the target is in the group
-            if (characterGroup.CharacterIdList[UnitControllerMode.Player].Contains(contextMenuService.TargetUnitController.CharacterId) == false) {
+            if (characterGroup.CharacterIdList[UnitControllerMode.Player].ContainsKey(contextMenuService.TargetUnitController.CharacterId) == false) {
                 // target is not in the group
                 kickButton.gameObject.SetActive(false);
                 return;
@@ -264,52 +265,52 @@ namespace AnyRPG {
             //Debug.Log("ContextMenuPanel.Inspect()");
 
             inspectCharacterService.SetTargetUnitController(systemGameManager.ContextMenuService.TargetUnitController);
-            uIManager.contextMenuWindow.CloseWindow();
+            contextMenuService.CloseContextMenu();
         }
 
         public void Trade() {
             Debug.Log("ContextMenuPanel.Trade()");
-            uIManager.contextMenuWindow.CloseWindow();
+            contextMenuService.CloseContextMenu();
         }
 
         public void Message() {
             Debug.Log("ContextMenuPanel.Message()");
-            uIManager.contextMenuWindow.CloseWindow();
+            contextMenuService.CloseContextMenu();
         }
 
         public void Invite() {
-            Debug.Log("ContextMenuPanel.Invite()");
+            //Debug.Log("ContextMenuPanel.Invite()");
 
             characterGroupServiceClient.RequestInviteCharacterToGroup(contextMenuService.TargetUnitController.CharacterId);
-            uIManager.contextMenuWindow.CloseWindow();
+            contextMenuService.CloseContextMenu();
         }
 
         public void Kick() {
-            Debug.Log("ContextMenuPanel.Kick()");
+            //Debug.Log("ContextMenuPanel.Kick()");
 
             characterGroupServiceClient.RequestRemoveCharacterFromGroup(contextMenuService.TargetUnitController.CharacterId);
-            uIManager.contextMenuWindow.CloseWindow();
+            contextMenuService.CloseContextMenu();
         }
 
         public void Promote() {
-            Debug.Log("ContextMenuPanel.Promote()");
+            //Debug.Log("ContextMenuPanel.Promote()");
 
             characterGroupServiceClient.RequestPromoteCharacterToLeader(contextMenuService.TargetUnitController.CharacterId);
-            uIManager.contextMenuWindow.CloseWindow();
+            contextMenuService.CloseContextMenu();
         }
 
         public void Disband() {
-            Debug.Log("ContextMenuPanel.Disband()");
+            //Debug.Log("ContextMenuPanel.Disband()");
 
             characterGroupServiceClient.RequestDisbandGroup();
-            uIManager.contextMenuWindow.CloseWindow();
+            contextMenuService.CloseContextMenu();
         }
 
         public void Leave() {
-            Debug.Log("ContextMenuPanel.Leave()");
+            //Debug.Log("ContextMenuPanel.Leave()");
 
             characterGroupServiceClient.RequestLeaveGroup();
-            uIManager.contextMenuWindow.CloseWindow();
+            contextMenuService.CloseContextMenu();
         }
 
     }

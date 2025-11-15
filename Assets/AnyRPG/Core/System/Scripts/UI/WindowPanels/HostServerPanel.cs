@@ -78,9 +78,6 @@ namespace AnyRPG {
             }
 
             uIManager.hostServerWindow.CloseWindow();
-            if (levelManager.IsMainMenu() == false) {
-                levelManager.LoadMainMenu(false);
-            }
         }
 
         public void StartServer() {
@@ -103,6 +100,7 @@ namespace AnyRPG {
         }
 
         public void HandleStopServer() {
+
             serverStatusText.text = "Server Status: Offline";
             startServerButton.Button.interactable = true;
             stopServerButton.Button.interactable = false;

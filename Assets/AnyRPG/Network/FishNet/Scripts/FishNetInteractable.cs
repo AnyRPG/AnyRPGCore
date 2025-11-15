@@ -89,15 +89,19 @@ namespace AnyRPG {
         }
 
         public override void OnStopServer() {
-            //Debug.Log($"{gameObject.name}.FishNetInteractable.OnStopServer()");
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.OnStopServer() {GetInstanceID()}");
 
             base.OnStopServer();
 
             if (SystemGameManager.IsShuttingDown == true) {
                 return;
             }
+
+            // enabling this here is needed because if a level unload occurs on the server as a result of the last player leaving the scene,
+            // the object will not have Despawn() called on it.  Despawn() is only triggered by client level unloads, and stop server calls
+            // now that all interactables can respond to level unloads on the server, this should no longer be needed
             //UnsubscribeFromServerInteractableEvents();
-            //systemGameManager.NetworkManagerServer.ProcessStopServer(unitController);
+            //UnsubscribeFromSystemEvents();
         }
 
         private void SubscribeToSystemEvents() {
@@ -109,6 +113,8 @@ namespace AnyRPG {
         }
 
         private void HandleBeforeStopServer() {
+            //Debug.Log($"FishNetInteractable.HandleBeforeStopServer() {GetInstanceID()}");
+
             // stopping the server results in the objects being destroyed without levelUnload being called, which is the usual way to initiate cleanup
             UnsubscribeFromSystemEvents();
             UnsubscribeFromServerInteractableEvents();
@@ -132,7 +138,7 @@ namespace AnyRPG {
             //interactable.InteractableEventController.OnAnimatedObjectChooseMovement += HandleAnimatedObjectChooseMovementServer;
             interactable.OnInteractionWithOptionStarted += HandleInteractionWithOptionStarted;
             interactable.InteractableEventController.OnPlayDialogNode += HandlePlayDialogNode;
-            interactable.OnInteractableDisable += HandleInteractableDisableServer;
+            interactable.OnInteractableResetSettings += HandleInteractableResetSettingsServer;
             interactable.InteractableEventController.OnDropLoot += HandleDropLoot;
             interactable.InteractableEventController.OnRemoveDroppedItem += HandleRemoveDroppedItem;
             interactable.InteractableEventController.OnStopMovementSound += HandleStopMovementSound;
@@ -148,7 +154,7 @@ namespace AnyRPG {
             eventRegistrationComplete = true;
         }
 
-        public void HandleInteractableDisableServer() {
+        public void HandleInteractableResetSettingsServer() {
             UnsubscribeFromServerInteractableEvents();
             UnsubscribeFromSystemEvents();
         }
@@ -158,13 +164,13 @@ namespace AnyRPG {
                 return;
             }
             if (eventRegistrationComplete == false) {
-                //Debug.Log($"{gameObject.name}.FishNetInteractable.UnsubscribeFromServerInteractableEvents(): not registered");
+                Debug.Log($"{gameObject.name}.FishNetInteractable.UnsubscribeFromServerInteractableEvents(): not registered");
                 return;
             }
             //interactable.InteractableEventController.OnAnimatedObjectChooseMovement -= HandleAnimatedObjectChooseMovementServer;
             interactable.OnInteractionWithOptionStarted -= HandleInteractionWithOptionStarted;
             interactable.InteractableEventController.OnPlayDialogNode -= HandlePlayDialogNode;
-            interactable.OnInteractableDisable -= HandleInteractableDisableServer;
+            interactable.OnInteractableResetSettings -= HandleInteractableResetSettingsServer;
             interactable.InteractableEventController.OnDropLoot -= HandleDropLoot;
             interactable.InteractableEventController.OnRemoveDroppedItem -= HandleRemoveDroppedItem;
             interactable.InteractableEventController.OnStopMovementSound -= HandleStopMovementSound;
@@ -337,7 +343,7 @@ namespace AnyRPG {
             if (sourceUnitController != null) {
                 targetNetworkCharacterUnit = sourceUnitController.GetComponent<FishNetUnitController>();
             }
-            HandleInteractionWithOptionStartedClient(targetNetworkCharacterUnit, componentIndex, choiceIndex);
+            HandleInteractionWithOptionStartedClient(targetNetworkCharacterUnit.Owner, targetNetworkCharacterUnit, componentIndex, choiceIndex);
         }
 
         /// <summary>
@@ -346,8 +352,8 @@ namespace AnyRPG {
         /// <param name="sourceNetworkCharacterUnit"></param>
         /// <param name="componentIndex"></param>
         /// <param name="choiceIndex"></param>
-        [ObserversRpc]
-        public void HandleInteractionWithOptionStartedClient(FishNetUnitController sourceNetworkCharacterUnit, int componentIndex, int choiceIndex) {
+        [TargetRpc]
+        public void HandleInteractionWithOptionStartedClient(NetworkConnection networkConnection, FishNetUnitController sourceNetworkCharacterUnit, int componentIndex, int choiceIndex) {
             //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleInteractionWithOptionStartedClient({(sourceNetworkCharacterUnit == null ? "null" : sourceNetworkCharacterUnit.gameObject.name)}, {componentIndex}, {choiceIndex})");
 
             UnitController sourceUnitController = null;

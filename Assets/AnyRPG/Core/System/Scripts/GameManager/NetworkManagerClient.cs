@@ -179,6 +179,11 @@ namespace AnyRPG {
         public void ProcessStopConnection() {
             //Debug.Log($"NetworkManagerClient.ProcessStopConnection()");
 
+            if (systemGameManager.DisconnectingNetworkForShutdown == true) {
+                systemGameManager.ExitGame();
+                return;
+            }
+
             systemGameManager.SetGameMode(GameMode.Local);
             OnClientConnectionStopped();
             if (levelManager.GetActiveSceneNode() != systemConfigurationManager.MainMenuSceneNode) {
@@ -657,13 +662,13 @@ namespace AnyRPG {
         }
 
         public void ProcessCharacterJoinGroup(int playerCharacterId, CharacterGroup characterGroup) {
-            Debug.Log($"NetworkManagerClient.ProcessCharacterJoinGroup({playerCharacterId}, {characterGroup.characterGroupId})");
+            //Debug.Log($"NetworkManagerClient.ProcessCharacterJoinGroup({playerCharacterId}, {characterGroup.characterGroupId})");
 
             characterGroupServiceClient.ProcessJoinGroup(playerCharacterId, characterGroup);
         }
 
         public void ProcessLoadCharacterGroup(CharacterGroup characterGroup) {
-            Debug.Log($"NetworkManagerClient.ProcessCharacterJoinGroup({characterGroup.characterGroupId})");
+            //Debug.Log($"NetworkManagerClient.ProcessCharacterJoinGroup({characterGroup.characterGroupId})");
 
             characterGroupServiceClient.ProcessLoadGroup(characterGroup);
         }
@@ -714,6 +719,10 @@ namespace AnyRPG {
 
         public void RequestPromoteCharacterToLeader(int characterId) {
             networkController.RequestPromoteCharacterToLeader(characterId);
+        }
+
+        public void ProcessRenameCharacterInGroup(int characterGroupId, int characterId, string newName) {
+            characterGroupServiceClient.ProcessRenameCharacterInGroup(characterGroupId, characterId, newName);
         }
     }
 

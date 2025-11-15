@@ -693,7 +693,7 @@ namespace AnyRPG {
 
         public void HandleNameChange(string newName) {
             systemEventManager.NotifyOnNameChange(newName);
-            uIManager.PlayerUnitFramePanel.SetTarget(unitController.NamePlateController);
+            uIManager.PlayerUnitFramePanel.SetTarget(unitController);
         }
 
         public void HandleUnsetGamepadActionButton(int buttonIndex) {

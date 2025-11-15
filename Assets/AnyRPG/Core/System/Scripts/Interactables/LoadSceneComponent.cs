@@ -19,8 +19,17 @@ namespace AnyRPG {
             base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
 
             //levelManager.LoadLevel(LoadSceneProps.SceneName);
-            playerManagerServer.LoadScene(LoadSceneProps.SceneName, sourceUnitController);
+            // give until the end of the frame so that client interactions can finish before the scene changes
+            interactable.StartCoroutine(LoadSceneDelay(LoadSceneProps.SceneName, sourceUnitController));
+            //playerManagerServer.LoadScene(LoadSceneProps.SceneName, sourceUnitController);
             return true;
+        }
+
+        public IEnumerator LoadSceneDelay(string sceneName, UnitController sourceUnitController) {
+            //Debug.Log($"{interactable.gameObject.name}.LoadSceneComponent.LoadSceneDelay()");
+            yield return new WaitForEndOfFrame();
+            //levelManager.LoadLevel(sceneName);
+            playerManagerServer.LoadScene(sceneName, sourceUnitController);
         }
 
     }

@@ -585,6 +585,7 @@ namespace AnyRPG {
         }
 
         public override void ConfigureUnitFrame(UnitFramePanelBase unitFramePanelBase, bool previewCameraExists) {
+            //Debug.Log($"{gameObject.name}.UnitController.ConfigureUnitFrame()");
 
             if (unitProfile != null && (unitProfile.UnitPrefabProps.NamePlateProps.UseSnapShot == false || previewCameraExists == false)) {
                 unitFramePanelBase.ConfigurePortrait(unitProfile.Icon);
@@ -970,7 +971,7 @@ namespace AnyRPG {
         }
 
         public void Despawn(float delayTime = 0f, bool addSystemDefaultTime = true, bool forceDespawn = false) {
-            //Debug.Log($"{gameObject.name}.UnitController.Despawn({delayTime}, {addSystemDefaultTime}, {forceDespawn})");
+            //Debug.Log($"{gameObject.name}.UnitController.Despawn({delayTime}, {addSystemDefaultTime}, {forceDespawn}) {GetInstanceID()}");
 
             if (initialized == false) {
                 return;
@@ -1401,7 +1402,7 @@ namespace AnyRPG {
         }
 
         public void SetModelReady() {
-            //Debug.Log($"{gameObject.name}.UnitController.SetModelReady()");
+            //Debug.Log($"{gameObject.name}.UnitController.SetModelReady() {GetInstanceID()}");
 
             unitMaterialController.ProcessSetModelReady();
             OnCameraTargetReady();
@@ -2168,7 +2169,12 @@ namespace AnyRPG {
                 target = newTarget;
             }
             UnitEventController.NotifyOnSetTarget(target);
+            target.OnInteractableResetSettings += HandleTargetResetSettings;
             target.OnInteractableDisable += HandleTargetDisable;
+        }
+
+        public void HandleTargetResetSettings() {
+            ClearTarget();
         }
 
         public void HandleTargetDisable() {
@@ -2186,6 +2192,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.UnitController.ClearTarget()");
 
             if (target != null) {
+                target.OnInteractableResetSettings -= HandleTargetResetSettings;
                 target.OnInteractableDisable -= HandleTargetDisable;
             }
             Interactable oldTarget = target;

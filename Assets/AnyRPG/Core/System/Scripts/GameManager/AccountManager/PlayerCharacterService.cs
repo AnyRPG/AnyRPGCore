@@ -16,6 +16,9 @@ namespace AnyRPG {
         /// </summary>
         private Dictionary<string, int> playerNameMap = new Dictionary<string, int>();
 
+        /// <summary>
+        /// playerCharacterId, playerName
+        /// </summary>
         private Dictionary<int, string> playerNameLookupMap = new Dictionary<int, string>();
 
         // game manager references

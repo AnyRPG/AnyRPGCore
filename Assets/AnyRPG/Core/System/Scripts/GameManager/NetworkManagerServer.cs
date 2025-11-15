@@ -421,6 +421,8 @@ namespace AnyRPG {
             if (loggedInAccounts.ContainsKey(accountId) == false) {
                 return;
             }
+
+            // remove the player from any lobby games
             int clientId = loggedInAccounts[accountId].clientId;
             if (lobbyGameAccountLookup.ContainsKey(accountId) == true) {
                 int gameId = lobbyGameAccountLookup[accountId];
@@ -699,7 +701,7 @@ namespace AnyRPG {
         }
 
         public void AdvertiseLoadScene(UnitController sourceUnitController, string sceneName, int accountId) {
-            Debug.Log($"NetworkManagerServer.AdvertiseLoadScene({sourceUnitController.gameObject.name}, {sceneName}, {accountId})");
+            //Debug.Log($"NetworkManagerServer.AdvertiseLoadScene({sourceUnitController.gameObject.name}, {sceneName}, {accountId})");
             
             //string oldSceneName = sourceUnitController.gameObject.scene.name;
             //int oldSceneHandle = sourceUnitController.gameObject.scene.handle;
@@ -815,6 +817,7 @@ namespace AnyRPG {
 
         public void HandleSceneUnloadStart(int sceneHandle, string sceneName) {
             //Debug.Log($"NetworkManagerServer.HandleSceneUnloadStart({sceneName}, {sceneHandle})");
+
             systemEventManager.NotifyOnLevelUnloadServer(sceneHandle, sceneName);
         }
 
@@ -1092,6 +1095,15 @@ namespace AnyRPG {
         public void Logout(int accountId) {
             //Debug.Log($"NetworkManagerServer.Logout({accountId})");
 
+            // remove the player from any character groups
+            int characterId = -1;
+            if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId)) {
+                characterId = playerManagerServer.PlayerCharacterMonitors[accountId].playerCharacterSaveData.PlayerCharacterId;
+            }
+            if (characterId != -1) {
+                characterGroupServiceServer.RemoveCharacterFromGroup(characterId);
+            }
+
             playerManagerServer.StopMonitoringPlayerUnit(accountId);
             KickPlayer(accountId);
             ProcessClientLogout(accountId);
@@ -1133,7 +1145,7 @@ namespace AnyRPG {
         }
 
         public void RequestLoadPlayerCharacter(int accountId, int playerCharacterId) {
-            Debug.Log($"NetworkManagerServer.RequestLoadPlayerCharacter({accountId}, {playerCharacterId})");
+            //Debug.Log($"NetworkManagerServer.RequestLoadPlayerCharacter({accountId}, {playerCharacterId})");
 
             string sceneName = string.Empty;
             if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId) == false) {
@@ -1186,7 +1198,7 @@ namespace AnyRPG {
         }
 
         public void AdvertiseCharacterGroup(int accountId, CharacterGroup characterGroup) {
-            Debug.Log($"NetworkManagerServer.AdvertiseCharacterGroup(accountId: {accountId}, groupId: {characterGroup.characterGroupId})");
+            //Debug.Log($"NetworkManagerServer.AdvertiseCharacterGroup(accountId: {accountId}, groupId: {characterGroup.characterGroupId})");
 
             networkController.AdvertiseCharacterGroup(accountId, characterGroup);
         }
@@ -1235,6 +1247,10 @@ namespace AnyRPG {
 
         public void RequestPromoteCharacterToLeader(int accountId, int characterId) {
             characterGroupServiceServer.RequestPromoteCharacterToLeader(accountId, characterId);
+        }
+
+        public void AdvertiseRenameCharacterInGroup(CharacterGroup characterGroup, int characterId, string newName) {
+            networkController.AdvertiseRenameCharacterInGroup(characterGroup, characterId, newName);
         }
     }
 

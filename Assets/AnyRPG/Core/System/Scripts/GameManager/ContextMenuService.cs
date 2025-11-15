@@ -31,6 +31,18 @@ namespace AnyRPG {
             uIManager.contextMenuWindow.RectTransform.position = new Vector3(mousePosition.x, mousePosition.y);
             uIManager.contextMenuWindow.OpenWindow();
         }
+
+        public void ClearContextMenuTarget() {
+            //Debug.Log($"ContextMenuService.ClearContextMenuTarget()");
+            targetUnitController = null;
+        }
+
+        public void CloseContextMenu() {
+            //Debug.Log($"ContextMenuService.CloseContextMenu()");
+            ClearContextMenuTarget();
+            uIManager.contextMenuWindow.CloseWindow();
+        }
+        
     }
 
 }

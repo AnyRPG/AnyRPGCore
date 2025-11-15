@@ -85,7 +85,7 @@ namespace AnyRPG {
         }
 
         public override void OnStopServer() {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStopServer()");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStopServer() {GetInstanceID()}");
 
             base.OnStopServer();
             if (SystemGameManager.IsShuttingDown == true) {

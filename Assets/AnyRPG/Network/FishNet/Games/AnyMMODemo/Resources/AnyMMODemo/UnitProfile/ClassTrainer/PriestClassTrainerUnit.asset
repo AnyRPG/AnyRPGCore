@@ -151,7 +151,7 @@ MonoBehaviour:
   factionName: 
   unitTypeName: 
   characterRaceName: 
-  characterClassName: 
+  characterClassName: Priest
   classSpecializationName: 
   spawnDead: 0
   preventAutoDespawn: 0

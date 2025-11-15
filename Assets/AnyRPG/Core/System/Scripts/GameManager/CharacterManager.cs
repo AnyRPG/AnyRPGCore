@@ -1,14 +1,12 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace AnyRPG {
     public class CharacterManager : ConfiguredClass {
+
+        public event Action<UnitController> OnCompleteUnitControllerInit = delegate { };
 
         // keep track of which request spawned something
         //private int clientSpawnRequestIdCounter;
@@ -81,20 +79,6 @@ namespace AnyRPG {
         }
 
         /*
-        public int GetClientSpawnRequestId() {
-            int returnValue = clientSpawnRequestIdCounter;
-            clientSpawnRequestIdCounter++;
-            return returnValue;
-        }
-        */
-
-        /*
-        public int GetServerSpawnRequestId() {
-            return serverSpawnRequestId++;
-        }
-        */
-
-        /*
         private void SetupUnitSpawnRequest(CharacterRequestData characterRequestData) {
             //Debug.Log($"CharacterManager.SetupUnitSpawnRequest({characterRequestData.characterConfigurationRequest.unitProfile.resourceName})");
 
@@ -146,6 +130,8 @@ namespace AnyRPG {
             if (networkManagerServer.ServerModeActive == true) {
                 return;
             }
+
+
             // add default case because network disconnect could happen before initialization is completed
             unitController.Despawn(0f, false, true);
 
@@ -208,7 +194,7 @@ namespace AnyRPG {
                 //Debug.Log($"CharacterManager.CompleteModelRequest({characterRequestData.spawnRequestId}, {isOwner}) removing character request id {characterRequestData.spawnRequestId}");
                 //unitSpawnRequests.Remove(usedSpawnRequestId);
             }
-
+            OnCompleteUnitControllerInit(unitController);
         }
 
         public void ConfigureUnitController(UnitController unitController) {

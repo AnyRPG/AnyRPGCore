@@ -67,6 +67,7 @@ namespace AnyRPG {
         protected CastTargettingManager castTargettingManager = null;
         protected SaveManager saveManager = null;
         protected InteractionManager interactionManager = null;
+        protected ContextMenuService contextMenuService = null;
 
         public List<Interactable> Interactables { get => interactables; }
         public RaycastHit MouseOverhit { get => mouseOverhit; set => mouseOverhit = value; }
@@ -87,6 +88,7 @@ namespace AnyRPG {
             castTargettingManager = systemGameManager.CastTargettingManager;
             saveManager = systemGameManager.SaveManager;
             interactionManager = systemGameManager.InteractionManager;
+            contextMenuService = systemGameManager.ContextMenuService;
         }
 
         public void AddInteractable(Interactable interactable) {
@@ -482,10 +484,17 @@ namespace AnyRPG {
                 return;
             }
 
-            // check if the right mouse button clicked on something and interact with it
-            if (inputManager.rightMouseButtonClicked && !EventSystem.current.IsPointerOverGameObject()) {
-                //Debug.Log($"{gameObject.name}.PlayerController.HandleRightMouseClick(): !EventSystem.current.IsPointerOverGameObject() == true!!!");
+            // Check if the left mouse button clicked on an interactable and focus it
+            if (!inputManager.rightMouseButtonClicked) {
+                return;
+            }
 
+            //Debug.Log($"{gameObject.name}.PlayerController.HandleRightMouseClick() mouse is in screen");
+
+            // check if the right mouse button clicked on something and interact with it
+            if (EventSystem.current.IsPointerOverGameObject() == false) {
+                //Debug.Log($"{gameObject.name}.PlayerController.HandleRightMouseClick() right mouse button clicked and not over UI");
+                contextMenuService.CloseContextMenu();
 
                 if (mouseOverInteractable != null && mouseOverInteractable.IsTrigger == false) {
                     //Debug.Log("setting interaction target to " + hit.collider.gameObject.name);
@@ -574,6 +583,7 @@ namespace AnyRPG {
 
         private void HandleLeftMouseClick() {
             //Debug.Log("PlayerController.HandleLeftMouseClick()");
+
             if (MouseOutsideScreen()) {
                 return;
             }
@@ -588,10 +598,14 @@ namespace AnyRPG {
                 return;
             }
 
+            //Debug.Log("PlayerController.HandleLeftMouseClick()");
+
             if (EventSystem.current.IsPointerOverGameObject() && !namePlateManager.MouseOverNamePlate()) {
                 //Debug.Log("PlayerController.HandleLeftMouseClick(): clicked over UI and not nameplate.  exiting");
                 return;
             }
+
+            contextMenuService.CloseContextMenu();
 
             //if (inputManager.leftMouseButtonClicked && !EventSystem.current.IsPointerOverGameObject()) {
             if (mouseOverInteractable == null && !namePlateManager.MouseOverNamePlate()) {
@@ -989,13 +1003,11 @@ namespace AnyRPG {
             if (newTarget == null) {
                 return;
             }
-            NamePlateUnit namePlateUnit = (newTarget as NamePlateUnit);
-            if (namePlateUnit?.NamePlateController != null && namePlateUnit.NamePlateController.SuppressNamePlate == false) {
+            contextMenuService.CloseContextMenu();
+            if (newTarget is UnitController) {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is not null");
-                uIManager.FocusUnitFramePanel.SetTarget(namePlateUnit.NamePlateController);
-                namePlateManager.SetFocus(namePlateUnit);
-            } else {
-                //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is null ???!?");
+                uIManager.FocusUnitFramePanel.SetTarget(newTarget as UnitController);
+                namePlateManager.SetFocus(newTarget as UnitController);
             }
             newTarget?.PhysicalTarget.SetTargeted();
         }
@@ -1093,7 +1105,7 @@ namespace AnyRPG {
         public void StopInteract() {
             // the idea of this code is that it will allow us to keep an NPC focused if we back out of range while its interactable popup closes
             // if we don't have anything focused, then we were interacting with someting environmental and definitely want to clear that because it can lead to a hidden target being set
-            if (uIManager.FocusUnitFramePanel.UnitNamePlateController == null && playerManager.UnitController != null) {
+            if (uIManager.FocusUnitFramePanel.UnitController == null && playerManager.UnitController != null) {
                 playerManager.UnitController.ClearTarget();
             }
         }

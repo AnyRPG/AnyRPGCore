@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace AnyRPG {
     public class CharacterGroupManager : ConfiguredClass {
 
@@ -12,6 +14,8 @@ namespace AnyRPG {
             Configure(systemGameManager);
         }
         public void SetGroupId(int groupId) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterGroupManager.SetGroupId({groupId})");
+
             this.groupId = groupId;
             unitController.UnitEventController.NotifyOnSetGroupId(groupId);
         }

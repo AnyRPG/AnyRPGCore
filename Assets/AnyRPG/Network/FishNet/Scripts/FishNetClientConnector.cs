@@ -795,7 +795,7 @@ namespace AnyRPG {
         }
 
         public void AdvertiseLoadSceneServer(string sceneResourceName, int accountId) {
-            Debug.Log($"FishNetClientConnector.AdvertiseLoadSceneServer({sceneResourceName}, {accountId})");
+            //Debug.Log($"FishNetClientConnector.AdvertiseLoadSceneServer({sceneResourceName}, {accountId})");
 
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
                 //Debug.Log($"FishNetClientConnector.AdvertiseLoadSceneServer() could not find client id {accountId}");
@@ -1667,7 +1667,7 @@ namespace AnyRPG {
         public void AdvertiseAddCharacterToGroup(int playerCharacterId, CharacterGroup characterGroup) {
             //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup({playerCharacterId}, {characterGroup.characterGroupId})");
 
-            foreach (int memberId in characterGroup.CharacterIdList[UnitControllerMode.Player]) {
+            foreach (int memberId in characterGroup.CharacterIdList[UnitControllerMode.Player].Keys) {
                 // get account id from player id
                 int accountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(memberId);
                 if (accountId == 0) {
@@ -1687,7 +1687,7 @@ namespace AnyRPG {
         }
 
         public void AdvertiseCharacterGroup(int accountId, CharacterGroup characterGroup) {
-            Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroup({accountId}, {characterGroup.characterGroupId})");
+            //Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroup({accountId}, {characterGroup.characterGroupId})");
 
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
                 Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {accountId}");
@@ -1719,7 +1719,7 @@ namespace AnyRPG {
         public void AdvertiseRemoveCharacterFromGroup(int removedCharacterId, CharacterGroup characterGroup) {
             //Debug.Log($"FishNetClientConnector.AdvertiseRemoveCharacterFromGroup({removedCharacterId}, {characterGroup.characterGroupId})");
 
-            foreach (int memberId in characterGroup.CharacterIdList[UnitControllerMode.Player]) {
+            foreach (int memberId in characterGroup.CharacterIdList[UnitControllerMode.Player].Keys) {
                 // get account id from player id
                 int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(memberId);
                 if (memberAccountId == 0) {
@@ -1777,7 +1777,7 @@ namespace AnyRPG {
         }
 
         public void AdvertiseDisbandCharacterGroup(CharacterGroup characterGroup) {
-            foreach (int memberId in characterGroup.CharacterIdList[UnitControllerMode.Player]) {
+            foreach (int memberId in characterGroup.CharacterIdList[UnitControllerMode.Player].Keys) {
                 // get account id from player id
                 int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(memberId);
                 if (memberAccountId == 0) {
@@ -1799,6 +1799,31 @@ namespace AnyRPG {
         [TargetRpc]
         public void AdvertiseDisbandCharacterGroupClient(NetworkConnection networkConnection, int characterGroupId) {
             networkManagerClient.ProcessDisbandCharacterGroup(characterGroupId);
+        }
+
+        public void AdvertiseRenameCharacterInGroup(CharacterGroup characterGroup, int characterId, string newName) {
+            foreach (int memberId in characterGroup.CharacterIdList[UnitControllerMode.Player].Keys) {
+                // get account id from player id
+                int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(memberId);
+                if (memberAccountId == 0) {
+                    continue;
+                }
+                if (networkManagerServer.LoggedInAccounts.ContainsKey(memberAccountId) == false) {
+                    Debug.Log($"FishNetClientConnector.AdvertiseRenameCharacterInGroup() could not find client id {memberAccountId}");
+                    continue;
+                }
+                int _clientId = networkManagerServer.LoggedInAccounts[memberAccountId].clientId;
+                if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                    Debug.Log($"FishNetClientConnector.AdvertiseRenameCharacterInGroup() could not find client id {_clientId}");
+                    continue;
+                }
+                AdvertiseRenameCharacterInGroupClient(fishNetNetworkManager.ServerManager.Clients[_clientId], characterGroup.characterGroupId, characterId, newName);
+            }
+        }
+
+        [TargetRpc]
+        public void AdvertiseRenameCharacterInGroupClient(NetworkConnection networkConnection, int characterGroupId, int characterId, string newName) {
+            networkManagerClient.ProcessRenameCharacterInGroup(characterGroupId, characterId, newName);
         }
 
         public void AdvertisePlayerNameNotAvailable(int accountId) {
@@ -1838,7 +1863,7 @@ namespace AnyRPG {
         }
 
         public void AdvertisePromoteGroupLeader(CharacterGroup characterGroup, int newLeaderCharacterId) {
-            foreach (int memberId in characterGroup.CharacterIdList[UnitControllerMode.Player]) {
+            foreach (int memberId in characterGroup.CharacterIdList[UnitControllerMode.Player].Keys) {
                 // get account id from player id
                 int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(memberId);
                 if (memberAccountId == 0) {

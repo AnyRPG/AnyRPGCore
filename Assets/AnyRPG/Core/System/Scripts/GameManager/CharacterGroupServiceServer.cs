@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 namespace AnyRPG {
     public class CharacterGroupServiceServer : ConfiguredClass {
@@ -45,11 +45,14 @@ namespace AnyRPG {
         public void CreateCharacterGroup(int leaderCharacterId) {
             //Debug.Log($"CharacterGroupService.CreateCharacterGroup({leaderCharacterId})");
 
-            CharacterGroup characterGroup = new CharacterGroup(nextCharacterGroupId, leaderCharacterId);
+            UnitController unitController = characterManager.GetUnitController(UnitControllerMode.Player, leaderCharacterId);
+            if (unitController == null) {
+                return;
+            }
+            CharacterGroup characterGroup = new CharacterGroup(nextCharacterGroupId, leaderCharacterId, unitController.DisplayName);
             nextCharacterGroupId++;
             characterGroupDictionary.Add(characterGroup.characterGroupId, characterGroup);
             characterGroupMemberLookup.Add(leaderCharacterId, characterGroup.characterGroupId);
-            UnitController unitController = characterManager.GetUnitController(UnitControllerMode.Player, leaderCharacterId);
             unitController?.CharacterGroupManager.SetGroupId(characterGroup.characterGroupId);
         }
 
@@ -60,19 +63,24 @@ namespace AnyRPG {
                 Debug.LogWarning("CharacterGroupService.AddCharacterToGroup: character group not found");
                 return;
             }
-            CharacterGroup characterGroup = characterGroupDictionary[characterGroupId];
-            characterGroup.AddPlayer(characterId);
-            characterGroupMemberLookup.Add(characterId, characterGroupId);
+
             UnitController unitController = characterManager.GetUnitController(UnitControllerMode.Player, characterId);
+            if (unitController == null) {
+                Debug.LogWarning($"CharacterGroupService.AddCharacterToGroup: unit controller not found for characterId {characterId}");
+                return;
+            }
+            CharacterGroup characterGroup = characterGroupDictionary[characterGroupId];
+            characterGroup.AddPlayer(characterId, unitController.DisplayName);
+            characterGroupMemberLookup.Add(characterId, characterGroupId);
             unitController?.CharacterGroupManager.SetGroupId(characterGroup.characterGroupId);
             networkManagerServer.AdvertiseAddCharacterToGroup(characterId, characterGroup);
         }
 
         public void RemoveCharacterFromGroup(int characterId) {
-            Debug.Log($"CharacterGroupService.RemoveCharacterFromGroup({characterId})");
+            //Debug.Log($"CharacterGroupService.RemoveCharacterFromGroup({characterId})");
 
             if (characterGroupMemberLookup.ContainsKey(characterId) == false) {
-                Debug.LogWarning("CharacterGroupService.RemoveCharacterFromGroup: character group member not found");
+                //Debug.Log("CharacterGroupService.RemoveCharacterFromGroup: character group member not found");
                 return;
             }
             int characterGroupId = characterGroupMemberLookup[characterId];
@@ -80,7 +88,7 @@ namespace AnyRPG {
         }
 
         public void RemoveCharacterFromGroup(int characterId, int characterGroupId) {
-            Debug.Log($"CharacterGroupService.RemoveCharacterFromGroup({characterId}, {characterGroupId})");
+            //Debug.Log($"CharacterGroupService.RemoveCharacterFromGroup({characterId}, {characterGroupId})");
 
             if (characterGroupDictionary.ContainsKey(characterGroupId) == false) {
                 Debug.LogWarning("CharacterGroupService.RemoveCharacterFromGroup: character group not found");
@@ -101,7 +109,7 @@ namespace AnyRPG {
 
             // if the leader left, promote a new leader
             if (characterGroup.leaderPlayerCharacterId == characterId) {
-                PromoteLeader(characterGroupId, characterId, characterGroup.CharacterIdList[UnitControllerMode.Player][0]);
+                PromoteLeader(characterGroupId, characterId, characterGroup.CharacterIdList[UnitControllerMode.Player].First().Key);
             }
         }
 
@@ -129,7 +137,7 @@ namespace AnyRPG {
             CharacterGroup characterGroup = characterGroupDictionary[characterGroupId];
             networkManagerServer.AdvertiseDisbandCharacterGroup(characterGroup);
 
-            foreach (int characterId in characterGroup.CharacterIdList[UnitControllerMode.Player]) {
+            foreach (int characterId in characterGroup.CharacterIdList[UnitControllerMode.Player].Keys) {
                 characterGroupMemberLookup.Remove(characterId);
                 UnitController unitController = characterManager.GetUnitController(UnitControllerMode.Player, characterId);
                 unitController?.CharacterGroupManager.LeaveGroup();
@@ -171,7 +179,7 @@ namespace AnyRPG {
             
             // check if the leader is the only person in the group and notify 
             if (characterGroup.CharacterIdList[UnitControllerMode.Player].Count == 1 &&
-                characterGroup.leaderPlayerCharacterId == characterGroup.CharacterIdList[UnitControllerMode.Player][0]) {
+                characterGroup.leaderPlayerCharacterId == characterGroup.CharacterIdList[UnitControllerMode.Player].First().Key) {
                 networkManagerServer.AdvertiseAddCharacterToGroup(characterGroup.leaderPlayerCharacterId, characterGroup);
             }
 
@@ -180,7 +188,7 @@ namespace AnyRPG {
         }
 
         public void DeclineCharacterGroupInvite(int accountId) {
-            Debug.Log($"CharacterGroupService.DeclineCharacterGroupInvite({accountId})");
+            //Debug.Log($"CharacterGroupService.DeclineCharacterGroupInvite({accountId})");
 
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
             if (playerCharacterId == 0) {
@@ -192,9 +200,11 @@ namespace AnyRPG {
                 if (characterGroupDictionary.ContainsKey(characterGroupInvites[playerCharacterId])) {
                     CharacterGroup characterGroup = characterGroupDictionary[characterGroupInvites[playerCharacterId]];
                     if (characterGroup.CharacterIdList[UnitControllerMode.Player].Count == 1 &&
-                        characterGroup.leaderPlayerCharacterId == characterGroup.CharacterIdList[UnitControllerMode.Player][0]) {
+                        characterGroup.leaderPlayerCharacterId == characterGroup.CharacterIdList[UnitControllerMode.Player].First().Key) {
                         characterGroupDictionary.Remove(characterGroup.characterGroupId);
                         characterGroupMemberLookup.Remove(characterGroup.leaderPlayerCharacterId);
+                        UnitController unitController = characterManager.GetUnitController(UnitControllerMode.Player, characterGroup.leaderPlayerCharacterId);
+                        unitController?.CharacterGroupManager.LeaveGroup();
                     }
                     int leaderAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(characterGroup.leaderPlayerCharacterId);
                     networkManagerServer.AdvertiseDeclineCharacterGroupInvite(leaderAccountId, playerCharacterService.GetPlayerNameFromId(playerCharacterId));
@@ -271,7 +281,7 @@ namespace AnyRPG {
         }
 
         public void SendCharacterGroupInfo(int accountId, int playerCharacterId) {
-            Debug.Log($"CharacterGroupService.SendCharacterGroupInfo({accountId}, {playerCharacterId})");
+            //Debug.Log($"CharacterGroupService.SendCharacterGroupInfo({accountId}, {playerCharacterId})");
 
             if (characterGroupMemberLookup.ContainsKey(playerCharacterId) == false) {
                 //Debug.Log($"CharacterGroupService.SendCharacterGroupInfo: character group member not found for playerCharacterId {playerCharacterId}");
@@ -298,7 +308,7 @@ namespace AnyRPG {
                 Debug.LogWarning("CharacterGroupService.PromoteLeader: only the current leader can promote a new leader");
                 return;
             }
-            if (characterGroup.CharacterIdList[UnitControllerMode.Player].Contains(newLeaderCharacterId) == false) {
+            if (characterGroup.CharacterIdList[UnitControllerMode.Player].ContainsKey(newLeaderCharacterId) == false) {
                 Debug.LogWarning("CharacterGroupService.PromoteLeader: new leader must be a member of the group");
                 return;
             }
@@ -320,6 +330,21 @@ namespace AnyRPG {
 
             int characterGroupId = characterGroupMemberLookup[requestingPlayerCharacterId];
             PromoteLeader(characterGroupId, requestingPlayerCharacterId, newLeaderCharacterId);
+        }
+
+        public void ProcessRenameCharacter(int characterId, string newName, int groupId) {
+            //Debug.Log($"CharacterGroupService.ProcessRenameCharacter({characterId}, {newName}, {groupId})");
+            if (characterGroupDictionary.ContainsKey(groupId) == false) {
+                Debug.LogWarning("CharacterGroupService.ProcessRenameCharacter: character group not found");
+                return;
+            }
+            CharacterGroup characterGroup = characterGroupDictionary[groupId];
+            if (characterGroup.CharacterIdList[UnitControllerMode.Player].ContainsKey(characterId) == false) {
+                Debug.LogWarning("CharacterGroupService.ProcessRenameCharacter: character group member not found");
+                return;
+            }
+            characterGroup.CharacterIdList[UnitControllerMode.Player][characterId] = newName;
+            networkManagerServer.AdvertiseRenameCharacterInGroup(characterGroup, characterId, newName);
         }
     }
 

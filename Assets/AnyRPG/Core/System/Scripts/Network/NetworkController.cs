@@ -124,6 +124,7 @@ namespace AnyRPG {
         public abstract void AdvertiseDeletePlayerCharacter(int accountId);
         public abstract void AdvertiseDeclineCharacterGroupInvite(int leaderAccountId, string decliningPlayerName);
         public abstract void AdvertisePromoteGroupLeader(CharacterGroup characterGroup, int newLeaderCharacterId);
+        public abstract void AdvertiseRenameCharacterInGroup(CharacterGroup characterGroup, int characterId, string newName);
     }
 
 }

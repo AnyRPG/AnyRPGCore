@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -121,9 +122,11 @@ namespace AnyRPG {
 
         // application state
         private int spawnCount = 0;
+        private bool disconnectingNetworkForShutdown = false;
         private static bool isShuttingDown = false;
 
         public static bool IsShuttingDown { get => isShuttingDown; }
+        public bool DisconnectingNetworkForShutdown { get => disconnectingNetworkForShutdown; set => disconnectingNetworkForShutdown = value; }
 
         public SystemEventManager SystemEventManager { get => systemEventManager; }
         public AuthenticationService AuthenticationService { get => authenticationService; }
@@ -364,6 +367,24 @@ namespace AnyRPG {
             }
         }
 
+        public void RequestExitGame() {
+            if (gameMode == GameMode.Network) {
+                disconnectingNetworkForShutdown = true;
+                networkManagerClient.RequestLogout();
+                return;
+            }
+            ExitGame();
+        }
+
+        public void ExitGame() {
+#if UNITY_EDITOR
+            // Application.Quit() does not work in the editor so
+            // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
     }
 
     public enum GameMode { Local, Network }
