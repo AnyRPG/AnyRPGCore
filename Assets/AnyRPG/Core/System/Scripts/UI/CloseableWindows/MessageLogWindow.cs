@@ -6,9 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CombatLogWindow : CloseableWindow {
+    public class MessageLogWindow : CloseableWindow {
 
-        [Header("Combat Log Window")]
+        [Header("Message Log Window")]
 
         [SerializeField]
         protected DraggableWindow buttonsHeading = null;

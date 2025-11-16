@@ -82,7 +82,8 @@ namespace AnyRPG {
 
         // game manager references
         private SaveManager saveManager = null;
-        private LogManager logManager = null;
+        private MessageLogClient messageLogClient = null;
+        private MessageLogServer messageLogServer = null;
         private PlayerManagerServer playerManagerServer = null;
         private CharacterManager characterManager = null;
         private InteractionManager interactionManager = null;
@@ -127,7 +128,8 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             saveManager = systemGameManager.SaveManager;
-            logManager = systemGameManager.LogManager;
+            messageLogClient = systemGameManager.MessageLogClient;
+            messageLogServer = systemGameManager.MessageLogServer;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             characterManager = systemGameManager.CharacterManager;
             interactionManager = systemGameManager.InteractionManager;
@@ -684,7 +686,7 @@ namespace AnyRPG {
             if (loggedInAccounts.ContainsKey(accountId) == false) {
                 return;
             }
-            logManager.WriteChatMessageServer(accountId, messageText);
+            messageLogServer.WriteChatMessage(accountId, messageText);
         }
 
         public void AdvertiseSceneChatMessage(string messageText, int accountId) {
@@ -693,7 +695,7 @@ namespace AnyRPG {
                 return;
             }
             // send the modified text with username to the chat window
-            string addedText = $"{loggedInAccounts[accountId].username}: {messageText}\n";
+            string addedText = $"{loggedInAccounts[accountId].username}: {messageText}";
             networkController.AdvertiseSendSceneChatMessage(addedText, accountId);
 
             // send original text to the dialog popup over the player's head
@@ -1251,6 +1253,16 @@ namespace AnyRPG {
 
         public void AdvertiseRenameCharacterInGroup(CharacterGroup characterGroup, int characterId, string newName) {
             networkController.AdvertiseRenameCharacterInGroup(characterGroup, characterId, newName);
+        }
+
+        public void AdvertiseGroupMessage(CharacterGroup characterGroup, string messageText) {
+            networkController.AdvertiseGroupMessage(characterGroup, messageText);
+        }
+
+        public void AdvertisePrivateMessage(int targetAccountId, string messageText) {
+            //Debug.Log($"NetworkManagerServer.AdvertisePrivateMessage({targetAccountId}, {messageText})");
+
+            networkController.AdvertisePrivateMessage(targetAccountId, messageText);
         }
     }
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.TextCore.Text;
 
 namespace AnyRPG {
     public class FishNetClientConnector : ConfiguredNetworkBehaviour {
@@ -1887,7 +1888,52 @@ namespace AnyRPG {
             networkManagerClient.ProcessPromoteGroupLeader(characterGroupId, newLeaderCharacterId);
         }
 
+        public void AdvertiseGroupMessage(CharacterGroup characterGroup, string messageText) {
+            foreach (int memberId in characterGroup.CharacterIdList[UnitControllerMode.Player].Keys) {
+                // get account id from player id
+                int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(memberId);
+                if (memberAccountId == 0) {
+                    continue;
+                }
+                if (networkManagerServer.LoggedInAccounts.ContainsKey(memberAccountId) == false) {
+                    Debug.Log($"FishNetClientConnector.AdvertiseGroupMessage() could not find client id {memberAccountId}");
+                    continue;
+                }
+                int _clientId = networkManagerServer.LoggedInAccounts[memberAccountId].clientId;
+                if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                    Debug.Log($"FishNetClientConnector.AdvertiseGroupMessage() could not find client id {_clientId}");
+                    continue;
+                }
+                AdvertiseGroupMessageClient(fishNetNetworkManager.ServerManager.Clients[_clientId], messageText);
+            }
+        }
 
+        [TargetRpc]
+        public void AdvertiseGroupMessageClient(NetworkConnection networkConnection, string messageText) {
+            networkManagerClient.AdvertiseGroupMessage(messageText);
+        }
+
+        public void AdvertisePrivateMessage(int targetAccountId, string messageText) {
+            //Debug.Log($"FishNetClientConnector.AdvertisePrivateMessage({targetAccountId}, {messageText})");
+
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(targetAccountId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertisePrivateMessage() could not find account id {targetAccountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[targetAccountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRenameCharacterInGroup() could not find client id {_clientId}");
+                return;
+            }
+            AdvertisePrivateMessageClient(fishNetNetworkManager.ServerManager.Clients[_clientId], messageText);
+        }
+
+        [TargetRpc]
+        public void AdvertisePrivateMessageClient(NetworkConnection networkConnection, string messageText) {
+            //Debug.Log($"FishNetClientConnector.AdvertisePrivateMessageClient({messageText})");
+
+            networkManagerClient.AdvertisePrivateMessage(messageText);
+        }
 
 
 

@@ -711,6 +711,14 @@ namespace AnyRPG {
             clientConnector.AdvertiseRenameCharacterInGroup(characterGroup, characterId, newName);
         }
 
+        public override void AdvertiseGroupMessage(CharacterGroup characterGroup, string messageText) {
+            clientConnector.AdvertiseGroupMessage(characterGroup, messageText);
+        }
+
+        public override void AdvertisePrivateMessage(int targetAccountId, string messageText) {
+            clientConnector.AdvertisePrivateMessage(targetAccountId, messageText);
+        }
+
         public override void AdvertisePlayerNameNotAvailable(int accountId) {
             clientConnector.AdvertisePlayerNameNotAvailable(accountId);
         }

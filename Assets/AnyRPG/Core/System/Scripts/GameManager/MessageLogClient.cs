@@ -1,37 +1,24 @@
-using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class LogManager : ConfiguredClass {
+    public class MessageLogClient : ConfiguredClass {
 
-        public event System.Action<string> OnWriteChatMessage = delegate { };
+        public event System.Action<string> OnWriteGeneralMessage = delegate { };
+        public event System.Action<string> OnWriteGroupMessage = delegate { };
+        public event System.Action<string> OnWritePrivateMessage = delegate { };
         public event System.Action<string> OnWriteSystemMessage = delegate { };
         public event System.Action<string> OnWriteCombatMessage = delegate { };
-        public event System.Action OnClearChatMessages = delegate { };
+        public event System.Action OnClearGeneralMessages = delegate { };
+        public event System.Action OnClearGroupMessages = delegate { };
+        public event System.Action OnClearPrivateMessages = delegate { };
         public event System.Action OnClearSystemMessages = delegate { };
         public event System.Action OnClearCombatMessages = delegate { };
 
         private string welcomeString = "Welcome to";
         private string completeWelcomeString = string.Empty;
-
-        // a list to hold the messages
-        //private List<string> combatMessageList = new List<string>();
-
-        private List<GameObject> combatMessageList = new List<GameObject>();
-
-        // a list to hold the messages
-        //private List<string> systemMessageList = new List<string>();
-
-        private List<GameObject> systemMessageList = new List<GameObject>();
-
-        // a list to hold the messages
-        //private List<string> chatMessageList = new List<string>();
-
-        private List<GameObject> chatMessageList = new List<GameObject>();
 
         private bool eventSubscriptionsInitialized = false;
 
@@ -39,18 +26,24 @@ namespace AnyRPG {
         SystemEventManager systemEventManager = null;
         PlayerManager playerManager = null;
         ChatCommandManager chatCommandManager = null;
+        MessageLogServer messageLogServer = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
-            //Debug.Log("CombatLogUI.Awake()");
+            //Debug.Log("LogManager.Awake()");
             base.Configure(systemGameManager);
-
-            systemEventManager = systemGameManager.SystemEventManager;
-            playerManager = systemGameManager.PlayerManager;
-            chatCommandManager = systemGameManager.ChatCommandManager;
 
             SetWelcomeString();
             ClearLog();
             CreateEventSubscriptions();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            systemEventManager = systemGameManager.SystemEventManager;
+            playerManager = systemGameManager.PlayerManager;
+            chatCommandManager = systemGameManager.ChatCommandManager;
+            messageLogServer = systemGameManager.MessageLogServer;
         }
 
         private void SetWelcomeString() {
@@ -65,51 +58,40 @@ namespace AnyRPG {
             }
         }
 
-        public void WriteChatMessageClient(string newMessage) {
-            //Debug.Log($"LogManager.WriteChatMessageClient({newMessage})");
-
-            OnWriteChatMessage(newMessage);
-        }
-
-        public void WriteChatMessageServer(int accountId, string newMessage) {
-            //Debug.Log($"LogManager.WriteChatMessageServer({accountId}, {newMessage})");
-
-            if (newMessage.StartsWith("/") == true) {
-                chatCommandManager.ParseChatCommand(newMessage.Substring(1), accountId);
-                return;
-            }
-
-            if (systemGameManager.GameMode == GameMode.Network) {
-                networkManagerServer.AdvertiseSceneChatMessage(newMessage, accountId);
-            } else {
-                WriteChatMessageClient(newMessage);
-            }
-        }
-
         public void RequestChatMessageClient(string newMessage) {
             //Debug.Log($"LogManager.RequestChatMessageClient({newMessage})");
 
             if (systemGameManager.GameMode == GameMode.Network) {
                 networkManagerClient.SendSceneChatMessage(newMessage);
             } else {
-                WriteChatMessageServer(0, newMessage);
+                messageLogServer.WriteChatMessage(0, newMessage);
             }
+        }
+
+        public void WriteGeneralMessage(string newMessage) {
+            //Debug.Log($"LogManager.WriteChatMessageClient({newMessage})");
+
+            OnWriteGeneralMessage(newMessage);
+        }
+
+        public void WriteGroupMessage(string newMessage) {
+            //Debug.Log("LogManager.WriteGroupMessage(" + newMessage + ")");
+
+            OnWriteGroupMessage(newMessage);
+            WriteGeneralMessage($"[group] {newMessage}");
+        }
+
+        public void WritePrivateMessage(string newMessage) {
+            //Debug.Log("LogManager.WritePrivateMessage(" + newMessage + ")");
+
+            OnWritePrivateMessage(newMessage);
+            WriteGeneralMessage($"[private] {newMessage}");
         }
 
         public void WriteCombatMessage(string newMessage) {
             //Debug.Log("LogManager.WriteCombatMessage(" + newMessage + ")");
 
             OnWriteCombatMessage(newMessage);
-        }
-
-        public void WriteSystemMessage(UnitController sourceUnitController, string message) {
-            //Debug.Log($"LogManager.WriteSystemMessage({sourceUnitController.gameObject.name}, {message})");
-
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
-                WriteSystemMessage(message);
-            } else {
-                networkManagerServer.AdvertiseSystemMessage(sourceUnitController, message);
-            }
         }
 
         public void WriteSystemMessage(string newMessage) {
@@ -163,33 +145,46 @@ namespace AnyRPG {
         }
 
         public void ClearLog() {
-            //Debug.Log("CombatLogUI.ClearLog()");
+            //Debug.Log("LogManager.ClearLog()");
+
+            ClearGroupMessages();
+            ClearPrivateMessages();
             ClearCombatMessages();
             ClearChatMessages();
             ClearSystemMessages();
         }
 
+        private void ClearGroupMessages() {
+            //Debug.Log("LogManager.ClearGroupMessages()");
+            OnClearGroupMessages();
+        }
+
+        private void ClearPrivateMessages() {
+            //Debug.Log("LogManager.ClearGroupMessages()");
+            OnClearPrivateMessages();
+        }
+
         private void ClearCombatMessages() {
-            //Debug.Log("CombatLogUI.ClearCombatMessages()");
+            //Debug.Log("LogManager.ClearCombatMessages()");
             OnClearCombatMessages();
         }
 
         private void ClearChatMessages() {
-            //Debug.Log("CombatLogUI.ClearChatMessages()");
-            OnClearChatMessages();
+            //Debug.Log("LogManager.ClearChatMessages()");
+            OnClearGeneralMessages();
         }
 
         private void ClearSystemMessages() {
-            //Debug.Log("CombatLogUI.ClearSystemMessages()");
+            //Debug.Log("LogManager.ClearSystemMessages()");
             OnClearSystemMessages();
         }
 
         public void PrintWelcomeMessages() {
-            //Debug.Log("CombatLogUI.PrintWelcomeMessages()");
+            //Debug.Log("LogManager.PrintWelcomeMessages()");
 
-            WriteChatMessageClient(completeWelcomeString);
-            WriteCombatMessage(completeWelcomeString);
-            WriteSystemMessage(completeWelcomeString);
+            WriteGeneralMessage(completeWelcomeString);
+            //WriteCombatMessage(completeWelcomeString);
+            //WriteSystemMessage(completeWelcomeString);
 
         }
 

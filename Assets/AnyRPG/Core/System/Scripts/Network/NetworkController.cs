@@ -125,6 +125,8 @@ namespace AnyRPG {
         public abstract void AdvertiseDeclineCharacterGroupInvite(int leaderAccountId, string decliningPlayerName);
         public abstract void AdvertisePromoteGroupLeader(CharacterGroup characterGroup, int newLeaderCharacterId);
         public abstract void AdvertiseRenameCharacterInGroup(CharacterGroup characterGroup, int characterId, string newName);
+        public abstract void AdvertiseGroupMessage(CharacterGroup characterGroup, string messageText);
+        public abstract void AdvertisePrivateMessage(int targetAccountId, string messageText);
     }
 
 }

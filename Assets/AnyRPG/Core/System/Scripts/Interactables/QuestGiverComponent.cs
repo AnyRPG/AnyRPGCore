@@ -14,7 +14,7 @@ namespace AnyRPG {
 
         // game manager references
         private DialogManagerClient dialogManagerClient = null;
-        private LogManager logManager = null;
+        private MessageLogClient logManager = null;
         private CurrencyConverter currencyConverter = null;
         private QuestGiverManagerClient questGiverManagerClient = null;
 
@@ -38,7 +38,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             
             dialogManagerClient = systemGameManager.DialogManagerClient;
-            logManager = systemGameManager.LogManager;
+            logManager = systemGameManager.MessageLogClient;
             currencyConverter = systemGameManager.CurrencyConverter;
             questGiverManagerClient = systemGameManager.QuestGiverManagerClient;
         }

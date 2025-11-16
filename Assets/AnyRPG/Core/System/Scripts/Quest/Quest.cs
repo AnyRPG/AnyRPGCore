@@ -121,7 +121,7 @@ namespace AnyRPG {
         protected bool allowRawComplete = false;
 
         // game manager references
-        protected LogManager logManager = null;
+        protected MessageLogServer messageLogServer = null;
         protected CurrencyConverter currencyConverter = null;
 
         public override bool PrintObjectiveCompletionMessages {
@@ -152,7 +152,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            logManager = systemGameManager.LogManager;
+            messageLogServer = systemGameManager.MessageLogServer;
             currencyConverter = systemGameManager.CurrencyConverter;
         }
 
@@ -316,7 +316,7 @@ namespace AnyRPG {
                 sourceUnitController.CharacterCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.Amount);
                 List<CurrencyNode> tmpCurrencyNode = new List<CurrencyNode>();
                 tmpCurrencyNode.Add(currencyNode);
-                logManager.WriteSystemMessage(sourceUnitController, $"Gained {currencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", ")}");
+                messageLogServer.WriteSystemMessage(sourceUnitController, $"Gained {currencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", ")}");
             }
 
             // item rewards first in case not enough space in inventory

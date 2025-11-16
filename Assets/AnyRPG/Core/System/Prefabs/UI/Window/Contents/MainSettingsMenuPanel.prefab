@@ -2501,7 +2501,7 @@ GameObject:
   - component: {fileID: 2761509306982164621}
   - component: {fileID: 2111695301410192088}
   m_Layer: 5
-  m_Name: CombatLogOpacitySlider
+  m_Name: MessageLogOpacitySlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2627,8 +2627,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5990523882854097658}
-        m_TargetAssemblyTypeName: AnyRPG.SystemUIPanelController, Assembly-CSharp
-        m_MethodName: CombatLogOpacitySliderUpdate
+        m_TargetAssemblyTypeName: AnyRPG.SystemUIPanel, Assembly-CSharp
+        m_MethodName: MessageLogOpacitySliderUpdate
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9019,7 +9019,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: use combat log
+  m_text: use message log
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9ff1637cc53af0c4f9d93e4706904ea7, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 9ff1637cc53af0c4f9d93e4706904ea7, type: 2}
@@ -14513,7 +14513,7 @@ GameObject:
   - component: {fileID: 4126055079757796926}
   - component: {fileID: 545596331201468761}
   m_Layer: 5
-  m_Name: CombatLogOpacityLine
+  m_Name: MessageLogOpacityLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23770,7 +23770,7 @@ GameObject:
   - component: {fileID: 6750332842281545934}
   - component: {fileID: 8357090688051543649}
   m_Layer: 0
-  m_Name: UseCombatLogLine
+  m_Name: UseMessageLogLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29374,8 +29374,8 @@ MonoBehaviour:
   useMessageFeedButton: {fileID: 895980728030060640}
   useStatusEffectBarLine: {fileID: 6800425322117109092}
   useStatusEffectBarButton: {fileID: 1461063422341430173}
-  useCombatLogLine: {fileID: 4726635248465225704}
-  useCombatLogButton: {fileID: 1139907194488256408}
+  useMessageLogLine: {fileID: 4726635248465225704}
+  useMessageLogButton: {fileID: 1139907194488256408}
   showPlayerNameButton: {fileID: 1867193612696188833}
   showPlayerFactionButton: {fileID: 4417487946172851898}
   hideFullHealthBarButton: {fileID: 498207886150187039}
@@ -29385,8 +29385,8 @@ MonoBehaviour:
   actionBarOpacitySlider: {fileID: 8246558239884787275}
   questTrackerOpacityLine: {fileID: 1232608414744345876}
   questTrackerOpacitySlider: {fileID: 8974505639344350717}
-  combatLogOpacityLine: {fileID: 3502996465959332854}
-  combatLogOpacitySlider: {fileID: 783075649256835069}
+  messageLogOpacityLine: {fileID: 3502996465959332854}
+  messageLogOpacitySlider: {fileID: 783075649256835069}
   systemMenuOpacitySlider: {fileID: 8803180364375494938}
   popupWindowOpacitySlider: {fileID: 4966686190576848365}
   pagedButtonsOpacitySlider: {fileID: 4497979498673447752}
@@ -42108,7 +42108,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: combat log opacity
+  m_text: message log opacity
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9ff1637cc53af0c4f9d93e4706904ea7, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 9ff1637cc53af0c4f9d93e4706904ea7, type: 2}
@@ -46798,12 +46798,12 @@ PrefabInstance:
     - target: {fileID: 5256718429467696180, guid: f729553522aa04b4594ba7302e12faf2,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ToggleUseCombatLog
+      value: ToggleUseMessageLog
       objectReference: {fileID: 0}
     - target: {fileID: 5256718429467696180, guid: f729553522aa04b4594ba7302e12faf2,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: AnyRPG.SystemUIPanelController, Assembly-CSharp
+      value: AnyRPG.SystemUIPanel, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7280165105058967333, guid: f729553522aa04b4594ba7302e12faf2,
         type: 3}

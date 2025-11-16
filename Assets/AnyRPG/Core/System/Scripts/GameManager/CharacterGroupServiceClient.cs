@@ -23,8 +23,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private CharacterManager characterManager = null;
         private PlayerManager playerManager = null;
-        private LogManager logManager = null;
-        private SystemEventManager systemEventManager = null;
+        private MessageLogClient messageLogClient = null;
 
         public CharacterGroup CurrentCharacterGroup { get => currentCharacterGroup; }
         public string InviteLeaderName { get => inviteLeaderName; }
@@ -40,8 +39,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             characterManager = systemGameManager.CharacterManager;
             playerManager = systemGameManager.PlayerManager;
-            logManager = systemGameManager.LogManager;
-            systemEventManager = systemGameManager.SystemEventManager;
+            messageLogClient = systemGameManager.MessageLogClient;
         }
 
         private void HandleClientConnectionStopped() {
@@ -56,7 +54,7 @@ namespace AnyRPG {
             inviteGroupId = characterGroupId;
             inviteLeaderName = leaderName;
             uIManager.confirmJoinGroupWindow.OpenWindow();
-            logManager.WriteSystemMessage($"You have been invited to a group by {leaderName}.");
+            messageLogClient.WriteSystemMessage($"You have been invited to a group by {leaderName}.");
         }
 
         public void AcceptCharacterGroupInvite() {
@@ -73,7 +71,7 @@ namespace AnyRPG {
 
             if (characterId == playerManager.UnitController.CharacterId) {
                 currentCharacterGroup = characterGroup;
-                logManager.WriteSystemMessage("You have joined a group.");
+                messageLogClient.WriteSystemMessage("You have joined a group.");
                 OnJoinGroup();
                 return;
             }
@@ -102,7 +100,7 @@ namespace AnyRPG {
             //uIManager.GroupUnitFramesWindow.CloseWindow();
 
             OnLeaveGroup();
-            logManager.WriteSystemMessage("You have left the group.");
+            messageLogClient.WriteSystemMessage("You have left the group.");
         }
 
         public void RequestInviteCharacterToGroup(int characterId) {
@@ -120,7 +118,7 @@ namespace AnyRPG {
             }
             currentCharacterGroup.AddPlayer(characterId, characterName);
             OnAddMember();
-            logManager.WriteSystemMessage($"{characterManager.GetCharacterName(characterId)} has joined the group.");
+            messageLogClient.WriteSystemMessage($"{characterManager.GetCharacterName(characterId)} has joined the group.");
         }
 
         public void RequestRemoveCharacterFromGroup(int characterId) {
@@ -144,7 +142,7 @@ namespace AnyRPG {
             }
             currentCharacterGroup.RemovePlayer(removedCharacterId);
             OnRemoveMember();
-            logManager.WriteSystemMessage($"{characterManager.GetCharacterName(removedCharacterId)} has left the group.");
+            messageLogClient.WriteSystemMessage($"{characterManager.GetCharacterName(removedCharacterId)} has left the group.");
         }
 
         public Dictionary<int, UnitController> GetCurrentGroupMemberUnitControllers() {
@@ -181,7 +179,7 @@ namespace AnyRPG {
 
             currentCharacterGroup = null;
             OnDisbandGroup();
-            logManager.WriteSystemMessage("Your group has been disbanded.");
+            messageLogClient.WriteSystemMessage("Your group has been disbanded.");
         }
 
         public void ProcessPromoteGroupLeader(int characterGroupId, int newLeaderCharacterId) {
@@ -193,9 +191,9 @@ namespace AnyRPG {
             currentCharacterGroup.leaderPlayerCharacterId = newLeaderCharacterId;
 
             if (newLeaderCharacterId == playerManager.UnitController.CharacterId) {
-                logManager.WriteSystemMessage("You are now the group leader.");
+                messageLogClient.WriteSystemMessage("You are now the group leader.");
             } else {
-                logManager.WriteSystemMessage($"{characterManager.GetCharacterName(newLeaderCharacterId)} is now the group leader.");
+                messageLogClient.WriteSystemMessage($"{characterManager.GetCharacterName(newLeaderCharacterId)} is now the group leader.");
             }
             OnPromoteGroupLeader();
         }

@@ -89,7 +89,8 @@ namespace AnyRPG {
         private LevelManager levelManager = new LevelManager();
         private LevelManagerServer levelManagerServer = new LevelManagerServer();
         private LoadGameManager loadGameManager = new LoadGameManager();
-        private LogManager logManager = new LogManager();
+        private MessageLogClient messageLogClient = new MessageLogClient();
+        private MessageLogServer messageLogServer = new MessageLogServer();
         private LootManager lootManager = new LootManager();
         private MusicPlayerManager musicPlayerManager = new MusicPlayerManager();
         private NameChangeManagerClient nameChangeManagerClient = new NameChangeManagerClient();
@@ -159,7 +160,8 @@ namespace AnyRPG {
         public PlayerManager PlayerManager { get => playerManager; set => playerManager = value; }
         public PlayerManagerServer PlayerManagerServer { get => playerManagerServer; set => playerManagerServer = value; }
         public SystemItemManager SystemItemManager { get => systemItemManager; set => systemItemManager = value; }
-        public LogManager LogManager { get => logManager; set => logManager = value; }
+        public MessageLogClient MessageLogClient { get => messageLogClient; set => messageLogClient = value; }
+        public MessageLogServer MessageLogServer { get => messageLogServer; set => messageLogServer = value; }
         public ObjectPooler ObjectPooler { get => objectPooler; set => objectPooler = value; }
         public SystemDataFactory SystemDataFactory { get => systemDataFactory; set => systemDataFactory = value; }
         public NewGameManager NewGameManager { get => newGameManager; set => newGameManager = value; }
@@ -258,7 +260,8 @@ namespace AnyRPG {
             playerManagerServer.Configure(this);
             systemItemManager.Configure(this);
             systemAchievementManager.Configure(this);
-            logManager.Configure(this);
+            messageLogClient.Configure(this);
+            messageLogServer.Configure(this);
             newGameManager.Configure(this);
             loadGameManager.Configure(this);
             saveManager.Configure(this);

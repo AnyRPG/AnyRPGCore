@@ -47,7 +47,7 @@ namespace AnyRPG {
 
         // game manager references
         protected UIManager uIManager = null;
-        protected LogManager logManager = null;
+        protected MessageLogClient messageLogClient = null;
         protected DialogManagerClient dialogManagerClient = null;
         protected PlayerManager playerManager = null;
         protected QuestGiverManagerClient questGiverManager = null;
@@ -59,7 +59,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
-            logManager = systemGameManager.LogManager;
+            messageLogClient = systemGameManager.MessageLogClient;
             dialogManagerClient = systemGameManager.DialogManagerClient;
             playerManager = systemGameManager.PlayerManager;
             questGiverManager = systemGameManager.QuestGiverManagerClient;
@@ -143,7 +143,7 @@ namespace AnyRPG {
             if (dialogManagerClient.Interactable != null) {
                 chatMessage = $"{dialogManagerClient.Interactable.DisplayName}: {chatMessage}";
             }
-            logManager.WriteChatMessageClient(chatMessage);
+            messageLogClient.WriteGeneralMessage(chatMessage);
             if (dialogManagerClient.Dialog.DialogNodes[dialogIndex].AudioClip != null) {
                 audioManager.PlayVoice(dialogManagerClient.Dialog.DialogNodes[dialogIndex].AudioClip);
             }

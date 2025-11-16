@@ -48,8 +48,7 @@ namespace AnyRPG {
         private CharacterManager characterManager = null;
         private UIManager uIManager = null;
         private LevelManager levelManager = null;
-        private LogManager logManager = null;
-        private InteractionManager interactionManager = null;
+        private MessageLogClient messageLogClient = null;
         private MessageFeedManager messageFeedManager = null;
         private SystemItemManager systemItemManager = null;
         private LootManager lootManager = null;
@@ -79,8 +78,7 @@ namespace AnyRPG {
             characterManager = systemGameManager.CharacterManager;
             levelManager = systemGameManager.LevelManager;
             uIManager = systemGameManager.UIManager;
-            logManager = systemGameManager.LogManager;
-            interactionManager = systemGameManager.InteractionManager;
+            messageLogClient = systemGameManager.MessageLogClient;
             messageFeedManager = uIManager.MessageFeedManager;
             systemItemManager = systemGameManager.SystemItemManager;
             lootManager = systemGameManager.LootManager;
@@ -323,7 +321,7 @@ namespace AnyRPG {
 
         public void AdvertiseSendSceneChatMessage(string messageText, int accountId) {
             OnSendSceneChatMessage(messageText, accountId);
-            logManager.WriteChatMessageClient(messageText);
+            messageLogClient.WriteGeneralMessage(messageText);
         }
 
         public void AdvertiseLobbyLogin(int accountId, string userName) {
@@ -500,7 +498,7 @@ namespace AnyRPG {
         }
 
         public void AdvertiseSystemMessage(string message) {
-            logManager.WriteSystemMessage(message);
+            messageLogClient.WriteSystemMessage(message);
         }
 
         public void SellItemToVendor(Interactable interactable, int componentIndex, int itemInstanceId) {
@@ -710,7 +708,7 @@ namespace AnyRPG {
         }
 
         public void ProcessDeclineCharacterGroupInvite(string decliningPlayerName) {
-            logManager.WriteSystemMessage($"{decliningPlayerName} has declined the group invite.");
+            messageLogClient.WriteSystemMessage($"{decliningPlayerName} has declined the group invite.");
         }
 
         public void ProcessPromoteGroupLeader(int characterGroupId, int newLeaderCharacterId) {
@@ -723,6 +721,14 @@ namespace AnyRPG {
 
         public void ProcessRenameCharacterInGroup(int characterGroupId, int characterId, string newName) {
             characterGroupServiceClient.ProcessRenameCharacterInGroup(characterGroupId, characterId, newName);
+        }
+
+        public void AdvertiseGroupMessage(string messageText) {
+            messageLogClient.WriteGroupMessage(messageText);
+        }
+
+        public void AdvertisePrivateMessage(string messageText) {
+            messageLogClient.WritePrivateMessage(messageText);
         }
     }
 

@@ -64,7 +64,7 @@ namespace AnyRPG {
         protected SystemAbilityController systemAbilityController = null;
         protected ClassChangeManagerClient classChangeManager = null;
 
-        protected LogManager logManager = null;
+        protected MessageLogClient messageLogClient = null;
         protected CastTargettingManager castTargettingManager = null;
         protected CombatTextManager combatTextManager = null;
         protected ActionBarManager actionBarManager = null;
@@ -106,7 +106,7 @@ namespace AnyRPG {
             levelManager = systemGameManager.LevelManager;
             cameraManager = systemGameManager.CameraManager;
             systemAbilityController = systemGameManager.SystemAbilityController;
-            logManager = systemGameManager.LogManager;
+            messageLogClient = systemGameManager.MessageLogClient;
             castTargettingManager = systemGameManager.CastTargettingManager;
             objectPooler = systemGameManager.ObjectPooler;
             controlsManager = systemGameManager.ControlsManager;
@@ -820,7 +820,7 @@ namespace AnyRPG {
         }
 
         public void HandleCombatMessage(string messageText) {
-            logManager.WriteCombatMessage(messageText);
+            messageLogClient.WriteCombatMessage(messageText);
         }
 
         public void HandleCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {
@@ -832,8 +832,8 @@ namespace AnyRPG {
         }
 
         public void HandleAbilityActionCheckFail(AbilityProperties baseAbility) {
-            if (PlayerUnitSpawned == true && logManager != null) {
-                logManager.WriteCombatMessage("Cannot use " + (baseAbility.DisplayName == null ? "null" : baseAbility.DisplayName) + ". Waiting for another ability to finish.");
+            if (PlayerUnitSpawned == true && messageLogClient != null) {
+                messageLogClient.WriteCombatMessage($"Cannot use {(baseAbility.DisplayName == null ? "null" : baseAbility.DisplayName)}. Waiting for another ability to finish.");
             }
         }
 
@@ -856,14 +856,14 @@ namespace AnyRPG {
         public void HandleDropCombat() {
             //Debug.Log("PlayerManager.HandleDropCombat()");
 
-            if (logManager != null) {
-                logManager.WriteCombatMessage("Left combat");
+            if (messageLogClient != null) {
+                messageLogClient.WriteCombatMessage("Left combat");
             }
         }
 
         public void HandleEnterCombat(Interactable interactable) {
-            if (logManager != null) {
-                logManager.WriteCombatMessage("Entered combat with " + interactable.DisplayName);
+            if (messageLogClient != null) {
+                messageLogClient.WriteCombatMessage("Entered combat with " + interactable.DisplayName);
             }
         }
 
@@ -874,25 +874,25 @@ namespace AnyRPG {
         }
 
         public void HandleTargetInAbilityRangeFail(AbilityProperties baseAbility, Interactable target) {
-            if (baseAbility != null && logManager != null) {
-                logManager.WriteCombatMessage(target.name + " is out of range of " + (baseAbility.DisplayName == null ? "null" : baseAbility.DisplayName));
+            if (baseAbility != null && messageLogClient != null) {
+                messageLogClient.WriteCombatMessage(target.name + " is out of range of " + (baseAbility.DisplayName == null ? "null" : baseAbility.DisplayName));
             }
         }
 
         public void HandleCombatCheckFail(AbilityProperties ability) {
-            logManager.WriteCombatMessage("The ability " + ability.DisplayName + " can only be cast while out of combat");
+            messageLogClient.WriteCombatMessage("The ability " + ability.DisplayName + " can only be cast while out of combat");
         }
 
         public void HandleStealthCheckFail(AbilityProperties ability) {
-            logManager.WriteCombatMessage("The ability " + ability.DisplayName + " can only be cast while while stealthed");
+            messageLogClient.WriteCombatMessage("The ability " + ability.DisplayName + " can only be cast while while stealthed");
         }
 
         public void HandlePowerResourceCheckFail(AbilityProperties ability, IAbilityCaster abilityCaster) {
-            logManager.WriteCombatMessage("Not enough " + ability.PowerResource.DisplayName + " to perform " + ability.DisplayName + " at a cost of " + ability.GetResourceCost(abilityCaster));
+            messageLogClient.WriteCombatMessage("Not enough " + ability.PowerResource.DisplayName + " to perform " + ability.DisplayName + " at a cost of " + ability.GetResourceCost(abilityCaster));
         }
 
         public void HandleLearnedCheckFail(AbilityProperties ability) {
-            logManager.WriteCombatMessage("You have not learned the ability " + ability.DisplayName + " yet");
+            messageLogClient.WriteCombatMessage("You have not learned the ability " + ability.DisplayName + " yet");
         }
 
         private void HandleAddEquipment(EquipmentSlotProfile profile, InstantiatedEquipment equipment) {
@@ -904,8 +904,8 @@ namespace AnyRPG {
         }
 
         public void HandleRecoverResource(PowerResource powerResource, int amount, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
-            if (logManager != null) {
-                logManager.WriteCombatMessage($"You gain {amount} {powerResource.DisplayName}");
+            if (messageLogClient != null) {
+                messageLogClient.WriteCombatMessage($"You gain {amount} {powerResource.DisplayName}");
             }
             combatTextManager.SpawnCombatText(activeUnitController, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
         }
@@ -932,8 +932,8 @@ namespace AnyRPG {
         }
 
         public void HandleGainXP(UnitController unitController, int gainedXP, int currentXP) {
-            if (logManager != null) {
-                logManager.WriteSystemMessage($"You gain {gainedXP} experience");
+            if (messageLogClient != null) {
+                messageLogClient.WriteSystemMessage($"You gain {gainedXP} experience");
             }
             if (activeUnitController != null) {
                 combatTextManager.SpawnCombatText(activeUnitController, gainedXP, CombatTextType.gainXP, CombatMagnitude.normal, null);

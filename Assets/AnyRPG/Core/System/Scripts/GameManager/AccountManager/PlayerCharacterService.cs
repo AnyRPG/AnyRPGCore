@@ -63,9 +63,9 @@ namespace AnyRPG {
                         if (fileName.EndsWith(".json")) {
                             string jsonString = File.ReadAllText(fileName);
                             PlayerCharacterSaveData playerCharacterSaveData = JsonUtility.FromJson<PlayerCharacterSaveData>(jsonString);
-                            if (!playerNameMap.ContainsKey(playerCharacterSaveData.SaveData.playerName) && !playerNameLookupMap.ContainsKey(playerCharacterSaveData.PlayerCharacterId)) {
+                            if (!playerNameMap.ContainsKey(playerCharacterSaveData.SaveData.playerName.ToLower()) && !playerNameLookupMap.ContainsKey(playerCharacterSaveData.PlayerCharacterId)) {
                                 //Debug.Log($"PlayerCharacterService.LoadPlayerNameMap(): Loaded player ({playerCharacterSaveData.SaveData.playerName}) with ID ({playerCharacterSaveData.PlayerCharacterId})");
-                                playerNameMap.Add(playerCharacterSaveData.SaveData.playerName, playerCharacterSaveData.PlayerCharacterId);
+                                playerNameMap.Add(playerCharacterSaveData.SaveData.playerName.ToLower(), playerCharacterSaveData.PlayerCharacterId);
                                 playerNameLookupMap.Add(playerCharacterSaveData.PlayerCharacterId, playerCharacterSaveData.SaveData.playerName);
                             } else {
                                 Debug.LogWarning($"PlayerCharacterService.LoadPlayerNameMap(): Duplicate player name ({playerCharacterSaveData.SaveData.playerName}) or character ID ({playerCharacterSaveData.PlayerCharacterId}) found . This character will be skipped.");
@@ -127,7 +127,7 @@ namespace AnyRPG {
             
             MakeAccountSaveFolder(accountId);
 
-            if (playerNameMap.ContainsKey(anyRPGSaveData.playerName)) {
+            if (playerNameMap.ContainsKey(anyRPGSaveData.playerName.ToLower())) {
                 return false;
             }
 
@@ -136,7 +136,7 @@ namespace AnyRPG {
                 SaveData = anyRPGSaveData
             };
             SaveDataFile(accountId, playerCharacterSaveData);
-            playerNameMap.Add(anyRPGSaveData.playerName, playerCharacterSaveData.PlayerCharacterId);
+            playerNameMap.Add(anyRPGSaveData.playerName.ToLower(), playerCharacterSaveData.PlayerCharacterId);
             playerNameLookupMap.Add(playerCharacterSaveData.PlayerCharacterId, anyRPGSaveData.playerName);
 
             return true;
@@ -195,15 +195,15 @@ namespace AnyRPG {
         }
 
         public bool RenamePlayerCharacter(int characterId, string newName) {
-            if (playerNameMap.ContainsKey(newName)) {
+            if (playerNameMap.ContainsKey(newName.ToLower())) {
                 return false;
             }
             if (playerNameLookupMap.ContainsKey(characterId) == false) {
                 return false;
             }
             string oldName = playerNameLookupMap[characterId];
-            playerNameMap.Remove(oldName);
-            playerNameMap.Add(newName, characterId);
+            playerNameMap.Remove(oldName.ToLower());
+            playerNameMap.Add(newName.ToLower(), characterId);
             playerNameLookupMap[characterId] = newName;
             return true;
         }
@@ -214,7 +214,7 @@ namespace AnyRPG {
             }
             string playerName = playerNameLookupMap[playerCharacterId];
             playerNameLookupMap.Remove(playerCharacterId);
-            playerNameMap.Remove(playerName);
+            playerNameMap.Remove(playerName.ToLower());
             string jsonSavePath = $"{GetAccountSaveFolder(accountId)}/{playerCharacterId}.json";
             if (File.Exists(jsonSavePath)) {
                 File.Delete(jsonSavePath);
@@ -236,7 +236,7 @@ namespace AnyRPG {
                             Debug.LogWarning($"PlayerCharacterService.GetPlayerCharacters({accountId}): Could not load player character save data from file {fileName}. This character will be skipped.");
                             continue;
                         }
-                        if (playerNameMap.ContainsKey(playerCharacterSaveData.SaveData.playerName) == false) {
+                        if (playerNameMap.ContainsKey(playerCharacterSaveData.SaveData.playerName.ToLower()) == false) {
                             Debug.LogWarning($"PlayerCharacterService.GetPlayerCharacters({accountId}): Player name {playerCharacterSaveData.SaveData.playerName} not found in player name map. This character will be skipped.");
                             continue;
                         }
@@ -264,6 +264,12 @@ namespace AnyRPG {
             return null;
         }
 
+        public int GetPlayerIdFromName(string targetPlayerName) {
+            if (playerNameMap.ContainsKey(targetPlayerName.ToLower()) == false) {
+                return 0;
+            }
+            return playerNameMap[targetPlayerName.ToLower()];
+        }
     }
 
 }

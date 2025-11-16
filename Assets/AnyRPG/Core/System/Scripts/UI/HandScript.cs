@@ -28,7 +28,7 @@ namespace AnyRPG {
         private InputManager inputManager = null;
         //InventoryManager inventoryManager = null;
         private PlayerManager playerManager = null;
-        private LogManager logManager = null;
+        private MessageLogClient logManager = null;
         private ControlsManager controlsManager = null;
 
 
@@ -39,7 +39,7 @@ namespace AnyRPG {
             inputManager = systemGameManager.InputManager;
             //inventoryManager = systemGameManager.InventoryManager;
             playerManager = systemGameManager.PlayerManager;
-            logManager = systemGameManager.LogManager;
+            logManager = systemGameManager.MessageLogClient;
             controlsManager = systemGameManager.ControlsManager;
         }
 

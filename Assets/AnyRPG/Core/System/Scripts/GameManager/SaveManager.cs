@@ -608,8 +608,8 @@ namespace AnyRPG {
 
             if (PlayerPrefs.HasKey("QuestTrackerWindowX") && PlayerPrefs.HasKey("QuestTrackerWindowY"))
                 uIManager.QuestTrackerWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("QuestTrackerWindowX"), PlayerPrefs.GetFloat("QuestTrackerWindowY"), 0);
-            if (PlayerPrefs.HasKey("CombatLogWindowX") && PlayerPrefs.HasKey("CombatLogWindowY"))
-                uIManager.CombatLogWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("CombatLogWindowX"), PlayerPrefs.GetFloat("CombatLogWindowY"), 0);
+            if (PlayerPrefs.HasKey("MessageLogWindowX") && PlayerPrefs.HasKey("MessageLogWindowY"))
+                uIManager.MessageLogWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("MessageLogWindowX"), PlayerPrefs.GetFloat("MessageLogWindowY"), 0);
 
             if (PlayerPrefs.HasKey("MessageFeedManagerX") && PlayerPrefs.HasKey("MessageFeedManagerY"))
                 messageFeedManager.MessageFeedWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("MessageFeedManagerX"), PlayerPrefs.GetFloat("MessageFeedManagerY"), 0);
@@ -698,8 +698,8 @@ namespace AnyRPG {
             PlayerPrefs.SetFloat("QuestTrackerWindowX", uIManager.QuestTrackerWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("QuestTrackerWindowY", uIManager.QuestTrackerWindow.RectTransform.anchoredPosition.y);
 
-            PlayerPrefs.SetFloat("CombatLogWindowX", uIManager.CombatLogWindow.RectTransform.anchoredPosition.x);
-            PlayerPrefs.SetFloat("CombatLogWindowY", uIManager.CombatLogWindow.RectTransform.anchoredPosition.y);
+            PlayerPrefs.SetFloat("MessageLogWindowX", uIManager.MessageLogWindow.RectTransform.anchoredPosition.x);
+            PlayerPrefs.SetFloat("MessageLogWindowY", uIManager.MessageLogWindow.RectTransform.anchoredPosition.y);
 
             PlayerPrefs.SetFloat("MessageFeedManagerX", messageFeedManager.MessageFeedWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("MessageFeedManagerY", messageFeedManager.MessageFeedWindow.RectTransform.anchoredPosition.y);

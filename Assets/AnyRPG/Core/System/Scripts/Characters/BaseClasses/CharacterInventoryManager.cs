@@ -33,9 +33,8 @@ namespace AnyRPG {
 
         // game manager references
         private SystemItemManager systemItemManager = null;
-        private SystemEventManager systemEventManager = null;
-        private LogManager logManager = null;
         private LootManager lootManager = null;
+        private MessageLogServer messageLogServer = null;
 
         protected bool eventSubscriptionsInitialized = false;
 
@@ -88,9 +87,8 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             systemItemManager = systemGameManager.SystemItemManager;
-            systemEventManager = systemGameManager.SystemEventManager;
-            logManager = systemGameManager.LogManager;
             lootManager = systemGameManager.LootManager;
+            messageLogServer = systemGameManager.MessageLogServer;
         }
 
 
@@ -853,7 +851,7 @@ namespace AnyRPG {
                 }
             }
             unitController.UnitEventController.NotifyOnDeleteItem(instantiatedItem);
-            logManager.WriteSystemMessage(unitController, $"Destroyed {instantiatedItem.DisplayName}");
+            messageLogServer.WriteSystemMessage(unitController, $"Destroyed {instantiatedItem.DisplayName}");
         }
 
         public void RequestDropItemFromInventorySlot(InventorySlot fromSlot, InventorySlot toSlot, bool fromSlotIsInventory, bool toSlotIsInventory) {

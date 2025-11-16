@@ -12,7 +12,7 @@ namespace AnyRPG {
         protected Dictionary<string, ChatCommand> commandDictionary = new Dictionary<string, ChatCommand>();
 
         // game manager references
-        protected LogManager logManager = null;
+        protected MessageLogClient logManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -26,7 +26,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            logManager = systemGameManager.LogManager;
+            logManager = systemGameManager.MessageLogClient;
         }
 
         public void ParseChatCommand(string commandText, int accountId) {

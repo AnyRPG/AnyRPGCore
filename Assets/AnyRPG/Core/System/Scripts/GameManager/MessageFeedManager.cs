@@ -22,8 +22,7 @@ namespace AnyRPG {
 
         // GameManager references
         private ObjectPooler objectPooler = null;
-        private LogManager logManager = null;
-        private NetworkManagerServer networkManagerServer = null;
+        private MessageLogClient messageLogClient = null;
 
         public CloseableWindow MessageFeedWindow { get => messageFeedWindow; set => messageFeedWindow = value; }
 
@@ -35,8 +34,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
-            logManager = systemGameManager.LogManager;
-            networkManagerServer = systemGameManager.NetworkManagerServer;
+            messageLogClient = systemGameManager.MessageLogClient;
         }
 
         /*
@@ -60,11 +58,7 @@ namespace AnyRPG {
             //uncomment the next line to make the messages spawn at the top instead of the bottom
             //go.transform.SetAsFirstSibling();
             objectPooler.ReturnObjectToPool(go, 2);
-            if (logManager != null) {
-                logManager.WriteSystemMessage(message);
-            } else {
-                //Debug.Log("CombatLogUI.Myinstance was null!!");
-            }
+            messageLogClient.WriteSystemMessage(message);
         }
         
         public void LockUI() {

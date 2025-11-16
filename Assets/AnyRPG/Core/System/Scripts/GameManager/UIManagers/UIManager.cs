@@ -151,7 +151,7 @@ namespace AnyRPG {
         private XPBarController xpBarController = null;
 
         [SerializeField]
-        private CloseableWindow combatLogWindow = null;
+        private CloseableWindow messageLogWindow = null;
 
 
         [Header("Popup Windows")]
@@ -261,7 +261,7 @@ namespace AnyRPG {
         private float defaultPagedButtonsOpacity = 0.8f;
         private float defaultInventorySlotOpacity = 0.5f;
         private float defaultSystemMenuOpacity = 0.8f;
-        private float defaultCombatLogOpacity = 0.8f;
+        private float defaultMessageLogOpacity = 0.8f;
 
         // ui element visibility defaults
         private int defaultUseQuestTracker = 1;
@@ -280,7 +280,7 @@ namespace AnyRPG {
         private int defaultUseMessageFeedButton = 1;
         private int defaultUseStatusEffectBarButton = 1;
         private int defaultLockUIButton = 1;
-        private int defaultUseCombatLogButton = 1;
+        private int defaultUseMessageLogButton = 1;
         private int defaultShowPlayerNameButton = 1;
         private int defaultShowPlayerFactionButton = 1;
         private int defaultHideFullHealthBarButton = 1;
@@ -302,7 +302,7 @@ namespace AnyRPG {
         public UnitFramePanel PlayerUnitFramePanel { get => playerUnitFramePanel; set => playerUnitFramePanel = value; }
         public GroupUnitFramesPanel GroupUnitFramesPanel { get => groupUnitFramesPanel; set => groupUnitFramesPanel = value; }
         public CloseableWindow QuestTrackerWindow { get => questTrackerWindow; }
-        public CloseableWindow CombatLogWindow { get => combatLogWindow; set => combatLogWindow = value; }
+        public CloseableWindow MessageLogWindow { get => messageLogWindow; set => messageLogWindow = value; }
         public CastBarController FloatingCastBarController { get => floatingCastBarController; set => floatingCastBarController = value; }
         public MiniMapController MiniMapController { get => miniMapController; set => miniMapController = value; }
         public XPBarController XPBarController { get => xpBarController; set => xpBarController = value; }
@@ -366,7 +366,7 @@ namespace AnyRPG {
             sidePanel.Configure(systemGameManager);
             mouseOverWindow.Configure(systemGameManager);
             questTrackerWindow.Configure(systemGameManager);
-            combatLogWindow.Configure(systemGameManager);
+            messageLogWindow.Configure(systemGameManager);
             tooltipController.Configure(systemGameManager);
             interactionTooltipController.Configure(systemGameManager);
             handScript.Configure(systemGameManager);
@@ -559,8 +559,8 @@ namespace AnyRPG {
             defaultWindowPositions.Add("DialogWindowY", dialogWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("QuestTrackerWindowX", questTrackerWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("QuestTrackerWindowY", questTrackerWindow.RectTransform.anchoredPosition.y);
-            defaultWindowPositions.Add("CombatLogWindowX", CombatLogWindow.RectTransform.anchoredPosition.x);
-            defaultWindowPositions.Add("CombatLogWindowY", CombatLogWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("MessageLogWindowX", MessageLogWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("MessageLogWindowY", MessageLogWindow.RectTransform.anchoredPosition.y);
 
             defaultWindowPositions.Add("MessageFeedManagerX", MessageFeedManager.MessageFeedWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("MessageFeedManagerY", MessageFeedManager.MessageFeedWindow.RectTransform.anchoredPosition.y);
@@ -624,7 +624,7 @@ namespace AnyRPG {
 
             // ui elements
             questTrackerWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["QuestTrackerWindowX"], defaultWindowPositions["QuestTrackerWindowY"], 0);
-            combatLogWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["CombatLogWindowX"], defaultWindowPositions["CombatLogWindowY"], 0);
+            messageLogWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MessageLogWindowX"], defaultWindowPositions["MessageLogWindowY"], 0);
             MessageFeedManager.MessageFeedWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MessageFeedManagerX"], defaultWindowPositions["MessageFeedManagerY"], 0);
             floatingCastBarWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["FloatingCastBarControllerX"], defaultWindowPositions["FloatingCastBarControllerY"], 0);
             statusEffectWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["StatusEffectPanelControllerX"], defaultWindowPositions["StatusEffectPanelControllerY"], 0);
@@ -1047,7 +1047,7 @@ namespace AnyRPG {
             // so that the window position can be retrieved
             gamepadWindow.OpenWindow();
             xpBarWindow.OpenWindow();
-            combatLogWindow.OpenWindow();
+            messageLogWindow.OpenWindow();
             playerUnitFrameWindow.OpenWindow();
             UpdateLockUI();
 
@@ -1255,14 +1255,14 @@ namespace AnyRPG {
             }
         }
 
-        public void CheckCombatLogSettings() {
-            if (PlayerPrefs.GetInt("UseCombatLog") == 0) {
-                if (combatLogWindow.IsOpen) {
-                    combatLogWindow.CloseWindow();
+        public void CheckMessageLogSettings() {
+            if (PlayerPrefs.GetInt("UseMessageLog") == 0) {
+                if (messageLogWindow.IsOpen) {
+                    messageLogWindow.CloseWindow();
                 }
-            } else if (PlayerPrefs.GetInt("UseCombatLog") == 1) {
-                if (!combatLogWindow.IsOpen) {
-                    combatLogWindow.OpenWindow();
+            } else if (PlayerPrefs.GetInt("UseMessageLog") == 1) {
+                if (!messageLogWindow.IsOpen) {
+                    messageLogWindow.OpenWindow();
                 }
             }
         }
@@ -1278,13 +1278,13 @@ namespace AnyRPG {
             InitializePlayerUI();
 
             CheckQuestTrackerSettings();
-            CheckCombatLogSettings();
+            CheckMessageLogSettings();
             CheckGroupUnitFramesPanelSettings();
             UpdateActionBars();
             UpdateQuestTrackerOpacity();
             UpdateInventoryOpacity();
             UpdatePopupWindowOpacity();
-            UpdateCombatLogOpacity();
+            UpdateMessageLogOpacity();
             if (closeAfterUpdate) {
                 DeactivatePlayerUI();
             }
@@ -1465,9 +1465,9 @@ namespace AnyRPG {
             questTrackerWindow.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
         }
 
-        public void UpdateCombatLogOpacity() {
-            int opacityLevel = (int)(PlayerPrefs.GetFloat("CombatLogOpacity") * 255);
-            combatLogWindow.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+        public void UpdateMessageLogOpacity() {
+            int opacityLevel = (int)(PlayerPrefs.GetFloat("MessageLogOpacity") * 255);
+            messageLogWindow.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
         }
 
         public void UpdateActionBarOpacity() {
@@ -1579,8 +1579,8 @@ namespace AnyRPG {
             if (!PlayerPrefs.HasKey("QuestTrackerOpacity")) {
                 PlayerPrefs.SetFloat("QuestTrackerOpacity", defaultQuestTrackerOpacity);
             }
-            if (!PlayerPrefs.HasKey("CombatLogOpacity")) {
-                PlayerPrefs.SetFloat("CombatLogOpacity", defaultCombatLogOpacity);
+            if (!PlayerPrefs.HasKey("MessageLogOpacity")) {
+                PlayerPrefs.SetFloat("MessageLogOpacity", defaultMessageLogOpacity);
             }
             if (!PlayerPrefs.HasKey("PopupWindowOpacity")) {
                 PlayerPrefs.SetFloat("PopupWindowOpacity", defaultPopupWindowOpacity);
@@ -1636,8 +1636,8 @@ namespace AnyRPG {
             if (!PlayerPrefs.HasKey("UseStatusEffectBar")) {
                 PlayerPrefs.SetInt("UseStatusEffectBar", defaultUseStatusEffectBarButton);
             }
-            if (!PlayerPrefs.HasKey("UseCombatLog")) {
-                PlayerPrefs.SetInt("UseCombatLog", defaultUseCombatLogButton);
+            if (!PlayerPrefs.HasKey("UseMessageLog")) {
+                PlayerPrefs.SetInt("UseMessageLog", defaultUseMessageLogButton);
             }
             if (!PlayerPrefs.HasKey("LockUI")) {
                 PlayerPrefs.SetInt("LockUI", defaultLockUIButton);

@@ -277,11 +277,11 @@ namespace AnyRPG {
 
         [Tooltip("Whether or not to display the combat log.")]
         [SerializeField]
-        private UIElementUsage useCombatLog = UIElementUsage.UserChoice;
+        private UIElementUsage useMessageLog = UIElementUsage.UserChoice;
 
         [Tooltip("Whether or not to display the combat log by default if user choice is selected.")]
         [SerializeField]
-        private bool useCombatLogDefault = true;
+        private bool useMessageLogDefault = true;
 
 
         public Sprite SystemBarMainMenu { get => systemBarMainMenu; set => systemBarMainMenu = value; }
@@ -330,7 +330,7 @@ namespace AnyRPG {
         public UIElementUsage UseFloatingCombatText { get => useFloatingCombatText; set => useFloatingCombatText = value; }
         public UIElementUsage UseMessageFeed { get => useMessageFeed; set => useMessageFeed = value; }
         public UIElementUsage UseStatusEffectBar { get => useStatusEffectBar; set => useStatusEffectBar = value; }
-        public UIElementUsage UseCombatLog { get => useCombatLog; set => useCombatLog = value; }
+        public UIElementUsage UseMessageLog { get => useMessageLog; set => useMessageLog = value; }
         public bool UseQuestTrackerDefault { get => useQuestTrackerDefault; set => useQuestTrackerDefault = value; }
         public bool UseSystemBarDefault { get => useSystemBarDefault; set => useSystemBarDefault = value; }
         public bool UseActionBar1Default { get => useActionBar1Default; set => useActionBar1Default = value; }
@@ -349,7 +349,7 @@ namespace AnyRPG {
         public bool UseFloatingCombatTextDefault { get => useFloatingCombatTextDefault; set => useFloatingCombatTextDefault = value; }
         public bool UseMessageFeedDefault { get => useMessageFeedDefault; set => useMessageFeedDefault = value; }
         public bool UseStatusEffectBarDefault { get => useStatusEffectBarDefault; set => useStatusEffectBarDefault = value; }
-        public bool UseCombatLogDefault { get => useCombatLogDefault; set => useCombatLogDefault = value; }
+        public bool UseMessageLogDefault { get => useMessageLogDefault; set => useMessageLogDefault = value; }
     }
 
     public enum UIElementUsage { Never, UserChoice, Always }

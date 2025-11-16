@@ -42,6 +42,13 @@ namespace AnyRPG {
             return -1;
         }
 
+        public CharacterGroup GetCharacterGroupFromCharacterId(int characterId) {
+            if (characterGroupMemberLookup.ContainsKey(characterId) && characterGroupDictionary.ContainsKey(characterGroupMemberLookup[characterId])) {
+                return characterGroupDictionary[characterGroupMemberLookup[characterId]];
+            }
+            return null;
+        }
+
         public void CreateCharacterGroup(int leaderCharacterId) {
             //Debug.Log($"CharacterGroupService.CreateCharacterGroup({leaderCharacterId})");
 

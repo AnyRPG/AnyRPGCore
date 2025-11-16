@@ -22,7 +22,7 @@ namespace AnyRPG {
 
         // game manager references
         private PlayerManager playerManager = null;
-        private LogManager logManager = null;
+        private MessageLogClient messageLogClient = null;
 
         public int DialogIndex { get => shownNodeCount; }
 
@@ -34,7 +34,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             playerManager = systemGameManager.PlayerManager;
-            logManager = systemGameManager.LogManager;
+            messageLogClient = systemGameManager.MessageLogClient;
         }
 
         public void Cleanup() {
@@ -166,9 +166,7 @@ namespace AnyRPG {
                     return;
                 }
             }
-            if (logManager != null) {
-                logManager.WriteChatMessageClient($"{interactable.DisplayName}: {dialogNode.Description}");
-            }
+            messageLogClient.WriteGeneralMessage($"{interactable.DisplayName}: {dialogNode.Description}");
             //interactable.ProcessDialogTextUpdate(dialogNode.Description);
             BeginChatMessage(dialogNode.Description, dialogNode.ShowTime);
             if (dialogNode.AudioClip != null) {
