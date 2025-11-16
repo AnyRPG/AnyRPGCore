@@ -33,10 +33,18 @@ namespace AnyRPG {
                 return;
             }
 
+            int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
+            if (playerCharacterId == 0) {
+                return;
+            }
+            string playerName = playerCharacterService.GetPlayerNameFromId(playerCharacterId);
+            string addedText = $"{playerName}: {newMessage}";
+
+
             if (systemGameManager.GameMode == GameMode.Network) {
-                networkManagerServer.AdvertiseSceneChatMessage(newMessage, accountId);
+                networkManagerServer.AdvertiseSceneChatMessage(newMessage, addedText, accountId);
             } else {
-                messageLogClient.WriteGeneralMessage(newMessage);
+                messageLogClient.WriteGeneralMessage(addedText);
             }
         }
 

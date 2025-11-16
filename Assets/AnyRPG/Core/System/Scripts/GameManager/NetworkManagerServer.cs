@@ -689,14 +689,14 @@ namespace AnyRPG {
             messageLogServer.WriteChatMessage(accountId, messageText);
         }
 
-        public void AdvertiseSceneChatMessage(string messageText, int accountId) {
+        public void AdvertiseSceneChatMessage(string messageText, string modifiedMessageText, int accountId) {
             if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId) == false) {
                 // no unit logged in
                 return;
             }
+
             // send the modified text with username to the chat window
-            string addedText = $"{loggedInAccounts[accountId].username}: {messageText}";
-            networkController.AdvertiseSendSceneChatMessage(addedText, accountId);
+            networkController.AdvertiseSendSceneChatMessage(modifiedMessageText, accountId);
 
             // send original text to the dialog popup over the player's head
             playerManagerServer.PlayerCharacterMonitors[accountId].unitController.UnitEventController.NotifyOnBeginChatMessage(messageText);
