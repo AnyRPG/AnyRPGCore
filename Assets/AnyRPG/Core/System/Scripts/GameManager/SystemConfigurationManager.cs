@@ -631,6 +631,10 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(SceneNode))]
         private List<string> lobbyGameSceneNames = new List<string>();
 
+        [Tooltip("The chat command that is configured to send a private message (eg: tell or whisper)")]
+        [SerializeField]
+        private string privateMessageChatCommand = string.Empty;
+
         // reference to the lobby game scene nodes
         private List<SceneNode> lobbyGameScenes = new List<SceneNode>();
 
@@ -805,6 +809,7 @@ namespace AnyRPG {
         public List<SceneNode> LobbyGameScenes { get => lobbyGameScenes; }
         public bool EnableLeashing { get => enableLeashing; set => enableLeashing = value; }
         public ServerBackend ServerBackend { get => serverBackend; set => serverBackend = value; }
+        public string PrivateMessageChatCommand { get => privateMessageChatCommand; set => privateMessageChatCommand = value; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }
 

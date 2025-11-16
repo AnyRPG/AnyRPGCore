@@ -126,6 +126,7 @@ namespace AnyRPG {
         protected ChatCommandManager chatCommandManager = null;
         protected UIManager uiManager = null;
         protected NetworkManagerClient networkManagerClient = null;
+        protected ContextMenuService contextMenuService = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("MessageLogPanel.Awake()");
@@ -148,6 +149,7 @@ namespace AnyRPG {
             chatCommandManager = systemGameManager.ChatCommandManager;
             uiManager = systemGameManager.UIManager;
             networkManagerClient = systemGameManager.NetworkManagerClient;
+            contextMenuService = systemGameManager.ContextMenuService;
         }
 
         private void ClearLog() {
@@ -288,6 +290,7 @@ namespace AnyRPG {
             logManager.OnClearSystemMessages += HandleClearSystemMessages;
             logManager.OnClearCombatMessages += HandleClearCombatMessages;
             uiManager.OnBeginChatCommand += HandleBeginChatCommand;
+            contextMenuService.OnBeginPrivateMessage += HandleBeginPrivateMessage;
         }
 
         protected override void ProcessCleanupEventSubscriptions() {
@@ -304,9 +307,22 @@ namespace AnyRPG {
             logManager.OnClearSystemMessages -= HandleClearSystemMessages;
             logManager.OnClearCombatMessages -= HandleClearCombatMessages;
             uiManager.OnBeginChatCommand -= HandleBeginChatCommand;
+            contextMenuService.OnBeginPrivateMessage -= HandleBeginPrivateMessage;
+        }
+
+        private void HandleBeginPrivateMessage(string messageText) {
+            //Debug.Log($"MessageLogPanel.HandleBeginPrivateMessage({messageText})");
+
+            HandleBeginChatCommand($"/{messageText}");
         }
 
         public void HandleBeginChatCommand() {
+            HandleBeginChatCommand("/");
+        }
+
+        public void HandleBeginChatCommand(string messageText) {
+            //Debug.Log($"MessageLogPanel.HandleBeginChatCommand({messageText})");
+
             // disable input of other keys while entering text
             ActivateTextInput();
 
@@ -315,10 +331,10 @@ namespace AnyRPG {
 
             // set the text to the slash that was just entered and move to end of the line so
             // the text isn't selected and the '/' doesn't get overwritten with the next keystroke
-            textInput.text = "/";
-            textInput.caretPosition = 1;
-            textInput.selectionAnchorPosition = 1;
-            textInput.selectionFocusPosition = 1;
+            textInput.text = messageText;
+            textInput.caretPosition = messageText.Length;
+            textInput.selectionAnchorPosition = messageText.Length;
+            textInput.selectionFocusPosition = messageText.Length;
         }
 
         public void HandleClearGeneralMessages() {

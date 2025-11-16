@@ -83,13 +83,52 @@ namespace AnyRPG {
             SetupLeaveButton();
             SetupPromoteButton();
             tradeButton.gameObject.SetActive(false);
-            messageButton.gameObject.SetActive(false);
+            SetupMessageButton();
 
             uINavigationController.UpdateNavigationList();
 
             if (uINavigationController.ActiveNavigableButtonCount == 0) {
                 contextMenuService.CloseContextMenu();
             }
+        }
+
+        private void SetupMessageButton() {
+            if (contextMenuService.TargetUnitController == playerManager.UnitController) {
+                // cannot message ourselves
+                //Debug.Log("ContextMenuPanel.SetupMessageButton() target is player, disabling invite button");
+                messageButton.gameObject.SetActive(false);
+                return;
+            }
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                // can only message in network mode
+                //Debug.Log("ContextMenuPanel.SetupMessageButton() game mode is local, disabling invite button");
+                messageButton.gameObject.SetActive(false);
+                return;
+            }
+
+            if (contextMenuService.TargetUnitController.UnitControllerMode != UnitControllerMode.Player) {
+                // can only message players
+                //Debug.Log("ContextMenuPanel.SetupMessageButton() target is not player, disabling invite button");
+                messageButton.gameObject.SetActive(false);
+                return;
+            }
+
+            if (Faction.RelationWith(contextMenuService.TargetUnitController, playerManager.UnitController) < 0) {
+                // can only message neutral or better
+                //Debug.Log("ContextMenuPanel.SetupMessageButton() target faction relationship is negative, disabling invite button");
+                messageButton.gameObject.SetActive(false);
+                return;
+            }
+
+            if (systemConfigurationManager.PrivateMessageChatCommand == string.Empty) {
+                // system must have a message command to use
+                messageButton.gameObject.SetActive(false);
+                return;
+            }
+
+            // all checks passed.  this character can be messaged
+            messageButton.gameObject.SetActive(true);
         }
 
         private void SetupInviteButton() {
@@ -270,11 +309,14 @@ namespace AnyRPG {
 
         public void Trade() {
             Debug.Log("ContextMenuPanel.Trade()");
+
             contextMenuService.CloseContextMenu();
         }
 
         public void Message() {
-            Debug.Log("ContextMenuPanel.Message()");
+            //Debug.Log("ContextMenuPanel.Message()");
+
+            contextMenuService.BeginPrivateMessage();
             contextMenuService.CloseContextMenu();
         }
 

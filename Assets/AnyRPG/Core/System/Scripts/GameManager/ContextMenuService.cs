@@ -1,12 +1,10 @@
-using AnyRPG;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
     public class ContextMenuService : ConfiguredClass {
+
+        public event Action<string> OnBeginPrivateMessage = delegate { };
 
         private UnitController targetUnitController;
 
@@ -42,7 +40,15 @@ namespace AnyRPG {
             ClearContextMenuTarget();
             uIManager.contextMenuWindow.CloseWindow();
         }
-        
+
+        public void BeginPrivateMessage() {
+            //Debug.Log($"ContextMenuService.BeginPrivateMessage()");
+
+            if (targetUnitController == null) {
+                return;
+            }
+            OnBeginPrivateMessage($"{systemConfigurationManager.PrivateMessageChatCommand} {targetUnitController.DisplayName} ");
+        }
     }
 
 }
