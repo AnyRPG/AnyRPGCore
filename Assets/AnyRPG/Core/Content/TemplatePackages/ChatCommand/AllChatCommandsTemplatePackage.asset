@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
-  m_Name: AllCheatCommandsTemplatePackage
+  m_Name: AllChatCommandsTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: All Cheat Commands
+  resourceName: All Chat Commands
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -30,5 +30,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fddb3f42531a042449080a7d0bb872ae, type: 2}
   - {fileID: 11400000, guid: e79c28bf4b85b72468240a8d24aa6fef, type: 2}
   - {fileID: 11400000, guid: 1c20f1c0e11333f49ab69e25a5c1f005, type: 2}
+  - {fileID: 11400000, guid: 107f7a1711efe834187fe11c5e0d370b, type: 2}
+  - {fileID: 11400000, guid: 796f7c447d44cfe4b80f39d85d73aff5, type: 2}
   prefabs: []
   dependencies: []
