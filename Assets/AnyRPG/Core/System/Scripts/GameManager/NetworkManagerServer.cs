@@ -67,6 +67,22 @@ namespace AnyRPG {
         /// </summary>
         private Dictionary<int, int> lobbyGameSceneHandleLookup = new Dictionary<int, int>();
 
+        /// <summary>
+        /// hashcode, characterGroupId
+        /// </summary>
+        private Dictionary<int, int> characterGroupLoadRequestHashCodes = new Dictionary<int, int>();
+
+        /// <summary>
+        /// characterGroupId, sceneFileName, sceneHandle
+        /// </summary>
+        private Dictionary<int, Dictionary<string, int>> characterGroupSceneHandles = new Dictionary<int, Dictionary<string, int>>();
+
+        /// <summary>
+        /// sceneHandle, characterGroupId
+        /// </summary>
+        private Dictionary<int, int> characterGroupSceneHandleLookup = new Dictionary<int, int>();
+
+
         private int lobbyGameCounter = 0;
         private int maxLobbyChatTextSize = 64000;
         private ushort port = 7770;
@@ -82,7 +98,6 @@ namespace AnyRPG {
 
         // game manager references
         private SaveManager saveManager = null;
-        private MessageLogClient messageLogClient = null;
         private MessageLogServer messageLogServer = null;
         private PlayerManagerServer playerManagerServer = null;
         private CharacterManager characterManager = null;
@@ -116,6 +131,7 @@ namespace AnyRPG {
         public Dictionary<int, LoggedInAccount> LoggedInAccountsByClient { get => loggedInAccountsByClient; }
         public Dictionary<int, LobbyGame> LobbyGames { get => lobbyGames; }
         public Dictionary<int, Dictionary<string, int>> LobbyGameSceneHandles { get => lobbyGameSceneHandles; }
+        public Dictionary<int, Dictionary<string, int>> CharacterGroupSceneHandles { get => characterGroupSceneHandles; }
         public Dictionary<int, int> LobbyGameAccountLookup { get => lobbyGameAccountLookup; set => lobbyGameAccountLookup = value; }
         public NetworkController NetworkController { get => networkController; set => networkController = value; }
 
@@ -128,7 +144,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             saveManager = systemGameManager.SaveManager;
-            messageLogClient = systemGameManager.MessageLogClient;
             messageLogServer = systemGameManager.MessageLogServer;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             characterManager = systemGameManager.CharacterManager;
@@ -799,6 +814,11 @@ namespace AnyRPG {
                 AddLobbyGameSceneHandle(lobbyGameLoadRequestHashCodes[loadRequestHashCode], scene);
                 lobbyGameLoadRequestHashCodes.Remove(loadRequestHashCode);
             }
+            if (characterGroupLoadRequestHashCodes.ContainsKey(loadRequestHashCode) == true) {
+                //Debug.Log($"NetworkManagerServer.HandleSceneLoadEnd({scene.name}, {loadRequestHashCode}) - character group load request");
+                AddCharacterGroupSceneHandle(characterGroupLoadRequestHashCodes[loadRequestHashCode], scene);
+                characterGroupLoadRequestHashCodes.Remove(loadRequestHashCode);
+            }
             levelManagerServer.AddLoadedScene(scene);
             levelManagerServer.ProcessLevelLoad(scene);
         }
@@ -814,6 +834,20 @@ namespace AnyRPG {
             }
             if (lobbyGameSceneHandleLookup.ContainsKey(scene.handle) == false) {
                 lobbyGameSceneHandleLookup.Add(scene.handle, lobbyGameId);
+            }
+        }
+
+        private void AddCharacterGroupSceneHandle(int characterGroupId, Scene scene) {
+            //Debug.Log($"NetworkManagerServer.AddCharacterGroupSceneHandle({characterGroupId}, {scene.name}, {scene.handle})");
+
+            if (characterGroupSceneHandles.ContainsKey(characterGroupId) == false) {
+                characterGroupSceneHandles.Add(characterGroupId, new Dictionary<string, int>());
+            }
+            if (characterGroupSceneHandles[characterGroupId].ContainsKey(scene.name) == false) {
+                characterGroupSceneHandles[characterGroupId].Add(scene.name, scene.handle);
+            }
+            if (characterGroupSceneHandleLookup.ContainsKey(scene.handle) == false) {
+                characterGroupSceneHandleLookup.Add(scene.handle, characterGroupId);
             }
         }
 
@@ -833,6 +867,14 @@ namespace AnyRPG {
                     lobbyGameSceneHandles[lobbyGameId].Remove(sceneName);
                 }
                 lobbyGameSceneHandleLookup.Remove(sceneHandle);
+            }
+            if (characterGroupSceneHandleLookup.ContainsKey(sceneHandle) == true) {
+                //Debug.Log($"NetworkManagerServer.HandleSceneUnloadEnd({sceneName}, {sceneHandle}) - character group unload request");
+                int characterGroupId = characterGroupSceneHandleLookup[sceneHandle];
+                if (characterGroupSceneHandles.ContainsKey(characterGroupId) == true && characterGroupSceneHandles[characterGroupId].ContainsKey(sceneName) == true) {
+                    characterGroupSceneHandles[characterGroupId].Remove(sceneName);
+                }
+                characterGroupSceneHandleLookup.Remove(sceneHandle);
             }
             //levelManagerServer.RemoveLoadedScene(sceneHandle, sceneName);
         }
@@ -1003,6 +1045,14 @@ namespace AnyRPG {
 
             if (lobbyGameLoadRequestHashCodes.ContainsKey(hashCode) == false) {
                 lobbyGameLoadRequestHashCodes.Add(hashCode, gameId);
+            }
+        }
+
+        public void SetCharacterGroupLoadRequestHashcode(int characterGroupId, int hashCode) {
+            //Debug.Log($"NetworkManagerServer.SetLobbyGameLoadRequestHashcode({gameId}, {hashCode})");
+
+            if (characterGroupLoadRequestHashCodes.ContainsKey(hashCode) == false) {
+                characterGroupLoadRequestHashCodes.Add(hashCode, characterGroupId);
             }
         }
 

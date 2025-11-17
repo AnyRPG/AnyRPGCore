@@ -45,6 +45,8 @@ MonoBehaviour:
   allowMount: 0
   suppressCharacterSpawn: 0
   suppressMainCamera: 0
+  isDungeon: 1
+  isCutScene: 0
   autoPlayCutsceneName: 
   environmentStateNames: []
   sunRotationMode: 0

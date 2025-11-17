@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.TextCore.Text;
 
 namespace AnyRPG {
     public class FishNetClientConnector : ConfiguredNetworkBehaviour {
@@ -20,6 +19,7 @@ namespace AnyRPG {
         private NetworkManagerClient networkManagerClient = null;
         private PlayerManagerServer playerManagerServer = null;
         private SaveManager saveManager = null;
+        private CharacterGroupServiceServer characterGroupServiceServer = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log($"FishNetClientConnector.Configure(): instanceId: {GetInstanceID()}");
@@ -36,6 +36,7 @@ namespace AnyRPG {
             networkManagerClient = systemGameManager.NetworkManagerClient;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             saveManager = systemGameManager.SaveManager;
+            characterGroupServiceServer = systemGameManager.CharacterGroupServiceServer;
         }
 
         public void SetNetworkManager(FishNet.Managing.NetworkManager networkManager) {
@@ -639,20 +640,50 @@ namespace AnyRPG {
 
             AdvertiseJoinMMOGameInProgress(networkConnection);
 
-            LoadMMOGameScene(loadingSceneNode, networkConnection);
+            LoadMMOGameScene(accountId, loadingSceneNode, networkConnection);
         }
 
 
-        public void LoadMMOGameScene(SceneNode sceneNode, NetworkConnection networkConnection) {
-            //Debug.Log($"FishNetClientConnector.LoadMMOGameScene({sceneNode.SceneFile}, {networkConnection.ClientId}");
+        public void LoadMMOGameScene(int accountId, SceneNode sceneNode, NetworkConnection networkConnection) {
+            //Debug.Log($"FishNetClientConnector.LoadMMOGameScene(accountId: {accountId}, {sceneNode.SceneFile}, clientId: {networkConnection.ClientId}");
 
+            // get characterGroupId for accountId
+            int playerId = playerManagerServer.GetPlayerCharacterId(accountId);
+            int characterGroupId = characterGroupServiceServer.GetCharacterGroupIdFromCharacterId(playerId);
+            //Debug.Log($"playerId: {playerId}; characterGroupId: {characterGroupId}");
+
+            if (characterGroupId > 0
+                && sceneNode.IsDungeon == true
+                && networkManagerServer.CharacterGroupSceneHandles.ContainsKey(characterGroupId)
+                && networkManagerServer.CharacterGroupSceneHandles[characterGroupId].ContainsKey(sceneNode.SceneFile) == true) {
+                // this is a dungeon and an existing scene exists for this character group
+                //Debug.Log("this is a dungeon and an existing scene exists for this character group");
+                SceneLoadData sceneLoadData = new(networkManagerServer.CharacterGroupSceneHandles[characterGroupId][sceneNode.SceneFile]);
+                sceneLoadData.ReplaceScenes = ReplaceOption.All;
+                sceneLoadData.Options.LocalPhysics = LocalPhysicsMode.Physics3D;
+                sceneLoadData.Options.AllowStacking = true;
+                sceneLoadData.PreferredActiveScene = new PreferredScene(SceneLookupData.CreateData(sceneNode.SceneFile));
+                fishNetNetworkManager.SceneManager.LoadConnectionScenes(networkConnection, sceneLoadData);
+            } else {
                 // load new scene
+                //Debug.Log("loading a new scene");
                 SceneLoadData sceneLoadData = new SceneLoadData(sceneNode.SceneFile);
                 sceneLoadData.ReplaceScenes = ReplaceOption.All;
                 sceneLoadData.Options.LocalPhysics = LocalPhysicsMode.Physics3D;
-                sceneLoadData.Options.AllowStacking = false;
                 sceneLoadData.PreferredActiveScene = new PreferredScene(SceneLookupData.CreateData(sceneNode.SceneFile));
+                if (characterGroupId > 0 && sceneNode.IsDungeon == true) {
+                    // this is a dungeon and the character is in a group. set the request hash and stacking so that this instance gets linked to the group
+                    sceneLoadData.Options.AllowStacking = true;
+                    networkManagerServer.SetCharacterGroupLoadRequestHashcode(characterGroupId, sceneLoadData.GetHashCode());
+                } else if (sceneNode.IsDungeon == true) {
+                    // this is a dungeon and the character is not in a group.  no hash code will be set because this instance will be unique to this character
+                    sceneLoadData.Options.AllowStacking = true;
+                } else {
+                    // this is a world scene and should not be stacked
+                    sceneLoadData.Options.AllowStacking = false;
+                }
                 fishNetNetworkManager.SceneManager.LoadConnectionScenes(networkConnection, sceneLoadData);
+            }
         }
 
         public void LoadLobbyGameScene(LobbyGame lobbyGame, SceneNode sceneNode, NetworkConnection networkConnection) {
@@ -828,7 +859,7 @@ namespace AnyRPG {
             }
 
             if (networkManagerServer.ServerMode == NetworkServerMode.MMO) {
-                LoadMMOGameScene(loadingSceneNode, networkConnection);
+                LoadMMOGameScene(accountId, loadingSceneNode, networkConnection);
             } else if (networkManagerServer.ServerMode == NetworkServerMode.Lobby) {
                 LobbyGame lobbyGame = networkManagerServer.LobbyGames[networkManagerServer.LobbyGameAccountLookup[accountId]];
                 LoadLobbyGameScene(lobbyGame, loadingSceneNode, networkConnection);

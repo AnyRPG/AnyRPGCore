@@ -103,6 +103,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool suppressMainCamera = false;
 
+        [Tooltip("If true, each character group will launch into a separate instance of this scene.")]
+        [SerializeField]
+        private bool isDungeon = false;
+
         [Tooltip("If true, this scene will only load on the client in a network game.")]
         [SerializeField]
         private bool isCutScene = false;
@@ -276,6 +280,7 @@ namespace AnyRPG {
         public SunRotationMode SunRotationMode { get => sunRotationMode; set => sunRotationMode = value; }
         public Sprite LoadingScreenImage { get => loadingScreenImage; set => loadingScreenImage = value; }
         public bool IsCutScene { get => isCutScene; set => isCutScene = value; }
+        public bool IsDungeon { get => isDungeon; set => isDungeon = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
