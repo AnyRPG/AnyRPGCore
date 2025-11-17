@@ -32,5 +32,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1c20f1c0e11333f49ab69e25a5c1f005, type: 2}
   - {fileID: 11400000, guid: 107f7a1711efe834187fe11c5e0d370b, type: 2}
   - {fileID: 11400000, guid: 796f7c447d44cfe4b80f39d85d73aff5, type: 2}
+  - {fileID: 11400000, guid: b980f7b15b11bbc43934fede67b37e3a, type: 2}
+  - {fileID: 11400000, guid: ab9e4d8faa69f2f43bea079caedf5e1c, type: 2}
+  - {fileID: 11400000, guid: 62950e13be3132e4db89b19481e58b2f, type: 2}
+  - {fileID: 11400000, guid: eac46836e1a9a194fa23450e81c88e00, type: 2}
+  - {fileID: 11400000, guid: 018afeca7c02b3c47bc04f2409adb10c, type: 2}
   prefabs: []
   dependencies: []

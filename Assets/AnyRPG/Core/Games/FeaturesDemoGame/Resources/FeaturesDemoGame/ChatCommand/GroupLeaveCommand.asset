@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64b6374697d369746bd6fdeacdaa45f9, type: 3}
-  m_Name: GroupMessageCommand
+  m_Script: {fileID: 11500000, guid: 6680591ec5e4e7145a518eeaab21a108, type: 3}
+  m_Name: GroupLeaveCommand
   m_EditorClassIdentifier: 
-  resourceName: group
+  resourceName: leave
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -20,4 +20,4 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  messageType: 1
+  commandType: 2
