@@ -350,7 +350,7 @@ namespace AnyRPG {
             // nothing here for now
         }
 
-        protected void InstallDefaultTemplateContent(string fileSystemGameName, string newGameParentFolder) {
+        protected virtual void InstallDefaultTemplateContent(string fileSystemGameName, string newGameParentFolder) {
 
             List<ScriptableContentTemplate> contentTemplates = new List<ScriptableContentTemplate>();
 
@@ -359,10 +359,7 @@ namespace AnyRPG {
             contentTemplates.Add((ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToAttackAbilityTemplate));
             contentTemplates.Add((ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + PathToPlayerUnitsTemplate));
 
-            if (contentTemplates.Count > 0) {
-                TemplateContentWizard.RunWizard(fileSystemGameName, newGameParentFolder, contentTemplates, true, true);
-            }
-
+            TemplateContentWizard.RunWizard(fileSystemGameName, newGameParentFolder, contentTemplates, true, true);
         }
 
         protected void InstallOptionalTemplateContent(string fileSystemGameName, string newGameParentFolder) {

@@ -11,6 +11,7 @@ namespace AnyRPG {
     public class FishNetNewGameWizard : NewGameWizardBase {
 
         private const string pathToFishNetNetworkManagerPrefab = "/AnyRPG/Network/FishNet/GameManager/FishNetNetworkManager.prefab";
+        private const string pathToNetworkChatCommandsTemplate = "/AnyRPG/Core/Content/TemplatePackages/ChatCommand/NetworkChatCommandsTemplatePackage.asset";
         private const string pathToPlayerUnitsTemplate = "/AnyRPG/Network/FishNet/Content/TemplatePackages/UnitProfile/Player/FishNetMecanimHumanPlayerUnitsTemplatePackage.asset";
         private const string pathToPhysicsSceneSync = "/AnyRPG/Network/FishNet/GameManager/FishNetPhysicsSceneSync.prefab";
 
@@ -38,6 +39,10 @@ namespace AnyRPG {
                 return false;
             }
 
+            if (WizardUtilities.CheckFileExists(pathToNetworkChatCommandsTemplate, "Network Chat Commands Template Package") == false) {
+                return false;
+            }
+
             return base.CheckFilesExist();
         }
 
@@ -45,6 +50,15 @@ namespace AnyRPG {
             string sceneConfigPrefabAssetPath = "Assets" + pathToPhysicsSceneSync;
             GameObject sceneSyncGameObject = (GameObject)AssetDatabase.LoadMainAssetAtPath(sceneConfigPrefabAssetPath);
             GameObject instantiatedGO = (GameObject)PrefabUtility.InstantiatePrefab(sceneSyncGameObject);
+        }
+
+        protected override void InstallDefaultTemplateContent(string fileSystemGameName, string newGameParentFolder) {
+            base.InstallDefaultTemplateContent(fileSystemGameName, newGameParentFolder);
+
+            List<ScriptableContentTemplate> contentTemplates = new List<ScriptableContentTemplate>();
+            contentTemplates.Add((ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToNetworkChatCommandsTemplate));
+
+            TemplateContentWizard.RunWizard(fileSystemGameName, newGameParentFolder, contentTemplates, true, true);
         }
 
         protected override void MakeOptionalContent(string fileSystemGameName, string prefabPath, GameObject gameManagerSceneVariant) {
@@ -104,6 +118,7 @@ namespace AnyRPG {
             systemConfigurationManager.DefaultPlayerUnitProfileName = "Mecanim Human Male";
             systemConfigurationManager.AllowOfflinePlay = false;
             systemConfigurationManager.AllowOnlinePlay = true;
+            systemConfigurationManager.PrivateMessageChatCommand = "private";
         }
 
         protected override void ConfigureGameManager(GameObject instantiatedGameObject) {

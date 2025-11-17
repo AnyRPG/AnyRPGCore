@@ -268,7 +268,6 @@ namespace AnyRPG {
 
             //List<ScriptableContentTemplate> returnList = new List<ScriptableContentTemplate>();
             foreach (ScriptableContentTemplate dependency in dependencyMaster) {
-                
                 // create a list of items that is not already in the return list, and crawl them for more dependencies
                 List<ScriptableContentTemplate> crawlList = new List<ScriptableContentTemplate>();
                 foreach (ScriptableContentTemplate scriptableContentTemplate in dependency.Dependencies) {
