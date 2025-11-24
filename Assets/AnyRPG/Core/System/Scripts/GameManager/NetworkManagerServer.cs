@@ -15,6 +15,8 @@ namespace AnyRPG {
         public event Action<int, int, string> OnJoinLobbyGame = delegate { };
         public event Action<int> OnStartLobbyGame = delegate { };
         public event Action<int, int> OnLeaveLobbyGame = delegate { };
+        public event Action OnStartServer = delegate { };
+        public event Action OnStopServer = delegate { };
 
         [SerializeField]
         private NetworkController networkController = null;
@@ -124,6 +126,7 @@ namespace AnyRPG {
         private PlayerCharacterService playerCharacterService = null;
         private NewGameManager newGameManager = null;
         private CharacterGroupServiceServer characterGroupServiceServer = null;
+        private TradeServiceServer tradeServiceServer = null;
 
         public bool ServerModeActive { get => serverModeActive; }
         public NetworkServerMode ServerMode { get => serverMode; }
@@ -170,6 +173,7 @@ namespace AnyRPG {
             playerCharacterService = systemGameManager.PlayerCharacterService;
             newGameManager = systemGameManager.NewGameManager;
             characterGroupServiceServer = systemGameManager.CharacterGroupServiceServer;
+            tradeServiceServer = systemGameManager.TradeServiceServer;
         }
 
         public void AddLoggedInAccount(int clientId, int accountId, string token) {
@@ -205,6 +209,8 @@ namespace AnyRPG {
         }
 
         public void SavePlayerCharacter(PlayerCharacterMonitor playerCharacterMonitor) {
+            //Debug.Log($"NetworkManagerServer.SavePlayerCharacter()");
+
             if (playerCharacterMonitor.unitController != null) {
                 playerCharacterMonitor.SavePlayerLocation();
             }
@@ -253,13 +259,13 @@ namespace AnyRPG {
             SpawnPlayerRequest spawnPlayerRequest = null;
             if (correctPassword == true) {
                 if (loggedInAccounts.ContainsKey(accountId) && loggedInAccounts[accountId].disconnected == false) {
-                    if (playerManagerServer.ActivePlayers.ContainsKey(accountId)) {
+                    if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId)) {
                         // if the player is already logged in, we need to add a spawn request to match the current position and direction of the player
                         spawnPlayerRequest = new SpawnPlayerRequest() {
                             overrideSpawnDirection = true,
-                            spawnForwardDirection = playerManagerServer.ActivePlayers[accountId].transform.forward,
+                            spawnForwardDirection = playerManagerServer.ActiveUnitControllers[accountId].transform.forward,
                             overrideSpawnLocation = true,
-                            spawnLocation = playerManagerServer.ActivePlayers[accountId].transform.position
+                            spawnLocation = playerManagerServer.ActiveUnitControllers[accountId].transform.position
                         };
                     }
                     // if the account is already logged in, kick the old client
@@ -459,7 +465,7 @@ namespace AnyRPG {
             //Debug.Log($"NetworkManagerServer.ActivateServerMode()");
 
             serverModeActive = true;
-            systemEventManager.NotifyOnStartServer();
+            OnStartServer();
             systemEventManager.OnChooseWeather += HandleChooseWeather;
             systemEventManager.OnStartWeather += HandleStartWeather;
             systemEventManager.OnEndWeather += HandleEndWeather;
@@ -474,7 +480,7 @@ namespace AnyRPG {
             lobbyGames.Clear();
             lobbyGameChatText.Clear();
 
-            systemEventManager.NotifyOnStopServer();
+            OnStopServer();
             systemEventManager.OnChooseWeather -= HandleChooseWeather;
             systemEventManager.OnStartWeather -= HandleStartWeather;
             systemEventManager.OnEndWeather -= HandleEndWeather;
@@ -742,12 +748,12 @@ namespace AnyRPG {
 
             // this method is only called when loading a cutscene, so we need to create a spawn request so the player spawns
             // at the correct position and direction when the cutscene ends
-            if (playerManagerServer.ActivePlayers.ContainsKey(accountId)) {
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId)) {
                 SpawnPlayerRequest spawnPlayerRequest = new SpawnPlayerRequest() {
                     overrideSpawnDirection = true,
-                    spawnForwardDirection = playerManagerServer.ActivePlayers[accountId].transform.forward,
+                    spawnForwardDirection = playerManagerServer.ActiveUnitControllers[accountId].transform.forward,
                     overrideSpawnLocation = true,
-                    spawnLocation = playerManagerServer.ActivePlayers[accountId].transform.position
+                    spawnLocation = playerManagerServer.ActiveUnitControllers[accountId].transform.position
                 };
                 DespawnPlayerUnit(accountId);
                 playerManagerServer.AddSpawnRequest(accountId, spawnPlayerRequest, true);
@@ -890,62 +896,62 @@ namespace AnyRPG {
         }
 
         public void TurnInDialog(Interactable interactable, int componentIndex, Dialog dialog, int accountId) {
-            if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == false) {
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            dialogManagerServer.TurnInDialog(playerManagerServer.ActivePlayers[accountId], interactable, componentIndex, dialog);
+            dialogManagerServer.TurnInDialog(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, dialog);
         }
 
         public void TurnInQuestDialog(Dialog dialog, int accountId) {
-            if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == false) {
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            playerManagerServer.ActivePlayers[accountId].CharacterDialogManager.TurnInDialog(dialog);
+            playerManagerServer.ActiveUnitControllers[accountId].CharacterDialogManager.TurnInDialog(dialog);
         }
 
 
         public void SetPlayerCharacterClass(Interactable interactable, int componentIndex, int accountId) {
-            if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == false) {
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            classChangeManagerServer.ChangeCharacterClass(playerManagerServer.ActivePlayers[accountId], interactable, componentIndex);
+            classChangeManagerServer.ChangeCharacterClass(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex);
         }
 
         public void SetPlayerCharacterSpecialization(Interactable interactable, int componentIndex, int accountId) {
-            if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == false) {
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            specializationChangeManagerServer.ChangeCharacterSpecialization(playerManagerServer.ActivePlayers[accountId], interactable, componentIndex);
+            specializationChangeManagerServer.ChangeCharacterSpecialization(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex);
         }
 
         public void SetPlayerFaction(Interactable interactable, int componentIndex, int accountId) {
-            if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == false) {
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            factionChangeManagerServer.ChangeCharacterFaction(playerManagerServer.ActivePlayers[accountId], interactable, componentIndex);
+            factionChangeManagerServer.ChangeCharacterFaction(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex);
         }
 
         public void LearnSkill(Interactable interactable, int componentIndex, int skillId, int accountId) {
-            if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == false) {
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            skillTrainerManagerServer.LearnSkill(playerManagerServer.ActivePlayers[accountId], interactable, componentIndex, skillId);
+            skillTrainerManagerServer.LearnSkill(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, skillId);
         }
 
         public void AcceptQuest(Interactable interactable, int componentIndex, Quest quest, int accountId) {
-            if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == false) {
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
 
-            questGiverManagerServer.AcceptQuest(interactable, componentIndex, playerManagerServer.ActivePlayers[accountId], quest);
+            questGiverManagerServer.AcceptQuest(interactable, componentIndex, playerManagerServer.ActiveUnitControllers[accountId], quest);
         }
 
         public void CompleteQuest(Interactable interactable, int componentIndex, Quest quest, QuestRewardChoices questRewardChoices, int accountId) {
-            if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == false) {
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
 
-            questGiverManagerServer.CompleteQuest(interactable, componentIndex, playerManagerServer.ActivePlayers[accountId], quest, questRewardChoices);
+            questGiverManagerServer.CompleteQuest(interactable, componentIndex, playerManagerServer.ActiveUnitControllers[accountId], quest, questRewardChoices);
         }
 
 
@@ -958,22 +964,22 @@ namespace AnyRPG {
         }
 
         public void SellVendorItem(Interactable interactable, int componentIndex, int itemInstanceId, int accountId) {
-            if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == false) {
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) == false) {
                 return;
             }
-            vendorManagerServer.SellItemToVendor(playerManagerServer.ActivePlayers[accountId], interactable, componentIndex, systemItemManager.InstantiatedItems[itemInstanceId]);
+            vendorManagerServer.SellItemToVendor(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, systemItemManager.InstantiatedItems[itemInstanceId]);
         }
 
         public void RequestSpawnUnit(Interactable interactable, int componentIndex, int unitLevel, int extraLevels, bool useDynamicLevel, UnitProfile unitProfile, UnitToughness unitToughness, int accountId) {
             //Debug.Log($"NetworkManagerServer.RequestSpawnUnit({interactable.gameObject.name}, {componentIndex}, {unitLevel}, {extraLevels}, {useDynamicLevel}, {unitProfile.ResourceName}, {unitToughness?.ResourceName}, {accountId})");
 
-            if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == false) {
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            unitSpawnManager.SpawnUnit(playerManagerServer.ActivePlayers[accountId], interactable, componentIndex, unitLevel, extraLevels, useDynamicLevel, unitProfile, unitToughness);
+            unitSpawnManager.SpawnUnit(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, unitLevel, extraLevels, useDynamicLevel, unitProfile, unitToughness);
         }
 
 
@@ -987,41 +993,41 @@ namespace AnyRPG {
         }
 
         public void BuyItemFromVendor(Interactable interactable, int componentIndex, int collectionIndex, int itemIndex, string resourceName, int accountId) {
-            if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == false) {
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            vendorManagerServer.BuyItemFromVendor(playerManagerServer.ActivePlayers[accountId], interactable, componentIndex, collectionIndex, itemIndex, resourceName, accountId);
+            vendorManagerServer.BuyItemFromVendor(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, collectionIndex, itemIndex, resourceName, accountId);
         }
 
         public void TakeAllLoot(int accountId) {
-            if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == true) {
-                lootManager.TakeAllLootInternal(accountId, playerManagerServer.ActivePlayers[accountId]);
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == true) {
+                lootManager.TakeAllLootInternal(accountId, playerManagerServer.ActiveUnitControllers[accountId]);
             }
         }
 
         public void RequestTakeLoot(int lootDropId, int accountId) {
             //Debug.Log($"NetworkManagerServer.RequestTakeLoot({lootDropId}, {accountId})");
 
-            if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == true) {
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == true) {
                 //lootManager.TakeLoot(accountId, lootDropId);
                 if (lootManager.LootDropIndex.ContainsKey(lootDropId) == false) {
                     return;
                 }
-                lootManager.LootDropIndex[lootDropId].TakeLoot(playerManagerServer.ActivePlayers[accountId]);
+                lootManager.LootDropIndex[lootDropId].TakeLoot(playerManagerServer.ActiveUnitControllers[accountId]);
             }
         }
 
         public void RequestBeginCrafting(Recipe recipe, int craftAmount, int accountId) {
             //Debug.Log($"NetworkManagerServer.RequestBeginCrafting({recipe.DisplayName}, {craftAmount}, {accountId})");
 
-            if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == true) {
-                craftingManager.BeginCrafting(playerManagerServer.ActivePlayers[accountId], recipe, craftAmount);
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == true) {
+                craftingManager.BeginCrafting(playerManagerServer.ActiveUnitControllers[accountId], recipe, craftAmount);
             }
         }
 
         public void RequestCancelCrafting(int accountId) {
-            if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == true) {
-                craftingManager.CancelCrafting(playerManagerServer.ActivePlayers[accountId]);
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == true) {
+                craftingManager.CancelCrafting(playerManagerServer.ActiveUnitControllers[accountId]);
             }
         }
 
@@ -1112,18 +1118,18 @@ namespace AnyRPG {
         }
 
         public void RequestUpdatePlayerAppearance(int accountId, Interactable interactable, int componentIndex, string unitProfileName, string appearanceString, List<SwappableMeshSaveData> swappableMeshSaveData) {
-            if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == false) {
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
 
-            characterAppearanceManagerServer.UpdatePlayerAppearance(playerManagerServer.ActivePlayers[accountId], accountId, interactable, componentIndex, unitProfileName, appearanceString, swappableMeshSaveData);
+            characterAppearanceManagerServer.UpdatePlayerAppearance(playerManagerServer.ActiveUnitControllers[accountId], accountId, interactable, componentIndex, unitProfileName, appearanceString, swappableMeshSaveData);
         }
 
         public void RequestChangePlayerName(Interactable interactable, int componentIndex, string newName, int accountId) {
-            if (playerManagerServer.ActivePlayers.ContainsKey(accountId) == false) {
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            nameChangeManagerServer.SetPlayerName(playerManagerServer.ActivePlayers[accountId], interactable, componentIndex, newName);
+            nameChangeManagerServer.SetPlayerName(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, newName);
         }
 
         public void RequestSpawnPet(int accountId, UnitProfile unitProfile) {
@@ -1313,6 +1319,68 @@ namespace AnyRPG {
             //Debug.Log($"NetworkManagerServer.AdvertisePrivateMessage({targetAccountId}, {messageText})");
 
             networkController.AdvertisePrivateMessage(targetAccountId, messageText);
+        }
+
+        public void RequestBeginTrade(int accountId, int targetCharacterId) {
+            tradeServiceServer.RequestBeginTrade(accountId, targetCharacterId);
+        }
+
+        public void AdvertiseAcceptTradeInvite(int sourceAccountId, int targetCharacterId) {
+            Debug.Log($"NetworkManagerServer.AdvertiseAcceptTradeInvite({sourceAccountId}, {targetCharacterId})");
+
+            networkController.AdvertiseAcceptTradeInvite(sourceAccountId, targetCharacterId);
+        }
+
+        public void AdvertiseDeclineTradeInvite(int sourceAccountId) {
+            networkController.AdvertiseDeclineTradeInvite(sourceAccountId);
+        }
+
+        public void AdvertiseRequestBeginTrade(int targetAccountId, int sourceCharacterId) {
+            networkController.AdvertiseRequestBeginTrade(targetAccountId, sourceCharacterId);
+        }
+
+        public void RequestDeclineTrade(int accountId) {
+            tradeServiceServer.DeclineTradeInvite(accountId);
+        }
+
+        public void RequestAcceptTrade(int accountId) {
+            tradeServiceServer.AcceptTradeInvite(accountId);
+        }
+
+        public void RequestAddItemsToTradeSlot(int accountId, int buttonIndex, List<int> itemIdList) {
+            tradeServiceServer.RequestAddItemsToTradeSlot(accountId, buttonIndex, itemIdList);
+        }
+
+        public void AdvertiseAddItemsToTargetTradeSlot(int targetAccountId, int buttonIndex, List<int> itemIdList) {
+            networkController.AdvertiseAddItemsToTargetTradeSlot(targetAccountId, buttonIndex, itemIdList);
+        }
+
+        public void RequestAddCurrencyToTrade(int accountId, int amount) {
+            tradeServiceServer.RequestAddCurrencyToTrade(accountId, amount);
+        }
+
+        public void AdvertiseAddCurrencyToTrade(int targetAccountId, int amount) {
+            networkController.AdvertiseAddCurrencyToTrade(targetAccountId, amount);
+        }
+
+        public void RequestCancelTrade(int accountId) {
+            tradeServiceServer.RequestCancelTrade(accountId);
+        }
+
+        public void RequestConfirmTrade(int accountId) {
+            tradeServiceServer.RequestConfirmTrade(accountId);
+        }
+
+        public void RequestUnconfirmTrade(int accountId) {
+            tradeServiceServer.RequestUnconfirmTrade(accountId);
+        }
+
+        public void AdvertiseCompleteTrade(int accountId) {
+            networkController.AdvertiseCompleteTrade(accountId);
+        }
+
+        public void AdvertiseCancelTrade(int accountId) {
+            networkController.AdvertiseCancelTrade(accountId);
         }
     }
 

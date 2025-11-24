@@ -488,13 +488,13 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.CloseableWindowContents.Close()");
             if (closeableWindow != null) {
                 closeableWindow.CloseWindow();
-                return;
             }
-            /*
-            if (parentPanel != null) {
-                parentPanel.Close();
+        }
+
+        public virtual void Open() {
+            if (closeableWindow != null) {
+                closeableWindow.OpenWindow();
             }
-            */
         }
 
         protected void CreateEventSubscriptions() {

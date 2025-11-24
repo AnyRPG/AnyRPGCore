@@ -174,6 +174,7 @@ namespace AnyRPG {
         public CloseableWindow musicPlayerWindow;
         public CloseableWindow interactionWindow;
         public CloseableWindow craftingWindow;
+        public CloseableWindow tradeWindow;
         public CloseableWindow mainMapWindow;
 
         public CloseableWindow dialogWindow;
@@ -215,6 +216,7 @@ namespace AnyRPG {
         public CloseableWindow loadGameWindow;
         public CloseableWindow newGameWindow;
         public CloseableWindow confirmJoinGroupWindow;
+        public CloseableWindow confirmOpenTradeWindow;
         public CloseableWindow confirmDestroyMenuWindow;
         public CloseableWindow confirmCharacterStuckWindow;
         public CloseableWindow confirmCancelCutsceneWindow;
@@ -390,6 +392,7 @@ namespace AnyRPG {
             musicPlayerWindow.Configure(systemGameManager);
             interactionWindow.Configure(systemGameManager);
             craftingWindow.Configure(systemGameManager);
+            tradeWindow.Configure(systemGameManager);
             mainMapWindow.Configure(systemGameManager);
             dialogWindow.Configure(systemGameManager);
             factionChangeWindow.Configure(systemGameManager);
@@ -425,6 +428,7 @@ namespace AnyRPG {
             loadGameWindow.Configure(systemGameManager);
             newGameWindow.Configure(systemGameManager);
             confirmJoinGroupWindow.Configure(systemGameManager);
+            confirmOpenTradeWindow.Configure(systemGameManager);
             confirmDestroyMenuWindow.Configure(systemGameManager);
             confirmCharacterStuckWindow.Configure(systemGameManager);
             confirmCancelCutsceneWindow.Configure(systemGameManager);
@@ -553,6 +557,8 @@ namespace AnyRPG {
             defaultWindowPositions.Add("InteractionWindowY", interactionWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("CraftingWindowX", craftingWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("CraftingWindowY", craftingWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("TradeWindowX", tradeWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("TradeWindowY", tradeWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("MainMapWindowX", mainMapWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("MainMapWindowY", mainMapWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("DialogWindowX", dialogWindow.RectTransform.anchoredPosition.x);
@@ -619,6 +625,7 @@ namespace AnyRPG {
             musicPlayerWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MusicPlayerWindowX"], defaultWindowPositions["MusicPlayerWindowY"], 0);
             interactionWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["InteractionWindowX"], defaultWindowPositions["InteractionWindowY"], 0);
             craftingWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["CraftingWindowX"], defaultWindowPositions["CraftingWindowY"], 0);
+            tradeWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["TradeWindowX"], defaultWindowPositions["TradeWindowY"], 0);
             mainMapWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MainMapWindowX"], defaultWindowPositions["MainMapWindowY"], 0);
             dialogWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["DialogWindowX"], defaultWindowPositions["DialogWindowY"], 0);
 
@@ -896,6 +903,7 @@ namespace AnyRPG {
             classChangeWindow.CloseWindow();
             contextMenuWindow.CloseWindow();
             craftingWindow.CloseWindow();
+            tradeWindow.CloseWindow();
             currencyListWindow.CloseWindow();
             dialogWindow.CloseWindow();
             factionChangeWindow.CloseWindow();
@@ -927,6 +935,7 @@ namespace AnyRPG {
             //Debug.Log("SystemWindowManager.CloseSystemPopupWindows()");
 
             confirmJoinGroupWindow.CloseWindow();
+            confirmOpenTradeWindow.CloseWindow();
             confirmDestroyMenuWindow.CloseWindow();
             confirmCharacterStuckWindow.CloseWindow();
             confirmCancelCutsceneWindow.CloseWindow();
@@ -1515,6 +1524,7 @@ namespace AnyRPG {
             characterPanelWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             inspectCharacterPanelWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             craftingWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            tradeWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             currencyListWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             interactionWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             lootWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));

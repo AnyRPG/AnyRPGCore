@@ -98,14 +98,10 @@ namespace AnyRPG {
         }
 
         public void HandlePointerClick() {
-            EventParamProperties eventParam = new EventParamProperties();
-            SystemEventManager.TriggerEvent("OnDisableMovement", eventParam);
             controlsManager.ActivateTextInput();
         }
 
         public void HandleEndEdit() {
-            EventParamProperties eventParam = new EventParamProperties();
-            SystemEventManager.TriggerEvent("OnEnableMovement", eventParam);
             controlsManager.DeactivateTextInput();
         }
 

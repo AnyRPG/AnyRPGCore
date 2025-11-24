@@ -52,7 +52,7 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            systemEventManager.OnStopServer += HandleStopServer;
+            networkManagerServer.OnStopServer += HandleStopServer;
         }
 
         public override void SetGameManagerReferences() {

@@ -1266,8 +1266,12 @@ namespace AnyRPG {
             networkManagerClient.AdvertiseSellItemToPlayerClient(networkCharacterUnit.UnitController, networkInteractable.Interactable, componentIndex, collectionIndex, itemIndex, resourceName, remainingQuantity);
         }
 
+        public void TakeAllLoot() {
+            TakeAllLootServer();
+        }
+
         [ServerRpc(RequireOwnership = false)]
-        public void TakeAllLoot(NetworkConnection networkConnection = null) {
+        public void TakeAllLootServer(NetworkConnection networkConnection = null) {
             if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
                 Debug.LogWarning($"FishNetClientConnector.TakeAllLoot() could not find clientId {networkConnection.ClientId} in logged in accounts");
                 return;
@@ -1550,6 +1554,86 @@ namespace AnyRPG {
             networkManagerServer.RequestPromoteCharacterToLeader(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, characterId);
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestBeginTrade(int characterId, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+
+            networkManagerServer.RequestBeginTrade(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, characterId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        internal void RequestDeclineTrade(NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+
+            networkManagerServer.RequestDeclineTrade(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestAcceptTrade(NetworkConnection networkConnection = null) {
+            Debug.Log($"FishnetClientConnector.RequestAcceptTrade()");
+
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+
+            networkManagerServer.RequestAcceptTrade(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestAddItemsToTradeSlot(int buttonIndex, List<int> itemIdList, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+
+            networkManagerServer.RequestAddItemsToTradeSlot(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, buttonIndex, itemIdList);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestAddCurrencyToTrade(int amount, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+
+            networkManagerServer.RequestAddCurrencyToTrade(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, amount);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestCancelTrade(NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestCancelTrade(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestConfirmTrade(NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestConfirmTrade(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestUnconfirmTrade(NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestUnconfirmTrade(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId);
+        }
+
+
 
 
         [ServerRpc(RequireOwnership = false)]
@@ -1568,9 +1652,14 @@ namespace AnyRPG {
             AdvertiseStartWeatherClient(networkConnection);
         }
 
+        public void RequestLogout() {
+            //Debug.Log($"FishNetClientConnector.RequestLogout()");
+
+            RequestLogoutServer();
+        }
 
         [ServerRpc(RequireOwnership = false)]
-        public void RequestLogout(NetworkConnection networkConnection = null) {
+        public void RequestLogoutServer(NetworkConnection networkConnection = null) {
             //Debug.Log($"FishNetClientConnector.RequestLogout()");
 
             if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
@@ -1966,6 +2055,135 @@ namespace AnyRPG {
             networkManagerClient.AdvertisePrivateMessage(messageText);
         }
 
+        public void AdvertiseAcceptTradeInvite(int accountId, int targetCharacterId) {
+            Debug.Log($"FishNetClientConnector.AdvertiseAcceptTradeInvite({accountId}, {targetCharacterId})");
+
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseAcceptTradeInvite() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseAcceptTradeInvite() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseAcceptTradeInviteClient(fishNetNetworkManager.ServerManager.Clients[_clientId], targetCharacterId);
+        }
+
+        [TargetRpc]
+        public void AdvertiseAcceptTradeInviteClient(NetworkConnection networkConnection, int characterId) {
+            //Debug.Log($"FishNetClientConnector.AdvertiseAcceptTradeInviteClient({characterId})");
+
+            networkManagerClient.AdvertiseAcceptTradeInvite(characterId);
+        }
+
+        public void AdvertiseDeclineTradeInvite(int accountId) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseDeclineTradeInvite() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseDeclineTradeInvite() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseDeclineTradeInviteClient(fishNetNetworkManager.ServerManager.Clients[_clientId]);
+        }
+
+        [TargetRpc]
+        public void AdvertiseDeclineTradeInviteClient(NetworkConnection networkConnection) {
+            networkManagerClient.AdvertiseDeclineTradeInvite();
+        }
+
+        public void AdvertiseRequestBeginTrade(int targetAccountId, int sourceCharacterId) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(targetAccountId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {targetAccountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[targetAccountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseRequestBeginTradeClient(fishNetNetworkManager.ServerManager.Clients[_clientId], sourceCharacterId);
+        }
+
+        [TargetRpc]
+        public void AdvertiseRequestBeginTradeClient(NetworkConnection networkConnection, int sourceCharacterId) {
+            networkManagerClient.AdvertiseRequestBeginTrade(sourceCharacterId);
+        }
+
+        public void AdvertiseAddItemsToTargetTradeSlot(int targetAccountId, int buttonIndex, List<int> itemIdList) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(targetAccountId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {targetAccountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[targetAccountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseAddItemsToTargetTradeSlotClient(fishNetNetworkManager.ServerManager.Clients[_clientId], buttonIndex, itemIdList);
+        }
+
+        [TargetRpc]
+        public void AdvertiseAddItemsToTargetTradeSlotClient(NetworkConnection networkConnection, int buttonIndex, List<int> itemIdList) {
+            networkManagerClient.AdvertiseAddItemsToTargetTradeSlot(buttonIndex, itemIdList);
+        }
+
+        public void AdvertiseAddCurrencyToTrade(int targetAccountId, int amount) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(targetAccountId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {targetAccountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[targetAccountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseAddCurrencyToTradeClient(fishNetNetworkManager.ServerManager.Clients[_clientId], amount);
+        }
+
+        [TargetRpc]
+        private void AdvertiseAddCurrencyToTradeClient(NetworkConnection networkConnection, int amount) {
+            networkManagerClient.AdvertiseAddCurrencyToTrade(amount);
+        }
+
+        public void AdvertiseCancelTrade(int accountId) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseCancelTradeClient(fishNetNetworkManager.ServerManager.Clients[_clientId]);
+        }
+
+        [TargetRpc]
+        private void AdvertiseCancelTradeClient(NetworkConnection networkConnection) {
+            networkManagerClient.AdvertiseCancelTrade();
+        }
+
+        public void AdvertiseCompleteTrade(int accountId) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseTradeCompleteClient(fishNetNetworkManager.ServerManager.Clients[_clientId]);
+        }
+
+        [TargetRpc]
+        private void AdvertiseTradeCompleteClient(NetworkConnection networkConnection) {
+            networkManagerClient.AdvertiseTradeComplete();
+        }
 
 
         /*

@@ -49,8 +49,8 @@ namespace AnyRPG {
             systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
             systemEventManager.OnLevelLoad += HandleLevelLoad;
 
-            systemEventManager.OnStartServer += HandleStartServer;
-            systemEventManager.OnStopServer += HandleStopServer;
+            networkManagerServer.OnStartServer += HandleStartServer;
+            networkManagerServer.OnStopServer += HandleStopServer;
             systemEventManager.OnCalculateRelativeTime += HandleCalculateRelativeTime;
         }
 

@@ -581,6 +581,38 @@ namespace AnyRPG {
             clientConnector.RequestPromoteCharacterToLeader(characterId);
         }
 
+        public override void RequestBeginTrade(int characterId) {
+            clientConnector.RequestBeginTrade(characterId);
+        }
+
+        public override void RequestDeclineTrade() {
+            clientConnector.RequestDeclineTrade();
+        }
+
+        public override void RequestAcceptTrade() {
+            clientConnector.RequestAcceptTrade();
+        }
+
+        public override void RequestAddItemsToTradeSlot(int buttonIndex, List<int> itemIdList) {
+            clientConnector.RequestAddItemsToTradeSlot(buttonIndex, itemIdList);
+        }
+
+        public override void RequestAddCurrencyToTrade(CurrencyNode currencyNode) {
+            clientConnector.RequestAddCurrencyToTrade(currencyNode.Amount);
+        }
+
+        public override void RequestCancelTrade() {
+            clientConnector.RequestCancelTrade();
+        }
+
+        public override void RequestConfirmTrade() {
+            clientConnector.RequestConfirmTrade();
+        }
+
+        public override void RequestUnconfirmTrade() {
+            clientConnector.RequestUnconfirmTrade();
+        }
+
         #endregion
 
         #region server functions
@@ -719,6 +751,26 @@ namespace AnyRPG {
             clientConnector.AdvertisePrivateMessage(targetAccountId, messageText);
         }
 
+        public override void AdvertiseAcceptTradeInvite(int sourceAccountId, int targetCharacterId) {
+            clientConnector.AdvertiseAcceptTradeInvite(sourceAccountId, targetCharacterId);
+        }
+
+        public override void AdvertiseDeclineTradeInvite(int sourceAccountId) {
+            clientConnector.AdvertiseDeclineTradeInvite(sourceAccountId);
+        }
+
+        public override void AdvertiseRequestBeginTrade(int targetAccountId, int sourceCharacterId) {
+            clientConnector.AdvertiseRequestBeginTrade(targetAccountId, sourceCharacterId);
+        }
+
+        public override void AdvertiseAddItemsToTargetTradeSlot(int targetAccountId, int buttonIndex, List<int> itemIdList) {
+            clientConnector.AdvertiseAddItemsToTargetTradeSlot(targetAccountId, buttonIndex, itemIdList);
+        }
+
+        public override void AdvertiseAddCurrencyToTrade(int targetAccountId, int amount) {
+            clientConnector.AdvertiseAddCurrencyToTrade(targetAccountId, amount);
+        }
+
         public override void AdvertisePlayerNameNotAvailable(int accountId) {
             clientConnector.AdvertisePlayerNameNotAvailable(accountId);
         }
@@ -743,14 +795,24 @@ namespace AnyRPG {
             clientConnector.AdvertiseSetLobbyGameReadyStatus(gameId, accountId, ready);
         }
 
-        public override int GetServerPort() {
-            return fishNetNetworkManager.TransportManager.Transport.GetPort();
-        }
 
         public override void AdvertiseLoadScene(string sceneResourceName, int accountId) {
             //Debug.Log($"FishNetNetworkController.AdvertiseLoadScene({sceneResourceName}, {accountId})");
 
             clientConnector.AdvertiseLoadSceneServer(sceneResourceName, accountId);
+        }
+
+        public override void AdvertiseCancelTrade(int accountId) {
+            clientConnector.AdvertiseCancelTrade(accountId);
+        }
+
+        public override void AdvertiseCompleteTrade(int accountId) {
+            clientConnector.AdvertiseCompleteTrade(accountId);
+        }
+
+
+        public override int GetServerPort() {
+            return fishNetNetworkManager.TransportManager.Transport.GetPort();
         }
 
         public override void ReturnObjectToPool(GameObject returnedObject) {

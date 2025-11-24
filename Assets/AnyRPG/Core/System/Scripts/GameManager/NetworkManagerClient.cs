@@ -24,18 +24,19 @@ namespace AnyRPG {
         public event Action<int> OnStartLobbyGame = delegate { };
         public event Action OnClientConnectionStopped = delegate { };
 
+        [SerializeField]
+        private NetworkController networkController = null;
 
         private string username = string.Empty;
         private string password = string.Empty;
-        
+
         private bool isLoggingInOrOut = false;
 
+        //private INetworkConnector networkConnector = null;
         private NetworkServerMode clientMode = NetworkServerMode.Lobby;
         private int accountId;
         private LobbyGame lobbyGame;
 
-        [SerializeField]
-        private NetworkController networkController = null;
 
         private Dictionary<int, LoggedInAccount> lobbyGamePlayerList = new Dictionary<int, LoggedInAccount>();
         
@@ -58,6 +59,7 @@ namespace AnyRPG {
         private MapManager mapManager = null;
         private CharacterGroupServiceClient characterGroupServiceClient = null;
         private LoadGameManager loadGameManager = null;
+        private TradeServiceClient tradeServiceClient = null;
 
         public string Username { get => username; }
         public string Password { get => password; }
@@ -89,6 +91,7 @@ namespace AnyRPG {
             mapManager = uIManager.MapManager;
             characterGroupServiceClient = systemGameManager.CharacterGroupServiceClient;
             loadGameManager = systemGameManager.LoadGameManager;
+            tradeServiceClient = systemGameManager.TradeServiceClient;
         }
 
         public bool Login(string username, string password, string server) {
@@ -729,6 +732,68 @@ namespace AnyRPG {
 
         public void AdvertisePrivateMessage(string messageText) {
             messageLogClient.WritePrivateMessage(messageText);
+        }
+
+        public void RequestBeginTrade(int characterId) {
+            networkController.RequestBeginTrade(characterId);
+        }
+
+        public void AdvertiseAcceptTradeInvite(int characterId) {
+            //Debug.Log($"NetworkManagerClient.AdvertiseAcceptTradeInvite{characterId}");
+
+            tradeServiceClient.AcceptTradeInvite(characterId);
+        }
+
+        public void AdvertiseDeclineTradeInvite() {
+            tradeServiceClient.DeclineTradeInvite();
+        }
+
+        public void AdvertiseRequestBeginTrade(int sourceCharacterId) {
+            tradeServiceClient.AdvertiseRequestBeginTrade(sourceCharacterId);
+        }
+
+        public void RequestDeclineTrade() {
+            networkController.RequestDeclineTrade();
+        }
+
+        public void RequestAcceptTrade() {
+            networkController.RequestAcceptTrade();
+        }
+
+        public void RequestAddItemsToTradeSlot(int buttonIndex, List<int> itemIdList) {
+            networkController.RequestAddItemsToTradeSlot(buttonIndex, itemIdList);
+        }
+
+        public void AdvertiseAddItemsToTargetTradeSlot(int buttonIndex, List<int> itemIdList) {
+            tradeServiceClient.AddItemsToTargetTradeSlot(buttonIndex, itemIdList);
+        }
+
+        public void RequestAddCurrencyToTrade(CurrencyNode currencyNode) {
+            networkController.RequestAddCurrencyToTrade(currencyNode);
+        }
+
+        public void AdvertiseAddCurrencyToTrade(int amount) {
+            tradeServiceClient.AdvertiseAddCurrencyToTrade(amount);
+        }
+
+        public void RequestConfirmTrade() {
+            networkController.RequestConfirmTrade();
+        }
+
+        public void RequestCancelTrade() {
+            networkController.RequestCancelTrade();
+        }
+
+        public void RequestUnconfirmTrade() {
+            networkController.RequestUnconfirmTrade();
+        }
+
+        public void AdvertiseCancelTrade() {
+            tradeServiceClient.AdvertiseCancelTrade();
+        }
+
+        public void AdvertiseTradeComplete() {
+            tradeServiceClient.AdvertiseTradeComplete();
         }
     }
 

@@ -113,6 +113,8 @@ namespace AnyRPG {
         private SystemPlayableDirectorManager systemPlayableDirectorManager = new SystemPlayableDirectorManager();
         private TimeOfDayManagerClient timeOfDayManagerClient = new TimeOfDayManagerClient();
         private TimeOfDayManagerServer timeOfDayManagerServer = new TimeOfDayManagerServer();
+        private TradeServiceClient tradeServiceClient = new TradeServiceClient();
+        private TradeServiceServer tradeServiceServer = new TradeServiceServer();
         private UnitSpawnManager unitSpawnManager = new UnitSpawnManager();
         private UserAccountService userAccountService = new UserAccountService();
         private VendorManagerClient vendorManagerClient = new VendorManagerClient();
@@ -170,6 +172,8 @@ namespace AnyRPG {
         public ChatCommandManager ChatCommandManager { get => chatCommandManager; set => chatCommandManager = value; }
         public TimeOfDayManagerClient TimeOfDayManagerClient { get => timeOfDayManagerClient; set => timeOfDayManagerClient = value; }
         public TimeOfDayManagerServer TimeOfDayManagerServer { get => timeOfDayManagerServer; set => timeOfDayManagerServer = value; }
+        public TradeServiceClient TradeServiceClient { get => tradeServiceClient; set => tradeServiceClient = value; }
+        public TradeServiceServer TradeServiceServer { get => tradeServiceServer; set => tradeServiceServer = value; }
         public WeatherManagerClient WeatherManagerClient { get => weatherManagerClient; set => weatherManagerClient = value; }
         public WeatherManagerServer WeatherManagerServer { get => weatherManagerServer; set => weatherManagerServer = value; }
         public DialogManagerClient DialogManagerClient { get => dialogManagerClient; set => dialogManagerClient = value; }
@@ -276,6 +280,8 @@ namespace AnyRPG {
             chatCommandManager.Configure(this);
             timeOfDayManagerServer.Configure(this);
             timeOfDayManagerClient.Configure(this);
+            tradeServiceClient.Configure(this);
+            tradeServiceServer.Configure(this);
             weatherManagerClient.Configure(this);
             weatherManagerServer.Configure(this);
             dialogManagerClient.Configure(this);

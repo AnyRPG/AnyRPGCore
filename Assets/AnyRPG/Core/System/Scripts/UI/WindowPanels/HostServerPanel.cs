@@ -167,8 +167,8 @@ namespace AnyRPG {
         public override void ProcessOpenWindowNotification() {
             base.ProcessOpenWindowNotification();
             playersPanel.PopulatePlayerList();
-            systemEventManager.OnStartServer += HandleStartServer;
-            systemEventManager.OnStopServer += HandleStopServer;
+            networkManagerServer.OnStartServer += HandleStartServer;
+            networkManagerServer.OnStopServer += HandleStopServer;
             networkManagerServer.OnAccountLogin += HandleAccountLogin;
             networkManagerServer.OnAccountLogout += HandleAccountLogout;
             networkManagerServer.OnCreateLobbyGame += HandleCreateLobbyGame;
@@ -180,8 +180,8 @@ namespace AnyRPG {
 
         public override void ReceiveClosedWindowNotification() {
             base.ReceiveClosedWindowNotification();
-            systemEventManager.OnStartServer -= HandleStartServer;
-            systemEventManager.OnStopServer -= HandleStopServer;
+            networkManagerServer.OnStartServer -= HandleStartServer;
+            networkManagerServer.OnStopServer -= HandleStopServer;
             networkManagerServer.OnAccountLogin -= HandleAccountLogin;
             networkManagerServer.OnAccountLogout -= HandleAccountLogout;
             networkManagerServer.OnCreateLobbyGame -= HandleCreateLobbyGame;

@@ -1,10 +1,11 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.Serialization;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Currency Group", menuName = "AnyRPG/Currencies/CurrencyGroup")]
@@ -45,6 +46,24 @@ namespace AnyRPG {
                 }
             }
             return false;
+        }
+
+        public List<Currency> GetCurrencyList() {
+            List<Currency> currencyList = new List<Currency>();
+
+            // create a sorted list and work down from the largest denomination, carrying the remainders
+            SortedDictionary<int, Currency> sortList = new SortedDictionary<int, Currency>();
+            foreach (CurrencyGroupRate currencyGroupRate in currencyGroupRates) {
+                sortList.Add(currencyGroupRate.BaseMultiple, currencyGroupRate.Currency);
+            }
+
+            //foreach (KeyValuePair<int, Currency> currencyGroupRate in sortList) {
+            foreach (KeyValuePair<int, Currency> currencyGroupRate in sortList.Reverse()) {
+                Debug.Log($"CurrencyGroup.GetCurrencyList() adding {currencyGroupRate.Value}");
+                currencyList.Add(currencyGroupRate.Value);
+            }
+            currencyList.Add(baseCurrency);
+            return currencyList;
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {

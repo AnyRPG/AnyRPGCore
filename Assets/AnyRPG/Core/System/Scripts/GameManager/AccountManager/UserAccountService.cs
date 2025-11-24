@@ -16,20 +16,12 @@ namespace AnyRPG {
         private string saveFolderName = string.Empty;
         private const string accountIdCounterKey = "Server.AccountIdCounter";
 
-        // game manager references
-        SystemEventManager systemEventManager = null;
-
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             LoadAccountIdCounter();
             MakeSaveFolder();
-            systemEventManager.OnStartServer += HandleStartServer;
-            systemEventManager.OnStopServer += HandleStopServer;
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemEventManager = systemGameManager.SystemEventManager;
+            networkManagerServer.OnStartServer += HandleStartServer;
+            networkManagerServer.OnStopServer += HandleStopServer;
         }
 
         private void HandleStartServer() {

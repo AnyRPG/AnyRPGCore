@@ -37,9 +37,7 @@ namespace AnyRPG {
         public event System.Action<int> OnTakeLoot = delegate { };
         public event System.Action OnPlayerDeath = delegate { };
         public event System.Action OnCalculateRelativeTime = delegate { };
-        public event System.Action OnStartServer = delegate { };
         public event System.Action OnBeforeStopServer = delegate { };
-        public event System.Action OnStopServer = delegate { };
         public event System.Action OnLevelLoad = delegate { };
         public event System.Action<int, string> OnLevelUnloadClient = delegate { };
         public event System.Action<int, string> OnLevelUnloadServer = delegate { };
@@ -265,16 +263,8 @@ namespace AnyRPG {
             OnCalculateRelativeTime();
         }
 
-        public void NotifyOnStartServer() {
-            OnStartServer();
-        }
-        
         public void NotifyOnBeforeStopServer() {
             OnBeforeStopServer();
-        }
-
-        public void NotifyOnStopServer() {
-            OnStopServer();
         }
 
         public void NotifyOnLevelLoad() {

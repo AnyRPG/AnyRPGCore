@@ -46,8 +46,8 @@ namespace AnyRPG {
             systemEventManager.OnChooseWeather += HandleChooseWeather;
             systemEventManager.OnStartWeather += HandleStartWeather;
             systemEventManager.OnEndWeather += HandleEndWeather;
-            systemEventManager.OnStartServer += HandleStartServer;
-            systemEventManager.OnStopServer += HandlStopServer;
+            networkManagerServer.OnStartServer += HandleStartServer;
+            networkManagerServer.OnStopServer += HandlStopServer;
         }
 
         public override void SetGameManagerReferences() {

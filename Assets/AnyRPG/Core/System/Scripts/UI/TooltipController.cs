@@ -38,7 +38,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             toolTipCurrencyBarController.Configure(systemGameManager);
-            toolTipCurrencyBarController.HideNonZeroAmounts = true;
+            toolTipCurrencyBarController.HideZeroAmounts = true;
             toolTipCurrencyBarController.DisableTooltip();
         }
 

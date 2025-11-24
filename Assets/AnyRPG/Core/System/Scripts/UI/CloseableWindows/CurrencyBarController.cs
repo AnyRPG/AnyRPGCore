@@ -19,7 +19,7 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        private bool hideNonZeroAmounts = false;
+        private bool hideZeroAmounts = false;
 
         // game manager references
         private CurrencyConverter currencyConverter = null;
@@ -27,7 +27,7 @@ namespace AnyRPG {
         [SerializeField]
         protected List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
 
-        public bool HideNonZeroAmounts { get => hideNonZeroAmounts; set => hideNonZeroAmounts = value; }
+        public bool HideZeroAmounts { get => hideZeroAmounts; set => hideZeroAmounts = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -92,14 +92,14 @@ namespace AnyRPG {
                         nonZeroFound = true;
                     }
                     if (currencyAmountController.CurrencyIcon != null) {
-                        if (currencyPair.Value == 0 && (nonZeroFound == false && hideNonZeroAmounts == true)) {
+                        if (currencyPair.Value == 0 && (nonZeroFound == false && hideZeroAmounts == true)) {
                             currencyAmountController.CurrencyIcon.SetDescribable(null);
                         } else {
                             currencyAmountController.CurrencyIcon.SetDescribable(currencyPair.Key);
                         }
                     }
                     if (currencyAmountController.AmountText != null) {
-                        if (currencyPair.Value == 0 && (nonZeroFound == false && hideNonZeroAmounts == true)) {
+                        if (currencyPair.Value == 0 && (nonZeroFound == false && hideZeroAmounts == true)) {
                             currencyAmountController.AmountText.text = string.Empty;
                         } else {
                             currencyAmountController.AmountText.text = currencyPair.Value.ToString();

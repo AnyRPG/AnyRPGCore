@@ -71,7 +71,14 @@ namespace AnyRPG {
         public abstract void RequestInviteCharacterToGroup(int playerCharacterId);
         public abstract void RequestDisbandCharacterGroup(int characterGroupId);
         public abstract void RequestPromoteCharacterToLeader(int characterId);
-
+        public abstract void RequestBeginTrade(int characterId);
+        public abstract void RequestDeclineTrade();
+        public abstract void RequestAcceptTrade();
+        public abstract void RequestAddItemsToTradeSlot(int buttonIndex, List<int> itemIdList);
+        public abstract void RequestAddCurrencyToTrade(CurrencyNode currencyNode);
+        public abstract void RequestConfirmTrade();
+        public abstract void RequestCancelTrade();
+        public abstract void RequestUnconfirmTrade();
 
         // server functions
         public abstract void StartServer(ushort port);
@@ -127,6 +134,13 @@ namespace AnyRPG {
         public abstract void AdvertiseRenameCharacterInGroup(CharacterGroup characterGroup, int characterId, string newName);
         public abstract void AdvertiseGroupMessage(CharacterGroup characterGroup, string messageText);
         public abstract void AdvertisePrivateMessage(int targetAccountId, string messageText);
+        public abstract void AdvertiseAcceptTradeInvite(int sourceAccountId, int targetCharacterId);
+        public abstract void AdvertiseDeclineTradeInvite(int sourceAccountId);
+        public abstract void AdvertiseRequestBeginTrade(int targetAccountId, int sourceCharacterId);
+        public abstract void AdvertiseAddItemsToTargetTradeSlot(int targetAccountId, int buttonIndex, List<int> itemIdList);
+        public abstract void AdvertiseAddCurrencyToTrade(int targetAccountId, int amount);
+        public abstract void AdvertiseCompleteTrade(int accountId);
+        public abstract void AdvertiseCancelTrade(int accountId);
     }
 
 }

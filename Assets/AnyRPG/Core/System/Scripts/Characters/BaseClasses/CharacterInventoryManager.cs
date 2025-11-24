@@ -1115,6 +1115,17 @@ namespace AnyRPG {
                 }
             }
         }
+
+        public bool HasItem(int itemId) {
+            foreach (InventorySlot slot in inventorySlots) {
+                foreach (InstantiatedItem instantiatedItem in slot.InstantiatedItems) {
+                    if (instantiatedItem.InstanceId == itemId) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 
 }

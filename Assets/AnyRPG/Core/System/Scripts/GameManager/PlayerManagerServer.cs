@@ -22,7 +22,7 @@ namespace AnyRPG {
         /// <summary>
         /// accountId, UnitController
         /// </summary>
-        private Dictionary<int, UnitController> activePlayers = new Dictionary<int, UnitController>();
+        private Dictionary<int, UnitController> activeUnitControllers = new Dictionary<int, UnitController>();
 
         /// <summary>
         /// gameobject, accountId
@@ -57,6 +57,7 @@ namespace AnyRPG {
         protected CharacterManager characterManager = null;
         protected SystemEventManager systemEventManager = null;
         protected CharacterGroupServiceServer characterGroupServiceServer = null;
+        protected TradeServiceServer tradeServiceServer = null;
 
         /// <summary>
         /// accountId, PlayerCharacterMonitor
@@ -66,7 +67,7 @@ namespace AnyRPG {
         /// <summary>
         /// accountId, UnitController
         /// </summary>
-        public Dictionary<int, UnitController> ActivePlayers { get => activePlayers; }
+        public Dictionary<int, UnitController> ActiveUnitControllers { get => activeUnitControllers; }
 
         /// <summary>
         /// unitController, accountId
@@ -87,10 +88,6 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             CreateEventSubscriptions();
-            if (monitorPlayerCharactersCoroutine == null) {
-                monitorPlayerCharactersCoroutine = systemGameManager.StartCoroutine(MonitorPlayerCharacters());
-            }
-
         }
 
         public override void SetGameManagerReferences() {
@@ -107,6 +104,7 @@ namespace AnyRPG {
             characterManager = systemGameManager.CharacterManager;
             systemEventManager = systemGameManager.SystemEventManager;
             characterGroupServiceServer = systemGameManager.CharacterGroupServiceServer;
+            tradeServiceServer = systemGameManager.TradeServiceServer;
         }
 
 
@@ -115,7 +113,21 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
+            networkManagerServer.OnStartServer += HandleStartServer;
+            networkManagerServer.OnStopServer += HandleStopServer;
             eventSubscriptionsInitialized = true;
+        }
+
+        private void HandleStartServer() {
+            if (monitorPlayerCharactersCoroutine == null) {
+                monitorPlayerCharactersCoroutine = systemGameManager.StartCoroutine(MonitorPlayerCharacters());
+            }
+        }
+
+        private void HandleStopServer() {
+            if (monitorPlayerCharactersCoroutine != null) {
+                systemGameManager.StopCoroutine(monitorPlayerCharactersCoroutine);
+            }
         }
 
         private void CleanupEventSubscriptions() {
@@ -149,13 +161,15 @@ namespace AnyRPG {
 
 
         private void SavePlayerCharacter(PlayerCharacterMonitor playerCharacterMonitor) {
+            //Debug.Log($"PlayerManagerServer.SavePlayerCharacter()");
+
             networkManagerServer.SavePlayerCharacter(playerCharacterMonitor);
         }
 
         public void AddActivePlayer(int accountId, UnitController unitController) {
             //Debug.Log($"PlayerManagerServer.AddActivePlayer({accountId}, {unitController.gameObject.name})");
 
-            activePlayers.Add(accountId, unitController);
+            activeUnitControllers.Add(accountId, unitController);
             activePlayerGameObjects.Add(unitController.gameObject, accountId);
             activePlayerLookup.Add(unitController, accountId);
 
@@ -185,13 +199,13 @@ namespace AnyRPG {
         public void RemoveActivePlayer(int accountId) {
             //Debug.Log($"PlayerManagerServer.RemoveActivePlayer({accountId})");
 
-            if (ActivePlayers.ContainsKey(accountId) == false) {
+            if (ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            UnsubscribeFromPlayerEvents(activePlayers[accountId]);
-            activePlayerGameObjects.Remove(activePlayers[accountId].gameObject);
-            activePlayerLookup.Remove(activePlayers[accountId]);
-            activePlayers.Remove(accountId);
+            UnsubscribeFromPlayerEvents(activeUnitControllers[accountId]);
+            activePlayerGameObjects.Remove(activeUnitControllers[accountId].gameObject);
+            activePlayerLookup.Remove(activeUnitControllers[accountId]);
+            activeUnitControllers.Remove(accountId);
         }
 
         public void SubscribeToPlayerEvents(UnitController unitController) {
@@ -235,8 +249,8 @@ namespace AnyRPG {
         }
 
         public void GainXP(int amount, int accountId) {
-            if (activePlayers.ContainsKey(accountId) == true) {
-                GainXP(activePlayers[accountId], amount);
+            if (activeUnitControllers.ContainsKey(accountId) == true) {
+                GainXP(activeUnitControllers[accountId], amount);
             }
         }
 
@@ -245,48 +259,48 @@ namespace AnyRPG {
         }
 
         public void AddCurrency(Currency currency, int amount, int accountId) {
-            if (activePlayers.ContainsKey(accountId) == false) {
+            if (activeUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            activePlayers[accountId].CharacterCurrencyManager.AddCurrency(currency, amount);
+            activeUnitControllers[accountId].CharacterCurrencyManager.AddCurrency(currency, amount);
 
         }
 
         public void AddItem(string itemName, int accountId) {
-            if (activePlayers.ContainsKey(accountId) == false) {
+            if (activeUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
 
-            InstantiatedItem tmpItem = activePlayers[accountId].CharacterInventoryManager.GetNewInstantiatedItem(itemName);
+            InstantiatedItem tmpItem = activeUnitControllers[accountId].CharacterInventoryManager.GetNewInstantiatedItem(itemName);
             if (tmpItem != null) {
-                activePlayers[accountId].CharacterInventoryManager.AddItem(tmpItem, false);
+                activeUnitControllers[accountId].CharacterInventoryManager.AddItem(tmpItem, false);
             }
         }
 
         public void BeginAction(AnimatedAction animatedAction, int accountId) {
-            if (activePlayers.ContainsKey(accountId) == false) {
+            if (activeUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            activePlayers[accountId].UnitActionManager.BeginAction(animatedAction);
+            activeUnitControllers[accountId].UnitActionManager.BeginAction(animatedAction);
 
         }
 
         public void LearnAbility(string abilityName, int accountId) {
-            if (activePlayers.ContainsKey(accountId) == false) {
+            if (activeUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
             Ability tmpAbility = systemDataFactory.GetResource<Ability>(abilityName);
             if (tmpAbility != null) {
-                activePlayers[accountId].CharacterAbilityManager.LearnAbility(tmpAbility.AbilityProperties);
+                activeUnitControllers[accountId].CharacterAbilityManager.LearnAbility(tmpAbility.AbilityProperties);
             }
 
         }
 
         public void SetLevel(int newLevel, int accountId) {
-            if (activePlayers.ContainsKey(accountId) == false) {
+            if (activeUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            CharacterStats characterStats = activePlayers[accountId].CharacterStats;
+            CharacterStats characterStats = activeUnitControllers[accountId].CharacterStats;
             newLevel = Mathf.Clamp(newLevel, characterStats.Level, systemConfigurationManager.MaxLevel);
             if (newLevel > characterStats.Level) {
                 while (characterStats.Level < newLevel) {
@@ -307,10 +321,10 @@ namespace AnyRPG {
         public void LoadScene(string sceneName, int accountId) {
             //Debug.Log($"PlayerManagerServer.LoadScene({sceneName}, {accountId})");
 
-            if (activePlayers.ContainsKey(accountId) == false) {
+            if (activeUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            LoadScene(sceneName, activePlayers[accountId], accountId);
+            LoadScene(sceneName, activeUnitControllers[accountId], accountId);
         }
 
         public void LoadScene(string sceneName, UnitController sourceUnitController, int accountId) {
@@ -381,12 +395,12 @@ namespace AnyRPG {
         public void DespawnPlayerUnit(int accountId) {
             //Debug.Log($"PlayerManagerServer.DespawnPlayerUnit({accountId})");
 
-            if (activePlayers.ContainsKey(accountId) == false) {
+            if (activeUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
             playerCharacterMonitors[accountId].ProcessBeforeDespawn();
 
-            activePlayers[accountId].Despawn(0, false, true);
+            activeUnitControllers[accountId].Despawn(0, false, true);
             RemoveActivePlayer(accountId);
         }
 
@@ -401,32 +415,32 @@ namespace AnyRPG {
         }
 
         public void SetPlayerCharacterClass(CharacterClass characterClass, int accountId) {
-            if (activePlayers.ContainsKey(accountId) == false) {
+            if (activeUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            activePlayers[accountId].BaseCharacter.ChangeCharacterClass(characterClass);
+            activeUnitControllers[accountId].BaseCharacter.ChangeCharacterClass(characterClass);
         }
 
         public void SetPlayerCharacterSpecialization(ClassSpecialization classSpecialization, int accountId) {
-            if (activePlayers.ContainsKey(accountId) == false) {
+            if (activeUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            activePlayers[accountId].BaseCharacter.ChangeClassSpecialization(classSpecialization);
+            activeUnitControllers[accountId].BaseCharacter.ChangeClassSpecialization(classSpecialization);
         }
 
         public void SetPlayerFaction(Faction faction, int accountId) {
-            if (activePlayers.ContainsKey(accountId) == false) {
+            if (activeUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            activePlayers[accountId].BaseCharacter.ChangeCharacterFaction(faction);
+            activeUnitControllers[accountId].BaseCharacter.ChangeCharacterFaction(faction);
         }
 
 
         public void LearnSkill(Skill skill, int accountId) {
-            if (activePlayers.ContainsKey(accountId) == false) {
+            if (activeUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            activePlayers[accountId].CharacterSkillManager.LearnSkill(skill);
+            activeUnitControllers[accountId].CharacterSkillManager.LearnSkill(skill);
         }
 
         public void AddSpawnRequest(int accountId, SpawnPlayerRequest loadSceneRequest) {
@@ -567,6 +581,8 @@ namespace AnyRPG {
         }
 
         public IEnumerator MonitorPlayerCharacters() {
+            //Debug.Log($"PlayerManagerServer.MonitorPlayerCharacters()");
+
             while (systemGameManager.GameMode == GameMode.Network) {
                 foreach (PlayerCharacterMonitor playerCharacterMonitor in playerCharacterMonitors.Values) {
                     if (playerCharacterMonitor.unitController != null) {
@@ -641,6 +657,9 @@ namespace AnyRPG {
         public void PauseMonitoringPlayerUnit(int accountId) {
             //Debug.Log($"PlayerManagerServer.PauseMonitoringPlayerUnit({accountId})");
 
+            // give the trade service a chance to cancel any trades
+            tradeServiceServer.RequestCancelTrade(accountId);
+
             //if (playerCharacterMonitors.ContainsKey(accountId) && playerCharacterMonitors[accountId].unitController != null) {
                 RemoveActivePlayer(accountId);
 
@@ -654,11 +673,11 @@ namespace AnyRPG {
         public void RevivePlayerUnit(int accountId) {
 
             // get lobby game id, unitprofile, and scene name from the player character save data
-            if (activePlayers.ContainsKey(accountId) == false) {
+            if (activeUnitControllers.ContainsKey(accountId) == false) {
                 //Debug.LogError($"PlayerManagerServer.RequestRespawnPlayerUnit: activePlayerCharacters does not contain accountId {accountId}");
                 return;
             }
-            activePlayers[accountId].CharacterStats.StatusEffectRevive();
+            activeUnitControllers[accountId].CharacterStats.StatusEffectRevive();
         }
 
         public void RespawnPlayerUnit(int accountId) {
@@ -795,11 +814,18 @@ namespace AnyRPG {
         }
 
         public string GetPlayerName(int leaderAccountId) {
-            if (activePlayers.ContainsKey(leaderAccountId)) {
-                return activePlayers[leaderAccountId].BaseCharacter.CharacterName;
+            if (activeUnitControllers.ContainsKey(leaderAccountId)) {
+                return activeUnitControllers[leaderAccountId].BaseCharacter.CharacterName;
             }
             return string.Empty;
 
+        }
+
+        public UnitController GetUnitController(int sourceAccountId) {
+            if (activeUnitControllers.ContainsKey(sourceAccountId)) {
+                return activeUnitControllers[sourceAccountId];
+            }
+            return null;
         }
     }
 

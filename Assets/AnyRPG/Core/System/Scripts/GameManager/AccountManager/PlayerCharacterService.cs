@@ -21,20 +21,12 @@ namespace AnyRPG {
         /// </summary>
         private Dictionary<int, string> playerNameLookupMap = new Dictionary<int, string>();
 
-        // game manager references
-        SystemEventManager systemEventManager = null;
-
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             MakeBaseSaveFolder();
             LoadPlayerCharacterIdCounter();
-            systemEventManager.OnStartServer += HandleStartServer;
-            systemEventManager.OnStopServer += HandleStopServer;
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemEventManager = systemGameManager.SystemEventManager;
+            networkManagerServer.OnStartServer += HandleStartServer;
+            networkManagerServer.OnStopServer += HandleStopServer;
         }
 
         private void HandleStopServer() {
@@ -181,6 +173,7 @@ namespace AnyRPG {
 
 
         public bool SavePlayerCharacter(int accountId, PlayerCharacterSaveData playerCharacterSaveData) {
+            //Debug.Log($"PlayerCharacterService.SavePlayerCharacter({accountId})");
 
             return SaveDataFile(accountId, playerCharacterSaveData);
         }

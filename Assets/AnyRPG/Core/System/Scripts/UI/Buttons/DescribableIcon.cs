@@ -38,6 +38,9 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
+            if (toolTipTransform == null) {
+                toolTipTransform = rectTransform;
+            }
         }
 
         public void DisableTooltip() {

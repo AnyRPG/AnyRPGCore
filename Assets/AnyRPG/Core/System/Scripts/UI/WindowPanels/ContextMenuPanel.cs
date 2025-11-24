@@ -41,6 +41,7 @@ namespace AnyRPG {
         private ContextMenuService contextMenuService = null;
         private InspectCharacterService inspectCharacterService = null;
         private PlayerManager playerManager = null;
+        private TradeServiceClient tradeServiceClient = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -48,6 +49,7 @@ namespace AnyRPG {
             contextMenuService = systemGameManager.ContextMenuService;
             inspectCharacterService = systemGameManager.InspectCharacterService;
             playerManager = systemGameManager.PlayerManager;
+            tradeServiceClient = systemGameManager.TradeServiceClient;
         }
 
         public override void ProcessOpenWindowNotification() {
@@ -63,26 +65,13 @@ namespace AnyRPG {
 
         private void SetupButtons() {
 
-            // inspect button
-            if (contextMenuService.TargetUnitController == playerManager.UnitController) {
-                // inspect button should not be available if the target is the player
-                inspectButton.gameObject.SetActive(false);
-            } else {
-                // button should only available if the target has a neutral or better relationship
-                // updated to allow any faction to inspect similar to DOS2
-                //if (Faction.RelationWith(contextMenuService.TargetUnitController, playerManager.UnitController) >= 0) {
-                    inspectButton.gameObject.SetActive(true);
-                //} else {
-                //    inspectButton.gameObject.SetActive(false);
-                //}
-            }
-
+            SetupInspectButton();
             SetupInviteButton();
             SetupKickButton();
             SetupDisbandButton();
             SetupLeaveButton();
             SetupPromoteButton();
-            tradeButton.gameObject.SetActive(false);
+            SetupTradeButton();
             SetupMessageButton();
 
             uINavigationController.UpdateNavigationList();
@@ -90,6 +79,50 @@ namespace AnyRPG {
             if (uINavigationController.ActiveNavigableButtonCount == 0) {
                 contextMenuService.CloseContextMenu();
             }
+        }
+
+        private void SetupInspectButton() {
+            // inspect button
+            if (contextMenuService.TargetUnitController == playerManager.UnitController) {
+                // inspect button should not be available if the target is the player
+                inspectButton.gameObject.SetActive(false);
+                return;
+            }
+            
+            inspectButton.gameObject.SetActive(true);
+        }
+
+        private void SetupTradeButton() {
+            if (contextMenuService.TargetUnitController == playerManager.UnitController) {
+                // cannot trade with ourselves
+                //Debug.Log("ContextMenuPanel.SetupMessageButton() target is player, disabling invite button");
+                tradeButton.gameObject.SetActive(false);
+                return;
+            }
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                // can only trade in network mode
+                //Debug.Log("ContextMenuPanel.SetupMessageButton() game mode is local, disabling invite button");
+                tradeButton.gameObject.SetActive(false);
+                return;
+            }
+
+            if (contextMenuService.TargetUnitController.UnitControllerMode != UnitControllerMode.Player) {
+                // can only trade players
+                //Debug.Log("ContextMenuPanel.SetupMessageButton() target is not player, disabling invite button");
+                tradeButton.gameObject.SetActive(false);
+                return;
+            }
+
+            if (Faction.RelationWith(contextMenuService.TargetUnitController, playerManager.UnitController) < 0) {
+                // can only trade neutral or better
+                //Debug.Log("ContextMenuPanel.SetupMessageButton() target faction relationship is negative, disabling invite button");
+                tradeButton.gameObject.SetActive(false);
+                return;
+            }
+
+            // all checks passed.  this character can be traded with
+            tradeButton.gameObject.SetActive(true);
         }
 
         private void SetupMessageButton() {
@@ -310,6 +343,7 @@ namespace AnyRPG {
         public void Trade() {
             Debug.Log("ContextMenuPanel.Trade()");
 
+            tradeServiceClient.RequestBeginTrade(contextMenuService.TargetUnitController.CharacterId);
             contextMenuService.CloseContextMenu();
         }
 

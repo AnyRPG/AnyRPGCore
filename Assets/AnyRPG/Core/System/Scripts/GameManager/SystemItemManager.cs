@@ -37,14 +37,42 @@ namespace AnyRPG {
         }
 
         public int GetNewItemInstanceId() {
-            //Debug.Log($"SystemItemManager.GetNewItemInstanceId()");
+            Debug.Log($"SystemItemManager.GetNewItemInstanceId()");
 
-            int returnValue = (networkManagerServer.ServerModeActive == true ? serverItemIdCount : clientItemIdCount);
-            if (networkManagerServer.ServerModeActive == true) {
-                serverItemIdCount--;
+            if (networkManagerServer.ServerModeActive == true ) {
+                return GetNewServerItemInstanceId();
             } else {
-                clientItemIdCount++;
+                return GetNewClientItemInstanceId();
             }
+        }
+
+        public int GetNewServerItemInstanceId() {
+            //Debug.Log($"SystemItemManager.GetNewServerItemInstanceId()");
+
+            // ensure unique item id returned even if count is off
+            int returnValue = serverItemIdCount;
+            while (instantiatedItems.ContainsKey(serverItemIdCount)) {
+                serverItemIdCount--;
+                returnValue = serverItemIdCount;
+            }
+            serverItemIdCount--;
+
+            Debug.Log($"SystemItemManager.GetNewServerItemInstanceId() return {returnValue}");
+            return returnValue;
+        }
+
+        public int GetNewClientItemInstanceId() {
+            //Debug.Log($"SystemItemManager.GetNewClientItemInstanceId()");
+
+            // ensure unique item id returned even if count is off
+            int returnValue = clientItemIdCount;
+            while (instantiatedItems.ContainsKey(clientItemIdCount)) {
+                clientItemIdCount++;
+                returnValue = clientItemIdCount;
+            }
+            clientItemIdCount++;
+
+            Debug.Log($"SystemItemManager.GetNewClientItemInstanceId() return {returnValue}");
             return returnValue;
         }
 
@@ -74,6 +102,13 @@ namespace AnyRPG {
 
             clientItemIdCount = 1;
             instantiatedItems.Clear();
+        }
+
+        public InstantiatedItem GetExistingInstantiatedItem(int itemInstanceId) {
+            if (instantiatedItems.ContainsKey(itemInstanceId)) {
+                return instantiatedItems[itemInstanceId];
+            }
+            return null;
         }
 
         /*
