@@ -29,7 +29,7 @@ namespace AnyRPG {
         public CurrencyNode CurrencyNode { get => currencyNode; }
 
         public override void Configure(SystemGameManager systemGameManager) {
-            Debug.Log($"CurrencyEntryBarController.Configure()");
+            //Debug.Log($"CurrencyEntryBarController.Configure()");
 
             base.Configure(systemGameManager);
 
@@ -60,7 +60,7 @@ namespace AnyRPG {
 
 
         public void RecalculateBaseCurrency() {
-            Debug.Log($"CurrencyEntryBarController.RecalculateBaseCurrency()");
+            //Debug.Log($"CurrencyEntryBarController.RecalculateBaseCurrency()");
 
             currencyNode.Amount = 0;
             foreach (CurrencyEntryAmountController currencyEntryAmountController in currencyEntryAmountControllers) {

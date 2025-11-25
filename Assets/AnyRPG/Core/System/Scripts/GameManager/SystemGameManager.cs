@@ -101,6 +101,7 @@ namespace AnyRPG {
         private QuestGiverManagerClient questGiverManagerClient = new QuestGiverManagerClient();
         private QuestGiverManagerServer questGiverManagerServer = new QuestGiverManagerServer();
         private SaveManager saveManager = new SaveManager();
+        private ServerStateService serverStateService = new ServerStateService();
         private SkillTrainerManagerClient skillTrainerManagerClient = new SkillTrainerManagerClient();
         private SkillTrainerManagerServer skillTrainerManagerServer = new SkillTrainerManagerServer();
         private SpecializationChangeManagerClient specializationChangeManagerClient = new SpecializationChangeManagerClient();
@@ -204,6 +205,7 @@ namespace AnyRPG {
         public QuestGiverManagerServer QuestGiverManagerServer { get => questGiverManagerServer; set => questGiverManagerServer = value; }
         public CharacterGroupServiceClient CharacterGroupServiceClient { get => characterGroupServiceClient; set => characterGroupServiceClient = value; }
         public CharacterGroupServiceServer CharacterGroupServiceServer { get => characterGroupServiceServer; set => characterGroupServiceServer = value; }
+        public ServerStateService ServerStateService { get => serverStateService; set => serverStateService = value; }
 
         private void Awake() {
             Init();
@@ -311,6 +313,7 @@ namespace AnyRPG {
             characterManager.Configure(this);
             characterGroupServiceClient.Configure(this);
             characterGroupServiceServer.Configure(this);
+            serverStateService.Configure(this);
         }
 
         private void Update() {

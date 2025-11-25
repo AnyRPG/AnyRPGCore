@@ -13,16 +13,14 @@ namespace AnyRPG {
 
         // game manager references
         private PlayerManagerServer playerManagerServer = null;
-        private SystemItemManager systemItemManager = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             playerManagerServer = systemGameManager.PlayerManagerServer;
-            systemItemManager = systemGameManager.SystemItemManager;
         }
 
         public void AcceptTradeInvite(int accountId) {
-            Debug.Log($"TradeServiceServer.AcceptTradeInvite({accountId})");
+            //Debug.Log($"TradeServiceServer.AcceptTradeInvite({accountId})");
 
             if (tradeSessionLookup.ContainsKey(accountId) == false) {
                 Debug.Log($"CharacterGroupService.AcceptTradeInvite({accountId}) trade session not found");
@@ -81,7 +79,7 @@ namespace AnyRPG {
 
         public void RequestAddCurrencyToTrade(int accountId, int amount) {
             if (tradeSessionLookup.ContainsKey(accountId) == false) {
-                Debug.Log($"CharacterGroupService.AcceptCharacterGroupInvite({accountId}) trade session not found");
+                Debug.Log($"TradeServiceServer.RequestAddCurrencyToTrade({accountId}) trade session not found");
                 return;
             }
             TradeSession tradeSession = tradeSessionLookup[accountId];

@@ -32,7 +32,6 @@ namespace AnyRPG {
         private MessageFeedManager messageFeedManager = null;
         private PlayerManager playerManager = null;
         private PlayerManagerServer playerManagerServer = null;
-        private SystemItemManager systemItemManager = null;
         private SystemEventManager systemEventManager = null;
 
         public Dictionary<int, List<LootDrop>> AvailableDroppedLoot { get => availableDroppedLoot; }
@@ -57,7 +56,6 @@ namespace AnyRPG {
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
             playerManager = systemGameManager.PlayerManager;
             playerManagerServer = systemGameManager.PlayerManagerServer;
-            systemItemManager = systemGameManager.SystemItemManager;
             systemEventManager = systemGameManager.SystemEventManager;
         }
 

@@ -4,25 +4,19 @@ namespace AnyRPG {
     public class MessageLogServer : ConfiguredClass {
 
         // game manager references
-        private SystemEventManager systemEventManager = null;
-        private PlayerManager playerManager = null;
         private ChatCommandManager chatCommandManager = null;
         private MessageLogClient messageLogClient = null;
         private CharacterGroupServiceServer characterGroupServiceServer = null;
         private PlayerManagerServer playerManagerServer = null;
-        private PlayerCharacterService playerCharacterService = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("LogManager.Awake()");
             base.Configure(systemGameManager);
 
-            systemEventManager = systemGameManager.SystemEventManager;
-            playerManager = systemGameManager.PlayerManager;
             chatCommandManager = systemGameManager.ChatCommandManager;
             messageLogClient = systemGameManager.MessageLogClient;
             characterGroupServiceServer = systemGameManager.CharacterGroupServiceServer;
             playerManagerServer = systemGameManager.PlayerManagerServer;
-            playerCharacterService = systemGameManager.PlayerCharacterService;
         }
 
         public void WriteChatMessage(int accountId, string newMessage) {

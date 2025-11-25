@@ -1326,7 +1326,7 @@ namespace AnyRPG {
         }
 
         public void AdvertiseAcceptTradeInvite(int sourceAccountId, int targetCharacterId) {
-            Debug.Log($"NetworkManagerServer.AdvertiseAcceptTradeInvite({sourceAccountId}, {targetCharacterId})");
+            //Debug.Log($"NetworkManagerServer.AdvertiseAcceptTradeInvite({sourceAccountId}, {targetCharacterId})");
 
             networkController.AdvertiseAcceptTradeInvite(sourceAccountId, targetCharacterId);
         }

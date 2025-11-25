@@ -59,7 +59,7 @@ namespace AnyRPG {
 
             //foreach (KeyValuePair<int, Currency> currencyGroupRate in sortList) {
             foreach (KeyValuePair<int, Currency> currencyGroupRate in sortList.Reverse()) {
-                Debug.Log($"CurrencyGroup.GetCurrencyList() adding {currencyGroupRate.Value}");
+                //Debug.Log($"CurrencyGroup.GetCurrencyList() adding {currencyGroupRate.Value}");
                 currencyList.Add(currencyGroupRate.Value);
             }
             currencyList.Add(baseCurrency);
@@ -74,7 +74,7 @@ namespace AnyRPG {
                 if (tmpCurrency != null) {
                     baseCurrency = tmpCurrency;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + baseCurrencyName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                    Debug.LogError($"CurrencyGroup.SetupScriptableObjects(): Could not find currency {baseCurrencyName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                 }
             }
 

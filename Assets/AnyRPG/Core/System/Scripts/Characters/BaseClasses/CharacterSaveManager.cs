@@ -20,7 +20,6 @@ namespace AnyRPG {
 
         // game manager references
         private ActionBarManager actionBarManager = null;
-        private SystemItemManager systemItemManager = null;
         private SaveManager saveManager = null;
         private LevelManager levelManager = null;
 
@@ -40,7 +39,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             actionBarManager = systemGameManager.UIManager.ActionBarManager;
-            systemItemManager = systemGameManager.SystemItemManager;
             saveManager = systemGameManager.SaveManager;
             levelManager = systemGameManager.LevelManager;
         }

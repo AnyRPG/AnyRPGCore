@@ -10,7 +10,6 @@ namespace AnyRPG {
 
         // game manager references
         NameChangeManagerClient nameChangeManager = null;
-        PlayerCharacterService playerCharacterService = null;
         CharacterGroupServiceServer characterGroupServiceServer = null;
 
         public NameChangeProps Props { get => interactableOptionProps as NameChangeProps; }
@@ -22,7 +21,6 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             nameChangeManager = systemGameManager.NameChangeManagerClient;
-            playerCharacterService = systemGameManager.PlayerCharacterService;
             characterGroupServiceServer = systemGameManager.CharacterGroupServiceServer;
         }
 

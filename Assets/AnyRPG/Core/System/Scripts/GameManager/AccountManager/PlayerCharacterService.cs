@@ -9,7 +9,6 @@ namespace AnyRPG {
 
         private int playerCharacterIdCounter = 1;
         private string baseSaveFolderName = string.Empty;
-        private const string playerIdCounterKey = "Server.PlayerCharacterIdCounter";
 
         /// <summary>
         /// playerName, playerCharacterId
@@ -24,7 +23,6 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             MakeBaseSaveFolder();
-            LoadPlayerCharacterIdCounter();
             networkManagerServer.OnStartServer += HandleStartServer;
             networkManagerServer.OnStopServer += HandleStopServer;
         }
@@ -73,11 +71,10 @@ namespace AnyRPG {
             playerNameLookupMap.Clear();
         }
 
-        private void LoadPlayerCharacterIdCounter() {
-            //Debug.Log("PlayerCharacterService.LoadPlayerCharacterIdCounter()");
+        public void LoadPlayerCharacterIdCounter(int newCounterValue) {
+            //Debug.Log($"PlayerCharacterService.LoadPlayerCharacterIdCounter({newCounterValue})");
 
-            playerCharacterIdCounter = PlayerPrefs.GetInt(playerIdCounterKey, 1);
-            //Debug.Log($"PlayerCharacterService.LoadPlayerCharacterIdCounter(): {playerCharacterIdCounter}");
+            playerCharacterIdCounter = newCounterValue;
         }
 
 
@@ -165,7 +162,7 @@ namespace AnyRPG {
             }
             returnValue = playerCharacterIdCounter;
             playerCharacterIdCounter++;
-            PlayerPrefs.SetInt(playerIdCounterKey, playerCharacterIdCounter);
+            serverStateService.SetPlayerCharacterIdCounter(playerCharacterIdCounter);
 
             Debug.Log($"PlayerCharacterService.GetNewPlayerCharacterId() return {returnValue}");
             return returnValue;

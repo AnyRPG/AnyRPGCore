@@ -18,7 +18,7 @@ namespace AnyRPG {
         public TMP_InputField TextInput { get => textInput; set => textInput = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
-            Debug.Log($"CurrencyEntryAmountController.Configure()");
+            //Debug.Log($"CurrencyEntryAmountController.Configure()");
 
             base.Configure(systemGameManager);
 
@@ -26,7 +26,7 @@ namespace AnyRPG {
         }
 
         public void SetCurrency(Currency currency) {
-            Debug.Log($"CurrencyEntryAmountController.SetCurrency({currency.ResourceName})");
+            //Debug.Log($"CurrencyEntryAmountController.SetCurrency({currency.ResourceName})");
 
             this.currency = currency;
             currencyIcon.Icon.sprite = currency.icon;

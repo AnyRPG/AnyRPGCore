@@ -24,7 +24,6 @@ namespace AnyRPG {
         // game manager references
         protected PlayerManager playerManager = null;
         protected UIManager uIManager = null;
-        protected SystemItemManager systemItemManager = null;
         protected MessageFeedManager messageFeedManager = null;
 
         public int InstanceId { get => instanceId; set => instanceId = value; }
@@ -76,12 +75,9 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            //inventoryManager = systemGameManager.InventoryManager;
-            //currencyConverter = systemGameManager.CurrencyConverter;
             playerManager = systemGameManager.PlayerManager;
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
-            systemItemManager = systemGameManager.SystemItemManager;
         }
 
         public virtual void InitializeNewItem(ItemQuality usedItemQuality) {

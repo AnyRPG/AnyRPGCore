@@ -1576,7 +1576,7 @@ namespace AnyRPG {
 
         [ServerRpc(RequireOwnership = false)]
         public void RequestAcceptTrade(NetworkConnection networkConnection = null) {
-            Debug.Log($"FishnetClientConnector.RequestAcceptTrade()");
+            //Debug.Log($"FishnetClientConnector.RequestAcceptTrade()");
 
             if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
                 Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
@@ -2056,7 +2056,7 @@ namespace AnyRPG {
         }
 
         public void AdvertiseAcceptTradeInvite(int accountId, int targetCharacterId) {
-            Debug.Log($"FishNetClientConnector.AdvertiseAcceptTradeInvite({accountId}, {targetCharacterId})");
+            //Debug.Log($"FishNetClientConnector.AdvertiseAcceptTradeInvite({accountId}, {targetCharacterId})");
 
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
                 Debug.Log($"FishNetClientConnector.AdvertiseAcceptTradeInvite() could not find account id {accountId}");

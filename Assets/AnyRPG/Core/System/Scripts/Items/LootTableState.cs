@@ -21,8 +21,6 @@ namespace AnyRPG {
         private bool rolled = false;
 
         // game manager references
-        private PlayerManager playerManager = null;
-        private SystemItemManager systemItemManager = null;
         private LootManager lootManager = null;
 
         public List<LootDrop> DroppedItems { get => droppedItems; set => droppedItems = value; }
@@ -36,8 +34,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
-            systemItemManager = systemGameManager.SystemItemManager;
             lootManager = systemGameManager.LootManager;
         }
 

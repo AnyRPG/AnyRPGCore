@@ -32,7 +32,6 @@ namespace AnyRPG {
 
         // game manager references
         private SaveManager saveManager = null;
-        private SystemItemManager systemItemManager = null;
 
         // public properties
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
@@ -55,7 +54,6 @@ namespace AnyRPG {
             //Debug.Log("LoadGameManager.SetGameManagerReferences()");
             base.SetGameManagerReferences();
             saveManager = systemGameManager.SaveManager;
-            systemItemManager = systemGameManager.SystemItemManager;
         }
 
 

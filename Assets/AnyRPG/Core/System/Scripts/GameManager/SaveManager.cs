@@ -19,13 +19,10 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
-        private SystemEventManager systemEventManager = null;
         private PlayerManager playerManager = null;
         private PlayerManagerServer playerManagerServer = null;
         private MessageFeedManager messageFeedManager = null;
         private LevelManager levelManager = null;
-        private ActionBarManager actionBarManager = null;
-        private SystemItemManager systemItemManager = null;
         private UIManager uIManager = null;
         private NewGameManager newGameManager = null;
         private LoadGameManager loadGameManager = null;
@@ -34,14 +31,11 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemEventManager = systemGameManager.SystemEventManager;
             playerManager = systemGameManager.PlayerManager;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             levelManager = systemGameManager.LevelManager;
-            systemItemManager = systemGameManager.SystemItemManager;
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
-            actionBarManager = uIManager.ActionBarManager;
             newGameManager = systemGameManager.NewGameManager;
             loadGameManager = systemGameManager.LoadGameManager;
         }

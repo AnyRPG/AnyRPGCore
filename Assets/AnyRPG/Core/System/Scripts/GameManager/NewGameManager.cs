@@ -67,9 +67,6 @@ namespace AnyRPG {
         // game manager references
         private SaveManager saveManager = null;
         private CharacterCreatorManager characterCreatorManager = null;
-        private UIManager uIManager = null;
-        private LevelManager levelManager = null;
-        private SystemItemManager systemItemManager = null;
 
         public Faction Faction { get => faction; }
         public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
@@ -104,9 +101,6 @@ namespace AnyRPG {
 
             saveManager = systemGameManager.SaveManager;
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
-            uIManager = systemGameManager.UIManager;
-            levelManager = systemGameManager.LevelManager;
-            systemItemManager = systemGameManager.SystemItemManager;
         }
 
         public void NewLocalGame() {

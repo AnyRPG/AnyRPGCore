@@ -37,7 +37,7 @@ namespace AnyRPG {
         }
 
         public int GetNewItemInstanceId() {
-            Debug.Log($"SystemItemManager.GetNewItemInstanceId()");
+            //Debug.Log($"SystemItemManager.GetNewItemInstanceId()");
 
             if (networkManagerServer.ServerModeActive == true ) {
                 return GetNewServerItemInstanceId();
@@ -56,8 +56,9 @@ namespace AnyRPG {
                 returnValue = serverItemIdCount;
             }
             serverItemIdCount--;
+            serverStateService.SetItemIdCounter(serverItemIdCount);
 
-            Debug.Log($"SystemItemManager.GetNewServerItemInstanceId() return {returnValue}");
+            //Debug.Log($"SystemItemManager.GetNewServerItemInstanceId() return {returnValue}");
             return returnValue;
         }
 
@@ -72,7 +73,7 @@ namespace AnyRPG {
             }
             clientItemIdCount++;
 
-            Debug.Log($"SystemItemManager.GetNewClientItemInstanceId() return {returnValue}");
+            //Debug.Log($"SystemItemManager.GetNewClientItemInstanceId() return {returnValue}");
             return returnValue;
         }
 
@@ -109,6 +110,12 @@ namespace AnyRPG {
                 return instantiatedItems[itemInstanceId];
             }
             return null;
+        }
+
+        public void LoadItemIdCounter(int itemInstanceIdCounter) {
+            //Debug.Log($"SystemItemManager.LoadItemIdCounter({itemInstanceIdCounter})");
+
+            serverItemIdCount = itemInstanceIdCounter;
         }
 
         /*

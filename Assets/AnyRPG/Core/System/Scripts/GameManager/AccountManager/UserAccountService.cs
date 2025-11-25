@@ -14,11 +14,9 @@ namespace AnyRPG {
 
         private int accountIdCounter = 1;
         private string saveFolderName = string.Empty;
-        private const string accountIdCounterKey = "Server.AccountIdCounter";
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            LoadAccountIdCounter();
             MakeSaveFolder();
             networkManagerServer.OnStartServer += HandleStartServer;
             networkManagerServer.OnStopServer += HandleStopServer;
@@ -42,11 +40,10 @@ namespace AnyRPG {
             userAccounts.Clear();
         }
 
-        private void LoadAccountIdCounter() {
-            //Debug.Log("UserAccountService.LoadAccountIdCounter()");
+        public void LoadAccountIdCounter(int counterValue) {
+            //Debug.Log($"UserAccountService.LoadAccountIdCounter({counterValue})");
 
-            accountIdCounter = PlayerPrefs.GetInt(accountIdCounterKey, 1);
-            //Debug.Log($"UserAccountService.LoadAccountIdCounter(): {accountIdCounter}");
+            accountIdCounter = counterValue;
         }
 
         private void MakeSaveFolder() {
@@ -176,7 +173,7 @@ namespace AnyRPG {
             }
             returnValue = accountIdCounter;
             accountIdCounter++;
-            PlayerPrefs.SetInt(accountIdCounterKey, accountIdCounter);
+            serverStateService.SetAccountIdCounter(accountIdCounter);
 
             Debug.Log($"UserAccountService.GetNewAccountId() return {returnValue}");
             return returnValue;

@@ -15,12 +15,11 @@ namespace AnyRPG {
         private int targetCharacterId = 0;
         private UnitController targetUnitController = null;
         private bool tradeConfirmed = false;
+        private int currencyAmount = 0;
 
         // game manager references
         private CharacterManager characterManager = null;
-        //private PlayerManager playerManager = null;
         private MessageLogClient messageLogClient = null;
-        private SystemItemManager systemItemManager = null;
 
         public int TargetCharacterId { get => targetCharacterId; set => targetCharacterId = value; }
         public UnitController TargetUnitController { get => targetUnitController; set => targetUnitController = value; }
@@ -33,9 +32,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             characterManager = systemGameManager.CharacterManager;
-            //playerManager = systemGameManager.PlayerManager;
             messageLogClient = systemGameManager.MessageLogClient;
-            systemItemManager = systemGameManager.SystemItemManager;
         }
 
         public void AcceptTradeInvite(int characterId) {
@@ -102,41 +99,52 @@ namespace AnyRPG {
         }
 
         public void AddCurrency(CurrencyNode currencyNode) {
-            Debug.Log($"TradeServiceClient.AddCurrency({currencyNode})");
+            //Debug.Log($"TradeServiceClient.AddCurrency({currencyNode})");
+
+            if (targetCharacterId == 0) {
+                return;
+            }
+
+            if (currencyNode.Amount == currencyAmount) {
+                return;
+            }
+
+            currencyAmount = currencyNode.Amount;
 
             networkManagerClient.RequestAddCurrencyToTrade(currencyNode);
         }
 
         public void AdvertiseAddCurrencyToTrade(int amount) {
-            Debug.Log($"TradeServiceClient.AdvertiseAddCurrencyToTrade({amount})");
+            //Debug.Log($"TradeServiceClient.AdvertiseAddCurrencyToTrade({amount})");
 
             OnAddCurrencyToTrade(amount);
         }
 
         public void RequestConfirmTrade() {
-            Debug.Log($"TradeServiceClient.RequestConfirmTrade()");
+            //Debug.Log($"TradeServiceClient.RequestConfirmTrade()");
 
             tradeConfirmed = true;
             networkManagerClient.RequestConfirmTrade();
         }
 
         public void UnconfirmTrade() {
-            Debug.Log($"TradeServiceClient.UnconfirmTrade()");
+            //Debug.Log($"TradeServiceClient.UnconfirmTrade()");
 
             tradeConfirmed = false;
             networkManagerClient.RequestUnconfirmTrade();
         }
 
         public void ResetTradeSettings() {
-            Debug.Log($"TradeServiceClient.ResetTradeSettings()");
+            //Debug.Log($"TradeServiceClient.ResetTradeSettings()");
 
             targetCharacterId = 0;
             targetUnitController = null;
             tradeConfirmed = false;
+            currencyAmount = 0;
         }
 
         public void RequestCancelTrade() {
-            Debug.Log($"TradeServiceClient.RequestCancelTrade()");
+            //Debug.Log($"TradeServiceClient.RequestCancelTrade()");
 
             if (targetCharacterId == 0) {
                 // trade is not active or has already been cancelled
@@ -149,7 +157,7 @@ namespace AnyRPG {
         }
 
         public void AdvertiseCancelTrade() {
-            Debug.Log($"TradeServiceClient.AdvertiseCancelTrade()");
+            //Debug.Log($"TradeServiceClient.AdvertiseCancelTrade()");
 
             ResetTradeSettings();
             messageLogClient.WriteSystemMessage("The trade was cancelled");

@@ -32,7 +32,6 @@ namespace AnyRPG {
         private UnitController unitController = null;
 
         // game manager references
-        private SystemItemManager systemItemManager = null;
         private LootManager lootManager = null;
         private MessageLogServer messageLogServer = null;
 
@@ -86,7 +85,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemItemManager = systemGameManager.SystemItemManager;
             lootManager = systemGameManager.LootManager;
             messageLogServer = systemGameManager.MessageLogServer;
         }

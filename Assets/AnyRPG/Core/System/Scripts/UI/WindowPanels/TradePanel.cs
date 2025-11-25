@@ -77,6 +77,8 @@ namespace AnyRPG {
         }
 
         private void HandleAddCurrencyToTrade(int amount) {
+            Debug.Log($"TradePanel.HandleAddCurrencyToTrade({amount})");
+
             currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, amount);
             confirmButton.Button.interactable = true;
         }
@@ -88,12 +90,14 @@ namespace AnyRPG {
         }
 
         private void HandleRecalculateBaseCurrency() {
-            Debug.Log($"TradePanel.HandleRecalculateBaseCurrency()");
+            //Debug.Log($"TradePanel.HandleRecalculateBaseCurrency()");
 
             tradeServiceClient.AddCurrency(currencyEntryBarController.CurrencyNode);
         }
 
         private void HandleAddItemsToTargetTradeSlot(int buttonIndex, List<InstantiatedItem> itemList) {
+            Debug.Log($"TradePanel.HandleAddItemsToTargetTradeSlot({buttonIndex})");
+
             if (targetTradeButtons.Count <= buttonIndex) {
                 return;
             }
@@ -117,11 +121,6 @@ namespace AnyRPG {
             Open();
         }
 
-        public void DeactivateButtons() {
-            confirmButton.Button.interactable = false;
-            uINavigationControllers[1].UpdateNavigationList();
-        }
-
         public override void ProcessOpenWindowNotification() {
             base.ProcessOpenWindowNotification();
             currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, 0);
@@ -131,9 +130,9 @@ namespace AnyRPG {
             Debug.Log($"TradePanel.ReceiveClosedWindowNotification()");
 
             base.ReceiveClosedWindowNotification();
+            tradeServiceClient.RequestCancelTrade();
             currencyEntryBarController.ResetCurrencyAmounts();
             confirmButton.Button.interactable = true;
-            tradeServiceClient.RequestCancelTrade();
         }
 
         public void ConfirmAction() {
@@ -143,6 +142,8 @@ namespace AnyRPG {
         }
 
         public void CancelAction() {
+            Debug.Log($"TradePanel.CancelAction()");
+
             if (tradeServiceClient.TradeConfirmed == true) {
                 tradeServiceClient.UnconfirmTrade();
                 confirmButton.Button.interactable = true;

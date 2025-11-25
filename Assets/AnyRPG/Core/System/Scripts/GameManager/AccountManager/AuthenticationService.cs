@@ -3,13 +3,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class AuthenticationService : ConfiguredClass {
 
-        // game manager references
-        UserAccountService userAccountService = null;
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            userAccountService = systemGameManager.UserAccountService;
-        }
 
         public (UserAccount, string) Login(AuthenticationRequest authenticationRequest) {
             UserAccount userAccount = userAccountService.GetUserAccount(authenticationRequest.UserName);

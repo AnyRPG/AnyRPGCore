@@ -769,6 +769,8 @@ namespace AnyRPG {
         }
 
         public void RequestAddCurrencyToTrade(CurrencyNode currencyNode) {
+            //Debug.Log("NetworkManagerClient.RequestAddCurrencyToTrade()");
+
             networkController.RequestAddCurrencyToTrade(currencyNode);
         }
 

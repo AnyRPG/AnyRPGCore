@@ -25,13 +25,11 @@ namespace AnyRPG {
 
         // game manager references
         private PlayerManagerServer playerManagerServer = null;
-        private PlayerCharacterService playerCharacterService = null;
         private CharacterManager characterManager = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             playerManagerServer = systemGameManager.PlayerManagerServer;
-            playerCharacterService = systemGameManager.PlayerCharacterService;
             characterManager = systemGameManager.CharacterManager;
         }
 

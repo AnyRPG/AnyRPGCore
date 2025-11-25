@@ -47,7 +47,6 @@ namespace AnyRPG {
 
         // game manager references
         protected SaveManager saveManager = null;
-        protected SystemItemManager systemItemManager = null;
         protected LevelManager levelManager = null;
         protected InteractionManager interactionManager = null;
         protected PlayerManager playerManager = null;
@@ -94,7 +93,6 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             saveManager = systemGameManager.SaveManager;
-            systemItemManager = systemGameManager.SystemItemManager;
             levelManager = systemGameManager.LevelManager;
             interactionManager = systemGameManager.InteractionManager;
             playerManager = systemGameManager.PlayerManager;
