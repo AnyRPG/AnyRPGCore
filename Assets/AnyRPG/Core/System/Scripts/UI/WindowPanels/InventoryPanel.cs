@@ -14,6 +14,9 @@ namespace AnyRPG {
         [SerializeField]
         protected BagBarController bagBarController;
 
+        [SerializeField]
+        protected CurrencyBarController currencyBarController = null;
+
         public BagBarController BagBarController { get => bagBarController; set => bagBarController = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -21,6 +24,7 @@ namespace AnyRPG {
             bagBarController.Configure(systemGameManager);
             bagBarController.SetBagButtonCount(systemConfigurationManager.MaxInventoryBags);
             bagBarController.SetBagPanel(this);
+            currencyBarController.Configure(systemGameManager);
         }
 
         protected override void ProcessCreateEventSubscriptions() {
@@ -31,6 +35,7 @@ namespace AnyRPG {
             systemEventManager.OnAddInventoryBagNode += HandleAddInventoryBagNode;
             systemEventManager.OnAddInventorySlot += HandleAddSlot;
             systemEventManager.OnRemoveInventorySlot += HandleRemoveSlot;
+            systemEventManager.OnCurrencyChange += HandleCurrencyChange;
         }
 
         protected override void ProcessCleanupEventSubscriptions() {
@@ -40,6 +45,18 @@ namespace AnyRPG {
             systemEventManager.OnAddInventoryBagNode -= HandleAddInventoryBagNode;
             systemEventManager.OnAddInventorySlot -= HandleAddSlot;
             systemEventManager.OnRemoveInventorySlot -= HandleRemoveSlot;
+            systemEventManager.OnCurrencyChange -= HandleCurrencyChange;
+        }
+
+        private void HandleCurrencyChange() {
+            UpdateCurrencyAmount();
+        }
+
+        private void UpdateCurrencyAmount() {
+            if (playerManager.UnitController == null) {
+                return;
+            }
+            currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, playerManager.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency));
         }
 
         public void HandlePlayerUnitDespawn(UnitController unitController) {
@@ -53,6 +70,11 @@ namespace AnyRPG {
             //Debug.Log("InventoryPanel.HandleAddInventoryBagNode()");
             bagBarController.AddBagButton(bagNode);
             //bagNode.BagPanel = this;
+        }
+
+        public override void ProcessOpenWindowNotification() {
+            base.ProcessOpenWindowNotification();
+            UpdateCurrencyAmount();
         }
 
 

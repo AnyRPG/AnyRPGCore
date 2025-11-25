@@ -8,8 +8,13 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class CurrencyPanel : PagedWindowContents {
 
+        [Header("Currency Panel")]
+
         [SerializeField]
         private List<CurrencyButton> currencyButtons = new List<CurrencyButton>();
+
+        [SerializeField]
+        protected CurrencyBarController currencyBarController = null;
 
         private bool windowSubscriptionsInitialized = false;
 
@@ -22,6 +27,7 @@ namespace AnyRPG {
             foreach (CurrencyButton currencyButton in currencyButtons) {
                 currencyButton.Configure(systemGameManager);
             }
+            currencyBarController.Configure(systemGameManager);
         }
 
         public override void SetGameManagerReferences() {
@@ -36,6 +42,10 @@ namespace AnyRPG {
             }
             systemEventManager.OnCurrencyChange += HandleCurrencyChange;
             windowSubscriptionsInitialized = true;
+            if (playerManager.UnitController == null) {
+                return;
+            }
+            currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, playerManager.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency));
         }
 
         public override void ReceiveClosedWindowNotification() {
@@ -52,15 +62,23 @@ namespace AnyRPG {
 
             ClearPages();
             PopulatePages();
+            if (playerManager.UnitController == null) {
+                return;
+            }
+            currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, playerManager.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency));
+
         }
 
         protected override void PopulatePages() {
             //Debug.Log("CurrencyPanelUI.PopulatePages()");
 
             CurrencyNodeContentList page = new CurrencyNodeContentList();
-            foreach (CurrencyNode currencySaveData in playerManager.UnitController.CharacterCurrencyManager.CurrencyList.Values) {
+            foreach (CurrencyNode currencyNode in playerManager.UnitController.CharacterCurrencyManager.CurrencyList.Values) {
+                if (systemConfigurationManager.DefaultCurrencyGroup.GetCurrencyList().Contains(currencyNode.currency)) {
+                    continue;
+                }
                 //Debug.Log($"CurrencyPanelUI.PopulatePages() adding {currencySaveData.currency.ResourceName} {currencySaveData.Amount}");
-                page.currencyNodes.Add(currencySaveData);
+                page.currencyNodes.Add(currencyNode);
                 if (page.currencyNodes.Count == pageSize) {
                     pages.Add(page);
                     page = new CurrencyNodeContentList();

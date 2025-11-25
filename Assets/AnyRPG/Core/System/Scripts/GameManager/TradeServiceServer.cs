@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -96,7 +97,7 @@ namespace AnyRPG {
 
         public void RequestCancelTrade(int accountId) {
             if (tradeSessionLookup.ContainsKey(accountId) == false) {
-                Debug.Log($"CharacterGroupService.AcceptCharacterGroupInvite({accountId}) trade session not found");
+                //Debug.Log($"CharacterGroupService.RequestCancelTrade({accountId}) trade session not found");
                 return;
             }
             TradeSession tradeSession = tradeSessionLookup[accountId];
@@ -132,17 +133,20 @@ namespace AnyRPG {
             UnitController sourceUnitController = playerManagerServer.GetUnitController(tradeSession.sourceAccountId);
             UnitController targetUnitController = playerManagerServer.GetUnitController(tradeSession.targetAccountId);
             if (sourceUnitController == null || targetUnitController == null) {
+                CancelTrade(tradeSession);
                 return;
             }
 
             // check that the source player has the correct currency and items in inventories
             if (tradeSession.sourceCurrencyAmount > 0
                 && sourceUnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency) < tradeSession.sourceCurrencyAmount) {
+                CancelTrade(tradeSession);
                 return;
             }
             foreach (List<int> itemList in tradeSession.sourceTradeSlots.Values) {
                 foreach (int itemId in itemList) {
                     if (sourceUnitController.CharacterInventoryManager.HasItem(itemId) == false) {
+                        CancelTrade(tradeSession);
                         return;
                     }
                 }
@@ -151,14 +155,30 @@ namespace AnyRPG {
             // check that the target player has the correct currency and items in inventories
             if (tradeSession.targetCurrencyAmount > 0
                 && targetUnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency) < tradeSession.targetCurrencyAmount) {
+                CancelTrade(tradeSession);
                 return;
             }
             foreach (List<int> itemList in tradeSession.targetTradeSlots.Values) {
                 foreach (int itemId in itemList) {
                     if (targetUnitController.CharacterInventoryManager.HasItem(itemId) == false) {
+                        CancelTrade(tradeSession);
                         return;
                     }
                 }
+            }
+
+            // check that both players have enough room in their inventories
+            int sourceSlotCount = tradeSession.sourceTradeSlots.Values.Select(x => x.Count > 0).Count();
+            int targetSlotCount = tradeSession.targetTradeSlots.Values.Select(x => x.Count > 0).Count();
+            int targetNeeds = sourceSlotCount - targetSlotCount;
+            int sourceNeeds = targetSlotCount - sourceSlotCount;
+            if (targetNeeds > targetUnitController.CharacterInventoryManager.EmptySlotCount()) {
+                CancelTrade(tradeSession);
+                return;
+            }
+            if (sourceNeeds > sourceUnitController.CharacterInventoryManager.EmptySlotCount()) {
+                CancelTrade(tradeSession);
+                return;
             }
 
             // swap currencies

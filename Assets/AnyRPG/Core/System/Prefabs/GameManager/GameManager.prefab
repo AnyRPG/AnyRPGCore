@@ -19438,7 +19438,7 @@ PrefabInstance:
     - target: {fileID: 6078769211671679274, guid: 9bf337a268283854ead7ab1f570cf0f6,
         type: 3}
       propertyPath: m_Name
-      value: CurrencyWindowVariant
+      value: CurrencyWindow
       objectReference: {fileID: 0}
     - target: {fileID: 6078769211671679275, guid: 9bf337a268283854ead7ab1f570cf0f6,
         type: 3}
@@ -30409,11 +30409,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMin.y
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4650705174944516333, guid: ea1577346aeb7224ba207e047dc263f0,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 276
       objectReference: {fileID: 0}
     - target: {fileID: 4650705174944516333, guid: ea1577346aeb7224ba207e047dc263f0,
         type: 3}
