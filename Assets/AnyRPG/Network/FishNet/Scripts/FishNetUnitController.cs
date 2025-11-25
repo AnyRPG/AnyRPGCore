@@ -161,6 +161,7 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnDeactivateMountedState += HandleDeactivateMountedStateOwner;
                 unitController.UnitEventController.OnRequestAcceptQuestItemQuest += HandleRequestAcceptQuestItemQuest;
                 unitController.UnitEventController.OnRequestCompleteQuestItemQuest += HandleRequestCompleteQuestItemQuest;
+                unitController.UnitEventController.OnRequestDeleteItem += HandleRequestDeleteItem;
             }
             // all clients
             unitController.UnitEventController.OnUnsetParent += HandleUnsetParent;
@@ -201,6 +202,7 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnDeactivateMountedState -= HandleDeactivateMountedStateOwner;
                 unitController.UnitEventController.OnRequestAcceptQuestItemQuest -= HandleRequestAcceptQuestItemQuest;
                 unitController.UnitEventController.OnRequestCompleteQuestItemQuest -= HandleRequestCompleteQuestItemQuest;
+                unitController.UnitEventController.OnRequestDeleteItem -= HandleRequestDeleteItem;
             }
             // all clients
             unitController.UnitEventController.OnUnsetParent -= HandleUnsetParent;
@@ -256,7 +258,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnAchievementObjectiveStatusUpdated += HandleAchievementObjectiveStatusUpdatedServer;
             //unitController.UnitEventController.OnStartInteractWithOption += HandleStartInteractWithOption;
             unitController.UnitEventController.OnGetNewInstantiatedItem += HandleGetNewInstantiatedItem;
-            unitController.UnitEventController.OnDeleteItem += HandleDeleteItemServer;
+            //unitController.UnitEventController.OnDeleteItem += HandleDeleteItemServer;
             unitController.UnitEventController.OnAddEquipment += HandleAddEquipment;
             unitController.UnitEventController.OnRemoveEquipment += HandleRemoveEquipment;
             unitController.UnitEventController.OnAddItemToInventorySlot += HandleAddItemToInventorySlot;
@@ -360,7 +362,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnQuestObjectiveStatusUpdated -= HandleQuestObjectiveStatusUpdatedServer;
             //unitController.UnitEventController.OnStartInteractWithOption -= HandleStartInteractWithOptionServer;
             unitController.UnitEventController.OnGetNewInstantiatedItem -= HandleGetNewInstantiatedItem;
-            unitController.UnitEventController.OnDeleteItem -= HandleDeleteItemServer;
+            //unitController.UnitEventController.OnDeleteItem -= HandleDeleteItemServer;
             unitController.UnitEventController.OnAddEquipment -= HandleAddEquipment;
             unitController.UnitEventController.OnRemoveEquipment -= HandleRemoveEquipment;
             unitController.UnitEventController.OnAddItemToInventorySlot -= HandleAddItemToInventorySlot;
@@ -417,6 +419,8 @@ namespace AnyRPG {
             unitController.UnitEventController.OnNameChangeFail -= HandleNameChangeFailServer;
             unitController.UnitEventController.OnSetGroupId -= HandleSetGroupId;
         }
+
+
 
         [ObserversRpc]
         private void HandleSetGroupId(int newGroupId) {
@@ -753,6 +757,16 @@ namespace AnyRPG {
             }
             unitController.CharacterQuestLog.AcceptQuestItemQuest(instantiatedItem as InstantiatedQuestStartItem, quest);
         }
+
+        private void HandleRequestDeleteItem(InstantiatedItem item) {
+            HandleRequestDeleteItemServer(item.InstanceId);
+        }
+
+        [ServerRpc]
+        private void HandleRequestDeleteItemServer(int itemInstanceId) {
+            unitController.CharacterInventoryManager.DeleteItem(itemInstanceId);
+        }
+
 
         private void HandleRequestCompleteQuestItemQuest(int slotIndex, int instanceId, Quest quest, QuestRewardChoices questRewardChoices) {
             HandleRequestCompleteQuestItemQuestServer(slotIndex, instanceId, quest.ResourceName, questRewardChoices);
@@ -1504,15 +1518,18 @@ namespace AnyRPG {
             }
         }
 
-
+        /*
         public void HandleDeleteItemServer(InstantiatedItem item) {
             HandleDeleteItemClient(item.InstanceId);
         }
+        */
 
+        /*
         [ObserversRpc]
         public void HandleDeleteItemClient(int itemInstanceId) {
             unitController.CharacterInventoryManager.DeleteItem(itemInstanceId);
         }
+        */
 
         public void HandleGetNewInstantiatedItem(InstantiatedItem instantiatedItem) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleGetNewInstantiatedItem({instantiatedItem.ResourceName}) instanceId: {instantiatedItem.InstanceId}");

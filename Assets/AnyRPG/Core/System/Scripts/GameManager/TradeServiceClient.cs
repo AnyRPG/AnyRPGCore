@@ -45,13 +45,13 @@ namespace AnyRPG {
         }
 
         public void RequestBeginTrade(int characterId) {
-            Debug.Log($"TradeServiceClient.RequestBeginTrade({characterId})");
+            //Debug.Log($"TradeServiceClient.RequestBeginTrade({characterId})");
 
             networkManagerClient.RequestBeginTrade(characterId);
         }
 
         public void RequestDeclineTrade() {
-            Debug.Log($"TradeServiceClient.RequestDeclineTrade()");
+            //Debug.Log($"TradeServiceClient.RequestDeclineTrade()");
 
             ResetTradeSettings();
             networkManagerClient.RequestDeclineTrade();
@@ -64,7 +64,7 @@ namespace AnyRPG {
         }
 
         public void DeclineTradeInvite() {
-            Debug.Log($"TradeServiceClient.DeclineTradeInvite()");
+            //Debug.Log($"TradeServiceClient.DeclineTradeInvite()");
 
             ResetTradeSettings();
             messageLogClient.WriteSystemMessage("Your trade invitation was declined");
@@ -85,7 +85,7 @@ namespace AnyRPG {
         }
 
         public void AddItemsToTargetTradeSlot(int buttonIndex, List<int> itemIdList) {
-            Debug.Log($"TradeServiceClient.AddItemsToTargetTradeSlot({buttonIndex})");
+            //Debug.Log($"TradeServiceClient.AddItemsToTargetTradeSlot({buttonIndex})");
 
             List<InstantiatedItem> itemList = new List<InstantiatedItem>();
             foreach (int itemId in itemIdList) {
@@ -165,7 +165,7 @@ namespace AnyRPG {
         }
 
         public void AdvertiseTradeComplete() {
-            Debug.Log($"TradeServiceClient.AdvertiseTradeComplete()");
+            //Debug.Log($"TradeServiceClient.AdvertiseTradeComplete()");
 
             ResetTradeSettings();
             messageLogClient.WriteSystemMessage("The trade was completed");

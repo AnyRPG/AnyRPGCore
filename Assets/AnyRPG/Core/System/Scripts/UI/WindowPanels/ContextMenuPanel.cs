@@ -341,7 +341,7 @@ namespace AnyRPG {
         }
 
         public void Trade() {
-            Debug.Log("ContextMenuPanel.Trade()");
+            //Debug.Log("ContextMenuPanel.Trade()");
 
             tradeServiceClient.RequestBeginTrade(contextMenuService.TargetUnitController.CharacterId);
             contextMenuService.CloseContextMenu();

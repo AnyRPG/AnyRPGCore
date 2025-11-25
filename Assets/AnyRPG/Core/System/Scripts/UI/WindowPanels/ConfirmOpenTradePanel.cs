@@ -10,14 +10,6 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI messageText = null;
 
-        /*
-        [SerializeField]
-        private HighlightButton noButton = null;
-
-        [SerializeField]
-        private HighlightButton yesButton = null;
-        */
-
         // game manager references
         private TradeServiceClient tradeServiceClient = null;
 
@@ -46,12 +38,13 @@ namespace AnyRPG {
 
         public void CancelAction() {
             //Debug.Log("NewGameMenuController.CancelAction()");
+
             Close();
             tradeServiceClient.RequestDeclineTrade();
         }
 
         public void ConfirmAction() {
-            Debug.Log("ConfirmOpenTradePanel.ConfirmAction()");
+            //Debug.Log("ConfirmOpenTradePanel.ConfirmAction()");
 
             Close();
             tradeServiceClient.RequestAcceptTrade();

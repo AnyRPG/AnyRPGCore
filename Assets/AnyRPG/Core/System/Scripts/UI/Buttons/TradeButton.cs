@@ -165,7 +165,11 @@ namespace AnyRPG {
             if (items[0].ItemQuality != null) {
                 colorString = "#" + ColorUtility.ToHtmlStringRGB(items[0].ItemQuality.QualityColor);
             }
-            string itemName = string.Format("<color={0}>{1}</color>", colorString, items[0].DisplayName);
+            string removeString = string.Empty;
+            if (isInteractable == true) {
+                removeString = "\n(right click to remove)";
+            }
+            string itemName = string.Format("<color={0}>{1}</color>{2}", colorString, items[0].DisplayName, removeString);
             title.text = itemName;
             stackSize.text = items.Count.ToString();
         }
@@ -191,7 +195,7 @@ namespace AnyRPG {
         }
 
         public void RequestRemoveItem() {
-            Debug.Log($"TradeButton.RemoveItem() instance: {GetInstanceID()}");
+            //Debug.Log($"TradeButton.RemoveItem() instance: {GetInstanceID()}");
 
             RemoveItem();
             tradeServiceClient.RequestAddItemsToTradeSlot(buttonIndex, new List<int>());

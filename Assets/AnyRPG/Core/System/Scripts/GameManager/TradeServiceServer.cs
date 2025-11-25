@@ -63,7 +63,7 @@ namespace AnyRPG {
 
         public void RequestAddItemsToTradeSlot(int accountId, int buttonIndex, List<int> itemIdList) {
             if (tradeSessionLookup.ContainsKey(accountId) == false) {
-                Debug.Log($"CharacterGroupService.AcceptCharacterGroupInvite({accountId}) trade session not found");
+                Debug.Log($"TradeServiceServer.AcceptCharacterGroupInvite({accountId}) trade session not found");
                 return;
             }
             TradeSession tradeSession = tradeSessionLookup[accountId];
@@ -227,21 +227,6 @@ namespace AnyRPG {
             // clean up trade session lookups
             tradeSessionLookup.Remove(tradeSession.targetAccountId);
             tradeSessionLookup.Remove(tradeSession.sourceAccountId);
-        }
-
-        private bool TradeItemsExist(TradeSession tradeSession, UnitController unitController) {
-            if (tradeSession.sourceCurrencyAmount > 0
-                && unitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency) < tradeSession.sourceCurrencyAmount) {
-                return false;
-            }
-            foreach (List<int> itemList in tradeSession.sourceTradeSlots.Values) {
-                foreach (int itemId in itemList) {
-                    if (unitController.CharacterInventoryManager.HasItem(itemId) == false) {
-                        return false;
-                    }
-                }
-            }
-            return true;
         }
 
         public void RequestUnconfirmTrade(int accountId) {

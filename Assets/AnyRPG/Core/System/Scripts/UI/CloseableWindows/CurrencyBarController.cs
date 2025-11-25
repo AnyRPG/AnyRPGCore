@@ -59,7 +59,9 @@ namespace AnyRPG {
                 currencyAmountController.gameObject.SetActive(false);
             }
             //currencyAmountControllers.Clear();
-            priceText.gameObject.SetActive(false);
+            if (priceText != null) {
+                priceText.gameObject.SetActive(false);
+            }
         }
 
         public void UpdateCurrencyAmount(Currency currency, int currencyAmount) {

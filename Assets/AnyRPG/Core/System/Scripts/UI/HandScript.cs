@@ -52,7 +52,7 @@ namespace AnyRPG {
             if (controlsManager.GamePadModeActive == false) {
                 transform.position = Input.mousePosition + offset;
                 if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && Moveable != null) {
-                    if (Moveable is Item) {
+                    if (Moveable is InstantiatedItem) {
                         uIManager.confirmDestroyMenuWindow.OpenWindow();
                     } else if (Moveable is Ability) {
                         // DROP ABILITY SAFELY

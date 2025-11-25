@@ -1194,7 +1194,8 @@ namespace AnyRPG {
 
 
         public void AdvertiseMessageFeedMessage(int accountId, string message) {
-            Debug.Log($"FishNetClientConnector.AdvertiseMessageFeedMessage({accountId}, {message})");
+            //Debug.Log($"FishNetClientConnector.AdvertiseMessageFeedMessage({accountId}, {message})");
+
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
                 return;
             }
@@ -1207,11 +1208,21 @@ namespace AnyRPG {
 
         [TargetRpc]
         public void AdvertiseMessageFeedMessageClient(NetworkConnection networkConnection, string message) {
-            Debug.Log($"FishNetClientConnector.AdvertiseMessageFeedMessageClient({message})");
+            //Debug.Log($"FishNetClientConnector.AdvertiseMessageFeedMessageClient({message})");
+
             networkManagerClient.AdvertiseMessageFeedMessage(message);
         }
 
-        public void AdvertiseSystemMessage(int clientId, string message) {
+        public void AdvertiseSystemMessage(int accountId, string message) {
+
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+                return;
+            }
+            int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
+                return;
+            }
+
             AdvertiseSystemMessageClient(fishNetNetworkManager.ServerManager.Clients[clientId], message);
         }
 

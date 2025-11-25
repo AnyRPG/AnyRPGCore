@@ -77,7 +77,7 @@ namespace AnyRPG {
         }
 
         private void HandleAddCurrencyToTrade(int amount) {
-            Debug.Log($"TradePanel.HandleAddCurrencyToTrade({amount})");
+            //Debug.Log($"TradePanel.HandleAddCurrencyToTrade({amount})");
 
             currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, amount);
             confirmButton.Button.interactable = true;
@@ -92,11 +92,17 @@ namespace AnyRPG {
         private void HandleRecalculateBaseCurrency() {
             //Debug.Log($"TradePanel.HandleRecalculateBaseCurrency()");
 
+            if (tradeServiceClient.TradeConfirmed == true) {
+                tradeServiceClient.UnconfirmTrade();
+                confirmButton.Button.interactable = true;
+                uINavigationControllers[1].UpdateNavigationList();
+                return;
+            }
             tradeServiceClient.AddCurrency(currencyEntryBarController.CurrencyNode);
         }
 
         private void HandleAddItemsToTargetTradeSlot(int buttonIndex, List<InstantiatedItem> itemList) {
-            Debug.Log($"TradePanel.HandleAddItemsToTargetTradeSlot({buttonIndex})");
+            //Debug.Log($"TradePanel.HandleAddItemsToTargetTradeSlot({buttonIndex})");
 
             if (targetTradeButtons.Count <= buttonIndex) {
                 return;
@@ -127,7 +133,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveClosedWindowNotification() {
-            Debug.Log($"TradePanel.ReceiveClosedWindowNotification()");
+            //Debug.Log($"TradePanel.ReceiveClosedWindowNotification()");
 
             base.ReceiveClosedWindowNotification();
             tradeServiceClient.RequestCancelTrade();
@@ -142,7 +148,7 @@ namespace AnyRPG {
         }
 
         public void CancelAction() {
-            Debug.Log($"TradePanel.CancelAction()");
+            //Debug.Log($"TradePanel.CancelAction()");
 
             if (tradeServiceClient.TradeConfirmed == true) {
                 tradeServiceClient.UnconfirmTrade();

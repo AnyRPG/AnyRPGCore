@@ -832,8 +832,11 @@ namespace AnyRPG {
         }
 
         public void DeleteItem(InstantiatedItem instantiatedItem) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.DeleteItem({instantiatedItem.InstanceId}({instantiatedItem.ResourceName}))");
+
             if (instantiatedItem.Slot != null) {
-                instantiatedItem.Slot.Clear();
+                //instantiatedItem.Slot.Clear();
+                instantiatedItem.Slot.RemoveAllItems();
                 NotifyOnItemCountChanged(instantiatedItem.Item);
             } else {
                 // first we want to get this items equipment slot
@@ -842,13 +845,13 @@ namespace AnyRPG {
                 if (instantiatedItem is InstantiatedEquipment) {
                     unitController.CharacterEquipmentManager.Unequip(instantiatedItem as InstantiatedEquipment);
                     if (instantiatedItem.Slot != null) {
-                        instantiatedItem.Slot.Clear();
+                        instantiatedItem.Slot.RemoveAllItems();
                         NotifyOnItemCountChanged(instantiatedItem.Item);
                     }
                     unitController.UnitModelController.RebuildModelAppearance();
                 }
             }
-            unitController.UnitEventController.NotifyOnDeleteItem(instantiatedItem);
+            //unitController.UnitEventController.NotifyOnDeleteItem(instantiatedItem);
             messageLogServer.WriteSystemMessage(unitController, $"Destroyed {instantiatedItem.DisplayName}");
         }
 
