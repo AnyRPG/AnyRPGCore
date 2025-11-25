@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -27,6 +28,9 @@ namespace AnyRPG {
         [SerializeField]
         private CurrencyBarController currencyBarController = null;
 
+        [SerializeField]
+        private UINavigationController actionButtonsNavigationController = null;
+
         //[SerializeField]
         //private HighlightButton cancelButton = null;
 
@@ -49,6 +53,7 @@ namespace AnyRPG {
             currencyBarController.Configure(systemGameManager);
             currencyEntryBarController.Configure(systemGameManager);
             tradeServiceClient.OnStartTradeSession += HandleStartTradeSession;
+            tradeServiceClient.OnRequestAddItemsToTargetTradeSlot += HandleRequestAddItemsToTargetTradeSlot;
             tradeServiceClient.OnAddItemsToTargetTradeSlot += HandleAddItemsToTargetTradeSlot;
             tradeServiceClient.OnAddCurrencyToTrade += HandleAddCurrencyToTrade;
             tradeServiceClient.OnCompleteTrade += HandleCompleteTrade;
@@ -65,6 +70,14 @@ namespace AnyRPG {
                 button.SetIsInteractable(false);
                 button.SetButtonIndex(i);
                 i++;
+            }
+        }
+
+        private void HandleRequestAddItemsToTargetTradeSlot() {
+            if (tradeServiceClient.TradeConfirmed == true) {
+                tradeServiceClient.UnconfirmTrade();
+                confirmButton.Button.interactable = true;
+                actionButtonsNavigationController.UpdateNavigationList();
             }
         }
 
@@ -95,7 +108,7 @@ namespace AnyRPG {
             if (tradeServiceClient.TradeConfirmed == true) {
                 tradeServiceClient.UnconfirmTrade();
                 confirmButton.Button.interactable = true;
-                uINavigationControllers[1].UpdateNavigationList();
+                actionButtonsNavigationController.UpdateNavigationList();
                 return;
             }
             tradeServiceClient.AddCurrency(currencyEntryBarController.CurrencyNode);
@@ -108,7 +121,12 @@ namespace AnyRPG {
                 return;
             }
             targetTradeButtons[buttonIndex].AddItems(itemList);
-            confirmButton.Button.interactable = true;
+            if (tradeServiceClient.TradeConfirmed == true) {
+                tradeServiceClient.UnconfirmTrade();
+                confirmButton.Button.interactable = true;
+                actionButtonsNavigationController.UpdateNavigationList();
+                return;
+            }
         }
 
         private void HandleStartTradeSession() {
@@ -143,7 +161,7 @@ namespace AnyRPG {
 
         public void ConfirmAction() {
             confirmButton.Button.interactable = false;
-            uINavigationControllers[1].UpdateNavigationList();
+            actionButtonsNavigationController.UpdateNavigationList();
             tradeServiceClient.RequestConfirmTrade();
         }
 
@@ -153,7 +171,7 @@ namespace AnyRPG {
             if (tradeServiceClient.TradeConfirmed == true) {
                 tradeServiceClient.UnconfirmTrade();
                 confirmButton.Button.interactable = true;
-                uINavigationControllers[1].UpdateNavigationList();
+                actionButtonsNavigationController.UpdateNavigationList();
                 return;
             }
             tradeServiceClient.RequestCancelTrade();

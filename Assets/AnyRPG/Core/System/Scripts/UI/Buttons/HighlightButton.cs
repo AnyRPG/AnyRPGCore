@@ -190,7 +190,11 @@ namespace AnyRPG {
             if (CapitalizeText == true) {
                 text.text = text.text.ToLower();
             }
-            EventSystem.current.SetSelectedGameObject(null);
+
+            //prevent buttons updated as a result of text updates from deselecting the input field
+            if (controlsManager.TextInputActive == false) {
+                EventSystem.current.SetSelectedGameObject(null);
+            }
         }
 
         public override void OnHoverSound() {

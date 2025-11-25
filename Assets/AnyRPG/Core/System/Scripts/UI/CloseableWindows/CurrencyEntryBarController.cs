@@ -96,10 +96,14 @@ namespace AnyRPG {
         }
 
         public void HandlePointerClick() {
+            //Debug.Log($"CurrencyEntryBarController.HandlePointerClick()");
+
             controlsManager.ActivateTextInput();
         }
 
         public void HandleEndEdit() {
+            //Debug.Log($"CurrencyEntryBarController.HandleEndEdit()");
+
             RecalculateBaseCurrency();
             controlsManager.DeactivateTextInput();
         }

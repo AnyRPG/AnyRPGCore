@@ -65,6 +65,7 @@ namespace AnyRPG {
         public float InputVertical { get => inputVertical; }
         public bool MouseDisabled { get => mouseDisabled; }
         public int WindowStackCount { get => windowStackCount; }
+        public bool TextInputActive { get => textInputActive; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

@@ -7,6 +7,7 @@ namespace AnyRPG {
 
         public event Action OnStartTradeSession = delegate { };
         public event Action OnRequestBeginTrade = delegate { };
+        public event Action OnRequestAddItemsToTargetTradeSlot = delegate { };
         public event Action<int, List<InstantiatedItem>> OnAddItemsToTargetTradeSlot = delegate { };
         public event Action<int> OnAddCurrencyToTrade = delegate { };
         public event Action OnCompleteTrade = delegate { };
@@ -82,6 +83,7 @@ namespace AnyRPG {
             //Debug.Log($"TradeServiceClient.RequestAddItemsToTradeSlot({buttonIndex})");
 
             networkManagerClient.RequestAddItemsToTradeSlot(buttonIndex, itemIdList);
+            OnRequestAddItemsToTargetTradeSlot();
         }
 
         public void AddItemsToTargetTradeSlot(int buttonIndex, List<int> itemIdList) {
