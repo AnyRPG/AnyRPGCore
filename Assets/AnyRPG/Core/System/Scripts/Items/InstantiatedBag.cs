@@ -36,10 +36,12 @@ namespace AnyRPG {
             this.slots = bag.Slots;
         }
 
+        /*
         public virtual void LoadSaveData(EquippedBagSaveData equippedBagSaveData) {
             displayName = equippedBagSaveData.DisplayName;
-            dropLevel = equippedBagSaveData.dropLevel;
+            dropLevel = equippedBagSaveData.DropLevel;
         }
+        */
 
         public override string GetDescription() {
             //Debug.Log($"{item.ResourceName}.InstantiatedCurrencyItem.GetDescription()");

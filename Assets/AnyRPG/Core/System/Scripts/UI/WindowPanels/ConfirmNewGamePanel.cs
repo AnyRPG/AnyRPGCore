@@ -49,7 +49,7 @@ namespace AnyRPG {
             if (systemConfigurationManager.UseNewGameWindow == true) {
                 divider.SetActive(false);
                 confirmGameButton.gameObject.SetActive(true);
-                confirmGameButton.AddSaveData(newGameManager.PlayerCharacterSaveData.SaveData);
+                confirmGameButton.AddSaveData(newGameManager.DefaultCharacterSaveData);
             } else {
                 divider.SetActive(true);
                 confirmGameButton.gameObject.SetActive(false);

@@ -52,13 +52,13 @@ namespace AnyRPG {
                     foreach (string fileName in fileEntries) {
                         if (fileName.EndsWith(".json")) {
                             string jsonString = File.ReadAllText(fileName);
-                            PlayerCharacterSaveData playerCharacterSaveData = JsonUtility.FromJson<PlayerCharacterSaveData>(jsonString);
-                            if (!playerNameMap.ContainsKey(playerCharacterSaveData.SaveData.playerName.ToLower()) && !playerNameLookupMap.ContainsKey(playerCharacterSaveData.PlayerCharacterId)) {
-                                //Debug.Log($"PlayerCharacterService.LoadPlayerNameMap(): Loaded player ({playerCharacterSaveData.SaveData.playerName}) with ID ({playerCharacterSaveData.PlayerCharacterId})");
-                                playerNameMap.Add(playerCharacterSaveData.SaveData.playerName.ToLower(), playerCharacterSaveData.PlayerCharacterId);
-                                playerNameLookupMap.Add(playerCharacterSaveData.PlayerCharacterId, playerCharacterSaveData.SaveData.playerName);
+                            CharacterSaveData characterSaveData = JsonUtility.FromJson<CharacterSaveData>(jsonString);
+                            if (!playerNameMap.ContainsKey(characterSaveData.CharacterName.ToLower()) && !playerNameLookupMap.ContainsKey(characterSaveData.CharacterId)) {
+                                //Debug.Log($"PlayerCharacterService.LoadPlayerNameMap(): Loaded player ({characterSaveData.CharacterName}) with ID ({characterSaveData.CharacterId})");
+                                playerNameMap.Add(characterSaveData.CharacterName.ToLower(), characterSaveData.CharacterId);
+                                playerNameLookupMap.Add(characterSaveData.CharacterId, characterSaveData.CharacterName);
                             } else {
-                                Debug.LogWarning($"PlayerCharacterService.LoadPlayerNameMap(): Duplicate player name ({playerCharacterSaveData.SaveData.playerName}) or character ID ({playerCharacterSaveData.PlayerCharacterId}) found . This character will be skipped.");
+                                Debug.LogWarning($"PlayerCharacterService.LoadPlayerNameMap(): Duplicate player name ({characterSaveData.CharacterName}) or character ID ({characterSaveData.CharacterId}) found . This character will be skipped.");
                             }
                         }
                     }
@@ -112,30 +112,27 @@ namespace AnyRPG {
             return $"{baseSaveFolderName}/{accountId}";
         }
 
-        public bool AddPlayerCharacter(int accountId, AnyRPGSaveData anyRPGSaveData) {
+        public bool AddPlayerCharacter(int accountId, CharacterSaveData characterSaveData) {
             
             MakeAccountSaveFolder(accountId);
 
-            if (playerNameMap.ContainsKey(anyRPGSaveData.playerName.ToLower())) {
+            if (playerNameMap.ContainsKey(characterSaveData.CharacterName.ToLower())) {
                 return false;
             }
 
-            PlayerCharacterSaveData playerCharacterSaveData = new PlayerCharacterSaveData() {
-                PlayerCharacterId = GetNewPlayerCharacterId(),
-                SaveData = anyRPGSaveData
-            };
-            SaveDataFile(accountId, playerCharacterSaveData);
-            playerNameMap.Add(anyRPGSaveData.playerName.ToLower(), playerCharacterSaveData.PlayerCharacterId);
-            playerNameLookupMap.Add(playerCharacterSaveData.PlayerCharacterId, anyRPGSaveData.playerName);
+            characterSaveData.CharacterId = GetNewPlayerCharacterId();
+            SaveDataFile(accountId, characterSaveData);
+            playerNameMap.Add(characterSaveData.CharacterName.ToLower(), characterSaveData.CharacterId);
+            playerNameLookupMap.Add(characterSaveData.CharacterId, characterSaveData.CharacterName);
 
             return true;
         }
 
-        public bool SaveDataFile(int accountId, PlayerCharacterSaveData playerCharacterSaveData) {
+        public bool SaveDataFile(int accountId, CharacterSaveData characterSaveData) {
             //Debug.Log($"UserAccountService.SaveDataFile({userAccount.UserName})");
 
-            string jsonString = JsonUtility.ToJson(playerCharacterSaveData);
-            string jsonSavePath = $"{GetAccountSaveFolder(accountId)}/{playerCharacterSaveData.PlayerCharacterId}.json";
+            string jsonString = JsonUtility.ToJson(characterSaveData);
+            string jsonSavePath = $"{GetAccountSaveFolder(accountId)}/{characterSaveData.CharacterId}.json";
             File.WriteAllText(jsonSavePath, jsonString);
 
             return true;
@@ -169,19 +166,17 @@ namespace AnyRPG {
         }
 
 
-        public bool SavePlayerCharacter(int accountId, PlayerCharacterSaveData playerCharacterSaveData) {
+        public bool SavePlayerCharacter(int accountId, CharacterSaveData characterSaveData) {
             //Debug.Log($"PlayerCharacterService.SavePlayerCharacter({accountId})");
 
-            return SaveDataFile(accountId, playerCharacterSaveData);
+            return SaveDataFile(accountId, characterSaveData);
         }
 
-        public bool SavePlayerCharacter(int accountId, int playerCharacterId, AnyRPGSaveData anyRPGSaveData) {
-            
-            PlayerCharacterSaveData playerCharacterSaveData = new PlayerCharacterSaveData() {
-                PlayerCharacterId = playerCharacterId,
-                SaveData = anyRPGSaveData
-            };
-            return SaveDataFile(accountId, playerCharacterSaveData);
+        public bool SavePlayerCharacter(int accountId, int playerCharacterId, CharacterSaveData characterSaveData) {
+
+            characterSaveData.CharacterId = playerCharacterId;
+
+            return SaveDataFile(accountId, characterSaveData);
         }
 
         public bool RenamePlayerCharacter(int characterId, string newName) {
@@ -221,20 +216,20 @@ namespace AnyRPG {
                 foreach (string fileName in fileEntries) {
                     if (fileName.EndsWith(".json")) {
                         string jsonString = File.ReadAllText(fileName);
-                        PlayerCharacterSaveData playerCharacterSaveData = JsonUtility.FromJson<PlayerCharacterSaveData>(jsonString);
-                        if (playerCharacterSaveData == null) {
+                        CharacterSaveData characterSaveData = JsonUtility.FromJson<CharacterSaveData>(jsonString);
+                        if (characterSaveData == null) {
                             Debug.LogWarning($"PlayerCharacterService.GetPlayerCharacters({accountId}): Could not load player character save data from file {fileName}. This character will be skipped.");
                             continue;
                         }
-                        if (playerNameMap.ContainsKey(playerCharacterSaveData.SaveData.playerName.ToLower()) == false) {
-                            Debug.LogWarning($"PlayerCharacterService.GetPlayerCharacters({accountId}): Player name {playerCharacterSaveData.SaveData.playerName} not found in player name map. This character will be skipped.");
+                        if (playerNameMap.ContainsKey(characterSaveData.CharacterName.ToLower()) == false) {
+                            Debug.LogWarning($"PlayerCharacterService.GetPlayerCharacters({accountId}): Player name {characterSaveData.CharacterName} not found in player name map. This character will be skipped.");
                             continue;
                         }
                         PlayerCharacterData playerCharacterData = new PlayerCharacterData() {
-                            id = playerCharacterSaveData.PlayerCharacterId,
+                            id = characterSaveData.CharacterId,
                             accountId = accountId,
-                            name = playerCharacterSaveData.SaveData.playerName,
-                            saveData = JsonUtility.ToJson(playerCharacterSaveData.SaveData)
+                            name = characterSaveData.CharacterName,
+                            saveData = JsonUtility.ToJson(characterSaveData)
                         };
                         playerCharacterListResponse.playerCharacters.Add(playerCharacterData);
                     }
@@ -244,17 +239,19 @@ namespace AnyRPG {
             return playerCharacterListResponse;
         }
 
-        public PlayerCharacterSaveData GetPlayerCharacterSaveData(int accountId, int playerCharacterId) {
+        public CharacterSaveData GetPlayerCharacterSaveData(int accountId, int playerCharacterId) {
             string jsonSavePath = $"{GetAccountSaveFolder(accountId)}/{playerCharacterId}.json";
             if (File.Exists(jsonSavePath)) {
                 string jsonString = File.ReadAllText(jsonSavePath);
-                PlayerCharacterSaveData playerCharacterSaveData = JsonUtility.FromJson<PlayerCharacterSaveData>(jsonString);
-                return playerCharacterSaveData;
+                CharacterSaveData characterSaveData = JsonUtility.FromJson<CharacterSaveData>(jsonString);
+                return characterSaveData;
             }
             return null;
         }
 
         public int GetPlayerIdFromName(string targetPlayerName) {
+            //Debug.Log($"PlayerCharacterService.GetPlayerIdFromName({targetPlayerName})");
+
             if (playerNameMap.ContainsKey(targetPlayerName.ToLower()) == false) {
                 return 0;
             }

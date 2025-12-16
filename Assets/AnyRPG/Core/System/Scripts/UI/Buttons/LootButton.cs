@@ -85,8 +85,18 @@ namespace AnyRPG {
             uIManager.HideToolTip();
         }
 
-        public override void OnPointerClick(PointerEventData eventData) {
-            base.OnPointerClick(eventData);
+        protected override void HandleLeftClick() {
+            base.HandleLeftClick();
+            if (LootDrop == null) {
+                return;
+            }
+
+            // loot the item
+            TakeLoot();
+        }
+
+        protected override void HandleRightClick() {
+            base.HandleRightClick();
             if (LootDrop == null) {
                 return;
             }

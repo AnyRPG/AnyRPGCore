@@ -94,10 +94,10 @@ namespace AnyRPG {
         }
 
 
-        public void CreatePlayerCharacter(int accountId, string token, AnyRPGSaveData anyRPGSaveData) {
+        public void CreatePlayerCharacter(int accountId, string token, CharacterSaveData characterSaveData) {
             Debug.Log($"GameServerClient.CreatePlayerCharacter({token})");
 
-            CreatePlayerCharacterRequest createPlayerCharacterRequest = new CreatePlayerCharacterRequest(anyRPGSaveData);
+            CreatePlayerCharacterRequest createPlayerCharacterRequest = new CreatePlayerCharacterRequest(characterSaveData);
 
             networkManagerServer.StartCoroutine(CreatePlayerCharacterEnumerator(accountId, token, createPlayerCharacterRequest));
         }
@@ -129,10 +129,10 @@ namespace AnyRPG {
 
         }
 
-        public void SavePlayerCharacter(int accountId, string token, int playerCharacterId, AnyRPGSaveData saveData) {
+        public void SavePlayerCharacter(int accountId, string token, int playerCharacterId, CharacterSaveData saveData) {
             //Debug.Log($"GameServerClient.SavePlayerCharacter({accountId}, {token}, {playerCharacterId})");
 
-            SavePlayerCharacterRequest savePlayerCharacterRequest = new SavePlayerCharacterRequest(playerCharacterId, saveData.playerName, saveData);
+            SavePlayerCharacterRequest savePlayerCharacterRequest = new SavePlayerCharacterRequest(playerCharacterId, saveData.CharacterName, saveData);
 
             networkManagerServer.StartCoroutine(SavePlayerCharacterEnumerator(accountId, token, savePlayerCharacterRequest));
         }
@@ -231,15 +231,6 @@ namespace AnyRPG {
     }
 
     [Serializable]
-    public class PlayerCharacterListResponse {
-        public List<PlayerCharacterData> playerCharacters;
-
-        public PlayerCharacterListResponse() {
-            playerCharacters = new List<PlayerCharacterData>();
-        }
-    }
-
-    [Serializable]
     public class PlayerCharacterData {
         public int id;
         public int accountId;
@@ -252,12 +243,6 @@ namespace AnyRPG {
         }
     }
 
-    [Serializable]
-    public class PlayerCharacterSaveData {
-        public int PlayerCharacterId;
-        public AnyRPGSaveData SaveData;
-    }
-
     public class LoginResponse {
         public string token = string.Empty;
         public int accountId = 0;
@@ -267,9 +252,9 @@ namespace AnyRPG {
         public string Name = string.Empty;
         public string SaveData = string.Empty;
         
-        public CreatePlayerCharacterRequest(AnyRPGSaveData anyRPGSaveData) {
-            Name = anyRPGSaveData.playerName;
-            SaveData = JsonUtility.ToJson(anyRPGSaveData);
+        public CreatePlayerCharacterRequest(CharacterSaveData characterSaveData) {
+            Name = characterSaveData.CharacterName;
+            SaveData = JsonUtility.ToJson(characterSaveData);
         }
     }
 
@@ -278,10 +263,10 @@ namespace AnyRPG {
         public string Name;
         public string SaveData;
 
-        public SavePlayerCharacterRequest(int playerCharacterId, string name, AnyRPGSaveData anyRPGSaveData) {
+        public SavePlayerCharacterRequest(int playerCharacterId, string name, CharacterSaveData characterSaveData) {
             Id = playerCharacterId;
             Name = name;
-            SaveData = JsonUtility.ToJson(anyRPGSaveData);
+            SaveData = JsonUtility.ToJson(characterSaveData);
         }
     }
 

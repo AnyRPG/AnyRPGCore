@@ -819,7 +819,8 @@ namespace AnyRPG {
         }
 
         public void NotifyOnRequestAddBagFromInventory(InstantiatedBag instantiatedBag, int nodeIndex, bool isBankNode) {
-            Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnRequestAddBagFromInventory({instantiatedBag.Item.ResourceName}, {nodeIndex}, {isBankNode})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnRequestAddBagFromInventory({instantiatedBag.Item.ResourceName}, {nodeIndex}, {isBankNode})");
+            
             OnRequestAddBag(instantiatedBag, nodeIndex, isBankNode);
         }
 

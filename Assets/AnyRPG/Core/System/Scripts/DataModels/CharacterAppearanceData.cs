@@ -11,9 +11,9 @@ namespace AnyRPG {
         public string appearanceString;
         public List<SwappableMeshSaveData> swappableMeshSaveDataList;
 
-        public CharacterAppearanceData(AnyRPGSaveData saveData) {
-            appearanceString = saveData.appearanceString;
-            swappableMeshSaveDataList = saveData.swappableMeshSaveData;
+        public CharacterAppearanceData(CharacterSaveData saveData) {
+            appearanceString = saveData.AppearanceString;
+            swappableMeshSaveDataList = saveData.SwappableMeshSaveData;
         }
 
         public CharacterAppearanceData() {

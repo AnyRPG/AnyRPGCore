@@ -13,7 +13,7 @@ namespace AnyRPG {
         public CharacterConfigurationRequest characterConfigurationRequest;
         public bool isServerOwned = false;
         public bool isOwner = false;
-        public AnyRPGSaveData saveData = null;
+        public CharacterSaveData saveData = null;
 
         public CharacterRequestData(ICharacterRequestor characterRequestor, GameMode requestMode, CharacterConfigurationRequest characterConfigurationRequest) {
             //Debug.Log($"CharacterRequestData.CharacterRequestData({characterRequestor}, {requestMode})");

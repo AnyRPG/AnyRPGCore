@@ -105,8 +105,6 @@ namespace AnyRPG {
 
             base.ProcessOpenWindowNotification();
 
-            loadGameManager.LoadCharacterList();
-
             // inform the preview panel so the character can be rendered
             characterPreviewPanel.OnUnitCreated += HandleUnitCreated;
             loadGameManager.OnLoadCharacterList += HandleLoadCharacterList;
@@ -115,7 +113,10 @@ namespace AnyRPG {
 
 
             // This is down here so re-used UMA units don't trigger handleTargetCreated before we can subscribe to it
-            ShowLoadButtonsCommon();
+            // disabled because this should only happen once in response to load game manager loading the character list
+            //ShowLoadButtonsCommon();
+
+            loadGameManager.LoadCharacterList();
 
             // this needs to be run here because the initial run in ShowLoadButtonsCommon will have done nothing because the preview panel wasn't open yet
             //LoadSavedAppearanceSettings();
@@ -162,7 +163,7 @@ namespace AnyRPG {
             uINavigationControllers[1].UpdateNavigationList();
             uINavigationControllers[0].UnHightlightButtonBackgrounds(loadButton);
 
-            nameText.text = loadGameManager.PlayerCharacterSaveData.SaveData.playerName;
+            nameText.text = loadGameManager.CharacterSaveData.CharacterName;
         }
 
 
@@ -183,7 +184,7 @@ namespace AnyRPG {
             copyGameButton.Button.interactable = false;
             deleteGameButton.Button.interactable = false;
             nameText.text = "";
-            loadGameManager.ResetData();
+            //loadGameManager.ResetData();
         }
 
 
@@ -274,7 +275,7 @@ namespace AnyRPG {
             if (characterCreatorManager.PreviewUnitController != null) {
                 //Debug.Log("LoadGamePanel.LoadEquipmentData(): preview controller found");
 
-                characterCreatorManager.PreviewUnitController.CharacterSaveManager.LoadEquipmentData(loadGameManager.PlayerCharacterSaveData.SaveData);
+                characterCreatorManager.PreviewUnitController.CharacterSaveManager.LoadEquipmentData(loadGameManager.CharacterSaveData);
             }
         }
 

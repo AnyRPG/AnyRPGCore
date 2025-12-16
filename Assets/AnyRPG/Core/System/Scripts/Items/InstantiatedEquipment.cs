@@ -45,28 +45,30 @@ namespace AnyRPG {
             return false;
         }
 
-        public override InventorySlotSaveData GetSlotSaveData() {
-            InventorySlotSaveData saveData = base.GetSlotSaveData();
-            saveData.randomSecondaryStatIndexes = RandomStatIndexes;
+        public override ItemInstanceSaveData GetItemSaveData() {
+            ItemInstanceSaveData saveData = base.GetItemSaveData();
+            saveData.RandomSecondaryStatIndexes = RandomStatIndexes;
             return saveData;
         }
 
-        public override void LoadSaveData(InventorySlotSaveData inventorySlotSaveData) {
-            base.LoadSaveData(inventorySlotSaveData);
-            if (inventorySlotSaveData.randomSecondaryStatIndexes != null) {
-                randomStatIndexes = inventorySlotSaveData.randomSecondaryStatIndexes;
+        public override void LoadSaveData(ItemInstanceSaveData itemInstanceSaveData) {
+            base.LoadSaveData(itemInstanceSaveData);
+            if (itemInstanceSaveData.RandomSecondaryStatIndexes != null) {
+                randomStatIndexes = itemInstanceSaveData.RandomSecondaryStatIndexes;
                 InitializeRandomStatsFromIndex();
             }
         }
 
-        public virtual void LoadSaveData(EquipmentSaveData equipmentSaveData) {
+        /*
+        public virtual void LoadSaveData(ItemInstanceSaveData equipmentSaveData) {
             displayName = equipmentSaveData.DisplayName;
-            dropLevel = equipmentSaveData.dropLevel;
-            if (equipmentSaveData.randomSecondaryStatIndexes != null) {
-                randomStatIndexes = equipmentSaveData.randomSecondaryStatIndexes;
+            dropLevel = equipmentSaveData.DropLevel;
+            if (equipmentSaveData.RandomSecondaryStatIndexes != null) {
+                randomStatIndexes = equipmentSaveData.RandomSecondaryStatIndexes;
                 InitializeRandomStatsFromIndex();
             }
         }
+        */
 
 
         public override void PostInitialization() {

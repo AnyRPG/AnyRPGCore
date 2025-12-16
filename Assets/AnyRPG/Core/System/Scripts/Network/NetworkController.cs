@@ -25,7 +25,7 @@ namespace AnyRPG {
         public abstract void RequestReturnFromCutscene();
         public abstract bool CanSpawnCharacterOverNetwork();
         public abstract bool OwnPlayer(UnitController unitController);
-        public abstract void RequestCreatePlayerCharacter(AnyRPGSaveData saveData);
+        public abstract void RequestCreatePlayerCharacter(CharacterSaveData saveData);
         public abstract void DeletePlayerCharacter(int playerCharacterId);
         public abstract void LoadCharacterList();
         public abstract void RequestCreateLobbyGame(string sceneResourceName, bool allowLateJoin);
@@ -47,6 +47,7 @@ namespace AnyRPG {
         public abstract void SetPlayerCharacterSpecialization(Interactable interactable, int componentIndex);
         public abstract void RequestSetPlayerFaction(Interactable interactable, int componentIndex);
         public abstract void RequestLearnSkill(Interactable interactable, int componentIndex, int skillId);
+        public abstract void RequestSendMail(Interactable interactable, int componentIndex, MailMessageRequest sendMailRequest);
         public abstract void RequestAcceptQuest(Interactable interactable, int componentIndex, Quest quest);
         public abstract void RequestCompleteQuest(Interactable interactable, int componentIndex, Quest quest, QuestRewardChoices questRewardChoices);
         public abstract void SellVendorItem(Interactable interactable, int componentIndex, int itemInstanceId);
@@ -79,6 +80,10 @@ namespace AnyRPG {
         public abstract void RequestConfirmTrade();
         public abstract void RequestCancelTrade();
         public abstract void RequestUnconfirmTrade();
+        public abstract void RequestDeleteMailMessage(int messageId);
+        public abstract void RequestTakeMailAttachments(int messageId);
+        public abstract void RequestTakeMailAttachment(int messageId, int attachmentSlotId);
+        public abstract void RequestMarkMailAsRead(int currentMessageId);
 
         // server functions
         public abstract void StartServer(ushort port);
@@ -141,6 +146,12 @@ namespace AnyRPG {
         public abstract void AdvertiseAddCurrencyToTrade(int targetAccountId, int amount);
         public abstract void AdvertiseCompleteTrade(int accountId);
         public abstract void AdvertiseCancelTrade(int accountId);
+        public abstract void AdvertiseMailMessages(int accountId, MailMessageListResponse mailMessageListResponse);
+        public abstract void AdvertiseDeleteMailMessage(int accountId, int messageId);
+        public abstract void AdvertiseTakeMailAttachment(int accountId, int messageId, int attachmentSlotId);
+        public abstract void AdvertiseTakeMailAttachments(int accountId, int messageId);
+        public abstract void AdvertiseConfirmationPopup(int accountId, string messageText);
+        public abstract void AdvertiseMailSend(int accountId);
     }
 
 }

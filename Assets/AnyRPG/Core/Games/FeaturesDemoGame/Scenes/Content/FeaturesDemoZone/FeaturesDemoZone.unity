@@ -15945,9 +15945,6 @@ MonoBehaviour:
   isTrigger: 0
   suppressInteractionWindow: 0
   interactionMaxRange: 2
-  checkOptionsToSpawn: 0
-  spawnRequiresValidOption: 0
-  despawnRequiresNoValidOption: 0
   componentController: {fileID: 0}
   unitComponentController: {fileID: 0}
 --- !u!114 &393183661
@@ -25018,9 +25015,6 @@ MonoBehaviour:
   isTrigger: 1
   suppressInteractionWindow: 1
   interactionMaxRange: 2
-  checkOptionsToSpawn: 0
-  spawnRequiresValidOption: 0
-  despawnRequiresNoValidOption: 0
   componentController: {fileID: 0}
   unitComponentController: {fileID: 0}
 --- !u!65 &623275583
@@ -30963,7 +30957,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 720bd65514fe2ed4aa32db640882f6ca, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 8a41c20d381b40f4fad8b03f4e8c5c4d, type: 2}
   m_BuildHeightMesh: 0
 --- !u!4 &784599040
 Transform:
@@ -36923,9 +36917,6 @@ MonoBehaviour:
   isTrigger: 0
   suppressInteractionWindow: 0
   interactionMaxRange: 2
-  checkOptionsToSpawn: 0
-  spawnRequiresValidOption: 0
-  despawnRequiresNoValidOption: 0
   componentController: {fileID: 0}
   unitComponentController: {fileID: 0}
 --- !u!4 &902514105
@@ -55189,9 +55180,6 @@ MonoBehaviour:
   isTrigger: 1
   suppressInteractionWindow: 1
   interactionMaxRange: 2
-  checkOptionsToSpawn: 0
-  spawnRequiresValidOption: 0
-  despawnRequiresNoValidOption: 0
   componentController: {fileID: 0}
   unitComponentController: {fileID: 0}
 --- !u!65 &1339571317
@@ -71187,9 +71175,6 @@ MonoBehaviour:
   isTrigger: 1
   suppressInteractionWindow: 1
   interactionMaxRange: 2
-  checkOptionsToSpawn: 0
-  spawnRequiresValidOption: 0
-  despawnRequiresNoValidOption: 0
   componentController: {fileID: 0}
   unitComponentController: {fileID: 0}
 --- !u!65 &1709763948

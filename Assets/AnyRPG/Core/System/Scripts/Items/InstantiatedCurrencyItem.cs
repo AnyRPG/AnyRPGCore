@@ -47,13 +47,17 @@ namespace AnyRPG {
             //gainCurrencyAmount = newGainCurrencyAmount;
             Currency tmpCurrency = systemDataFactory.GetResource<Currency>(newGainCurrencyName);
             if (tmpCurrency != null) {
-                currencyNode = new CurrencyNode();
-                currencyNode.currency = tmpCurrency;
-                currencyNode.Amount = newGainCurrencyAmount;
-                RecalculateCurrencyString();
+                OverrideCurrency(tmpCurrency, newGainCurrencyAmount);
             } else {
                 Debug.LogError($"CurrencyItem.SetupScriptableObjects(): Could not find currency : {newGainCurrencyName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
             }
+        }
+
+        public void OverrideCurrency(Currency currency, int newGainCurrencyAmount) {
+            currencyNode = new CurrencyNode();
+            currencyNode.currency = currency;
+            currencyNode.Amount = newGainCurrencyAmount;
+            RecalculateCurrencyString();
         }
 
         public override bool Use(UnitController sourceUnitController) {
@@ -69,21 +73,21 @@ namespace AnyRPG {
             return true;
         }
 
-        public override InventorySlotSaveData GetSlotSaveData() {
+        public override ItemInstanceSaveData GetItemSaveData() {
             //Debug.Log($"InstantiatedCurrencyItem.GetSlotSaveData()");
 
-            InventorySlotSaveData saveData = base.GetSlotSaveData();
-            saveData.gainCurrencyName = currencyNode.currency.ResourceName;
-            saveData.gainCurrencyAmount = currencyNode.Amount;
+            ItemInstanceSaveData saveData = base.GetItemSaveData();
+            saveData.GainCurrencyName = currencyNode.currency.ResourceName;
+            saveData.GainCurrencyAmount = currencyNode.Amount;
             //Debug.Log($"InstantiatedCurrencyItem.GetSlotSaveData(): gainCurrencyName = {gainCurrencyName}, gainCurrencyAmount = {gainCurrencyAmount}");
             return saveData;
         }
 
-        public override void LoadSaveData(InventorySlotSaveData inventorySlotSaveData) {
+        public override void LoadSaveData(ItemInstanceSaveData itemInstanceSaveData) {
             //Debug.Log($"InstantiatedCurrencyItem.LoadSaveData({inventorySlotSaveData.ItemName}) name: {inventorySlotSaveData.gainCurrencyName} amount: {inventorySlotSaveData.gainCurrencyAmount}");
 
-            base.LoadSaveData(inventorySlotSaveData);
-            OverrideCurrency(inventorySlotSaveData.gainCurrencyName, inventorySlotSaveData.gainCurrencyAmount);
+            base.LoadSaveData(itemInstanceSaveData);
+            OverrideCurrency(itemInstanceSaveData.GainCurrencyName, itemInstanceSaveData.GainCurrencyAmount);
         }
 
         

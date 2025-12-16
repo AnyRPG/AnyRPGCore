@@ -121,7 +121,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="userAccount"></param>
         private void SaveNewAccountLocal(UserAccount userAccount) {
-            Debug.Log($"UserAccountService.SaveNewAccountLocal({userAccount.UserName})");
+            //Debug.Log($"UserAccountService.SaveNewAccountLocal({userAccount.UserName})");
 
             SaveDataFile(userAccount);
         }
@@ -175,12 +175,12 @@ namespace AnyRPG {
             accountIdCounter++;
             serverStateService.SetAccountIdCounter(accountIdCounter);
 
-            Debug.Log($"UserAccountService.GetNewAccountId() return {returnValue}");
+            //Debug.Log($"UserAccountService.GetNewAccountId() return {returnValue}");
             return returnValue;
         }
 
         public bool SaveDataFile(UserAccount userAccount) {
-            Debug.Log($"UserAccountService.SaveDataFile({userAccount.UserName}, {userAccount.Id})");
+            //Debug.Log($"UserAccountService.SaveDataFile({userAccount.UserName}, {userAccount.Id})");
 
             string jsonString = JsonUtility.ToJson(userAccount);
             string jsonSavePath = $"{saveFolderName}/{userAccount.Id}.json";

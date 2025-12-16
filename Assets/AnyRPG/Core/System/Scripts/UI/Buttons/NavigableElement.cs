@@ -1,4 +1,5 @@
 using AnyRPG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -194,13 +195,27 @@ namespace AnyRPG {
         }
 
         public virtual void OnPointerClick(PointerEventData eventData) {
+            if (eventData.button == PointerEventData.InputButton.Left) {
+                HandleLeftClick();
+            }
+            if (eventData.button == PointerEventData.InputButton.Right) {
+                HandleRightClick();
+            }
         }
+
 
         public virtual void OnPointerDown(PointerEventData eventData) {
         }
 
         public virtual void OnPointerUp(PointerEventData eventData) {
         }
+
+        protected virtual void HandleRightClick() {
+        }
+
+        protected virtual void HandleLeftClick() {
+        }
+
 
         public virtual void Select() {
             //Debug.Log($"{gameObject.name}.NavigableElement.Select()");

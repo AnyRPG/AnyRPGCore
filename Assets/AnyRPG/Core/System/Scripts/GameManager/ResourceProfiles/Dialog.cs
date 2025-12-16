@@ -51,7 +51,7 @@ namespace AnyRPG {
         /// Track whether this dialog has been turned in
         /// </summary>
         public bool TurnedIn(UnitController sourceUnitController) {
-            return sourceUnitController.CharacterSaveManager.GetDialogSaveData(this).turnedIn;
+            return sourceUnitController.CharacterSaveManager.GetDialogSaveData(this).TurnedIn;
         }
 
         public void NotifyOnDialogCompleted(UnitController sourceUnitController) {

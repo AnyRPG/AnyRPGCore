@@ -73,18 +73,6 @@ namespace AnyRPG {
             }
         }
 
-        public override void OnPointerClick(PointerEventData eventData) {
-            //Debug.Log("SlotScript.OnPointerClick()");
-            base.OnPointerClick(eventData);
-            // Detect a left click on a slot in a bag
-            if (eventData.button == PointerEventData.InputButton.Left) {
-                HandleLeftClick();
-            }
-            if (eventData.button == PointerEventData.InputButton.Right) {
-                HandleRightClick();
-            }
-        }
-
         private void DropItemFromNonInventorySlot() {
             // item comes from somewhere else, like bag bar or character panel
         }
@@ -106,7 +94,8 @@ namespace AnyRPG {
             handScript.Drop();
 
         }
-        public void HandleLeftClick() {
+
+        protected override void HandleLeftClick() {
             // we have something to move and it came from the inventory, therefore we are trying to drop something from this slot or another slot onto this slot
             if (playerManager.UnitController.CharacterInventoryManager.FromSlot != null) {
                 DropItemFromInventorySlot();
@@ -158,7 +147,7 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleRightClick() {
+        protected override void HandleRightClick() {
             //Debug.Log("SlotScript.HandleRightClick()");
             InteractWithSlot();
             ProcessMouseEnter();

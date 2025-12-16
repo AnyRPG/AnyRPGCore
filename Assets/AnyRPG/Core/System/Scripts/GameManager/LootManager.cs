@@ -47,6 +47,7 @@ namespace AnyRPG {
             }
             // this is normally done by the resource manager when loading from resources, but since we are creating this manually we need to do it ourselves
             currencyLootItem.SetupScriptableObjects(systemGameManager);
+            systemDataFactory.AddResource<Item>(currencyLootItem);
             // pre populate client id 0 so this works before loot is dropped
             availableDroppedLoot.Add(0, new List<LootDrop>());
         }
@@ -62,8 +63,8 @@ namespace AnyRPG {
         public void AddAvailableLoot(UnitController sourceUnitController, List<LootDrop> items) {
             //Debug.Log($"LootManager.AddAvailableLoot({sourceUnitController.gameObject.name}, count: {items.Count})");
 
-            if (playerManagerServer.ActivePlayerLookup.ContainsKey(sourceUnitController)) {
-                AddAvailableLoot(playerManagerServer.ActivePlayerLookup[sourceUnitController], items);
+            if (playerManagerServer.ActiveUnitControllerLookup.ContainsKey(sourceUnitController)) {
+                AddAvailableLoot(playerManagerServer.ActiveUnitControllerLookup[sourceUnitController], items);
             }
         }
 
@@ -113,8 +114,8 @@ namespace AnyRPG {
         }
 
         public void TakeLoot(UnitController sourceUnitController, LootDrop lootDrop) {
-            if (playerManagerServer.ActivePlayerLookup.ContainsKey(sourceUnitController)) {
-                TakeLoot(playerManagerServer.ActivePlayerLookup[sourceUnitController], lootDrop);
+            if (playerManagerServer.ActiveUnitControllerLookup.ContainsKey(sourceUnitController)) {
+                TakeLoot(playerManagerServer.ActiveUnitControllerLookup[sourceUnitController], lootDrop);
             }
         }
 
@@ -242,7 +243,7 @@ namespace AnyRPG {
             
             lootDropIndex.Add(lootDrop.LootDropId, lootDrop);
             if (networkManagerServer.ServerModeActive == true) {
-                networkManagerServer.AddLootDrop(playerManagerServer.ActivePlayerLookup[sourceUnitController], lootDrop.LootDropId, lootDrop.InstantiatedItem.InstanceId);
+                networkManagerServer.AddLootDrop(playerManagerServer.ActiveUnitControllerLookup[sourceUnitController], lootDrop.LootDropId, lootDrop.InstantiatedItem.InstanceId);
             }
         }
 

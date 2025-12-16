@@ -169,7 +169,7 @@ namespace AnyRPG {
             if (LootHolder.LootTableStates.Count > 0) {
                 foreach (AggroNode aggroNode in characterUnit.UnitController.CharacterCombat.AggroTable.AggroNodes) {
                     // only drop loot for the aggro target if it is a player
-                    if (playerManagerServer.ActivePlayerLookup.ContainsKey(aggroNode.aggroTarget.UnitController)) {
+                    if (playerManagerServer.ActiveUnitControllerLookup.ContainsKey(aggroNode.aggroTarget.UnitController)) {
                         //lootCount += GetLootCount(aggroNode.aggroTarget.UnitController);
                         List <LootDrop> lootDrops = DropLoot(aggroNode.aggroTarget.UnitController);
                         // turn the list of lootDrops into a new list of lootDropIds
@@ -177,7 +177,7 @@ namespace AnyRPG {
                         foreach (LootDrop lootDrop in lootDrops) {
                             lootDropIds.Add(lootDrop.LootDropId);
                         }
-                        lootDropIdLookup.Add(playerManagerServer.ActivePlayerLookup[aggroNode.aggroTarget.UnitController], lootDropIds);
+                        lootDropIdLookup.Add(playerManagerServer.ActiveUnitControllerLookup[aggroNode.aggroTarget.UnitController], lootDropIds);
                         lootCount += lootDropIds.Count;
                     }
                 }
@@ -311,8 +311,8 @@ namespace AnyRPG {
             }
             */
             int accountId = 0;
-            if (playerManagerServer.ActivePlayerLookup.ContainsKey(sourceUnitController)) {
-                accountId = playerManagerServer.ActivePlayerLookup[sourceUnitController];
+            if (playerManagerServer.ActiveUnitControllerLookup.ContainsKey(sourceUnitController)) {
+                accountId = playerManagerServer.ActiveUnitControllerLookup[sourceUnitController];
             }
             if (lootDropIdLookup.ContainsKey(accountId)) {
                 lootCount = lootDropIdLookup[accountId].Count;

@@ -12,21 +12,19 @@ namespace AnyRPG {
         
         public CharacterPanel CharacterPanel { get => characterPanel; set => characterPanel = value; }
 
-        public override void OnPointerClick(PointerEventData eventData) {
-            base.OnPointerClick(eventData);
-            if (eventData.button == PointerEventData.InputButton.Left) {
-                if (handScript.Moveable is InstantiatedEquipment) {
-                    InstantiatedEquipment tmp = (InstantiatedEquipment)handScript.Moveable;
-                    if (equipmentSlotProfile.EquipmentSlotTypeList.Contains(tmp.Equipment.EquipmentSlotType)) {
-                        playerManager.UnitController.CharacterEquipmentManager.RequestEquipToSlot(tmp, equipmentSlotProfile);
-                        handScript.Drop();
-                        uIManager.RefreshTooltip(tmp);
-                    }
-                } else if (handScript.Moveable == null && equippedEquipment != null) {
-                    handScript.TakeMoveable(equippedEquipment);
-                    characterPanel.SelectedButton = this;
-                    icon.color = Color.gray;
+        protected override void HandleLeftClick() {
+            base.HandleLeftClick();
+            if (handScript.Moveable is InstantiatedEquipment) {
+                InstantiatedEquipment tmp = (InstantiatedEquipment)handScript.Moveable;
+                if (equipmentSlotProfile.EquipmentSlotTypeList.Contains(tmp.Equipment.EquipmentSlotType)) {
+                    playerManager.UnitController.CharacterEquipmentManager.RequestEquipToSlot(tmp, equipmentSlotProfile);
+                    handScript.Drop();
+                    uIManager.RefreshTooltip(tmp);
                 }
+            } else if (handScript.Moveable == null && equippedEquipment != null) {
+                handScript.TakeMoveable(equippedEquipment);
+                characterPanel.SelectedButton = this;
+                icon.color = Color.gray;
             }
         }
 

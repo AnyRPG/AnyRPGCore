@@ -9,7 +9,7 @@ namespace AnyRPG {
 
         private UnitController unitController;
 
-        private AnyRPGSaveData saveData = null;
+        private CharacterSaveData saveData = null;
 
         private Dictionary<string, BehaviorSaveData> behaviorSaveDataDictionary = new Dictionary<string, BehaviorSaveData>();
         private Dictionary<string, DialogSaveData> dialogSaveDataDictionary = new Dictionary<string, DialogSaveData>();
@@ -27,13 +27,13 @@ namespace AnyRPG {
 
         public Dictionary<string, SceneNodeSaveData> SceneNodeSaveDataDictionary { get => sceneNodeSaveDataDictionary; set => sceneNodeSaveDataDictionary = value; }
 
-        public AnyRPGSaveData SaveData { get => saveData; }
+        public CharacterSaveData SaveData { get => saveData; }
 
         public CharacterSaveManager(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
             Configure(systemGameManager);
             //saveData = saveManager.CreateSaveData().SaveData;
-            saveData = new AnyRPGSaveData();
+            saveData = new CharacterSaveData();
         }
 
         public override void SetGameManagerReferences() {
@@ -95,33 +95,33 @@ namespace AnyRPG {
         public void SaveGameData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveGameData()");
 
-            saveData.unitProfileName = unitController.UnitProfile.ResourceName;
-            saveData.playerName = unitController.BaseCharacter.CharacterName;
-            saveData.PlayerLevel = unitController.CharacterStats.Level;
-            saveData.currentExperience = unitController.CharacterStats.CurrentXP;
-            saveData.isDead = !unitController.CharacterStats.IsAlive;
+            saveData.UnitProfileName = unitController.UnitProfile.ResourceName;
+            saveData.CharacterName = unitController.BaseCharacter.CharacterName;
+            saveData.CharacterLevel = unitController.CharacterStats.Level;
+            saveData.CurrentExperience = unitController.CharacterStats.CurrentXP;
+            saveData.IsDead = !unitController.CharacterStats.IsAlive;
             //saveData.isMounted = unitController.IsMounted;
             if (unitController.BaseCharacter.Faction != null) {
                 //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveGameData() faction: {unitController.BaseCharacter.Faction.ResourceName}");
-                saveData.playerFaction = unitController.BaseCharacter.Faction.ResourceName;
+                saveData.CharacterFaction = unitController.BaseCharacter.Faction.ResourceName;
             } else {
                 //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveGameData() no faction");
-                saveData.playerFaction = string.Empty;
+                saveData.CharacterFaction = string.Empty;
             }
             if (unitController.BaseCharacter.CharacterClass != null) {
-                saveData.characterClass = unitController.BaseCharacter.CharacterClass.ResourceName;
+                saveData.CharacterClass = unitController.BaseCharacter.CharacterClass.ResourceName;
             } else {
-                saveData.characterClass = string.Empty;
+                saveData.CharacterClass = string.Empty;
             }
             if (unitController.BaseCharacter.ClassSpecialization != null) {
-                saveData.classSpecialization = unitController.BaseCharacter.ClassSpecialization.ResourceName;
+                saveData.ClassSpecialization = unitController.BaseCharacter.ClassSpecialization.ResourceName;
             } else {
-                saveData.classSpecialization = string.Empty;
+                saveData.ClassSpecialization = string.Empty;
             }
             if (unitController.BaseCharacter.CharacterRace != null) {
-                saveData.characterRace = unitController.BaseCharacter.CharacterRace.ResourceName;
+                saveData.CharacterRace = unitController.BaseCharacter.CharacterRace.ResourceName;
             } else {
-                saveData.characterRace = string.Empty;
+                saveData.CharacterRace = string.Empty;
             }
 
             SavePlayerLocation();
@@ -155,18 +155,18 @@ namespace AnyRPG {
         private void HandleActivateMountedState(UnitController controller) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.HandleActivateMountedState()");
 
-            saveData.isMounted = true;
+            saveData.IsMounted = true;
             unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
 
         private void HandleReviveComplete(UnitController controller) {
-            saveData.isDead = false;
+            saveData.IsDead = false;
             unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleBeforeDie(UnitController controller) {
-            saveData.isDead = true;
+            saveData.IsDead = true;
             unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
@@ -345,27 +345,27 @@ namespace AnyRPG {
 
         private void HandleSpecializationChange(UnitController sourceUnitController, ClassSpecialization newSpecialization, ClassSpecialization oldSpecialization) {
             if (newSpecialization != null) {
-                saveData.classSpecialization = newSpecialization.ResourceName;
+                saveData.ClassSpecialization = newSpecialization.ResourceName;
             } else {
-                saveData.classSpecialization = string.Empty;
+                saveData.ClassSpecialization = string.Empty;
             }
             unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleClassChange(UnitController sourceUnitController, CharacterClass newClass, CharacterClass oldClass) {
             if (newClass != null) {
-                saveData.characterClass = newClass.ResourceName;
+                saveData.CharacterClass = newClass.ResourceName;
             } else {
-                saveData.characterClass = string.Empty;
+                saveData.CharacterClass = string.Empty;
             }
             unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleRaceChange(CharacterRace newRace, CharacterRace oldRace) {
             if (newRace != null) {
-                saveData.characterRace = newRace.ResourceName;
+                saveData.CharacterRace = newRace.ResourceName;
             } else {
-                saveData.characterRace = string.Empty;
+                saveData.CharacterRace = string.Empty;
             }
             unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
@@ -374,27 +374,27 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSaveManager.HandleFactionChange(new: {newFaction?.ResourceName}, old: {oldFaction?.ResourceName})");
 
             if (newFaction != null) {
-                saveData.playerFaction = newFaction.ResourceName;
+                saveData.CharacterFaction = newFaction.ResourceName;
             } else {
-                saveData.playerFaction = string.Empty;
+                saveData.CharacterFaction = string.Empty;
             }
             unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleNameChange(string newName) {
-            saveData.playerName = newName;
+            saveData.CharacterName = newName;
             unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         private void HandleGainXP(UnitController sourceUnitController, int gainedXP, int currentXP) {
-            saveData.currentExperience = currentXP;
+            saveData.CurrentExperience = currentXP;
             unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         public void HandleLevelChanged(int newLevel) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.HandleLevelChanged({newLevel})");
 
-            saveData.PlayerLevel = newLevel;
+            saveData.CharacterLevel = newLevel;
             unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
@@ -402,28 +402,28 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SetSaveData()");
 
             this.saveData = characterRequestData.saveData;
-            characterRequestData.characterConfigurationRequest.characterName = saveData.playerName;
+            characterRequestData.characterConfigurationRequest.characterName = saveData.CharacterName;
             characterRequestData.characterConfigurationRequest.characterAppearanceData = new CharacterAppearanceData(saveData);
-            characterRequestData.characterConfigurationRequest.unitLevel = saveData.PlayerLevel;
-            characterRequestData.characterConfigurationRequest.currentExperience = saveData.currentExperience;
-            characterRequestData.characterConfigurationRequest.isDead = saveData.isDead;
-            if (saveData.characterClass != string.Empty) {
-                characterRequestData.characterConfigurationRequest.characterClass = systemDataFactory.GetResource<CharacterClass>(saveData.characterClass);
+            characterRequestData.characterConfigurationRequest.unitLevel = saveData.CharacterLevel;
+            characterRequestData.characterConfigurationRequest.currentExperience = saveData.CurrentExperience;
+            characterRequestData.characterConfigurationRequest.isDead = saveData.IsDead;
+            if (saveData.CharacterClass != string.Empty) {
+                characterRequestData.characterConfigurationRequest.characterClass = systemDataFactory.GetResource<CharacterClass>(saveData.CharacterClass);
             } else {
                 characterRequestData.characterConfigurationRequest.characterClass = null;
             }
-            if (saveData.classSpecialization != string.Empty) {
-                characterRequestData.characterConfigurationRequest.classSpecialization = systemDataFactory.GetResource<ClassSpecialization>(saveData.classSpecialization);
+            if (saveData.ClassSpecialization != string.Empty) {
+                characterRequestData.characterConfigurationRequest.classSpecialization = systemDataFactory.GetResource<ClassSpecialization>(saveData.ClassSpecialization);
             } else {
                 characterRequestData.characterConfigurationRequest.classSpecialization = null;
             }
-            if (saveData.characterRace != string.Empty) {
-                characterRequestData.characterConfigurationRequest.characterRace = systemDataFactory.GetResource<CharacterRace>(saveData.characterRace);
+            if (saveData.CharacterRace != string.Empty) {
+                characterRequestData.characterConfigurationRequest.characterRace = systemDataFactory.GetResource<CharacterRace>(saveData.CharacterRace);
             } else {
                 characterRequestData.characterConfigurationRequest.characterRace = null;
             }
-            if (saveData.playerFaction != string.Empty) {
-                characterRequestData.characterConfigurationRequest.faction = systemDataFactory.GetResource<Faction>(saveData.playerFaction);
+            if (saveData.CharacterFaction != string.Empty) {
+                characterRequestData.characterConfigurationRequest.faction = systemDataFactory.GetResource<Faction>(saveData.CharacterFaction);
             } else {
                 characterRequestData.characterConfigurationRequest.faction = null;
             }
@@ -435,7 +435,7 @@ namespace AnyRPG {
                 return dialogSaveDataDictionary[dialog.ResourceName];
             } else {
                 DialogSaveData saveData = new DialogSaveData();
-                saveData.dialogNodeShown = new List<bool>(new bool[dialog.DialogNodes.Count]);
+                saveData.DialogNodeShown = new List<bool>(new bool[dialog.DialogNodes.Count]);
                 //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.GetDialogSaveData({dialog.ResourceName}): initialized list size {dialog.DialogNodes.Count} : {saveData.dialogNodeShown.Count}");
                 saveData.DialogName = dialog.ResourceName;
                 dialogSaveDataDictionary.Add(dialog.ResourceName, saveData);
@@ -461,19 +461,19 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.GetDialogNodeShown({dialog.ResourceName}, {index})");
             DialogSaveData saveData = GetDialogSaveData(dialog);
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.GetDialogNodeShown({dialog.ResourceName}, {index}) count: {saveData.dialogNodeShown.Count}");
-            return saveData.dialogNodeShown[index];
+            return saveData.DialogNodeShown[index];
         }
 
         public void SetDialogNodeShown(Dialog dialog, bool value, int index) {
             DialogSaveData saveData = GetDialogSaveData(dialog);
-            saveData.dialogNodeShown[index] = value;
+            saveData.DialogNodeShown[index] = value;
             dialogSaveDataDictionary[dialog.ResourceName] = saveData;
             SaveDialogData();
         }
 
         public void ResetDialogNodes(Dialog dialog) {
             DialogSaveData saveData = GetDialogSaveData(dialog);
-            saveData.dialogNodeShown = new List<bool>(new bool[dialog.DialogNodes.Count]);
+            saveData.DialogNodeShown = new List<bool>(new bool[dialog.DialogNodes.Count]);
             dialogSaveDataDictionary[dialog.ResourceName] = saveData;
             SaveDialogData();
         }
@@ -484,7 +484,7 @@ namespace AnyRPG {
                 saveData = sceneNodeSaveDataDictionary[sceneNode.ResourceName];
             } else {
                 saveData = new SceneNodeSaveData();
-                saveData.persistentObjects = new List<PersistentObjectSaveData>();
+                saveData.PersistentObjects = new List<PersistentObjectSaveData>();
                 saveData.SceneName = sceneNode.ResourceName;
                 sceneNodeSaveDataDictionary.Add(sceneNode.ResourceName, saveData);
             }
@@ -529,41 +529,41 @@ namespace AnyRPG {
             LoadAchievementData(saveData);
         }
 
-        public void LoadDialogData(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadDialogData(CharacterSaveData characterSaveData) {
             dialogSaveDataDictionary.Clear();
-            foreach (DialogSaveData dialogSaveData in anyRPGSaveData.dialogSaveData) {
+            foreach (DialogSaveData dialogSaveData in characterSaveData.DialogSaveData) {
                 if (dialogSaveData.DialogName != null && dialogSaveData.DialogName != string.Empty) {
                     dialogSaveDataDictionary.Add(dialogSaveData.DialogName, dialogSaveData);
                 }
             }
         }
 
-        public void LoadBehaviorData(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadBehaviorData(CharacterSaveData characterSaveData) {
             behaviorSaveDataDictionary.Clear();
-            foreach (BehaviorSaveData behaviorSaveData in anyRPGSaveData.behaviorSaveData) {
+            foreach (BehaviorSaveData behaviorSaveData in characterSaveData.BehaviorSaveData) {
                 if (behaviorSaveData.BehaviorName != null && behaviorSaveData.BehaviorName != string.Empty) {
                     behaviorSaveDataDictionary.Add(behaviorSaveData.BehaviorName, behaviorSaveData);
                 }
             }
         }
 
-        public void LoadSceneNodeData(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadSceneNodeData(CharacterSaveData characterSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadSceneNodeData()");
 
             sceneNodeSaveDataDictionary.Clear();
-            foreach (SceneNodeSaveData sceneNodeSaveData in anyRPGSaveData.sceneNodeSaveData) {
+            foreach (SceneNodeSaveData sceneNodeSaveData in characterSaveData.SceneNodeSaveData) {
                 if (sceneNodeSaveData.SceneName != null && sceneNodeSaveData.SceneName != string.Empty) {
                     sceneNodeSaveDataDictionary.Add(sceneNodeSaveData.SceneName, sceneNodeSaveData);
                 }
             }
         }
 
-        public void LoadQuestData(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadQuestData(CharacterSaveData characterSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.Savemanager.LoadQuestData()");
 
             unitController.CharacterQuestLog.QuestSaveDataDictionary.Clear();
             unitController.CharacterQuestLog.QuestObjectiveSaveDataDictionary.Clear();
-            foreach (QuestSaveData questSaveData in anyRPGSaveData.questSaveData) {
+            foreach (QuestSaveData questSaveData in characterSaveData.QuestSaveData) {
 
                 if (questSaveData.QuestName == null || questSaveData.QuestName == string.Empty) {
                     // don't load invalid quest data
@@ -574,7 +574,7 @@ namespace AnyRPG {
                 Dictionary<string, Dictionary<string, QuestObjectiveSaveData>> objectiveDictionary = new Dictionary<string, Dictionary<string, QuestObjectiveSaveData>>();
 
                 // add objectives to dictionary
-                foreach (QuestObjectiveSaveData questObjectiveSaveData in questSaveData.questObjectives) {
+                foreach (QuestObjectiveSaveData questObjectiveSaveData in questSaveData.QuestObjectives) {
                     // perform null check to allow opening of older save files without null reference
                     if (questObjectiveSaveData.ObjectiveType != null && questObjectiveSaveData.ObjectiveType != string.Empty) {
                         if (!objectiveDictionary.ContainsKey(questObjectiveSaveData.ObjectiveType)) {
@@ -587,18 +587,18 @@ namespace AnyRPG {
                 unitController.CharacterQuestLog.QuestObjectiveSaveDataDictionary.Add(questSaveData.QuestName, objectiveDictionary);
             }
 
-            foreach (QuestSaveData questSaveData in anyRPGSaveData.questSaveData) {
+            foreach (QuestSaveData questSaveData in characterSaveData.QuestSaveData) {
                 //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadQuestData(): loading questsavedata");
                 unitController.CharacterQuestLog.LoadQuest(questSaveData);
             }
         }
 
-        public void LoadAchievementData(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadAchievementData(CharacterSaveData characterSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.Savemanager.LoadAchievementData()");
 
             unitController.CharacterQuestLog.AchievementSaveDataDictionary.Clear();
             unitController.CharacterQuestLog.AchievementObjectiveSaveDataDictionary.Clear();
-            foreach (QuestSaveData achievementSaveData in anyRPGSaveData.achievementSaveData) {
+            foreach (QuestSaveData achievementSaveData in characterSaveData.AchievementSaveData) {
 
                 if (achievementSaveData.QuestName == null || achievementSaveData.QuestName == string.Empty) {
                     // don't load invalid quest data
@@ -609,7 +609,7 @@ namespace AnyRPG {
                 Dictionary<string, Dictionary<string, QuestObjectiveSaveData>> objectiveDictionary = new Dictionary<string, Dictionary<string, QuestObjectiveSaveData>>();
 
                 // add objectives to dictionary
-                foreach (QuestObjectiveSaveData achievementObjectiveSaveData in achievementSaveData.questObjectives) {
+                foreach (QuestObjectiveSaveData achievementObjectiveSaveData in achievementSaveData.QuestObjectives) {
                     // perform null check to allow opening of older save files without null reference
                     if (achievementObjectiveSaveData.ObjectiveType != null && achievementObjectiveSaveData.ObjectiveType != string.Empty) {
                         if (!objectiveDictionary.ContainsKey(achievementObjectiveSaveData.ObjectiveType)) {
@@ -622,41 +622,41 @@ namespace AnyRPG {
                 unitController.CharacterQuestLog.AchievementObjectiveSaveDataDictionary.Add(achievementSaveData.QuestName, objectiveDictionary);
             }
 
-            foreach (QuestSaveData questSaveData in anyRPGSaveData.achievementSaveData) {
+            foreach (QuestSaveData questSaveData in characterSaveData.AchievementSaveData) {
                 //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadQuestData(): loading questsavedata");
                 unitController.CharacterQuestLog.LoadAchievement(questSaveData);
             }
         }
-        public void LoadResourcePowerData(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadResourcePowerData(CharacterSaveData characterSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadResourcePowerData()");
 
-            foreach (ResourcePowerSaveData resourcePowerSaveData in anyRPGSaveData.resourcePowerSaveData) {
+            foreach (ResourcePowerSaveData resourcePowerSaveData in characterSaveData.ResourcePowerSaveData) {
                 //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadResourcePowerData(): loading questsavedata");
                 //unitController.CharacterStats.SetResourceAmount(resourcePowerSaveData.ResourceName, resourcePowerSaveData.amount);
-                unitController.CharacterStats.LoadResourceAmount(resourcePowerSaveData.ResourceName, resourcePowerSaveData.amount);
+                unitController.CharacterStats.LoadResourceAmount(resourcePowerSaveData.ResourceName, resourcePowerSaveData.Amount);
             }
 
         }
 
         public void LoadStatusEffectData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadStatusEffectData()");
-            foreach (StatusEffectSaveData statusEffectSaveData in saveData.statusEffectSaveData) {
+            foreach (StatusEffectSaveData statusEffectSaveData in saveData.StatusEffectSaveData) {
                 unitController.CharacterAbilityManager.ApplySavedStatusEffects(statusEffectSaveData);
             }
         }
 
-        public void LoadCurrencyData(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadCurrencyData(CharacterSaveData characterSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadCurrencyData()");
-            foreach (CurrencySaveData currencySaveData in anyRPGSaveData.currencySaveData) {
+            foreach (CurrencySaveData currencySaveData in characterSaveData.CurrencySaveData) {
                 unitController.CharacterCurrencyManager.AddCurrency(systemDataFactory.GetResource<Currency>(currencySaveData.CurrencyName), currencySaveData.Amount);
             }
         }
 
 
-        public void LoadPetData(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadPetData(CharacterSaveData characterSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSaveManager.LoadPetData()");
 
-            foreach (PetSaveData petSaveData in anyRPGSaveData.petSaveData) {
+            foreach (PetSaveData petSaveData in characterSaveData.PetSaveData) {
                 if (petSaveData.PetName != string.Empty) {
                     unitController.CharacterPetManager.AddPet(petSaveData.PetName);
                 }
@@ -664,78 +664,74 @@ namespace AnyRPG {
 
         }
 
-        public void LoadEquippedBagData(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadEquippedBagData(CharacterSaveData characterSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadEquippedBagData()");
-            unitController.CharacterInventoryManager.LoadEquippedBagData(anyRPGSaveData.equippedBagSaveData, false);
-            unitController.CharacterInventoryManager.LoadEquippedBagData(anyRPGSaveData.equippedBankBagSaveData, true);
+            unitController.CharacterInventoryManager.LoadEquippedBagData(characterSaveData.EquippedBagSaveData, false);
+            unitController.CharacterInventoryManager.LoadEquippedBagData(characterSaveData.EquippedBankBagSaveData, true);
         }
 
-        public void LoadInventorySlotData(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadInventorySlotData(CharacterSaveData characterSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadInventorySlotData()");
             int counter = 0;
-            foreach (InventorySlotSaveData inventorySlotSaveData in anyRPGSaveData.inventorySlotSaveData) {
+            foreach (InventorySlotSaveData inventorySlotSaveData in characterSaveData.InventorySlotSaveData) {
                 LoadSlotData(inventorySlotSaveData, counter, false);
                 counter++;
             }
         }
 
-        public void LoadBankSlotData(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadBankSlotData(CharacterSaveData characterSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadBankSlotData()");
 
             int counter = 0;
-            foreach (InventorySlotSaveData inventorySlotSaveData in anyRPGSaveData.bankSlotSaveData) {
+            foreach (InventorySlotSaveData inventorySlotSaveData in characterSaveData.BankSlotSaveData) {
                 LoadSlotData(inventorySlotSaveData, counter, true);
                 counter++;
             }
         }
 
         private void LoadSlotData(InventorySlotSaveData inventorySlotSaveData, int counter, bool bank) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadSlotData({inventorySlotSaveData.ItemName}, {counter}, {bank}) stack: {inventorySlotSaveData.stackCount}");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadSlotData({inventorySlotSaveData.ItemInstanceIds.Count}, {counter}, {bank})");
 
-            if (inventorySlotSaveData.ItemName != string.Empty && inventorySlotSaveData.ItemName != null) {
-                for (int i = 0; i < inventorySlotSaveData.stackCount; i++) {
-                    InstantiatedItem newInstantiatedItem = unitController.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData(inventorySlotSaveData);
-                    if (newInstantiatedItem == null) {
-                        Debug.LogWarning("CharacterSavemanager.LoadInventorySlotData(): COULD NOT LOAD ITEM FROM ITEM MANAGER: {inventorySlotSaveData.ItemName}");
+            foreach (int itemInstanceId in inventorySlotSaveData.ItemInstanceIds) {
+                InstantiatedItem newInstantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemInstanceId);
+                if (newInstantiatedItem == null) {
+                    Debug.LogWarning($"{unitController.gameObject.name}.CharacterSavemanager.LoadInventorySlotData(): item is null for itemInstanceId {itemInstanceId}, skipping load");
+                } else {
+                    if (bank == true) {
+                        unitController.CharacterInventoryManager.AddBankItem(newInstantiatedItem, counter);
                     } else {
-                        if (bank == true) {
-                            unitController.CharacterInventoryManager.AddBankItem(newInstantiatedItem, counter);
-                        } else {
-                            unitController.CharacterInventoryManager.AddInventoryItem(newInstantiatedItem, counter);
-                        }
+                        unitController.CharacterInventoryManager.AddInventoryItem(newInstantiatedItem, counter);
                     }
                 }
             }
         }
 
-        public void LoadAbilityData(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadAbilityData(CharacterSaveData characterSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadAbilityData()");
 
-            foreach (AbilitySaveData abilitySaveData in anyRPGSaveData.abilitySaveData) {
+            foreach (AbilitySaveData abilitySaveData in characterSaveData.AbilitySaveData) {
                 if (abilitySaveData.AbilityName != string.Empty) {
                     unitController.CharacterAbilityManager.LoadAbility(abilitySaveData.AbilityName);
                 }
             }
         }
 
-        public void LoadEquipmentData(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadEquipmentData(CharacterSaveData characterSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadEquipmentData()");
 
-            foreach (EquipmentSaveData equipmentSaveData in anyRPGSaveData.equipmentSaveData) {
+            foreach (EquipmentSaveData equipmentSaveData in characterSaveData.EquipmentSaveData) {
                 //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadEquipmentData() {(equipmentSaveData.EquipmentName)}");
-                if (equipmentSaveData.EquipmentName != string.Empty) {
-                    InstantiatedEquipment newInstantiatedEquipment = unitController.CharacterInventoryManager.GetNewInstantiatedEquipmentFromSaveData(equipmentSaveData);
-                    if (newInstantiatedEquipment != null) {
-                        unitController.CharacterEquipmentManager.Equip(newInstantiatedEquipment, null);
-                    }
+                InstantiatedEquipment newInstantiatedEquipment = unitController.CharacterInventoryManager.GetInstantiatedEquipmentFromSaveData(equipmentSaveData);
+                if (newInstantiatedEquipment != null) {
+                    unitController.CharacterEquipmentManager.Equip(newInstantiatedEquipment, null);
                 }
             }
         }
 
-        public void LoadReputationData(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadReputationData(CharacterSaveData characterSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadReputationData()");
             //int counter = 0;
-            foreach (ReputationSaveData reputationSaveData in anyRPGSaveData.reputationSaveData) {
+            foreach (ReputationSaveData reputationSaveData in characterSaveData.ReputationSaveData) {
                 FactionDisposition factionDisposition = new FactionDisposition();
                 factionDisposition.Faction = systemDataFactory.GetResource<Faction>(reputationSaveData.ReputationName);
                 factionDisposition.disposition = reputationSaveData.Amount;
@@ -745,26 +741,26 @@ namespace AnyRPG {
         }
 
 
-        public void LoadSkillData(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadSkillData(CharacterSaveData characterSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadSkillData()");
-            foreach (SkillSaveData skillSaveData in anyRPGSaveData.skillSaveData) {
+            foreach (SkillSaveData skillSaveData in characterSaveData.SkillSaveData) {
                 unitController.CharacterSkillManager.LoadSkill(skillSaveData.SkillName);
             }
         }
 
-        public void LoadRecipeData(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadRecipeData(CharacterSaveData characterSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadRecipeData()");
-            foreach (RecipeSaveData recipeSaveData in anyRPGSaveData.recipeSaveData) {
+            foreach (RecipeSaveData recipeSaveData in characterSaveData.RecipeSaveData) {
                 unitController.CharacterRecipeManager.LoadRecipe(recipeSaveData.RecipeName);
             }
         }
 
-        public void LoadActionBarData(AnyRPGSaveData anyRPGSaveData) {
+        public void LoadActionBarData(CharacterSaveData characterSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadActionBarData()");
 
-            LoadMouseActionButtonData(anyRPGSaveData.actionBarSaveData);
-            LoadGamepadActionButtonData(anyRPGSaveData.gamepadActionBarSaveData);
-            actionBarManager.SetGamepadActionButtonSet(anyRPGSaveData.GamepadActionButtonSet, false);
+            LoadMouseActionButtonData(characterSaveData.ActionBarSaveData);
+            LoadGamepadActionButtonData(characterSaveData.GamepadActionBarSaveData);
+            actionBarManager.SetGamepadActionButtonSet(characterSaveData.GamepadActionButtonSet, false);
         }
 
         private void LoadMouseActionButtonData(List<ActionBarSaveData> actionBarSaveDatas) {
@@ -777,7 +773,7 @@ namespace AnyRPG {
                 useable = null;
                 savedUseable = null;
                 if (actionBarSaveData.DisplayName != string.Empty) {
-                    if (actionBarSaveData.isItem == true) {
+                    if (actionBarSaveData.IsItem == true) {
                         // find item in bag
                         //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadMouseActionButtonData(): searching for usable {actionBarSaveData.DisplayName} as item");
                         useable = systemItemManager.GetNewInstantiatedItem(actionBarSaveData.DisplayName);
@@ -789,14 +785,14 @@ namespace AnyRPG {
                         }
                     }
                 }
-                if (actionBarSaveData.savedName != string.Empty) {
-                    if (actionBarSaveData.savedIsItem == true) {
+                if (actionBarSaveData.SavedName != string.Empty) {
+                    if (actionBarSaveData.SavedIsItem == true) {
                         // find item in bag
                         //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadMouseActionButtonData(): searching for saved usable {actionBarSaveData.savedName} as item");
-                        savedUseable = systemItemManager.GetNewInstantiatedItem(actionBarSaveData.savedName);
+                        savedUseable = systemItemManager.GetNewInstantiatedItem(actionBarSaveData.SavedName);
                     } else {
                         //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadMouseActionButtonData(): searching for saved usable {actionBarSaveData.savedName} as ability");
-                        Ability ability = systemDataFactory.GetResource<Ability>(actionBarSaveData.savedName);
+                        Ability ability = systemDataFactory.GetResource<Ability>(actionBarSaveData.SavedName);
                         if (ability != null) {
                             savedUseable = ability.AbilityProperties;
                         }
@@ -829,7 +825,7 @@ namespace AnyRPG {
             int counter = 0;
             foreach (ActionBarSaveData actionBarSaveData in actionBarSaveDatas) {
                 useable = null;
-                if (actionBarSaveData.isItem == true) {
+                if (actionBarSaveData.IsItem == true) {
                     // find item in bag
                     //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadActionBarData(): searching for usable(" + actionBarSaveData.MyName + ") in inventory");
                     //useable = systemDataFactory.GetResource<Item>(actionBarSaveData.DisplayName);
@@ -842,8 +838,8 @@ namespace AnyRPG {
                     } else {
                         //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadActionBarData(): saved action bar had no name");
                     }
-                    if (actionBarSaveData.savedName != null && actionBarSaveData.savedName != string.Empty) {
-                        IUseable savedUseable = systemDataFactory.GetResource<Ability>(actionBarSaveData.savedName).AbilityProperties;
+                    if (actionBarSaveData.SavedName != null && actionBarSaveData.SavedName != string.Empty) {
+                        IUseable savedUseable = systemDataFactory.GetResource<Ability>(actionBarSaveData.SavedName).AbilityProperties;
                         if (savedUseable != null) {
                             unitController.CharacterActionBarManager.GamepadActionButtons[counter].SavedUseable = savedUseable;
                         }
@@ -874,8 +870,8 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.VisitSceneNode({sceneNode.ResourceName})");
 
             SceneNodeSaveData saveData = GetSceneNodeSaveData(sceneNode);
-            if (saveData.visited == false) {
-                saveData.visited = true;
+            if (saveData.Visited == false) {
+                saveData.Visited = true;
                 sceneNodeSaveDataDictionary[saveData.SceneName] = saveData;
                 SaveSceneNodeData();
             }
@@ -883,7 +879,7 @@ namespace AnyRPG {
 
         public bool IsSceneNodeVisited(SceneNode sceneNode) {
             SceneNodeSaveData saveData = GetSceneNodeSaveData(sceneNode);
-            return saveData.visited;
+            return saveData.Visited;
         }
 
         public void SavePlayerLocation() {
@@ -901,12 +897,12 @@ namespace AnyRPG {
         }
 
         public void SaveResourcePowerData() {
-            saveData.resourcePowerSaveData.Clear();
+            saveData.ResourcePowerSaveData.Clear();
             foreach (PowerResource powerResource in unitController.CharacterStats.PowerResourceDictionary.Keys) {
                 ResourcePowerSaveData resourcePowerData = new ResourcePowerSaveData();
                 resourcePowerData.ResourceName = powerResource.ResourceName;
-                resourcePowerData.amount = unitController.CharacterStats.PowerResourceDictionary[powerResource].currentValue;
-                saveData.resourcePowerSaveData.Add(resourcePowerData);
+                resourcePowerData.Amount = unitController.CharacterStats.PowerResourceDictionary[powerResource].currentValue;
+                saveData.ResourcePowerSaveData.Add(resourcePowerData);
             }
         }
 
@@ -917,7 +913,7 @@ namespace AnyRPG {
         public void SaveQuestData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveQuestData()");
 
-            saveData.questSaveData.Clear();
+            saveData.QuestSaveData.Clear();
             foreach (QuestSaveData questSaveData in unitController.CharacterQuestLog.QuestSaveDataDictionary.Values) {
                 QuestSaveData finalSaveData = questSaveData;
                 if (unitController.CharacterQuestLog.QuestObjectiveSaveDataDictionary.ContainsKey(questSaveData.QuestName)) {
@@ -928,17 +924,17 @@ namespace AnyRPG {
                             questObjectiveSaveDataList.Add(saveData);
                         }
                     }
-                    finalSaveData.questObjectives = questObjectiveSaveDataList;
+                    finalSaveData.QuestObjectives = questObjectiveSaveDataList;
                 }
-                finalSaveData.inLog = unitController.CharacterQuestLog.HasQuest(questSaveData.QuestName);
-                saveData.questSaveData.Add(finalSaveData);
+                finalSaveData.InLog = unitController.CharacterQuestLog.HasQuest(questSaveData.QuestName);
+                saveData.QuestSaveData.Add(finalSaveData);
             }
         }
 
         public void SaveAchievementData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveAchievementData()");
 
-            saveData.achievementSaveData.Clear();
+            saveData.AchievementSaveData.Clear();
             foreach (QuestSaveData achievementSaveData in unitController.CharacterQuestLog.AchievementSaveDataDictionary.Values) {
                 QuestSaveData finalSaveData = achievementSaveData;
                 if (unitController.CharacterQuestLog.AchievementObjectiveSaveDataDictionary.ContainsKey(achievementSaveData.QuestName)) {
@@ -951,52 +947,52 @@ namespace AnyRPG {
 
                     }
 
-                    finalSaveData.questObjectives = achievementObjectiveSaveDataList;
+                    finalSaveData.QuestObjectives = achievementObjectiveSaveDataList;
                 }
-                finalSaveData.inLog = unitController.CharacterQuestLog.HasAchievement(achievementSaveData.QuestName);
+                finalSaveData.InLog = unitController.CharacterQuestLog.HasAchievement(achievementSaveData.QuestName);
                 // print if finalsavadata complete and turnedin are true
                 //Debug.Log($"CharacterSavemanager.SaveAchievementData(): Saving achievement {finalSaveData.QuestName} complete: {finalSaveData.markedComplete} turnedIn: {finalSaveData.turnedIn}");
-                saveData.achievementSaveData.Add(finalSaveData);
+                saveData.AchievementSaveData.Add(finalSaveData);
             }
         }
 
         public void SaveDialogData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveDialogData()");
-            saveData.dialogSaveData.Clear();
+            saveData.DialogSaveData.Clear();
             foreach (DialogSaveData dialogSaveData in dialogSaveDataDictionary.Values) {
-                saveData.dialogSaveData.Add(dialogSaveData);
+                saveData.DialogSaveData.Add(dialogSaveData);
             }
         }
 
         public void SaveBehaviorData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveQuestData()");
-            saveData.behaviorSaveData.Clear();
+            saveData.BehaviorSaveData.Clear();
             foreach (BehaviorSaveData behaviorSaveData in behaviorSaveDataDictionary.Values) {
-                saveData.behaviorSaveData.Add(behaviorSaveData);
+                saveData.BehaviorSaveData.Add(behaviorSaveData);
             }
         }
 
         public void SaveSceneNodeData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveSceneNodeData()");
 
-            saveData.sceneNodeSaveData.Clear();
+            saveData.SceneNodeSaveData.Clear();
             foreach (SceneNodeSaveData sceneNodeSaveData in sceneNodeSaveDataDictionary.Values) {
-                saveData.sceneNodeSaveData.Add(sceneNodeSaveData);
+                saveData.SceneNodeSaveData.Add(sceneNodeSaveData);
             }
         }
 
         public void SaveStatusEffectData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveSceneNodeData()");
 
-            saveData.statusEffectSaveData.Clear();
+            saveData.StatusEffectSaveData.Clear();
             foreach (StatusEffectNode statusEffectNode in unitController.CharacterStats.StatusEffects.Values) {
                 if (statusEffectNode.StatusEffect.ClassTrait == false
                     && statusEffectNode.StatusEffect.SaveEffect == true
                     && statusEffectNode.AbilityEffectContext.AbilityCaster == (unitController as IAbilityCaster)) {
                     StatusEffectSaveData statusEffectSaveData = new StatusEffectSaveData();
                     statusEffectSaveData.StatusEffectName = statusEffectNode.StatusEffect.DisplayName;
-                    statusEffectSaveData.remainingSeconds = (int)statusEffectNode.GetRemainingDuration();
-                    saveData.statusEffectSaveData.Add(statusEffectSaveData);
+                    statusEffectSaveData.RemainingSeconds = (int)statusEffectNode.GetRemainingDuration();
+                    saveData.StatusEffectSaveData.Add(statusEffectSaveData);
                 }
             }
         }
@@ -1005,13 +1001,13 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveActionBarData()");
 
             saveData.GamepadActionButtonSet = actionBarManager.CurrentActionBarSet;
-            saveData.actionBarSaveData.Clear();
-            saveData.gamepadActionBarSaveData.Clear();
+            saveData.ActionBarSaveData.Clear();
+            saveData.GamepadActionBarSaveData.Clear();
             foreach (ActionButtonNode actionButtonNode in unitController.CharacterActionBarManager.MouseActionButtons) {
-                SaveActionButtonNodeSaveData(actionButtonNode, saveData.actionBarSaveData);
+                SaveActionButtonNodeSaveData(actionButtonNode, saveData.ActionBarSaveData);
             }
             foreach (ActionButtonNode actionButtonNode in unitController.CharacterActionBarManager.GamepadActionButtons) {
-                SaveActionButtonNodeSaveData(actionButtonNode, saveData.gamepadActionBarSaveData);
+                SaveActionButtonNodeSaveData(actionButtonNode, saveData.GamepadActionBarSaveData);
             }
         }
 
@@ -1030,16 +1026,16 @@ namespace AnyRPG {
         private void SaveActionButtonNodeSaveData(ActionButtonNode actionButtonNode, List<ActionBarSaveData> actionBarSaveDataList) {
             ActionBarSaveData actionBarSaveData = new ActionBarSaveData();
             actionBarSaveData.DisplayName = (actionButtonNode.Useable == null ? string.Empty : (actionButtonNode.Useable as IDescribable).ResourceName);
-            actionBarSaveData.savedName = (actionButtonNode.SavedUseable == null ? string.Empty : (actionButtonNode.SavedUseable as IDescribable).ResourceName);
+            actionBarSaveData.SavedName = (actionButtonNode.SavedUseable == null ? string.Empty : (actionButtonNode.SavedUseable as IDescribable).ResourceName);
             if (actionButtonNode.Useable != null) {
-                actionBarSaveData.isItem = (actionButtonNode.Useable is InstantiatedItem ? true : false);
+                actionBarSaveData.IsItem = (actionButtonNode.Useable is InstantiatedItem ? true : false);
             } else {
-                actionBarSaveData.isItem = false;
+                actionBarSaveData.IsItem = false;
             }
             if (actionButtonNode.SavedUseable != null) {
-                actionBarSaveData.savedIsItem = (actionButtonNode.SavedUseable is InstantiatedItem ? true : false);
+                actionBarSaveData.SavedIsItem = (actionButtonNode.SavedUseable is InstantiatedItem ? true : false);
             } else {
-                actionBarSaveData.savedIsItem = false;
+                actionBarSaveData.SavedIsItem = false;
             }
             actionBarSaveDataList.Add(actionBarSaveData);
         }
@@ -1048,35 +1044,30 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.GetSlotSaveData(): getting slot save data for slot with item {(inventorySlot.InstantiatedItem != null ? inventorySlot.InstantiatedItem.ResourceName : "empty")}");
 
             InventorySlotSaveData saveData = new InventorySlotSaveData();
-            if (inventorySlot.InstantiatedItem != null) {
-                saveData = inventorySlot.InstantiatedItem.GetSlotSaveData();
-            } else {
-                saveData = saveManager.GetEmptySlotSaveData();
-            }
-            saveData.stackCount = (inventorySlot.InstantiatedItem == null ? 0 : inventorySlot.Count);
+            saveData.ItemInstanceIds = inventorySlot.InstantiatedItems.Keys.ToList();
             return saveData;
         }
 
         public void SaveInventorySlotData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveInventorySlotData()");
-            saveData.inventorySlotSaveData.Clear();
+            saveData.InventorySlotSaveData.Clear();
             foreach (InventorySlot inventorySlot in unitController.CharacterInventoryManager.InventorySlots) {
-                saveData.inventorySlotSaveData.Add(GetSlotSaveData(inventorySlot));
+                saveData.InventorySlotSaveData.Add(GetSlotSaveData(inventorySlot));
             }
         }
 
         public void SaveBankSlotData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveBankSlotData()");
 
-            saveData.bankSlotSaveData.Clear();
+            saveData.BankSlotSaveData.Clear();
             foreach (InventorySlot inventorySlot in unitController.CharacterInventoryManager.BankSlots) {
-                saveData.bankSlotSaveData.Add(GetSlotSaveData(inventorySlot));
+                saveData.BankSlotSaveData.Add(GetSlotSaveData(inventorySlot));
             }
         }
 
         public void SaveReputationData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveReputationData()");
-            saveData.reputationSaveData.Clear();
+            saveData.ReputationSaveData.Clear();
             foreach (FactionDisposition factionDisposition in unitController.CharacterFactionManager.DispositionDictionary) {
                 if (factionDisposition == null) {
                     Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveReputationData(): no disposition");
@@ -1089,47 +1080,43 @@ namespace AnyRPG {
                 ReputationSaveData reputationSaveData = new ReputationSaveData();
                 reputationSaveData.ReputationName = factionDisposition.Faction.ResourceName;
                 reputationSaveData.Amount = factionDisposition.disposition;
-                saveData.reputationSaveData.Add(reputationSaveData);
+                saveData.ReputationSaveData.Add(reputationSaveData);
             }
         }
 
         public void SaveCurrencyData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveCurrencyData()");
-            saveData.currencySaveData.Clear();
+            saveData.CurrencySaveData.Clear();
             foreach (CurrencyNode currencyNode in unitController.CharacterCurrencyManager.CurrencyList.Values) {
                 CurrencySaveData currencySaveData = new CurrencySaveData();
                 currencySaveData.Amount = currencyNode.Amount;
                 currencySaveData.CurrencyName = currencyNode.currency.ResourceName;
-                saveData.currencySaveData.Add(currencySaveData);
+                saveData.CurrencySaveData.Add(currencySaveData);
             }
         }
 
         public void SaveEquippedBagData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveEquippedBagData()");
-            saveData.equippedBagSaveData.Clear();
+            saveData.EquippedBagSaveData.Clear();
             foreach (BagNode bagNode in unitController.CharacterInventoryManager.BagNodes) {
                 //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveEquippedBagData(): got bagNode");
-                saveData.equippedBagSaveData.Add(GetBagSaveData(bagNode));
+                saveData.EquippedBagSaveData.Add(GetBagSaveData(bagNode));
             }
         }
 
         public void SaveEquippedBankBagData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveEquippedBagData()");
-            saveData.equippedBankBagSaveData.Clear();
+            saveData.EquippedBankBagSaveData.Clear();
             foreach (BagNode bagNode in unitController.CharacterInventoryManager.BankNodes) {
                 //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveEquippedBagData(): got bagNode");
-                saveData.equippedBankBagSaveData.Add(GetBagSaveData(bagNode));
+                saveData.EquippedBankBagSaveData.Add(GetBagSaveData(bagNode));
             }
         }
 
         private EquippedBagSaveData GetBagSaveData(BagNode bagNode) {
             EquippedBagSaveData saveData = new EquippedBagSaveData();
-            saveData.BagName = (bagNode.InstantiatedBag != null ? bagNode.InstantiatedBag.ResourceName : string.Empty);
-            saveData.slotCount = (bagNode.InstantiatedBag != null ? bagNode.InstantiatedBag.Slots : 0);
             if (bagNode.InstantiatedBag != null) {
-                saveData.DisplayName = bagNode.InstantiatedBag.DisplayName;
-                saveData.dropLevel = bagNode.InstantiatedBag.DropLevel;
-                saveData.itemInstanceId = bagNode.InstantiatedBag.InstanceId;
+                saveData.ItemInstanceId = bagNode.InstantiatedBag.InstanceId;
             }
 
             return saveData;
@@ -1137,76 +1124,69 @@ namespace AnyRPG {
 
         public void SaveAbilityData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSaveManager.SaveAbilityData()");
-            saveData.abilitySaveData.Clear();
+            saveData.AbilitySaveData.Clear();
             foreach (AbilityProperties baseAbility in unitController.CharacterAbilityManager.RawAbilityList.Values) {
                 AbilitySaveData abilitySaveData = new AbilitySaveData();
                 abilitySaveData.AbilityName = baseAbility.DisplayName;
-                saveData.abilitySaveData.Add(abilitySaveData);
+                saveData.AbilitySaveData.Add(abilitySaveData);
             }
         }
 
         public void SavePetData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSaveManager.SavePetData()");
 
-            saveData.petSaveData.Clear();
+            saveData.PetSaveData.Clear();
             foreach (UnitProfile unitProfile in unitController.CharacterPetManager.UnitProfiles) {
                 PetSaveData petSaveData = new PetSaveData();
                 petSaveData.PetName = unitProfile.ResourceName;
-                saveData.petSaveData.Add(petSaveData);
+                saveData.PetSaveData.Add(petSaveData);
             }
         }
 
         public void SaveEquipmentData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSaveManager..SaveEquipmentData()");
-            saveData.equipmentSaveData.Clear();
+            saveData.EquipmentSaveData.Clear();
             if (unitController.CharacterEquipmentManager != null) {
                 foreach (EquipmentInventorySlot equipmentInventorySlot in unitController.CharacterEquipmentManager.CurrentEquipment.Values) {
                     EquipmentSaveData equipmentSaveData = new EquipmentSaveData();
-                    equipmentSaveData.EquipmentName = (equipmentInventorySlot.InstantiatedEquipment == null ? string.Empty : equipmentInventorySlot.InstantiatedEquipment.ResourceName);
-                    equipmentSaveData.DisplayName = (equipmentInventorySlot.InstantiatedEquipment == null ? string.Empty : equipmentInventorySlot.InstantiatedEquipment.DisplayName);
                     if (equipmentInventorySlot.InstantiatedEquipment != null) {
-                        if (equipmentInventorySlot.InstantiatedEquipment.ItemQuality != null) {
-                            equipmentSaveData.itemQuality = (equipmentInventorySlot.InstantiatedEquipment == null ? string.Empty : equipmentInventorySlot.InstantiatedEquipment.ItemQuality.ResourceName);
-                        }
-                        equipmentSaveData.dropLevel = equipmentInventorySlot.InstantiatedEquipment.DropLevel;
-                        equipmentSaveData.itemInstanceId = equipmentInventorySlot.InstantiatedEquipment.InstanceId;
-                        equipmentSaveData.randomSecondaryStatIndexes = (equipmentInventorySlot.InstantiatedEquipment == null ? null : equipmentInventorySlot.InstantiatedEquipment.RandomStatIndexes);
+                        equipmentSaveData.ItemInstanceId = equipmentInventorySlot.InstantiatedEquipment.InstanceId;
                     }
-                    saveData.equipmentSaveData.Add(equipmentSaveData);
+                    saveData.EquipmentSaveData.Add(equipmentSaveData);
                 }
             }
         }
 
         public void SaveSkillData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveSkillData()");
-            saveData.skillSaveData.Clear();
+            saveData.SkillSaveData.Clear();
             foreach (string skillName in unitController.CharacterSkillManager.MySkillList.Keys) {
                 SkillSaveData skillSaveData = new SkillSaveData();
                 skillSaveData.SkillName = skillName;
-                saveData.skillSaveData.Add(skillSaveData);
+                saveData.SkillSaveData.Add(skillSaveData);
             }
         }
 
         public void SaveRecipeData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveRecipeData()");
-            saveData.recipeSaveData.Clear();
+            saveData.RecipeSaveData.Clear();
             foreach (string recipeName in unitController.CharacterRecipeManager.RecipeList.Keys) {
                 RecipeSaveData recipeSaveData = new RecipeSaveData();
                 recipeSaveData.RecipeName = recipeName;
-                saveData.recipeSaveData.Add(recipeSaveData);
+                saveData.RecipeSaveData.Add(recipeSaveData);
             }
         }
 
         public void SetDialogTurnedIn(Dialog dialog, bool turnedIn) {
             DialogSaveData saveData = GetDialogSaveData(dialog);
-            saveData.turnedIn = turnedIn;
+            saveData.TurnedIn = turnedIn;
             dialogSaveDataDictionary[saveData.DialogName] = saveData;
             SaveDialogData();
         }
 
         public void SetBehaviorCompleted(BehaviorProfile behaviorProfile, bool value) {
             BehaviorSaveData saveData = GetBehaviorSaveData(behaviorProfile);
-            saveData.completed = value;
+            saveData.Completed = value;
             behaviorSaveDataDictionary[saveData.BehaviorName] = saveData;
         }
     }

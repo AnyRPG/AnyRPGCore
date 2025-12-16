@@ -27,10 +27,10 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5120163514250653680}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -49,12 +49,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e9366657eed2f441ada58dc8f743501, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dragHandle: {fileID: 0}
   contentParent: {fileID: 7883348060532690562}
   contentPrefab: {fileID: 0}
   contentGameObject: {fileID: 7602647262329135940}
   windowTitle: 
   windowText: {fileID: 0}
   backGroundImage: {fileID: 0}
+  rectTransform: {fileID: 4759218684814125540}
+  hintBarController: {fileID: 0}
 --- !u!1 &7883348060532690562
 GameObject:
   m_ObjectHideFlags: 0
@@ -81,10 +84,10 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7602647262329135961}
   m_Father: {fileID: 4759218684814125540}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -96,8 +99,14 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5120163514250653680}
     m_Modifications:
+    - target: {fileID: 225842031891059254, guid: f1522bcc56d2d5a4fb0625113281b6cd,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
     - target: {fileID: 2382909202382707813, guid: f1522bcc56d2d5a4fb0625113281b6cd,
         type: 3}
       propertyPath: m_RootOrder
@@ -133,6 +142,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: NameChangePanel
       objectReference: {fileID: 0}
+    - target: {fileID: 2407919938686193519, guid: f1522bcc56d2d5a4fb0625113281b6cd,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
     - target: {fileID: 5911998557073091075, guid: f1522bcc56d2d5a4fb0625113281b6cd,
         type: 3}
       propertyPath: m_textInfo.lineCount
@@ -143,7 +157,20 @@ PrefabInstance:
       propertyPath: m_firstOverflowCharacterIndex
       value: -1
       objectReference: {fileID: 0}
+    - target: {fileID: 5911998557073091075, guid: f1522bcc56d2d5a4fb0625113281b6cd,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 6141587224688969573, guid: f1522bcc56d2d5a4fb0625113281b6cd,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f1522bcc56d2d5a4fb0625113281b6cd, type: 3}
 --- !u!1 &7602647262329135940 stripped
 GameObject:

@@ -152,9 +152,9 @@ MonoBehaviour:
   updateActiveListOnOpen: 1
   pruneInactiveElements: 1
   navigableButtons:
-  - {fileID: 6053584569853114307}
-  - {fileID: 4625695758376119249}
-  - {fileID: 4140138119220106810}
+  - {fileID: 2308702817575563297}
+  - {fileID: 3763120482382228531}
+  - {fileID: 5583397303034745304}
 --- !u!1001 &1366832059071751811
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -314,9 +314,9 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1366832059071751811}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4140138119220106810 stripped
+--- !u!114 &5583397303034745304 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3135436811845595321, guid: 6e370bd75f9b53f4ca1ed5831deaac18,
+  m_CorrespondingSourceObject: {fileID: 6884808419582474075, guid: 6e370bd75f9b53f4ca1ed5831deaac18,
     type: 3}
   m_PrefabInstance: {fileID: 1366832059071751811}
   m_PrefabAsset: {fileID: 0}
@@ -503,9 +503,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40b390740209a4f4fbfe0f7ed4ce4dbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4625695758376119249 stripped
+--- !u!114 &3763120482382228531 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3135436811845595321, guid: 6e370bd75f9b53f4ca1ed5831deaac18,
+  m_CorrespondingSourceObject: {fileID: 6884808419582474075, guid: 6e370bd75f9b53f4ca1ed5831deaac18,
     type: 3}
   m_PrefabInstance: {fileID: 7760417818909563752}
   m_PrefabAsset: {fileID: 0}
@@ -701,9 +701,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40b390740209a4f4fbfe0f7ed4ce4dbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6053584569853114307 stripped
+--- !u!114 &2308702817575563297 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3135436811845595321, guid: 6e370bd75f9b53f4ca1ed5831deaac18,
+  m_CorrespondingSourceObject: {fileID: 6884808419582474075, guid: 6e370bd75f9b53f4ca1ed5831deaac18,
     type: 3}
   m_PrefabInstance: {fileID: 9187880062536124282}
   m_PrefabAsset: {fileID: 0}

@@ -172,7 +172,7 @@ namespace AnyRPG {
                 playerManagerServer.DespawnPlayerUnit(networkManagerClient.AccountId);
             }
             DespawnPlayerConnection();
-            saveManager.ClearSystemManagedSaveData();
+            saveManager.ClearSharedData();
         }
 
         public void HandleLevelLoad() {
@@ -483,11 +483,11 @@ namespace AnyRPG {
             activeUnitController.UnitModelController.OnModelCreated -= HandleModelReady;
         }
 
-        public void SpawnPlayerConnection(PlayerCharacterSaveData playerCharacterSaveData) {
+        public void SpawnPlayerConnection(CharacterSaveData characterSaveData) {
             //Debug.Log($"PlayerManager.SpawnPlayerConnection({playerCharacterSaveData.SaveData})");
 
             // this is only called in local mode so we can safely pass zero for account id
-            playerManagerServer.AddPlayerMonitor(0, playerCharacterSaveData);
+            playerManagerServer.AddPlayerMonitor(0, characterSaveData);
 
             SpawnPlayerConnectionObject();
         }

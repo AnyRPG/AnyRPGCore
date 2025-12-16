@@ -97,14 +97,6 @@ namespace AnyRPG {
             //nameChangeManager.EndInteraction();
         }
 
-        public void HandlePointerClick() {
-            controlsManager.ActivateTextInput();
-        }
-
-        public void HandleEndEdit() {
-            controlsManager.DeactivateTextInput();
-        }
-
     }
 
 }

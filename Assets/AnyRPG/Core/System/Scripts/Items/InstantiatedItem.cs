@@ -91,25 +91,25 @@ namespace AnyRPG {
             // nothing here in base class for now
         }
 
-        public virtual InventorySlotSaveData GetSlotSaveData() {
+        public virtual ItemInstanceSaveData GetItemSaveData() {
             //Debug.Log($"{ResourceName}.InstantiatedItem.GetSlotSaveData()");
 
-            InventorySlotSaveData saveData = new InventorySlotSaveData();
+            ItemInstanceSaveData saveData = new ItemInstanceSaveData();
             saveData.ItemName = ResourceName;
             saveData.DisplayName = displayName;
             if (itemQuality != null) {
-                saveData.itemQuality = itemQuality.ResourceName;
+                saveData.ItemQuality = itemQuality.ResourceName;
             }
-            saveData.dropLevel = DropLevel;
-            saveData.randomSecondaryStatIndexes = new List<int>();
-            saveData.itemInstanceId = InstanceId;
+            saveData.DropLevel = DropLevel;
+            saveData.RandomSecondaryStatIndexes = new List<int>();
+            saveData.ItemInstanceId = instanceId;
             return saveData;
 
         }
 
-        public virtual void LoadSaveData(InventorySlotSaveData inventorySlotSaveData) {
-            displayName = inventorySlotSaveData.DisplayName;
-            dropLevel = inventorySlotSaveData.dropLevel;
+        public virtual void LoadSaveData(ItemInstanceSaveData itemInstanceSaveData) {
+            displayName = itemInstanceSaveData.DisplayName;
+            dropLevel = itemInstanceSaveData.DropLevel;
         }
 
         public int GetItemLevel(int characterLevel) {

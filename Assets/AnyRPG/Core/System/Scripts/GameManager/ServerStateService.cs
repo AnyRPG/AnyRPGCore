@@ -15,11 +15,19 @@ namespace AnyRPG {
         private int saveInterval = 10;
         private bool saveDataDirty = false;
 
+        // game manager references
+        private MailService mailService = null;
+
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             MakeBaseSaveFolder();
             networkManagerServer.OnStartServer += HandleStartServer;
             networkManagerServer.OnStopServer += HandleStopServer;
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            mailService = systemGameManager.MailService;
         }
 
         private void HandleStopServer() {
@@ -41,6 +49,7 @@ namespace AnyRPG {
             userAccountService.LoadAccountIdCounter(serverStateSaveData.accountIdCounter);
             playerCharacterService.LoadPlayerCharacterIdCounter(serverStateSaveData.playerCharacterIdCounter);
             systemItemManager.LoadItemIdCounter(serverStateSaveData.itemInstanceIdCounter);
+            mailService.LoadMailIdCounter(serverStateSaveData.mailIdCounter);
             BeginMonitoringServerState();
         }
 
@@ -68,6 +77,11 @@ namespace AnyRPG {
 
         public void SetPlayerCharacterIdCounter(int playerCharacterIdCounter) {
             serverStateSaveData.playerCharacterIdCounter = playerCharacterIdCounter;
+            saveDataDirty = true;
+        }
+
+        public void SetMailIdCounter(int mailIdCounter) {
+            serverStateSaveData.mailIdCounter = mailIdCounter;
             saveDataDirty = true;
         }
 

@@ -93,10 +93,13 @@ namespace AnyRPG {
         private MessageLogServer messageLogServer = new MessageLogServer();
         private LootManager lootManager = new LootManager();
         private MusicPlayerManager musicPlayerManager = new MusicPlayerManager();
+        private MailboxManagerClient mailboxManagerClient = new MailboxManagerClient();
+        private MailboxManagerServer mailboxManagerServer = new MailboxManagerServer();
         private NameChangeManagerClient nameChangeManagerClient = new NameChangeManagerClient();
         private NameChangeManagerServer nameChangeManagerServer = new NameChangeManagerServer();
         private NewGameManager newGameManager = new NewGameManager();
         private PlayerCharacterService playerCharacterService = new PlayerCharacterService();
+        private MailService mailService = new MailService();
         private PlayerManagerServer playerManagerServer = new PlayerManagerServer();
         private QuestGiverManagerClient questGiverManagerClient = new QuestGiverManagerClient();
         private QuestGiverManagerServer questGiverManagerServer = new QuestGiverManagerServer();
@@ -136,6 +139,7 @@ namespace AnyRPG {
         public AuthenticationService AuthenticationService { get => authenticationService; }
         public UserAccountService UserAccountService { get => userAccountService; }
         public PlayerCharacterService PlayerCharacterService { get => playerCharacterService; }
+        public MailService MailService { get => mailService; }
         public SystemEnvironmentManager SystemEnvironmentManager { get => systemEnvironmentManager; set => systemEnvironmentManager = value; }
         public CraftingManager CraftingManager { get => craftingManager; set => craftingManager = value; }
         public InteractionManager InteractionManager { get => interactionManager; set => interactionManager = value; }
@@ -188,6 +192,8 @@ namespace AnyRPG {
         public SpecializationChangeManagerClient SpecializationChangeManagerClient { get => specializationChangeManagerClient; set => specializationChangeManagerClient = value; }
         public SpecializationChangeManagerServer SpecializationChangeManagerServer { get => specializationChangeManagerServer; set => specializationChangeManagerServer = value; }
         public MusicPlayerManager MusicPlayerManager { get => musicPlayerManager; set => musicPlayerManager = value; }
+        public MailboxManagerClient MailboxManagerClient { get => mailboxManagerClient; set => mailboxManagerClient = value; }
+        public MailboxManagerServer MailboxManagerServer { get => mailboxManagerServer; set => mailboxManagerServer = value; }
         public NameChangeManagerClient NameChangeManagerClient { get => nameChangeManagerClient; set => nameChangeManagerClient = value; }
         public NameChangeManagerServer NameChangeManagerServer { get => nameChangeManagerServer; set => nameChangeManagerServer = value; }
         public SkillTrainerManagerClient SkillTrainerManagerClient { get => skillTrainerManagerClient; set => skillTrainerManagerClient = value; }
@@ -248,6 +254,7 @@ namespace AnyRPG {
             // configure services and managers
             userAccountService.Configure(this);
             playerCharacterService.Configure(this);
+            mailService.Configure(this);
             authenticationService.Configure(this);
             controlsManager.Configure(this);
             windowManager.Configure(this);
@@ -297,6 +304,8 @@ namespace AnyRPG {
             specializationChangeManagerClient.Configure(this);
             specializationChangeManagerServer.Configure(this);
             musicPlayerManager.Configure(this);
+            mailboxManagerClient.Configure(this);
+            mailboxManagerServer.Configure(this);
             nameChangeManagerClient.Configure(this);
             nameChangeManagerServer.Configure(this);
             skillTrainerManagerClient.Configure(this);

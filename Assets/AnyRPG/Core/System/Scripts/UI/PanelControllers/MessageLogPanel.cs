@@ -376,7 +376,6 @@ namespace AnyRPG {
             controlsManager.ActivateTextInput();
         }
 
-
         public void DeativateTextInput() {
             controlsManager.DeactivateTextInput();
         }

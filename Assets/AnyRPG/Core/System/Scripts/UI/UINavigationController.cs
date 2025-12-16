@@ -116,6 +116,10 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             foreach (NavigableElement navigableElement in navigableButtons) {
+                if (navigableElement == null) {
+                    Debug.LogWarning($"UINavigationController.Configure() Null navigable button.  CHECK INSPECTOR!");
+                    continue;
+                }
                 navigableElement.Configure(systemGameManager);
                 navigableElement.SetController(this);
                 if (pruneInactiveElements == false || navigableElement.gameObject.activeSelf == true) {

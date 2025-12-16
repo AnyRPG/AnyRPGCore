@@ -48,8 +48,8 @@ namespace AnyRPG {
             characterRequestData.characterId = characterManager.GetNewCharacterId(UnitControllerMode.Mount);
             if (networkManagerServer.ServerModeActive == true) {
                 characterRequestData.requestMode = GameMode.Network;
-                if (playerManagerServer.ActivePlayerLookup.ContainsKey(unitController)) {
-                    characterRequestData.accountId = playerManagerServer.ActivePlayerLookup[unitController];
+                if (playerManagerServer.ActiveUnitControllerLookup.ContainsKey(unitController)) {
+                    characterRequestData.accountId = playerManagerServer.ActiveUnitControllerLookup[unitController];
                 }
                 characterManager.SpawnUnitPrefab(characterRequestData, null, unitController.transform.position, unitController.transform.forward, unitController.gameObject.scene);
             } else {
@@ -329,7 +329,7 @@ namespace AnyRPG {
         public void ProcessModelCreated() {
             //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ProcessModelCreated()");
 
-            if (unitController.CharacterSaveManager.SaveData.isMounted == false) {
+            if (unitController.CharacterSaveManager.SaveData.IsMounted == false) {
                 //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ProcessModelCreated() isMounted = false");
                 return;
             }

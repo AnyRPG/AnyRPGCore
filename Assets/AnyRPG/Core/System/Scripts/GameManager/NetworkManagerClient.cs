@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -23,6 +22,7 @@ namespace AnyRPG {
         public event Action<int, int, bool> OnSetLobbyGameReadyStatus = delegate { };
         public event Action<int> OnStartLobbyGame = delegate { };
         public event Action OnClientConnectionStopped = delegate { };
+        public event Action OnClientConnectionStarted = delegate { };
 
         [SerializeField]
         private NetworkController networkController = null;
@@ -60,6 +60,7 @@ namespace AnyRPG {
         private CharacterGroupServiceClient characterGroupServiceClient = null;
         private LoadGameManager loadGameManager = null;
         private TradeServiceClient tradeServiceClient = null;
+        private MailboxManagerClient mailboxManagerClient = null;
 
         public string Username { get => username; }
         public string Password { get => password; }
@@ -92,6 +93,7 @@ namespace AnyRPG {
             characterGroupServiceClient = systemGameManager.CharacterGroupServiceClient;
             loadGameManager = systemGameManager.LoadGameManager;
             tradeServiceClient = systemGameManager.TradeServiceClient;
+            mailboxManagerClient = systemGameManager.MailboxManagerClient;
         }
 
         public bool Login(string username, string password, string server) {
@@ -236,7 +238,7 @@ namespace AnyRPG {
             isLoggingInOrOut = false;
         }
 
-        public void RequestCreatePlayerCharacter(AnyRPGSaveData saveData) {
+        public void RequestCreatePlayerCharacter(CharacterSaveData saveData) {
             //Debug.Log($"NetworkManagerClient.CreatePlayerCharacterClient(AnyRPGSaveData)");
 
             networkController.RequestCreatePlayerCharacter(saveData);
@@ -417,7 +419,7 @@ namespace AnyRPG {
         public void LaunchNetworkGame() {
             //Debug.Log($"NetworkManagerClient.LaunchNetworkGame()");
 
-            systemItemManager.ClearInstantiatedItems();
+            //systemItemManager.ClearInstantiatedItems();
             playerManager.SpawnPlayerConnection();
             levelManager.ProcessBeforeLevelUnload();
         }
@@ -609,6 +611,7 @@ namespace AnyRPG {
         }
 
         public void ProcessStartClientConnector() {
+            OnClientConnectionStarted();
             uIManager.ProcessLoginSuccess();
         }
 
@@ -796,6 +799,52 @@ namespace AnyRPG {
 
         public void AdvertiseTradeComplete() {
             tradeServiceClient.AdvertiseTradeComplete();
+        }
+
+        public void RequestSendMail(Interactable interactable, int componentIndex, MailMessageRequest sendMailRequest) {
+            //Debug.Log($"mailboxManagerClient.RequestSendMail()");
+
+            networkController.RequestSendMail(interactable, componentIndex, sendMailRequest);
+        }
+
+        public void AdvertiseMailMessages(MailMessageListResponse mailMessageListResponse) {
+            mailboxManagerClient.SetMailMessages(mailMessageListResponse);
+        }
+
+        public void RequestDeleteMailMessage(int messageId) {
+            networkController.RequestDeleteMailMessage(messageId);
+        }
+
+        public void RequestTakeMailAttachments(int messageId) {
+            networkController.RequestTakeMailAttachments(messageId);
+        }
+
+        public void RequestTakeMailAttachment(int messageId, int attachmentSlotId) {
+            networkController.RequestTakeMailAttachment(messageId, attachmentSlotId);
+        }
+
+        public void AdvertiseDeleteMailMessage(int messageId) {
+            mailboxManagerClient.AdvertiseDeleteMailMessage(messageId);
+        }
+
+        public void AdvertiseTakeMailAttachment(int messageId, int attachmentSlotId) {
+            mailboxManagerClient.AdvertiseTakeMailAttachment(messageId, attachmentSlotId);
+        }
+
+        public void AdvertiseTakeMailAttachments(int messageId) {
+            mailboxManagerClient.AdvertiseTakeMailAttachments(messageId);
+        }
+
+        public void AdvertiseConfirmationPopup(string messageText) {
+            uIManager.AdvertiseConfirmationPopup(messageText);
+        }
+
+        public void AdvertiseMailSend() {
+            mailboxManagerClient.AdvertiseMailSend();
+        }
+
+        public void RequestMarkMailAsRead(int currentMessageId) {
+            networkController.RequestMarkMailAsRead(currentMessageId);
         }
     }
 

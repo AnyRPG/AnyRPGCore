@@ -50,17 +50,14 @@ namespace AnyRPG {
             description.text = string.Empty;
         }
 
-        public override void OnPointerClick(PointerEventData eventData) {
-            //Debug.Log("AbilityButton.OnPointerClick()");
-            base.OnPointerClick(eventData);
-            if (eventData.button == PointerEventData.InputButton.Left) {
-                //Debug.Log("AbilityButton.OnPointerClick(): left click");
-                uIManager.HandScript.TakeMoveable(ability);
-            }
-            if (eventData.button == PointerEventData.InputButton.Right) {
-                //Debug.Log("AbilityButton.OnPointerClick(): right click");
-                playerManager.UnitController.CharacterAbilityManager.BeginAbility(ability);
-            }
+        protected override void HandleLeftClick() {
+            base.HandleLeftClick();
+            uIManager.HandScript.TakeMoveable(ability);
+        }
+
+        protected override void HandleRightClick() {
+            base.HandleRightClick();
+            playerManager.UnitController.CharacterAbilityManager.BeginAbility(ability);
         }
 
         public override void Select() {

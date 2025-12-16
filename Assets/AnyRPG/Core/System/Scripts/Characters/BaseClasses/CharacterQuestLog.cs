@@ -59,7 +59,7 @@ namespace AnyRPG {
             if (quest == null) {
                 return;
             }
-            if (!questSaveData.inLog) {
+            if (!questSaveData.InLog) {
                 return;
             }
 
@@ -299,7 +299,7 @@ namespace AnyRPG {
             if (achievement == null) {
                 return;
             }
-            if (!questSaveData.inLog) {
+            if (!questSaveData.InLog) {
                 return;
             }
 
@@ -314,7 +314,7 @@ namespace AnyRPG {
                 return;
             }
             achievements[achievement.ResourceName] = achievement;
-            if (questSaveData.markedComplete == true) {
+            if (questSaveData.MarkedComplete == true) {
                 //Debug.Log($"{unitController.gameObject.name}.CharacterQuestLog.LoadAchievement({achievement.ResourceName}): already marked complete");
                 achievementSaveDataDictionary[achievement.ResourceName] = questSaveData;
                 return;

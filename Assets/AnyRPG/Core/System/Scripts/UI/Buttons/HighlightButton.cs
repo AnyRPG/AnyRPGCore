@@ -212,11 +212,8 @@ namespace AnyRPG {
             }
         }
 
-        public override void OnPointerClick(PointerEventData eventData) {
-            //Debug.Log($"{gameObject.name}.HighlightButton.OnPointerClick()");
-
-            base.OnPointerClick(eventData);
-
+        protected override void HandleLeftClick() {
+            base.HandleLeftClick();
             if (mouseClickSound == true) {
                 OnClickSound();
             }

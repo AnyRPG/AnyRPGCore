@@ -22,7 +22,12 @@ namespace AnyRPG {
         /// <summary>
         /// accountId, UnitController
         /// </summary>
-        private Dictionary<int, UnitController> activeUnitControllers = new Dictionary<int, UnitController>();
+        private Dictionary<int, UnitController> activeUnitControllersByAccountId = new Dictionary<int, UnitController>();
+
+        /// <summary>
+        /// playerCharacterid, UnitController
+        /// </summary>
+        private Dictionary<int, UnitController> activeUnitControllersByPlayerCharacterId = new Dictionary<int, UnitController>();
 
         /// <summary>
         /// gameobject, accountId
@@ -32,7 +37,7 @@ namespace AnyRPG {
         /// <summary>
         /// unitController, accountId
         /// </summary>
-        private Dictionary<UnitController, int> activePlayerLookup = new Dictionary<UnitController, int>();
+        private Dictionary<UnitController, int> activeUnitControllerLookup = new Dictionary<UnitController, int>();
 
         /// <summary>
         /// accountId, LoadSceneRequest pairs for spawn requests
@@ -66,12 +71,12 @@ namespace AnyRPG {
         /// <summary>
         /// accountId, UnitController
         /// </summary>
-        public Dictionary<int, UnitController> ActiveUnitControllers { get => activeUnitControllers; }
+        public Dictionary<int, UnitController> ActiveUnitControllers { get => activeUnitControllersByAccountId; }
 
         /// <summary>
         /// unitController, accountId
         /// </summary>
-        public Dictionary<UnitController, int> ActivePlayerLookup { get => activePlayerLookup; }
+        public Dictionary<UnitController, int> ActiveUnitControllerLookup { get => activeUnitControllerLookup; }
 
         /// <summary>
         /// gameObject, accountId
@@ -152,7 +157,7 @@ namespace AnyRPG {
 
         public int GetPlayerCharacterId(int accountId) {
             if (playerCharacterMonitors.ContainsKey(accountId)) {
-                return playerCharacterMonitors[accountId].playerCharacterSaveData.PlayerCharacterId;
+                return playerCharacterMonitors[accountId].characterSaveData.CharacterId;
             }
             return 0;
         }
@@ -165,18 +170,20 @@ namespace AnyRPG {
         }
 
         public void AddActivePlayer(int accountId, UnitController unitController) {
-            //Debug.Log($"PlayerManagerServer.AddActivePlayer({accountId}, {unitController.gameObject.name})");
+            //Debug.Log($"PlayerManagerServer.AddActivePlayer(accountId: {accountId}, {unitController.gameObject.name})");
 
-            activeUnitControllers.Add(accountId, unitController);
+            int playerCharacterId = GetPlayerCharacterId(accountId);
+            activeUnitControllersByPlayerCharacterId.Add(playerCharacterId, unitController);
+            activeUnitControllersByAccountId.Add(accountId, unitController);
+            activeUnitControllerLookup.Add(unitController, accountId);
             activePlayerGameObjects.Add(unitController.gameObject, accountId);
-            activePlayerLookup.Add(unitController, accountId);
 
         }
 
         public void MonitorPlayer(UnitController unitController) {
             //Debug.Log($"PlayerManagerServer.MonitorPlayer({unitController.gameObject.name})");
 
-            if (activePlayerLookup.ContainsKey(unitController) == false) {
+            if (activeUnitControllerLookup.ContainsKey(unitController) == false) {
                 return;
             }
             SubscribeToPlayerEvents(unitController);
@@ -200,10 +207,12 @@ namespace AnyRPG {
             if (ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
-            UnsubscribeFromPlayerEvents(activeUnitControllers[accountId]);
-            activePlayerGameObjects.Remove(activeUnitControllers[accountId].gameObject);
-            activePlayerLookup.Remove(activeUnitControllers[accountId]);
-            activeUnitControllers.Remove(accountId);
+            UnsubscribeFromPlayerEvents(activeUnitControllersByAccountId[accountId]);
+            activePlayerGameObjects.Remove(activeUnitControllersByAccountId[accountId].gameObject);
+            activeUnitControllerLookup.Remove(activeUnitControllersByAccountId[accountId]);
+            activeUnitControllersByAccountId.Remove(accountId);
+            int playerCharacterId = GetPlayerCharacterId(accountId);
+            activeUnitControllersByPlayerCharacterId.Remove(playerCharacterId);
         }
 
         public void SubscribeToPlayerEvents(UnitController unitController) {
@@ -247,8 +256,8 @@ namespace AnyRPG {
         }
 
         public void GainXP(int amount, int accountId) {
-            if (activeUnitControllers.ContainsKey(accountId) == true) {
-                GainXP(activeUnitControllers[accountId], amount);
+            if (activeUnitControllersByAccountId.ContainsKey(accountId) == true) {
+                GainXP(activeUnitControllersByAccountId[accountId], amount);
             }
         }
 
@@ -257,48 +266,48 @@ namespace AnyRPG {
         }
 
         public void AddCurrency(Currency currency, int amount, int accountId) {
-            if (activeUnitControllers.ContainsKey(accountId) == false) {
+            if (activeUnitControllersByAccountId.ContainsKey(accountId) == false) {
                 return;
             }
-            activeUnitControllers[accountId].CharacterCurrencyManager.AddCurrency(currency, amount);
+            activeUnitControllersByAccountId[accountId].CharacterCurrencyManager.AddCurrency(currency, amount);
 
         }
 
         public void AddItem(string itemName, int accountId) {
-            if (activeUnitControllers.ContainsKey(accountId) == false) {
+            if (activeUnitControllersByAccountId.ContainsKey(accountId) == false) {
                 return;
             }
 
-            InstantiatedItem tmpItem = activeUnitControllers[accountId].CharacterInventoryManager.GetNewInstantiatedItem(itemName);
+            InstantiatedItem tmpItem = activeUnitControllersByAccountId[accountId].CharacterInventoryManager.GetNewInstantiatedItem(itemName);
             if (tmpItem != null) {
-                activeUnitControllers[accountId].CharacterInventoryManager.AddItem(tmpItem, false);
+                activeUnitControllersByAccountId[accountId].CharacterInventoryManager.AddItem(tmpItem, false);
             }
         }
 
         public void BeginAction(AnimatedAction animatedAction, int accountId) {
-            if (activeUnitControllers.ContainsKey(accountId) == false) {
+            if (activeUnitControllersByAccountId.ContainsKey(accountId) == false) {
                 return;
             }
-            activeUnitControllers[accountId].UnitActionManager.BeginAction(animatedAction);
+            activeUnitControllersByAccountId[accountId].UnitActionManager.BeginAction(animatedAction);
 
         }
 
         public void LearnAbility(string abilityName, int accountId) {
-            if (activeUnitControllers.ContainsKey(accountId) == false) {
+            if (activeUnitControllersByAccountId.ContainsKey(accountId) == false) {
                 return;
             }
             Ability tmpAbility = systemDataFactory.GetResource<Ability>(abilityName);
             if (tmpAbility != null) {
-                activeUnitControllers[accountId].CharacterAbilityManager.LearnAbility(tmpAbility.AbilityProperties);
+                activeUnitControllersByAccountId[accountId].CharacterAbilityManager.LearnAbility(tmpAbility.AbilityProperties);
             }
 
         }
 
         public void SetLevel(int newLevel, int accountId) {
-            if (activeUnitControllers.ContainsKey(accountId) == false) {
+            if (activeUnitControllersByAccountId.ContainsKey(accountId) == false) {
                 return;
             }
-            CharacterStats characterStats = activeUnitControllers[accountId].CharacterStats;
+            CharacterStats characterStats = activeUnitControllersByAccountId[accountId].CharacterStats;
             newLevel = Mathf.Clamp(newLevel, characterStats.Level, systemConfigurationManager.MaxLevel);
             if (newLevel > characterStats.Level) {
                 while (characterStats.Level < newLevel) {
@@ -310,19 +319,19 @@ namespace AnyRPG {
         public void LoadScene(string sceneName, UnitController sourceUnitController) {
             //Debug.Log($"PlayerManagerServer.LoadScene({sceneName}, {sourceUnitController.gameObject.name})");
 
-            if (activePlayerLookup.ContainsKey(sourceUnitController) == false) {
+            if (activeUnitControllerLookup.ContainsKey(sourceUnitController) == false) {
                 return;
             }
-            LoadScene(sceneName, sourceUnitController, activePlayerLookup[sourceUnitController]);
+            LoadScene(sceneName, sourceUnitController, activeUnitControllerLookup[sourceUnitController]);
         }
 
         public void LoadScene(string sceneName, int accountId) {
             //Debug.Log($"PlayerManagerServer.LoadScene({sceneName}, {accountId})");
 
-            if (activeUnitControllers.ContainsKey(accountId) == false) {
+            if (activeUnitControllersByAccountId.ContainsKey(accountId) == false) {
                 return;
             }
-            LoadScene(sceneName, activeUnitControllers[accountId], accountId);
+            LoadScene(sceneName, activeUnitControllersByAccountId[accountId], accountId);
         }
 
         public void LoadScene(string sceneName, UnitController sourceUnitController, int accountId) {
@@ -351,10 +360,10 @@ namespace AnyRPG {
         private void TeleportInternal(UnitController unitController, TeleportEffectProperties teleportEffectProperties) {
             //Debug.Log($"PlayerManagerServer.TeleportInternal({unitController.gameObject.name}, {teleportEffectProperties.levelName})");
 
-            if (activePlayerLookup.ContainsKey(unitController) == false) {
+            if (activeUnitControllerLookup.ContainsKey(unitController) == false) {
                 return;
             }
-            int accountId = activePlayerLookup[unitController];
+            int accountId = activeUnitControllerLookup[unitController];
 
             SpawnPlayerRequest loadSceneRequest = new SpawnPlayerRequest();
             if (teleportEffectProperties.overrideSpawnDirection == true) {
@@ -393,52 +402,52 @@ namespace AnyRPG {
         public void DespawnPlayerUnit(int accountId) {
             //Debug.Log($"PlayerManagerServer.DespawnPlayerUnit({accountId})");
 
-            if (activeUnitControllers.ContainsKey(accountId) == false) {
+            if (activeUnitControllersByAccountId.ContainsKey(accountId) == false) {
                 return;
             }
             playerCharacterMonitors[accountId].ProcessBeforeDespawn();
 
-            activeUnitControllers[accountId].Despawn(0, false, true);
+            activeUnitControllersByAccountId[accountId].Despawn(0, false, true);
             RemoveActivePlayer(accountId);
         }
 
         public void AddSpawnRequest(UnitController unitController, SpawnPlayerRequest loadSceneRequest) {
-            if (activePlayerLookup.ContainsKey(unitController)) {
+            if (activeUnitControllerLookup.ContainsKey(unitController)) {
                 //if (networkManagerServer.ServerModeActive == true) {
                 //    networkManagerServer.AdvertiseAddSpawnRequest(activePlayerLookup[unitController], loadSceneRequest);
                 //} else {
-                    AddSpawnRequest(activePlayerLookup[unitController], loadSceneRequest);
+                    AddSpawnRequest(activeUnitControllerLookup[unitController], loadSceneRequest);
                 //}
             }
         }
 
         public void SetPlayerCharacterClass(CharacterClass characterClass, int accountId) {
-            if (activeUnitControllers.ContainsKey(accountId) == false) {
+            if (activeUnitControllersByAccountId.ContainsKey(accountId) == false) {
                 return;
             }
-            activeUnitControllers[accountId].BaseCharacter.ChangeCharacterClass(characterClass);
+            activeUnitControllersByAccountId[accountId].BaseCharacter.ChangeCharacterClass(characterClass);
         }
 
         public void SetPlayerCharacterSpecialization(ClassSpecialization classSpecialization, int accountId) {
-            if (activeUnitControllers.ContainsKey(accountId) == false) {
+            if (activeUnitControllersByAccountId.ContainsKey(accountId) == false) {
                 return;
             }
-            activeUnitControllers[accountId].BaseCharacter.ChangeClassSpecialization(classSpecialization);
+            activeUnitControllersByAccountId[accountId].BaseCharacter.ChangeClassSpecialization(classSpecialization);
         }
 
         public void SetPlayerFaction(Faction faction, int accountId) {
-            if (activeUnitControllers.ContainsKey(accountId) == false) {
+            if (activeUnitControllersByAccountId.ContainsKey(accountId) == false) {
                 return;
             }
-            activeUnitControllers[accountId].BaseCharacter.ChangeCharacterFaction(faction);
+            activeUnitControllersByAccountId[accountId].BaseCharacter.ChangeCharacterFaction(faction);
         }
 
 
         public void LearnSkill(Skill skill, int accountId) {
-            if (activeUnitControllers.ContainsKey(accountId) == false) {
+            if (activeUnitControllersByAccountId.ContainsKey(accountId) == false) {
                 return;
             }
-            activeUnitControllers[accountId].CharacterSkillManager.LearnSkill(skill);
+            activeUnitControllersByAccountId[accountId].CharacterSkillManager.LearnSkill(skill);
         }
 
         public void AddSpawnRequest(int accountId, SpawnPlayerRequest loadSceneRequest) {
@@ -552,23 +561,23 @@ namespace AnyRPG {
 
             if (systemGameManager.GameMode == GameMode.Local) {
                 // load local player
-                CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(systemDataFactory, playerCharacterMonitors[accountId].playerCharacterSaveData.SaveData);
+                CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(systemDataFactory, playerCharacterMonitors[accountId].characterSaveData);
                 characterConfigurationRequest.unitControllerMode = UnitControllerMode.Player;
                 CharacterRequestData characterRequestData = new CharacterRequestData(playerManager,
                     systemGameManager.GameMode,
                     characterConfigurationRequest);
-                characterRequestData.characterId = playerCharacterMonitors[accountId].playerCharacterSaveData.PlayerCharacterId;
+                characterRequestData.characterId = playerCharacterMonitors[accountId].characterSaveData.CharacterId;
                 characterRequestData.isOwner = true;
-                characterRequestData.saveData = playerCharacterMonitors[accountId].playerCharacterSaveData.SaveData;
+                characterRequestData.saveData = playerCharacterMonitors[accountId].characterSaveData;
                 UnitController unitController = characterManager.SpawnCharacterPrefab(characterRequestData, null, spawnPlayerRequest.spawnLocation, spawnPlayerRequest.spawnForwardDirection);
                 playerCharacterMonitors[accountId].SetUnitController(unitController);
             } else {
-                CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(systemDataFactory, playerCharacterMonitors[accountId].playerCharacterSaveData.SaveData);
+                CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(systemDataFactory, playerCharacterMonitors[accountId].characterSaveData);
                 characterConfigurationRequest.unitControllerMode = UnitControllerMode.Player;
                 CharacterRequestData characterRequestData = new CharacterRequestData(this, GameMode.Network, characterConfigurationRequest);
-                characterRequestData.characterId = playerCharacterMonitors[accountId].playerCharacterSaveData.PlayerCharacterId;
+                characterRequestData.characterId = playerCharacterMonitors[accountId].characterSaveData.CharacterId;
                 characterRequestData.characterGroupId = characterGroupServiceServer.GetCharacterGroupIdFromCharacterId(characterRequestData.characterId);
-                characterRequestData.saveData = playerCharacterMonitors[accountId].playerCharacterSaveData.SaveData;
+                characterRequestData.saveData = playerCharacterMonitors[accountId].characterSaveData;
 
                 if (spawnPlayerRequest.overrideSpawnLocation == false) {
                     // we were loading the default location, so randomize the spawn position a bit so players don't all spawn in the same place
@@ -591,7 +600,7 @@ namespace AnyRPG {
             }
         }
 
-        public void AddPlayerMonitor(int accountId, PlayerCharacterSaveData playerCharacterSaveData) {
+        public void AddPlayerMonitor(int accountId, CharacterSaveData characterSaveData) {
             //Debug.Log($"PlayerManagerServer.AddPlayerMonitor({accountId}, {playerCharacterSaveData.SaveData.unitProfileName})");
 
             if (playerCharacterMonitors.ContainsKey(accountId)) {
@@ -600,11 +609,11 @@ namespace AnyRPG {
                 PlayerCharacterMonitor playerCharacterMonitor = new PlayerCharacterMonitor(
                     systemGameManager,
                     accountId,
-                    playerCharacterSaveData,
+                    characterSaveData,
                     null
                 );
                 playerCharacterMonitors.Add(accountId, playerCharacterMonitor);
-                playerCharacterAccountIdLookup.Add(playerCharacterSaveData.PlayerCharacterId, accountId);
+                playerCharacterAccountIdLookup.Add(characterSaveData.CharacterId, accountId);
 
                 // this should not be needed.  Check for breakage before deleting.
                 //AddSpawnRequest(accountId, new SpawnPlayerRequest());
@@ -638,7 +647,7 @@ namespace AnyRPG {
                 PauseMonitoringPlayerUnit(accountId);
 
                 //activePlayerCharactersByAccount.Remove(activePlayerCharacters[playerCharacterId].accountId);
-                playerCharacterAccountIdLookup.Remove(playerCharacterMonitors[accountId].playerCharacterSaveData.PlayerCharacterId);
+                playerCharacterAccountIdLookup.Remove(playerCharacterMonitors[accountId].characterSaveData.CharacterId);
                 playerCharacterMonitors.Remove(accountId);
             }
         }
@@ -671,11 +680,11 @@ namespace AnyRPG {
         public void RevivePlayerUnit(int accountId) {
 
             // get lobby game id, unitprofile, and scene name from the player character save data
-            if (activeUnitControllers.ContainsKey(accountId) == false) {
+            if (activeUnitControllersByAccountId.ContainsKey(accountId) == false) {
                 //Debug.LogError($"PlayerManagerServer.RequestRespawnPlayerUnit: activePlayerCharacters does not contain accountId {accountId}");
                 return;
             }
-            activeUnitControllers[accountId].CharacterStats.StatusEffectRevive();
+            activeUnitControllersByAccountId[accountId].CharacterStats.StatusEffectRevive();
         }
 
         public void RespawnPlayerUnit(int accountId) {
@@ -688,8 +697,8 @@ namespace AnyRPG {
             string sceneName = playerCharacterMonitors[accountId].unitController.gameObject.scene.name;
 
             DespawnPlayerUnit(accountId);
-            playerCharacterMonitors[accountId].playerCharacterSaveData.SaveData.isDead = false;
-            playerCharacterMonitors[accountId].playerCharacterSaveData.SaveData.initializeResourceAmounts = true;
+            playerCharacterMonitors[accountId].characterSaveData.IsDead = false;
+            playerCharacterMonitors[accountId].characterSaveData.InitializeResourceAmounts = true;
             RequestSpawnPlayerUnit(accountId, sceneName);
         }
 
@@ -706,9 +715,9 @@ namespace AnyRPG {
             string sceneName = playerCharacterMonitors[accountId].unitController.gameObject.scene.name;
             AddSpawnRequest(accountId, loadSceneRequest);
             DespawnPlayerUnit(accountId);
-            playerCharacterMonitors[accountId].playerCharacterSaveData.SaveData.appearanceString = appearanceString;
-            playerCharacterMonitors[accountId].playerCharacterSaveData.SaveData.swappableMeshSaveData = swappableMeshSaveData;
-            playerCharacterMonitors[accountId].playerCharacterSaveData.SaveData.unitProfileName = unitProfileName;
+            playerCharacterMonitors[accountId].characterSaveData.AppearanceString = appearanceString;
+            playerCharacterMonitors[accountId].characterSaveData.SwappableMeshSaveData = swappableMeshSaveData;
+            playerCharacterMonitors[accountId].characterSaveData.UnitProfileName = unitProfileName;
             RequestSpawnPlayerUnit(accountId, sceneName);
         }
 
@@ -778,8 +787,8 @@ namespace AnyRPG {
         private void LoadCutscene(Cutscene cutscene, UnitController sourceUnitController) {
             //Debug.Log($"PlayerManagerServer.LoadCutscene({cutscene.ResourceName}, {sourceUnitController?.gameObject.name})");
 
-            if (activePlayerLookup.ContainsKey(sourceUnitController)) {
-                int accountId = activePlayerLookup[sourceUnitController];
+            if (activeUnitControllerLookup.ContainsKey(sourceUnitController)) {
+                int accountId = activeUnitControllerLookup[sourceUnitController];
                 SpawnPlayerRequest spawnPlayerRequest = new SpawnPlayerRequest() {
                     overrideSpawnDirection = true,
                     spawnForwardDirection = sourceUnitController.transform.forward,
@@ -811,17 +820,33 @@ namespace AnyRPG {
             return 0;
         }
 
+        public int GetAccountIdFromUnitController(UnitController unitController) {
+            if (activeUnitControllerLookup.ContainsKey(unitController)) {
+                return activeUnitControllerLookup[unitController];
+            }
+            return 0;
+        }
+
         public string GetPlayerName(int leaderAccountId) {
-            if (activeUnitControllers.ContainsKey(leaderAccountId)) {
-                return activeUnitControllers[leaderAccountId].BaseCharacter.CharacterName;
+            if (activeUnitControllersByAccountId.ContainsKey(leaderAccountId)) {
+                return activeUnitControllersByAccountId[leaderAccountId].BaseCharacter.CharacterName;
             }
             return string.Empty;
 
         }
 
-        public UnitController GetUnitController(int sourceAccountId) {
-            if (activeUnitControllers.ContainsKey(sourceAccountId)) {
-                return activeUnitControllers[sourceAccountId];
+        public UnitController GetUnitControllerFromAccountId(int sourceAccountId) {
+            if (activeUnitControllersByAccountId.ContainsKey(sourceAccountId)) {
+                return activeUnitControllersByAccountId[sourceAccountId];
+            }
+            return null;
+        }
+
+        public UnitController GetUnitControllerFromPlayerCharacterId(int playerCharacterId) {
+            //Debug.Log($"PlayerManagerServer.GetUnitControllerFromPlayerCharacterId({playerCharacterId})");
+
+            if (activeUnitControllersByPlayerCharacterId.ContainsKey(playerCharacterId)) {
+                return activeUnitControllersByPlayerCharacterId[playerCharacterId];
             }
             return null;
         }

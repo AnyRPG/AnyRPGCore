@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class CurrencyEntryBarController : ConfiguredMonoBehaviour {
 
-        public event System.Action OnRecalculateBaseCurrency;
+        public event System.Action OnRecalculateBaseCurrency = delegate { };
 
         protected bool eventSubscriptionsInitialized = false;
 
@@ -95,11 +95,13 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public void HandlePointerClick() {
             //Debug.Log($"CurrencyEntryBarController.HandlePointerClick()");
 
             controlsManager.ActivateTextInput();
         }
+        */
 
         public void HandleEndEdit() {
             //Debug.Log($"CurrencyEntryBarController.HandleEndEdit()");
@@ -112,6 +114,7 @@ namespace AnyRPG {
             foreach (CurrencyEntryAmountController currencyEntryAmountController in currencyEntryAmountControllers) {
                 currencyEntryAmountController.SetAmount(0);
             }
+            currencyNode.Amount = 0;
         }
     }
 

@@ -14,11 +14,9 @@ namespace AnyRPG {
 
         // game manager references
         private SystemDataFactory systemDataFactory = null;
-        private CharacterManager characterManager = null;
         private NetworkManagerServer networkManagerServer = null;
         private NetworkManagerClient networkManagerClient = null;
         private PlayerManagerServer playerManagerServer = null;
-        private SaveManager saveManager = null;
         private CharacterGroupServiceServer characterGroupServiceServer = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -31,11 +29,9 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             systemDataFactory = systemGameManager.SystemDataFactory;
-            characterManager = systemGameManager.CharacterManager;
             networkManagerServer = systemGameManager.NetworkManagerServer;
             networkManagerClient = systemGameManager.NetworkManagerClient;
             playerManagerServer = systemGameManager.PlayerManagerServer;
-            saveManager = systemGameManager.SaveManager;
             characterGroupServiceServer = systemGameManager.CharacterGroupServiceServer;
         }
 
@@ -346,7 +342,7 @@ namespace AnyRPG {
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void RequestCreatePlayerCharacter(AnyRPGSaveData saveData, NetworkConnection networkConnection = null) {
+        public void RequestCreatePlayerCharacter(CharacterSaveData saveData, NetworkConnection networkConnection = null) {
             //Debug.Log($"FishNetClientConnector.RequestCreatePlayerCharacter()");
 
             if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
@@ -1041,6 +1037,29 @@ namespace AnyRPG {
             networkManagerServer.SetPlayerFaction(interactable, componentIndex, networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId);
         }
 
+        public void RequestSendMail(Interactable interactable, int componentIndex, MailMessageRequest sendMailRequest) {
+            FishNetInteractable networkInteractable = null;
+            if (interactable != null) {
+                networkInteractable = interactable.GetComponent<FishNetInteractable>();
+            }
+            RequestSendMailServer(networkInteractable, componentIndex, sendMailRequest);
+
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void RequestSendMailServer(FishNetInteractable networkInteractable, int componentIndex, MailMessageRequest sendMailRequest, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.BuyItemFromVendorServer() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+
+            Interactable interactable = null;
+            if (networkInteractable != null) {
+                interactable = networkInteractable.Interactable;
+            }
+            networkManagerServer.RequestSendMail(interactable, componentIndex, sendMailRequest, networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId);
+        }
+
         public void RequestLearnSkill(Interactable interactable, int componentIndex, int skillId) {
             FishNetInteractable networkInteractable = null;
             if (interactable != null) {
@@ -1644,8 +1663,42 @@ namespace AnyRPG {
             networkManagerServer.RequestUnconfirmTrade(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId);
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestDeleteMailMessage(int messageId, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestDeleteMailMessage(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, messageId);
+        }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestTakeMailAttachment(int messageId, int attachmentSlotId, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestTakeMailAttachment(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, messageId, attachmentSlotId);
 
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestTakeMailAttachments(int messageId, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestTakeMailAttachments(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, messageId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        internal void RequestMarkMailAsRead(int messageId, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestMarkMailAsRead(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, messageId);
+        }
 
         [ServerRpc(RequireOwnership = false)]
         public void RequestSceneWeather(NetworkConnection networkConnection = null) {
@@ -2195,6 +2248,117 @@ namespace AnyRPG {
         private void AdvertiseTradeCompleteClient(NetworkConnection networkConnection) {
             networkManagerClient.AdvertiseTradeComplete();
         }
+
+        public void AdvertiseMailMessages(int accountId, MailMessageListResponse mailMessageListResponse) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseMailMessagesClient(fishNetNetworkManager.ServerManager.Clients[_clientId], mailMessageListResponse);
+        }
+
+        [TargetRpc]
+        public void AdvertiseMailMessagesClient(NetworkConnection networkConnection, MailMessageListResponse mailMessageListResponse) {
+            networkManagerClient.AdvertiseMailMessages(mailMessageListResponse);
+        }
+
+        public void AdvertiseDeleteMailMessage(int accountId, int messageId) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseDeleteMailMessageClient(fishNetNetworkManager.ServerManager.Clients[_clientId], messageId);
+        }
+
+        [TargetRpc]
+        public void AdvertiseDeleteMailMessageClient(NetworkConnection networkConnection, int messageId) {
+            networkManagerClient.AdvertiseDeleteMailMessage(messageId);
+        }
+
+        internal void AdvertiseTakeMailAttachment(int accountId, int messageId, int attachmentSlotId) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseTakeMailAttachmentClient(fishNetNetworkManager.ServerManager.Clients[_clientId], messageId, attachmentSlotId);
+        }
+
+        [TargetRpc]
+        public void AdvertiseTakeMailAttachmentClient(NetworkConnection networkConnection, int messageId, int attachmentSlotId) {
+            networkManagerClient.AdvertiseTakeMailAttachment(messageId, attachmentSlotId);
+        }
+
+        internal void AdvertiseTakeMailAttachments(int accountId, int messageId) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseTakeMailAttachmentsClient(fishNetNetworkManager.ServerManager.Clients[_clientId], messageId);
+        }
+
+        [TargetRpc]
+        public void AdvertiseTakeMailAttachmentsClient(NetworkConnection networkConnection, int messageId) {
+            networkManagerClient.AdvertiseTakeMailAttachments(messageId);
+        }
+
+        public void AdvertiseConfirmationPopup(int accountId, string messageText) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseConfirmationPopupClient(fishNetNetworkManager.ServerManager.Clients[_clientId], messageText);
+        }
+
+        [TargetRpc]
+        public void AdvertiseConfirmationPopupClient(NetworkConnection networkConnection, string messageText) {
+            networkManagerClient.AdvertiseConfirmationPopup(messageText);
+        }
+
+        public void AdvertiseMailSend(int accountId) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseMailSendClient(fishNetNetworkManager.ServerManager.Clients[_clientId]);
+        }
+
+        [TargetRpc]
+        public void AdvertiseMailSendClient(NetworkConnection networkConnection) {
+            networkManagerClient.AdvertiseMailSend();
+        }
+
+
+
 
 
         /*

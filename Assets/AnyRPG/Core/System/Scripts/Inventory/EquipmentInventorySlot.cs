@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -23,8 +24,8 @@ namespace AnyRPG {
         }
 
         protected override void UpdateSlot() {
-            if (instantiatedItems.Count > 0 && instantiatedItems[0] is InstantiatedEquipment) {
-                instantiatedEquipment = instantiatedItems[0] as InstantiatedEquipment;
+            if (instantiatedItems.Count > 0 && instantiatedItems.First().Value is InstantiatedEquipment) {
+                instantiatedEquipment = instantiatedItems.First().Value as InstantiatedEquipment;
             } else {
                 instantiatedEquipment = null;
             }

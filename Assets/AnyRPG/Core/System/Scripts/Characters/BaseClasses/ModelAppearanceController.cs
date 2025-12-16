@@ -33,7 +33,7 @@ namespace AnyRPG {
         }
 
         public abstract T GetModelAppearanceController<T>() where T : ModelAppearanceController;
-        public abstract void SaveAppearanceSettings(AnyRPGSaveData saveData);
+        public abstract void SaveAppearanceSettings(CharacterSaveData saveData);
         public abstract void SetInitialSavedAppearance(CharacterAppearanceData characterAppearanceData);
         public abstract void BuildModelAppearance();
         public abstract bool IsBuilding();

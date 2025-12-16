@@ -37,7 +37,7 @@ namespace AnyRPG {
 
         private CapabilityConsumerProcessor capabilityConsumerProcessor = null;
 
-        private AnyRPGSaveData saveData;
+        private CharacterSaveData saveData;
 
         // game manager references
         protected UIManager uIManager = null;
@@ -57,7 +57,7 @@ namespace AnyRPG {
         public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
         public Faction Faction { get => faction; set => faction = value; }
-        public AnyRPGSaveData SaveData { get => saveData; set => saveData = value; }
+        public CharacterSaveData SaveData { get => saveData; set => saveData = value; }
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -260,8 +260,8 @@ namespace AnyRPG {
             }
 
             // copy the the appearance settings so they don't get overwritten when the character despawns and saves
-            string appearanceString = String.Copy(playerManager.ActiveUnitController.CharacterSaveManager.SaveData.appearanceString);
-            List<SwappableMeshSaveData> swappableMeshSaveData = new List<SwappableMeshSaveData>(playerManager.ActiveUnitController.CharacterSaveManager.SaveData.swappableMeshSaveData);
+            string appearanceString = String.Copy(playerManager.ActiveUnitController.CharacterSaveManager.SaveData.AppearanceString);
+            List<SwappableMeshSaveData> swappableMeshSaveData = new List<SwappableMeshSaveData>(playerManager.ActiveUnitController.CharacterSaveManager.SaveData.SwappableMeshSaveData);
 
             characterAppearanceManagerClient.RequestUpdatePlayerAppearance(playerManager.UnitController, unitProfile.ResourceName, appearanceString, swappableMeshSaveData);
         }

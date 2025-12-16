@@ -33,17 +33,17 @@ namespace AnyRPG {
             SetUnitProfileProperties(unitProfile);
         }
 
-        public CharacterConfigurationRequest(SystemDataFactory systemDataFactory, AnyRPGSaveData saveData) {
+        public CharacterConfigurationRequest(SystemDataFactory systemDataFactory, CharacterSaveData saveData) {
             //Debug.Log($"CharacterConfigurationRequest.CharacterConfigurationRequest() faction: {saveData.playerFaction}");
 
-            SetUnitProfileProperties(systemDataFactory.GetResource<UnitProfile>(saveData.unitProfileName));
-            characterName = saveData.playerName;
-            characterClass = systemDataFactory.GetResource<CharacterClass>(saveData.characterClass);
-            classSpecialization = systemDataFactory.GetResource<ClassSpecialization>(saveData.classSpecialization);
-            faction = systemDataFactory.GetResource<Faction>(saveData.playerFaction);
-            unitLevel = saveData.PlayerLevel;
-            currentExperience = saveData.currentExperience;
-            isDead = saveData.isDead;
+            SetUnitProfileProperties(systemDataFactory.GetResource<UnitProfile>(saveData.UnitProfileName));
+            characterName = saveData.CharacterName;
+            characterClass = systemDataFactory.GetResource<CharacterClass>(saveData.CharacterClass);
+            classSpecialization = systemDataFactory.GetResource<ClassSpecialization>(saveData.ClassSpecialization);
+            faction = systemDataFactory.GetResource<Faction>(saveData.CharacterFaction);
+            unitLevel = saveData.CharacterLevel;
+            currentExperience = saveData.CurrentExperience;
+            isDead = saveData.IsDead;
             characterAppearanceData = new CharacterAppearanceData(saveData);
         }
 

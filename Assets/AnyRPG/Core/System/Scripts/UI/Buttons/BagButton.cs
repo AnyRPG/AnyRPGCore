@@ -120,50 +120,41 @@ namespace AnyRPG {
         }
         */
 
-
-        public override void OnPointerClick(PointerEventData eventData) {
-            //Debug.Log("BagButton.OnPointerClick()");
+        protected override void HandleLeftClick() {
             if (bagNode == null) {
                 return;
             }
-
-            base.OnPointerClick(eventData);
-
-            if (eventData.button == PointerEventData.InputButton.Left) {
-                //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED");
-                if (handScript.Moveable != null && handScript.Moveable is InstantiatedBag) {
-                    if (bagNode.InstantiatedBag != null) {
-                        // there is a bag in this slot already
-                        if ((handScript.Moveable as InstantiatedBag).BagNode != null) {
-                            // bag was moved from a bag bar slot to another bag bar slot with a bag in it, swap equipped bags
-                            playerManager.UnitController.CharacterInventoryManager.RequestSwapBags(BagNode.InstantiatedBag, handScript.Moveable as InstantiatedBag);
-                        } else if (playerManager.UnitController.CharacterInventoryManager.FromSlot != null) {
-                            // bag was moved from an inventory slot, swap unequipped bag with equipped bag
-                            playerManager.UnitController.CharacterInventoryManager.RequestSwapBags(BagNode.InstantiatedBag, handScript.Moveable as InstantiatedBag);
-                        }
-                        handScript.Drop();
-                    } else {
-                        // there is no bag in this slot
-                        InstantiatedBag tmpBag = (InstantiatedBag)handScript.Moveable;
-                        if (tmpBag.BagNode != null) {
-                            // bag was moved from a bag bar slot, to an empty bag bar slot, ensure there is enough space to remove bag from old slot before dropping in this slot
-                            if (playerManager.UnitController.CharacterInventoryManager.EmptySlotCount(tmpBag.BagNode.IsBankNode) - tmpBag.Slots >= 0) {
-                                playerManager.UnitController.CharacterInventoryManager.RequestMoveBag(tmpBag, bagNode);
-                                handScript.Drop();
-                            }
-                        } else {
-                            // bag came from an inventory slot
-                            playerManager.UnitController.CharacterInventoryManager.RequestAddBagFromInventory(tmpBag, bagNode);
+            base.HandleLeftClick();
+            if (handScript.Moveable != null && handScript.Moveable is InstantiatedBag) {
+                if (bagNode.InstantiatedBag != null) {
+                    // there is a bag in this slot already
+                    if ((handScript.Moveable as InstantiatedBag).BagNode != null) {
+                        // bag was moved from a bag bar slot to another bag bar slot with a bag in it, swap equipped bags
+                        playerManager.UnitController.CharacterInventoryManager.RequestSwapBags(BagNode.InstantiatedBag, handScript.Moveable as InstantiatedBag);
+                    } else if (playerManager.UnitController.CharacterInventoryManager.FromSlot != null) {
+                        // bag was moved from an inventory slot, swap unequipped bag with equipped bag
+                        playerManager.UnitController.CharacterInventoryManager.RequestSwapBags(BagNode.InstantiatedBag, handScript.Moveable as InstantiatedBag);
+                    }
+                    handScript.Drop();
+                } else {
+                    // there is no bag in this slot
+                    InstantiatedBag tmpBag = (InstantiatedBag)handScript.Moveable;
+                    if (tmpBag.BagNode != null) {
+                        // bag was moved from a bag bar slot, to an empty bag bar slot, ensure there is enough space to remove bag from old slot before dropping in this slot
+                        if (playerManager.UnitController.CharacterInventoryManager.EmptySlotCount(tmpBag.BagNode.IsBankNode) - tmpBag.Slots >= 0) {
+                            playerManager.UnitController.CharacterInventoryManager.RequestMoveBag(tmpBag, bagNode);
                             handScript.Drop();
                         }
-
-
+                    } else {
+                        // bag came from an inventory slot
+                        playerManager.UnitController.CharacterInventoryManager.RequestAddBagFromInventory(tmpBag, bagNode);
+                        handScript.Drop();
                     }
-                } else if (Input.GetKey(KeyCode.LeftShift)) {
-                    //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED WITH SHIFT KEY on bagNode.mybag: " + bagNode.MyBag.GetInstanceID());
-                    //Debug.Log("InventoryManager.RemoveBag(): Found matching bag in bagNode: " + bagNode.MyBag.GetInstanceID() + "; " + bag.GetInstanceID());
-                    handScript.TakeMoveable(BagNode.InstantiatedBag);
                 }
+            } else if (Input.GetKey(KeyCode.LeftShift)) {
+                //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED WITH SHIFT KEY on bagNode.mybag: " + bagNode.MyBag.GetInstanceID());
+                //Debug.Log("InventoryManager.RemoveBag(): Found matching bag in bagNode: " + bagNode.MyBag.GetInstanceID() + "; " + bag.GetInstanceID());
+                handScript.TakeMoveable(BagNode.InstantiatedBag);
             }
         }
 

@@ -163,7 +163,7 @@ namespace AnyRPG {
         public virtual void HandInItems(UnitController sourceUnitController) {
             if (turnInItems == true) {
                 if (steps.Count > 0) {
-                    foreach (QuestObjective questObjective in steps[GetSaveData(sourceUnitController).questStep].QuestObjectives) {
+                    foreach (QuestObjective questObjective in steps[GetSaveData(sourceUnitController).QuestStep].QuestObjectives) {
                         if ((questObjective as CollectObjective) is CollectObjective) {
                             (questObjective as CollectObjective).Complete(sourceUnitController);
                         }

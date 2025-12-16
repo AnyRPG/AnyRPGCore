@@ -56,10 +56,13 @@ namespace AnyRPG {
             chosen = false;
         }
 
-        public override void OnPointerClick(PointerEventData eventData) {
-            //Debug.Log("RewardButton: OnPointerClick()");
-            base.OnPointerClick(eventData);
+        protected override void HandleLeftClick() {
+            base.HandleLeftClick();
+            ToggleChosen();
+        }
 
+        protected override void HandleRightClick() {
+            base.HandleRightClick();
             ToggleChosen();
         }
 

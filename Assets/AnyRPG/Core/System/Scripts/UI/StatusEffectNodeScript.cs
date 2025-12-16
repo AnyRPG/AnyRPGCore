@@ -52,16 +52,10 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
         }
 
-        public override void OnPointerClick(PointerEventData eventData) {
-            //Debug.Log("StatusEffectNodeScript.OnPointerClick()");
-            base.OnPointerClick(eventData);
-            if (eventData.button == PointerEventData.InputButton.Right) {
-                HandleRightClick();
-            }
-        }
-
-        public void HandleRightClick() {
+        protected override void HandleRightClick() {
             //Debug.Log("StatusEffectNodeScript.HandleRightClick()");
+
+            base.HandleRightClick();
             RequestCancelStatusEffect();
             uIManager.HideToolTip();
         }

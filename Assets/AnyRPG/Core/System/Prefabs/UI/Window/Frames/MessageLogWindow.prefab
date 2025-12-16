@@ -411,8 +411,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8824412404309154825}
   m_HandleRect: {fileID: 7603073577887064148}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.20948105
+  m_Value: 1
+  m_Size: 0.7980769
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1050,7 +1050,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 2898}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &2351060171028996768
@@ -2559,7 +2559,7 @@ GameObject:
   - component: {fileID: 4020704290318693521}
   - component: {fileID: 3439999618991835634}
   - component: {fileID: 2390800021452360315}
-  - component: {fileID: 6754031119512857582}
+  - component: {fileID: 4150240758398161609}
   m_Layer: 5
   m_Name: InputField
   m_TagString: Untagged
@@ -2738,7 +2738,7 @@ MonoBehaviour:
   isAlert: 0
   m_InputValidator: {fileID: 0}
   m_ShouldActivateOnSelect: 1
---- !u!114 &6754031119512857582
+--- !u!114 &4150240758398161609
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2747,26 +2747,39 @@ MonoBehaviour:
   m_GameObject: {fileID: 4437817184013940329}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Script: {fileID: 11500000, guid: 0381f29ed8cdbbf41a6cff4a5d3adfd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 4
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 7850415698067800002}
-          m_TargetAssemblyTypeName: AnyRPG.CombatLogUI, Assembly-CSharp
-          m_MethodName: ActivateTextInput
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+  outlineImage: {fileID: 2326841977495864810}
+  highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
+  highlightImage: {fileID: 0}
+  highlightBackgroundOnSelect: 0
+  highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
+  highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useUnfocusedColor: 1
+  unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
+  text: {fileID: 0}
+  ignoreSystemImageTint: 0
+  highlightButton: {fileID: 0}
+  selectedButtonColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  overrideNormalColor: 0
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  overrideHighlightedColor: 0
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  overridePressedColor: 0
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  overrideSelectedColor: 0
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  overrideDisabledColor: 0
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
+  mouseClickSound: 1
+  mouseHoverSound: 1
+  inputField: {fileID: 2390800021452360315}
 --- !u!1 &4504221090100188821
 GameObject:
   m_ObjectHideFlags: 0
@@ -3112,8 +3125,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2335452209901581501}
   m_HandleRect: {fileID: 1925409723574363349}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.20948105
+  m_Value: 1
+  m_Size: 0.7980769
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4155,8 +4168,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5020205203879708042}
   m_HandleRect: {fileID: 5020205203879708041}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.20948105
+  m_Value: 1
+  m_Size: 0.7980769
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4393,7 +4406,6 @@ GameObject:
   - component: {fileID: 1944802317733198594}
   - component: {fileID: 4982353478751403463}
   - component: {fileID: 3386349606339365424}
-  - component: {fileID: 1865115986001078629}
   - component: {fileID: 3349504764363959455}
   m_Layer: 5
   m_Name: TextInput
@@ -4462,48 +4474,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1865115986001078629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5497877021390316262}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0381f29ed8cdbbf41a6cff4a5d3adfd2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineImage: {fileID: 2326841977495864810}
-  highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
-  useSystemOutlineColor: 1
-  highlightImage: {fileID: 0}
-  highlightBackgroundOnSelect: 0
-  highlightBackgroundOnInteract: 0
-  unHighlightBackgroundOnUnFocus: 1
-  unHighlightBackgroundOnLeave: 1
-  highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
-  useUnfocusedColor: 1
-  unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
-  rectTransform: {fileID: 0}
-  text: {fileID: 0}
-  ignoreSystemImageTint: 0
-  highlightButton: {fileID: 0}
-  selectedButtonColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
-  overrideNormalColor: 0
-  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
-  overrideHighlightedColor: 0
-  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
-  overridePressedColor: 0
-  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
-  overrideSelectedColor: 0
-  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
-  overrideDisabledColor: 0
-  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-  CapitalizeText: 0
-  mouseClickSound: 1
-  mouseHoverSound: 1
-  inputField: {fileID: 2390800021452360315}
 --- !u!114 &3349504764363959455
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4536,7 +4506,7 @@ MonoBehaviour:
   updateActiveListOnOpen: 1
   pruneInactiveElements: 1
   navigableButtons:
-  - {fileID: 1865115986001078629}
+  - {fileID: 4150240758398161609}
   - {fileID: 507439498680719917}
 --- !u!1 &5567751537155375242
 GameObject:
@@ -4574,7 +4544,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 2898}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &1172832688614355919
@@ -5342,7 +5312,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 2898}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &8933218608711623245
@@ -5571,7 +5541,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 2898}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &4809484319177524532
@@ -7113,8 +7083,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2237847117649692095}
   m_HandleRect: {fileID: 4045259740790153366}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.20948105
+  m_Value: 1
+  m_Size: 0.7980769
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7933,8 +7903,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3372039671620754240}
   m_HandleRect: {fileID: 7029603603086155440}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.20948105
+  m_Value: 1
+  m_Size: 0.7980769
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7975,7 +7945,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 2898}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &8072017506743616063

@@ -77,7 +77,7 @@ namespace AnyRPG {
                 //Debug.Log("BagPanel.GetItems(): found slot");
                 if (!inventorySlot.IsEmpty) {
                     //Debug.Log("BagPanel.GetItems(): found slot and it is not empty");
-                    foreach (InstantiatedItem item in inventorySlot.InstantiatedItems) {
+                    foreach (InstantiatedItem item in inventorySlot.InstantiatedItems.Values) {
                         instantiatedItems.Add(item);
                     }
                 } else {

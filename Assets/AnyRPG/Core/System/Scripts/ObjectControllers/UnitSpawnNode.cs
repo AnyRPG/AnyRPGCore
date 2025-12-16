@@ -418,7 +418,7 @@ namespace AnyRPG {
 
         public int GetUnspawnedPlayerLevel(int defaultLevel) {
             if (playerManagerServer.PlayerCharacterMonitors.Count > 0) {
-                return playerManagerServer.PlayerCharacterMonitors.First().Value.playerCharacterSaveData.SaveData.PlayerLevel;
+                return playerManagerServer.PlayerCharacterMonitors.First().Value.characterSaveData.CharacterLevel;
             }
             return defaultLevel;
         }

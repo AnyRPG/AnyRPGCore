@@ -204,29 +204,10 @@ namespace AnyRPG {
         [SerializeField]
         private float fallDamageMinDistance = 10f;
 
-        /*
-        [Tooltip("When not mounted, disable native movement input to allow a third party controller (such as Invector) to move the character")]
-        [SerializeField]
-        private bool useThirdPartyMovementControl = false;
-        */
-
         [Tooltip("If a third party movement controller is used, disable this to prevent movement lock in combat.")]
         [SerializeField]
         private bool allowAutoAttack = true;
        
-        /*
-        [Header("CAMERA")]
-
-        [Tooltip("Use a third party camera (such as Invector) to follow the character.  Built-in camera will still be used for menus and cutscenes.")]
-        [SerializeField]
-        private bool useThirdPartyCameraControl = false;
-
-        [Tooltip("A reference to the third party camera prefab to be used")]
-        [SerializeField]
-        private GameObject thirdPartyCamera = null;
-        */
-
-
         [Header("ANIMATION")]
 
         [Tooltip("This profile should contain references to all the default animations that are on the default animation controller so the system knows which animations to replace when overriding them.")]
@@ -283,6 +264,25 @@ namespace AnyRPG {
         [Tooltip("When selling an item to a vendor, the offered amount will be the regular purchase amount multiplied by this number.")]
         [SerializeField]
         private float vendorPriceMultiplier = 0.25f;
+
+        [Header("Mail Currency")]
+
+        /*
+        [Tooltip("The name of the base currency to use for mail.")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(Currency))]
+        private string postageCurrencyName = string.Empty;
+
+        private Currency postageCurrency = null;
+        */
+
+        [Tooltip("The amount of currency required to send a mail message (in the base currency of the default system currency group).")]
+        [SerializeField]
+        private int basePostageCurrencyAmount = 0;
+
+        [Tooltip("The amount of currency required to send a mail message (in the base currency of the default system currency group).")]
+        [SerializeField]
+        private int postageCurrencyAmountPerAttachment = 0;
 
 
         [Header("Currency Scaling")]
@@ -493,6 +493,14 @@ namespace AnyRPG {
         [Tooltip("An image to for a dialog option on a nameplate.")]
         [SerializeField]
         private Sprite dialogNamePlateImage = null;
+
+        [Tooltip("An image to use beside a mailbox option in the interaction UI window.")]
+        [SerializeField]
+        private Sprite mailboxInteractionPanelImage = null;
+
+        [Tooltip("An image to for a mailbox option on a nameplate.")]
+        [SerializeField]
+        private Sprite mailboxNamePlateImage = null;
 
         [Tooltip("An image to use beside a name change option in the interaction UI window.")]
         [SerializeField]
@@ -810,6 +818,11 @@ namespace AnyRPG {
         public bool EnableLeashing { get => enableLeashing; set => enableLeashing = value; }
         public ServerBackend ServerBackend { get => serverBackend; set => serverBackend = value; }
         public string PrivateMessageChatCommand { get => privateMessageChatCommand; set => privateMessageChatCommand = value; }
+        public Sprite MailboxInteractionPanelImage { get => mailboxInteractionPanelImage; set => mailboxInteractionPanelImage = value; }
+        public Sprite MailboxNamePlateImage { get => mailboxNamePlateImage; set => mailboxNamePlateImage = value; }
+        public int BasePostageCurrencyAmount { get => basePostageCurrencyAmount; set => basePostageCurrencyAmount = value; }
+        public int PostageCurrencyAmountPerAttachment { get => postageCurrencyAmountPerAttachment; set => postageCurrencyAmountPerAttachment = value; }
+        //public Currency PostageCurrency { get => postageCurrency; set => postageCurrency = value; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }
 
@@ -860,7 +873,7 @@ namespace AnyRPG {
             if (levelUpEffectName != null && levelUpEffectName != string.Empty) {
                 AbilityEffect testAbility = systemDataFactory.GetResource<AbilityEffect>(levelUpEffectName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + levelUpEffectName + " could not be found in factory.  CHECK INSPECTOR");
+                    Debug.LogError($"SystemConfigurationManager.SetupScriptableObjects(): {levelUpEffectName} could not be found in factory.  CHECK INSPECTOR");
                     return;
                 } else {
                     levelUpEffect = testAbility;
@@ -870,30 +883,44 @@ namespace AnyRPG {
             if (deathEffectName != null && deathEffectName != string.Empty) {
                 AbilityEffect testAbility = systemDataFactory.GetResource<AbilityEffect>(deathEffectName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + deathEffectName + " could not be found in factory.  CHECK INSPECTOR");
+                    Debug.LogError($"SystemConfigurationManager.SetupScriptableObjects(): {deathEffectName} could not be found in factory.  CHECK INSPECTOR");
                     return;
                 } else {
                     deathEffect = testAbility;
                 }
             }
+
             if (lootSparkleEffectName != null && lootSparkleEffectName != string.Empty) {
                 AbilityEffect testAbility = systemDataFactory.GetResource<AbilityEffect>(lootSparkleEffectName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + lootSparkleEffectName + " could not be found in factory.  CHECK INSPECTOR");
+                    Debug.LogError($"SystemConfigurationManager.SetupScriptableObjects(): {lootSparkleEffectName} could not be found in factory.  CHECK INSPECTOR");
                     return;
                 } else {
                     lootSparkleEffect = testAbility;
                 }
             }
+
             if (currencyGroupName != null && currencyGroupName != string.Empty) {
                 CurrencyGroup tmpCurrencyGroup = systemDataFactory.GetResource<CurrencyGroup>(currencyGroupName);
                 if (tmpCurrencyGroup == null) {
-                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + currencyGroupName + " could not be found in factory.  CHECK INSPECTOR");
+                    Debug.LogError($"SystemConfigurationManager.SetupScriptableObjects(): {currencyGroupName} could not be found in factory.  CHECK INSPECTOR");
                     return;
                 } else {
                     defaultCurrencyGroup = tmpCurrencyGroup;
                 }
             }
+
+            /*
+            if (postageCurrencyName != string.Empty) {
+                Currency tmpCurrency = systemDataFactory.GetResource<Currency>(postageCurrencyName);
+                if (tmpCurrency == null) {
+                    Debug.LogError($"SystemConfigurationManager.SetupScriptableObjects(): {postageCurrencyName} could not be found in factory.  CHECK INSPECTOR");
+                    return;
+                } else {
+                    postageCurrency = tmpCurrency;
+                }
+            }
+            */
 
             if (defaultAnimationProfile == null) {
                 Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): no default animation profile set.  CHECK INSPECTOR");

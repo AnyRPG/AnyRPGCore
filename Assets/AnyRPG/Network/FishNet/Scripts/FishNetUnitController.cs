@@ -104,24 +104,24 @@ namespace AnyRPG {
 
             base.OnSpawnServer(connection);
 
-            HandleSpawnServerClient(connection, unitController.CharacterSaveManager.SaveData, unitController.CharacterGroupManager.GroupId);
+            HandleSpawnServerClient(connection, new PlayerCharacterSaveData(unitController.CharacterSaveManager.SaveData, systemItemManager), unitController.CharacterGroupManager.GroupId);
         }
 
         [TargetRpc]
-        private void HandleSpawnServerClient(NetworkConnection networkConnection, AnyRPGSaveData saveData, int characterGroupId) {
+        private void HandleSpawnServerClient(NetworkConnection networkConnection, PlayerCharacterSaveData playerCharacterSaveData, int characterGroupId) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnServerClient() owner: {base.OwnerId}");
 
             if (unitControllerMode.Value == UnitControllerMode.Player
                 || unitControllerMode.Value == UnitControllerMode.Pet
                 || unitControllerMode.Value == UnitControllerMode.AI) {
-                CompleteClientCharacterRequest(saveData, characterGroupId);
+                CompleteClientCharacterRequest(playerCharacterSaveData, characterGroupId);
             }
         }
 
-        public void CompleteClientCharacterRequest(AnyRPGSaveData saveData, int characterGroupId) {
+        public void CompleteClientCharacterRequest(PlayerCharacterSaveData playerCharacterSaveData, int characterGroupId) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.CompleteClientCharacterRequest()");
 
-            CompleteCharacterRequest(base.IsOwner, saveData, characterGroupId);
+            CompleteCharacterRequest(base.IsOwner, playerCharacterSaveData, characterGroupId);
             SubscribeToClientUnitEvents();
         }
 
@@ -1534,15 +1534,15 @@ namespace AnyRPG {
         public void HandleGetNewInstantiatedItem(InstantiatedItem instantiatedItem) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleGetNewInstantiatedItem({instantiatedItem.ResourceName}) instanceId: {instantiatedItem.InstanceId}");
             
-            InventorySlotSaveData inventorySlotSaveData = instantiatedItem.GetSlotSaveData();
-            HandleGetNewInstantiatedItemClient(instantiatedItem.InstanceId, inventorySlotSaveData);
+            ItemInstanceSaveData itemInstanceSaveData = instantiatedItem.GetItemSaveData();
+            HandleGetNewInstantiatedItemClient(itemInstanceSaveData);
         }
 
         [ObserversRpc]
-        public void HandleGetNewInstantiatedItemClient(int itemInstanceId, InventorySlotSaveData inventorySlotSaveData) {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleGetNewInstantiatedItemClient{itemInstanceId}, {inventorySlotSaveData.ItemName}");
+        public void HandleGetNewInstantiatedItemClient(ItemInstanceSaveData itemInstanceSaveData) {
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleGetNewInstantiatedItemClient({itemInstanceSaveData.ItemInstanceId}, {itemInstanceSaveData.ItemName}");
             
-            unitController.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData(inventorySlotSaveData);
+            unitController.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData(itemInstanceSaveData);
         }
 
         public void HandleMarkQuestCompleteServer(UnitController controller, Quest quest) {
@@ -2079,7 +2079,7 @@ namespace AnyRPG {
             systemGameManager.CharacterManager.BeginCharacterRequest(unitController);
         }
 
-        private void CompleteCharacterRequest(bool isOwner, AnyRPGSaveData saveData, int characterGroupId) {
+        private void CompleteCharacterRequest(bool isOwner, PlayerCharacterSaveData playerCharacterSaveData, int characterGroupId) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.CompleteCharacterRequest({isOwner}, {(saveData == null ? "null" : "valid save data")})");
 
             /*
@@ -2092,6 +2092,9 @@ namespace AnyRPG {
             if (networkManagerServer.ServerModeActive == true) {
                 systemGameManager.CharacterManager.CompleteCharacterRequest(unitController);
             } else {
+                // first load items
+                systemItemManager.LoadItemInstanceListSaveData(playerCharacterSaveData.ItemInstanceListSaveData);
+
                 CharacterConfigurationRequest characterConfigurationRequest;
                 characterConfigurationRequest = new CharacterConfigurationRequest(unitProfile);
                 characterConfigurationRequest.unitControllerMode = unitControllerMode.Value;
@@ -2102,8 +2105,8 @@ namespace AnyRPG {
                 if (isOwner == true && unitControllerMode.Value == UnitControllerMode.Player) {
                     characterRequestData.characterRequestor = systemGameManager.PlayerManager;
                 }
-                if (saveData != null) {
-                    characterRequestData.saveData = saveData;
+                if (playerCharacterSaveData != null) {
+                    characterRequestData.saveData = playerCharacterSaveData.CharacterSaveData;
                     //Debug.Log($"{gameObject.name}.FishNetUnitController.CompleteCharacterRequest({isOwner}, isMounted: {saveData.isMounted})");
                 }
                 unitController.SetCharacterRequestData(characterRequestData);

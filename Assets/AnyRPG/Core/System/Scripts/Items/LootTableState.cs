@@ -192,6 +192,7 @@ namespace AnyRPG {
             //Debug.Log($"LootTableState.InitializeItem({instantiatedItem.Item.ResourceName})");
 
             OnInitializeItem(instantiatedItem);
+            systemItemManager.SaveDataFile(instantiatedItem);
         }
 
 

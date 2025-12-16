@@ -46,10 +46,10 @@ namespace AnyRPG {
         public List<LootDrop> GetLoot(UnitController sourceUnitController, LootTable lootTable, bool rollLoot) {
             //Debug.Log($"LootHolder.GetLoot({sourceUnitController?.gameObject.name}, {rollLoot})");
 
-            if (playerManagerServer.ActivePlayerLookup.ContainsKey(sourceUnitController) == false) {
+            if (playerManagerServer.ActiveUnitControllerLookup.ContainsKey(sourceUnitController) == false) {
                 return new List<LootDrop>();
             }
-            int accountId = playerManagerServer.ActivePlayerLookup[sourceUnitController];
+            int accountId = playerManagerServer.ActiveUnitControllerLookup[sourceUnitController];
             if (lootTableStates.ContainsKey(lootTable) == false) {
                 Debug.Log($"LootHolder.GetLoot(): lootTableStates does not contain lootTable");
                 return new List<LootDrop>();

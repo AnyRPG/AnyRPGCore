@@ -211,6 +211,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
         type: 3}
+      propertyPath: basePostageCurrencyAmount
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
       propertyPath: powerResources.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -278,6 +283,11 @@ PrefabInstance:
         type: 3}
       propertyPath: 'loadResourcesFolders.Array.data[0]'
       value: AnyMMODemo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: postageCurrencyAmountPerAttachment
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
         type: 3}

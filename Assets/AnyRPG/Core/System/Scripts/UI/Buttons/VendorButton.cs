@@ -127,9 +127,13 @@ namespace AnyRPG {
             }
         }
 
-        public override void OnPointerClick(PointerEventData eventData) {
-            base.OnPointerClick(eventData);
-            //Debug.Log("VendorButton.OnPointerClick()");
+        protected override void HandleLeftClick() {
+            base.HandleLeftClick();
+            ProcessMouseClick();
+        }
+
+        protected override void HandleRightClick() {
+            base.HandleRightClick();
             ProcessMouseClick();
         }
 

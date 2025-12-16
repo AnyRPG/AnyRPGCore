@@ -7,7 +7,7 @@ namespace AnyRPG {
     public class PlayerCharacterMonitor : ConfiguredClass {
 
         public int accountId;
-        public PlayerCharacterSaveData playerCharacterSaveData;
+        public CharacterSaveData characterSaveData;
         public UnitController unitController;
         public bool saveDataDirty;
         public bool disconnected = false;
@@ -15,11 +15,11 @@ namespace AnyRPG {
         // game manager references
         private SaveManager saveManager = null;
 
-        public PlayerCharacterMonitor(SystemGameManager systemGameManager, int accountId, PlayerCharacterSaveData playerCharacterSaveData, UnitController unitController) {
+        public PlayerCharacterMonitor(SystemGameManager systemGameManager, int accountId, CharacterSaveData characterSaveData, UnitController unitController) {
             Configure(systemGameManager);
 
             this.accountId = accountId;
-            this.playerCharacterSaveData = playerCharacterSaveData;
+            this.characterSaveData = characterSaveData;
             this.unitController = unitController;
             saveDataDirty = false;
             //unitController.OnCameraTargetReady += HandleCameraTargetReady;
@@ -42,12 +42,12 @@ namespace AnyRPG {
             if (unitController?.CharacterSaveManager == null) {
                 return;
             }
-            if (unitController.transform.position.x != playerCharacterSaveData.SaveData.PlayerLocationX
-                || unitController.transform.position.y != playerCharacterSaveData.SaveData.PlayerLocationY
-                || unitController.transform.position.z != playerCharacterSaveData.SaveData.PlayerLocationZ
-                || unitController.transform.forward.x != playerCharacterSaveData.SaveData.PlayerRotationX
-                || unitController.transform.forward.y != playerCharacterSaveData.SaveData.PlayerRotationY
-                || unitController.transform.forward.z != playerCharacterSaveData.SaveData.PlayerRotationZ) {
+            if (unitController.transform.position.x != characterSaveData.PlayerLocationX
+                || unitController.transform.position.y != characterSaveData.PlayerLocationY
+                || unitController.transform.position.z != characterSaveData.PlayerLocationZ
+                || unitController.transform.forward.x != characterSaveData.PlayerRotationX
+                || unitController.transform.forward.y != characterSaveData.PlayerRotationY
+                || unitController.transform.forward.z != characterSaveData.PlayerRotationZ) {
                 unitController.CharacterSaveManager.SavePlayerLocation();
                 saveDataDirty = true;
             }

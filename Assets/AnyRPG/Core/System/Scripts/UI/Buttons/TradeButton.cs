@@ -98,30 +98,22 @@ namespace AnyRPG {
             uIManager.HideToolTip();
         }
 
-        public override void OnPointerClick(PointerEventData eventData) {
-            base.OnPointerClick(eventData);
-
+        protected override void HandleRightClick() {
             if (isInteractable == false) {
                 return;
             }
-
-            if (eventData.button == PointerEventData.InputButton.Left) {
-                HandleLeftClick();
-            }
-            if (eventData.button == PointerEventData.InputButton.Right) {
-                HandleRightClick();
-            }
-
-        }
-
-        private void HandleRightClick() {
+            base.HandleRightClick();
             if (items.Count == 0) {
                 return;
             }
             RequestRemoveItem();
         }
 
-        private void HandleLeftClick() {
+        protected override void HandleLeftClick() {
+            if (isInteractable == false) {
+                return;
+            }
+            base.HandleLeftClick();
             if (playerManager.UnitController.CharacterInventoryManager.FromSlot != null) {
                 AddItemFromInventorySlot();
                 return;
@@ -133,7 +125,7 @@ namespace AnyRPG {
 
             //Debug.Log("Dropping an item from an inventory slot");
             items.Clear();
-            items.AddRange(playerManager.UnitController.CharacterInventoryManager.FromSlot.InventorySlot.InstantiatedItems);
+            items.AddRange(playerManager.UnitController.CharacterInventoryManager.FromSlot.InventorySlot.InstantiatedItems.Values);
             UpdateVisual();
             handScript.Drop();
             if (items.Count > 0) {

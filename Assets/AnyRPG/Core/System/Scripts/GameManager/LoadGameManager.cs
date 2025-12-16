@@ -1,9 +1,6 @@
-using AnyRPG;
 using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
 
@@ -24,7 +21,7 @@ namespace AnyRPG {
 
         private CapabilityConsumerProcessor capabilityConsumerProcessor = null;
 
-        private PlayerCharacterSaveData playerCharacterSaveData;
+        private CharacterSaveData characterSaveData;
 
         //private LoadGameButton selectedLoadGameButton = null;
 
@@ -41,7 +38,7 @@ namespace AnyRPG {
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
         public Faction Faction { get => faction; set => faction = value; }
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
-        public PlayerCharacterSaveData PlayerCharacterSaveData { get => playerCharacterSaveData; set => playerCharacterSaveData = value; }
+        public CharacterSaveData CharacterSaveData { get => characterSaveData; set => characterSaveData = value; }
         public CapabilityConsumerSnapshot CapabilityConsumerSnapshot { get => capabilityConsumerSnapshot; set => capabilityConsumerSnapshot = value; }
         public List<PlayerCharacterSaveData> CharacterList { get => characterList; }
 
@@ -57,11 +54,11 @@ namespace AnyRPG {
         }
 
 
-        public void SetSavedGame(PlayerCharacterSaveData saveData) {
+        public void SetSavedGame(PlayerCharacterSaveData playerCharacterSaveData) {
             //Debug.Log("LoadGameManager.SetSavedGame()");
 
-            playerCharacterSaveData = saveData;
-            capabilityConsumerSnapshot = saveManager.GetCapabilityConsumerSnapshot(playerCharacterSaveData.SaveData);
+            characterSaveData = playerCharacterSaveData.CharacterSaveData;
+            capabilityConsumerSnapshot = saveManager.GetCapabilityConsumerSnapshot(characterSaveData);
 
             unitProfile = capabilityConsumerSnapshot.UnitProfile;
             UnitType = capabilityConsumerSnapshot.UnitProfile?.UnitType;
@@ -71,6 +68,7 @@ namespace AnyRPG {
             faction = capabilityConsumerSnapshot.Faction;
 
             saveManager.ClearSharedData();
+            systemItemManager.LoadPlayerCharacterSaveData(playerCharacterSaveData);
         }
 
         public void ResetData() {
@@ -83,7 +81,7 @@ namespace AnyRPG {
             classSpecialization = null;
             faction = null;
             systemItemManager.ClientReset();
-            playerCharacterSaveData = saveManager.CreateSaveData();
+            characterSaveData = saveManager.CreateSaveData();
             capabilityConsumerSnapshot = null;
         }
 
@@ -94,7 +92,7 @@ namespace AnyRPG {
             if (systemGameManager.GameMode == GameMode.Local) {
                 saveManager.LoadGame(playerCharacterSaveData);
             } else {
-                networkManagerClient.RequestLoadPlayerCharacter(playerCharacterSaveData.PlayerCharacterId);
+                networkManagerClient.RequestLoadPlayerCharacter(playerCharacterSaveData.CharacterSaveData.CharacterId);
             }
         }
 
@@ -102,15 +100,15 @@ namespace AnyRPG {
             //Debug.Log("LoadGameManager.DeleteGame()");
 
             if (systemGameManager.GameMode == GameMode.Local) {
-                saveManager.DeleteGame(playerCharacterSaveData.SaveData);
+                saveManager.DeleteGame(characterSaveData);
                 OnDeleteGame();
             } else {
-                networkManagerClient.DeletePlayerCharacter(playerCharacterSaveData.PlayerCharacterId);
+                networkManagerClient.DeletePlayerCharacter(characterSaveData.CharacterId);
             }
         }
 
         public void CopyGame() {
-            saveManager.CopyGame(playerCharacterSaveData.SaveData);
+            saveManager.CopyGame(characterSaveData);
             OnCopyGame();
         }
 
@@ -141,7 +139,7 @@ namespace AnyRPG {
             //Debug.Log("LoadGameManager.GetCharacterConfigurationRequest()");
 
             CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(this);
-            characterConfigurationRequest.characterAppearanceData = new CharacterAppearanceData(playerCharacterSaveData.SaveData);
+            characterConfigurationRequest.characterAppearanceData = new CharacterAppearanceData(characterSaveData);
             return characterConfigurationRequest;
         }
     }

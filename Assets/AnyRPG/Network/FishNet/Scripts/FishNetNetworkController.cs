@@ -371,7 +371,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public override void RequestCreatePlayerCharacter(AnyRPGSaveData saveData) {
+        public override void RequestCreatePlayerCharacter(CharacterSaveData saveData) {
             //Debug.Log($"FishNetNetworkController.RequestCreatePlayerCharacter(AnyRPGSaveData)");
 
             clientConnector.RequestCreatePlayerCharacter(saveData);
@@ -469,6 +469,10 @@ namespace AnyRPG {
 
         public override void RequestLearnSkill(Interactable interactable, int componentIndex, int skillId) {
             clientConnector.RequestLearnSkill(interactable, componentIndex, skillId);
+        }
+
+        public override void RequestSendMail(Interactable interactable, int componentIndex, MailMessageRequest sendMailRequest) {
+            clientConnector.RequestSendMail(interactable, componentIndex, sendMailRequest);
         }
 
         public override void RequestAcceptQuest(Interactable interactable, int componentIndex, Quest quest) {
@@ -611,6 +615,22 @@ namespace AnyRPG {
 
         public override void RequestUnconfirmTrade() {
             clientConnector.RequestUnconfirmTrade();
+        }
+
+        public override void RequestDeleteMailMessage(int messageId) {
+            clientConnector.RequestDeleteMailMessage(messageId);
+        }
+
+        public override void RequestTakeMailAttachment(int messageId, int attachmentSlotId) {
+            clientConnector.RequestTakeMailAttachment(messageId, attachmentSlotId);
+        }
+
+        public override void RequestTakeMailAttachments(int messageId) {
+            clientConnector.RequestTakeMailAttachments(messageId);
+        }
+
+        public override void RequestMarkMailAsRead(int currentMessageId) {
+            clientConnector.RequestMarkMailAsRead(currentMessageId);
         }
 
         #endregion
@@ -806,10 +826,33 @@ namespace AnyRPG {
             clientConnector.AdvertiseCancelTrade(accountId);
         }
 
+        public override void AdvertiseMailMessages(int accountId, MailMessageListResponse mailMessageListResponse) {
+            clientConnector.AdvertiseMailMessages(accountId, mailMessageListResponse);
+        }
+
         public override void AdvertiseCompleteTrade(int accountId) {
             clientConnector.AdvertiseCompleteTrade(accountId);
         }
 
+        public override void AdvertiseDeleteMailMessage(int accountId, int messageId) {
+            clientConnector.AdvertiseDeleteMailMessage(accountId, messageId);
+        }
+
+        public override void AdvertiseTakeMailAttachment(int accountId, int messageId, int attachmentSlotId) {
+            clientConnector.AdvertiseTakeMailAttachment(accountId, messageId, attachmentSlotId);
+        }
+
+        public override void AdvertiseTakeMailAttachments(int accountId, int messageId) {
+            clientConnector.AdvertiseTakeMailAttachments(accountId, messageId);
+        }
+
+        public override void AdvertiseConfirmationPopup(int accountId, string messageText) {
+            clientConnector.AdvertiseConfirmationPopup(accountId, messageText);
+        }
+
+        public override void AdvertiseMailSend(int accountId) {
+            clientConnector.AdvertiseMailSend(accountId);
+        }
 
         public override int GetServerPort() {
             return fishNetNetworkManager.TransportManager.Transport.GetPort();

@@ -148,7 +148,7 @@ namespace AnyRPG {
         }
         */
 
-        public void SaveAppearanceSettings(AnyRPGSaveData saveData) {
+        public void SaveAppearanceSettings(CharacterSaveData saveData) {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SaveAppearanceSettings()");
             
             if (modelAppearanceController == null) {

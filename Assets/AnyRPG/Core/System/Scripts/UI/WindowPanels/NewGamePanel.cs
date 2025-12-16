@@ -157,7 +157,7 @@ namespace AnyRPG {
             newGameManager.OnUpdateUnitProfileList -= HandleUpdateUnitProfileList;
             loadGameManager.OnLoadCharacterList -= HandleLoadCharacterList;
 
-            saveManager.ClearSharedData();
+            //saveManager.ClearSharedData();
             //characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
             //characterPreviewPanel.OnTargetReady -= HandleTargetReady;
 
@@ -221,7 +221,7 @@ namespace AnyRPG {
 
             ClearButtons();
 
-            saveManager.ClearSharedData();
+            saveManager.ClearSystemManagedSaveData();
 
             factionPanel.ReceiveOpenWindowNotification();
             racePanel.ReceiveOpenWindowNotification();
@@ -725,16 +725,16 @@ namespace AnyRPG {
         public void NewGame() {
             //Debug.Log("NewGamePanel.NewGame()");
 
-            SaveAppearanceData(newGameManager.PlayerCharacterSaveData.SaveData);
+            SaveAppearanceData(newGameManager.DefaultCharacterSaveData);
 
             if (systemGameManager.GameMode == GameMode.Network && networkManagerClient.ClientMode == NetworkServerMode.Lobby) {
-                networkManagerClient.ChooseLobbyGameCharacter(newGameManager.PlayerCharacterSaveData.SaveData.unitProfileName, newGameManager.PlayerCharacterSaveData.SaveData.appearanceString, newGameManager.PlayerCharacterSaveData.SaveData.swappableMeshSaveData);
+                networkManagerClient.ChooseLobbyGameCharacter(newGameManager.DefaultCharacterSaveData.UnitProfileName, newGameManager.DefaultCharacterSaveData.AppearanceString, newGameManager.DefaultCharacterSaveData.SwappableMeshSaveData);
             } else {
                 uIManager.confirmNewGameMenuWindow.OpenWindow();
             }
         }
 
-        public void SaveAppearanceData(AnyRPGSaveData saveData) {
+        public void SaveAppearanceData(CharacterSaveData saveData) {
             //Debug.Log("CharacterPreviewPanelController.SaveAppearanceData()");
 
             if (characterCreatorManager.PreviewUnitController?.UnitModelController == null) {

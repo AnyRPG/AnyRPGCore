@@ -149,59 +149,53 @@ namespace AnyRPG {
             }
         }
 
-        public override void OnPointerClick(PointerEventData eventData) {
-            //Debug.Log("ActionButton.OnPointerClick()");
-
+        protected override void HandleLeftClick() {
             // do not allow clicks to have any effect when gamepad mode is active to prevent pickup with hand script
             if (controlsManager.GamePadModeActive == true) {
                 //Debug.Log("ActionButton.OnPointerClick() gamepad mode active, returning");
                 return;
             }
 
-            base.OnPointerClick(eventData);
+            base.HandleLeftClick();
             if (playerManager.ActiveUnitController != null) {
                 if (playerManager.ActiveUnitController.ControlLocked == true) {
                     return;
                 }
             }
 
-            // left click
-            if (eventData.button == PointerEventData.InputButton.Left) {
-
-                if (Input.GetKey(KeyCode.LeftShift)) {
-                    // attempt to pick up - the only valid option when shift is held down
-                    if (Useable != null && actionBarManager.FromButton == null && handScript.Moveable == null) {
-                        // left shift down, pick up a useable
-                        //Debug.Log("ActionButton: OnPointerClick(): shift clicked and useable is not null. picking up");
-                        handScript.TakeMoveable(Useable as IMoveable);
-                        actionBarManager.FromButton = this;
-                    }
-                } else {
-                    // attempt to put down
-                    if (handScript.Moveable != null && handScript.Moveable is IUseable) {
-                        if (actionBarManager.FromButton != this) {
-                            if (actionBarManager.FromButton != null) {
-                                //Debug.Log("ActionButton: OnPointerClick(): FROMBUTTON IS NOT NULL, SWAPPING ACTIONBAR ITEMS");
-                                // this came from another action button slot.  now decide to swap (if we are not empty), or remove from original (if we are empty)
-                                /*
-                                if (Useable != null) {
-                                    actionBarManager.FromButton.ClearUseable();
-                                    actionBarManager.FromButton.SetUseable(Useable);
-                                } else {
-                                    actionBarManager.FromButton.ClearUseable();
-                                }
-                                */
-                                actionBarManager.RequestMoveMouseUseable(actionBarManager.FromButton.actionButtonIndex, actionButtonIndex);
+            if (Input.GetKey(KeyCode.LeftShift)) {
+                // attempt to pick up - the only valid option when shift is held down
+                if (Useable != null && actionBarManager.FromButton == null && handScript.Moveable == null) {
+                    // left shift down, pick up a useable
+                    //Debug.Log("ActionButton: OnPointerClick(): shift clicked and useable is not null. picking up");
+                    handScript.TakeMoveable(Useable as IMoveable);
+                    actionBarManager.FromButton = this;
+                }
+            } else {
+                // attempt to put down
+                if (handScript.Moveable != null && handScript.Moveable is IUseable) {
+                    if (actionBarManager.FromButton != this) {
+                        if (actionBarManager.FromButton != null) {
+                            //Debug.Log("ActionButton: OnPointerClick(): FROMBUTTON IS NOT NULL, SWAPPING ACTIONBAR ITEMS");
+                            // this came from another action button slot.  now decide to swap (if we are not empty), or remove from original (if we are empty)
+                            /*
+                            if (Useable != null) {
+                                actionBarManager.FromButton.ClearUseable();
+                                actionBarManager.FromButton.SetUseable(Useable);
                             } else {
-                                actionBarManager.RequestAssignMouseUseable(handScript.Moveable as IUseable, actionButtonIndex);
+                                actionBarManager.FromButton.ClearUseable();
                             }
-                                // no matter whether we sent our useable over or not, we can now clear our useable and set whatever is in the handscript
-                            //ClearUseable();
-                            //SetUseable(handScript.Moveable as IUseable);
+                            */
+                            actionBarManager.RequestMoveMouseUseable(actionBarManager.FromButton.actionButtonIndex, actionButtonIndex);
+                        } else {
+                            actionBarManager.RequestAssignMouseUseable(handScript.Moveable as IUseable, actionButtonIndex);
                         }
-
-                        handScript.Drop();
+                        // no matter whether we sent our useable over or not, we can now clear our useable and set whatever is in the handscript
+                        //ClearUseable();
+                        //SetUseable(handScript.Moveable as IUseable);
                     }
+
+                    handScript.Drop();
                 }
             }
         }

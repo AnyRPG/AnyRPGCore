@@ -73,15 +73,15 @@ namespace AnyRPG {
             return this as T;
         }
 
-        public override void SaveAppearanceSettings(AnyRPGSaveData saveData) {
+        public override void SaveAppearanceSettings(CharacterSaveData saveData) {
             //Debug.Log($"{unitController.gameObject.name}.SwappableMeshModelController.SaveAppearanceSettings()");
 
-            saveData.swappableMeshSaveData.Clear();
+            saveData.SwappableMeshSaveData.Clear();
             foreach (string groupName in optionGroupChoices.Keys) {
                 SwappableMeshSaveData swappableMeshSaveData = new SwappableMeshSaveData();
-                swappableMeshSaveData.groupName = groupName;
-                swappableMeshSaveData.optionName = optionGroupChoices[groupName];
-                saveData.swappableMeshSaveData.Add(swappableMeshSaveData);
+                swappableMeshSaveData.GroupName = groupName;
+                swappableMeshSaveData.OptionName = optionGroupChoices[groupName];
+                saveData.SwappableMeshSaveData.Add(swappableMeshSaveData);
             }
         }
 
@@ -182,7 +182,7 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.SwappableMeshModelController.SetInitialSavedAppearance()");
 
             foreach (SwappableMeshSaveData swappableMeshSaveData in characterAppearanceData.swappableMeshSaveDataList) {
-                LoadGroupChoice(swappableMeshSaveData.groupName, swappableMeshSaveData.optionName);
+                LoadGroupChoice(swappableMeshSaveData.GroupName, swappableMeshSaveData.OptionName);
             }
 
         }

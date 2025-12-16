@@ -67,7 +67,7 @@ namespace AnyRPG {
         public virtual void SetTurnedIn(UnitController sourceUnitController, bool turnedIn, bool notify = true) {
             
             QuestSaveData saveData = GetSaveData(sourceUnitController);
-            saveData.turnedIn = turnedIn;
+            saveData.TurnedIn = turnedIn;
             SetSaveData(sourceUnitController, saveData.QuestName, saveData);
 
             //Debug.Log(DisplayName + ".Quest.TurnedIn = " + value);
@@ -90,28 +90,28 @@ namespace AnyRPG {
         public bool TurnedIn(UnitController sourceUnitController) {
             //Debug.Log($"{ResourceName}.QuestBase.TurnedIn({sourceUnitController.gameObject.name})");
 
-            return GetSaveData(sourceUnitController).turnedIn;
+            return GetSaveData(sourceUnitController).TurnedIn;
         }
 
         public int CurrentStep(UnitController sourceUnitController) {
-            return GetSaveData(sourceUnitController).questStep;
+            return GetSaveData(sourceUnitController).QuestStep;
         }
 
         public virtual void SetCurrentStep(UnitController sourceUnitController, int value) {
             //Debug.Log($"{ResourceName}.QuestBase.SetCurrentStep({sourceUnitController.gameObject.name}, {value})");
 
             QuestSaveData saveData = GetSaveData(sourceUnitController);
-            saveData.questStep = value;
+            saveData.QuestStep = value;
             SetSaveData(sourceUnitController, saveData.QuestName, saveData);
         }
 
         public bool MarkedComplete(UnitController sourceUnitController) {
-            return GetSaveData(sourceUnitController).markedComplete;
+            return GetSaveData(sourceUnitController).MarkedComplete;
         }
 
         public void SetMarkedComplete(UnitController sourceUnitController, bool value) { 
             QuestSaveData saveData = GetSaveData(sourceUnitController);
-            saveData.markedComplete = value;
+            saveData.MarkedComplete = value;
             SetSaveData(sourceUnitController, saveData.QuestName, saveData);
         }
 
@@ -247,7 +247,7 @@ namespace AnyRPG {
             string objectives = string.Empty;
             List<string> objectiveList = new List<string>();
             if (steps.Count > 0) {
-                foreach (QuestObjective questObjective in steps[GetSaveData(sourceUnitController).questStep].QuestObjectives) {
+                foreach (QuestObjective questObjective in steps[GetSaveData(sourceUnitController).QuestStep].QuestObjectives) {
                     objectiveList.Add(questObjective.GetUnformattedStatus(sourceUnitController));
                 }
             }
@@ -267,10 +267,10 @@ namespace AnyRPG {
 
             QuestSaveData questSaveData = GetSaveData(sourceUnitController);
             if (resetStep == true) {
-                questSaveData.questStep = 0;
+                questSaveData.QuestStep = 0;
             }
-            questSaveData.markedComplete = false;
-            questSaveData.turnedIn = false;
+            questSaveData.MarkedComplete = false;
+            questSaveData.TurnedIn = false;
             SetSaveData(sourceUnitController, ResourceName, questSaveData);
 
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {

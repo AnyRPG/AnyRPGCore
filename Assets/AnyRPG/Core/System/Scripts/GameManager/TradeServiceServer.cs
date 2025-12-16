@@ -130,8 +130,8 @@ namespace AnyRPG {
         }
 
         private void CompleteTrade(TradeSession tradeSession) {
-            UnitController sourceUnitController = playerManagerServer.GetUnitController(tradeSession.sourceAccountId);
-            UnitController targetUnitController = playerManagerServer.GetUnitController(tradeSession.targetAccountId);
+            UnitController sourceUnitController = playerManagerServer.GetUnitControllerFromAccountId(tradeSession.sourceAccountId);
+            UnitController targetUnitController = playerManagerServer.GetUnitControllerFromAccountId(tradeSession.targetAccountId);
             if (sourceUnitController == null || targetUnitController == null) {
                 CancelTrade(tradeSession);
                 return;

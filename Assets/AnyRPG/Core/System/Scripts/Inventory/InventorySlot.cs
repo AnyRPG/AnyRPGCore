@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -16,7 +17,7 @@ namespace AnyRPG {
         /// <summary>
         /// A stack for all items on this slot
         /// </summary>
-        protected List<InstantiatedItem> instantiatedItems = new List<InstantiatedItem>();
+        protected Dictionary<int, InstantiatedItem> instantiatedItems = new Dictionary<int, InstantiatedItem>();
 
         // game manager references
         protected HandScript handScript = null;
@@ -45,14 +46,14 @@ namespace AnyRPG {
         public InstantiatedItem InstantiatedItem {
             get {
                 if (!IsEmpty) {
-                    return InstantiatedItems[0];
+                    return InstantiatedItems.First().Value;
                 }
                 return null;
             }
         }
 
         public int Count { get => InstantiatedItems.Count; }
-        public List<InstantiatedItem> InstantiatedItems {
+        public Dictionary<int, InstantiatedItem> InstantiatedItems {
             get {
                 return instantiatedItems;
             }
@@ -83,7 +84,7 @@ namespace AnyRPG {
 
         private void SetSlotOnItems() {
             //Debug.Log("SlotScript.SetSlotOnItems(): MyItem is null");
-            foreach (InstantiatedItem tmpItem in InstantiatedItems) {
+            foreach (InstantiatedItem tmpItem in InstantiatedItems.Values) {
                 //Debug.Log("SlotScript.SetSlotOnItems(): going through MyItems");
                 tmpItem.Slot = this;
             }
@@ -92,7 +93,7 @@ namespace AnyRPG {
         public bool AddItem(InstantiatedItem instantiatedItem) {
             //Debug.Log($"InventorySlot.Additem({instantiatedItem.Item.ResourceName}) (instance: {GetHashCode()})");
 
-            InstantiatedItems.Add(instantiatedItem);
+            InstantiatedItems.Add(instantiatedItem.InstanceId, instantiatedItem);
             instantiatedItem.Slot = this;
             UpdateSlot();
             NotifyOnAddItem(instantiatedItem);
@@ -126,7 +127,8 @@ namespace AnyRPG {
             //Debug.Log($"InventorySlot.RemoveAllItems()");
 
             while (InstantiatedItems.Count > 0) {
-                RemoveItem(InstantiatedItems[0]);
+                int itemId = instantiatedItems.First().Key;
+                RemoveItem(InstantiatedItems[itemId]);
             }
         }
 
@@ -134,7 +136,7 @@ namespace AnyRPG {
             //Debug.Log($"InventorySlot.RemoveItem({instantiatedItem.Item.ResourceName})");
 
             if (!IsEmpty) {
-                InstantiatedItems.Remove(instantiatedItem);
+                InstantiatedItems.Remove(instantiatedItem.InstanceId);
                 UpdateSlot();
                 NotifyOnRemoveItem(instantiatedItem);
             }
@@ -235,12 +237,12 @@ namespace AnyRPG {
             //Debug.Log($"InventorySlot.SwapItems()");
 
             // use a temporary list to swap references to the stacks
-            List<InstantiatedItem> tmpFrom = new List<InstantiatedItem>(from.InstantiatedItems);
+            Dictionary<int, InstantiatedItem> tmpFrom = new Dictionary<int, InstantiatedItem>(from.InstantiatedItems);
             //from.InstantiatedItems = InstantiatedItems;
             from.RemoveAllItems();
-            from.AddItems(InstantiatedItems);
+            from.AddItems(InstantiatedItems.Values.ToList());
             RemoveAllItems();
-            AddItems(tmpFrom);
+            AddItems(tmpFrom.Values.ToList());
 
             return true;
         }
@@ -258,8 +260,8 @@ namespace AnyRPG {
                 if (free >= from.Count) {
                     int maxCount = from.Count;
                     for (int i = 0; i < maxCount; i++) {
-                        AddItem(from.InstantiatedItems[0]);
-                        from.RemoveItem(from.InstantiatedItems[0]);
+                        AddItem(from.InstantiatedItems.First().Value);
+                        from.RemoveItem(from.InstantiatedItems.First().Value);
                     }
                     return true;
                 } else {

@@ -1273,9 +1273,9 @@ namespace AnyRPG {
                 // safely visit scene node now that save data has been loaded and state will not be overwritten
                 characterSaveManager.VisitSceneNode();
                 characterStats.SetLevelInternal(characterConfigurationRequest.unitLevel);
-                if (characterRequestData.saveData.initializeResourceAmounts == true) {
+                if (characterRequestData.saveData.InitializeResourceAmounts == true) {
                     characterStats.SetResourceAmountsToMaximum();
-                    characterRequestData.saveData.initializeResourceAmounts = false;
+                    characterRequestData.saveData.InitializeResourceAmounts = false;
                 }
             } else {
                 characterStats.SetLevelInternal(characterConfigurationRequest.unitLevel);

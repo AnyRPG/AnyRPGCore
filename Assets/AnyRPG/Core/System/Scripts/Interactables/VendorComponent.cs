@@ -93,8 +93,8 @@ namespace AnyRPG {
             VendorItem newVendorItem = new VendorItem();
             newVendorItem.Quantity = 1;
             newVendorItem.InstantiatedItem = newInstantiatedItem;
-            if (playerManagerServer.ActivePlayerLookup.ContainsKey(sourceUnitController) == true) {
-                int accountId = playerManagerServer.ActivePlayerLookup[sourceUnitController];
+            if (playerManagerServer.ActiveUnitControllerLookup.ContainsKey(sourceUnitController) == true) {
+                int accountId = playerManagerServer.ActiveUnitControllerLookup[sourceUnitController];
                 VendorCollection buyBackCollection = GetBuyBackCollection(accountId);
                 buyBackCollection.VendorItems.Add(newVendorItem);
                 interactable.InteractableEventController.NotifyOnAddToBuyBackCollection(sourceUnitController, newInstantiatedItem);

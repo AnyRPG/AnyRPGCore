@@ -24,7 +24,7 @@ namespace AnyRPG {
         public void RequestReturnFromCutscene();
         public bool CanSpawnCharacterOverNetwork();
         public bool OwnPlayer(UnitController unitController);
-        public void RequestCreatePlayerCharacter(AnyRPGSaveData saveData);
+        public void RequestCreatePlayerCharacter(CharacterSaveData saveData);
         public void DeletePlayerCharacter(int playerCharacterId);
         public void LoadCharacterList();
         public void RequestCreateLobbyGame(string sceneResourceName, bool allowLateJoin);
