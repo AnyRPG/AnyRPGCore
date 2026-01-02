@@ -84,6 +84,10 @@ namespace AnyRPG {
         public abstract void RequestTakeMailAttachments(int messageId);
         public abstract void RequestTakeMailAttachment(int messageId, int attachmentSlotId);
         public abstract void RequestMarkMailAsRead(int currentMessageId);
+        public abstract void RequestListAuctionItems(Interactable interactable, int componentIndex, ListAuctionItemRequest listAuctionItemRequest);
+        public abstract void RequestCancelAuction(int auctionItemId);
+        public abstract void RequestBuyAuctionItem(int auctionItemId);
+        public abstract void RequestSearchAuctions(Interactable interactable, int componentIndex, string searchText, bool onlyShowOwnAuctions);
 
         // server functions
         public abstract void StartServer(ushort port);
@@ -152,6 +156,10 @@ namespace AnyRPG {
         public abstract void AdvertiseTakeMailAttachments(int accountId, int messageId);
         public abstract void AdvertiseConfirmationPopup(int accountId, string messageText);
         public abstract void AdvertiseMailSend(int accountId);
+        public abstract void AdvertiseBuyAuctionItem(int accountId, int auctionItemId);
+        public abstract void AdvertiseCancelAuction(int accountId, int auctionItemId);
+        public abstract void AdvertiseAuctionItems(int accountId, AuctionItemListResponse auctionItemListResponse);
+        public abstract void AdvertiseListAuctionItems(int accountId);
     }
 
 }

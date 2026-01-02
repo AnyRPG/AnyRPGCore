@@ -1540,7 +1540,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         public void HandleGetNewInstantiatedItemClient(ItemInstanceSaveData itemInstanceSaveData) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleGetNewInstantiatedItemClient({itemInstanceSaveData.ItemInstanceId}, {itemInstanceSaveData.ItemName}");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleGetNewInstantiatedItemClient({itemInstanceSaveData.ItemInstanceId}, {itemInstanceSaveData.ItemName}");
             
             unitController.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData(itemInstanceSaveData);
         }

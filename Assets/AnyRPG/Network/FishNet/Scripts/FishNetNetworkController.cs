@@ -475,6 +475,14 @@ namespace AnyRPG {
             clientConnector.RequestSendMail(interactable, componentIndex, sendMailRequest);
         }
 
+        public override void RequestListAuctionItems(Interactable interactable, int componentIndex, ListAuctionItemRequest listAuctionItemRequest) {
+            clientConnector.RequestListAuctionItems(interactable, componentIndex, listAuctionItemRequest);
+        }
+
+        public override void RequestSearchAuctions(Interactable interactable, int componentIndex, string searchText, bool onlyShowOwnAuctions) {
+            clientConnector.RequestSearchAuctions(interactable, componentIndex, searchText, onlyShowOwnAuctions);
+        }
+
         public override void RequestAcceptQuest(Interactable interactable, int componentIndex, Quest quest) {
             clientConnector.RequestAcceptQuest(interactable, componentIndex, quest);
         }
@@ -631,6 +639,14 @@ namespace AnyRPG {
 
         public override void RequestMarkMailAsRead(int currentMessageId) {
             clientConnector.RequestMarkMailAsRead(currentMessageId);
+        }
+
+        public override void RequestBuyAuctionItem(int auctionItemId) {
+            clientConnector.RequestBuyAuctionItem(auctionItemId);
+        }
+
+        public override void RequestCancelAuction(int auctionItemId) {
+            clientConnector.RequestCancelAuction(auctionItemId);
         }
 
         #endregion
@@ -830,6 +846,14 @@ namespace AnyRPG {
             clientConnector.AdvertiseMailMessages(accountId, mailMessageListResponse);
         }
 
+        public override void AdvertiseAuctionItems(int accountId, AuctionItemListResponse auctionItemListResponse) {
+            clientConnector.AdvertiseAuctionItems(accountId, auctionItemListResponse);
+        }
+
+        public override void AdvertiseListAuctionItems(int accountId) {
+            clientConnector.AdvertiseListAuctionItems(accountId);
+        }
+
         public override void AdvertiseCompleteTrade(int accountId) {
             clientConnector.AdvertiseCompleteTrade(accountId);
         }
@@ -848,6 +872,14 @@ namespace AnyRPG {
 
         public override void AdvertiseConfirmationPopup(int accountId, string messageText) {
             clientConnector.AdvertiseConfirmationPopup(accountId, messageText);
+        }
+
+        public override void AdvertiseBuyAuctionItem(int accountId, int auctionItemId) {
+            clientConnector.AdvertiseBuyAuctionItem(accountId, auctionItemId);
+        }
+
+        public override void AdvertiseCancelAuction(int accountId, int auctionItemId) {
+            clientConnector.AdvertiseCancelAuction(accountId, auctionItemId);
         }
 
         public override void AdvertiseMailSend(int accountId) {

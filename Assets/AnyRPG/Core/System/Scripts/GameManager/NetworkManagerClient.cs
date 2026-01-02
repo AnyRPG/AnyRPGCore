@@ -61,6 +61,7 @@ namespace AnyRPG {
         private LoadGameManager loadGameManager = null;
         private TradeServiceClient tradeServiceClient = null;
         private MailboxManagerClient mailboxManagerClient = null;
+        private AuctionManagerClient auctionManagerClient = null;
 
         public string Username { get => username; }
         public string Password { get => password; }
@@ -94,6 +95,7 @@ namespace AnyRPG {
             loadGameManager = systemGameManager.LoadGameManager;
             tradeServiceClient = systemGameManager.TradeServiceClient;
             mailboxManagerClient = systemGameManager.MailboxManagerClient;
+            auctionManagerClient = systemGameManager.AuctionManagerClient;
         }
 
         public bool Login(string username, string password, string server) {
@@ -807,6 +809,12 @@ namespace AnyRPG {
             networkController.RequestSendMail(interactable, componentIndex, sendMailRequest);
         }
 
+        public void RequestListAuctionItems(Interactable interactable, int componentIndex, ListAuctionItemRequest listAuctionItemRequest) {
+            //Debug.Log($"mailboxManagerClient.RequestSendMail()");
+
+            networkController.RequestListAuctionItems(interactable, componentIndex, listAuctionItemRequest);
+        }
+
         public void AdvertiseMailMessages(MailMessageListResponse mailMessageListResponse) {
             mailboxManagerClient.SetMailMessages(mailMessageListResponse);
         }
@@ -845,6 +853,34 @@ namespace AnyRPG {
 
         public void RequestMarkMailAsRead(int currentMessageId) {
             networkController.RequestMarkMailAsRead(currentMessageId);
+        }
+
+        public void RequestCancelAuction(int auctionItemId) {
+            networkController.RequestCancelAuction(auctionItemId);
+        }
+
+        public void RequestBuyAuctionItem(int auctionItemId) {
+            networkController.RequestBuyAuctionItem(auctionItemId);
+        }
+
+        public void AdvertiseBuyAuctionItem(int auctionItemId) {
+            auctionManagerClient.AdvertiseBuyAuctionItem(auctionItemId);
+        }
+
+        public void AdvertiseCancelAuction(int auctionItemId) {
+            auctionManagerClient.AdvertiseCancelAuction(auctionItemId);
+        }
+
+        public void RequestSearchAuctions(Interactable interactable, int componentIndex, string searchText, bool onlyShowOwnAuctions) {
+            networkController.RequestSearchAuctions(interactable, componentIndex, searchText, onlyShowOwnAuctions);
+        }
+
+        public void AdvertiseAuctionItems(AuctionItemListResponse auctionItemListResponse) {
+            auctionManagerClient.SetAuctionItems(auctionItemListResponse);
+        }
+
+        public void AdvertiseListAuctionItems() {
+            auctionManagerClient.AdvertiseListItem();
         }
     }
 

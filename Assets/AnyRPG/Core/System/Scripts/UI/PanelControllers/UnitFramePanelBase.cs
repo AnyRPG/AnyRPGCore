@@ -197,7 +197,8 @@ namespace AnyRPG {
         }
 
         private void TargetInitialization() {
-            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.TargetInitialization()");
+            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.TargetInitialization() instanceId: {GetInstanceID()}");
+
             if (unitController == null) {
                 return;
             }
@@ -400,14 +401,17 @@ namespace AnyRPG {
                 StopCoroutine(waitForCameraCoroutine);
             }
             UnsubscribeFromTargetReady();
+
             if (unitController != null) {
                 ClearSubscriptions();
             }
+            systemEventManager.OnReputationChange -= HandleReputationChange;
             unitController = null;
             targetInitialized = false;
             leaderIcon.gameObject.SetActive(false);
             castBarController.ClearTarget();
             statusEffectPanelController.ClearTarget();
+
             primaryPowerResource = null;
             secondaryPowerResource = null;
             if (closeWindowOnClear) {
@@ -431,7 +435,7 @@ namespace AnyRPG {
         }
 
         public virtual void ClearSubscriptions() {
-            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.ClearSubscriptions()");
+            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.ClearSubscriptions() instanceId: {GetInstanceID()}");
 
             if (unitController == null) {
                 return;
@@ -652,6 +656,8 @@ namespace AnyRPG {
         }
 
         public void HandleReputationChange(UnitController sourceUnitController) {
+            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.HandleReputationChange({sourceUnitController.gameObject.name}) instanceId: {GetInstanceID()}");
+
             if (playerManager == null || playerManager.PlayerUnitSpawned == false) {
                 return;
             }
@@ -663,7 +669,8 @@ namespace AnyRPG {
         }
 
         public void OnEnable() {
-            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.OnEnable()");
+            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.OnEnable() instanceId: {GetInstanceID()}");
+
             // just in case something was targetted before the canvas became active
             if (partialTargetInitialization && unitController != null) {
                 TargetInitialization();
@@ -671,7 +678,8 @@ namespace AnyRPG {
         }
 
         public void OnDisable() {
-            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.OnDisable()");
+            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.OnDisable(): {GetInstanceID()}");
+
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }
@@ -699,7 +707,7 @@ namespace AnyRPG {
         }
 
         protected virtual void HandleLeftClick(Vector2 mousePosition) {
-            Debug.Log($"UnitFrameController.HandleLeftClick({mousePosition})");
+            //Debug.Log($"UnitFrameController.HandleLeftClick({mousePosition})");
             // nothing here, overridden in derived classes
         }
 

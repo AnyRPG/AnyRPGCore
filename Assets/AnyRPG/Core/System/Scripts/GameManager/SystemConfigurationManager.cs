@@ -284,6 +284,15 @@ namespace AnyRPG {
         [SerializeField]
         private int postageCurrencyAmountPerAttachment = 0;
 
+        [Header("Auction Currency")]
+
+        [Tooltip("The amount of currency required to post an item for auction (in the base currency of the default system currency group). This will be returned on successful sale.")]
+        [SerializeField]
+        private int auctionDepositAmount = 0;
+
+        [Tooltip("The percentage of the auction proceeds that will be removed from the total amount sent to the player when an item sells (in the base currency of the default system currency group).")]
+        [SerializeField]
+        private float auctionSoldFeePercentage = 0;
 
         [Header("Currency Scaling")]
 
@@ -469,6 +478,14 @@ namespace AnyRPG {
         [Tooltip("An image to use on a nameplate if only crafting is available, but more than 1 craft skill can be shown.")]
         [SerializeField]
         private Sprite multipleCraftNamePlateImage = null;
+
+        [Tooltip("An image to use beside an auction option in the interaction UI window.")]
+        [SerializeField]
+        private Sprite auctionInteractionPanelImage = null;
+
+        [Tooltip("An image to for an auction option on a nameplate.")]
+        [SerializeField]
+        private Sprite auctionNamePlateImage = null;
 
         [Tooltip("An image to use beside a bank option in the interaction UI window.")]
         [SerializeField]
@@ -820,8 +837,13 @@ namespace AnyRPG {
         public string PrivateMessageChatCommand { get => privateMessageChatCommand; set => privateMessageChatCommand = value; }
         public Sprite MailboxInteractionPanelImage { get => mailboxInteractionPanelImage; set => mailboxInteractionPanelImage = value; }
         public Sprite MailboxNamePlateImage { get => mailboxNamePlateImage; set => mailboxNamePlateImage = value; }
+        public Sprite AuctionInteractionPanelImage { get => auctionInteractionPanelImage; set => auctionInteractionPanelImage = value; }
+        public Sprite AuctionNamePlateImage { get => auctionNamePlateImage; set => auctionNamePlateImage = value; }
         public int BasePostageCurrencyAmount { get => basePostageCurrencyAmount; set => basePostageCurrencyAmount = value; }
         public int PostageCurrencyAmountPerAttachment { get => postageCurrencyAmountPerAttachment; set => postageCurrencyAmountPerAttachment = value; }
+        public int AuctionDepositAmount { get => auctionDepositAmount; set => auctionDepositAmount = value; }
+        public float AuctionSoldFeePercentage { get => auctionSoldFeePercentage; set => auctionSoldFeePercentage = value; }
+
         //public Currency PostageCurrency { get => postageCurrency; set => postageCurrency = value; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }

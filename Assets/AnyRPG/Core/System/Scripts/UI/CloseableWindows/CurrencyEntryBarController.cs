@@ -116,6 +116,23 @@ namespace AnyRPG {
             }
             currencyNode.Amount = 0;
         }
+
+        public void UpdateCurrencyAmount(Currency currency, int currencyAmount) {
+            //Debug.Log($"{gameObject.name}.CurrencyBarController.UpdateCurrencyAmount(" + currency.DisplayName + ", " + currencyAmount + ", " + priceString + ")");
+
+            Dictionary<Currency, int> currencyList = currencyConverter.RedistributeCurrency(currency, currencyAmount);
+
+            int counter = 0;
+            foreach (KeyValuePair<Currency, int> currencyPair in currencyList) {
+                if (currencyEntryAmountControllers.Count > counter) {
+                    currencyEntryAmountControllers[counter].SetAmount(currencyPair.Value);
+                }
+                counter += 1;
+            }
+
+            RecalculateBaseCurrency();
+        }
+
     }
 
 }

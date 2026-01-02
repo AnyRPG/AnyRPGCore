@@ -570,6 +570,8 @@ namespace AnyRPG {
 
             if (PlayerPrefs.HasKey("AbilityBookWindowX") && PlayerPrefs.HasKey("AbilityBookWindowY"))
                 uIManager.abilityBookWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("AbilityBookWindowX"), PlayerPrefs.GetFloat("AbilityBookWindowY"), 0);
+            if (PlayerPrefs.HasKey("AuctionWindowX") && PlayerPrefs.HasKey("AuctionWindowY"))
+                uIManager.auctionWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("AuctionWindowX"), PlayerPrefs.GetFloat("AuctionWindowY"), 0);
             if (PlayerPrefs.HasKey("SkillBookWindowX") && PlayerPrefs.HasKey("SkillBookWindowY"))
                 uIManager.skillBookWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("SkillBookWindowX"), PlayerPrefs.GetFloat("SkillBookWindowY"), 0);
             if (PlayerPrefs.HasKey("ReputationBookWindowX") && PlayerPrefs.HasKey("ReputationBookWindowY"))
@@ -655,6 +657,9 @@ namespace AnyRPG {
 
             PlayerPrefs.SetFloat("AbilityBookWindowX", uIManager.abilityBookWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("AbilityBookWindowY", uIManager.abilityBookWindow.RectTransform.anchoredPosition.y);
+
+            PlayerPrefs.SetFloat("AuctionWindowX", uIManager.auctionWindow.RectTransform.anchoredPosition.x);
+            PlayerPrefs.SetFloat("AuctionWindowY", uIManager.auctionWindow.RectTransform.anchoredPosition.y);
 
             PlayerPrefs.SetFloat("SkillBookWindowX", uIManager.skillBookWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("SkillBookWindowY", uIManager.skillBookWindow.RectTransform.anchoredPosition.y);

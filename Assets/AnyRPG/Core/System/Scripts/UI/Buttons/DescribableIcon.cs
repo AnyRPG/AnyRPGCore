@@ -21,6 +21,8 @@ namespace AnyRPG {
 
         protected int count;
 
+        private string sellpriceString = string.Empty;
+
         // the transform that will be used to calculate tooltip position
         protected RectTransform toolTipTransform = null;
 
@@ -41,6 +43,10 @@ namespace AnyRPG {
             if (toolTipTransform == null) {
                 toolTipTransform = rectTransform;
             }
+        }
+
+        public void SetSellPriceString(string sellpriceString) {
+            this.sellpriceString = sellpriceString;
         }
 
         public void DisableTooltip() {
@@ -143,7 +149,7 @@ namespace AnyRPG {
             if (tooltipEnabled == false) {
                 return;
             }
-            uIManager.ShowGamepadTooltip(toolTipTransform, transform, describable, "");
+            uIManager.ShowGamepadTooltip(toolTipTransform, transform, describable, sellpriceString);
         }
 
         /*

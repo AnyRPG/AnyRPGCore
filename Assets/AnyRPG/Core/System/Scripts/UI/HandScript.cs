@@ -49,6 +49,8 @@ namespace AnyRPG {
 
         // Update is called once per frame
         public void ProcessInput() {
+            //Debug.Log("HandScript.ProcessInput()");
+
             if (controlsManager.GamePadModeActive == false) {
                 transform.position = Input.mousePosition + offset;
                 if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && Moveable != null) {

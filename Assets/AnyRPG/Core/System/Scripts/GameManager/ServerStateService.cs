@@ -17,6 +17,7 @@ namespace AnyRPG {
 
         // game manager references
         private MailService mailService = null;
+        private AuctionService auctionService = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -28,6 +29,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             mailService = systemGameManager.MailService;
+            auctionService = systemGameManager.AuctionService;
         }
 
         private void HandleStopServer() {
@@ -50,6 +52,7 @@ namespace AnyRPG {
             playerCharacterService.LoadPlayerCharacterIdCounter(serverStateSaveData.playerCharacterIdCounter);
             systemItemManager.LoadItemIdCounter(serverStateSaveData.itemInstanceIdCounter);
             mailService.LoadMailIdCounter(serverStateSaveData.mailIdCounter);
+            auctionService.LoadAuctionIdCounter(serverStateSaveData.auctionIdCounter);
             BeginMonitoringServerState();
         }
 
@@ -130,6 +133,10 @@ namespace AnyRPG {
             }
         }
 
+        public void SetAuctionIdCounter(int auctionIdCounter) {
+            serverStateSaveData.auctionIdCounter = auctionIdCounter;
+            saveDataDirty = true;
+        }
     }
 
 }

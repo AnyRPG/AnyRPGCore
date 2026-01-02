@@ -129,6 +129,8 @@ namespace AnyRPG {
         private TradeServiceServer tradeServiceServer = null;
         private MailboxManagerServer mailboxManagerServer = null;
         private MailService mailService = null;
+        private AuctionManagerServer auctionManagerServer = null;
+        private AuctionService auctionService = null;
 
         public bool ServerModeActive { get => serverModeActive; }
         public NetworkServerMode ServerMode { get => serverMode; }
@@ -178,6 +180,8 @@ namespace AnyRPG {
             tradeServiceServer = systemGameManager.TradeServiceServer;
             mailboxManagerServer = systemGameManager.MailboxManagerServer;
             mailService = systemGameManager.MailService;
+            auctionManagerServer = systemGameManager.AuctionManagerServer;
+            auctionService = systemGameManager.AuctionService;
         }
 
         public void AddLoggedInAccount(int clientId, int accountId, string token) {
@@ -467,10 +471,19 @@ namespace AnyRPG {
             //Debug.Log($"NetworkManagerServer.ActivateServerMode()");
 
             serverModeActive = true;
+            // ordered dependencies
+            // load items first
+            systemItemManager.ProcessStartServer();
+            // load things that depend on items
+            mailService.ProcessStartServer();
+            auctionService.ProcessStartServer();
+
+            // unordered dependencies
             OnStartServer();
             systemEventManager.OnChooseWeather += HandleChooseWeather;
             systemEventManager.OnStartWeather += HandleStartWeather;
             systemEventManager.OnEndWeather += HandleEndWeather;
+
         }
 
         public void DeactivateServerMode() {
@@ -518,6 +531,13 @@ namespace AnyRPG {
                 return;
             }
             systemEventManager.NotifyOnBeforeStopServer();
+            
+            // logout all logged in accounts
+            List<int> loggedInAccountIds = new List<int>(loggedInAccounts.Keys);
+            foreach (int accountId in loggedInAccountIds) {
+                Logout(accountId);
+            }
+
             networkController?.StopServer();
         }
 
@@ -945,6 +965,20 @@ namespace AnyRPG {
                 return;
             }
             mailboxManagerServer.RequestSendMail(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, sendMailRequest);
+        }
+
+        public void RequestListAuctionItems(Interactable interactable, int componentIndex, ListAuctionItemRequest listAuctionItemRequest, int accountId) {
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
+                return;
+            }
+            auctionManagerServer.RequestListAuctionItems(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, listAuctionItemRequest);
+        }
+
+        public void RequestSearchAuctions(Interactable interactable, int componentIndex, string searchText, bool onlyShowOwnAuctions, int accountId) {
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
+                return;
+            }
+            auctionManagerServer.RequestSearchAuctions(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, searchText, onlyShowOwnAuctions);
         }
 
 
@@ -1432,6 +1466,30 @@ namespace AnyRPG {
 
         public void RequestMarkMailAsRead(int accountId, int messageId) {
             mailboxManagerServer.RequestMarkMailAsRead(accountId, messageId);
+        }
+
+        public void RequestBuyAuctionItem(int accountId, int auctionItemId) {
+            auctionManagerServer.RequestBuyAuctionItem(accountId, auctionItemId);
+        }
+
+        public void RequestCancelAuction(int accountId, int auctionItemId) {
+            auctionManagerServer.RequestCancelAuction(accountId, auctionItemId);
+        }
+
+        public void AdvertiseBuyAuctionItem(int accountId, int auctionItemId) {
+            networkController.AdvertiseBuyAuctionItem(accountId, auctionItemId);
+        }
+
+        public void AdvertiseCancelAuction(int accountId, int auctionItemId) {
+            networkController.AdvertiseCancelAuction(accountId, auctionItemId);
+        }
+
+        public void AdvertiseAuctionItems(int accountId, AuctionItemListResponse auctionItemListResponse) {
+            networkController.AdvertiseAuctionItems(accountId, auctionItemListResponse);
+        }
+
+        public void AdvertiseListAuctionItems(int accountId) {
+            networkController.AdvertiseListAuctionItems(accountId);
         }
     }
 

@@ -21,7 +21,7 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             MakeSaveFolder();
-            networkManagerServer.OnStartServer += HandleStartServer;
+            //networkManagerServer.OnStartServer += HandleStartServer;
             networkManagerServer.OnStopServer += HandleStopServer;
         }
 
@@ -30,7 +30,7 @@ namespace AnyRPG {
             lootManager = systemGameManager.LootManager;
         }
 
-        private void HandleStartServer() {
+        public void ProcessStartServer() {
             //Debug.Log("SystemItemManager.HandleStartServer()");
 
             LoadAllItems();

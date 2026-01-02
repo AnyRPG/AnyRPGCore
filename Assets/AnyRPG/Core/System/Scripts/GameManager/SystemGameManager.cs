@@ -67,6 +67,9 @@ namespace AnyRPG {
 
         // system scripts
         private AuthenticationService authenticationService = new AuthenticationService();
+        private AuctionManagerClient auctionManagerClient = new AuctionManagerClient();
+        private AuctionManagerServer auctionManagerServer = new AuctionManagerServer();
+        private AuctionService auctionService = new AuctionService();
         private CharacterAppearanceManagerClient characterAppearanceManagerClient = new CharacterAppearanceManagerClient();
         private CharacterAppearanceManagerServer characterAppearanceManagerServer = new CharacterAppearanceManagerServer();
         private CharacterGroupServiceClient characterGroupServiceClient = new CharacterGroupServiceClient();
@@ -149,6 +152,9 @@ namespace AnyRPG {
         public KeyBindManager KeyBindManager { get => keyBindManager; set => keyBindManager = value; }
 
         public SystemConfigurationManager SystemConfigurationManager { get => systemConfigurationManager; set => systemConfigurationManager = value; }
+        public AuctionManagerClient AuctionManagerClient { get => auctionManagerClient; set => auctionManagerClient = value; }
+        public AuctionManagerServer AuctionManagerServer { get => auctionManagerServer; set => auctionManagerServer = value; }
+        public AuctionService AuctionService { get => auctionService; }
         public ControlsManager ControlsManager { get => controlsManager; }
         public WindowManager WindowManager { get => windowManager; set => windowManager = value; }
         public CameraManager CameraManager { get => cameraManager; set => cameraManager = value; }
@@ -254,6 +260,7 @@ namespace AnyRPG {
             // configure services and managers
             userAccountService.Configure(this);
             playerCharacterService.Configure(this);
+            auctionService.Configure(this);
             mailService.Configure(this);
             authenticationService.Configure(this);
             controlsManager.Configure(this);
@@ -304,6 +311,8 @@ namespace AnyRPG {
             specializationChangeManagerClient.Configure(this);
             specializationChangeManagerServer.Configure(this);
             musicPlayerManager.Configure(this);
+            auctionManagerClient.Configure(this);
+            auctionManagerServer.Configure(this);
             mailboxManagerClient.Configure(this);
             mailboxManagerServer.Configure(this);
             nameChangeManagerClient.Configure(this);

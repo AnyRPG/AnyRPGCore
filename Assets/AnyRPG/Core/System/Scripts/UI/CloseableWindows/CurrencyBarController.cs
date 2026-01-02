@@ -75,7 +75,6 @@ namespace AnyRPG {
             Dictionary<Currency, int> currencyList = currencyConverter.RedistributeCurrency(currency, currencyAmount);
 
             ClearCurrencyAmounts();
-            // spawn new ones
 
             if (priceText != null) {
                 if (priceString != string.Empty) {

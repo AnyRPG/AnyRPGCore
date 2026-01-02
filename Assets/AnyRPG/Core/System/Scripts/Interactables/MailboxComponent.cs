@@ -47,7 +47,7 @@ namespace AnyRPG {
         public void SendMail(UnitController sourceUnitController, MailMessageRequest mailMessageRequest) {
             //Debug.Log($"MailboxComponent.SendMail({sourceUnitController.gameObject.name})");
 
-            mailService.SaveMailMessage(sourceUnitController, mailMessageRequest);
+            mailService.SendMailMessage(sourceUnitController, mailMessageRequest);
 
             NotifyOnConfirmAction(sourceUnitController);
         }

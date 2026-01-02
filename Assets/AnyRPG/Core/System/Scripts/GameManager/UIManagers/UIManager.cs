@@ -167,6 +167,7 @@ namespace AnyRPG {
         public PagedWindow lootWindow;
         public PagedWindow vendorWindow;
         //public CloseableWindow chestWindow;
+        public CloseableWindow auctionWindow;
         public CloseableWindow bankWindow;
         public CloseableWindow inventoryWindow;
         public CloseableWindow questLogWindow;
@@ -227,6 +228,9 @@ namespace AnyRPG {
         public CloseableWindow confirmStopServerWindow;
         public CloseableWindow confirmSellItemMenuWindow;
         public CloseableWindow confirmSendMailWindow;
+        public CloseableWindow confirmBuyAuctionWindow;
+        public CloseableWindow confirmCancelAuctionWindow;
+        public CloseableWindow confirmListAuctionWindow;
         public CloseableWindow confirmWindow;
         public CloseableWindow nameChangeWindow;
         public CloseableWindow networkLoginWindow;
@@ -442,7 +446,11 @@ namespace AnyRPG {
             confirmStopServerWindow.Configure(systemGameManager);
             confirmSellItemMenuWindow.Configure(systemGameManager);
             confirmSendMailWindow.Configure(systemGameManager);
+            confirmBuyAuctionWindow.Configure(systemGameManager);
+            confirmCancelAuctionWindow.Configure(systemGameManager);
+            confirmListAuctionWindow.Configure(systemGameManager);
             confirmWindow.Configure(systemGameManager);
+            auctionWindow.Configure(systemGameManager);
             mailboxWindow.Configure(systemGameManager);
             mailComposeWindow.Configure(systemGameManager);
             mailViewWindow.Configure(systemGameManager);
@@ -570,6 +578,8 @@ namespace AnyRPG {
             defaultWindowPositions.Add("MusicPlayerWindowY", musicPlayerWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("NameChangeWindowX", nameChangeWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("NameChangeWindowY", nameChangeWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("AuctionWindowX", auctionWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("AuctionWindowY", auctionWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("MailboxWindowX", mailboxWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("MailboxWindowY", mailboxWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("MailComposeWindowX", mailComposeWindow.RectTransform.anchoredPosition.x);
@@ -647,6 +657,7 @@ namespace AnyRPG {
             skillTrainerWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["SkillTrainerWindowX"], defaultWindowPositions["SkillTrainerWindowY"], 0);
             musicPlayerWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MusicPlayerWindowX"], defaultWindowPositions["MusicPlayerWindowY"], 0);
             nameChangeWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["NameChangeWindowX"], defaultWindowPositions["NameChangeWindowY"], 0);
+            auctionWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["AuctionWindowX"], defaultWindowPositions["AuctionWindowY"], 0);
             mailboxWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MailboxWindowX"], defaultWindowPositions["MailboxWindowY"], 0);
             mailComposeWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MailComposeWindowX"], defaultWindowPositions["MailComposeWindowY"], 0);
             mailViewWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MailViewWindowX"], defaultWindowPositions["MailViewWindowY"], 0);
@@ -940,6 +951,7 @@ namespace AnyRPG {
             mainMapWindow.CloseWindow();
             musicPlayerWindow.CloseWindow();
             nameChangeWindow.CloseWindow();
+            auctionWindow.CloseWindow();
             mailboxWindow.CloseWindow();
             mailComposeWindow.CloseWindow();
             mailViewWindow.CloseWindow();
@@ -973,6 +985,9 @@ namespace AnyRPG {
             confirmStopServerWindow.CloseWindow();
             confirmSellItemMenuWindow.CloseWindow();
             confirmSendMailWindow.CloseWindow();
+            confirmBuyAuctionWindow.CloseWindow();
+            confirmCancelAuctionWindow.CloseWindow();
+            confirmListAuctionWindow.CloseWindow();
             confirmWindow.CloseWindow();
             copyGameMenuWindow.CloseWindow();
             creditsWindow.CloseWindow();
@@ -1554,6 +1569,7 @@ namespace AnyRPG {
             skillBookWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             skillTrainerWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             musicPlayerWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            auctionWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             mailboxWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             mailComposeWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             mailViewWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
@@ -1736,7 +1752,7 @@ namespace AnyRPG {
             }
         }
 
-        internal void AdvertiseConfirmationPopup(string messageText) {
+        public void AdvertiseConfirmationPopup(string messageText) {
             OnConfirmationPopup(messageText);
         }
     }

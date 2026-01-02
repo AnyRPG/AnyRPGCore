@@ -1060,6 +1060,50 @@ namespace AnyRPG {
             networkManagerServer.RequestSendMail(interactable, componentIndex, sendMailRequest, networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId);
         }
 
+        public void RequestListAuctionItems(Interactable interactable, int componentIndex, ListAuctionItemRequest listAuctionItemRequest) {
+            FishNetInteractable networkInteractable = null;
+            if (interactable != null) {
+                networkInteractable = interactable.GetComponent<FishNetInteractable>();
+            }
+            RequestListAuctionItemsServer(networkInteractable, componentIndex, listAuctionItemRequest);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void RequestListAuctionItemsServer(FishNetInteractable networkInteractable, int componentIndex, ListAuctionItemRequest listAuctionItemRequest, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.BuyItemFromVendorServer() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            Interactable interactable = null;
+            if (networkInteractable != null) {
+                interactable = networkInteractable.Interactable;
+            }
+            networkManagerServer.RequestListAuctionItems(interactable, componentIndex, listAuctionItemRequest, networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId);
+        }
+
+        public void RequestSearchAuctions(Interactable interactable, int componentIndex, string searchText, bool onlyShowOwnAuctions) {
+            FishNetInteractable networkInteractable = null;
+            if (interactable != null) {
+                networkInteractable = interactable.GetComponent<FishNetInteractable>();
+            }
+            RequestSearchAuctionsServer(networkInteractable, componentIndex, searchText, onlyShowOwnAuctions);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void RequestSearchAuctionsServer(FishNetInteractable networkInteractable, int componentIndex, string searchText, bool onlyShowOwnAuctions, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.BuyItemFromVendorServer() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            Interactable interactable = null;
+            if (networkInteractable != null) {
+                interactable = networkInteractable.Interactable;
+            }
+            networkManagerServer.RequestSearchAuctions(interactable, componentIndex, searchText, onlyShowOwnAuctions, networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId);
+        }
+
+
+
         public void RequestLearnSkill(Interactable interactable, int componentIndex, int skillId) {
             FishNetInteractable networkInteractable = null;
             if (interactable != null) {
@@ -1692,13 +1736,32 @@ namespace AnyRPG {
         }
 
         [ServerRpc(RequireOwnership = false)]
-        internal void RequestMarkMailAsRead(int messageId, NetworkConnection networkConnection = null) {
+        public void RequestMarkMailAsRead(int messageId, NetworkConnection networkConnection = null) {
             if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
                 Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
                 return;
             }
             networkManagerServer.RequestMarkMailAsRead(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, messageId);
         }
+
+        [ServerRpc(RequireOwnership = false)]
+        internal void RequestBuyAuctionItem(int auctionItemId, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestBuyAuctionItem(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, auctionItemId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        internal void RequestCancelAuction(int auctionItemId, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestCancelAuction(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, auctionItemId);
+        }
+
 
         [ServerRpc(RequireOwnership = false)]
         public void RequestSceneWeather(NetworkConnection networkConnection = null) {
@@ -2280,6 +2343,25 @@ namespace AnyRPG {
             AdvertiseDeleteMailMessageClient(fishNetNetworkManager.ServerManager.Clients[_clientId], messageId);
         }
 
+        public void AdvertiseAuctionItems(int accountId, AuctionItemListResponse auctionItemListResponse) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseAuctionItemsClient(fishNetNetworkManager.ServerManager.Clients[_clientId], auctionItemListResponse);
+        }
+
+        [TargetRpc]
+        public void AdvertiseAuctionItemsClient(NetworkConnection networkConnection, AuctionItemListResponse auctionItemListResponse) {
+            networkManagerClient.AdvertiseAuctionItems(auctionItemListResponse);
+        }
+
+
         [TargetRpc]
         public void AdvertiseDeleteMailMessageClient(NetworkConnection networkConnection, int messageId) {
             networkManagerClient.AdvertiseDeleteMailMessage(messageId);
@@ -2356,6 +2438,64 @@ namespace AnyRPG {
         public void AdvertiseMailSendClient(NetworkConnection networkConnection) {
             networkManagerClient.AdvertiseMailSend();
         }
+
+        public void AdvertiseBuyAuctionItem(int accountId, int auctionItemId) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseBuyAuctionItemClient(fishNetNetworkManager.ServerManager.Clients[_clientId], auctionItemId);
+        }
+
+        [TargetRpc]
+        public void AdvertiseBuyAuctionItemClient(NetworkConnection networkConnection, int auctionItemId) {
+            networkManagerClient.AdvertiseBuyAuctionItem(auctionItemId);
+        }
+
+        public void AdvertiseCancelAuction(int accountId, int auctionItemId) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseCancelAuctionClient(fishNetNetworkManager.ServerManager.Clients[_clientId], auctionItemId);
+        }
+
+        [TargetRpc]
+        public void AdvertiseCancelAuctionClient(NetworkConnection networkConnection, int auctionItemId) {
+            networkManagerClient.AdvertiseCancelAuction(auctionItemId);
+        }
+
+        public void AdvertiseListAuctionItems(int accountId) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseListAuctionItemsClient(fishNetNetworkManager.ServerManager.Clients[_clientId]);
+        }
+
+        [TargetRpc]
+        public void AdvertiseListAuctionItemsClient(NetworkConnection networkConnection) {
+            networkManagerClient.AdvertiseListAuctionItems();
+        }
+
+
+
+
 
 
 

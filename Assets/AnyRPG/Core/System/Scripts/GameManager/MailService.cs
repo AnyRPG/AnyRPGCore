@@ -18,7 +18,7 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             MakeBaseSaveFolder();
-            networkManagerServer.OnStartServer += HandleStartServer;
+            //networkManagerServer.OnStartServer += HandleStartServer;
             networkManagerServer.OnStopServer += HandleStopServer;
         }
 
@@ -33,7 +33,7 @@ namespace AnyRPG {
             //ClearPlayerNameMap();
         }
 
-        private void HandleStartServer() {
+        public void ProcessStartServer() {
             //LoadPlayerNameMap();
         }
 
@@ -42,7 +42,6 @@ namespace AnyRPG {
 
             mailIdCounter = newCounterValue;
         }
-
 
         private void MakeBaseSaveFolder() {
             //Debug.Log("PlayerCharacterService.MakeSaveFolder()");
@@ -78,22 +77,20 @@ namespace AnyRPG {
             return $"{baseSaveFolderName}/{playerCharacterId}";
         }
 
-        public bool SaveMailMessage(UnitController sourceUnitController, MailMessageRequest mailMessageRequest) {
+        public bool SendMailMessage(UnitController sourceUnitController, MailMessageRequest mailMessageRequest) {
 
-            int accountId = playerManagerServer.GetAccountIdFromUnitController(sourceUnitController);
+            int senderAccountId = playerManagerServer.GetAccountIdFromUnitController(sourceUnitController);
 
             int playerCharacterId = playerCharacterService.GetPlayerIdFromName(mailMessageRequest.Recipient);
             if (playerCharacterId == 0) {
-                networkManagerServer.AdvertiseConfirmationPopup(accountId, $"{mailMessageRequest.Recipient} is not a valid player name");
+                networkManagerServer.AdvertiseConfirmationPopup(senderAccountId, $"{mailMessageRequest.Recipient} is not a valid player name");
                 return false;
             }
 
             if (mailMessageRequest.Subject == string.Empty) {
-                networkManagerServer.AdvertiseConfirmationPopup(accountId, $"Mail must have a subject");
+                networkManagerServer.AdvertiseConfirmationPopup(senderAccountId, $"Mail must have a subject");
                 return false;
             }
-
-            MakeMessageSaveFolder(playerCharacterId);
 
             // remove duplicate itemIds from attachment slots
             List<int> uniqueIds = new List<int>();
@@ -108,14 +105,9 @@ namespace AnyRPG {
                 mailAttachmentSlot.ItemIds = newItemIds;
             }
 
-            // set messageId and sender
-            MailMessage mailMessage = new MailMessage(mailMessageRequest);
-            int messageId = GetNewMessageId();
-            mailMessage.MessageId = messageId;
-            mailMessage.Sender = sourceUnitController.DisplayName;
 
             // first check to ensure item exist
-            foreach (MailAttachmentSlot mailAttachmentSlot in mailMessage.AttachmentSlots) {
+            foreach (MailAttachmentSlot mailAttachmentSlot in mailMessageRequest.AttachmentSlots) {
                 foreach (int itemId in mailAttachmentSlot.ItemIds) {
                     if (sourceUnitController.CharacterInventoryManager.HasItem(itemId) == false) {
                         return false;
@@ -125,7 +117,7 @@ namespace AnyRPG {
 
             // calculate postage
             int postageCurrencyAmount = systemConfigurationManager.BasePostageCurrencyAmount;
-            foreach (MailAttachmentSlot mailAttachmentSlot in mailMessage.AttachmentSlots) {
+            foreach (MailAttachmentSlot mailAttachmentSlot in mailMessageRequest.AttachmentSlots) {
                 if (mailAttachmentSlot.ItemIds.Count > 0) {
                     postageCurrencyAmount += systemConfigurationManager.PostageCurrencyAmountPerAttachment;
                 }
@@ -139,11 +131,36 @@ namespace AnyRPG {
 
 
             // remove items from inventory
-            foreach (MailAttachmentSlot mailAttachmentSlot in mailMessage.AttachmentSlots) {
+            foreach (MailAttachmentSlot mailAttachmentSlot in mailMessageRequest.AttachmentSlots) {
                 foreach (int itemId in mailAttachmentSlot.ItemIds) {
                     sourceUnitController.CharacterInventoryManager.RemoveInventoryItem(itemId);
                 }
             }
+
+            // remove currency from inventory
+            sourceUnitController.CharacterCurrencyManager.SpendCurrency(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, mailMessageRequest.CurrencyAmount);
+            
+            // remove postage from inventory
+            sourceUnitController.CharacterCurrencyManager.SpendCurrency(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, postageCurrencyAmount);
+
+            SaveMailMessage(playerCharacterId, mailMessageRequest, sourceUnitController.DisplayName);
+
+            // notify source that mail was sent
+            sourceUnitController.UnitEventController.NotifyOnWriteMessageFeedMessage($"Your message to {mailMessageRequest.Recipient} was sent");
+            networkManagerServer.AdvertiseMailSend(senderAccountId);
+
+            return true;
+        }
+
+        public void SaveMailMessage(int recipientPlayerCharacterId, MailMessageRequest mailMessageRequest, string senderName) {
+
+            MakeMessageSaveFolder(recipientPlayerCharacterId);
+
+            // set messageId and sender
+            MailMessage mailMessage = new MailMessage(mailMessageRequest);
+            int messageId = GetNewMessageId();
+            mailMessage.MessageId = messageId;
+            mailMessage.Sender = senderName;
 
             // add currency item
             if (mailMessageRequest.CurrencyAmount > 0) {
@@ -155,25 +172,14 @@ namespace AnyRPG {
                 mailMessage.AttachmentSlots.Add(mailAttachmentSlot);
             }
 
-            // remove currency from inventory
-            sourceUnitController.CharacterCurrencyManager.SpendCurrency(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, mailMessageRequest.CurrencyAmount);
-            // remove postage from inventory
-            sourceUnitController.CharacterCurrencyManager.SpendCurrency(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, postageCurrencyAmount);
-
-            SaveMailFile(playerCharacterId, messageId, mailMessage);
+            SaveMailFile(recipientPlayerCharacterId, messageId, mailMessage);
 
             // notify source and target that mail was sent
-            //messageLogServer.WriteSystemMessage(sourceUnitController, $"Your mail to {mailMessage.recipient} was sent successfully.");
-            //sourceUnitController.UnitEventController.NotifyOnWriteMessageFeedMessage("Message Sent");
-            sourceUnitController.UnitEventController.NotifyOnWriteMessageFeedMessage($"Your message to {mailMessage.Recipient} was sent");
-            UnitController targetUnitController = playerManagerServer.GetUnitControllerFromPlayerCharacterId(playerCharacterId);
+            UnitController targetUnitController = playerManagerServer.GetUnitControllerFromPlayerCharacterId(recipientPlayerCharacterId);
             if (targetUnitController != null) {
                 messageLogServer.WriteSystemMessage(targetUnitController, $"You have new mail from {mailMessage.Sender}.");
             }
-            networkManagerServer.AdvertiseMailSend(accountId);
-            SendMailMessages(playerCharacterId);
-
-            return true;
+            SendMailMessages(recipientPlayerCharacterId);
         }
 
         public bool SaveMailFile(int playerCharacterId, int messageId, MailMessage mailMessage) {
@@ -238,15 +244,15 @@ namespace AnyRPG {
             return null;
         }
 
-        public void SendMailMessages(int characterId) {
+        public void SendMailMessages(int playerCharacterId) {
             //Debug.Log($"MailService.SendMailMessages({characterId})");
 
             // accountId will be 0 if player is not online, in which case we do not need to send mail messages
-            int accountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(characterId);
+            int accountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(playerCharacterId);
             if (accountId == 0) {
                 return;
             }
-            MailMessageListResponse mailMessageListResponse = GetMailMessages(characterId);
+            MailMessageListResponse mailMessageListResponse = GetMailMessages(playerCharacterId);
             networkManagerServer.AdvertiseMailMessages(accountId, mailMessageListResponse);
         }
 
