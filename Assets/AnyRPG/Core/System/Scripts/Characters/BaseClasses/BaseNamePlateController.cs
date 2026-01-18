@@ -19,6 +19,8 @@ namespace AnyRPG {
 
         // game manager references
         protected NamePlateManager namePlateManager = null;
+        protected UIManager uIManager = null;
+        protected PlayerManager playerManager = null;
 
         public virtual NamePlateController NamePlate { get => namePlate; }
 
@@ -127,6 +129,8 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             namePlateManager = systemGameManager.UIManager.NamePlateManager;
+            uIManager = systemGameManager.UIManager;
+            playerManager = systemGameManager.PlayerManager;
         }
 
         public void SetNamePlatePosition() {
@@ -185,10 +189,10 @@ namespace AnyRPG {
             //Debug.Log(namePlateUnit.gameObject.name + ".BaseNamePlateController.SetupNamePlate()");
             /*
             if (namePlate == null) {
-                Debug.Log(namePlateUnit.gameObject.name + ".BaseNamePlateController.SetupNamePlate(): namePlate is null");
+                Debug.LogWarning(namePlateUnit.gameObject.name + ".BaseNamePlateController.SetupNamePlate(): namePlate is null");
             }
             if (namePlate.HealthBar == null) {
-                Debug.Log(namePlateUnit.gameObject.name + ".BaseNamePlateController.SetupNamePlate(): namePlate.Healthbar is null");
+                Debug.LogWarning(namePlateUnit.gameObject.name + ".BaseNamePlateController.SetupNamePlate(): namePlate.Healthbar is null");
             }
             */
             namePlate.HealthBar.SetActive(false);
@@ -231,9 +235,10 @@ namespace AnyRPG {
             return 0f;
         }
 
+        public virtual string GetNamePlateString() {
 
-
-
+            return $"<color=white>{UnitDisplayName}</color>";
+        }
     }
 
 

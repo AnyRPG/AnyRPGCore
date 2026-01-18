@@ -80,7 +80,7 @@ namespace AnyRPG {
         public void PlayFootStep() {
             //Debug.Log($"{gameObject.name}.HandleMovementAudio(): " + apparentVelocity);
             if (unitController == null) {
-                Debug.Log(gameObject.name + ".UnitAnimationEventReceiver.PlayFootStep() unitController is null!!!");
+                Debug.LogWarning($"{gameObject.name}.UnitAnimationEventReceiver.PlayFootStep() unitController is null!!!");
             }
 
             unitController.PlayFootStep();
@@ -89,7 +89,7 @@ namespace AnyRPG {
         public void PlaySwimSound() {
             //Debug.Log($"{gameObject.name}.HandleMovementAudio(): " + apparentVelocity);
             if (unitController == null) {
-                Debug.Log(gameObject.name + ".UnitAnimationEventReceiver.PlayFootStep() unitController is null!!!");
+                Debug.LogWarning($"{gameObject.name}.UnitAnimationEventReceiver.PlayFootStep() unitController is null!!!");
                 return;
             }
 

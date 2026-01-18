@@ -62,7 +62,7 @@ namespace AnyRPG {
             base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
 
             if (Props.MoveableObject == null) {
-                Debug.Log("MoveableObject.Interact(): gameObject was null. Check Inspector");
+                Debug.LogWarning("MoveableObject.Interact(): gameObject was null. Check Inspector");
                 return false;
             }
             if (Props.Loop == true) {

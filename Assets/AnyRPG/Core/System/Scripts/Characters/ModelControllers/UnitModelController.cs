@@ -161,9 +161,9 @@ namespace AnyRPG {
         public void SetAnimatorOverrideController(AnimatorOverrideController animatorOverrideController) {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetAnimatorOverrideController({animatorOverrideController.GetInstanceID()})");
 
-            if (modelAppearanceController == null) {
-                Debug.Log("Null model appearance controller!");
-            }
+            //if (modelAppearanceController == null) {
+                //Debug.LogWarning("Null model appearance controller!");
+            //}
             modelAppearanceController.SetAnimatorOverrideController(animatorOverrideController);
         }
 
@@ -245,9 +245,10 @@ namespace AnyRPG {
                 // in empty game mode, this can be null
                 return;
             }
-            if (modelAppearanceController == null) {
-                Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetInitialSavedAppearance() model appearance controller is null");
-            }
+            //if (modelAppearanceController == null) {
+              //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetInitialSavedAppearance() model appearance controller is null");
+              //return;
+            //}
             modelAppearanceController.SetInitialSavedAppearance(characterAppearanceData);
         }
 

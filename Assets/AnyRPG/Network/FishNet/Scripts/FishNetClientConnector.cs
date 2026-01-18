@@ -4,8 +4,10 @@ using FishNet.Object;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.TextCore.Text;
 
 namespace AnyRPG {
     public class FishNetClientConnector : ConfiguredNetworkBehaviour {
@@ -290,7 +292,7 @@ namespace AnyRPG {
 
         /*
         private void SetNetworkObjectParent(NetworkObject networkObject, Transform parentTransform) {
-            Debug.Log($"FishNetClientConnector.SetNetworkObjectParent({networkObject.gameObject.name}, {(parentTransform == null ? "null" : parentTransform.gameObject.name)})");
+            //Debug.Log($"FishNetClientConnector.SetNetworkObjectParent({networkObject.gameObject.name}, {(parentTransform == null ? "null" : parentTransform.gameObject.name)})");
 
             if (parentTransform != null) {
                 NetworkObject networkObjectParent = parentTransform.GetComponent<NetworkObject>();
@@ -323,7 +325,7 @@ namespace AnyRPG {
             */
             /*
             if (networkConnection != null) {
-                Debug.Log($"FishNetClientConnector.SpawnPrefab({networkObject.gameObject.name}, {scene.name}({scene.handle}), {(parentTransform == null ? "null" : parentTransform.gameObject.name)}) give ownership to {networkConnection.ClientId}");
+                //Debug.Log($"FishNetClientConnector.SpawnPrefab({networkObject.gameObject.name}, {scene.name}({scene.handle}), {(parentTransform == null ? "null" : parentTransform.gameObject.name)}) give ownership to {networkConnection.ClientId}");
                 networkObject.GiveOwnership(networkConnection);
             }
             */
@@ -397,7 +399,7 @@ namespace AnyRPG {
         /*
         [TargetRpc]
         public void LoadCharacterList(NetworkConnection networkConnection, List<PlayerCharacterSaveData> playerCharacterSaveDataList) {
-            Debug.Log($"FishNetClientConnector.SetCharacterList({playerCharacterSaveDataList.Count})");
+            //Debug.Log($"FishNetClientConnector.SetCharacterList({playerCharacterSaveDataList.Count})");
 
             systemGameManager.LoadGameManager.SetCharacterList(playerCharacterSaveDataList);
         }
@@ -556,7 +558,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         public void AdvertiseLobbyLogin(int accountId, string userName) {
-            Debug.Log($"FishNetClientConnector.AdvertiseLobbyLogin({accountId}, {userName})");
+            //Debug.Log($"FishNetClientConnector.AdvertiseLobbyLogin({accountId}, {userName})");
 
             networkManagerClient.AdvertiseLobbyLogin(accountId, userName);
         }
@@ -905,7 +907,7 @@ namespace AnyRPG {
         /*
         public void AdvertiseAddSpawnRequestServer(int accountId, SpawnPlayerRequest loadSceneRequest) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseAddSpawnRequestServer() could not find client id {accountId}");
+                //Debug.Log($"FishNetClientConnector.AdvertiseAddSpawnRequestServer() could not find client id {accountId}");
                 return;
             }
             int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
@@ -1036,6 +1038,54 @@ namespace AnyRPG {
             }
             networkManagerServer.SetPlayerFaction(interactable, componentIndex, networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId);
         }
+
+        public void RequestCreateGuild(Interactable interactable, int componentIndex, string guildName) {
+            //Debug.Log($"FishNetClientConnector.RequestCreateGuild({guildName})");
+
+            FishNetInteractable networkInteractable = null;
+            if (interactable != null) {
+                networkInteractable = interactable.GetComponent<FishNetInteractable>();
+            }
+            RequestCreateGuildServer(networkInteractable, componentIndex, guildName);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestCreateGuildServer(FishNetInteractable targetNetworkInteractable, int componentIndex, string guildName, NetworkConnection networkConnection = null) {
+            //Debug.Log($"FishNetClientConnector.RequestCreateGuildServer({guildName})");
+
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.BuyItemFromVendorServer() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+
+            Interactable interactable = null;
+            if (targetNetworkInteractable != null) {
+                interactable = targetNetworkInteractable.Interactable;
+            }
+            networkManagerServer.RequestCreateGuild(interactable, componentIndex, guildName, networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId);
+        }
+
+        public void CheckGuildName(Interactable interactable, int componentIndex, string guildName) {
+            FishNetInteractable networkInteractable = null;
+            if (interactable != null) {
+                networkInteractable = interactable.GetComponent<FishNetInteractable>();
+            }
+            CheckGuildNameServer(networkInteractable, componentIndex, guildName);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void CheckGuildNameServer(FishNetInteractable targetNetworkInteractable, int componentIndex, string guildName, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.BuyItemFromVendorServer() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            Interactable interactable = null;
+            if (targetNetworkInteractable != null) {
+                interactable = targetNetworkInteractable.Interactable;
+            }
+            networkManagerServer.CheckGuildName(interactable, componentIndex, guildName, networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId);
+        }
+
 
         public void RequestSendMail(Interactable interactable, int componentIndex, MailMessageRequest sendMailRequest) {
             FishNetInteractable networkInteractable = null;
@@ -1304,12 +1354,12 @@ namespace AnyRPG {
                 networkCharacterUnit = interactable.GetComponent<FishNetUnitController>();
             }
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseAddToBuyBackCollection() could not find client id {accountId}");
+                //Debug.Log($"FishNetClientConnector.AdvertiseAddToBuyBackCollection() could not find client id {accountId}");
                 return;
             }
             int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseAddToBuyBackCollection() could not find client id {clientId}");
+                //Debug.Log($"FishNetClientConnector.AdvertiseAddToBuyBackCollection() could not find client id {clientId}");
                 return;
             }
             AdvertiseAddToBuyBackCollectionClient(fishNetNetworkManager.ServerManager.Clients[clientId], networkCharacterUnit, networkInteractable, componentIndex, newInstantiatedItem.InstanceId);
@@ -1367,7 +1417,7 @@ namespace AnyRPG {
             //Debug.Log($"FishNetClientConnector.AddDroppedLoot({accountId}, {lootDropId}, {itemId})");
 
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AddDroppedLoot() could not find client id {accountId}");
+                //Debug.Log($"FishNetClientConnector.AddDroppedLoot() could not find client id {accountId}");
                 return;
             }
             int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
@@ -1384,11 +1434,11 @@ namespace AnyRPG {
             networkManagerClient.AddDroppedLoot(lootDropId, itemId);
         }
 
-        public void AddAvailableDroppedLoot(int accountId, List<LootDrop> items) {
+        public void AddAvailableDroppedLoot(int accountId, List<int> lootDropIds) {
             //Debug.Log($"FishNetClientConnector.AddAvailableDroppedLoot({accountId}, {items.Count})");
 
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AddAvailableDroppedLoot() could not find client id {accountId}");
+                //Debug.Log($"FishNetClientConnector.AddAvailableDroppedLoot() could not find client id {accountId}");
                 return;
             }
             int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
@@ -1396,13 +1446,7 @@ namespace AnyRPG {
                 return;
             }
 
-            List<int> lootDropIds = new List<int>();
-            
-            foreach (LootDrop item in items) {
-                lootDropIds.Add(item.LootDropId);
-            }
             AddAvailableDroppedLootClient(ServerManager.Clients[clientId], lootDropIds);
-            
         }
 
         [TargetRpc]
@@ -1416,7 +1460,7 @@ namespace AnyRPG {
             //Debug.Log($"FishNetClientConnector.AdvertiseTakeLoot({accountId}, {lootDropId})");
 
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseTakeLoot() could not find client id {accountId}");
+                //Debug.Log($"FishNetClientConnector.AdvertiseTakeLoot() could not find client id {accountId}");
                 return;
             }
             int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
@@ -1435,14 +1479,14 @@ namespace AnyRPG {
 
         /*
         public void SetCraftingManagerAbility(int accountId, string abilityName) {
-            Debug.Log($"FishNetClientConnector.SetCraftingManagerAbility({accountId}, {abilityName})");
+            //Debug.Log($"FishNetClientConnector.SetCraftingManagerAbility({accountId}, {abilityName})");
 
             SetCraftingManagerAbilityClient(ServerManager.Clients[accountId], abilityName);
         }
 
         [TargetRpc]
         public void SetCraftingManagerAbilityClient(NetworkConnection networkConnection, string abilityName) {
-            Debug.Log($"FishNetClientConnector.SetCraftingManagerAbilityClient({networkConnection.ClientId}, {abilityName})");
+            //Debug.Log($"FishNetClientConnector.SetCraftingManagerAbilityClient({networkConnection.ClientId}, {abilityName})");
 
             CraftAbility craftAbility = systemDataFactory.GetResource<Ability>(abilityName) as CraftAbility;
             if (craftAbility == null) {
@@ -1526,7 +1570,7 @@ namespace AnyRPG {
 
         [ServerRpc(RequireOwnership = false)]
         public void RequestSpawnPet(string resourceName, NetworkConnection networkConnection = null) {
-            Debug.Log($"FishNetClientConnector.RequestSpawnPet({resourceName})");
+            //Debug.Log($"FishNetClientConnector.RequestSpawnPet({resourceName})");
 
             UnitProfile unitProfile = systemDataFactory.GetResource<UnitProfile>(resourceName);
             if (unitProfile == null) {
@@ -1582,6 +1626,43 @@ namespace AnyRPG {
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void AcceptGuildInvite(int guildId, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptGuildInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.AcceptGuildInvite(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, guildId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void AcceptFriendInvite(int friendId, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptGuildInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.AcceptFriendInvite(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, friendId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void DeclineGuildInvite(NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptGuildInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.DeclineGuildInvite(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void DeclineFriendInvite(int friendId, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptGuildInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.DeclineFriendInvite(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, friendId);
+        }
+
+
+        [ServerRpc(RequireOwnership = false)]
         public void RequestLeaveCharacterGroup(NetworkConnection networkConnection = null) {
             if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
                 Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
@@ -1591,13 +1672,43 @@ namespace AnyRPG {
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void RequestLeaveGuild(NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.RequestLeaveGuild() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestLeaveGuild(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         public void RequestRemoveCharacterFromGroup(int playerCharacterId, NetworkConnection networkConnection = null) {
             if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
-                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                Debug.LogWarning($"FishNetClientConnector.RequestRemoveCharacterFromGroup() could not find clientId {networkConnection.ClientId} in logged in accounts");
                 return;
             }
             networkManagerServer.RequestRemoveCharacterFromGroup(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, playerCharacterId);
         }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestRemoveCharacterFromGuild(int playerCharacterId, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.RequestRemoveCharacterFromGuild() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestRemoveCharacterFromGuild(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, playerCharacterId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestRemoveCharacterFromFriendList(int playerCharacterId, NetworkConnection networkConnection = null) {
+            //Debug.Log($"FishNetClientConnector.RequestRemoveCharacterFromFriendList({playerCharacterId})");
+
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.RequestRemoveCharacterFromGuild() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestRemoveCharacterFromFriendList(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, playerCharacterId);
+        }
+
 
         [ServerRpc(RequireOwnership = false)]
         public void RequestInviteCharacterToGroup(int characterId, NetworkConnection networkConnection = null) {
@@ -1611,6 +1722,61 @@ namespace AnyRPG {
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void RequestInviteCharacterToGroup(string characterName, NetworkConnection networkConnection = null) {
+            //Debug.Log($"FishNetClientConnector.RequestInviteCharacterToGroup({characterId})");
+
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestInviteCharacterToGroup(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, characterName);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestInviteCharacterToGuild(int characterId, NetworkConnection networkConnection = null) {
+            //Debug.Log($"FishNetClientConnector.RequestInviteCharacterToGuild({characterId})");
+
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestInviteCharacterToGuild(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, characterId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestInviteCharacterToFriendList(int characterId, NetworkConnection networkConnection = null) {
+            //Debug.Log($"FishNetClientConnector.RequestInviteCharacterToGuild({characterId})");
+
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestInviteCharacterToFriendList(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, characterId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestInviteCharacterToFriendList(string characterName, NetworkConnection networkConnection = null) {
+            //Debug.Log($"FishNetClientConnector.RequestInviteCharacterToGuild({characterId})");
+
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestInviteCharacterToFriendList(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, characterName);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestInviteCharacterToGuild(string characterName, NetworkConnection networkConnection = null) {
+            //Debug.Log($"FishNetClientConnector.RequestInviteCharacterToGuild({characterId})");
+
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestInviteCharacterToGuild(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, characterName);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         public void RequestDisbandCharacterGroup(int characterGroupId, NetworkConnection networkConnection = null) {
             if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
                 Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
@@ -1620,12 +1786,57 @@ namespace AnyRPG {
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void RequestDisbandGuild(int characterGroupId, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.RequestDisbandGuild() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestDisbandGuild(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, characterGroupId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         public void RequestPromoteCharacterToLeader(int characterId, NetworkConnection networkConnection = null) {
             if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
-                Debug.LogWarning($"FishNetClientConnector.AcceptCharacterGroupInvite() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                Debug.LogWarning($"FishNetClientConnector.RequestPromoteCharacterToLeader() could not find clientId {networkConnection.ClientId} in logged in accounts");
                 return;
             }
             networkManagerServer.RequestPromoteCharacterToLeader(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, characterId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestPromoteGuildCharacter(int characterId, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.RequestPromoteGuildCharacter() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestPromoteGuildCharacter(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, characterId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestDemoteGuildCharacter(int characterId, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.RequestPromoteGuildCharacterToLeader() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestDemoteGuildCharacter(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, characterId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestPromoteGroupCharacter(int characterId, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.RequestPromoteGroupCharacter() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestPromoteGroupCharacter(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, characterId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestDemoteGroupCharacter(int characterId, NetworkConnection networkConnection = null) {
+            if (networkManagerServer.LoggedInAccountsByClient.ContainsKey(networkConnection.ClientId) == false) {
+                Debug.LogWarning($"FishNetClientConnector.RequestDemoteGroupCharacter() could not find clientId {networkConnection.ClientId} in logged in accounts");
+                return;
+            }
+            networkManagerServer.RequestDemoteGroupCharacter(networkManagerServer.LoggedInAccountsByClient[networkConnection.ClientId].accountId, characterId);
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -1877,7 +2088,7 @@ namespace AnyRPG {
             //Debug.Log($"FishNetClientConnector.AdvertiseLoadCutscene({cutscene.ResourceName}, {accountId})");
 
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseLoadCutscene() could not find client id {accountId}");
+                //Debug.Log($"FishNetClientConnector.AdvertiseLoadCutscene() could not find client id {accountId}");
                 return;
             }
             int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
@@ -1912,90 +2123,171 @@ namespace AnyRPG {
             networkManagerClient.AdvertiseSceneObjectLoadComplete();
         }
 
-        public void AdvertiseAddCharacterToGroup(int playerCharacterId, CharacterGroup characterGroup) {
+        public void AdvertiseAddCharacterToGroup(int accountId, int characterGroupId, CharacterGroupMemberNetworkData characterGroupMemberNetworkData) {
             //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup({playerCharacterId}, {characterGroup.characterGroupId})");
 
-            foreach (int memberId in characterGroup.CharacterIdList[UnitControllerMode.Player].Keys) {
-                // get account id from player id
-                int accountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(memberId);
-                if (accountId == 0) {
-                    continue;
-                }
-                if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                    Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find account id {accountId}");
-                    continue;
-                }
-                int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
-                if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
-                    Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {clientId}");
-                    continue;
-                }
-                AdvertiseAddCharacterToGroupClient(fishNetNetworkManager.ServerManager.Clients[clientId], playerCharacterId, characterGroup);
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+                //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find account id {accountId}");
+                return;
             }
+            int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
+                //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {clientId}");
+                return;
+            }
+            AdvertiseAddCharacterToGroupClient(fishNetNetworkManager.ServerManager.Clients[clientId], characterGroupId, characterGroupMemberNetworkData);
+
         }
 
-        public void AdvertiseCharacterGroup(int accountId, CharacterGroup characterGroup) {
+        [TargetRpc]
+        public void AdvertiseAddCharacterToGroupClient(NetworkConnection networkConnection, int characterGroupId, CharacterGroupMemberNetworkData characterGroupMemberNetworkData) {
+            //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroupClient({playerCharacterId}, {characterGroup.characterGroupId})");
+
+            networkManagerClient.ProcessAddCharacterToGroup(characterGroupId, characterGroupMemberNetworkData);
+        }
+
+        public void AdvertiseAddCharacterToGuild(int existingAccountId, int guildId, GuildMemberNetworkData guildMemberNetworkData) {
+            //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGuild({existingAccountId}, {guildId})");
+
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(existingAccountId) == false) {
+                //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGuild() could not find account id {existingAccountId}");
+                return;
+            }
+            int clientId = networkManagerServer.LoggedInAccounts[existingAccountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
+                //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGuild() could not find client id {clientId}");
+                return;
+            }
+            AdvertiseAddCharacterToGuildClient(fishNetNetworkManager.ServerManager.Clients[clientId], guildId, guildMemberNetworkData);
+        }
+
+        [TargetRpc]
+        public void AdvertiseAddCharacterToGuildClient(NetworkConnection networkConnection, int guildId, GuildMemberNetworkData guildMemberNetworkData) {
+            //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGuildClient(guildId: {guildId}, {characterSummaryNetworkData.CharacterName})");
+
+            networkManagerClient.ProcessCharacterJoinGuild(guildId, guildMemberNetworkData);
+        }
+
+        public void AdvertiseAddFriend(int existingAccountId, CharacterSummaryNetworkData characterSummaryNetworkData) {
+            //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup({playerCharacterId}, {characterGroup.characterGroupId})");
+
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(existingAccountId) == false) {
+                //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find account id {existingAccountId}");
+                return;
+            }
+            int clientId = networkManagerServer.LoggedInAccounts[existingAccountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
+                //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {clientId}");
+                return;
+            }
+            AdvertiseAddFriendClient(fishNetNetworkManager.ServerManager.Clients[clientId], characterSummaryNetworkData);
+        }
+
+        [TargetRpc]
+        public void AdvertiseAddFriendClient(NetworkConnection networkConnection, CharacterSummaryNetworkData characterSummaryNetworkData) {
+            //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGuildClient({playerCharacterId}, {guild.guildId})");
+            networkManagerClient.ProcessAddFriend(characterSummaryNetworkData);
+        }
+
+        public void AdvertiseCharacterGroup(int accountId, CharacterGroupNetworkData characterGroupNetworkData) {
             //Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroup({accountId}, {characterGroup.characterGroupId})");
 
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {accountId}");
+                //Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroup() could not find client id {accountId}");
                 return;
             }
             int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {clientId}");
+                //Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroup() could not find client id {clientId}");
                 return;
             }
-            AdvertiseCharacterGroupClient(fishNetNetworkManager.ServerManager.Clients[clientId], characterGroup);
+            AdvertiseCharacterGroupClient(fishNetNetworkManager.ServerManager.Clients[clientId], characterGroupNetworkData);
         }
 
         [TargetRpc]
-        public void AdvertiseCharacterGroupClient(NetworkConnection networkConnection, CharacterGroup characterGroup) {
-            //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroupClient({characterGroup.characterGroupId})");
+        public void AdvertiseCharacterGroupClient(NetworkConnection networkConnection, CharacterGroupNetworkData characterGroupNetworkData) {
+            //Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroup({characterGroup.characterGroupId})");
 
-            networkManagerClient.ProcessLoadCharacterGroup(characterGroup);
+            networkManagerClient.ProcessLoadCharacterGroup(characterGroupNetworkData);
         }
 
+        public void AdvertiseGuild(int accountId, GuildNetworkData guildNetworkData) {
+            //Debug.Log($"FishNetClientConnector.AdvertiseGuild({accountId}, {characterGroup.characterGroupId})");
+
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+                //Debug.Log($"FishNetClientConnector.AdvertiseGuild() could not find client id {accountId}");
+                return;
+            }
+            int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
+                //Debug.Log($"FishNetClientConnector.AdvertiseGuild() could not find client id {clientId}");
+                return;
+            }
+            AdvertiseGuildClient(fishNetNetworkManager.ServerManager.Clients[clientId], guildNetworkData);
+        }
 
         [TargetRpc]
-        public void AdvertiseAddCharacterToGroupClient(NetworkConnection networkConnection, int playerCharacterId, CharacterGroup characterGroup) {
-            //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroupClient({playerCharacterId}, {characterGroup.characterGroupId})");
-
-            networkManagerClient.ProcessCharacterJoinGroup(playerCharacterId, characterGroup);
+        public void AdvertiseGuildClient(NetworkConnection networkConnection, GuildNetworkData guildNetworkData) {
+            //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroupClient({guild.guildId})");
+            networkManagerClient.ProcessLoadGuild(guildNetworkData);
         }
 
-        public void AdvertiseRemoveCharacterFromGroup(int removedCharacterId, CharacterGroup characterGroup) {
+        public void AdvertiseFriendList(int accountId, FriendListNetworkData friendListNetworkData) {
+            //Debug.Log($"FishNetClientConnector.AdvertiseGuild({accountId}, {characterGroup.characterGroupId})");
+
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+                //Debug.Log($"FishNetClientConnector.AdvertiseGuild() could not find client id {accountId}");
+                return;
+            }
+            int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
+                //Debug.Log($"FishNetClientConnector.AdvertiseGuild() could not find client id {clientId}");
+                return;
+            }
+            AdvertiseFriendListClient(fishNetNetworkManager.ServerManager.Clients[clientId], friendListNetworkData);
+        }
+
+        [TargetRpc]
+        public void AdvertiseFriendListClient(NetworkConnection networkConnection, FriendListNetworkData friendListNetworkData) {
+            //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroupClient({guild.guildId})");
+            networkManagerClient.ProcessLoadFriendList(friendListNetworkData);
+        }
+
+        public void AdvertiseGuildNameAvailable(int accountId) {
+            //Debug.Log($"FishNetClientConnector.AdvertiseGuildNameAvailable({accountId})");
+
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseGuild() could not find client id {accountId}");
+                return;
+            }
+            int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseGuild() could not find client id {clientId}");
+                return;
+            }
+            AdvertiseGuildNameAvailableClient(fishNetNetworkManager.ServerManager.Clients[clientId]);
+        }
+
+        [TargetRpc]
+        public void AdvertiseGuildNameAvailableClient(NetworkConnection networkConnection) {
+            //Debug.Log($"FishNetClientConnector.AdvertiseGuildNameAvailableClient()");
+            networkManagerClient.ProcessGuildNameAvailable();
+        }
+
+
+        public void AdvertiseRemoveCharacterFromGroup(int accountId, int removedCharacterId, int characterGroupId) {
             //Debug.Log($"FishNetClientConnector.AdvertiseRemoveCharacterFromGroup({removedCharacterId}, {characterGroup.characterGroupId})");
 
-            foreach (int memberId in characterGroup.CharacterIdList[UnitControllerMode.Player].Keys) {
-                // get account id from player id
-                int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(memberId);
-                if (memberAccountId == 0) {
-                    continue;
-                }
-                if (networkManagerServer.LoggedInAccounts.ContainsKey(memberAccountId) == false) {
-                    Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {memberAccountId}");
-                    continue;
-                }
-                int _clientId = networkManagerServer.LoggedInAccounts[memberAccountId].clientId;
-                if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                    Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {_clientId}");
-                    continue;
-                }
-                AdvertiseRemoveCharacterFromGroupClient(fishNetNetworkManager.ServerManager.Clients[_clientId], removedCharacterId, characterGroup.characterGroupId);
-            }
-            // get account id from player id
-            int accountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(removedCharacterId);
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {accountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {accountId}");
                 return;
             }
-            int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
-            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {clientId}");
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {_clientId}");
                 return;
             }
-            AdvertiseRemoveCharacterFromGroupClient(fishNetNetworkManager.ServerManager.Clients[clientId], removedCharacterId, characterGroup.characterGroupId);
+            AdvertiseRemoveCharacterFromGroupClient(fishNetNetworkManager.ServerManager.Clients[_clientId], removedCharacterId, characterGroupId);
         }
 
         [TargetRpc]
@@ -2003,45 +2295,117 @@ namespace AnyRPG {
             networkManagerClient.ProcessCharacterLeaveGroup(removedPlayerId, characterGroupId);
         }
 
-        public void AdvertiseCharacterGroupInvite(int invitedCharacterId, CharacterGroup characterGroup, string leaderName) {
+        public void AdvertiseRemoveCharacterFromGuild(int accountId, int removedCharacterId, int guildId) {
+            //Debug.Log($"FishNetClientConnector.AdvertiseRemoveCharacterFromGroup({removedCharacterId}, {characterGroup.characterGroupId})");
+
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseRemoveCharacterFromGuildClient(fishNetNetworkManager.ServerManager.Clients[_clientId], removedCharacterId, guildId);
+        }
+
+        [TargetRpc]
+        public void AdvertiseRemoveCharacterFromGuildClient(NetworkConnection networkConnection, int removedPlayerId, int guildId) {
+            networkManagerClient.ProcessCharacterLeaveGuild(removedPlayerId, guildId);
+        }
+
+        public void AdvertiseRemoveCharacterFromFriendList(int accountId, int removedCharacterId) {
+            //Debug.Log($"FishNetClientConnector.AdvertiseRemoveCharacterFromFriendList({accountId}, {removedCharacterId})");
+
+            int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {clientId}");
+                return;
+            }
+            AdvertiseRemoveCharacterFromFriendListClient(fishNetNetworkManager.ServerManager.Clients[clientId], removedCharacterId);
+        }
+
+        [TargetRpc]
+        public void AdvertiseRemoveCharacterFromFriendListClient(NetworkConnection networkConnection, int removedPlayerId) {
+            //Debug.Log($"FishNetClientConnector.AdvertiseRemoveCharacterFromFriendListClient({removedPlayerId})");
+
+            networkManagerClient.ProcessRemoveCharacterFromFriendList(removedPlayerId);
+        }
+
+        public void AdvertiseCharacterGroupInvite(int invitedCharacterId, int characterGroupId, string leaderName) {
             //Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupInvite({invitedCharacterId}, {characterGroup.characterGroupId}, {leaderName})");
 
             int accountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(invitedCharacterId);
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupInvite() account id {accountId} is not logged in");
+               //Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupInvite() account id {accountId} is not logged in");
                 return;
             }
             int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupInvite() could not find client id {clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupInvite() could not find client id {clientId}");
                 return;
             }
-            AdvertiseCharacterGroupInviteClient(fishNetNetworkManager.ServerManager.Clients[clientId], characterGroup, leaderName);
+            AdvertiseCharacterGroupInviteClient(fishNetNetworkManager.ServerManager.Clients[clientId], characterGroupId, leaderName);
         }
 
         [TargetRpc]
-        public void AdvertiseCharacterGroupInviteClient(NetworkConnection networkConnection, CharacterGroup characterGroup, string leaderName) {
-            networkManagerClient.ProcessCharacterGroupInvite(characterGroup, leaderName);
+        public void AdvertiseCharacterGroupInviteClient(NetworkConnection networkConnection, int characterGroupId, string leaderName) {
+            networkManagerClient.ProcessCharacterGroupInvite(characterGroupId, leaderName);
         }
 
-        public void AdvertiseDisbandCharacterGroup(CharacterGroup characterGroup) {
-            foreach (int memberId in characterGroup.CharacterIdList[UnitControllerMode.Player].Keys) {
-                // get account id from player id
-                int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(memberId);
-                if (memberAccountId == 0) {
-                    continue;
-                }
-                if (networkManagerServer.LoggedInAccounts.ContainsKey(memberAccountId) == false) {
-                    Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {memberAccountId}");
-                    continue;
-                }
-                int _clientId = networkManagerServer.LoggedInAccounts[memberAccountId].clientId;
-                if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                    Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {_clientId}");
-                    continue;
-                }
-                AdvertiseDisbandCharacterGroupClient(fishNetNetworkManager.ServerManager.Clients[_clientId], characterGroup.characterGroupId);
+        public void AdvertiseGuildInvite(int invitedCharacterId, int guildId, string leaderName) {
+            //Debug.Log($"FishNetClientConnector.AdvertiseGuildInvite({invitedCharacterId}, {characterGroup.characterGroupId}, {leaderName})");
+
+            int accountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(invitedCharacterId);
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseGuildInvite() account id {accountId} is not logged in");
+                return;
             }
+            int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseGuildInvite() could not find client id {clientId}");
+                return;
+            }
+            AdvertiseGuildInviteClient(fishNetNetworkManager.ServerManager.Clients[clientId], guildId, leaderName);
+        }
+
+        [TargetRpc]
+        public void AdvertiseGuildInviteClient(NetworkConnection networkConnection, int guildId, string leaderName) {
+            networkManagerClient.ProcessGuildInvite(guildId, leaderName);
+        }
+
+        public void AdvertiseFriendInvite(int accountId, int inviterCharacterId, string characterName) {
+            //Debug.Log($"FishNetClientConnector.AdvertiseGuildInvite({invitedCharacterId}, {characterGroup.characterGroupId}, {leaderName})");
+
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseGuildInvite() account id {accountId} is not logged in");
+                return;
+            }
+            int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseGuildInvite() could not find client id {clientId}");
+                return;
+            }
+            AdvertiseFriendInviteClient(fishNetNetworkManager.ServerManager.Clients[clientId], inviterCharacterId, characterName);
+        }
+
+        [TargetRpc]
+        public void AdvertiseFriendInviteClient(NetworkConnection networkConnection, int inviterCharacterId, string leaderName) {
+            networkManagerClient.ProcessFriendInvite(inviterCharacterId, leaderName);
+        }
+
+        public void AdvertiseDisbandCharacterGroup(int accountId, int characterGroupId) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseDisbandCharacterGroupClient(fishNetNetworkManager.ServerManager.Clients[_clientId], characterGroupId);
         }
 
         [TargetRpc]
@@ -2049,24 +2413,35 @@ namespace AnyRPG {
             networkManagerClient.ProcessDisbandCharacterGroup(characterGroupId);
         }
 
-        public void AdvertiseRenameCharacterInGroup(CharacterGroup characterGroup, int characterId, string newName) {
-            foreach (int memberId in characterGroup.CharacterIdList[UnitControllerMode.Player].Keys) {
-                // get account id from player id
-                int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(memberId);
-                if (memberAccountId == 0) {
-                    continue;
-                }
-                if (networkManagerServer.LoggedInAccounts.ContainsKey(memberAccountId) == false) {
-                    Debug.Log($"FishNetClientConnector.AdvertiseRenameCharacterInGroup() could not find client id {memberAccountId}");
-                    continue;
-                }
-                int _clientId = networkManagerServer.LoggedInAccounts[memberAccountId].clientId;
-                if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                    Debug.Log($"FishNetClientConnector.AdvertiseRenameCharacterInGroup() could not find client id {_clientId}");
-                    continue;
-                }
-                AdvertiseRenameCharacterInGroupClient(fishNetNetworkManager.ServerManager.Clients[_clientId], characterGroup.characterGroupId, characterId, newName);
+        public void AdvertiseDisbandGuild(int accountId, int guildId) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find account id {accountId}");
+                return;
             }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseDisbandGuildClient(fishNetNetworkManager.ServerManager.Clients[_clientId], guildId);
+        }
+
+        [TargetRpc]
+        public void AdvertiseDisbandGuildClient(NetworkConnection networkConnection, int guildId) {
+            networkManagerClient.ProcessDisbandGuild(guildId);
+        }
+
+        public void AdvertiseRenameCharacterInGroup(int accountId, int groupId, int characterId, string newName) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseRenameCharacterInGroup() could not find client id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseRenameCharacterInGroup() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseRenameCharacterInGroupClient(fishNetNetworkManager.ServerManager.Clients[_clientId], groupId, characterId, newName);
         }
 
         [TargetRpc]
@@ -2074,14 +2449,104 @@ namespace AnyRPG {
             networkManagerClient.ProcessRenameCharacterInGroup(characterGroupId, characterId, newName);
         }
 
+        public void AdvertiseRenameCharacterInGuild(int accountId, int guildId, int characterId, string newName) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseRenameCharacterInGroup() could not find client id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseRenameCharacterInGroup() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseRenameCharacterInGuildClient(fishNetNetworkManager.ServerManager.Clients[_clientId], guildId, characterId, newName);
+        }
+
+        [TargetRpc]
+        public void AdvertiseRenameCharacterInGuildClient(NetworkConnection networkConnection, int guildId, int characterId, string newName) {
+            networkManagerClient.ProcessRenameCharacterInGuild(guildId, characterId, newName);
+        }
+
+        public void AdvertiseRenameCharacterInFriendList(int accountId, int characterId, string newName) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseRenameCharacterInFriendList() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseRenameCharacterInFriendList() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseRenameCharacterInFriendListClient(fishNetNetworkManager.ServerManager.Clients[_clientId], characterId, newName);
+        }
+
+        [TargetRpc]
+        public void AdvertiseRenameCharacterInFriendListClient(NetworkConnection networkConnection, int characterId, string newName) {
+            networkManagerClient.ProcessRenameCharacterInFriendList(characterId, newName);
+        }
+
+        public void AdvertiseCharacterGroupMemberStatusChange(int accountId, int characterGroupId, int playerCharacterId, CharacterGroupMemberNetworkData characterGroupMemberNetworkData) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupMemberOnline() could not find client id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupMemberOnline() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseCharacterGroupMemberStatusChangeClient(fishNetNetworkManager.ServerManager.Clients[_clientId], characterGroupId, playerCharacterId, characterGroupMemberNetworkData);
+        }
+
+        [TargetRpc]
+        public void AdvertiseCharacterGroupMemberStatusChangeClient(NetworkConnection networkConnection, int characterGroupId, int playerCharacterId, CharacterGroupMemberNetworkData characterGroupMemberNetworkData) {
+            networkManagerClient.ProcessCharacterGroupMemberStatusChange(characterGroupId, playerCharacterId, characterGroupMemberNetworkData);
+        }
+
+        public void AdvertiseGuildMemberStatusChange(int accountId, int guildId, int playerCharacterId, GuildMemberNetworkData guildMemberNetworkData) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseGuildMemberOnline() could not account client id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseGuildMemberOnline() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseGuildMemberStatusChangeClient(fishNetNetworkManager.ServerManager.Clients[_clientId], guildId, playerCharacterId, guildMemberNetworkData);
+        }
+
+        [TargetRpc]
+        public void AdvertiseGuildMemberStatusChangeClient(NetworkConnection networkConnection, int guildId, int playerCharacterId, GuildMemberNetworkData guildMemberNetworkData) {
+            networkManagerClient.ProcessGuildMemberStatusChange(guildId, playerCharacterId, guildMemberNetworkData);
+        }
+
+        public void AdvertiseFriendStateChange(int accountId, int playerCharacterId, CharacterSummaryNetworkData characterSummaryNetworkData) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseFriendOnline() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseFriendOnline() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseFriendStateChangeClient(fishNetNetworkManager.ServerManager.Clients[_clientId], playerCharacterId, characterSummaryNetworkData);
+        }
+
+        [TargetRpc]
+        public void AdvertiseFriendStateChangeClient(NetworkConnection networkConnection, int playerCharacterId, CharacterSummaryNetworkData characterSummaryNetworkData) {
+            networkManagerClient.ProcessFriendStateChange(playerCharacterId, characterSummaryNetworkData);
+        }
+
         public void AdvertisePlayerNameNotAvailable(int accountId) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupInvite() account id {accountId} is not logged in");
+               //Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupInvite() account id {accountId} is not logged in");
                 return;
             }
             int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupInvite() could not find client id {clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupInvite() could not find client id {clientId}");
                 return;
             }
             AdvertisePlayerNameNotAvailableClient(fishNetNetworkManager.ServerManager.Clients[clientId]);
@@ -2094,12 +2559,12 @@ namespace AnyRPG {
 
         public void AdvertiseDeclineCharacterGroupInvite(int leaderAccountId, string decliningPlayerName) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(leaderAccountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupInvite() account id {leaderAccountId} is not logged in");
+               //Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupInvite() account id {leaderAccountId} is not logged in");
                 return;
             }
             int clientId = networkManagerServer.LoggedInAccounts[leaderAccountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupInvite() could not find client id {clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupInvite() could not find client id {clientId}");
                 return;
             }
             AdvertiseDeclineCharacterGroupInviteClient(fishNetNetworkManager.ServerManager.Clients[clientId], decliningPlayerName);
@@ -2110,24 +2575,53 @@ namespace AnyRPG {
             networkManagerClient.ProcessDeclineCharacterGroupInvite(decliningPlayerName);
         }
 
-        public void AdvertisePromoteGroupLeader(CharacterGroup characterGroup, int newLeaderCharacterId) {
-            foreach (int memberId in characterGroup.CharacterIdList[UnitControllerMode.Player].Keys) {
-                // get account id from player id
-                int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(memberId);
-                if (memberAccountId == 0) {
-                    continue;
-                }
-                if (networkManagerServer.LoggedInAccounts.ContainsKey(memberAccountId) == false) {
-                    Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {memberAccountId}");
-                    continue;
-                }
-                int _clientId = networkManagerServer.LoggedInAccounts[memberAccountId].clientId;
-                if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                    Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {_clientId}");
-                    continue;
-                }
-                AdvertisePromoteGroupLeaderClient(fishNetNetworkManager.ServerManager.Clients[_clientId], characterGroup.characterGroupId, newLeaderCharacterId);
+        public void AdvertiseDeclineGuildInvite(int leaderAccountId, string decliningPlayerName) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(leaderAccountId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupInvite() account id {leaderAccountId} is not logged in");
+                return;
             }
+            int clientId = networkManagerServer.LoggedInAccounts[leaderAccountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupInvite() could not find client id {clientId}");
+                return;
+            }
+            AdvertiseDeclineGuildInviteClient(fishNetNetworkManager.ServerManager.Clients[clientId], decliningPlayerName);
+        }
+
+        [TargetRpc]
+        public void AdvertiseDeclineGuildInviteClient(NetworkConnection networkConnection, string decliningPlayerName) {
+            networkManagerClient.ProcessDeclineGuildInvite(decliningPlayerName);
+        }
+
+        public void AdvertiseDeclineFriendInvite(int accountId, string decliningPlayerName) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupInvite() account id {accountId} is not logged in");
+                return;
+            }
+            int clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseCharacterGroupInvite() could not find client id {clientId}");
+                return;
+            }
+            AdvertiseDeclineFriendInviteClient(fishNetNetworkManager.ServerManager.Clients[clientId], decliningPlayerName);
+        }
+
+        [TargetRpc]
+        public void AdvertiseDeclineFriendInviteClient(NetworkConnection networkConnection, string decliningPlayerName) {
+            networkManagerClient.ProcessDeclineFriendInvite(decliningPlayerName);
+        }
+
+        public void AdvertisePromoteGroupLeader(int accountId, int characterGroupId, int newLeaderCharacterId) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {_clientId}");
+                return;
+            }
+            AdvertisePromoteGroupLeaderClient(fishNetNetworkManager.ServerManager.Clients[_clientId], characterGroupId, newLeaderCharacterId);
         }
 
         [TargetRpc]
@@ -2135,41 +2629,71 @@ namespace AnyRPG {
             networkManagerClient.ProcessPromoteGroupLeader(characterGroupId, newLeaderCharacterId);
         }
 
-        public void AdvertiseGroupMessage(CharacterGroup characterGroup, string messageText) {
-            foreach (int memberId in characterGroup.CharacterIdList[UnitControllerMode.Player].Keys) {
-                // get account id from player id
-                int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(memberId);
-                if (memberAccountId == 0) {
-                    continue;
-                }
-                if (networkManagerServer.LoggedInAccounts.ContainsKey(memberAccountId) == false) {
-                    Debug.Log($"FishNetClientConnector.AdvertiseGroupMessage() could not find client id {memberAccountId}");
-                    continue;
-                }
-                int _clientId = networkManagerServer.LoggedInAccounts[memberAccountId].clientId;
-                if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                    Debug.Log($"FishNetClientConnector.AdvertiseGroupMessage() could not find client id {_clientId}");
-                    continue;
-                }
-                AdvertiseGroupMessageClient(fishNetNetworkManager.ServerManager.Clients[_clientId], messageText);
+        public void AdvertisePromoteGuildLeader(int accountId, int guildId, int newLeaderCharacterId) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {accountId}");
+                return;
             }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseAddCharacterToGroup() could not find client id {_clientId}");
+                return;
+            }
+            AdvertisePromoteGuildLeaderClient(fishNetNetworkManager.ServerManager.Clients[_clientId], guildId, newLeaderCharacterId);
         }
 
         [TargetRpc]
-        public void AdvertiseGroupMessageClient(NetworkConnection networkConnection, string messageText) {
-            networkManagerClient.AdvertiseGroupMessage(messageText);
+        public void AdvertisePromoteGuildLeaderClient(NetworkConnection networkConnection, int guildId, int newLeaderCharacterId) {
+            networkManagerClient.ProcessPromoteGuildLeader(guildId, newLeaderCharacterId);
         }
+
+        public void AdvertiseGroupMessage(int accountId, int characterGroupId, string messageText) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseGroupMessage() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseGroupMessage() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseGroupMessageClient(fishNetNetworkManager.ServerManager.Clients[_clientId], characterGroupId, messageText);
+        }
+
+        [TargetRpc]
+        public void AdvertiseGroupMessageClient(NetworkConnection networkConnection, int characterGroupId, string messageText) {
+            networkManagerClient.AdvertiseGroupMessage(characterGroupId, messageText);
+        }
+
+        public void AdvertiseGuildMessage(int accountId, int guildId, string messageText) {
+            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseGroupMessage() could not find account id {accountId}");
+                return;
+            }
+            int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
+               //Debug.Log($"FishNetClientConnector.AdvertiseGroupMessage() could not find client id {_clientId}");
+                return;
+            }
+            AdvertiseGuildMessageClient(fishNetNetworkManager.ServerManager.Clients[_clientId], guildId, messageText);
+        }
+
+        [TargetRpc]
+        public void AdvertiseGuildMessageClient(NetworkConnection networkConnection, int guildId, string messageText) {
+            networkManagerClient.AdvertiseGuildMessage(guildId, messageText);
+        }
+
 
         public void AdvertisePrivateMessage(int targetAccountId, string messageText) {
             //Debug.Log($"FishNetClientConnector.AdvertisePrivateMessage({targetAccountId}, {messageText})");
 
             if (networkManagerServer.LoggedInAccounts.ContainsKey(targetAccountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertisePrivateMessage() could not find account id {targetAccountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertisePrivateMessage() could not find account id {targetAccountId}");
                 return;
             }
             int _clientId = networkManagerServer.LoggedInAccounts[targetAccountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRenameCharacterInGroup() could not find client id {_clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertisePrivateMessage() could not find client id {_clientId}");
                 return;
             }
             AdvertisePrivateMessageClient(fishNetNetworkManager.ServerManager.Clients[_clientId], messageText);
@@ -2186,12 +2710,12 @@ namespace AnyRPG {
             //Debug.Log($"FishNetClientConnector.AdvertiseAcceptTradeInvite({accountId}, {targetCharacterId})");
 
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseAcceptTradeInvite() could not find account id {accountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseAcceptTradeInvite() could not find account id {accountId}");
                 return;
             }
             int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseAcceptTradeInvite() could not find client id {_clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseAcceptTradeInvite() could not find client id {_clientId}");
                 return;
             }
             AdvertiseAcceptTradeInviteClient(fishNetNetworkManager.ServerManager.Clients[_clientId], targetCharacterId);
@@ -2206,12 +2730,12 @@ namespace AnyRPG {
 
         public void AdvertiseDeclineTradeInvite(int accountId) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseDeclineTradeInvite() could not find account id {accountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseDeclineTradeInvite() could not find account id {accountId}");
                 return;
             }
             int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseDeclineTradeInvite() could not find client id {_clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseDeclineTradeInvite() could not find client id {_clientId}");
                 return;
             }
             AdvertiseDeclineTradeInviteClient(fishNetNetworkManager.ServerManager.Clients[_clientId]);
@@ -2224,12 +2748,12 @@ namespace AnyRPG {
 
         public void AdvertiseRequestBeginTrade(int targetAccountId, int sourceCharacterId) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(targetAccountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {targetAccountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {targetAccountId}");
                 return;
             }
             int _clientId = networkManagerServer.LoggedInAccounts[targetAccountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
                 return;
             }
             AdvertiseRequestBeginTradeClient(fishNetNetworkManager.ServerManager.Clients[_clientId], sourceCharacterId);
@@ -2242,12 +2766,12 @@ namespace AnyRPG {
 
         public void AdvertiseAddItemsToTargetTradeSlot(int targetAccountId, int buttonIndex, List<int> itemIdList) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(targetAccountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {targetAccountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {targetAccountId}");
                 return;
             }
             int _clientId = networkManagerServer.LoggedInAccounts[targetAccountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
                 return;
             }
             AdvertiseAddItemsToTargetTradeSlotClient(fishNetNetworkManager.ServerManager.Clients[_clientId], buttonIndex, itemIdList);
@@ -2260,12 +2784,12 @@ namespace AnyRPG {
 
         public void AdvertiseAddCurrencyToTrade(int targetAccountId, int amount) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(targetAccountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {targetAccountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {targetAccountId}");
                 return;
             }
             int _clientId = networkManagerServer.LoggedInAccounts[targetAccountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
                 return;
             }
             AdvertiseAddCurrencyToTradeClient(fishNetNetworkManager.ServerManager.Clients[_clientId], amount);
@@ -2278,12 +2802,12 @@ namespace AnyRPG {
 
         public void AdvertiseCancelTrade(int accountId) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
                 return;
             }
             int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
                 return;
             }
             AdvertiseCancelTradeClient(fishNetNetworkManager.ServerManager.Clients[_clientId]);
@@ -2296,12 +2820,12 @@ namespace AnyRPG {
 
         public void AdvertiseCompleteTrade(int accountId) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
                 return;
             }
             int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
                 return;
             }
             AdvertiseTradeCompleteClient(fishNetNetworkManager.ServerManager.Clients[_clientId]);
@@ -2314,12 +2838,12 @@ namespace AnyRPG {
 
         public void AdvertiseMailMessages(int accountId, MailMessageListResponse mailMessageListResponse) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
                 return;
             }
             int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
                 return;
             }
             AdvertiseMailMessagesClient(fishNetNetworkManager.ServerManager.Clients[_clientId], mailMessageListResponse);
@@ -2332,12 +2856,12 @@ namespace AnyRPG {
 
         public void AdvertiseDeleteMailMessage(int accountId, int messageId) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
                 return;
             }
             int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
                 return;
             }
             AdvertiseDeleteMailMessageClient(fishNetNetworkManager.ServerManager.Clients[_clientId], messageId);
@@ -2345,12 +2869,12 @@ namespace AnyRPG {
 
         public void AdvertiseAuctionItems(int accountId, AuctionItemListResponse auctionItemListResponse) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
                 return;
             }
             int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
                 return;
             }
             AdvertiseAuctionItemsClient(fishNetNetworkManager.ServerManager.Clients[_clientId], auctionItemListResponse);
@@ -2369,12 +2893,12 @@ namespace AnyRPG {
 
         internal void AdvertiseTakeMailAttachment(int accountId, int messageId, int attachmentSlotId) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
                 return;
             }
             int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
                 return;
             }
             AdvertiseTakeMailAttachmentClient(fishNetNetworkManager.ServerManager.Clients[_clientId], messageId, attachmentSlotId);
@@ -2387,12 +2911,12 @@ namespace AnyRPG {
 
         internal void AdvertiseTakeMailAttachments(int accountId, int messageId) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
                 return;
             }
             int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
                 return;
             }
             AdvertiseTakeMailAttachmentsClient(fishNetNetworkManager.ServerManager.Clients[_clientId], messageId);
@@ -2405,12 +2929,12 @@ namespace AnyRPG {
 
         public void AdvertiseConfirmationPopup(int accountId, string messageText) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
                 return;
             }
             int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
                 return;
             }
             AdvertiseConfirmationPopupClient(fishNetNetworkManager.ServerManager.Clients[_clientId], messageText);
@@ -2423,12 +2947,12 @@ namespace AnyRPG {
 
         public void AdvertiseMailSend(int accountId) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
                 return;
             }
             int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
                 return;
             }
             AdvertiseMailSendClient(fishNetNetworkManager.ServerManager.Clients[_clientId]);
@@ -2441,12 +2965,12 @@ namespace AnyRPG {
 
         public void AdvertiseBuyAuctionItem(int accountId, int auctionItemId) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
                 return;
             }
             int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
                 return;
             }
             AdvertiseBuyAuctionItemClient(fishNetNetworkManager.ServerManager.Clients[_clientId], auctionItemId);
@@ -2459,12 +2983,12 @@ namespace AnyRPG {
 
         public void AdvertiseCancelAuction(int accountId, int auctionItemId) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
                 return;
             }
             int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
                 return;
             }
             AdvertiseCancelAuctionClient(fishNetNetworkManager.ServerManager.Clients[_clientId], auctionItemId);
@@ -2477,12 +3001,12 @@ namespace AnyRPG {
 
         public void AdvertiseListAuctionItems(int accountId) {
             if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
                 return;
             }
             int _clientId = networkManagerServer.LoggedInAccounts[accountId].clientId;
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(_clientId) == false) {
-                Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
+               //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find client id {_clientId}");
                 return;
             }
             AdvertiseListAuctionItemsClient(fishNetNetworkManager.ServerManager.Clients[_clientId]);
@@ -2493,18 +3017,10 @@ namespace AnyRPG {
             networkManagerClient.AdvertiseListAuctionItems();
         }
 
-
-
-
-
-
-
-
-
         /*
         public override void OnStartServer() {
             base.OnStartServer();
-            Debug.Log($"FishNetClientConnector.OnStartServer()");
+           //Debug.Log($"FishNetClientConnector.OnStartServer()");
 
             // on server gameMode should always bet set to network
             //Debug.Log($"FishNetClientConnector.OnStartServer(): setting gameMode to network");
@@ -2514,7 +3030,7 @@ namespace AnyRPG {
 
         public override void OnStopServer() {
             base.OnStopServer();
-            Debug.Log($"FishNetClientConnector.OnStopServer()");
+           //Debug.Log($"FishNetClientConnector.OnStopServer()");
 
             systemGameManager.SetGameMode(GameMode.Local);
             networkManagerServer.DeactivateServerMode();

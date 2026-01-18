@@ -104,7 +104,7 @@ namespace AnyRPG {
                 // ensure attacks aren't happening too fast
                 return;
             }/* else {
-                Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleAutoAttack() time is " + (Time.time - lastAttackBegin));
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleAutoAttack() time is " + (Time.time - lastAttackBegin));
             }*/
 
 

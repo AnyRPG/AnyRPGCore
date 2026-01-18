@@ -114,7 +114,7 @@ namespace AnyRPG {
                     //characterEquipmentManager.CreateSubscriptions();
                 }
             } else {
-                Debug.Log("InspectCharacterPanel.HandleUnitCreated(): could not find a characterEquipmentManager");
+                Debug.LogWarning("InspectCharacterPanel.HandleUnitCreated(): could not find a characterEquipmentManager");
             }
         }
 

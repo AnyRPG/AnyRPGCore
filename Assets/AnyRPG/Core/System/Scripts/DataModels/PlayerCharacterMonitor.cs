@@ -14,6 +14,7 @@ namespace AnyRPG {
 
         // game manager references
         private SaveManager saveManager = null;
+        private LevelManager levelManager = null;
 
         public PlayerCharacterMonitor(SystemGameManager systemGameManager, int accountId, CharacterSaveData characterSaveData, UnitController unitController) {
             Configure(systemGameManager);
@@ -28,6 +29,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             saveManager = systemGameManager.SaveManager;
+            levelManager = systemGameManager.LevelManager;
         }
 
         public void ProcessBeforeDespawn() {
@@ -35,6 +37,8 @@ namespace AnyRPG {
 
             unitController.CharacterSaveManager.SaveGameData();
             unitController.UnitEventController.OnSaveDataUpdated -= HandleSaveDataUpdated;
+            unitController.UnitEventController.OnLevelChanged -= HandleLevelChanged;
+            unitController.UnitEventController.OnClassChange -= HandleClassChange;
             unitController = null;
         }
 
@@ -84,6 +88,20 @@ namespace AnyRPG {
             this.unitController = unitController;
             disconnected = false;
             unitController.UnitEventController.OnSaveDataUpdated += HandleSaveDataUpdated;
+            unitController.UnitEventController.OnLevelChanged += HandleLevelChanged;
+            unitController.UnitEventController.OnClassChange += HandleClassChange;
+            SceneNode sceneNode = levelManager.GetSceneNodeBySceneName(unitController.gameObject.scene.name);
+            if (sceneNode != null) {
+                playerCharacterService.SetCharacterZone(unitController.CharacterId, sceneNode.DisplayName);
+            }
+        }
+
+        private void HandleClassChange(UnitController controller, CharacterClass newClass, CharacterClass oldClass) {
+            playerCharacterService.ProcessClassChange(unitController, newClass);
+        }
+
+        private void HandleLevelChanged(int newLevel) {
+            playerCharacterService.ProcessLevelChanged(unitController, newLevel);
         }
 
         private void HandleSaveDataUpdated() {

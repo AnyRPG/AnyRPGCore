@@ -284,7 +284,7 @@ namespace AnyRPG {
         public void CompleteQuest(UnitController sourceUnitController, QuestRewardChoices questRewardChoices) {
             //Debug.Log("QuestGiverUI.CompleteQuest()");
             if (!IsComplete(sourceUnitController)) {
-                Debug.Log("QuestGiverManager.CompleteQuest(): currentQuest is not complete, exiting!");
+                Debug.LogWarning("QuestGiverManager.CompleteQuest(): currentQuest is not complete, exiting!");
                 return;
             }
 
@@ -408,7 +408,7 @@ namespace AnyRPG {
                 questGiver.UpdateQuestStatus(sourceUnitController);
                 questGiver.HandleCompleteQuest();
             } else {
-                Debug.Log("QuestGiverUI.CompleteQuest(): questGiver is null!");
+                //Debug.Log("QuestGiverUI.CompleteQuest(): questGiver is null!");
             }
             */
 

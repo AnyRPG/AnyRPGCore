@@ -211,94 +211,21 @@ namespace AnyRPG {
         private void SetCharacterName() {
             //Debug.Log($"{unitNamePlateController.NamePlateUnit.DisplayName}.NamePlateController.SetCharacterName()");
 
+            if (CharacterName == null) {
+                return;
+            }
+
             if (isPlayerUnitNamePlate && PlayerPrefs.GetInt("ShowPlayerName") == 0 && PlayerPrefs.GetInt("ShowPlayerFaction") == 0) {
                 //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): ShowPlayerName and ShowPlayerFaction are both set to zero, setting charactername.text to string.empty");
                 CharacterName.text = string.Empty;
                 return;
             }
 
-            if (CharacterName != null && unitNamePlateController != null) {
-                if (CharacterName.text != null) {
-                    // character names have special coloring. white if no faction, green if character, otherwise normal faction colors
-                    if (unitNamePlateController.Faction != null) {
-                        //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName);
-                        Color textColor;
-                        if (uIManager.CutSceneBarController.CurrentCutscene != null) {
-                            /*
-                            if (unitNamePlateController.Faction != null) {
-                                //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: USING DEFAULT");
-                                textColor = unitNamePlateController.Faction.GetFactionColor();
-                            } else {
-                                //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: USING UNIT");
-                                textColor = Faction.GetFactionColor(playerManager, unitNamePlateController.NamePlateUnit);
-                            }
-                            */
-                            if (uIManager.CutSceneBarController.CurrentCutscene.UseDefaultFactionColors == true) {
-                                if (unitNamePlateController.Faction != null) {
-                                    textColor = unitNamePlateController.Faction.GetFactionColor();
-                                } else {
-                                    textColor = Color.white;
-                                }
-                            } else {
-                                textColor = Color.white;
-                            }
-                        } else {
-                            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: USING UNIT");
-                            textColor = Faction.GetFactionColor(playerManager, unitNamePlateController.NamePlateUnit);
-                        }
-                        //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: " + ColorUtility.ToHtmlStringRGB(textColor));
-
-
-                        string nameString = string.Empty;
-                        string factionString = string.Empty;
-                        if (isPlayerUnitNamePlate && PlayerPrefs.GetInt("ShowPlayerName") == 0) {
-                            // nothing for now
-                            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): not showing name");
-                        } else {
-                            nameString = unitNamePlateController.UnitDisplayName;
-                            //Debug.Log($"{unitNamePlateController.NamePlateUnit.DisplayName}.NamePlateController.SetCharacterName(): showing name : {unitNamePlateController.UnitDisplayName}");
-                        }
-                        if (isPlayerUnitNamePlate && PlayerPrefs.GetInt("ShowPlayerFaction") == 0) {
-                            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): not showing faction");
-                        } else {
-                            if (unitNamePlateController.SuppressFaction == false) {
-                                factionString = "<" + unitNamePlateController.Faction.DisplayName + ">";
-                            }
-                            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): showing faction");
-                        }
-                        if (unitNamePlateController.Title != string.Empty) {
-                            factionString = "<" + unitNamePlateController.Title + ">";
-                        }
-                        string newLineString = string.Empty;
-                        if (factionString != string.Empty && nameString != string.Empty) {
-                            newLineString = "\n";
-                            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): faction nad name are both not empty");
-                        } else {
-                            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): faction or name are empty");
-                        }
-                        //Debug.Log($"{unitNamePlateController.NamePlateUnit.DisplayName}.NamePlateController.SetCharacterName(): setting character name text: {nameString}{newLineString}{factionString}");
-                        CharacterName.text = string.Format("<color=#{0}>{1}{2}{3}</color>", ColorUtility.ToHtmlStringRGB(textColor), nameString, newLineString, factionString);
-                    } else {
-                        //Debug.Log("NamePlateController.SetCharacterName(): namePlateUnit has no faction!");
-                        Color textColor;
-                        if (playerManager.UnitController != null && unitNamePlateController.NamePlateUnit.gameObject == playerManager.UnitController.gameObject) {
-                            textColor = Color.green;
-                        } else {
-                            textColor = Color.white;
-                        }
-                        if (PlayerPrefs.GetInt("ShowPlayerName") == 0 && isPlayerUnitNamePlate) {
-                            // nothing
-                        } else {
-                            //Debug.Log($"{unitNamePlateController.NamePlateUnit.DisplayName}.NamePlateController.SetCharacterName(): setting character name text: {unitNamePlateController.UnitDisplayName}");
-                            CharacterName.text = string.Format("<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGB(textColor), unitNamePlateController.UnitDisplayName);
-                        }
-                    }
-                } else {
-                    //Debug.Log("NamePlateController.SetCharacterName(): text field is null!");
-                }
-            } else {
-                //Debug.Log("NamePlateController.SetCharacterName(): character name is null!");
+            if (unitNamePlateController == null) {
+                return;
             }
+
+            CharacterName.text = unitNamePlateController.GetNamePlateString();
         }
 
         public void SetNamePlateUnit(NamePlateUnit namePlateUnit, bool usePositionOffset) {
@@ -325,6 +252,12 @@ namespace AnyRPG {
         }
 
         public void HandleNameChange(string newName) {
+            SetCharacterName();
+        }
+
+        public void HandleSetGuildId() {
+            //Debug.Log($"{unitNamePlateController.UnitDisplayName}.NamePlateController.HandleSetGuildId()");
+
             SetCharacterName();
         }
 

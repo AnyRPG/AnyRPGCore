@@ -8,14 +8,17 @@ namespace AnyRPG {
 
         public event System.Action<string> OnWriteGeneralMessage = delegate { };
         public event System.Action<string> OnWriteGroupMessage = delegate { };
+        public event System.Action<string> OnWriteGuildMessage = delegate { };
         public event System.Action<string> OnWritePrivateMessage = delegate { };
         public event System.Action<string> OnWriteSystemMessage = delegate { };
         public event System.Action<string> OnWriteCombatMessage = delegate { };
         public event System.Action OnClearGeneralMessages = delegate { };
         public event System.Action OnClearGroupMessages = delegate { };
+        public event System.Action OnClearGuildMessages = delegate { };
         public event System.Action OnClearPrivateMessages = delegate { };
         public event System.Action OnClearSystemMessages = delegate { };
         public event System.Action OnClearCombatMessages = delegate { };
+        public event System.Action<string> OnBeginPrivateMessage = delegate { };
 
         private string welcomeString = "Welcome to";
         private string completeWelcomeString = string.Empty;
@@ -81,6 +84,13 @@ namespace AnyRPG {
             WriteGeneralMessage($"[group] {newMessage}");
         }
 
+        public void WriteGuildMessage(string newMessage) {
+            //Debug.Log($"MessageLogClient.WriteGuildMessage({newMessage})");
+
+            OnWriteGuildMessage(newMessage);
+            WriteGeneralMessage($"[guild] {newMessage}");
+        }
+
         public void WritePrivateMessage(string newMessage) {
             //Debug.Log("LogManager.WritePrivateMessage(" + newMessage + ")");
 
@@ -98,6 +108,7 @@ namespace AnyRPG {
             //Debug.Log($"LogManager.WriteSystemMessage({newMessage})");
 
             OnWriteSystemMessage(newMessage);
+            WriteGeneralMessage($"{newMessage}");
         }
 
         private void CreateEventSubscriptions() {
@@ -148,6 +159,7 @@ namespace AnyRPG {
             //Debug.Log("LogManager.ClearLog()");
 
             ClearGroupMessages();
+            ClearGuildMessages();
             ClearPrivateMessages();
             ClearCombatMessages();
             ClearChatMessages();
@@ -157,6 +169,11 @@ namespace AnyRPG {
         private void ClearGroupMessages() {
             //Debug.Log("LogManager.ClearGroupMessages()");
             OnClearGroupMessages();
+        }
+
+        private void ClearGuildMessages() {
+            //Debug.Log("LogManager.ClearGroupMessages()");
+            OnClearGuildMessages();
         }
 
         private void ClearPrivateMessages() {
@@ -183,8 +200,6 @@ namespace AnyRPG {
             //Debug.Log("LogManager.PrintWelcomeMessages()");
 
             WriteGeneralMessage(completeWelcomeString);
-            //WriteCombatMessage(completeWelcomeString);
-            //WriteSystemMessage(completeWelcomeString);
 
         }
 
@@ -192,6 +207,9 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
+        public void BeginPrivateMessage(string commandText) {
+            OnBeginPrivateMessage(commandText);
+        }
     }
 
 }

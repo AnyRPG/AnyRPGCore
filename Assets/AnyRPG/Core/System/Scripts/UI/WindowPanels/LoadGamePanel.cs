@@ -201,13 +201,13 @@ namespace AnyRPG {
             }
             uINavigationControllers[1].UpdateNavigationList();
             /*
-            Debug.Log($"LoadGamePanel.ShowLoadButtonsCommon() buttonArea height after adds: {buttonArea.sizeDelta.y}");
+            //Debug.Log($"LoadGamePanel.ShowLoadButtonsCommon() buttonArea height after adds: {buttonArea.sizeDelta.y}");
             Canvas.ForceUpdateCanvases();
-            Debug.Log($"LoadGamePanel.ShowLoadButtonsCommon() buttonArea height after recalculate 1: {buttonArea.sizeDelta.y}");
+            //Debug.Log($"LoadGamePanel.ShowLoadButtonsCommon() buttonArea height after recalculate 1: {buttonArea.sizeDelta.y}");
             LayoutRebuilder.ForceRebuildLayoutImmediate(buttonArea);
-            Debug.Log($"LoadGamePanel.ShowLoadButtonsCommon() buttonArea height after recalculate 2: {buttonArea.sizeDelta.y}");
+            //Debug.Log($"LoadGamePanel.ShowLoadButtonsCommon() buttonArea height after recalculate 2: {buttonArea.sizeDelta.y}");
             LayoutRebuilder.MarkLayoutForRebuild(buttonArea);
-            Debug.Log($"LoadGamePanel.ShowLoadButtonsCommon() buttonArea height after recalculate 3: {buttonArea.sizeDelta.y}");
+            //Debug.Log($"LoadGamePanel.ShowLoadButtonsCommon() buttonArea height after recalculate 3: {buttonArea.sizeDelta.y}");
             */
 
             if (loadGameButtons.Count > 0) {

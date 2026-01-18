@@ -1,4 +1,3 @@
-using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,6 +18,9 @@ namespace AnyRPG {
 
         [SerializeField]
         protected HighlightButton groupHighlightButton = null;
+
+        [SerializeField]
+        protected HighlightButton guildHighlightButton = null;
 
         [SerializeField]
         protected HighlightButton privateHighlightButton = null;
@@ -65,6 +67,20 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI groupText = null;
 
+        [SerializeField]
+        protected GameObject guildArea = null;
+
+        /*
+        [SerializeField]
+        protected GameObject guildContentArea = null;
+
+        [SerializeField]
+        protected RectTransform guildRectTranform = null;
+        */
+
+        [SerializeField]
+        private TextMeshProUGUI guildText = null;
+
 
         [SerializeField]
         protected GameObject privateArea = null;
@@ -110,23 +126,27 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI systemText = null;
 
-
         [SerializeField]
         protected TMP_InputField textInput = null;
+
+        [SerializeField]
+        protected UINavigationController logButtonsNavigationController = null;
 
         // log content
         protected string generalLog = string.Empty;
         protected string groupLog = string.Empty;
+        protected string guildLog = string.Empty;
         protected string privateLog = string.Empty;
         protected string combatLog = string.Empty;
         protected string systemLog = string.Empty;
 
         // game manager references
-        protected MessageLogClient logManager = null;
+        protected MessageLogClient messageLogClient = null;
         protected ChatCommandManager chatCommandManager = null;
         protected UIManager uiManager = null;
         protected NetworkManagerClient networkManagerClient = null;
         protected ContextMenuService contextMenuService = null;
+        protected LevelManager levelManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("MessageLogPanel.Awake()");
@@ -139,22 +159,24 @@ namespace AnyRPG {
             */
 
             ClearLog();
-
             textInput.onSubmit.AddListener(ProcessEnterKey);
+            DisableNetworkButtons();
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            logManager = systemGameManager.MessageLogClient;
+            messageLogClient = systemGameManager.MessageLogClient;
             chatCommandManager = systemGameManager.ChatCommandManager;
             uiManager = systemGameManager.UIManager;
             networkManagerClient = systemGameManager.NetworkManagerClient;
             contextMenuService = systemGameManager.ContextMenuService;
+            levelManager = systemGameManager.LevelManager;
         }
 
         private void ClearLog() {
             HandleClearGeneralMessages();
             HandleClearGroupMessages();
+            HandleClearGuildMessages();
             HandleClearPrivateMessages();
             HandleClearCombatMessages();
             HandleClearSystemMessages();
@@ -162,8 +184,10 @@ namespace AnyRPG {
 
         public void ShowGeneralLog() {
             generalHighlightButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtonBackgrounds(generalHighlightButton);
+            logButtonsNavigationController.UnHightlightButtonBackgrounds(generalHighlightButton);
+            logButtonsNavigationController.SetCurrentButton(generalHighlightButton);
             groupArea.SetActive(false);
+            guildArea.SetActive(false);
             privateArea.SetActive(false);
             combatArea.SetActive(false);
             systemArea.SetActive(false);
@@ -177,12 +201,31 @@ namespace AnyRPG {
 
         public void ShowGroupLog() {
             groupHighlightButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtonBackgrounds(groupHighlightButton);
+            logButtonsNavigationController.UnHightlightButtonBackgrounds(groupHighlightButton);
+            logButtonsNavigationController.SetCurrentButton(groupHighlightButton);
             privateArea.SetActive(false);
             combatArea.SetActive(false);
             systemArea.SetActive(false);
             generalArea.SetActive(false);
             groupArea.SetActive(true);
+            guildArea.SetActive(false);
+
+            //LayoutRebuilder.ForceRebuildLayoutImmediate(generalContentArea.GetComponent<RectTransform>());
+
+            // set to the bottom so user doesn't have to scroll all the way down on existing long logs
+            //chatScrollBar.value = 0;
+        }
+
+        public void ShowGuildLog() {
+            guildHighlightButton.HighlightBackground();
+            logButtonsNavigationController.UnHightlightButtonBackgrounds(guildHighlightButton);
+            logButtonsNavigationController.SetCurrentButton(guildHighlightButton);
+            privateArea.SetActive(false);
+            combatArea.SetActive(false);
+            systemArea.SetActive(false);
+            generalArea.SetActive(false);
+            groupArea.SetActive(false);
+            guildArea.SetActive(true);
 
             //LayoutRebuilder.ForceRebuildLayoutImmediate(generalContentArea.GetComponent<RectTransform>());
 
@@ -192,11 +235,13 @@ namespace AnyRPG {
 
         public void ShowPrivateLog() {
             privateHighlightButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtonBackgrounds(privateHighlightButton);
+            logButtonsNavigationController.UnHightlightButtonBackgrounds(privateHighlightButton);
+            logButtonsNavigationController.SetCurrentButton(privateHighlightButton);
             combatArea.SetActive(false);
             systemArea.SetActive(false);
             generalArea.SetActive(false);
             groupArea.SetActive(false);
+            guildArea.SetActive(false);
             privateArea.SetActive(true);
 
             //LayoutRebuilder.ForceRebuildLayoutImmediate(generalContentArea.GetComponent<RectTransform>());
@@ -207,8 +252,10 @@ namespace AnyRPG {
 
         public void ShowCombatLog() {
             combatHighlightButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtonBackgrounds(combatHighlightButton);
+            logButtonsNavigationController.UnHightlightButtonBackgrounds(combatHighlightButton);
+            logButtonsNavigationController.SetCurrentButton(combatHighlightButton);
             groupArea.SetActive(false);
+            guildArea.SetActive(false);
             privateArea.SetActive(false);
             systemArea.SetActive(false);
             generalArea.SetActive(false);
@@ -221,8 +268,10 @@ namespace AnyRPG {
 
         public void ShowSystemLog() {
             systemHighlightButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtonBackgrounds(systemHighlightButton);
+            logButtonsNavigationController.UnHightlightButtonBackgrounds(systemHighlightButton);
+            logButtonsNavigationController.SetCurrentButton(systemHighlightButton);
             groupArea.SetActive(false);
+            guildArea.SetActive(false);
             privateArea.SetActive(false);
             generalArea.SetActive(false);
             combatArea.SetActive(false);
@@ -246,6 +295,13 @@ namespace AnyRPG {
             //Debug.Log($"MessageLogPanel.WriteGroupMessage({newMessage})");
             groupLog += newMessage + "\n";
             groupText.text = groupLog;
+            //LayoutRebuilder.ForceRebuildLayoutImmediate(groupRectTranform);
+        }
+
+        public void HandleWriteGuildMessage(string newMessage) {
+            //Debug.Log($"MessageLogPanel.WriteGroupMessage({newMessage})");
+            guildLog += newMessage + "\n";
+            guildText.text = guildLog;
             //LayoutRebuilder.ForceRebuildLayoutImmediate(groupRectTranform);
         }
 
@@ -273,41 +329,80 @@ namespace AnyRPG {
             systemText.text = systemLog;
 
             //LayoutRebuilder.ForceRebuildLayoutImmediate(systemRectTransform);
-
         }
 
         protected override void ProcessCreateEventSubscriptions() {
             ////Debug.Log("PlayerManager.CreateEventSubscriptions()");
             base.ProcessCreateEventSubscriptions();
-            logManager.OnWriteGeneralMessage += HandleWriteGeneralMessage;
-            logManager.OnWriteGroupMessage += HandleWriteGroupMessage;
-            logManager.OnWritePrivateMessage += HandleWritePrivateMessage;
-            logManager.OnWriteSystemMessage += HandleWriteSystemMessage;
-            logManager.OnWriteCombatMessage += HandleWriteCombatMessage;
-            logManager.OnClearGeneralMessages += HandleClearGeneralMessages;
-            logManager.OnClearGroupMessages += HandleClearGroupMessages;
-            logManager.OnClearPrivateMessages += HandleClearPrivateMessages;
-            logManager.OnClearSystemMessages += HandleClearSystemMessages;
-            logManager.OnClearCombatMessages += HandleClearCombatMessages;
+            messageLogClient.OnWriteGeneralMessage += HandleWriteGeneralMessage;
+            messageLogClient.OnWriteGroupMessage += HandleWriteGroupMessage;
+            messageLogClient.OnWriteGuildMessage += HandleWriteGuildMessage;
+            messageLogClient.OnWritePrivateMessage += HandleWritePrivateMessage;
+            messageLogClient.OnWriteSystemMessage += HandleWriteSystemMessage;
+            messageLogClient.OnWriteCombatMessage += HandleWriteCombatMessage;
+            messageLogClient.OnClearGeneralMessages += HandleClearGeneralMessages;
+            messageLogClient.OnClearGroupMessages += HandleClearGroupMessages;
+            messageLogClient.OnClearGuildMessages += HandleClearGuildMessages;
+            messageLogClient.OnClearPrivateMessages += HandleClearPrivateMessages;
+            messageLogClient.OnClearSystemMessages += HandleClearSystemMessages;
+            messageLogClient.OnClearCombatMessages += HandleClearCombatMessages;
             uiManager.OnBeginChatCommand += HandleBeginChatCommand;
             contextMenuService.OnBeginPrivateMessage += HandleBeginPrivateMessage;
+            messageLogClient.OnBeginPrivateMessage += HandleBeginPrivateMessage;
+            networkManagerClient.OnClientConnectionStarted += HandleClientConnectionStarted;
+            networkManagerClient.OnClientConnectionStopped += HandleClientConnectionStopped;
+            //levelManager.OnExitToMainMenu += HandleExitToMainMenu;
         }
 
         protected override void ProcessCleanupEventSubscriptions() {
             ////Debug.Log("PlayerManager.CleanupEventSubscriptions()");
             base.ProcessCleanupEventSubscriptions();
-            logManager.OnWriteGeneralMessage -= HandleWriteGeneralMessage;
-            logManager.OnWriteGroupMessage -= HandleWriteGroupMessage;
-            logManager.OnWritePrivateMessage -= HandleWritePrivateMessage;
-            logManager.OnWriteSystemMessage -= HandleWriteSystemMessage;
-            logManager.OnWriteCombatMessage -= HandleWriteCombatMessage;
-            logManager.OnClearGeneralMessages -= HandleClearGeneralMessages;
-            logManager.OnClearGroupMessages -= HandleClearGroupMessages;
-            logManager.OnClearPrivateMessages -= HandleClearPrivateMessages;
-            logManager.OnClearSystemMessages -= HandleClearSystemMessages;
-            logManager.OnClearCombatMessages -= HandleClearCombatMessages;
+            messageLogClient.OnWriteGeneralMessage -= HandleWriteGeneralMessage;
+            messageLogClient.OnWriteGroupMessage -= HandleWriteGroupMessage;
+            messageLogClient.OnWriteGuildMessage -= HandleWriteGuildMessage;
+            messageLogClient.OnWritePrivateMessage -= HandleWritePrivateMessage;
+            messageLogClient.OnWriteSystemMessage -= HandleWriteSystemMessage;
+            messageLogClient.OnWriteCombatMessage -= HandleWriteCombatMessage;
+            messageLogClient.OnClearGeneralMessages -= HandleClearGeneralMessages;
+            messageLogClient.OnClearGroupMessages -= HandleClearGroupMessages;
+            messageLogClient.OnClearGuildMessages -= HandleClearGuildMessages;
+            messageLogClient.OnClearPrivateMessages -= HandleClearPrivateMessages;
+            messageLogClient.OnClearSystemMessages -= HandleClearSystemMessages;
+            messageLogClient.OnClearCombatMessages -= HandleClearCombatMessages;
             uiManager.OnBeginChatCommand -= HandleBeginChatCommand;
             contextMenuService.OnBeginPrivateMessage -= HandleBeginPrivateMessage;
+            messageLogClient.OnBeginPrivateMessage -= HandleBeginPrivateMessage;
+            networkManagerClient.OnClientConnectionStarted -= HandleClientConnectionStarted;
+            networkManagerClient.OnClientConnectionStopped -= HandleClientConnectionStopped;
+            //levelManager.OnExitToMainMenu -= HandleExitToMainMenu;
+        }
+
+        public void HandleExitToMainMenu() {
+            ClearLog();
+        }
+
+        private void HandleClientConnectionStarted() {
+            EnableNetworkButtons();
+        }
+
+        private void EnableNetworkButtons() {
+            //Debug.Log("MessageLogPanel.EnableNetworkButtons()");
+
+            groupHighlightButton.gameObject.SetActive(true);
+            guildHighlightButton.gameObject.SetActive(true);
+            privateHighlightButton.gameObject.SetActive(true);
+        }
+
+        private void HandleClientConnectionStopped() {
+            DisableNetworkButtons();
+        }
+
+        private void DisableNetworkButtons() {
+            //Debug.Log("MessageLogPanel.DisableNetworkButtons()");
+
+            groupHighlightButton.gameObject.SetActive(false);
+            guildHighlightButton.gameObject.SetActive(false);
+            privateHighlightButton.gameObject.SetActive(false);
         }
 
         private void HandleBeginPrivateMessage(string messageText) {
@@ -347,6 +442,12 @@ namespace AnyRPG {
             //Debug.Log("MessageLogPanel.ClearGroupMessages()");
             groupLog = string.Empty;
             groupText.text = generalLog;
+        }
+
+        public void HandleClearGuildMessages() {
+            //Debug.Log("MessageLogPanel.HandleClearGuildMessages()");
+            guildLog = string.Empty;
+            guildText.text = generalLog;
         }
 
         public void HandleClearPrivateMessages() {
@@ -413,20 +514,27 @@ namespace AnyRPG {
                 logManager.WriteChatMessage(chatMessage);
             }
             */
-            logManager.RequestChatMessageClient(chatMessage);
+            messageLogClient.RequestChatMessageClient(chatMessage);
         }
 
         public override void ReceiveClosedWindowNotification() {
-            //Debug.Log("QuestTrackerUI.OnCloseWindow()");
+            //Debug.Log("MessageLogPanel.OnCloseWindow()");
             base.ReceiveClosedWindowNotification();
         }
 
         public override void ProcessOpenWindowNotification() {
-            //Debug.Log("QuestTrackerUI.OnOpenWindow()");
+            //Debug.Log("MessageLogPanel.ProcessOpenWindowNotification()");
+
             base.ProcessOpenWindowNotification();
-            //SetNavigationController();
-            generalHighlightButton.HighlightBackground();
+
+            //generalHighlightButton.HighlightBackground();
             ShowGeneralLog();
+        }
+
+        private void OnEnable() {
+            // there isn't really a better way to do this for now since the ui element isn't directly opened or closed
+            logButtonsNavigationController.UpdateNavigationList();
+            logButtonsNavigationController.HighlightCurrentNavigableElement();
         }
     }
 

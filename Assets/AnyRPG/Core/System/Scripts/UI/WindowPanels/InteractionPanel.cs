@@ -290,15 +290,17 @@ namespace AnyRPG {
 
             // this has to be done first, because the next line after could close the window and set the interactable to null
             if (uIManager != null) {
+                /*
                 if (interactable == null) {
-                    Debug.Log("interactable is null");
+                    //Debug.Log("interactable is null");
                 }
                 if (interactable.DisplayName == null) {
-                    Debug.Log("interactable.displayname is null");
+                    //Debug.Log("interactable.displayname is null");
                 }
                 if (uIManager.interactionWindow == null) {
-                    Debug.Log("interactactionwindow is null");
+                    //Debug.Log("interactactionwindow is null");
                 }
+                */
                 uIManager.interactionWindow.SetWindowTitle(interactable.DisplayName);
             }
 

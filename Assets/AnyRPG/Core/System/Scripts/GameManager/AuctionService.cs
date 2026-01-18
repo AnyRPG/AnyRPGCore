@@ -331,7 +331,7 @@ namespace AnyRPG {
                 if (searchstring != string.Empty && instantiatedItem.DisplayName.IndexOf(searchstring, StringComparison.OrdinalIgnoreCase) < 0) {
                     continue;
                 }
-                auctionItemListResponse.AuctionItems.Add(new AuctionItemSearchResult(auctionItem, playerCharacterService.GetPlayerNameFromId(auctionItem.SellerPlayerCharacterId)));
+                auctionItemListResponse.AuctionItems.Add(new AuctionItemSerializedSearchResult(auctionItem, playerCharacterService.GetPlayerNameFromId(auctionItem.SellerPlayerCharacterId)));
                 if (auctionItemListResponse.AuctionItems.Count >= searchResultLimit) {
                     break;
                 }

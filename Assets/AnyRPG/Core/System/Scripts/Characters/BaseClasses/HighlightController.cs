@@ -113,7 +113,7 @@ namespace AnyRPG {
 
             /*
             foreach (string tmpColor in colorDictionary.Keys) {
-                Debug.Log("Dictionary contains key: " + tmpColor.ToString());
+                //Debug.Log("Dictionary contains key: " + tmpColor.ToString());
             }
             */
             if (colorOverrideDictionary.ContainsKey(ColorUtility.ToHtmlStringRGBA(materialColor)) && unitController.CharacterStats.IsAlive == true) {

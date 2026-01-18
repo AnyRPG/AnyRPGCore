@@ -113,7 +113,7 @@ namespace AnyRPG {
             foreach (KeyValuePair<int, UnitController> kvp in playerCharacters) {
                 if (index < unitFramePanels.Count) {
                     if (kvp.Value == null) {
-                        unitFramePanels[index].SetNullTarget(kvp.Key, characterGroup.CharacterIdList[UnitControllerMode.Player][kvp.Key]);
+                        unitFramePanels[index].SetNullTarget(kvp.Key);
                     } else {
                         unitFramePanels[index].SetTarget(kvp.Value);
                     }
@@ -131,7 +131,7 @@ namespace AnyRPG {
             //Debug.Log($"GroupUnitFramesPanel.CreateCharacterManagerEventSubscriptions()");
 
             if (characterManagerSubscriptionsInitialized == true) {
-                Debug.Log($"GroupUnitFramesPanel.CreateCharacterManagerEventSubscriptions(): subscriptions already initialized, returning");
+                //Debug.Log($"GroupUnitFramesPanel.CreateCharacterManagerEventSubscriptions(): subscriptions already initialized, returning");
                 return;
             }
             characterManager.OnCompleteUnitControllerInit += HandleCompleteUnitControllerInit;
@@ -142,7 +142,7 @@ namespace AnyRPG {
             //Debug.Log($"GroupUnitFramesPanel.ClearCharacterManagerEventSubscriptions()");
 
             if (characterManagerSubscriptionsInitialized == false) {
-                Debug.Log($"GroupUnitFramesPanel.ClearCharacterManagerEventSubscriptions(): subscriptions not initialized, returning");
+                //Debug.Log($"GroupUnitFramesPanel.ClearCharacterManagerEventSubscriptions(): subscriptions not initialized, returning");
                 return;
             }
             characterManager.OnCompleteUnitControllerInit -= HandleCompleteUnitControllerInit;
@@ -152,7 +152,7 @@ namespace AnyRPG {
         private void HandleCompleteUnitControllerInit(UnitController unitController) {
             //Debug.Log($"GroupUnitFramesPanel.HandleCompleteUnitControllerInit({unitController.gameObject.name})");
 
-            if (characterGroupServiceClient.CurrentCharacterGroup == null || characterGroupServiceClient.CurrentCharacterGroup.CharacterIdList[UnitControllerMode.Player].ContainsKey(unitController.CharacterId) == false) {
+            if (characterGroupServiceClient.CurrentCharacterGroup == null || characterGroupServiceClient.CurrentCharacterGroup.MemberList[UnitControllerMode.Player].ContainsKey(unitController.CharacterId) == false) {
                 return;
             }
             // this is a member of the current group, likely returning from disconnection, so the list needs to be refreshed

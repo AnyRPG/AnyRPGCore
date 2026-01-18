@@ -152,7 +152,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveClosedWindowNotification() {
-            Debug.Log("QuestTrackerPanel.ReceiveClosedWindowNotification()");
+            //Debug.Log("QuestTrackerPanel.ReceiveClosedWindowNotification()");
 
             base.ReceiveClosedWindowNotification();
             //CleanupEventSubscriptions();

@@ -140,7 +140,7 @@ namespace AnyRPG {
 
         /*
         private void OnEnable() {
-            Debug.Log("MainMapController.OnEnable()");
+            //Debug.Log("MainMapController.OnEnable()");
             //CreateActiveEventSubscriptions();
         }
         */

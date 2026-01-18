@@ -15,7 +15,7 @@ namespace AnyRPG {
         protected NetworkManagerServer networkManagerServer = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
-            Debug.Log($"{gameObject.name}.FishNetRigidbody.Configure()");
+            //Debug.Log($"{gameObject.name}.FishNetRigidbody.Configure()");
 
             base.Configure(systemGameManager);
             

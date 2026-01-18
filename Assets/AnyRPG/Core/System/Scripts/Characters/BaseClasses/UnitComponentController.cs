@@ -54,7 +54,7 @@ namespace AnyRPG {
 
             if (unitAudioEmitter == null) {
                 unitAudioEmitter = GetComponentInChildren<UnitAudioEmitter>();
-                Debug.Log(gameObject.name + "UnitAudioController.OnEnable(): UnitAudioEmitter was not set.  Searching children.");
+                //Debug.Log($"{gameObject.name}.UnitAudioController.OnEnable(): UnitAudioEmitter was not set.  Searching children.");
                 if (unitAudioEmitter == null) {
                     Debug.LogError(gameObject.name + "UnitAudioController.OnEnable(): Could not find UnitAudioEmitter in children.  Check object.");
                 }

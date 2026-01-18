@@ -54,7 +54,7 @@ namespace AnyRPG {
                 //GetClientSaveData();
             } else {
                 BeginCharacterRequest();
-                CompleteClientCharacterRequest(null, -1);
+                CompleteClientCharacterRequest(null, -1, -1, string.Empty);
             }
         }
 
@@ -80,7 +80,7 @@ namespace AnyRPG {
                 return;
             }
             BeginCharacterRequest();
-            CompleteCharacterRequest(false, null, -1);
+            CompleteCharacterRequest(false, null, -1, -1, string.Empty);
             SubscribeToServerUnitEvents();
         }
 
@@ -104,24 +104,24 @@ namespace AnyRPG {
 
             base.OnSpawnServer(connection);
 
-            HandleSpawnServerClient(connection, new PlayerCharacterSaveData(unitController.CharacterSaveManager.SaveData, systemItemManager), unitController.CharacterGroupManager.GroupId);
+            HandleSpawnServerClient(connection, new PlayerCharacterSaveData(unitController.CharacterSaveManager.SaveData, systemItemManager), unitController.CharacterGroupManager.GroupId, unitController.CharacterGuildManager.GuildId, unitController.CharacterGuildManager.GuildName);
         }
 
         [TargetRpc]
-        private void HandleSpawnServerClient(NetworkConnection networkConnection, PlayerCharacterSaveData playerCharacterSaveData, int characterGroupId) {
+        private void HandleSpawnServerClient(NetworkConnection networkConnection, PlayerCharacterSaveData playerCharacterSaveData, int characterGroupId, int guildId, string guildName) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnServerClient() owner: {base.OwnerId}");
 
             if (unitControllerMode.Value == UnitControllerMode.Player
                 || unitControllerMode.Value == UnitControllerMode.Pet
                 || unitControllerMode.Value == UnitControllerMode.AI) {
-                CompleteClientCharacterRequest(playerCharacterSaveData, characterGroupId);
+                CompleteClientCharacterRequest(playerCharacterSaveData, characterGroupId, guildId, guildName);
             }
         }
 
-        public void CompleteClientCharacterRequest(PlayerCharacterSaveData playerCharacterSaveData, int characterGroupId) {
+        public void CompleteClientCharacterRequest(PlayerCharacterSaveData playerCharacterSaveData, int characterGroupId, int guildId, string guildName) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.CompleteClientCharacterRequest()");
 
-            CompleteCharacterRequest(base.IsOwner, playerCharacterSaveData, characterGroupId);
+            CompleteCharacterRequest(base.IsOwner, playerCharacterSaveData, characterGroupId, guildId, guildName);
             SubscribeToClientUnitEvents();
         }
 
@@ -315,6 +315,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnInteractWithQuestStartItem += HandleInteractWithQuestStartItemServer;
             unitController.UnitEventController.OnNameChangeFail += HandleNameChangeFailServer;
             unitController.UnitEventController.OnSetGroupId += HandleSetGroupId;
+            unitController.UnitEventController.OnSetGuildId += HandleSetGuildId;
         }
 
 
@@ -418,6 +419,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnInteractWithQuestStartItem -= HandleInteractWithQuestStartItemServer;
             unitController.UnitEventController.OnNameChangeFail -= HandleNameChangeFailServer;
             unitController.UnitEventController.OnSetGroupId -= HandleSetGroupId;
+            unitController.UnitEventController.OnSetGuildId -= HandleSetGuildId;
         }
 
 
@@ -425,6 +427,13 @@ namespace AnyRPG {
         [ObserversRpc]
         private void HandleSetGroupId(int newGroupId) {
             unitController.CharacterGroupManager.SetGroupId(newGroupId);
+        }
+
+        [ObserversRpc]
+        private void HandleSetGuildId(int newGuildId, string guildName) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetGuildId({newGuildId},{guildName})");
+
+            unitController.CharacterGuildManager.SetGuildId(newGuildId, guildName);
         }
 
         private void HandleNameChangeFailServer() {
@@ -506,12 +515,12 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({(parentTransform == null ? "null" : parentTransform.gameObject.name)})");
 
             if (networkObject != null && parentTransform != null) {
-                Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({(parentTransform == null ? "null" : parentTransform.gameObject.name)}) networkObject is not null");
+                //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({(parentTransform == null ? "null" : parentTransform.gameObject.name)}) networkObject is not null");
                 NetworkBehaviour nobParent = parentTransform.GetComponent<NetworkBehaviour>();
                 if (nobParent == null) {
                     Debug.LogWarning($"{gameObject.name}.FishNetUnitController.HandleSetParent({parentTransform.gameObject.name}) No EmptyNetworkBehaviour found on parent.  Please check inspector!");
                 } else {
-                    Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({parentTransform.gameObject.name}) setting parent transform");
+                    //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({parentTransform.gameObject.name}) setting parent transform");
                     networkObject.SetParent(nobParent);
                 }
             }
@@ -719,7 +728,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         public void HandleAddPetClient(string petResourceName) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleAddPetClient({petResourceName})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleAddPetClient({petResourceName})");
             
             UnitProfile unitProfile = systemDataFactory.GetResource<UnitProfile>(petResourceName);
             
@@ -1501,13 +1510,14 @@ namespace AnyRPG {
 
 
         public void HandleRequestEquipToSlot(InstantiatedEquipment equipment, EquipmentSlotProfile profile) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRequestEquipToSlot({equipment.Equipment.ResourceName}, {profile.ResourceName}) instanceId: {equipment.InstanceId}");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRequestEquipToSlot({equipment.Equipment.ResourceName}, {profile.ResourceName}) instanceId: {equipment.InstanceId}");
+
             RequestEquipToSlot(equipment.InstanceId, profile.ResourceName);
         }
 
         [ServerRpc]
         public void RequestEquipToSlot(int itemInstanceId, string equipmentSlotProfileName) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.RequestEquipToSlot({itemInstanceId}, {equipmentSlotProfileName})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.RequestEquipToSlot({itemInstanceId}, {equipmentSlotProfileName})");
 
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) && systemItemManager.InstantiatedItems[itemInstanceId] is InstantiatedEquipment) {
                 EquipmentSlotProfile equipmentSlotProfile = systemDataFactory.GetResource<EquipmentSlotProfile>(equipmentSlotProfileName);
@@ -1921,7 +1931,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         public void HandleSpawnChanneledEffectPrefabsClient(FishNetInteractable networkTarget, FishNetInteractable networkOriginalTarget, string abilityEffectName, SerializableAbilityEffectContext serializableAbilityEffectContext) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnProjectileEffectPrefabsClient({networkTarget?.gameObject.name}, {networkOriginalTarget?.gameObject.name}, {abilityEffectName})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnProjectileEffectPrefabsClient({networkTarget?.gameObject.name}, {networkOriginalTarget?.gameObject.name}, {abilityEffectName})");
 
             ChanneledEffect abilityEffect = systemGameManager.SystemDataFactory.GetResource<AbilityEffect>(abilityEffectName) as ChanneledEffect;
             if (abilityEffect == null) {
@@ -2008,7 +2018,7 @@ namespace AnyRPG {
         }
 
         private void HandleReviveBeginServer(float reviveTime) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleReviveBeginServer()");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleReviveBeginServer()");
 
             // we don't need to pass the time to the client, since it will be calculated there anyway
             HandleReviveBeginClient();
@@ -2022,7 +2032,7 @@ namespace AnyRPG {
         }
 
         private void HandleReviveCompleteServer(UnitController targetUnitController) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleReviveCompleteServer(" + (targetUnitController == null ? "null" : targetUnitController.gameObject.name) + ")");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleReviveCompleteServer(" + (targetUnitController == null ? "null" : targetUnitController.gameObject.name) + ")");
 
             HandleReviveCompleteClient();
         }
@@ -2079,12 +2089,12 @@ namespace AnyRPG {
             systemGameManager.CharacterManager.BeginCharacterRequest(unitController);
         }
 
-        private void CompleteCharacterRequest(bool isOwner, PlayerCharacterSaveData playerCharacterSaveData, int characterGroupId) {
+        private void CompleteCharacterRequest(bool isOwner, PlayerCharacterSaveData playerCharacterSaveData, int characterGroupId, int guildId, string guildName) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.CompleteCharacterRequest({isOwner}, {(saveData == null ? "null" : "valid save data")})");
 
             /*
             if (base.Owner != null ) {
-                Debug.Log($"{gameObject.name}.FishNetUnitController.CompleteCharacterRequest({isOwner}) owner accountId: {base.OwnerId}");
+                //Debug.Log($"{gameObject.name}.FishNetUnitController.CompleteCharacterRequest({isOwner}) owner accountId: {base.OwnerId}");
             }
             */
 
@@ -2102,6 +2112,8 @@ namespace AnyRPG {
                 characterRequestData.isOwner = isOwner;
                 characterRequestData.characterId = characterId.Value;
                 characterRequestData.characterGroupId = characterGroupId;
+                characterRequestData.characterGuildId = guildId;
+                characterRequestData.characterGuildName = guildName;
                 if (isOwner == true && unitControllerMode.Value == UnitControllerMode.Player) {
                     characterRequestData.characterRequestor = systemGameManager.PlayerManager;
                 }

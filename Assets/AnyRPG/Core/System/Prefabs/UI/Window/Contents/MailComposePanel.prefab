@@ -4508,6 +4508,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5181354365886595360, guid: bcbc9379988b3da4e8b551267d2059b6,
         type: 3}
+      propertyPath: m_margin.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5181354365886595360, guid: bcbc9379988b3da4e8b551267d2059b6,
+        type: 3}
       propertyPath: m_textAlignment
       value: 65535
       objectReference: {fileID: 0}

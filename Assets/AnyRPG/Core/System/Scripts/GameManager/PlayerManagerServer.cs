@@ -62,6 +62,7 @@ namespace AnyRPG {
         protected SystemEventManager systemEventManager = null;
         protected CharacterGroupServiceServer characterGroupServiceServer = null;
         protected TradeServiceServer tradeServiceServer = null;
+        protected GuildServiceServer guildServiceServer = null;
 
         /// <summary>
         /// accountId, PlayerCharacterMonitor
@@ -108,6 +109,7 @@ namespace AnyRPG {
             systemEventManager = systemGameManager.SystemEventManager;
             characterGroupServiceServer = systemGameManager.CharacterGroupServiceServer;
             tradeServiceServer = systemGameManager.TradeServiceServer;
+            guildServiceServer = systemGameManager.GuildServiceServer;
         }
 
 
@@ -381,7 +383,7 @@ namespace AnyRPG {
 
             // if the scene is already loaded, then just respawn the player
             if (unitController.gameObject.scene.name == teleportEffectProperties.levelName) {
-                Debug.Log($"PlayerManagerServer.TeleportInternal({unitController.gameObject.name}, {teleportEffectProperties.levelName}) - already in scene, respawning");
+                //Debug.Log($"PlayerManagerServer.TeleportInternal({unitController.gameObject.name}, {teleportEffectProperties.levelName}) - already in scene, respawning");
 
                 RespawnPlayerUnit(accountId);
                 return;
@@ -577,6 +579,12 @@ namespace AnyRPG {
                 CharacterRequestData characterRequestData = new CharacterRequestData(this, GameMode.Network, characterConfigurationRequest);
                 characterRequestData.characterId = playerCharacterMonitors[accountId].characterSaveData.CharacterId;
                 characterRequestData.characterGroupId = characterGroupServiceServer.GetCharacterGroupIdFromCharacterId(characterRequestData.characterId);
+                Guild guild = guildServiceServer.GetGuildFromCharacterId(characterRequestData.characterId);
+                if (guild != null) {
+                    //Debug.Log($"PlayerManagerServer.RequestSpawnPlayerUnit: found guild {guild.guildName} for characterId {characterRequestData.characterId}");
+                    characterRequestData.characterGuildId = guild.guildId;
+                    characterRequestData.characterGuildName = guild.guildName;
+                }
                 characterRequestData.saveData = playerCharacterMonitors[accountId].characterSaveData;
 
                 if (spawnPlayerRequest.overrideSpawnLocation == false) {
@@ -632,7 +640,7 @@ namespace AnyRPG {
 
         /*
         public void StopMonitoringPlayerUnit(UnitController unitController) {
-            Debug.Log($"PlayerManagerServer.StopMonitoringPlayerUnit({unitController.gameObject.name})");
+            //Debug.Log($"PlayerManagerServer.StopMonitoringPlayerUnit({unitController.gameObject.name})");
 
             if (activePlayerLookup.ContainsKey(unitController)) {
                 StopMonitoringPlayerUnit(activePlayerLookup[unitController]);

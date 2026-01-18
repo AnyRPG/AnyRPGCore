@@ -54,36 +54,19 @@ namespace AnyRPG {
             }
 
             if (commandType == CharacterGroupCommandType.Promote) {
-                characterGroupServiceServer.RequestPromoteCharacterToLeader(accountId, commandParameters);
+                characterGroupServiceServer.RequestPromoteCharacter(accountId, commandParameters);
                 return;
             }
 
-
-            /*
-            if (commandParameters.Contains(" ") == false) {
+            if (commandType == CharacterGroupCommandType.Demote) {
+                characterGroupServiceServer.RequestDemoteCharacter(accountId, commandParameters);
                 return;
             }
 
-            string[] parameterList = commandParameters.Split(' ');
-            string playerName = parameterList[0];
-            string[] messageArray = parameterList.Skip(1).ToArray();
-            SendPrivateMessage(accountId, playerName, string.Join(' ', messageArray));
-            */
         }
-
-        private void SendPrivateMessage(int accountId, string targetPlayerName, string messageText) {
-            //Debug.Log($"ChatMessageCommand.SendPrivateMessage({accountId}, {targetPlayerName}, {messageText})");
-
-            messageLogServer.SendPrivateMessage(accountId, targetPlayerName, messageText);
-        }
-
-        private void SendGroupMessage(int accountId, string messageText) {
-            messageLogServer.SendGroupMessage(accountId, messageText);
-        }
-
 
     }
 
-    public enum CharacterGroupCommandType { Invite, Kick, Leave, Disband, Promote }
+    public enum CharacterGroupCommandType { Invite, Kick, Leave, Disband, Promote, Demote }
 
 }

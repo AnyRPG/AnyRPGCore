@@ -55,7 +55,7 @@ namespace AnyRPG {
             //Debug.Log($"{interactable.gameObject.name}.GatheringNode.ProcessInteract({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex})");
 
             if (Props.LootTables == null) {
-                Debug.Log($"{interactable.gameObject.name}.GatheringNode.ProcessInteract({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex}) loot table was null");
+                Debug.LogWarning($"{interactable.gameObject.name}.GatheringNode.ProcessInteract({sourceUnitController.gameObject.name}, {componentIndex}, {choiceIndex}) loot table was null");
                 return true;
             }
             // base.Interact() will drop loot automatically so we will intentionally not call it because the loot drop in this class is activated by the gatherability
@@ -85,7 +85,7 @@ namespace AnyRPG {
 
         /*
         public override void DropLoot() {
-            Debug.Log(gameObject.name + ".GatheringNode.DropLoot()");
+            //Debug.Log(gameObject.name + ".GatheringNode.DropLoot()");
             base.Interact(playerManager.UnitController.CharacterUnit);
             //base.DropLoot();
             //PickUp();

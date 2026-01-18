@@ -77,7 +77,7 @@ namespace AnyRPG {
 
             Configure();
             if (systemGameManager == null) {
-                Debug.Log($"{gameObject.name}.FishNetInteractable.OnStartServer(): systemGameManager is null");
+               //Debug.Log($"{gameObject.name}.FishNetInteractable.OnStartServer(): systemGameManager is null");
                 return;
             }
 
@@ -125,12 +125,12 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.FishNetInteractable.SubscribeToServerInteractableEvents()");
 
             if (eventRegistrationComplete == true) {
-                Debug.Log($"{gameObject.name}.FishNetInteractable.SubscribeToServerInteractableEvents(): already registered");
+               //Debug.Log($"{gameObject.name}.FishNetInteractable.SubscribeToServerInteractableEvents(): already registered");
                 return;
             }
 
             if (interactable == null) {
-                Debug.Log($"{gameObject.name}.FishNetInteractable.SubscribeToServerInteractableEvents(): interactable is null");
+               //Debug.Log($"{gameObject.name}.FishNetInteractable.SubscribeToServerInteractableEvents(): interactable is null");
                 // something went wrong
                 return;
             }
@@ -164,7 +164,7 @@ namespace AnyRPG {
                 return;
             }
             if (eventRegistrationComplete == false) {
-                Debug.Log($"{gameObject.name}.FishNetInteractable.UnsubscribeFromServerInteractableEvents(): not registered");
+               //Debug.Log($"{gameObject.name}.FishNetInteractable.UnsubscribeFromServerInteractableEvents(): not registered");
                 return;
             }
             //interactable.InteractableEventController.OnAnimatedObjectChooseMovement -= HandleAnimatedObjectChooseMovementServer;
@@ -387,7 +387,7 @@ namespace AnyRPG {
         public void HandleDropLootTarget(NetworkConnection networkConnection, Dictionary<int, List<int>> lootDropIdLookup) {
             //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleDropLootTarget()");
             if (interactable == null) {
-                Debug.Log($"{gameObject.name}.FishNetInteractable.HandleDropLootTarget(): interactable is null");
+               //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleDropLootTarget(): interactable is null");
                 return;
             }
             interactable.InteractableEventController.NotifyOnDropLoot(lootDropIdLookup);
@@ -404,7 +404,7 @@ namespace AnyRPG {
         public void HandleRemoveDroppedItemTarget(NetworkConnection networkConnection, int lootDropId, int accountId) {
             //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleRemoveDroppedItemTarget({lootDropId}, {accountId})");
             if (interactable == null) {
-                Debug.Log($"{gameObject.name}.FishNetInteractable.HandleRemoveDroppedItemTarget(): interactable is null");
+               //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleRemoveDroppedItemTarget(): interactable is null");
                 return;
             }
             interactable.InteractableEventController.NotifyOnRemoveDroppedItemClient(lootDropId, accountId);

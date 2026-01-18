@@ -13,6 +13,7 @@ namespace AnyRPG {
         public event Action OnDisbandGroup = delegate { };
         public event Action OnPromoteGroupLeader = delegate { };
         public event Action OnRenameCharacterInGroup = delegate { };
+        public event Action OnCharacterGroupMemberStatusChange = delegate { };
 
         private int inviteGroupId = 0;
         private string inviteLeaderName = string.Empty;
@@ -58,7 +59,7 @@ namespace AnyRPG {
         }
 
         public void AcceptCharacterGroupInvite() {
-            Debug.Log($"CharacterGroupServiceClient.AcceptCharacterGroupInvite()");
+            //Debug.Log($"CharacterGroupServiceClient.AcceptCharacterGroupInvite()");
 
             networkManagerClient.AcceptCharacterGroupInvite(inviteGroupId);
             inviteGroupId = 0;
@@ -66,23 +67,24 @@ namespace AnyRPG {
             uIManager.confirmJoinGroupWindow.CloseWindow();
         }
 
-        public void ProcessJoinGroup(int characterId, CharacterGroup characterGroup) {
+        public void ProcessJoinGroup(int characterGroupId, CharacterGroupMemberNetworkData characterGroupMemberNetworkData) {
             //Debug.Log($"CharacterGroupServiceClient.ProcessJoinGroup({characterId})");
 
-            if (characterId == playerManager.UnitController.CharacterId) {
-                currentCharacterGroup = characterGroup;
+            if (currentCharacterGroup != null
+                && currentCharacterGroup.characterGroupId == characterGroupId
+                && characterGroupMemberNetworkData.CharacterSummaryNetworkData.CharacterId == playerManager.UnitController.CharacterId) {
                 messageLogClient.WriteSystemMessage("You have joined a group.");
                 OnJoinGroup();
                 return;
             }
 
-            AddCharacterToGroup(characterId, characterGroup.CharacterIdList[UnitControllerMode.Player][characterId],characterGroup.characterGroupId);
+            AddCharacterToGroup(characterGroupId, characterGroupMemberNetworkData);
         }
 
-        public void ProcessLoadGroup(CharacterGroup characterGroup) {
+        public void ProcessLoadGroup(CharacterGroupNetworkData characterGroupNetworkData) {
             //Debug.Log($"CharacterGroupServiceClient.ProcessLoadGroup({characterGroup.characterGroupId})");
 
-            currentCharacterGroup = characterGroup;
+            currentCharacterGroup = new CharacterGroup(characterGroupNetworkData, systemDataFactory);
         }
 
         public void RequestLeaveGroup() {
@@ -109,16 +111,22 @@ namespace AnyRPG {
             networkManagerClient.RequestInviteCharacterToGroup(characterId);
         }
 
-        public void AddCharacterToGroup(int characterId, string characterName, int characterGroupId) {
+        public void RequestInviteCharacterToGroup(string characterName) {
+            //Debug.Log($"CharacterGroupServiceClient.RequestInviteCharacterToGroup({characterId})");
+
+            networkManagerClient.RequestInviteCharacterToGroup(characterName);
+        }
+
+        public void AddCharacterToGroup(int characterGroupId, CharacterGroupMemberNetworkData characterGroupMemberNetworkData) {
             //Debug.Log($"CharacterGroupServiceClient.AddCharacterToGroup({characterId}, {characterGroupId})");
 
             if (currentCharacterGroup == null || currentCharacterGroup.characterGroupId != characterGroupId) {
                 //Debug.Log("CharacterGroupService.AddCharacterToGroup: character group not found");
                 return;
             }
-            currentCharacterGroup.AddPlayer(characterId, characterName);
+            currentCharacterGroup.AddPlayer(new CharacterGroupMemberData(characterGroupMemberNetworkData, systemDataFactory));
             OnAddMember();
-            messageLogClient.WriteSystemMessage($"{characterManager.GetCharacterName(characterId)} has joined the group.");
+            messageLogClient.WriteSystemMessage($"{characterManager.GetCharacterName(characterGroupMemberNetworkData.CharacterSummaryNetworkData.CharacterId)} has joined the group.");
         }
 
         public void RequestRemoveCharacterFromGroup(int characterId) {
@@ -150,7 +158,7 @@ namespace AnyRPG {
 
             Dictionary<int, UnitController> returnList = new Dictionary<int, UnitController>();
             if (currentCharacterGroup != null) {
-                foreach (int characterId in currentCharacterGroup.CharacterIdList[UnitControllerMode.Player].Keys) {
+                foreach (int characterId in currentCharacterGroup.MemberList[UnitControllerMode.Player].Keys) {
                     UnitController unitController = characterManager.GetUnitController(UnitControllerMode.Player, characterId);
                     if (unitController != null && unitController != playerManager.UnitController) {
                         //Debug.Log($"CharacterGroupServiceClient.GetCurrentGroupMemberUnitControllers(): adding {unitController.gameObject.name}");
@@ -190,11 +198,13 @@ namespace AnyRPG {
 
             currentCharacterGroup.leaderPlayerCharacterId = newLeaderCharacterId;
 
+            /*
             if (newLeaderCharacterId == playerManager.UnitController.CharacterId) {
                 messageLogClient.WriteSystemMessage("You are now the group leader.");
             } else {
                 messageLogClient.WriteSystemMessage($"{characterManager.GetCharacterName(newLeaderCharacterId)} is now the group leader.");
             }
+            */
             OnPromoteGroupLeader();
         }
 
@@ -207,10 +217,46 @@ namespace AnyRPG {
                 //Debug.Log("CharacterGroupService.ProcessRenameCharacterInGroup: character group not found");
                 return;
             }
-            if (currentCharacterGroup.CharacterIdList[UnitControllerMode.Player].ContainsKey(characterId)) {
-                currentCharacterGroup.CharacterIdList[UnitControllerMode.Player][characterId] = newName;
+            if (currentCharacterGroup.MemberList[UnitControllerMode.Player].ContainsKey(characterId)) {
+                currentCharacterGroup.MemberList[UnitControllerMode.Player][characterId].CharacterSummaryData.CharacterName = newName;
             }
             OnRenameCharacterInGroup();
+        }
+
+        public void ProcessCharacterGroupMemberStatusChange(int characterGroupId, int playerCharacterId, CharacterGroupMemberNetworkData characterGroupMemberNetworkData) {
+            //Debug.Log($"CharacterGroupServiceClient.ProcessCharacterGroupMemberStatusChange(characterGroupId: {characterGroupId}, playerCharacterId: {playerCharacterId}, isOnline: {characterGroupMemberNetworkData.CharacterSummaryNetworkData.IsOnline})");
+
+            if (currentCharacterGroup == null || currentCharacterGroup.characterGroupId != characterGroupId) {
+                //Debug.Log("CharacterGroupService.ProcessCharacterGroupMemberOnline: character group not found");
+                return;
+            }
+            if (currentCharacterGroup.MemberList[UnitControllerMode.Player].ContainsKey(playerCharacterId)) {
+                currentCharacterGroup.MemberList[UnitControllerMode.Player][playerCharacterId] = new CharacterGroupMemberData(characterGroupMemberNetworkData, systemDataFactory);
+            }
+            OnCharacterGroupMemberStatusChange();
+        }
+
+        public void AdvertiseGroupMessage(int characterGroupId, string messageText) {
+            if (currentCharacterGroup == null || currentCharacterGroup.characterGroupId != characterGroupId) {
+                //Debug.Log("CharacterGroupService.AdvertiseGroupMessage: character group not found");
+                return;
+            }
+            messageLogClient.WriteGroupMessage(messageText);
+        }
+
+        public CharacterGroupMemberData GetCharacterGroupMemberData(int characterId) {
+            if (currentCharacterGroup != null && currentCharacterGroup.MemberList[UnitControllerMode.Player].ContainsKey(characterId)) {
+                return currentCharacterGroup.MemberList[UnitControllerMode.Player][characterId];
+            }
+            return null;
+        }
+
+        public void RequestPromoteGroupCharacter(int characterId) {
+            networkManagerClient.RequestDemoteGroupCharacter(characterId);
+        }
+
+        public void RequestDemoteGroupCharacter(int characterId) {
+            networkManagerClient.RequestDemoteGroupCharacter(characterId);
         }
     }
 

@@ -105,7 +105,7 @@ namespace AnyRPG {
         }
 
         public void ShowUnit(PetSpawnButton petSpawnButton) {
-            Debug.Log($"PetSpawnControlPanel.ShowUnit({petSpawnButton.UnitProfile.ResourceName})");
+            //Debug.Log($"PetSpawnControlPanel.ShowUnit({petSpawnButton.UnitProfile.ResourceName})");
 
             selectedPetSpawnButton = petSpawnButton;
 
@@ -122,7 +122,7 @@ namespace AnyRPG {
         }
    
         public void UpdateUnitInformation() {
-            Debug.Log($"PetSpawnControlPanel.UpdateUnitInformation()");
+            //Debug.Log($"PetSpawnControlPanel.UpdateUnitInformation()");
 
             nameText.text = (unitProfile.CharacterName != string.Empty ? unitProfile.CharacterName : unitProfile.DisplayName);
 
@@ -184,13 +184,13 @@ namespace AnyRPG {
         }
 
         public override void ProcessOpenWindowNotification() {
-            Debug.Log("PetSpawnControlPanel.ProcessOpenWindowNotification()");
+            //Debug.Log("PetSpawnControlPanel.ProcessOpenWindowNotification()");
 
             base.ProcessOpenWindowNotification();
             ClearPanel();
             systemEventManager.OnRemoveActivePet += HandleRemoveActivePet;
             if (playerManager.UnitController.CharacterPetManager != null) {
-                Debug.Log($"PetSpawnControlPanel.ProcessOpenWindowNotification() setting unit profile list count : {playerManager.UnitController.CharacterPetManager.UnitProfiles.Count}");
+                //Debug.Log($"PetSpawnControlPanel.ProcessOpenWindowNotification() setting unit profile list count : {playerManager.UnitController.CharacterPetManager.UnitProfiles.Count}");
                 unitProfileList = playerManager.UnitController.CharacterPetManager.UnitProfiles;
             }
 
@@ -208,12 +208,12 @@ namespace AnyRPG {
         }
 
         public void ShowPreviewButtonsCommon() {
-            Debug.Log("PetSpawnControlPanel.ShowPreviewButtonsCommon()");
+            //Debug.Log("PetSpawnControlPanel.ShowPreviewButtonsCommon()");
             //ClearPreviewTarget();
             ClearPreviewButtons();
 
             foreach (UnitProfile unitProfile in unitProfileList) {
-                Debug.Log($"PetSpawnControlPanel.ShowPreviewButtonsCommon() unitprofile: {unitProfile.DisplayName}");
+                //Debug.Log($"PetSpawnControlPanel.ShowPreviewButtonsCommon() unitprofile: {unitProfile.DisplayName}");
                 if (playerManager.UnitController.CharacterPetManager.ValidPetTypeList.Contains(unitProfile.UnitType) == true) {
                     GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
                     PetSpawnButton petSpawnButton = go.GetComponent<PetSpawnButton>();
@@ -225,7 +225,7 @@ namespace AnyRPG {
                         uINavigationControllers[0].AddActiveButton(petSpawnButton);
                     }
                 } else {
-                    Debug.Log($"PetSpawnControlPanel.ShowPreviewButtonsCommon() unitprofile: {unitProfile.DisplayName} NOT IN VALID PET TYPE LIST");
+                    //Debug.Log($"PetSpawnControlPanel.ShowPreviewButtonsCommon() unitprofile: {unitProfile.DisplayName} NOT IN VALID PET TYPE LIST");
                 }
             }
             if (petSpawnButtons.Count > 0) {

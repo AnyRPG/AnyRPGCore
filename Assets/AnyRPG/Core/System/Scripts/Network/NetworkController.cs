@@ -70,6 +70,7 @@ namespace AnyRPG {
         public abstract void RequestLeaveCharacterGroup();
         public abstract void RequestRemoveCharacterFromGroup(int playerCharacterId);
         public abstract void RequestInviteCharacterToGroup(int playerCharacterId);
+        public abstract void RequestInviteCharacterToGroup(string characterName);
         public abstract void RequestDisbandCharacterGroup(int characterGroupId);
         public abstract void RequestPromoteCharacterToLeader(int characterId);
         public abstract void RequestBeginTrade(int characterId);
@@ -88,6 +89,24 @@ namespace AnyRPG {
         public abstract void RequestCancelAuction(int auctionItemId);
         public abstract void RequestBuyAuctionItem(int auctionItemId);
         public abstract void RequestSearchAuctions(Interactable interactable, int componentIndex, string searchText, bool onlyShowOwnAuctions);
+        public abstract void DeclineGuildInvite();
+        public abstract void AcceptGuildInvite(int inviteGuildId);
+        public abstract void RequestLeaveGuild();
+        public abstract void RequestInviteCharacterToGuild(int characterId);
+        public abstract void RequestInviteCharacterToGuild(string characterName);
+        public abstract void RequestRemoveCharacterFromGuild(int characterId);
+        public abstract void RequestDisbandGuild(int guildId);
+        public abstract void RequestCreateGuild(Interactable interactable, int componentIndex, string guildName);
+        public abstract void CheckGuildName(Interactable interactable, int componentIndex, string guildName);
+        public abstract void AcceptFriendInvite(int inviteCharacterId);
+        public abstract void DeclineFriendInvite(int inviteCharacterId);
+        public abstract void RequestInviteCharacterToFriendList(int characterId);
+        public abstract void RequestInviteCharacterToFriendList(string characterName);
+        public abstract void RequestRemoveCharacterFromFriendList(int characterId);
+        public abstract void RequestPromoteGuildCharacter(int characterId);
+        public abstract void RequestPromoteGroupCharacter(int characterId);
+        public abstract void RequestDemoteGroupCharacter(int characterId);
+        public abstract void RequestDemoteGuildCharacter(int characterId);
 
         // server functions
         public abstract void StartServer(ushort port);
@@ -119,7 +138,7 @@ namespace AnyRPG {
         public abstract void AdvertiseSystemMessage(int accountId, string message);
         public abstract void AdvertiseAddToBuyBackCollection(UnitController sourceUnitController, int accountId, Interactable interactable, int componentIndex, InstantiatedItem newInstantiatedItem);
         public abstract void AdvertiseSellItemToPlayer(UnitController sourceUnitController, Interactable interactable, int componentIndex, int collectionIndex, int itemIndex, string resourceName, int quantity);
-        public abstract void AddAvailableDroppedLoot(int accountId, List<LootDrop> items);
+        public abstract void AddAvailableDroppedLoot(int accountId, List<int> lootDropIds);
         public abstract void AddLootDrop(int accountId, int lootDropId, int itemId);
         public abstract void AdvertiseTakeLoot(int accountId, int lootDropId);
         public abstract void SpawnPlayer(int accountId, CharacterRequestData characterRequestData, Vector3 position, Vector3 forward, string sceneName);
@@ -130,18 +149,20 @@ namespace AnyRPG {
         public abstract void AdvertiseStartWeather(int sceneHandle);
         public abstract void AdvertiseLoadCutscene(Cutscene cutscene, int accountId);
         public abstract void AdvertiseLoadPlayerCharacter(int accountId, string sceneName);
-        public abstract void AdvertiseAddCharacterToGroup(int playerCharacterId, CharacterGroup characterGroup);
-        public abstract void AdvertiseCharacterGroup(int accountId, CharacterGroup characterGroup);
-        public abstract void AdvertiseRemoveCharacterFromGroup(int characterId, CharacterGroup characterGroup);
-        public abstract void AdvertiseCharacterGroupInvite(int invitedAccountId, CharacterGroup characterGroup, string leaderName);
-        public abstract void AdvertiseDisbandCharacterGroup(CharacterGroup characterGroup);
+        public abstract void AdvertiseAddCharacterToGroup(int accountId, int characterGroupId, CharacterGroupMemberNetworkData characterGroupMemberNetworkData);
+        public abstract void AdvertiseCharacterGroup(int accountId, CharacterGroupNetworkData characterGroupNetworkData);
+        public abstract void AdvertiseRemoveCharacterFromGroup(int accountId, int characterId, int characterGroupId);
+        public abstract void AdvertiseRemoveCharacterFromGuild(int accountId, int characterId, int guildId);
+        public abstract void AdvertiseCharacterGroupInvite(int invitedAccountId, int characterGroupId, string leaderName);
+        public abstract void AdvertiseDisbandCharacterGroup(int accountId, int characterGroupId);
         public abstract void AdvertisePlayerNameNotAvailable(int accountId);
         public abstract void AdvertiseLoadCharacterList(int accountId, List<PlayerCharacterSaveData> playerCharacterSaveDataList);
         public abstract void AdvertiseDeletePlayerCharacter(int accountId);
         public abstract void AdvertiseDeclineCharacterGroupInvite(int leaderAccountId, string decliningPlayerName);
-        public abstract void AdvertisePromoteGroupLeader(CharacterGroup characterGroup, int newLeaderCharacterId);
-        public abstract void AdvertiseRenameCharacterInGroup(CharacterGroup characterGroup, int characterId, string newName);
-        public abstract void AdvertiseGroupMessage(CharacterGroup characterGroup, string messageText);
+        public abstract void AdvertisePromoteGroupLeader(int accountId, int characterGroupId, int newLeaderCharacterId);
+        public abstract void AdvertiseRenameCharacterInGroup(int accountId, int groupId, int characterId, string newName);
+        public abstract void AdvertiseGroupMessage(int accountId, int characterGroupId, string messageText);
+        public abstract void AdvertiseGuildMessage(int accountId, int guildId, string messageText);
         public abstract void AdvertisePrivateMessage(int targetAccountId, string messageText);
         public abstract void AdvertiseAcceptTradeInvite(int sourceAccountId, int targetCharacterId);
         public abstract void AdvertiseDeclineTradeInvite(int sourceAccountId);
@@ -160,6 +181,23 @@ namespace AnyRPG {
         public abstract void AdvertiseCancelAuction(int accountId, int auctionItemId);
         public abstract void AdvertiseAuctionItems(int accountId, AuctionItemListResponse auctionItemListResponse);
         public abstract void AdvertiseListAuctionItems(int accountId);
+        public abstract void AdvertiseDisbandGuild(int accountId, int guildId);
+        public abstract void AdvertiseDeclineGuildInvite(int leaderAccountId, string playerName);
+        public abstract void AdvertiseGuildInvite(int invitedCharacterId, int guildId, string leaderName);
+        public abstract void AdvertiseGuild(int accountId, GuildNetworkData guildNetworkData);
+        public abstract void AdvertisePromoteGuildLeader(int accountId, int guildId, int newLeaderCharacterId);
+        public abstract void AdvertiseRenameCharacterInGuild(int accountId, int guildId, int characterId, string newName);
+        public abstract void AdvertiseAddCharacterToGuild(int existingAccountId, int guildId, GuildMemberNetworkData guildMemberNetworkData);
+        public abstract void AdvertiseGuildNameAvailable(int accountId);
+        public abstract void AdvertiseCharacterGroupMemberStatusChange(int accountId, int characterGroupId, int playerCharacterId, CharacterGroupMemberNetworkData characterGroupMemberNetworkData);
+        public abstract void AdvertiseGuildMemberStatusChange(int accountId, int guildId, int playerCharacterId, GuildMemberNetworkData guildMemberNetworkData);
+        public abstract void AdvertiseAddFriend(int sourceCharacterAccountId, CharacterSummaryNetworkData characterSummaryNetworkData);
+        public abstract void AdvertiseRemoveCharacterFromFriendList(int targetCharacterAccountId, int sourceCharacterId);
+        public abstract void AdvertiseDeclineFriendInvite(int friendAccountId, string characterName);
+        public abstract void AdvertiseFriendInvite(int invitedAccountId, int sourceCharacterId, string sourceCharacterName);
+        public abstract void AdvertiseFriendList(int accountId, FriendListNetworkData friendListNetworkData);
+        public abstract void AdvertiseRenameCharacterInFriendList(int targetAccountId, int characterId, string newName);
+        public abstract void AdvertiseFriendStateChange(int targetAccountId, int playerCharacterId, CharacterSummaryNetworkData characterSummaryNetworkData);
     }
 
 }

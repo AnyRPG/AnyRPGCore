@@ -105,6 +105,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnTitleChange -= HandleTitleChange;
             unitController.UnitEventController.OnNameChange -= HandleNameChange;
             unitController.UnitEventController.OnReputationChange -= HandleReputationChange;
+            unitController.UnitEventController.OnSetGuildId -= HandleSetGuildId;
 
             base.RemoveNamePlate();
         }
@@ -119,6 +120,13 @@ namespace AnyRPG {
             unitController.UnitEventController.OnTitleChange += HandleTitleChange;
             unitController.UnitEventController.OnNameChange += HandleNameChange;
             unitController.UnitEventController.OnReputationChange += HandleReputationChange;
+            unitController.UnitEventController.OnSetGuildId += HandleSetGuildId;
+        }
+
+        private void HandleSetGuildId(int guildId, string guildName) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitNamePlateController.HandleSetGuildId({guildId}, {guildName})");
+
+            namePlate.HandleSetGuildId();
         }
 
         public void HandleReputationChange(UnitController sourceUnitController) {
@@ -132,6 +140,8 @@ namespace AnyRPG {
         public void HandleNameChange(string newName) {
             namePlate.HandleNameChange(newName);
         }
+
+
 
         public void HandleResourceAmountChanged(PowerResource powerResource, int maxAmount, int currentAmount) {
             //Debug.Log($"{unitController.gameObject.name}.UnitNamePlateController.HandleResourceAmountChanged()");
@@ -191,10 +201,10 @@ namespace AnyRPG {
         public override bool HasHealth() {
             //Debug.Log($"{gameObject.name}.CharacterUnit.HasHealth(): return true");
             if (unitController == null) {
-                Debug.Log("UnitNamePlateController.HasHealth(): unitcontroller is null");
+                Debug.LogWarning("UnitNamePlateController.HasHealth(): unitcontroller is null");
             }
             if (unitController.CharacterUnit == null) {
-                Debug.Log(unitController.gameObject.name + ".UnitNamePlateController.HasHealth(): unitcontroller.CharacterUnit is null");
+                Debug.LogWarning($"{unitController.gameObject.name}.UnitNamePlateController.HasHealth(): unitcontroller.CharacterUnit is null");
             }
             if (unitController.BaseCharacter != null && unitController.CharacterStats != null) {
                 return unitController.CharacterStats.HasHealthResource;
@@ -216,6 +226,68 @@ namespace AnyRPG {
             return base.GetPowerResourceAmount(powerResource);
         }
 
+        public Color32 GetTextColor() {
+
+            // player is always green
+            if (playerManager.UnitController != null && unitController == playerManager.UnitController) {
+                return Color.green;
+            }
+
+            // this is not the player, check for faction
+            if (Faction == null) {
+                return Color.white;
+            }
+
+            // faction is not null, check for cutscene
+            if (uIManager.CutSceneBarController.CurrentCutscene == null) {
+                return Faction.GetFactionColor(playerManager, NamePlateUnit);
+            }
+
+            // cutscene is not null, check for faction color setting
+            if (uIManager.CutSceneBarController.CurrentCutscene.UseDefaultFactionColors == true) {
+                return Faction.GetFactionColor();
+            }
+
+            return Color.white;
+        }
+
+        public override string GetNamePlateString() {
+
+            Color textColor = GetTextColor();
+
+                string nameString = string.Empty;
+                string tagString = string.Empty;
+                if (playerManager.UnitController == null ||unitController != playerManager.UnitController || PlayerPrefs.GetInt("ShowPlayerName") == 1) {
+                    // player is not spawned, or this is not the player, or player is allowed to show name
+                    nameString = UnitDisplayName;
+                }
+
+                // faction is lowest priority
+                if (playerManager.UnitController == null || unitController != playerManager.UnitController || PlayerPrefs.GetInt("ShowPlayerFaction") == 1) {
+                    if (SuppressFaction == false) {
+                        tagString = $"<{Faction.DisplayName}>";
+                    }
+                }
+
+                // title is higher priority than faction
+                if (Title != string.Empty) {
+                    tagString = $"<{Title}>";
+                }
+
+                // guild is the highest priority
+                if (unitController.CharacterGuildManager.IsInGuild()) {
+                    tagString = $"<{unitController.CharacterGuildManager.GuildName}>";
+                }
+
+                string newLineString = string.Empty;
+                if (tagString != string.Empty && nameString != string.Empty) {
+                    newLineString = "\n";
+                    //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): faction and name are both not empty");
+                }
+
+                //Debug.Log($"{unitNamePlateController.NamePlateUnit.DisplayName}.NamePlateController.SetCharacterName(): setting character name text: {nameString}{newLineString}{factionString}");
+                return $"<color=#{ColorUtility.ToHtmlStringRGB(textColor)}>{nameString}{newLineString}{tagString}</color>";
+        }
 
 
     }

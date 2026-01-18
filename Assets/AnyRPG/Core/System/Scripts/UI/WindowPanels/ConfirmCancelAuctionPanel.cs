@@ -63,8 +63,8 @@ namespace AnyRPG {
         public override void ProcessOpenWindowNotification() {
             base.ProcessOpenWindowNotification();
             //currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, mailboxManagerClient.SavedMessageRequest.CurrencyAmount);
-            InstantiatedItem item = systemItemManager.GetExistingInstantiatedItem(auctionManagerClient.CancelAuctionItem.ItemIds[0]);
-            confirmText.text = $"Cancel auction of {item.DisplayName} ({auctionManagerClient.CancelAuctionItem.ItemIds.Count})";
+            InstantiatedItem item = auctionManagerClient.CancelAuctionItem.Items[0];
+            confirmText.text = $"Cancel auction of {item.DisplayName} ({auctionManagerClient.CancelAuctionItem.Items.Count})";
         }
 
 

@@ -1081,14 +1081,14 @@ namespace AnyRPG {
         /// <summary>
         /// World space movement based off camera facing.
         /// </summary>
-        Vector3 CameraRelativeInput(Vector3 inputVector) {
-            Debug.Log("PlayerUnitMovementController.CameraRelativeInput(" + inputVector + ")");
+        private Vector3 CameraRelativeInput(Vector3 inputVector) {
+            //Debug.Log("PlayerUnitMovementController.CameraRelativeInput(" + inputVector + ")");
             //Forward vector relative to the camera
             
             return Quaternion.LookRotation(new Vector3(cameraManager.ActiveMainCamera.transform.forward.x, 0f, cameraManager.ActiveMainCamera.transform.forward.z).normalized) * inputVector;
         }
 
-        Vector3 CameraRelativeInputOld(float inputX, float inputZ) {
+        private Vector3 CameraRelativeInputOld(float inputX, float inputZ) {
             //Forward vector relative to the camera along the x-z plane   
             Vector3 forward = cameraManager.ActiveMainCamera.transform.TransformDirection(Vector3.forward);
             forward.y = 0;
@@ -1176,7 +1176,7 @@ namespace AnyRPG {
             }
             /*
             if (returnValue == true) {
-                Debug.Log("RaycastForGround() : ground angle: " + Vector3.Angle(groundNormal, Vector3.up));
+                //Debug.Log("RaycastForGround() : ground angle: " + Vector3.Angle(groundNormal, Vector3.up));
             }
             */
 
@@ -1380,7 +1380,7 @@ namespace AnyRPG {
             }
 
             newReturnValue = playerManager.ActiveUnitController.transform.InverseTransformDirection(rotatedInput);
-            Debug.Log("position: " + playerManager.ActiveUnitController.transform.position + "; forwardDirection: " + forwardDirection + "; worldInput: " + worldInput + "; rotatedInput: " + rotatedInput + "; groundNormal: " + groundNormal + "; newReturnValue: " + newReturnValue);
+            //Debug.Log("position: " + playerManager.ActiveUnitController.transform.position + "; forwardDirection: " + forwardDirection + "; worldInput: " + worldInput + "; rotatedInput: " + rotatedInput + "; groundNormal: " + groundNormal + "; newReturnValue: " + newReturnValue);
             */
 
             // limit upward momentum near stairs to prevent overshooting the stairs in the vertical direction
@@ -1403,7 +1403,7 @@ namespace AnyRPG {
                     yValue = Mathf.Clamp(1, 0, -closestGroundDistance / calculatedSpeed / Time.fixedDeltaTime) * -1;
                     //yValue = -1;
                     /*
-                    Debug.Log("NormalizedLocalMovement() position.y: " + playerManager.ActiveUnitController.transform.position.y +
+                    //Debug.Log("NormalizedLocalMovement() position.y: " + playerManager.ActiveUnitController.transform.position.y +
                         "; Applying extra down force: " + yValue +
                         "; ground distance: " + closestGroundDistance);
                       */  
@@ -1520,7 +1520,7 @@ namespace AnyRPG {
                         if (Vector3.Angle(bottomStairDownHitInfo.normal, Vector3.up) < slopeLimit) {
                             bottomFrontStairHeight = bottomStairDownHitInfo.point;
                             /*
-                            Debug.Log("CheckFrontObstacle(): y position: " + playerManager.ActiveUnitController.transform.position.y +
+                            //Debug.Log("CheckFrontObstacle(): y position: " + playerManager.ActiveUnitController.transform.position.y +
                                 "; stairs detected angle: " + Vector3.Angle(stairDownHitInfo.normal, Vector3.up) +
                                 "; stairHeight: " + "(" + stairHeight.x + ", " + stairHeight.y + ", " + stairHeight.z + ")" +
                                 "; object: " + stairDownHitInfo.collider.gameObject.name);
@@ -1557,7 +1557,7 @@ namespace AnyRPG {
                         if (Vector3.Angle(topStairDownHitInfo.normal, Vector3.up) < slopeLimit) {
                             topFrontStairHeight = topStairDownHitInfo.point;
                             /*
-                            Debug.Log("CheckFrontObstacle(): y position: " + playerManager.ActiveUnitController.transform.position.y +
+                            //Debug.Log("CheckFrontObstacle(): y position: " + playerManager.ActiveUnitController.transform.position.y +
                                 "; stairs detected angle: " + Vector3.Angle(stairDownHitInfo.normal, Vector3.up) +
                                 "; stairHeight: " + "(" + stairHeight.x + ", " + stairHeight.y + ", " + stairHeight.z + ")" +
                                 "; object: " + stairDownHitInfo.collider.gameObject.name);

@@ -969,7 +969,8 @@ namespace AnyRPG {
         }
 
         public void ToggleShowPlayerNameButton() {
-            Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton()");
+            //Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton()");
+
             if (PlayerPrefs.GetInt("ShowPlayerName") == 0) {
                 PlayerPrefs.SetInt("ShowPlayerName", 1);
                 //Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton(): showplayername now set to 1");

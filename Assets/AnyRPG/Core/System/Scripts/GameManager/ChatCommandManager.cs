@@ -33,7 +33,7 @@ namespace AnyRPG {
             //Debug.Log($"ChatCommandManager.ParseChatCommand({commandText}, {accountId})");
 
             if (commandText == string.Empty) {
-                Debug.Log("Empty Chat Message");
+                //Debug.Log("Empty Chat Message");
                 return;
             }
 

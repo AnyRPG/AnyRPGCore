@@ -10,6 +10,7 @@ namespace AnyRPG {
 
         public event System.Action<float> OnSetLoadingProgress = delegate { };
         public event System.Action<string> OnBeginLoadingLevel = delegate { };
+        public event System.Action OnExitToMainMenu = delegate { };
 
         private bool navMeshAvailable;
         private SceneNode returnScene = null;
@@ -197,6 +198,13 @@ namespace AnyRPG {
                 activeSceneNode = null;
                 //Debug.Log($"Levelmanager.SetActiveSceneNode(): NULLING active scene node");
             }
+        }
+
+        public SceneNode GetSceneNodeBySceneName(string sceneName) {
+            if (sceneDictionary.ContainsKey(sceneName)) {
+                return sceneDictionary[sceneName];
+            }
+            return null;
         }
 
         public bool IsMainMenu() {
@@ -407,6 +415,7 @@ namespace AnyRPG {
             if (loadingSceneNode != null && IsInitializationScene() == false && IsMainMenu(loadingSceneNode.SceneFile) == true) {
                 // since this isn't the initialization scene, we need to process the exit to main menu functionality
                 playerManager.ProcessExitToMainMenu();
+                OnExitToMainMenu();
             }
 
             if (loadingSceneNode != null) {

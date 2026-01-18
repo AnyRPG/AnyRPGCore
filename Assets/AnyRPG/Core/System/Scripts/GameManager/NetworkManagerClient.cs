@@ -62,6 +62,8 @@ namespace AnyRPG {
         private TradeServiceClient tradeServiceClient = null;
         private MailboxManagerClient mailboxManagerClient = null;
         private AuctionManagerClient auctionManagerClient = null;
+        private GuildServiceClient guildServiceClient = null;
+        private FriendServiceClient friendServiceClient = null;
 
         public string Username { get => username; }
         public string Password { get => password; }
@@ -96,6 +98,8 @@ namespace AnyRPG {
             tradeServiceClient = systemGameManager.TradeServiceClient;
             mailboxManagerClient = systemGameManager.MailboxManagerClient;
             auctionManagerClient = systemGameManager.AuctionManagerClient;
+            guildServiceClient = systemGameManager.GuildServiceClient;
+            friendServiceClient = systemGameManager.FriendServiceClient;
         }
 
         public bool Login(string username, string password, string server) {
@@ -119,7 +123,7 @@ namespace AnyRPG {
         }
 
         public void RequestReturnFromCutscene() {
-            Debug.Log($"NetworkManagerClient.ReturnFromCutscene()");
+            //Debug.Log($"NetworkManagerClient.ReturnFromCutscene()");
 
             networkController.RequestReturnFromCutscene();
         }
@@ -259,7 +263,7 @@ namespace AnyRPG {
         }
 
         public void DeletePlayerCharacter(int playerCharacterId) {
-            Debug.Log($"NetworkManagerClient.DeletePlayerCharacter({playerCharacterId})");
+            //Debug.Log($"NetworkManagerClient.DeletePlayerCharacter({playerCharacterId})");
 
             networkController.DeletePlayerCharacter(playerCharacterId);
         }
@@ -488,6 +492,14 @@ namespace AnyRPG {
             networkController.RequestSetPlayerFaction(interactable, componentIndex);
         }
 
+        public void RequestCreateGuild(Interactable interactable, int componentIndex, string guildName) {
+            networkController.RequestCreateGuild(interactable, componentIndex, guildName);
+        }
+
+        public void CheckGuildName(Interactable interactable, int componentIndex, string guildName) {
+            networkController.CheckGuildName(interactable, componentIndex, guildName);
+        }
+
         public void RequestLearnSkill(Interactable interactable, int componentIndex, int skillId) {
             networkController.RequestLearnSkill(interactable, componentIndex, skillId);
         }
@@ -577,7 +589,7 @@ namespace AnyRPG {
         }
 
         public void RequestBeginCrafting(Recipe recipe, int craftAmount) {
-            Debug.Log($"NetworkManagerClient.RequestBeginCrafting({recipe.DisplayName}, {craftAmount})");
+            //Debug.Log($"NetworkManagerClient.RequestBeginCrafting({recipe.DisplayName}, {craftAmount})");
 
             networkController.RequestBeginCrafting(recipe, craftAmount);
         }
@@ -634,7 +646,8 @@ namespace AnyRPG {
         }
 
         public void RequestDespawnPlayer() {
-            Debug.Log($"NetworkManagerClient.RequestDespawnPlayer()");
+            //Debug.Log($"NetworkManagerClient.RequestDespawnPlayer()");
+
             networkController.RequestDespawnPlayerUnit();
         }
 
@@ -667,16 +680,27 @@ namespace AnyRPG {
             networkController.DeclineCharacterGroupInvite();
         }
 
-        public void ProcessCharacterJoinGroup(int playerCharacterId, CharacterGroup characterGroup) {
+        public void ProcessAddCharacterToGroup(int characterGroupId, CharacterGroupMemberNetworkData characterGroupMemberNetworkData) {
             //Debug.Log($"NetworkManagerClient.ProcessCharacterJoinGroup({playerCharacterId}, {characterGroup.characterGroupId})");
 
-            characterGroupServiceClient.ProcessJoinGroup(playerCharacterId, characterGroup);
+            characterGroupServiceClient.ProcessJoinGroup(characterGroupId, characterGroupMemberNetworkData);
         }
 
-        public void ProcessLoadCharacterGroup(CharacterGroup characterGroup) {
+        public void ProcessCharacterJoinGuild(int guildId, GuildMemberNetworkData guildMemberNetworkData) {
+            //Debug.Log($"NetworkManagerClient.ProcessCharacterJoinGuild(guildId: {guildId}, {characterSummaryNetworkData.CharacterName})");
+
+            guildServiceClient.ProcessJoinGuild(guildId, guildMemberNetworkData);
+        }
+
+        public void ProcessLoadCharacterGroup(CharacterGroupNetworkData characterGroupNetworkData) {
             //Debug.Log($"NetworkManagerClient.ProcessCharacterJoinGroup({characterGroup.characterGroupId})");
 
-            characterGroupServiceClient.ProcessLoadGroup(characterGroup);
+            characterGroupServiceClient.ProcessLoadGroup(characterGroupNetworkData);
+        }
+
+        public void ProcessLoadGuild(GuildNetworkData guildNetworkData) {
+            //Debug.Log($"NetworkManagerClient.ProcessLoadGuild({guild.guildId})");
+            guildServiceClient.ProcessLoadGuild(guildNetworkData);
         }
 
         public void RequestLeaveCharacterGroup() {
@@ -687,6 +711,10 @@ namespace AnyRPG {
             characterGroupServiceClient.RemoveCharacterFromGroup(removedPlayerId, characterGroupId);
         }
 
+        public void ProcessCharacterLeaveGuild(int removedPlayerId, int guildId) {
+            guildServiceClient.RemoveCharacterFromGuild(removedPlayerId, guildId);
+        }
+
         public void RequestRemoveCharacterFromGroup(int playerCharacterId) {
             networkController.RequestRemoveCharacterFromGroup(playerCharacterId);
         }
@@ -695,8 +723,16 @@ namespace AnyRPG {
             networkController.RequestInviteCharacterToGroup(characterId);
         }
 
-        public void ProcessCharacterGroupInvite(CharacterGroup characterGroup, string leaderName) {
-            characterGroupServiceClient.DisplayCharacterGroupInvite(characterGroup.characterGroupId, leaderName);
+        public void RequestInviteCharacterToGroup(string characterName) {
+            networkController.RequestInviteCharacterToGroup(characterName);
+        }
+
+        public void ProcessCharacterGroupInvite(int characterGroupId, string leaderName) {
+            characterGroupServiceClient.DisplayCharacterGroupInvite(characterGroupId, leaderName);
+        }
+
+        public void ProcessGuildInvite(int guildId, string leaderName) {
+            guildServiceClient.DisplayGuildInvite(guildId, leaderName);
         }
 
         public void RequestDisbandCharacterGroup(int characterGroupId) {
@@ -705,6 +741,10 @@ namespace AnyRPG {
 
         public void ProcessDisbandCharacterGroup(int characterGroupId) {
             characterGroupServiceClient.ProcessDisbandGroup(characterGroupId);
+        }
+
+        public void ProcessDisbandGuild(int guildId) {
+            guildServiceClient.ProcessDisbandGuild(guildId);
         }
 
         public void AdvertisePlayerNameNotAvailable() {
@@ -719,8 +759,16 @@ namespace AnyRPG {
             messageLogClient.WriteSystemMessage($"{decliningPlayerName} has declined the group invite.");
         }
 
+        public void ProcessDeclineGuildInvite(string decliningPlayerName) {
+            messageLogClient.WriteSystemMessage($"{decliningPlayerName} has declined the guild invite.");
+        }
+
         public void ProcessPromoteGroupLeader(int characterGroupId, int newLeaderCharacterId) {
             characterGroupServiceClient.ProcessPromoteGroupLeader(characterGroupId, newLeaderCharacterId);
+        }
+
+        public void ProcessPromoteGuildLeader(int guildId, int newLeaderCharacterId) {
+            guildServiceClient.ProcessPromoteGuildLeader(guildId, newLeaderCharacterId);
         }
 
         public void RequestPromoteCharacterToLeader(int characterId) {
@@ -731,8 +779,16 @@ namespace AnyRPG {
             characterGroupServiceClient.ProcessRenameCharacterInGroup(characterGroupId, characterId, newName);
         }
 
-        public void AdvertiseGroupMessage(string messageText) {
-            messageLogClient.WriteGroupMessage(messageText);
+        public void ProcessRenameCharacterInGuild(int guildId, int characterId, string newName) {
+            guildServiceClient.ProcessRenameCharacterInGuild(guildId, characterId, newName);
+        }
+
+        public void AdvertiseGroupMessage(int characterGroupId, string messageText) {
+            characterGroupServiceClient.AdvertiseGroupMessage(characterGroupId, messageText);
+        }
+
+        public void AdvertiseGuildMessage(int guildId, string messageText) {
+            guildServiceClient.AdvertiseGuildMessage(guildId, messageText);
         }
 
         public void AdvertisePrivateMessage(string messageText) {
@@ -882,6 +938,111 @@ namespace AnyRPG {
         public void AdvertiseListAuctionItems() {
             auctionManagerClient.AdvertiseListItem();
         }
+
+        public void DeclineGuildInvite() {
+            networkController.DeclineGuildInvite();
+        }
+
+        public void AcceptGuildInvite(int inviteGuildId) {
+            networkController.AcceptGuildInvite(inviteGuildId);
+        }
+
+        public void RequestLeaveGuild() {
+            networkController.RequestLeaveGuild();
+        }
+
+        public void RequestInviteCharacterToGuild(int characterId) {
+            networkController.RequestInviteCharacterToGuild(characterId);
+        }
+
+        public void RequestInviteCharacterToGuild(string characterName) {
+            networkController.RequestInviteCharacterToGuild(characterName);
+        }
+
+        public void RequestRemoveCharacterFromGuild(int characterId) {
+            networkController.RequestRemoveCharacterFromGuild(characterId);
+        }
+
+        public void RequestDisbandGuild(int guildId) {
+            networkController.RequestDisbandGuild(guildId);
+        }
+
+        public void ProcessGuildNameAvailable() {
+            guildServiceClient.ProcessGuildNameAvailable();
+        }
+
+        public void ProcessCharacterGroupMemberStatusChange(int characterGroupId, int playerCharacterId, CharacterGroupMemberNetworkData characterGroupMemberNetworkData) {
+            characterGroupServiceClient.ProcessCharacterGroupMemberStatusChange(characterGroupId, playerCharacterId, characterGroupMemberNetworkData);
+        }
+
+        public void ProcessGuildMemberStatusChange(int guildId, int playerCharacterId, GuildMemberNetworkData guildMemberNetworkData) {
+            guildServiceClient.ProcessGuildMemberStatusChange(guildId, playerCharacterId, guildMemberNetworkData);
+        }
+
+        public void ProcessAddFriend(CharacterSummaryNetworkData characterSummaryNetworkData) {
+            friendServiceClient.AddCharacterToFriendList(characterSummaryNetworkData);
+        }
+
+        public void ProcessRemoveCharacterFromFriendList(int removedPlayerId) {
+            friendServiceClient.RemoveCharacterFromFriendList(removedPlayerId);
+        }
+
+        public void ProcessDeclineFriendInvite(string decliningPlayerName) {
+            friendServiceClient.ProcessDeclineFriendInvite(decliningPlayerName);
+        }
+
+        public void DeclineFriendInvite(int inviteCharacterId) {
+            networkController.DeclineFriendInvite(inviteCharacterId);
+        }
+
+        public void ProcessFriendInvite(int inviterCharacterId, string leaderName) {
+            friendServiceClient.DisplayFriendInvite(inviterCharacterId, leaderName);
+        }
+
+        public void ProcessLoadFriendList(FriendListNetworkData friendListNetworkData) {
+            friendServiceClient.ProcessLoadFriendList(friendListNetworkData);
+        }
+
+        public void ProcessRenameCharacterInFriendList(int characterId, string newName) {
+            friendServiceClient.ProcessRenameCharacterInFriendList(characterId, newName);
+        }
+
+        public void ProcessFriendStateChange(int playerCharacterId, CharacterSummaryNetworkData characterSummaryNetworkData) {
+            friendServiceClient.ProcessFriendStateChange(playerCharacterId, characterSummaryNetworkData);
+        }
+
+        public void AcceptFriendInvite(int inviteCharacterId) {
+            networkController.AcceptFriendInvite(inviteCharacterId);
+        }
+
+        public void RequestInviteCharacterToFriendList(int characterId) {
+            networkController.RequestInviteCharacterToFriendList(characterId);
+        }
+
+        public void RequestInviteCharacterToFriendList(string characterName) {
+            networkController.RequestInviteCharacterToFriendList(characterName);
+        }
+
+        public void RequestRemoveCharacterFromFriendList(int characterId) {
+            networkController.RequestRemoveCharacterFromFriendList(characterId);
+        }
+
+        public void RequestPromoteGuildCharacter(int characterId) {
+            networkController.RequestPromoteGuildCharacter(characterId);
+        }
+
+        public void RequestPromoteGroupCharacter(int characterId) {
+            networkController.RequestPromoteGroupCharacter(characterId);
+        }
+
+        public void RequestDemoteGroupCharacter(int characterId) {
+            networkController.RequestDemoteGroupCharacter(characterId);
+        }
+
+        public void RequestDemoteGuildCharacter(int characterId) {
+            networkController.RequestDemoteGuildCharacter(characterId);
+        }
+
     }
 
 }

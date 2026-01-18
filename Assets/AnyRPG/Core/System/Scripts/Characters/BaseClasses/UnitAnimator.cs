@@ -231,7 +231,7 @@ namespace AnyRPG {
 
         /*
         public void SetAnimator(Animator animator) {
-            Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetAnimator({animator.GetInstanceID()})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetAnimator({animator.GetInstanceID()})");
 
             this.animator = animator;
         }

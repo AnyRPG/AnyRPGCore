@@ -39,7 +39,7 @@ namespace AnyRPG {
             // populate the resource dictionary
             foreach (ResourceProfile resource in resourceList) {
                 if (resource.ResourceName == null) {
-                    Debug.Log($"{resource.name} had empty ResourceName value");
+                    //Debug.Log($"{resource.name} had empty ResourceName value");
                     (resource as ResourceProfile).ResourceName = resource.name;
                 }
                 if (resource.Description == null) {

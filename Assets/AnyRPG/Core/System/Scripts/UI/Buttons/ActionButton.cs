@@ -408,7 +408,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.ActionButton.RemoveStaleActions()");
 
             if (Useable != null && Useable.IsUseableStale(playerManager.UnitController) == true) {
-                Debug.Log($"{gameObject.name}.ActionButton.RemoveStaleActions() removing useable: {Useable.ResourceName}");
+                //Debug.Log($"{gameObject.name}.ActionButton.RemoveStaleActions() removing useable: {Useable.ResourceName}");
                 savedUseable = Useable;
                 useable = null;
                 UpdateVisual();

@@ -127,7 +127,7 @@ namespace AnyRPG {
         }
         
         public UserAccount CreateNewAccount(string username, string password) {
-            Debug.Log($"UserAccountService.CreateNewAccount({username}, {password})");
+            //Debug.Log($"UserAccountService.CreateNewAccount({username}, {password})");
 
             // check if username is not taken
             if (AccountExists(username)) {

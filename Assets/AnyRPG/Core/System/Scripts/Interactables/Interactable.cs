@@ -509,7 +509,7 @@ namespace AnyRPG {
         }
 
         public bool CanInteract(UnitController sourceUnitController) {
-            Debug.Log($"{gameObject.name}.Interactable.CanInteract()");
+            //Debug.Log($"{gameObject.name}.Interactable.CanInteract()");
 
             if (notInteractable == true) {
                 return false;
@@ -1019,7 +1019,7 @@ namespace AnyRPG {
             characterUnit = null;
             outlineController = null;
             objectMaterialController = null;
-            interactableEventController = null;
+            interactableEventController = new InteractableEventController();
             dialogController = null;
 
             startHasRun = false;

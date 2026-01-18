@@ -126,9 +126,9 @@ namespace AnyRPG {
         public virtual Interactable ReturnTarget(IAbilityCaster sourceCharacter, Interactable target, AbilityEffectContext abilityEffectContext = null) {
             if (sourceCharacter?.AbilityManager?.UnitGameObject == null) {
                 /*
-                /Debug.Log(DisplayName + ".AbilityEffect.ReturnTarget(): source is null! This should never happen!!!!! (unless the thing that put the dot on you despawns)");
+                /Debug.LogWarning(DisplayName + ".AbilityEffect.ReturnTarget(): source is null! This should never happen!!!!! (unless the thing that put the dot on you despawns)");
                 if (sourceCharacter == null) {
-                    Debug.Log(DisplayName + ".AbilityEffect.ReturnTarget(): source abilitymanager is null! This should never happen!!!!! " + sourceCharacter.AbilityManager.Name);
+                    Debug.LogWarning(DisplayName + ".AbilityEffect.ReturnTarget(): source abilitymanager is null! This should never happen!!!!! " + sourceCharacter.AbilityManager.Name);
                 }
                 */
                 return null;
@@ -247,7 +247,7 @@ namespace AnyRPG {
                         objectAudioController = abilityEffectContext.PrefabObjects.First().Value.First().GetComponent<ObjectAudioController>();
                         /*
                         if (audioSource != null) {
-                            Debug.Log("Found Audio Source on " + abilityEffectContext.PrefabObjects.First().Value.name);
+                            //Debug.Log("Found Audio Source on " + abilityEffectContext.PrefabObjects.First().Value.name);
                         }
                         */
                     }

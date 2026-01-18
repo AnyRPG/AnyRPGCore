@@ -163,7 +163,7 @@ namespace AnyRPG {
         }
 
         public void RequestAssignUseableByIndex(int index) {
-            Debug.Log($"ActionBarManager.AssignUseableByIndex({index})");
+            //Debug.Log($"ActionBarManager.AssignUseableByIndex({index})");
 
             if (moveIndex > -1) {
                 RequestMoveGamepadUseable((currentActionBarSet * 16) + moveIndex, (currentActionBarSet * 16) + index);

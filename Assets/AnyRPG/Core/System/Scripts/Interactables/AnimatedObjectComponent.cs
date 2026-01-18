@@ -28,7 +28,7 @@ namespace AnyRPG {
             base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
 
             if (Props.AnimationComponent == null) {
-                Debug.Log("AnimatedObjectComponent.Interact(): Animation component was null");
+                //Debug.Log("AnimatedObjectComponent.Interact(): Animation component was null");
                 return false;
             }
             ChooseMovement(sourceUnitController, componentIndex);

@@ -167,9 +167,9 @@ namespace AnyRPG {
 
             /*
             if (pooledGameObject.activeInHierarchy == false) {
-                Debug.Log($"ObjectPooler.ReturnObjectToPool({pooledGameObject.name}) instanceID: {pooledGameObject.GetInstanceID()} RETURNING INACTIVE OBJECT");
+                //Debug.Log($"ObjectPooler.ReturnObjectToPool({pooledGameObject.name}) instanceID: {pooledGameObject.GetInstanceID()} RETURNING INACTIVE OBJECT");
             } else {
-                Debug.Log($"ObjectPooler.ReturnObjectToPool({pooledGameObject.name}) instanceID: {pooledGameObject.GetInstanceID()} RETURNING ACTIVE OBJECT");
+                //Debug.Log($"ObjectPooler.ReturnObjectToPool({pooledGameObject.name}) instanceID: {pooledGameObject.GetInstanceID()} RETURNING ACTIVE OBJECT");
             }
             */
 

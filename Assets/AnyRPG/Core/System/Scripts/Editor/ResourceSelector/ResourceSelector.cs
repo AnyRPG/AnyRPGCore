@@ -120,7 +120,7 @@ namespace AnyRPG.EditorTools {
                 } catch (NullReferenceException) {
                     // that means the serialized object has been disposed and gone out of scope while the editor window is still open
                     // let's just close it and act as nothing happened
-                    Debug.Log("edited property is gone.");
+                    Debug.LogWarning("edited property is gone.");
                     Close();
                 }
                 fileTypeLabel.text = "Resource name: " + resourceType.Name;

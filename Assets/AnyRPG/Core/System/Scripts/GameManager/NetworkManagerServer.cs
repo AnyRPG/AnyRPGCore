@@ -131,6 +131,10 @@ namespace AnyRPG {
         private MailService mailService = null;
         private AuctionManagerServer auctionManagerServer = null;
         private AuctionService auctionService = null;
+        private GuildServiceServer guildServiceServer = null;
+        private ServerStateService serverStateService = null;
+        private GuildmasterManagerServer guildmasterManagerServer = null;
+        private FriendServiceServer friendServiceServer = null;
 
         public bool ServerModeActive { get => serverModeActive; }
         public NetworkServerMode ServerMode { get => serverMode; }
@@ -182,6 +186,10 @@ namespace AnyRPG {
             mailService = systemGameManager.MailService;
             auctionManagerServer = systemGameManager.AuctionManagerServer;
             auctionService = systemGameManager.AuctionService;
+            guildServiceServer = systemGameManager.GuildServiceServer;
+            serverStateService = systemGameManager.ServerStateService;
+            guildmasterManagerServer = systemGameManager.GuildmasterManagerServer;
+            friendServiceServer = systemGameManager.FriendServiceServer;
         }
 
         public void AddLoggedInAccount(int clientId, int accountId, string token) {
@@ -441,6 +449,15 @@ namespace AnyRPG {
             //ProcessClientLogout(accountId);
             loggedInAccounts[accountId].disconnected = true;
 
+            // remove the player from any character groups
+            int characterId = -1;
+            if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId)) {
+                characterId = playerManagerServer.PlayerCharacterMonitors[accountId].characterSaveData.CharacterId;
+            }
+            if (characterId != -1) {
+                playerCharacterService.SetCharacterOnline(characterId, false);
+            }
+
             playerManagerServer.ProcessDisconnect(accountId);
         }
 
@@ -472,11 +489,16 @@ namespace AnyRPG {
 
             serverModeActive = true;
             // ordered dependencies
+            // server state service needs to load ids before anything else
+            serverStateService.ProcessStartServer();
             // load items first
             systemItemManager.ProcessStartServer();
             // load things that depend on items
             mailService.ProcessStartServer();
             auctionService.ProcessStartServer();
+            playerCharacterService.ProcessStartServer();
+            guildServiceServer.ProcessStartServer();
+            friendServiceServer.ProcessStartServer();
 
             // unordered dependencies
             OnStartServer();
@@ -953,6 +975,23 @@ namespace AnyRPG {
             factionChangeManagerServer.ChangeCharacterFaction(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex);
         }
 
+        public void RequestCreateGuild(Interactable interactable, int componentIndex, string guildName, int accountId) {
+            //Debug.Log($"NetworkManagerServer.RequestCreateGuild({interactable.gameObject.name}, {componentIndex}, {guildName}, {accountId})");
+
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
+                return;
+            }
+            guildmasterManagerServer.CreateGuild(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, guildName);
+        }
+
+        public void CheckGuildName(Interactable interactable, int componentIndex, string guildName, int accountId) {
+            if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
+                return;
+            }
+            guildmasterManagerServer.CheckGuildName(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, guildName);
+        }
+
+
         public void LearnSkill(Interactable interactable, int componentIndex, int skillId, int accountId) {
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
@@ -1001,6 +1040,10 @@ namespace AnyRPG {
 
         public void AdvertiseMessageFeedMessage(UnitController sourceUnitController, string message) {
             networkController.AdvertiseMessageFeedMessage(playerManagerServer.ActiveUnitControllerLookup[sourceUnitController], message);
+        }
+
+        public void AdvertiseSystemMessage(int accountId, string message) {
+            networkController.AdvertiseSystemMessage(accountId, message);
         }
 
         public void AdvertiseSystemMessage(UnitController sourceUnitController, string message) {
@@ -1076,10 +1119,10 @@ namespace AnyRPG {
         }
 
 
-        public void AddAvailableDroppedLoot(int accountId, List<LootDrop> items) {
+        public void AddAvailableDroppedLoot(int accountId, List<int> lootDropIds) {
             //Debug.Log($"NetworkManagerServer.AddAvailableDroppedLoot({accountId}, count: {items.Count})");
 
-            networkController.AddAvailableDroppedLoot(accountId, items);
+            networkController.AddAvailableDroppedLoot(accountId, lootDropIds);
         }
 
         public void AddLootDrop(int accountId, int lootDropId, int itemId) {
@@ -1177,7 +1220,7 @@ namespace AnyRPG {
         }
 
         public void RequestSpawnPet(int accountId, UnitProfile unitProfile) {
-            Debug.Log($"NetworkManagerServer.RequestSpawnPet({accountId}, {unitProfile.ResourceName})");
+            //Debug.Log($"NetworkManagerServer.RequestSpawnPet({accountId}, {unitProfile.ResourceName})");
 
             playerManagerServer.RequestSpawnPet(accountId, unitProfile);
         }
@@ -1202,13 +1245,23 @@ namespace AnyRPG {
             if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId)) {
                 characterId = playerManagerServer.PlayerCharacterMonitors[accountId].characterSaveData.CharacterId;
             }
+            /*
             if (characterId != -1) {
                 characterGroupServiceServer.RemoveCharacterFromGroup(characterId);
+                guildServiceServer.SetCharacterOnline(characterId, false);
+                friendServiceServer.SetCharacterOnline(characterId, false);
             }
+            */
 
             playerManagerServer.StopMonitoringPlayerUnit(accountId);
             KickPlayer(accountId);
             ProcessClientLogout(accountId);
+
+            if (characterId != -1) {
+                playerCharacterService.SetCharacterOnline(characterId, false);
+				characterGroupServiceServer.RemoveCharacterFromGroup(characterId);
+            }
+
         }
 
         public void RequestSpawnRequest(int accountId) {
@@ -1250,6 +1303,7 @@ namespace AnyRPG {
             //Debug.Log($"NetworkManagerServer.RequestLoadPlayerCharacter(accountId: {accountId}, playerCharacterId: {playerCharacterId})");
 
             string sceneName = string.Empty;
+            playerCharacterService.SetCharacterOnline(playerCharacterId, true);
             if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId) == false) {
                 // no existing monitor, so this is a fresh login
                 CharacterSaveData characterSaveData = playerCharacterService.GetPlayerCharacterSaveData(accountId, playerCharacterId);
@@ -1277,6 +1331,8 @@ namespace AnyRPG {
                 }
                 characterGroupServiceServer.SendCharacterGroupInfo(accountId, playerCharacterId);
             }
+            guildServiceServer.SendGuildInfo(accountId, playerCharacterId);
+            friendServiceServer.SendFriendListInfo(accountId);
 
             networkController.AdvertiseLoadPlayerCharacter(accountId, sceneName);
             mailService.SendMailMessages(playerCharacterId);
@@ -1294,26 +1350,50 @@ namespace AnyRPG {
             characterGroupServiceServer.DeclineCharacterGroupInvite(accountId);
         }
 
-        public void AdvertiseAddCharacterToGroup(int playerCharacterId, CharacterGroup characterGroup) {
-            //Debug.Log($"NetworkManagerServer.AdvertiseAddCharacterToGroup({playerCharacterId}, {characterGroup.characterGroupId})");
+        public void AcceptGuildInvite(int accountId, int guildId) {
+            //Debug.Log($"NetworkManagerServer.AcceptGuildInvite({accountId}, {characterGroupId})");
 
-            networkController.AdvertiseAddCharacterToGroup(playerCharacterId, characterGroup);
+            guildServiceServer.AcceptGuildInvite(accountId, guildId);
         }
 
-        public void AdvertiseCharacterGroup(int accountId, CharacterGroup characterGroup) {
+        public void DeclineGuildInvite(int accountId) {
+            //Debug.Log($"NetworkManagerServer.DeclineGuildInvite({accountId})");
+
+            guildServiceServer.DeclineGuildInvite(accountId);
+        }
+
+        public void DeclineFriendInvite(int accountId, int friendId) {
+            //Debug.Log($"NetworkManagerServer.DeclineGuildInvite({accountId})");
+
+            friendServiceServer.DeclineFriendInvite(accountId, friendId);
+        }
+
+        public void AdvertiseAddCharacterToGroup(int accountId, int characterGroupId, CharacterGroupMemberNetworkData characterGroupMemberNetworkData) {
+            //Debug.Log($"NetworkManagerServer.AdvertiseAddCharacterToGroup({playerCharacterId}, {characterGroup.characterGroupId})");
+
+            networkController.AdvertiseAddCharacterToGroup(accountId, characterGroupId, characterGroupMemberNetworkData);
+        }
+
+        public void AdvertiseAddCharacterToGuild(int existingAccountId, int guildId, GuildMemberNetworkData guildMemberNetworkData) {
+            //Debug.Log($"NetworkManagerServer.AdvertiseAddCharacterToGuild(accountId: {existingAccountId}, guildId: {guildId})");
+
+            networkController.AdvertiseAddCharacterToGuild(existingAccountId, guildId, guildMemberNetworkData);
+        }
+
+        public void AdvertiseCharacterGroup(int accountId, CharacterGroupNetworkData characterGroupNetworkData) {
             //Debug.Log($"NetworkManagerServer.AdvertiseCharacterGroup(accountId: {accountId}, groupId: {characterGroup.characterGroupId})");
 
-            networkController.AdvertiseCharacterGroup(accountId, characterGroup);
+            networkController.AdvertiseCharacterGroup(accountId, characterGroupNetworkData);
         }
 
         public void RequestLeaveCharacterGroup(int accountId) {
             characterGroupServiceServer.RequestLeaveCharacterGroup(accountId);
         }
 
-        public void AdvertiseRemoveCharacterFromGroup(int characterId, CharacterGroup characterGroup) {
+        public void AdvertiseRemoveCharacterFromGroup(int accountId, int characterId, int groupId) {
             //Debug.Log($"NetworkManagerServer.AdvertiseRemoveCharacterFromGroup({characterId}, {characterGroup.characterGroupId})");
 
-            networkController.AdvertiseRemoveCharacterFromGroup(characterId, characterGroup);
+            networkController.AdvertiseRemoveCharacterFromGroup(accountId, characterId, groupId);
         }
 
         public void RequestRemoveCharacterFromGroup(int accountId, int playerCharacterId) {
@@ -1326,38 +1406,110 @@ namespace AnyRPG {
             characterGroupServiceServer.RequestInviteCharacterToGroup(accountId, invitedCharacterId);
         }
 
-        public void AdvertiseCharacterGroupInvite(int invitedCharacterId, CharacterGroup characterGroup, string leaderName) {
+        public void RequestInviteCharacterToGroup(int accountId, string invitedCharacterName) {
+            //Debug.Log($"NetworkManagerServer.RequestInviteCharacterToGroup({accountId}, {invitedCharacterId})");
+
+            characterGroupServiceServer.RequestInviteCharacterToGroup(accountId, invitedCharacterName);
+        }
+
+        public void RequestLeaveGuild(int accountId) {
+            guildServiceServer.RequestLeaveGuild(accountId);
+        }
+
+        public void AdvertiseRemoveCharacterFromGuild(int accountId, int characterId, int guildId) {
+            //Debug.Log($"NetworkManagerServer.AdvertiseRemoveCharacterFromGroup({characterId}, {characterGroup.characterGroupId})");
+
+            networkController.AdvertiseRemoveCharacterFromGuild(accountId, characterId, guildId);
+        }
+
+        public void RequestRemoveCharacterFromGuild(int accountId, int playerCharacterId) {
+            guildServiceServer.RequestRemoveCharacterFromGuild(accountId, playerCharacterId);
+        }
+
+        public void RequestRemoveCharacterFromFriendList(int accountId, int playerCharacterId) {
+            friendServiceServer.RequestRemoveCharacterFromFriendList(accountId, playerCharacterId);
+        }
+
+        public void RequestInviteCharacterToGuild(int accountId, int invitedCharacterId) {
+            //Debug.Log($"NetworkManagerServer.RequestInviteCharacterToGroup({accountId}, {invitedCharacterId})");
+
+            guildServiceServer.RequestInviteCharacterToGuild(accountId, invitedCharacterId);
+        }
+
+        public void RequestInviteCharacterToFriendList(int accountId, int invitedCharacterId) {
+            //Debug.Log($"NetworkManagerServer.RequestInviteCharacterToGroup({accountId}, {invitedCharacterId})");
+
+            friendServiceServer.RequestInviteCharacterToFriend(accountId, invitedCharacterId);
+        }
+
+        public void RequestInviteCharacterToFriendList(int accountId, string characterName) {
+            //Debug.Log($"NetworkManagerServer.RequestInviteCharacterToGroup({accountId}, {invitedCharacterId})");
+
+            friendServiceServer.RequestInviteCharacterToFriend(accountId, characterName);
+        }
+
+        public void RequestInviteCharacterToGuild(int accountId, string invitedCharacterName) {
+            //Debug.Log($"NetworkManagerServer.RequestInviteCharacterToGroup({accountId}, {invitedCharacterId})");
+
+            guildServiceServer.RequestInviteCharacterToGuild(accountId, invitedCharacterName);
+        }
+
+        public void AdvertiseCharacterGroupInvite(int invitedCharacterId, int characterGroupId, string leaderName) {
             //Debug.Log($"NetworkManagerServer.AdvertiseCharacterGroupInvite({invitedCharacterId}, {characterGroup.characterGroupId}, {leaderName})");
 
-            networkController.AdvertiseCharacterGroupInvite(invitedCharacterId, characterGroup, leaderName);
+            networkController.AdvertiseCharacterGroupInvite(invitedCharacterId, characterGroupId, leaderName);
         }
 
         public void RequestDisbandCharacterGroup(int accountId, int characterGroupId) {
             characterGroupServiceServer.DisbandGroup(accountId, characterGroupId);
         }
 
-        public void AdvertiseDisbandCharacterGroup(CharacterGroup characterGroup) {
-            networkController.AdvertiseDisbandCharacterGroup(characterGroup);
+        public void RequestDisbandGuild(int accountId, int guildId) {
+            guildServiceServer.DisbandGuild(accountId, guildId);
+        }
+
+        public void AdvertiseDisbandCharacterGroup(int accountId, int characterGroupId) {
+            networkController.AdvertiseDisbandCharacterGroup(accountId, characterGroupId);
         }
 
         public void AdvertiseDeclineCharacterGroupInvite(int leaderAccountId, string decliningPlayerName) {
             networkController.AdvertiseDeclineCharacterGroupInvite(leaderAccountId, decliningPlayerName);
         }
 
-        public void AdvertisePromoteLeader(CharacterGroup characterGroup, int newLeaderCharacterId) {
-            networkController.AdvertisePromoteGroupLeader(characterGroup, newLeaderCharacterId);
+        public void AdvertisePromoteGroupLeader(int accountId, int characterGroupId, int newLeaderCharacterId) {
+            networkController.AdvertisePromoteGroupLeader(accountId, characterGroupId, newLeaderCharacterId);
         }
 
         public void RequestPromoteCharacterToLeader(int accountId, int characterId) {
-            characterGroupServiceServer.RequestPromoteCharacterToLeader(accountId, characterId);
+            characterGroupServiceServer.RequestPromoteCharacter(accountId, characterId);
         }
 
-        public void AdvertiseRenameCharacterInGroup(CharacterGroup characterGroup, int characterId, string newName) {
-            networkController.AdvertiseRenameCharacterInGroup(characterGroup, characterId, newName);
+        public void RequestPromoteGuildCharacter(int accountId, int characterId) {
+            guildServiceServer.RequestPromoteCharacter(accountId, characterId);
         }
 
-        public void AdvertiseGroupMessage(CharacterGroup characterGroup, string messageText) {
-            networkController.AdvertiseGroupMessage(characterGroup, messageText);
+        public void RequestDemoteGuildCharacter(int accountId, int characterId) {
+            guildServiceServer.RequestDemoteCharacter(accountId, characterId);
+        }
+
+        public void RequestPromoteGroupCharacter(int accountId, int characterId) {
+            characterGroupServiceServer.RequestPromoteCharacter(accountId, characterId);
+        }
+
+        public void RequestDemoteGroupCharacter(int accountId, int characterId) {
+            characterGroupServiceServer.RequestDemoteCharacter(accountId, characterId);
+        }
+
+        public void AdvertiseRenameCharacterInGroup(int accountId, int groupId, int characterId, string newName) {
+            networkController.AdvertiseRenameCharacterInGroup(accountId, groupId, characterId, newName);
+        }
+
+        public void AdvertiseGroupMessage(int accountId, int characterGroupId, string messageText) {
+            networkController.AdvertiseGroupMessage(accountId, characterGroupId, messageText);
+        }
+
+        public void AdvertiseGuildMessage(int accountId, int guildId, string messageText) {
+            networkController.AdvertiseGuildMessage(accountId, guildId, messageText);
         }
 
         public void AdvertisePrivateMessage(int targetAccountId, string messageText) {
@@ -1490,6 +1642,76 @@ namespace AnyRPG {
 
         public void AdvertiseListAuctionItems(int accountId) {
             networkController.AdvertiseListAuctionItems(accountId);
+        }
+
+        public void AdvertiseDisbandGuild(int accountId, int guildId) {
+            networkController.AdvertiseDisbandGuild(accountId, guildId);
+        }
+
+        public void AdvertiseDeclineGuildInvite(int leaderAccountId, string playerName) {
+            networkController.AdvertiseDeclineGuildInvite(leaderAccountId, playerName);
+        }
+
+        public void AdvertiseGuildInvite(int invitedCharacterId, int guildId, string leaderName) {
+            networkController.AdvertiseGuildInvite(invitedCharacterId, guildId, leaderName);
+        }
+
+        public void AdvertiseGuild(int accountId, GuildNetworkData guildNetworkData) {
+            //Debug.Log($"NetworkManagerServer.AdvertiseGuild(accountId: {accountId}, guildId: {guildNetworkData.GuildId})");
+
+            networkController.AdvertiseGuild(accountId, guildNetworkData);
+        }
+
+        public void AdvertisePromoteGuildLeader(int accountId, int guildId, int newLeaderCharacterId) {
+            networkController.AdvertisePromoteGuildLeader(accountId, guildId, newLeaderCharacterId);
+        }
+
+        public void AdvertiseRenameCharacterInGuild(int accountId, int guildId, int characterId, string newName) {
+            networkController.AdvertiseRenameCharacterInGuild(accountId, guildId, characterId, newName);
+        }
+
+        public void AdvertiseGuildNameAvailable(int accountId) {
+            networkController.AdvertiseGuildNameAvailable(accountId);
+        }
+
+        public void AdvertiseGroupMemberStatusChange(int accountId, int characterGroupId, int playerCharacterId, CharacterGroupMemberNetworkData characterGroupMemberNetworkData) {
+            networkController.AdvertiseCharacterGroupMemberStatusChange(accountId, characterGroupId, playerCharacterId, characterGroupMemberNetworkData);
+        }
+
+        public void AdvertiseGuildMemberStatusChange(int accountId, int guildId, int playerCharacterId, GuildMemberNetworkData guildMemberNetworkData) {
+            networkController.AdvertiseGuildMemberStatusChange(accountId, guildId, playerCharacterId, guildMemberNetworkData);
+        }
+
+        public void AdvertiseAddFriend(int sourceCharacterAccountId, CharacterSummaryNetworkData characterSummaryNetworkData) {
+            networkController.AdvertiseAddFriend(sourceCharacterAccountId, characterSummaryNetworkData);
+        }
+
+        public void AdvertiseRemoveCharacterFromFriendList(int targetCharacterAccountId, int sourceCharacterId) {
+            networkController.AdvertiseRemoveCharacterFromFriendList(targetCharacterAccountId, sourceCharacterId);
+        }
+
+        public void AdvertiseDeclineFriendInvite(int friendAccountId, string characterName) {
+            networkController.AdvertiseDeclineFriendInvite(friendAccountId, characterName);
+        }
+
+        public void AdvertiseFriendInvite(int invitedAccountId, int sourceCharacterId, string sourceCharacterName) {
+            networkController.AdvertiseFriendInvite(invitedAccountId, sourceCharacterId, sourceCharacterName);
+        }
+
+        public void AdvertiseFriendList(int accountId, FriendListNetworkData friendListNetworkData) {
+            networkController.AdvertiseFriendList(accountId, friendListNetworkData);
+        }
+
+        public void AdvertiseRenameCharacterInFriendList(int targetAccountId, int characterId, string newName) {
+            networkController.AdvertiseRenameCharacterInFriendList(targetAccountId, characterId, newName);
+        }
+
+        public void AdvertiseFriendStateChange(int targetAccountId, int playerCharacterId, CharacterSummaryNetworkData characterSummaryNetworkData) {
+            networkController.AdvertiseFriendStateChange(targetAccountId, playerCharacterId, characterSummaryNetworkData);
+        }
+
+        public void AcceptFriendInvite(int accountId, int friendId) {
+            friendServiceServer.AcceptFriendInvite(accountId, friendId);
         }
     }
 

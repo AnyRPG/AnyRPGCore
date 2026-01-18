@@ -52,7 +52,7 @@ namespace AnyRPG {
         }
 
         public void RevivePlayer() {
-            Debug.Log("PlayerOptionsController.RevivePlayer()");
+            //Debug.Log("PlayerOptionsController.RevivePlayer()");
 
             uIManager.playerOptionsMenuWindow.CloseWindow();
             playerManager.RequestRevivePlayer();

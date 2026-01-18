@@ -377,7 +377,7 @@ namespace AnyRPG {
                 }
                 counter++;
                 if (counter == 200) {
-                    Debug.Log("HIT CIRCUIT BREAKER!");
+                    Debug.LogWarning("HIT CIRCUIT BREAKER!");
                     break;
                 }
             }

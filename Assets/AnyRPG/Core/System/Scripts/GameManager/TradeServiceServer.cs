@@ -24,7 +24,7 @@ namespace AnyRPG {
             //Debug.Log($"TradeServiceServer.AcceptTradeInvite({accountId})");
 
             if (tradeSessionLookup.ContainsKey(accountId) == false) {
-                Debug.Log($"CharacterGroupService.AcceptTradeInvite({accountId}) trade session not found");
+                //Debug.Log($"CharacterGroupService.AcceptTradeInvite({accountId}) trade session not found");
                 return;
             }
             TradeSession tradeSession = tradeSessionLookup[accountId];
@@ -38,7 +38,7 @@ namespace AnyRPG {
             //Debug.Log($"CharacterGroupService.DeclineCharacterGroupInvite({accountId})");
 
             if (tradeSessionLookup.ContainsKey(accountId) == false) {
-                Debug.Log($"CharacterGroupService.DeclineTradeInvite({accountId}) trade session not found");
+                //Debug.Log($"CharacterGroupService.DeclineTradeInvite({accountId}) trade session not found");
                 return;
             }
             TradeSession tradeSession = tradeSessionLookup[accountId];
@@ -51,7 +51,7 @@ namespace AnyRPG {
         public void RequestBeginTrade(int accountId, int targetCharacterId) {
             int targetAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(targetCharacterId);
             if (targetAccountId == 0) {
-                Debug.Log($"TradeServiceServer.RequestInviteCharacterToGroup: account not found for character {targetCharacterId}");
+                //Debug.Log($"TradeServiceServer.RequestInviteCharacterToGroup: account not found for character {targetCharacterId}");
                 return;
             }
             TradeSession tradeSession = new TradeSession(accountId, targetAccountId);
@@ -63,7 +63,7 @@ namespace AnyRPG {
 
         public void RequestAddItemsToTradeSlot(int accountId, int buttonIndex, List<int> itemIdList) {
             if (tradeSessionLookup.ContainsKey(accountId) == false) {
-                Debug.Log($"TradeServiceServer.AcceptCharacterGroupInvite({accountId}) trade session not found");
+                //Debug.Log($"TradeServiceServer.AcceptCharacterGroupInvite({accountId}) trade session not found");
                 return;
             }
             TradeSession tradeSession = tradeSessionLookup[accountId];
@@ -80,7 +80,7 @@ namespace AnyRPG {
 
         public void RequestAddCurrencyToTrade(int accountId, int amount) {
             if (tradeSessionLookup.ContainsKey(accountId) == false) {
-                Debug.Log($"TradeServiceServer.RequestAddCurrencyToTrade({accountId}) trade session not found");
+                //Debug.Log($"TradeServiceServer.RequestAddCurrencyToTrade({accountId}) trade session not found");
                 return;
             }
             TradeSession tradeSession = tradeSessionLookup[accountId];
@@ -113,7 +113,7 @@ namespace AnyRPG {
 
         public void RequestConfirmTrade(int accountId) {
             if (tradeSessionLookup.ContainsKey(accountId) == false) {
-                Debug.Log($"CharacterGroupService.AcceptCharacterGroupInvite({accountId}) trade session not found");
+                //Debug.Log($"CharacterGroupService.AcceptCharacterGroupInvite({accountId}) trade session not found");
                 return;
             }
             TradeSession tradeSession = tradeSessionLookup[accountId];
@@ -231,7 +231,7 @@ namespace AnyRPG {
 
         public void RequestUnconfirmTrade(int accountId) {
             if (tradeSessionLookup.ContainsKey(accountId) == false) {
-                Debug.Log($"CharacterGroupService.AcceptCharacterGroupInvite({accountId}) trade session not found");
+                //Debug.Log($"CharacterGroupService.AcceptCharacterGroupInvite({accountId}) trade session not found");
                 return;
             }
             TradeSession tradeSession = tradeSessionLookup[accountId];

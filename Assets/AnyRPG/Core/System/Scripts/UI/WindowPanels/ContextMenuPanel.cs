@@ -228,7 +228,7 @@ namespace AnyRPG {
             }
 
             // check if the target is in the group
-            if (characterGroup.CharacterIdList[UnitControllerMode.Player].ContainsKey(contextMenuService.TargetUnitController.CharacterId) == false) {
+            if (characterGroup.MemberList[UnitControllerMode.Player].ContainsKey(contextMenuService.TargetUnitController.CharacterId) == false) {
                 // target is not in the group
                 promoteButton.gameObject.SetActive(false);
                 return;
@@ -267,7 +267,7 @@ namespace AnyRPG {
             }
 
             // check if the target is in the group
-            if (characterGroup.CharacterIdList[UnitControllerMode.Player].ContainsKey(contextMenuService.TargetUnitController.CharacterId) == false) {
+            if (characterGroup.MemberList[UnitControllerMode.Player].ContainsKey(contextMenuService.TargetUnitController.CharacterId) == false) {
                 // target is not in the group
                 kickButton.gameObject.SetActive(false);
                 return;

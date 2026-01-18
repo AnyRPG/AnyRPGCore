@@ -216,7 +216,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.Spawnable.Spawn()");
 
             if (spawnReference == null && prefabProfile?.Prefab != null) {
-                Debug.Log($"{gameObject.name}.Spawnable.Spawn() reference is null but prefab is not");
+                //Debug.Log($"{gameObject.name}.Spawnable.Spawn() reference is null but prefab is not");
                 Vector3 usedPosition = prefabProfile.SheathedPosition;
                 Vector3 usedScale = prefabProfile.SheathedScale;
                 Vector3 usedRotation = prefabProfile.SheathedRotation;

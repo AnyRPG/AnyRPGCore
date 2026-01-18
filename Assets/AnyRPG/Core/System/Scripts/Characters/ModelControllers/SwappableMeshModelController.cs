@@ -109,12 +109,12 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.SwappableMeshModelController.LoadGroupChoice({groupName}, {optionChoice})");
 
             if (optionGroups.ContainsKey(groupName) == false) {
-                Debug.Log($"{unitController.gameObject.name}.SwappableMeshModelController.LoadGroupChoice({groupName}, {optionChoice}) option group did not exist");
+                Debug.LogWarning($"{unitController.gameObject.name}.SwappableMeshModelController.LoadGroupChoice({groupName}, {optionChoice}) option group did not exist");
                 return false;
             }
 
             if (unitModelController.UnitModel == null) {
-                Debug.Log($"{unitController.gameObject.name}.SwappableMeshModelController.LoadGroupChoice({groupName}, {optionChoice}) could not find the model to search");
+                Debug.LogWarning($"{unitController.gameObject.name}.SwappableMeshModelController.LoadGroupChoice({groupName}, {optionChoice}) could not find the model to search");
                 return false;
             }
 

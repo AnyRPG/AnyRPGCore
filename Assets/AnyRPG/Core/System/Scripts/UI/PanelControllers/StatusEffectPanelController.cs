@@ -142,10 +142,10 @@ namespace AnyRPG {
             foreach (StatusEffectNodeScript _statusEffectNodeScript in statusEffectNodes) {
                 if (_statusEffectNodeScript == null) {
                     removeList.Add(_statusEffectNodeScript);
-                    Debug.Log("StatusEffectPanelController.SpawnStatusNode() a status effect node script was null.  This should not happen because scripts should clear themselves on disable");
+                    //Debug.Log("StatusEffectPanelController.SpawnStatusNode() a status effect node script was null.  This should not happen because scripts should clear themselves on disable");
                 } else if (_statusEffectNodeScript.gameObject.activeSelf == false) {
                     removeList.Add(_statusEffectNodeScript);
-                    Debug.Log("StatusEffectPanelController.SpawnStatusNode() a status effect node script was inactive.  This should not happen because scripts should clear themselves on disable");
+                    //Debug.Log("StatusEffectPanelController.SpawnStatusNode() a status effect node script was inactive.  This should not happen because scripts should clear themselves on disable");
                 }
             }
             foreach (StatusEffectNodeScript _statusEffectNodeScript in removeList) {

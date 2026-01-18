@@ -112,7 +112,7 @@ namespace AnyRPG
 
             if (base.NetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
                 //if (base.NetworkManager.ClientManager.Clients.ContainsKey(clientId) == false) {
-                Debug.Log($"FishNetPasswordAuthenticator.HandleAuthenticationResult({clientId}, {authenticationPassed}) COULD NOT FIND CONNECTION FOR CLIENT ID");
+                //Debug.Log($"FishNetPasswordAuthenticator.HandleAuthenticationResult({clientId}, {authenticationPassed}) COULD NOT FIND CONNECTION FOR CLIENT ID");
                 return;
             }
             

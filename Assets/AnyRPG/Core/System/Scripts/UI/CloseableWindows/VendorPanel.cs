@@ -265,7 +265,8 @@ namespace AnyRPG {
         }
 
         public void RefreshPage() {
-            Debug.Log("VendorUI.RefreshPage()");
+            //Debug.Log("VendorUI.RefreshPage()");
+
             CreatePages(vendorCollections[dropDownIndex].VendorItems, false);
             //Debug.Log("VendorUI.RefreshPage() count: " + pages.Count + "; index: " + pageIndex);
             LoadPage(pageIndex);

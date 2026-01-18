@@ -73,7 +73,7 @@ namespace AnyRPG {
             }
 
             if (playerInitiated) {
-                Debug.Log($"CraftAbility.CanUseOn({source.gameObject.name}, {(target ? target.gameObject.name : "null")}) target does not require this ability");
+                //Debug.Log($"CraftAbility.CanUseOn({source.gameObject.name}, {(target ? target.gameObject.name : "null")}) target does not require this ability");
                 source.AbilityManager.ReceiveCombatMessage($"Cannot cast {DisplayName}. Target is not valid for this type of crafting");
             }
             return false;

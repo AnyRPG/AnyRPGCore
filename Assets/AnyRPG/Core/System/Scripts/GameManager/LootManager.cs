@@ -91,7 +91,11 @@ namespace AnyRPG {
             
             // copy this data to the client
             if (networkManagerServer.ServerModeActive == true) {
-                networkManagerServer.AddAvailableDroppedLoot(accountId, items);
+                List<int> lootDropIds = new List<int>();
+                foreach (LootDrop item in items) {
+                    lootDropIds.Add(item.LootDropId);
+                }
+                networkManagerServer.AddAvailableDroppedLoot(accountId, lootDropIds);
             } else {
                 OnAvailableLootAdded();
             }

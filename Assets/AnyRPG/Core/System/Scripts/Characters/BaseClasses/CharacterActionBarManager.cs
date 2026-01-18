@@ -273,14 +273,14 @@ namespace AnyRPG {
 
         /*
         public void AssignGamepadUseable(IUseable useable, int index) {
-            Debug.Log($"ActionBarManager.AssignUseableByIndex({index})");
+            //Debug.Log($"ActionBarManager.AssignUseableByIndex({index})");
 
             gamepadActionButtons[index].Useable = useable;
         }
         */
 
         public void MoveGamepadUseable(int oldIndex, int newIndex) {
-            Debug.Log($"ActionBarManager.MoveGamepadUseable({oldIndex}, {newIndex})");
+            //Debug.Log($"ActionBarManager.MoveGamepadUseable({oldIndex}, {newIndex})");
 
             IUseable oldUseable = gamepadActionButtons[newIndex].Useable;
 

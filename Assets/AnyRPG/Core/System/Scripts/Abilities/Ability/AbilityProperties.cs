@@ -1203,7 +1203,7 @@ namespace AnyRPG {
 
             foreach (AbilityEffectProperties abilityEffect in abilityEffectProperties) {
                 if (abilityEffect == null) {
-                    Debug.Log("Forgot to set ability affect in inspector?");
+                    Debug.LogWarning("Forgot to set ability affect in inspector?");
                 }
                 AbilityEffectContext abilityEffectOutput = abilityEffectContext.GetCopy();
                 if (abilityEffect != null

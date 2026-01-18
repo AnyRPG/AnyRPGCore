@@ -68,7 +68,7 @@ namespace AnyRPG {
 
         /*
         public void OnSendObjectToPool() {
-            Debug.Log("EdibleObject.OnSendObjectToPool()");
+            //Debug.Log("EdibleObject.OnSendObjectToPool()");
 
             for (int i = 0; i < portions.Length; i++) {
                 if (i == 0) {

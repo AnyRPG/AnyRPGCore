@@ -245,7 +245,7 @@ namespace AnyRPG {
 
             if (umaModelController == null) {
                 // somehow this panel was opened but the preview model is not configured as an UMA model
-                Debug.Log("UMACharacterEditorPanelController.SetupOptions() : no UMA model controller");
+                //Debug.Log("UMACharacterEditorPanelController.SetupOptions() : no UMA model controller");
                 mainNoOptionsArea.SetActive(true);
                 return;
             }
@@ -254,7 +254,7 @@ namespace AnyRPG {
 
             // there are no options to show if this is not an UMA
             if (dynamicCharacterAvatar == null) {
-                Debug.Log("UMACharacterEditorPanelController.SetupOptions() : no dynamic character avatar");
+                //Debug.Log("UMACharacterEditorPanelController.SetupOptions() : no dynamic character avatar");
                 mainNoOptionsArea.SetActive(true);
                 return;
             }
@@ -271,7 +271,7 @@ namespace AnyRPG {
             //Debug.Log("UMACharacterEditorPanelController.GetAvatarConfiguration()");
 
             if (dynamicCharacterAvatar == null) {
-                Debug.Log("UMAAppearanceEditorPanel.CheckAppearance(): umaAvatar is null!!!!");
+                Debug.LogWarning("UMAAppearanceEditorPanel.CheckAppearance(): umaAvatar is null!!!!");
             }
 
             allRecipes = dynamicCharacterAvatar.AvailableRecipes;
@@ -293,7 +293,7 @@ namespace AnyRPG {
 
         /*
         public override void HandleModelCreated() {
-            Debug.Log("UMAAppearanceEditorPanelController.HandleModelCreated()");
+            //Debug.Log("UMAAppearanceEditorPanelController.HandleModelCreated()");
 
             base.HandleUnitCreated();
 
@@ -541,7 +541,7 @@ namespace AnyRPG {
             //Debug.Log("UMAAppearanceEditorPanelController.ShowAppearanceOptions()");
 
             if (dynamicCharacterAvatar == null) {
-                Debug.Log("UMAAppearanceEditorPanelController.ShowAppearanceOptions(): umaAvatar is null!!!!");
+                Debug.LogWarning("UMAAppearanceEditorPanelController.ShowAppearanceOptions(): umaAvatar is null!!!!");
             }
 
             // clear old buttons

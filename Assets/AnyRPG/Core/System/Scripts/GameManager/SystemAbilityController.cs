@@ -124,11 +124,11 @@ namespace AnyRPG {
             foreach (List<GameObject> gameObjectList in abilityEffectObjects.Values) {
                 foreach (GameObject go in gameObjectList) {
                     if (go != null) {
-                        Debug.Log($"SystemAbilityController.DestroyAbilityEffectObject(): starting timer for {go.name} {go.GetInstanceID()}");
+                        //Debug.Log($"SystemAbilityController.DestroyAbilityEffectObject(): starting timer for {go.name} {go.GetInstanceID()}");
                     }
                 }
             }
-            Debug.Log($"SystemAbilityController.DestroyAbilityEffectObject(): fixedLengthEffect: {(fixedLengthEffect == null ? "null" : fixedLengthEffect.ResourceName)}");
+            //Debug.Log($"SystemAbilityController.DestroyAbilityEffectObject(): fixedLengthEffect: {(fixedLengthEffect == null ? "null" : fixedLengthEffect.ResourceName)}");
             */
 
             // keep track of temporary elapsed time between ticks

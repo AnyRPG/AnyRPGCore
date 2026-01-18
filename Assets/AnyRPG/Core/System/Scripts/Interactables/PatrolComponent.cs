@@ -138,7 +138,7 @@ namespace AnyRPG {
         // testing - since behavior component requires behavior controller, let it handle player unit spawn calls for proper ordering
         /*
         public override void HandlePlayerUnitSpawn() {
-            Debug.Log(interactable.gameObject.name + ".BehaviorComponent.HandlePlayerUnitSpawn()");
+            //Debug.Log(interactable.gameObject.name + ".BehaviorComponent.HandlePlayerUnitSpawn()");
             base.HandlePlayerUnitSpawn();
             MiniMapStatusUpdateHandler(this);
         }

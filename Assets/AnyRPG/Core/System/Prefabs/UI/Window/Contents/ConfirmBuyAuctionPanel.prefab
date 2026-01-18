@@ -1110,6 +1110,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1654570281174992552, guid: 15b4b9805a7f55c4c91872c0ecedc36e,
+        type: 3}
+      propertyPath: m_ChildAlignment
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 1671635706342951678, guid: 15b4b9805a7f55c4c91872c0ecedc36e,
         type: 3}
       propertyPath: m_SizeDelta.x

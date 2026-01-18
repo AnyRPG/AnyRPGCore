@@ -86,6 +86,12 @@ namespace AnyRPG {
         private DialogManagerServer dialogManagerServer = new DialogManagerServer();
         private FactionChangeManagerClient factionChangeManagerClient = new FactionChangeManagerClient();
         private FactionChangeManagerServer factionChangeManagerServer = new FactionChangeManagerServer();
+        private FriendServiceClient friendServiceClient = new FriendServiceClient();
+        private FriendServiceServer friendServiceServer = new FriendServiceServer();
+        private GuildmasterManagerClient guildmasterManagerClient = new GuildmasterManagerClient();
+        private GuildmasterManagerServer guildmasterManagerServer = new GuildmasterManagerServer();
+        private GuildServiceClient guildServiceClient = new GuildServiceClient();
+        private GuildServiceServer guildServiceServer = new GuildServiceServer();
         private InspectCharacterService inspectCharacterService = new InspectCharacterService();
         private InteractionManager interactionManager = new InteractionManager();
         private KeyBindManager keyBindManager = new KeyBindManager();
@@ -194,6 +200,8 @@ namespace AnyRPG {
         public ContextMenuService ContextMenuService { get => contextMenuService; set => contextMenuService = value; }
         public FactionChangeManagerClient FactionChangeManagerClient { get => factionChangeManagerClient; set => factionChangeManagerClient = value; }
         public FactionChangeManagerServer FactionChangeManagerServer { get => factionChangeManagerServer; set => factionChangeManagerServer = value; }
+        public GuildmasterManagerClient GuildmasterManagerClient { get => guildmasterManagerClient; set => guildmasterManagerClient = value; }
+        public GuildmasterManagerServer GuildmasterManagerServer { get => guildmasterManagerServer; set => guildmasterManagerServer = value; }
         public InspectCharacterService InspectCharacterService { get => inspectCharacterService; set => inspectCharacterService = value; }
         public SpecializationChangeManagerClient SpecializationChangeManagerClient { get => specializationChangeManagerClient; set => specializationChangeManagerClient = value; }
         public SpecializationChangeManagerServer SpecializationChangeManagerServer { get => specializationChangeManagerServer; set => specializationChangeManagerServer = value; }
@@ -217,7 +225,11 @@ namespace AnyRPG {
         public QuestGiverManagerServer QuestGiverManagerServer { get => questGiverManagerServer; set => questGiverManagerServer = value; }
         public CharacterGroupServiceClient CharacterGroupServiceClient { get => characterGroupServiceClient; set => characterGroupServiceClient = value; }
         public CharacterGroupServiceServer CharacterGroupServiceServer { get => characterGroupServiceServer; set => characterGroupServiceServer = value; }
+        public GuildServiceClient GuildServiceClient { get => guildServiceClient; set => guildServiceClient = value; }
+        public GuildServiceServer GuildServiceServer { get => guildServiceServer; set => guildServiceServer = value; }
         public ServerStateService ServerStateService { get => serverStateService; set => serverStateService = value; }
+        public FriendServiceClient FriendServiceClient { get => friendServiceClient; set => friendServiceClient = value; }
+        public FriendServiceServer FriendServiceServer { get => friendServiceServer; set => friendServiceServer = value; }
 
         private void Awake() {
             Init();
@@ -307,6 +319,8 @@ namespace AnyRPG {
             contextMenuService.Configure(this);
             factionChangeManagerClient.Configure(this);
             factionChangeManagerServer.Configure(this);
+            guildmasterManagerClient.Configure(this);
+            guildmasterManagerServer.Configure(this);
             inspectCharacterService.Configure(this);
             specializationChangeManagerClient.Configure(this);
             specializationChangeManagerServer.Configure(this);
@@ -331,7 +345,11 @@ namespace AnyRPG {
             characterManager.Configure(this);
             characterGroupServiceClient.Configure(this);
             characterGroupServiceServer.Configure(this);
+            guildServiceClient.Configure(this);
+            guildServiceServer.Configure(this);
             serverStateService.Configure(this);
+            friendServiceClient.Configure(this);
+            friendServiceServer.Configure(this);
         }
 
         private void Update() {
@@ -346,7 +364,7 @@ namespace AnyRPG {
             if (umaDCS == null) {
                 umaDCS = GameObject.Find("UMA_DCS");
                 if (umaDCS != null) {
-                    Debug.Log("SystemGameManager.SetupPermanentObjects(): UMA_DCS is deprecated.  Please replace the UMA_DCS prefab with the UMA_GLIB prefab");
+                    Debug.LogWarning("SystemGameManager.SetupPermanentObjects(): UMA_DCS is deprecated.  Please replace the UMA_DCS prefab with the UMA_GLIB prefab");
                 }
             }
             if (umaDCS == null) {

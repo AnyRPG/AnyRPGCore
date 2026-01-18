@@ -68,7 +68,7 @@ namespace AnyRPG {
             base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
 
             if (Props == null || Props.Ability == null) {
-                Debug.Log("Props is null");
+                Debug.LogWarning("Props is null");
             }
             sourceUnitController.CharacterCraftingManager.SetCraftAbility(Props.Ability);
             return true;

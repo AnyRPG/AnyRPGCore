@@ -5,16 +5,16 @@ namespace AnyRPG {
         public int characterGroupId;
         public int leaderPlayerCharacterId;
 
-        private Dictionary<UnitControllerMode, Dictionary<int, string>> characterIdList = new Dictionary<UnitControllerMode, Dictionary<int, string>>() {
-            { UnitControllerMode.Player, new Dictionary<int, string>() },
-            { UnitControllerMode.Pet, new Dictionary < int, string >() },
-            { UnitControllerMode.AI, new Dictionary < int, string >() },
-            { UnitControllerMode.Mount, new Dictionary < int, string >() },
-            { UnitControllerMode.Preview, new Dictionary < int, string >() },
-            { UnitControllerMode.Inanimate, new Dictionary < int, string >() },
+        private Dictionary<UnitControllerMode, Dictionary<int, CharacterGroupMemberData>> memberList = new Dictionary<UnitControllerMode, Dictionary<int, CharacterGroupMemberData>>() {
+            { UnitControllerMode.Player, new Dictionary<int, CharacterGroupMemberData>() },
+            { UnitControllerMode.Pet, new Dictionary < int, CharacterGroupMemberData >() },
+            { UnitControllerMode.AI, new Dictionary < int, CharacterGroupMemberData >() },
+            { UnitControllerMode.Mount, new Dictionary < int, CharacterGroupMemberData >() },
+            { UnitControllerMode.Preview, new Dictionary < int, CharacterGroupMemberData >() },
+            { UnitControllerMode.Inanimate, new Dictionary < int, CharacterGroupMemberData >() },
         };
         
-        public Dictionary<UnitControllerMode, Dictionary<int, string>> CharacterIdList { get => characterIdList; set => characterIdList = value; }
+        public Dictionary<UnitControllerMode, Dictionary<int, CharacterGroupMemberData>> MemberList { get => memberList; set => memberList = value; }
 
         public CharacterGroup() {
         }
@@ -23,34 +23,34 @@ namespace AnyRPG {
             this.characterGroupId = characterGroupId;
         }
 
-        public CharacterGroup(int characterGroupId, int leaderCharacterId, string leaderName) {
+        public CharacterGroup(int characterGroupId, CharacterGroupMemberData characterGroupMemberData) {
             this.characterGroupId = characterGroupId;
-            this.leaderPlayerCharacterId = leaderCharacterId;
-            CharacterIdList[UnitControllerMode.Player].Add(leaderCharacterId, leaderName);
+            this.leaderPlayerCharacterId = characterGroupMemberData.CharacterSummaryData.CharacterId;
+            MemberList[UnitControllerMode.Player].Add(characterGroupMemberData.CharacterSummaryData.CharacterId, characterGroupMemberData);
         }
 
-        public void AddPlayer(int playerCharacterId, string playerName) {
-            CharacterIdList[UnitControllerMode.Player].Add(playerCharacterId, playerName);
+        public CharacterGroup(CharacterGroupNetworkData characterGroupNetworkData, SystemDataFactory systemDataFactory) {
+            this.characterGroupId = characterGroupNetworkData.CharacterGroupId;
+            this.leaderPlayerCharacterId = characterGroupNetworkData.LeaderCharacterId;
+            foreach (CharacterGroupMemberNetworkData member in characterGroupNetworkData.MemberIdList) {
+                MemberList[UnitControllerMode.Player].Add(member.CharacterSummaryNetworkData.CharacterId, new CharacterGroupMemberData(member, systemDataFactory));
+            }
+        }
+
+        public void AddPlayer(CharacterGroupMemberData characterGroupMemberData) {
+            MemberList[UnitControllerMode.Player].Add(characterGroupMemberData.CharacterSummaryData.CharacterId, characterGroupMemberData);
         }
 
         public void RemovePlayer(int playerCharacterId) {
-            CharacterIdList[UnitControllerMode.Player].Remove(playerCharacterId);
+            MemberList[UnitControllerMode.Player].Remove(playerCharacterId);
         }
+
     }
 
-    /*
-    public class CharacterGroupMemberInfo {
-        public int accountId;
-        public int playerCharacterId;
-
-        public CharacterGroupMemberInfo() {
-        }
-
-        public CharacterGroupMemberInfo(int accountId, int playerCharacterId) {
-            this.accountId = accountId;
-            this.playerCharacterId = playerCharacterId;
-        }
+    public enum CharacterGroupRank {
+        Member,
+        Assistant,
+        Leader
     }
-    */
 
 }

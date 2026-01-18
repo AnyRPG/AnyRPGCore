@@ -129,6 +129,14 @@ namespace AnyRPG {
         [SerializeField]
         private Sprite systemBarInventory;
 
+        [Tooltip("The pets icon to show on the UI system bar.")]
+        [SerializeField]
+        private Sprite systemBarPets;
+
+        [Tooltip("The pets icon to show on the UI system bar.")]
+        [SerializeField]
+        private Sprite systemBarSocial;
+
         [Header("UI Elements")]
 
         [Tooltip("Whether or not to display the quest tracker.")]
@@ -294,6 +302,8 @@ namespace AnyRPG {
         public Sprite SystemBarCurrencies { get => systemBarCurrencies; set => systemBarCurrencies = value; }
         public Sprite SystemBarAchievements { get => systemBarAchievements; set => systemBarAchievements = value; }
         public Sprite SystemBarInventory { get => systemBarInventory; set => systemBarInventory = value; }
+        public Sprite SystemBarPets { get => systemBarPets; set => systemBarPets = value; }
+        public Sprite SystemBarSocial { get => systemBarSocial; set => systemBarSocial = value; }
         public Color DefaultUIColor { get => defaultUIColor; set => defaultUIColor = value; }
         public Color DefaultUIFillColor { get => defaultUIFillColor; set => defaultUIFillColor = value; }
         public Sprite DefaultFactionIcon { get => defaultFactionIcon; set => defaultFactionIcon = value; }

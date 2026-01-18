@@ -207,7 +207,7 @@ namespace AnyRPG {
             gameObject.SetActive(true);
             targetInitialized = true;
             if (isActiveAndEnabled == false) {
-                Debug.Log($"{gameObject.name}.UnitFramePanelBase.TargetInitialization(): Unit Frame Not active after activate command.  Likely gameobject under inactive canvas.");
+                //Debug.Log($"{gameObject.name}.UnitFramePanelBase.TargetInitialization(): Unit Frame Not active after activate command.  Likely gameobject under inactive canvas.");
                 partialTargetInitialization = true;
                 return;
             }

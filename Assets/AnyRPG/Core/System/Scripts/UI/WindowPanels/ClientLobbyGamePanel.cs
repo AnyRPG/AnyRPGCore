@@ -188,7 +188,7 @@ namespace AnyRPG {
         }
 
         public void RequestLobbyGamePlayerList() {
-            Debug.Log($"ClientLobbyPanelController.RequestLobbyPlayerList()");
+            //Debug.Log($"ClientLobbyPanelController.RequestLobbyPlayerList()");
 
             networkManagerClient.RequestLobbyPlayerList();
         }
@@ -224,7 +224,7 @@ namespace AnyRPG {
         }
 
         public void RemovePlayerFromList(int accountId) {
-            Debug.Log($"ClientLobbyGamePanel.RemovePlayerFromList({accountId})");
+            //Debug.Log($"ClientLobbyGamePanel.RemovePlayerFromList({accountId})");
 
             if (playerButtons.ContainsKey(accountId)) {
                 //uINavigationControllers[1].ClearActiveButton(playerButtons[clientId].KickButton);

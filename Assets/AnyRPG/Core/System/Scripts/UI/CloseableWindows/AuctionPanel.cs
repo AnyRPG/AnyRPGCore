@@ -31,6 +31,9 @@ namespace AnyRPG {
         [SerializeField]
         private CurrencyBarController currencyBarController = null;
 
+        private AuctionSortField currentSortType = AuctionSortField.Name;
+        private bool reverseSort = false;
+
         private bool windowSubscriptionsInitialized = false;
 
         // game manager references
@@ -67,7 +70,7 @@ namespace AnyRPG {
             windowSubscriptionsInitialized = true;
             currencyEntryBarController.ResetCurrencyAmounts();
             auctionListAttachmentButton.ClearItems();
-            currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, systemConfigurationManager.AuctionDepositAmount, "Deposit: ");
+            currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, systemConfigurationManager.AuctionDepositAmount, "Deposit:");
             SearchAuctions();
         }
 
@@ -134,12 +137,63 @@ namespace AnyRPG {
             CreatePages();
         }
 
+        private void SortAuctionItemDictionary(Dictionary<int, AuctionItemSearchResult> sortedDictionary, bool reverseSort) {
+            List<KeyValuePair<int, AuctionItemSearchResult>> sortedList = new List<KeyValuePair<int, AuctionItemSearchResult>>(sortedDictionary);
+            if (reverseSort) {
+                sortedList.Sort(
+                    delegate (KeyValuePair<int, AuctionItemSearchResult> pair1,
+                              KeyValuePair<int, AuctionItemSearchResult> pair2) {
+                                  if (currentSortType == AuctionSortField.Price) {
+                                      return pair2.Value.CurrencyAmount.CompareTo(pair1.Value.CurrencyAmount);
+                                  } else if (currentSortType == AuctionSortField.Amount) {
+                                      return pair2.Value.Items.Count.CompareTo(pair1.Value.Items.Count);
+                                  } else if (currentSortType == AuctionSortField.Seller) {
+                                      return pair2.Value.SellerName.CompareTo(pair1.Value.SellerName);
+                                  }
+                                  return pair2.Value.Items[0].DisplayName.CompareTo(pair1.Value.Items[0].DisplayName);
+                              }
+                );
+            } else {
+                sortedList.Sort(
+                    delegate (KeyValuePair<int, AuctionItemSearchResult> pair1,
+                              KeyValuePair<int, AuctionItemSearchResult> pair2) {
+                                  if (currentSortType == AuctionSortField.Price) {
+                                      return pair1.Value.CurrencyAmount.CompareTo(pair2.Value.CurrencyAmount);
+                                  } else if (currentSortType == AuctionSortField.Amount) {
+                                      return pair1.Value.Items.Count.CompareTo(pair2.Value.Items.Count);
+                                  } else if (currentSortType == AuctionSortField.Seller) {
+                                      return pair1.Value.SellerName.CompareTo(pair2.Value.SellerName);
+                                  }
+                                  return pair1.Value.Items[0].DisplayName.CompareTo(pair2.Value.Items[0].DisplayName);
+                              }
+                );
+            }
+            // Clear the original dictionary and repopulate it with the sorted values
+            sortedDictionary.Clear();
+            int sortOrder = 0;
+            foreach (KeyValuePair<int, AuctionItemSearchResult> pair in sortedList) {
+                sortedDictionary.Add(sortOrder, pair.Value);
+                sortOrder++;
+            }
+
+        }
+
         protected override void PopulatePages() {
             //Debug.Log("AuctionPanel.PopulatePages()");
 
             pages.Clear();
             AuctionContentList page = new AuctionContentList();
+
+            Dictionary<int, AuctionItemSearchResult> sortedDictionary = new Dictionary<int, AuctionItemSearchResult>();
+            int sortOrder = 0;
             foreach (AuctionItemSearchResult auctionItem in auctionManagerClient.AuctionItems.Values) {
+                sortedDictionary.Add(sortOrder, auctionItem);
+                sortOrder++;
+            }
+            SortAuctionItemDictionary(sortedDictionary, reverseSort);
+
+            for (int i = 0; i < sortedDictionary.Count; i++) {
+                AuctionItemSearchResult auctionItem = sortedDictionary[i];
                 page.auctionItems.Add(auctionItem);
                 if (page.auctionItems.Count == pageSize) {
                     pages.Add(page);
@@ -151,6 +205,8 @@ namespace AnyRPG {
             }
             AddAuctionItems();
         }
+
+
 
         public void AddAuctionItems() {
             //Debug.Log("AuctionPanel.AddMessages()");
@@ -224,9 +280,40 @@ namespace AnyRPG {
             auctionManagerClient.RequestSearchAuctions(searchText, onlyShowOwnAuctions);
         }
 
+        public void SortByAmount() {
+            reverseSort = !reverseSort;
+            currentSortType = AuctionSortField.Amount;
+            CreatePages();
+        }
+
+        public void SortByName() {
+            reverseSort = !reverseSort;
+            currentSortType = AuctionSortField.Name;
+            CreatePages();
+        }
+
+        public void SortBySeller() {
+            reverseSort = !reverseSort;
+            currentSortType= AuctionSortField.Seller;
+            CreatePages();
+        }
+
+        public void SortByPrice() {
+            reverseSort = !reverseSort;
+            currentSortType = AuctionSortField.Price;
+            CreatePages();
+        }
+
     }
 
     public class AuctionContentList : PagedContentList {
         public List<AuctionItemSearchResult> auctionItems = new List<AuctionItemSearchResult>();
+    }
+
+    public enum AuctionSortField {
+        Name,
+        Amount,
+        Seller,
+        Price
     }
 }

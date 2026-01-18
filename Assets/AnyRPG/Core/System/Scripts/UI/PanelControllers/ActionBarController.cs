@@ -95,7 +95,7 @@ namespace AnyRPG {
         }
 
         public void RemoveStaleActions() {
-            Debug.Log($"{gameObject.name}.ActionBarController.RemoveStaleActions()");
+            //Debug.Log($"{gameObject.name}.ActionBarController.RemoveStaleActions()");
 
             for (int i = 0; i < actionButtons.Count; i++) {
                 //Debug.Log($"{gameObject.name}.ActionBarController.ClearActionBar(): clearing button: " + i);

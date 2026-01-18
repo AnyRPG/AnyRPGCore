@@ -31,7 +31,7 @@ namespace AnyRPG {
 
         /*
         public override void Configure(SystemGameManager systemGameManager) {
-            Debug.Log("SystemSoundPanelController.Configure() instanceID: " + GetInstanceID());
+            //Debug.Log("SystemSoundPanelController.Configure() instanceID: " + GetInstanceID());
             base.Configure(systemGameManager);
         }
         */
@@ -71,10 +71,10 @@ namespace AnyRPG {
             }
             //Debug.Log("SystemSoundPanelController.MasterSlider() instanceID: " + GetInstanceID());
             if (audioManager == null) {
-                Debug.Log("SystemSoundPanelController.MasterSlider() audiomanager is null");
+                Debug.LogWarning("SystemSoundPanelController.MasterSlider() audiomanager is null");
             }
             if (masterSlider == null) {
-                Debug.Log("SystemSoundPanelController.MasterSlider() masterslider is null");
+                Debug.LogWarning("SystemSoundPanelController.MasterSlider() masterslider is null");
             }
             audioManager.SetMasterVolume(masterSlider.value);
         }

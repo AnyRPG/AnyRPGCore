@@ -55,7 +55,7 @@ namespace AnyRPG {
 
         /*
         public override void Interact() {
-            Debug.Log(gameObject.name + ".NewGameUnitButton.Interact()");
+            //Debug.Log(gameObject.name + ".NewGameUnitButton.Interact()");
 
             base.Interact();
             newGameManager.SetUnitProfile(unitProfile);

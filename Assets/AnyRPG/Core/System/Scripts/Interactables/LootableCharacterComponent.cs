@@ -284,7 +284,7 @@ namespace AnyRPG {
                             }
                             currencyItem.GainCurrencyAmount = currencyNode.Amount;
                             currencyItem.GainCurrencyName = currencyNode.currency.ResourceName;
-                            Debug.Log($"{interactable.gameObject.name}.LootableCharacter.DropLoot({sourceUnitController.gameObject.name}): gaincurrencyAmount: {currencyItem.GainCurrencyAmount}, currency: {currencyItem.GainCurrencyName}");
+                            //Debug.Log($"{interactable.gameObject.name}.LootableCharacter.DropLoot({sourceUnitController.gameObject.name}): gaincurrencyAmount: {currencyItem.GainCurrencyAmount}, currency: {currencyItem.GainCurrencyName}");
                         }
                     }
                     */

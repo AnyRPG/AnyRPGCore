@@ -544,12 +544,14 @@ namespace AnyRPG {
         private void ActivateCorrectAppearancePanel() {
             //Debug.Log("NewGamePanel.ActivateCorrectAppearancePanel()");
 
+            /*
             if (characterCreatorManager.PreviewUnitController == null) {
-                Debug.Log("NewGamePanel.ActivateCorrectAppearancePanel() null");
+                //Debug.Log("NewGamePanel.ActivateCorrectAppearancePanel() null");
             }
             if (characterCreatorManager.PreviewUnitController.UnitProfile == null) {
-                Debug.Log("NewGamePanel.ActivateCorrectAppearancePanel() null");
+                //Debug.Log("NewGamePanel.ActivateCorrectAppearancePanel() null");
             }
+            */
             if (characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider == null) {
                 currentAppearanceEditorPanel = defaultAppearancePanel;
                 return;

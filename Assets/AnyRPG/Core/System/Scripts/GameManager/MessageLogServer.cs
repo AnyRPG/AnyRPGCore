@@ -7,6 +7,7 @@ namespace AnyRPG {
         private ChatCommandManager chatCommandManager = null;
         private MessageLogClient messageLogClient = null;
         private CharacterGroupServiceServer characterGroupServiceServer = null;
+        private GuildServiceServer guildServiceServer = null;
         private PlayerManagerServer playerManagerServer = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -17,6 +18,7 @@ namespace AnyRPG {
             messageLogClient = systemGameManager.MessageLogClient;
             characterGroupServiceServer = systemGameManager.CharacterGroupServiceServer;
             playerManagerServer = systemGameManager.PlayerManagerServer;
+            guildServiceServer = systemGameManager.GuildServiceServer;
         }
 
         public void WriteChatMessage(int accountId, string newMessage) {
@@ -42,6 +44,15 @@ namespace AnyRPG {
             }
         }
 
+        public void WriteSystemMessage(int accountId, string message) {
+            //Debug.Log($"LogManager.WriteSystemMessage({sourceUnitController.gameObject.name}, {message})");
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                messageLogClient.WriteSystemMessage(message);
+            } else {
+                networkManagerServer.AdvertiseSystemMessage(accountId, message);
+            }
+        }
 
         public void WriteSystemMessage(UnitController sourceUnitController, string message) {
             //Debug.Log($"LogManager.WriteSystemMessage({sourceUnitController.gameObject.name}, {message})");
@@ -67,9 +78,38 @@ namespace AnyRPG {
             if (systemGameManager.GameMode == GameMode.Local) {
                 messageLogClient.WriteGroupMessage(messageText);
             } else {
-                networkManagerServer.AdvertiseGroupMessage(characterGroup, messageText);
+                foreach (int memberId in characterGroup.MemberList[UnitControllerMode.Player].Keys) {
+                    // get account id from player id
+                    int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(memberId);
+                    if (memberAccountId == 0) {
+                        continue;
+                    }
+                    networkManagerServer.AdvertiseGroupMessage(memberAccountId, characterGroup.characterGroupId, messageText);
+                }
             }
 
+        }
+
+        public void SendGuildMessage(int accountId, string messageText) {
+            int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
+            if (playerCharacterId == 0) {
+                return;
+            }
+            string playerName = playerCharacterService.GetPlayerNameFromId(playerCharacterId);
+            messageText = $"{playerName}: {messageText}";
+            Guild guild = guildServiceServer.GetGuildFromCharacterId(playerCharacterId);
+            if (systemGameManager.GameMode == GameMode.Local) {
+                messageLogClient.WriteGuildMessage(messageText);
+            } else {
+                foreach (int memberId in guild.MemberList.Keys) {
+                    // get account id from player id
+                    int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(memberId);
+                    if (memberAccountId == 0) {
+                        continue;
+                    }
+                    networkManagerServer.AdvertiseGuildMessage(memberAccountId, guild.guildId, messageText);
+                }
+            }
         }
 
         public void SendPrivateMessage(int sourceAccountId, string targetPlayerName, string messageText) {

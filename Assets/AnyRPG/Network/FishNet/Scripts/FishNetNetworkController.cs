@@ -180,7 +180,7 @@ namespace AnyRPG {
             }
 
             if (clientState != LocalConnectionState.Stopped) {
-                Debug.Log("FishNetNetworkController.Login() Already connected to the server!");
+               //Debug.Log("FishNetNetworkController.Login() Already connected to the server!");
                 return false;
             }
 
@@ -198,7 +198,7 @@ namespace AnyRPG {
 
         public override void RequestLogout() {
             if (clientState == LocalConnectionState.Stopped) {
-                Debug.Log("FishNetNetworkController.Login() Already disconnected from the server!");
+               //Debug.Log("FishNetNetworkController.Login() Already disconnected from the server!");
                 return;
             }
 
@@ -207,12 +207,12 @@ namespace AnyRPG {
 
         public override void Disconnect() {
             if (clientState == LocalConnectionState.Stopped) {
-                Debug.Log("FishNetNetworkController.Login() Already disconnected from the server!");
+               //Debug.Log("FishNetNetworkController.Login() Already disconnected from the server!");
                 return;
             }
 
             bool connectionResult = fishNetNetworkManager.ClientManager.StopConnection();
-            Debug.Log($"FishNetNetworkController.Login() Result of disconnection attempt: {connectionResult}");
+           //Debug.Log($"FishNetNetworkController.Login() Result of disconnection attempt: {connectionResult}");
         }
 
 
@@ -333,13 +333,13 @@ namespace AnyRPG {
         }
 
         public override void RequestDespawnPlayerUnit() {
-            Debug.Log($"FishNetNetworkController.RequestDespawnPlayerUnit()");
+           //Debug.Log($"FishNetNetworkController.RequestDespawnPlayerUnit()");
 
             clientConnector.RequestDespawnPlayerUnit();
         }
 
         public override void RequestRevivePlayerUnit() {
-            Debug.Log($"FishNetNetworkController.RequestRevivePlayerUnit()");
+           //Debug.Log($"FishNetNetworkController.RequestRevivePlayerUnit()");
 
             clientConnector.RequestRevivePlayerUnit();
         }
@@ -378,7 +378,7 @@ namespace AnyRPG {
         }
 
         public override void DeletePlayerCharacter(int playerCharacterId) {
-            Debug.Log($"FishNetNetworkController.DeletePlayerCharacter({playerCharacterId})");
+           //Debug.Log($"FishNetNetworkController.DeletePlayerCharacter({playerCharacterId})");
 
             clientConnector.DeletePlayerCharacter(playerCharacterId);
         }
@@ -467,6 +467,18 @@ namespace AnyRPG {
             clientConnector.RequestSetPlayerFaction(interactable, componentIndex);
         }
 
+        public override void RequestCreateGuild(Interactable interactable, int componentIndex, string guildName) {
+            clientConnector.RequestCreateGuild(interactable, componentIndex, guildName);
+        }
+
+        public override void CheckGuildName(Interactable interactable, int componentIndex, string guildName) {
+            clientConnector.CheckGuildName(interactable, componentIndex, guildName);
+        }
+
+        public override void AcceptFriendInvite(int inviteCharacterId) {
+            clientConnector.AcceptFriendInvite(inviteCharacterId);
+        }
+
         public override void RequestLearnSkill(Interactable interactable, int componentIndex, int skillId) {
             clientConnector.RequestLearnSkill(interactable, componentIndex, skillId);
         }
@@ -522,13 +534,13 @@ namespace AnyRPG {
         }
 
         public override void RequestTakeLoot(int lootDropId) {
-            Debug.Log($"FishNetNetworkController.RequestTakeLoot({lootDropId})");
+           //Debug.Log($"FishNetNetworkController.RequestTakeLoot({lootDropId})");
 
             clientConnector.RequestTakeLoot(lootDropId);
         }
 
         public override void RequestBeginCrafting(Recipe recipe, int craftAmount) {
-            Debug.Log($"FishNetNetworkController.RequestBeginCrafting({recipe.ResourceName}, {craftAmount})");
+           //Debug.Log($"FishNetNetworkController.RequestBeginCrafting({recipe.ResourceName}, {craftAmount})");
 
             clientConnector.RequestBeginCrafting(recipe.ResourceName, craftAmount);
         }
@@ -542,7 +554,7 @@ namespace AnyRPG {
         }
 
         public override void RequestChangePlayerName(Interactable interactable, int componentIndex, string newName) {
-            Debug.Log($"FishNetNetworkController.RequestChangePlayerName({newName})");
+           //Debug.Log($"FishNetNetworkController.RequestChangePlayerName({newName})");
 
             clientConnector.RequestChangePlayerName(interactable, componentIndex, newName);
         }
@@ -573,6 +585,67 @@ namespace AnyRPG {
             clientConnector.DeclineCharacterGroupInvite();
         }
 
+        public override void RequestInviteCharacterToFriendList(int characterId) {
+            clientConnector.RequestInviteCharacterToFriendList(characterId);
+        }
+
+        public override void RequestInviteCharacterToFriendList(string characterName) {
+            clientConnector.RequestInviteCharacterToFriendList(characterName);
+        }
+
+        public override void RequestRemoveCharacterFromFriendList(int characterId) {
+            clientConnector.RequestRemoveCharacterFromFriendList(characterId);
+        }
+
+        public override void RequestPromoteGuildCharacter(int characterId) {
+            clientConnector.RequestPromoteGuildCharacter(characterId);
+        }
+
+        public override void RequestDemoteGuildCharacter(int characterId) {
+            clientConnector.RequestDemoteGuildCharacter(characterId);
+        }
+
+        public override void RequestPromoteGroupCharacter(int characterId) {
+            clientConnector.RequestPromoteGroupCharacter(characterId);
+        }
+
+        public override void RequestDemoteGroupCharacter(int characterId) {
+            clientConnector.RequestDemoteGroupCharacter(characterId);
+        }
+
+
+        public override void AcceptGuildInvite(int inviteGuildId) {
+            clientConnector.AcceptGuildInvite(inviteGuildId);
+        }
+
+        public override void DeclineGuildInvite() {
+            clientConnector.DeclineGuildInvite();
+        }
+
+        public override void DeclineFriendInvite(int inviteCharacterId) {
+            clientConnector.DeclineFriendInvite(inviteCharacterId);
+        }
+
+        public override void RequestLeaveGuild() {
+            clientConnector.RequestLeaveGuild();
+        }
+
+        public override void RequestDisbandGuild(int guildId) {
+            clientConnector.RequestDisbandGuild(guildId);
+        }
+
+        public override void RequestInviteCharacterToGuild(int characterId) {
+            clientConnector.RequestInviteCharacterToGuild(characterId);
+        }
+
+        public override void RequestInviteCharacterToGuild(string characterName) {
+            clientConnector.RequestInviteCharacterToGuild(characterName);
+        }
+
+        public override void RequestRemoveCharacterFromGuild(int characterId) {
+            clientConnector.RequestRemoveCharacterFromGuild(characterId);
+        }
+
         public override void RequestLeaveCharacterGroup() {
             clientConnector.RequestLeaveCharacterGroup();
         }
@@ -583,6 +656,10 @@ namespace AnyRPG {
 
         public override void RequestInviteCharacterToGroup(int characterId) {
             clientConnector.RequestInviteCharacterToGroup(characterId);
+        }
+
+        public override void RequestInviteCharacterToGroup(string characterName) {
+            clientConnector.RequestInviteCharacterToGroup(characterName);
         }
 
         public override void RequestDisbandCharacterGroup(int characterGroupId) {
@@ -755,32 +832,46 @@ namespace AnyRPG {
             clientConnector.JoinMMOGameInProgress(accountId, sceneName);
         }
 
-        public override void AdvertiseAddCharacterToGroup(int playerCharacterId, CharacterGroup characterGroup) {
-            clientConnector.AdvertiseAddCharacterToGroup(playerCharacterId, characterGroup);
+        public override void AdvertiseAddCharacterToGroup(int accountId, int characterGroupId, CharacterGroupMemberNetworkData characterGroupMemberNetworkData) {
+            clientConnector.AdvertiseAddCharacterToGroup(accountId, characterGroupId, characterGroupMemberNetworkData);
         }
 
-        public override void AdvertiseCharacterGroup(int accountId, CharacterGroup characterGroup) {
-            clientConnector.AdvertiseCharacterGroup(accountId, characterGroup);
+        public override void AdvertiseAddCharacterToGuild(int existingAccountId, int guildId, GuildMemberNetworkData guildMemberNetworkData) {
+            //Debug.Log($"FishNetNetworkController.AdvertiseAddCharacterToGuild({existingAccountId}, {guildId}, {characterSummaryNetworkData.CharacterName})");
+
+            clientConnector.AdvertiseAddCharacterToGuild(existingAccountId, guildId, guildMemberNetworkData);
         }
 
-        public override void AdvertiseRemoveCharacterFromGroup(int characterId, CharacterGroup characterGroup) {
-            clientConnector.AdvertiseRemoveCharacterFromGroup(characterId, characterGroup);
+        public override void AdvertiseCharacterGroup(int accountId, CharacterGroupNetworkData characterGroupNetworkData) {
+            clientConnector.AdvertiseCharacterGroup(accountId, characterGroupNetworkData);
         }
 
-        public override void AdvertiseCharacterGroupInvite(int invitedCharacterId, CharacterGroup characterGroup, string leaderName) {
-            clientConnector.AdvertiseCharacterGroupInvite(invitedCharacterId, characterGroup, leaderName);
+        public override void AdvertiseRemoveCharacterFromGroup(int accountId, int characterId, int characterGroupId) {
+            clientConnector.AdvertiseRemoveCharacterFromGroup(accountId, characterId, characterGroupId);
         }
 
-        public override void AdvertiseDisbandCharacterGroup(CharacterGroup characterGroup) {
-            clientConnector.AdvertiseDisbandCharacterGroup(characterGroup);
+        public override void AdvertiseRemoveCharacterFromGuild(int accountId, int characterId, int guildId) {
+            clientConnector.AdvertiseRemoveCharacterFromGuild(accountId, characterId, guildId);
         }
 
-        public override void AdvertiseRenameCharacterInGroup(CharacterGroup characterGroup, int characterId, string newName) {
-            clientConnector.AdvertiseRenameCharacterInGroup(characterGroup, characterId, newName);
+        public override void AdvertiseCharacterGroupInvite(int invitedCharacterId, int characterGroupId, string leaderName) {
+            clientConnector.AdvertiseCharacterGroupInvite(invitedCharacterId, characterGroupId, leaderName);
         }
 
-        public override void AdvertiseGroupMessage(CharacterGroup characterGroup, string messageText) {
-            clientConnector.AdvertiseGroupMessage(characterGroup, messageText);
+        public override void AdvertiseDisbandCharacterGroup(int accountId, int characterGroupId) {
+            clientConnector.AdvertiseDisbandCharacterGroup(accountId, characterGroupId);
+        }
+
+        public override void AdvertiseRenameCharacterInGroup(int accountId, int groupId, int characterId, string newName) {
+            clientConnector.AdvertiseRenameCharacterInGroup(accountId, groupId, characterId, newName);
+        }
+
+        public override void AdvertiseGroupMessage(int accountId, int characterGroupId, string messageText) {
+            clientConnector.AdvertiseGroupMessage(accountId, characterGroupId, messageText);
+        }
+
+        public override void AdvertiseGuildMessage(int accountId, int guildId, string messageText) {
+            clientConnector.AdvertiseGuildMessage(accountId, guildId, messageText);
         }
 
         public override void AdvertisePrivateMessage(int targetAccountId, string messageText) {
@@ -823,8 +914,8 @@ namespace AnyRPG {
             clientConnector.AdvertiseDeclineCharacterGroupInvite(leaderAccountId, decliningPlayerName);
         }
 
-        public override void AdvertisePromoteGroupLeader(CharacterGroup characterGroup, int newLeaderCharacterId) {
-            clientConnector.AdvertisePromoteGroupLeader(characterGroup, newLeaderCharacterId);
+        public override void AdvertisePromoteGroupLeader(int accountId, int characterGroupId, int newLeaderCharacterId) {
+            clientConnector.AdvertisePromoteGroupLeader(accountId, characterGroupId, newLeaderCharacterId);
         }
 
         public override void AdvertiseSetLobbyGameReadyStatus(int gameId, int accountId, bool ready) {
@@ -894,6 +985,70 @@ namespace AnyRPG {
             clientConnector.ReturnObjectToPool(returnedObject);
         }
 
+        public override void AdvertiseDeclineGuildInvite(int leaderAccountId, string playerName) {
+            clientConnector.AdvertiseDeclineGuildInvite(leaderAccountId, playerName);
+        }
+
+        public override void AdvertiseDisbandGuild(int accountId, int guildId) {
+            clientConnector.AdvertiseDisbandGuild(accountId, guildId);
+        }
+
+        public override void AdvertiseGuild(int accountId, GuildNetworkData guildNetworkData) {
+            clientConnector.AdvertiseGuild(accountId, guildNetworkData);
+        }
+
+        public override void AdvertiseGuildNameAvailable(int accountId) {
+            clientConnector.AdvertiseGuildNameAvailable(accountId);
+        }
+
+        public override void AdvertiseGuildInvite(int invitedCharacterId, int guildId, string leaderName) {
+            clientConnector.AdvertiseGuildInvite(invitedCharacterId, guildId, leaderName);
+        }
+
+        public override void AdvertisePromoteGuildLeader(int accountId, int guildId, int newLeaderCharacterId) {
+            clientConnector.AdvertisePromoteGuildLeader(accountId, guildId, newLeaderCharacterId);
+        }
+
+        public override void AdvertiseRenameCharacterInGuild(int accountId, int guildId, int characterId, string newName) {
+            clientConnector.AdvertiseRenameCharacterInGuild(accountId, guildId, characterId, newName);
+        }
+
+        public override void AdvertiseCharacterGroupMemberStatusChange(int accountId, int characterGroupId, int playerCharacterId, CharacterGroupMemberNetworkData characterGroupMemberNetworkData) {
+            clientConnector.AdvertiseCharacterGroupMemberStatusChange(accountId, characterGroupId, playerCharacterId, characterGroupMemberNetworkData);
+        }
+
+        public override void AdvertiseGuildMemberStatusChange(int accountId, int guildId, int playerCharacterId, GuildMemberNetworkData guildMemberNetworkData) {
+            clientConnector.AdvertiseGuildMemberStatusChange(accountId, guildId, playerCharacterId, guildMemberNetworkData);
+        }
+
+        public override void AdvertiseAddFriend(int sourceCharacterAccountId, CharacterSummaryNetworkData characterSummaryNetworkData) {
+            clientConnector.AdvertiseAddFriend(sourceCharacterAccountId, characterSummaryNetworkData);
+        }
+
+        public override void AdvertiseRemoveCharacterFromFriendList(int targetCharacterAccountId, int sourceCharacterId) {
+            clientConnector.AdvertiseRemoveCharacterFromFriendList(targetCharacterAccountId, sourceCharacterId);
+        }
+
+        public override void AdvertiseDeclineFriendInvite(int friendAccountId, string characterName) {
+            clientConnector.AdvertiseDeclineFriendInvite(friendAccountId, characterName);
+        }
+
+        public override void AdvertiseFriendInvite(int invitedAccountId, int sourceCharacterId, string sourceCharacterName) {
+            clientConnector.AdvertiseFriendInvite(invitedAccountId, sourceCharacterId, sourceCharacterName);
+        }
+
+        public override void AdvertiseFriendList(int accountId, FriendListNetworkData friendListNetworkData) {
+            clientConnector.AdvertiseFriendList(accountId, friendListNetworkData);
+        }
+
+        public override void AdvertiseRenameCharacterInFriendList(int targetAccountId, int characterId, string newName) {
+            clientConnector.AdvertiseRenameCharacterInFriendList(targetAccountId, characterId, newName);
+        }
+
+        public override void AdvertiseFriendStateChange(int targetAccountId, int playerCharacterId, CharacterSummaryNetworkData characterSummaryNetworkData) {
+            clientConnector.AdvertiseFriendStateChange(targetAccountId, playerCharacterId, characterSummaryNetworkData);
+        }
+
         /*
         public override void AdvertiseInteractWithQuestGiver(Interactable interactable, int optionIndex, int accountId) {
 
@@ -954,10 +1109,10 @@ namespace AnyRPG {
             clientConnector.AdvertiseSellItemToPlayer(sourceUnitController, interactable, componentIndex, collectionIndex, itemIndex, resourceName, remainingQuantity);
         }
 
-        public override void AddAvailableDroppedLoot(int accountId, List<LootDrop> items) {
+        public override void AddAvailableDroppedLoot(int accountId, List<int> lootDropIds) {
             //Debug.Log($"FishNetNetworkController.AddAvailableDroppedLoot({accountId}, {items.Count})");
 
-            clientConnector.AddAvailableDroppedLoot(accountId, items);
+            clientConnector.AddAvailableDroppedLoot(accountId, lootDropIds);
         }
 
         public override void AddLootDrop(int accountId, int lootDropId, int itemId) {
@@ -1006,7 +1161,7 @@ namespace AnyRPG {
 
         /*
         public override void SetCraftingManagerAbility(int accountId, string abilityName) {
-            Debug.Log($"FishNetNetworkController.SetCraftingManagerAbility({accountId}, {abilityName})");
+           //Debug.Log($"FishNetNetworkController.SetCraftingManagerAbility({accountId}, {abilityName})");
 
             clientConnector.SetCraftingManagerAbility(accountId, abilityName);
         }

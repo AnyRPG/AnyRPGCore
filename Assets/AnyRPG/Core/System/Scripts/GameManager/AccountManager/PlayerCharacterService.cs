@@ -20,18 +20,35 @@ namespace AnyRPG {
         /// </summary>
         private Dictionary<int, string> playerNameLookupMap = new Dictionary<int, string>();
 
+        /// <summary>
+        /// playerCharacterId, CharacterSummaryData
+        /// </summary>
+        private Dictionary<int, CharacterSummaryData> playerCharacterSummaryData = new Dictionary<int, CharacterSummaryData>();
+
+        // game manager references
+        private CharacterGroupServiceServer characterGroupServiceServer = null;
+        private FriendServiceServer friendServiceServer = null;
+        private GuildServiceServer guildServiceServer = null;
+
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             MakeBaseSaveFolder();
-            networkManagerServer.OnStartServer += HandleStartServer;
+            //networkManagerServer.OnStartServer += HandleStartServer;
             networkManagerServer.OnStopServer += HandleStopServer;
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            characterGroupServiceServer = systemGameManager.CharacterGroupServiceServer;
+            friendServiceServer = systemGameManager.FriendServiceServer;
+            guildServiceServer = systemGameManager.GuildServiceServer;
         }
 
         private void HandleStopServer() {
             ClearPlayerNameMap();
         }
 
-        private void HandleStartServer() {
+        public void ProcessStartServer() {
             LoadPlayerNameMap();
         }
 
@@ -57,6 +74,7 @@ namespace AnyRPG {
                                 //Debug.Log($"PlayerCharacterService.LoadPlayerNameMap(): Loaded player ({characterSaveData.CharacterName}) with ID ({characterSaveData.CharacterId})");
                                 playerNameMap.Add(characterSaveData.CharacterName.ToLower(), characterSaveData.CharacterId);
                                 playerNameLookupMap.Add(characterSaveData.CharacterId, characterSaveData.CharacterName);
+                                playerCharacterSummaryData.Add(characterSaveData.CharacterId, new CharacterSummaryData(characterSaveData, systemDataFactory));
                             } else {
                                 Debug.LogWarning($"PlayerCharacterService.LoadPlayerNameMap(): Duplicate player name ({characterSaveData.CharacterName}) or character ID ({characterSaveData.CharacterId}) found . This character will be skipped.");
                             }
@@ -69,6 +87,7 @@ namespace AnyRPG {
         private void ClearPlayerNameMap() {
             playerNameMap.Clear();
             playerNameLookupMap.Clear();
+            playerCharacterSummaryData.Clear();
         }
 
         public void LoadPlayerCharacterIdCounter(int newCounterValue) {
@@ -139,7 +158,7 @@ namespace AnyRPG {
         }
 
         private int GetNewPlayerCharacterId() {
-            Debug.Log("PlayerCharacterService.GetNewPlayerCharacterId()");
+            //Debug.Log("PlayerCharacterService.GetNewPlayerCharacterId()");
 
             int returnValue = playerCharacterIdCounter;
             // loop until accountIdCounter is found that is not in use, using the in memory dictionary for speed
@@ -161,7 +180,7 @@ namespace AnyRPG {
             playerCharacterIdCounter++;
             serverStateService.SetPlayerCharacterIdCounter(playerCharacterIdCounter);
 
-            Debug.Log($"PlayerCharacterService.GetNewPlayerCharacterId() return {returnValue}");
+            //Debug.Log($"PlayerCharacterService.GetNewPlayerCharacterId() return {returnValue}");
             return returnValue;
         }
 
@@ -179,7 +198,8 @@ namespace AnyRPG {
             return SaveDataFile(accountId, characterSaveData);
         }
 
-        public bool RenamePlayerCharacter(int characterId, string newName) {
+        public bool RenamePlayerCharacter(UnitController unitController, string newName) {
+            int characterId = unitController.CharacterId;
             if (playerNameMap.ContainsKey(newName.ToLower())) {
                 return false;
             }
@@ -190,6 +210,11 @@ namespace AnyRPG {
             playerNameMap.Remove(oldName.ToLower());
             playerNameMap.Add(newName.ToLower(), characterId);
             playerNameLookupMap[characterId] = newName;
+            playerCharacterSummaryData[characterId].CharacterName = newName;
+
+            characterGroupServiceServer.ProcessStatusChange(unitController.CharacterId);
+            friendServiceServer.ProcessStatusChange(unitController.CharacterId);
+            guildServiceServer.ProcessStatusChange(unitController.CharacterId);
             return true;
         }
 
@@ -200,6 +225,7 @@ namespace AnyRPG {
             string playerName = playerNameLookupMap[playerCharacterId];
             playerNameLookupMap.Remove(playerCharacterId);
             playerNameMap.Remove(playerName.ToLower());
+            playerCharacterSummaryData.Remove(playerCharacterId);
             string jsonSavePath = $"{GetAccountSaveFolder(accountId)}/{playerCharacterId}.json";
             if (File.Exists(jsonSavePath)) {
                 File.Delete(jsonSavePath);
@@ -257,6 +283,58 @@ namespace AnyRPG {
             }
             return playerNameMap[targetPlayerName.ToLower()];
         }
+
+        public CharacterSummaryData GetSummaryData(int playerCharacterId) {
+            if (playerCharacterSummaryData.ContainsKey(playerCharacterId)) {
+                return playerCharacterSummaryData[playerCharacterId];
+            }
+            return null;
+        }
+
+        public void ProcessLevelChanged(UnitController unitController, int newLevel) {
+            if (playerCharacterSummaryData.ContainsKey(unitController.CharacterId) == false) {
+                return;
+            }
+            playerCharacterSummaryData[unitController.CharacterId].Level = newLevel;
+
+            characterGroupServiceServer.ProcessStatusChange(unitController.CharacterId);
+            friendServiceServer.ProcessStatusChange(unitController.CharacterId);
+            guildServiceServer.ProcessStatusChange(unitController.CharacterId);
+        }
+
+        public void ProcessClassChange(UnitController unitController, CharacterClass newClass) {
+            if (playerCharacterSummaryData.ContainsKey(unitController.CharacterId) == false) {
+                return;
+            }
+            playerCharacterSummaryData[unitController.CharacterId].CharacterClass = newClass;
+
+            characterGroupServiceServer.ProcessStatusChange(unitController.CharacterId);
+            friendServiceServer.ProcessStatusChange(unitController.CharacterId);
+            guildServiceServer.ProcessStatusChange(unitController.CharacterId);
+        }
+
+        public void SetCharacterOnline(int characterId, bool isOnline) {
+            if (playerCharacterSummaryData.ContainsKey(characterId) == false) {
+                return;
+            }
+            playerCharacterSummaryData[characterId].IsOnline = isOnline;
+
+            characterGroupServiceServer.ProcessStatusChange(characterId);
+            friendServiceServer.ProcessStatusChange(characterId);
+            guildServiceServer.ProcessStatusChange(characterId);
+        }
+
+        public void SetCharacterZone(int characterId, string sceneDisplayName) {
+            if (playerCharacterSummaryData.ContainsKey(characterId) == false) {
+                return;
+            }
+            playerCharacterSummaryData[characterId].CurrentZoneName = sceneDisplayName;
+
+            characterGroupServiceServer.ProcessStatusChange(characterId);
+            friendServiceServer.ProcessStatusChange(characterId);
+            guildServiceServer.ProcessStatusChange(characterId);
+        }
+
     }
 
 }

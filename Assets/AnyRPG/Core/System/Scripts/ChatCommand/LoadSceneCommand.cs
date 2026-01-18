@@ -31,7 +31,7 @@ namespace AnyRPG {
         }
 
         public override void ExecuteCommand(string commandParameters, int accountId) {
-            Debug.Log($"{resourceName}.LoadSceneCommand.ExecuteCommand({commandParameters}, {accountId})");
+            //Debug.Log($"{resourceName}.LoadSceneCommand.ExecuteCommand({commandParameters}, {accountId})");
 
             // load a fixed scene
             if (fixedScene == true) {
@@ -49,7 +49,7 @@ namespace AnyRPG {
         }
 
         private void LoadScene(string sceneName, int accountId) {
-            Debug.Log($"{resourceName}.LoadSceneCommand.LoadScene({sceneName}, {accountId})");
+            //Debug.Log($"{resourceName}.LoadSceneCommand.LoadScene({sceneName}, {accountId})");
 
             playerManagerServer.AddSpawnRequest(accountId, new SpawnPlayerRequest());
             playerManagerServer.LoadScene(sceneName, accountId);

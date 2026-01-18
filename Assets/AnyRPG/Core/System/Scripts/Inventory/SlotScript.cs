@@ -172,7 +172,7 @@ namespace AnyRPG {
                 if (BagPanel is InventoryPanel) {
                     playerManager.UnitController.CharacterInventoryManager.RequestMoveFromInventoryToBank(inventorySlot);
                 } /*else {
-                    Debug.Log("SlotScript.InteractWithSlot(): We clicked on something in a chest or bag");
+                    //Debug.Log("SlotScript.InteractWithSlot(): We clicked on something in a chest or bag");
                 }*/
                 return;
             } else if (uIManager.inventoryWindow.IsOpen == true && uIManager.bankWindow.IsOpen == false && uIManager.vendorWindow.IsOpen) {

@@ -31,15 +31,15 @@ namespace AnyRPG {
             }/*
             else {
                 if (unitController.PatrolController == null) {
-                    Debug.Log(unitController.gameObject.name + ".IdleState.TryToEnterPatrolState(): patrol controller is null");
+                    //Debug.Log(unitController.gameObject.name + ".IdleState.TryToEnterPatrolState(): patrol controller is null");
                     return;
                 }
                 if (unitController.PatrolController.CurrentPatrol == null) {
-                    Debug.Log(unitController.gameObject.name + ".IdleState.TryToEnterPatrolState(): current patrol is null");
+                    //Debug.Log(unitController.gameObject.name + ".IdleState.TryToEnterPatrolState(): current patrol is null");
                     return;
                 }
                 if (unitController.PatrolController.CurrentPatrol.PatrolComplete() == true) {
-                    Debug.Log(unitController.gameObject.name + ".IdleState.TryToEnterPatrolState(): current patrol is complete");
+                    //Debug.Log(unitController.gameObject.name + ".IdleState.TryToEnterPatrolState(): current patrol is complete");
                 }
             }
             */

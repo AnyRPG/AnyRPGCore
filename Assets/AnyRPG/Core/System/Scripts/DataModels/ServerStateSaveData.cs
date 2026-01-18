@@ -5,6 +5,7 @@ namespace AnyRPG {
     public class ServerStateSaveData {
         public int accountIdCounter = 1;
         public int auctionIdCounter = 1;
+        public int guildIdCounter = 1;
         public int playerCharacterIdCounter = 1;
         public int mailIdCounter = 1;
         public int itemInstanceIdCounter = -1;

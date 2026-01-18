@@ -51,7 +51,7 @@ namespace AnyRPG.EditorTools {
                 missingCount += findMissingMaterialReferences(paths[i], material);
             }
 
-            Debug.Log($"Found {materialCount} Materials");
+            //Debug.Log($"Found {materialCount} Materials");
 
             onFinished.Invoke();
             return missingCount;

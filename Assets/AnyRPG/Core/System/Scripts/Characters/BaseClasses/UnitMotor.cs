@@ -88,7 +88,7 @@ namespace AnyRPG {
                 //unitController.MyRigidBody.velocity = new Vector3(0, unitController.MyRigidBody.velocity.y + (-9.81f * Time.deltaTime), 0);
                 /*
                 Vector3 newRelativeForce = new Vector3(0, -(9.81f * 9.81f * Time.fixedDeltaTime), 0);
-                Debug.Log(gameObject.name + ".UnitMotor.FixedUpdate(): newRelativeForce: " + newRelativeForce);
+                //Debug.Log(gameObject.name + ".UnitMotor.FixedUpdate(): newRelativeForce: " + newRelativeForce);
                 unitController.MyRigidBody.AddRelativeForce(newRelativeForce);
                 */
                 return;
@@ -377,7 +377,7 @@ namespace AnyRPG {
                 }
             }
             if (frozen) {
-                Debug.Log($"{unitController.gameObject.name}.UnitMotor.Move({moveDirection}: frozen and doing nothing!!!");
+                //Debug.Log($"{unitController.gameObject.name}.UnitMotor.Move({moveDirection}: frozen and doing nothing!!!");
                 return;
             }
 

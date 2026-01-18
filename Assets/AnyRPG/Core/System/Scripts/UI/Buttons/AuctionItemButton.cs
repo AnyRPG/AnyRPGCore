@@ -19,6 +19,9 @@ namespace AnyRPG {
         protected DescribableIcon describableIcon = null;
 
         [SerializeField]
+        protected TextMeshProUGUI amountText = null;
+
+        [SerializeField]
         protected TextMeshProUGUI itemNameText = null;
 
         [SerializeField]
@@ -80,9 +83,8 @@ namespace AnyRPG {
             if (instantiatedItem.ItemQuality != null) {
                 displayNameColorString = "#" + ColorUtility.ToHtmlStringRGB(instantiatedItem.ItemQuality.QualityColor);
             }
-            //string sellerColorString = "#FFFFFF";
-            itemNameText.text = $"<color={displayNameColorString}>{instantiatedItem.DisplayName} ({auctionItem.ItemIds.Count})</color>";
-            //sellerText.text = $"<color={sellerColorString}>{auctionItem.SellerName}</color>";
+            amountText.text = auctionItem.Items.Count.ToString();
+            itemNameText.text = $"<color={displayNameColorString}>{instantiatedItem.DisplayName}</color>";
             sellerText.text = auctionItem.SellerName;
 
             if (auctionItem.SellerPlayerCharacterId == playerManager.UnitController.CharacterId) {
@@ -102,8 +104,7 @@ namespace AnyRPG {
         }
 
         public InstantiatedItem GetFirstInstantiatedItem() {
-            foreach (int itemId in auctionItem.ItemIds) {
-                InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemId);
+            foreach (InstantiatedItem instantiatedItem in auctionItem.Items) {
                 return instantiatedItem;
             }
             return null;
@@ -113,6 +114,7 @@ namespace AnyRPG {
             attachmentImage.sprite = null;
             attachmentImage.color = new Color32(0, 0, 0, 0);
             itemNameText.text = string.Empty;
+            amountText.text = string.Empty;
             sellerText.text = string.Empty;
         }
 

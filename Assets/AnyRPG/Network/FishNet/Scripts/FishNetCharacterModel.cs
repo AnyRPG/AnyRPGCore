@@ -57,11 +57,11 @@ namespace AnyRPG {
         }
 
         private IEnumerator WaitForParent() {
-            Debug.Log($"{gameObject.name}.FishNetCharacterModel.WaitForParent(): ownerId: {base.OwnerId} frame: {Time.frameCount}");
+            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.WaitForParent(): ownerId: {base.OwnerId} frame: {Time.frameCount}");
 
             while (unitController == null) {
                 yield return null;
-                Debug.Log($"{gameObject.name}.FishNetCharacterModel.WaitForParent(): ownerId: {base.OwnerId} frame: {Time.frameCount}");
+                //Debug.Log($"{gameObject.name}.FishNetCharacterModel.WaitForParent(): ownerId: {base.OwnerId} frame: {Time.frameCount}");
                 unitController = GetComponentInParent<UnitController>();
             }
             CompleteSharedConfiguration();
@@ -70,7 +70,7 @@ namespace AnyRPG {
         /*
         private void HandleModelCreated() {
             animator = GetComponent<Animator>();
-            Debug.Log($"{gameObject.name}.FishNetCharacterModel.HandleModelCreated(): animator: {animator.GetInstanceID()}");
+            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.HandleModelCreated(): animator: {animator.GetInstanceID()}");
 
             networkAnimator.SetAnimator(animator);
         }
@@ -169,7 +169,7 @@ namespace AnyRPG {
         /*
         [ServerRpc(RequireOwnership = false)]
         public void GetClientSaveData(NetworkConnection networkConnection = null) {
-            Debug.Log($"{gameObject.name}.NetworkCharacterUnit.GetClientSaveData()");
+            //Debug.Log($"{gameObject.name}.NetworkCharacterUnit.GetClientSaveData()");
 
             PutClientSaveData(networkConnection, unitController.CharacterSaveManager.SaveData);
         }

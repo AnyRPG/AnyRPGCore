@@ -42,7 +42,7 @@ namespace AnyRPG {
             this.interactable = interactable;
             /*
             if (autoSetRadius == true) {
-                Debug.Log("setting bounds");
+                //Debug.Log("setting bounds");
                 Vector3 extents = rangeCollider.bounds.extents;
                 rangeCollider.
                 //extents.x = interactable.InteractionMaxRange;

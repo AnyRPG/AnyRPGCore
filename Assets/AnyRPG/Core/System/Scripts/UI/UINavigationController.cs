@@ -529,7 +529,7 @@ namespace AnyRPG {
 
 
         public virtual void Accept() {
-            Debug.Log($"{gameObject.name}.UINavigationController.Accept()");
+            //Debug.Log($"{gameObject.name}.UINavigationController.Accept()");
 
             if (activeNavigableButtons.Count != 0) {
                 if (currentIndex < 0) {
@@ -537,7 +537,7 @@ namespace AnyRPG {
                     currentNavigableElement.Select();
                     return;
                 }
-                Debug.Log($"{gameObject.name}.UINavigationController.Accept() setting currentNavigableElement to {currentIndex}");
+                //Debug.Log($"{gameObject.name}.UINavigationController.Accept() setting currentNavigableElement to {currentIndex}");
                 currentNavigableElement = activeNavigableButtons[currentIndex];
                 currentNavigableElement.Accept();
             }

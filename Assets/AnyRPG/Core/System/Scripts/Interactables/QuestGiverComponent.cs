@@ -336,7 +336,7 @@ namespace AnyRPG {
         public void CompleteQuest(UnitController sourceUnitController, Quest quest, QuestRewardChoices questRewardChoices) {
             //Debug.Log("QuestGiverUI.CompleteQuest()");
             if (!quest.IsComplete(sourceUnitController)) {
-                Debug.Log("QuestGiverManager.CompleteQuest(): currentQuest is not complete, exiting!");
+                Debug.LogWarning("QuestGiverManager.CompleteQuest(): currentQuest is not complete, exiting!");
                 return;
             }
 

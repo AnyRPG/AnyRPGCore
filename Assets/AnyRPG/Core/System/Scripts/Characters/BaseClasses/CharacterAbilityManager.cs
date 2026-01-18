@@ -221,7 +221,7 @@ namespace AnyRPG {
                         go.transform.localEulerAngles = attachmentPointNode.Rotation;
                     }
                 } else {
-                    Debug.Log("CharacterAbilityManager.HoldObject(): Unable to find target bone : " + attachmentPointNode.TargetBone);
+                    Debug.LogWarning("CharacterAbilityManager.HoldObject(): Unable to find target bone : " + attachmentPointNode.TargetBone);
                 }
             } else {
                 // this code appears to have been copied from equipmentmanager (now in mecanimModelController) so the below line is false ?
@@ -307,7 +307,7 @@ namespace AnyRPG {
                                 newEquipmentPrefab.transform.localScale = abilityAttachmentNode.HoldableObject.Scale;
                                 HoldObject(newEquipmentPrefab, abilityAttachmentNode, unitController.gameObject);
                             } else {
-                                Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.SpawnAbilityObjects(). We could not find the target bone {attachmentPointNode.TargetBone} while attempting to hold {abilityAttachmentNode.HoldableObject.ResourceName}");
+                                Debug.LogWarning($"{unitController.gameObject.name}.CharacterAbilityManager.SpawnAbilityObjects(). We could not find the target bone {attachmentPointNode.TargetBone} while attempting to hold {abilityAttachmentNode.HoldableObject.ResourceName}");
                             }
                         }
                     }
@@ -472,7 +472,7 @@ namespace AnyRPG {
             }
             clipIndex = UnityEngine.Random.Range(0, usedCastAnimationClips.Count);
             if (usedCastAnimationClips[clipIndex] == null) {
-                Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.PerformCastingAnimation({abilityProperties.DisplayName}): cast animation clip is null");
+                Debug.LogWarning($"{unitController.gameObject.name}.CharacterAbilityManager.PerformCastingAnimation({abilityProperties.DisplayName}): cast animation clip is null");
                 return;
             }
 
@@ -1369,7 +1369,7 @@ namespace AnyRPG {
             if (AutoAttackAbility != null) {
                 BeginAbility(AutoAttackAbility, playerInitiated);
             }/* else {
-                Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.AttemtpAutoAttack() no autoAttackAbility found!");
+                Debug.LogWarning(baseCharacter.gameObject.name + ".CharacterAbilitymanager.AttemtpAutoAttack() no autoAttackAbility found!");
             }*/
         }
 
@@ -1570,7 +1570,7 @@ namespace AnyRPG {
                 if (playerInitiated) {
                     ReceiveCombatMessage("Target is not in line of sight");
                 }
-                Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.BeginAbilityCommon({ability.ResourceName}, {target?.name}): finalTarget is not in line of sight. exiting");
+                //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.BeginAbilityCommon({ability.ResourceName}, {target?.name}): finalTarget is not in line of sight. exiting");
                 return false;
             }
 
@@ -1598,7 +1598,7 @@ namespace AnyRPG {
                     currentCastCoroutine = abilityCasterMonoBehaviour.StartCoroutine(PerformAbilityCast(ability, finalTarget, abilityEffectContext));
                 } else {
                     // return false so that items in the inventory don't get used if this came from a castable item
-                    Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.BeginAbilityCommon({ability.ResourceName}, {target?.name}): A cast was already in progress!");
+                    //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.BeginAbilityCommon({ability.ResourceName}, {target?.name}): A cast was already in progress!");
                     return false;
                     //systemGameManager.LogManager.WriteCombatMessage("A cast was already in progress WE SHOULD NOT BE HERE BECAUSE WE CHECKED FIRST! iscasting: " + isCasting + "; currentcast==null? " + (currentCast == null));
                     // unless.... we got here from the crafting queue, which launches the next item as the last step of the currently in progress cast
@@ -1971,7 +1971,7 @@ namespace AnyRPG {
                 globalCoolDownCoroutine = abilityCasterMonoBehaviour.StartCoroutine(BeginGlobalCoolDown(coolDownToUse));
                 unitController.UnitEventController.NotifyOnInitiateGlobalCooldown(coolDownToUse);
             } else {
-                Debug.Log("CharacterAbilityManager.InitiateGlobalCooldown(): INVESTIGATE: GCD COROUTINE WAS NOT NULL");
+                Debug.LogWarning("CharacterAbilityManager.InitiateGlobalCooldown(): INVESTIGATE: GCD COROUTINE WAS NOT NULL");
             }
         }
 

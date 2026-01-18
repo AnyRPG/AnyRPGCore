@@ -58,6 +58,8 @@ namespace AnyRPG {
         public event System.Action OnNameChangeFail = delegate { };
         public event System.Action<string> OnNameChange = delegate { };
         public event System.Action OnPlayerNameNotAvailable = delegate { };
+        public event System.Action OnFactionChange = delegate { };
+        public event System.Action<int> OnSetGuildId = delegate { };
 
         // equipment manager
         public System.Action<EquipmentSlotProfile, InstantiatedEquipment> OnAddEquipment = delegate { };
@@ -321,6 +323,14 @@ namespace AnyRPG {
 
         public void NotifyOnPlayerNameNotAvailable() {
             OnPlayerNameNotAvailable();
+        }
+
+        public void NotifyOnFactionChange() {
+            OnFactionChange();
+        }
+
+        public void NotifyOnSetGuildId(int guildId) {
+            OnSetGuildId(guildId);
         }
     }
 

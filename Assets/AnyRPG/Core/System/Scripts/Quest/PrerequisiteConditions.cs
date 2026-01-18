@@ -59,7 +59,7 @@ namespace AnyRPG {
             //Debug.Log($"PrerequisiteConditions.HandlePrerequisiteUpdates({sourceUnitController.gameObject.name})");
             /*
             if ((prerequisiteOwner as MonoBehaviour) is MonoBehaviour) {
-                Debug.Log("PrerequisiteConditions.HandlePrerequisiteUpdates(): calling prerequisiteOwner.HandlePrerequisiteUpdates(): owner: " + (prerequisiteOwner as MonoBehaviour).gameObject.name);
+                //Debug.Log("PrerequisiteConditions.HandlePrerequisiteUpdates(): calling prerequisiteOwner.HandlePrerequisiteUpdates(): owner: " + (prerequisiteOwner as MonoBehaviour).gameObject.name);
             }
             */
             bool oldResult = lastResult;

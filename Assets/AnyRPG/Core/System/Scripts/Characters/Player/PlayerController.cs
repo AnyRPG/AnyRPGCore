@@ -1120,9 +1120,6 @@ namespace AnyRPG {
             }
 
             playerManager.ActiveUnitController.UnitEventController.OnClearTarget += HandleClearTarget;
-            playerManager.ActiveUnitController.UnitEventController.OnClassChange += HandleClassChange;
-            playerManager.ActiveUnitController.UnitEventController.OnFactionChange += HandleFactionChange;
-            playerManager.ActiveUnitController.UnitEventController.OnSpecializationChange += HandleSpecializationChange;
             playerManager.ActiveUnitController.UnitEventController.OnActivateMountedState += HandleActivateMountedState;
             playerManager.ActiveUnitController.UnitEventController.OnDeactivateMountedState += HandleDeactivateMountedState;
             systemEventManager.OnPlayerUnitDespawn += HandleUnitDespawn;
@@ -1138,9 +1135,6 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.PlayerController.UnsubscribeFromUnitEvents()");
             playerManager.ActiveUnitController.UnitEventController.OnSetTarget -= HandleSetTarget;
             playerManager.ActiveUnitController.UnitEventController.OnClearTarget -= HandleClearTarget;
-            playerManager.ActiveUnitController.UnitEventController.OnClassChange -= HandleClassChange;
-            playerManager.ActiveUnitController.UnitEventController.OnFactionChange -= HandleFactionChange;
-            playerManager.ActiveUnitController.UnitEventController.OnSpecializationChange -= HandleSpecializationChange;
             playerManager.ActiveUnitController.UnitEventController.OnActivateMountedState -= HandleActivateMountedState;
             playerManager.ActiveUnitController.UnitEventController.OnDeactivateMountedState -= HandleDeactivateMountedState;
             playerManager.ActiveUnitController.OnInitializeNamePlate -= HandleInitializeNamePlate;
@@ -1222,23 +1216,6 @@ namespace AnyRPG {
             EventParamProperties eventParam = new EventParamProperties();
             SystemEventManager.TriggerEvent("OnEndRiding", eventParam);
 
-        }
-
-        public void HandleFactionChange(Faction newFaction, Faction oldFaction) {
-            SystemEventManager.TriggerEvent("OnFactionChange", new EventParamProperties());
-            messageFeedManager.WriteMessage("Changed faction to " + newFaction.DisplayName);
-        }
-
-        public void HandleClassChange(UnitController sourceUnitController, CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
-            systemEventManager.NotifyOnClassChange(sourceUnitController, newCharacterClass, oldCharacterClass);
-            messageFeedManager.WriteMessage("Changed class to " + newCharacterClass.DisplayName);
-        }
-
-        public void HandleSpecializationChange(UnitController sourceUnitController, ClassSpecialization newSpecialization, ClassSpecialization oldSpecialization) {
-            systemEventManager.NotifyOnSpecializationChange(sourceUnitController, newSpecialization, oldSpecialization);
-            if (newSpecialization != null) {
-                messageFeedManager.WriteMessage("Changed specialization to " + newSpecialization.DisplayName);
-            }
         }
 
         public void OnSendObjectToPool() {

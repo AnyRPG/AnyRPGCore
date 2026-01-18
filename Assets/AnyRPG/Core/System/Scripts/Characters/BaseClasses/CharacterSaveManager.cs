@@ -1013,7 +1013,7 @@ namespace AnyRPG {
 
         /*
         private void SaveActionButtonSaveData(ActionButton actionButton, List<ActionBarSaveData> actionBarSaveDataList) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveActionButtonSaveData({actionButton.name}");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveActionButtonSaveData({actionButton.name}");
 
             ActionBarSaveData actionBarSaveData = new ActionBarSaveData();
             actionBarSaveData.DisplayName = (actionButton.Useable == null ? string.Empty : (actionButton.Useable as IDescribable).DisplayName);
@@ -1070,11 +1070,11 @@ namespace AnyRPG {
             saveData.ReputationSaveData.Clear();
             foreach (FactionDisposition factionDisposition in unitController.CharacterFactionManager.DispositionDictionary) {
                 if (factionDisposition == null) {
-                    Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveReputationData(): no disposition");
+                    //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveReputationData(): no disposition");
                     continue;
                 }
                 if (factionDisposition.Faction == null) {
-                    Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveReputationData() no faction");
+                    //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveReputationData() no faction");
                     continue;
                 }
                 ReputationSaveData reputationSaveData = new ReputationSaveData();

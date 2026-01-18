@@ -160,7 +160,7 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnAddEquipment += HandleAddEquipment;
                 unitController.UnitEventController.OnRemoveEquipment += HandleRemoveEquipment;
             } else {
-                Debug.Log("CharacterPanel.HandleTargetCreated(): could not find a characterEquipmentManager");
+                Debug.LogWarning("CharacterPanel.HandleTargetCreated(): could not find a characterEquipmentManager");
             }
         }
 

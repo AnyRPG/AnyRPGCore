@@ -272,7 +272,7 @@ namespace AnyRPG {
         }
 
         public void RequestRevivePlayer() {
-            Debug.Log("PlayerManager.RequestRevivePlayer()");
+            //Debug.Log("PlayerManager.RequestRevivePlayer()");
 
             if (systemGameManager.GameMode == GameMode.Network) {
                 //Debug.Log("PlayerManager.RequestRespawnPlayer(): Lobby Game Mode, requesting server to respawn player unit");
@@ -601,6 +601,9 @@ namespace AnyRPG {
             unitController.CharacterInventoryManager.OnRemoveBankSlot += HandleRemoveBankSlot;
             unitController.UnitEventController.OnAddBag += HandleAddBag;
             unitController.UnitEventController.OnNameChangeFail += HandleNameChangeFail;
+            unitController.UnitEventController.OnClassChange += HandleClassChange;
+            unitController.UnitEventController.OnSpecializationChange += HandleSpecializationChange;
+            unitController.UnitEventController.OnSetGuildId += HandleSetGuildId;
         }
 
         public void UnsubscribeFromPlayerEvents() {
@@ -667,6 +670,13 @@ namespace AnyRPG {
             unitController.CharacterInventoryManager.OnRemoveBankSlot -= HandleRemoveBankSlot;
             unitController.UnitEventController.OnAddBag -= HandleAddBag;
             unitController.UnitEventController.OnNameChangeFail -= HandleNameChangeFail;
+            unitController.UnitEventController.OnClassChange -= HandleClassChange;
+            unitController.UnitEventController.OnSpecializationChange -= HandleSpecializationChange;
+            unitController.UnitEventController.OnSetGuildId -= HandleSetGuildId;
+        }
+
+        private void HandleSetGuildId(int guildId, string guildName) {
+            systemEventManager.NotifyOnSetGuildId(guildId);
         }
 
         private void HandleNameChangeFail() {
@@ -735,7 +745,9 @@ namespace AnyRPG {
         }
 
         public void HandleFactionChange(Faction newFaction, Faction oldFaction) {
+            systemEventManager.NotifyOnFactionChange();
             systemEventManager.NotifyOnReputationChange(unitController);
+            messageFeedManager.WriteMessage($"Changed faction to {newFaction.DisplayName}");
         }
 
         public void HandleAddBag(InstantiatedBag bag, BagNode node) {
@@ -847,7 +859,7 @@ namespace AnyRPG {
 
         /*
         public void HandleCombatUpdate() {
-            Debug.Log("PlayerManager.HandleCombatUpdate()");
+            //Debug.Log("PlayerManager.HandleCombatUpdate()");
 
             activeUnitController.CharacterCombat.HandleAutoAttack();
         }
@@ -973,6 +985,19 @@ namespace AnyRPG {
         public void HandleImmuneToEffect(AbilityEffectContext abilityEffectContext) {
             combatTextManager.SpawnCombatText(activeUnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
         }
+
+        public void HandleClassChange(UnitController sourceUnitController, CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
+            systemEventManager.NotifyOnClassChange(sourceUnitController, newCharacterClass, oldCharacterClass);
+            messageFeedManager.WriteMessage("Changed class to " + newCharacterClass.DisplayName);
+        }
+
+        public void HandleSpecializationChange(UnitController sourceUnitController, ClassSpecialization newSpecialization, ClassSpecialization oldSpecialization) {
+            systemEventManager.NotifyOnSpecializationChange(sourceUnitController, newSpecialization, oldSpecialization);
+            if (newSpecialization != null) {
+                messageFeedManager.WriteMessage("Changed specialization to " + newSpecialization.DisplayName);
+            }
+        }
+
 
         public void RequestSpawnPet(UnitProfile unitProfile) {
             if (systemGameManager.GameMode == GameMode.Local) {

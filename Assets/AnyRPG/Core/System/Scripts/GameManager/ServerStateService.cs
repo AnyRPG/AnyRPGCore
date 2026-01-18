@@ -18,11 +18,12 @@ namespace AnyRPG {
         // game manager references
         private MailService mailService = null;
         private AuctionService auctionService = null;
+        private GuildServiceServer guildServiceServer = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             MakeBaseSaveFolder();
-            networkManagerServer.OnStartServer += HandleStartServer;
+            //networkManagerServer.OnStartServer += HandleStartServer;
             networkManagerServer.OnStopServer += HandleStopServer;
         }
 
@@ -30,6 +31,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             mailService = systemGameManager.MailService;
             auctionService = systemGameManager.AuctionService;
+            guildServiceServer = systemGameManager.GuildServiceServer;
         }
 
         private void HandleStopServer() {
@@ -44,7 +46,7 @@ namespace AnyRPG {
             SaveDataFile();
         }
 
-        private void HandleStartServer() {
+        public void ProcessStartServer() {
             //Debug.Log($"ServerStateService.HandleStartServer()");
 
             LoadDataFile();
@@ -53,6 +55,7 @@ namespace AnyRPG {
             systemItemManager.LoadItemIdCounter(serverStateSaveData.itemInstanceIdCounter);
             mailService.LoadMailIdCounter(serverStateSaveData.mailIdCounter);
             auctionService.LoadAuctionIdCounter(serverStateSaveData.auctionIdCounter);
+            guildServiceServer.LoadGuildIdCounter(serverStateSaveData.guildIdCounter);
             BeginMonitoringServerState();
         }
 
@@ -135,6 +138,11 @@ namespace AnyRPG {
 
         public void SetAuctionIdCounter(int auctionIdCounter) {
             serverStateSaveData.auctionIdCounter = auctionIdCounter;
+            saveDataDirty = true;
+        }
+
+        public void SetGuildIdCounter(int guildIdCounter) {
+            serverStateSaveData.guildIdCounter = guildIdCounter;
             saveDataDirty = true;
         }
     }

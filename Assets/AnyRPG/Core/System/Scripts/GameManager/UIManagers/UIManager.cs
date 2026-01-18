@@ -176,6 +176,7 @@ namespace AnyRPG {
         public CloseableWindow mailboxWindow;
         public CloseableWindow mailComposeWindow;
         public CloseableWindow mailViewWindow;
+        public CloseableWindow socialWindow;
         public CloseableWindow musicPlayerWindow;
         public CloseableWindow interactionWindow;
         public CloseableWindow craftingWindow;
@@ -221,6 +222,8 @@ namespace AnyRPG {
         public CloseableWindow loadGameWindow;
         public CloseableWindow newGameWindow;
         public CloseableWindow confirmJoinGroupWindow;
+        public CloseableWindow confirmJoinGuildWindow;
+        public CloseableWindow confirmAcceptFriendWindow;
         public CloseableWindow confirmOpenTradeWindow;
         public CloseableWindow confirmDestroyMenuWindow;
         public CloseableWindow confirmCharacterStuckWindow;
@@ -233,6 +236,8 @@ namespace AnyRPG {
         public CloseableWindow confirmListAuctionWindow;
         public CloseableWindow confirmWindow;
         public CloseableWindow nameChangeWindow;
+        public CloseableWindow createGuildWindow;
+        public CloseableWindow confirmCreateGuildWindow;
         public CloseableWindow networkLoginWindow;
         public CloseableWindow exitToMainMenuWindow;
         public CloseableWindow confirmNewGameMenuWindow;
@@ -439,6 +444,8 @@ namespace AnyRPG {
             loadGameWindow.Configure(systemGameManager);
             newGameWindow.Configure(systemGameManager);
             confirmJoinGroupWindow.Configure(systemGameManager);
+            confirmJoinGuildWindow.Configure(systemGameManager);
+            confirmAcceptFriendWindow.Configure(systemGameManager);
             confirmOpenTradeWindow.Configure(systemGameManager);
             confirmDestroyMenuWindow.Configure(systemGameManager);
             confirmCharacterStuckWindow.Configure(systemGameManager);
@@ -452,9 +459,12 @@ namespace AnyRPG {
             confirmWindow.Configure(systemGameManager);
             auctionWindow.Configure(systemGameManager);
             mailboxWindow.Configure(systemGameManager);
+            socialWindow.Configure(systemGameManager);
             mailComposeWindow.Configure(systemGameManager);
             mailViewWindow.Configure(systemGameManager);
             nameChangeWindow.Configure(systemGameManager);
+            createGuildWindow.Configure(systemGameManager);
+            confirmCreateGuildWindow.Configure(systemGameManager);
             networkLoginWindow.Configure(systemGameManager);
             exitToMainMenuWindow.Configure(systemGameManager);
             confirmNewGameMenuWindow.Configure(systemGameManager);
@@ -578,10 +588,14 @@ namespace AnyRPG {
             defaultWindowPositions.Add("MusicPlayerWindowY", musicPlayerWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("NameChangeWindowX", nameChangeWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("NameChangeWindowY", nameChangeWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("CreateGuildWindowX", createGuildWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("CreateGuildWindowY", createGuildWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("AuctionWindowX", auctionWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("AuctionWindowY", auctionWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("MailboxWindowX", mailboxWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("MailboxWindowY", mailboxWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("SocialWindowX", socialWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("SocialWindowY", socialWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("MailComposeWindowX", mailComposeWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("MailComposeWindowY", mailComposeWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("MailViewWindowX", mailViewWindow.RectTransform.anchoredPosition.x);
@@ -657,10 +671,12 @@ namespace AnyRPG {
             skillTrainerWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["SkillTrainerWindowX"], defaultWindowPositions["SkillTrainerWindowY"], 0);
             musicPlayerWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MusicPlayerWindowX"], defaultWindowPositions["MusicPlayerWindowY"], 0);
             nameChangeWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["NameChangeWindowX"], defaultWindowPositions["NameChangeWindowY"], 0);
+            createGuildWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["CreateGuildWindowX"], defaultWindowPositions["CreateGuildWindowY"], 0);
             auctionWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["AuctionWindowX"], defaultWindowPositions["AuctionWindowY"], 0);
             mailboxWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MailboxWindowX"], defaultWindowPositions["MailboxWindowY"], 0);
             mailComposeWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MailComposeWindowX"], defaultWindowPositions["MailComposeWindowY"], 0);
             mailViewWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MailViewWindowX"], defaultWindowPositions["MailViewWindowY"], 0);
+            socialWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["SocialWindowX"], defaultWindowPositions["SocialWindowY"], 0);
             interactionWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["InteractionWindowX"], defaultWindowPositions["InteractionWindowY"], 0);
             craftingWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["CraftingWindowX"], defaultWindowPositions["CraftingWindowY"], 0);
             tradeWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["TradeWindowX"], defaultWindowPositions["TradeWindowY"], 0);
@@ -715,7 +731,8 @@ namespace AnyRPG {
         }
 
         private void CleanupEventSubscriptions() {
-            Debug.Log("UIManager.CleanupEventSubscriptions()");
+            //Debug.Log("UIManager.CleanupEventSubscriptions()");
+
             if (!eventSubscriptionsInitialized) {
                 return;
             }
@@ -840,6 +857,9 @@ namespace AnyRPG {
                 if (inputManager.KeyBindWasPressed("INVENTORY")) {
                     inventoryWindow.ToggleOpenClose();
                 }
+                if (inputManager.KeyBindWasPressed("SOCIAL")) {
+                    socialWindow.ToggleOpenClose();
+                }
                 if (inputManager.KeyBindWasPressed("ABILITYBOOK")) {
                     abilityBookWindow.ToggleOpenClose();
                 }
@@ -951,10 +971,12 @@ namespace AnyRPG {
             mainMapWindow.CloseWindow();
             musicPlayerWindow.CloseWindow();
             nameChangeWindow.CloseWindow();
+            createGuildWindow.CloseWindow();
             auctionWindow.CloseWindow();
             mailboxWindow.CloseWindow();
             mailComposeWindow.CloseWindow();
             mailViewWindow.CloseWindow();
+            socialWindow.CloseWindow();
             onScreenKeyboardWindow.CloseWindow();
             questLogWindow.CloseWindow();
             questGiverWindow.CloseWindow();
@@ -978,6 +1000,8 @@ namespace AnyRPG {
             //Debug.Log("SystemWindowManager.CloseSystemPopupWindows()");
 
             confirmJoinGroupWindow.CloseWindow();
+            confirmJoinGuildWindow.CloseWindow();
+            confirmAcceptFriendWindow.CloseWindow();
             confirmOpenTradeWindow.CloseWindow();
             confirmDestroyMenuWindow.CloseWindow();
             confirmCharacterStuckWindow.CloseWindow();
@@ -989,6 +1013,7 @@ namespace AnyRPG {
             confirmCancelAuctionWindow.CloseWindow();
             confirmListAuctionWindow.CloseWindow();
             confirmWindow.CloseWindow();
+            confirmCreateGuildWindow.CloseWindow();
             copyGameMenuWindow.CloseWindow();
             creditsWindow.CloseWindow();
             clientLobbyWindow.CloseWindow();
@@ -1433,12 +1458,12 @@ namespace AnyRPG {
         public void UpdateStatusEffectBar() {
             if (PlayerPrefs.GetInt("UseStatusEffectBar") == 0) {
                 if (statusEffectWindow.gameObject.activeSelf) {
-                    Debug.Log("Disabling status effect window");
+                    //Debug.Log("Disabling status effect window");
                     statusEffectWindow.gameObject.SetActive(false);
                 }
             } else if (PlayerPrefs.GetInt("UseStatusEffectBar") == 1) {
                 if (!statusEffectWindow.gameObject.activeSelf) {
-                    Debug.Log("Enabling status effect window");
+                    //Debug.Log("Enabling status effect window");
                     statusEffectWindow.gameObject.SetActive(true);
                 }
             }
@@ -1573,7 +1598,9 @@ namespace AnyRPG {
             mailboxWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             mailComposeWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             mailViewWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            socialWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             nameChangeWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            createGuildWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             characterPanelWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             inspectCharacterPanelWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             craftingWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));

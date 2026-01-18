@@ -50,11 +50,8 @@ namespace AnyRPG {
 
         public void SetPlayerName(UnitController sourceUnitController, string newName) {
             if (newName != null && newName != string.Empty) {
-                if (playerCharacterService.RenamePlayerCharacter(sourceUnitController.CharacterId, newName)) {
+                if (playerCharacterService.RenamePlayerCharacter(sourceUnitController, newName)) {
                     sourceUnitController.BaseCharacter.ChangeCharacterName(newName);
-                    if (sourceUnitController.CharacterGroupManager.GroupId != -1) {
-                        characterGroupServiceServer.ProcessRenameCharacter(sourceUnitController.CharacterId, newName, sourceUnitController.CharacterGroupManager.GroupId);
-                    }
                 } else {
                     sourceUnitController.UnitEventController.NotifyOnNameChangeFail();
                 }

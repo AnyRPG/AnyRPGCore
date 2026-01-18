@@ -41,7 +41,7 @@ namespace AnyRPG {
 
         /*
         private void HandleModelCreated() {
-            Debug.Log($"{unitController.gameObject.name}.UMAModelController.HandleModelCreated()");
+            //Debug.Log($"{unitController.gameObject.name}.UMAModelController.HandleModelCreated()");
 
             Animator animator = dynamicCharacterAvatar.GetComponent<Animator>();
             unitController.UnitAnimator.SetAnimator(animator);
@@ -59,9 +59,9 @@ namespace AnyRPG {
                 return false;
             }
             /*
-            Debug.Log(unitController.gameObject.name + ".UMAModelController.IsBuilding() : uma dirty status: " + dynamicCharacterAvatar.umaData.dirty);
-            Debug.Log(unitController.gameObject.name + ".UMAModelController.IsBuilding() : update pending status : " + dynamicCharacterAvatar.UpdatePending());
-            Debug.Log(unitController.gameObject.name + ".UMAModelController.IsBuilding() : build in progress status: " + buildInProgress);
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.IsBuilding() : uma dirty status: " + dynamicCharacterAvatar.umaData.dirty);
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.IsBuilding() : update pending status : " + dynamicCharacterAvatar.UpdatePending());
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.IsBuilding() : build in progress status: " + buildInProgress);
             */
             //return dynamicCharacterAvatar.umaData.dirty || dynamicCharacterAvatar.UpdatePending() || buildInProgress;
             return dynamicCharacterAvatar.umaData.dirty || dynamicCharacterAvatar.UpdatePending() || buildInProgress;
@@ -74,7 +74,8 @@ namespace AnyRPG {
         */
 
         public void SetAppearance(string appearance) {
-            Debug.Log($"{unitController.gameObject.name}.UMAModelController.SetAppearance()");
+            //Debug.Log($"{unitController.gameObject.name}.UMAModelController.SetAppearance()");
+
             initialAppearance = appearance;
             avatarDefinition = AvatarDefinition.FromCompressedString(initialAppearance, '|');
             CheckAvatarDefinition();
@@ -208,7 +209,8 @@ namespace AnyRPG {
 
         /*
         public void LoadSavedAppearanceSettings(string recipeString = null, bool rebuildAppearance = false) {
-            Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings()");
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings()");
+
             if (dynamicCharacterAvatar != null) {
                 if (recipeString != null && recipeString != string.Empty) {
                     //Debug.Log($"{unitController.gameObject.name}.UMAModelController.LoadSavedAppearanceSettings() : loading string from parameters : " + recipeString);
@@ -272,7 +274,8 @@ namespace AnyRPG {
 
         /*
         public void HandleCharacterCreated(UMAData umaData) {
-            Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterCreated()");
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterCreated()");
+
             //UnsubscribeFromUMACreate();
             SetModelReady();
         }
@@ -590,7 +593,7 @@ namespace AnyRPG {
 
             /*
             dynamicCharacterAvatar.ClearSlots();
-            Debug.Log(unitController.gameObject.name + ".UMAModelController.ResetSettings(): Restoring cached body colors");
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.ResetSettings(): Restoring cached body colors");
             dynamicCharacterAvatar.RestoreCachedBodyColors(false, true);
             dynamicCharacterAvatar.LoadDefaultWardrobe();
             // doing the rebuild on despawn so there isn't a frame with this appearance until a rebuild happens when re-using the avatar

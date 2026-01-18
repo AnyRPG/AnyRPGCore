@@ -66,10 +66,10 @@ namespace AnyRPG {
             //Debug.Log($"MailboxManagerClient.SetMailMessages(count: {mailMessageListResponse.MailMessages.Count})");
 
             mailMessages.Clear();
+            systemItemManager.LoadItemInstanceListSaveData(mailMessageListResponse.ItemInstanceListSaveData);
             foreach (MailMessage mailMessage in mailMessageListResponse.MailMessages) {
                 mailMessages.Add(mailMessage.MessageId, mailMessage);
             }
-            systemItemManager.LoadItemInstanceListSaveData(mailMessageListResponse.ItemInstanceListSaveData);
             OnSetMailMessages();
             CheckForUnreadMail();
         }

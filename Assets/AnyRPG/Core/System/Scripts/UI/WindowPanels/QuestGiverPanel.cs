@@ -127,7 +127,7 @@ namespace AnyRPG {
         public void ShowQuestsCommon(IQuestGiver questGiver) {
             //Debug.Log("QuestGiverUI.ShowQuestsCommon()");
             if (questGiver == null) {
-                Debug.Log("QuestGiverUI.ShowQuestsCommon() QUESTGIVER IS NULL!!!");
+                //Debug.Log("QuestGiverUI.ShowQuestsCommon() QUESTGIVER IS NULL!!!");
                 return;
             }
             interactable = questGiver.Interactable;
@@ -231,7 +231,7 @@ namespace AnyRPG {
         }
 
         public void ShowQuests(IQuestGiver questGiver) {
-            Debug.Log("QuestGiverUI.ShowQuests(" + (questGiver != null ? questGiver.ToString() : "null") + ")");
+            //Debug.Log("QuestGiverUI.ShowQuests(" + (questGiver != null ? questGiver.ToString() : "null") + ")");
             SetQuestGiver(questGiver);
             ShowQuestsCommon(this.questGiver);
         }
@@ -406,7 +406,7 @@ namespace AnyRPG {
         public void CompleteQuest() {
             //Debug.Log("QuestGiverUI.CompleteQuest()");
             if (!currentQuest.IsComplete(playerManager.UnitController)) {
-                Debug.Log("QuestGiverUI.CompleteQuest(): currentQuest is not complete, exiting!");
+                Debug.LogWarning("QuestGiverUI.CompleteQuest(): currentQuest is not complete, exiting!");
                 return;
             }
 

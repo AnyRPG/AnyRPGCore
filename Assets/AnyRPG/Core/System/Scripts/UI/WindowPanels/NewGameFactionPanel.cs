@@ -223,7 +223,7 @@ namespace AnyRPG {
 
         /*
         public override void Accept() {
-            Debug.Log(gameObject.name + ".NewGameFactionPanelController.Accept()");
+            //Debug.Log(gameObject.name + ".NewGameFactionPanelController.Accept()");
             base.Accept();
             if (currentNavigationController == uINavigationControllers[0]) {
                 newGamePanel.OpenDetailsPanel();

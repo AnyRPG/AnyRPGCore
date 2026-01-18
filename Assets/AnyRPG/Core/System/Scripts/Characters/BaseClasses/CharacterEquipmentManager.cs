@@ -134,7 +134,7 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.Equip({(newItem != null ? newItem.ResourceName : "null")}, {(equipmentSlotProfile == null ? "null" : equipmentSlotProfile.DisplayName)})");
 
             if (newItem == null) {
-                Debug.Log("Instructed to Equip a null item!");
+                Debug.LogWarning("Instructed to Equip a null item!");
                 return false;
             }
 
@@ -244,7 +244,7 @@ namespace AnyRPG {
         */
 
         public InstantiatedEquipment Unequip(InstantiatedEquipment instantiatedEquipment) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.Unequip({(instantiatedEquipment != null ? instantiatedEquipment.ResourceName : "null")})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.Unequip({(instantiatedEquipment != null ? instantiatedEquipment.ResourceName : "null")})");
 
             EquipmentSlotProfile equipmentSlotProfile = FindEquipmentSlotForEquipment(instantiatedEquipment);
             if (equipmentSlotProfile != null) {

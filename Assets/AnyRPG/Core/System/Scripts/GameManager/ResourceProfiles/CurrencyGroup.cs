@@ -35,7 +35,7 @@ namespace AnyRPG {
                 return false;
             }
             if (baseCurrency == null) {
-                Debug.Log("CurrencyGroup.HasCurrency(" + (currency == null ? "null" : currency.ResourceName) + "): basecurrency is null");
+                Debug.LogWarning($"CurrencyGroup.HasCurrency({(currency == null ? "null" : currency.ResourceName)}): basecurrency is null");
             }
             if (SystemDataUtility.MatchResource(baseCurrency.ResourceName, currency.ResourceName)) {
                 return true;

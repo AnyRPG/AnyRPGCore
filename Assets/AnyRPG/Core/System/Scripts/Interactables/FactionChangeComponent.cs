@@ -29,17 +29,17 @@ namespace AnyRPG {
             //Debug.Log("GatheringNode.CreateEventSubscriptions()");
             base.ProcessCreateEventSubscriptions();
 
-            SystemEventManager.StartListening("OnFactionChange", HandleFactionChange);
+            systemEventManager.OnFactionChange += HandleFactionChange;
         }
 
         public override void ProcessCleanupEventSubscriptions() {
             //Debug.Log($"{gameObject.name}.FactionChangeInteractable.CleanupEventSubscriptions()");
             base.ProcessCleanupEventSubscriptions();
 
-            SystemEventManager.StopListening("OnFactionChange", HandleFactionChange);
+            systemEventManager.OnFactionChange -= HandleFactionChange;
         }
 
-        public void HandleFactionChange(string eventName, EventParamProperties eventParamProperties) {
+        public void HandleFactionChange() {
             HandleOptionStateChange();
         }
 

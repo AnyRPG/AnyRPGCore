@@ -340,7 +340,7 @@ namespace AnyRPG {
             if (selectedRecipeScript != null) {
                 craftingManager.RequestBeginCrafting(playerManager.UnitController, selectedRecipeScript.Recipe, craftAmount);
             } else {
-                Debug.Log("CraftingUI.BeginCrafting() selectedRecipeScript is null");
+                Debug.LogWarning("CraftingUI.BeginCrafting() selectedRecipeScript is null");
             }
         }
 

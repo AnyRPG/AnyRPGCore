@@ -59,7 +59,7 @@ namespace AnyRPG {
                 //Debug.Log("Bag.Initialize(): loading icon from resources at: " + spriteLocation);
                 Sprite newIcon = bagIcon;
                 if (newIcon == null) {
-                    Debug.Log("Bag.Initialize(): unable to load bag icon from resources!");
+                    //Debug.Log("Bag.Initialize(): unable to load bag icon from resources!");
                 } else {
                     icon = newIcon;
                 }

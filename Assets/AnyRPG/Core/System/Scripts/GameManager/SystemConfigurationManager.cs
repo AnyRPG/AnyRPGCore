@@ -267,15 +267,6 @@ namespace AnyRPG {
 
         [Header("Mail Currency")]
 
-        /*
-        [Tooltip("The name of the base currency to use for mail.")]
-        [SerializeField]
-        [ResourceSelector(resourceType = typeof(Currency))]
-        private string postageCurrencyName = string.Empty;
-
-        private Currency postageCurrency = null;
-        */
-
         [Tooltip("The amount of currency required to send a mail message (in the base currency of the default system currency group).")]
         [SerializeField]
         private int basePostageCurrencyAmount = 0;
@@ -293,6 +284,13 @@ namespace AnyRPG {
         [Tooltip("The percentage of the auction proceeds that will be removed from the total amount sent to the player when an item sells (in the base currency of the default system currency group).")]
         [SerializeField]
         private float auctionSoldFeePercentage = 0;
+
+        [Header("Guildmaster Currency")]
+
+        [Tooltip("The amount of currency required to create a guild (in the base currency of the default system currency group).")]
+        [SerializeField]
+        private int createGuildCurrencyAmount = 0;
+
 
         [Header("Currency Scaling")]
 
@@ -495,6 +493,14 @@ namespace AnyRPG {
         [SerializeField]
         private Sprite bankNamePlateImage = null;
 
+        [Tooltip("An image to use beside a guildmaster option in the interaction UI window.")]
+        [SerializeField]
+        private Sprite guildmasterInteractionPanelImage = null;
+
+        [Tooltip("An image to for a guildmaster option on a nameplate.")]
+        [SerializeField]
+        private Sprite guildmasterNamePlateImage = null;
+
         [Tooltip("An image to use beside a quest giver option in the interaction UI window.")]
         [SerializeField]
         private Sprite questGiverInteractionPanelImage = null;
@@ -693,6 +699,8 @@ namespace AnyRPG {
         public float DefaultDespawnTimer { get => defaultDespawnTimer; set => defaultDespawnTimer = value; }
         public Sprite BankInteractionPanelImage { get => bankInteractionPanelImage; set => bankInteractionPanelImage = value; }
         public Sprite BankNamePlateImage { get => bankNamePlateImage; set => bankNamePlateImage = value; }
+        public Sprite GuildmasterInteractionPanelImage { get => guildmasterInteractionPanelImage; set => guildmasterInteractionPanelImage = value; }
+        public Sprite GuildmasterNamePlateImage { get => guildmasterNamePlateImage; set => guildmasterNamePlateImage = value; }
         public Sprite VendorInteractionPanelImage { get => vendorInteractionPanelImage; set => vendorInteractionPanelImage = value; }
         public Sprite VendorNamePlateImage { get => vendorNamePlateImage; set => vendorNamePlateImage = value; }
         public Sprite MultipleCraftNamePlateImage { get => multipleCraftNamePlateImage; set => multipleCraftNamePlateImage = value; }
@@ -843,6 +851,7 @@ namespace AnyRPG {
         public int PostageCurrencyAmountPerAttachment { get => postageCurrencyAmountPerAttachment; set => postageCurrencyAmountPerAttachment = value; }
         public int AuctionDepositAmount { get => auctionDepositAmount; set => auctionDepositAmount = value; }
         public float AuctionSoldFeePercentage { get => auctionSoldFeePercentage; set => auctionSoldFeePercentage = value; }
+        public int CreateGuildCurrencyAmount { get => createGuildCurrencyAmount; set => createGuildCurrencyAmount = value; }
 
         //public Currency PostageCurrency { get => postageCurrency; set => postageCurrency = value; }
 

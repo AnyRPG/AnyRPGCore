@@ -38,7 +38,7 @@ namespace AnyRPG {
         private void HandleDespawn(UnitController controller) {
             //Debug.Log($"GroupUnitFramePanel.HandleDespawn({controller.DisplayName})");
 
-            SetNullTarget(unitController.DisplayName, leaderIcon.gameObject.activeSelf);
+            SetNullTarget(unitController.CharacterId);
         }
 
         public override void SetTarget(UnitController unitController) {
@@ -53,19 +53,7 @@ namespace AnyRPG {
             base.SetTarget(unitController);
         }
 
-        public void SetNullTarget(int characterId, string userName) {
-            //Debug.Log($"GroupUnitFramePanel.SetNullTarget({characterId})");
-
-            SetNullTarget(userName, characterGroupServiceClient.CurrentCharacterGroup.leaderPlayerCharacterId == characterId);
-        }
-
-        /*
-        public void SetNullTarget() {
-            SetNullTarget("?????");
-        }
-        */
-
-        private void SetNullTarget(string userName, bool isLeader) {
+        public void SetNullTarget(int characterId) {
             //Debug.Log($"GroupUnitFramePanel.SetNullTarget({userName}, {isLeader})");
 
             ClearTarget(false);
@@ -75,13 +63,19 @@ namespace AnyRPG {
                 gameObject.SetActive(true);
             }
 
+            CharacterGroupMemberData characterGroupMemberData = characterGroupServiceClient.GetCharacterGroupMemberData(characterId);
+
             ClearResourceBars();
             primaryResourceText.text = $"?? / ?? (??%)";
             secondaryResourceText.text = $"?? / ?? (??%)";
-            unitNameText.text = userName;
-            unitLevelText.text = "??";
-            ConfigurePortrait(disconnectedImage);
-            if (isLeader) {
+            unitNameText.text = characterGroupMemberData.CharacterSummaryData.CharacterName;
+            unitLevelText.text = characterGroupMemberData.CharacterSummaryData.Level.ToString();
+            if (characterGroupMemberData.CharacterSummaryData.IsOnline == false) {
+                ConfigurePortrait(disconnectedImage);
+            } else {
+                ConfigurePortrait(characterGroupMemberData.CharacterSummaryData.UnitProfile.Icon);
+            }
+            if (characterGroupMemberData.Rank == CharacterGroupRank.Leader) {
                 leaderIcon.gameObject.SetActive(true);
             } else {
                 leaderIcon.gameObject.SetActive(false);

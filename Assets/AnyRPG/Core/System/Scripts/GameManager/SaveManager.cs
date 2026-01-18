@@ -608,6 +608,16 @@ namespace AnyRPG {
                 uIManager.mainMapWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("MainMapWindowX"), PlayerPrefs.GetFloat("MainMapWindowY"), 0);
             if (PlayerPrefs.HasKey("DialogWindowX") && PlayerPrefs.HasKey("DialogWindowY"))
                 uIManager.dialogWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("DialogWindowX"), PlayerPrefs.GetFloat("DialogWindowY"), 0);
+            if (PlayerPrefs.HasKey("MailboxWindowX") && PlayerPrefs.HasKey("MailboxWindowY"))
+                uIManager.mailboxWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("MailboxWindowX"), PlayerPrefs.GetFloat("MailboxWindowY"), 0);
+            if (PlayerPrefs.HasKey("MailComposeWindowX") && PlayerPrefs.HasKey("MailComposeWindowY"))
+                uIManager.mailComposeWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("MailComposeWindowX"), PlayerPrefs.GetFloat("MailComposeWindowY"), 0);
+            if (PlayerPrefs.HasKey("MailViewWindowX") && PlayerPrefs.HasKey("MailViewWindowY"))
+                uIManager.mailViewWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("MailViewWindowX"), PlayerPrefs.GetFloat("MailViewWindowY"), 0);
+            if (PlayerPrefs.HasKey("AuctionWindowX") && PlayerPrefs.HasKey("AuctionWindowY"))
+                uIManager.auctionWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("AuctionWindowX"), PlayerPrefs.GetFloat("AuctionWindowY"), 0);
+            if (PlayerPrefs.HasKey("SocialWindowX") && PlayerPrefs.HasKey("SocialWindowY"))
+                uIManager.socialWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("SocialWindowX"), PlayerPrefs.GetFloat("SocialWindowY"), 0);
 
             if (PlayerPrefs.HasKey("QuestTrackerWindowX") && PlayerPrefs.HasKey("QuestTrackerWindowY"))
                 uIManager.QuestTrackerWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("QuestTrackerWindowX"), PlayerPrefs.GetFloat("QuestTrackerWindowY"), 0);
@@ -700,6 +710,16 @@ namespace AnyRPG {
             PlayerPrefs.SetFloat("MainMapWindowY", uIManager.mainMapWindow.RectTransform.anchoredPosition.y);
             PlayerPrefs.SetFloat("DialogWindowX", uIManager.dialogWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("DialogWindowY", uIManager.dialogWindow.RectTransform.anchoredPosition.y);
+            PlayerPrefs.SetFloat("MailboxWindowX", uIManager.mailboxWindow.RectTransform.anchoredPosition.x);
+            PlayerPrefs.SetFloat("MailboxWindowY", uIManager.mailboxWindow.RectTransform.anchoredPosition.y);
+            PlayerPrefs.SetFloat("MailComposeWindowX", uIManager.mailComposeWindow.RectTransform.anchoredPosition.x);
+            PlayerPrefs.SetFloat("MailComposeWindowY", uIManager.mailComposeWindow.RectTransform.anchoredPosition.y);
+            PlayerPrefs.SetFloat("MailViewWindowX", uIManager.mailViewWindow.RectTransform.anchoredPosition.x);
+            PlayerPrefs.SetFloat("MailViewWindowY", uIManager.mailViewWindow.RectTransform.anchoredPosition.y);
+            PlayerPrefs.SetFloat("SocialWindowX", uIManager.socialWindow.RectTransform.anchoredPosition.x);
+            PlayerPrefs.SetFloat("SocialWindowY", uIManager.socialWindow.RectTransform.anchoredPosition.y);
+            PlayerPrefs.SetFloat("AuctionWindowX", uIManager.auctionWindow.RectTransform.anchoredPosition.x);
+            PlayerPrefs.SetFloat("AuctionWindowY", uIManager.auctionWindow.RectTransform.anchoredPosition.y);
 
             PlayerPrefs.SetFloat("QuestTrackerWindowX", uIManager.QuestTrackerWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("QuestTrackerWindowY", uIManager.QuestTrackerWindow.RectTransform.anchoredPosition.y);
@@ -763,7 +783,7 @@ namespace AnyRPG {
 
         public List<PersistentObjectSaveData> GetPersistentObjects(SceneNode sceneNode) {
             if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(0) == false) {
-                Debug.Log($"SaveManager.GetPersistentObjects({sceneNode.ResourceName}): playerManager.UnitController is null.  Returning empty list.");
+                Debug.LogWarning($"SaveManager.GetPersistentObjects({sceneNode.ResourceName}): playerManager.UnitController is null.  Returning empty list.");
                 return new List<PersistentObjectSaveData>();
             }
             return GetSceneNodeSaveData(sceneNode).PersistentObjects;

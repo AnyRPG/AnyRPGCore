@@ -51,7 +51,7 @@ namespace AnyRPG {
             }
             int accountId = playerManagerServer.ActiveUnitControllerLookup[sourceUnitController];
             if (lootTableStates.ContainsKey(lootTable) == false) {
-                Debug.Log($"LootHolder.GetLoot(): lootTableStates does not contain lootTable");
+                Debug.LogWarning($"LootHolder.GetLoot(): lootTableStates does not contain lootTable");
                 return new List<LootDrop>();
             }
 

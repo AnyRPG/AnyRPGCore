@@ -76,7 +76,7 @@ namespace AnyRPG {
 
             Configure();
             if (systemGameManager == null) {
-                Debug.Log($"{gameObject.name}.FishNetObjectAudioController.OnStartServer(): systemGameManager is null");
+                //Debug.LogWarning($"{gameObject.name}.FishNetObjectAudioController.OnStartServer(): systemGameManager is null");
                 return;
             }
 
@@ -107,7 +107,7 @@ namespace AnyRPG {
             }
 
             if (objectAudioController == null) {
-                Debug.Log($"{gameObject.name}.FishNetObjectAudioController.SubscribeToServerInteractableEvents(): interactable is null");
+                Debug.LogWarning($"{gameObject.name}.FishNetObjectAudioController.SubscribeToServerInteractableEvents(): interactable is null");
                 // something went wrong
                 return;
             }

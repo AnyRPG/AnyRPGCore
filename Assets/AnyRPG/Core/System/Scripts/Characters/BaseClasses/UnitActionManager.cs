@@ -97,7 +97,7 @@ namespace AnyRPG {
                         go.transform.localEulerAngles = attachmentPointNode.Rotation;
                     }
                 } else {
-                    Debug.Log("CharacterAbilityManager.HoldObject(): Unable to find target bone : " + attachmentPointNode.TargetBone);
+                    Debug.LogWarning($"CharacterAbilityManager.HoldObject(): Unable to find target bone : {attachmentPointNode.TargetBone}");
                 }
             } else {
                 // this code appears to have been copied from equipmentmanager (now in mecanimModelController) so the below line is false ?
@@ -144,7 +144,7 @@ namespace AnyRPG {
                                 newEquipmentPrefab.transform.localScale = abilityAttachmentNode.HoldableObject.Scale;
                                 HoldObject(newEquipmentPrefab, abilityAttachmentNode, unitController.gameObject);
                             } else {
-                                Debug.Log("CharacterAbilityManager.SpawnAbilityObjects(). We could not find the target bone " + attachmentPointNode.TargetBone + " while spawning " + abilityAttachmentNode.HoldableObject.ResourceName);
+                                //Debug.Log($"CharacterAbilityManager.SpawnAbilityObjects(). We could not find the target bone {attachmentPointNode.TargetBone} while spawning {abilityAttachmentNode.HoldableObject.ResourceName}");
                             }
                         }
                     }

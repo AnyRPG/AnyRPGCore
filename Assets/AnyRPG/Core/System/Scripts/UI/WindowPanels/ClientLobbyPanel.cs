@@ -88,7 +88,7 @@ namespace AnyRPG {
         }
 
         public void HandleLobbyLogin(int accountId, string userName) {
-            Debug.Log($"ClientLobbyPanel.HandleLobbyLogin({accountId}, {userName})");
+            //Debug.Log($"ClientLobbyPanel.HandleLobbyLogin({accountId}, {userName})");
 
             AddPlayerToList(accountId, userName);
         }
@@ -233,7 +233,7 @@ namespace AnyRPG {
         }
 
         public void RemoveLobbyGameFromList(int gameId) {
-            Debug.Log($"ClientLobbyPanelController.RemoveLobbyGameFromList({gameId})");
+            //Debug.Log($"ClientLobbyPanelController.RemoveLobbyGameFromList({gameId})");
 
             if (lobbyGameButtons.ContainsKey(gameId)) {
                 uINavigationControllers[1].ClearActiveButton(lobbyGameButtons[gameId].JoinButton);

@@ -27,13 +27,15 @@ namespace AnyRPG {
             systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
+        /*
         private void OnEnable() {
-            Debug.Log($"FishNetServerBootstrap.OnEnable()");
+            //Debug.Log($"FishNetServerBootstrap.OnEnable()");
         }
 
         private void Awake() {
-            Debug.Log($"FishNetServerBootstrap.Awake()");
+            //Debug.Log($"FishNetServerBootstrap.Awake()");
         }
+        */
 
         public void SetNetworkManager(FishNet.Managing.NetworkManager networkManager) {
             this.networkManager = networkManager;
@@ -56,7 +58,8 @@ namespace AnyRPG {
 
         
         public override void OnStartServer() {
-            Debug.Log($"{gameObject.name}.FishNetServerBootstrap.OnStartServer()");
+            //Debug.Log($"{gameObject.name}.FishNetServerBootstrap.OnStartServer()");
+
             base.OnStartServer();
 
             //networkManager = GameObject.FindAnyObjectByType<FishNet.Managing.NetworkManager>();

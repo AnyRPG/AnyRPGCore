@@ -95,6 +95,7 @@ namespace AnyRPG {
             InitializeKey("ACHIEVEMENTBOOK", KeyCode.Y, KeyCode.None, KeyCode.None, "Achievement Book", KeyBindType.System);
             InitializeKey("REPUTATIONBOOK", KeyCode.U, KeyCode.None, KeyCode.None, "Reputation Book", KeyBindType.System);
             InitializeKey("INVENTORY", KeyCode.B, KeyCode.None, KeyCode.None, "Inventory", KeyBindType.System);
+            InitializeKey("SOCIAL", KeyCode.O, KeyCode.None, KeyCode.None, "Social", KeyBindType.System);
             InitializeKey("MAINMAP", KeyCode.M, KeyCode.None, KeyCode.None, "Map", KeyBindType.System);
             InitializeKey("NEXTTARGET", KeyCode.Tab, KeyCode.None, KeyCode.None, "Next Target", KeyBindType.System);
             InitializeKey("UNEQUIPALL", KeyCode.N, KeyCode.None, KeyCode.None, "Unequip All", KeyBindType.System);
@@ -110,40 +111,39 @@ namespace AnyRPG {
             InitializeKey("ACT8", KeyCode.Alpha8, KeyCode.None, KeyCode.None, "Action Button 8", KeyBindType.Action);
             InitializeKey("ACT9", KeyCode.Alpha9, KeyCode.None, KeyCode.None, "Action Button 9", KeyBindType.Action);
             InitializeKey("ACT10", KeyCode.Alpha0, KeyCode.None, KeyCode.None, "Action Button 10", KeyBindType.Action);
+            InitializeKey("ACT11", KeyCode.Minus, KeyCode.None, KeyCode.None, "Action Button 11", KeyBindType.Action);
+            InitializeKey("ACT12", KeyCode.Equals, KeyCode.None, KeyCode.None, "Action Button 12", KeyBindType.Action);
 
-            InitializeKey("ACT11", KeyCode.Alpha1, KeyCode.None, KeyCode.None, "Action Button 11", KeyBindType.Action, false, true);
-            InitializeKey("ACT12", KeyCode.Alpha2, KeyCode.None, KeyCode.None, "Action Button 12", KeyBindType.Action, false, true);
-            InitializeKey("ACT13", KeyCode.Alpha3, KeyCode.None, KeyCode.None, "Action Button 13", KeyBindType.Action, false, true);
-            InitializeKey("ACT14", KeyCode.Alpha4, KeyCode.None, KeyCode.None, "Action Button 14", KeyBindType.Action, false, true);
-            InitializeKey("ACT15", KeyCode.Alpha5, KeyCode.None, KeyCode.None, "Action Button 15", KeyBindType.Action, false, true);
-            InitializeKey("ACT16", KeyCode.Alpha6, KeyCode.None, KeyCode.None, "Action Button 16", KeyBindType.Action, false, true);
-            InitializeKey("ACT17", KeyCode.Alpha7, KeyCode.None, KeyCode.None, "Action Button 17", KeyBindType.Action, false, true);
-            InitializeKey("ACT18", KeyCode.Alpha8, KeyCode.None, KeyCode.None, "Action Button 18", KeyBindType.Action, false, true);
-            InitializeKey("ACT19", KeyCode.Alpha9, KeyCode.None, KeyCode.None, "Action Button 19", KeyBindType.Action, false, true);
-            InitializeKey("ACT20", KeyCode.Alpha0, KeyCode.None, KeyCode.None, "Action Button 20", KeyBindType.Action, false, true);
-                                                   
-            InitializeKey("ACT21", KeyCode.Alpha1, KeyCode.None, KeyCode.None, "Action Button 21", KeyBindType.Action, true);
-            InitializeKey("ACT22", KeyCode.Alpha2, KeyCode.None, KeyCode.None, "Action Button 22", KeyBindType.Action, true);
-            InitializeKey("ACT23", KeyCode.Alpha3, KeyCode.None, KeyCode.None, "Action Button 23", KeyBindType.Action, true);
-            InitializeKey("ACT24", KeyCode.Alpha4, KeyCode.None, KeyCode.None, "Action Button 24", KeyBindType.Action, true);
-            InitializeKey("ACT25", KeyCode.Alpha5, KeyCode.None, KeyCode.None, "Action Button 25", KeyBindType.Action, true);
-            InitializeKey("ACT26", KeyCode.Alpha6, KeyCode.None, KeyCode.None, "Action Button 26", KeyBindType.Action, true);
-            InitializeKey("ACT27", KeyCode.Alpha7, KeyCode.None, KeyCode.None, "Action Button 27", KeyBindType.Action, true);
-            InitializeKey("ACT28", KeyCode.Alpha8, KeyCode.None, KeyCode.None, "Action Button 28", KeyBindType.Action, true);
-            InitializeKey("ACT29", KeyCode.Alpha9, KeyCode.None, KeyCode.None, "Action Button 29", KeyBindType.Action, true);
-            InitializeKey("ACT30", KeyCode.Alpha0, KeyCode.None, KeyCode.None, "Action Button 30", KeyBindType.Action, true);
+            InitializeKey("ACT13", KeyCode.Alpha1, KeyCode.None, KeyCode.None, "Action Button 13", KeyBindType.Action, false, true);
+            InitializeKey("ACT14", KeyCode.Alpha2, KeyCode.None, KeyCode.None, "Action Button 14", KeyBindType.Action, false, true);
+            InitializeKey("ACT15", KeyCode.Alpha3, KeyCode.None, KeyCode.None, "Action Button 15", KeyBindType.Action, false, true);
+            InitializeKey("ACT16", KeyCode.Alpha4, KeyCode.None, KeyCode.None, "Action Button 16", KeyBindType.Action, false, true);
+            InitializeKey("ACT17", KeyCode.Alpha5, KeyCode.None, KeyCode.None, "Action Button 17", KeyBindType.Action, false, true);
+            InitializeKey("ACT18", KeyCode.Alpha6, KeyCode.None, KeyCode.None, "Action Button 18", KeyBindType.Action, false, true);
+            InitializeKey("ACT19", KeyCode.Alpha7, KeyCode.None, KeyCode.None, "Action Button 19", KeyBindType.Action, false, true);
+            InitializeKey("ACT20", KeyCode.Alpha8, KeyCode.None, KeyCode.None, "Action Button 20", KeyBindType.Action, false, true);
+            InitializeKey("ACT21", KeyCode.Alpha9, KeyCode.None, KeyCode.None, "Action Button 21", KeyBindType.Action, false, true);
+            InitializeKey("ACT22", KeyCode.Alpha0, KeyCode.None, KeyCode.None, "Action Button 22", KeyBindType.Action, false, true);
+            InitializeKey("ACT23", KeyCode.Minus, KeyCode.None, KeyCode.None, "Action Button 23", KeyBindType.Action, false, true);
+            InitializeKey("ACT24", KeyCode.Equals, KeyCode.None, KeyCode.None, "Action Button 24", KeyBindType.Action, false, true);
 
-            InitializeKey("ACT31", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 31", KeyBindType.Action);
-            InitializeKey("ACT32", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 32", KeyBindType.Action);
-            InitializeKey("ACT33", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 33", KeyBindType.Action);
-            InitializeKey("ACT34", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 34", KeyBindType.Action);
-            InitializeKey("ACT35", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 35", KeyBindType.Action);
-            InitializeKey("ACT36", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 36", KeyBindType.Action);
+            InitializeKey("ACT25", KeyCode.Alpha1, KeyCode.None, KeyCode.None, "Action Button 25", KeyBindType.Action, true);
+            InitializeKey("ACT26", KeyCode.Alpha2, KeyCode.None, KeyCode.None, "Action Button 26", KeyBindType.Action, true);
+            InitializeKey("ACT27", KeyCode.Alpha3, KeyCode.None, KeyCode.None, "Action Button 27", KeyBindType.Action, true);
+            InitializeKey("ACT28", KeyCode.Alpha4, KeyCode.None, KeyCode.None, "Action Button 28", KeyBindType.Action, true);
+            InitializeKey("ACT29", KeyCode.Alpha5, KeyCode.None, KeyCode.None, "Action Button 29", KeyBindType.Action, true);
+            InitializeKey("ACT30", KeyCode.Alpha6, KeyCode.None, KeyCode.None, "Action Button 30", KeyBindType.Action, true);
+            InitializeKey("ACT31", KeyCode.Alpha7, KeyCode.None, KeyCode.None, "Action Button 31", KeyBindType.Action, true);
+            InitializeKey("ACT32", KeyCode.Alpha8, KeyCode.None, KeyCode.None, "Action Button 32", KeyBindType.Action, true);
+            InitializeKey("ACT33", KeyCode.Alpha9, KeyCode.None, KeyCode.None, "Action Button 33", KeyBindType.Action, true);
+            InitializeKey("ACT34", KeyCode.Alpha0, KeyCode.None, KeyCode.None, "Action Button 34", KeyBindType.Action, true);
+            InitializeKey("ACT35", KeyCode.Minus, KeyCode.None, KeyCode.None, "Action Button 35", KeyBindType.Action, true);
+            InitializeKey("ACT36", KeyCode.Equals, KeyCode.None, KeyCode.None, "Action Button 36", KeyBindType.Action, true);
+
             InitializeKey("ACT37", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 37", KeyBindType.Action);
             InitializeKey("ACT38", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 38", KeyBindType.Action);
             InitializeKey("ACT39", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 39", KeyBindType.Action);
             InitializeKey("ACT40", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 40", KeyBindType.Action);
-                                                 
             InitializeKey("ACT41", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 41", KeyBindType.Action);
             InitializeKey("ACT42", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 42", KeyBindType.Action);
             InitializeKey("ACT43", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 43", KeyBindType.Action);
@@ -152,9 +152,9 @@ namespace AnyRPG {
             InitializeKey("ACT46", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 46", KeyBindType.Action);
             InitializeKey("ACT47", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 47", KeyBindType.Action);
             InitializeKey("ACT48", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 48", KeyBindType.Action);
+
             InitializeKey("ACT49", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 49", KeyBindType.Action);
             InitializeKey("ACT50", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 50", KeyBindType.Action);
-                                                 
             InitializeKey("ACT51", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 51", KeyBindType.Action);
             InitializeKey("ACT52", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 52", KeyBindType.Action);
             InitializeKey("ACT53", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 53", KeyBindType.Action);
@@ -176,6 +176,22 @@ namespace AnyRPG {
             InitializeKey("ACT68", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 68", KeyBindType.Action);
             InitializeKey("ACT69", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 69", KeyBindType.Action);
             InitializeKey("ACT70", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 70", KeyBindType.Action);
+            InitializeKey("ACT71", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 71", KeyBindType.Action);
+            InitializeKey("ACT72", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 72", KeyBindType.Action);
+
+            InitializeKey("ACT73", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 73", KeyBindType.Action);
+            InitializeKey("ACT74", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 74", KeyBindType.Action);
+            InitializeKey("ACT75", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 75", KeyBindType.Action);
+            InitializeKey("ACT76", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 76", KeyBindType.Action);
+            InitializeKey("ACT77", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 77", KeyBindType.Action);
+            InitializeKey("ACT78", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 78", KeyBindType.Action);
+            InitializeKey("ACT79", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 79", KeyBindType.Action);
+            InitializeKey("ACT80", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 80", KeyBindType.Action);
+            InitializeKey("ACT81", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 81", KeyBindType.Action);
+            InitializeKey("ACT82", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 82", KeyBindType.Action);
+            InitializeKey("ACT83", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 83", KeyBindType.Action);
+            InitializeKey("ACT84", KeyCode.None, KeyCode.None, KeyCode.None, "Action Button 84", KeyBindType.Action);
+
         }
 
         private void InitializeKey(string key, KeyCode keyCode, KeyCode joystickKeyCode, KeyCode mobileKeyCode, string label, KeyBindType keyBindType, bool control = false, bool shift = false) {
@@ -199,7 +215,7 @@ namespace AnyRPG {
         }
 
         public void BindKey(string key, InputDeviceType inputDeviceType, KeyCode keyCode, bool control, bool shift) {
-            Debug.Log("KeyBindManager.BindKey(" + key + ", " + keyCode.ToString() + ")");
+            //Debug.Log("KeyBindManager.BindKey(" + key + ", " + keyCode.ToString() + ")");
 
             // since the key cannot control 2 actions, if it already exists, unbind it from that action
             UnbindKeyCode(keyBinds, inputDeviceType, keyCode, control, shift);
@@ -256,7 +272,7 @@ namespace AnyRPG {
         */
 
         public void BeginKeyBind(string key, InputDeviceType inputDeviceType) {
-            Debug.Log("KeyBindManager.BeginKeyBind(" + key + ", " + inputDeviceType.ToString() + ")");
+            //Debug.Log("KeyBindManager.BeginKeyBind(" + key + ", " + inputDeviceType.ToString() + ")");
             this.bindName = key;
             this.inputDeviceType = inputDeviceType;
             uIManager.keyBindConfirmWindow.OpenWindow();
@@ -276,7 +292,7 @@ namespace AnyRPG {
                 for (int i = 0; i < 20; i++) {
                     if (Input.GetKey("joystick button " + i.ToString())) {
                         //System.Enum.Parse(typeof(KeyCode), "JoystickButton" + i)
-                        Debug.Log("joystick button " + i);
+                        //Debug.Log("joystick button " + i);
                         BindKey(bindName, inputDeviceType, (KeyCode)System.Enum.Parse(typeof(KeyCode), "JoystickButton" + i), false, false);
                         return;
                     }
@@ -286,7 +302,8 @@ namespace AnyRPG {
         }
 
         public void CancelKeyBind() {
-            Debug.Log("KeyBindManager.CancelKeyBind()");
+            //Debug.Log("KeyBindManager.CancelKeyBind()");
+
             uIManager.keyBindConfirmWindow.CloseWindow();
             bindName = string.Empty;
         }

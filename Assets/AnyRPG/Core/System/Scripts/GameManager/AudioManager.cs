@@ -207,7 +207,7 @@ namespace AnyRPG {
         }
 
         public void PlayAmbient(AudioClip audioClip) {
-            Debug.Log("AudioManager.PlayAmbient(" + (audioClip == null ? "null" : audioClip.name) + ")");
+            //Debug.Log($"AudioManager.PlayAmbient({(audioClip == null ? "null" : audioClip.name)})");
 
             if (currentAmbientAudioSource.clip == audioClip && ambientPaused == true) {
                 UnPauseAmbient();

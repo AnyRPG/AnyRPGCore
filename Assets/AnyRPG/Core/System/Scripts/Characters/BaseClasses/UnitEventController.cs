@@ -188,6 +188,7 @@ namespace AnyRPG {
         public event System.Action OnSaveDataUpdated = delegate { };
         public event System.Action OnNameChangeFail = delegate { };
         public event System.Action<int> OnSetGroupId = delegate { };
+        public event System.Action<int, string> OnSetGuildId = delegate { };
 
         //public event System.Action<BaseAbilityProperties, Interactable> OnTargetInAbilityRangeFail = delegate { };
 
@@ -230,7 +231,7 @@ namespace AnyRPG {
 
         /*
         public void NotifyOnMessageFeedMessage(string message) {
-            Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnMessageFeedMessage({message})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnMessageFeedMessage({message})");
 
             OnMessageFeedMessage(unitController, message);
         }
@@ -1024,6 +1025,10 @@ namespace AnyRPG {
 
         public void NotifyOnSetGroupId(int groupId) {
             OnSetGroupId(groupId);
+        }
+
+        public void NotifyOnSetGuildId(int guildId, string guildName) {
+            OnSetGuildId(guildId, guildName);
         }
 
         #endregion

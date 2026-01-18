@@ -107,7 +107,7 @@ namespace AnyRPG {
                     postageCurrencyAmount += systemConfigurationManager.PostageCurrencyAmountPerAttachment;
                 }
             }
-            currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, postageCurrencyAmount, "Postage: ");
+            currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, postageCurrencyAmount, "Postage:");
         }
 
         public void CancelAction() {

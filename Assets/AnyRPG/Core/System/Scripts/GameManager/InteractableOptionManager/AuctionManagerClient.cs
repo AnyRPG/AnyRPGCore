@@ -59,21 +59,21 @@ namespace AnyRPG {
             //Debug.Log($"AuctionManagerClient.SetAuctionItems(count: {auctionItemListResponse.AuctionItems.Count})");
 
             auctionItems.Clear();
-            foreach (AuctionItemSearchResult auctionItem in auctionItemListResponse.AuctionItems) {
-                auctionItems.Add(auctionItem.AuctionItemId, auctionItem);
-            }
             systemItemManager.LoadItemInstanceListSaveData(auctionItemListResponse.ItemInstanceListSaveData);
+            foreach (AuctionItemSerializedSearchResult auctionItem in auctionItemListResponse.AuctionItems) {
+                auctionItems.Add(auctionItem.AuctionItemId, new AuctionItemSearchResult(auctionItem, systemItemManager));
+            }
             OnSetAuctionItems();
         }
 
         public void SetCancelAuctionItem(AuctionItemSearchResult auctionItem) {
-            Debug.Log($"AuctionManagerClient.SetCancelAuctionItem(auctionItemId: {auctionItem.AuctionItemId})");
+            //Debug.Log($"AuctionManagerClient.SetCancelAuctionItem(auctionItemId: {auctionItem.AuctionItemId})");
 
             cancelAuctionItem = auctionItem;
         }
 
         public void SetBuyAuctionItem(AuctionItemSearchResult auctionItem) {
-            Debug.Log($"AuctionManagerClient.SetBuyAuctionItem(auctionItemId: {auctionItem.AuctionItemId})");
+            //Debug.Log($"AuctionManagerClient.SetBuyAuctionItem(auctionItemId: {auctionItem.AuctionItemId})");
 
             buyAuctionItem = auctionItem;
         }

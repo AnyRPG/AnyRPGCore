@@ -13,7 +13,7 @@ namespace AnyRPG {
         }
 
         public override bool Use(UnitController sourceUnitController) {
-            Debug.Log($"{ResourceName}.InstantiatedPowerResourcePotion.Use({sourceUnitController.gameObject.name})");
+            //Debug.Log($"{ResourceName}.InstantiatedPowerResourcePotion.Use({sourceUnitController.gameObject.name})");
 
             int fullcount = 0;
             foreach (ResourceAmountNode resourceAmountNode in powerResourcePotion.HealEffect.ResourceAmounts) {

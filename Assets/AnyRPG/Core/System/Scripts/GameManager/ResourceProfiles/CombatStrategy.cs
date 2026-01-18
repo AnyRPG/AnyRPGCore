@@ -80,7 +80,7 @@ namespace AnyRPG {
                                 return baseAbility;
                             }
                         } else {
-                            Debug.Log("CombatStrategy.GetValidAttackAbility(): ABILITY NOT KNOWN: " + baseAbility.DisplayName);
+                            Debug.LogWarning($"CombatStrategy.GetValidAttackAbility(): ABILITY NOT KNOWN: {baseAbility.ResourceName}");
                         }
                     }
 
@@ -113,7 +113,7 @@ namespace AnyRPG {
                         if (sourceCharacter.AbilityManager.HasAbility(baseAbility)) {
                             returnList.Add(baseAbility);
                         } else {
-                            Debug.Log("CombatStrategy.GetValidAttackAbility(): ABILITY NOT KNOWN: " + baseAbility.DisplayName);
+                            Debug.LogWarning($"CombatStrategy.GetValidAttackAbility(): ABILITY NOT KNOWN: {baseAbility.DisplayName}");
                         }
                     }
                 }

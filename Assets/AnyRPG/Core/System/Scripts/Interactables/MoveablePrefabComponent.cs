@@ -52,7 +52,7 @@ namespace AnyRPG {
             // FIX ME - SHOULD THIS COMPONENT JUST GET REMOVED COMPLETELY ?
             /*
             if (interactable.PrefabProfile == null) {
-                Debug.Log("AnimatedObject.Interact(): prefabprofile was null");
+                //Debug.Log("AnimatedObject.Interact(): prefabprofile was null");
                 return false;
             }
             */

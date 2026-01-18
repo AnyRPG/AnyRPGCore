@@ -17,7 +17,7 @@ namespace AnyRPG.EditorTools {
                 UnityEngine.Object o = AssetDatabase.LoadMainAssetAtPath(prefab);
 
                 if (o == null) {
-                    Debug.Log("prefab " + prefab + " null?");
+                    Debug.LogWarning($"prefab {prefab} null?");
                     continue;
                 }
 
@@ -30,7 +30,7 @@ namespace AnyRPG.EditorTools {
                     GameObject.DestroyImmediate(go);
 
                 } catch {
-                    Debug.Log("For some reason, prefab " + prefab + " won't cast to GameObject");
+                    Debug.LogWarning($"For some reason, prefab {prefab} won't cast to GameObject");
 
                 }
             }

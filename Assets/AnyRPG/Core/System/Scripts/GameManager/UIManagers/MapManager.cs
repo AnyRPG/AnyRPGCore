@@ -74,7 +74,7 @@ namespace AnyRPG {
 
         /*
         public void RenderMapFromCamera() {
-            Debug.Log("MapManager.RenderMapFromCamera()");
+            //Debug.Log("MapManager.RenderMapFromCamera()");
             renderTexture = new RenderTexture((int)levelManager.SceneBounds.size.x, (int)levelManager.SceneBounds.size.z, 16, RenderTextureFormat.ARGB32);
             renderTexture.Create();
             cameraManager.MainMapCamera.Render();

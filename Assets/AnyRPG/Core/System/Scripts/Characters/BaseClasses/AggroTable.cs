@@ -50,7 +50,7 @@ namespace AnyRPG {
                 topNode = aggroNodes[0];
                 if (threatLocked) {
                     if (lockedNode == null) {
-                        Debug.Log("AggroTable.TopAgroNode.Get() about to assign null locked node");
+                        Debug.LogWarning("AggroTable.TopAgroNode.Get() about to assign null locked node");
                     }
                     topNode = lockedNode;
                 } else {

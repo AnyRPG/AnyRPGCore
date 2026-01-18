@@ -109,7 +109,7 @@ namespace AnyRPG {
                         if (buyBackButton == false) {
                             currencyBarController.UpdateCurrencyAmount(vendorItem.Item.Currency, vendorItem.BuyPrice(playerManager.UnitController));
                         } else {
-                            currencyBarController.UpdateCurrencyAmount(vendorItem.Item.GetSellPrice(vendorItem.InstantiatedItem, playerManager.UnitController).Key, vendorItem.Item.GetSellPrice(vendorItem.InstantiatedItem, playerManager.UnitController).Value, "Buy Back Price: ");
+                            currencyBarController.UpdateCurrencyAmount(vendorItem.Item.GetSellPrice(vendorItem.InstantiatedItem, playerManager.UnitController).Key, vendorItem.Item.GetSellPrice(vendorItem.InstantiatedItem, playerManager.UnitController).Value, "Buy Back Price:");
                         }
                     }
                 } else {
