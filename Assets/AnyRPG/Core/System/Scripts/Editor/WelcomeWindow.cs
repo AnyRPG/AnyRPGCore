@@ -54,7 +54,7 @@ namespace AnyRPG {
         private const string contentDemoGameScenePath = "/AnyRPG/Engine/Games/ContentDemo/Scenes/Game/ContentDemoGame/ContentDemoGame.unity";
         private const string featuresDemoGameScenePath = "/AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity";
         private const string zeroConfigModeGameScenePath = "/AnyRPG/Core/Games/EmptyGame/Scenes/EmptyGame/EmptyGame.unity";
-        private const string mmoDemoGameScenePath = "/AnyRPG/Network/Fishnet/Games/AnyMMODemo/Scenes/AnyMMODemo/AnyMMODemo.unity";
+        private const string mmoDemoGameScenePath = "/AnyRPG/Network/FishNet/Games/AnyMMODemo/Scenes/AnyMMODemo/AnyMMODemo.unity";
 
         public static Texture2D welcomeBanner = null;
 
