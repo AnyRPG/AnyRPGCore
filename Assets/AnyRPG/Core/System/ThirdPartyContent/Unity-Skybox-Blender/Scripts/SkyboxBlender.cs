@@ -8,8 +8,8 @@ namespace AnyRPG {
     [ExecuteInEditMode]
     public class SkyboxBlender : MonoBehaviour {
 
-        [SerializeField] public enum BlendMode { Linear, Smoothstep, Maximum, Add, Substract, Multiply }
-        [SerializeField] public enum ProbeResolution { _16, _32, _64, _128, _256, _512, _1024, _2048 }
+        public enum BlendMode { Linear, Smoothstep, Maximum, Add, Substract, Multiply }
+        public enum ProbeResolution { _16, _32, _64, _128, _256, _512, _1024, _2048 }
 
         //[Header("Input Skyboxes")]
         [SerializeField] public Material skyBox1;
