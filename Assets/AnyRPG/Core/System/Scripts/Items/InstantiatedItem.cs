@@ -12,7 +12,7 @@ namespace AnyRPG {
     /// </summary>
     public class InstantiatedItem : ConfiguredClass, IMoveable, IDescribable, IUseable {
 
-        protected int instanceId;
+        protected long instanceId;
         protected Item item;
         protected ItemQuality itemQuality;
         protected string displayName = string.Empty;
@@ -26,7 +26,7 @@ namespace AnyRPG {
         protected UIManager uIManager = null;
         protected MessageFeedManager messageFeedManager = null;
 
-        public int InstanceId { get => instanceId; set => instanceId = value; }
+        public long InstanceId { get => instanceId; set => instanceId = value; }
         public Item Item { get => item; set => item = value; }
         public ItemQuality ItemQuality {
             get {
@@ -62,7 +62,7 @@ namespace AnyRPG {
         public virtual bool RequireStealth { get => false; }
         public bool AlwaysDisplayCount { get => true; }
 
-        public InstantiatedItem(SystemGameManager systemGameManager, int instanceId, Item item, ItemQuality itemQuality) {
+        public InstantiatedItem(SystemGameManager systemGameManager, long instanceId, Item item, ItemQuality itemQuality) {
             this.instanceId = instanceId;
             this.item = item;
             //if (itemQuality == null) {

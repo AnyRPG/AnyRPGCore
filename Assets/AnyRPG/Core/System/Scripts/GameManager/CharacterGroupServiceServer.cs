@@ -84,13 +84,13 @@ namespace AnyRPG {
             characterGroupMemberLookup.Add(characterId, characterGroupId);
             unitController?.CharacterGroupManager.SetGroupId(characterGroup.characterGroupId);
             int accountId = playerManagerServer.GetAccountIdFromUnitController(unitController);
-            if (accountId != 0) {
+            if (accountId != -1) {
                 networkManagerServer.AdvertiseCharacterGroup(accountId, new CharacterGroupNetworkData(characterGroup));
             }
             foreach (CharacterGroupMemberData _characterGroupMemberData in characterGroup.MemberList[UnitControllerMode.Player].Values) {
                 // get account id from player id, zero means the player is logged out
                 int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(_characterGroupMemberData.CharacterSummaryData.CharacterId);
-                if (memberAccountId == 0) {
+                if (memberAccountId == -1) {
                     continue;
                 }
                 // check if the player is disconnected
@@ -127,7 +127,7 @@ namespace AnyRPG {
             foreach (CharacterGroupMemberData characterGroupMemberData in characterGroup.MemberList[UnitControllerMode.Player].Values) {
                 // get account id from player id, zero means the player is logged out
                 int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(characterGroupMemberData.CharacterSummaryData.CharacterId);
-                if (memberAccountId == 0) {
+                if (memberAccountId == -1) {
                     continue;
                 }
                 // check if the player is disconnected
@@ -137,7 +137,7 @@ namespace AnyRPG {
                 networkManagerServer.AdvertiseRemoveCharacterFromGroup(memberAccountId, characterId, characterGroupId);
             }
             int removedAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(characterId);
-            if (removedAccountId != 0) {
+            if (removedAccountId != -1) {
                 networkManagerServer.AdvertiseRemoveCharacterFromGroup(removedAccountId, characterId, characterGroupId);
             }
 
@@ -155,7 +155,7 @@ namespace AnyRPG {
 
         public void DisbandGroupByAccountId(int accountId) {
             int leaderPlayerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (leaderPlayerCharacterId == 0) {
+            if (leaderPlayerCharacterId == -1) {
                 //Debug.Log($"CharacterGroupService.DisbandGroup: player character not found for accountId {accountId}");
                 return;
             }
@@ -182,7 +182,7 @@ namespace AnyRPG {
                 return;
             }
             int leaderPlayerCharacterid = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (leaderPlayerCharacterid == 0) {
+            if (leaderPlayerCharacterid == -1) {
                 //Debug.Log($"CharacterGroupService.DisbandGroup: player character not found for accountId {accountId}");
                 return;
             }
@@ -203,7 +203,7 @@ namespace AnyRPG {
 
                 // get account id from player id, zero means the player is logged out
                 int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(characterGroupMemberData.CharacterSummaryData.CharacterId);
-                if (memberAccountId == 0) {
+                if (memberAccountId == -1) {
                     continue;
                 }
                 // check if the player is disconnected
@@ -239,7 +239,7 @@ namespace AnyRPG {
                 return;
             }
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (playerCharacterId == 0) {
+            if (playerCharacterId == -1) {
                 Debug.LogWarning($"CharacterGroupService.AcceptCharacterGroupInvite({accountId}, {characterGroupId}) player character not found for account");
                 return;
             }
@@ -266,7 +266,7 @@ namespace AnyRPG {
             //Debug.Log($"CharacterGroupService.DeclineCharacterGroupInvite({accountId})");
 
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (playerCharacterId == 0) {
+            if (playerCharacterId == -1) {
                 Debug.LogWarning($"CharacterGroupService.DeclineCharacterGroupInvite({accountId}) player character not found for accountId");
                 return;
             }
@@ -292,7 +292,7 @@ namespace AnyRPG {
             //Debug.Log($"CharacterGroupService.RequestLeaveCharacterGroup({accountId})");
 
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (playerCharacterId == 0) {
+            if (playerCharacterId == -1) {
                 //Debug.LogWarning($"CharacterGroupService.RequestLeaveCharacterGroup: player character not found for accountId {accountId}");
                 return;
             }
@@ -301,14 +301,14 @@ namespace AnyRPG {
 
         public void RequestRemoveCharacterFromGroup(int leaderAccountId, string playerName) {
             int inviteCharacterId = playerCharacterService.GetPlayerIdFromName(playerName);
-            if (inviteCharacterId != 0) {
+            if (inviteCharacterId != -1) {
                 RequestRemoveCharacterFromGroup(leaderAccountId, inviteCharacterId);
             }
         }
 
         public void RequestRemoveCharacterFromGroup(int actingAccountId, int removedCharacterId) {
             int actingPlayerCharacterId = playerManagerServer.GetPlayerCharacterId(actingAccountId);
-            if (actingPlayerCharacterId == 0) {
+            if (actingPlayerCharacterId == -1) {
                 //Debug.LogWarning($"CharacterGroupServiceServer.RequestRemoveCharacterFromGroup: player character not found for accountId {accountId}");
                 return;
             }
@@ -338,7 +338,7 @@ namespace AnyRPG {
 
         public void RequestInviteCharacterToGroup(int leaderAccountId, string playerName) {
             int inviteCharacterId = playerCharacterService.GetPlayerIdFromName(playerName);
-            if (inviteCharacterId != 0) {
+            if (inviteCharacterId != -1) {
                 RequestInviteCharacterToGroup(leaderAccountId, inviteCharacterId);
             }
         }
@@ -347,7 +347,7 @@ namespace AnyRPG {
             //Debug.Log($"CharacterGroupService.RequestInviteCharacterToGroup({leaderAccountId}, {invitedCharacterId})");
 
             int actingPlayerCharacterId = playerManagerServer.GetPlayerCharacterId(actingAccountId);
-            if (actingPlayerCharacterId == 0) {
+            if (actingPlayerCharacterId == -1) {
                 Debug.LogWarning($"CharacterGroupService.RequestInviteCharacterToGroup: player character not found for leader accountId {actingAccountId}");
                 return;
             }
@@ -420,7 +420,7 @@ namespace AnyRPG {
             foreach (CharacterGroupMemberData characterSummaryData in characterGroup.CharacterIdList[UnitControllerMode.Player].Values) {
                 // get account id from player id, zero means the player is logged out
                 int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(characterSummaryData.CharacterId);
-                if (memberAccountId == 0) {
+                if (memberAccountId == -1) {
                     continue;
                 }
                 // check if the player is disconnected
@@ -439,15 +439,15 @@ namespace AnyRPG {
 
         public void RequestPromoteCharacter(int leaderAccountId, string playerName) {
             int inviteCharacterId = playerCharacterService.GetPlayerIdFromName(playerName);
-            if (inviteCharacterId != 0) {
+            if (inviteCharacterId != -1) {
                 RequestPromoteCharacter(leaderAccountId, inviteCharacterId);
             }
         }
 
-        public void RequestPromoteCharacter(int requestingAccountId, int newLeaderCharacterId) {
+        public void RequestPromoteCharacter(int requestingAccountId, int promotedCharacterId) {
             
             int requestingPlayerCharacterId = playerManagerServer.GetPlayerCharacterId(requestingAccountId);
-            if (requestingPlayerCharacterId == 0) {
+            if (requestingPlayerCharacterId == -1) {
                 Debug.LogWarning($"CharacterGroupService.RequestInviteCharacterToGroup: player character not found for leader accountId {requestingAccountId}");
                 return;
             }
@@ -457,12 +457,12 @@ namespace AnyRPG {
             }
 
             int characterGroupId = characterGroupMemberLookup[requestingPlayerCharacterId];
-            PromoteCharacter(characterGroupId, requestingPlayerCharacterId, newLeaderCharacterId);
+            PromoteCharacter(characterGroupId, requestingPlayerCharacterId, promotedCharacterId);
         }
 
         public void RequestDemoteCharacter(int actingAccountId, string playerName) {
             int demoteCharacterId = playerCharacterService.GetPlayerIdFromName(playerName);
-            if (demoteCharacterId != 0) {
+            if (demoteCharacterId != -1) {
                 RequestDemoteCharacter(actingAccountId, demoteCharacterId);
             }
         }
@@ -470,7 +470,7 @@ namespace AnyRPG {
         public void RequestDemoteCharacter(int requestingAccountId, int demotedCharacterId) {
 
             int requestingPlayerCharacterId = playerManagerServer.GetPlayerCharacterId(requestingAccountId);
-            if (requestingPlayerCharacterId == 0) {
+            if (requestingPlayerCharacterId == -1) {
                 Debug.LogWarning($"CharacterGroupService.RequestInviteCharacterToGroup: player character not found for leader accountId {requestingAccountId}");
                 return;
             }
@@ -499,7 +499,7 @@ namespace AnyRPG {
             foreach (CharacterGroupMemberData characterGroupMemberData in characterGroup.MemberList[UnitControllerMode.Player].Values) {
                 // get account id from player id, zero means the player is logged out
                 int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(characterGroupMemberData.CharacterSummaryData.CharacterId);
-                if (memberAccountId == 0) {
+                if (memberAccountId == -1) {
                     continue;
                 }
                 // check if the player is disconnected
@@ -529,7 +529,7 @@ namespace AnyRPG {
             foreach (CharacterGroupMemberData characterGroupMemberData in characterGroup.MemberList[UnitControllerMode.Player].Values) {
                 // get account id from player id, zero means the player is logged out
                 int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(characterGroupMemberData.CharacterSummaryData.CharacterId);
-                if (memberAccountId == 0) {
+                if (memberAccountId == -1) {
                     continue;
                 }
                 // check if the player is disconnected
@@ -601,19 +601,24 @@ namespace AnyRPG {
         private void ProcessPromoteCharacter(CharacterGroup characterGroup, CharacterGroupMemberData promotedCharacterData, CharacterGroupMemberData actingCharacterData) {
             string promotedCharacterName = playerCharacterService.GetPlayerNameFromId(promotedCharacterData.CharacterSummaryData.CharacterId);
 
+            CharacterGroupMemberNetworkData promotedCharacterNetworkData = new CharacterGroupMemberNetworkData(promotedCharacterData);
+            CharacterGroupMemberNetworkData actingCharacterNetworkData = null;
+            if (actingCharacterData != null) {
+                actingCharacterNetworkData = new CharacterGroupMemberNetworkData(actingCharacterData);
+            }
             foreach (CharacterGroupMemberData characterGroupMemberData in characterGroup.MemberList[UnitControllerMode.Player].Values) {
                 // get account id from player id
                 int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(characterGroupMemberData.CharacterSummaryData.CharacterId);
-                if (memberAccountId == 0) {
+                if (memberAccountId == -1) {
                     continue;
                 }
                 // check if the player is disconnected
                 if (characterGroupMemberData.CharacterSummaryData.IsOnline == false) {
                     continue;
                 }
-                networkManagerServer.AdvertiseGroupMemberStatusChange(memberAccountId, characterGroup.characterGroupId, promotedCharacterData.CharacterSummaryData.CharacterId, new CharacterGroupMemberNetworkData(promotedCharacterData));
+                networkManagerServer.AdvertiseGroupMemberStatusChange(memberAccountId, characterGroup.characterGroupId, promotedCharacterData.CharacterSummaryData.CharacterId, promotedCharacterNetworkData);
                 if (actingCharacterData != null) {
-                    networkManagerServer.AdvertiseGroupMemberStatusChange(memberAccountId, characterGroup.characterGroupId, actingCharacterData.CharacterSummaryData.CharacterId, new CharacterGroupMemberNetworkData(actingCharacterData));
+                    networkManagerServer.AdvertiseGroupMemberStatusChange(memberAccountId, characterGroup.characterGroupId, actingCharacterData.CharacterSummaryData.CharacterId, actingCharacterNetworkData);
                 }
 
                 if (promotedCharacterData.CharacterSummaryData.CharacterId == characterGroupMemberData.CharacterSummaryData.CharacterId) {
@@ -656,7 +661,7 @@ namespace AnyRPG {
             foreach (CharacterGroupMemberData characterGroupMemberData in characterGroup.MemberList[UnitControllerMode.Player].Values) {
                 // get account id from player id
                 int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(characterGroupMemberData.CharacterSummaryData.CharacterId);
-                if (memberAccountId == 0) {
+                if (memberAccountId == -1) {
                     continue;
                 }
                 // check if the player is disconnected
@@ -694,7 +699,7 @@ namespace AnyRPG {
             foreach (CharacterSummaryData characterSummaryData in characterGroup.CharacterIdList[UnitControllerMode.Player].Values) {
                 // get account id from player id, zero means the player is logged out
                 int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(characterSummaryData.CharacterId);
-                if (memberAccountId == 0) {
+                if (memberAccountId == -1) {
                     continue;
                 }
                 // check if the player is disconnected

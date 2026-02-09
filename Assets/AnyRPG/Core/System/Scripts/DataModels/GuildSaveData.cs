@@ -17,9 +17,9 @@ namespace AnyRPG {
         }
 
         public GuildSaveData(Guild guild) {
-            GuildId = guild.guildId;
-            GuildName = guild.guildName;
-            LeaderPlayerCharacterId = guild.leaderPlayerCharacterId;
+            GuildId = guild.GuildId;
+            GuildName = guild.GuildName;
+            LeaderPlayerCharacterId = guild.LeaderPlayerCharacterId;
             foreach (KeyValuePair<int, GuildMemberData> member in guild.MemberList) {
                 MemberList.Add(new GuildMemberSaveData(member.Value));
             }

@@ -8,7 +8,7 @@ namespace AnyRPG {
 
         private RecipeItem recipeItem = null;
 
-        public InstantiatedRecipeItem(SystemGameManager systemGameManager, int instanceId, RecipeItem recipeItem, ItemQuality itemQuality) : base(systemGameManager, instanceId, recipeItem, itemQuality) {
+        public InstantiatedRecipeItem(SystemGameManager systemGameManager, long instanceId, RecipeItem recipeItem, ItemQuality itemQuality) : base(systemGameManager, instanceId, recipeItem, itemQuality) {
             this.recipeItem = recipeItem;
         }
 

@@ -38,7 +38,7 @@ namespace AnyRPG
             systemGameManager = GameObject.FindAnyObjectByType<SystemGameManager>();
 
             //Listen for authentication result
-            systemGameManager.NetworkManagerServer.OnAuthenticationResult += HandleAuthenticationResult;
+            systemGameManager.AuthenticationService.OnAuthenticationResult += HandleAuthenticationResult;
 
             //Listen for connection state change as client.
             base.NetworkManager.ClientManager.OnClientConnectionState += ClientManager_OnClientConnectionState;
@@ -104,7 +104,7 @@ namespace AnyRPG
                 return;
             }
 
-            systemGameManager.NetworkManagerServer.GetLoginToken(conn.ClientId, pb.Username, pb.Password);
+            systemGameManager.AuthenticationService.GetLoginToken(conn.ClientId, pb.Username, pb.Password);
         }
 
         public void HandleAuthenticationResult(int clientId, int accountId, bool clientPassed, bool authenticationPassed) {

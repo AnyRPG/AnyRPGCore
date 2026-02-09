@@ -247,7 +247,7 @@ namespace AnyRPG {
             }
         }
 
-        private void HandleBuyItemFromVendor(VendorItem vendorItem) {
+        private void HandleBuyItemFromVendor(VendorItem vendorItem, int componentIndex, int collectionIndex, int itemIndex) {
 
             if (systemConfigurationManager.VendorAudioClip != null) {
                 audioManager.PlayEffect(systemConfigurationManager.VendorAudioClip);

@@ -55,7 +55,7 @@ namespace AnyRPG {
             networkManagerClient.RequestListAuctionItems(auctionComponent.Interactable, componentIndex, listAuctionItemRequest);
         }
 
-        public void SetAuctionItems(AuctionItemListResponse auctionItemListResponse) {
+        public void SetAuctionItems(AuctionItemSearchListResult auctionItemListResponse) {
             //Debug.Log($"AuctionManagerClient.SetAuctionItems(count: {auctionItemListResponse.AuctionItems.Count})");
 
             auctionItems.Clear();
@@ -108,11 +108,11 @@ namespace AnyRPG {
             messageFeedManager.WriteMessage("Your auction was listed");
         }
 
-        public void SetListItem(List<int> itemIdList, int amount) {
+        public void SetListItem(List<long> itemInstanceIdList, int amount) {
             //Debug.Log($"AuctionManagerClient.SetListItem(itemIdList.Count: {itemIdList.Count}, amount: {amount})");
 
             listAuctionItemRequest = new ListAuctionItemRequest() {
-                ItemIds = itemIdList,
+                ItemInstanceIds = itemInstanceIdList,
                 CurrencyAmount = amount
             };
         }

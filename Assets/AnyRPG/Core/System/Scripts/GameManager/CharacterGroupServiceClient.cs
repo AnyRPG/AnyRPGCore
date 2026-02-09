@@ -191,6 +191,8 @@ namespace AnyRPG {
         }
 
         public void ProcessPromoteGroupLeader(int characterGroupId, int newLeaderCharacterId) {
+            //Debug.Log($"CharacterGroupService.ProcessPromoteGroupLeader(characterGroupId: {characterGroupId}, newLeaderCharacterId: {newLeaderCharacterId})");
+
             if (currentCharacterGroup == null || currentCharacterGroup.characterGroupId != characterGroupId) {
                 //Debug.Log("CharacterGroupService.ProcessPromoteGroupLeader: character group not found");
                 return;
@@ -231,9 +233,19 @@ namespace AnyRPG {
                 return;
             }
             if (currentCharacterGroup.MemberList[UnitControllerMode.Player].ContainsKey(playerCharacterId)) {
-                currentCharacterGroup.MemberList[UnitControllerMode.Player][playerCharacterId] = new CharacterGroupMemberData(characterGroupMemberNetworkData, systemDataFactory);
+                CharacterGroupMemberData characterGroupMemberData = new CharacterGroupMemberData(characterGroupMemberNetworkData, systemDataFactory);
+                bool promotingLeader = false;
+                if (characterGroupMemberData.Rank == CharacterGroupRank.Leader && currentCharacterGroup.MemberList[UnitControllerMode.Player][playerCharacterId].Rank != CharacterGroupRank.Leader) {
+                    currentCharacterGroup.leaderPlayerCharacterId = characterGroupMemberData.CharacterSummaryData.CharacterId;
+                    promotingLeader = true;
+                }
+                currentCharacterGroup.MemberList[UnitControllerMode.Player][playerCharacterId] = characterGroupMemberData;
+                if (promotingLeader == true) {
+                    OnPromoteGroupLeader();
+                } else {
+                    OnCharacterGroupMemberStatusChange();
+                }
             }
-            OnCharacterGroupMemberStatusChange();
         }
 
         public void AdvertiseGroupMessage(int characterGroupId, string messageText) {

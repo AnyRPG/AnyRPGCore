@@ -5,10 +5,10 @@ namespace AnyRPG {
 
     [Serializable]
     public class PlayerCharacterListResponse {
-        public List<PlayerCharacterData> playerCharacters;
+        public List<PlayerCharacterSerializedData> playerCharacters;
 
         public PlayerCharacterListResponse() {
-            playerCharacters = new List<PlayerCharacterData>();
+            playerCharacters = new List<PlayerCharacterSerializedData>();
         }
     }
 

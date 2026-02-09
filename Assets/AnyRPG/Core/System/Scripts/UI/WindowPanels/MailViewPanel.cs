@@ -75,9 +75,12 @@ namespace AnyRPG {
             foreach (MailViewAttachmentButton attachmentButton in attachmentButtons) {
                 List<InstantiatedItem> items = new List<InstantiatedItem>();
                 if (mailMessage.AttachmentSlots.Count > i) {
-                    foreach (int itemId in mailMessage.AttachmentSlots[i].ItemIds) {
-                        hasAttachment = true;
-                        items.Add(systemItemManager.GetExistingInstantiatedItem(itemId));
+                    foreach (long itemInstanceId in mailMessage.AttachmentSlots[i].ItemInstanceIds) {
+                        InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemInstanceId);
+                        if (instantiatedItem != null) {
+                            hasAttachment = true;
+                            items.Add(instantiatedItem);
+                        }
                     }
                 }
                 attachmentButton.AddItemsFromMailMessage(i, items, mailMessage);

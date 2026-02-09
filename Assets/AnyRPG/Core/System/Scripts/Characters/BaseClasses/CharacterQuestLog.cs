@@ -383,13 +383,13 @@ namespace AnyRPG {
             ClearAchievementLog();
         }
 
-        public void InteractWithQuestStartItem(Quest quest, int slotIndex, int instanceId) {
+        public void InteractWithQuestStartItem(Quest quest, int slotIndex, long itemInstanceId) {
             if (uIManager.questGiverWindow.IsOpen) {
                 // safety to prevent deletion
                 return;
             }
             if (unitController.CharacterInventoryManager.InventorySlots.Count > slotIndex
-                && unitController.CharacterInventoryManager.InventorySlots[slotIndex].InstantiatedItem.InstanceId == instanceId) {
+                && unitController.CharacterInventoryManager.InventorySlots[slotIndex].InstantiatedItem.InstanceId == itemInstanceId) {
                 ShowQuestGiverDescription(quest, unitController.CharacterInventoryManager.InventorySlots[slotIndex].InstantiatedItem as InstantiatedQuestStartItem);
             }
 

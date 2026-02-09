@@ -36,7 +36,6 @@ namespace AnyRPG {
         public string CurrentScene = string.Empty;
 
         public int GamepadActionButtonSet;
-        public int ClientItemIdCount = 1;
 
         public List<ResourcePowerSaveData> ResourcePowerSaveData = new List<ResourcePowerSaveData>();
         public List<SwappableMeshSaveData> SwappableMeshSaveData = new List<SwappableMeshSaveData>();
@@ -50,7 +49,7 @@ namespace AnyRPG {
         public List<SkillSaveData> SkillSaveData = new List<SkillSaveData>();
         public List<RecipeSaveData> RecipeSaveData = new List<RecipeSaveData>();
         public List<ReputationSaveData> ReputationSaveData = new List<ReputationSaveData>();
-        public List<EquipmentSaveData> EquipmentSaveData = new List<EquipmentSaveData>();
+        public List<EquipmentInventorySlotSaveData> EquipmentSaveData = new List<EquipmentInventorySlotSaveData>();
         public List<CurrencySaveData> CurrencySaveData = new List<CurrencySaveData>();
         public List<StatusEffectSaveData> StatusEffectSaveData = new List<StatusEffectSaveData>();
         public List<PetSaveData> PetSaveData = new List<PetSaveData>();
@@ -153,7 +152,7 @@ namespace AnyRPG {
     [Serializable]
     public class InventorySlotSaveData {
 
-        public List<int> ItemInstanceIds = new List<int>();
+        public List<long> ItemInstanceIds = new List<long>();
     }
 
     [Serializable]
@@ -167,7 +166,8 @@ namespace AnyRPG {
     [Serializable]
     public struct EquippedBagSaveData {
 
-        public int ItemInstanceId;
+        public bool HasItem;
+        public long ItemInstanceId;
     }
 
     [Serializable]
@@ -185,9 +185,9 @@ namespace AnyRPG {
     }
 
     [Serializable]
-    public class EquipmentSaveData {
-
-        public int ItemInstanceId;
+    public class EquipmentInventorySlotSaveData {
+        public bool HasItem;
+        public long ItemInstanceId;
     }
 
     [Serializable]

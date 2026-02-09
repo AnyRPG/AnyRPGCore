@@ -140,12 +140,16 @@ namespace AnyRPG {
             //Debug.Log($"SaveManager.LoadSaveDataFromString({fileContents})");
 
             CharacterSaveData characterSaveData = JsonUtility.FromJson<CharacterSaveData>(fileContents);
+            if (characterSaveData == null) {
+                return null;
+            }
+
             CharacterSaveDataPostLoad(characterSaveData);
 
             return characterSaveData;
         }
 
-        private void CharacterSaveDataPostLoad(CharacterSaveData characterSaveData) {
+        public void CharacterSaveDataPostLoad(CharacterSaveData characterSaveData) {
             // when loaded from file, overrides should always be true because the file may have been saved before these were added
             // disabled because new games create a save file, so if we create a new game, then quit, then load that save file,
             // it will not have the overrides set, and we don't want to override the location and rotation
@@ -229,7 +233,7 @@ namespace AnyRPG {
                 characterSaveData.ReputationSaveData = new List<ReputationSaveData>();
             }
             if (characterSaveData.EquipmentSaveData == null || overWrite) {
-                characterSaveData.EquipmentSaveData = new List<EquipmentSaveData>();
+                characterSaveData.EquipmentSaveData = new List<EquipmentInventorySlotSaveData>();
             }
             if (characterSaveData.CurrencySaveData == null || overWrite) {
                 characterSaveData.CurrencySaveData = new List<CurrencySaveData>();
@@ -288,7 +292,6 @@ namespace AnyRPG {
             SystemEventManager.TriggerEvent("OnSaveGame", new EventParamProperties());
 
             SaveCutsceneData(characterSaveData);
-            SaveItemIdCount(characterSaveData);
             playerManager.UnitController.CharacterSaveManager.SaveGameData();
 
             SaveWindowPositions();
@@ -303,10 +306,6 @@ namespace AnyRPG {
             }
 
             return saveResult;
-        }
-
-        public void SaveItemIdCount(CharacterSaveData saveData) {
-            saveData.ClientItemIdCount = systemItemManager.ClientItemIdCount;
         }
 
         public bool SaveDataFile(PlayerCharacterSaveData playerCharacterSaveData) {
@@ -362,6 +361,7 @@ namespace AnyRPG {
                 InstantiatedBag instantiatedBag = systemItemManager.GetNewInstantiatedItem(systemConfigurationManager.DefaultBackpackItem) as InstantiatedBag;
                 if (instantiatedBag != null) {
                     EquippedBagSaveData saveData = new EquippedBagSaveData();
+                    saveData.HasItem = true;
                     saveData.ItemInstanceId = instantiatedBag.InstanceId;
                     characterSaveData.EquippedBagSaveData.Add(saveData);
                     bagCount++;
@@ -396,9 +396,6 @@ namespace AnyRPG {
                 }
             }
 
-            if (networkManagerServer.ServerModeActive == false) {
-                characterSaveData.ClientItemIdCount = systemItemManager.ClientItemIdCount;
-            }
         }
 
         /*
@@ -524,7 +521,6 @@ namespace AnyRPG {
             playerManager.SpawnPlayerConnection(playerCharacterSaveData.CharacterSaveData);
 
             LoadCutsceneData(playerCharacterSaveData.CharacterSaveData);
-            LoadItemIdData(playerCharacterSaveData.CharacterSaveData);
 
             // testing - moved to UIManager initialization so it works in online mode
             //LoadWindowPositions();
@@ -549,12 +545,6 @@ namespace AnyRPG {
             //levelManager.LoadLevel(characterSaveData.CurrentScene, playerLocation, playerRotation);
             // load the proper level now that everything should be setup
             levelManager.LoadLevel(playerCharacterSaveData.CharacterSaveData.CurrentScene);
-        }
-
-        private void LoadItemIdData(CharacterSaveData saveData) {
-            //Debug.Log("SaveManager.LoadItemIdData()");
-
-            systemItemManager.SetClientItemIdCount(saveData.ClientItemIdCount);
         }
 
         public void ClearSystemManagedSaveData() {

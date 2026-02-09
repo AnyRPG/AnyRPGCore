@@ -50,6 +50,14 @@ namespace AnyRPG {
         protected Dictionary<AbilityAttachmentNode, List<GameObject>> abilityEffectObjects = new Dictionary<AbilityAttachmentNode, List<GameObject>>();
         protected Dictionary<GameObject, AbilityAttachmentNode> abilityEffectObjectLookup = new Dictionary<GameObject, AbilityAttachmentNode>();
 
+        private struct PendingEvent {
+            public float Time;
+            public string FunctionName;
+            public bool Fired;
+        }
+
+        private List<PendingEvent> hitEventCache = new List<PendingEvent>();
+
         // game manager references
         private PlayerManager playerManager = null;
         private CastTargettingManager castTargettingManager = null;
@@ -626,6 +634,21 @@ namespace AnyRPG {
                 speedNormalizedAnimationLength = (1f / (unitController.CharacterStats.GetSpeedModifiers() / 100f)) * animationClip.length;
             }
 
+            // setup event tracking to ensure hit events fire regardless of frame rates / drops / animation compression etc
+            float timeScaleRatio = speedNormalizedAnimationLength / animationClip.length;
+            hitEventCache.Clear();
+            foreach (var evt in animationClip.events) {
+                if (evt.functionName != "Hit") {
+                    continue;
+                }
+                hitEventCache.Add(new PendingEvent {
+                    // Scale the designer's timestamp to match your buffed speed
+                    Time = speedNormalizedAnimationLength - (evt.time * timeScaleRatio),
+                    FunctionName = evt.functionName,
+                    Fired = false
+                });
+            }
+
             unitController.CharacterCombat.SwingTarget = targetUnitController;
             currentAbilityEffectContext = abilityEffectContext;
 
@@ -638,7 +661,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator WaitForAbilityActionToComplete(AbilityProperties baseAbilityProperties, AbilityEffectContext abilityEffectContext, UnitController targetUnitController, float animationLength) {
-            //Debug.Log($"{unitController.gameObject.name}.WaitForAbilityActionToComplete({baseAbilityProperties.ResourceName}, {animationLength})");
+            //Debug.Log($"{unitController.gameObject.name}.WaitForAbilityActionToComplete({baseAbilityProperties.ResourceName}, animationLength: {animationLength})");
             
             float remainingTime = animationLength;
             //Debug.Log($"{gameObject.name}waitforanimation remainingtime: " + remainingTime + "; MyWaitingForHits: " + PerformingAutoAttack + "; PerformingAnimatedAbility: " + performingAnimatedAbility);
@@ -646,6 +669,16 @@ namespace AnyRPG {
                 //Debug.Log($"{gameObject.name}.WaitForAttackToComplete(" + animationLength + "): remainingTime: " + remainingTime + "; PerformingAutoAttack: " + PerformingAutoAttack + "; PerformingAnimatedAbility: " + performingAnimatedAbility + "; animationSpeed: " + animator.GetFloat("AnimationSpeed"));
                 yield return null;
                 remainingTime -= Time.deltaTime;
+                for (int i = 0; i < hitEventCache.Count; i++) {
+                    var e = hitEventCache[i];
+                    if (!e.Fired && remainingTime <= e.Time) {
+                        // Trigger the logic (e.g., Hit 1, then Hit 2)
+                        unitController.CharacterCombat.AttackHitAnimationEvent(abilityEffectContext);
+
+                        e.Fired = true;
+                        hitEventCache[i] = e; // Update the struct in the list
+                    }
+                }
             }
 
             abilityEffectContext.baseAbility.HandleAbilityEndHit(
@@ -1961,7 +1994,6 @@ namespace AnyRPG {
 
             unitController.UnitComponentController.StopEffectSound();
         }
-
 
         public override void InitiateGlobalCooldown(float coolDownToUse = 0f) {
             //Debug.Log($"{gameObject.name}.CharacterAbilitymanager.InitiateGlobalCooldown(" + coolDownToUse + ")");

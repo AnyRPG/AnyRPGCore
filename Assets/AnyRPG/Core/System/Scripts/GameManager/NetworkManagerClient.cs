@@ -113,6 +113,8 @@ namespace AnyRPG {
         }
 
         public void RequestLogout() {
+            //Debug.Log("NetworkManagerClient.RequestLogout()");
+
             isLoggingInOrOut = true;
             networkController.RequestLogout();
         }
@@ -454,7 +456,7 @@ namespace AnyRPG {
             OnSetLobbyGameReadyStatus(gameId, accountId, ready);
         }
 
-        public void AdvertiseLoadSceneClient(string sceneName) {
+        public void AdvertiseUnloadSceneClient() {
             //Debug.Log($"NetworkManagerClient.AdvertiseLoadSceneClient({sceneName})");
 
             levelManager.ProcessBeforeLevelUnload();
@@ -520,7 +522,7 @@ namespace AnyRPG {
             messageLogClient.WriteSystemMessage(message);
         }
 
-        public void SellItemToVendor(Interactable interactable, int componentIndex, int itemInstanceId) {
+        public void SellItemToVendor(Interactable interactable, int componentIndex, long itemInstanceId) {
             networkController.SellVendorItem(interactable, componentIndex, itemInstanceId);
         }
 
@@ -531,7 +533,7 @@ namespace AnyRPG {
         }
 
 
-        public void AdvertiseAddToBuyBackCollection(UnitController sourceUnitController, Interactable interactable, int componentIndex, int instantiatedItemId) {
+        public void AdvertiseAddToBuyBackCollection(UnitController sourceUnitController, Interactable interactable, int componentIndex, long instantiatedItemId) {
             if (systemItemManager.InstantiatedItems.ContainsKey(instantiatedItemId) == false) {
                 return;
             }
@@ -542,20 +544,6 @@ namespace AnyRPG {
 
         }
 
-        public void AdvertiseSellItemToPlayerClient(UnitController sourceUnitController, Interactable interactable, int componentIndex, int collectionIndex, int itemIndex, string resourceName, int remainingQuantity) {
-            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.GetCurrentInteractables(sourceUnitController);
-            if (currentInteractables[componentIndex] is VendorComponent) {
-                VendorComponent vendorComponent = (currentInteractables[componentIndex] as VendorComponent);
-                List<VendorCollection> localVendorCollections = vendorComponent.GetLocalVendorCollections();
-                if (localVendorCollections.Count > collectionIndex && localVendorCollections[collectionIndex].VendorItems.Count > itemIndex) {
-                    VendorItem vendorItem = localVendorCollections[collectionIndex].VendorItems[itemIndex];
-                    if (vendorItem.Item.ResourceName == resourceName) {
-                        vendorComponent.ProcessQuantityNotification(vendorItem, remainingQuantity);
-                    }
-                }
-            }
-        }
-
         public void BuyItemFromVendor(Interactable interactable, int componentIndex, int collectionIndex, int itemIndex, string resourceName) {
             networkController.BuyItemFromVendor(interactable, componentIndex, collectionIndex, itemIndex, resourceName);
         }
@@ -564,10 +552,10 @@ namespace AnyRPG {
             networkController.TakeAllLoot();
         }
 
-        public void AddDroppedLoot(int lootDropId, int itemId) {
+        public void AddDroppedLoot(int lootDropId, long itemInstanceId) {
             //Debug.Log($"NetworkManagerClient.AddDroppedLoot({lootDropId}, {itemId})");
 
-            lootManager.AddNetworkLootDrop(lootDropId, itemId);
+            lootManager.AddNetworkLootDrop(lootDropId, itemInstanceId);
         }
 
         public void AddAvailableDroppedLoot(List<int> lootDropIds) {
@@ -821,12 +809,12 @@ namespace AnyRPG {
             networkController.RequestAcceptTrade();
         }
 
-        public void RequestAddItemsToTradeSlot(int buttonIndex, List<int> itemIdList) {
-            networkController.RequestAddItemsToTradeSlot(buttonIndex, itemIdList);
+        public void RequestAddItemsToTradeSlot(int buttonIndex, List<long> itemInstanceIdList) {
+            networkController.RequestAddItemsToTradeSlot(buttonIndex, itemInstanceIdList);
         }
 
-        public void AdvertiseAddItemsToTargetTradeSlot(int buttonIndex, List<int> itemIdList) {
-            tradeServiceClient.AddItemsToTargetTradeSlot(buttonIndex, itemIdList);
+        public void AdvertiseAddItemsToTargetTradeSlot(int buttonIndex, List<long> itemInstanceIdList) {
+            tradeServiceClient.AddItemsToTargetTradeSlot(buttonIndex, itemInstanceIdList);
         }
 
         public void RequestAddCurrencyToTrade(CurrencyNode currencyNode) {
@@ -871,7 +859,7 @@ namespace AnyRPG {
             networkController.RequestListAuctionItems(interactable, componentIndex, listAuctionItemRequest);
         }
 
-        public void AdvertiseMailMessages(MailMessageListResponse mailMessageListResponse) {
+        public void AdvertiseMailMessages(MailMessageListBundle mailMessageListResponse) {
             mailboxManagerClient.SetMailMessages(mailMessageListResponse);
         }
 
@@ -931,7 +919,7 @@ namespace AnyRPG {
             networkController.RequestSearchAuctions(interactable, componentIndex, searchText, onlyShowOwnAuctions);
         }
 
-        public void AdvertiseAuctionItems(AuctionItemListResponse auctionItemListResponse) {
+        public void AdvertiseAuctionItems(AuctionItemSearchListResult auctionItemListResponse) {
             auctionManagerClient.SetAuctionItems(auctionItemListResponse);
         }
 

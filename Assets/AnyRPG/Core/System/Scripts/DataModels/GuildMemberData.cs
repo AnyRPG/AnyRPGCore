@@ -15,11 +15,17 @@ namespace AnyRPG {
         }
 
         public GuildMemberData(CharacterSummaryData characterSummaryData) {
+            if (characterSummaryData == null) {
+                Debug.LogWarning($"GuildMemberData() characterSummaryData is null!");
+            }
             CharacterSummaryData = characterSummaryData;
             Rank = GuildRank.Member;
         }
 
         public GuildMemberData(CharacterSummaryData characterSummaryData, GuildRank rank) {
+            if (characterSummaryData == null) {
+                Debug.LogWarning($"GuildMemberData() characterSummaryData is null!");
+            }
             CharacterSummaryData = characterSummaryData;
             Rank = rank;
         }

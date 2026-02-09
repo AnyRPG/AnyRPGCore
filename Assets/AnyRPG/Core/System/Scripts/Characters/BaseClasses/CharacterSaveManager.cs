@@ -88,6 +88,10 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnAddPet += HandleAddPet;
                 unitController.UnitEventController.OnSetReputationAmount += HandleSetReputationAmount;
                 unitController.UnitEventController.OnActivateMountedState += HandleActivateMountedState;
+                unitController.UnitEventController.OnSetMouseActionButton += HandleSetMouseActionButton;
+                unitController.UnitEventController.OnUnsetMouseActionButton += HandleUnsetMouseActionButton;
+                unitController.UnitEventController.OnSetGamepadActionButton += HandleSetGamepadActionButton;
+                unitController.UnitEventController.OnUnsetGamepadActionButton += HandleUnsetGamepadActionButton;
                 eventSubscriptionsInitialized = true;
             }
         }
@@ -149,6 +153,26 @@ namespace AnyRPG {
             SaveSceneNodeData();
             SaveStatusEffectData();
             SavePetData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
+        }
+
+        private void HandleUnsetGamepadActionButton(int buttonIndex) {
+            SaveActionBarData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
+        }
+
+        private void HandleSetGamepadActionButton(IUseable useable, int buttonIndex) {
+            SaveActionBarData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
+        }
+
+        private void HandleUnsetMouseActionButton(int buttonIndex) {
+            SaveActionBarData();
+            unitController.UnitEventController.NotifyOnSaveDataUpdated();
+        }
+
+        private void HandleSetMouseActionButton(IUseable useable, int buttonIndex) {
+            SaveActionBarData();
             unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
@@ -692,7 +716,7 @@ namespace AnyRPG {
         private void LoadSlotData(InventorySlotSaveData inventorySlotSaveData, int counter, bool bank) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadSlotData({inventorySlotSaveData.ItemInstanceIds.Count}, {counter}, {bank})");
 
-            foreach (int itemInstanceId in inventorySlotSaveData.ItemInstanceIds) {
+            foreach (long itemInstanceId in inventorySlotSaveData.ItemInstanceIds) {
                 InstantiatedItem newInstantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemInstanceId);
                 if (newInstantiatedItem == null) {
                     Debug.LogWarning($"{unitController.gameObject.name}.CharacterSavemanager.LoadInventorySlotData(): item is null for itemInstanceId {itemInstanceId}, skipping load");
@@ -719,7 +743,7 @@ namespace AnyRPG {
         public void LoadEquipmentData(CharacterSaveData characterSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadEquipmentData()");
 
-            foreach (EquipmentSaveData equipmentSaveData in characterSaveData.EquipmentSaveData) {
+            foreach (EquipmentInventorySlotSaveData equipmentSaveData in characterSaveData.EquipmentSaveData) {
                 //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadEquipmentData() {(equipmentSaveData.EquipmentName)}");
                 InstantiatedEquipment newInstantiatedEquipment = unitController.CharacterInventoryManager.GetInstantiatedEquipmentFromSaveData(equipmentSaveData);
                 if (newInstantiatedEquipment != null) {
@@ -1116,6 +1140,7 @@ namespace AnyRPG {
         private EquippedBagSaveData GetBagSaveData(BagNode bagNode) {
             EquippedBagSaveData saveData = new EquippedBagSaveData();
             if (bagNode.InstantiatedBag != null) {
+                saveData.HasItem = true;
                 saveData.ItemInstanceId = bagNode.InstantiatedBag.InstanceId;
             }
 
@@ -1148,8 +1173,9 @@ namespace AnyRPG {
             saveData.EquipmentSaveData.Clear();
             if (unitController.CharacterEquipmentManager != null) {
                 foreach (EquipmentInventorySlot equipmentInventorySlot in unitController.CharacterEquipmentManager.CurrentEquipment.Values) {
-                    EquipmentSaveData equipmentSaveData = new EquipmentSaveData();
+                    EquipmentInventorySlotSaveData equipmentSaveData = new EquipmentInventorySlotSaveData();
                     if (equipmentInventorySlot.InstantiatedEquipment != null) {
+                        equipmentSaveData.HasItem = true;
                         equipmentSaveData.ItemInstanceId = equipmentInventorySlot.InstantiatedEquipment.InstanceId;
                     }
                     saveData.EquipmentSaveData.Add(equipmentSaveData);

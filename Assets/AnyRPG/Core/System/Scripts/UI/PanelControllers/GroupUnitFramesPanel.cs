@@ -32,16 +32,22 @@ namespace AnyRPG {
             characterGroupServiceClient.OnDisbandGroup += HandleDisbandGroup;
             characterGroupServiceClient.OnPromoteGroupLeader += HandlePromoteGroupLeader;
             characterGroupServiceClient.OnRenameCharacterInGroup += HandleRenameCharacterInGroup;
+            characterGroupServiceClient.OnCharacterGroupMemberStatusChange += HandleCharacterGroupMemberStatusChange;
             systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             systemEventManager.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
         }
-
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
             characterGroupServiceClient = systemGameManager.CharacterGroupServiceClient;
             characterManager = systemGameManager.CharacterManager;
+        }
+
+        private void HandleCharacterGroupMemberStatusChange() {
+            //Debug.Log($"GroupUnitFramesPanel.HandleCharacterGroupMemberStatusChange()");
+
+            UpdateCharacterGroupDisplay();
         }
 
         private void HandleRenameCharacterInGroup() {

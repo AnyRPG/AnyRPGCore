@@ -8,7 +8,7 @@ namespace AnyRPG {
     public class AuctionItem {
         public int SellerPlayerCharacterId = 0;
         public int AuctionItemId = 0;
-        public List<int> ItemIds = new List<int>();
+        public List<long> ItemInstanceIds = new List<long>();
         public int CurrencyAmount = 0;
 
         public AuctionItem() { }
@@ -16,8 +16,9 @@ namespace AnyRPG {
         public AuctionItem(ListAuctionItemRequest listAuctionItemRequest, int playerCharacterId) {
             this.SellerPlayerCharacterId = playerCharacterId;
             this.CurrencyAmount = listAuctionItemRequest.CurrencyAmount;
-            this.ItemIds = listAuctionItemRequest.ItemIds;
+            this.ItemInstanceIds = listAuctionItemRequest.ItemInstanceIds;
         }
+
     }
 
 }

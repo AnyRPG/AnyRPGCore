@@ -50,7 +50,7 @@ namespace AnyRPG {
         public abstract void RequestSendMail(Interactable interactable, int componentIndex, MailMessageRequest sendMailRequest);
         public abstract void RequestAcceptQuest(Interactable interactable, int componentIndex, Quest quest);
         public abstract void RequestCompleteQuest(Interactable interactable, int componentIndex, Quest quest, QuestRewardChoices questRewardChoices);
-        public abstract void SellVendorItem(Interactable interactable, int componentIndex, int itemInstanceId);
+        public abstract void SellVendorItem(Interactable interactable, int componentIndex, long itemInstanceId);
         public abstract void BuyItemFromVendor(Interactable interactable, int componentIndex, int collectionIndex, int itemIndex, string resourceName);
         public abstract void RequestSpawnUnit(Interactable interactable, int componentIndex, int unitLevel, int extraLevels, bool useDynamicLevel, string unitProfileName, string unitToughnessName);
         public abstract void RequestTurnInDialog(Interactable interactable, int componentIndex, Dialog dialog);
@@ -76,7 +76,7 @@ namespace AnyRPG {
         public abstract void RequestBeginTrade(int characterId);
         public abstract void RequestDeclineTrade();
         public abstract void RequestAcceptTrade();
-        public abstract void RequestAddItemsToTradeSlot(int buttonIndex, List<int> itemIdList);
+        public abstract void RequestAddItemsToTradeSlot(int buttonIndex, List<long> itemInstanceIdList);
         public abstract void RequestAddCurrencyToTrade(CurrencyNode currencyNode);
         public abstract void RequestConfirmTrade();
         public abstract void RequestCancelTrade();
@@ -111,7 +111,7 @@ namespace AnyRPG {
         // server functions
         public abstract void StartServer(ushort port);
         public abstract void StopServer();
-        public abstract void KickPlayer(int accountId);
+        public abstract void KickPlayer(int clientId);
         public abstract string GetClientIPAddress(int accountId);
         public abstract void AdvertiseCreateLobbyGame(LobbyGame lobbyGame);
         public abstract void AdvertiseCancelLobbyGame(int gameId);
@@ -129,7 +129,7 @@ namespace AnyRPG {
         public abstract void AdvertiseJoinLobbyGameInProgress(int gameId, int accountId, string sceneResourceName);
         public abstract void AdvertiseSetLobbyGameReadyStatus(int gameId, int accountId, bool ready);
         public abstract int GetServerPort();
-        public abstract void AdvertiseLoadScene(string sceneResourceName, int accountId);
+        public abstract void AdvertiseUnloadScene(int accountId);
         public abstract void ReturnObjectToPool(GameObject returnedObject);
         //public abstract void AdvertiseAddSpawnRequest(int accountId, SpawnPlayerRequest loadSceneRequest);
         public abstract UnitController SpawnCharacterPrefab(CharacterRequestData characterRequestData, Transform parentTransform, Vector3 position, Vector3 forward, Scene scene);
@@ -137,9 +137,8 @@ namespace AnyRPG {
         public abstract void AdvertiseMessageFeedMessage(int accountId, string message);
         public abstract void AdvertiseSystemMessage(int accountId, string message);
         public abstract void AdvertiseAddToBuyBackCollection(UnitController sourceUnitController, int accountId, Interactable interactable, int componentIndex, InstantiatedItem newInstantiatedItem);
-        public abstract void AdvertiseSellItemToPlayer(UnitController sourceUnitController, Interactable interactable, int componentIndex, int collectionIndex, int itemIndex, string resourceName, int quantity);
         public abstract void AddAvailableDroppedLoot(int accountId, List<int> lootDropIds);
-        public abstract void AddLootDrop(int accountId, int lootDropId, int itemId);
+        public abstract void AddLootDrop(int accountId, int lootDropId, long itemInstanceId);
         public abstract void AdvertiseTakeLoot(int accountId, int lootDropId);
         public abstract void SpawnPlayer(int accountId, CharacterRequestData characterRequestData, Vector3 position, Vector3 forward, string sceneName);
         public abstract Scene GetAccountScene(int accountId, string sceneName);
@@ -148,7 +147,7 @@ namespace AnyRPG {
         public abstract void AdvertiseChooseWeather(int sceneHandle, WeatherProfile profile);
         public abstract void AdvertiseStartWeather(int sceneHandle);
         public abstract void AdvertiseLoadCutscene(Cutscene cutscene, int accountId);
-        public abstract void AdvertiseLoadPlayerCharacter(int accountId, string sceneName);
+        public abstract void AdvertiseJoinMMOGameInProgress(int accountId);
         public abstract void AdvertiseAddCharacterToGroup(int accountId, int characterGroupId, CharacterGroupMemberNetworkData characterGroupMemberNetworkData);
         public abstract void AdvertiseCharacterGroup(int accountId, CharacterGroupNetworkData characterGroupNetworkData);
         public abstract void AdvertiseRemoveCharacterFromGroup(int accountId, int characterId, int characterGroupId);
@@ -157,7 +156,6 @@ namespace AnyRPG {
         public abstract void AdvertiseDisbandCharacterGroup(int accountId, int characterGroupId);
         public abstract void AdvertisePlayerNameNotAvailable(int accountId);
         public abstract void AdvertiseLoadCharacterList(int accountId, List<PlayerCharacterSaveData> playerCharacterSaveDataList);
-        public abstract void AdvertiseDeletePlayerCharacter(int accountId);
         public abstract void AdvertiseDeclineCharacterGroupInvite(int leaderAccountId, string decliningPlayerName);
         public abstract void AdvertisePromoteGroupLeader(int accountId, int characterGroupId, int newLeaderCharacterId);
         public abstract void AdvertiseRenameCharacterInGroup(int accountId, int groupId, int characterId, string newName);
@@ -167,11 +165,11 @@ namespace AnyRPG {
         public abstract void AdvertiseAcceptTradeInvite(int sourceAccountId, int targetCharacterId);
         public abstract void AdvertiseDeclineTradeInvite(int sourceAccountId);
         public abstract void AdvertiseRequestBeginTrade(int targetAccountId, int sourceCharacterId);
-        public abstract void AdvertiseAddItemsToTargetTradeSlot(int targetAccountId, int buttonIndex, List<int> itemIdList);
+        public abstract void AdvertiseAddItemsToTargetTradeSlot(int targetAccountId, int buttonIndex, List<long> itemInstanceIdList);
         public abstract void AdvertiseAddCurrencyToTrade(int targetAccountId, int amount);
         public abstract void AdvertiseCompleteTrade(int accountId);
         public abstract void AdvertiseCancelTrade(int accountId);
-        public abstract void AdvertiseMailMessages(int accountId, MailMessageListResponse mailMessageListResponse);
+        public abstract void AdvertiseMailMessages(int accountId, MailMessageListBundle mailMessageListResponse);
         public abstract void AdvertiseDeleteMailMessage(int accountId, int messageId);
         public abstract void AdvertiseTakeMailAttachment(int accountId, int messageId, int attachmentSlotId);
         public abstract void AdvertiseTakeMailAttachments(int accountId, int messageId);
@@ -179,7 +177,7 @@ namespace AnyRPG {
         public abstract void AdvertiseMailSend(int accountId);
         public abstract void AdvertiseBuyAuctionItem(int accountId, int auctionItemId);
         public abstract void AdvertiseCancelAuction(int accountId, int auctionItemId);
-        public abstract void AdvertiseAuctionItems(int accountId, AuctionItemListResponse auctionItemListResponse);
+        public abstract void AdvertiseAuctionItems(int accountId, AuctionItemSearchListResult auctionItemListResponse);
         public abstract void AdvertiseListAuctionItems(int accountId);
         public abstract void AdvertiseDisbandGuild(int accountId, int guildId);
         public abstract void AdvertiseDeclineGuildInvite(int leaderAccountId, string playerName);
@@ -198,6 +196,10 @@ namespace AnyRPG {
         public abstract void AdvertiseFriendList(int accountId, FriendListNetworkData friendListNetworkData);
         public abstract void AdvertiseRenameCharacterInFriendList(int targetAccountId, int characterId, string newName);
         public abstract void AdvertiseFriendStateChange(int targetAccountId, int playerCharacterId, CharacterSummaryNetworkData characterSummaryNetworkData);
+        public abstract void UnloadScene(int sceneHandle);
+        public abstract void LoadExistingScene(int accountId, int sceneHandle);
+        public abstract void LoadNewScene(int accountId, int playerCharacterId, SceneInstanceType dungeon, SceneNode sceneNode);
+        public abstract void LoadNewLobbyGameScene(int accountId, LobbyGame lobbyGame, SceneNode sceneNode);
     }
 
 }

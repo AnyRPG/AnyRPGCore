@@ -14,7 +14,7 @@ namespace AnyRPG {
 
         public override float CoolDown { get => actionItem.CoolDown; }
 
-        public InstantiatedActionItem(SystemGameManager systemGameManager, int instanceId, ActionItem actionItem, ItemQuality itemQuality) : base(systemGameManager, instanceId, actionItem, itemQuality) {
+        public InstantiatedActionItem(SystemGameManager systemGameManager, long instanceId, ActionItem actionItem, ItemQuality itemQuality) : base(systemGameManager, instanceId, actionItem, itemQuality) {
             this.actionItem = actionItem;
         }
 

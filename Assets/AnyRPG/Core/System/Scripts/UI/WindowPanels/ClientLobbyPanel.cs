@@ -98,6 +98,8 @@ namespace AnyRPG {
         }
 
         public void HandleCreateLobbyGame(LobbyGame lobbyGame) {
+            //Debug.Log($"ClientLobbyPanel.HandleCreateLobbyGame()");
+
             AddLobbyGameToList(lobbyGame.gameId, lobbyGame);
         }
 
@@ -107,6 +109,7 @@ namespace AnyRPG {
 
         public void SendChatMessage() {
             networkManagerClient.SendLobbyChatMessage(chatInput.text);
+            chatInput.text = string.Empty;
         }
 
         public void HandleSendLobbyChatMessage(string messageText) {
@@ -222,7 +225,7 @@ namespace AnyRPG {
         }
 
         public void AddLobbyGameToList(int gameId, LobbyGame lobbyGame) {
-            //Debug.Log($"ClientLobbyPanelController.AddLobbyGameToList({gameId})");
+            //Debug.Log($"ClientLobbyPanelController.AddLobbyGameToList(gameId: {gameId})");
 
             GameObject go = objectPooler.GetPooledObject(lobbyGameTemplate, lobbyGameContainer);
             ClientLobbyGameConnectionButtonController clientLobbyGameConnectionButtonController = go.GetComponent<ClientLobbyGameConnectionButtonController>();

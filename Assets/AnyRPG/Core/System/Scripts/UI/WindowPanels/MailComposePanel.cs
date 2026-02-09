@@ -65,9 +65,9 @@ namespace AnyRPG {
             mailboxManagerClient.OnMailSend += HandleMailSend;
         }
 
-        public bool HasItemId(int itemId) {
+        public bool HasItemInstanceId(long itemInstanceId) {
             foreach (MailComposeAttachmentButton button in attachmentButtons) {
-                if (button != null && button.HasItemId(itemId)) {
+                if (button != null && button.HasItemInstanceId(itemInstanceId)) {
                     return true;
                 }
             }
@@ -103,7 +103,7 @@ namespace AnyRPG {
             }
             postageCurrencyAmount = systemConfigurationManager.BasePostageCurrencyAmount;
             foreach (MailComposeAttachmentButton button in attachmentButtons) {
-                if (button != null && button.GetItemIds().Count > 0) {
+                if (button != null && button.GetItemInstanceIds().Count > 0) {
                     postageCurrencyAmount += systemConfigurationManager.PostageCurrencyAmountPerAttachment;
                 }
             }
@@ -119,9 +119,9 @@ namespace AnyRPG {
 
             List<MailAttachmentSlot> allAttachmentSlots = new List<MailAttachmentSlot>();
             foreach (MailComposeAttachmentButton composeMailAttachmentButton in attachmentButtons) {
-                List<int> attachmentIds = composeMailAttachmentButton.GetItemIds();
+                List<long> attachmentIds = composeMailAttachmentButton.GetItemInstanceIds();
                 MailAttachmentSlot mailAttachmentSlot = new MailAttachmentSlot();
-                mailAttachmentSlot.ItemIds = attachmentIds;
+                mailAttachmentSlot.ItemInstanceIds = attachmentIds;
                 allAttachmentSlots.Add(mailAttachmentSlot);
             }
             MailMessageRequest sendMailRequest = new MailMessageRequest() {

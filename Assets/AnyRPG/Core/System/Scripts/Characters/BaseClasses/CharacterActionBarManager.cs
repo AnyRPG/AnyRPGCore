@@ -146,7 +146,7 @@ namespace AnyRPG {
         }
 
         public bool AddMouseNewAbility(AbilityProperties newAbility) {
-            //Debug.Log($"{gameObject.name}.ActionBarController.AddNewAbility({newAbility.ResourceName})");
+            //Debug.Log($"{unitController.gameObject.name}.AddMouseNewAbility.AddNewAbility({newAbility.ResourceName})");
 
             for (int i = 0; i < mouseActionButtons.Count; i++) {
                 if (mouseActionButtons[i].Useable == null) {
@@ -243,6 +243,7 @@ namespace AnyRPG {
             } else {
                 UnSetMouseActionButton(oldIndex);
             }
+
         }
 
 

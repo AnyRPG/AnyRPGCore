@@ -89,8 +89,8 @@ namespace AnyRPG {
         private void HandleAddAttachment() {
             // calculate the currency entry amount as the total vendor price of all attached items
             int totalVendorPrice = 0;
-            foreach (int itemId in auctionListAttachmentButton.GetItemIds()) {
-                InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemId);
+            foreach (long itemInstanceId in auctionListAttachmentButton.GetItemInstanceIds()) {
+                InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemInstanceId);
                 if (instantiatedItem == null) {
                     continue;
                 }
@@ -257,7 +257,7 @@ namespace AnyRPG {
         public void ListItem() {
             //Debug.Log("AuctionPanel.ListItem()");
 
-            if (auctionListAttachmentButton.GetItemIds().Count == 0) {
+            if (auctionListAttachmentButton.GetItemInstanceIds().Count == 0) {
                 uiManager.AdvertiseConfirmationPopup("You must attach at least one item to list an auction.");
                 return;
             }
@@ -268,7 +268,7 @@ namespace AnyRPG {
             }
 
 
-            auctionManagerClient.SetListItem(auctionListAttachmentButton.GetItemIds(), currencyEntryBarController.CurrencyNode.Amount);
+            auctionManagerClient.SetListItem(auctionListAttachmentButton.GetItemInstanceIds(), currencyEntryBarController.CurrencyNode.Amount);
             uiManager.confirmListAuctionWindow.OpenWindow();
         }
 

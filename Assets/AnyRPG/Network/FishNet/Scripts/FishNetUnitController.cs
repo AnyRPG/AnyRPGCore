@@ -445,17 +445,17 @@ namespace AnyRPG {
             unitController.UnitEventController.NotifyOnNameChangeFail();
         }
 
-        private void HandleInteractWithQuestStartItemServer(Quest quest, int slotIndex, int instanceId) {
-            HandleInteractWithQuestStartItemClient(base.Owner, quest.ResourceName, slotIndex, instanceId);
+        private void HandleInteractWithQuestStartItemServer(Quest quest, int slotIndex, long itemInstanceId) {
+            HandleInteractWithQuestStartItemClient(base.Owner, quest.ResourceName, slotIndex, itemInstanceId);
         }
 
         [TargetRpc]
-        private void HandleInteractWithQuestStartItemClient(NetworkConnection networkConnection, string questResourceName, int slotIndex, int instanceId) {
+        private void HandleInteractWithQuestStartItemClient(NetworkConnection networkConnection, string questResourceName, int slotIndex, long itemInstanceId) {
             Quest quest = systemDataFactory.GetResource<Quest>(questResourceName);
             if (quest == null) {
                 return;
             }
-            unitController.CharacterQuestLog.InteractWithQuestStartItem(quest, slotIndex, instanceId);
+            unitController.CharacterQuestLog.InteractWithQuestStartItem(quest, slotIndex, itemInstanceId);
         }
 
         private void HandleDialogCompletedServer(UnitController controller, Dialog dialog) {
@@ -685,7 +685,7 @@ namespace AnyRPG {
         }
 
         [TargetRpc]
-        private void HandleBeginActionCoolDownClient(NetworkConnection networkConnection, int itemInstanceId, float coolDownLength) {
+        private void HandleBeginActionCoolDownClient(NetworkConnection networkConnection, long itemInstanceId, float coolDownLength) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleBeginActionCoolDownClient({actionResourceName}, {coolDownLength})");
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) && systemItemManager.InstantiatedItems[itemInstanceId] is InstantiatedActionItem) {
                 unitController.CharacterAbilityManager.BeginActionCoolDown(systemItemManager.InstantiatedItems[itemInstanceId] as InstantiatedActionItem, coolDownLength);
@@ -744,12 +744,12 @@ namespace AnyRPG {
             unitController.BaseCharacter.ChangeCharacterName(newName);
         }
 
-        private void HandleRequestAcceptQuestItemQuest(int slotIndex, int instanceId, Quest quest) {
+        private void HandleRequestAcceptQuestItemQuest(int slotIndex, long instanceId, Quest quest) {
             HandleRequestAcceptQuestItemQuestServer(slotIndex, instanceId, quest.ResourceName);
         }
 
         [ServerRpc]
-        private void HandleRequestAcceptQuestItemQuestServer(int slotIndex, int instanceId, string questResourceName) {
+        private void HandleRequestAcceptQuestItemQuestServer(int slotIndex, long instanceId, string questResourceName) {
             Quest quest = systemDataFactory.GetResource<Quest>(questResourceName);
             if (quest == null) {
                 return;
@@ -772,17 +772,17 @@ namespace AnyRPG {
         }
 
         [ServerRpc]
-        private void HandleRequestDeleteItemServer(int itemInstanceId) {
+        private void HandleRequestDeleteItemServer(long itemInstanceId) {
             unitController.CharacterInventoryManager.DeleteItem(itemInstanceId);
         }
 
 
-        private void HandleRequestCompleteQuestItemQuest(int slotIndex, int instanceId, Quest quest, QuestRewardChoices questRewardChoices) {
+        private void HandleRequestCompleteQuestItemQuest(int slotIndex, long instanceId, Quest quest, QuestRewardChoices questRewardChoices) {
             HandleRequestCompleteQuestItemQuestServer(slotIndex, instanceId, quest.ResourceName, questRewardChoices);
         }
 
         [ServerRpc]
-        private void HandleRequestCompleteQuestItemQuestServer(int slotIndex, int instanceId, string questResourceName, QuestRewardChoices questRewardChoices) {
+        private void HandleRequestCompleteQuestItemQuestServer(int slotIndex, long instanceId, string questResourceName, QuestRewardChoices questRewardChoices) {
             Quest quest = systemDataFactory.GetResource<Quest>(questResourceName);
             if (quest == null) {
                 return;
@@ -1120,7 +1120,7 @@ namespace AnyRPG {
         }
 
         [ObserversRpc]
-        public void HandleAddBagClient(int itemInstanceId, int nodeIndex, bool isBankNode) {
+        public void HandleAddBagClient(long itemInstanceId, int nodeIndex, bool isBankNode) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleAddBagClient({itemInstanceId}, {nodeIndex}, {isBankNode})");
 
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) && systemItemManager.InstantiatedItems[itemInstanceId] is InstantiatedBag) {
@@ -1142,7 +1142,7 @@ namespace AnyRPG {
         }
 
         [ObserversRpc]
-        public void HandleRemoveBagClient(int itemInstanceId) {
+        public void HandleRemoveBagClient(long itemInstanceId) {
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) && systemItemManager.InstantiatedItems[itemInstanceId] is InstantiatedBag) {
                 unitController.CharacterInventoryManager.RemoveBag(systemItemManager.InstantiatedItems[itemInstanceId] as InstantiatedBag, true);
             }
@@ -1248,7 +1248,7 @@ namespace AnyRPG {
         }
 
         [ObserversRpc]
-        public void AddItemToInventorySlotClient(int slotIndex, int itemInstanceId) {
+        public void AddItemToInventorySlotClient(int slotIndex, long itemInstanceId) {
             //Debug.Log($"{unitController.gameObject.name}.FishNetUnitController.AddItemToInventorySlotClient({slotIndex}, {itemInstanceId})");
 
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId)) {
@@ -1264,7 +1264,7 @@ namespace AnyRPG {
         }
 
         [ObserversRpc]
-        public void RemoveItemFromInventorySlotClient(int slotIndex, int itemInstanceId) {
+        public void RemoveItemFromInventorySlotClient(int slotIndex, long itemInstanceId) {
             //Debug.Log($"{unitController.gameObject.name}.FishNetUnitController.RemoveItemFromInventorySlotClient({slotIndex}, {itemInstanceId})");
 
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId)) {
@@ -1277,7 +1277,7 @@ namespace AnyRPG {
         }
 
         [ObserversRpc]
-        public void AddItemToBankSlotClient(int slotIndex, int itemInstanceId) {
+        public void AddItemToBankSlotClient(int slotIndex, long itemInstanceId) {
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId)) {
                 unitController.CharacterInventoryManager.AddBankItem(systemItemManager.InstantiatedItems[itemInstanceId], slotIndex);
             }
@@ -1288,7 +1288,7 @@ namespace AnyRPG {
         }
 
         [ObserversRpc]
-        public void RemoveItemFromBankSlotClient(int slotIndex, int itemInstanceId) {
+        public void RemoveItemFromBankSlotClient(int slotIndex, long itemInstanceId) {
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId)) {
                 unitController.CharacterInventoryManager.RemoveBankItem(systemItemManager.InstantiatedItems[itemInstanceId], slotIndex);
             }
@@ -1299,7 +1299,7 @@ namespace AnyRPG {
         }
 
         [ObserversRpc]
-        public void HandleRemoveEquipmentClient(string equipmentSlotProfileName, int itemInstanceId) {
+        public void HandleRemoveEquipmentClient(string equipmentSlotProfileName, long itemInstanceId) {
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) && systemItemManager.InstantiatedItems[itemInstanceId] is InstantiatedEquipment) {
                 EquipmentSlotProfile equipmentSlotProfile = systemDataFactory.GetResource<EquipmentSlotProfile>(equipmentSlotProfileName);
                 if (equipmentSlotProfile == null) {
@@ -1317,7 +1317,7 @@ namespace AnyRPG {
         }
 
         [ObserversRpc]
-        public void HandleAddEquipmentClient(string equipmentSlotProfileName, int itemInstanceId) {
+        public void HandleAddEquipmentClient(string equipmentSlotProfileName, long itemInstanceId) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleAddEquipmentClient({equipmentSlotProfileName}, {itemInstanceId})");
 
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) && systemItemManager.InstantiatedItems[itemInstanceId] is InstantiatedEquipment) {
@@ -1372,7 +1372,7 @@ namespace AnyRPG {
         }
 
         [ServerRpc]
-        public void RequestSwapInventoryEquipment(int oldEquipmentInstanceId, int newEquipmentInstanceId) {
+        public void RequestSwapInventoryEquipment(long oldEquipmentInstanceId, long newEquipmentInstanceId) {
             if (systemItemManager.InstantiatedItems.ContainsKey(oldEquipmentInstanceId) && systemItemManager.InstantiatedItems[oldEquipmentInstanceId] is InstantiatedEquipment) {
                 unitController.CharacterEquipmentManager.SwapInventoryEquipment(systemItemManager.InstantiatedItems[oldEquipmentInstanceId] as InstantiatedEquipment, systemItemManager.InstantiatedItems[newEquipmentInstanceId] as InstantiatedEquipment);
             }
@@ -1385,7 +1385,7 @@ namespace AnyRPG {
         }
 
         [ServerRpc]
-        public void RequestUnequipToSlot(int itemInstanceId, int inventorySlotId) {
+        public void RequestUnequipToSlot(long itemInstanceId, int inventorySlotId) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.RequestUnequipToSlot({itemInstanceId}, {inventorySlotId})");
 
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) && systemItemManager.InstantiatedItems[itemInstanceId] is InstantiatedEquipment) {
@@ -1398,7 +1398,7 @@ namespace AnyRPG {
         }
 
         [ServerRpc]
-        public void RequestSwapBags(int oldBagInstanceId, int newBagInstanceId) {
+        public void RequestSwapBags(long oldBagInstanceId, long newBagInstanceId) {
             if (systemItemManager.InstantiatedItems.ContainsKey(oldBagInstanceId)
                 && systemItemManager.InstantiatedItems[oldBagInstanceId] is InstantiatedBag
                 && systemItemManager.InstantiatedItems.ContainsKey(newBagInstanceId)
@@ -1412,7 +1412,7 @@ namespace AnyRPG {
         }
 
         [ServerRpc]
-        public void RequestUnequipBagToSlot(int itemInstanceId, int slotIndex, bool isBank) {
+        public void RequestUnequipBagToSlot(long itemInstanceId, int slotIndex, bool isBank) {
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) && systemItemManager.InstantiatedItems[itemInstanceId] is InstantiatedBag) {
                 unitController.CharacterInventoryManager.UnequipBagToSlot(systemItemManager.InstantiatedItems[itemInstanceId] as InstantiatedBag, slotIndex, isBank);
             }
@@ -1423,7 +1423,7 @@ namespace AnyRPG {
         }
 
         [ServerRpc]
-        public void RequestUnequipBag(int itemInstanceId, bool isBank) {
+        public void RequestUnequipBag(long itemInstanceId, bool isBank) {
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) && systemItemManager.InstantiatedItems[itemInstanceId] is InstantiatedBag) {
                 unitController.CharacterInventoryManager.UnequipBag(systemItemManager.InstantiatedItems[itemInstanceId] as InstantiatedBag, isBank);
             }
@@ -1434,7 +1434,7 @@ namespace AnyRPG {
         }
 
         [ServerRpc]
-        public void RequestMoveBag(int itemInstanceId, int nodeIndex, bool isBankNode) {
+        public void RequestMoveBag(long itemInstanceId, int nodeIndex, bool isBankNode) {
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) && systemItemManager.InstantiatedItems[itemInstanceId] is InstantiatedBag) {
                 unitController.CharacterInventoryManager.MoveBag(systemItemManager.InstantiatedItems[itemInstanceId] as InstantiatedBag, nodeIndex, isBankNode);
             }
@@ -1456,7 +1456,7 @@ namespace AnyRPG {
         }
 
         [ServerRpc]
-        public void RequestAddBagFromInventory(int itemInstanceId, int nodeIndex, bool isBankNode) {
+        public void RequestAddBagFromInventory(long itemInstanceId, int nodeIndex, bool isBankNode) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.RequestAddBagFromInventory({itemInstanceId}, {nodeIndex}, {isBankNode})");
 
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) && systemItemManager.InstantiatedItems[itemInstanceId] is InstantiatedBag) {
@@ -1516,7 +1516,7 @@ namespace AnyRPG {
         }
 
         [ServerRpc]
-        public void RequestEquipToSlot(int itemInstanceId, string equipmentSlotProfileName) {
+        public void RequestEquipToSlot(long itemInstanceId, string equipmentSlotProfileName) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.RequestEquipToSlot({itemInstanceId}, {equipmentSlotProfileName})");
 
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) && systemItemManager.InstantiatedItems[itemInstanceId] is InstantiatedEquipment) {
@@ -1536,7 +1536,7 @@ namespace AnyRPG {
 
         /*
         [ObserversRpc]
-        public void HandleDeleteItemClient(int itemInstanceId) {
+        public void HandleDeleteItemClient(long itemInstanceId) {
             unitController.CharacterInventoryManager.DeleteItem(itemInstanceId);
         }
         */

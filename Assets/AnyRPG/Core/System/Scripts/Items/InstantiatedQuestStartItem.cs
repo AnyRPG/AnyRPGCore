@@ -20,7 +20,7 @@ namespace AnyRPG {
 
         public QuestGiverProps QuestGiverProps { get => questStartItem.QuestGiverProps; }
 
-        public InstantiatedQuestStartItem(SystemGameManager systemGameManager, int instanceId, QuestStartItem questStartItem, ItemQuality itemQuality) : base(systemGameManager, instanceId, questStartItem, itemQuality) {
+        public InstantiatedQuestStartItem(SystemGameManager systemGameManager, long instanceId, QuestStartItem questStartItem, ItemQuality itemQuality) : base(systemGameManager, instanceId, questStartItem, itemQuality) {
             this.questStartItem = questStartItem;
         }
 

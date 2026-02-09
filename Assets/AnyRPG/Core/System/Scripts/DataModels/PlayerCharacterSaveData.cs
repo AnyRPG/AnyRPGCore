@@ -14,7 +14,7 @@ namespace AnyRPG {
         public PlayerCharacterSaveData(CharacterSaveData characterSaveData, SystemItemManager systemItemManager) { 
             CharacterSaveData = characterSaveData;
             foreach (InventorySlotSaveData inventorySlotSaveData in characterSaveData.InventorySlotSaveData) {
-                foreach (int itemInstanceId in inventorySlotSaveData.ItemInstanceIds) {
+                foreach (long itemInstanceId in inventorySlotSaveData.ItemInstanceIds) {
                     InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemInstanceId);
                     if (instantiatedItem == null) {
                         Debug.LogWarning($"PlayerCharacterSaveData.PlayerCharacterSaveData(): Could not find instantiated item with id {itemInstanceId} in inventory for character {characterSaveData.CharacterName}");
@@ -24,7 +24,7 @@ namespace AnyRPG {
                 }
             }
             foreach (InventorySlotSaveData inventorySlotSaveData in characterSaveData.BankSlotSaveData) {
-                foreach (int itemInstanceId in inventorySlotSaveData.ItemInstanceIds) {
+                foreach (long itemInstanceId in inventorySlotSaveData.ItemInstanceIds) {
                     InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemInstanceId);
                     if (instantiatedItem == null) {
                         Debug.LogWarning($"PlayerCharacterSaveData.PlayerCharacterSaveData(): Could not find instantiated item with id {itemInstanceId} in bank for character {characterSaveData.CharacterName}");
@@ -33,20 +33,20 @@ namespace AnyRPG {
                     ItemInstanceListSaveData.ItemInstances.Add(instantiatedItem.GetItemSaveData());
                 }
             }
-            foreach (EquipmentSaveData equipmentSaveData in characterSaveData.EquipmentSaveData) {
+            foreach (EquipmentInventorySlotSaveData equipmentInventorySlotSaveData in characterSaveData.EquipmentSaveData) {
                 //Debug.Log($"PlayerCharacterSaveData.Constructor() equipmentId: {equipmentSaveData.ItemInstanceId}");
-                if (equipmentSaveData.ItemInstanceId == 0) {
+                if (equipmentInventorySlotSaveData.HasItem == false) {
                     continue;
                 }
-                InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(equipmentSaveData.ItemInstanceId);
+                InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(equipmentInventorySlotSaveData.ItemInstanceId);
                 if (instantiatedItem == null) {
-                    Debug.LogWarning($"PlayerCharacterSaveData.PlayerCharacterSaveData(): Could not find instantiated item with id {equipmentSaveData.ItemInstanceId} in equipment for character {characterSaveData.CharacterName}");
+                    Debug.LogWarning($"PlayerCharacterSaveData.PlayerCharacterSaveData(): Could not find instantiated item with id {equipmentInventorySlotSaveData.ItemInstanceId} in equipment for character {characterSaveData.CharacterName}");
                     continue;
                 }
                 ItemInstanceListSaveData.ItemInstances.Add(instantiatedItem.GetItemSaveData());
             }
             foreach (EquippedBagSaveData equippedBagSaveData in characterSaveData.EquippedBagSaveData) {
-                if (equippedBagSaveData.ItemInstanceId == 0) {
+                if (equippedBagSaveData.HasItem == false) {
                     continue;
                 }
                 InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(equippedBagSaveData.ItemInstanceId);
@@ -57,7 +57,7 @@ namespace AnyRPG {
                 ItemInstanceListSaveData.ItemInstances.Add(instantiatedItem.GetItemSaveData());
             }
             foreach (EquippedBagSaveData equippedBagSaveData in characterSaveData.EquippedBankBagSaveData) {
-                if (equippedBagSaveData.ItemInstanceId == 0) {
+                if (equippedBagSaveData.HasItem == false) {
                     continue;
                 }
                 InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(equippedBagSaveData.ItemInstanceId);

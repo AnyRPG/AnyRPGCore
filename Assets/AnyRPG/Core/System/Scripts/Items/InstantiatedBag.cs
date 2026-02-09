@@ -31,7 +31,7 @@ namespace AnyRPG {
         public int Slots { get => slots; }
         public Bag Bag { get => bag; }
 
-        public InstantiatedBag(SystemGameManager systemGameManager, int instanceId, Bag bag, ItemQuality itemQuality) : base(systemGameManager, instanceId, bag, itemQuality) {
+        public InstantiatedBag(SystemGameManager systemGameManager, long instanceId, Bag bag, ItemQuality itemQuality) : base(systemGameManager, instanceId, bag, itemQuality) {
             this.bag = bag;
             this.slots = bag.Slots;
         }

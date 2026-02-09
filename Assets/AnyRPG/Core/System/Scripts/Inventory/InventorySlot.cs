@@ -17,7 +17,7 @@ namespace AnyRPG {
         /// <summary>
         /// A stack for all items on this slot
         /// </summary>
-        protected Dictionary<int, InstantiatedItem> instantiatedItems = new Dictionary<int, InstantiatedItem>();
+        protected Dictionary<long, InstantiatedItem> instantiatedItems = new Dictionary<long, InstantiatedItem>();
 
         // game manager references
         protected HandScript handScript = null;
@@ -53,7 +53,7 @@ namespace AnyRPG {
         }
 
         public int Count { get => InstantiatedItems.Count; }
-        public Dictionary<int, InstantiatedItem> InstantiatedItems {
+        public Dictionary<long, InstantiatedItem> InstantiatedItems {
             get {
                 return instantiatedItems;
             }
@@ -127,8 +127,8 @@ namespace AnyRPG {
             //Debug.Log($"InventorySlot.RemoveAllItems()");
 
             while (InstantiatedItems.Count > 0) {
-                int itemId = instantiatedItems.First().Key;
-                RemoveItem(InstantiatedItems[itemId]);
+                long itemInstanceId = instantiatedItems.First().Key;
+                RemoveItem(InstantiatedItems[itemInstanceId]);
             }
         }
 
@@ -237,7 +237,7 @@ namespace AnyRPG {
             //Debug.Log($"InventorySlot.SwapItems()");
 
             // use a temporary list to swap references to the stacks
-            Dictionary<int, InstantiatedItem> tmpFrom = new Dictionary<int, InstantiatedItem>(from.InstantiatedItems);
+            Dictionary<long, InstantiatedItem> tmpFrom = new Dictionary<long, InstantiatedItem>(from.InstantiatedItems);
             //from.InstantiatedItems = InstantiatedItems;
             from.RemoveAllItems();
             from.AddItems(InstantiatedItems.Values.ToList());

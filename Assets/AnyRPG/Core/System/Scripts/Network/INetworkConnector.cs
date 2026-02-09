@@ -48,7 +48,7 @@ namespace AnyRPG {
         public void RequestLearnSkill(Interactable interactable, int componentIndex, int skillId);
         public void RequestAcceptQuest(Interactable interactable, int componentIndex, Quest quest);
         public void RequestCompleteQuest(Interactable interactable, int componentIndex, Quest quest, QuestRewardChoices questRewardChoices);
-        public void SellVendorItem(Interactable interactable, int componentIndex, int itemInstanceId);
+        public void SellVendorItem(Interactable interactable, int componentIndex, long itemInstanceId);
         public void BuyItemFromVendor(Interactable interactable, int componentIndex, int collectionIndex, int itemIndex, string resourceName);
         public void RequestSpawnUnit(Interactable interactable, int componentIndex, int unitLevel, int extraLevels, bool useDynamicLevel, string unitProfileName, string unitToughnessName);
         public void RequestTurnInDialog(Interactable interactable, int componentIndex, Dialog dialog);
@@ -104,7 +104,7 @@ namespace AnyRPG {
         public void AdvertiseAddToBuyBackCollection(UnitController sourceUnitController, int accountId, Interactable interactable, int componentIndex, InstantiatedItem newInstantiatedItem);
         public void AdvertiseSellItemToPlayer(UnitController sourceUnitController, Interactable interactable, int componentIndex, int collectionIndex, int itemIndex, string resourceName, int quantity);
         public void AddAvailableDroppedLoot(int accountId, List<LootDrop> items);
-        public void AddLootDrop(int accountId, int lootDropId, int itemId);
+        public void AddLootDrop(int accountId, int lootDropId, long itemInstanceId);
         public void AdvertiseTakeLoot(int accountId, int lootDropId);
         public void SpawnPlayer(int accountId, CharacterRequestData characterRequestData, Vector3 position, Vector3 forward, string sceneName);
         public Scene GetAccountScene(int accountId, string sceneName);

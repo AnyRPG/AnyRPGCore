@@ -8,7 +8,6 @@ namespace AnyRPG {
         protected SystemDataFactory systemDataFactory = null;
         protected NetworkManagerClient networkManagerClient = null;
         protected NetworkManagerServer networkManagerServer = null;
-        protected ServerStateService serverStateService = null;
         protected UserAccountService userAccountService = null;
         protected PlayerCharacterService playerCharacterService = null;
         protected SystemItemManager systemItemManager = null;
@@ -25,7 +24,6 @@ namespace AnyRPG {
             systemDataFactory = systemGameManager.SystemDataFactory;
             networkManagerClient = systemGameManager.NetworkManagerClient;
             networkManagerServer = systemGameManager.NetworkManagerServer;
-            serverStateService = systemGameManager.ServerStateService;
             userAccountService = systemGameManager.UserAccountService;
             playerCharacterService = systemGameManager.PlayerCharacterService;
             systemItemManager = systemGameManager.SystemItemManager;

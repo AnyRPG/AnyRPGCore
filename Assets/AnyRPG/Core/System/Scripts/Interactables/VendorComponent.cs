@@ -1,4 +1,5 @@
 using AnyRPG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -184,19 +185,25 @@ namespace AnyRPG {
                 }
                 sourceUnitController.CharacterCurrencyManager.SpendCurrency(usedSellPrice.Key, usedSellPrice.Value);
             }
-            ProcessQuantityNotification(vendorItem, (vendorItem.Unlimited ? vendorItem.Quantity : vendorItem.Quantity - 1));
-            if (networkManagerServer.ServerModeActive == true) {
-                networkManagerServer.AdvertiseSellItemToPlayer(sourceUnitController, interactable, componentIndex, collectionIndex, itemIndex, vendorItem.Item.ResourceName, vendorItem.Quantity);
-            }
+            ProcessQuantityNotification(vendorItem, (vendorItem.Unlimited ? vendorItem.Quantity : vendorItem.Quantity - 1), componentIndex, collectionIndex, itemIndex);
 
             sourceUnitController.WriteMessageFeedMessage($"Purchased {vendorItem.Item.DisplayName} for {priceString}");
         }
 
-        public void ProcessQuantityNotification(VendorItem vendorItem, int newQuantity) {
+        public void ProcessQuantityNotification(VendorItem vendorItem, int newQuantity, int componentIndex, int collectionIndex, int itemIndex) {
             vendorItem.Quantity = newQuantity;
-            interactable.InteractableEventController.NotifyOnSellItemToPlayer(vendorItem);
+            interactable.InteractableEventController.NotifyOnSellItemToPlayer(vendorItem, componentIndex, collectionIndex, itemIndex);
         }
 
+        public void HandleSellItemToPlayer(string resourceName, int remainingQuantity, int componentIndex, int collectionIndex, int itemIndex) {
+            List<VendorCollection> localVendorCollections = GetLocalVendorCollections();
+            if (localVendorCollections.Count > collectionIndex && localVendorCollections[collectionIndex].VendorItems.Count > itemIndex) {
+                VendorItem vendorItem = localVendorCollections[collectionIndex].VendorItems[itemIndex];
+                if (vendorItem.Item.ResourceName == resourceName) {
+                    ProcessQuantityNotification(vendorItem, remainingQuantity, componentIndex, collectionIndex, itemIndex);
+                }
+            }
+        }
     }
 
 }

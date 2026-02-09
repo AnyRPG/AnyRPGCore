@@ -23,7 +23,7 @@ namespace AnyRPG {
 
         public void RequestBuyAuctionItem(int accountId, int auctionItemId) {
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (playerCharacterId == 0) {
+            if (playerCharacterId == -1) {
                 return;
             }
             if (auctionService.BuyAuctionItem(playerCharacterId, auctionItemId)) {
@@ -33,7 +33,7 @@ namespace AnyRPG {
 
         public void RequestCancelAuction(int accountId, int auctionItemId) {
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (playerCharacterId == 0) {
+            if (playerCharacterId == -1) {
                 return;
             }
             if (auctionService.CancelAuction(playerCharacterId, auctionItemId)) {

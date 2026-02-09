@@ -18,11 +18,11 @@ namespace AnyRPG {
 
         public Recipe Recipe { get => recipe; }
 
-        public override InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, int itemId, Item item, ItemQuality usedItemQuality) {
+        public override InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, long itemInstanceId, Item item, ItemQuality usedItemQuality) {
             if ((item is RecipeItem) == false) {
                 return null;
             }
-            return new InstantiatedRecipeItem(systemGameManager, itemId, item as RecipeItem, usedItemQuality);
+            return new InstantiatedRecipeItem(systemGameManager, itemInstanceId, item as RecipeItem, usedItemQuality);
         }
 
 

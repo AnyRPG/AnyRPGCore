@@ -29,7 +29,7 @@ namespace AnyRPG {
             }
         }
 
-        public InstantiatedCurrencyItem(SystemGameManager systemGameManager, int instanceId, CurrencyItem currencyItem, ItemQuality itemQuality) : base(systemGameManager, instanceId, currencyItem, itemQuality) {
+        public InstantiatedCurrencyItem(SystemGameManager systemGameManager, long instanceId, CurrencyItem currencyItem, ItemQuality itemQuality) : base(systemGameManager, instanceId, currencyItem, itemQuality) {
             this.currencyItem = currencyItem;
             //gainCurrencyName = currencyItem.GainCurrencyName;
             //gainCurrencyAmount = currencyItem.GainCurrencyAmount;

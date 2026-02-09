@@ -523,7 +523,7 @@ namespace AnyRPG {
             }
         }
 
-        public void RemoveInventoryItem(int itemInstanceId) {
+        public void RemoveInventoryItem(long itemInstanceId) {
             foreach (InventorySlot slot in inventorySlots) {
                 if (!slot.IsEmpty && slot.InstantiatedItem.InstanceId == itemInstanceId) {
                     slot.RemoveItem(slot.InstantiatedItem);
@@ -701,7 +701,7 @@ namespace AnyRPG {
         /// <returns></returns>
         public InstantiatedItem GetNewInstantiatedItemFromSaveData(Item item, InventorySlotSaveData inventorySlotSaveData) {
             //Debug.Log(this.GetType().Name + ".GetNewResource(" + resourceName + ")");
-            int itemInstanceId = systemItemManager.GetNewItemInstanceId();
+            long itemInstanceId = systemItemManager.GetNewItemInstanceId();
             return GetNewInstantiatedItemFromSaveData(itemInstanceId, item, inventorySlotSaveData);
         }
         */
@@ -735,7 +735,7 @@ namespace AnyRPG {
             return GetNewInstantiatedItemFromSaveData(itemInstanceSaveData, itemInstanceSaveData.ItemInstanceId);
         }
 
-        public InstantiatedItem GetNewInstantiatedItemFromSaveData(ItemInstanceSaveData itemInstanceSaveData, int itemInstanceId) {
+        public InstantiatedItem GetNewInstantiatedItemFromSaveData(ItemInstanceSaveData itemInstanceSaveData, long itemInstanceId) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData({inventorySlotSaveData.ItemName})");
 
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId)) {
@@ -773,7 +773,7 @@ namespace AnyRPG {
         public InstantiatedBag GetInstantiatedBagFromSaveData(EquippedBagSaveData equippedBagSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData({itemInstanceId}, {itemName})");
 
-            if (equippedBagSaveData.ItemInstanceId == 0) {
+            if (equippedBagSaveData.HasItem == false) {
                 return null;
             }
 
@@ -784,10 +784,10 @@ namespace AnyRPG {
             return null;
         }
 
-        public InstantiatedEquipment GetInstantiatedEquipmentFromSaveData(EquipmentSaveData equipmentSaveData) {
+        public InstantiatedEquipment GetInstantiatedEquipmentFromSaveData(EquipmentInventorySlotSaveData equipmentSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.GetNewInstantiatedItemFromSaveData({equipmentSaveData.EquipmentName}({equipmentSaveData.itemInstanceId}))");
 
-            if (equipmentSaveData.ItemInstanceId == 0) {
+            if (equipmentSaveData.HasItem == false) {
                 return null;
             }
 
@@ -807,7 +807,7 @@ namespace AnyRPG {
             }
         }
 
-        public void DeleteItem(int instanceId) {
+        public void DeleteItem(long instanceId) {
             if (systemItemManager.InstantiatedItems.ContainsKey(instanceId)) {
                 DeleteItem(systemItemManager.InstantiatedItems[instanceId]);
             }
@@ -1099,10 +1099,10 @@ namespace AnyRPG {
             }
         }
 
-        public bool HasItem(int itemId) {
+        public bool HasItem(long itemInstanceId) {
             foreach (InventorySlot slot in inventorySlots) {
                 foreach (InstantiatedItem instantiatedItem in slot.InstantiatedItems.Values) {
-                    if (instantiatedItem.InstanceId == itemId) {
+                    if (instantiatedItem.InstanceId == itemInstanceId) {
                         return true;
                     }
                 }

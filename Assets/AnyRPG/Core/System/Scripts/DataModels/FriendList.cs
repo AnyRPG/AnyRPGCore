@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace AnyRPG {
     public class FriendList {
@@ -25,7 +26,12 @@ namespace AnyRPG {
         public FriendList(FriendListSaveData friendListSaveData, PlayerCharacterService playerCharacterService) {
             this.playerCharacterId = friendListSaveData.PlayerCharacterId;
             foreach (int memberId in friendListSaveData.PlayerIdList) {
-                MemberIdList.Add(memberId, playerCharacterService.GetSummaryData(memberId));
+                CharacterSummaryData characterSummaryData = playerCharacterService.GetSummaryData(memberId);
+                if (characterSummaryData == null) {
+                    Debug.LogWarning("FriendList() characterSummaryData was null. Skipping member!");
+                    continue;
+                }
+                MemberIdList.Add(memberId, characterSummaryData);
             }
         }
 

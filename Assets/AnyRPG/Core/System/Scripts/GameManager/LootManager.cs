@@ -251,13 +251,13 @@ namespace AnyRPG {
             }
         }
 
-        public void AddNetworkLootDrop(int lootDropId, int itemId) {
+        public void AddNetworkLootDrop(int lootDropId, long itemInstanceId) {
             //Debug.Log($"LootManager.AddNetworkLootDrop({lootDropId}, {itemId})");
 
-            if (systemItemManager.InstantiatedItems.ContainsKey(itemId) == false) {
+            if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) == false) {
                 return;
             }
-            LootDrop lootDrop = new LootDrop(lootDropId, systemItemManager.InstantiatedItems[itemId], systemGameManager);
+            LootDrop lootDrop = new LootDrop(lootDropId, systemItemManager.InstantiatedItems[itemInstanceId], systemGameManager);
             lootDropIndex.Add(lootDropId, lootDrop);
         }
 

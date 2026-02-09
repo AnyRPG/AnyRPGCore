@@ -11,14 +11,19 @@ namespace AnyRPG {
             this.unitController = unitController;
         }
 
+        /*
         public void AttackHitEvent() {
             //Debug.Log($"{gameObject.name}.CharacterAnimationEventReceiver.AttackHitEvent()");
+
             unitController.CharacterCombat.AttackHitAnimationEvent();
         }
+        */
 
+        
         public void Hit() {
             //Debug.Log($"{gameObject.name}.CharacterAnimationEventReceiver.Hit()");
-            AttackHitEvent();
+
+            //AttackHitEvent();
         }
 
         public void AnimationHit() {

@@ -1,23 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace AnyRPG { 
     public class MailService : ConfiguredClass {
 
-        private int mailIdCounter = 1;
-        private string baseSaveFolderName = string.Empty;
-
         // game manager references
         private PlayerManagerServer playerManagerServer = null;
         private LootManager lootManager = null;
         private MessageLogServer messageLogServer = null;
+        private ServerDataService serverDataService = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            MakeBaseSaveFolder();
             //networkManagerServer.OnStartServer += HandleStartServer;
             networkManagerServer.OnStopServer += HandleStopServer;
         }
@@ -27,62 +22,25 @@ namespace AnyRPG {
             playerManagerServer = systemGameManager.PlayerManagerServer;
             lootManager = systemGameManager.LootManager;
             messageLogServer = systemGameManager.MessageLogServer;
+            serverDataService = systemGameManager.ServerDataService;
         }
 
         private void HandleStopServer() {
             //ClearPlayerNameMap();
         }
 
+        /*
         public void ProcessStartServer() {
             //LoadPlayerNameMap();
         }
-
-        public void LoadMailIdCounter(int newCounterValue) {
-            //Debug.Log($"MailService.LoadMailIdCounter({newCounterValue})");
-
-            mailIdCounter = newCounterValue;
-        }
-
-        private void MakeBaseSaveFolder() {
-            //Debug.Log("PlayerCharacterService.MakeSaveFolder()");
-
-            Regex regex = new Regex("[^a-zA-Z0-9]");
-            string gameNameString = regex.Replace(systemConfigurationManager.GameName, "");
-            if (gameNameString == string.Empty) {
-                return;
-            }
-            baseSaveFolderName = $"{Application.persistentDataPath}/{gameNameString}/Online/Mail";
-            if (!Directory.Exists($"{Application.persistentDataPath}/{gameNameString}")) {
-                Directory.CreateDirectory($"{Application.persistentDataPath}/{gameNameString}");
-            }
-            if (!Directory.Exists($"{Application.persistentDataPath}/{gameNameString}/Online")) {
-                Directory.CreateDirectory($"{Application.persistentDataPath}/{gameNameString}/Online");
-            }
-            if (!Directory.Exists(baseSaveFolderName)) {
-                Directory.CreateDirectory(baseSaveFolderName);
-            }
-        }
-
-        private void MakeMessageSaveFolder(int playerCharacterId) {
-            //Debug.Log("PlayerCharacterService.MakeSaveFolder()");
-
-            string saveFolderName = GetMessageSaveFolder(playerCharacterId);
-            if (!Directory.Exists(saveFolderName)) {
-                Directory.CreateDirectory(saveFolderName);
-            }
-        }
-
-        private string GetMessageSaveFolder(int playerCharacterId) {
-            
-            return $"{baseSaveFolderName}/{playerCharacterId}";
-        }
+        */
 
         public bool SendMailMessage(UnitController sourceUnitController, MailMessageRequest mailMessageRequest) {
 
             int senderAccountId = playerManagerServer.GetAccountIdFromUnitController(sourceUnitController);
 
             int playerCharacterId = playerCharacterService.GetPlayerIdFromName(mailMessageRequest.Recipient);
-            if (playerCharacterId == 0) {
+            if (playerCharacterId == -1) {
                 networkManagerServer.AdvertiseConfirmationPopup(senderAccountId, $"{mailMessageRequest.Recipient} is not a valid player name");
                 return false;
             }
@@ -93,23 +51,23 @@ namespace AnyRPG {
             }
 
             // remove duplicate itemIds from attachment slots
-            List<int> uniqueIds = new List<int>();
+            List<long> uniqueIds = new List<long>();
             foreach (MailAttachmentSlot mailAttachmentSlot in mailMessageRequest.AttachmentSlots) {
-                List<int> newItemIds = new List<int>();
-                foreach (int itemId in mailAttachmentSlot.ItemIds) {
-                    if (uniqueIds.Contains(itemId) == false) {
-                        uniqueIds.Add(itemId);
-                        newItemIds.Add(itemId);
+                List<long> newItemInstanceIds = new List<long>();
+                foreach (long itemInstanceId in mailAttachmentSlot.ItemInstanceIds) {
+                    if (uniqueIds.Contains(itemInstanceId) == false) {
+                        uniqueIds.Add(itemInstanceId);
+                        newItemInstanceIds.Add(itemInstanceId);
                     }
                 }
-                mailAttachmentSlot.ItemIds = newItemIds;
+                mailAttachmentSlot.ItemInstanceIds = newItemInstanceIds;
             }
 
 
             // first check to ensure item exist
             foreach (MailAttachmentSlot mailAttachmentSlot in mailMessageRequest.AttachmentSlots) {
-                foreach (int itemId in mailAttachmentSlot.ItemIds) {
-                    if (sourceUnitController.CharacterInventoryManager.HasItem(itemId) == false) {
+                foreach (long itemInstanceId in mailAttachmentSlot.ItemInstanceIds) {
+                    if (sourceUnitController.CharacterInventoryManager.HasItem(itemInstanceId) == false) {
                         return false;
                     }
                 }
@@ -118,7 +76,7 @@ namespace AnyRPG {
             // calculate postage
             int postageCurrencyAmount = systemConfigurationManager.BasePostageCurrencyAmount;
             foreach (MailAttachmentSlot mailAttachmentSlot in mailMessageRequest.AttachmentSlots) {
-                if (mailAttachmentSlot.ItemIds.Count > 0) {
+                if (mailAttachmentSlot.ItemInstanceIds.Count > 0) {
                     postageCurrencyAmount += systemConfigurationManager.PostageCurrencyAmountPerAttachment;
                 }
             }
@@ -132,8 +90,8 @@ namespace AnyRPG {
 
             // remove items from inventory
             foreach (MailAttachmentSlot mailAttachmentSlot in mailMessageRequest.AttachmentSlots) {
-                foreach (int itemId in mailAttachmentSlot.ItemIds) {
-                    sourceUnitController.CharacterInventoryManager.RemoveInventoryItem(itemId);
+                foreach (long itemInstanceId in mailAttachmentSlot.ItemInstanceIds) {
+                    sourceUnitController.CharacterInventoryManager.RemoveInventoryItem(itemInstanceId);
                 }
             }
 
@@ -154,126 +112,122 @@ namespace AnyRPG {
 
         public void SaveMailMessage(int recipientPlayerCharacterId, MailMessageRequest mailMessageRequest, string senderName) {
 
-            MakeMessageSaveFolder(recipientPlayerCharacterId);
-
             // set messageId and sender
             MailMessage mailMessage = new MailMessage(mailMessageRequest);
-            int messageId = GetNewMessageId();
-            mailMessage.MessageId = messageId;
             mailMessage.Sender = senderName;
+
+            serverDataService.GetNewMailMessageId(mailMessage, mailMessageRequest, recipientPlayerCharacterId);
+        }
+
+        public void ProcessMailMessageIdAssigned(MailMessage mailMessage, MailMessageRequest mailMessageRequest, int recipientPlayerCharacterId) {
+            //Debug.Log($"MailService.ProcessMailMessageIdAssigned(messageId: {mailMessage.MessageId})");
 
             // add currency item
             if (mailMessageRequest.CurrencyAmount > 0) {
                 InstantiatedCurrencyItem instantiatedCurrencyItem = systemItemManager.GetNewInstantiatedItem(lootManager.CurrencyLootItem) as InstantiatedCurrencyItem;
                 instantiatedCurrencyItem.OverrideCurrency(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, mailMessageRequest.CurrencyAmount);
-                systemItemManager.SaveDataFile(instantiatedCurrencyItem);
+                systemItemManager.CreateItemInstance(instantiatedCurrencyItem);
                 MailAttachmentSlot mailAttachmentSlot = new MailAttachmentSlot();
-                mailAttachmentSlot.ItemIds.Add(instantiatedCurrencyItem.InstanceId);
+                mailAttachmentSlot.ItemInstanceIds.Add(instantiatedCurrencyItem.InstanceId);
                 mailMessage.AttachmentSlots.Add(mailAttachmentSlot);
             }
 
-            SaveMailFile(recipientPlayerCharacterId, messageId, mailMessage);
+            SaveMailAndRefreshMessages(recipientPlayerCharacterId, mailMessage);
 
             // notify source and target that mail was sent
             UnitController targetUnitController = playerManagerServer.GetUnitControllerFromPlayerCharacterId(recipientPlayerCharacterId);
             if (targetUnitController != null) {
                 messageLogServer.WriteSystemMessage(targetUnitController, $"You have new mail from {mailMessage.Sender}.");
             }
-            SendMailMessages(recipientPlayerCharacterId);
+            //SendMailMessages(recipientPlayerCharacterId);
         }
 
-        public bool SaveMailFile(int playerCharacterId, int messageId, MailMessage mailMessage) {
-            //Debug.Log($"MailService.SaveMailFile({playerCharacterId}, {messageId})");
-
-            string jsonString = JsonUtility.ToJson(mailMessage);
-            string jsonSavePath = $"{GetMessageSaveFolder(playerCharacterId)}/{messageId}.json";
-            File.WriteAllText(jsonSavePath, jsonString);
-
-            return true;
-        }
-
-        private int GetNewMessageId() {
-            //Debug.Log($"MailService.GetNewMessageId()");
-
-            int returnValue = mailIdCounter;
-            mailIdCounter++;
-            serverStateService.SetMailIdCounter(mailIdCounter);
-
-            //Debug.Log($"MailService.GetNewMessageId() return {returnValue}");
-            return returnValue;
-        }
-
-        public bool DeleteMessage(int playerCharacterId, int messageId) {
-            string jsonSavePath = $"{GetMessageSaveFolder(playerCharacterId)}/{messageId}.json";
-            if (File.Exists(jsonSavePath)) {
-                File.Delete(jsonSavePath);
+        private void SaveMailAndRefreshMessages(int recipientPlayerCharacterId, MailMessage mailMessage) {
+            int accountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(recipientPlayerCharacterId);
+            if (accountId == -1) {
+                return;
             }
-            return true;
+            serverDataService.SaveMailAndRefreshMessages(accountId, recipientPlayerCharacterId, mailMessage);
         }
 
-        public MailMessageListResponse GetMailMessages(int playerCharacterId) {
-            //Debug.Log($"MailService.GetMailMessages({playerCharacterId})");
+        public void SaveMail(int playerCharacterId, MailMessage mailMessage) {
+            //Debug.Log($"MailService.SaveMailFile(playerCharacterId: {playerCharacterId}, mailMessageId: {mailMessage.MessageId})");
 
-            MailMessageListResponse mailMessageListResponse = new MailMessageListResponse();
-            string accountSaveFolder = GetMessageSaveFolder(playerCharacterId);
-            if (Directory.Exists(accountSaveFolder)) {
-                string[] fileEntries = Directory.GetFiles(accountSaveFolder);
-                foreach (string fileName in fileEntries) {
-                    if (fileName.EndsWith(".json")) {
-                        string jsonString = File.ReadAllText(fileName);
-                        MailMessage mailMessage = JsonUtility.FromJson<MailMessage>(jsonString);
-                        if (mailMessage == null) {
-                            Debug.LogWarning($"MailService.GetMailMessages({playerCharacterId}): Could not load mail message from file {fileName}. This message will be skipped.");
-                            continue;
-                        }
-                        mailMessageListResponse.MailMessages.Add(mailMessage);
-                    }
-                }
-            }
-            mailMessageListResponse.BundleItems(systemItemManager);
-            return mailMessageListResponse;
+            serverDataService.SaveMailMessage(playerCharacterId, mailMessage);
         }
 
-        public MailMessage GetMailMessage(int playerCharacterId, int messageId) {
-            string jsonSavePath = $"{GetMessageSaveFolder(playerCharacterId)}/{messageId}.json";
-            if (File.Exists(jsonSavePath)) {
-                string jsonString = File.ReadAllText(jsonSavePath);
-                MailMessage mailMessage = JsonUtility.FromJson<MailMessage>(jsonString);
-                return mailMessage;
-            }
-            return null;
+        public void DeleteMessage(int accountId, int playerCharacterId, int messageId) {
+            serverDataService.DeleteMailMessage(accountId, playerCharacterId, messageId);
+        }
+
+        public void ProcessDeleteMessage(int accountId, int messageId) {
+            networkManagerServer.AdvertiseDeleteMailMessage(accountId, messageId);
+        }
+
+        public void GetMailMessages(int accountId, int playerCharacterId) {
+            //Debug.Log($"MailService.GetMailMessages(accountId: {accountId}, playerCharacterId: {playerCharacterId})");
+
+            serverDataService.GetMailMessages(accountId, playerCharacterId);
         }
 
         public void SendMailMessages(int playerCharacterId) {
-            //Debug.Log($"MailService.SendMailMessages({characterId})");
+            //Debug.Log($"MailService.SendMailMessages(playerCharacterId: {playerCharacterId})");
 
             // accountId will be 0 if player is not online, in which case we do not need to send mail messages
             int accountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(playerCharacterId);
-            if (accountId == 0) {
+            if (accountId == -1) {
                 return;
             }
-            MailMessageListResponse mailMessageListResponse = GetMailMessages(playerCharacterId);
-            networkManagerServer.AdvertiseMailMessages(accountId, mailMessageListResponse);
+            GetMailMessages(accountId, playerCharacterId);
         }
 
-        public bool TakeAttachment(int playerCharacterId, int messageId, int attachmentSlotId) {
+        public void ProcessMailMessageListResponse(int accountId, List<MailMessageSerializedData> mailMessageSerializedDatas) {
+
+            List<MailMessage> mailMessages = new List<MailMessage>();
+
+            foreach (MailMessageSerializedData mailMessageSerializedData in mailMessageSerializedDatas) {
+                MailMessage mailMessage = JsonUtility.FromJson<MailMessage>(mailMessageSerializedData.saveData);
+                // trust the database column with the ID in case of race conditions
+                mailMessage.MessageId = mailMessageSerializedData.id;
+                mailMessages.Add(mailMessage);
+            }
+
+            ProcessMailMessageListResponse(accountId, mailMessages);
+        }
+
+        public void ProcessMailMessageListResponse(int accountId, List <MailMessage> mailMessages) {
+
+            MailMessageListBundle mailMessageListBundle = new MailMessageListBundle();
+
+            foreach (MailMessage mailMessage in mailMessages) {
+                mailMessageListBundle.MailMessages.Add(mailMessage);
+            }
+            mailMessageListBundle.BundleItems(systemItemManager);
+
+            networkManagerServer.AdvertiseMailMessages(accountId, mailMessageListBundle);
+        }
+
+        public void RequestTakeAttachment(int playerCharacterId, int messageId, int attachmentSlotId) {
             //Debug.Log($"MailService.TakeAttachment(playerCharacterId: {playerCharacterId}, messageId: {messageId}, attachmentSlotId: {attachmentSlotId})");
 
-            MailMessage mailMessage = GetMailMessage(playerCharacterId, messageId);
+            serverDataService.TakeAttachment(playerCharacterId, messageId, attachmentSlotId);
+        }
+
+        public void ProcessTakeAttachment(MailMessage mailMessage, int playerCharacterId, int attachmentSlotId) {
+
             if (mailMessage == null) {
-                return false;
+                return;
             }
             int accountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(playerCharacterId);
             UnitController unitController = playerManagerServer.GetUnitControllerFromAccountId(accountId);
             if (unitController == null) {
-                return false;
+                return;
             }
             if (TakeAttachment(playerCharacterId, attachmentSlotId, mailMessage, unitController) == true) {
-                SaveMailFile(playerCharacterId, messageId, mailMessage);
-                return true;
+                SaveMail(playerCharacterId, mailMessage);
             }
-            
-            return false;
+
+            networkManagerServer.AdvertiseTakeMailAttachment(accountId, mailMessage.MessageId, attachmentSlotId);
         }
 
         public bool TakeAttachment(int playerCharacterId, int attachmentSlotId, MailMessage mailMessage, UnitController unitController) {
@@ -282,13 +236,13 @@ namespace AnyRPG {
             if (attachmentSlotId >= mailMessage.AttachmentSlots.Count) {
                 return false;
             }
-            while (mailMessage.AttachmentSlots[attachmentSlotId].ItemIds.Count > 0) {
-                int itemId = mailMessage.AttachmentSlots[attachmentSlotId].ItemIds[0];
-                InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemId);
+            while (mailMessage.AttachmentSlots[attachmentSlotId].ItemInstanceIds.Count > 0) {
+                long itemInstanceId = mailMessage.AttachmentSlots[attachmentSlotId].ItemInstanceIds[0];
+                InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemInstanceId);
                 if (instantiatedItem != null) {
                     if (unitController.CharacterInventoryManager.AddItem(instantiatedItem, false) == false) {
                         // save file before return to ensure any items that were taken are removed from message
-                        SaveMailFile(playerCharacterId, mailMessage.MessageId, mailMessage);
+                        SaveMail(playerCharacterId, mailMessage);
                         return false;
                     } else {
                         if (instantiatedItem is InstantiatedCurrencyItem) {
@@ -297,39 +251,47 @@ namespace AnyRPG {
 
                     }
                 }
-                mailMessage.AttachmentSlots[attachmentSlotId].ItemIds.Remove(itemId);
+                mailMessage.AttachmentSlots[attachmentSlotId].ItemInstanceIds.Remove(itemInstanceId);
             }
             return true;
         }
 
-        public bool TakeAttachments(int playerCharacterId, int messageId) {
-            MailMessage mailMessage = GetMailMessage(playerCharacterId, messageId);
-            if (mailMessage == null) {
-                return false;
-            }
-            int accountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(playerCharacterId);
-            UnitController unitController = playerManagerServer.GetUnitControllerFromAccountId(accountId);
-            if (unitController == null) {
-                return false;
-            }
-            for (int i = 0; i < mailMessage.AttachmentSlots.Count; i++) {
-                if (TakeAttachment(playerCharacterId, i, mailMessage, unitController) == false) {
-                    return false;
-                }
-            }
-            SaveMailFile(playerCharacterId, messageId, mailMessage);
-            return true;
+        public void RequestTakeAttachments(int accountId, int playerCharacterId, int messageId) {
+            serverDataService.TakeAttachments(accountId, playerCharacterId, messageId);
         }
-
-        public void MarkMessageAsRead(int accountId, int messageId) {
-            int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            MailMessage mailMessage = GetMailMessage(playerCharacterId, messageId);
+        public void ProcessTakeAttachments(MailMessage mailMessage, int playerCharacterId, int accountId) {
             if (mailMessage == null) {
                 return;
             }
-            mailMessage.IsRead = true;
-            SaveMailFile(playerCharacterId, messageId, mailMessage);
+            UnitController unitController = playerManagerServer.GetUnitControllerFromAccountId(accountId);
+            if (unitController == null) {
+                return;
+            }
+            for (int i = 0; i < mailMessage.AttachmentSlots.Count; i++) {
+                if (TakeAttachment(playerCharacterId, i, mailMessage, unitController) == false) {
+                    return;
+                }
+            }
+            SaveMail(playerCharacterId, mailMessage);
+
+            networkManagerServer.AdvertiseTakeMailAttachments(accountId, mailMessage.MessageId);
         }
+
+        public void RequestMarkMessageAsRead(int accountId, int messageId) {
+            //Debug.Log($"MailService.RequestMarkMessageAsRead(accountId: {accountId}, messageId: {messageId})");
+
+            int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
+            serverDataService.MarkMailMessageAsRead(messageId, playerCharacterId);
+        }
+
+        public void ProcessMarkMessageAsRead(MailMessage mailMessage, int playerCharacterId) {
+            //Debug.Log($"MailService.ProcessMarkMessageAsRead(mailMessageId: {mailMessage.MessageId}, playerCharacterId: {playerCharacterId})");
+
+            mailMessage.IsRead = true;
+            SaveMail(playerCharacterId, mailMessage);
+        }
+
+
     }
 
 }

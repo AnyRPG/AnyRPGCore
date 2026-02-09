@@ -175,6 +175,7 @@ namespace AnyRPG {
 
         public void SendChatMessage() {
             networkManagerClient.SendLobbyGameChatMessage(chatInput.text, networkManagerClient.LobbyGame.gameId);
+            chatInput.text = string.Empty;
         }
 
         public void HandleSendLobbyGameChatMessage(string messageText, int gameId) {
@@ -315,10 +316,12 @@ namespace AnyRPG {
 
             // hide the cancel game button for anyone other than the leader
             if (networkManagerClient.AccountId == networkManagerClient.LobbyGame.leaderAccountId) {
+                leaveButton.Button.interactable = false;
                 cancelGameButton.gameObject.SetActive(true);
                 startGameButton.gameObject.SetActive(true);
                 startGameButton.Button.interactable = false;
             } else {
+                leaveButton.Button.interactable = true;
                 cancelGameButton.gameObject.SetActive(false);
                 if (networkManagerClient.LobbyGame.inProgress == true && networkManagerClient.LobbyGame.allowLateJoin == true) {
                     startGameButton.gameObject.SetActive(true);

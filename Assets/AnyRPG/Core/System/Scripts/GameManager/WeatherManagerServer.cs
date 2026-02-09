@@ -18,14 +18,15 @@ namespace AnyRPG {
         protected TimeOfDayManagerServer timeOfDayManagerServer = null;
         protected TimeOfDayManagerClient timeOfDayManagerClient = null;
         protected SystemEventManager systemEventManager = null;
+        protected LevelManagerServer levelManagerServer = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
             systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
             systemEventManager.OnLevelLoad += HandleLevelLoad;
-            systemEventManager.OnAddLoadedScene += HandleAddLoadedScene;
-            systemEventManager.OnRemoveLoadedScene += HandleRemoveLoadedScene;
+            levelManagerServer.OnAddLoadedScene += HandleAddLoadedScene;
+            levelManagerServer.OnRemoveLoadedScene += HandleRemoveLoadedScene;
         }
 
         public override void SetGameManagerReferences() {
@@ -37,6 +38,7 @@ namespace AnyRPG {
             timeOfDayManagerServer = systemGameManager.TimeOfDayManagerServer;
             timeOfDayManagerClient = systemGameManager.TimeOfDayManagerClient;
             systemEventManager = systemGameManager.SystemEventManager;
+            levelManagerServer = systemGameManager.LevelManagerServer;
         }
 
         private void HandleRemoveLoadedScene(int sceneHandle, string sceneName) {
@@ -45,11 +47,11 @@ namespace AnyRPG {
             ProcessRemoveLoadedScene(sceneHandle, sceneName);
         }
 
-        private void HandleAddLoadedScene(int sceneHandle, string sceneName) {
+        private void HandleAddLoadedScene(int sceneHandle, SceneData sceneData) {
             //Debug.Log($"WeatherManagerServer.HandleAddLoadedScene({sceneHandle}, {sceneName})");
 
-            if (levelManager.SceneDictionary.ContainsKey(sceneName) == true) {
-                ProcessAddLoadedScene(sceneHandle, levelManager.SceneDictionary[sceneName]);
+            if (sceneData.SceneNode != null) {
+                ProcessAddLoadedScene(sceneHandle, sceneData.SceneNode);
             }
         }
 

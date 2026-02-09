@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace AnyRPG {
     public class MailboxManagerServer : InteractableOptionManager {
@@ -23,37 +24,36 @@ namespace AnyRPG {
 
         public void RequestDeleteMailMessage(int accountId, int messageId) {
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (playerCharacterId == 0) {
+            if (playerCharacterId == -1) {
                 return;
             }
-            if (mailService.DeleteMessage(playerCharacterId, messageId) == true) {
-                networkManagerServer.AdvertiseDeleteMailMessage(accountId, messageId);
-            }
+            mailService.DeleteMessage(accountId, playerCharacterId, messageId);
+            
         }
 
         public void RequestTakeMailAttachment(int accountId, int messageId, int attachmentSlotId) {
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (playerCharacterId == 0) {
+            if (playerCharacterId == -1) {
                 return;
             }
-            if (mailService.TakeAttachment(playerCharacterId, messageId, attachmentSlotId) == true) {
-                networkManagerServer.AdvertiseTakeMailAttachment(accountId, messageId, attachmentSlotId);
-            }
+            mailService.RequestTakeAttachment(playerCharacterId, messageId, attachmentSlotId);
         }
 
         public void RequestTakeMailAttachments(int accountId, int messageId) {
+            //Debug.Log($"MailboxManagerServer.RequestTakeMailAttachments(accountId: {accountId}, messageId: {messageId})");
+
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (playerCharacterId == 0) {
+            if (playerCharacterId == -1) {
                 return;
             }
-            if (mailService.TakeAttachments(playerCharacterId, messageId) == true) {
-                networkManagerServer.AdvertiseTakeMailAttachments(accountId, messageId);
-            }
+            mailService.RequestTakeAttachments(accountId, playerCharacterId, messageId);
             
         }
 
         public void RequestMarkMailAsRead(int accountId, int messageId) {
-            mailService.MarkMessageAsRead(accountId, messageId);
+            //Debug.Log($"MailboxManagerServer.RequestMarkMailAsRead(accountId: {accountId}, messageId: {messageId})");
+
+            mailService.RequestMarkMessageAsRead(accountId, messageId);
         }
     }
 

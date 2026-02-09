@@ -116,8 +116,8 @@ namespace AnyRPG {
         public event System.Action<UnitController, Skill> OnUnLearnSkill = delegate { };
         public event System.Action<string, string, string, int> OnSetQuestObjectiveCurrentAmount = delegate { };
         public event System.Action<string, string, string, int> OnSetAchievementObjectiveCurrentAmount = delegate { };
-        public event System.Action<int, bool, int> OnPlaceInStack = delegate { };
-        public event System.Action<int, bool, int> OnPlaceInEmpty = delegate { };
+        public event System.Action<long, bool, int> OnPlaceInStack = delegate { };
+        public event System.Action<long, bool, int> OnPlaceInEmpty = delegate { };
         public event System.Action<InstantiatedItem> OnGetNewInstantiatedItem = delegate { };
         public event System.Action<InstantiatedItem> OnRequestDeleteItem = delegate { };
         public event System.Action<InstantiatedItem> OnDeleteItem = delegate { };
@@ -182,9 +182,9 @@ namespace AnyRPG {
         public event System.Action<string> OnWriteMessageFeedMessage = delegate { };
         public event System.Action<UnitController, Item> OnItemCountChanged = delegate { };
         public event System.Action<UnitController, Dialog> OnDialogCompleted = delegate { };
-        public event System.Action<Quest, int, int> OnInteractWithQuestStartItem = delegate { };
-        public event System.Action<int, int, Quest> OnRequestAcceptQuestItemQuest = delegate { };
-        public event System.Action<int, int, Quest, QuestRewardChoices> OnRequestCompleteQuestItemQuest = delegate { };
+        public event System.Action<Quest, int, long> OnInteractWithQuestStartItem = delegate { };
+        public event System.Action<int, long, Quest> OnRequestAcceptQuestItemQuest = delegate { };
+        public event System.Action<int, long, Quest, QuestRewardChoices> OnRequestCompleteQuestItemQuest = delegate { };
         public event System.Action OnSaveDataUpdated = delegate { };
         public event System.Action OnNameChangeFail = delegate { };
         public event System.Action<int> OnSetGroupId = delegate { };
@@ -836,6 +836,8 @@ namespace AnyRPG {
         }
 
         public void NotifyOnSpawnProjectileEffectPrefabs(Interactable target, Interactable originalTarget, ProjectileEffectProperties projectileEffectProperties, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnSpawnProjectileEffectPrefabs({projectileEffectProperties.ResourceName})");
+
             OnSpawnProjectileEffectPrefabs(target, originalTarget, projectileEffectProperties, abilityEffectContext);
         }
 
@@ -1003,15 +1005,15 @@ namespace AnyRPG {
             OnCompleteInteractWithOption(unitController, interactableOptionComponent);
         }
 
-        public void NotifyOnInteractWithQuestStartItem(Quest quest, int slotIndex, int instanceId) {
-            OnInteractWithQuestStartItem(quest, slotIndex, instanceId);
+        public void NotifyOnInteractWithQuestStartItem(Quest quest, int slotIndex, long itemInstanceId) {
+            OnInteractWithQuestStartItem(quest, slotIndex, itemInstanceId);
         }
 
-        public void NotifyOnRequestAcceptQuestItemQuest(int slotIndex, int instanceId, Quest currentQuest) {
+        public void NotifyOnRequestAcceptQuestItemQuest(int slotIndex, long instanceId, Quest currentQuest) {
             OnRequestAcceptQuestItemQuest(slotIndex, instanceId, currentQuest);
         }
 
-        public void NotifyOnRequestCompleteQuestItemQuest(int slotIndex, int instanceId, Quest currentQuest, QuestRewardChoices questRewardChoices) {
+        public void NotifyOnRequestCompleteQuestItemQuest(int slotIndex, long instanceId, Quest currentQuest, QuestRewardChoices questRewardChoices) {
             OnRequestCompleteQuestItemQuest(slotIndex, instanceId, currentQuest, questRewardChoices);
         }
 

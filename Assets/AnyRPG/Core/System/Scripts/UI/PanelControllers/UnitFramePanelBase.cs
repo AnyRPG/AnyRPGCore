@@ -323,6 +323,8 @@ namespace AnyRPG {
         }
 
         public void UpdateLeaderIcon() {
+            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.UpdateLeaderIcon()");
+
             if (leaderIcon == null || unitController == null) {
                 // no icon or no target, hide leader icon
                 leaderIcon.gameObject.SetActive(false);

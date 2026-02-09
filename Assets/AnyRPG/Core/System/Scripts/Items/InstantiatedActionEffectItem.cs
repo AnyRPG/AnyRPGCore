@@ -8,7 +8,7 @@ namespace AnyRPG {
 
         private ActionEffectItem actionEffectItem = null;
 
-        public InstantiatedActionEffectItem(SystemGameManager systemGameManager, int instanceId, ActionEffectItem actionEffectItem, ItemQuality itemQuality) : base(systemGameManager, instanceId, actionEffectItem, itemQuality) {
+        public InstantiatedActionEffectItem(SystemGameManager systemGameManager, long instanceId, ActionEffectItem actionEffectItem, ItemQuality itemQuality) : base(systemGameManager, instanceId, actionEffectItem, itemQuality) {
             this.actionEffectItem = actionEffectItem;
         }
 

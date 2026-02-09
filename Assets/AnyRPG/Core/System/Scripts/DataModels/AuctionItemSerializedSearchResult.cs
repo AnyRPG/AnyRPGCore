@@ -8,7 +8,7 @@ namespace AnyRPG {
         public int SellerPlayerCharacterId = 0;
         public string SellerName = string.Empty;
         public int AuctionItemId = 0;
-        public List<int> ItemIds = new List<int>();
+        public List<long> ItemInstanceIds = new List<long>();
         public int CurrencyAmount = 0;
 
         public AuctionItemSerializedSearchResult() { }
@@ -18,13 +18,13 @@ namespace AnyRPG {
             this.SellerName = sellerName;
             this.AuctionItemId = auctionItem.AuctionItemId;
             this.CurrencyAmount = auctionItem.CurrencyAmount;
-            this.ItemIds = auctionItem.ItemIds;
+            this.ItemInstanceIds = auctionItem.ItemInstanceIds;
         }
 
         public AuctionItemSerializedSearchResult(ListAuctionItemRequest listAuctionItemRequest, int playerCharacterId) {
             this.SellerPlayerCharacterId = playerCharacterId;
             this.CurrencyAmount = listAuctionItemRequest.CurrencyAmount;
-            this.ItemIds = listAuctionItemRequest.ItemIds;
+            this.ItemInstanceIds = listAuctionItemRequest.ItemInstanceIds;
         }
     }
 

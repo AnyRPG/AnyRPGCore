@@ -8,5 +8,7 @@ namespace AnyRPG {
 
     public enum DamageType { ability, physical }
 
+    public enum SceneInstanceType { World, Group, LobbyGame, Personal }
+
 }
 

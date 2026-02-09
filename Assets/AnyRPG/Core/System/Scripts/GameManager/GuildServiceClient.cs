@@ -71,7 +71,7 @@ namespace AnyRPG {
         public void ProcessJoinGuild(int guildId, GuildMemberNetworkData guildMemberNetworkData) {
             //Debug.Log($"GuildServiceClient.ProcessJoinGuild(guildId: {guildId})");
 
-            if (currentGuild == null || currentGuild.guildId != guildId) {
+            if (currentGuild == null || currentGuild.GuildId != guildId) {
                 Debug.LogWarning($"GuildService.ProcessJoinGuild({guildId}) guildId provided does not match current guildId");
                 return;
             }
@@ -124,7 +124,7 @@ namespace AnyRPG {
         public void AddCharacterToGuild(GuildMemberData guildMemberData, int guildId) {
             //Debug.Log($"GuildServiceClient.AddCharacterToGuild({guildMemberData.CharacterSummaryData.IsOnline}, {guildId})");
 
-            if (currentGuild == null || currentGuild.guildId != guildId) {
+            if (currentGuild == null || currentGuild.GuildId != guildId) {
                 //Debug.Log("GuildService.AddCharacterToGuild: character guild not found");
                 return;
             }
@@ -144,7 +144,7 @@ namespace AnyRPG {
         public void RemoveCharacterFromGuild(int removedCharacterId, int guildId) {
             //Debug.Log($"GuildServiceClient.RemoveCharacterFromGuild({removedCharacterId}, {guildId})");
 
-            if (currentGuild == null || currentGuild.guildId != guildId) {
+            if (currentGuild == null || currentGuild.GuildId != guildId) {
                 Debug.LogWarning("GuildService.RemoveCharacterFromGuild: character guild not found");
                 return;
             }
@@ -178,13 +178,13 @@ namespace AnyRPG {
         public void RequestDisbandGuild() {
             //Debug.Log($"GuildServiceClient.RequestDisbandGuild()");
 
-            networkManagerClient.RequestDisbandGuild(currentGuild.guildId);
+            networkManagerClient.RequestDisbandGuild(currentGuild.GuildId);
         }
 
         public void ProcessDisbandGuild(int guildId) {
             //Debug.Log($"GuildServiceClient.ProcessDisbandGuild({guildId})");
 
-            if (currentGuild == null || currentGuild.guildId != guildId) {
+            if (currentGuild == null || currentGuild.GuildId != guildId) {
                 //Debug.Log("GuildService.ProcessDisbandGuild: character guild not found");
                 return;
             }
@@ -195,12 +195,12 @@ namespace AnyRPG {
         }
 
         public void ProcessPromoteGuildLeader(int guildId, int newLeaderCharacterId) {
-            if (currentGuild == null || currentGuild.guildId != guildId) {
+            if (currentGuild == null || currentGuild.GuildId != guildId) {
                 //Debug.Log("GuildService.ProcessPromoteGuildLeader: character guild not found");
                 return;
             }
 
-            currentGuild.leaderPlayerCharacterId = newLeaderCharacterId;
+            currentGuild.LeaderPlayerCharacterId = newLeaderCharacterId;
 
             /*
             if (newLeaderCharacterId == playerManager.UnitController.CharacterId) {
@@ -221,7 +221,7 @@ namespace AnyRPG {
         }
 
         public void ProcessRenameCharacterInGuild(int guildId, int characterId, string newName) {
-            if (currentGuild == null || currentGuild.guildId != guildId) {
+            if (currentGuild == null || currentGuild.GuildId != guildId) {
                 //Debug.Log("GuildService.ProcessRenameCharacterInGuild: character guild not found");
                 return;
             }
@@ -236,21 +236,21 @@ namespace AnyRPG {
         }
 
         public void ProcessGuildMemberStatusChange(int guildId, int playerCharacterId, GuildMemberNetworkData guildMemberNetworkData) {
-            if (currentGuild == null || currentGuild.guildId != guildId) {
+            if (currentGuild == null || currentGuild.GuildId != guildId) {
                 //Debug.Log("GuildService.ProcessGuildMemberOnline: guild not found");
                 return;
             }
             if (currentGuild.MemberList.ContainsKey(playerCharacterId)) {
                 currentGuild.MemberList[playerCharacterId] = new GuildMemberData(guildMemberNetworkData, systemDataFactory);
                 if (currentGuild.MemberList[playerCharacterId].Rank == GuildRank.Leader) {
-                    currentGuild.leaderPlayerCharacterId = playerCharacterId;
+                    currentGuild.LeaderPlayerCharacterId = playerCharacterId;
                 }
             }
             OnGuildMemberStatusChange();
         }
 
         public void AdvertiseGuildMessage(int guildId, string messageText) {
-            if (currentGuild == null || currentGuild.guildId != guildId) {
+            if (currentGuild == null || currentGuild.GuildId != guildId) {
                 //Debug.Log("GuildService.ProcessGuildMemberOnline: guild not found");
                 return;
             }

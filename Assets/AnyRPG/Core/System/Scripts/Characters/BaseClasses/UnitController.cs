@@ -1282,6 +1282,9 @@ namespace AnyRPG {
                 if (characterRequestData.saveData.InitializeResourceAmounts == true) {
                     characterStats.SetResourceAmountsToMaximum();
                     characterRequestData.saveData.InitializeResourceAmounts = false;
+                } else {
+                    // cap the resources to their max amount in case they were higher for some reason
+                    characterStats.ClipResourceAmounts();
                 }
             } else {
                 characterStats.SetLevelInternal(characterConfigurationRequest.unitLevel);

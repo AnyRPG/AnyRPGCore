@@ -745,10 +745,11 @@ namespace AnyRPG {
                 // nothing to save
                 return;
             }
-            characterSaveData.EquipmentSaveData = new List<EquipmentSaveData>();
+            characterSaveData.EquipmentSaveData = new List<EquipmentInventorySlotSaveData>();
             foreach (EquipmentInventorySlot equipmentInventorySlot in equipmentManager.CurrentEquipment.Values) {
-                EquipmentSaveData tmpSaveData = new EquipmentSaveData();
+                EquipmentInventorySlotSaveData tmpSaveData = new EquipmentInventorySlotSaveData();
                 if (equipmentInventorySlot.InstantiatedEquipment != null) {
+                    tmpSaveData.HasItem = true;
                     tmpSaveData.ItemInstanceId = equipmentInventorySlot.InstantiatedEquipment.InstanceId;
                 }
                 characterSaveData.EquipmentSaveData.Add(tmpSaveData);

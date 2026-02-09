@@ -341,7 +341,7 @@ namespace AnyRPG {
             return string.Join("\n", summaryLines);
         }
 
-        public override InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, int itemId, Item item, ItemQuality usedItemQuality) {
+        public override InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, long itemId, Item item, ItemQuality usedItemQuality) {
             if ((item is Equipment) == false) {
                 return null;
             }

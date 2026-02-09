@@ -1,4 +1,3 @@
-using AnyRPG;
 //using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -192,7 +191,11 @@ namespace AnyRPG {
             //Debug.Log($"LootTableState.InitializeItem({instantiatedItem.Item.ResourceName})");
 
             OnInitializeItem(instantiatedItem);
-            systemItemManager.SaveDataFile(instantiatedItem);
+
+            // loot table is the only implementation of IInstantiatedItemRequestor, but only currency loot needs to be created(saved to database for first time)
+            if (networkManagerServer.ServerModeActive == true && instantiatedItem.Item == lootManager.CurrencyLootItem) {
+                systemItemManager.CreateItemInstance(instantiatedItem);
+            }
         }
 
 

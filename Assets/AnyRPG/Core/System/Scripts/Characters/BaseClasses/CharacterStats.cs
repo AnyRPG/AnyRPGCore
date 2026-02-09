@@ -1334,9 +1334,27 @@ namespace AnyRPG {
                 }
                 NotifyOnResourceAmountChanged(_powerResource, (int)GetPowerResourceMaxAmount(_powerResource), (int)PowerResourceDictionary[_powerResource].currentValue);
             }
-
-
         }
+
+        public void ClipResourceAmounts() {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.ClipResourceAmounts()");
+
+            if (PowerResourceList == null) {
+                return;
+            }
+
+            // loop through and update the resources.
+            foreach (PowerResource _powerResource in PowerResourceList) {
+                if (_powerResource != null && powerResourceDictionary.ContainsKey(_powerResource)) {
+                    if (powerResourceDictionary[_powerResource].currentValue > GetPowerResourceMaxAmount(_powerResource)) {
+                        //Debug.Log($"{unitController.gameObject.name}.CharacterStats.SetResourceAmountsToMaximum(): Lowering {_powerResource.ResourceName} from {powerResourceDictionary[_powerResource].currentValue} to {GetPowerResourceMaxAmount(_powerResource)}");
+                        powerResourceDictionary[_powerResource].currentValue = GetPowerResourceMaxAmount(_powerResource);
+                    }
+                }
+                NotifyOnResourceAmountChanged(_powerResource, (int)GetPowerResourceMaxAmount(_powerResource), (int)PowerResourceDictionary[_powerResource].currentValue);
+            }
+        }
+
 
         /*
         public void TrySpawnDead() {

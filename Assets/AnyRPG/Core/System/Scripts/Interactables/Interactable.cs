@@ -983,11 +983,15 @@ namespace AnyRPG {
         }
 
         public void NotifyOnInteractableResetSettings() {
+            //Debug.Log($"Interactable.NotifyOnInteractableResetSettings() {GetInstanceID()}");
+            //Debug.Log($"{gameObject.name}.Interactable.NotifyOnInteractableResetSettings() {GetInstanceID()}");
+
             OnInteractableResetSettings();
         }
 
         public virtual void ResetSettings() {
-            //Debug.Log($"{gameObject.name}.Interactable.ResetSettings()");
+            //Debug.Log($"Interactable.ResetSettings() {GetInstanceID()}");
+            //Debug.Log($"{gameObject.name}.Interactable.ResetSettings() {GetInstanceID()}");
 
             if (glowOnMouseOver) {
                 outlineController.TurnOffOutline();

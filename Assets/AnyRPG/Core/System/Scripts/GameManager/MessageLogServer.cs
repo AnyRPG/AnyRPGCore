@@ -30,7 +30,7 @@ namespace AnyRPG {
             }
 
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (playerCharacterId == 0) {
+            if (playerCharacterId == -1) {
                 return;
             }
             string playerName = playerCharacterService.GetPlayerNameFromId(playerCharacterId);
@@ -66,7 +66,7 @@ namespace AnyRPG {
 
         public void SendGroupMessage(int accountId, string messageText) {
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (playerCharacterId == 0) {
+            if (playerCharacterId == -1) {
                 return;
             }
 
@@ -81,7 +81,7 @@ namespace AnyRPG {
                 foreach (int memberId in characterGroup.MemberList[UnitControllerMode.Player].Keys) {
                     // get account id from player id
                     int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(memberId);
-                    if (memberAccountId == 0) {
+                    if (memberAccountId == -1) {
                         continue;
                     }
                     networkManagerServer.AdvertiseGroupMessage(memberAccountId, characterGroup.characterGroupId, messageText);
@@ -92,7 +92,7 @@ namespace AnyRPG {
 
         public void SendGuildMessage(int accountId, string messageText) {
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (playerCharacterId == 0) {
+            if (playerCharacterId == -1) {
                 return;
             }
             string playerName = playerCharacterService.GetPlayerNameFromId(playerCharacterId);
@@ -104,10 +104,10 @@ namespace AnyRPG {
                 foreach (int memberId in guild.MemberList.Keys) {
                     // get account id from player id
                     int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(memberId);
-                    if (memberAccountId == 0) {
+                    if (memberAccountId == -1) {
                         continue;
                     }
-                    networkManagerServer.AdvertiseGuildMessage(memberAccountId, guild.guildId, messageText);
+                    networkManagerServer.AdvertiseGuildMessage(memberAccountId, guild.GuildId, messageText);
                 }
             }
         }
@@ -116,13 +116,13 @@ namespace AnyRPG {
             //Debug.Log($"MessageLogServer.SendPrivateMessage({sourceAccountId}, {targetPlayerName}, {messageText})");
 
             int sourcePlayerCharacterId = playerManagerServer.GetPlayerCharacterId(sourceAccountId);
-            if (sourcePlayerCharacterId == 0) {
+            if (sourcePlayerCharacterId == -1) {
                 return;
             }
             string sourcePlayerName = playerCharacterService.GetPlayerNameFromId(sourcePlayerCharacterId);
 
             int targetPlayerCharacterId = playerCharacterService.GetPlayerIdFromName(targetPlayerName);
-            if (targetPlayerCharacterId == 0) {
+            if (targetPlayerCharacterId == -1) {
                 return;
             }
             // we already have the target player name, but it could have come in lowercase, so we need to lookup the real one

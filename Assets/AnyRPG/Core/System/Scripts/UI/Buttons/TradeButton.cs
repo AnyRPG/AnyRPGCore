@@ -190,7 +190,7 @@ namespace AnyRPG {
             //Debug.Log($"TradeButton.RemoveItem() instance: {GetInstanceID()}");
 
             RemoveItem();
-            tradeServiceClient.RequestAddItemsToTradeSlot(buttonIndex, new List<int>());
+            tradeServiceClient.RequestAddItemsToTradeSlot(buttonIndex, new List<long>());
         }
 
         public void RemoveItem() {

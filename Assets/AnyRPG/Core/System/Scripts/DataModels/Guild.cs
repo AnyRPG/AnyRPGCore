@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace AnyRPG {
     public class Guild {
-        public int guildId;
-        public string guildName;
-        public int leaderPlayerCharacterId;
+        public int GuildId;
+        public string GuildName;
+        public int LeaderPlayerCharacterId;
 
         /// <summary>
         /// characterId, GuildMemberData
@@ -20,31 +21,42 @@ namespace AnyRPG {
         }
 
         public Guild(int guildId) {
-            this.guildId = guildId;
+            this.GuildId = guildId;
         }
 
         public Guild(GuildNetworkData guildNetworkData, SystemDataFactory systemDataFactory) {
-            this.guildId = guildNetworkData.GuildId;
-            this.guildName = guildNetworkData.GuildName;
-            this.leaderPlayerCharacterId = guildNetworkData.LeaderPlayerCharacterId;
+            this.GuildId = guildNetworkData.GuildId;
+            this.GuildName = guildNetworkData.GuildName;
+            this.LeaderPlayerCharacterId = guildNetworkData.LeaderPlayerCharacterId;
             foreach (GuildMemberNetworkData guildMemberNetworkData in guildNetworkData.MemberList) {
                 MemberList.Add(guildMemberNetworkData.CharacterSummaryNetworkData.CharacterId, new GuildMemberData(guildMemberNetworkData, systemDataFactory));
             }
         }
 
+        public Guild(string guildName, GuildMemberData guildMemberData) {
+            this.GuildName = guildName;
+            this.LeaderPlayerCharacterId = guildMemberData.CharacterSummaryData.CharacterId;
+            MemberList.Add(guildMemberData.CharacterSummaryData.CharacterId, guildMemberData);
+        }
+
         public Guild(int guildId, string guildName, GuildMemberData guildMemberData) {
-            this.guildId = guildId;
-            this.guildName = guildName;
-            this.leaderPlayerCharacterId = guildMemberData.CharacterSummaryData.CharacterId;
+            this.GuildId = guildId;
+            this.GuildName = guildName;
+            this.LeaderPlayerCharacterId = guildMemberData.CharacterSummaryData.CharacterId;
             MemberList.Add(guildMemberData.CharacterSummaryData.CharacterId, guildMemberData);
         }
 
         public Guild(GuildSaveData guildSaveData, PlayerCharacterService playerCharacterService) {
-            this.guildId = guildSaveData.GuildId;
-            this.guildName = guildSaveData.GuildName;
-            this.leaderPlayerCharacterId = guildSaveData.LeaderPlayerCharacterId;
+            this.GuildId = guildSaveData.GuildId;
+            this.GuildName = guildSaveData.GuildName;
+            this.LeaderPlayerCharacterId = guildSaveData.LeaderPlayerCharacterId;
             foreach (GuildMemberSaveData guildMemberSaveData in guildSaveData.MemberList) {
-                MemberList.Add(guildMemberSaveData.CharacterId, new GuildMemberData(playerCharacterService.GetSummaryData(guildMemberSaveData.CharacterId), guildMemberSaveData.Rank));
+                CharacterSummaryData characterSummaryData = playerCharacterService.GetSummaryData(guildMemberSaveData.CharacterId);
+                if (characterSummaryData == null) {
+                    Debug.LogWarning("Guild() characterSummaryData was null. Skipping member!");
+                    continue;
+                }
+                MemberList.Add(guildMemberSaveData.CharacterId, new GuildMemberData(characterSummaryData, guildMemberSaveData.Rank));
             }
         }
 
@@ -57,7 +69,7 @@ namespace AnyRPG {
         }
 
         public void PromoteLeader(int newLeaderCharacterId) {
-            leaderPlayerCharacterId = newLeaderCharacterId;
+            LeaderPlayerCharacterId = newLeaderCharacterId;
         }
 
     }

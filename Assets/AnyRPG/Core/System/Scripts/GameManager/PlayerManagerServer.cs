@@ -158,17 +158,19 @@ namespace AnyRPG {
         }
 
         public int GetPlayerCharacterId(int accountId) {
+            //Debug.Log($"PlayerManagerServer.GetPlayerCharacterId(accountId: {accountId})");
+
             if (playerCharacterMonitors.ContainsKey(accountId)) {
                 return playerCharacterMonitors[accountId].characterSaveData.CharacterId;
             }
-            return 0;
+            return -1;
         }
 
 
         private void SavePlayerCharacter(PlayerCharacterMonitor playerCharacterMonitor) {
             //Debug.Log($"PlayerManagerServer.SavePlayerCharacter()");
 
-            networkManagerServer.SavePlayerCharacter(playerCharacterMonitor);
+            playerCharacterService.SavePlayerCharacter(playerCharacterMonitor);
         }
 
         public void AddActivePlayer(int accountId, UnitController unitController) {
@@ -557,7 +559,7 @@ namespace AnyRPG {
         }
 
         public void RequestSpawnPlayerUnit(int accountId, string sceneName) {
-            //Debug.Log($"PlayerManagerServer.RequestSpawnPlayerUnit({accountId}, {sceneName})");
+            //Debug.Log($"PlayerManagerServer.RequestSpawnPlayerUnit(accountId: {accountId}, sceneName: {sceneName})");
 
             SpawnPlayerRequest spawnPlayerRequest = GetSpawnPlayerRequest(accountId, sceneName);
 
@@ -582,8 +584,8 @@ namespace AnyRPG {
                 Guild guild = guildServiceServer.GetGuildFromCharacterId(characterRequestData.characterId);
                 if (guild != null) {
                     //Debug.Log($"PlayerManagerServer.RequestSpawnPlayerUnit: found guild {guild.guildName} for characterId {characterRequestData.characterId}");
-                    characterRequestData.characterGuildId = guild.guildId;
-                    characterRequestData.characterGuildName = guild.guildName;
+                    characterRequestData.characterGuildId = guild.GuildId;
+                    characterRequestData.characterGuildName = guild.GuildName;
                 }
                 characterRequestData.saveData = playerCharacterMonitors[accountId].characterSaveData;
 
@@ -609,7 +611,7 @@ namespace AnyRPG {
         }
 
         public void AddPlayerMonitor(int accountId, CharacterSaveData characterSaveData) {
-            //Debug.Log($"PlayerManagerServer.AddPlayerMonitor({accountId}, {playerCharacterSaveData.SaveData.unitProfileName})");
+            //Debug.Log($"PlayerManagerServer.AddPlayerMonitor(accountId: {accountId}, characterId: {characterSaveData.CharacterId})");
 
             if (playerCharacterMonitors.ContainsKey(accountId)) {
                 return;
@@ -649,7 +651,7 @@ namespace AnyRPG {
         */
 
         public void StopMonitoringPlayerUnit(int accountId) {
-            //Debug.Log($"PlayerManagerServer.StopMonitoringPlayerUnit({accountId})");
+            //Debug.Log($"PlayerManagerServer.StopMonitoringPlayerUnit(accountId: {accountId})");
 
             if (playerCharacterMonitors.ContainsKey(accountId)) {
                 PauseMonitoringPlayerUnit(accountId);
@@ -825,14 +827,14 @@ namespace AnyRPG {
             if (playerCharacterAccountIdLookup.ContainsKey(playerCharacterId)) {
                 return playerCharacterAccountIdLookup[playerCharacterId];
             }
-            return 0;
+            return -1;
         }
 
         public int GetAccountIdFromUnitController(UnitController unitController) {
             if (activeUnitControllerLookup.ContainsKey(unitController)) {
                 return activeUnitControllerLookup[unitController];
             }
-            return 0;
+            return -1;
         }
 
         public string GetPlayerName(int leaderAccountId) {

@@ -8,7 +8,7 @@ namespace AnyRPG {
 
         private PowerResourcePotion powerResourcePotion = null;
 
-        public InstantiatedPowerResourcePotion(SystemGameManager systemGameManager, int instanceId, PowerResourcePotion powerResourcePotion, ItemQuality itemQuality) : base(systemGameManager, instanceId, powerResourcePotion, itemQuality) {
+        public InstantiatedPowerResourcePotion(SystemGameManager systemGameManager, long instanceId, PowerResourcePotion powerResourcePotion, ItemQuality itemQuality) : base(systemGameManager, instanceId, powerResourcePotion, itemQuality) {
             this.powerResourcePotion = powerResourcePotion;
         }
 

@@ -748,6 +748,7 @@ namespace AnyRPG {
             characterGroupServiceClient.OnPromoteGroupLeader -= HandlePromoteGroupLeader;
             characterGroupServiceClient.OnLeaveGroup -= HandleLeaveGroup;
             characterGroupServiceClient.OnDisbandGroup -= HandleDisbandGroup;
+
             eventSubscriptionsInitialized = false;
         }
 

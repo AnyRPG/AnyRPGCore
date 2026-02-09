@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using UnityEditor;
 using UnityEngine;
 
 namespace AnyRPG { 
     public class AuctionService : ConfiguredClass {
 
-        private int auctionIdCounter = 1;
-        private string baseSaveFolderName = string.Empty;
         private const int searchResultLimit = 50;
 
         private Dictionary<int, AuctionItem> auctionItems = new Dictionary<int, AuctionItem>();
@@ -20,10 +19,10 @@ namespace AnyRPG {
         private LootManager lootManager = null;
         private MessageLogServer messageLogServer = null;
         private MailService mailService = null;
+        private ServerDataService serverDataService = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            MakeBaseSaveFolder();
             //networkManagerServer.OnStartServer += HandleStartServer;
             networkManagerServer.OnStopServer += HandleStopServer;
         }
@@ -34,174 +33,133 @@ namespace AnyRPG {
             lootManager = systemGameManager.LootManager;
             messageLogServer = systemGameManager.MessageLogServer;
             mailService = systemGameManager.MailService;
+            serverDataService = systemGameManager.ServerDataService;
         }
 
         private void HandleStopServer() {
             ClearAuctionItemMap();
         }
 
-        public void ProcessStartServer() {
-            LoadAuctionItemMap();
-        }
-
         private void ClearAuctionItemMap() {
             //Debug.Log("PlayerCharacterService.ClearPlayerNameMap()");
             auctionItems.Clear();
+            auctionItemInstances.Clear();
         }
 
-        private void LoadAuctionItemMap() {
+        public void LoadAuctionItemMap() {
+            serverDataService.LoadAuctionItemMap();
+        }
+
+        public void ProcessLoadAuctionItemListResponse(List<AuctionItemSerializedData> auctionItemSerializedData) {
+            //Debug.Log("AuctionService.LoadAuctionItemMap()");
+            List<AuctionItem> auctionItems = new List<AuctionItem>();
+            foreach (AuctionItemSerializedData auctionItemSerializedDataItem in auctionItemSerializedData) {
+                AuctionItem auctionItem = JsonUtility.FromJson<AuctionItem>(auctionItemSerializedDataItem.saveData);
+                if (auctionItem != null) {
+                    auctionItems.Add(auctionItem);
+                }
+            }
+            ProcessLoadAuctionItemList(auctionItems);
+        }
+
+        public void ProcessLoadAuctionItemList(List<AuctionItem> auctionItems) {
             //Debug.Log("AuctionService.LoadAuctionItemMap()");
 
-            if (Directory.Exists(baseSaveFolderName)) {
-                string[] accountDirectories = Directory.GetDirectories(baseSaveFolderName);
-                foreach (string playerCharacterDirectory in accountDirectories) {
-                    string[] fileEntries = Directory.GetFiles(playerCharacterDirectory);
-                    foreach (string fileName in fileEntries) {
-                        if (fileName.EndsWith(".json")) {
-                            string jsonString = File.ReadAllText(fileName);
-                            AuctionItem auctionItemSaveData = JsonUtility.FromJson<AuctionItem>(jsonString);
-                            //Debug.Log($"AuctionService.LoadAuctionItemMap(): Loaded auction item id {auctionItemSaveData.AuctionItemId} from file {fileName}");
-                            if (!auctionItems.ContainsKey(auctionItemSaveData.AuctionItemId)) {
-                                auctionItems.Add(auctionItemSaveData.AuctionItemId, auctionItemSaveData);
-                                auctionItemInstances.Add(auctionItemSaveData.AuctionItemId, systemItemManager.GetExistingInstantiatedItem(auctionItemSaveData.ItemIds[0]));
-                            } else {
-                                Debug.LogWarning($"PlayerCharacterService.LoadPlayerNameMap(): Duplicate auction item id ({auctionItemSaveData.AuctionItemId}) found . This item will be skipped.");
-                            }
-                        }
-                    }
+            foreach (AuctionItem auctionItem in auctionItems) {
+                if (auctionItem.ItemInstanceIds.Count == 0) {
+                    Debug.LogWarning($"AuctionService.ProcessLoadAuctionItemList(): Loading auction item id {auctionItem.AuctionItemId}. Stack size is 0!");
+                    continue;
+                }
+                if (!this.auctionItems.ContainsKey(auctionItem.AuctionItemId)) {
+                    this.auctionItems.Add(auctionItem.AuctionItemId, auctionItem);
+                    auctionItemInstances.Add(auctionItem.AuctionItemId, systemItemManager.GetExistingInstantiatedItem(auctionItem.ItemInstanceIds[0]));
+                } else {
+                    Debug.LogWarning($"AuctionService.ProcessLoadAuctionItemListResponse(): Duplicate auction item id ({auctionItem.AuctionItemId}) found . This item will be skipped.");
                 }
             }
         }
 
-        public void LoadAuctionIdCounter(int newCounterValue) {
-            //Debug.Log($"AuctionService.LoadAuctionIdCounter({newCounterValue})");
-
-            auctionIdCounter = newCounterValue;
-        }
-
-        private void MakeBaseSaveFolder() {
-            //Debug.Log("PlayerCharacterService.MakeSaveFolder()");
-
-            Regex regex = new Regex("[^a-zA-Z0-9]");
-            string gameNameString = regex.Replace(systemConfigurationManager.GameName, "");
-            if (gameNameString == string.Empty) {
-                return;
-            }
-            baseSaveFolderName = $"{Application.persistentDataPath}/{gameNameString}/Online/Auction";
-            if (!Directory.Exists($"{Application.persistentDataPath}/{gameNameString}")) {
-                Directory.CreateDirectory($"{Application.persistentDataPath}/{gameNameString}");
-            }
-            if (!Directory.Exists($"{Application.persistentDataPath}/{gameNameString}/Online")) {
-                Directory.CreateDirectory($"{Application.persistentDataPath}/{gameNameString}/Online");
-            }
-            if (!Directory.Exists(baseSaveFolderName)) {
-                Directory.CreateDirectory(baseSaveFolderName);
-            }
-        }
-
-        private void MakeAuctionItemSaveFolder(int playerCharacterId) {
-            //Debug.Log("AuctionService.MakeAuctionItemSaveFolder()");
-
-            string saveFolderName = GetAuctionItemSaveFolder(playerCharacterId);
-            if (!Directory.Exists(saveFolderName)) {
-                Directory.CreateDirectory(saveFolderName);
-            }
-        }
-
-        private string GetAuctionItemSaveFolder(int playerCharacterId) {
-            //Debug.Log("AuctionService.GetAuctionItemSaveFolder()");
-
-            return $"{baseSaveFolderName}/{playerCharacterId}";
-        }
-
-        public bool ListNewItems(UnitController sourceUnitController, ListAuctionItemRequest listAuctionItemRequest) {
-            //Debug.Log($"AuctionService.ListNewItems({sourceUnitController.gameObject.name}, {listAuctionItemRequest.ItemIds.Count})");
+        public void ListNewItems(UnitController sourceUnitController, ListAuctionItemRequest listAuctionItemRequest) {
+            //Debug.Log($"AuctionService.ListNewItems({sourceUnitController.gameObject.name}, count: {listAuctionItemRequest.ItemInstanceIds.Count})");
 
             int accountId = playerManagerServer.GetAccountIdFromUnitController(sourceUnitController);
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (playerCharacterId == 0) {
-                return false;
+            if (playerCharacterId == -1) {
+                //Debug.Log($"AuctionService.ListNewItems({sourceUnitController.gameObject.name}, count: {listAuctionItemRequest.ItemInstanceIds.Count}) invalid player character id");
+                return;
             }
 
             if (listAuctionItemRequest.CurrencyAmount == 0) {
                 networkManagerServer.AdvertiseConfirmationPopup(accountId, $"Auction must have a price");
-                return false;
+                //Debug.Log($"AuctionService.ListNewItems({sourceUnitController.gameObject.name}, count: {listAuctionItemRequest.ItemInstanceIds.Count}) must have a price");
+                return;
             }
 
-            MakeAuctionItemSaveFolder(playerCharacterId);
-
             // remove duplicate itemIds from attachment slots
-            List<int> uniqueIds = new List<int>();
-            foreach (int itemId in listAuctionItemRequest.ItemIds) {
-                if (uniqueIds.Contains(itemId) == false) {
-                    uniqueIds.Add(itemId);
+            List<long> uniqueIds = new List<long>();
+            foreach (long itemInstanceId in listAuctionItemRequest.ItemInstanceIds) {
+                if (uniqueIds.Contains(itemInstanceId) == false) {
+                    uniqueIds.Add(itemInstanceId);
                 }
             }
 
-            listAuctionItemRequest.ItemIds = uniqueIds;
-
-            // set messageId and sender
-            AuctionItem auctionItem = new AuctionItem(listAuctionItemRequest, playerCharacterId);
-            int auctionItemId = GetNewAuctionItemId();
-            auctionItem.AuctionItemId = auctionItemId;
-
-            if (auctionItems.ContainsKey(auctionItemId)) {
-                Debug.LogWarning($"AuctionService.ListNewItems(): Generated auction item id {auctionItemId} already exists. Item will not be listed.");
-                return false;
-            }
+            listAuctionItemRequest.ItemInstanceIds = uniqueIds;
 
             // first check to ensure item exist
-            foreach (int itemId in auctionItem.ItemIds) {
-                if (sourceUnitController.CharacterInventoryManager.HasItem(itemId) == false) {
-                    return false;
+            foreach (long itemInstanceId in listAuctionItemRequest.ItemInstanceIds) {
+                if (sourceUnitController.CharacterInventoryManager.HasItem(itemInstanceId) == false) {
+                    //Debug.Log($"AuctionService.ListNewItems({sourceUnitController.gameObject.name}, count: {listAuctionItemRequest.ItemInstanceIds.Count}) does not have item");
+                    return;
                 }
             }
 
             // check to make sure fee exists
             if (listAuctionItemRequest.CurrencyAmount > 0
                 && sourceUnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency) < systemConfigurationManager.AuctionDepositAmount) {
-                return false;
+                //Debug.Log($"AuctionService.ListNewItems({sourceUnitController.gameObject.name}, count: {listAuctionItemRequest.ItemInstanceIds.Count}) does not have currency");
+                return;
             }
 
             // remove items from inventory
-            foreach (int itemId in auctionItem.ItemIds) {
-                sourceUnitController.CharacterInventoryManager.RemoveInventoryItem(itemId);
+            foreach (long itemInstanceId in listAuctionItemRequest.ItemInstanceIds) {
+                sourceUnitController.CharacterInventoryManager.RemoveInventoryItem(itemInstanceId);
             }
 
             // remove fee from inventory
             sourceUnitController.CharacterCurrencyManager.SpendCurrency(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, systemConfigurationManager.AuctionDepositAmount);
 
-            SaveAuctionFile(playerCharacterId, auctionItemId, auctionItem);
+            // create auction item
+            AuctionItem auctionItem = new AuctionItem(listAuctionItemRequest, playerCharacterId);
+
+            // get auction item Id
+            serverDataService.GetNewAuctionItemId(auctionItem);
+        }
+
+        public void ProcessAuctionItemIdAssigned(AuctionItem auctionItem) {
+            int accountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(auctionItem.SellerPlayerCharacterId);
+            ProcessAuctionItemIdAssigned(auctionItem, accountId);
+        }
+
+        public void ProcessAuctionItemIdAssigned(AuctionItem auctionItem, int accountId) {
+
+            if (auctionItems.ContainsKey(auctionItem.AuctionItemId)) {
+                Debug.LogWarning($"AuctionService.ListNewItems(): Generated auction item id {auctionItem.AuctionItemId} already exists. Item will not be listed.");
+                return;
+            }
+
+            SaveAuction(auctionItem.SellerPlayerCharacterId, auctionItem);
 
             // add to in-memory map
-            auctionItems.Add(auctionItemId, auctionItem);
-            auctionItemInstances.Add(auctionItemId, systemItemManager.GetExistingInstantiatedItem(auctionItem.ItemIds[0]));
-
+            auctionItems.Add(auctionItem.AuctionItemId, auctionItem);
+            auctionItemInstances.Add(auctionItem.AuctionItemId, systemItemManager.GetExistingInstantiatedItem(auctionItem.ItemInstanceIds[0]));
 
             networkManagerServer.AdvertiseListAuctionItems(accountId);
-
-            return true;
         }
 
-        public bool SaveAuctionFile(int playerCharacterId, int auctionItemId, AuctionItem auctionItem) {
-            //Debug.Log($"AuctionService.SaveAuctionFile(playerCharacterId: {playerCharacterId}, {auctionItemId})");
+        private void SaveAuction(int playerCharacterId, AuctionItem auctionItem) {
+            
+            serverDataService.SaveAuction(playerCharacterId, auctionItem);
 
-            string jsonString = JsonUtility.ToJson(auctionItem);
-            string jsonSavePath = $"{GetAuctionItemSaveFolder(playerCharacterId)}/{auctionItemId}.json";
-            File.WriteAllText(jsonSavePath, jsonString);
-
-            return true;
-        }
-
-        private int GetNewAuctionItemId() {
-            //Debug.Log($"AuctionService.GetNewAuctionItemId()");
-
-            int returnValue = auctionIdCounter;
-            auctionIdCounter++;
-            serverStateService.SetAuctionIdCounter(auctionIdCounter);
-
-            //Debug.Log($"AuctionService.GetNewMessageId() return {returnValue}");
-            return returnValue;
         }
 
         public bool BuyAuctionItem(int buyerPlayerCharacterId, int auctionItemId) {
@@ -225,8 +183,8 @@ namespace AnyRPG {
             // create mail message with the item attached for the buyer
             MailMessageRequest buyerMailMessageRequest = new MailMessageRequest();
             Item boughtItem = auctionItemInstances[auctionItemId].Item;
-            buyerMailMessageRequest.Subject = $"Auction Item Purchased: {boughtItem.DisplayName} ({auctionItem.ItemIds.Count})";
-            buyerMailMessageRequest.AttachmentSlots.Add(new MailAttachmentSlot() { ItemIds = auctionItem.ItemIds});
+            buyerMailMessageRequest.Subject = $"Auction Item Purchased: {boughtItem.DisplayName} ({auctionItem.ItemInstanceIds.Count})";
+            buyerMailMessageRequest.AttachmentSlots.Add(new MailAttachmentSlot() { ItemInstanceIds = auctionItem.ItemInstanceIds});
             mailService.SaveMailMessage(buyerPlayerCharacterId, buyerMailMessageRequest, "Auction");
 
             // take currency from buyer
@@ -240,13 +198,13 @@ namespace AnyRPG {
             int sellerAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(auctionItem.SellerPlayerCharacterId);
             MailMessageRequest sellerMailMessageRequest = new MailMessageRequest();
             Item soldItem = auctionItemInstances[auctionItemId].Item;
-            sellerMailMessageRequest.Subject = $"Auction Item Sold: {boughtItem.DisplayName} ({auctionItem.ItemIds.Count})";
+            sellerMailMessageRequest.Subject = $"Auction Item Sold: {boughtItem.DisplayName} ({auctionItem.ItemInstanceIds.Count})";
             // body with breakdown of sale and fees
             string sellString = systemGameManager.CurrencyConverter.GetCombinedPriceString(new KeyValuePair<Currency, int>(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, auctionItem.CurrencyAmount));
             string feeString = systemGameManager.CurrencyConverter.GetCombinedPriceString(new KeyValuePair<Currency, int>(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, auctionFeeAmount));
             string depositString = systemGameManager.CurrencyConverter.GetCombinedPriceString(new KeyValuePair<Currency, int>(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, systemConfigurationManager.AuctionDepositAmount));
             string totalString = systemGameManager.CurrencyConverter.GetCombinedPriceString(new KeyValuePair<Currency, int>(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, currencyAfterFee));
-            sellerMailMessageRequest.Body = $"Your auction for {soldItem.DisplayName} ({auctionItem.ItemIds.Count}) has been sold!\n\n" +
+            sellerMailMessageRequest.Body = $"Your auction for {soldItem.DisplayName} ({auctionItem.ItemInstanceIds.Count}) has been sold!\n\n" +
                 $"Sale Price: {sellString}\n" +
                 $"Deposit Returned: {depositString}\n" +
                 $"Auction Fee: ({feeString})\n" +
@@ -272,9 +230,9 @@ namespace AnyRPG {
 
             // create mail message with the item attached for the seller
             MailMessageRequest sellerMailMessageRequest = new MailMessageRequest();
-            List<int> returnedItemIds = new List<int>(auctionItem.ItemIds);
-            sellerMailMessageRequest.Subject = $"Auction Canceled: {auctionItemInstances[auctionItemId].Item.DisplayName} ({returnedItemIds.Count})";
-            sellerMailMessageRequest.AttachmentSlots.Add(new MailAttachmentSlot() { ItemIds = returnedItemIds });
+            List<long> returnedItemInstanceIds = new List<long>(auctionItem.ItemInstanceIds);
+            sellerMailMessageRequest.Subject = $"Auction Canceled: {auctionItemInstances[auctionItemId].Item.DisplayName} ({returnedItemInstanceIds.Count})";
+            sellerMailMessageRequest.AttachmentSlots.Add(new MailAttachmentSlot() { ItemInstanceIds = returnedItemInstanceIds });
 
             DeleteAuctionItem(auctionItem);
 
@@ -285,37 +243,32 @@ namespace AnyRPG {
         }
 
         private void DeleteAuctionItem(AuctionItem auctionItem) {
-            //Debug.Log($"AuctionService.DeleteAuctionItem({auctionItem.AuctionItemId})");
-
             auctionItems.Remove(auctionItem.AuctionItemId);
             auctionItemInstances.Remove(auctionItem.AuctionItemId);
-            string jsonSavePath = $"{GetAuctionItemSaveFolder(auctionItem.SellerPlayerCharacterId)}/{auctionItem.AuctionItemId}.json";
-            if (File.Exists(jsonSavePath)) {
-                File.Delete(jsonSavePath);
-            }
+            serverDataService.DeleteAuctionItem(auctionItem);
         }
 
         public void SearchAuctionItems(UnitController sourceUnitController, string searchstring, bool ownItems) {
             //Debug.Log($"AuctionService.SearchAuctionItems({sourceUnitController.gameObject.name}, {searchstring}, {ownItems})");
 
             int accountId = playerManagerServer.GetAccountIdFromUnitController(sourceUnitController);
-            if (accountId == 0) {
+            if (accountId == -1) {
                 return;
             }
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (playerCharacterId == 0) {
+            if (playerCharacterId == -1) {
                 return;
             }
 
-            AuctionItemListResponse auctionItemListResponse = GetAuctionItems(playerCharacterId, searchstring, ownItems);
+            AuctionItemSearchListResult auctionItemListResponse = GetAuctionItems(playerCharacterId, searchstring, ownItems);
             
             networkManagerServer.AdvertiseAuctionItems(accountId, auctionItemListResponse);
         }
 
-        public AuctionItemListResponse GetAuctionItems(int playerCharacterId, string searchstring, bool ownItems) {
+        public AuctionItemSearchListResult GetAuctionItems(int playerCharacterId, string searchstring, bool ownItems) {
             //Debug.Log($"AuctionService.GetAuctionItems({playerCharacterId}, {searchstring}, {ownItems})");
 
-            AuctionItemListResponse auctionItemListResponse = new AuctionItemListResponse();
+            AuctionItemSearchListResult auctionItemListResponse = new AuctionItemSearchListResult();
             foreach (KeyValuePair<int, AuctionItem> kvp in auctionItems) {
                 AuctionItem auctionItem = kvp.Value;
                 InstantiatedItem instantiatedItem = auctionItemInstances[kvp.Key];

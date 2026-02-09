@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
+using System;
 
 namespace AnyRPG {
     public class HostServerPanel : WindowPanel {
@@ -28,6 +29,9 @@ namespace AnyRPG {
         [SerializeField]
         private WindowPanel lobbyGamesPanel = null;
 
+        [SerializeField]
+        private HostServerScenesPanel scenesPanel = null;
+
         //[SerializeField]
         //protected HighlightButton returnButton = null;
 
@@ -38,6 +42,9 @@ namespace AnyRPG {
         protected HighlightButton playersButton = null;
 
         [SerializeField]
+        protected HighlightButton scenesButton = null;
+
+        [SerializeField]
         protected HighlightButton lobbyGamesButton = null;
 
         [SerializeField]
@@ -46,6 +53,8 @@ namespace AnyRPG {
         [SerializeField]
         protected HighlightButton stopServerButton = null;
 
+        [SerializeField]
+        protected UINavigationController panelsNavigationController = null;
 
         private Dictionary<int, ServerLobbyGameConnectionButtonController> lobbyGameButtons = new Dictionary<int, ServerLobbyGameConnectionButtonController>();
 
@@ -55,6 +64,8 @@ namespace AnyRPG {
         protected SystemDataFactory systemDataFactory = null;
         protected NetworkManagerServer networkManagerServer = null;
         protected LevelManager levelManager = null;
+        protected AuthenticationService authenticationService = null;
+        protected LevelManagerServer levelManagerServer = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -69,6 +80,8 @@ namespace AnyRPG {
             systemDataFactory = systemGameManager.SystemDataFactory;
             networkManagerServer = systemGameManager.NetworkManagerServer;
             levelManager = systemGameManager.LevelManager;
+            authenticationService = systemGameManager.AuthenticationService;
+            levelManagerServer = systemGameManager.LevelManagerServer;
         }
 
         public void CloseMenu() {
@@ -110,7 +123,7 @@ namespace AnyRPG {
         public void HandleAccountLogin(int accountId) {
             //Debug.Log($"HostServerPanelController.HandlePlayerLogin({accountId})");
 
-            playersPanel.AddPlayerToList(accountId, networkManagerServer.LoggedInAccounts[accountId].username);
+            playersPanel.AddPlayerToList(accountId, authenticationService.LoggedInAccounts[accountId].username);
         }
 
         public void HandleAccountLogout(int accountId) {
@@ -169,26 +182,34 @@ namespace AnyRPG {
             playersPanel.PopulatePlayerList();
             networkManagerServer.OnStartServer += HandleStartServer;
             networkManagerServer.OnStopServer += HandleStopServer;
-            networkManagerServer.OnAccountLogin += HandleAccountLogin;
-            networkManagerServer.OnAccountLogout += HandleAccountLogout;
+            authenticationService.OnAccountLogin += HandleAccountLogin;
+            authenticationService.OnAccountLogout += HandleAccountLogout;
             networkManagerServer.OnCreateLobbyGame += HandleCreateLobbyGame;
             networkManagerServer.OnCancelLobbyGame += HandleCancelLobbyGame;
             networkManagerServer.OnJoinLobbyGame += HandleJoinLobbyGame;
             networkManagerServer.OnLeaveLobbyGame += HandleLeaveLobbyGame;
             networkManagerServer.OnStartLobbyGame += HandleStartLobbyGame;
+            levelManagerServer.OnAddLoadedScene += HandleAddLoadedScene;
+            levelManagerServer.OnRemoveLoadedScene += HandleRemoveLoadedScene;
+            levelManagerServer.OnSetSceneClientCount += HandleSetSceneClientCount;
+
+            OpenOptionsPanel();
         }
 
         public override void ReceiveClosedWindowNotification() {
             base.ReceiveClosedWindowNotification();
             networkManagerServer.OnStartServer -= HandleStartServer;
             networkManagerServer.OnStopServer -= HandleStopServer;
-            networkManagerServer.OnAccountLogin -= HandleAccountLogin;
-            networkManagerServer.OnAccountLogout -= HandleAccountLogout;
+            authenticationService.OnAccountLogin -= HandleAccountLogin;
+            authenticationService.OnAccountLogout -= HandleAccountLogout;
             networkManagerServer.OnCreateLobbyGame -= HandleCreateLobbyGame;
             networkManagerServer.OnCancelLobbyGame -= HandleCancelLobbyGame;
             networkManagerServer.OnJoinLobbyGame -= HandleJoinLobbyGame;
             networkManagerServer.OnLeaveLobbyGame -= HandleLeaveLobbyGame;
             networkManagerServer.OnStartLobbyGame -= HandleStartLobbyGame;
+            levelManagerServer.OnAddLoadedScene -= HandleAddLoadedScene;
+            levelManagerServer.OnRemoveLoadedScene -= HandleRemoveLoadedScene;
+            levelManagerServer.OnSetSceneClientCount -= HandleSetSceneClientCount;
 
             playersPanel.ClearPlayerList();
 
@@ -196,6 +217,18 @@ namespace AnyRPG {
             if (networkManagerServer.ServerModeActive == true) {
                 StopServer();
             }
+        }
+
+        private void HandleSetSceneClientCount(int sceneHandle, int clientCount) {
+            scenesPanel.SetSceneClientCount(sceneHandle, clientCount);
+        }
+
+        private void HandleRemoveLoadedScene(int sceneHandle, string sceneName) {
+            scenesPanel.RemoveSceneFromList(sceneHandle);
+        }
+
+        private void HandleAddLoadedScene(int sceneHandle, SceneData data) {
+            scenesPanel.AddSceneToList(sceneHandle, data);
         }
 
         public void SetServerMode(int dropdownIndex) {
@@ -231,6 +264,9 @@ namespace AnyRPG {
             if (skipPanel != lobbyGamesPanel) {
                 lobbyGamesPanel.HidePanel();
             }
+            if (skipPanel != scenesPanel) {
+                scenesPanel.HidePanel();
+            }
         }
 
         public void OpenOptionsPanel() {
@@ -241,7 +277,7 @@ namespace AnyRPG {
             }
 
             optionsButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtonBackgrounds(optionsButton);
+            panelsNavigationController.UnHightlightButtonBackgrounds(optionsButton);
         }
 
         public void OpenPlayersPanel() {
@@ -251,7 +287,7 @@ namespace AnyRPG {
                 SetOpenSubPanel(playersPanel, false);
             }
             playersButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtonBackgrounds(playersButton);
+            panelsNavigationController.UnHightlightButtonBackgrounds(playersButton);
         }
 
         public void OpenLobbyGamesPanel() {
@@ -261,7 +297,17 @@ namespace AnyRPG {
                 SetOpenSubPanel(lobbyGamesPanel, false);
             }
             lobbyGamesButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtonBackgrounds(lobbyGamesButton);
+            panelsNavigationController.UnHightlightButtonBackgrounds(lobbyGamesButton);
+        }
+
+        public void OpenScenesPanel() {
+            if (openSubPanel != scenesPanel) {
+                ClosePanels(scenesPanel);
+                scenesPanel.ShowPanel();
+                SetOpenSubPanel(scenesPanel, false);
+            }
+            scenesButton.HighlightBackground();
+            panelsNavigationController.UnHightlightButtonBackgrounds(scenesButton);
         }
 
     }

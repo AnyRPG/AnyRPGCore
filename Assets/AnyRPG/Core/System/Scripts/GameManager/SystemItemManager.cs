@@ -1,39 +1,43 @@
+using IdGen;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace AnyRPG {
     public class SystemItemManager : ConfiguredClass {
 
-        private int clientItemIdCount = 1;
-        private int serverItemIdCount = -1;
-        private string saveFolderName = string.Empty;
+        IdGenerator clientIdGenerator = null;
+        IdGenerator serverIdGenerator = null;
 
         // game manager references
         private LootManager lootManager = null;
+        private ServerDataService serverDataService = null;
 
-        private Dictionary<int, InstantiatedItem> instantiatedItems = new Dictionary<int, InstantiatedItem>();
+        private Dictionary<long, InstantiatedItem> instantiatedItems = new Dictionary<long, InstantiatedItem>();
 
-        public Dictionary<int, InstantiatedItem> InstantiatedItems { get => instantiatedItems; set => instantiatedItems = value; }
-        public int ClientItemIdCount { get => clientItemIdCount; }
+        public Dictionary<long, InstantiatedItem> InstantiatedItems { get => instantiatedItems; set => instantiatedItems = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            MakeSaveFolder();
             //networkManagerServer.OnStartServer += HandleStartServer;
             networkManagerServer.OnStopServer += HandleStopServer;
+
+            SetupIDGenerator();
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             lootManager = systemGameManager.LootManager;
+            serverDataService = systemGameManager.ServerDataService;
         }
 
-        public void ProcessStartServer() {
-            //Debug.Log("SystemItemManager.HandleStartServer()");
+        private void SetupIDGenerator() {
+            //Debug.Log("SystemItemManager.SetupIDGenerator()");
 
-            LoadAllItems();
+            var epoch = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            IdGeneratorOptions idGeneratorOptions = new IdGeneratorOptions(IdStructure.Default, new DefaultTimeSource(epoch));
+            clientIdGenerator = new IdGenerator(0, idGeneratorOptions);
+            serverIdGenerator = new IdGenerator(1, idGeneratorOptions);
         }
 
         private void HandleStopServer() {
@@ -42,21 +46,38 @@ namespace AnyRPG {
             ClearInstantiatedItems();
         }
 
-        private void LoadAllItems() {
+        public void LoadAllItems() {
             //Debug.Log("SystemItemManager.LoadAllItems()");
 
-            // load all user accounts from storage
-            string[] fileEntries = Directory.GetFiles(saveFolderName, "*.json");
-            foreach (string fileName in fileEntries) {
+            // this is only called in network mode.  In offline mode, items are loaded as part of the player data load
+            serverDataService.LoadAllItems();
+        }
+
+        public void ProcessLoadAllItemInstances(List<ItemInstanceSerializedData> itemInstances) {
+
+            List<ItemInstanceSaveData> itemInstanceSaveDataList = new List<ItemInstanceSaveData>();
+            foreach (ItemInstanceSerializedData itemInstanceSerializedData in itemInstances) {
+                ItemInstanceSaveData itemInstanceSaveData = JsonUtility.FromJson<ItemInstanceSaveData>(itemInstanceSerializedData.saveData);
+                if (itemInstanceSaveData == null) {
+                    Debug.LogWarning($"SystemItemManager.ProcessLoadAllItemInstances(): ItemInstanceSaveData is null for id {itemInstanceSerializedData.id}.  This item will be skipped.");
+                    continue;
+                }
+                itemInstanceSaveDataList.Add(itemInstanceSaveData);
+            }
+
+            ProcessLoadAllItemInstances(itemInstanceSaveDataList);
+        }
+
+        public void ProcessLoadAllItemInstances(List<ItemInstanceSaveData> itemInstances) {
+
+            foreach (ItemInstanceSaveData itemInstanceSaveData in itemInstances) {
                 //Debug.Log($"Loading user account from file: {fileName}");
-                string jsonString = File.ReadAllText(fileName);
-                ItemInstanceSaveData itemInstanceSaveData = JsonUtility.FromJson<ItemInstanceSaveData>(jsonString);
-                if (itemInstanceSaveData.ItemInstanceId == 0) {
-                    Debug.LogWarning($"SystemItemManager.LoadAllItems(): item in file {fileName} has invalid instance id of 0.  This item will be skipped.");
+                if (itemInstanceSaveData.ItemInstanceId == -1) {
+                    Debug.LogWarning($"SystemItemManager.LoadAllItems(): item has invalid instance id of -1.  This item will be skipped.");
                     continue;
                 }
                 if (instantiatedItems.ContainsKey(itemInstanceSaveData.ItemInstanceId) == true) {
-                    Debug.LogWarning($"SystemItemManager.LoadAllItems(): Duplicate item id {itemInstanceSaveData.ItemInstanceId} found in file {fileName}.  This item will be skipped.");
+                    Debug.LogWarning($"SystemItemManager.LoadAllItems(): Duplicate item id {itemInstanceSaveData.ItemInstanceId} found.  This item will be skipped.");
                     continue;
                 }
                 LoadItemInstanceSaveData(itemInstanceSaveData);
@@ -84,25 +105,10 @@ namespace AnyRPG {
             instantiatedItem.LoadSaveData(itemInstanceSaveData);
         }
 
+        public InstantiatedItem GetNewInstantiatedItem(Item item) {
+            //Debug.Log($"SystemItemManager.GetNewInstantiatedItem({item.ResourceName})");
 
-        private void MakeSaveFolder() {
-            //Debug.Log("SystemItemManager.MakeSaveFolder()");
-
-            Regex regex = new Regex("[^a-zA-Z0-9]");
-            string gameNameString = regex.Replace(systemConfigurationManager.GameName, "");
-            if (gameNameString == string.Empty) {
-                return;
-            }
-            saveFolderName = $"{Application.persistentDataPath}/{gameNameString}/Online/Items";
-            if (!Directory.Exists($"{Application.persistentDataPath}/{gameNameString}")) {
-                Directory.CreateDirectory($"{Application.persistentDataPath}/{gameNameString}");
-            }
-            if (!Directory.Exists($"{Application.persistentDataPath}/{gameNameString}/Online")) {
-                Directory.CreateDirectory($"{Application.persistentDataPath}/{gameNameString}/Online");
-            }
-            if (!Directory.Exists(saveFolderName)) {
-                Directory.CreateDirectory(saveFolderName);
-            }
+            return GetNewInstantiatedItem(item, null);
         }
 
         public InstantiatedItem GetNewInstantiatedItem(string itemName, ItemQuality usedItemQuality = null) {
@@ -114,64 +120,17 @@ namespace AnyRPG {
             return GetNewInstantiatedItem(item, usedItemQuality);
         }
 
-        public InstantiatedItem GetNewInstantiatedItem(Item item) {
-            //Debug.Log($"SystemItemManager.GetNewInstantiatedItem({item.ResourceName})");
-
-            return GetNewInstantiatedItem(item, null);
-        }
-
         public InstantiatedItem GetNewInstantiatedItem(Item item, ItemQuality usedItemQuality) {
             //Debug.Log($"SystemItemManager.GetNewInstantiatedItem({item.ResourceName})");
 
             InstantiatedItem instantiatedItem = GetNewInstantiatedItem(GetNewItemInstanceId(), item, usedItemQuality);
             if (networkManagerServer.ServerModeActive == true && item != lootManager.CurrencyLootItem) {
-                SaveDataFile(instantiatedItem);
+                serverDataService.CreateItemInstance(instantiatedItem);
             }
             return instantiatedItem;
         }
 
-        public int GetNewItemInstanceId() {
-            //Debug.Log($"SystemItemManager.GetNewItemInstanceId()");
-
-            if (networkManagerServer.ServerModeActive == true ) {
-                return GetNewServerItemInstanceId();
-            } else {
-                return GetNewClientItemInstanceId();
-            }
-        }
-
-        public int GetNewServerItemInstanceId() {
-            //Debug.Log($"SystemItemManager.GetNewServerItemInstanceId()");
-
-            // ensure unique item id returned even if count is off
-            int returnValue = serverItemIdCount;
-            while (instantiatedItems.ContainsKey(serverItemIdCount)) {
-                serverItemIdCount--;
-                returnValue = serverItemIdCount;
-            }
-            serverItemIdCount--;
-            serverStateService.SetItemIdCounter(serverItemIdCount);
-
-            //Debug.Log($"SystemItemManager.GetNewServerItemInstanceId() return {returnValue}");
-            return returnValue;
-        }
-
-        public int GetNewClientItemInstanceId() {
-            //Debug.Log($"SystemItemManager.GetNewClientItemInstanceId()");
-
-            // ensure unique item id returned even if count is off
-            int returnValue = clientItemIdCount;
-            while (instantiatedItems.ContainsKey(clientItemIdCount)) {
-                clientItemIdCount++;
-                returnValue = clientItemIdCount;
-            }
-            clientItemIdCount++;
-
-            //Debug.Log($"SystemItemManager.GetNewClientItemInstanceId() return {returnValue}");
-            return returnValue;
-        }
-
-        public InstantiatedItem GetNewInstantiatedItem(int itemInstanceId, Item item, ItemQuality usedItemQuality = null) {
+        public InstantiatedItem GetNewInstantiatedItem(long itemInstanceId, Item item, ItemQuality usedItemQuality = null) {
             //Debug.Log($"SystemItemManager.GetNewInstantiatedItem({itemInstanceId}, {item?.ResourceName}, {usedItemQuality?.ResourceName})");
             if (instantiatedItems.ContainsKey(itemInstanceId)) {
                 return instantiatedItems[itemInstanceId];
@@ -182,10 +141,29 @@ namespace AnyRPG {
             return instantiatedItem;
         }
 
-        public void SetClientItemIdCount(int clientItemIdCount) {
-            //Debug.Log($"SystemItemManager.SetClientItemIdCount({clientItemIdCount})");
 
-            this.clientItemIdCount = clientItemIdCount;
+        public void SaveItemInstance(InstantiatedItem instantiatedItem) {
+            serverDataService.SaveItemInstance(instantiatedItem);
+        }
+
+        public void CreateItemInstance(InstantiatedItem instantiatedItem) {
+            serverDataService.CreateItemInstance(instantiatedItem);
+        }
+
+        public long GetNewItemInstanceId() {
+            //Debug.Log($"SystemItemManager.GetNewItemInstanceId()");
+
+            if (networkManagerServer.ServerModeActive == true ) {
+                return GetNewServerItemInstanceId();
+            } else {
+                return GetNewClientItemInstanceId();
+            }
+        }
+
+        public long GetNewClientItemInstanceId() {
+            //Debug.Log($"SystemItemManager.GetNewClientItemInstanceId()");
+
+            return clientIdGenerator.CreateId();
         }
 
         public void ClearInstantiatedItems() {
@@ -197,12 +175,13 @@ namespace AnyRPG {
         public void ClientReset() {
             //Debug.Log($"SystemItemManager.ClientReset()");
 
-            clientItemIdCount = 1;
             ClearInstantiatedItems();
         }
 
-        public InstantiatedItem GetExistingInstantiatedItem(int itemInstanceId) {
-            if (itemInstanceId == 0) {
+        public InstantiatedItem GetExistingInstantiatedItem(long itemInstanceId) {
+            //Debug.Log($"SystemItemManager.GetExistingInstantiatedItem(itemInstanceId: {itemInstanceId})");
+
+            if (itemInstanceId == -1) {
                 return null;
             }
             
@@ -212,27 +191,9 @@ namespace AnyRPG {
             return null;
         }
 
-        public void LoadItemIdCounter(int itemInstanceIdCounter) {
-            //Debug.Log($"SystemItemManager.LoadItemIdCounter({itemInstanceIdCounter})");
-
-            serverItemIdCount = itemInstanceIdCounter;
-        }
-
-        public bool SaveDataFile(InstantiatedItem instantiatedItem) {
-            //Debug.Log($"SystemItemManager.SaveDataFile({instantiatedItem.Item.ResourceName})");
-
-            ItemInstanceSaveData itemInstanceSaveData = instantiatedItem.GetItemSaveData();
-            string jsonString = JsonUtility.ToJson(itemInstanceSaveData);
-            string jsonSavePath = $"{saveFolderName}/{instantiatedItem.InstanceId}.json";
-            File.WriteAllText(jsonSavePath, jsonString);
-
-            return true;
-        }
-
         public void LoadPlayerCharacterSaveData(PlayerCharacterSaveData playerCharacterSaveData) {
             //Debug.Log($"SystemItemManager.LoadPlayerCharacterSaveData(characterId: {playerCharacterSaveData.CharacterSaveData.CharacterId})");
 
-            SetClientItemIdCount(playerCharacterSaveData.CharacterSaveData.ClientItemIdCount);
             LoadItemInstanceListSaveData(playerCharacterSaveData.ItemInstanceListSaveData);
         }
 
@@ -243,6 +204,13 @@ namespace AnyRPG {
                 LoadItemInstanceSaveData(itemInstanceSaveData);
             }
         }
+
+        public long GetNewServerItemInstanceId() {
+            //Debug.Log($"SystemItemManager.GetNewServerItemInstanceId()");
+
+            return serverIdGenerator.CreateId();
+        }
+
 
         /*
         public InstantiatedItem GetNewInstantiatedItem(Item item, ItemQuality usedItemQuality = null) {

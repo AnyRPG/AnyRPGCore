@@ -22,6 +22,7 @@ namespace AnyRPG {
         protected SystemDataFactory systemDataFactory = null;
         protected NetworkManagerServer networkManagerServer = null;
         protected SystemItemManager systemItemManager = null;
+        protected AuthenticationService authenticationService = null;
 
         public Interactable Interactable { get => interactable; }
 
@@ -34,6 +35,7 @@ namespace AnyRPG {
             systemDataFactory = systemGameManager.SystemDataFactory;
             networkManagerServer = systemGameManager.NetworkManagerServer;
             systemItemManager = systemGameManager.SystemItemManager;
+            authenticationService = systemGameManager.AuthenticationService;
             
             interactable = GetComponent<Interactable>();
         }
@@ -105,11 +107,13 @@ namespace AnyRPG {
         }
 
         private void SubscribeToSystemEvents() {
-            systemGameManager.SystemEventManager.OnBeforeStopServer += HandleBeforeStopServer;
+            systemGameManager.NetworkManagerServer.OnBeforeStopServer += HandleBeforeStopServer;
         }
 
         private void UnsubscribeFromSystemEvents() {
-            systemGameManager.SystemEventManager.OnBeforeStopServer -= HandleBeforeStopServer;
+            //Debug.Log($"FishNetInteractable.UnsubscribeFromSystemEvents() {GetInstanceID()}");
+
+            systemGameManager.NetworkManagerServer.OnBeforeStopServer -= HandleBeforeStopServer;
         }
 
         private void HandleBeforeStopServer() {
@@ -150,11 +154,14 @@ namespace AnyRPG {
             interactable.InteractableEventController.OnStopVoiceSound += HandleStopVoiceSound;
             interactable.InteractableEventController.OnPlayVoiceSound += HandlePlayVoiceSound;
             interactable.InteractableEventController.OnMiniMapStatusUpdate += HandleMiniMapStatusUpdate;
+            interactable.InteractableEventController.OnSellItemToPlayer += HandleSellItemToPlayer;
 
             eventRegistrationComplete = true;
         }
 
         public void HandleInteractableResetSettingsServer() {
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleInteractableResetSettingsServer(): {GetInstanceID()}");
+
             UnsubscribeFromServerInteractableEvents();
             UnsubscribeFromSystemEvents();
         }
@@ -182,8 +189,36 @@ namespace AnyRPG {
             interactable.InteractableEventController.OnStopVoiceSound -= HandleStopVoiceSound;
             interactable.InteractableEventController.OnPlayVoiceSound -= HandlePlayVoiceSound;
             interactable.InteractableEventController.OnMiniMapStatusUpdate -= HandleMiniMapStatusUpdate;
+            interactable.InteractableEventController.OnSellItemToPlayer -= HandleSellItemToPlayer;
 
             eventRegistrationComplete = false;
+        }
+
+        private void HandleSellItemToPlayer(VendorItem item, int componentIndex, int collectionIndex, int itemIndex) {
+            HandleSellItemToPlayerClient(item.ItemName, item.Quantity, componentIndex, collectionIndex, itemIndex);
+        }
+
+        [ObserversRpc]
+        private void HandleSellItemToPlayerClient(string resourceName, int remainingQuantity, int componentIndex, int collectionIndex, int itemIndex) {
+            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.Interactables;
+            if (currentInteractables[componentIndex] is VendorComponent) {
+                VendorComponent vendorComponent = (currentInteractables[componentIndex] as VendorComponent);
+                vendorComponent.HandleSellItemToPlayer(resourceName, remainingQuantity, componentIndex, collectionIndex, itemIndex);
+            }
+        }
+
+        public void AdvertiseSellItemToPlayerClient(UnitController sourceUnitController, Interactable interactable, int componentIndex, int collectionIndex, int itemIndex, string resourceName, int remainingQuantity) {
+            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.GetCurrentInteractables(sourceUnitController);
+            if (currentInteractables[componentIndex] is VendorComponent) {
+                VendorComponent vendorComponent = (currentInteractables[componentIndex] as VendorComponent);
+                List<VendorCollection> localVendorCollections = vendorComponent.GetLocalVendorCollections();
+                if (localVendorCollections.Count > collectionIndex && localVendorCollections[collectionIndex].VendorItems.Count > itemIndex) {
+                    VendorItem vendorItem = localVendorCollections[collectionIndex].VendorItems[itemIndex];
+                    if (vendorItem.Item.ResourceName == resourceName) {
+                        vendorComponent.ProcessQuantityNotification(vendorItem, remainingQuantity, componentIndex, collectionIndex, itemIndex);
+                    }
+                }
+            }
         }
 
         private void HandleMiniMapStatusUpdate(InteractableOptionComponent component) {
@@ -367,7 +402,6 @@ namespace AnyRPG {
                 //currentInteractables[componentIndex].ClientInteract(sourceUnitController, componentIndex, choiceIndex);
                 sourceUnitController.UnitEventController.NotifyOnStartInteractWithOption(currentInteractables[componentIndex], componentIndex, choiceIndex);
             }
-            
         }
 
         private void HandleDropLoot(Dictionary<int, List<int>> lootDropIdLookup) {
@@ -376,8 +410,8 @@ namespace AnyRPG {
                 List<int> lootDropIds = kvp.Value;
                 Dictionary<int, List<int>> targetLootDropIdLookup = new Dictionary<int, List<int>>();
                 targetLootDropIdLookup.Add(accountId, lootDropIds);
-                if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) && base.NetworkManager.ServerManager.Clients.ContainsKey(networkManagerServer.LoggedInAccounts[accountId].clientId)) {
-                    NetworkConnection networkConnection = base.NetworkManager.ServerManager.Clients[networkManagerServer.LoggedInAccounts[accountId].clientId];
+                if (authenticationService.LoggedInAccounts.ContainsKey(accountId) && base.NetworkManager.ServerManager.Clients.ContainsKey(authenticationService.LoggedInAccounts[accountId].clientId)) {
+                    NetworkConnection networkConnection = base.NetworkManager.ServerManager.Clients[authenticationService.LoggedInAccounts[accountId].clientId];
                     HandleDropLootTarget(networkConnection, targetLootDropIdLookup);
                 }
             }
@@ -394,8 +428,8 @@ namespace AnyRPG {
         }
 
         private void HandleRemoveDroppedItem(int lootDropId, int accountId) {
-            if (networkManagerServer.LoggedInAccounts.ContainsKey(accountId) && base.NetworkManager.ServerManager.Clients.ContainsKey(networkManagerServer.LoggedInAccounts[accountId].clientId)) {
-                NetworkConnection networkConnection = base.NetworkManager.ServerManager.Clients[networkManagerServer.LoggedInAccounts[accountId].clientId];
+            if (authenticationService.LoggedInAccounts.ContainsKey(accountId) && base.NetworkManager.ServerManager.Clients.ContainsKey(authenticationService.LoggedInAccounts[accountId].clientId)) {
+                NetworkConnection networkConnection = base.NetworkManager.ServerManager.Clients[authenticationService.LoggedInAccounts[accountId].clientId];
                 HandleRemoveDroppedItemTarget(networkConnection, lootDropId, accountId);
             }
         }

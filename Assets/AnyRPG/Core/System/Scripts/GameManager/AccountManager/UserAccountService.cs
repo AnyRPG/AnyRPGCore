@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -12,17 +10,21 @@ namespace AnyRPG {
         /// </summary>
         private Dictionary<string, UserAccount> userAccounts = new Dictionary<string, UserAccount>();
 
-        private int accountIdCounter = 1;
-        private string saveFolderName = string.Empty;
+        // game manager references
+        private ServerDataService serverDataService = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            MakeSaveFolder();
-            networkManagerServer.OnStartServer += HandleStartServer;
+            //networkManagerServer.OnStartServer += ProcessStartServer;
             networkManagerServer.OnStopServer += HandleStopServer;
         }
 
-        private void HandleStartServer() {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            serverDataService = systemGameManager.ServerDataService;
+        }
+
+        public void ProcessStartServer() {
             //Debug.Log("UserAccountService.HandleStartServer()");
 
             LoadAllUserAccounts();
@@ -40,48 +42,21 @@ namespace AnyRPG {
             userAccounts.Clear();
         }
 
-        public void LoadAccountIdCounter(int counterValue) {
-            //Debug.Log($"UserAccountService.LoadAccountIdCounter({counterValue})");
-
-            accountIdCounter = counterValue;
-        }
-
-        private void MakeSaveFolder() {
-            //Debug.Log("UserAccountService.MakeSaveFolder()");
-
-            Regex regex = new Regex("[^a-zA-Z0-9]");
-            string gameNameString = regex.Replace(systemConfigurationManager.GameName, "");
-            if (gameNameString == string.Empty) {
-                return;
-            }
-            saveFolderName = $"{Application.persistentDataPath}/{gameNameString}/Online/UserAccounts";
-            if (!Directory.Exists($"{Application.persistentDataPath}/{gameNameString}")) {
-                Directory.CreateDirectory($"{Application.persistentDataPath}/{gameNameString}");
-            }
-            if (!Directory.Exists($"{Application.persistentDataPath}/{gameNameString}/Online")) {
-                Directory.CreateDirectory($"{Application.persistentDataPath}/{gameNameString}/Online");
-            }
-            if (!Directory.Exists(saveFolderName)) {
-                Directory.CreateDirectory(saveFolderName);
-            }
-        }
-
         private void LoadAllUserAccounts() {
             //Debug.Log("UserAccountService.LoadAllUserAccounts()");
+            serverDataService.LoadAllUserAccounts();
+        }
 
-            // load all user accounts from storage
-            string[] fileEntries = Directory.GetFiles(saveFolderName, "*.json");
-            foreach (string fileName in fileEntries) {
-                //Debug.Log($"Loading user account from file: {fileName}");
-                string jsonString = File.ReadAllText(fileName);
-                UserAccount userAccount = JsonUtility.FromJson<UserAccount>(jsonString);
-                if (userAccount.Id == 0) {
-                    Debug.LogWarning($"UserAccountService.LoadAllUserAccounts(): User account in file {fileName} has invalid id of 0.  This account will be skipped.");
+        public void ProcessLoadAllUserAccounts(List<UserAccount> accountList) {
+            foreach (UserAccount userAccount in accountList) {
+                //UserAccount userAccount = JsonUtility.FromJson<UserAccount>(jsonString);
+                if (userAccount.Id == -1) {
+                    Debug.LogWarning($"UserAccountService.LoadAllUserAccounts(): User account with name {userAccount.UserName} has invalid id of -1.  This account will be skipped.");
                     continue;
                 }
                 //Debug.Log($"Loaded user account: {userAccount.UserName}");
                 if (userAccounts.ContainsKey(userAccount.UserName)) {
-                    Debug.LogWarning($"UserAccountService.LoadAllUserAccounts(): Duplicate user account name {userAccount.UserName} found in file {fileName}.  This account will be skipped.");
+                    Debug.LogWarning($"UserAccountService.LoadAllUserAccounts(): Duplicate user account name {userAccount.UserName} found.  This account will be skipped.");
                     continue;
                 }
                 //Debug.Log($"UserAccountService.LoadAllUserAccounts(): Adding user account {userAccount.UserName} with id {userAccount.Id} to in memory lookup.");
@@ -116,16 +91,6 @@ namespace AnyRPG {
             return null;
         }
 
-        /// <summary>
-        /// add new user account to local storage
-        /// </summary>
-        /// <param name="userAccount"></param>
-        private void SaveNewAccountLocal(UserAccount userAccount) {
-            //Debug.Log($"UserAccountService.SaveNewAccountLocal({userAccount.UserName})");
-
-            SaveDataFile(userAccount);
-        }
-        
         public UserAccount CreateNewAccount(string username, string password) {
             //Debug.Log($"UserAccountService.CreateNewAccount({username}, {password})");
 
@@ -136,7 +101,7 @@ namespace AnyRPG {
 
             // create new account
             UserAccount userAccount = new UserAccount() {
-                Id = GetNewAccountId(),
+                Id = serverDataService.GetNewAccountId(),
                 UserName = username,
             };
 
@@ -144,7 +109,7 @@ namespace AnyRPG {
             AuthenticationHelpers.ProvideSaltAndHash(userAccount);
 
             // add user account to storage
-            SaveNewAccountLocal(userAccount);
+            serverDataService.SaveAccount(userAccount);
 
             // add to in memory lookup
             userAccounts.Add(username, userAccount);
@@ -152,42 +117,7 @@ namespace AnyRPG {
             return userAccount;
         }
 
-        private int GetNewAccountId() {
-            //Debug.Log("UserAccountService.GetNewAccountId()");
-
-            int returnValue = accountIdCounter;
-            // loop until accountIdCounter is found that is not in use, using the in memory dictionary for speed
-            while (true) {
-                bool idInUse = false;
-                foreach (KeyValuePair<string, UserAccount> entry in userAccounts) {
-                    if (entry.Value.Id == accountIdCounter) {
-                        Debug.LogWarning($"UserAccountService.GetNewAccountId(): id {accountIdCounter} is already in use, trying next");
-                        idInUse = true;
-                        break;
-                    }
-                }
-                if (!idInUse) {
-                    break;
-                }
-                accountIdCounter++;
-            }
-            returnValue = accountIdCounter;
-            accountIdCounter++;
-            serverStateService.SetAccountIdCounter(accountIdCounter);
-
-            //Debug.Log($"UserAccountService.GetNewAccountId() return {returnValue}");
-            return returnValue;
-        }
-
-        public bool SaveDataFile(UserAccount userAccount) {
-            //Debug.Log($"UserAccountService.SaveDataFile({userAccount.UserName}, {userAccount.Id})");
-
-            string jsonString = JsonUtility.ToJson(userAccount);
-            string jsonSavePath = $"{saveFolderName}/{userAccount.Id}.json";
-            File.WriteAllText(jsonSavePath, jsonString);
-
-            return true;
-        }
+        
 
     }
 

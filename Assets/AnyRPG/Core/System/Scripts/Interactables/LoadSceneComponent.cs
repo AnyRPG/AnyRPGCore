@@ -27,6 +27,7 @@ namespace AnyRPG {
 
         public IEnumerator LoadSceneDelay(string sceneName, UnitController sourceUnitController) {
             //Debug.Log($"{interactable.gameObject.name}.LoadSceneComponent.LoadSceneDelay()");
+
             yield return new WaitForEndOfFrame();
             //levelManager.LoadLevel(sceneName);
             playerManagerServer.LoadScene(sceneName, sourceUnitController);

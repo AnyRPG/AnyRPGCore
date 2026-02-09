@@ -21,7 +21,7 @@ namespace AnyRPG {
             }
         }
 
-        public InstantiatedEquipment(SystemGameManager systemGameManager, int instanceId, Equipment equipment, ItemQuality itemQuality) : base(systemGameManager, instanceId, equipment, itemQuality) {
+        public InstantiatedEquipment(SystemGameManager systemGameManager, long instanceId, Equipment equipment, ItemQuality itemQuality) : base(systemGameManager, instanceId, equipment, itemQuality) {
             this.equipment = equipment;
         }
 

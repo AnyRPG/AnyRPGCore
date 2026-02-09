@@ -77,6 +77,8 @@ namespace AnyRPG {
         }
 
         public void BeginDestroyAbilityEffectObject(Dictionary<PrefabProfile, List<GameObject>> abilityEffectObjects, IAbilityCaster source, Interactable target, float timer, AbilityEffectContext abilityEffectInput, FixedLengthEffectProperties fixedLengthEffect) {
+            //Debug.Log($"SystemAbilityController.BeginDestroyAbilityEffectObject(objectCount: {abilityEffectObjects.Count}, {(source == null ? "null" : source.AbilityManager.Name)}, {(target == null ? "null" : target.gameObject.name)}, {timer}, {fixedLengthEffect.ResourceName})");
+
             if (abilityEffectGameObjects.ContainsKey(source.gameObject.scene.handle) == false) {
                 abilityEffectGameObjects.Add(source.gameObject.scene.handle, new List<GameObject>());
             }

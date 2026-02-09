@@ -59,7 +59,7 @@ namespace AnyRPG {
 
         public InstantiatedItem GetFirstMessageItem() {
             foreach (MailAttachmentSlot mailAttachmentSlot in mailMessage.AttachmentSlots) {
-                foreach (int itemId in mailAttachmentSlot.ItemIds) {
+                foreach (long itemId in mailAttachmentSlot.ItemInstanceIds) {
                     InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemId);
                     return instantiatedItem;
                 }

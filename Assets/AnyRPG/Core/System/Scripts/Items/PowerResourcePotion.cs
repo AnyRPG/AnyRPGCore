@@ -24,11 +24,11 @@ namespace AnyRPG {
 
         public HealEffectProperties HealEffect { get => healEffect; set => healEffect = value; }
 
-        public override InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, int itemId, Item item, ItemQuality usedItemQuality) {
+        public override InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, long itemInstanceId, Item item, ItemQuality usedItemQuality) {
             if ((item is PowerResourcePotion) == false) {
                 return null;
             }
-            return new InstantiatedPowerResourcePotion(systemGameManager, itemId, item as PowerResourcePotion, usedItemQuality);
+            return new InstantiatedPowerResourcePotion(systemGameManager, itemInstanceId, item as PowerResourcePotion, usedItemQuality);
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {

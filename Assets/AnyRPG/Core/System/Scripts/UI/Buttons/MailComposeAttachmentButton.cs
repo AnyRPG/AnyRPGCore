@@ -120,7 +120,7 @@ namespace AnyRPG {
 
             // check that items do not already exist in the mail message
             foreach (InstantiatedItem item in playerManager.UnitController.CharacterInventoryManager.FromSlot.InventorySlot.InstantiatedItems.Values) {
-                if (mailComposePanel.HasItemId(item.InstanceId)) {
+                if (mailComposePanel.HasItemInstanceId(item.InstanceId)) {
                     //Debug.Log("SlotScript.DropItemFromInventorySlot(): item already exists in mail message");
                     return;
                 }
@@ -211,12 +211,12 @@ namespace AnyRPG {
             UpdateVisual();
         }
 
-        public List<int> GetItemIds() {
+        public List<long> GetItemInstanceIds() {
             return items.Select(item => item.InstanceId).ToList();
         }
 
-        public bool HasItemId(int itemId) {
-            return items.Any(item => item.InstanceId == itemId);
+        public bool HasItemInstanceId(long itemInstanceId) {
+            return items.Any(item => item.InstanceId == itemInstanceId);
         }
     }
 

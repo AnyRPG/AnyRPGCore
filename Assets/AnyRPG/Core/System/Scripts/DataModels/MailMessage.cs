@@ -27,7 +27,7 @@ namespace AnyRPG {
 
     [Serializable]
     public class  MailAttachmentSlot {
-        public List<int> ItemIds = new List<int>();
+        public List<long> ItemInstanceIds = new List<long>();
     }
 
 }

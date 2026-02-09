@@ -23,6 +23,7 @@ namespace AnyRPG {
         // game manager references
         NetworkManagerServer networkManagerServer = null;
         ObjectPooler objectPooler = null;
+        AuthenticationService authenticationService = null;
 
         /// <summary>
         /// accountId, PlayerConnectionButtonController
@@ -33,12 +34,13 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             networkManagerServer = systemGameManager.NetworkManagerServer;
             objectPooler = systemGameManager.ObjectPooler;
+            authenticationService = systemGameManager.AuthenticationService;
         }
 
         public void PopulatePlayerList() {
             //Debug.Log($"HostServerPanelController.PopulatePlayerList()");
 
-            foreach (KeyValuePair<int, LoggedInAccount> loggedInAccount in networkManagerServer.LoggedInAccounts) {
+            foreach (KeyValuePair<int, LoggedInAccount> loggedInAccount in authenticationService.LoggedInAccounts) {
                 AddPlayerToList(loggedInAccount.Value.accountId, loggedInAccount.Value.username);
             }
         }
@@ -48,13 +50,13 @@ namespace AnyRPG {
 
             if (playerButtons.ContainsKey(accountId)) {
                 //Debug.Warning($"HostServerPanelController.AddPlayerToList() - player was already connected, and is reconnecting");
-                playerButtons[accountId].UpdateIPAddress(networkManagerServer.LoggedInAccounts[accountId].ipAddress);
+                playerButtons[accountId].UpdateIPAddress(authenticationService.LoggedInAccounts[accountId].ipAddress);
                 return;
             }
             GameObject go = objectPooler.GetPooledObject(playerConnectionTemplate, playerConnectionContainer);
             PlayerConnectionButtonController playerConnectionButtonController = go.GetComponent<PlayerConnectionButtonController>();
             playerConnectionButtonController.Configure(systemGameManager);
-            playerConnectionButtonController.SetAccountId(accountId, userName, networkManagerServer.LoggedInAccounts[accountId].ipAddress);
+            playerConnectionButtonController.SetAccountId(accountId, userName, authenticationService.LoggedInAccounts[accountId].ipAddress);
             playerListNavigationController.AddActiveButton(playerConnectionButtonController.KickButton);
             playerButtons.Add(accountId, playerConnectionButtonController);
         }

@@ -641,9 +641,17 @@ namespace AnyRPG {
         [SerializeField]
         private ServerBackend serverBackend = ServerBackend.File;
 
-        [Tooltip("This is the address of the API server that the dedicated game server will connect to for login and character save / load operations. Do not use a trailing slash.")]
+        [Tooltip("This is the address of the API server that the dedicated game server will connect to for database operations. Do not use a trailing slash.")]
         [SerializeField]
-        private string apiServerAddress = "https://account.anyrpg.org";
+        private string apiServerAddress = "https://apiserver.yourdomain.com";
+
+        [Tooltip("This should only be set to false during development and testing when the APIServer is using a self-signed SSL certificate.")]
+        [SerializeField]
+        private bool validateAPIServerCert = true;
+
+        [Tooltip("This is the shared secret that allows the game server to login to the api server.")]
+        [SerializeField]
+        private string apiServerSharedSecret = "AnySecretThatCouldNotBeGuessed";
 
         [Tooltip("This is the address (and optionally port) of the dedicated authoritative game server that all clients connect to.")]
         [SerializeField]
@@ -665,6 +673,22 @@ namespace AnyRPG {
         [Tooltip("The chat command that is configured to send a private message (eg: tell or whisper)")]
         [SerializeField]
         private string privateMessageChatCommand = string.Empty;
+
+        [Tooltip("The length of time (in minutes) a personal instance must be empty before the scene is unloaded. -1 means it never unloads.")]
+        [SerializeField]
+        private float personalInstanceTimeout = 30f;
+
+        [Tooltip("The length of time (in minutes) a group instance must be empty before the scene is unloaded. -1 means it never unloads.")]
+        [SerializeField]
+        private float groupInstanceTimeout = 30f;
+
+        [Tooltip("The length of time (in minutes) a lobby game instance must be empty before the scene is unloaded. -1 means it never unloads.")]
+        [SerializeField]
+        private float lobbyGameInstanceTimeout = 2f;
+
+        [Tooltip("The length of time (in minutes) a world instance must be empty before the scene is unloaded. -1 means it never unloads.")]
+        [SerializeField]
+        private float worldInstanceTimeout = 5f;
 
         // reference to the lobby game scene nodes
         private List<SceneNode> lobbyGameScenes = new List<SceneNode>();
@@ -852,6 +876,12 @@ namespace AnyRPG {
         public int AuctionDepositAmount { get => auctionDepositAmount; set => auctionDepositAmount = value; }
         public float AuctionSoldFeePercentage { get => auctionSoldFeePercentage; set => auctionSoldFeePercentage = value; }
         public int CreateGuildCurrencyAmount { get => createGuildCurrencyAmount; set => createGuildCurrencyAmount = value; }
+        public bool ValidateAPIServerCert { get => validateAPIServerCert; set => validateAPIServerCert = value; }
+        public string ApiServerSharedSecret { get => apiServerSharedSecret; set => apiServerSharedSecret = value; }
+        public float PersonalInstanceTimeout { get => personalInstanceTimeout; set => personalInstanceTimeout = value; }
+        public float GroupInstanceTimeout { get => groupInstanceTimeout; set => groupInstanceTimeout = value; }
+        public float LobbyGameInstanceTimeout { get => lobbyGameInstanceTimeout; set => lobbyGameInstanceTimeout = value; }
+        public float WorldInstanceTimeout { get => worldInstanceTimeout; set => worldInstanceTimeout = value; }
 
         //public Currency PostageCurrency { get => postageCurrency; set => postageCurrency = value; }
 

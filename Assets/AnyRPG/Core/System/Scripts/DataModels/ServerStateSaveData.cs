@@ -8,6 +8,5 @@ namespace AnyRPG {
         public int guildIdCounter = 1;
         public int playerCharacterIdCounter = 1;
         public int mailIdCounter = 1;
-        public int itemInstanceIdCounter = -1;
     }
 }

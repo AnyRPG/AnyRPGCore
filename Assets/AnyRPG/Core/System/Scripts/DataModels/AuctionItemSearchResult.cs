@@ -18,12 +18,12 @@ namespace AnyRPG {
             this.SellerName = auctionItemSerializedSearchResult.SellerName;
             this.AuctionItemId = auctionItemSerializedSearchResult.AuctionItemId;
             this.CurrencyAmount = auctionItemSerializedSearchResult.CurrencyAmount;
-            foreach (int itemId in auctionItemSerializedSearchResult.ItemIds) {
-                InstantiatedItem item = systemItemManager.GetExistingInstantiatedItem(itemId);
+            foreach (long itemInstanceId in auctionItemSerializedSearchResult.ItemInstanceIds) {
+                InstantiatedItem item = systemItemManager.GetExistingInstantiatedItem(itemInstanceId);
                 if (item != null) {
                     Items.Add(item);
                 } else {
-                    Debug.LogWarning("AuctionItemSearchResult.AuctionItemSearchResult(): Could not find item with id " + itemId + " for auction item " + AuctionItemId);
+                    Debug.LogWarning($"AuctionItemSearchResult.AuctionItemSearchResult(): Could not find item with id {itemInstanceId} for auction item {AuctionItemId}");
                 }
             }
         }

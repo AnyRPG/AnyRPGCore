@@ -240,10 +240,18 @@ namespace AnyRPG {
             updateString += "\n";
 
             if (playerManager.UnitController.CharacterStats.PrimaryResource != null) {
-                updateString += playerManager.UnitController.CharacterStats.PrimaryResource.DisplayName + ": " + playerManager.UnitController.CharacterStats.CurrentPrimaryResource + " / " + playerManager.UnitController.CharacterStats.MaxPrimaryResource + "\n\n";
+                updateString += $"{playerManager.UnitController.CharacterStats.PrimaryResource.DisplayName}: {playerManager.UnitController.CharacterStats.CurrentPrimaryResource} / {playerManager.UnitController.CharacterStats.MaxPrimaryResource}\n";
             }
+            // add other resources
+            foreach (KeyValuePair<PowerResource, PowerResourceNode> _powerResource in playerManager.UnitController.CharacterStats.PowerResourceDictionary) {
+                if (playerManager.UnitController.CharacterStats.PrimaryResource == _powerResource.Key) {
+                    continue;
+                }
+                updateString += $"{_powerResource.Key.DisplayName}: {_powerResource.Value.currentValue} / {playerManager.UnitController.CharacterStats.GetPowerResourceMaxAmount(_powerResource.Key)}\n";
+            }
+            updateString += "\n";
 
-            updateString += "Amor: " + playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue + "\n";
+            updateString += $"Armor: {playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue}\n";
             /*
             updateString += "Armor: " + playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue;
             if (playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue != playerManager.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.Armor].BaseValue) {

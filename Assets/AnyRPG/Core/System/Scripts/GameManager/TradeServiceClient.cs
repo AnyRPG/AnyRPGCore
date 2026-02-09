@@ -79,19 +79,19 @@ namespace AnyRPG {
             OnRequestBeginTrade();
         }
 
-        public void RequestAddItemsToTradeSlot(int buttonIndex, List<int> itemIdList) {
+        public void RequestAddItemsToTradeSlot(int buttonIndex, List<long> itemInstanceIdList) {
             //Debug.Log($"TradeServiceClient.RequestAddItemsToTradeSlot({buttonIndex})");
 
-            networkManagerClient.RequestAddItemsToTradeSlot(buttonIndex, itemIdList);
+            networkManagerClient.RequestAddItemsToTradeSlot(buttonIndex, itemInstanceIdList);
             OnRequestAddItemsToTargetTradeSlot();
         }
 
-        public void AddItemsToTargetTradeSlot(int buttonIndex, List<int> itemIdList) {
+        public void AddItemsToTargetTradeSlot(int buttonIndex, List<long> itemInstanceIdList) {
             //Debug.Log($"TradeServiceClient.AddItemsToTargetTradeSlot({buttonIndex})");
 
             List<InstantiatedItem> itemList = new List<InstantiatedItem>();
-            foreach (int itemId in itemIdList) {
-                InstantiatedItem item = systemItemManager.GetExistingInstantiatedItem(itemId);
+            foreach (long itemInstanceId in itemInstanceIdList) {
+                InstantiatedItem item = systemItemManager.GetExistingInstantiatedItem(itemInstanceId);
                 if (item != null) {
                     itemList.Add(item);
                 }
@@ -103,7 +103,7 @@ namespace AnyRPG {
         public void AddCurrency(CurrencyNode currencyNode) {
             //Debug.Log($"TradeServiceClient.AddCurrency({currencyNode})");
 
-            if (targetCharacterId == 0) {
+            if (targetCharacterId == -1) {
                 return;
             }
 
@@ -148,7 +148,7 @@ namespace AnyRPG {
         public void RequestCancelTrade() {
             //Debug.Log($"TradeServiceClient.RequestCancelTrade()");
 
-            if (targetCharacterId == 0) {
+            if (targetCharacterId == -1) {
                 // trade is not active or has already been cancelled
                 return;
             }

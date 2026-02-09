@@ -16,11 +16,11 @@ namespace AnyRPG {
 
         public QuestGiverProps QuestGiverProps { get => questGiverProps; set => questGiverProps = value; }
 
-        public override InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, int itemId, Item item, ItemQuality usedItemQuality) {
+        public override InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, long itemInstanceId, Item item, ItemQuality usedItemQuality) {
             if ((item is QuestStartItem) == false) {
                 return null;
             }
-            return new InstantiatedQuestStartItem(systemGameManager, itemId, item as QuestStartItem, usedItemQuality);
+            return new InstantiatedQuestStartItem(systemGameManager, itemInstanceId, item as QuestStartItem, usedItemQuality);
         }
 
         public bool QuestRequirementsAreMet(UnitController sourceUnitController) {

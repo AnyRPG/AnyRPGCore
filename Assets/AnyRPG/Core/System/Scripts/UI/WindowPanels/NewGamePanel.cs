@@ -44,6 +44,9 @@ namespace AnyRPG {
         [SerializeField]
         private NewGameSpecializationPanel specializationPanel = null;
 
+        [SerializeField]
+        private GameObject playerNameInput = null;
+
         [Header("Bottom Buttons")]
         /*
         [SerializeField]
@@ -273,6 +276,17 @@ namespace AnyRPG {
                 } else {
                     // MMO mode
                     startButtonText.text = "Create Character";
+                }
+            }
+
+            if (networkManagerClient.ClientMode == NetworkServerMode.Lobby) {
+                if (playerNameInput.activeSelf == true) {
+                    playerNameInput.SetActive(false);
+                }
+                playerNameLabel.text = networkManagerClient.Username;
+            } else {
+                if (playerNameInput.activeSelf == false) {
+                    playerNameInput.SetActive(true);
                 }
             }
         }
@@ -717,9 +731,10 @@ namespace AnyRPG {
 
         public void ClosePanel() {
             //Debug.Log("NewGamePanel.ClosePanel()");
+
             uIManager.newGameWindow.CloseWindow();
             levelManager.PlayLevelSounds();
-            if (systemGameManager.GameMode == GameMode.Network) {
+            if (systemGameManager.GameMode == GameMode.Network && networkManagerClient.ClientMode != NetworkServerMode.Lobby) {
                 uIManager.loadGameWindow.OpenWindow();
             }
         }

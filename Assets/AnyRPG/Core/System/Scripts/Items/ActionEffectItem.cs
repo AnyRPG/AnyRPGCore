@@ -29,11 +29,11 @@ namespace AnyRPG {
 
         public AbilityEffectProperties AbilityEffectProperties { get => abilityEffectProperties; set => abilityEffectProperties = value; }
 
-        public override InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, int itemId, Item item, ItemQuality usedItemQuality) {
+        public override InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, long itemInstanceId, Item item, ItemQuality usedItemQuality) {
             if ((item is ActionEffectItem) == false) {
                 return null;
             }
-            return new InstantiatedActionEffectItem(systemGameManager, itemId, item as ActionEffectItem, usedItemQuality);
+            return new InstantiatedActionEffectItem(systemGameManager, itemInstanceId, item as ActionEffectItem, usedItemQuality);
         }
 
         /*

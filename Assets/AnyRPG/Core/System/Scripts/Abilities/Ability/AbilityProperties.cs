@@ -993,7 +993,7 @@ namespace AnyRPG {
         }
 
         public virtual bool Cast(IAbilityCaster sourceCharacter, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log($"{ResourceName}.BaseAbility.Cast(" + (sourceCharacter == null ? "null" : sourceCharacter.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log($"{ResourceName}.AbilityProperties.Cast({(sourceCharacter == null ? "null" : sourceCharacter.AbilityManager.Name)}, {(target == null ? "null" : target.name)})");
             
             if (!CanCast(sourceCharacter)) {
                 //Debug.Log(resourceName + ".BaseAbility.Cast(" + sourceCharacter.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + " CAN'T CAST!!!");
@@ -1042,6 +1042,8 @@ namespace AnyRPG {
 
         
         public void HandleAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log($"{ResourceName}.HandleAbilityHit()");
+
             List<AbilityEffectProperties> abilityEffectProperties = GetActionHitEffects(source);
             HandleAbilityHitCommon(source, target, abilityEffectContext, abilityEffectProperties);
         }
@@ -1055,7 +1057,8 @@ namespace AnyRPG {
         }
 
         public void HandleAbilityHitCommon(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, List<AbilityEffectProperties> abilityEffectProperties) {
-            //Debug.Log(DisplayName + ".AnimatedAbilityProperties.HandleAbilityHit()");
+            //Debug.Log($"{ResourceName}.AbilityProperties.HandleAbilityHitCommon()");
+
             // perform a check that includes range to target, and does not include in progress ability action check
             bool rangeResult = CanUseOnBase(target, source);
             bool deactivateAutoAttack = false;
@@ -1185,7 +1188,7 @@ namespace AnyRPG {
         }
 
         public virtual bool PerformAbilityEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, List<AbilityEffectProperties> abilityEffectProperties) {
-            //Debug.Log(DisplayName + ".BaseAbility.PerformAbilityEffects(" + source.AbilityManager.Name + ", " + (target ? target.name : "null") + ")");
+            //Debug.Log($"{ResourceName}.AbilityProperties.PerformAbilityEffects({source.AbilityManager.Name}, {(target ? target.name : "null")})");
             
             // FIX ME - this line existed only for DirectAbility - does it break anything else by being here ?
             abilityEffectContext.castTimeMultiplier = GetBaseAbilityCastingTime(source);
@@ -1193,7 +1196,7 @@ namespace AnyRPG {
             // perform hit / miss check only if baseability requires target and return false if miss
             if (GetTargetOptions(source).RequireTarget) {
                 if (!source.AbilityManager.DidAbilityHit(target, abilityEffectContext)) {
-                    //Debug.Log(DisplayName + ".BaseAbility.PerformAbilityEffects(): miss");
+                    //Debug.Log($"{ResourceName}.AbilityProperties.PerformAbilityEffects({source.AbilityManager.Name}, {(target ? target.name : "null")}) missed!");
                     return false;
                 }
             }
@@ -1205,13 +1208,14 @@ namespace AnyRPG {
                 if (abilityEffect == null) {
                     Debug.LogWarning("Forgot to set ability affect in inspector?");
                 }
+                //Debug.Log($"{ResourceName}.AbilityProperties.PerformAbilityEffects({source.AbilityManager.Name}, {(target ? target.name : "null")}) processing abilityEffect {abilityEffect.ResourceName}");
                 AbilityEffectContext abilityEffectOutput = abilityEffectContext.GetCopy();
                 if (abilityEffect != null
                     && abilityEffect.CanUseOn(target, source, abilityEffectContext)
                     && (abilityEffect.ChanceToCast >= 100f || abilityEffect.ChanceToCast >= UnityEngine.Random.Range(0f, 100f))) {
                     abilityEffect.Cast(source, target, target, abilityEffectOutput);
                 } else {
-                    //Debug.Log(DisplayName + ".BaseAbility.PerformAbilityEffects(" + source.AbilityManager.Name + ", " + (target ? target.name : "null") + ") COULD NOT FIND " + abilityEffect.DisplayName);
+                    //Debug.Log($"{ResourceName}.AbilityProperties.PerformAbilityEffects({source.AbilityManager.Name}, {(target ? target.name : "null")}) NULL ABILITYEFFECT OR COULD NOT USE ON");
                     //return;
                 }
             }

@@ -202,7 +202,7 @@ namespace AnyRPG {
             return string.Format("{0}", descriptionString);
         }
 
-        public virtual InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, int itemId, Item item, ItemQuality usedItemQuality) {
+        public virtual InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, long itemId, Item item, ItemQuality usedItemQuality) {
             return new InstantiatedItem(systemGameManager, itemId, item, usedItemQuality);
         }
 

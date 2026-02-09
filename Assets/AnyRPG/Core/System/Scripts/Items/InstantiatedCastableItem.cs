@@ -11,7 +11,7 @@ namespace AnyRPG {
         // game manager references
         protected SystemAbilityController systemAbilityController = null;
 
-        public InstantiatedCastableItem(SystemGameManager systemGameManager, int instanceId, CastableItem castableItem, ItemQuality itemQuality) : base(systemGameManager, instanceId, castableItem, itemQuality) {
+        public InstantiatedCastableItem(SystemGameManager systemGameManager, long instanceId, CastableItem castableItem, ItemQuality itemQuality) : base(systemGameManager, instanceId, castableItem, itemQuality) {
             this.castableItem = castableItem;
         }
 

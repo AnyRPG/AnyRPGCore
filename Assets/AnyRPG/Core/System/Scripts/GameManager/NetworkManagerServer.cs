@@ -7,44 +7,17 @@ using UnityEngine.SceneManagement;
 namespace AnyRPG {
     public class NetworkManagerServer : ConfiguredMonoBehaviour {
 
-        public event Action<int, int, bool, bool> OnAuthenticationResult = delegate { };
-        public event Action<int> OnAccountLogin = delegate { };
-        public event Action<int> OnAccountLogout = delegate { };
         public event Action<LobbyGame> OnCreateLobbyGame = delegate { };
         public event Action<int> OnCancelLobbyGame = delegate { };
         public event Action<int, int, string> OnJoinLobbyGame = delegate { };
         public event Action<int> OnStartLobbyGame = delegate { };
         public event Action<int, int> OnLeaveLobbyGame = delegate { };
         public event Action OnStartServer = delegate { };
+        public event Action OnBeforeStopServer = delegate { };
         public event Action OnStopServer = delegate { };
 
         [SerializeField]
         private NetworkController networkController = null;
-
-        // jwt for each client so the server can make API calls to the api server on their behalf
-        //private Dictionary<int, string> clientTokens = new Dictionary<int, string>();
-
-        // cached list of player character save data from client lookups used for loading games
-        /// <summary>
-        /// accountId, playerCharacterId, playerCharacterSaveData
-        /// </summary>
-        private Dictionary<int, Dictionary<int, CharacterSaveData>> playerCharacterDataDict = new Dictionary<int, Dictionary<int, CharacterSaveData>>();
-
-        /// <summary>
-        /// clientId, loggedInAccount
-        /// </summary>
-        private Dictionary<int, LoggedInAccount> loggedInAccountsByClient = new Dictionary<int, LoggedInAccount>();
-
-        /// <summary>
-        /// accountId, loggedInAccount
-        /// </summary>
-        private Dictionary<int, LoggedInAccount> loggedInAccounts = new Dictionary<int, LoggedInAccount>();
-
-
-        /// <summary>
-        /// clientId, username
-        /// </summary>
-        private Dictionary<int, string> loginRequests = new Dictionary<int, string>();
 
         // list of lobby games
         private Dictionary<int, LobbyGame> lobbyGames = new Dictionary<int, LobbyGame>();
@@ -84,6 +57,21 @@ namespace AnyRPG {
         /// </summary>
         private Dictionary<int, int> characterGroupSceneHandleLookup = new Dictionary<int, int>();
 
+        /// <summary>
+        /// playerCharacterId, sceneFileName, sceneHandle
+        /// </summary>
+        private Dictionary<int, Dictionary<string, int>> personalSceneHandles = new Dictionary<int, Dictionary<string, int>>();
+
+        /// <summary>
+        /// hashcode, playerCharacterId
+        /// </summary>
+        private Dictionary<int, int> personalLoadRequestHashCodes = new Dictionary<int, int>();
+
+        /// <summary>
+        /// sceneHandle, playerCharacterId
+        /// </summary>
+        private Dictionary<int, int> personalSceneHandleLookup = new Dictionary<int, int>();
+
 
         private int lobbyGameCounter = 0;
         private int maxLobbyChatTextSize = 64000;
@@ -93,8 +81,6 @@ namespace AnyRPG {
         private string lobbyChatText = string.Empty;
         private Dictionary<int, string> lobbyGameChatText = new Dictionary<int, string>();
 
-
-        private GameServerClient gameServerClient = null;
         private bool serverModeActive = false;
         private NetworkServerMode serverMode = NetworkServerMode.MMO;
 
@@ -124,27 +110,24 @@ namespace AnyRPG {
         private DialogManagerServer dialogManagerServer = null;
         private AuthenticationService authenticationService = null;
         private PlayerCharacterService playerCharacterService = null;
-        private NewGameManager newGameManager = null;
         private CharacterGroupServiceServer characterGroupServiceServer = null;
         private TradeServiceServer tradeServiceServer = null;
         private MailboxManagerServer mailboxManagerServer = null;
         private MailService mailService = null;
         private AuctionManagerServer auctionManagerServer = null;
-        private AuctionService auctionService = null;
         private GuildServiceServer guildServiceServer = null;
-        private ServerStateService serverStateService = null;
         private GuildmasterManagerServer guildmasterManagerServer = null;
         private FriendServiceServer friendServiceServer = null;
+        private ServerDataService gameDataService = null;
 
         public bool ServerModeActive { get => serverModeActive; }
         public NetworkServerMode ServerMode { get => serverMode; }
-        public Dictionary<int, LoggedInAccount> LoggedInAccounts { get => loggedInAccounts; }
-        public Dictionary<int, LoggedInAccount> LoggedInAccountsByClient { get => loggedInAccountsByClient; }
         public Dictionary<int, LobbyGame> LobbyGames { get => lobbyGames; }
         public Dictionary<int, Dictionary<string, int>> LobbyGameSceneHandles { get => lobbyGameSceneHandles; }
         public Dictionary<int, Dictionary<string, int>> CharacterGroupSceneHandles { get => characterGroupSceneHandles; }
         public Dictionary<int, int> LobbyGameAccountLookup { get => lobbyGameAccountLookup; set => lobbyGameAccountLookup = value; }
         public NetworkController NetworkController { get => networkController; set => networkController = value; }
+        //public RemoteGameServerClient GameServerClient { get => remoteGameServerClient; set => remoteGameServerClient = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -179,188 +162,39 @@ namespace AnyRPG {
             questGiverManagerServer = systemGameManager.QuestGiverManagerServer;
             authenticationService = systemGameManager.AuthenticationService;
             playerCharacterService = systemGameManager.PlayerCharacterService;
-            newGameManager = systemGameManager.NewGameManager;
             characterGroupServiceServer = systemGameManager.CharacterGroupServiceServer;
             tradeServiceServer = systemGameManager.TradeServiceServer;
             mailboxManagerServer = systemGameManager.MailboxManagerServer;
             mailService = systemGameManager.MailService;
             auctionManagerServer = systemGameManager.AuctionManagerServer;
-            auctionService = systemGameManager.AuctionService;
             guildServiceServer = systemGameManager.GuildServiceServer;
-            serverStateService = systemGameManager.ServerStateService;
             guildmasterManagerServer = systemGameManager.GuildmasterManagerServer;
             friendServiceServer = systemGameManager.FriendServiceServer;
+            gameDataService = systemGameManager.ServerDataService;
         }
 
-        public void AddLoggedInAccount(int clientId, int accountId, string token) {
-            //Debug.Log($"NetworkManagerServer.AddLoggedInAccount({clientId}, {accountId}, {token})");
+        public void RequestCreatePlayerCharacter(int clientId, CharacterSaveData requestedSaveData) {
+            //Debug.Log($"NetworkManagerServer.CreatePlayerCharacter(clientId: {clientId})");
 
-            if (loginRequests.ContainsKey(clientId)) {
-                if (loggedInAccounts.ContainsKey(accountId)) {
-                    //Debug.Log($"NetworkManagerServer.AddLoggedInAccount({clientId}, {accountId}, {token}) : updating existing object");
-                    int oldClientId = loggedInAccounts[accountId].clientId;
-                    loggedInAccounts[accountId].clientId = clientId;
-                    loggedInAccounts[accountId].token = token;
-                    loggedInAccounts[accountId].ipAddress = GetClientIPAddress(clientId);
-                    loggedInAccounts[accountId].disconnected = false;
-                    loggedInAccountsByClient.Remove(oldClientId);
-                    loggedInAccountsByClient.Add(clientId, loggedInAccounts[accountId]);
-                } else {
-                    LoggedInAccount loggedInAccount = new LoggedInAccount(clientId, accountId, loginRequests[clientId], token, GetClientIPAddress(clientId));
-                    loggedInAccounts.Add(accountId, loggedInAccount);
-                    loggedInAccountsByClient.Add(clientId, loggedInAccount);
-                }
-            }
-        }
-
-        public void OnSetGameMode(GameMode gameMode) {
-            //Debug.Log($"NetworkManagerServer.OnSetGameMode({gameMode})");
-            
-            if (gameMode == GameMode.Network) {
-                // create instance of GameServerClient
-                gameServerClient = new GameServerClient(systemGameManager, systemConfigurationManager.ApiServerAddress);
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
                 return;
             }
-
-        }
-
-        public void SavePlayerCharacter(PlayerCharacterMonitor playerCharacterMonitor) {
-            //Debug.Log($"NetworkManagerServer.SavePlayerCharacter()");
-
-            if (playerCharacterMonitor.unitController != null) {
-                playerCharacterMonitor.SavePlayerLocation();
-            }
-            if (playerCharacterMonitor.saveDataDirty == true) {
-                if (serverMode == NetworkServerMode.MMO) {
-                    if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
-                        if (loggedInAccounts.ContainsKey(playerCharacterMonitor.accountId) == false) {
-                            // can't do anything without a token
-                            return;
-                        }
-                        gameServerClient.SavePlayerCharacter(
-                            playerCharacterMonitor.accountId,
-                            loggedInAccounts[playerCharacterMonitor.accountId].token,
-                            playerCharacterMonitor.characterSaveData.CharacterId,
-                            playerCharacterMonitor.characterSaveData);
-                    } else if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                        playerCharacterService.SavePlayerCharacter(playerCharacterMonitor.accountId, playerCharacterMonitor.characterSaveData);
-                    }
-                }
-            }
-        }
-
-        public void GetLoginToken(int clientId, string username, string password) {
-            //Debug.Log($"NetworkManagerServer.GetLoginToken({clientId}, {username}, {password})");
-
-            loginRequests.Add(clientId, username);
-            if (serverMode == NetworkServerMode.MMO) {
-                if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
-                    gameServerClient.Login(clientId, username, password);
-                } else if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                    LocalLogin(clientId, username, password);
-                }
-            } else {
-                LocalLogin(clientId, username, password);
-            }
-        }
-
-        public void LocalLogin(int clientId, string username, string password) {
-            //Debug.Log($"NetworkManagerServer.LobbyLogin({clientId}, {username}, {password})");
-            authenticationService.LoginOrCreateAccount(clientId, username, password);
-        }
-
-        public void ProcessLoginResponse(int clientId, int accountId, bool correctPassword, string token) {
-            //Debug.Log($"NetworkManagerServer.ProcessLoginResponse({clientId}, {accountId}, {correctPassword}, {token})");
-
-            SpawnPlayerRequest spawnPlayerRequest = null;
-            if (correctPassword == true) {
-                if (loggedInAccounts.ContainsKey(accountId) && loggedInAccounts[accountId].disconnected == false) {
-                    if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId)) {
-                        // if the player is already logged in, we need to add a spawn request to match the current position and direction of the player
-                        spawnPlayerRequest = new SpawnPlayerRequest() {
-                            overrideSpawnDirection = true,
-                            spawnForwardDirection = playerManagerServer.ActiveUnitControllers[accountId].transform.forward,
-                            overrideSpawnLocation = true,
-                            spawnLocation = playerManagerServer.ActiveUnitControllers[accountId].transform.position
-                        };
-                    }
-                    // if the account is already logged in, kick the old client
-                    playerManagerServer.DespawnPlayerUnit(accountId);
-                    KickPlayer(accountId);
-                } else if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId)) {
-                    //Debug.Log($"NetworkManagerServer.ProcessLoginResponse({clientId}, {accountId}, {correctPassword}, {token}) account was disconnected, using last position");
-                    // if the account is disconnected but was already logged in, add a spawn request to match the saved position and direction of the player
-                    CharacterSaveData saveData = playerManagerServer.PlayerCharacterMonitors[accountId].characterSaveData;
-                    spawnPlayerRequest = new SpawnPlayerRequest() {
-                        overrideSpawnDirection = true,
-                        spawnForwardDirection = new Vector3(saveData.PlayerRotationX, saveData.PlayerRotationY, saveData.PlayerRotationZ),
-                        overrideSpawnLocation = true,
-                        spawnLocation = new Vector3(saveData.PlayerLocationX, saveData.PlayerLocationY, saveData.PlayerLocationZ)
-                    };
-                }
-                if (spawnPlayerRequest != null) {
-                    playerManagerServer.AddSpawnRequest(accountId, spawnPlayerRequest, false);
-                }
-                AddLoggedInAccount(clientId, accountId, token);
-            }
-            loginRequests.Remove(clientId);
-            OnAuthenticationResult(clientId, accountId, true, correctPassword);
-            
-            if (correctPassword == false) {
-                return;
-            }
-            //if (spawnPlayerRequest != null) {
-            //}
-
-            OnAccountLogin(accountId);
-            if (serverMode == NetworkServerMode.Lobby) {
-                networkController.AdvertiseLobbyLogin(accountId, loggedInAccounts[accountId].username);
-            }
-        }
-
-        public void RequestCreatePlayerCharacter(int accountId, CharacterSaveData requestedSaveData) {
-            //Debug.Log($"NetworkManagerServer.CreatePlayerCharacter(AnyRPGSaveData)");
-
-            if (loggedInAccounts.ContainsKey(accountId) == false) {
+            if (authenticationService.LoggedInAccounts.ContainsKey(accountId) == false) {
                 // can't do anything without a token
                 return;
             }
-            CharacterSaveData characterSaveData = newGameManager.CreateNewPlayerSaveData(requestedSaveData);
-
-            // create save data from parameters
-            if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
-                gameServerClient.CreatePlayerCharacter(accountId, loggedInAccounts[accountId].token, characterSaveData);
-            } else if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                
-                if (playerCharacterService.AddPlayerCharacter(accountId, characterSaveData)) {
-                    ProcessCreatePlayerCharacterResponse(accountId);
-                } else {
-                    networkController.AdvertisePlayerNameNotAvailable(accountId);
-                }
-            }
+            playerCharacterService.RequestCreatePlayerCharacter(accountId, requestedSaveData);
         }
 
-        public void ProcessCreatePlayerCharacterResponse(int accountId) {
-            //Debug.Log($"NetworkManagerServer.ProcessCreatePlayerCharacterResponse({accountId})");
-
-            //networkController.AdvertiseCreatePlayerCharacter(accountId);
-            LoadCharacterList(accountId);
-        }
-
-
-        public void DeletePlayerCharacter(int accountId, int playerCharacterId) {
+        public void RequestDeletePlayerCharacter(int clientId, int playerCharacterId) {
             //Debug.Log($"NetworkManagerServer.DeletePlayerCharacter({playerCharacterId})");
 
-            if (loggedInAccounts.ContainsKey(accountId) == false) {
-                // can't do anything without a token
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
                 return;
             }
-            if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                playerCharacterService.DeletePlayerCharacter(accountId, playerCharacterId);
-                ProcessDeletePlayerCharacterResponse(accountId);
-            } else if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
-                gameServerClient.DeletePlayerCharacter(accountId, loggedInAccounts[accountId].token, playerCharacterId);
-            }
+            playerCharacterService.RequestDeletePlayerCharacter(accountId, playerCharacterId);
         }
 
         public void ProcessStopNetworkUnitServer(UnitController unitController) {
@@ -376,136 +210,35 @@ namespace AnyRPG {
             //}
         }
 
-        public void ProcessDeletePlayerCharacterResponse(int accountId) {
-            //Debug.Log($"NetworkManagerServer.ProcessDeletePlayerCharacterResponse({accountId})");
+        public void RequestLoadCharacterList(int clientId) {
+            //Debug.Log($"NetworkManagerServer.RequestLoadCharacterList(clientId: {clientId})");
 
-            networkController.AdvertiseDeletePlayerCharacter(accountId);
-        }
-
-        public void LoadCharacterList(int accountId) {
-            //Debug.Log($"NetworkManagerServer.LoadCharacterList({accountId})");
-
-            if (loggedInAccounts.ContainsKey(accountId) == false) {
-                // can't do anything without a token
-                //return new List<PlayerCharacterSaveData>();
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
                 return;
             }
-            if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                PlayerCharacterListResponse playerCharacterListResponse = playerCharacterService.GetPlayerCharacters(accountId);
-                ProcessLoadCharacterListResponse(accountId, playerCharacterListResponse.playerCharacters);
-            } else if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
-                gameServerClient.LoadCharacterList(accountId, loggedInAccounts[accountId].token);
-            }
-        }
 
-        public void ProcessLoadCharacterListResponse(int accountId, List<PlayerCharacterData> playerCharacters) {
-            //Debug.Log($"NetworkManagerServer.ProcessLoadCharacterListResponse({accountId})");
+            playerCharacterService.LoadCharacterList(accountId);
 
-            List<PlayerCharacterSaveData> playerCharacterSaveDataList = new List<PlayerCharacterSaveData>();
-            foreach (PlayerCharacterData playerCharacterData in playerCharacters) {
-                PlayerCharacterSaveData playerCharacterSaveData = new PlayerCharacterSaveData(saveManager.LoadCharacterSaveDataFromString(playerCharacterData.saveData), systemItemManager);
-                playerCharacterSaveDataList.Add(playerCharacterSaveData);
-            }
-            Dictionary<int, CharacterSaveData> playerCharacterSaveDataDict = new Dictionary<int, CharacterSaveData>();
-            foreach (PlayerCharacterSaveData playerCharacterSaveData in playerCharacterSaveDataList) {
-                playerCharacterSaveDataDict.Add(playerCharacterSaveData.CharacterSaveData.CharacterId, playerCharacterSaveData.CharacterSaveData);
-            }
-            if (playerCharacterDataDict.ContainsKey(accountId)) {
-                playerCharacterDataDict[accountId] = playerCharacterSaveDataDict;
-            } else {
-                playerCharacterDataDict.Add(accountId, playerCharacterSaveDataDict);
-            }
-
-            networkController.AdvertiseLoadCharacterList(accountId, playerCharacterSaveDataList);
-        }
-
-        public CharacterSaveData GetPlayerCharacterSaveData(int accountId, int playerCharacterId) {
-            if (playerCharacterDataDict.ContainsKey(accountId) == false) {
-                return null;
-            }
-            if (playerCharacterDataDict[accountId].ContainsKey(playerCharacterId) == false) {
-                return null;
-            }
-            return playerCharacterDataDict[accountId][playerCharacterId];
-        }
-
-        public string GetAccountToken(int accountId) {
-            //Debug.Log($"NetworkManagerServer.GetClientToken({accountId})");
-
-            if (loggedInAccounts.ContainsKey(accountId)) {
-                return loggedInAccounts[accountId].token;
-            }
-            return string.Empty;
         }
 
         public void ProcessClientDisconnect(int clientId) {
-            //Debug.Log($"NetworkManagerServer.ProcessClientDisconnect({clientId})");
-
-            if (loggedInAccountsByClient.ContainsKey(clientId) == false) {
-                return;
-            }
-            int accountId = loggedInAccountsByClient[clientId].accountId;
-            // don't do this - it will remove them from the lobby game
-            //ProcessClientLogout(accountId);
-            loggedInAccounts[accountId].disconnected = true;
-
-            // remove the player from any character groups
-            int characterId = -1;
-            if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId)) {
-                characterId = playerManagerServer.PlayerCharacterMonitors[accountId].characterSaveData.CharacterId;
-            }
-            if (characterId != -1) {
-                playerCharacterService.SetCharacterOnline(characterId, false);
-            }
-
-            playerManagerServer.ProcessDisconnect(accountId);
-        }
-
-        public void ProcessClientLogout(int accountId) {
-            //Debug.Log($"NetworkManagerServer.ProcessClientLogout({accountId})");
-
-            if (loggedInAccounts.ContainsKey(accountId) == false) {
-                return;
-            }
-
-            // remove the player from any lobby games
-            int clientId = loggedInAccounts[accountId].clientId;
-            if (lobbyGameAccountLookup.ContainsKey(accountId) == true) {
-                int gameId = lobbyGameAccountLookup[accountId];
-                LeaveLobbyGame(gameId, accountId);
-            }
-
-            loggedInAccounts.Remove(accountId);
-            loggedInAccountsByClient.Remove(clientId);
-
-            OnAccountLogout(accountId);
-            if (serverMode == NetworkServerMode.Lobby) {
-                networkController?.AdvertiseLobbyLogout(accountId);
-            }
+            authenticationService.ProcessClientDisconnect(clientId);
         }
 
         public void ActivateServerMode() {
             //Debug.Log($"NetworkManagerServer.ActivateServerMode()");
 
-            serverModeActive = true;
-            // ordered dependencies
-            // server state service needs to load ids before anything else
-            serverStateService.ProcessStartServer();
-            // load items first
-            systemItemManager.ProcessStartServer();
-            // load things that depend on items
-            mailService.ProcessStartServer();
-            auctionService.ProcessStartServer();
-            playerCharacterService.ProcessStartServer();
-            guildServiceServer.ProcessStartServer();
-            friendServiceServer.ProcessStartServer();
-
-            // unordered dependencies
-            OnStartServer();
             systemEventManager.OnChooseWeather += HandleChooseWeather;
             systemEventManager.OnStartWeather += HandleStartWeather;
             systemEventManager.OnEndWeather += HandleEndWeather;
 
+            serverModeActive = true;
+
+            // run functions with no dependencies on database data
+            OnStartServer();
+
+            gameDataService.LoadServerData();
         }
 
         public void DeactivateServerMode() {
@@ -513,8 +246,8 @@ namespace AnyRPG {
 
             serverModeActive = false;
 
-            loggedInAccountsByClient.Clear();
-            lobbyGames.Clear();
+            authenticationService.ProcessDeactivateServerMode();
+            CancelLobbyGames();
             lobbyGameChatText.Clear();
 
             OnStopServer();
@@ -552,10 +285,12 @@ namespace AnyRPG {
             if (serverModeActive == false) {
                 return;
             }
-            systemEventManager.NotifyOnBeforeStopServer();
-            
+            OnBeforeStopServer();
+
+            CancelLobbyGames();
+
             // logout all logged in accounts
-            List<int> loggedInAccountIds = new List<int>(loggedInAccounts.Keys);
+            List<int> loggedInAccountIds = new List<int>(authenticationService.LoggedInAccounts.Keys);
             foreach (int accountId in loggedInAccountIds) {
                 Logout(accountId);
             }
@@ -564,18 +299,28 @@ namespace AnyRPG {
         }
 
         public void KickPlayer(int accountId) {
-            //Debug.Log($"NetworkManagerServer.KickPlayer({accountId})");
+            //Debug.Log($"NetworkManagerServer.KickPlayer(accountId: {accountId})");
 
-            networkController?.KickPlayer(accountId);
+            int clientId = GetClientIDForAccount(accountId);
+            if (clientId == -1) {
+                return;
+            }
+            networkController.KickPlayer(clientId);
         }
 
         public string GetClientIPAddress(int clientId) {
             return networkController?.GetClientIPAddress(clientId);
         }
 
-        public void CreateLobbyGame(string sceneResourceName, int accountId, bool allowLateJoin) {
-            
-            LobbyGame lobbyGame = new LobbyGame(accountId, lobbyGameCounter, sceneResourceName, loggedInAccounts[accountId].username, allowLateJoin);
+        public void CreateLobbyGame(string sceneResourceName, int clientId, bool allowLateJoin) {
+            //Debug.Log($"NetworkManagerServer.CreateLobbyGame(sceneResourceName: {sceneResourceName}, clientId: {clientId}, allowLateJoin: {allowLateJoin})");
+
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                Debug.LogWarning($"NetworkManagerServer.CreateLobbyGame(sceneResourceName: {sceneResourceName}, clientId: {clientId}, allowLateJoin: {allowLateJoin}) could not get account for client");
+                return;
+            }
+            LobbyGame lobbyGame = new LobbyGame(accountId, lobbyGameCounter, sceneResourceName, authenticationService.LoggedInAccounts[accountId].username, allowLateJoin);
             lobbyGameCounter++;
             lobbyGames.Add(lobbyGame.gameId, lobbyGame);
             lobbyGameAccountLookup.Add(accountId, lobbyGame.gameId);
@@ -584,11 +329,19 @@ namespace AnyRPG {
             networkController.AdvertiseCreateLobbyGame(lobbyGame);
         }
 
-        public void CancelLobbyGame(int accountId, int gameId) {
+        public void CancelLobbyGame(int clientId, int gameId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (lobbyGames.ContainsKey(gameId) == false || lobbyGames[gameId].leaderAccountId != accountId) {
                 // game not found, or requesting client is not leader
                 return;
             }
+            CancelLobbyGame(gameId);
+        }
+
+        public void CancelLobbyGame(int gameId) {
             foreach (int accountIdInGame in lobbyGames[gameId].PlayerList.Keys) {
                 lobbyGameAccountLookup.Remove(accountIdInGame);
             }
@@ -598,33 +351,56 @@ namespace AnyRPG {
             networkController.AdvertiseCancelLobbyGame(gameId);
         }
 
-        public void JoinLobbyGame(int gameId, int accountId) {
-            if (lobbyGames.ContainsKey(gameId) == false || loggedInAccounts.ContainsKey(accountId) == false) {
+        private void CancelLobbyGames() {
+            List<int> lobbyGameIds = new List<int>(lobbyGames.Keys);
+            foreach (int lobbyGameId in lobbyGameIds) {
+                CancelLobbyGame(lobbyGameId);
+            }
+        }
+
+        public void JoinLobbyGame(int gameId, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
+            if (lobbyGames.ContainsKey(gameId) == false || authenticationService.LoggedInAccounts.ContainsKey(accountId) == false) {
                 // game or client doesn't exist
                 return;
             }
-            lobbyGames[gameId].AddPlayer(accountId, loggedInAccounts[accountId].username);
+            lobbyGames[gameId].AddPlayer(accountId, authenticationService.LoggedInAccounts[accountId].username);
             lobbyGameAccountLookup.Add(accountId, gameId);
-            OnJoinLobbyGame(gameId, accountId, loggedInAccounts[accountId].username);
-            networkController.AdvertiseAccountJoinLobbyGame(gameId, accountId, loggedInAccounts[accountId].username);
+            OnJoinLobbyGame(gameId, accountId, authenticationService.LoggedInAccounts[accountId].username);
+            networkController.AdvertiseAccountJoinLobbyGame(gameId, accountId, authenticationService.LoggedInAccounts[accountId].username);
         }
 
-        public void RequestLobbyGameList(int accountId) {
+        public void RequestLobbyGameList(int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             networkController.SetLobbyGameList(accountId, lobbyGames.Values.ToList<LobbyGame>());
         }
 
-        public void RequestLobbyPlayerList(int accountId) {
+        public void RequestLobbyPlayerList(int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             Dictionary<int, string> lobbyPlayerList = new Dictionary<int, string>();
-            foreach (int loggedInClientId in loggedInAccountsByClient.Keys) {
-                lobbyPlayerList.Add(loggedInClientId, loggedInAccountsByClient[loggedInClientId].username);
+            foreach (int loggedInClientId in authenticationService.LoggedInAccountsByClient.Keys) {
+                lobbyPlayerList.Add(loggedInClientId, authenticationService.LoggedInAccountsByClient[loggedInClientId].username);
             }
             networkController.SetLobbyPlayerList(accountId, lobbyPlayerList);
         }
 
-        public void ChooseLobbyGameCharacter(int gameId, int accountId, string unitProfileName, string appearanceString, List<SwappableMeshSaveData> swappableMeshSaveData) {
+        public void ChooseLobbyGameCharacter(int gameId, int clientId, string unitProfileName, string appearanceString, List<SwappableMeshSaveData> swappableMeshSaveData) {
             //Debug.Log($"NetworkManagerServer.ChooseLobbyGameCharacter({gameId}, {accountId}, {unitProfileName})");
 
-            if (lobbyGames.ContainsKey(gameId) == false || loggedInAccounts.ContainsKey(accountId) == false) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
+            if (lobbyGames.ContainsKey(gameId) == false || authenticationService.LoggedInAccounts.ContainsKey(accountId) == false) {
                 Debug.LogWarning($"NetworkManagerServer.ChooseLobbyGameCharacter({gameId}, {accountId}, {unitProfileName}) - lobby game or client does not exist");
                 return;
             }
@@ -638,8 +414,14 @@ namespace AnyRPG {
             networkController.AdvertiseChooseLobbyGameCharacter(gameId, accountId, unitProfileName);
         }
 
-        public void ToggleLobbyGameReadyStatus(int gameId, int accountId) {
+        public void ToggleLobbyGameReadyStatus(int gameId, int clientId) {
             //Debug.Log($"NetworkManagerClient.ToggleLobbyGameReadyStatus({gameId}, {accountId})");
+
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
+
 
             if (lobbyGames.ContainsKey(gameId) == false || lobbyGames[gameId].PlayerList.ContainsKey(accountId) == false) {
                 // game did not exist or client was not in game
@@ -650,7 +432,11 @@ namespace AnyRPG {
             networkController.AdvertiseSetLobbyGameReadyStatus(gameId, accountId, lobbyGames[gameId].PlayerList[accountId].ready);
         }
 
-        public void RequestStartLobbyGame(int gameId, int accountId) {
+        public void RequestStartLobbyGame(int gameId, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (lobbyGames.ContainsKey(gameId) == false || lobbyGames[gameId].leaderAccountId != accountId || lobbyGames[gameId].inProgress == true) {
                 // game did not exist, non leader tried to start, or already in progress, nothing to do
                 return;
@@ -658,7 +444,11 @@ namespace AnyRPG {
             StartLobbyGame(gameId);
         }
 
-        public void RequestJoinLobbyGameInProgress(int gameId, int accountId) {
+        public void RequestJoinLobbyGameInProgress(int gameId, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (lobbyGames.ContainsKey(gameId) == false || lobbyGames[gameId].inProgress == false || lobbyGames[gameId].allowLateJoin == false) {
                 // game did not exist or not in progress or does not allow late joins
                 return;
@@ -688,6 +478,19 @@ namespace AnyRPG {
                 }
             }
             networkController.AdvertiseJoinLobbyGameInProgress(gameId, accountId, sceneName);
+
+            LobbyGame lobbyGame = lobbyGames[gameId];
+
+            // first try the scene resource name provided, then fallback to the lobby game default scene resource name
+            SceneNode loadingSceneNode = systemDataFactory.GetResource<SceneNode>(sceneName);
+            if (loadingSceneNode == null) {
+                loadingSceneNode = systemDataFactory.GetResource<SceneNode>(lobbyGame.sceneResourceName);
+                if (loadingSceneNode == null) {
+                    return;
+                }
+            }
+
+            LoadLobbyGameScene(accountId, lobbyGame, loadingSceneNode);
         }
 
         public void StartLobbyGame(int gameId) {
@@ -707,8 +510,12 @@ namespace AnyRPG {
             networkController.StartLobbyGame(gameId);
         }
 
-        public void LeaveLobbyGame(int gameId, int accountId) {
-            if (lobbyGames.ContainsKey(gameId) == false || loggedInAccounts.ContainsKey(accountId) == false) {
+        public void LeaveLobbyGame(int gameId, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
+            if (lobbyGames.ContainsKey(gameId) == false || authenticationService.LoggedInAccounts.ContainsKey(accountId) == false) {
                 // game or client doesn't exist
                 return;
             }
@@ -722,33 +529,45 @@ namespace AnyRPG {
             }
         }
 
-        public void SendLobbyChatMessage(string messageText, int accountId) {
-            if (loggedInAccounts.ContainsKey(accountId) == false) {
+        public void SendLobbyChatMessage(string messageText, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
                 return;
             }
-            string addedText = $"{loggedInAccounts[accountId].username}: {messageText}\n";
+            if (authenticationService.LoggedInAccounts.ContainsKey(accountId) == false) {
+                return;
+            }
+            string addedText = $"{authenticationService.LoggedInAccounts[accountId].username}: {messageText}\n";
             lobbyChatText += addedText;
             lobbyChatText = ShortenStringOnNewline(lobbyChatText, maxLobbyChatTextSize);
 
             networkController.AdvertiseSendLobbyChatMessage(addedText);
         }
 
-        public void SendLobbyGameChatMessage(string messageText, int accountId, int gameId) {
-            if (loggedInAccountsByClient.ContainsKey(accountId) == false) {
+        public void SendLobbyGameChatMessage(string messageText, int clientId, int gameId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
+            if (authenticationService.LoggedInAccounts.ContainsKey(accountId) == false) {
                 return;
             }
             if (lobbyGames.ContainsKey(gameId) == false || lobbyGames[gameId].PlayerList.ContainsKey(accountId) == false) {
                 return;
             }
-            string addedText = $"{loggedInAccounts[accountId].username}: {messageText}\n";
+            string addedText = $"{authenticationService.LoggedInAccounts[accountId].username}: {messageText}\n";
             lobbyGameChatText[gameId] += addedText;
             lobbyGameChatText[gameId] = ShortenStringOnNewline(lobbyGameChatText[gameId], maxLobbyChatTextSize);
 
             networkController.AdvertiseSendLobbyGameChatMessage(addedText, gameId);
         }
 
-        public void SendSceneChatMessage(string messageText, int accountId) {
-            if (loggedInAccounts.ContainsKey(accountId) == false) {
+        public void SendSceneChatMessage(string messageText, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
+            if (authenticationService.LoggedInAccounts.ContainsKey(accountId) == false) {
                 return;
             }
             messageLogServer.WriteChatMessage(accountId, messageText);
@@ -774,7 +593,38 @@ namespace AnyRPG {
             //int oldSceneHandle = sourceUnitController.gameObject.scene.handle;
             DespawnPlayerUnit(accountId);
             //systemEventManager.NotifyOnLevelUnloadServer(oldSceneHandle, oldSceneName);
-            networkController.AdvertiseLoadScene(sceneName, accountId);
+            ChangeScene(accountId, sceneName);
+        }
+
+        public void ChangeScene(int accountId, string sceneName) {
+            //Debug.Log($"NetworkManagerServer.ChangeScene(accountId: {accountId}, sceneName: {sceneName})");
+
+            networkController.AdvertiseUnloadScene(accountId);
+
+            int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
+
+            SceneNode sceneNode = levelManager.GetSceneNodeBySceneName(sceneName);
+            if (sceneNode == null) {
+                Debug.LogWarning($"NetworkManagerServer.ChangeScene(accountId: {accountId}, sceneName: {sceneName}) could not find scene node");
+                return;
+            }
+
+            if (serverMode == NetworkServerMode.MMO) {
+                LoadMMOGameScene(accountId, playerCharacterId, sceneNode);
+            } else if (serverMode == NetworkServerMode.Lobby) {
+                LobbyGame lobbyGame = lobbyGames[lobbyGameAccountLookup[accountId]];
+                LoadLobbyGameScene(accountId, lobbyGame, sceneNode);
+            }
+        }
+
+        public void LoadLobbyGameScene(int accountId, LobbyGame lobbyGame, SceneNode sceneNode) {
+            //Debug.Log($"FishNetClientConnector.LoadLobbyGameScene({lobbyGame.gameId}, {sceneNode.SceneFile}, {networkConnection.ClientId}");
+
+            if (lobbyGameSceneHandles.ContainsKey(lobbyGame.gameId) == false || lobbyGameSceneHandles[lobbyGame.gameId].ContainsKey(sceneNode.SceneFile) == false) {
+                networkController.LoadNewLobbyGameScene(accountId, lobbyGame, sceneNode);
+                return;
+            }
+            networkController.LoadExistingScene(accountId, lobbyGameSceneHandles[lobbyGame.gameId][sceneNode.SceneFile]);
         }
 
         public void AdvertiseLoadCutscene(Cutscene cutscene, int accountId) {
@@ -787,8 +637,12 @@ namespace AnyRPG {
             playerManagerServer.DespawnPlayerUnit(accountId);
         }
 
-        public void RequestDespawnPlayerUnit(int accountId) {
+        public void RequestDespawnPlayerUnit(int clientId) {
             //Debug.Log($"NetworkManagerServer.RequestDespawnPlayerUnit({accountId})");
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
 
             // this method is only called when loading a cutscene, so we need to create a spawn request so the player spawns
             // at the correct position and direction when the cutscene ends
@@ -823,7 +677,7 @@ namespace AnyRPG {
             //int oldSceneHandle = sourceUnitController.gameObject.scene.handle;
             DespawnPlayerUnit(accountId);
             //systemEventManager.NotifyOnLevelUnloadServer(oldSceneHandle, oldSceneName);
-            networkController.AdvertiseLoadScene(teleportEffectProperties.LevelName, accountId);
+            ChangeScene(accountId, teleportEffectProperties.LevelName);
         }
 
         public void ReturnObjectToPool(GameObject returnedObject) {
@@ -869,7 +723,13 @@ namespace AnyRPG {
                 AddCharacterGroupSceneHandle(characterGroupLoadRequestHashCodes[loadRequestHashCode], scene);
                 characterGroupLoadRequestHashCodes.Remove(loadRequestHashCode);
             }
-            levelManagerServer.AddLoadedScene(scene);
+            if (personalLoadRequestHashCodes.ContainsKey(loadRequestHashCode) == true) {
+                //Debug.Log($"NetworkManagerServer.HandleSceneLoadEnd({scene.name}, {loadRequestHashCode}) - personalp load request");
+                AddPersonalSceneHandle(personalLoadRequestHashCodes[loadRequestHashCode], scene);
+                personalLoadRequestHashCodes.Remove(loadRequestHashCode);
+            }
+
+            levelManagerServer.AddLoadedScene(loadRequestHashCode, scene);
             levelManagerServer.ProcessLevelLoad(scene);
         }
 
@@ -901,6 +761,20 @@ namespace AnyRPG {
             }
         }
 
+        private void AddPersonalSceneHandle(int playerCharacterId, Scene scene) {
+            //Debug.Log($"NetworkManagerServer.AddCharacterGroupSceneHandle({characterGroupId}, {scene.name}, {scene.handle})");
+
+            if (personalSceneHandles.ContainsKey(playerCharacterId) == false) {
+                personalSceneHandles.Add(playerCharacterId, new Dictionary<string, int>());
+            }
+            if (personalSceneHandles[playerCharacterId].ContainsKey(scene.name) == false) {
+                personalSceneHandles[playerCharacterId].Add(scene.name, scene.handle);
+            }
+            if (personalSceneHandleLookup.ContainsKey(scene.handle) == false) {
+                personalSceneHandleLookup.Add(scene.handle, playerCharacterId);
+            }
+        }
+
         public void HandleSceneUnloadStart(int sceneHandle, string sceneName) {
             //Debug.Log($"NetworkManagerServer.HandleSceneUnloadStart({sceneName}, {sceneHandle})");
 
@@ -926,6 +800,16 @@ namespace AnyRPG {
                 }
                 characterGroupSceneHandleLookup.Remove(sceneHandle);
             }
+            if (personalSceneHandleLookup.ContainsKey(sceneHandle) == true) {
+                //Debug.Log($"NetworkManagerServer.HandleSceneUnloadEnd({sceneName}, {sceneHandle}) - character group unload request");
+                int playerCharacterId = personalSceneHandleLookup[sceneHandle];
+                if (personalSceneHandles.ContainsKey(playerCharacterId) == true && personalSceneHandles[playerCharacterId].ContainsKey(sceneName) == true) {
+                    personalSceneHandles[playerCharacterId].Remove(sceneName);
+                }
+                personalSceneHandleLookup.Remove(sceneHandle);
+            }
+
+
             //levelManagerServer.RemoveLoadedScene(sceneHandle, sceneName);
         }
 
@@ -939,14 +823,22 @@ namespace AnyRPG {
             return networkController.SpawnModelPrefabServer(spawnPrefab, parentTransform, position, forward);
         }
 
-        public void TurnInDialog(Interactable interactable, int componentIndex, Dialog dialog, int accountId) {
+        public void TurnInDialog(Interactable interactable, int componentIndex, Dialog dialog, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
             dialogManagerServer.TurnInDialog(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, dialog);
         }
 
-        public void TurnInQuestDialog(Dialog dialog, int accountId) {
+        public void TurnInQuestDialog(Dialog dialog, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
@@ -954,37 +846,57 @@ namespace AnyRPG {
         }
 
 
-        public void SetPlayerCharacterClass(Interactable interactable, int componentIndex, int accountId) {
+        public void SetPlayerCharacterClass(Interactable interactable, int componentIndex, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
             classChangeManagerServer.ChangeCharacterClass(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex);
         }
 
-        public void SetPlayerCharacterSpecialization(Interactable interactable, int componentIndex, int accountId) {
+        public void SetPlayerCharacterSpecialization(Interactable interactable, int componentIndex, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
             specializationChangeManagerServer.ChangeCharacterSpecialization(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex);
         }
 
-        public void SetPlayerFaction(Interactable interactable, int componentIndex, int accountId) {
+        public void SetPlayerFaction(Interactable interactable, int componentIndex, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
             factionChangeManagerServer.ChangeCharacterFaction(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex);
         }
 
-        public void RequestCreateGuild(Interactable interactable, int componentIndex, string guildName, int accountId) {
+        public void RequestCreateGuild(Interactable interactable, int componentIndex, string guildName, int clientId) {
             //Debug.Log($"NetworkManagerServer.RequestCreateGuild({interactable.gameObject.name}, {componentIndex}, {guildName}, {accountId})");
 
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
             guildmasterManagerServer.CreateGuild(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, guildName);
         }
 
-        public void CheckGuildName(Interactable interactable, int componentIndex, string guildName, int accountId) {
+        public void CheckGuildName(Interactable interactable, int componentIndex, string guildName, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
@@ -992,28 +904,45 @@ namespace AnyRPG {
         }
 
 
-        public void LearnSkill(Interactable interactable, int componentIndex, int skillId, int accountId) {
+        public void LearnSkill(Interactable interactable, int componentIndex, int skillId, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
             skillTrainerManagerServer.LearnSkill(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, skillId);
         }
 
-        public void RequestSendMail(Interactable interactable, int componentIndex, MailMessageRequest sendMailRequest, int accountId) {
+        public void RequestSendMail(Interactable interactable, int componentIndex, MailMessageRequest sendMailRequest, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
             mailboxManagerServer.RequestSendMail(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, sendMailRequest);
         }
 
-        public void RequestListAuctionItems(Interactable interactable, int componentIndex, ListAuctionItemRequest listAuctionItemRequest, int accountId) {
+        public void RequestListAuctionItems(Interactable interactable, int componentIndex, ListAuctionItemRequest listAuctionItemRequest, int clientId) {
+            //Debug.Log($"NetworkManagerServer.RequestListAuctionItems()");
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
             auctionManagerServer.RequestListAuctionItems(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, listAuctionItemRequest);
         }
 
-        public void RequestSearchAuctions(Interactable interactable, int componentIndex, string searchText, bool onlyShowOwnAuctions, int accountId) {
+        public void RequestSearchAuctions(Interactable interactable, int componentIndex, string searchText, bool onlyShowOwnAuctions, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
@@ -1021,7 +950,11 @@ namespace AnyRPG {
         }
 
 
-        public void AcceptQuest(Interactable interactable, int componentIndex, Quest quest, int accountId) {
+        public void AcceptQuest(Interactable interactable, int componentIndex, Quest quest, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
@@ -1029,7 +962,11 @@ namespace AnyRPG {
             questGiverManagerServer.AcceptQuest(interactable, componentIndex, playerManagerServer.ActiveUnitControllers[accountId], quest);
         }
 
-        public void CompleteQuest(Interactable interactable, int componentIndex, Quest quest, QuestRewardChoices questRewardChoices, int accountId) {
+        public void CompleteQuest(Interactable interactable, int componentIndex, Quest quest, QuestRewardChoices questRewardChoices, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
@@ -1050,7 +987,11 @@ namespace AnyRPG {
             networkController.AdvertiseSystemMessage(playerManagerServer.ActiveUnitControllerLookup[sourceUnitController], message);
         }
 
-        public void SellVendorItem(Interactable interactable, int componentIndex, int itemInstanceId, int accountId) {
+        public void SellVendorItem(Interactable interactable, int componentIndex, long itemInstanceId, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
@@ -1060,8 +1001,12 @@ namespace AnyRPG {
             vendorManagerServer.SellItemToVendor(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, systemItemManager.InstantiatedItems[itemInstanceId]);
         }
 
-        public void RequestSpawnUnit(Interactable interactable, int componentIndex, int unitLevel, int extraLevels, bool useDynamicLevel, UnitProfile unitProfile, UnitToughness unitToughness, int accountId) {
+        public void RequestSpawnUnit(Interactable interactable, int componentIndex, int unitLevel, int extraLevels, bool useDynamicLevel, UnitProfile unitProfile, UnitToughness unitToughness, int clientId) {
             //Debug.Log($"NetworkManagerServer.RequestSpawnUnit({interactable.gameObject.name}, {componentIndex}, {unitLevel}, {extraLevels}, {useDynamicLevel}, {unitProfile.ResourceName}, {unitToughness?.ResourceName}, {accountId})");
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
 
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
@@ -1074,27 +1019,34 @@ namespace AnyRPG {
             networkController.AdvertiseAddToBuyBackCollection(sourceUnitController, playerManagerServer.ActiveUnitControllerLookup[sourceUnitController], interactable, componentIndex, newInstantiatedItem);
         }
 
-        public void AdvertiseSellItemToPlayer(UnitController sourceUnitController, Interactable interactable, int componentIndex, int collectionIndex, int itemIndex, string resourceName, int remainingQuantity) {
-            //Debug.Log($"NetworkManagerServer.AdvertiseSellItemToPlayer({sourceUnitController.gameObject.name}, {interactable.gameObject.name}, {componentIndex}, {collectionIndex}, {itemIndex}, {resourceName}, {remainingQuantity})");
-            networkController.AdvertiseSellItemToPlayer(sourceUnitController, interactable, componentIndex, collectionIndex, itemIndex, resourceName, remainingQuantity);
-        }
-
-        public void BuyItemFromVendor(Interactable interactable, int componentIndex, int collectionIndex, int itemIndex, string resourceName, int accountId) {
+        public void BuyItemFromVendor(Interactable interactable, int componentIndex, int collectionIndex, int itemIndex, string resourceName, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
             vendorManagerServer.BuyItemFromVendor(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, collectionIndex, itemIndex, resourceName, accountId);
         }
 
-        public void TakeAllLoot(int accountId) {
+        public void TakeAllLoot(int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == true) {
                 lootManager.TakeAllLootInternal(accountId, playerManagerServer.ActiveUnitControllers[accountId]);
             }
         }
 
-        public void RequestTakeLoot(int lootDropId, int accountId) {
+        public void RequestTakeLoot(int lootDropId, int clientId) {
             //Debug.Log($"NetworkManagerServer.RequestTakeLoot({lootDropId}, {accountId})");
 
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == true) {
                 //lootManager.TakeLoot(accountId, lootDropId);
                 if (lootManager.LootDropIndex.ContainsKey(lootDropId) == false) {
@@ -1104,15 +1056,23 @@ namespace AnyRPG {
             }
         }
 
-        public void RequestBeginCrafting(Recipe recipe, int craftAmount, int accountId) {
+        public void RequestBeginCrafting(Recipe recipe, int craftAmount, int clientId) {
             //Debug.Log($"NetworkManagerServer.RequestBeginCrafting({recipe.DisplayName}, {craftAmount}, {accountId})");
 
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == true) {
                 craftingManager.BeginCrafting(playerManagerServer.ActiveUnitControllers[accountId], recipe, craftAmount);
             }
         }
 
-        public void RequestCancelCrafting(int accountId) {
+        public void RequestCancelCrafting(int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == true) {
                 craftingManager.CancelCrafting(playerManagerServer.ActiveUnitControllers[accountId]);
             }
@@ -1125,7 +1085,7 @@ namespace AnyRPG {
             networkController.AddAvailableDroppedLoot(accountId, lootDropIds);
         }
 
-        public void AddLootDrop(int accountId, int lootDropId, int itemId) {
+        public void AddLootDrop(int accountId, int lootDropId, long itemId) {
             networkController.AddLootDrop(accountId, lootDropId, itemId);
         }
 
@@ -1149,6 +1109,14 @@ namespace AnyRPG {
             }
         }
 
+        public void SetPersonalLoadRequestHashcode(int playerCharacterId, int hashCode) {
+            //Debug.Log($"NetworkManagerServer.SetLobbyGameLoadRequestHashcode({gameId}, {hashCode})");
+
+            if (personalLoadRequestHashCodes.ContainsKey(hashCode) == false) {
+                personalLoadRequestHashCodes.Add(hashCode, playerCharacterId);
+            }
+        }
+
         public void RequestSpawnLobbyGamePlayer(int accountId, int gameId, string sceneName) {
             //Debug.Log($"NetworkManagerServer.RequestSpawnLobbyGamePlayer({accountId}, {gameId}, {sceneName})");
 
@@ -1156,13 +1124,14 @@ namespace AnyRPG {
         }
 
         public void RequestSpawnPlayer(int accountId, string sceneName) {
-            //Debug.Log($"NetworkManagerServer.RequestSpawnLobbyGamePlayer({accountId}, {gameId}, {sceneName})");
+            //Debug.Log($"NetworkManagerServer.RequestSpawnPlayer(accountId: {accountId}, {sceneName})");
 
             playerManagerServer.RequestSpawnPlayerUnit(accountId, sceneName);
         }
 
         public void SpawnPlayer(int accountId, CharacterRequestData characterRequestData, Vector3 position, Vector3 forward, string sceneName) {
-            
+            //Debug.Log($"NetworkManagerServer.SpawnPlayer(accountId: {accountId}, sceneName: {sceneName})");
+
             networkController.SpawnPlayer(accountId, characterRequestData, position, forward, sceneName);
         }
 
@@ -1188,14 +1157,22 @@ namespace AnyRPG {
             return networkController.GetAccountScene(accountId, sceneName);
         }
 
-        public void RequestRespawnPlayerUnit(int accountId) {
+        public void RequestRespawnPlayerUnit(int clientId) {
             //Debug.Log($"NetworkManagerServer.RequestRespawnPlayerUnit({accountId})");
-            
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
+
             playerManagerServer.RespawnPlayerUnit(accountId);
         }
 
-        public void RequestRevivePlayerUnit(int accountId) {
+        public void RequestRevivePlayerUnit(int clientId) {
             //Debug.Log($"NetworkManagerServer.RequestRevivePlayerUnit({accountId})");
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
 
             playerManagerServer.RevivePlayerUnit(accountId);
         }
@@ -1204,7 +1181,11 @@ namespace AnyRPG {
             playerManagerServer.MonitorPlayerUnit(accountId, unitController);
         }
 
-        public void RequestUpdatePlayerAppearance(int accountId, Interactable interactable, int componentIndex, string unitProfileName, string appearanceString, List<SwappableMeshSaveData> swappableMeshSaveData) {
+        public void RequestUpdatePlayerAppearance(int clientId, Interactable interactable, int componentIndex, string unitProfileName, string appearanceString, List<SwappableMeshSaveData> swappableMeshSaveData) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
@@ -1212,20 +1193,32 @@ namespace AnyRPG {
             characterAppearanceManagerServer.UpdatePlayerAppearance(playerManagerServer.ActiveUnitControllers[accountId], accountId, interactable, componentIndex, unitProfileName, appearanceString, swappableMeshSaveData);
         }
 
-        public void RequestChangePlayerName(Interactable interactable, int componentIndex, string newName, int accountId) {
+        public void RequestChangePlayerName(Interactable interactable, int componentIndex, string newName, int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             if (playerManagerServer.ActiveUnitControllers.ContainsKey(accountId) == false) {
                 return;
             }
             nameChangeManagerServer.SetPlayerName(playerManagerServer.ActiveUnitControllers[accountId], interactable, componentIndex, newName);
         }
 
-        public void RequestSpawnPet(int accountId, UnitProfile unitProfile) {
+        public void RequestSpawnPet(int clientId, UnitProfile unitProfile) {
             //Debug.Log($"NetworkManagerServer.RequestSpawnPet({accountId}, {unitProfile.ResourceName})");
 
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             playerManagerServer.RequestSpawnPet(accountId, unitProfile);
         }
 
-        public void RequestDespawnPet(int accountId, UnitProfile unitProfile) {
+        public void RequestDespawnPet(int clientId, UnitProfile unitProfile) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             playerManagerServer.RequestDespawnPet(accountId, unitProfile);
         }
 
@@ -1235,36 +1228,15 @@ namespace AnyRPG {
             networkController.AdvertiseAddSpawnRequest(accountId, loadSceneRequest);
         }
 
-
-
         public void Logout(int accountId) {
-            //Debug.Log($"NetworkManagerServer.Logout({accountId})");
-
-            // remove the player from any character groups
-            int characterId = -1;
-            if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId)) {
-                characterId = playerManagerServer.PlayerCharacterMonitors[accountId].characterSaveData.CharacterId;
-            }
-            /*
-            if (characterId != -1) {
-                characterGroupServiceServer.RemoveCharacterFromGroup(characterId);
-                guildServiceServer.SetCharacterOnline(characterId, false);
-                friendServiceServer.SetCharacterOnline(characterId, false);
-            }
-            */
-
-            playerManagerServer.StopMonitoringPlayerUnit(accountId);
-            KickPlayer(accountId);
-            ProcessClientLogout(accountId);
-
-            if (characterId != -1) {
-                playerCharacterService.SetCharacterOnline(characterId, false);
-				characterGroupServiceServer.RemoveCharacterFromGroup(characterId);
-            }
-
+            authenticationService.Logout(accountId);
         }
 
-        public void RequestSpawnRequest(int accountId) {
+        public void RequestSpawnRequest(int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             playerManagerServer.RequestSpawnRequest(accountId);
         }
 
@@ -1276,15 +1248,20 @@ namespace AnyRPG {
             return weatherManagerServer.GetSceneWeatherProfile(handle);
         }
 
-        public void ReturnFromCutscene(int accountId) {
+        public void ReturnFromCutscene(int clientId) {
             //Debug.Log($"NetworkManagerServer.ReturnFromCutscene({accountId})");
+
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
 
             if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId) == false) {
                 // no spawn request, nothing to do
                 return;
             }
             string sceneName = playerManagerServer.PlayerCharacterMonitors[accountId].characterSaveData.CurrentScene;
-            networkController.AdvertiseLoadScene(sceneName, accountId);
+            ChangeScene(accountId, sceneName);
         }
 
         public void SetServerPort(ushort port) {
@@ -1299,9 +1276,13 @@ namespace AnyRPG {
             this.serverMode = networkServerMode;
         }
 
-        public void RequestLoadPlayerCharacter(int accountId, int playerCharacterId) {
-            //Debug.Log($"NetworkManagerServer.RequestLoadPlayerCharacter(accountId: {accountId}, playerCharacterId: {playerCharacterId})");
+        public void RequestLoadPlayerCharacter(int clientId, int playerCharacterId) {
+            //Debug.Log($"NetworkManagerServer.RequestLoadPlayerCharacter(clientId: {clientId}, playerCharacterId: {playerCharacterId})");
 
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             string sceneName = string.Empty;
             playerCharacterService.SetCharacterOnline(playerCharacterId, true);
             if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId) == false) {
@@ -1331,39 +1312,105 @@ namespace AnyRPG {
                 }
                 characterGroupServiceServer.SendCharacterGroupInfo(accountId, playerCharacterId);
             }
-            guildServiceServer.SendGuildInfo(accountId, playerCharacterId);
-            friendServiceServer.SendFriendListInfo(accountId);
+            if (serverMode != NetworkServerMode.Lobby) {
+                guildServiceServer.SendGuildInfo(accountId, playerCharacterId);
+                friendServiceServer.SendFriendListInfo(accountId);
+            }
 
-            networkController.AdvertiseLoadPlayerCharacter(accountId, sceneName);
+            SceneNode sceneNode = levelManager.GetSceneNodeBySceneName(sceneName);
+            if (sceneNode == null) {
+                Debug.LogWarning($"NetworkManagerServer.RequestLoadPlayerCharacter(clientId: {clientId}, playerCharacterId: {playerCharacterId}) could not find scene node for {sceneName}");
+                return;
+            }
+            networkController.AdvertiseJoinMMOGameInProgress(accountId);
+            LoadMMOGameScene(accountId, playerCharacterId, sceneNode);
             mailService.SendMailMessages(playerCharacterId);
         }
 
-        public void AcceptCharacterGroupInvite(int accountId, int characterGroupId) {
+        public void LoadMMOGameScene(int accountId, int playerCharacterId, SceneNode sceneNode) {
+            //Debug.Log($"FishNetClientConnector.LoadMMOGameScene(accountId: {accountId}, {sceneNode.SceneFile}, clientId: {networkConnection.ClientId}");
+
+            // get characterGroupId for accountId
+            int characterGroupId = characterGroupServiceServer.GetCharacterGroupIdFromCharacterId(playerCharacterId);
+            //Debug.Log($"playerId: {playerId}; characterGroupId: {characterGroupId}");
+
+            // dungeon cases
+            if (sceneNode.IsDungeon == true) {
+                
+                if (characterGroupId != -1) {
+                    // group dungeon with existing instance
+                    if (CharacterGroupSceneHandles.ContainsKey(characterGroupId)
+                    && CharacterGroupSceneHandles[characterGroupId].ContainsKey(sceneNode.SceneFile) == true) {
+                        networkController.LoadExistingScene(accountId, CharacterGroupSceneHandles[characterGroupId][sceneNode.SceneFile]);
+                        return;
+                    }
+                    // group dungeon with new instance
+                    networkController.LoadNewScene(accountId, playerCharacterId,SceneInstanceType.Group, sceneNode);
+                    return;
+                }
+
+                // personal dungeon with existing instance
+                if (personalSceneHandles.ContainsKey(playerCharacterId)
+                    && personalSceneHandles[playerCharacterId].ContainsKey(sceneNode.SceneFile) == true) {
+                    networkController.LoadExistingScene(accountId, personalSceneHandles[playerCharacterId][sceneNode.SceneFile]);
+                    return;
+                }
+
+                // personal dungeon with new instance
+                networkController.LoadNewScene(accountId, playerCharacterId, SceneInstanceType.Personal, sceneNode);
+                return;
+            }
+
+            // world scene case
+            networkController.LoadNewScene(accountId, playerCharacterId, SceneInstanceType.World, sceneNode);
+        }
+
+        public void AcceptCharacterGroupInvite(int clientId, int characterGroupId) {
             //Debug.Log($"NetworkManagerServer.AcceptCharacterGroupInvite({accountId}, {characterGroupId})");
 
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             characterGroupServiceServer.AcceptCharacterGroupInvite(accountId, characterGroupId);
         }
 
-        public void DeclineCharacterGroupInvite(int accountId) {
+        public void DeclineCharacterGroupInvite(int clientId) {
             //Debug.Log($"NetworkManagerServer.DeclineCharacterGroupInvite({accountId})");
 
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             characterGroupServiceServer.DeclineCharacterGroupInvite(accountId);
         }
 
-        public void AcceptGuildInvite(int accountId, int guildId) {
+        public void AcceptGuildInvite(int clientId, int guildId) {
             //Debug.Log($"NetworkManagerServer.AcceptGuildInvite({accountId}, {characterGroupId})");
 
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             guildServiceServer.AcceptGuildInvite(accountId, guildId);
         }
 
-        public void DeclineGuildInvite(int accountId) {
+        public void DeclineGuildInvite(int clientId) {
             //Debug.Log($"NetworkManagerServer.DeclineGuildInvite({accountId})");
 
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             guildServiceServer.DeclineGuildInvite(accountId);
         }
 
-        public void DeclineFriendInvite(int accountId, int friendId) {
+        public void DeclineFriendInvite(int clientId, int friendId) {
             //Debug.Log($"NetworkManagerServer.DeclineGuildInvite({accountId})");
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
 
             friendServiceServer.DeclineFriendInvite(accountId, friendId);
         }
@@ -1386,7 +1433,11 @@ namespace AnyRPG {
             networkController.AdvertiseCharacterGroup(accountId, characterGroupNetworkData);
         }
 
-        public void RequestLeaveCharacterGroup(int accountId) {
+        public void RequestLeaveCharacterGroup(int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             characterGroupServiceServer.RequestLeaveCharacterGroup(accountId);
         }
 
@@ -1396,23 +1447,39 @@ namespace AnyRPG {
             networkController.AdvertiseRemoveCharacterFromGroup(accountId, characterId, groupId);
         }
 
-        public void RequestRemoveCharacterFromGroup(int accountId, int playerCharacterId) {
+        public void RequestRemoveCharacterFromGroup(int clientId, int playerCharacterId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             characterGroupServiceServer.RequestRemoveCharacterFromGroup(accountId, playerCharacterId);
         }
 
-        public void RequestInviteCharacterToGroup(int accountId, int invitedCharacterId) {
+        public void RequestInviteCharacterToGroup(int clientId, int invitedCharacterId) {
             //Debug.Log($"NetworkManagerServer.RequestInviteCharacterToGroup({accountId}, {invitedCharacterId})");
 
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             characterGroupServiceServer.RequestInviteCharacterToGroup(accountId, invitedCharacterId);
         }
 
-        public void RequestInviteCharacterToGroup(int accountId, string invitedCharacterName) {
+        public void RequestInviteCharacterToGroup(int clientId, string invitedCharacterName) {
             //Debug.Log($"NetworkManagerServer.RequestInviteCharacterToGroup({accountId}, {invitedCharacterId})");
 
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             characterGroupServiceServer.RequestInviteCharacterToGroup(accountId, invitedCharacterName);
         }
 
-        public void RequestLeaveGuild(int accountId) {
+        public void RequestLeaveGuild(int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             guildServiceServer.RequestLeaveGuild(accountId);
         }
 
@@ -1422,34 +1489,60 @@ namespace AnyRPG {
             networkController.AdvertiseRemoveCharacterFromGuild(accountId, characterId, guildId);
         }
 
-        public void RequestRemoveCharacterFromGuild(int accountId, int playerCharacterId) {
+        public void RequestRemoveCharacterFromGuild(int clientId, int playerCharacterId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             guildServiceServer.RequestRemoveCharacterFromGuild(accountId, playerCharacterId);
         }
 
-        public void RequestRemoveCharacterFromFriendList(int accountId, int playerCharacterId) {
+        public void RequestRemoveCharacterFromFriendList(int clientId, int playerCharacterId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             friendServiceServer.RequestRemoveCharacterFromFriendList(accountId, playerCharacterId);
         }
 
-        public void RequestInviteCharacterToGuild(int accountId, int invitedCharacterId) {
+        public void RequestInviteCharacterToGuild(int clientId, int invitedCharacterId) {
             //Debug.Log($"NetworkManagerServer.RequestInviteCharacterToGroup({accountId}, {invitedCharacterId})");
 
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             guildServiceServer.RequestInviteCharacterToGuild(accountId, invitedCharacterId);
         }
 
-        public void RequestInviteCharacterToFriendList(int accountId, int invitedCharacterId) {
+        public void RequestInviteCharacterToFriendList(int clientId, int invitedCharacterId) {
             //Debug.Log($"NetworkManagerServer.RequestInviteCharacterToGroup({accountId}, {invitedCharacterId})");
 
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             friendServiceServer.RequestInviteCharacterToFriend(accountId, invitedCharacterId);
         }
 
-        public void RequestInviteCharacterToFriendList(int accountId, string characterName) {
-            //Debug.Log($"NetworkManagerServer.RequestInviteCharacterToGroup({accountId}, {invitedCharacterId})");
+        public void RequestInviteCharacterToFriendList(int clientId, string characterName) {
+            //Debug.Log($"NetworkManagerServer.RequestInviteCharacterToGroup(clientId: {clientId}, characterName: {characterName})");
+
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
 
             friendServiceServer.RequestInviteCharacterToFriend(accountId, characterName);
         }
 
-        public void RequestInviteCharacterToGuild(int accountId, string invitedCharacterName) {
-            //Debug.Log($"NetworkManagerServer.RequestInviteCharacterToGroup({accountId}, {invitedCharacterId})");
+        public void RequestInviteCharacterToGuild(int clientId, string invitedCharacterName) {
+            //Debug.Log($"NetworkManagerServer.RequestInviteCharacterToGuild(clientId: {clientId}, invitedCharacterName: {invitedCharacterName})");
+
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
 
             guildServiceServer.RequestInviteCharacterToGuild(accountId, invitedCharacterName);
         }
@@ -1460,11 +1553,19 @@ namespace AnyRPG {
             networkController.AdvertiseCharacterGroupInvite(invitedCharacterId, characterGroupId, leaderName);
         }
 
-        public void RequestDisbandCharacterGroup(int accountId, int characterGroupId) {
+        public void RequestDisbandCharacterGroup(int clientId, int characterGroupId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             characterGroupServiceServer.DisbandGroup(accountId, characterGroupId);
         }
 
-        public void RequestDisbandGuild(int accountId, int guildId) {
+        public void RequestDisbandGuild(int clientId, int guildId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             guildServiceServer.DisbandGuild(accountId, guildId);
         }
 
@@ -1480,23 +1581,43 @@ namespace AnyRPG {
             networkController.AdvertisePromoteGroupLeader(accountId, characterGroupId, newLeaderCharacterId);
         }
 
-        public void RequestPromoteCharacterToLeader(int accountId, int characterId) {
+        public void RequestPromoteCharacterToLeader(int clientId, int characterId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             characterGroupServiceServer.RequestPromoteCharacter(accountId, characterId);
         }
 
-        public void RequestPromoteGuildCharacter(int accountId, int characterId) {
+        public void RequestPromoteGuildCharacter(int clientId, int characterId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             guildServiceServer.RequestPromoteCharacter(accountId, characterId);
         }
 
-        public void RequestDemoteGuildCharacter(int accountId, int characterId) {
+        public void RequestDemoteGuildCharacter(int clientId, int characterId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             guildServiceServer.RequestDemoteCharacter(accountId, characterId);
         }
 
-        public void RequestPromoteGroupCharacter(int accountId, int characterId) {
+        public void RequestPromoteGroupCharacter(int clientId, int characterId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             characterGroupServiceServer.RequestPromoteCharacter(accountId, characterId);
         }
 
-        public void RequestDemoteGroupCharacter(int accountId, int characterId) {
+        public void RequestDemoteGroupCharacter(int clientId, int characterId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             characterGroupServiceServer.RequestDemoteCharacter(accountId, characterId);
         }
 
@@ -1518,7 +1639,11 @@ namespace AnyRPG {
             networkController.AdvertisePrivateMessage(targetAccountId, messageText);
         }
 
-        public void RequestBeginTrade(int accountId, int targetCharacterId) {
+        public void RequestBeginTrade(int clientId, int targetCharacterId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             tradeServiceServer.RequestBeginTrade(accountId, targetCharacterId);
         }
 
@@ -1536,23 +1661,39 @@ namespace AnyRPG {
             networkController.AdvertiseRequestBeginTrade(targetAccountId, sourceCharacterId);
         }
 
-        public void RequestDeclineTrade(int accountId) {
+        public void RequestDeclineTrade(int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             tradeServiceServer.DeclineTradeInvite(accountId);
         }
 
-        public void RequestAcceptTrade(int accountId) {
+        public void RequestAcceptTrade(int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             tradeServiceServer.AcceptTradeInvite(accountId);
         }
 
-        public void RequestAddItemsToTradeSlot(int accountId, int buttonIndex, List<int> itemIdList) {
-            tradeServiceServer.RequestAddItemsToTradeSlot(accountId, buttonIndex, itemIdList);
+        public void RequestAddItemsToTradeSlot(int clientId, int buttonIndex, List<long> itemInstanceIdList) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
+            tradeServiceServer.RequestAddItemsToTradeSlot(accountId, buttonIndex, itemInstanceIdList);
         }
 
-        public void AdvertiseAddItemsToTargetTradeSlot(int targetAccountId, int buttonIndex, List<int> itemIdList) {
-            networkController.AdvertiseAddItemsToTargetTradeSlot(targetAccountId, buttonIndex, itemIdList);
+        public void AdvertiseAddItemsToTargetTradeSlot(int targetAccountId, int buttonIndex, List<long> itemInstanceIdList) {
+            networkController.AdvertiseAddItemsToTargetTradeSlot(targetAccountId, buttonIndex, itemInstanceIdList);
         }
 
-        public void RequestAddCurrencyToTrade(int accountId, int amount) {
+        public void RequestAddCurrencyToTrade(int clientId, int amount) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             tradeServiceServer.RequestAddCurrencyToTrade(accountId, amount);
         }
 
@@ -1560,15 +1701,27 @@ namespace AnyRPG {
             networkController.AdvertiseAddCurrencyToTrade(targetAccountId, amount);
         }
 
-        public void RequestCancelTrade(int accountId) {
+        public void RequestCancelTrade(int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             tradeServiceServer.RequestCancelTrade(accountId);
         }
 
-        public void RequestConfirmTrade(int accountId) {
+        public void RequestConfirmTrade(int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             tradeServiceServer.RequestConfirmTrade(accountId);
         }
 
-        public void RequestUnconfirmTrade(int accountId) {
+        public void RequestUnconfirmTrade(int clientId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             tradeServiceServer.RequestUnconfirmTrade(accountId);
         }
 
@@ -1580,19 +1733,31 @@ namespace AnyRPG {
             networkController.AdvertiseCancelTrade(accountId);
         }
 
-        public void AdvertiseMailMessages(int accountId, MailMessageListResponse mailMessageListResponse) {
+        public void AdvertiseMailMessages(int accountId, MailMessageListBundle mailMessageListResponse) {
             networkController.AdvertiseMailMessages(accountId, mailMessageListResponse);
         }
 
-        public void RequestDeleteMailMessage(int accountId, int messageId) {
+        public void RequestDeleteMailMessage(int clientId, int messageId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             mailboxManagerServer.RequestDeleteMailMessage(accountId, messageId);
         }
 
-        public void RequestTakeMailAttachment(int accountId, int messageId, int attachmentSlotId) {
+        public void RequestTakeMailAttachment(int clientId, int messageId, int attachmentSlotId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             mailboxManagerServer.RequestTakeMailAttachment(accountId, messageId, attachmentSlotId);
         }
 
-        public void RequestTakeMailAttachments(int accountId, int messageId) {
+        public void RequestTakeMailAttachments(int clientId, int messageId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             mailboxManagerServer.RequestTakeMailAttachments(accountId, messageId);
         }
 
@@ -1616,15 +1781,29 @@ namespace AnyRPG {
             networkController.AdvertiseMailSend(accountId);
         }
 
-        public void RequestMarkMailAsRead(int accountId, int messageId) {
+        public void RequestMarkMailAsRead(int clientId, int messageId) {
+            //Debug.Log($"NetworkManagerServer.RequestMarkMailAsRead(clientId: {clientId}, messageId: {messageId})");
+
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             mailboxManagerServer.RequestMarkMailAsRead(accountId, messageId);
         }
 
-        public void RequestBuyAuctionItem(int accountId, int auctionItemId) {
+        public void RequestBuyAuctionItem(int clientId, int auctionItemId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             auctionManagerServer.RequestBuyAuctionItem(accountId, auctionItemId);
         }
 
-        public void RequestCancelAuction(int accountId, int auctionItemId) {
+        public void RequestCancelAuction(int clientId, int auctionItemId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             auctionManagerServer.RequestCancelAuction(accountId, auctionItemId);
         }
 
@@ -1636,7 +1815,7 @@ namespace AnyRPG {
             networkController.AdvertiseCancelAuction(accountId, auctionItemId);
         }
 
-        public void AdvertiseAuctionItems(int accountId, AuctionItemListResponse auctionItemListResponse) {
+        public void AdvertiseAuctionItems(int accountId, AuctionItemSearchListResult auctionItemListResponse) {
             networkController.AdvertiseAuctionItems(accountId, auctionItemListResponse);
         }
 
@@ -1710,8 +1889,76 @@ namespace AnyRPG {
             networkController.AdvertiseFriendStateChange(targetAccountId, playerCharacterId, characterSummaryNetworkData);
         }
 
-        public void AcceptFriendInvite(int accountId, int friendId) {
+        public void AcceptFriendInvite(int clientId, int friendId) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
             friendServiceServer.AcceptFriendInvite(accountId, friendId);
+        }
+
+        public void AdvertisePlayerNameNotAvailable(int accountId) {
+            networkController.AdvertisePlayerNameNotAvailable(accountId);
+        }
+
+        public void AdvertiseLobbyLogin(int accountId, string username) {
+            networkController.AdvertiseLobbyLogin(accountId, username);
+        }
+
+        public void AdvertiseLobbyLogout(int accountId) {
+            networkController.AdvertiseLobbyLogout(accountId);
+        }
+
+        public void RemoveLobbyGamePlayer(int accountId) {
+            if (lobbyGameAccountLookup.ContainsKey(accountId) == true) {
+                int gameId = lobbyGameAccountLookup[accountId];
+                LeaveLobbyGame(gameId, accountId);
+            }
+        }
+
+        public int GetClientIDForAccount(int accountId) {
+            if (authenticationService.LoggedInAccounts.ContainsKey(accountId) == false) {
+                //Debug.Log($"FishNetClientConnector.AdvertiseRequestBeginTrade() could not find account id {accountId}");
+                return -1;
+            }
+            return authenticationService.LoggedInAccounts[accountId].clientId;
+
+        }
+
+        public void LogoutByClientId(int clientId) {
+            //Debug.Log($"NetworkManagerServer.LogoutByClientId(clientId: {clientId})");
+
+            authenticationService.LogoutByClientId(clientId);
+        }
+
+        public void RequestSpawnPlayerUnit(int clientId, string sceneName) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
+            if (serverMode == NetworkServerMode.Lobby) {
+                if (LobbyGameAccountLookup.ContainsKey(accountId)) {
+                    RequestSpawnLobbyGamePlayer(accountId, LobbyGameAccountLookup[accountId], sceneName);
+                }
+            } else if (serverMode == NetworkServerMode.MMO) {
+                RequestSpawnPlayer(accountId, sceneName);
+            }
+        }
+
+        public void AdvertiseLoadCharacterList(int accountId, List<PlayerCharacterSaveData> playerCharacterSaveDataList) {
+            networkController.AdvertiseLoadCharacterList(accountId, playerCharacterSaveDataList);
+        }
+
+        public void SetSceneLoadRequestHashCode(SceneInstanceType sceneInstanceType, int hashCode) {
+            levelManagerServer.SetSceneLoadRequestHashCode(sceneInstanceType, hashCode);
+        }
+
+        public void UnloadScene(int handle) {
+            networkController.UnloadScene(handle);
+        }
+
+        internal void SetSceneClientCount(string name, int handle, int clientCount) {
+            levelManagerServer.SetSceneClientCount(name, handle, clientCount);
         }
     }
 

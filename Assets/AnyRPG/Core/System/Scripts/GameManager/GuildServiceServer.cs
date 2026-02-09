@@ -10,9 +10,6 @@ using UnityEngine.TextCore.Text;
 namespace AnyRPG {
     public class GuildServiceServer : ConfiguredClass {
 
-        int nextGuildId = 1;
-        private string saveFolderName = string.Empty;
-
         /// <summary>
         /// characterId, guildId
         /// </summary>
@@ -32,10 +29,10 @@ namespace AnyRPG {
         private PlayerManagerServer playerManagerServer = null;
         private CharacterManager characterManager = null;
         private MessageLogServer messageLogServer = null;
+        private ServerDataService serverDataService = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            MakeSaveFolder();
             //networkManagerServer.OnStartServer += HandleStartServer;
             networkManagerServer.OnStopServer += HandleStopServer;
         }
@@ -45,43 +42,54 @@ namespace AnyRPG {
             playerManagerServer = systemGameManager.PlayerManagerServer;
             characterManager = systemGameManager.CharacterManager;
             messageLogServer = systemGameManager.MessageLogServer;
+            serverDataService = systemGameManager.ServerDataService;
         }
 
         private void HandleStopServer() {
             ClearGuilds();
         }
 
-        public void ProcessStartServer() {
-            LoadAllGuilds();
+        public void LoadAllGuilds() {
+            serverDataService.LoadAllGuilds();
         }
 
-        private void LoadAllGuilds() {
-            //Debug.Log("UserAccountService.LoadAllUserAccounts()");
+        public void ProcessLoadGuildListResponse(List<GuildSerializedData> guildSerializedDataList) {
+            //Debug.Log($"NetworkManagerServer.ProcessLoadCharacterListResponse({accountId})");
 
-            // load all user accounts from storage
-            string[] fileEntries = Directory.GetFiles(saveFolderName, "*.json");
-            foreach (string fileName in fileEntries) {
-                //Debug.Log($"Loading user account from file: {fileName}");
-                string jsonString = File.ReadAllText(fileName);
-                GuildSaveData guildSaveData = JsonUtility.FromJson<GuildSaveData>(jsonString);
-                if (guildSaveData.GuildId == 0) {
-                    Debug.LogWarning($"UserAccountService.LoadAllGuilds(): Guild in file {fileName} has invalid id of 0.  This guild will be skipped.");
+            List<GuildSaveData> guildSaveDataList = new List<GuildSaveData>();
+            foreach (GuildSerializedData guildSerializedData in guildSerializedDataList) {
+                GuildSaveData guildSaveData = JsonUtility.FromJson<GuildSaveData>(guildSerializedData.saveData);
+                if (guildSaveData == null) {
+                    Debug.LogWarning($"GuildServiceServer.ProcessLoadGuildListResponse() invalid Guild. It will be skipped.");
+                    continue;
+                }
+                guildSaveDataList.Add(guildSaveData);
+            }
+            ProcessLoadGuildListResponse(guildSaveDataList);
+        }
+
+        public void ProcessLoadGuildListResponse(List<GuildSaveData> guildSaveDataList) {
+            //Debug.Log($"NetworkManagerServer.ProcessLoadCharacterListResponse({accountId})");
+
+            foreach (GuildSaveData guildSaveData in guildSaveDataList) {
+                if (guildSaveData.GuildId == -1) {
+                    Debug.LogWarning($"UserAccountService.LoadAllGuilds(): Guild {guildSaveData.GuildName} has invalid id of 0.  This guild will be skipped.");
                     continue;
                 }
                 if (guildDictionary.ContainsKey(guildSaveData.GuildId)) {
-                    Debug.LogWarning($"UserAccountService.LoadAllGuilds(): Duplicate guild id {guildSaveData.GuildId} found in file {fileName}.  This guild will be skipped.");
+                    Debug.LogWarning($"UserAccountService.LoadAllGuilds(): Duplicate guild id {guildSaveData.GuildId} found in guild {guildSaveData.GuildName}.  This guild will be skipped.");
                     continue;
                 }
                 Guild guild = new Guild(guildSaveData, playerCharacterService);
 
                 //Debug.Log($"UserAccountService.LoadAllGuilds(): Loaded guild {guild.guildName} with id {guild.guildId} and {guild.MemberIdList.Count} members.");
-                guildDictionary.Add(guild.guildId, guild);
+                guildDictionary.Add(guild.GuildId, guild);
                 foreach (int memberId in guild.MemberList.Keys) {
                     if (guildMemberLookup.ContainsKey(memberId)) {
-                        Debug.LogWarning($"UserAccountService.LoadAllGuilds(): Duplicate guild member id {memberId} found in file {fileName}.  This member will be skipped.");
+                        Debug.LogWarning($"UserAccountService.LoadAllGuilds(): Duplicate guild member id {memberId} found in guild {guildSaveData.GuildName}.  This member will be skipped.");
                         continue;
                     }
-                    guildMemberLookup.Add(memberId, guild.guildId);
+                    guildMemberLookup.Add(memberId, guild.GuildId);
                 }
             }
         }
@@ -91,25 +99,7 @@ namespace AnyRPG {
             guildMemberLookup.Clear();
         }
 
-        private void MakeSaveFolder() {
-            //Debug.Log("PlayerCharacterService.MakeSaveFolder()");
-
-            Regex regex = new Regex("[^a-zA-Z0-9]");
-            string gameNameString = regex.Replace(systemConfigurationManager.GameName, "");
-            if (gameNameString == string.Empty) {
-                return;
-            }
-            saveFolderName = $"{Application.persistentDataPath}/{gameNameString}/Online/Guilds";
-            if (!Directory.Exists($"{Application.persistentDataPath}/{gameNameString}")) {
-                Directory.CreateDirectory($"{Application.persistentDataPath}/{gameNameString}");
-            }
-            if (!Directory.Exists($"{Application.persistentDataPath}/{gameNameString}/Online")) {
-                Directory.CreateDirectory($"{Application.persistentDataPath}/{gameNameString}/Online");
-            }
-            if (!Directory.Exists(saveFolderName)) {
-                Directory.CreateDirectory(saveFolderName);
-            }
-        }
+        
 
         public int GetGuildIdFromCharacterId(int characterId) {
             if (guildMemberLookup.ContainsKey(characterId)) {
@@ -132,7 +122,7 @@ namespace AnyRPG {
             int accountId = playerManagerServer.GetAccountIdFromUnitController(sourceUnitController);
             // check for duplicate guild names
             foreach (Guild existingGuild in guildDictionary.Values) {
-                if (string.Equals(existingGuild.guildName, guildName, StringComparison.OrdinalIgnoreCase)) {
+                if (string.Equals(existingGuild.GuildName, guildName, StringComparison.OrdinalIgnoreCase)) {
                     networkManagerServer.AdvertiseConfirmationPopup(accountId, $"The guild name <{guildName}> is already taken");
                     return;
                 }
@@ -158,7 +148,7 @@ namespace AnyRPG {
 
             // check for duplicate guild names
             foreach (Guild existingGuild in guildDictionary.Values) {
-                if (string.Equals(existingGuild.guildName, guildName, StringComparison.OrdinalIgnoreCase)) {
+                if (string.Equals(existingGuild.GuildName, guildName, StringComparison.OrdinalIgnoreCase)) {
                     networkManagerServer.AdvertiseConfirmationPopup(accountId, $"The guild name <{guildName}> is already taken");
                     return;
                 }
@@ -176,31 +166,37 @@ namespace AnyRPG {
 
             // create guild
             GuildMemberData leaderGuildMemberData = new GuildMemberData(playerCharacterService.GetSummaryData(leaderCharacterId), GuildRank.Leader);
-            Guild guild = new Guild(nextGuildId, guildName, leaderGuildMemberData);
-            nextGuildId++;
-            serverStateService.SetGuildIdCounter(nextGuildId);
+            Guild guild = new Guild(guildName, leaderGuildMemberData);
 
-            // add guild to internal lookups
-            guildDictionary.Add(guild.guildId, guild);
-            guildMemberLookup.Add(leaderCharacterId, guild.guildId);
-
-            // save guild to storage
-            SaveGuildFile(guild);
-
-            // send guild info to leader
-            SendGuildInfo(accountId, leaderCharacterId);
-            unitController?.CharacterGuildManager.SetGuildId(guild.guildId, guildName);
-            networkManagerServer.AdvertiseAddCharacterToGuild(accountId, guild.guildId, new GuildMemberNetworkData(leaderGuildMemberData));
+            // get guild Id
+            serverDataService.GetGuildId(guild);
         }
 
-        private void SaveGuildFile(Guild guild) {
-            //Debug.Log($"GuildServiceServer.SaveGuildFile({guild.guildId})");
+        public void ProcessGuildIdAssigned(Guild guild, int accountId, UnitController unitController) {
 
-            GuildSaveData guildSaveData = new GuildSaveData(guild);
+            // add guild to internal lookups
+            guildDictionary.Add(guild.GuildId, guild);
+            guildMemberLookup.Add(guild.LeaderPlayerCharacterId, guild.GuildId);
 
-            string jsonString = JsonUtility.ToJson(guildSaveData, true);
-            string fileName = $"{saveFolderName}/{guildSaveData.GuildId}.json";
-            File.WriteAllText(fileName, jsonString);
+            // save guild to storage
+            SaveGuild(guild);
+
+            // send guild info to leader
+            SendGuildInfo(accountId, guild.LeaderPlayerCharacterId);
+            unitController?.CharacterGuildManager.SetGuildId(guild.GuildId, guild.GuildName);
+            networkManagerServer.AdvertiseAddCharacterToGuild(accountId, guild.GuildId, new GuildMemberNetworkData(guild.MemberList[guild.LeaderPlayerCharacterId]));
+        }
+
+        public void ProcessGuildIdAssigned(Guild guild) {
+
+            UnitController unitController = characterManager.GetUnitController(UnitControllerMode.Player, guild.LeaderPlayerCharacterId);
+            if (unitController == null) {
+                return;
+            }
+
+            int accountId = playerManagerServer.GetAccountIdFromUnitController(unitController);
+
+            ProcessGuildIdAssigned(guild, accountId, unitController);
         }
 
         public void AddCharacterToGuild(int characterId, int guildId) {
@@ -225,11 +221,17 @@ namespace AnyRPG {
                 return;
             }
 
-            GuildMemberData sourceCharacterGuildMemberData = new GuildMemberData(playerCharacterService.GetSummaryData(characterId));
+            CharacterSummaryData characterSummaryData = playerCharacterService.GetSummaryData(characterId);
+            if (characterSummaryData == null) {
+                Debug.LogWarning($"GuildServiceServer.AddCharacterToGuild() CharacterSummaryData was not found");
+                return;
+            }
+
+            GuildMemberData sourceCharacterGuildMemberData = new GuildMemberData(characterSummaryData);
             guild.AddPlayer(sourceCharacterGuildMemberData);
-            SaveGuildFile(guild);
+            SaveGuild(guild);
             guildMemberLookup.Add(characterId, guildId);
-            unitController.CharacterGuildManager.SetGuildId(guild.guildId, guild.guildName);
+            unitController.CharacterGuildManager.SetGuildId(guild.GuildId, guild.GuildName);
 
             networkManagerServer.AdvertiseGuild(newCharacterAccountId, new GuildNetworkData(guild));
 
@@ -237,15 +239,19 @@ namespace AnyRPG {
             foreach (GuildMemberData guildMemberData in guild.MemberList.Values) {
                 // check if existing member is logged in
                 int existingAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(guildMemberData.CharacterSummaryData.CharacterId);
-                if (existingAccountId == 0) {
+                if (existingAccountId == -1) {
                     continue;
                 }
                 // check if existing member is disconnected
                 if (guildMemberData.CharacterSummaryData.IsOnline == false) {
                     continue;
                 }
-                networkManagerServer.AdvertiseAddCharacterToGuild(existingAccountId, guild.guildId, new GuildMemberNetworkData(sourceCharacterGuildMemberData));
+                networkManagerServer.AdvertiseAddCharacterToGuild(existingAccountId, guild.GuildId, new GuildMemberNetworkData(sourceCharacterGuildMemberData));
             }
+        }
+
+        private void SaveGuild(Guild guild) {
+            serverDataService.SaveGuild(guild);
         }
 
         public void RemoveCharacterFromGuild(int characterId) {
@@ -269,26 +275,26 @@ namespace AnyRPG {
 
             Guild guild = guildDictionary[guildId];
             guild.RemovePlayer(characterId);
-            SaveGuildFile(guild);
+            SaveGuild(guild);
             guildMemberLookup.Remove(characterId);
             UnitController unitController = characterManager.GetUnitController(UnitControllerMode.Player, characterId);
             unitController?.CharacterGuildManager.LeaveGuild();
             foreach (GuildMemberData guildMemberData in guild.MemberList.Values) {
                 // get account id from player id
                 int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(guildMemberData.CharacterSummaryData.CharacterId);
-                if (memberAccountId == 0) {
+                if (memberAccountId == -1) {
                     continue;
                 }
                 // check if the player is disconnected
                 if (guildMemberData.CharacterSummaryData.IsOnline == false) {
                     continue;
                 }
-                networkManagerServer.AdvertiseRemoveCharacterFromGuild(memberAccountId, characterId, guild.guildId);
+                networkManagerServer.AdvertiseRemoveCharacterFromGuild(memberAccountId, characterId, guild.GuildId);
             }
 
             int removedAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(characterId);
-            if (removedAccountId != 0) {
-                networkManagerServer.AdvertiseRemoveCharacterFromGuild(removedAccountId, characterId, guild.guildId);
+            if (removedAccountId != -1) {
+                networkManagerServer.AdvertiseRemoveCharacterFromGuild(removedAccountId, characterId, guild.GuildId);
             }
 
             // if there are no members left, disband the guild
@@ -298,39 +304,10 @@ namespace AnyRPG {
             }
 
             // if the leader left, promote a new leader
-            if (guild.leaderPlayerCharacterId == characterId) {
+            if (guild.LeaderPlayerCharacterId == characterId) {
                 PromoteCharacterToLeader(guildId, guild.MemberList.First().Key);
             }
         }
-
-        /*
-        public void DisbandGuildByAccountId(int accountId) {
-            int leaderPlayerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (leaderPlayerCharacterId == 0) {
-                //Debug.Log($"GuildServiceServer.DisbandGuild: player character not found for accountId {accountId}");
-                return;
-            }
-            if (guildMemberLookup.ContainsKey(leaderPlayerCharacterId) == false) {
-                return;
-            }
-            int guildId = guildMemberLookup[leaderPlayerCharacterId];
-            if (guildDictionary.ContainsKey(guildId) == false) {
-                Debug.LogWarning("GuildServiceServer.DisbandGuildByAccountId: guild not found in dictionary");
-                return;
-            }
-            Guild guild = guildDictionary[guildId];
-            if (guild == null) {
-                Debug.LogWarning($"GuildServiceServer.DisbandGuildByAccountId({accountId}): guild not found");
-                return;
-            }
-
-            if (leaderPlayerCharacterId != guild.leaderPlayerCharacterId) {
-                //Debug.Log("GuildServiceServer.RequestRemoveCharacterFromGuild: only the guild leader can disband the guild");
-                return;
-            }
-            DisbandGuild(guildId);
-        }
-        */
 
         public void DisbandGuild(int accountId, int guildId) {
             //Debug.Log($"GuildServiceServer.DisbandGuild({accountId}, {guildId})");
@@ -339,11 +316,11 @@ namespace AnyRPG {
                 return;
             }
             int leaderPlayerCharacterid = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (leaderPlayerCharacterid == 0) {
+            if (leaderPlayerCharacterid == -1) {
                 Debug.LogWarning($"GuildServiceServer.DisbandGuild: player character not found for accountId {accountId}");
                 return;
             }
-            if (leaderPlayerCharacterid != guildDictionary[guildId].leaderPlayerCharacterId) {
+            if (leaderPlayerCharacterid != guildDictionary[guildId].LeaderPlayerCharacterId) {
                 Debug.LogWarning("GuildServiceServer.DisbandGuild: only the guild leader can disband the guild");
                 return;
             }
@@ -359,7 +336,7 @@ namespace AnyRPG {
 
                 // get account id from player id
                 int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(guildMemberData.CharacterSummaryData.CharacterId);
-                if (memberAccountId == 0) {
+                if (memberAccountId == -1) {
                     continue;
                 }
                 // check if the player is disconnected
@@ -384,16 +361,11 @@ namespace AnyRPG {
                 guildInvites.Remove(key);
             }
 
-            DeleteGuildFile(guildId);
+            DeleteGuild(guildId);
         }
 
-        private void DeleteGuildFile(int guildId) {
-            //Debug.Log($"GuildServiceServer.DeleteGuildFile({guildId})");
-
-            string fileName = $"{saveFolderName}/{guildId}.json";
-            if (File.Exists(fileName)) {
-                File.Delete(fileName);
-            }
+        private void DeleteGuild(int guildId) {
+            serverDataService.DeleteGuild(guildId);
         }
 
         public void AcceptGuildInvite(int accountId, int guildId) {
@@ -404,7 +376,7 @@ namespace AnyRPG {
                 return;
             }
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (playerCharacterId == 0) {
+            if (playerCharacterId == -1) {
                 Debug.LogWarning($"GuildServiceServer.AcceptGuildInvite({accountId}, {guildId}) player character not found for account");
                 return;
             }
@@ -423,7 +395,7 @@ namespace AnyRPG {
             //Debug.Log($"GuildServiceServer.DeclineGuildInvite({accountId})");
 
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (playerCharacterId == 0) {
+            if (playerCharacterId == -1) {
                 Debug.LogWarning($"GuildServiceServer.DeclineGuildInvite({accountId}) player character not found for accountId");
                 return;
             }
@@ -432,13 +404,13 @@ namespace AnyRPG {
                 if (guildDictionary.ContainsKey(guildInvites[playerCharacterId])) {
                     Guild guild = guildDictionary[guildInvites[playerCharacterId]];
                     if (guild.MemberList.Count == 1 &&
-                        guild.leaderPlayerCharacterId == guild.MemberList.First().Key) {
-                        guildDictionary.Remove(guild.guildId);
-                        guildMemberLookup.Remove(guild.leaderPlayerCharacterId);
-                        UnitController unitController = characterManager.GetUnitController(UnitControllerMode.Player, guild.leaderPlayerCharacterId);
+                        guild.LeaderPlayerCharacterId == guild.MemberList.First().Key) {
+                        guildDictionary.Remove(guild.GuildId);
+                        guildMemberLookup.Remove(guild.LeaderPlayerCharacterId);
+                        UnitController unitController = characterManager.GetUnitController(UnitControllerMode.Player, guild.LeaderPlayerCharacterId);
                         unitController?.CharacterGuildManager.LeaveGuild();
                     }
-                    int leaderAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(guild.leaderPlayerCharacterId);
+                    int leaderAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(guild.LeaderPlayerCharacterId);
                     networkManagerServer.AdvertiseDeclineGuildInvite(leaderAccountId, playerCharacterService.GetPlayerNameFromId(playerCharacterId));
                 }
                 guildInvites.Remove(playerCharacterId);
@@ -449,7 +421,7 @@ namespace AnyRPG {
             //Debug.Log($"GuildServiceServer.RequestLeaveGuild({accountId})");
 
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (playerCharacterId == 0) {
+            if (playerCharacterId == -1) {
                 //Debug.LogWarning($"GuildServiceServer.RequestLeaveGuild: player character not found for accountId {accountId}");
                 return;
             }
@@ -460,14 +432,14 @@ namespace AnyRPG {
             //Debug.Log($"GuildServiceServer.RequestRemoveCharacterFromGuild({leaderAccountId}, {playerName})");
 
 			int inviteCharacterId = playerCharacterService.GetPlayerIdFromName(playerName);
-            if (inviteCharacterId != 0) {
+            if (inviteCharacterId != -1) {
                 RequestRemoveCharacterFromGuild(leaderAccountId, inviteCharacterId);
             }
         }
 
         public void RequestRemoveCharacterFromGuild(int actingAccountId, int removedCharacterId) {
             int actingPlayerCharacterId = playerManagerServer.GetPlayerCharacterId(actingAccountId);
-            if (actingPlayerCharacterId == 0) {
+            if (actingPlayerCharacterId == -1) {
                 //Debug.LogWarning($"GuildServiceServer.RequestInviteCharacterToGuild: player character not found for accountId {accountId}");
                 return;
             }
@@ -494,18 +466,20 @@ namespace AnyRPG {
             RemoveCharacterFromGuild(removedCharacterId);
         }
 
-        public void RequestInviteCharacterToGuild(int leaderAccountId, string playerName) {
+        public void RequestInviteCharacterToGuild(int actingAccountId, string playerName) {
+            //Debug.Log($"GuildServiceServer.RequestInviteCharacterToGuild(actingAccountId: {actingAccountId}, playerName: {playerName})");
+
             int inviteCharacterId = playerCharacterService.GetPlayerIdFromName(playerName);
-            if (inviteCharacterId != 0) {
-                RequestInviteCharacterToGuild(leaderAccountId, inviteCharacterId);
+            if (inviteCharacterId != -1) {
+                RequestInviteCharacterToGuild(actingAccountId, inviteCharacterId);
             }
         }
 
         public void RequestInviteCharacterToGuild(int actingAccountId, int invitedCharacterId) {
-            //Debug.Log($"GuildServiceServer.RequestInviteCharacterToGuild({leaderAccountId}, {invitedCharacterId})");
+            //Debug.Log($"GuildServiceServer.RequestInviteCharacterToGuild(actingAccountId: {actingAccountId}, invitedCharacterId: {invitedCharacterId})");
 
             int actingPlayerCharacterId = playerManagerServer.GetPlayerCharacterId(actingAccountId);
-            if (actingPlayerCharacterId == 0) {
+            if (actingPlayerCharacterId == -1) {
                 Debug.LogWarning($"GuildServiceServer.RequestInviteCharacterToGuild: player character not found for leader accountId {actingAccountId}");
                 return;
             }
@@ -535,7 +509,7 @@ namespace AnyRPG {
             if (leaderName == string.Empty) {
                 leaderName = "Unknown";
             }
-            networkManagerServer.AdvertiseGuildInvite(invitedCharacterId, guild.guildId, leaderName);
+            networkManagerServer.AdvertiseGuildInvite(invitedCharacterId, guild.GuildId, leaderName);
         }
 
         public void SendGuildInfo(int accountId, int playerCharacterId) {
@@ -591,7 +565,7 @@ namespace AnyRPG {
                 } else if (promotedCharacterData.Rank == GuildRank.Officer) {
                     promotedCharacterData.Rank = GuildRank.Leader;
                     actingCharacterData.Rank = GuildRank.Officer;
-                    guild.leaderPlayerCharacterId = promotedCharacterId;
+                    guild.LeaderPlayerCharacterId = promotedCharacterId;
                 }
             }
 
@@ -618,23 +592,23 @@ namespace AnyRPG {
         }
 
         private void ProcessPromoteCharacter(Guild guild, GuildMemberData promotedCharacterData, GuildMemberData actingCharacterData) {
-            SaveGuildFile(guild);
+            SaveGuild(guild);
 
             string promotedCharacterName = playerCharacterService.GetPlayerNameFromId(promotedCharacterData.CharacterSummaryData.CharacterId);
 
             foreach (GuildMemberData guildMemberData in guild.MemberList.Values) {
                 // get account id from player id
                 int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(guildMemberData.CharacterSummaryData.CharacterId);
-                if (memberAccountId == 0) {
+                if (memberAccountId == -1) {
                     continue;
                 }
                 // check if the player is disconnected
                 if (guildMemberData.CharacterSummaryData.IsOnline == false) {
                     continue;
                 }
-                networkManagerServer.AdvertiseGuildMemberStatusChange(memberAccountId, guild.guildId, promotedCharacterData.CharacterSummaryData.CharacterId, new GuildMemberNetworkData(promotedCharacterData));
+                networkManagerServer.AdvertiseGuildMemberStatusChange(memberAccountId, guild.GuildId, promotedCharacterData.CharacterSummaryData.CharacterId, new GuildMemberNetworkData(promotedCharacterData));
                 if (actingCharacterData != null) {
-                    networkManagerServer.AdvertiseGuildMemberStatusChange(memberAccountId, guild.guildId, actingCharacterData.CharacterSummaryData.CharacterId, new GuildMemberNetworkData(actingCharacterData));
+                    networkManagerServer.AdvertiseGuildMemberStatusChange(memberAccountId, guild.GuildId, actingCharacterData.CharacterSummaryData.CharacterId, new GuildMemberNetworkData(actingCharacterData));
                 }
 
                 if (promotedCharacterData.CharacterSummaryData.CharacterId == guildMemberData.CharacterSummaryData.CharacterId) {
@@ -672,14 +646,14 @@ namespace AnyRPG {
             }
             demotedCharacterData.Rank = GuildRank.Member;
 
-            SaveGuildFile(guild);
+            SaveGuild(guild);
 
             string demotedCharacterName = playerCharacterService.GetPlayerNameFromId(demotedCharacterId);
 
             foreach (GuildMemberData guildMemberData in guild.MemberList.Values) {
                 // get account id from player id
                 int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(guildMemberData.CharacterSummaryData.CharacterId);
-                if (memberAccountId == 0) {
+                if (memberAccountId == -1) {
                     continue;
                 }
                 // check if the player is disconnected
@@ -699,7 +673,7 @@ namespace AnyRPG {
 
         public void RequestPromoteCharacter(int leaderAccountId, string playerName) {
             int inviteCharacterId = playerCharacterService.GetPlayerIdFromName(playerName);
-            if (inviteCharacterId != 0) {
+            if (inviteCharacterId != -1) {
                 RequestPromoteCharacter(leaderAccountId, inviteCharacterId);
             }
         }
@@ -707,7 +681,7 @@ namespace AnyRPG {
         public void RequestPromoteCharacter(int requestingAccountId, int newLeaderCharacterId) {
             
             int requestingPlayerCharacterId = playerManagerServer.GetPlayerCharacterId(requestingAccountId);
-            if (requestingPlayerCharacterId == 0) {
+            if (requestingPlayerCharacterId == -1) {
                 Debug.LogWarning($"GuildServiceServer.RequestPromoteCharacter() player character not found for leader accountId {requestingAccountId}");
                 return;
             }
@@ -723,7 +697,7 @@ namespace AnyRPG {
 
         public void RequestDemoteCharacter(int requestingAccountId, string playerName) {
             int demoteCharacterId = playerCharacterService.GetPlayerIdFromName(playerName);
-            if (demoteCharacterId != 0) {
+            if (demoteCharacterId != -1) {
                 RequestDemoteCharacter(requestingAccountId, demoteCharacterId);
             }
         }
@@ -731,7 +705,7 @@ namespace AnyRPG {
         public void RequestDemoteCharacter(int requestingAccountId, int demotedCharacterId) {
 
             int requestingPlayerCharacterId = playerManagerServer.GetPlayerCharacterId(requestingAccountId);
-            if (requestingPlayerCharacterId == 0) {
+            if (requestingPlayerCharacterId == -1) {
                 Debug.LogWarning($"GuildServiceServer.RequestDemoteCharacter: player character not found for leader accountId {requestingAccountId}");
                 return;
             }
@@ -764,7 +738,7 @@ namespace AnyRPG {
             foreach (CharacterSummaryData characterSummaryData in guild.MemberIdList.Values) {
                 // get account id from player id
                 int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(characterSummaryData.CharacterId);
-                if (memberAccountId == 0) {
+                if (memberAccountId == -1) {
                     continue;
                 }
                 // check if the player is disconnected
@@ -775,10 +749,6 @@ namespace AnyRPG {
             }
         }
         */
-
-        public void LoadGuildIdCounter(int guildIdCounter) {
-            nextGuildId = guildIdCounter;
-        }
 
         public void ProcessStatusChange(int playerCharacterId) {
             // check if character is in a guild
@@ -797,47 +767,48 @@ namespace AnyRPG {
 			foreach (GuildMemberData guildMemberData in guild.MemberList.Values) {
                 // get account id from player id
                 int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(guildMemberData.CharacterSummaryData.CharacterId);
-                if (memberAccountId == 0) {
+                if (memberAccountId == -1) {
                     continue;
                 }
                 // check if the player is disconnected
                 if (guildMemberData.CharacterSummaryData.IsOnline == false) {
                     continue;
                 }
-                networkManagerServer.AdvertiseGuildMemberStatusChange(memberAccountId, guild.guildId, playerCharacterId, new GuildMemberNetworkData(guild.MemberList[playerCharacterId]));
+                networkManagerServer.AdvertiseGuildMemberStatusChange(memberAccountId, guild.GuildId, playerCharacterId, new GuildMemberNetworkData(guild.MemberList[playerCharacterId]));
             }
         }
-        /*
-        public void ProcessLevelChanged(UnitController unitController) {
-            int playerCharacterId = unitController.CharacterId;
-            // check if character is in a guild
-            if (guildMemberLookup.ContainsKey(playerCharacterId) == false) {
-                return;
-            }
-            int guildId = guildMemberLookup[playerCharacterId];
-            if (guildDictionary.ContainsKey(guildId) == false) {
-                return;
-            }
-            Guild guild = guildDictionary[guildId];
-            if (guild.MemberIdList.ContainsKey(playerCharacterId) == false) {
-                return;
-            }
-            guild.MemberIdList[playerCharacterId].Level = unitController.CharacterStats.Level;
 
-            foreach (CharacterSummaryData characterSummaryData in guild.MemberIdList.Values) {
-                // get account id from player id
-                int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(characterSummaryData.CharacterId);
-                if (memberAccountId == 0) {
-                    continue;
-                }
-                // check if the player is disconnected
-                if (characterSummaryData.IsOnline == false) {
-                    continue;
-                }
-                networkManagerServer.AdvertiseGuildMemberStatusChange(memberAccountId, guild.guildId, playerCharacterId, new CharacterSummaryNetworkData(guild.MemberIdList[playerCharacterId]));
-            }
-        }
-        */
+        /*
+public void ProcessLevelChanged(UnitController unitController) {
+   int playerCharacterId = unitController.CharacterId;
+   // check if character is in a guild
+   if (guildMemberLookup.ContainsKey(playerCharacterId) == false) {
+       return;
+   }
+   int guildId = guildMemberLookup[playerCharacterId];
+   if (guildDictionary.ContainsKey(guildId) == false) {
+       return;
+   }
+   Guild guild = guildDictionary[guildId];
+   if (guild.MemberIdList.ContainsKey(playerCharacterId) == false) {
+       return;
+   }
+   guild.MemberIdList[playerCharacterId].Level = unitController.CharacterStats.Level;
+
+   foreach (CharacterSummaryData characterSummaryData in guild.MemberIdList.Values) {
+       // get account id from player id
+       int memberAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(characterSummaryData.CharacterId);
+       if (memberAccountId == -1) {
+           continue;
+       }
+       // check if the player is disconnected
+       if (characterSummaryData.IsOnline == false) {
+           continue;
+       }
+       networkManagerServer.AdvertiseGuildMemberStatusChange(memberAccountId, guild.guildId, playerCharacterId, new CharacterSummaryNetworkData(guild.MemberIdList[playerCharacterId]));
+   }
+}
+*/
 
     }
 

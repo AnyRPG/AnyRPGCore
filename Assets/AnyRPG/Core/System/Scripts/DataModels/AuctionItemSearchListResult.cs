@@ -4,15 +4,15 @@ using System.Collections.Generic;
 namespace AnyRPG {
     
     [Serializable]
-    public class AuctionItemListResponse {
+    public class AuctionItemSearchListResult {
         public List<AuctionItemSerializedSearchResult> AuctionItems = new List<AuctionItemSerializedSearchResult>();
         public ItemInstanceListSaveData ItemInstanceListSaveData = new ItemInstanceListSaveData();
 
-        public AuctionItemListResponse() { }
+        public AuctionItemSearchListResult() { }
 
         public void BundleItems(SystemItemManager systemItemManager) {
             foreach (AuctionItemSerializedSearchResult auctionItem in AuctionItems) {
-                foreach (int itemInstanceId in auctionItem.ItemIds) {
+                foreach (long itemInstanceId in auctionItem.ItemInstanceIds) {
                     InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemInstanceId);
                     ItemInstanceListSaveData.ItemInstances.Add(instantiatedItem.GetItemSaveData());
                 }

@@ -4,13 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
-using static UnityEngine.Rendering.DebugUI;
 
 namespace AnyRPG {
     public class FriendServiceServer : ConfiguredClass {
-
-        private string saveFolderName = string.Empty;
 
         /// <summary>
         /// inviterCharacterId, invitedCharacterIds
@@ -25,37 +21,40 @@ namespace AnyRPG {
         // game manager references
         private PlayerManagerServer playerManagerServer = null;
         private CharacterManager characterManager = null;
+        private ServerDataService serverDataService = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            MakeSaveFolder();
             //networkManagerServer.OnStartServer += HandleStartServer;
             networkManagerServer.OnStopServer += HandleStopServer;
         }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            playerManagerServer = systemGameManager.PlayerManagerServer;
+            characterManager = systemGameManager.CharacterManager;
+            serverDataService = systemGameManager.ServerDataService;
+        }
+
 
         private void HandleStopServer() {
             ClearFriends();
         }
 
-        public void ProcessStartServer() {
-            LoadAllFriends();
-        }
-
-        private void LoadAllFriends() {
+        public void LoadAllFriends() {
             //Debug.Log("FriendServiceServer.LoadAllFriends()");
 
-            // load all user accounts from storage
-            string[] fileEntries = Directory.GetFiles(saveFolderName, "*.json");
-            foreach (string fileName in fileEntries) {
-                //Debug.Log($"Loading user account from file: {fileName}");
-                string jsonString = File.ReadAllText(fileName);
-                FriendListSaveData friendListSaveData = JsonUtility.FromJson<FriendListSaveData>(jsonString);
-                if (friendListSaveData.PlayerCharacterId == 0) {
-                    Debug.LogWarning($"FriendServiceServer.LoadAllFriends(): Player in file {fileName} has invalid id of 0.  This friend list will be skipped.");
+            serverDataService.LoadAllFriends();
+        }
+
+        public void ProcessLoadAllFriendLists(List<FriendListSaveData> friendListSaveDatas) {
+            foreach (FriendListSaveData friendListSaveData in friendListSaveDatas) {
+                if (friendListSaveData.PlayerCharacterId == -1) {
+                    Debug.LogWarning($"FriendServiceServer.LoadAllFriends(): Player has invalid id of -1.  This friend list will be skipped.");
                     continue;
                 }
                 if (friendListDictionary.ContainsKey(friendListSaveData.PlayerCharacterId)) {
-                    Debug.LogWarning($"FriendServiceServer.LoadAllFriends(): Duplicate friend id {friendListSaveData.PlayerCharacterId} found in file {fileName}.  This friend list will be skipped.");
+                    Debug.LogWarning($"FriendServiceServer.LoadAllFriends(): Duplicate friend id {friendListSaveData.PlayerCharacterId} found.  This friend list will be skipped.");
                     continue;
                 }
                 FriendList friendList = new FriendList(friendListSaveData, playerCharacterService);
@@ -65,34 +64,23 @@ namespace AnyRPG {
             }
         }
 
+        public void ProcessLoadAllFriendLists(List<FriendListSerializedData> friendListSerializedDatas) {
+            List<FriendListSaveData> friendListSaveDatas = new List<FriendListSaveData>();
+            foreach (FriendListSerializedData friendListSerializedData in friendListSerializedDatas) {
+                FriendListSaveData friendListSaveData = JsonUtility.FromJson<FriendListSaveData>(friendListSerializedData.saveData);
+                // since network friend lists are created automatically with no content, check for null saveData
+                if (friendListSaveData == null) {
+                    friendListSaveData = new FriendListSaveData();
+                }
+                // since network friend list are created automatically with no content, the trusted field for player character id should be the database field
+                friendListSaveData.PlayerCharacterId = friendListSerializedData.playerCharacterId;
+                friendListSaveDatas.Add(friendListSaveData);
+            }
+            ProcessLoadAllFriendLists(friendListSaveDatas);
+        }
+
         private void ClearFriends() {
             friendListDictionary.Clear();
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            playerManagerServer = systemGameManager.PlayerManagerServer;
-            characterManager = systemGameManager.CharacterManager;
-        }
-
-        private void MakeSaveFolder() {
-            //Debug.Log("PlayerCharacterService.MakeSaveFolder()");
-
-            Regex regex = new Regex("[^a-zA-Z0-9]");
-            string gameNameString = regex.Replace(systemConfigurationManager.GameName, "");
-            if (gameNameString == string.Empty) {
-                return;
-            }
-            saveFolderName = $"{Application.persistentDataPath}/{gameNameString}/Online/Friends";
-            if (!Directory.Exists($"{Application.persistentDataPath}/{gameNameString}")) {
-                Directory.CreateDirectory($"{Application.persistentDataPath}/{gameNameString}");
-            }
-            if (!Directory.Exists($"{Application.persistentDataPath}/{gameNameString}/Online")) {
-                Directory.CreateDirectory($"{Application.persistentDataPath}/{gameNameString}/Online");
-            }
-            if (!Directory.Exists(saveFolderName)) {
-                Directory.CreateDirectory(saveFolderName);
-            }
         }
 
         public FriendList GetFriendListFromCharacterId(int characterId) {
@@ -104,18 +92,14 @@ namespace AnyRPG {
             return null;
         }
 
-        private void SaveFriendListFile(FriendList friendList) {
-            //Debug.Log($"FriendServiceServer.SaveFriendFile({friendList.playerCharacterId})");
+        private void SaveFriendList(FriendList friendList) {
+            //Debug.Log($"FriendServiceServer.SaveFriendList(playerCharacterId: {friendList.playerCharacterId})");
 
-            FriendListSaveData friendListSaveData = new FriendListSaveData(friendList);
-
-            string jsonString = JsonUtility.ToJson(friendListSaveData, true);
-            string fileName = $"{saveFolderName}/{friendListSaveData.PlayerCharacterId}.json";
-            File.WriteAllText(fileName, jsonString);
+            serverDataService.SaveFriendList(friendList);
         }
 
         public void AddCharacterToFriendList(int sourceCharacterId, int targetCharacterId) {
-            //Debug.Log($"FriendServiceServer.AddCharacterToFriend({sourceCharacterId}, {targetCharacterId})");
+            //Debug.Log($"FriendServiceServer.AddCharacterToFriendList(sourceCharacterId: {sourceCharacterId}, targetCharacterId: {targetCharacterId})");
 
             if (friendListDictionary.ContainsKey(sourceCharacterId) == false) {
                 friendListDictionary.Add(sourceCharacterId, new FriendList(sourceCharacterId));
@@ -128,12 +112,12 @@ namespace AnyRPG {
 
             UnitController sourceUnitController = characterManager.GetUnitController(UnitControllerMode.Player, sourceCharacterId);
             if (sourceUnitController == null) {
-                Debug.LogWarning($"FriendServiceServer.AddCharacterToFriend: unit controller not found for characterId {sourceCharacterId}");
+                Debug.LogWarning($"FriendServiceServer.AddCharacterToFriendList() unit controller not found for characterId {sourceCharacterId}");
                 return;
             }
             UnitController targetUnitController = characterManager.GetUnitController(UnitControllerMode.Player, targetCharacterId);
             if (targetUnitController == null) {
-                Debug.LogWarning($"FriendServiceServer.AddCharacterToFriend: unit controller not found for characterId {sourceCharacterId}");
+                Debug.LogWarning($"FriendServiceServer.AddCharacterToFriendList() unit controller not found for characterId {sourceCharacterId}");
                 return;
             }
 
@@ -141,12 +125,20 @@ namespace AnyRPG {
             int targetCharacterAccountId = playerManagerServer.GetAccountIdFromUnitController(targetUnitController);
 
             CharacterSummaryData targetFriendInfo = playerCharacterService.GetSummaryData(targetCharacterId);
-            CharacterSummaryData sourceFriendInfo = playerCharacterService.GetSummaryData(sourceCharacterAccountId);
+            CharacterSummaryData sourceFriendInfo = playerCharacterService.GetSummaryData(sourceCharacterId);
+
+            if (sourceFriendInfo == null) {
+                Debug.LogWarning($"FriendServiceServer.AddCharacterToFriendList() source CharacterSummaryData was not found");
+                return;
+            } else if (targetFriendInfo == null) {
+                Debug.LogWarning($"FriendServiceServer.AddCharacterToFriendList() target CharacterSummaryData was not found");
+                return;
+            }
 
             sourceFriendList.AddPlayer(targetFriendInfo);
             targetFriendList.AddPlayer(sourceFriendInfo);
-            SaveFriendListFile(sourceFriendList);
-            SaveFriendListFile(targetFriendList);
+            SaveFriendList(sourceFriendList);
+            SaveFriendList(targetFriendList);
 
             networkManagerServer.AdvertiseAddFriend(sourceCharacterAccountId, new CharacterSummaryNetworkData(targetFriendInfo));
             networkManagerServer.AdvertiseAddFriend(targetCharacterAccountId, new CharacterSummaryNetworkData(sourceFriendInfo));
@@ -159,7 +151,7 @@ namespace AnyRPG {
             if (friendListDictionary.ContainsKey(targetCharacterId) == true) {
                 FriendList targetFriendList = friendListDictionary[targetCharacterId];
                 targetFriendList.RemovePlayer(sourceCharacterId);
-                SaveFriendListFile(targetFriendList);
+                SaveFriendList(targetFriendList);
                 int targetCharacterAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(targetCharacterId);
                 networkManagerServer.AdvertiseRemoveCharacterFromFriendList(targetCharacterAccountId, sourceCharacterId);
             }
@@ -167,18 +159,17 @@ namespace AnyRPG {
             if (friendListDictionary.ContainsKey(sourceCharacterId) == true) {
                 FriendList sourceFriendList = friendListDictionary[sourceCharacterId];
                 sourceFriendList.RemovePlayer(targetCharacterId);
-                SaveFriendListFile(sourceFriendList);
+                SaveFriendList(sourceFriendList);
                 int sourceCharacterAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(sourceCharacterId);
                 networkManagerServer.AdvertiseRemoveCharacterFromFriendList(sourceCharacterAccountId, targetCharacterId);
             }
-
         }
 
         public void AcceptFriendInvite(int accountId, int friendId) {
             //Debug.Log($"FriendServiceServer.AcceptFriendInvite({accountId}, {friendId})");
 
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (playerCharacterId == 0) {
+            if (playerCharacterId == -1) {
                 Debug.LogWarning($"FriendServiceServer.AcceptFriendInvite({accountId}, {friendId}) player character not found for account");
                 return;
             }
@@ -196,12 +187,12 @@ namespace AnyRPG {
             //Debug.Log($"FriendServiceServer.DeclineFriendInvite({accountId})");
 
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
-            if (playerCharacterId == 0) {
+            if (playerCharacterId == -1) {
                 Debug.LogWarning($"FriendServiceServer.DeclineFriendInvite({accountId}) player character not found for accountId");
                 return;
             }
             int friendAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(friendId);
-            if (friendAccountId == 0) {
+            if (friendAccountId == -1) {
                 Debug.LogWarning($"FriendServiceServer.DeclineFriendInvite({accountId}) account not found for friendId {friendId}");
                 return;
             }
@@ -215,7 +206,7 @@ namespace AnyRPG {
             //Debug.Log($"FriendServiceServer.RequestRemoveCharacterFromFriendList({sourceAccountId}, {removedCharacterName})");
 
             int removedCharacterId = playerCharacterService.GetPlayerIdFromName(removedCharacterName);
-            if (removedCharacterId == 0) {
+            if (removedCharacterId == -1) {
                 return;
             }
 
@@ -226,7 +217,7 @@ namespace AnyRPG {
             //Debug.Log($"FriendServiceServer.RequestRemoveCharacterFromFriendList({sourceAccountId}, {removedCharacterId})");
 
             int sourceCharacterId = playerManagerServer.GetPlayerCharacterId(sourceAccountId);
-            if (sourceCharacterId == 0) {
+            if (sourceCharacterId == -1) {
                 //Debug.LogWarning($"FriendServiceServer.RequestInviteCharacterToFriend: player character not found for accountId {accountId}");
                 return;
             }
@@ -236,7 +227,7 @@ namespace AnyRPG {
 
         public void RequestInviteCharacterToFriend(int sourceAccountId, string playerName) {
             int inviteCharacterId = playerCharacterService.GetPlayerIdFromName(playerName);
-            if (inviteCharacterId != 0) {
+            if (inviteCharacterId != -1) {
                 RequestInviteCharacterToFriend(sourceAccountId, inviteCharacterId);
             }
         }
@@ -245,7 +236,7 @@ namespace AnyRPG {
             //Debug.Log($"FriendServiceServer.RequestInviteCharacterToFriend({sourceAccountId}, {invitedCharacterId})");
 
             int sourceCharacterId = playerManagerServer.GetPlayerCharacterId(sourceAccountId);
-            if (sourceCharacterId == 0) {
+            if (sourceCharacterId == -1) {
                 Debug.LogWarning($"FriendServiceServer.RequestInviteCharacterToFriend: player character not found for leader accountId {sourceAccountId}");
                 return;
             }
@@ -300,7 +291,7 @@ namespace AnyRPG {
 
                 // return zero if the friend is not logged in to avoid trying sent info to offline accounts
                 int targetAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(friendCharacterId);
-                if (targetAccountId == 0) {
+                if (targetAccountId == -1) {
                     continue;
                 }
                 if (characterSummaryData.IsOnline == false) {
@@ -331,7 +322,7 @@ namespace AnyRPG {
 
                 // return zero if the friend is not logged in to avoid trying sent info to offline accounts
                 int targetAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(friendCharacterId);
-                if (targetAccountId == 0) {
+                if (targetAccountId == -1) {
                     continue;
                 }
                 if (characterSummaryData.IsOnline == false) {
@@ -362,7 +353,7 @@ namespace AnyRPG {
 
                 // return zero if the friend is not logged in to avoid trying sent info to offline accounts
                 int targetAccountId = playerManagerServer.GetAccountIdFromPlayerCharacterId(friendCharacterId);
-                if (targetAccountId == 0) {
+                if (targetAccountId == -1) {
                     continue;
                 }
                 if (characterSummaryData.IsOnline == false) {

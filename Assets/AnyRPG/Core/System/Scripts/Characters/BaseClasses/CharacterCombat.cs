@@ -516,16 +516,20 @@ namespace AnyRPG {
             return returnValue;
         }
 
+        /*
         /// <summary>
         /// receive the AttackHitEvent from the attack animation so damage can be triggered against the enemy
         /// </summary>
         public void AttackHitEvent() {
             AttackHitAnimationEvent();
         }
+        */
 
-        public void ProcessAttackHit() {
+        public void ProcessAttackHit(AbilityEffectContext abilityEffectContext) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.ProcessAttackHit()");
+
             if (!unitController.CharacterStats.IsAlive) {
-                //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.AttackHit_AnimationEvent() Character is not alive!");
+                //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.ProcessAttackHit() Character is not alive!");
                 return;
             }
             CharacterUnit targetCharacterUnit = null;
@@ -537,9 +541,11 @@ namespace AnyRPG {
             // some attacks can hit more than once.
             // in case this is one of those attacks, get a copy of the ability effect context so subsequent hits do not get input power from each other
             AbilityEffectContext usedAbilityEffectContext = null;
-            if (unitController.CharacterAbilityManager.CurrentAbilityEffectContext != null) {
-                usedAbilityEffectContext = unitController.CharacterAbilityManager.CurrentAbilityEffectContext.GetCopy();
+            //if (unitController.CharacterAbilityManager.CurrentAbilityEffectContext != null) {
+            if (abilityEffectContext != null) {
+                usedAbilityEffectContext = abilityEffectContext.GetCopy();
             } else {
+                //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.ProcessAttackHit() currentAbilityEffectContext is null");
                 return;
             }
 
@@ -568,13 +574,15 @@ namespace AnyRPG {
         /// <summary>
         /// After the attack animation reaches the point where it contacts the enemy, do damage to it
         /// </summary>
-        public void AttackHitAnimationEvent() {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent()");
-            ProcessAttackHit();
+        public void AttackHitAnimationEvent(AbilityEffectContext abilityEffectContext) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.AttackHit_AnimationEvent()");
+
+            ProcessAttackHit(abilityEffectContext);
         }
 
         public virtual void ReceiveCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.ReceiveCombatMiss()");
+
             lastCombatEvent = Time.time;
             unitController.UnitEventController.NotifyOnReceiveCombatMiss(targetObject, abilityEffectContext);
             

@@ -70,11 +70,11 @@ namespace AnyRPG {
             }
         }
 
-        public override InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, int itemId, Item item, ItemQuality usedItemQuality) {
+        public override InstantiatedItem GetNewInstantiatedItem(SystemGameManager systemGameManager, long itemInstanceId, Item item, ItemQuality usedItemQuality) {
             if ((item is Food) == false) {
                 return null;
             }
-            return new InstantiatedFood(systemGameManager, itemId, item as Food, usedItemQuality);
+            return new InstantiatedFood(systemGameManager, itemInstanceId, item as Food, usedItemQuality);
         }
 
         /*

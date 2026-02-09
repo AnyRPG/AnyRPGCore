@@ -51,7 +51,8 @@ namespace AnyRPG {
         }
 
         public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(DisplayName + ".ProjectileEffect.Cast(" + source.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log($"{ResourceName}.ProjectileEffect.Cast({source.AbilityManager.Name}, {(target == null ? "null" : target.name)})");
+
             Dictionary<PrefabProfile, List<GameObject>> returnObjects = source.AbilityManager.SpawnProjectileEffectPrefabs(target, originalTarget, this, abilityEffectContext);
             return returnObjects;
         }

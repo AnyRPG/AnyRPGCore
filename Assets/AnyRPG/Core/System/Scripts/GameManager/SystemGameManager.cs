@@ -88,6 +88,7 @@ namespace AnyRPG {
         private FactionChangeManagerServer factionChangeManagerServer = new FactionChangeManagerServer();
         private FriendServiceClient friendServiceClient = new FriendServiceClient();
         private FriendServiceServer friendServiceServer = new FriendServiceServer();
+        private ServerDataService serverDataService = new ServerDataService();
         private GuildmasterManagerClient guildmasterManagerClient = new GuildmasterManagerClient();
         private GuildmasterManagerServer guildmasterManagerServer = new GuildmasterManagerServer();
         private GuildServiceClient guildServiceClient = new GuildServiceClient();
@@ -113,7 +114,7 @@ namespace AnyRPG {
         private QuestGiverManagerClient questGiverManagerClient = new QuestGiverManagerClient();
         private QuestGiverManagerServer questGiverManagerServer = new QuestGiverManagerServer();
         private SaveManager saveManager = new SaveManager();
-        private ServerStateService serverStateService = new ServerStateService();
+        //private LocalGameServerClient localGameServerClient = new LocalGameServerClient();
         private SkillTrainerManagerClient skillTrainerManagerClient = new SkillTrainerManagerClient();
         private SkillTrainerManagerServer skillTrainerManagerServer = new SkillTrainerManagerServer();
         private SpecializationChangeManagerClient specializationChangeManagerClient = new SpecializationChangeManagerClient();
@@ -227,9 +228,10 @@ namespace AnyRPG {
         public CharacterGroupServiceServer CharacterGroupServiceServer { get => characterGroupServiceServer; set => characterGroupServiceServer = value; }
         public GuildServiceClient GuildServiceClient { get => guildServiceClient; set => guildServiceClient = value; }
         public GuildServiceServer GuildServiceServer { get => guildServiceServer; set => guildServiceServer = value; }
-        public ServerStateService ServerStateService { get => serverStateService; set => serverStateService = value; }
+        //public LocalGameServerClient LocalGameServerClient { get => localGameServerClient; set => localGameServerClient = value; }
         public FriendServiceClient FriendServiceClient { get => friendServiceClient; set => friendServiceClient = value; }
         public FriendServiceServer FriendServiceServer { get => friendServiceServer; set => friendServiceServer = value; }
+        public ServerDataService ServerDataService { get => serverDataService; set => serverDataService = value; }
 
         private void Awake() {
             Init();
@@ -270,6 +272,7 @@ namespace AnyRPG {
             objectPooler.Configure(this);
 
             // configure services and managers
+            serverDataService.Configure(this);
             userAccountService.Configure(this);
             playerCharacterService.Configure(this);
             auctionService.Configure(this);
@@ -347,7 +350,7 @@ namespace AnyRPG {
             characterGroupServiceServer.Configure(this);
             guildServiceClient.Configure(this);
             guildServiceServer.Configure(this);
-            serverStateService.Configure(this);
+            //localGameServerClient.Configure(this);
             friendServiceClient.Configure(this);
             friendServiceServer.Configure(this);
         }
@@ -396,7 +399,7 @@ namespace AnyRPG {
                 Physics.simulationMode = SimulationMode.FixedUpdate;
             }
             */
-            networkManagerServer.OnSetGameMode(gameMode);
+            //networkManagerServer.OnSetGameMode(gameMode);
         }
 
         /// <summary>

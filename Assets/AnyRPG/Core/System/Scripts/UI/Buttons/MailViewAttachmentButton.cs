@@ -200,7 +200,7 @@ namespace AnyRPG {
             UpdateVisual();
         }
 
-        public List<int> GetItemIds() {
+        public List<long> GetItemInstanceIds() {
             return items.Select(item => item.InstanceId).ToList();
         }
     }

@@ -62,7 +62,7 @@ namespace AnyRPG {
             //networkManagerClient.RequestMailMessages
         }
 
-        public void SetMailMessages(MailMessageListResponse mailMessageListResponse) {
+        public void SetMailMessages(MailMessageListBundle mailMessageListResponse) {
             //Debug.Log($"MailboxManagerClient.SetMailMessages(count: {mailMessageListResponse.MailMessages.Count})");
 
             mailMessages.Clear();
@@ -83,7 +83,7 @@ namespace AnyRPG {
         public MailMessage GetCurrentMessage() {
             //Debug.Log($"MailboxManagerClient.GetCurrentMessage()");
 
-            if (currentMessageId == 0) {
+            if (currentMessageId == -1) {
                 return null;
             }
             if (mailMessages.ContainsKey(currentMessageId) == false) {
@@ -136,13 +136,13 @@ namespace AnyRPG {
         }
 
         public void AdvertiseTakeMailAttachment(int messageId, int attachmentSlotId) {
-            mailMessages[messageId].AttachmentSlots[attachmentSlotId].ItemIds.Clear();
+            mailMessages[messageId].AttachmentSlots[attachmentSlotId].ItemInstanceIds.Clear();
             OnTakeMailAttachment(messageId);
         }
 
         public void AdvertiseTakeMailAttachments(int messageId) {
             foreach (MailAttachmentSlot attachmentSlot in mailMessages[messageId].AttachmentSlots) {
-                attachmentSlot.ItemIds.Clear();
+                attachmentSlot.ItemInstanceIds.Clear();
             }
             OnTakeMailAttachment(messageId);
         }

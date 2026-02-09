@@ -196,12 +196,12 @@ namespace AnyRPG {
             UpdateVisual();
         }
 
-        public List<int> GetItemIds() {
+        public List<long> GetItemInstanceIds() {
             return items.Select(item => item.InstanceId).ToList();
         }
 
-        public bool HasItemId(int itemId) {
-            return items.Any(item => item.InstanceId == itemId);
+        public bool HasItemId(long itemInstanceId) {
+            return items.Any(item => item.InstanceId == itemInstanceId);
         }
     }
 

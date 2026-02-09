@@ -10,7 +10,7 @@ namespace AnyRPG {
 
         private Food food = null;
 
-        public InstantiatedFood(SystemGameManager systemGameManager, int instanceId, Food food, ItemQuality itemQuality) : base(systemGameManager, instanceId, food, itemQuality) {
+        public InstantiatedFood(SystemGameManager systemGameManager, long instanceId, Food food, ItemQuality itemQuality) : base(systemGameManager, instanceId, food, itemQuality) {
             this.food = food;
         }
 

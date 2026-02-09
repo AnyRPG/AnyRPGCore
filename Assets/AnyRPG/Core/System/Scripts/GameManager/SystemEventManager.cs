@@ -37,12 +37,9 @@ namespace AnyRPG {
         public event System.Action<int> OnTakeLoot = delegate { };
         public event System.Action OnPlayerDeath = delegate { };
         public event System.Action OnCalculateRelativeTime = delegate { };
-        public event System.Action OnBeforeStopServer = delegate { };
         public event System.Action OnLevelLoad = delegate { };
         public event System.Action<int, string> OnLevelUnloadClient = delegate { };
         public event System.Action<int, string> OnLevelUnloadServer = delegate { };
-        public event System.Action<int, string> OnRemoveLoadedScene = delegate { };
-        public event System.Action<int, string> OnAddLoadedScene = delegate { };
         public event System.Action<int, WeatherProfile, bool> OnEndWeather = delegate { };
         public event System.Action<int, WeatherProfile> OnChooseWeather = delegate { };
         public event System.Action<int> OnStartWeather = delegate { };
@@ -265,10 +262,6 @@ namespace AnyRPG {
             OnCalculateRelativeTime();
         }
 
-        public void NotifyOnBeforeStopServer() {
-            OnBeforeStopServer();
-        }
-
         public void NotifyOnLevelLoad() {
             OnLevelLoad();
         }
@@ -279,14 +272,6 @@ namespace AnyRPG {
 
         public void NotifyOnLevelUnloadServer(int sceneHandle, string sceneName) {
             OnLevelUnloadServer(sceneHandle, sceneName);
-        }
-
-        public void NotifyOnRemoveLoadedScene(int sceneHandle, string sceneName) {
-            OnRemoveLoadedScene(sceneHandle, sceneName);
-        }
-
-        public void NotifyOnAddLoadedScene(int sceneHandle, string sceneName) {
-            OnAddLoadedScene(sceneHandle, sceneName);
         }
 
         public void NotifyOnEndWeather(int sceneHandle, WeatherProfile previousWeather, bool immediate) {
