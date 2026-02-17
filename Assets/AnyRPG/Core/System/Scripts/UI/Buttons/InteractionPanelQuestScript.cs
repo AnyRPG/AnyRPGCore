@@ -18,7 +18,7 @@ namespace AnyRPG {
         protected bool markedComplete = false;
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected QuestGiverManagerClient questGiverManagerClient = null;
 
         public Quest Quest { get => quest;}

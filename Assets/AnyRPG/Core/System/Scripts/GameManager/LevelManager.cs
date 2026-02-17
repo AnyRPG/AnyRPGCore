@@ -36,7 +36,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private AudioManager audioManager = null;
         private CameraManager cameraManager = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private MapManager mapManager = null;
         private SystemEventManager systemEventManager = null;
 

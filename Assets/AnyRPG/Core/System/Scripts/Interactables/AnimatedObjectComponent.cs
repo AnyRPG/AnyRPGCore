@@ -47,7 +47,7 @@ namespace AnyRPG {
                     Props.AnimationComponent.Play(Props.CloseAnimationClip.name);
                 }
                 if (Props.OpenAudioClip != null) {
-                    interactable.UnitComponentController.PlayEffectSound(Props.CloseAudioClip);
+                    interactable.InteractableEventController.NotifyOnPlayEffectSound(Props.CloseAudioClip, false);
                 }
                 objectOpen = false;
             } else {
@@ -55,7 +55,7 @@ namespace AnyRPG {
                     Props.AnimationComponent.Play(Props.OpenAnimationClip.name);
                 }
                 if (Props.CloseAudioClip != null) {
-                    interactable.UnitComponentController.PlayEffectSound(Props.OpenAudioClip);
+                    interactable.InteractableEventController.NotifyOnPlayEffectSound(Props.OpenAudioClip, false);
                 }
                 objectOpen = true;
             }

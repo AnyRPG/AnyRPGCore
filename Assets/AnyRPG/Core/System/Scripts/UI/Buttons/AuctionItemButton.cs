@@ -42,7 +42,7 @@ namespace AnyRPG {
         // game manager references
         private AuctionManagerClient auctionManagerClient = null;
         private SystemItemManager systemItemManager = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
 
         public AuctionItemSearchResult AuctionItem { get => auctionItem; set => auctionItem = value; }
 

@@ -58,7 +58,7 @@ namespace AnyRPG {
 
         // game manager references
         LevelManager levelManager = null;
-        PlayerManager playerManager = null;
+        PlayerManagerClient playerManager = null;
 
         public Camera MainCamera { get => mainCamera; set => mainCamera = value; }
         public GameObject MainCameraGameObject { get => mainCameraGameObject; }

@@ -3,12 +3,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.Serialization;
 
 namespace AnyRPG {
 
-    [System.Serializable]
     public class UnitNamePlateController : BaseNamePlateController {
 
         public override event System.Action OnInitializeNamePlate = delegate { };
@@ -97,7 +94,8 @@ namespace AnyRPG {
         */
 
         public override NamePlateController AddNamePlate() {
-            return namePlateManager.AddNamePlate(unitController, (unitController.UnitComponentController.NamePlateTransform == null ? true : false));
+            //return namePlateManager.AddNamePlate(unitController, (unitController.ComponentController.NamePlateTransform == null ? true : false));
+            return namePlateManager.AddNamePlate(unitController, false);
         }
 
         public override void RemoveNamePlate() {

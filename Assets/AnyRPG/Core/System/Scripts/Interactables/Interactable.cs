@@ -66,15 +66,21 @@ namespace AnyRPG {
         [SerializeField]
         private float interactionMaxRange = 2f;
 
+        [Tooltip("The prefered locations that units wanting to interact will move to, based on NavMeshPath completeness.")]
+        [SerializeField]
+        protected List<GameObject> interactLocations = new List<GameObject>();
+
         [Header("Controller References")]
 
         [Tooltip("Reference to local component controller prefab with nameplate target, speakers, etc.")]
         [SerializeField]
         protected ComponentController componentController = null;
 
+        /*
         [Tooltip("Reference to local component controller prefab with nameplate target, speakers, etc.")]
         [SerializeField]
         protected UnitComponentController unitComponentController = null;
+        */
 
         protected Dictionary<int, InteractableOptionComponent> interactables = new Dictionary<int, InteractableOptionComponent>();
         protected int interactableOptionCount = 0;
@@ -91,6 +97,8 @@ namespace AnyRPG {
         protected bool componentReferencesInitialized = false;
         protected bool eventSubscriptionsInitialized = false;
 
+        protected Dictionary<GameObject, UnitController> inRangeUnitControllers = new Dictionary<GameObject, UnitController>();
+
         // attached components
         protected Collider myCollider;
         //protected MiniMapIndicatorController miniMapIndicator = null;
@@ -106,7 +114,7 @@ namespace AnyRPG {
 
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected UIManager uIManager = null;
         protected NamePlateManager namePlateManager = null;
         protected MiniMapManager miniMapManager = null;
@@ -120,7 +128,7 @@ namespace AnyRPG {
 
         public Sprite Icon { get => interactableIcon; }
 
-        public UnitComponentController UnitComponentController { get => unitComponentController; set => unitComponentController = value; }
+        //public UnitComponentController UnitComponentController { get => unitComponentController; set => unitComponentController = value; }
 
         public string ResourceName { get => DisplayName; }
         public virtual string DisplayName {
@@ -191,9 +199,10 @@ namespace AnyRPG {
         public bool SuppressInteractionWindow { get => suppressInteractionWindow; set => suppressInteractionWindow = value; }
         public bool IsTargeted { get => isTargeted; }
         public bool Initialized { get => initialized; }
+        public List<GameObject> InteractLocations { get => interactLocations; set => interactLocations = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
-            //Debug.Log($"{gameObject.name}.Interactable.Configure()");
+            //Debug.Log($"{gameObject.name}.Interactable.Configure() instanceId: {GetInstanceID()}");
 
             base.Configure(systemGameManager);
 
@@ -238,13 +247,11 @@ namespace AnyRPG {
         }
 
         protected virtual void ConfigureComponents() {
+            //Debug.Log($"{gameObject.name}.Interactable.ConfigureComponents() instanceId: {GetInstanceID()}");
+
             if (componentController != null) {
                 componentController.Configure(systemGameManager);
                 componentController.SetInteractable(this);
-            }
-            if (unitComponentController != null) {
-                unitComponentController.Configure(systemGameManager);
-                unitComponentController.SetInteractable(this);
             }
         }
 
@@ -305,17 +312,24 @@ namespace AnyRPG {
         }
 
         public void RegisterDespawn(GameObject go) {
-            if (componentController != null) {
-                componentController.RegisterDespawn(go);
-            }
+            RemoveInRangeCollider(go);
         }
 
         public virtual void ProcessInit() {
             //if (spawnReference != null) {
                 objectMaterialController.PopulateOriginalMaterials();
             //}
+            CheckEnableInteractableRange();
         }
 
+        protected virtual void CheckEnableInteractableRange() { 
+            EnableInteractableRange();
+        }
+
+        public void EnableInteractableRange() {
+            // meant to be overwritten in unitcontrollers, as they enable this during SetUnitControllerMode()
+            interactableEventController.NotifyOnEnableInteractableRange();
+        }
 
         /// <summary>
         /// get a list of interactable options by type
@@ -396,8 +410,12 @@ namespace AnyRPG {
 
             InstantiateMiniMapIndicator();
 
-            if (componentController != null) {
-                componentController.InteractableRange.UpdateStatus();
+            foreach (UnitController inRangeUnitController in inRangeUnitControllers.Values) {
+                if (GetCurrentInteractables(inRangeUnitController).Count == 0) {
+                    inRangeUnitController.UnitEventController.NotifyOnExitInteractableRange(this);
+                } else {
+                    inRangeUnitController.UnitEventController.NotifyOnEnterInteractableRange(this);
+                }
             }
         }
 
@@ -609,6 +627,21 @@ namespace AnyRPG {
             // interactables allow everything to interact by default.
             // characters will override this
             return 0;
+        }
+
+        public Dictionary<int, InteractableOptionComponent> GetInRangeInteractables(UnitController sourceUnitController) {
+            bool passedRangeCheck = IsInRange(sourceUnitController);
+
+            Dictionary<int, InteractableOptionComponent> inRangeInteractables = new Dictionary<int, InteractableOptionComponent>();
+            foreach (KeyValuePair<int, InteractableOptionComponent> interactableOption in interactables) {
+                if (interactableOption.Value.CanInteract(sourceUnitController, true, passedRangeCheck, true)) {
+                    //Debug.Log($"{gameObject.name}.Interactable.GetCurrentInteractables(): Adding interactable: {interactableOption.ToString()}");
+                    inRangeInteractables.Add(interactableOption.Key, interactableOption.Value);
+                } else {
+                    //Debug.Log($"{gameObject.name}.Interactable.GetValidInteractables(): invalid interactable: {interactableOption.ToString()}");
+                }
+            }
+            return inRangeInteractables;
         }
 
         public Dictionary<int, InteractableOptionComponent> GetCurrentInteractables(UnitController sourceUnitController) {
@@ -973,6 +1006,11 @@ namespace AnyRPG {
             // only needed in namePlateUnit and above
         }
 
+        public virtual bool IsInRange(UnitController sourceUnitController) {
+            GetValidInteractables(sourceUnitController);
+            return IsInInteractableRange(sourceUnitController.gameObject);
+        }
+
         public virtual void ProcessLevelUnload() {
             // this is meant to not be called from child classes as they will call ResetSettings() during Despawn()
             ResetSettings();
@@ -1007,6 +1045,11 @@ namespace AnyRPG {
             CleanupMiniMapIndicator();
             NotifyOnInteractableResetSettings();
 
+            foreach (UnitController inRangeUnitController in inRangeUnitControllers.Values) {
+                inRangeUnitController.UnitEventController.NotifyOnExitInteractableRange(this);
+            }
+            inRangeUnitControllers.Clear();
+
             interactables = new Dictionary<int, InteractableOptionComponent>();
             interactableOptionCount = 0;
             isInteracting = false;
@@ -1034,9 +1077,6 @@ namespace AnyRPG {
         }
 
         public virtual void OnSendObjectToPool() {
-            if (componentController != null) {
-                componentController.InteractableRange.OnSendObjectToPool();
-            }
         }
 
         public void CreateEventSubscriptions() {
@@ -1114,7 +1154,7 @@ namespace AnyRPG {
         }
 
         public virtual void HandleTargeted() {
-            unitComponentController?.HighlightController?.HandleTargeted();
+            interactableEventController.NotifyOnTargeted();
         }
 
         public void SetUnTargeted() {
@@ -1125,8 +1165,56 @@ namespace AnyRPG {
         }
 
         public void HandleUnTargeted() {
-            unitComponentController?.HighlightController?.HandleUnTargeted();
+            interactableEventController.NotifyOnUnTargeted();
         }
+
+        public void InteractableTriggerEnter(Collider collider) {
+            if (inRangeUnitControllers.ContainsKey(collider.gameObject) == false) {
+                UnitController unitController = collider.gameObject.GetComponent<UnitController>();
+                if (unitController == null || unitController.UnitControllerMode != UnitControllerMode.Player) {
+                    return;
+                }
+                inRangeUnitControllers.Add(collider.gameObject, unitController);
+                if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false) {
+                    // events from triggers are server authoritative
+                    return;
+                }
+                if (GetCurrentInteractables(unitController).Count == 0) {
+                    return;
+                }
+                unitController.UnitEventController.NotifyOnEnterInteractableRange(this);
+            }
+        }
+
+        public void InteractableTriggerExit(Collider collider) {
+            if (inRangeUnitControllers.ContainsKey(collider.gameObject) == false) {
+                return;
+            }
+
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                // events from triggers are server authoritative
+                inRangeUnitControllers[collider.gameObject].UnitEventController.NotifyOnExitInteractableRange(this);
+            }
+            RemoveInRangeCollider(collider.gameObject);
+        }
+
+        private void RemoveInRangeCollider(GameObject go) {
+            //Debug.Log("InteractableRange.RemoveInRangeCollider(" + go.name + ") count: " + inRangeColliders.Count);
+            if (inRangeUnitControllers.ContainsKey(go)) {
+                inRangeUnitControllers.Remove(go);
+            }
+        }
+
+        public bool IsInInteractableRange(GameObject go) {
+            //Debug.Log($"{interactable.gameObject.name}.InteractableRange.IsInRange({go.name}) count: {inRangeGameObjects.Count} instanceId: {GetInstanceID()}"); 
+            //Debug.Log($"InteractableRange.IsInRange({go.name}) count: {inRangeUnitControllers.Count} instanceId: {GetInstanceID()}");
+
+            if (inRangeUnitControllers.ContainsKey(go)) {
+                return true;
+            }
+            return false;
+        }
+
 
         #endregion
 

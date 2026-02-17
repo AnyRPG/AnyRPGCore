@@ -54,7 +54,7 @@ namespace AnyRPG {
         private UnitToughness unitToughness;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private SystemDataFactory systemDataFactory = null;
         private UnitPreviewManager unitPreviewManager = null;
         private CameraManager cameraManager = null;

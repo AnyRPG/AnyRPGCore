@@ -51,7 +51,7 @@ namespace AnyRPG {
         private Coroutine dropCombatCoroutine = null;
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected UIManager uIManager = null;
         protected SystemEventManager systemEventManager = null;
 

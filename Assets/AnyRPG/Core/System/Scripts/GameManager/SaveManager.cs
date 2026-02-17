@@ -24,7 +24,7 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private PlayerManagerServer playerManagerServer = null;
         private MessageFeedManager messageFeedManager = null;
         private LevelManager levelManager = null;

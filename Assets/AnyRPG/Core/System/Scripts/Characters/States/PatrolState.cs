@@ -62,7 +62,7 @@ namespace AnyRPG {
 
             // give a chance to switch to attack mode
             baseController.UpdateTarget();
-            if (baseController.Target != null && baseController.AggroEnabled() == true) {
+            if (baseController.Target != null && baseController.AggroEnabled == true) {
                 baseController.LeashPosition = baseController.transform.position;
                 baseController.ChangeState(new FollowState());
                 return;

@@ -49,7 +49,7 @@ namespace AnyRPG {
         // the action bar target for range checks
         private Interactable target = null;
 
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected KeyBindManager keyBindManager = null;
         protected ControlsManager controlsManager = null;
         protected InputManager inputManager = null;

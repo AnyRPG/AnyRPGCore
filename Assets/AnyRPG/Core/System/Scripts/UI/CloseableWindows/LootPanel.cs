@@ -22,7 +22,7 @@ namespace AnyRPG {
 
         // game manager references
         private LootManager lootManager = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private NetworkManagerClient networkManagerClient = null;
 
         public List<LootButton> LootButtons { get => lootButtons; set => lootButtons = value; }

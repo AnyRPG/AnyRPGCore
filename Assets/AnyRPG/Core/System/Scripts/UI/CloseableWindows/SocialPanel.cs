@@ -78,7 +78,7 @@ namespace AnyRPG {
         private SocialPanelTab currentTab = SocialPanelTab.Group;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private CharacterGroupServiceClient characterGroupServiceClient = null;
         private GuildServiceClient guildServiceClient = null;
         private UIManager uiManager = null;

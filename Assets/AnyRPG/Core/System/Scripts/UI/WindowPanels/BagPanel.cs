@@ -22,7 +22,7 @@ namespace AnyRPG {
 
         // game manager references
         protected ObjectPooler objectPooler = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
 
         public List<SlotScript> Slots { get => slots; }
         public Transform ContentArea { get => contentArea; }

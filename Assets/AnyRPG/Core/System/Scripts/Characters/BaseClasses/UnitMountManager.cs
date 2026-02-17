@@ -19,7 +19,7 @@ namespace AnyRPG {
         private bool lateJoin = false;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private PlayerManagerServer playerManagerServer = null;
         private CharacterManager characterManager = null;
 

@@ -35,7 +35,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private SaveManager saveManager = null;
         private MessageFeedManager messageFeedManager = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

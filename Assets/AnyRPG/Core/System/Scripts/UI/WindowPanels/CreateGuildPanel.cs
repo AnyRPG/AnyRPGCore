@@ -20,7 +20,7 @@ namespace AnyRPG {
         // game manager references
         private GuildmasterManagerClient guildMasterManagerClient = null;
         private GuildServiceClient guildServiceClient = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

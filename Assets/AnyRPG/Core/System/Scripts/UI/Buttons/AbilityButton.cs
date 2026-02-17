@@ -24,7 +24,7 @@ namespace AnyRPG {
         protected TextMeshProUGUI description = null;
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected ActionBarManager actionBarManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {

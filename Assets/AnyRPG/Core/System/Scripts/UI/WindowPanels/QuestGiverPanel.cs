@@ -74,7 +74,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private ObjectPooler objectPooler = null;
         private MessageFeedManager messageFeedManager = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private DialogManagerClient dialogManagerClient = null;
 
         public QuestGiverQuestScript SelectedQuestGiverQuestScript { get => selectedQuestGiverQuestScript; set => selectedQuestGiverQuestScript = value; }

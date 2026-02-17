@@ -22,7 +22,7 @@ namespace AnyRPG {
         private float circleRadius = 0f;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -47,10 +47,6 @@ namespace AnyRPG {
                 //Debug.Log("FocusTargettingController.SetupController(): added " + ColorUtility.ToHtmlStringRGBA(colorMapNode.MySourceColor));
             }
             meshRenderer.enabled = false;
-        }
-
-        public void ConfigureOwner(UnitController unitController) {
-            this.unitController = unitController;
         }
 
         public void HandleTargeted() {
@@ -78,7 +74,7 @@ namespace AnyRPG {
             SubscribeToEvents();
         }
 
-        private void HandlReputationChange(UnitController controller) {
+        private void HandleSystemEventManagerReputationChange(UnitController controller) {
             UpdateColors();
         }
 
@@ -93,14 +89,14 @@ namespace AnyRPG {
 
         private void SubscribeToEvents() {
             if (subscriptionsInitialized == false) {
-                systemEventManager.OnReputationChange += HandlReputationChange;
+                systemEventManager.OnReputationChange += HandleSystemEventManagerReputationChange;
                 subscriptionsInitialized = true;
             }
         }
 
         private void UnsubscribeFromEvents() {
             if (subscriptionsInitialized == true) {
-                systemEventManager.OnReputationChange -= HandlReputationChange;
+                systemEventManager.OnReputationChange -= HandleSystemEventManagerReputationChange;
                 subscriptionsInitialized = false;
             }
         }
@@ -159,6 +155,37 @@ namespace AnyRPG {
             circleRadius = newRadius;
             // multiply by 2 because the dimension is the diameter of the plane, not radius
             transform.localScale = new Vector3(circleRadius * 2f, circleRadius * 2f, 1f);
+        }
+
+        public void SetUnitController(UnitController unitController) {
+            this.unitController = unitController;
+            unitController.InteractableEventController.OnTargeted += HandleTargeted;
+            unitController.InteractableEventController.OnUnTargeted += HandleUnTargeted;
+            unitController.UnitEventController.OnReputationChange += HandleReputationChange;
+            unitController.UnitEventController.OnBeforeDie += HandleBeforeDie;
+            unitController.UnitEventController.OnReviveComplete += HandleReviveComplete;
+            unitController.OnInteractableResetSettings += HandleInteractableResetSettings;
+        }
+
+        private void HandleInteractableResetSettings() {
+            unitController.InteractableEventController.OnTargeted -= HandleTargeted;
+            unitController.InteractableEventController.OnUnTargeted -= HandleUnTargeted;
+            unitController.UnitEventController.OnReputationChange -= HandleReputationChange;
+            unitController.UnitEventController.OnBeforeDie -= HandleBeforeDie;
+            unitController.UnitEventController.OnReviveComplete -= HandleReviveComplete;
+            unitController.OnInteractableResetSettings -= HandleInteractableResetSettings;
+        }
+
+        private void HandleReviveComplete(UnitController controller) {
+            UpdateColors();
+        }
+
+        private void HandleBeforeDie(UnitController controller) {
+            UpdateColors();
+        }
+
+        private void HandleReputationChange(UnitController controller) {
+            UpdateColors();
         }
 
     }

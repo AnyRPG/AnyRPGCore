@@ -111,7 +111,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private SaveManager saveManager = null;
         private SystemUIConfiguration uiConfiguration = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

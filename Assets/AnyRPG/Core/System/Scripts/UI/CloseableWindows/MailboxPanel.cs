@@ -17,7 +17,7 @@ namespace AnyRPG {
         private bool windowSubscriptionsInitialized = false;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private MailboxManagerClient mailboxManagerClient = null;
         private UIManager uiManager = null;
 

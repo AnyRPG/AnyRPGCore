@@ -14,7 +14,7 @@ namespace AnyRPG {
         //private CharacterUnit playerUnit;
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

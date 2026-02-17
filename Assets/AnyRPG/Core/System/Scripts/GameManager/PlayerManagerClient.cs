@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
-    public class PlayerManager : ConfiguredMonoBehaviour, ICharacterRequestor {
+    public class PlayerManagerClient : ConfiguredMonoBehaviour, ICharacterRequestor {
 
         [SerializeField]
         private float maxMovementSpeed = 20f;
@@ -20,9 +20,11 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject playerConnectionPrefab = null;
 
+        /*
         [Tooltip("If true, the system will enable the nav mesh agent for character navigation if a nav mesh exists in the scene")]
         [SerializeField]
         private bool autoDetectNavMeshes = false;
+        */
 
         [SerializeField]
         private bool autoSpawnPlayerOnLevelLoad = false;
@@ -343,15 +345,15 @@ namespace AnyRPG {
                 //SetUnitController(unitController);
             //}
 
-            if (levelManager.NavMeshAvailable == true && autoDetectNavMeshes) {
+            if (levelManager.NavMeshAvailable) {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Enabling NavMeshAgent()");
-                unitController.EnableAgent();
+                //unitController.EnableAgent();
                 if (playerUnitMovementController != null) {
                     playerUnitMovementController.useMeshNav = true;
                 }
             } else {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Disabling NavMeshAgent()");
-                unitController.DisableAgent();
+                //unitController.DisableAgent();
                 if (playerUnitMovementController != null) {
                     playerUnitMovementController.useMeshNav = false;
                 }
@@ -604,6 +606,8 @@ namespace AnyRPG {
             unitController.UnitEventController.OnClassChange += HandleClassChange;
             unitController.UnitEventController.OnSpecializationChange += HandleSpecializationChange;
             unitController.UnitEventController.OnSetGuildId += HandleSetGuildId;
+            unitController.UnitEventController.OnManualMovement += HandleManualMovement;
+            unitController.UnitEventController.OnReachDestination += HandleReachDestination;
         }
 
         public void UnsubscribeFromPlayerEvents() {
@@ -673,6 +677,16 @@ namespace AnyRPG {
             unitController.UnitEventController.OnClassChange -= HandleClassChange;
             unitController.UnitEventController.OnSpecializationChange -= HandleSpecializationChange;
             unitController.UnitEventController.OnSetGuildId -= HandleSetGuildId;
+            unitController.UnitEventController.OnManualMovement += HandleManualMovement;
+            unitController.UnitEventController.OnReachDestination += HandleReachDestination;
+        }
+
+        private void HandleReachDestination() {
+            uIManager.MovementTargetController.DisableProjector();
+        }
+
+        private void HandleManualMovement() {
+            uIManager.MovementTargetController.DisableProjector();
         }
 
         private void HandleSetGuildId(int guildId, string guildName) {

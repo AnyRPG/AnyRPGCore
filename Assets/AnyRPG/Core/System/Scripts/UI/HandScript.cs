@@ -27,7 +27,7 @@ namespace AnyRPG {
         private ActionBarManager actionBarManager = null;
         private InputManager inputManager = null;
         //InventoryManager inventoryManager = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private MessageLogClient logManager = null;
         private ControlsManager controlsManager = null;
 

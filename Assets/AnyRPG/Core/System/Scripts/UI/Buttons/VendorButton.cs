@@ -43,7 +43,7 @@ namespace AnyRPG {
 
         // game manager references
         protected SystemItemManager systemItemManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         //protected InventoryManager inventoryManager = null;
         protected MessageFeedManager messageFeedManager = null;
         protected CurrencyConverter currencyConverter = null;

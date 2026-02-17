@@ -28,7 +28,7 @@ namespace AnyRPG {
         protected List<AudioProfile> flightAudioProfiles = new List<AudioProfile>();
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
 
         public float ProjectileSpeed { get => projectileSpeed; }
         public bool RandomFlightAudioProfiles { get => randomFlightAudioProfiles; }

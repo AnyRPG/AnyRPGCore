@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1751672641666550326}
   - component: {fileID: 6973582095505325909}
   - component: {fileID: 3309121852376907503}
+  - component: {fileID: 5960685158865917729}
   m_Layer: 8
   m_Name: DefaultUMACharacterUnit
   m_TagString: Player
@@ -30,6 +31,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2692339740015506113}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -37,7 +39,6 @@ Transform:
   m_Children:
   - {fileID: 565477750004378721}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!195 &2692339740015506125
 NavMeshAgent:
@@ -69,8 +70,17 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2692339740015506113}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
+  serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
@@ -82,10 +92,21 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2692339740015506113}
-  serializedVersion: 2
+  serializedVersion: 5
   m_Mass: 50
-  m_Drag: 0.1
-  m_AngularDrag: 0.1
+  m_LinearDamping: 0.1
+  m_AngularDamping: 0.1
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1
@@ -103,11 +124,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df07de734135f834b9ba0098ec4ed914, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabProfileName: Default UMA Player Unit
-  spawnDelay: 0
-  spawnReference: {fileID: 0}
-  despawnObject: 0
-  spawnPrerequisites: []
   showTooltip: 1
   interactableName: 
   glowOnMouseOver: 1
@@ -119,11 +135,7 @@ MonoBehaviour:
   isTrigger: 0
   suppressInteractionWindow: 0
   interactionMaxRange: 2
-  checkOptionsToSpawn: 0
-  spawnRequiresValidOption: 0
-  despawnRequiresNoValidOption: 0
   componentController: {fileID: 0}
-  unitComponentController: {fileID: 0}
 --- !u!114 &1751672641666550326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,11 +148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 894bc4eeef577cf43a021ba43cfdd2d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabProfileName: 
-  spawnDelay: 0
-  spawnReference: {fileID: 0}
-  despawnObject: 0
-  spawnPrerequisites: []
   showTooltip: 1
   interactableName: 
   glowOnMouseOver: 1
@@ -152,11 +159,7 @@ MonoBehaviour:
   isTrigger: 0
   suppressInteractionWindow: 0
   interactionMaxRange: 2
-  checkOptionsToSpawn: 0
-  spawnRequiresValidOption: 0
-  despawnRequiresNoValidOption: 0
-  componentController: {fileID: 0}
-  unitComponentController: {fileID: 8257430763179704801}
+  componentController: {fileID: 5627543989980708334}
   namePlateProps:
     displayName: 
     suppressNamePlate: 0
@@ -191,7 +194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   context: {fileID: 0}
-  umaData: {fileID: 0}
+  umaData: {fileID: 5960685158865917729}
   defaultRendererAsset: {fileID: 0}
   umaRecipe: {fileID: 0}
   umaAdditionalRecipes:
@@ -222,6 +225,8 @@ MonoBehaviour:
   DelayUnload: 2
   BundleCheck: 1
   KeepAnimatorController: 0
+  RecreateAnimatorOnRaceChange: 1
+  userInformation: 
   RecipeUpdated:
     m_PersistentCalls:
       m_Calls: []
@@ -231,27 +236,52 @@ MonoBehaviour:
   WardrobeRemoved:
     m_PersistentCalls:
       m_Calls: []
+  CharacterStart:
+    m_PersistentCalls:
+      m_Calls: []
+  BuildCharacterBegun:
+    m_PersistentCalls:
+      m_Calls: []
+  SlotsHidden:
+    m_PersistentCalls:
+      m_Calls: []
+  WardrobeSuppressed:
+    m_PersistentCalls:
+      m_Calls: []
   hide: 0
+  markNotReadable: 1
+  markDynamic: 1
   loadBlendShapes: 0
+  loadOnlyUsedBlendshapes: 1
+  loadBlendshapeNormals: 1
+  loadBlendshapeTangents: 1
+  loadAllFrames: 1
+  forceKeepBlendshapes: []
   keepAvatar: 0
+  rawAvatar: 0
+  keepPredefinedDNA: 0
   activeRace:
     name: HumanMaleDCS
   defaultChangeRaceOptions: 8
   cacheCurrentState: 1
   rebuildSkeleton: 0
   alwaysRebuildSkeleton: 0
+  forceRebindAnimator: 0
   preloadWardrobeRecipes:
     loadDefaultRecipes: 1
     recipes:
     - _recipeName: MaleUnderwear
+      _enabledInDefaultWardrobe: 1
       _compatibleRaces:
       - HumanMale
       - HumanMaleDCS
     - _recipeName: FemaleUndies2
+      _enabledInDefaultWardrobe: 1
       _compatibleRaces:
       - HumanFemaleDCS
       - HumanFemale
     - _recipeName: Peasant_Trousers_Grey_Recipe
+      _enabledInDefaultWardrobe: 1
       _compatibleRaces:
       - HumanMale
       - HumanMaleHighPoly
@@ -273,8 +303,15 @@ MonoBehaviour:
       - {r: 0, g: 0, b: 0, a: 0}
       PropertyBlock:
         alwaysUpdate: 0
+        alwaysUpdateParms: 0
         serializedProperties: []
       foldout: 0
+      showAdvanced: 0
+      isBaseColor: 0
+      deleteThis: 0
+      colorsExpanded: 0
+      propertiesExpanded: 0
+      displayColor: {r: 1, g: 1, b: 1, a: 1}
       _name: 
       _color: {r: 1, g: 1, b: 1, a: 1}
       _metallicGloss: {r: 0, g: 0, b: 0, a: 0}
@@ -291,8 +328,15 @@ MonoBehaviour:
       - {r: 0, g: 0, b: 0, a: 0}
       PropertyBlock:
         alwaysUpdate: 0
+        alwaysUpdateParms: 0
         serializedProperties: []
       foldout: 0
+      showAdvanced: 0
+      isBaseColor: 0
+      deleteThis: 0
+      colorsExpanded: 0
+      propertiesExpanded: 0
+      displayColor: {r: 1, g: 1, b: 1, a: 1}
       _name: 
       _color: {r: 1, g: 1, b: 1, a: 1}
       _metallicGloss: {r: 0, g: 0, b: 0, a: 0}
@@ -309,8 +353,15 @@ MonoBehaviour:
       - {r: 0, g: 0, b: 0, a: 0}
       PropertyBlock:
         alwaysUpdate: 0
+        alwaysUpdateParms: 0
         serializedProperties: []
       foldout: 0
+      showAdvanced: 0
+      isBaseColor: 0
+      deleteThis: 0
+      colorsExpanded: 0
+      propertiesExpanded: 0
+      displayColor: {r: 1, g: 1, b: 1, a: 1}
       _name: 
       _color: {r: 1, g: 1, b: 1, a: 1}
       _metallicGloss: {r: 0, g: 0, b: 0, a: 0}
@@ -323,7 +374,7 @@ MonoBehaviour:
   loadFilename: 
   loadString: 
   loadFileOnStart: 0
-  ForceSlotMaterials: 0
+  forceSlotMaterials: 0
   AtlasResolutionScale: 1
   defaultLoadOptions: 31
   savePathType: 0
@@ -340,9 +391,11 @@ MonoBehaviour:
   customRotation: {x: 0, y: 0, z: 0}
   previewColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   _buildCharacterEnabled: 1
+  nextBuildSlotsOnly: 0
+  debugVertexes: 1
 --- !u!95 &3309121852376907503
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -356,16 +409,87 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5960685158865917729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2692339740015506113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15ee0e75ac30e964b8dcd0ad5f953c15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UMA_Core::UMA.UMAData
+  renderers: []
+  userInformation: 
+  rawAvatar: 0
+  raceChanged: 0
+  hideRenderers: 0
+  umaGenerator: {fileID: 0}
+  OverrideTpose: {fileID: 0}
+  atlasResolutionScale: 1
+  ForceRebindAnimator: 0
+  isMeshDirty: 0
+  isShapeDirty: 0
+  isTextureDirty: 0
+  isAtlasDirty: 0
+  markNotReadable: 1
+  markDynamic: 1
+  animationController: {fileID: 0}
+  CharacterCreated:
+    m_PersistentCalls:
+      m_Calls: []
+  CharacterDestroyed:
+    m_PersistentCalls:
+      m_Calls: []
+  CharacterUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  CharacterBeforeUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  CharacterBeforeDnaUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  CharacterDnaUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  CharacterBegun:
+    m_PersistentCalls:
+      m_Calls: []
+  AnimatorStateSaved:
+    m_PersistentCalls:
+      m_Calls: []
+  AnimatorStateRestored:
+    m_PersistentCalls:
+      m_Calls: []
+  PreUpdateUMABody:
+    m_PersistentCalls:
+      m_Calls: []
+  umaRoot: {fileID: 0}
+  _umaRecipe:
+    raceData: {fileID: 0}
+    dnaValues: []
+    slotDataList: []
+    sharedColors: []
+  animator: {fileID: 0}
+  KeepAvatar: 0
+  characterHeight: 2
+  characterRadius: 0.25
+  characterMass: 50
 --- !u!1001 &8260972880229052764
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 2692339740015506124}
     m_Modifications:
     - target: {fileID: 2374868691136697553, guid: ffef65e2e170bd54a9b915f85d943c90,
@@ -414,6 +538,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ffef65e2e170bd54a9b915f85d943c90, type: 3}
 --- !u!4 &565477750004378721 stripped
 Transform:
@@ -421,15 +548,15 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8260972880229052764}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8257430763179704801 stripped
+--- !u!114 &5627543989980708334 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 17054075724345533, guid: ffef65e2e170bd54a9b915f85d943c90,
+  m_CorrespondingSourceObject: {fileID: 4376885729236552882, guid: ffef65e2e170bd54a9b915f85d943c90,
     type: 3}
   m_PrefabInstance: {fileID: 8260972880229052764}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff66cd4c225276a429c7ebf4774567da, type: 3}
+  m_Script: {fileID: 11500000, guid: bbfd1210233fbdf4384ee537a76e5a2e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.ComponentController

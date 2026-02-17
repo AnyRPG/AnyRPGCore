@@ -23,6 +23,10 @@ namespace AnyRPG {
         public event System.Action<AudioClip, bool> OnPlayEffectSound = delegate { };
         public event System.Action<AudioClip, bool> OnPlayCastSound = delegate { };
         public event System.Action<InteractableOptionComponent> OnMiniMapStatusUpdate = delegate { };
+        public event System.Action OnTargeted = delegate { };
+        public event System.Action OnUnTargeted = delegate { };
+        public event System.Action<Vector3> OnSetNameplatePosition = delegate { };
+        public event System.Action OnEnableInteractableRange = delegate { };
 
         // interactable this controller is attached to
         private Interactable interactable;
@@ -103,6 +107,22 @@ namespace AnyRPG {
 
         public void NotifyOnMiniMapStatusUpdate(InteractableOptionComponent interactableOptionComponent) {
             OnMiniMapStatusUpdate(interactableOptionComponent);
+        }
+
+        public void NotifyOnTargeted() {
+            OnTargeted();
+        }
+
+        public void NotifyOnUnTargeted() {
+            OnUnTargeted();
+        }
+
+        public void NotifyOnSetNameplatePosition(Vector3 overridePosition) {
+            OnSetNameplatePosition(overridePosition);
+        }
+
+        public void NotifyOnEnableInteractableRange() {
+            OnEnableInteractableRange();
         }
 
         // temporarily disabled because this object is not created early enough in the process when its a unitcontroller

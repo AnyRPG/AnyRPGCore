@@ -18,7 +18,7 @@ namespace AnyRPG {
         */
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected PlayerManagerServer playerManagerServer = null;
 
         public override void SetGameManagerReferences() {

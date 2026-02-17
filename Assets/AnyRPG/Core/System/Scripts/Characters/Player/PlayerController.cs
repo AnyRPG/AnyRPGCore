@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -54,7 +56,7 @@ namespace AnyRPG {
 
         // game manager references
         protected InputManager inputManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected MessageFeedManager messageFeedManager = null;
         protected NamePlateManager namePlateManager = null;
         protected CameraManager cameraManager = null;
@@ -92,10 +94,18 @@ namespace AnyRPG {
         }
 
         public void AddInteractable(Interactable interactable) {
-            //Debug.Log("PlayerController.AddInteractable(" + interactable.gameObject.name + ")");
+            //Debug.Log($"PlayerController.AddInteractable({interactable.gameObject.name})");
+
             if (interactables.Contains(interactable) == false) {
                 interactables.Add(interactable);
             }
+
+            if (playerManager.ActiveUnitController.UnitMotor.InteractionTarget != null && playerManager.ActiveUnitController.UnitMotor.InteractionTarget == interactable) {
+                playerManager.ActiveUnitController.UnitMotor.StopFollowingTarget();
+                InterActWithTarget(interactable);
+                return;
+            }
+
             ShowHideInteractionPopup();
         }
 
@@ -104,7 +114,8 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="_interactable"></param>
         public void RemoveInteractable(Interactable interactable) {
-            //Debug.Log("PlayerController.RemoveInteractable(" + interactable.gameObject.name + ")");
+            //Debug.Log($"PlayerController.RemoveInteractable({interactable.gameObject.name})");
+
             if (interactables.Contains(interactable)) {
                 interactables.Remove(interactable);
             }
@@ -208,8 +219,9 @@ namespace AnyRPG {
             NormalizedMoveInput = NormalizedVelocity(new Vector3(inputHorizontal, 0, inputVertical));
             TurnInput = new Vector3(inputTurn, 0, 0);
 
-            if (HasMoveInput()) {
+            if (HasAnyInput()) {
                 //Debug.Log("PlayerController.CollectMoveInput(): hasMoveInput");
+                playerManager.ActiveUnitController.UnitMotor.StopFollowingTarget();
                 playerManager.ActiveUnitController.CommonMovementNotifier();
             }
         }
@@ -258,7 +270,10 @@ namespace AnyRPG {
             if (playerManager?.ActiveUnitController != null && playerManager.ActiveUnitController.ControlLocked == true) {
                 return;
             }
-            CollectMoveInput();
+
+            if (systemConfigurationManager.AllowFreeMove == true) {
+                CollectMoveInput();
+            }
 
             HandleRightMouseClick();
 
@@ -499,10 +514,61 @@ namespace AnyRPG {
                 if (mouseOverInteractable != null && mouseOverInteractable.IsTrigger == false) {
                     //Debug.Log("setting interaction target to " + hit.collider.gameObject.name);
                     //interactionTarget = hit.collider.gameObject;
-                    InterActWithTarget(mouseOverInteractable.CharacterTarget);
+                    RightMouseInteraction(mouseOverInteractable.CharacterTarget);
                 }
                 //Debug.Log("We hit " + hit.collider.name + " " + hit.point);
             }
+        }
+
+        public void RightMouseInteraction(Interactable interactable) {
+
+            if (interactable.IsMouseOverBlocked() == true) {
+                //Debug.Log("PlayerController.InterActWithTarget(): mouseover blocked");
+                return;
+            }
+
+            if (playerManager.UnitController.Target == null || playerManager.UnitController.Target != interactable) {
+                playerManager.UnitController.ClearTarget();
+                playerManager.UnitController.SetTarget(interactable);
+            }
+
+            Dictionary<int, InteractableOptionComponent> inRangeInteractables = interactable.GetInRangeInteractables(playerManager.UnitController);
+            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.GetCurrentInteractables(playerManager.UnitController);
+
+            // there are no options to interact with
+            if (currentInteractables.Count == 0) {
+                //Debug.Log($"{gameObject.name}.InterActWithTarget({interactable.gameObject.name}) no interactables available");
+                return;
+            }
+
+            // the player is trying to interact with something that is out of range, but there are interactables available, so we should move toward the target
+            if (inRangeInteractables.Count == 0) {
+                if (playerManager.PlayerUnitMovementController.useMeshNav && systemConfigurationManager.AllowClickToMove) {
+                    //Debug.Log($"{gameObject.name}.InterActWithTarget({interactable.gameObject.name}) out of range, following target");
+                    playerManager.ActiveUnitController.UnitMotor.FollowInteractionTarget(playerManager.UnitController.Target);
+                }
+                return;
+            }
+
+            // There is already an interactable in range, and it is of type attack.
+            // Attack interactions are always valid at any range, so we need to check if within attack range for the currently equipped weapon.
+            // If not, move toward the target.
+            if (inRangeInteractables.Count == 1 && inRangeInteractables.First().Value.InteractionType == InteractionType.Attack) {
+                if (playerManager.UnitController.CharacterAbilityManager.AutoAttackAbility != null) {
+                    float attackRange = playerManager.UnitController.CharacterAbilityManager.AutoAttackAbility.GetTargetOptions(playerManager.UnitController).MaxRange;
+                    float distanceToTarget = Vector3.Distance(playerManager.ActiveUnitController.transform.position, interactable.transform.position);
+                    if (distanceToTarget > attackRange) {
+                        if (playerManager.PlayerUnitMovementController.useMeshNav && systemConfigurationManager.AllowClickToMove) {
+                            //Debug.Log($"{gameObject.name}.InterActWithTarget({interactable.gameObject.name}) out of range for attack, following target");
+                            playerManager.ActiveUnitController.UnitMotor.FollowAttackTarget(interactable, attackRange);
+                        }
+                        //return;
+                    }
+                }
+            }
+
+            // we are within range.  Go ahead and interact (or attack)
+            InterActWithTarget(interactable, false);
         }
 
         private void ProcessGamepadButtonClicks() {
@@ -562,7 +628,9 @@ namespace AnyRPG {
                         }
                     }
                 } else {
-                    FinishGroundTarget(castTargettingManager.CastTargetController.VirtualCursor);
+                    if (playerManager.ActiveUnitController.CharacterAbilityManager.WaitingForTarget()) {
+                        FinishGroundTarget(castTargettingManager.CastTargetController.VirtualCursor);
+                    }
                 }
             } else if (controlsManager.DPadRightPressed) {
                 GetNextTabTarget(playerManager.UnitController.Target, true, false);
@@ -575,11 +643,20 @@ namespace AnyRPG {
             Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(targetPosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100, movementMask)) {
-                if (playerManager.ActiveUnitController.CharacterAbilityManager.WaitingForTarget()) {
-                    playerManager.ActiveUnitController.CharacterAbilityManager.SetGroundTargetClient(hit.point);
-                }
+                playerManager.ActiveUnitController.CharacterAbilityManager.SetGroundTargetClient(hit.point);
             }
         }
+
+        private void ClickToMove(Vector3 targetPosition) {
+            Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(targetPosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 100, movementMask)) {
+                uIManager.MovementTargetController.SetPosition(hit.point);
+                playerManager.ActiveUnitController.EnableAgent();
+                playerManager.ActiveUnitController.UnitMotor.MoveToPoint(hit.point);
+            }
+        }
+
 
         private void HandleLeftMouseClick() {
             //Debug.Log("PlayerController.HandleLeftMouseClick()");
@@ -614,17 +691,25 @@ namespace AnyRPG {
                 playerManager.UnitController.ClearTarget();
             } else if (mouseOverInteractable != null) {
                 //playerManager.UnitController.SetTarget(mouseOverInteractable);
-                if (mouseOverInteractable.IsMouseOverBlocked() == true) {
+                if (mouseOverInteractable.IsMouseOverBlocked() == false) {
                     //Debug.Log("PlayerController.HandleLeftMouseClick(): mouseover blocked");
+                    playerManager.UnitController.SetTarget(mouseOverInteractable.CharacterTarget);
                     return;
                 }
-                playerManager.UnitController.SetTarget(mouseOverInteractable.CharacterTarget);
             }
             //}
 
-            FinishGroundTarget(Input.mousePosition);
+            if (playerManager.ActiveUnitController.CharacterAbilityManager.WaitingForTarget()) {
+                FinishGroundTarget(Input.mousePosition);
+            } else if (systemConfigurationManager.AllowClickToMove == true) {
+                if (playerManager?.ActiveUnitController != null && playerManager.ActiveUnitController.ControlLocked == true) {
+                    return;
+                }
+                ClickToMove(Input.mousePosition);
+            }
         }
 
+        /*
         /// <summary>
         /// if an interactable is set, try to interact with it if it's in range.
         /// </summary>
@@ -643,6 +728,7 @@ namespace AnyRPG {
                 }
             }
         }
+        */
 
         private bool InteractionSucceeded(Interactable target) {
             //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded()");
@@ -898,30 +984,24 @@ namespace AnyRPG {
         }
 
         public void InterActWithTarget(Interactable interactable, bool resetTarget = true) {
-            //Debug.Log($"{gameObject.name}.InterActWithTarget(" + interactable.gameObject.name + ")");
+            //Debug.Log($"{gameObject.name}.InterActWithTarget({interactable.gameObject.name})");
 
             if (interactable.IsMouseOverBlocked() == true) {
                 //Debug.Log("PlayerController.InterActWithTarget(): mouseover blocked");
                 return;
             }
 
-            if (playerManager.UnitController.Target != interactable && resetTarget == true) {
+            if ((playerManager.UnitController.Target == null || playerManager.UnitController.Target != interactable) && resetTarget == true) {
                 playerManager.UnitController.ClearTarget();
                 playerManager.UnitController.SetTarget(interactable);
             }
+
+            // the interactable is in range
             if (InteractionSucceeded(interactable)) {
                 //Debug.Log("We were able to interact with the target");
                 if (resetTarget == true) {
                     // not actually stopping interacting.  just clearing target if this was a trigger interaction and we are not interacting with a focus
                     StopInteract();
-                }
-            } else {
-                //Debug.Log("we were out of range and must move toward the target to be able to interact with it");
-                if (playerManager.PlayerUnitMovementController.useMeshNav) {
-                    //Debug.Log("Nav Mesh Agent is enabled. Setting follow target: " + target.name);
-                    playerManager.ActiveUnitController.UnitMotor.FollowTarget(playerManager.UnitController.Target);
-                } else {
-                    //Debug.Log("Nav Mesh Agent is disabled and you are out of range");
                 }
             }
         }
@@ -936,7 +1016,7 @@ namespace AnyRPG {
                 //Debug.Log("we were out of range and must move toward the target to be able to interact with it");
                 if (playerManager.PlayerUnitMovementController.useMeshNav) {
                     //Debug.Log("Nav Mesh Agent is enabled. Setting follow target: " + target.name);
-                    playerManager.ActiveUnitController.UnitMotor.FollowTarget(playerManager.UnitController.Target);
+                    playerManager.ActiveUnitController.UnitMotor.FollowInteractionTarget(playerManager.UnitController.Target);
                 } else {
                     //Debug.Log("Nav Mesh Agent is disabled and you are out of range");
                 }
@@ -963,9 +1043,16 @@ namespace AnyRPG {
 
             if (inputManager.KeyBindWasPressed("CANCELALL")
                 || (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1") && controlsManager.RightTriggerDown == false && controlsManager.LeftTriggerDown == false)) {
+                uIManager.MovementTargetController.DisableProjector();
                 playerManager.UnitController.ClearTarget();
                 if (playerManager.ActiveUnitController.CharacterStats.IsAlive != false) {
-                    // prevent character from swapping to third party controller while dead
+                    // that stuff is already done by ClearTarget()
+                    /*
+                    if (playerManager.ActiveUnitController.UnitMotor.HasDestination() == true) {
+                        uIManager.MovementTargetController.DisableProjector();
+                        playerManager.ActiveUnitController.UnitMotor.StopFollowingTarget();
+                    }
+                    */
                     playerManager.ActiveUnitController.CharacterAbilityManager.TryToStopAnyAbility();
                     playerManager.UnitController.UnitActionManager.TryToStopAction();
                 }

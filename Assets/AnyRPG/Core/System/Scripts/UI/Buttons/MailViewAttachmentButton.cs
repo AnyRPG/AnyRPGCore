@@ -31,7 +31,7 @@ namespace AnyRPG {
         private MailMessage mailMessage = null;
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected HandScript handScript = null;
         protected TradeServiceClient tradeServiceClient = null;
         protected MailboxManagerClient mailboxManagerClient = null;

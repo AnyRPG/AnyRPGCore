@@ -21,7 +21,7 @@ namespace AnyRPG {
         private Coroutine dialogCoroutine = null;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private MessageLogClient messageLogClient = null;
 
         public int DialogIndex { get => shownNodeCount; }
@@ -170,7 +170,7 @@ namespace AnyRPG {
             //interactable.ProcessDialogTextUpdate(dialogNode.Description);
             BeginChatMessage(dialogNode.Description, dialogNode.ShowTime);
             if (dialogNode.AudioClip != null) {
-                interactable.UnitComponentController.PlayVoiceSound(dialogNode.AudioClip);
+                interactable.InteractableEventController.NotifyOnPlayVoiceSound(dialogNode.AudioClip);
             }
         }
 

@@ -15,7 +15,7 @@ namespace AnyRPG {
         private CurrencyBarController currencyBarController = null;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private GuildmasterManagerClient guildMasterManagerClient = null;
         private GuildServiceClient guildServiceClient = null;
 

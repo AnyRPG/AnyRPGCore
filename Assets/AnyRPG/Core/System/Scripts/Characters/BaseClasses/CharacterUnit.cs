@@ -14,6 +14,7 @@ namespace AnyRPG {
 
         public override string DisplayName { get => unitController.BaseCharacter.CharacterName; }
         public override int PriorityValue { get => -1; }
+        public override InteractionType InteractionType { get =>  InteractionType.Attack; }
 
         public float HitBoxSize { get => hitBoxSize; set => hitBoxSize = value; }
         public UnitController UnitController { get => unitController; }

@@ -71,7 +71,7 @@ namespace AnyRPG {
         protected NamePlateManager namePlateManager = null;
         protected UIManager uIManager = null;
         protected WindowManager windowManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected ControlsManager controlsManager = null;
 
         public Transform Target { get => target; set => target = value; }

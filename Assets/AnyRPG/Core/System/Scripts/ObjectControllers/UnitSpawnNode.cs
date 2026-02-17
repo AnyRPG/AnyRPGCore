@@ -19,7 +19,7 @@ namespace AnyRPG {
 
         private List<UnitProfile> unitProfiles = new List<UnitProfile>();
 
-        [Header("Unit Level and Toughness")]
+        [Header("Unit Configuration")]
 
         [SerializeField]
         private bool dynamicLevel = true;
@@ -35,6 +35,10 @@ namespace AnyRPG {
         [SerializeField]
         [ResourceSelector(resourceType = typeof(UnitToughness))]
         private string defaultToughness = string.Empty;
+
+        [Tooltip("Any unit spawned will be configured with these interact locations if the list is not empty.")]
+        [SerializeField]
+        protected List<GameObject> interactLocations = new List<GameObject>();
 
         [Header("Timers")]
 
@@ -123,7 +127,7 @@ namespace AnyRPG {
         private List<UnitController> spawnReferences = new List<UnitController>();
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private SystemDataFactory systemDataFactory = null;
         private CharacterManager characterManager = null;
         private NetworkManagerServer networkManagerServer = null;
@@ -534,6 +538,10 @@ namespace AnyRPG {
         }
 
         public void PostInit(UnitController unitController) {
+            //Debug.Log($"{gameObject.name}.UnitSpawnNode.PostInit()");
+            if (interactLocations != null && interactLocations.Count > 0) {
+                unitController.InteractLocations.AddRange(interactLocations);
+            }
         }
 
         /// <summary>

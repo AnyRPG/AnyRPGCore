@@ -81,7 +81,7 @@ namespace AnyRPG {
 
         // game manager references
         private CraftingManager craftingManager = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private ObjectPooler objectPooler = null;
         private UIManager uIManager = null;
 
@@ -335,7 +335,7 @@ namespace AnyRPG {
         }
 
         public void BeginCrafting() {
-            //Debug.Log("CraftingUI.BeginCrafting()");
+            Debug.Log("CraftingPanel.BeginCrafting()");
 
             if (selectedRecipeScript != null) {
                 craftingManager.RequestBeginCrafting(playerManager.UnitController, selectedRecipeScript.Recipe, craftAmount);

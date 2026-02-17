@@ -19,7 +19,7 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
 
         public Color CircleColor { get => circleColor; set => circleColor = value; }
         public CastTargetController CastTargetController { get => castTargetController; }

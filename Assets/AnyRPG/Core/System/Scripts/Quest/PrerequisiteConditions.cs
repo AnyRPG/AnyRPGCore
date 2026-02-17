@@ -49,7 +49,7 @@ namespace AnyRPG {
         List<List<IPrerequisite>> allPrerequisites = new List<List<IPrerequisite>>();
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
 
         public bool ReverseMatch {
             get => reverseMatch;

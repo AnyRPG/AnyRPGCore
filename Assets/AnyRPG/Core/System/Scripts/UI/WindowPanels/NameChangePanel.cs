@@ -14,7 +14,7 @@ namespace AnyRPG {
         private TMP_InputField textInput = null;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private NameChangeManagerClient nameChangeManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {

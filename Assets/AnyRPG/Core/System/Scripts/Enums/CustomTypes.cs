@@ -1,4 +1,3 @@
-using AnyRPG;
 
 namespace AnyRPG {
 
@@ -9,6 +8,8 @@ namespace AnyRPG {
     public enum DamageType { ability, physical }
 
     public enum SceneInstanceType { World, Group, LobbyGame, Personal }
+
+    public enum InteractionType { Interact, Attack }
 
 }
 

@@ -14,7 +14,7 @@ namespace AnyRPG {
         public UnitSpawnControllerProps UnitSpawnControllerProps { get => unitSpawnControllerProps; set => unitSpawnControllerProps = value; }
 
         // game manager references
-        PlayerManager playerManager = null;
+        PlayerManagerClient playerManager = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

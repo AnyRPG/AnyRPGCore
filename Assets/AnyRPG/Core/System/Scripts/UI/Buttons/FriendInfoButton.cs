@@ -41,7 +41,7 @@ namespace AnyRPG {
         private CharacterSummaryData characterSummaryData = null;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private FriendServiceClient friendServiceClient = null;
 
         public CharacterSummaryData CharacterSummaryData { get => characterSummaryData; set => characterSummaryData = value; }

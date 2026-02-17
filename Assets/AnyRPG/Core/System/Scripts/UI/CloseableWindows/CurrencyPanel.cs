@@ -19,7 +19,7 @@ namespace AnyRPG {
         private bool windowSubscriptionsInitialized = false;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

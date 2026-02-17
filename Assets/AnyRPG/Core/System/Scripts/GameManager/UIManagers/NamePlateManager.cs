@@ -23,7 +23,7 @@ namespace AnyRPG {
 
         // game manager references
         private CameraManager cameraManager = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private ObjectPooler objectPooler = null;
 
         public override void Configure(SystemGameManager systemGameManager) {

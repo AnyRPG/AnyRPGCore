@@ -19,7 +19,7 @@ namespace AnyRPG {
 
         // game manager references
         private CurrencyConverter currencyConverter = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private ControlsManager controlsManager = null;
 
         [SerializeField]

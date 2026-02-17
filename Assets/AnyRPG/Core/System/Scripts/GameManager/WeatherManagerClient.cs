@@ -29,7 +29,7 @@ namespace AnyRPG {
         protected LevelManager levelManager = null;
         protected AudioManager audioManager = null;
         protected ObjectPooler objectPooler = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected CameraManager cameraManager = null;
         protected TimeOfDayManagerServer timeOfDayManagerServer = null;
         protected TimeOfDayManagerClient timeOfDayManagerClient = null;

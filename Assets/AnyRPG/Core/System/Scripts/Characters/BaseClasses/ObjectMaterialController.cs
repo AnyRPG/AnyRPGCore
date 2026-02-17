@@ -54,6 +54,10 @@ namespace AnyRPG {
             meshRenderers = tempList.ToArray();
 
             foreach (Renderer renderer in meshRenderers) {
+                // set interactable layer and overwrite any other layers so the target location projector ignores this object
+                int interactableLayer = RenderingLayerMask.NameToRenderingLayer("Interactable");
+                renderer.renderingLayerMask = (1u << interactableLayer);
+
                 originalMaterials.Add(renderer, renderer.materials);
             }
         }

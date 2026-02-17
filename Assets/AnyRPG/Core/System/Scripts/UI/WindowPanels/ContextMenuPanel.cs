@@ -40,7 +40,7 @@ namespace AnyRPG {
         private CharacterGroupServiceClient characterGroupServiceClient = null;
         private ContextMenuService contextMenuService = null;
         private InspectCharacterService inspectCharacterService = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private TradeServiceClient tradeServiceClient = null;
 
         public override void SetGameManagerReferences() {

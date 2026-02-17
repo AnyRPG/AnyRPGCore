@@ -11,7 +11,7 @@ namespace AnyRPG {
         private List<SkillButton> skillButtons = new List<SkillButton>();
 
 
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

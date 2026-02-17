@@ -23,7 +23,7 @@ namespace AnyRPG {
         // game manager references
         private UIManager uIManager = null;
         private CharacterManager characterManager = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private MessageLogClient messageLogClient = null;
 
         public CharacterGroup CurrentCharacterGroup { get => currentCharacterGroup; }

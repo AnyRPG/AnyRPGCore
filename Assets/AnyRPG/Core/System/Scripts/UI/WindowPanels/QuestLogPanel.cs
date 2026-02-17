@@ -40,7 +40,7 @@ namespace AnyRPG {
 
         // game manager references
         private ObjectPooler objectPooler = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
 
         public QuestScript SelectedQuestScript { get => selectedQuestScript; set => selectedQuestScript = value; }
 

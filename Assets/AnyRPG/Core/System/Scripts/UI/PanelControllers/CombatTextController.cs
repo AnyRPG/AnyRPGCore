@@ -80,7 +80,7 @@ namespace AnyRPG {
         // game manager references
         protected CameraManager cameraManager = null;
         protected CombatTextManager combatTextManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
 
         public RectTransform RectTransform { get => rectTransform; set => rectTransform = value; }
 

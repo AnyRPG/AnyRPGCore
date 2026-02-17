@@ -32,7 +32,7 @@ namespace AnyRPG {
 
         // game manager references
         protected UIManager uIManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

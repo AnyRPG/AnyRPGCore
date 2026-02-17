@@ -37,7 +37,7 @@ namespace AnyRPG {
         private ObjectPooler objectPooler = null;
         private UIManager uIManager = null;
         private SkillTrainerManagerClient skillTrainerManagerClient = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

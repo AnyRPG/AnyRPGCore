@@ -218,7 +218,7 @@ namespace AnyRPG {
 
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected InputManager inputManager = null;
         protected NamePlateManager namePlateManager = null;
         protected CameraManager cameraManager = null;
@@ -306,10 +306,13 @@ namespace AnyRPG {
         }
 
         public void AnimatorMoveUpdate() {
+            
+            if (useMeshNav == true && playerManager.ActiveUnitController.NavMeshAgent.enabled == true) {
+                return;
+            }
             //If alive and is moving, set animator.
-            if (useMeshNav == false
-                && playerManager.ActiveUnitController?.CharacterStats.IsAlive == true
-                && playerManager?.PlayerController?.canMove == true) {
+            if (playerManager.ActiveUnitController?.CharacterStats.IsAlive == true
+                && playerManager.PlayerController?.canMove == true) {
 
                 // handle movement
                 if (localMoveVelocity.magnitude > 0 && playerManager.PlayerController.HasMoveInput()) {
@@ -475,6 +478,8 @@ namespace AnyRPG {
         }
 
         void Move_EnterState() {
+            //Debug.Log($"PlayerUnitMovementController.Move_EnterState()");
+
             EnterGroundStateCommon();
             CalculateFallDamage();
         }

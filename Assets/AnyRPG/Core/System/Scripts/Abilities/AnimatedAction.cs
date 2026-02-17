@@ -20,7 +20,7 @@ namespace AnyRPG {
         private AnimatedActionProperties actionProperties = new AnimatedActionProperties();
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected UIManager uIManager = null;
         protected SystemAbilityController systemAbilityController = null;
 

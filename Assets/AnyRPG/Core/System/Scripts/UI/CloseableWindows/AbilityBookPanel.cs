@@ -15,7 +15,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<GameObject> abilityButtonHolders = new List<GameObject>();
 
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

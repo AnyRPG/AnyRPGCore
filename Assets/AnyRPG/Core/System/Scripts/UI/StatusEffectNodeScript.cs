@@ -30,7 +30,7 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
 
         public TextMeshProUGUI Timer { get => timer; }
         public TextMeshProUGUI StackCount { get => stackCount; set => stackCount = value; }

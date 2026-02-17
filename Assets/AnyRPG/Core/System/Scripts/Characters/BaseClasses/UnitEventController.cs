@@ -189,6 +189,10 @@ namespace AnyRPG {
         public event System.Action OnNameChangeFail = delegate { };
         public event System.Action<int> OnSetGroupId = delegate { };
         public event System.Action<int, string> OnSetGuildId = delegate { };
+        public event Action<float> OnSetAggroRange = delegate { };
+        public event Action OnDisableAggro = delegate { };
+        public event Action OnEnableAggro = delegate { };
+        public event Action OnReachDestination = delegate { };
 
         //public event System.Action<BaseAbilityProperties, Interactable> OnTargetInAbilityRangeFail = delegate { };
 
@@ -427,7 +431,7 @@ namespace AnyRPG {
         }
 
         public void NotifyOnCombatMiss() {
-            unitController.UnitComponentController.PlayEffectSound(systemConfigurationManager.WeaponMissAudioClip);
+            unitController.InteractableEventController.NotifyOnPlayEffectSound(systemConfigurationManager.WeaponMissAudioClip, false);
         }
 
         public void NotifyOnReputationChange() {
@@ -437,12 +441,10 @@ namespace AnyRPG {
             }
             unitController.CharacterUnit.CallMiniMapStatusUpdateHandler();
             OnReputationChange(unitController);
-            unitController.UnitComponentController.HighlightController.UpdateColors();
         }
 
         public void NotifyOnBeforeDie(UnitController targetUnitController) {
-            unitController.UnitComponentController.StopMovementSound();
-            unitController.UnitComponentController.HighlightController.UpdateColors();
+            unitController.InteractableEventController.NotifyOnStopMovementSound(false);
             OnBeforeDie(targetUnitController);
 
         }
@@ -1031,6 +1033,24 @@ namespace AnyRPG {
 
         public void NotifyOnSetGuildId(int guildId, string guildName) {
             OnSetGuildId(guildId, guildName);
+        }
+
+        public void NotifyOnSetAggroRange(float aggroRadius) {
+            OnSetAggroRange(aggroRadius);
+        }
+
+        public void NotifyOnDisableAggro() {
+            OnDisableAggro();
+        }
+
+        public void NotifyOnEnableAggro() {
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnEnableAggro()");
+
+            OnEnableAggro();
+        }
+
+        public void NotifyOnReachDestination() {
+            OnReachDestination();
         }
 
         #endregion

@@ -39,7 +39,7 @@ namespace AnyRPG {
         private bool windowSubscriptionsInitialized = false;
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected MailboxManagerClient mailboxManagerClient = null;
         protected SystemItemManager systemItemManager = null;
 

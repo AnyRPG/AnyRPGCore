@@ -245,7 +245,7 @@ namespace AnyRPG {
         public void HandlePlayVoiceSoundClient(string clipName) {
             AudioClip clip = systemGameManager.AudioManager.GetAudioClip(clipName);
             if (clip != null) {
-                interactable.UnitComponentController.PlayVoiceSound(clip);
+                interactable.InteractableEventController.NotifyOnPlayVoiceSound(clip);
             }
         }
 
@@ -255,7 +255,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         public void HandleStopVoiceSoundClient() {
-            interactable.UnitComponentController.StopVoiceSound();
+            interactable.InteractableEventController.NotifyOnStopVoiceSound();
         }
 
         private void HandlePlayEffectSound(AudioClip clip, bool loop) {
@@ -266,7 +266,7 @@ namespace AnyRPG {
         public void HandlePlayEffectSoundClient(string clipName, bool loop) {
             AudioClip clip = systemGameManager.AudioManager.GetAudioClip(clipName);
             if (clip != null) {
-                interactable.UnitComponentController.PlayEffectSound(clip, loop);
+                interactable.InteractableEventController.NotifyOnPlayEffectSound(clip, loop);
             }
         }
 
@@ -276,7 +276,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         public void HandleStopEffectSoundClient() {
-            interactable.UnitComponentController.StopEffectSound();
+            interactable.InteractableEventController.NotifyOnStopEffectSound();
         }
 
         private void HandlePlayCastSound(AudioClip clip, bool loop) {
@@ -287,7 +287,7 @@ namespace AnyRPG {
         public void HandlePlayCastSoundClient(string clipName, bool loop) {
             AudioClip clip = systemGameManager.AudioManager.GetAudioClip(clipName);
             if (clip != null) {
-                interactable.UnitComponentController.PlayCastSound(clip, loop);
+                interactable.InteractableEventController.NotifyOnPlayCastSound(clip, loop);
             }
         }
 
@@ -297,7 +297,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         public void HandleStopCastSoundClient() {
-            interactable.UnitComponentController.StopCastSound();
+            interactable.InteractableEventController.NotifyOnStopCastSound();
         }
 
         private void HandlePlayMovementSound(AudioClip clip, bool loop) {
@@ -308,7 +308,7 @@ namespace AnyRPG {
         public void HandlePlayMovementSoundClient(string clipName, bool loop) {
             AudioClip clip = systemGameManager.AudioManager.GetAudioClip(clipName);
             if (clip != null) {
-                interactable.UnitComponentController.PlayMovementSound(clip, loop);
+                interactable.InteractableEventController.NotifyOnPlayMovementSound(clip, loop);
             }
         }
 
@@ -318,7 +318,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         public void HandleStopMovementSoundClient(bool stopLoops) {
-            interactable.UnitComponentController.StopMovementSound(stopLoops);
+            interactable.InteractableEventController.NotifyOnStopMovementSound(stopLoops);
         }
 
         public void SubscribeToClientInteractableEvents() {

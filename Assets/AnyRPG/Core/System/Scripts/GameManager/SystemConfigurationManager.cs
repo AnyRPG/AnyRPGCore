@@ -204,6 +204,14 @@ namespace AnyRPG {
         [SerializeField]
         private float fallDamageMinDistance = 10f;
 
+        [Tooltip("If true, the player can be moved using the keyboard.")]
+        [SerializeField]
+        private bool allowFreeMove = true;
+
+        [Tooltip("If true, the player can be moved by clicking on the ground.")]
+        [SerializeField]
+        private bool allowClickToMove = false;
+
         [Tooltip("If a third party movement controller is used, disable this to prevent movement lock in combat.")]
         [SerializeField]
         private bool allowAutoAttack = true;
@@ -464,6 +472,10 @@ namespace AnyRPG {
         [Tooltip("The material that will be used to display the cast target on the ground when casting ground targeted spells.")]
         [SerializeField]
         private Material defaultCastTargetCircle;
+
+        [Tooltip("The material that will be used to display the cast target on the ground when casting ground targeted spells.")]
+        [SerializeField]
+        private Material defaultMovementTargetCircle;
 
         [FormerlySerializedAs("focusProjectorColorMap")]
         [SerializeField]
@@ -882,6 +894,9 @@ namespace AnyRPG {
         public float GroupInstanceTimeout { get => groupInstanceTimeout; set => groupInstanceTimeout = value; }
         public float LobbyGameInstanceTimeout { get => lobbyGameInstanceTimeout; set => lobbyGameInstanceTimeout = value; }
         public float WorldInstanceTimeout { get => worldInstanceTimeout; set => worldInstanceTimeout = value; }
+        public bool AllowFreeMove { get => allowFreeMove; set => allowFreeMove = value; }
+        public bool AllowClickToMove { get => allowClickToMove; set => allowClickToMove = value; }
+        public Material DefaultMovementTargetCircle { get => defaultMovementTargetCircle; set => defaultMovementTargetCircle = value; }
 
         //public Currency PostageCurrency { get => postageCurrency; set => postageCurrency = value; }
 

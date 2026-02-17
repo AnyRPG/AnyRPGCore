@@ -11,7 +11,7 @@ namespace AnyRPG {
         private Dictionary<string, Skill> skillList = new Dictionary<string, Skill>();
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected SystemEventManager systemEventManager = null;
 
         public Dictionary<string, Skill> MySkillList { get => skillList; }

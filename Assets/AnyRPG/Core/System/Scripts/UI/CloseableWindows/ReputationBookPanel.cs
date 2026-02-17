@@ -10,7 +10,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<FactionButton> factionButtons = new List<FactionButton>();
 
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

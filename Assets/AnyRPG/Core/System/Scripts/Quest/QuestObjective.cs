@@ -22,7 +22,7 @@ namespace AnyRPG {
         protected SaveManager saveManager = null;
         protected MessageFeedManager messageFeedManager = null;
         protected SystemEventManager systemEventManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected LevelManager levelManager = null;
 
         public int Amount {

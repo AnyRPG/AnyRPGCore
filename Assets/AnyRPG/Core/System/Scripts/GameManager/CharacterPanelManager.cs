@@ -9,7 +9,7 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected SaveManager saveManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {

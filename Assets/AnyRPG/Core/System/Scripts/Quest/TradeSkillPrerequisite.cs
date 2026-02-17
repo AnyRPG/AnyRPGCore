@@ -19,7 +19,7 @@ namespace AnyRPG {
         private string ownerName = null;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private SystemEventManager systemEventManager = null;
 
         public void UpdateStatus(UnitController sourceUnitController, bool notify = true) {

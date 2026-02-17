@@ -41,7 +41,7 @@ namespace AnyRPG {
 
         // game manager references
         protected UIManager uIManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected PlayerManagerServer playerManagerServer = null;
         protected CharacterCreatorManager characterCreatorManager = null;
         protected SaveManager saveManager = null;

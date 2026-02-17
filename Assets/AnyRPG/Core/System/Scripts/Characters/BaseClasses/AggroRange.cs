@@ -1,4 +1,5 @@
 using AnyRPG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,9 +16,6 @@ namespace AnyRPG {
         [SerializeField]
         private float aggroRadius = 20f;
 
-        [SerializeField]
-        private bool autoEnableAgro = true;
-
         public UnitController UnitController { get => unitController; set => unitController = value; }
 
         private void OnEnable() {
@@ -30,18 +28,6 @@ namespace AnyRPG {
         }
 
         /// <summary>
-        /// detect if agro should be enabled based on monobehavior setting or unit profile
-        /// </summary>
-        public void StartEnableAggro() {
-            //Debug.Log($"{unitController.gameObject.name}.AggroRange.StartEnableAggro()");
-
-            if (autoEnableAgro
-                || (unitController.UnitProfile != null && unitController.UnitProfile.IsAggressive == true)) {
-                EnableAggro();
-            }
-        }
-
-        /// <summary>
         /// Enable the collider attached to this script
         /// </summary>
         public void EnableAggro() {
@@ -51,10 +37,9 @@ namespace AnyRPG {
             aggroCollider.radius = aggroRadius;
         }
 
-        public void SetAgroRange(float newRange, UnitController unitController) {
+        public void HandleSetAggroRange(float newRange) {
             //Debug.Log($"{unitController.gameObject.name}.AggroRange.SetAgroRange({newRange})");
 
-            this.unitController = unitController;
             aggroRadius = newRange;
             if (aggroCollider != null) {
                 aggroCollider.radius = aggroRadius;
@@ -103,7 +88,7 @@ namespace AnyRPG {
             if (otherUnitController != null
                 && otherUnitController.CharacterStats.IsAlive == true
                 && unitController.BaseCharacter.Faction != null) {
-                if (Faction.RelationWith(otherUnitController, UnitController) <= -1) {
+                if (Faction.RelationWith(otherUnitController, UnitController) <= -1f) {
                     //baseCharacter.CharacterCombat.MyAggroTable.AddToAggroTable(_characterUnit, -1);
                     //baseCharacter.CharacterCombat.EnterCombat(targetInteractable);
                     unitController.ProximityAggro(_characterUnit);
@@ -112,11 +97,33 @@ namespace AnyRPG {
             }
         }
 
-        public bool AggroEnabled() {
-            if (aggroCollider != null) {
-                return aggroCollider.enabled;
-            }
-            return false;
+        public void SetUnitController(UnitController unitController) {
+            //Debug.Log($"AggroRange.SetUnitController({unitController.gameObject.name})");
+
+            this.unitController = unitController;
+            unitController.UnitEventController.OnSetAggroRange += HandleSetAggroRange;
+            unitController.UnitEventController.OnEnableAggro += HandleEnableAggro;
+            unitController.UnitEventController.OnDisableAggro += HandleDisableAggro;
+            unitController.OnInteractableResetSettings += HandleInteractableResetSettings;
+        }
+
+        private void HandleInteractableResetSettings() {
+            unitController.UnitEventController.OnSetAggroRange -= HandleSetAggroRange;
+            unitController.UnitEventController.OnEnableAggro -= HandleEnableAggro;
+            unitController.UnitEventController.OnDisableAggro -= HandleDisableAggro;
+            unitController.OnInteractableResetSettings -= HandleInteractableResetSettings;
+        }
+
+        private void HandleDisableAggro() {
+            //Debug.Log($"{unitController.gameObject.name}.AggroRange.HandleDisableAggro()");
+
+            DisableAggro();
+        }
+
+        private void HandleEnableAggro() {
+            //Debug.Log($"{unitController.gameObject.name}.AggroRange.HandleEnableAggro()");
+
+            EnableAggro();
         }
 
     }

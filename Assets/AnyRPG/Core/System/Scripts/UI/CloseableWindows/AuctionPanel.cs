@@ -40,7 +40,7 @@ namespace AnyRPG {
         private AuctionManagerClient auctionManagerClient = null;
         private UIManager uiManager = null;
         private SystemItemManager systemItemManager = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

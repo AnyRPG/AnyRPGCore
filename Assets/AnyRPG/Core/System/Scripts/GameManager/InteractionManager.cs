@@ -16,7 +16,7 @@ namespace AnyRPG {
         private InteractableOptionComponent currentInteractableOptionComponent = null;
         private InteractableOptionManager interactableOptionManager = null;
 
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private UIManager uIManager = null;
 
         public override void SetGameManagerReferences() {
@@ -45,7 +45,8 @@ namespace AnyRPG {
 
             // perform range check
             bool passedRangeCheck = false;
-
+            // replaced with tracking interactables in range on the unit controller
+            /*
             Collider[] colliders = new Collider[100];
             int playerMask = 1 << LayerMask.NameToLayer("Player");
             int characterMask = 1 << LayerMask.NameToLayer("CharacterUnit");
@@ -68,6 +69,9 @@ namespace AnyRPG {
                     break;
                 }
             }
+            */
+
+            passedRangeCheck = targetInteractable.IsInRange(sourceUnitController);
 
             //float factionValue = targetInteractable.PerformFactionCheck(sourceUnitController);
 
@@ -117,6 +121,11 @@ namespace AnyRPG {
         }
 
         public void InteractWithOptionClient(UnitController sourceUnitController, Interactable targetInteractable, InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
+            //Debug.Log($"InteractionManager.InteractWithOptionClient({sourceUnitController.gameObject.name}, {targetInteractable.gameObject.name}, {componentIndex}, {choiceIndex})");
+
+            sourceUnitController.UnitMotor.StickToGround();
+            sourceUnitController.ResetApparentVelocity();
+
             if (systemGameManager.GameMode == GameMode.Local) {
                 InteractWithOptionInternal(sourceUnitController, targetInteractable, interactableOptionComponent, componentIndex, choiceIndex);
             } else {
@@ -135,7 +144,6 @@ namespace AnyRPG {
 
         public void InteractWithOptionInternal(UnitController sourceUnitController, Interactable targetInteractable, InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
             //Debug.Log($"InteractionManager.InteractWithOptionInternal({sourceUnitController.gameObject.name}, {targetInteractable.gameObject.name}, {componentIndex}, {choiceIndex})");
-
             interactableOptionComponent.Interact(sourceUnitController, componentIndex, choiceIndex);
         }
 

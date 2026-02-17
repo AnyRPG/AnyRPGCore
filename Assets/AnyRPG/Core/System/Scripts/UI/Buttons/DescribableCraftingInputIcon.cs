@@ -21,7 +21,7 @@ namespace AnyRPG {
         // game manager references
         //private InventoryManager inventoryManager = null;
         protected CraftingManager craftingManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
 
         public GameObject MaterialSlot { get => materialSlot; }
 

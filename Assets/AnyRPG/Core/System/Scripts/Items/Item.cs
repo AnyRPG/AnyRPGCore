@@ -88,7 +88,7 @@ namespace AnyRPG {
         protected MessageFeedManager messageFeedManager = null;
         protected UIManager uIManager = null;
         protected SystemItemManager systemItemManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected CurrencyConverter currencyConverter = null;
 
         public int MaximumStackSize { get => stackSize; set => stackSize = value; }

@@ -77,7 +77,7 @@ namespace AnyRPG {
 
         // game manager references
         private ObjectPooler objectPooler = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private CurrencyConverter currencyConverter = null;
 
         public override void Configure(SystemGameManager systemGameManager) {

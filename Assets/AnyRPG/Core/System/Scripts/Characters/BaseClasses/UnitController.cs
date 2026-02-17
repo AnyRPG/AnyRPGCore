@@ -88,6 +88,7 @@ namespace AnyRPG {
         // control logic
         private IState currentState;
         private List<CombatStrategyNode> startedPhaseNodes = new List<CombatStrategyNode>();
+        private bool aggroEnabled = false;
 
         // targeting
         private Interactable target = null;
@@ -138,7 +139,9 @@ namespace AnyRPG {
 
         // movement tracking
         private float apparentVelocity = 0f;
+        private float lastApparentVelocity = 0f;
         private Vector3 lastPosition = Vector3.zero;
+        private Vector3 lastFrozenPosition = Vector3.zero;
         private FootstepType footstepType = FootstepType.Environment;
         private AudioProfile environmentFootstepAudioProfile = null;
         private AudioProfile unitFootstepAudioProfile = null;
@@ -243,7 +246,7 @@ namespace AnyRPG {
                 return (Frozen || Stunned || Levitated);
             }
         }
-        public Vector3 LastPosition { get => lastPosition; set => lastPosition = value; }
+        //public Vector3 LastPosition { get => lastPosition; set => lastPosition = value; }
         public float ApparentVelocity { get => apparentVelocity; set => apparentVelocity = value; }
         public float AggroRadius {
             get {
@@ -411,6 +414,7 @@ namespace AnyRPG {
 
         public override float InteractionMaxRange {
             get {
+                //Debug.Log($"{gameObject.name}.UnitController.InteractionMaxRange: unitProfile.InteractionMaxRange: {(unitProfile != null ? unitProfile.InteractionMaxRange.ToString() : "null")} base.InteractionMaxRange: {base.InteractionMaxRange}");
                 if (unitProfile != null) {
                     return unitProfile.InteractionMaxRange;
                 }
@@ -432,7 +436,6 @@ namespace AnyRPG {
                 return base.NonCombatOptionsAvailable;
             }
         }
-
 
         public override bool CombatOnly {
             get {
@@ -484,6 +487,7 @@ namespace AnyRPG {
         public bool IsDisconnected { get => isDisconnected; set => isDisconnected = value; }
         public bool IsStealth { get => isStealth; set => isStealth = value; }
         public int CharacterId { get => characterId; set => characterId = value; }
+        public bool AggroEnabled { get => aggroEnabled; }
 
         public override void AutoConfigure(SystemGameManager systemGameManager) {
             // don't do anything here.  Unitcontrollers should never be autoconfigured
@@ -576,7 +580,10 @@ namespace AnyRPG {
 
             behaviorController.Init();
             patrolController.Init();
+        }
 
+        protected override void CheckEnableInteractableRange() {
+            // do nothing here, unit controller will handle enabling and disabling the interactable range based on the unit controller mode
         }
 
         public override void InitializeNamePlateController() {
@@ -802,7 +809,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.UnitController.SetMountMode()");
 
             // mount namePlates do not need full initialization, only the position to be set
-            namePlateController.SetNamePlatePosition();
+            namePlateController.SetNameplatePosition();
 
             SetUnitControllerMode(UnitControllerMode.Mount);
             unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultCharacterUnitLayer);
@@ -823,7 +830,11 @@ namespace AnyRPG {
                 rigidBody.useGravity = true;
             }
             rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-            useAgent = false;
+            if (systemConfigurationManager.AllowClickToMove == true) {
+                useAgent = true;
+            } else {
+                useAgent = false;
+            }
             DisableAgent();
         }
 
@@ -860,8 +871,12 @@ namespace AnyRPG {
 
             myCollider.isTrigger = false;
 
-            unitComponentController.InteractableRange.gameObject.SetActive(false);
-            useAgent = false;
+            if (systemConfigurationManager.AllowClickToMove == true) {
+                useAgent = true;
+            } else {
+                useAgent = false;
+            }
+            agent.avoidancePriority = 0;
             DisableAgent();
         }
 
@@ -871,6 +886,7 @@ namespace AnyRPG {
         private void EnableAI() {
             //Debug.Log($"{gameObject.name}.UnitController.EnableAI()");
 
+            EnableInteractableRange();
             InitializeNamePlateController();
             EnableAICommon();
 
@@ -1151,6 +1167,8 @@ namespace AnyRPG {
 
             characterConfigured = false;
 
+            interactLocations.Clear();
+
             base.ResetSettings();
         }
 
@@ -1181,7 +1199,6 @@ namespace AnyRPG {
             characterUnit = new CharacterUnit(this, new InteractableOptionProps(), systemGameManager);
 
             // now that the characterUnit is available
-            unitComponentController?.HighlightController?.ConfigureOwner(this);
             AddInteractableOption(characterUnit);
 
             base.GetComponentReferences();
@@ -1387,8 +1404,7 @@ namespace AnyRPG {
             }
 
             // prevent apparent velocity on first update by setting lastposition to currentposition
-            lastPosition = transform.position;
-
+            lastPosition = rigidBody.position;
         }
 
         public void ConfigureAnimator() {
@@ -1465,15 +1481,15 @@ namespace AnyRPG {
             }
 
             // update apparent velocity so any spellcast that caused the cancel mount is not interrupted
-            LastPosition = transform.position;
+            lastPosition = rigidBody.position;
         }
 
 
 
-        public void FollowTarget(Interactable target, float minAttackRange = -1f) {
+        public void FollowAttackTarget(Interactable target, float minAttackRange) {
             //Debug.Log($"{gameObject.name}.AIController.FollowTarget(" + (target == null ? "null" : target.name) + ", " + minAttackRange + ")");
             if (!(currentState is DeathState)) {
-                UnitMotor.FollowTarget(target, minAttackRange);
+                UnitMotor.FollowAttackTarget(target, minAttackRange);
             }
         }
 
@@ -1507,15 +1523,19 @@ namespace AnyRPG {
             }
 
             if (motorEnabled) {
-                unitMotor.Update();
+                unitMotor.Tick();
             }
+
+            /*
             UpdateApparentVelocity();
             if (ApparentVelocity > 0.1f) {
-                //Debug.Log($"{gameObject.name}.UnitController.Update() : position: " + transform.position + "; apparentVelocity: " + apparentVelocity);
+                Debug.Log($"{gameObject.name}.UnitController.Update() position: {transform.position}; apparentVelocity: {apparentVelocity}");
                 characterAbilityManager.HandleManualMovement();
                 unitActionManager.HandleManualMovement();
                 unitEventController.NotifyOnMovement();
             }
+            */
+
             HandleMovementAudio();
 
             characterCombat.Tick();
@@ -1527,12 +1547,15 @@ namespace AnyRPG {
         public void FixedUpdate() {
             if (target != null) {
                 // prevent distance calculation if no movement has occured
-                if (transform.position != lastPosition || target.transform.position != lastTargetPosition) {
-                    distanceToTarget = Vector3.Distance(target.transform.position, transform.position);
+                if (rigidBody.position != lastPosition || target.transform.position != lastTargetPosition) {
+                    distanceToTarget = Vector3.Distance(target.transform.position, rigidBody.position);
                 }
                 lastTargetPosition = target.transform.position;
             }
-            lastPosition = transform.position;
+
+            UpdateApparentVelocity();
+            CalculateVelocityEffects();
+
             if (ControlLocked) {
                 // can't allow any action if we are stunned/frozen/etc
                 //Debug.Log($"{gameObject.name}.AIController.FixedUpdate(): controlLocked: " + MyControlLocked);
@@ -1546,11 +1569,24 @@ namespace AnyRPG {
             }
         }
 
+        public void CalculateVelocityEffects() {
+            //Debug.Log($"{gameObject.name}.UnitController.CalculateVelocityEffects() position: ({rigidBody.position.x}, {rigidBody.position.y}, {rigidBody.position.z}) lastFrozenPosition: ({lastFrozenPosition.x}, {lastFrozenPosition.y}, {lastFrozenPosition.z}) apparentVelocity: {apparentVelocity}");
+
+            if (apparentVelocity > 0.1f && lastApparentVelocity > 0.1f) {
+                //Debug.Log($"{gameObject.name}.UnitController.CalculateVelocityEffects() position: ({rigidBody.position.x}, {rigidBody.position.y}, {rigidBody.position.z}) ; apparentVelocity: {apparentVelocity}");
+                characterAbilityManager.HandleApparentMovement();
+                unitActionManager.HandleApparentMovement();
+                unitEventController.NotifyOnMovement();
+            }
+        }
+
         public void SetAggroRange() {
-            if (unitComponentController.AggroRangeController != null) {
-                unitComponentController.AggroRangeController.SetAgroRange(AggroRadius, this);
-                if (!(currentState is DeathState)) {
-                    unitComponentController.AggroRangeController.StartEnableAggro();
+            //Debug.Log($"{gameObject.name}.UnitController.SetAggroRange()");
+
+            unitEventController.NotifyOnSetAggroRange(AggroRadius);
+            if (!(currentState is DeathState)) {
+                if (UnitProfile.IsAggressive == true) {
+                    EnableAggro();
                 }
             }
         }
@@ -1698,6 +1734,7 @@ namespace AnyRPG {
                 //Debug.Log($"{gameObject.name}: UpdateTarget() and the target remained the same: " + topNode.aggroTarget.name);
             }
             */
+            //Debug.Log($"{gameObject.name}.AIController.UpdateTarget(): topNode: {(topNode.aggroTarget != null ? topNode.aggroTarget.UnitController.name : "null")} with agro value: {topNode.aggroValue}");
             topNode.aggroValue = Mathf.Clamp(topNode.aggroValue, 0, float.MaxValue);
             if (Target == null) {
                 //Debug.Log($"{gameObject.name}.AIController.UpdateTarget(): target was null.  setting target: " + topNode.aggroTarget.gameObject.name);
@@ -1740,26 +1777,17 @@ namespace AnyRPG {
         }
 
         public void DisableAggro() {
-            //Debug.Log($"{gameObject.name}AIController.DisableAggro()");
-            if (unitComponentController.AggroRangeController != null) {
-                unitComponentController.AggroRangeController.DisableAggro();
-                return;
-            }
-            //Debug.Log($"{gameObject.name}AIController.DisableAggro(): AGGRORANGE IS NULL!");
+            //Debug.Log($"{gameObject.name}.UnitController.DisableAggro()");
+
+            aggroEnabled = false;
+            unitEventController.NotifyOnDisableAggro();
         }
 
         public void EnableAggro() {
-            //Debug.Log($"{gameObject.name}AIController.EnableAggro()");
-            if (unitComponentController.AggroRangeController != null) {
-                unitComponentController.AggroRangeController.EnableAggro();
-            }
-        }
+            //Debug.Log($"{gameObject.name}.UnitController.EnableAggro()");
 
-        public bool AggroEnabled() {
-            if (unitComponentController.AggroRangeController != null) {
-                return unitComponentController.AggroRangeController.AggroEnabled();
-            }
-            return false;
+            aggroEnabled = true;
+            unitEventController.NotifyOnEnableAggro();
         }
 
         public float GetMinAttackRange() {
@@ -1848,7 +1876,6 @@ namespace AnyRPG {
                 return;
             }
 
-            // note : this will not work for third paty controllers without these parameters.  Third party controllers should be setup to use footstep hit audio
             if (unitAnimator != null
                 && UnitAnimator.IsInAir() == false
                 && isMounted == false
@@ -1859,14 +1886,14 @@ namespace AnyRPG {
                 && unitAnimator.GetBool("Moving") == true
                 && MovementLoopProfile != null) {
                 //Debug.Log($"{gameObject.name}.HandleMovementAudio(): up to run speed");
-                if (!unitComponentController.MovementSoundIsPlaying(true)) {
+                if (!componentController.MovementSoundIsPlaying(true)) {
                     PlayMovementSound(MovementLoopProfile.AudioClip, true);
                     //unitComponentController.PlayMovement(MovementLoopProfile.AudioClip, true);
                 }
             } else {
                 //Debug.Log($"{gameObject.name}.HandleMovementAudio(): not up to run speed");
-                if (unitComponentController?.MovementSoundIsPlaying(true) == true) {
-                    unitComponentController.StopMovementSound();
+                if (componentController?.MovementSoundIsPlaying(true) == true) {
+                    interactableEventController.NotifyOnStopMovementSound(false);
                 }
             }
         }
@@ -1879,14 +1906,14 @@ namespace AnyRPG {
             // this should allow the sound of the current footstep to finish instead of getting cut off if it's a hit sound
             if (movementSoundArea == null
                 || (movementSoundArea != null && movementSoundArea.MovementLoopProfile != null)) {
-                unitComponentController.StopMovementSound();
+                interactableEventController.NotifyOnStopMovementSound(false);
             }
         }
 
         public void PlayMovementSound(AudioClip audioClip, bool loop) {
             //Debug.Log($"{gameObject.name}.PlayMovementSound(" + (audioClip == null ? "null" : audioClip.name) + ", " + loop + ")");
 
-            unitComponentController.PlayMovementSound(audioClip, loop);
+            interactableEventController.NotifyOnPlayMovementSound(audioClip, loop);
         }
 
         public void PlayFootStep() {
@@ -1972,7 +1999,7 @@ namespace AnyRPG {
             if (currentWater.Count > 0
                 && currentWater[0].SwimHitsAudioProfile?.AudioClip != null
                 && Collider.bounds.max.y > currentWater[0].SurfaceHeight) {
-                unitComponentController.PlayMovementSound(currentWater[0].SwimHitsAudioProfile?.AudioClip, false);
+                interactableEventController.NotifyOnPlayMovementSound(currentWater[0].SwimHitsAudioProfile?.AudioClip, false);
             }
         }
 
@@ -1980,16 +2007,31 @@ namespace AnyRPG {
         /// reset velocity calculation so that casting in the same frame as the unit stops will not be cancelled
         /// </summary>
         public void ResetApparentVelocity() {
-            lastPosition = transform.position;
+            //Debug.Log($"{gameObject.name}.UnitController.ResetApparentVelocity() rigidbody position: ({rigidBody.position.x}, {rigidBody.position.y}, {rigidBody.position.z})");
+
+            lastPosition = rigidBody.position;
+            //Debug.Log($"{gameObject.name}.UnitController.ResetApparentVelocity() set lastposition to: ({lastPosition.x}, {lastPosition.y}, {lastPosition.z})");
             apparentVelocity = 0f;
+
+            if (rigidBody.isKinematic == false) {
+                rigidBody.linearVelocity = Vector3.zero;
+            }
         }
 
         public void UpdateApparentVelocity() {
-            //Debug.Log($"{gameObject.name}UpdateApparentVelocity()");
-            // yes this is being called in update, not fixedupdate, but it's only checked when we are standing still trying to cast, so framerates shouldn't be an issue
-            apparentVelocity = Vector3.Distance(transform.position, lastPosition) * (1 / Time.deltaTime);
-            lastPosition = transform.position;
+            //Debug.Log($"{gameObject.name}.UnitController.UpdateApparentVelocity() currentPosition: {transform.position}, lastPosition: {lastPosition}, deltaTime: {Time.fixedDeltaTime}");
 
+            lastApparentVelocity = apparentVelocity;
+            apparentVelocity = Vector3.Distance(rigidBody.position, lastPosition) * (1 / Time.fixedDeltaTime);
+            /*
+            if (apparentVelocity > 0.01f) {
+                //Debug.Log($"{gameObject.name}.UnitController.UpdateApparentVelocity() currentPosition: ({rigidBody.position.x}, {rigidBody.position.y}, {rigidBody.position.z}), lastPosition: ({lastPosition.x}, {lastPosition.y}, {lastPosition.z}), deltaTime: {Time.fixedDeltaTime} velocity: {apparentVelocity}");
+            } else {
+                //Debug.Log($"{gameObject.name}.UnitController.UpdateApparentVelocity() currentPosition: ({rigidBody.position.x}, {rigidBody.position.y}, {rigidBody.position.z}), lastPosition: ({lastPosition.x}, {lastPosition.y}, {lastPosition.z}), deltaTime: {Time.fixedDeltaTime} velocity: {apparentVelocity} NO VELOCITY CHANGE");
+            }
+            */
+            lastPosition = rigidBody.position;
+            //Debug.Log($"{gameObject.name}.UnitController.UpdateApparentVelocity() set lastposition to: ({lastPosition.x}, {lastPosition.y}, {lastPosition.z})");
         }
 
         public override void ProcessLevelUnload() {
@@ -2313,7 +2355,10 @@ namespace AnyRPG {
         }
 
         public void FreezePositionXZ() {
+            //Debug.Log($"{gameObject.name}.UnitController.FreezePositionXZ() position: ({rigidBody.position.x}, {rigidBody.position.y}, {rigidBody.position.z})");
+
             RigidBody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+            lastFrozenPosition = rigidBody.position;
         }
 
         public void FreezeAll() {
@@ -2330,6 +2375,7 @@ namespace AnyRPG {
         /// </summary>
         public void EnableAgent() {
             //Debug.Log($"{gameObject.name}.UnitController.EnableAgent()");
+
             if (NavMeshAgent != null && useAgent == true && NavMeshAgent.enabled == false) {
                 NavMeshAgent.enabled = true;
             }
@@ -2337,6 +2383,7 @@ namespace AnyRPG {
 
         public void DisableAgent() {
             //Debug.Log($"{gameObject.name}.UnitController.DisableAgent()");
+
             if (NavMeshAgent != null) {
                 NavMeshAgent.enabled = false;
             }
@@ -2399,7 +2446,7 @@ namespace AnyRPG {
             if (currentWater.Contains(water) == false) {
                 currentWater.Add(water);
                 if (!inWater && water.EnterWaterAudioProfile?.AudioClip != null) {
-                    unitComponentController.PlayMovementSound(water.EnterWaterAudioProfile.AudioClip, false);
+                    interactableEventController.NotifyOnPlayMovementSound(water.EnterWaterAudioProfile.AudioClip, false);
                 }
                 inWater = true;
             }
@@ -2500,6 +2547,12 @@ namespace AnyRPG {
             unitEventController.NotifyOnWriteMessageFeedMessage(messageText);
         }
 
+        protected override void ConfigureComponents() {
+            base.ConfigureComponents();
+            if (componentController != null) {
+                componentController.SetUnitController(this);
+            }
+        }
 
         #region MessagePassthroughs
 

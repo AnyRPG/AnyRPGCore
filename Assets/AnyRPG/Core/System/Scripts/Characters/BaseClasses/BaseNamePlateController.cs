@@ -20,7 +20,7 @@ namespace AnyRPG {
         // game manager references
         protected NamePlateManager namePlateManager = null;
         protected UIManager uIManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
 
         public virtual NamePlateController NamePlate { get => namePlate; }
 
@@ -107,10 +107,7 @@ namespace AnyRPG {
 
         public virtual Transform NamePlateTransform {
             get {
-                if (namePlateUnit.UnitComponentController.NamePlateTransform != null) {
-                    return namePlateUnit.UnitComponentController.NamePlateTransform;
-                }
-                return namePlateUnit.transform;
+                return namePlateUnit.GetNameplateTransform();
             }
         }
         public virtual int Level {
@@ -133,17 +130,11 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
         }
 
-        public void SetNamePlatePosition() {
+        public void SetNameplatePosition() {
             //Debug.Log(namePlateUnit.gameObject.name + "BaseNamePlateController.SetnamePlatePosition()");
-            if (namePlateUnit.UnitComponentController.GotInitialNamePlatePosition == false) {
-                namePlateUnit.UnitComponentController.InitialNamePlatePosition = namePlateUnit.UnitComponentController.NamePlateTransform.localPosition;
-                namePlateUnit.UnitComponentController.GotInitialNamePlatePosition = true;
-            }
+
             if (OverrideNamePlatePosition) {
-                //_namePlate.transform.localPosition = NamePlatePosition;
-                namePlateUnit.UnitComponentController.NamePlateTransform.localPosition = NamePlatePosition;
-            } else {
-                namePlateUnit.UnitComponentController.NamePlateTransform.localPosition = namePlateUnit.UnitComponentController.InitialNamePlatePosition;
+                Interactable.InteractableEventController.NotifyOnSetNameplatePosition(NamePlatePosition);
             }
         }
 
@@ -157,7 +148,7 @@ namespace AnyRPG {
                 return false;
             }
             if (CanSpawnNamePlate()) {
-                SetNamePlatePosition();
+                SetNameplatePosition();
                 namePlate = AddNamePlate();
                 SetupNamePlate();
                 BroadcastInitializeNamePlate();

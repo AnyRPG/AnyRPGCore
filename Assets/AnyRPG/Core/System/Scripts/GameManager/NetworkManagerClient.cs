@@ -44,7 +44,7 @@ namespace AnyRPG {
         private Dictionary<int, string> lobbyPlayers = new Dictionary<int, string>();
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private PlayerManagerServer playerManagerServer = null;
         private CharacterManager characterManager = null;
         private UIManager uIManager = null;

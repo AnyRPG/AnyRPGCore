@@ -23,7 +23,7 @@ namespace AnyRPG {
         protected float originalXPSliderWidth = 0f;
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

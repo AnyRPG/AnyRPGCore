@@ -15,6 +15,7 @@ namespace AnyRPG {
         // the coroutine will exit without actually setting the coroutine variable, because it doesn't get set until the first yield statement executes
         protected bool isPerformingAction = false;
         private Coroutine currentActionCoroutine = null;
+        private Vector3 actionStartPosition = Vector3.zero;
 
         //private AnimatedActionProperties currentAction = null;
 
@@ -245,6 +246,9 @@ namespace AnyRPG {
             
             float startTime = Time.time;
             isPerformingAction = true;
+            actionStartPosition = unitController.RigidBody.position;
+            Debug.Log($"{unitController.gameObject.name}.UnitActionManager.PerformActionCast() startPosition: ({actionStartPosition.x}, {actionStartPosition.y}, {actionStartPosition.z})");
+
             AnimatedActionProperties animatedActionProperties = animatedAction.ActionProperties;
             //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + ", " + (target == null ? "null" : target.name) + ") Enter Ienumerator with tag: " + startTime);
 
@@ -258,7 +262,7 @@ namespace AnyRPG {
                 SpawnActionObjectsInternal(animatedAction);
             }
             if (animatedActionProperties.CastingAudioClip != null) {
-                unitController.UnitComponentController.PlayCastSound(animatedActionProperties.CastingAudioClip);
+                unitController.InteractableEventController.NotifyOnPlayCastSound(animatedActionProperties.CastingAudioClip, false);
             }
 
             if (animatedActionProperties.ActionCastingTime > 0f) {
@@ -276,7 +280,7 @@ namespace AnyRPG {
         public void EndActionCleanup() {
             //Debug.Log(abilityCaster.gameObject.name + ".CharacterAbilitymanager.EndCastCleanup()");
             if (unitController != null) {
-                unitController.UnitComponentController.StopCastSound();
+                unitController.InteractableEventController.NotifyOnStopCastSound();
             }
         }
 
@@ -460,16 +464,23 @@ namespace AnyRPG {
         }
         */
 
+        public void HandleApparentMovement() {
+            // exit if rigidbody constraints x and z are are both freeze and we haven't moved more than 10 centimeters since we stopped
+            if ((unitController.RigidBody.constraints & RigidbodyConstraints.FreezePositionX) == RigidbodyConstraints.FreezePositionX
+                && (unitController.RigidBody.constraints & RigidbodyConstraints.FreezePositionZ) == RigidbodyConstraints.FreezePositionZ
+                && (Mathf.Abs(actionStartPosition.y - unitController.RigidBody.position.y) < 0.1f)) {
+                return;
+            }
+
+            HandleManualMovement();
+        }
+
+
         /// <summary>
         /// Stop casting if the character is manually moved with the movement keys
         /// </summary>
         public void HandleManualMovement() {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleManualMovement()");
-
-            // require some movement distance to prevent gravity while standing still from triggering this
-            if (unitController.ApparentVelocity <= 0.1f) {
-                return;
-            }
 
             TryToStopAction();
         }

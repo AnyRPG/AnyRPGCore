@@ -47,7 +47,7 @@ namespace AnyRPG {
         private Color fullSlotColor = new Color32(255, 255, 255, 255);
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private UIManager uIManager = null;
         private CameraManager cameraManager = null;
         private SaveManager saveManager = null;

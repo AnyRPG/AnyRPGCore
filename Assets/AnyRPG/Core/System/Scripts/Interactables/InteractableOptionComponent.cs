@@ -17,7 +17,7 @@ namespace AnyRPG {
 
         // game manager references
         protected SystemEventManager systemEventManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected PlayerManagerServer playerManagerServer = null;
         protected UIManager uIManager = null;
         protected InteractionManager interactionManager = null;
@@ -25,6 +25,7 @@ namespace AnyRPG {
         public Interactable Interactable { get => interactable; set => interactable = value; }
         public virtual InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; }
         public virtual int PriorityValue { get => 0; }
+        public virtual InteractionType InteractionType { get => InteractionType.Interact; }
         public virtual bool BlockTooltip { get => false; }
         public virtual string DisplayName {
             get {

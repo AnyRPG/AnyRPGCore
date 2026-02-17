@@ -22,8 +22,6 @@ namespace AnyRPG {
         protected NetworkManagerServer networkManagerServer = null;
         protected LevelManager levelManager = null;
 
-        protected Dictionary<GameObject, UnitController> inRangeGameObjects = new Dictionary<GameObject, UnitController>();
-
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
         }
@@ -38,7 +36,8 @@ namespace AnyRPG {
         }
 
         public void SetInteractable(Interactable interactable) {
-            //Debug.Log($"InteractableRange.SetInteractable({interactable.gameObject.name})");
+            //Debug.Log($"InteractableRange.SetInteractable({interactable.gameObject.name}) instanceId: {GetInstanceID()}");
+
             this.interactable = interactable;
             /*
             if (autoSetRadius == true) {
@@ -51,87 +50,70 @@ namespace AnyRPG {
                 extents = new Vector3(interactable.InteractionMaxRange, interactable.InteractionMaxRange, interactable.InteractionMaxRange);
             }
             */
-            if (colliderWasActive && (networkManagerServer.ServerModeActive == true || systemGameManager.GameMode == GameMode.Local || levelManager.IsCutscene())) {
+            //if (colliderWasActive && (networkManagerServer.ServerModeActive == true || systemGameManager.GameMode == GameMode.Local || levelManager.IsCutscene())) {
+            if (colliderWasActive) {
                 EnableCollider();
+                AdjustCollider();
             }
         }
+
+        public void AdjustCollider() {
+            AdjustCollider(new Vector3(interactable.InteractionMaxRange * 2f, interactable.InteractionMaxRange * 2f, interactable.InteractionMaxRange * 2f));
+        }
+
+        public void AdjustCollider(Vector3 newSize) {
+            //Debug.Log($"{gameObject.transform.parent.parent.name}.InteractableRange.AdjustCollider({newSize}) instanceId: {GetInstanceID()}");
+
+            switch (rangeCollider) {
+                case BoxCollider box:
+                    // BoxCollider uses 'size' (full dimensions)
+                    box.size = newSize;
+                    break;
+
+                case SphereCollider sphere:
+                    // SphereCollider uses 'radius' (half of one dimension)
+                    sphere.radius = newSize.x * 0.5f;
+                    break;
+
+                case CapsuleCollider capsule:
+                    // CapsuleCollider uses 'height' and 'radius'
+                    capsule.height = newSize.y;
+                    capsule.radius = newSize.x * 0.5f;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
 
         public void EnableCollider() {
             rangeCollider.enabled = true;
         }
 
         public void DisableCollider() {
+            //Debug.Log($"{gameObject.transform.parent.parent.name}.InteractableRange.DisableCollider() instanceId: {GetInstanceID()}");
+
             rangeCollider.enabled = false;
         }
 
         private void OnTriggerEnter(Collider collider) {
-            //Debug.Log($"{gameObject.transform.parent.parent.name}.InteractableRange.OnTriggerEnter({collider.gameObject.name}) count : " + inRangeGameObjects.Count);
+            //Debug.Log($"{interactable.gameObject.name}.InteractableRange.OnTriggerEnter({collider.gameObject.name}) count : {inRangeGameObjects.Count}");
 
-            if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false) {
-                // triggers are server authoritative
-                return;
-            }
-
-            if (playerManagerServer.ActivePlayerGameObjects.ContainsKey(collider.gameObject) == false) {
-                return;
-            }
-
-            if (inRangeGameObjects.ContainsKey(collider.gameObject) == false) {
-                UnitController unitController = collider.gameObject.GetComponent<UnitController>();
-                if (unitController != null) {
-                    return;
-                }
-                inRangeGameObjects.Add(collider.gameObject, unitController);
-                if (interactable.GetCurrentInteractables(unitController).Count == 0) {
-                    return;
-                }
-                unitController.UnitEventController.NotifyOnEnterInteractableRange(interactable);
-            }
+            interactable.InteractableTriggerEnter(collider);
         }
+
 
         private void OnTriggerExit(Collider collider) {
-            //Debug.Log(interactable.gameObject.name + ".InteractableRange.OnTriggerExit(" + collider.gameObject.name + ") count: " + inRangeColliders.Count);
+            //Debug.Log($"{interactable.gameObject.name}.InteractableRange.OnTriggerExit({collider.gameObject.name})");
 
-            if (inRangeGameObjects.ContainsKey(collider.gameObject) == false) {
-                return;
-            }
+            interactable.InteractableTriggerExit(collider);
 
-            inRangeGameObjects[collider.gameObject].UnitEventController.NotifyOnExitInteractableRange(interactable);
-            RemoveInRangeCollider(collider.gameObject);
-        }
-
-        private void RemoveInRangeCollider(GameObject go) {
-            //Debug.Log("InteractableRange.RemoveInRangeCollider(" + go.name + ") count: " + inRangeColliders.Count);
-            if (inRangeGameObjects.ContainsKey(go)) {
-                inRangeGameObjects.Remove(go);
-            }
-        }
-
-        public void UpdateStatus() {
-            //Debug.Log("InteractableRange.UpdateStatus()");
-
-            foreach (UnitController inRangeUnitController in inRangeGameObjects.Values) {
-                if (interactable.GetCurrentInteractables(inRangeUnitController).Count == 0) {
-                    inRangeUnitController.UnitEventController.NotifyOnExitInteractableRange(interactable);
-                } else {
-                    inRangeUnitController.UnitEventController.NotifyOnEnterInteractableRange(interactable);
-                }
-
-            }
-        }
-
-        public void RegisterDespawn(GameObject go) {
-            RemoveInRangeCollider(go);
-        }
-
-        public void OnSendObjectToPool() {
-            foreach (UnitController inRangeUnitController in inRangeGameObjects.Values) {
-                inRangeUnitController.UnitEventController.NotifyOnExitInteractableRange(interactable);
-            }
-            inRangeGameObjects.Clear();
         }
 
         private void Awake() {
+            //Debug.Log($"{gameObject.transform.parent.parent.name}.InteractableRange.Awake() instanceId: {GetInstanceID()}");
+
             if (rangeCollider != null && rangeCollider.enabled == true) {
                 colliderWasActive = true;
                 DisableCollider();

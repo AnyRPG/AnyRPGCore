@@ -48,7 +48,7 @@ namespace AnyRPG {
         protected UIManager uIManager = null;
         protected MessageLogClient messageLogClient = null;
         protected DialogManagerClient dialogManagerClient = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected MailboxManagerClient mailboxManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {

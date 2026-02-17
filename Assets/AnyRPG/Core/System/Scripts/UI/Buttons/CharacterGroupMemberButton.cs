@@ -50,7 +50,7 @@ namespace AnyRPG {
         private CharacterGroupMemberData characterGroupMemberData = null;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private CharacterGroupServiceClient characterGroupServiceClient = null;
 
         public CharacterGroupMemberData CharacterGroupMemberData { get => characterGroupMemberData; set => characterGroupMemberData = value; }

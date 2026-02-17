@@ -13,6 +13,7 @@ namespace AnyRPG {
         protected Dictionary<string, AbilityProperties> abilityList = new Dictionary<string, AbilityProperties>();
 
         protected Vector3 groundTarget = Vector3.zero;
+        protected Vector3 abilityStartPosition = Vector3.zero;
 
         protected bool targetingModeActive = false;
         protected AbilityProperties groundTargetAbility = null;
@@ -59,7 +60,7 @@ namespace AnyRPG {
         private List<PendingEvent> hitEventCache = new List<PendingEvent>();
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private CastTargettingManager castTargettingManager = null;
         private CharacterManager characterManager = null;
         private SystemAbilityController systemAbilityController = null;
@@ -1323,7 +1324,7 @@ namespace AnyRPG {
                 }
             }
             if (ability.CastingAudioClip != null) {
-                unitController.UnitComponentController.PlayCastSound(ability.CastingAudioClip, ability.LoopAudio);
+                unitController.InteractableEventController.NotifyOnPlayCastSound(ability.CastingAudioClip, ability.LoopAudio);
             }
             if (ability.CoolDownOnCast == true) {
                 ability.BeginAbilityCoolDown(unitController);
@@ -1389,10 +1390,10 @@ namespace AnyRPG {
             base.EndCastCleanup();
             if (unitController != null) {
                 // stop any casting audio clip
-                unitController.UnitComponentController.StopCastSound();
+                unitController.InteractableEventController.NotifyOnStopCastSound();
 
                 //stop any animation event audio clip
-                unitController.UnitComponentController.StopEffectSound();
+                unitController.InteractableEventController.NotifyOnStopEffectSound();
             }
         }
 
@@ -1425,7 +1426,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="ability"></param>
         public bool BeginAbility(AbilityProperties ability, bool playerInitiated = false) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterAbilitymanager.BeginAbility({ability.ResourceName}, {playerInitiated})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterAbilitymanager.BeginAbility({ability.ResourceName}, playerInitiated: {playerInitiated})");
 
             if (ability.GetTargetOptions(unitController).RequiresGroundTarget == true) {
                 //Debug.Log("CharacterAbilitymanager.BeginAbility() Ability requires a ground target.");
@@ -1479,7 +1480,7 @@ namespace AnyRPG {
             if (abilityEffectContext.baseAbility != null) {
                 AudioClip audioClip = abilityEffectContext.baseAbility.GetHitSound(unitController);
                 if (audioClip != null) {
-                    unitController.UnitComponentController.PlayEffectSound(audioClip);
+                    unitController.InteractableEventController.NotifyOnPlayEffectSound(audioClip, false);
                 }
             }
 
@@ -1628,6 +1629,9 @@ namespace AnyRPG {
                     //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + usedAbility + "): setting currentCastAbility");
                     // currentCastAbility must be set before starting the coroutine because for animated events, the cast time is zero and the variable will be cleared in the coroutine
                     currentCastAbility = ability;
+                    abilityStartPosition = unitController.RigidBody.position;
+                    //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.BeginAbilityInternal() startPosition: ({abilityStartPosition.x}, {abilityStartPosition.y}, {abilityStartPosition.z})");
+
                     currentCastCoroutine = abilityCasterMonoBehaviour.StartCoroutine(PerformAbilityCast(ability, finalTarget, abilityEffectContext));
                 } else {
                     // return false so that items in the inventory don't get used if this came from a castable item
@@ -1834,16 +1838,21 @@ namespace AnyRPG {
             unitController.CharacterStats.UsePowerResource(powerResource, amount);
         }
 
+        public void HandleApparentMovement() {
+            // exit if rigidbody constraints x and z are are both freeze and we haven't moved more than 10 centimeters since we stopped
+            if ((unitController.RigidBody.constraints & RigidbodyConstraints.FreezePositionX) == RigidbodyConstraints.FreezePositionX
+                && (unitController.RigidBody.constraints & RigidbodyConstraints.FreezePositionZ) == RigidbodyConstraints.FreezePositionZ
+                && (Mathf.Abs(abilityStartPosition.y - unitController.RigidBody.position.y) < 0.1f)) {
+                return;
+            }
+            HandleManualMovement();
+        }
+
         /// <summary>
         /// Stop casting if the character is manually moved with the movement keys
         /// </summary>
         public void HandleManualMovement() {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleManualMovement()");
-            // adding new code to require some movement distance to prevent gravity while standing still from triggering this
-            if (unitController.ApparentVelocity <= 0.1f) {
-                //Debug.Log("CharacterAbilityManager.HandleManualMovement(): velocity too low, doing nothing");
-                return;
-            }
 
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleManualMovement(): apparent velocity > 0.1f : " + baseCharacter.UnitController.ApparentVelocity);
             if (currentCastAbility != null
@@ -1859,6 +1868,8 @@ namespace AnyRPG {
         }
 
         public void TryToStopAnyAbility() {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.TryToStopAnyAbility()");
+
             TryToStopAnyAttack();
             TryToStopCasting();
         }
@@ -1956,7 +1967,7 @@ namespace AnyRPG {
             if (currentCastAbility != null) {
                 AudioClip audioClip = currentCastAbility.GetAnimationEventSound();
                 if (audioClip != null) {
-                    unitController.UnitComponentController.PlayEffectSound(audioClip);
+                    unitController.InteractableEventController.NotifyOnPlayEffectSound(audioClip, false);
                 }
             }
         }
@@ -1970,7 +1981,7 @@ namespace AnyRPG {
             if (currentCastAbility != null) {
                 AudioClip audioClip = currentCastAbility.GetAnimationEventSound();
                 if (audioClip != null) {
-                    unitController.UnitComponentController.PlayEffectSound(audioClip, currentCastAbility.LoopAudio);
+                    unitController.InteractableEventController.NotifyOnPlayEffectSound(audioClip, currentCastAbility.LoopAudio);
                 }
                 return;
             }
@@ -1980,7 +1991,7 @@ namespace AnyRPG {
             if (currentAbilityEffectContext != null) {
                 AudioClip audioClip = currentAbilityEffectContext.baseAbility.GetAnimationEventSound(unitController.CharacterCombat);
                 if (audioClip != null) {
-                    unitController.UnitComponentController.PlayEffectSound(audioClip, currentAbilityEffectContext.baseAbility.LoopAudio);
+                    unitController.InteractableEventController.NotifyOnPlayEffectSound(audioClip, currentAbilityEffectContext.baseAbility.LoopAudio);
                 }
                 return;
             }
@@ -1992,7 +2003,7 @@ namespace AnyRPG {
         public void StopAudioAnimationEvent() {
             //Debug.Log($"{gameObject.name}.CharacterAbilitymanager.StopAudioAnimationEvent()");
 
-            unitController.UnitComponentController.StopEffectSound();
+            unitController.InteractableEventController.NotifyOnStopEffectSound();
         }
 
         public override void InitiateGlobalCooldown(float coolDownToUse = 0f) {

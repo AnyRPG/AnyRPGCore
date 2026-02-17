@@ -16,6 +16,8 @@ namespace AnyRPG {
         // created components
         protected BaseNamePlateController namePlateController = null;
 
+        private Transform nameplateTransform = null;
+
         // track startup state
         protected bool namePlateReady = false;
         protected bool cameraTargetReady = true;
@@ -202,6 +204,13 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            if (componentController != null) {
+                nameplateTransform = componentController.GetNameplateTransform();
+            }
+            if (nameplateTransform == null) {
+                nameplateTransform = transform;
+            }
+
             namePlateController = new BaseNamePlateController(this, systemGameManager);
             if (startHasRun && namePlateController != null) {
                 namePlateController.InitializeNamePlate();
@@ -241,6 +250,10 @@ namespace AnyRPG {
 
         public override void ConfigureDialogPanel(DialogPanel dialogPanelController) {
             dialogPanelController.ConfigureSnapshotPortrait();
+        }
+
+        public Transform GetNameplateTransform() {
+            return nameplateTransform;
         }
     }
 

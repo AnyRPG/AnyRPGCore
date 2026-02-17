@@ -118,7 +118,7 @@ namespace AnyRPG {
         //private int lastWaitFrame = 0;
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected ContextMenuService contextMenuService = null;
         protected CharacterGroupServiceClient characterGroupServiceClient = null;
 

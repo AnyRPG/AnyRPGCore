@@ -38,7 +38,7 @@ namespace AnyRPG {
         // game manager references
         private InteractionManager interactionManager = null;
         private UIManager uIManager = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private ObjectPooler objectPooler = null;
 
         public override void Configure(SystemGameManager systemGameManager) {

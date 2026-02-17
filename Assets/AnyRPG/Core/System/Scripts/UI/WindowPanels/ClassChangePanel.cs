@@ -39,7 +39,7 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private ObjectPooler objectPooler = null;
         private ClassChangeManagerClient classChangeManager = null;
 

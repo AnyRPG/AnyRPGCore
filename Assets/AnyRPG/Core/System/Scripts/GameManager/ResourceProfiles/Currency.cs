@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class Currency : DescribableResource {
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

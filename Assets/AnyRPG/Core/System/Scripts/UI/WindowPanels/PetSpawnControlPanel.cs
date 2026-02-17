@@ -69,7 +69,7 @@ namespace AnyRPG {
         //private CapabilityConsumerSnapshot capabilityConsumerSnapshot = null;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private UIManager uIManager = null;
         private ObjectPooler objectPooler = null;
         protected CharacterCreatorManager characterCreatorManager = null;

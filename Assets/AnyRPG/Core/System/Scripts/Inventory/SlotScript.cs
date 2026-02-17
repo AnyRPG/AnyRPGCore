@@ -17,7 +17,7 @@ namespace AnyRPG {
         // game manager references
         //protected InventoryManager inventoryManager = null;
         protected HandScript handScript = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected ActionBarManager actionBarManager = null;
         protected MessageFeedManager messageFeedManager = null;
 

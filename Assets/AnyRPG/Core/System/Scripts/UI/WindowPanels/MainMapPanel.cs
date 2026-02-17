@@ -32,7 +32,7 @@ namespace AnyRPG {
 
         // system component references
         protected CameraManager cameraManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected MapManager mapManager = null;
         protected MainMapManager mainMapManager = null;
         protected LevelManager levelManager = null;

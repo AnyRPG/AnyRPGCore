@@ -54,7 +54,7 @@ namespace AnyRPG {
         protected SaveManager saveManager = null;
         protected LevelManager levelManager = null;
         protected InteractionManager interactionManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected SystemAchievementManager systemAchievementManager = null;
         protected QuestGiverManagerClient questGiverManager = null;
         protected MessageFeedManager messageFeedManager = null;

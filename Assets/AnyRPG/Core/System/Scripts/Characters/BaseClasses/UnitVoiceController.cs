@@ -9,11 +9,11 @@ namespace AnyRPG {
 
         // unit controller of controlling unit
         private UnitController unitController;
-        private UnitComponentController unitComponentController = null;
+        //private UnitComponentController unitComponentController = null;
 
         public UnitVoiceController(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
-            unitComponentController = unitController.UnitComponentController;
+            //unitComponentController = unitController.UnitComponentController;
             Configure(systemGameManager);
         }
 
@@ -50,7 +50,7 @@ namespace AnyRPG {
                 return;
             }
 
-            unitComponentController.PlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomStartInteract);
+            unitController.InteractableEventController.NotifyOnPlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomStartInteract);
         }
 
         public void HandleStopInteract() {
@@ -58,7 +58,7 @@ namespace AnyRPG {
                 return;
             }
 
-            unitComponentController.PlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomStopInteract);
+            unitController.InteractableEventController.NotifyOnPlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomStopInteract);
         }
 
 
@@ -69,7 +69,7 @@ namespace AnyRPG {
             }
 
             if (interactableOptionComponent.PlayInteractionSound() == true) {
-                unitComponentController.PlayVoiceSound(interactableOptionComponent.GetInteractionSound(unitController.UnitProfile.VoiceProps));
+                unitController.InteractableEventController.NotifyOnPlayVoiceSound(interactableOptionComponent.GetInteractionSound(unitController.UnitProfile.VoiceProps));
             }
         }
 
@@ -78,10 +78,10 @@ namespace AnyRPG {
                 return;
             }
             if (interactableOptionComponent.GetType() == typeof(VendorComponent)) {
-                unitComponentController.PlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomStopVendorInteract);
+                unitController.InteractableEventController.NotifyOnPlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomStopVendorInteract);
             } else {
                 if (interactableOptionComponent.PlayInteractionSound() == true) {
-                    unitComponentController.PlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomStopInteract);
+                    unitController.InteractableEventController.NotifyOnPlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomStopInteract);
                 }
             }
         }
@@ -90,49 +90,49 @@ namespace AnyRPG {
             if (unitController.UnitProfile == null) {
                 return;
             }
-            unitComponentController.PlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomAggro);
+            unitController.InteractableEventController.NotifyOnPlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomAggro);
         }
 
         public void HandleAttack() {
             if (unitController.UnitProfile == null) {
                 return;
             }
-            unitComponentController.PlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomAttack);
+            unitController.InteractableEventController.NotifyOnPlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomAttack);
         }
 
         public void HandleTakeDamage(IAbilityCaster caster, UnitController controller, int amount, CombatTextType type, CombatMagnitude magnitude, string abilityName, AbilityEffectContext context) {
             if (unitController.UnitProfile == null) {
                 return;
             }
-            unitComponentController.PlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomDamage);
+            unitController.InteractableEventController.NotifyOnPlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomDamage);
         }
 
         public void HandleTakeFallDamage() {
             if (unitController.UnitProfile == null) {
                 return;
             }
-            unitComponentController.PlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomFallDamage);
+            unitController.InteractableEventController.NotifyOnPlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomFallDamage);
         }
 
         public void HandleKillTarget() {
             if (unitController.UnitProfile == null) {
                 return;
             }
-            unitComponentController.PlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomVictory);
+            unitController.InteractableEventController.NotifyOnPlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomVictory);
         }
 
         public void HandleBeforeDie(UnitController targetUnitController) {
             if (unitController.UnitProfile == null) {
                 return;
             }
-            unitComponentController.PlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomDeath);
+            unitController.InteractableEventController.NotifyOnPlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomDeath);
         }
 
         public void HandleJump() {
             if (unitController.UnitProfile == null) {
                 return;
             }
-            unitComponentController.PlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomJump);
+            unitController.InteractableEventController.NotifyOnPlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomJump);
         }
 
     }

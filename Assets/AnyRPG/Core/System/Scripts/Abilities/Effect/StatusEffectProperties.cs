@@ -209,7 +209,7 @@ namespace AnyRPG {
 
         // game manager references
         protected LevelManager levelManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
 
         public int StatAmount { get => statAmount; }
         public float StatMultiplier { get => statMultiplier; set => statMultiplier = value; }

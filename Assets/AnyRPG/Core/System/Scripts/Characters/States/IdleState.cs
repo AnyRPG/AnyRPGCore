@@ -13,11 +13,14 @@ namespace AnyRPG {
 
             this.unitController = unitController;
             this.unitController.Reset();
+            unitController.NavMeshAgent.enabled = false;
             TryToEnterPatrolState();
         }
 
         public void Exit() {
+            //Debug.Log($"{unitController.gameObject.name}.IdleState.Exit()");
 
+            unitController.NavMeshAgent.enabled = true;
         }
 
         public void TryToEnterPatrolState() {
@@ -51,8 +54,8 @@ namespace AnyRPG {
             unitController.UpdateTarget();
 
             // change into follow state if the player is close
-            if (unitController.Target != null && unitController.AggroEnabled() == true) {
-                //Debug.Log(aiController.gameObject.name + ": IdleState.Update(): setting follow state");
+            if (unitController.Target != null && unitController.AggroEnabled == true) {
+                //Debug.Log($"{unitController.gameObject.name}.IdleState.Update(): setting follow state");
                 unitController.ChangeState(new FollowState());
                 return;
             }

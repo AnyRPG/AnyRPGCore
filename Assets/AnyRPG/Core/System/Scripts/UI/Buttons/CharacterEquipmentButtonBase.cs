@@ -38,7 +38,7 @@ namespace AnyRPG {
         protected CloseableWindowContents parentPanel = null;
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected UIManager uIManager = null;
         protected HandScript handScript = null;
         protected SystemDataFactory systemDataFactory = null;

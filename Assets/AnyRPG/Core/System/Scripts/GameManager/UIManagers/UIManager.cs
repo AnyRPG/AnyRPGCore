@@ -249,6 +249,11 @@ namespace AnyRPG {
         [SerializeField]
         private List<NavigableInterfaceElement> navigableInterfaceElements = new List<NavigableInterfaceElement>();
 
+        [Header("World Objects")]
+
+        public MovementTargetController MovementTargetController;
+
+
         private List<NavigableInterfaceElement> activeNavigableInterfaceElements = new List<NavigableInterfaceElement>();
 
         // objects in the mouseover window
@@ -304,7 +309,7 @@ namespace AnyRPG {
         */
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private KeyBindManager keyBindManager = null;
         private InputManager inputManager = null;
         private ControlsManager controlsManager = null;
@@ -477,6 +482,9 @@ namespace AnyRPG {
             // setting menu must go last because it checks all other windows opacity
             // which requires them to have configured their panels first
             settingsMenuWindow.Configure(systemGameManager);
+
+            // world objects
+            MovementTargetController.Configure(systemGameManager);
 
             CreateEventSubscriptions();
 
@@ -900,7 +908,8 @@ namespace AnyRPG {
                     // special case for escape key to open main menu if no windows are open
                     // this is necessary because the system bar could be disabled and this is the only way to open it 
                     // (assuming player forgot / doesn't know about f12 keybind
-                    if (playerManager.UnitController == null || playerManager.UnitController.Target == null) {
+                    if (playerManager.UnitController == null
+                        || (playerManager.UnitController.Target == null && playerManager.UnitController.UnitMotor.HasDestination() == false)) {
                         ToggleMainMenu();
                     }
                     return;

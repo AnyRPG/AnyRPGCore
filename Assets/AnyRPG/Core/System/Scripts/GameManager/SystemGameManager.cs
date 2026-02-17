@@ -54,7 +54,7 @@ namespace AnyRPG {
         private InputManager inputManager = null;
 
         [SerializeField]
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
 
         [SerializeField]
         private UIManager uIManager = null;
@@ -177,7 +177,7 @@ namespace AnyRPG {
         public InputManager InputManager { get => inputManager; set => inputManager = value; }
         public LevelManager LevelManager { get => levelManager; }
         public LevelManagerServer LevelManagerServer { get => levelManagerServer; set => levelManagerServer = value; }
-        public PlayerManager PlayerManager { get => playerManager; set => playerManager = value; }
+        public PlayerManagerClient PlayerManager { get => playerManager; set => playerManager = value; }
         public PlayerManagerServer PlayerManagerServer { get => playerManagerServer; set => playerManagerServer = value; }
         public SystemItemManager SystemItemManager { get => systemItemManager; set => systemItemManager = value; }
         public MessageLogClient MessageLogClient { get => messageLogClient; set => messageLogClient = value; }

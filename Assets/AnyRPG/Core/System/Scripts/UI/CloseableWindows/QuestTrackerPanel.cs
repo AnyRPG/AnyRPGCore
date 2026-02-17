@@ -21,7 +21,7 @@ namespace AnyRPG {
         protected List<QuestTrackerQuestScript> questScripts = new List<QuestTrackerQuestScript>();
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected ObjectPooler objectPooler = null;
 
         public override void SetGameManagerReferences() {

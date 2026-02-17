@@ -22,7 +22,7 @@ namespace AnyRPG {
         protected InventorySlot slot = null;
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected UIManager uIManager = null;
         protected MessageFeedManager messageFeedManager = null;
 

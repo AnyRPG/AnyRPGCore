@@ -25,7 +25,7 @@ namespace AnyRPG {
         public Vector3 VirtualCursor { get => virtualCursor; }
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected CameraManager cameraManager = null;
         protected ControlsManager controlsManager = null;
 

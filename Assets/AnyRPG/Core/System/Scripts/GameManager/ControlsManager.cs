@@ -45,7 +45,7 @@ namespace AnyRPG {
         protected InputManager inputManager = null;
         protected UIManager uIManager = null;
         protected WindowManager windowManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected ActionBarManager actionBarManager = null;
         protected CutsceneBarController cutSceneBarController = null;
 

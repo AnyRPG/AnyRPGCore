@@ -43,7 +43,7 @@ namespace AnyRPG {
         private LayerMask explosionMask = 0;
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
 
         public KnockbackType KnockbackType { get => knockbackType; set => knockbackType = value; }
         public float KnockBackVelocity { get => knockBackVelocity; set => knockBackVelocity = value; }

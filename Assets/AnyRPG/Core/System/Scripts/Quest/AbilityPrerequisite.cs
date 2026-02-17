@@ -20,7 +20,7 @@ namespace AnyRPG {
         private string ownerName = null;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
 
         public void HandleAbilityListChanged(UnitController unitController) {
             //Debug.Log("AbilityPrerequisite.HandleAbilityListChanged()");

@@ -57,7 +57,7 @@ namespace AnyRPG {
 
         // game manager references
         protected LevelManager levelManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected CombatTextManager combatTextManager = null;
 
         public float WalkSpeed { get => walkSpeed; }
@@ -1495,7 +1495,6 @@ namespace AnyRPG {
                 unitController.InitializeNamePlate();
                 // minimap updates
                 unitController.CharacterUnit.HandleReviveComplete();
-                unitController.UnitComponentController.HighlightController.UpdateColors();
             }
             unitController.UnitEventController.NotifyOnReviveComplete();
         }

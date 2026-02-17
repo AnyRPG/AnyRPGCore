@@ -30,7 +30,7 @@ namespace AnyRPG {
 
         // game manager references
         private MessageFeedManager messageFeedManager = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private PlayerManagerServer playerManagerServer = null;
         private SystemEventManager systemEventManager = null;
 

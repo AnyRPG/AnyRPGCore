@@ -75,7 +75,7 @@ namespace AnyRPG {
         private List<CharacterClassCapabilityNode> classCapabilityList = new List<CharacterClassCapabilityNode>();
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
 
         public bool NewGameOption { get => newGameOption; set => newGameOption = value; }
         public string DefaultStartingZone { get => defaultStartingZone; set => defaultStartingZone = value; }
@@ -104,7 +104,7 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public static Color GetFactionColor(PlayerManager playerManager, NamePlateUnit namePlateUnit) {
+        public static Color GetFactionColor(PlayerManagerClient playerManager, NamePlateUnit namePlateUnit) {
             //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ")");
             if (playerManager.UnitController != null && (namePlateUnit as MonoBehaviour).gameObject == playerManager.UnitController?.gameObject) {
                 // when retrieving the color that should be displayed on the player character, always green even if it has no faction
@@ -122,7 +122,7 @@ namespace AnyRPG {
             return GetFactionColor(playerManager, namePlateUnit.NamePlateController.Faction);
         }
 
-        public static Color GetFactionColor(PlayerManager playerManager, UnitController characterToCheck, UnitController myCharacter) {
+        public static Color GetFactionColor(PlayerManagerClient playerManager, UnitController characterToCheck, UnitController myCharacter) {
             //Debug.Log("Faction.GetFactionColor(): " + myCharacter.MyCharacterName + " checking color for: "  + characterToCheck.MyCharacterName);
             float relationValue = Faction.RelationWith(characterToCheck, myCharacter);
             //Debug.Log("Faction.GetFactionColor(): " + myCharacter.MyCharacterName + " checking color for: "  + characterToCheck.MyCharacterName + "; relationValue: " + relationValue);
@@ -134,7 +134,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="otherFaction"></param>
         /// <returns></returns>
-        public static Color GetFactionColor(PlayerManager playerManager, Faction sourceFaction) {
+        public static Color GetFactionColor(PlayerManagerClient playerManager, Faction sourceFaction) {
             if (playerManager.UnitController == null) {
                 return new Color32(0, 0, 0, 0);
             }

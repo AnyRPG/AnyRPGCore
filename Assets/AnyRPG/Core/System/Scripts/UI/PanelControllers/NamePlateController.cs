@@ -79,7 +79,7 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
-        private PlayerManager playerManager = null;
+        private PlayerManagerClient playerManager = null;
         private CameraManager cameraManager = null;
 
         public override void SetGameManagerReferences() {
@@ -514,7 +514,7 @@ namespace AnyRPG {
                 return;
             }
             if (unitNamePlateController.Interactable.gameObject != playerManager.UnitController.gameObject && unitNamePlateController.Interactable.IsTrigger == false) {
-                playerManager.PlayerController.InterActWithTarget(unitNamePlateController.Interactable);
+                playerManager.PlayerController.RightMouseInteraction(unitNamePlateController.Interactable);
             }
         }
 

@@ -25,7 +25,7 @@ namespace AnyRPG {
         protected LootDrop lootDrop = null;
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected LootManager lootManager = null;
 
         public TextMeshProUGUI Title { get => title; }

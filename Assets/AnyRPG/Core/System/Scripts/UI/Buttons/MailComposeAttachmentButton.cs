@@ -36,7 +36,7 @@ namespace AnyRPG {
         private MailComposePanel mailComposePanel = null;
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
         protected HandScript handScript = null;
 
         public TextMeshProUGUI Title { get => title; }

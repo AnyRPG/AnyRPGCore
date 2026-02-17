@@ -59,7 +59,7 @@ namespace AnyRPG {
                     //Debug.Log(aiController.gameObject.name + ": FollowTarget: " + aiController.MyTarget.name);
                     // if within agro distance but out of hitbox range, move toward target
                     if (unitController.HasMeleeAttack() || (unitController.GetMinAttackRange() > 0f && (unitController.GetMinAttackRange() < unitController.DistanceToTarget))) {
-                        unitController.FollowTarget(unitController.Target, unitController.GetMinAttackRange());
+                        unitController.FollowAttackTarget(unitController.Target, unitController.GetMinAttackRange());
                     } else {
                         unitController.UnitMotor.StopFollowingTarget();
                     }

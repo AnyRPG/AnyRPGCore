@@ -27,7 +27,7 @@ namespace AnyRPG {
 
         // game manager references
         SystemEventManager systemEventManager = null;
-        PlayerManager playerManager = null;
+        PlayerManagerClient playerManager = null;
         ChatCommandManager chatCommandManager = null;
         MessageLogServer messageLogServer = null;
 

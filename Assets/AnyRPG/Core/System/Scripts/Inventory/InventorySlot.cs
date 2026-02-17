@@ -21,7 +21,7 @@ namespace AnyRPG {
 
         // game manager references
         protected HandScript handScript = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
 
         /// <summary>
         /// A referecne to the bag that this slot belongs to

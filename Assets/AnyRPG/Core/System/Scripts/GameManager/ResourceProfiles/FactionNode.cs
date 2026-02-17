@@ -22,7 +22,7 @@ namespace AnyRPG {
         public Faction Faction { get => faction; }
 
         // game manager references
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

@@ -18,7 +18,7 @@ namespace AnyRPG {
         // game manager references
         protected UIManager uIManager = null;
         protected WindowManager windowManager = null;
-        protected PlayerManager playerManager = null;
+        protected PlayerManagerClient playerManager = null;
 
         public Quest Quest { get; set; }
         public TextMeshProUGUI Text {

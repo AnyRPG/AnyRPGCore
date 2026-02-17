@@ -236,41 +236,56 @@ namespace AnyRPG {
 
         public virtual void PlayAudioEffects(List<AudioProfile> audioProfiles, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AbilityEffect.PlayAudioEffects(" + (target == null ? "null" : target.name) + ")");
-            if (audioProfiles != null) {
-                ObjectAudioController objectAudioController = null;
-                if (target?.UnitComponentController == null) {
+            if (audioProfiles == null) {
+                return;
+            }
 
-                    if (abilityEffectContext.PrefabObjects != null
-                        && abilityEffectContext.PrefabObjects.Count > 0
-                        && abilityEffectContext.PrefabObjects.First().Value.Count > 0) {
-                        //prefabObjects.First();
-                        objectAudioController = abilityEffectContext.PrefabObjects.First().Value.First().GetComponent<ObjectAudioController>();
-                        /*
-                        if (audioSource != null) {
-                            //Debug.Log("Found Audio Source on " + abilityEffectContext.PrefabObjects.First().Value.name);
-                        }
-                        */
-                    }
-                }
-                if (objectAudioController != null || target?.UnitComponentController != null) {
-                    List<AudioProfile> usedAudioProfiles = new List<AudioProfile>();
-                    if (randomAudioProfiles == true) {
-                        usedAudioProfiles.Add(audioProfiles[UnityEngine.Random.Range(0, audioProfiles.Count)]);
-                    } else {
-                        usedAudioProfiles = audioProfiles;
-                    }
-                    foreach (AudioProfile audioProfile in usedAudioProfiles) {
-                        if (audioProfile.AudioClips.Count > 0) {
-                            //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.AudioClip.name);
-                            if (target != null && target.UnitComponentController != null) {
-                                target.UnitComponentController.PlayEffectSound(audioProfile.RandomAudioClip);
-                            } else {
-                                objectAudioController.PlayOneShot(audioProfile.RandomAudioClip);
-                            }
-                        }
-                    }
+            if (target != null) {
+                List<AudioClip> audioClips = GetAudioClips(audioProfiles);
+                PlayEffectsOnTarget(target, audioClips);
+                return;
+            }
+
+            ObjectAudioController objectAudioController = null;
+            if (abilityEffectContext.PrefabObjects != null
+                && abilityEffectContext.PrefabObjects.Count > 0
+                && abilityEffectContext.PrefabObjects.First().Value.Count > 0) {
+                objectAudioController = abilityEffectContext.PrefabObjects.First().Value.First().GetComponent<ObjectAudioController>();
+            }
+
+            if (objectAudioController != null) {
+                List<AudioClip> audioClips = GetAudioClips(audioProfiles);
+                PlayEffectsOnTarget(objectAudioController, audioClips);
+            }
+        }
+
+        private void PlayEffectsOnTarget(Interactable target, List<AudioClip> audioClips) {
+            foreach (AudioClip audioClip in audioClips) {
+                target.InteractableEventController.NotifyOnPlayEffectSound(audioClip, false);
+            }
+        }
+
+        private void PlayEffectsOnTarget(ObjectAudioController objectAudioController, List<AudioClip> audioClips) {
+            foreach (AudioClip audioClip in audioClips) {
+                objectAudioController.PlayOneShot(audioClip);
+            }
+        }
+
+        private List<AudioClip> GetAudioClips(List<AudioProfile> audioProfiles) {
+            List<AudioProfile> usedAudioProfiles = new List<AudioProfile>();
+            if (randomAudioProfiles == true) {
+                usedAudioProfiles.Add(audioProfiles[UnityEngine.Random.Range(0, audioProfiles.Count)]);
+            } else {
+                usedAudioProfiles = audioProfiles;
+            }
+
+            List<AudioClip> returnList = new List<AudioClip>();
+            foreach (AudioProfile audioProfile in audioProfiles) {
+                if (audioProfile.AudioClips.Count > 0) {
+                    returnList.Add(audioProfile.RandomAudioClip);
                 }
             }
+            return returnList;
         }
 
         public virtual void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
