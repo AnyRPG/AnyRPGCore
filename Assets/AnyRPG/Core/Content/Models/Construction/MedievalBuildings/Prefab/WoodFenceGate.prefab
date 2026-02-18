@@ -1,5 +1,67 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &923048945873731778
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7661710520264267367}
+  m_Layer: 0
+  m_Name: RearInteractionPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7661710520264267367
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 923048945873731778}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.70710677, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0.7, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 519295157329950579}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!1 &2034132278724058390
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1340156752460016280}
+  m_Layer: 0
+  m_Name: FrontInteractionPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1340156752460016280
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2034132278724058390}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.7071066, z: -0, w: 0.707107}
+  m_LocalPosition: {x: -0.701, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 519295157329950579}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1001 &2550496924264511843
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -76,6 +138,14 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 2617091941434150416, guid: 0b209d8fd0c498d4f841bcfeaee37de0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1340156752460016280}
+    - targetCorrespondingSourceObject: {fileID: 2617091941434150416, guid: 0b209d8fd0c498d4f841bcfeaee37de0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7661710520264267367}
     - targetCorrespondingSourceObject: {fileID: 3169992412228735776, guid: 0b209d8fd0c498d4f841bcfeaee37de0,
         type: 3}
       insertIndex: -1
@@ -98,6 +168,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 8144312634759182476}
   m_SourcePrefab: {fileID: 100100000, guid: 0b209d8fd0c498d4f841bcfeaee37de0, type: 3}
+--- !u!4 &519295157329950579 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2617091941434150416, guid: 0b209d8fd0c498d4f841bcfeaee37de0,
+    type: 3}
+  m_PrefabInstance: {fileID: 2550496924264511843}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &620155607257770563 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3169992412228735776, guid: 0b209d8fd0c498d4f841bcfeaee37de0,
@@ -178,6 +254,9 @@ MonoBehaviour:
   isTrigger: 0
   suppressInteractionWindow: 0
   interactionMaxRange: 2
+  interactLocations:
+  - {fileID: 2034132278724058390}
+  - {fileID: 923048945873731778}
   componentController: {fileID: 2265463211303104384}
 --- !u!114 &8144312634759182476
 MonoBehaviour:
@@ -227,7 +306,7 @@ PrefabInstance:
     - target: {fileID: 4653803682729839022, guid: 37f353160369b234b89e9214e5695cf7,
         type: 3}
       propertyPath: m_Size.z
-      value: 1.107801
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4653803682729839022, guid: 37f353160369b234b89e9214e5695cf7,
         type: 3}

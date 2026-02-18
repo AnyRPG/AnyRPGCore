@@ -25,6 +25,8 @@ namespace AnyRPG {
         // if true, the agent is currently moving toward a spot on the ground
         protected bool hasDestinationPosition = false;
 
+        protected Transform interactionTransform = null;
+
         protected Vector3 lastTargetPosition = Vector3.zero;
 
         protected RaycastHit centerDownHitInfo;
@@ -72,6 +74,7 @@ namespace AnyRPG {
         public float NavMeshDistancePadding { get => navMeshDistancePadding; }
         public bool UseRootMotion { get => useRootMotion; set => useRootMotion = value; }
         public Interactable InteractionTarget { get => interactionTarget; set => interactionTarget = value; }
+        public Transform InteractionTransform { get => interactionTransform; set => interactionTransform = value; }
 
         public UnitMotor(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
@@ -126,35 +129,35 @@ namespace AnyRPG {
             }
 
             if (setMoveDestination && unitController.NavMeshAgent.pathPending == false && unitController.NavMeshAgent.hasPath == false) {
-                //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CheckSetMoveDestination(): setMoveDestination: true.  Set move destination: " + destinationPosition + "; current location: " + unitController.transform.position);
+                //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CheckSetMoveDestination(): setMoveDestination: true.  Set move destination: {destinationPosition}; current location: {unitController.transform.position}");
                 unitController.EnableAgent();
                 if (unitController.NavMeshAgent.enabled == true && unitController.NavMeshAgent.isOnNavMesh == true) {
                     moveToDestination = true;
-                    //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CheckSetMoveDestination(): ISSUING SETDESTINATION: current location: " + unitController.transform.position + "; MyAgent.SetDestination(" + destinationPosition + ") on frame: " + Time.frameCount + " with last reset: " + lastResetFrame + "; pathpending: " + unitController.NavMeshAgent.pathPending + "; pathstatus: " + unitController.NavMeshAgent.pathStatus + "; hasPath: " + unitController.NavMeshAgent.hasPath);
+                    //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CheckSetMoveDestination(): ISSUING SETDESTINATION: current location: {unitController.transform.position}; MyAgent.SetDestination({destinationPosition}) on frame: " + Time.frameCount + " with last reset: " + lastResetFrame + "; pathpending: {unitController.NavMeshAgent.pathPending}; pathstatus: {unitController.NavMeshAgent.pathStatus}; hasPath: {unitController.NavMeshAgent.hasPath}");
                     unitController.NavMeshAgent.SetDestination(destinationPosition);
-                    //Debug.Log($"{gameObject.name}: UnitMotor.CheckSetMoveDestination(): AFTER SETDESTINATION: current location: " + transform.position + "; NavMeshAgentDestination: " + unitController.MyAgent.destination + "; destinationPosition: " + destinationPosition + "; frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; pathpending: " + unitController.MyAgent.pathPending + "; pathstatus: " + unitController.MyAgent.pathStatus + "; hasPath: " + unitController.MyAgent.hasPath);
+                    //Debug.Log($"{gameObject.name}: UnitMotor.CheckSetMoveDestination(): AFTER SETDESTINATION: current location: {transform.position}; NavMeshAgentDestination: " + unitController.MyAgent.destination + "; destinationPosition: " + destinationPosition + "; frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; pathpending: {unitController.MyAgent.pathPending}; pathstatus: {unitController.MyAgent.pathStatus}; hasPath: {unitController.MyAgent.hasPath}");
                     lastCommandFrame = Time.frameCount;
                     setMoveDestination = false;
                 }
             }
             
             if (!setMoveDestination) {
-                //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FixedUpdate(): setMoveDestination: false.  Set move destination: " + destinationPosition + "; current location: " + unitController.transform.position);
+                //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FixedUpdate(): setMoveDestination: false.  Set move destination: {destinationPosition}; current location: {unitController.transform.position}");
             }
             
             if (unitController.NavMeshAgent.pathPending == true) {
                 pathPendingCount++;
-                //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CheckSetMoveDestination(): setMoveDestination: " + setMoveDestination + "; destinationPosition: " + destinationPosition + "; current location: " + unitController.transform.position + "; PATHPENDING: TRUE!!!; status: " + unitController.NavMeshAgent.pathStatus + "; count: " + pathPendingCount);
+                //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CheckSetMoveDestination(): setMoveDestination: {setMoveDestination}; destinationPosition: {destinationPosition}; current location: {unitController.transform.position}; PATHPENDING: TRUE!!!; status: {unitController.NavMeshAgent.pathStatus}; count: {pathPendingCount}");
             } else {
                 pathPendingCount = 0;
             }
             if (unitController.NavMeshAgent.hasPath == true) {
-                //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CheckSetMoveDestination(): setMoveDestination: " + setMoveDestination + "; destinationPosition: " + destinationPosition + "; current location: " + unitController.transform.position + "; HASPATH: TRUE!!!; status: " + unitController.NavMeshAgent.pathStatus);
+                //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CheckSetMoveDestination(): setMoveDestination: {setMoveDestination}; destinationPosition: {destinationPosition}; current location: {unitController.transform.position}; HASPATH: TRUE!!!; status: {unitController.NavMeshAgent.pathStatus}");
             }
         }
 
         public void FixedTick() {
-            //Debug.Log($"{gameObject.name}.UnitMotor.FixedUpdate(). current location: " + transform.position);
+            //Debug.Log($"{gameObject.name}.UnitMotor.FixedUpdate(). current location: {transform.position}");
             if (frozen) {
                 return;
             }
@@ -168,8 +171,18 @@ namespace AnyRPG {
                 && !unitController.NavMeshAgent.pathPending) {
                 if (unitController.NavMeshAgent.remainingDistance <= unitController.NavMeshAgent.stoppingDistance) {
                     if (!unitController.NavMeshAgent.hasPath || unitController.NavMeshAgent.velocity.sqrMagnitude == 0f) {
+                        //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FixedUpdate(): REACHED DESTINATION: {destinationPosition}; current location: {unitController.transform.position}; frame: {Time.frameCount}; last reset: {lastResetFrame}; ");
                         hasDestinationPosition = false;
+                        // face the prefered direction of the interaction
+                        if (interactionTransform != null) {
+                            FaceDirection(interactionTransform.forward);
+                        }
+                        // this will cause an interaction to happen if the interactionTransform was not null
                         unitController.UnitEventController.NotifyOnReachDestination();
+                        // clear variables related to following an interaction target since we have reached the destination and are now interacting
+                        if (interactionTransform != null) {
+                            StopFollowingTarget();
+                        }
                     }
                 }
             }
@@ -179,10 +192,12 @@ namespace AnyRPG {
                 SetMovementSpeed();
                 CheckSetMoveDestination();
 
-                if (target == null) {
-                    FollowNullTargetTick();
-                } else {
+                if (target != null) {
                     FollowTargetTick();
+                } else {
+                    if (moveToDestination == true) {
+                        FollowNullTargetTick();
+                    }
                 }
             }
 
@@ -232,7 +247,7 @@ namespace AnyRPG {
                 }
                 lastTargetPosition = target.transform.position;
             }
-            FaceTarget(target);
+            //FaceTarget(target);
 
         }
 
@@ -526,6 +541,7 @@ namespace AnyRPG {
 
         public void FollowInteractionTarget(Interactable newTarget) {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FollowInteractionTarget({(newTarget == null ? "null" : newTarget.name)})");
+
             interactionTarget = newTarget;
             FollowTarget(newTarget, unitController.CharacterUnit.HitBoxSize);
         }
@@ -547,11 +563,54 @@ namespace AnyRPG {
             lastTargetPosition = target.transform.position;
             if (oldTarget == null || (minAttackRange > 0f && currentMaxSampleRadius != minAttackRange)) {
                 //Debug.Log($"{gameObject.name}.UnitMotor.FollowTarget(" + (target == null ? "null" : target.name) + ", " + minAttackRange + "): issuing movetopoint. currentradius: " + currentMaxSampleRadius + "; minattack: " + minAttackRange);
-                MoveToPoint(target.transform.position, minAttackRange);
+                MoveToInteractionPoint(target, minAttackRange);
             } else {
                 //Debug.Log($"{gameObject.name}.UnitMotor.FollowTarget(" + (target == null ? "null" : target.name) + ", " + minAttackRange + "): doing nothing.  oldtarget is not null");
             }
+        }
 
+        private void MoveToInteractionPoint(Interactable newTarget, float minAttackRange) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.MoveToInteractionPoint({newTarget.name}, {minAttackRange})");
+
+            // cycle through newTarget interactaionLocations and determine the shortest path, then move to that one
+            if (newTarget.InteractLocations.Count > 0) { 
+                Transform bestTarget = newTarget.InteractLocations[0].transform;
+                float bestDistance = GetPathLength(unitController.transform.position, bestTarget.position);
+                for (int i = 1; i < newTarget.InteractLocations.Count; i++) {
+                    Transform testTarget = newTarget.InteractLocations[i].transform;
+                    float testDistance = GetPathLength(unitController.transform.position, testTarget.position);
+                    if (testDistance < bestDistance) {
+                        bestDistance = testDistance;
+                        bestTarget = testTarget;
+                    }
+                }
+                MoveToPoint(bestTarget.position, minAttackRange);
+
+                //Debug.Log($"{unitController.gameObject.name}.UnitMotor.MoveToInteractionPoint(): best target: {bestTarget} with distance: {bestDistance}");
+
+                // MoveToPoint() will reset the interaction transform so we need to set it after
+                interactionTransform = bestTarget;
+
+                return;
+            }
+
+            MoveToPoint(target.transform.position, minAttackRange);
+        }
+
+        private float GetPathLength(Vector3 start, Vector3 target) {
+            NavMeshPath path = new NavMeshPath();
+            // Calculate the actual walking route
+            if (NavMesh.CalculatePath(start, target, NavMesh.AllAreas, path)) {
+                // If the path is 'Partial', it means it hit a wall/carved obstacle
+                if (path.status != NavMeshPathStatus.PathComplete) return float.MaxValue;
+
+                float distance = 0f;
+                for (int i = 0; i < path.corners.Length - 1; i++) {
+                    distance += Vector3.Distance(path.corners[i], path.corners[i + 1]);
+                }
+                return distance;
+            }
+            return float.MaxValue;
         }
 
         public void StopFollowingTarget() {
@@ -581,14 +640,21 @@ namespace AnyRPG {
             }
             Vector3 direction = (newTarget.transform.position - unitController.transform.position).normalized;
 
+            FaceDirection(direction);
+        }
+
+        private void FaceDirection(Vector3 direction) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FaceDirection({direction})");
+
+            if (frozen) {
+                return;
+            }
             // prevent turning updward
             direction = new Vector3(direction.x, 0f, direction.z);
-
-            //Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
             if (unitController.NavMeshAgent.enabled) {
                 unitController.NavMeshAgent.updateRotation = false;
             }
-            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FaceTarget(" + newTarget.name + "): direction: " + direction + "; current: " + unitController.transform.forward);
+            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FaceDirection(): direction: " + direction + "; current: " + unitController.transform.forward);
             if (direction != Vector3.zero) {
                 unitController.transform.forward = direction;
             }
@@ -613,6 +679,7 @@ namespace AnyRPG {
             hasDestinationPosition = false;
             moveToDestination = false;
             setMoveDestination = false;
+            interactionTransform = null;
             if (unitController.NavMeshAgent.enabled == true) {
                 //Debug.Log($"{unitController.gameObject.name}.UnitMotor.ResetPath(forceStop: {forceStop}): navhaspath: {unitController.NavMeshAgent.hasPath}; isOnNavMesh: {unitController.NavMeshAgent.isOnNavMesh}; pathpending: {unitController.NavMeshAgent.pathPending}");
                 if (unitController.NavMeshAgent.isOnNavMesh == true) {

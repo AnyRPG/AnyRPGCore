@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEngine.GraphicsBuffer;
 
 namespace AnyRPG {
     public class PlayerManagerClient : ConfiguredMonoBehaviour, ICharacterRequestor {
@@ -79,6 +80,7 @@ namespace AnyRPG {
         protected NetworkManagerServer networkManagerServer = null;
         protected PlayerManagerServer playerManagerServer = null;
         protected SystemAchievementManager systemAchievementManager = null;
+        protected InteractionManager interactionManager = null;
 
         public GameObject PlayerConnectionObject { get => playerConnectionObject; set => playerConnectionObject = value; }
         public float MaxMovementSpeed { get => maxMovementSpeed; set => maxMovementSpeed = value; }
@@ -118,6 +120,7 @@ namespace AnyRPG {
             networkManagerServer = systemGameManager.NetworkManagerServer;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             systemAchievementManager = systemGameManager.SystemAchievementManager;
+            interactionManager = systemGameManager.InteractionManager;
         }
 
         private void CreateEventSubscriptions() {
@@ -192,7 +195,7 @@ namespace AnyRPG {
                 return;
             }
 
-            //Debug.Log($"PlayerManager.OnLevelLoad(): scene node {(activeSceneNode == null ? "null" : activeSceneNode.ResourceName)}");
+            //Debug.Log($"PlayerManagerClient.OnLevelLoad(): scene node {(activeSceneNode == null ? "null" : activeSceneNode.ResourceName)}");
             // fix to allow character to spawn after cutscene is viewed on next level load - and another fix to prevent character from spawning on a pure cutscene
             if (activeSceneNode != null) {
                 if ((activeSceneNode.AutoPlayCutscene != null && (activeSceneNode.AutoPlayCutscene.Viewed == false || activeSceneNode.AutoPlayCutscene.Repeatable == true))
@@ -286,7 +289,7 @@ namespace AnyRPG {
         }
 
         public void SubscribeToTargetReady() {
-            //Debug.Log($"PlayerManager.SubscribeToTargetReady()");
+            //Debug.Log($"PlayerManagerClient.SubscribeToTargetReady()");
 
             activeUnitController.OnCameraTargetReady += HandleTargetReady;
             subscribeToTargetReady = false;
@@ -299,7 +302,7 @@ namespace AnyRPG {
         }
 
         public void HandleTargetReady() {
-            //Debug.Log($"PlayerManager.HandleTargetReady()");
+            //Debug.Log($"PlayerManagerClient.HandleTargetReady()");
 
             waitForPlayerReadyCoroutine = StartCoroutine(WaitForPlayerReady());
         }
@@ -329,7 +332,7 @@ namespace AnyRPG {
         }
 
         public void RequestSpawnPlayerUnit(int accountId) {
-            //Debug.Log($"PlayerManager.RequestSpawnPlayerUnit({accountId})");
+            //Debug.Log($"PlayerManagerClient.RequestSpawnPlayerUnit({accountId})");
 
             if (systemGameManager.GameMode == GameMode.Network) {
                 networkManagerClient.RequestSpawnPlayerUnit(SceneManager.GetActiveScene().name);
@@ -339,7 +342,7 @@ namespace AnyRPG {
         }
 
         public void ConfigureSpawnedCharacter(UnitController unitController) {
-            //Debug.Log($"PlayerManager.ConfigureSpawnedCharacter({unitController.gameObject.name})");
+            //Debug.Log($"PlayerManagerClient.ConfigureSpawnedCharacter({unitController.gameObject.name})");
 
             //if (OwnPlayer(unitController, characterRequestData) == true) {
                 //SetUnitController(unitController);
@@ -366,7 +369,7 @@ namespace AnyRPG {
         }
 
         public void PostInit(UnitController unitController) {
-            //Debug.Log($"PlayerManager.PostInit({unitController.gameObject.name})");
+            //Debug.Log($"PlayerManagerClient.PostInit({unitController.gameObject.name})");
 
             if (unitController.UnitModelController.ModelCreated == false) {
                 // do UMA spawn stuff to wait for UMA to spawn
@@ -402,7 +405,7 @@ namespace AnyRPG {
         }
 
         public void SetUnitController(UnitController unitController) {
-            //Debug.Log($"PlayerManager.SetUnitController({(unitController == null ? "null" : unitController.gameObject.name)})");
+            //Debug.Log($"PlayerManagerClient.SetUnitController({(unitController == null ? "null" : unitController.gameObject.name)})");
 
             this.unitController = unitController;
             activeUnitController = unitController;
@@ -486,7 +489,7 @@ namespace AnyRPG {
         }
 
         public void SpawnPlayerConnection(CharacterSaveData characterSaveData) {
-            //Debug.Log($"PlayerManager.SpawnPlayerConnection({playerCharacterSaveData.SaveData})");
+            //Debug.Log($"PlayerManagerClient.SpawnPlayerConnection({playerCharacterSaveData.SaveData})");
 
             // this is only called in local mode so we can safely pass zero for account id
             playerManagerServer.AddPlayerMonitor(0, characterSaveData);
@@ -682,7 +685,14 @@ namespace AnyRPG {
         }
 
         private void HandleReachDestination() {
+            //Debug.Log("PlayerManagerClient.HandleReachDestination()");
+
             uIManager.MovementTargetController.DisableProjector();
+            if (activeUnitController.UnitMotor.InteractionTransform != null) {
+                interactionManager.Interact(unitController, activeUnitController.UnitMotor.InteractionTarget);
+            }/* else {
+                Debug.Log("PlayerManager.HandleReachDestination(): reached destination but no interaction transform was set");
+            }*/
         }
 
         private void HandleManualMovement() {
@@ -702,7 +712,7 @@ namespace AnyRPG {
         }
 
         private void HandleWriteMessageFeedMessage(string messageText) {
-            //Debug.Log($"PlayerManager.HandleWriteMessageFeedMessage({messageText})");
+            //Debug.Log($"PlayerManagerClient.HandleWriteMessageFeedMessage({messageText})");
 
             messageFeedManager.WriteMessage(messageText);
         }
@@ -778,13 +788,13 @@ namespace AnyRPG {
         }
 
         public void HandleStartInteractWithOption(UnitController sourceUnitController, InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
-            //Debug.Log($"PlayerManager.HandleStartInteractWithOption({sourceUnitController.gameObject.name}, {interactableOptionComponent.Interactable.gameObject.name}, {componentIndex}, {choiceIndex})");
+            //Debug.Log($"PlayerManagerClient.HandleStartInteractWithOption({sourceUnitController.gameObject.name}, {interactableOptionComponent.Interactable.gameObject.name}, {componentIndex}, {choiceIndex})");
 
             interactableOptionComponent.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
         }
 
         public void HandleLearnSkill(UnitController sourceUnitController, Skill skill) {
-            //Debug.Log($"PlayerManager.HandleLearnSkill({sourceUnitController.gameObject.name}, {skill.ResourceName})");
+            //Debug.Log($"PlayerManagerClient.HandleLearnSkill({sourceUnitController.gameObject.name}, {skill.ResourceName})");
 
             systemEventManager.NotifyOnLearnSkill(unitController, skill);
         }
@@ -864,7 +874,7 @@ namespace AnyRPG {
         }
 
         public void HandleLearnAbility(UnitController sourceUnitController, AbilityProperties baseAbility) {
-            //Debug.Log($"PlayerManager.HandleLearnAbility({baseAbility.ResourceName})");
+            //Debug.Log($"PlayerManagerClient.HandleLearnAbility({baseAbility.ResourceName})");
 
             systemEventManager.NotifyOnAbilityListChanged(sourceUnitController, baseAbility);
             // this is ok to have here for now because prerequisites are only used on the client

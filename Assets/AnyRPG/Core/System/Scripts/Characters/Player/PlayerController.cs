@@ -100,7 +100,9 @@ namespace AnyRPG {
                 interactables.Add(interactable);
             }
 
-            if (playerManager.ActiveUnitController.UnitMotor.InteractionTarget != null && playerManager.ActiveUnitController.UnitMotor.InteractionTarget == interactable) {
+            if (playerManager.ActiveUnitController.UnitMotor.InteractionTarget != null
+                && playerManager.ActiveUnitController.UnitMotor.InteractionTarget == interactable
+                && playerManager.ActiveUnitController.UnitMotor.InteractionTransform == null) { 
                 playerManager.ActiveUnitController.UnitMotor.StopFollowingTarget();
                 InterActWithTarget(interactable);
                 return;
@@ -1007,6 +1009,8 @@ namespace AnyRPG {
         }
 
         // not currently in use - this is for when click to move is enabled
+        // click to move is now enabled without the use of the following 2 methods - can probably delete them
+        /*
         public void InterActWithInteractableOption(Interactable interactable, InteractableOptionComponent interactableOption, int componentIndex, int choiceIndex) {
             playerManager.UnitController.SetTarget(interactable);
             if (InteractionWithOptionSucceeded(interactableOption, componentIndex, choiceIndex)) {
@@ -1022,7 +1026,9 @@ namespace AnyRPG {
                 }
             }
         }
+        */
 
+        /*
         private bool InteractionWithOptionSucceeded(InteractableOptionComponent interactableOption, int componentIndex, int choiceIndex) {
             //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded()");
             if (interactableOption.Interact(playerManager.ActiveUnitController, componentIndex, choiceIndex)) {
@@ -1033,6 +1039,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded(): returning false");
             return false;
         }
+        */
 
         private void HandleCancelButtonPressed() {
             //Debug.Log("HandleCancelButtonPressed()");
