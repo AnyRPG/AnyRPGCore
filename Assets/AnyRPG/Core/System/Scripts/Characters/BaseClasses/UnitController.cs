@@ -1393,7 +1393,8 @@ namespace AnyRPG {
         }
 
         private void SetStartPosition() {
-            //Debug.Log($"{gameObject.name}.UnitController.SetStartPosition(): " + transform.position);
+            //Debug.Log($"{gameObject.name}.UnitController.SetStartPosition(): {transform.position}");
+
             // pets have their start position set by master
             if (unitControllerMode != UnitControllerMode.Pet) {
                 Vector3 correctedPosition = transform.position;
@@ -1529,7 +1530,7 @@ namespace AnyRPG {
             /*
             UpdateApparentVelocity();
             if (ApparentVelocity > 0.1f) {
-                Debug.Log($"{gameObject.name}.UnitController.Update() position: {transform.position}; apparentVelocity: {apparentVelocity}");
+                //Debug.Log($"{gameObject.name}.UnitController.Update() position: {transform.position}; apparentVelocity: {apparentVelocity}");
                 characterAbilityManager.HandleManualMovement();
                 unitActionManager.HandleManualMovement();
                 unitEventController.NotifyOnMovement();
@@ -1749,7 +1750,8 @@ namespace AnyRPG {
         }
 
         public Vector3 SetDestination(Vector3 destination) {
-            //Debug.Log($"{gameObject.name}.UnitController.SetDestination(" + destination + "). current location: " + transform.position);
+            //Debug.Log($"{gameObject.name}.UnitController.SetDestination({destination}) current location: {transform.position}");
+
             if ((currentState is DeathState) == false) {
                 //if ((currentState is DeathState) == false && characterStats.IsReviving == false) {
                 CommonMovementNotifier();
@@ -1796,7 +1798,7 @@ namespace AnyRPG {
                 // attempt to get a valid ability from combat strategy before defaulting to random attacks
                 return characterCombat.GetMinAttackRange(CombatStrategy.GetAttackRangeAbilityList(this));
             } else {
-                // get random attack if no strategy exists
+                // get from random attacks if no strategy exists
                 return characterCombat.GetMinAttackRange(characterCombat.GetAttackRangeAbilityList());
             }
         }

@@ -73,7 +73,8 @@ namespace AnyRPG {
         public bool Frozen { get => frozen; set => frozen = value; }
         public float NavMeshDistancePadding { get => navMeshDistancePadding; }
         public bool UseRootMotion { get => useRootMotion; set => useRootMotion = value; }
-        public Interactable InteractionTarget { get => interactionTarget; set => interactionTarget = value; }
+        public Interactable InteractionTarget { get => interactionTarget; }
+        public Interactable AttackTarget { get => attackTarget; }
         public Transform InteractionTransform { get => interactionTransform; set => interactionTransform = value; }
 
         public UnitMotor(UnitController unitController, SystemGameManager systemGameManager) {
@@ -216,7 +217,8 @@ namespace AnyRPG {
         }
 
         private void FollowTargetTick() {
-            //Debug.Log($"{gameObject.name}: UnitMotor.FixedUpdate() target = " + target.name);
+            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FollowTargetTick() targetPosition: {target.transform.position} lastTargetPosition: {lastTargetPosition}");
+
             //if (attackTarget != null && unitController.IsTargetInHitBox(target)) {
             if (attackTarget != null && Vector3.Distance(unitController.transform.position, attackTarget.transform.position) <= attackRange) {
                 StopFollowingTarget();
@@ -226,15 +228,20 @@ namespace AnyRPG {
             if (target.transform.position != lastTargetPosition) {
                 // YES THESE 2 BLOCKS OF CODE ARE COMPLETELY IDENTICAL.  IT'S LIKE THAT SO I CAN ADJUST THE LONG DISTANCE PATHING DIFFERENT IN THE FUTURE.
                 // EG, ENEMY MORE THAN 10 YARDS AWAY CAN HAVE LESS PRECISE UPDATES TO AVOID A LOT OF PATHING CALCULATIONS FOR SOMETHING THAT ONLY NEEDS TO HEAD IN YOUR APPROXIMATE DIRECTION
+                //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FollowTargetTick(): target has moved.  current location: {unitController.transform.position}; target position: {target.transform.position}; last target position: {lastTargetPosition}");
                 if (Vector3.Distance(target.transform.position, unitController.transform.position) > (unitController.CharacterUnit.HitBoxSize * 2)) {
                     // we are more than 3x the hitbox size away, and should be trying to move toward the targets fuzzy location to prevent movement stutter
                     // this next line is meant to at long distances, move toward the character even if he is off the navmesh and prevent enemy movement stutter chasing a moving target
+                    //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FollowTargetTick(): target is far away.  Using corrected navmesh position to prevent stutter.  current location: {unitController.transform.position}; target position: {target.transform.position}; last target position: {lastTargetPosition}");
                     if (Vector3.Distance(CorrectedNavmeshPosition(target.transform.position), unitController.NavMeshAgent.destination) > (unitController.CharacterUnit.HitBoxSize * 1.5) && unitController.NavMeshAgent.pathPending == false) {
                         // the target has moved more than 1 hitbox from our destination position, re-adjust heading
+                        //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FollowTargetTick(): target is far away and has moved more than 1.5 hitbox from current destination.  Re-issuing move command.  current location: {unitController.transform.position}; target position: {target.transform.position}; last target position: {lastTargetPosition}; current destination: {unitController.NavMeshAgent.destination}");
                         if (Time.frameCount != lastResetFrame && Time.frameCount != lastCommandFrame) {
                             // prevent anything from resetting movement twice in the same frame
                             MoveToPoint(target.transform.position);
-                        }
+                        }/* else {
+                            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FollowTargetTick(): target is far away and has moved more than 1.5 hitbox from current destination, but we already issued a move command this frame or reset the path, so skipping issuing another command.  current location: {unitController.transform.position}; target position: {target.transform.position}; last target position: {lastTargetPosition}; current destination: {unitController.NavMeshAgent.destination}; frame: {Time.frameCount}; last reset: {lastResetFrame}; last command: {lastCommandFrame}");
+                        }*/
                     }
                 } else {
                     // they are not in our hitbox yet, but they are closer than 2 meters, we need to move directly to them.  we are likely 0.5 meters out of hitbox range at this point
@@ -504,7 +511,7 @@ namespace AnyRPG {
         }
 
         public void RotateToward(Vector3 rotateDirection) {
-            Debug.Log($"{unitController.gameObject.name}.UnitMotor.RotateToward({rotateDirection})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.RotateToward({rotateDirection})");
 
             if (frozen) {
                 return;
@@ -532,7 +539,7 @@ namespace AnyRPG {
         }
 
         public void FollowAttackTarget(Interactable newTarget, float minAttackRange) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FollowAttackTarget({newTarget.name}, {minAttackRange})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FollowAttackTarget({newTarget.name}, minAttackRange: {minAttackRange})");
 
             attackTarget = newTarget;
             this.attackRange = minAttackRange;
@@ -546,7 +553,7 @@ namespace AnyRPG {
             FollowTarget(newTarget, unitController.CharacterUnit.HitBoxSize);
         }
 
-        public void FollowTarget(Interactable newTarget, float minAttackRange = -1f) {
+        public void FollowTarget(Interactable newTarget, float minAttackRange) {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FollowTarget({(newTarget == null ? "null" : newTarget.name)}, {minAttackRange})");
 
             if (frozen) {

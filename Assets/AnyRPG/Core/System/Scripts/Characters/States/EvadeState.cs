@@ -1,4 +1,3 @@
-using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +18,9 @@ namespace AnyRPG {
         }
 
         public void Exit() {
+            // if the unit is leaving evade state, we need to cycle the collider in case there are units in range that should be aggroed.
+            unitController.UnitEventController.NotifyOnDisableAggro();
+            unitController.UnitEventController.NotifyOnEnableAggro();
         }
 
         public void Update() {

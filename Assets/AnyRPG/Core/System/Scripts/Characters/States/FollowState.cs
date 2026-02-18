@@ -8,7 +8,7 @@ namespace AnyRPG {
         private UnitController unitController;
 
         public void Enter(UnitController unitController) {
-            //Debug.Log($"{baseController.gameObject.name}.FollowState.Enter()");
+            //Debug.Log($"FollowState.Enter({unitController.gameObject.name})");
 
             this.unitController = unitController;
             this.unitController.UnitMotor.MovementSpeed = unitController.MovementSpeed;
@@ -16,9 +16,9 @@ namespace AnyRPG {
         }
 
         public void Exit() {
-            //Debug.Log(baseController.gameObject.name + ".FollowState.Exit()");
+            //Debug.Log($"{unitController.gameObject.name}.FollowState.Exit()");
+
             unitController.UnitMotor.StopFollowingTarget();
-            // stop following target code goes here
         }
 
         public void Update() {
@@ -34,6 +34,7 @@ namespace AnyRPG {
                 // evade if the target is out of aggro range.  In the future this could also be calculated as distance from start point if we would rather use a leash approach
 
                 if (unitController.EnableLeashing == true && unitController.UnderControl == false) {
+                    //Debug.Log($"{unitController.gameObject.name}: FollowState: Leash check: distance from start position is {Vector3.Distance(unitController.transform.position, unitController.StartPosition)} and leash distance is {unitController.LeashDistance}");
                     if (Vector3.Distance(unitController.transform.position, unitController.StartPosition) > unitController.LeashDistance) {
                         unitController.ChangeState(new EvadeState());
                         return;
@@ -56,12 +57,15 @@ namespace AnyRPG {
                     unitController.ChangeState(new AttackState());
                     return;
                 } else {
-                    //Debug.Log(aiController.gameObject.name + ": FollowTarget: " + aiController.MyTarget.name);
                     // if within agro distance but out of hitbox range, move toward target
-                    if (unitController.HasMeleeAttack() || (unitController.GetMinAttackRange() > 0f && (unitController.GetMinAttackRange() < unitController.DistanceToTarget))) {
-                        unitController.FollowAttackTarget(unitController.Target, unitController.GetMinAttackRange());
-                    } else {
-                        unitController.UnitMotor.StopFollowingTarget();
+                    // do not re-issue the command if we are already moving toward the target
+                    // the unit motor will handle the case where the target moves and we need to update the follow position
+                    if (unitController.UnitMotor.AttackTarget != unitController.Target) {
+                        if (unitController.HasMeleeAttack() || (unitController.GetMinAttackRange() > 0f && (unitController.GetMinAttackRange() < unitController.DistanceToTarget))) {
+                            unitController.FollowAttackTarget(unitController.Target, unitController.GetMinAttackRange());
+                        } else {
+                            unitController.UnitMotor.StopFollowingTarget();
+                        }
                     }
                 }
             } else {

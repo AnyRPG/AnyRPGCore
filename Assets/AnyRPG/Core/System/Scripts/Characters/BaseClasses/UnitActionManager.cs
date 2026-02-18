@@ -247,7 +247,7 @@ namespace AnyRPG {
             float startTime = Time.time;
             isPerformingAction = true;
             actionStartPosition = unitController.RigidBody.position;
-            Debug.Log($"{unitController.gameObject.name}.UnitActionManager.PerformActionCast() startPosition: ({actionStartPosition.x}, {actionStartPosition.y}, {actionStartPosition.z})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitActionManager.PerformActionCast() startPosition: ({actionStartPosition.x}, {actionStartPosition.y}, {actionStartPosition.z})");
 
             AnimatedActionProperties animatedActionProperties = animatedAction.ActionProperties;
             //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + ", " + (target == null ? "null" : target.name) + ") Enter Ienumerator with tag: " + startTime);

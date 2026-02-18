@@ -691,7 +691,7 @@ namespace AnyRPG {
             if (activeUnitController.UnitMotor.InteractionTransform != null) {
                 interactionManager.Interact(unitController, activeUnitController.UnitMotor.InteractionTarget);
             }/* else {
-                Debug.Log("PlayerManager.HandleReachDestination(): reached destination but no interaction transform was set");
+                //Debug.Log("PlayerManager.HandleReachDestination(): reached destination but no interaction transform was set");
             }*/
         }
 
