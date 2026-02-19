@@ -5,6 +5,7 @@ using UnityEngine.Rendering.Universal;
 /// <summary>
 /// Volume component for the outline.
 /// </summary>
+[DisplayInfo(name = "Outline")]
 [VolumeComponentMenu("Custom/Outline")]
 [VolumeRequiresRendererFeatures(typeof(OutlineRendererFeature))]
 [SupportedOnRenderPipeline(typeof(UniversalRenderPipelineAsset))]
@@ -38,7 +39,7 @@ public sealed class OutlineVolumeComponent : VolumeComponent, IPostProcessCompon
 
 	public OutlineVolumeComponent() : base()
 	{
-		displayName = "Outline";
+		//displayName = "Outline";
 	}
 
 	#endregion

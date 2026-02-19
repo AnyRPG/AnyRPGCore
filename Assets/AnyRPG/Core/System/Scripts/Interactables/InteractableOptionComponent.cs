@@ -181,8 +181,8 @@ namespace AnyRPG {
             //Debug.Log($"{interactable.gameObject.name}.InteractableOptionComponent.ProcessClientNotifications({(sourceUnitController == null ? "null" : sourceUnitController.gameObject.name)}, {componentIndex}, {choiceIndex})");
 
             if (sourceUnitController != null) {
-                // trigger network client interaction
-                interactable.NotifyOnInteractionWithOptionStarted(sourceUnitController, componentIndex, choiceIndex);
+                // trigger interaction sound and remote client interaction
+                interactable.InteractableEventController.NotifyOnInteractionWithOptionStarted(sourceUnitController, this, componentIndex, choiceIndex);
                 // trigger local client interaction
                 sourceUnitController.UnitEventController.NotifyOnStartInteractWithOption(this, componentIndex, choiceIndex);
                 // trigger system event notification

@@ -38,6 +38,9 @@ namespace AnyRPG {
             authenticationService = systemGameManager.AuthenticationService;
             
             interactable = GetComponent<Interactable>();
+            if (interactable == null) { 
+                Debug.LogError($"{gameObject.name}.FishNetInteractable.Configure(): no interactable found on object");
+            }
         }
 
         public override void OnStartClient() {
@@ -107,11 +110,13 @@ namespace AnyRPG {
         }
 
         private void SubscribeToSystemEvents() {
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.SubscribeToSystemEvents() {GetInstanceID()}");
+
             systemGameManager.NetworkManagerServer.OnBeforeStopServer += HandleBeforeStopServer;
         }
 
         private void UnsubscribeFromSystemEvents() {
-            //Debug.Log($"FishNetInteractable.UnsubscribeFromSystemEvents() {GetInstanceID()}");
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.UnsubscribeFromSystemEvents() {GetInstanceID()}");
 
             systemGameManager.NetworkManagerServer.OnBeforeStopServer -= HandleBeforeStopServer;
         }
@@ -140,7 +145,7 @@ namespace AnyRPG {
             }
 
             //interactable.InteractableEventController.OnAnimatedObjectChooseMovement += HandleAnimatedObjectChooseMovementServer;
-            interactable.OnInteractionWithOptionStarted += HandleInteractionWithOptionStarted;
+            interactable.InteractableEventController.OnInteractionWithOptionStarted += HandleInteractionWithOptionStarted;
             interactable.InteractableEventController.OnPlayDialogNode += HandlePlayDialogNode;
             interactable.OnInteractableResetSettings += HandleInteractableResetSettingsServer;
             interactable.InteractableEventController.OnDropLoot += HandleDropLoot;
@@ -175,7 +180,7 @@ namespace AnyRPG {
                 return;
             }
             //interactable.InteractableEventController.OnAnimatedObjectChooseMovement -= HandleAnimatedObjectChooseMovementServer;
-            interactable.OnInteractionWithOptionStarted -= HandleInteractionWithOptionStarted;
+            interactable.InteractableEventController.OnInteractionWithOptionStarted -= HandleInteractionWithOptionStarted;
             interactable.InteractableEventController.OnPlayDialogNode -= HandlePlayDialogNode;
             interactable.OnInteractableResetSettings -= HandleInteractableResetSettingsServer;
             interactable.InteractableEventController.OnDropLoot -= HandleDropLoot;
@@ -371,7 +376,7 @@ namespace AnyRPG {
         }
         */
 
-        public void HandleInteractionWithOptionStarted(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+        public void HandleInteractionWithOptionStarted(UnitController sourceUnitController, InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
             //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleInteractionWithOptionStarted({(sourceUnitController == null ? "null" : sourceUnitController.gameObject.name)}, {componentIndex}, {choiceIndex})");
 
             FishNetUnitController targetNetworkCharacterUnit = null;

@@ -335,7 +335,7 @@ namespace AnyRPG {
         }
 
         public void BeginCrafting() {
-            Debug.Log("CraftingPanel.BeginCrafting()");
+            //Debug.Log("CraftingPanel.BeginCrafting()");
 
             if (selectedRecipeScript != null) {
                 craftingManager.RequestBeginCrafting(playerManager.UnitController, selectedRecipeScript.Recipe, craftAmount);

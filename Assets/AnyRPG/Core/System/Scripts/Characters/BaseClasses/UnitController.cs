@@ -445,6 +445,8 @@ namespace AnyRPG {
                 return base.CombatOnly;
             }
         }
+        // unitControllers should always override the interactable range collider size to match the unit profile settings, so return true here to enable that functionality in the base class
+        public override bool OverrideInteractionColliderSize => true;
 
         public bool UseAgent { get => useAgent; }
         public MovementSoundArea MovementSoundArea { get => movementSoundArea; set => movementSoundArea = value; }

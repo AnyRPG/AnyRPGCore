@@ -27,6 +27,7 @@ namespace AnyRPG {
         public event System.Action OnUnTargeted = delegate { };
         public event System.Action<Vector3> OnSetNameplatePosition = delegate { };
         public event System.Action OnEnableInteractableRange = delegate { };
+        public event System.Action<UnitController, InteractableOptionComponent, int, int> OnInteractionWithOptionStarted = delegate { };
 
         // interactable this controller is attached to
         private Interactable interactable;
@@ -124,6 +125,13 @@ namespace AnyRPG {
         public void NotifyOnEnableInteractableRange() {
             OnEnableInteractableRange();
         }
+
+        public void NotifyOnInteractionWithOptionStarted(UnitController sourceUnitController, InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
+            //Debug.Log($"{gameObject.name}.Interactable.NotifyOnInteractionWithOptionStarted({sourceUnitController?.gameObject.name}, {componentIndex}, {choiceIndex})");
+
+            OnInteractionWithOptionStarted(sourceUnitController, interactableOptionComponent, componentIndex, choiceIndex);
+        }
+
 
         // temporarily disabled because this object is not created early enough in the process when its a unitcontroller
         // this if fixed now ^

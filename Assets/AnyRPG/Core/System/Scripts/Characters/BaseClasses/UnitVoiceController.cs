@@ -20,7 +20,8 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            unitController.UnitEventController.OnStartInteractWithOption += HandleStartInteractWithOption;
+            //unitController.UnitEventController.OnStartInteractWithOption += HandleStartInteractWithOption;
+            unitController.InteractableEventController.OnInteractionWithOptionStarted += HandleStartInteractWithOption;
             unitController.UnitEventController.OnStopInteractWithOption += HandleStopInteractWithOption;
             unitController.UnitEventController.OnStartInteract += HandleStartInteract;
             unitController.UnitEventController.OnStopInteract += HandleStopInteract;
@@ -34,7 +35,8 @@ namespace AnyRPG {
         }
 
         public void ResetSettings() {
-            unitController.UnitEventController.OnStartInteractWithOption -= HandleStartInteractWithOption;
+            //unitController.UnitEventController.OnStartInteractWithOption -= HandleStartInteractWithOption;
+            unitController.InteractableEventController.OnInteractionWithOptionStarted -= HandleStartInteractWithOption;
             unitController.UnitEventController.OnStopInteractWithOption -= HandleStopInteractWithOption;
             unitController.UnitEventController.OnAggroTarget -= HandleAggroTarget;
             unitController.UnitEventController.OnAttack -= HandleAttack;
@@ -69,11 +71,18 @@ namespace AnyRPG {
             }
 
             if (interactableOptionComponent.PlayInteractionSound() == true) {
-                unitController.InteractableEventController.NotifyOnPlayVoiceSound(interactableOptionComponent.GetInteractionSound(unitController.UnitProfile.VoiceProps));
+                AudioClip audioClip = interactableOptionComponent.GetInteractionSound(unitController.UnitProfile.VoiceProps);
+                if (audioClip != null) {
+                    unitController.InteractableEventController.NotifyOnPlayVoiceSound(audioClip);
+                } else {
+                    Debug.LogWarning($"{unitController.gameObject.name}.UnitVoiceController.HandleStartInteractWithOption: No audio clip found for {interactableOptionComponent.Interactable.DisplayName} option {componentIndex} choice {choiceIndex}");
+                }
             }
         }
 
         public void HandleStopInteractWithOption(InteractableOptionComponent interactableOptionComponent) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitVoiceController.HandleStopInteractWithOption({interactableOptionComponent.Interactable.DisplayName})");
+
             if (unitController.UnitProfile == null) {
                 return;
             }

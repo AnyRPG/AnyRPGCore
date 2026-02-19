@@ -422,8 +422,6 @@ namespace AnyRPG {
             unitController.UnitEventController.OnSetGuildId -= HandleSetGuildId;
         }
 
-
-
         [ObserversRpc]
         private void HandleSetGroupId(int newGroupId) {
             unitController.CharacterGroupManager.SetGroupId(newGroupId);
@@ -2252,6 +2250,7 @@ namespace AnyRPG {
             }
             unitController.UnitActionManager.BeginActionInternal(animatedAction, playerInitiated);
         }
+
 
         /*
         [ServerRpc(RequireOwnership = false)]

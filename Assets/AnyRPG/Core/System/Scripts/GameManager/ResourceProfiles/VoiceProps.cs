@@ -126,6 +126,7 @@ namespace AnyRPG {
 
         public AudioClip RandomStartInteract {
             get {
+                //Debug.Log($"VoiceProps.RandomStartInteract: startInteract.Count = {startInteract.Count}");
                 if (startInteract.Count > 0) {
                     return startInteract[Random.Range(0, startInteract.Count)];
                 }

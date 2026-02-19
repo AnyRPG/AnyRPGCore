@@ -58,7 +58,9 @@ namespace AnyRPG {
         }
 
         public void AdjustCollider() {
-            AdjustCollider(new Vector3(interactable.InteractionMaxRange * 2f, interactable.InteractionMaxRange * 2f, interactable.InteractionMaxRange * 2f));
+            if (interactable.OverrideInteractionColliderSize) {
+                AdjustCollider(new Vector3(interactable.InteractionMaxRange * 2f, interactable.InteractionMaxRange * 2f, interactable.InteractionMaxRange * 2f));
+            }
         }
 
         public void AdjustCollider(Vector3 newSize) {

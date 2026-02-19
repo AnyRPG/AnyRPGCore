@@ -1,4 +1,3 @@
-using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,7 +12,6 @@ namespace AnyRPG {
         public event System.Action OnPrerequisiteUpdates = delegate { };
         public event System.Action OnInteractableDisable = delegate { };
         public event System.Action OnInteractableResetSettings = delegate { };
-        public event System.Action<UnitController, int, int> OnInteractionWithOptionStarted = delegate { };
 
         // this field does not do anything, but is needed to satisfy the IDescribable interface
         protected Sprite interactableIcon = null;
@@ -61,6 +59,11 @@ namespace AnyRPG {
         [Tooltip("Set this to true to automatically activate the first interactable instead of opening the interaction window and presenting the player with interaction options.")]
         [SerializeField]
         protected bool suppressInteractionWindow = false;
+
+
+        [Tooltip("If true, the InteractionRange collider will be set to the new extents in the Interaction Max Range field.")]
+        [SerializeField]
+        private bool overrideInteractionColliderSize = false;
 
         [Tooltip("For everything except character unit interactions, the interactor must be within this range of this objects collider. This does not apply to interactions triggered by switches.")]
         [SerializeField]
@@ -200,6 +203,7 @@ namespace AnyRPG {
         public bool IsTargeted { get => isTargeted; }
         public bool Initialized { get => initialized; }
         public List<GameObject> InteractLocations { get => interactLocations; set => interactLocations = value; }
+        public virtual bool OverrideInteractionColliderSize { get => overrideInteractionColliderSize; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log($"{gameObject.name}.Interactable.Configure() instanceId: {GetInstanceID()}");
@@ -746,7 +750,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (EventSystem.current.IsPointerOverGameObject() && !namePlateManager.MouseOverNamePlate()) {
+            if (EventSystem.current.IsPointerOverGameObject() == true && !namePlateManager.MouseOverNamePlate()) {
                 // THIS CODE WILL STILL CAUSE THE GUY TO GLOW IF YOU MOUSE OVER HIS NAMEPLATE WHILE A WINDOW IS UP.  NOT A BIG DEAL FOR NOW
                 // IT HAS TO BE THIS WAY BECAUSE THE MOUSEOVER WINDOW IS A GAMEOBJECT AND WE NEED TO BE ABLE TO GLOW WHEN A WINDOW IS NOT UP AND WE ARE OVER IT
                 // THIS COULD BE POTENTIALLY FIXED BY BLOCKING MOUSEOVER THE SAME WAY WE BLOCK DRAG IN THE UIMANAGER BY RESTRICTING ON MOUSEENTER ON ANY CLOSEABLEWINDOW IF IT'S TOO DISTRACTING
@@ -1138,14 +1142,6 @@ namespace AnyRPG {
         }
 
 
-        #region events
-
-        public void NotifyOnInteractionWithOptionStarted(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
-            //Debug.Log($"{gameObject.name}.Interactable.NotifyOnInteractionWithOptionStarted({sourceUnitController?.gameObject.name}, {componentIndex}, {choiceIndex})");
-            
-            OnInteractionWithOptionStarted(sourceUnitController, componentIndex, choiceIndex);
-        }
-
         public void SetTargeted() {
             //Debug.Log($"{gameObject.name}.Interactable.SetTargeted()");
 
@@ -1214,9 +1210,6 @@ namespace AnyRPG {
             }
             return false;
         }
-
-
-        #endregion
 
     }
 

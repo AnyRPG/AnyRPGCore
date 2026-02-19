@@ -324,8 +324,10 @@ namespace AnyRPG {
         public VoiceProps VoiceProps {
             get {
                 if (useInlineVoiceProps) {
+                    //Debug.Log($"{ResourceName}.UnitProfile.VoiceProps: using inline voice props");
                     return voiceProps;
                 }
+                //Debug.Log($"{ResourceName}.UnitProfile.VoiceProps: using voiceProfileProps");
                 return voiceProfileProps;
             }
         }
@@ -521,9 +523,10 @@ namespace AnyRPG {
 
             SetupUnitPrefabProps();
 
-            if (voiceProfile != null && voiceProfile != string.Empty) {
+            if (voiceProfile != string.Empty) {
                 VoiceProfile tmpVoiceProfile = systemDataFactory.GetResource<VoiceProfile>(voiceProfile);
                 if (tmpVoiceProfile != null) {
+                    //Debug.Log($"{ResourceName}.UnitProfile.SetupScriptableObjects(): Loaded voice profile {voiceProfile}");
                     voiceProfileProps = tmpVoiceProfile.VoiceProps;
                 } else {
                     Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find voice profile : " + voiceProfile + " while inititalizing " + name + ".  CHECK INSPECTOR");
