@@ -529,7 +529,7 @@ namespace AnyRPG {
                     //Debug.Log($"{ResourceName}.UnitProfile.SetupScriptableObjects(): Loaded voice profile {voiceProfile}");
                     voiceProfileProps = tmpVoiceProfile.VoiceProps;
                 } else {
-                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find voice profile : " + voiceProfile + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                    Debug.LogError($"UnitProfile.SetupScriptableObjects(): Could not find voice profile : {voiceProfile} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                 }
             }
 
@@ -541,7 +541,7 @@ namespace AnyRPG {
                         if (interactableOptionConfig != null && interactableOptionConfig.InteractableOptionProps != null) {
                             interactableOptionProps.Add(interactableOptionConfig.InteractableOptionProps);
                         } else {
-                            Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find interactableOptionConfig: " + interactableOptionName + " while inititalizing " + ResourceName + ".  CHECK INSPECTOR");
+                            Debug.LogError($"UnitProfile.SetupScriptableObjects(): Could not find interactableOptionConfig: {interactableOptionName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                         }
                     }
                 }

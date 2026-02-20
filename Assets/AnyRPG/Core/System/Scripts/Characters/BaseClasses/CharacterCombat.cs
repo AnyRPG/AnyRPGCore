@@ -614,7 +614,7 @@ namespace AnyRPG {
         /// <param name="abilityEffect"></param>
         /// <returns></returns>
         private bool TakeDamageCommon(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectProperties abilityEffect) {
-            //Debug.Log($"{unitController.gameObject.name}.TakeDamageCommon(" + damage + ")");
+            //Debug.Log($"{unitController.gameObject.name}.TakeDamageCommon(damage: {damage})");
 
             // perform check to see if this character has the resource to be reduced.  if not, it is immune to this type of damage
             if (unitController.CharacterStats.WasImmuneToDamageType(powerResource, source, abilityEffectContext)) {

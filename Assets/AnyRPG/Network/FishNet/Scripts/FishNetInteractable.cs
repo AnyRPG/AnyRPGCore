@@ -243,6 +243,12 @@ namespace AnyRPG {
         }
 
         private void HandlePlayVoiceSound(AudioClip clip) {
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.HandlePlayVoiceSound({(clip == null ? "null" : clip.name)})");
+
+            if (clip == null) {
+                //Debug.LogWarning($"{gameObject.name}.FishNetInteractable.HandlePlayVoiceSound(): clip is null");
+                return;
+            }
             HandlePlayVoiceSoundClient(clip.name);
         }
 
@@ -263,8 +269,11 @@ namespace AnyRPG {
             interactable.InteractableEventController.NotifyOnStopVoiceSound();
         }
 
-        private void HandlePlayEffectSound(AudioClip clip, bool loop) {
-            HandlePlayEffectSoundClient(clip.name, loop);
+        private void HandlePlayEffectSound(AudioClip audioClip, bool loop) {
+            if (audioClip == null) {
+                return;
+            }
+            HandlePlayEffectSoundClient(audioClip.name, loop);
         }
 
         [ObserversRpc]
@@ -284,8 +293,11 @@ namespace AnyRPG {
             interactable.InteractableEventController.NotifyOnStopEffectSound();
         }
 
-        private void HandlePlayCastSound(AudioClip clip, bool loop) {
-            HandlePlayCastSoundClient(clip.name, loop);
+        private void HandlePlayCastSound(AudioClip audioClip, bool loop) {
+            if (audioClip == null) {
+                return;
+            }
+            HandlePlayCastSoundClient(audioClip.name, loop);
         }
 
         [ObserversRpc]
@@ -305,8 +317,11 @@ namespace AnyRPG {
             interactable.InteractableEventController.NotifyOnStopCastSound();
         }
 
-        private void HandlePlayMovementSound(AudioClip clip, bool loop) {
-            HandlePlayMovementSoundClient(clip.name, loop);
+        private void HandlePlayMovementSound(AudioClip audioClip, bool loop) {
+            if (audioClip == null) {
+                return;
+            }
+            HandlePlayMovementSoundClient(audioClip.name, loop);
         }
 
         [ObserversRpc]
@@ -409,11 +424,11 @@ namespace AnyRPG {
             }
         }
 
-        private void HandleDropLoot(Dictionary<int, List<int>> lootDropIdLookup) {
-            foreach (KeyValuePair<int, List<int>> kvp in lootDropIdLookup) {
+        private void HandleDropLoot(Dictionary<int, LootDropIdList> lootDropIdLookup) {
+            foreach (KeyValuePair<int, LootDropIdList> kvp in lootDropIdLookup) {
                 int accountId = kvp.Key;
-                List<int> lootDropIds = kvp.Value;
-                Dictionary<int, List<int>> targetLootDropIdLookup = new Dictionary<int, List<int>>();
+                LootDropIdList lootDropIds = kvp.Value;
+                Dictionary<int, LootDropIdList> targetLootDropIdLookup = new Dictionary<int, LootDropIdList>();
                 targetLootDropIdLookup.Add(accountId, lootDropIds);
                 if (authenticationService.LoggedInAccounts.ContainsKey(accountId) && base.NetworkManager.ServerManager.Clients.ContainsKey(authenticationService.LoggedInAccounts[accountId].clientId)) {
                     NetworkConnection networkConnection = base.NetworkManager.ServerManager.Clients[authenticationService.LoggedInAccounts[accountId].clientId];
@@ -423,7 +438,7 @@ namespace AnyRPG {
         }
 
         [TargetRpc]
-        public void HandleDropLootTarget(NetworkConnection networkConnection, Dictionary<int, List<int>> lootDropIdLookup) {
+        public void HandleDropLootTarget(NetworkConnection networkConnection, Dictionary<int, LootDropIdList> lootDropIdLookup) {
             //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleDropLootTarget()");
             if (interactable == null) {
                //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleDropLootTarget(): interactable is null");
@@ -447,6 +462,22 @@ namespace AnyRPG {
                 return;
             }
             interactable.InteractableEventController.NotifyOnRemoveDroppedItemClient(lootDropId, accountId);
+        }
+
+        public override void OnSpawnServer(NetworkConnection connection) {
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.OnSpawnServer()");
+
+            base.OnSpawnServer(connection);
+            InteractableSaveData interactableSaveData = interactable.GetInteractableSaveData();
+            interactableSaveData.BundleItems(systemItemManager);
+            HandleSpawnServerClient(connection, interactableSaveData);
+        }
+
+        [TargetRpc]
+        private void HandleSpawnServerClient(NetworkConnection networkConnection, InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnServerClient()");
+
+            interactable.LoadInteractableSaveData(interactableSaveData);
         }
 
     }

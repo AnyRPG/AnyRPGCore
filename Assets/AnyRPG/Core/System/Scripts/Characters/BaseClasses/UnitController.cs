@@ -1169,7 +1169,7 @@ namespace AnyRPG {
 
             characterConfigured = false;
 
-            interactLocations.Clear();
+            interactionPoints.Clear();
 
             base.ResetSettings();
         }
@@ -1366,7 +1366,7 @@ namespace AnyRPG {
         }
 
         private void SetUnitProfileInteractables() {
-            //Debug.Log($"{gameObject.name}UnitController.SetUnitProfileInteractables()");
+            Debug.Log($"{gameObject.name}UnitController.SetUnitProfileInteractables()");
 
             if (unitProfile == null) {
                 return;
@@ -1382,6 +1382,11 @@ namespace AnyRPG {
                 if (interactableOption != null) {
                     InteractableOptionComponent interactableOptionComponent = interactableOption.GetInteractableOption(this);
                     AddInteractableOption(interactableOptionComponent);
+                    
+                    // because this profile is loaded after the save data is loaded, we need to send it to the new components manually
+                    if (_interactableSaveData != null) {
+                        interactableOptionComponent.LoadFromSaveData(_interactableSaveData);
+                    }
                     //interactableOptionComponent.HandlePrerequisiteUpdates();
                 }
             }
@@ -1391,6 +1396,7 @@ namespace AnyRPG {
                 interactableOptionComponent.HandleOptionStateChange();
             }
 
+            // this is done earlier in GetComponentReferences, but has to be redone here because the component didn't exist until the unit profile created it
             lootableCharacter = LootableCharacterComponent.GetLootableCharacterComponent(this);
         }
 

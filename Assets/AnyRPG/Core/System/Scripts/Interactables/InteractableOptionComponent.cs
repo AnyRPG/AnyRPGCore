@@ -1,4 +1,5 @@
 using AnyRPG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -124,6 +125,16 @@ namespace AnyRPG {
 
             sourceUnitController.UnitEventController.NotifyOnCompleteInteractWithOption(this);
             systemEventManager.NotifyOnCompleteInteractWithOption(sourceUnitController, this);
+        }
+
+        public virtual void SetSaveData(InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.InteractableOptionComponent.SetSaveData()");
+            // overwrite me if I have something to save
+        }
+
+        public virtual void LoadFromSaveData(InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.InteractableOptionComponent.LoadFromSaveData()");
+            // overwrite me if I have something to load
         }
 
         public virtual bool ProcessFactionValue(float factionValue) {
@@ -404,7 +415,6 @@ namespace AnyRPG {
             }
 
         }
-
 
     }
 

@@ -81,6 +81,7 @@ namespace AnyRPG {
 
         public AudioClip RandomDamage {
             get {
+                Debug.Log($"VoiceProps.RandomDamage: damage.Count = {damage.Count}");
                 if (damage.Count > 0) {
                     return damage[Random.Range(0, damage.Count)];
                 }

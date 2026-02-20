@@ -37,8 +37,9 @@ namespace AnyRPG {
         private string defaultToughness = string.Empty;
 
         [Tooltip("Any unit spawned will be configured with these interact locations if the list is not empty.")]
+        [FormerlySerializedAs("interactLocations")]
         [SerializeField]
-        protected List<GameObject> interactLocations = new List<GameObject>();
+        protected List<GameObject> interactionPoints = new List<GameObject>();
 
         [Header("Timers")]
 
@@ -539,8 +540,10 @@ namespace AnyRPG {
 
         public void PostInit(UnitController unitController) {
             //Debug.Log($"{gameObject.name}.UnitSpawnNode.PostInit()");
-            if (interactLocations != null && interactLocations.Count > 0) {
-                unitController.InteractLocations.AddRange(interactLocations);
+
+            if (interactionPoints != null && interactionPoints.Count > 0) {
+                //Debug.Log($"{gameObject.name}.UnitSpawnNode.PostInit(): adding interact locations to unit controller");
+                unitController.InteractionPoints.AddRange(interactionPoints);
             }
         }
 

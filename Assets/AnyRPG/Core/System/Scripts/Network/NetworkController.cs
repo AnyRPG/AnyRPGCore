@@ -138,7 +138,7 @@ namespace AnyRPG {
         public abstract void AdvertiseSystemMessage(int accountId, string message);
         public abstract void AdvertiseAddToBuyBackCollection(UnitController sourceUnitController, int accountId, Interactable interactable, int componentIndex, InstantiatedItem newInstantiatedItem);
         public abstract void AddAvailableDroppedLoot(int accountId, List<int> lootDropIds);
-        public abstract void AddLootDrop(int accountId, int lootDropId, long itemInstanceId);
+        public abstract void AddLootDrop(int accountId, LootDropSerializedData lootDropSerializedData);
         public abstract void AdvertiseTakeLoot(int accountId, int lootDropId);
         public abstract void SpawnPlayer(int accountId, CharacterRequestData characterRequestData, Vector3 position, Vector3 forward, string sceneName);
         public abstract Scene GetAccountScene(int accountId, string sceneName);

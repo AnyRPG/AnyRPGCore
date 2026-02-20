@@ -1,6 +1,7 @@
 using AnyRPG;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,7 +31,7 @@ namespace AnyRPG {
         private LootHolder lootHolder = new LootHolder();
 
         // account id, loot drop ids
-        Dictionary<int, List<int>> lootDropIdLookup = new Dictionary<int, List<int>>();
+        Dictionary<int, LootDropIdList> lootDropIdLookup = new Dictionary<int, LootDropIdList>();
 
         // game manager references
         private SystemAbilityController systemAbilityController = null;
@@ -43,6 +44,8 @@ namespace AnyRPG {
         public LootHolder LootHolder { get => lootHolder; set => lootHolder = value; }
 
         public LootableCharacterComponent(Interactable interactable, LootableCharacterProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+            //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.Constructor()");
+
             CreateLootTables();
             if (interactionPanelTitle == string.Empty) {
                 interactionPanelTitle = "Loot";
@@ -122,7 +125,39 @@ namespace AnyRPG {
             }
         }
 
-        private void HandleDropLoot(Dictionary<int, List<int>> lootDropIdLookup) {
+        public override void SetSaveData(InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.SetSaveData()");
+
+            base.SetSaveData(interactableSaveData);
+            interactableSaveData.LootableCharacterSaveData.LootDropIds = lootDropIdLookup.Values.ToList();
+            foreach (LootDropIdList lootDropIdList in interactableSaveData.LootableCharacterSaveData.LootDropIds) {
+                foreach (int lootDropId in lootDropIdList.LootDropIds) {
+                    //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.SetSaveData(): adding loot drop id to save data: {lootDropId}");
+                    interactableSaveData.LootableCharacterSaveData.LootDropSerializedDataList.Add(lootManager.GetSerializedDataForLootDropId(lootDropId));
+                }
+            }
+        }
+
+        public override void LoadFromSaveData(InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.LoadFromSaveData()");
+
+            base.LoadFromSaveData(interactableSaveData);
+
+            // first, add the loot drops
+            foreach (LootDropSerializedData lootDropSerializedData in interactableSaveData.LootableCharacterSaveData.LootDropSerializedDataList) {
+                lootManager.AddNetworkLootDrop(lootDropSerializedData);
+            }
+
+            // next, load the loot drop id lookups
+            lootDropIdLookup = new Dictionary<int, LootDropIdList>();
+            if (interactableSaveData.LootableCharacterSaveData.LootDropIds != null) {
+                foreach (LootDropIdList lootDropList in interactableSaveData.LootableCharacterSaveData.LootDropIds) {
+                    lootDropIdLookup.Add(lootDropList.AccountId, lootDropList);
+                }
+            }
+        }
+
+        private void HandleDropLoot(Dictionary<int, LootDropIdList> lootDropIdLookup) {
             this.lootDropIdLookup = lootDropIdLookup;
         }
 
@@ -177,7 +212,8 @@ namespace AnyRPG {
                         foreach (LootDrop lootDrop in lootDrops) {
                             lootDropIds.Add(lootDrop.LootDropId);
                         }
-                        lootDropIdLookup.Add(playerManagerServer.ActiveUnitControllerLookup[aggroNode.aggroTarget.UnitController], lootDropIds);
+                        LootDropIdList lootDropList = new LootDropIdList(playerManagerServer.ActiveUnitControllerLookup[aggroNode.aggroTarget.UnitController], lootDropIds);
+                        lootDropIdLookup.Add(lootDropList.AccountId, lootDropList);
                         lootCount += lootDropIds.Count;
                     }
                 }
@@ -237,6 +273,7 @@ namespace AnyRPG {
         }
 
         public override bool CanInteract(UnitController sourceUnitController, bool processRangeCheck, bool passedRangeCheck, bool processNonCombatCheck, bool viaSwitch = false) {
+            //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.CanInteract({sourceUnitController.gameObject.name}, {processRangeCheck}, {passedRangeCheck}, {processNonCombatCheck}, {viaSwitch})");
 
             float factionValue = Faction.RelationWith(sourceUnitController, unitController);
             // you can't loot friendly characters
@@ -297,25 +334,18 @@ namespace AnyRPG {
         }
 
         public int GetLootCount(UnitController sourceUnitController) {
-            //Debug.Log($"{interactable.gameObject.name}.LootableCharacter.GetLootCount({sourceUnitController.gameObject.name})");
+            Debug.Log($"{interactable.gameObject.name}.LootableCharacter.GetLootCount({sourceUnitController.gameObject.name})");
 
             int lootCount = 0;
 
-            /*
-            foreach (LootTable lootTable in lootHolder.LootTableStates.Keys) {
-                if (lootTable != null) {
-                    //lootHolder.LootTableStates[lootTable].GetLoot(sourceUnitController, lootTable, !lootCalculated);
-                    List<LootDrop> droppedItems = lootHolder.GetLoot(sourceUnitController, lootTable, !lootCalculated);
-                    lootCount += droppedItems.Count;
-                }
-            }
-            */
             int accountId = 0;
             if (playerManagerServer.ActiveUnitControllerLookup.ContainsKey(sourceUnitController)) {
                 accountId = playerManagerServer.ActiveUnitControllerLookup[sourceUnitController];
+            } else {
+                Debug.LogWarning($"{interactable.gameObject.name}.LootableCharacter.GetLootCount({sourceUnitController.gameObject.name}): accountId not found for sourceUnitController");
             }
             if (lootDropIdLookup.ContainsKey(accountId)) {
-                lootCount = lootDropIdLookup[accountId].Count;
+                lootCount = lootDropIdLookup[accountId].LootDropIds.Count;
             }
 
             //Debug.Log($"{interactable.gameObject.name}.LootableCharacter.GetLootCount({sourceUnitController.gameObject.name}): returning loot count: {lootCount}");
@@ -335,8 +365,8 @@ namespace AnyRPG {
                 }
             }
             */
-            foreach (KeyValuePair<int, List<int>> lootDropId in lootDropIdLookup) {
-                lootCount += lootDropId.Value.Count;
+            foreach (KeyValuePair<int, LootDropIdList> lootDropId in lootDropIdLookup) {
+                lootCount += lootDropId.Value.LootDropIds.Count;
             }
             /*
             if (Props.AutomaticCurrency == true) {
@@ -540,7 +570,7 @@ namespace AnyRPG {
             //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.HandleRemoveDroppedItemClient({lootDropId}, {accountId})");
 
             if (lootDropIdLookup.ContainsKey(accountId)) {
-                lootDropIdLookup[accountId].Remove(lootDropId);
+                lootDropIdLookup[accountId].LootDropIds.Remove(lootDropId);
             }
         }
 
@@ -549,7 +579,7 @@ namespace AnyRPG {
             //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.HandleRemoveDroppedItem({lootDrop.LootDropId}, {accountId})");
 
             if (lootDropIdLookup.ContainsKey(accountId)) {
-                lootDropIdLookup[accountId].Remove(lootDrop.LootDropId);
+                lootDropIdLookup[accountId].LootDropIds.Remove(lootDrop.LootDropId);
             }
             interactable.InteractableEventController.NotifyOnRemoveDroppedItem(lootDrop, accountId);
             TryToDespawn();

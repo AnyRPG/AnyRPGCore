@@ -1235,7 +1235,7 @@ namespace AnyRPG {
         }
 
 
-        public void AddDroppedLoot(int accountId, int lootDropId, long itemId) {
+        public void AddDroppedLoot(int accountId, LootDropSerializedData lootDropSerializedData) {
             //Debug.Log($"FishNetClientConnector.AddDroppedLoot({accountId}, {lootDropId}, {itemId})");
 
             int clientId = networkManagerServer.GetClientIDForAccount(accountId);
@@ -1245,14 +1245,14 @@ namespace AnyRPG {
             if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
                 return;
             }
-            AddDroppedLootClient(ServerManager.Clients[clientId], lootDropId, itemId);
+            AddDroppedLootClient(ServerManager.Clients[clientId], lootDropSerializedData);
         }
 
         [TargetRpc]
-        public void AddDroppedLootClient(NetworkConnection networkConnection, int lootDropId, long itemInstanceId) {
+        public void AddDroppedLootClient(NetworkConnection networkConnection, LootDropSerializedData lootDropSerializedData) {
             //Debug.Log($"FishNetClientConnector.AddDroppedLootClient({networkConnection.ClientId}, {lootDropId}, {itemId})");
 
-            networkManagerClient.AddDroppedLoot(lootDropId, itemInstanceId);
+            networkManagerClient.AddDroppedLoot(lootDropSerializedData);
         }
 
         public void AddAvailableDroppedLoot(int accountId, List<int> lootDropIds) {

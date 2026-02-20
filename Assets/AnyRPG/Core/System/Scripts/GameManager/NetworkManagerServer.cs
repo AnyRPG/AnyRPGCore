@@ -1085,8 +1085,8 @@ namespace AnyRPG {
             networkController.AddAvailableDroppedLoot(accountId, lootDropIds);
         }
 
-        public void AddLootDrop(int accountId, int lootDropId, long itemId) {
-            networkController.AddLootDrop(accountId, lootDropId, itemId);
+        public void AddLootDrop(int accountId, LootDropSerializedData lootDropSerializedData) {
+            networkController.AddLootDrop(accountId, lootDropSerializedData);
         }
 
         public void AdvertiseTakeLoot(int accountId, int lootDropId) {
@@ -1307,9 +1307,12 @@ namespace AnyRPG {
                 // there is an existing monitor, so the player must have been disconnected
                 CharacterSaveData saveData = playerManagerServer.PlayerCharacterMonitors[accountId].characterSaveData;
                 sceneName = playerManagerServer.PlayerCharacterMonitors[accountId].characterSaveData.CurrentScene;
+                // that code led to a bug where scene was not found later due to spaces in name
+                /*
                 if (levelManager.SceneDictionary.ContainsKey(sceneName)) {
                     sceneName = levelManager.SceneDictionary[sceneName].ResourceName;
                 }
+                */
                 characterGroupServiceServer.SendCharacterGroupInfo(accountId, playerCharacterId);
             }
             if (serverMode != NetworkServerMode.Lobby) {

@@ -580,11 +580,11 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.MoveToInteractionPoint({newTarget.name}, {minAttackRange})");
 
             // cycle through newTarget interactaionLocations and determine the shortest path, then move to that one
-            if (newTarget.InteractLocations.Count > 0) { 
-                Transform bestTarget = newTarget.InteractLocations[0].transform;
+            if (newTarget.InteractionPoints.Count > 0) { 
+                Transform bestTarget = newTarget.InteractionPoints[0].transform;
                 float bestDistance = GetPathLength(unitController.transform.position, bestTarget.position);
-                for (int i = 1; i < newTarget.InteractLocations.Count; i++) {
-                    Transform testTarget = newTarget.InteractLocations[i].transform;
+                for (int i = 1; i < newTarget.InteractionPoints.Count; i++) {
+                    Transform testTarget = newTarget.InteractionPoints[i].transform;
                     float testDistance = GetPathLength(unitController.transform.position, testTarget.position);
                     if (testDistance < bestDistance) {
                         bestDistance = testDistance;

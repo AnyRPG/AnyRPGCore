@@ -552,10 +552,10 @@ namespace AnyRPG {
             networkController.TakeAllLoot();
         }
 
-        public void AddDroppedLoot(int lootDropId, long itemInstanceId) {
+        public void AddDroppedLoot(LootDropSerializedData lootDropSerializedData) {
             //Debug.Log($"NetworkManagerClient.AddDroppedLoot({lootDropId}, {itemId})");
 
-            lootManager.AddNetworkLootDrop(lootDropId, itemInstanceId);
+            lootManager.AddNetworkLootDrop(lootDropSerializedData);
         }
 
         public void AddAvailableDroppedLoot(List<int> lootDropIds) {

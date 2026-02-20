@@ -103,18 +103,41 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.OnSpawnServer()");
 
             base.OnSpawnServer(connection);
-
-            HandleSpawnServerClient(connection, new PlayerCharacterSaveData(unitController.CharacterSaveManager.SaveData, systemItemManager), unitController.CharacterGroupManager.GroupId, unitController.CharacterGuildManager.GuildId, unitController.CharacterGuildManager.GuildName);
+            FishNetSpawnClientRequest fishNetSpawnClientRequest = new FishNetSpawnClientRequest() {
+                PlayerCharacterSaveData = new PlayerCharacterSaveData(unitController.CharacterSaveManager.SaveData, systemItemManager),
+                GuildId = unitController.CharacterGuildManager.GuildId,
+                GuildName = unitController.CharacterGuildManager.GuildName,
+                CharacterGroupId = unitController.CharacterGroupManager.GroupId
+            };
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnSpawnServer() interaction points: {unitController.InteractionPoints.Count}");
+            foreach (GameObject interactionObject in unitController.InteractionPoints) {
+                NetworkObject interactionNetworkObject = interactionObject.GetComponent<NetworkObject>();
+                if (interactionNetworkObject != null) {
+                    fishNetSpawnClientRequest.InteractionPoints.Add(interactionNetworkObject);
+                }
+            }
+            HandleSpawnServerUnitClient(connection, fishNetSpawnClientRequest);
         }
 
         [TargetRpc]
-        private void HandleSpawnServerClient(NetworkConnection networkConnection, PlayerCharacterSaveData playerCharacterSaveData, int characterGroupId, int guildId, string guildName) {
+        private void HandleSpawnServerUnitClient(NetworkConnection networkConnection, FishNetSpawnClientRequest fishNetSpawnClientRequest) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnServerClient() owner: {base.OwnerId}");
 
             if (unitControllerMode.Value == UnitControllerMode.Player
                 || unitControllerMode.Value == UnitControllerMode.Pet
                 || unitControllerMode.Value == UnitControllerMode.AI) {
-                CompleteClientCharacterRequest(playerCharacterSaveData, characterGroupId, guildId, guildName);
+                CompleteClientCharacterRequest(fishNetSpawnClientRequest.PlayerCharacterSaveData,
+                    fishNetSpawnClientRequest.CharacterGroupId,
+                    fishNetSpawnClientRequest.GuildId,
+                    fishNetSpawnClientRequest.GuildName);
+            }
+            foreach (NetworkObject interactionNetworkObject in fishNetSpawnClientRequest.InteractionPoints) {
+                if (interactionNetworkObject != null) {
+                    GameObject interactionObject = interactionNetworkObject.gameObject;
+                    if (interactionObject != null) {
+                        unitController.InteractionPoints.Add(interactionObject);
+                    }
+                }
             }
         }
 

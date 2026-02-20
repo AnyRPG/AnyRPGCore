@@ -1136,8 +1136,8 @@ namespace AnyRPG {
             clientConnector.AddAvailableDroppedLoot(accountId, lootDropIds);
         }
 
-        public override void AddLootDrop(int accountId, int lootDropId, long itemInstanceId) {
-            clientConnector.AddDroppedLoot(accountId, lootDropId, itemInstanceId);
+        public override void AddLootDrop(int accountId, LootDropSerializedData lootDropSerializedData) {
+            clientConnector.AddDroppedLoot(accountId, lootDropSerializedData);
         }
 
         public override void AdvertiseTakeLoot(int accountId, int lootDropId) {

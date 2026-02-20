@@ -236,7 +236,7 @@ namespace AnyRPG {
         }
 
         private void HandleEnterInteractableTrigger(UnitController unitController, Interactable interactable) {
-            //Debug.Log($"PlayerManagerServer.HandleEnterInteractableTrigger({unitController.gameObject.name})");
+            Debug.Log($"PlayerManagerServer.HandleEnterInteractableTrigger({unitController.gameObject.name})");
 
             if (networkManagerServer.ServerModeActive || systemGameManager.GameMode == GameMode.Local) {
                 interactionManager.InteractWithTrigger(unitController, interactable);

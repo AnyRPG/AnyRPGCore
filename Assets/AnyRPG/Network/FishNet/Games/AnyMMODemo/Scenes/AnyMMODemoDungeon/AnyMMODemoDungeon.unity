@@ -11774,7 +11774,7 @@ Transform:
   m_GameObject: {fileID: 696891887}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: 86.160995, y: 1.028, z: 93.130005}
+  m_LocalPosition: {x: 86.160995, y: 1.028, z: 92.947}
   m_LocalScale: {x: 3, y: 4, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11826,8 +11826,9 @@ MonoBehaviour:
   interactOnExit: 0
   isTrigger: 1
   suppressInteractionWindow: 1
+  overrideInteractionColliderSize: 0
   interactionMaxRange: 2
-  interactLocations: []
+  interactionPoints: []
   componentController: {fileID: 0}
 --- !u!65 &696891891
 BoxCollider:

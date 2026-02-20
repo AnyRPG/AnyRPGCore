@@ -247,20 +247,27 @@ namespace AnyRPG {
             
             lootDropIndex.Add(lootDrop.LootDropId, lootDrop);
             if (networkManagerServer.ServerModeActive == true) {
-                networkManagerServer.AddLootDrop(playerManagerServer.ActiveUnitControllerLookup[sourceUnitController], lootDrop.LootDropId, lootDrop.InstantiatedItem.InstanceId);
+                networkManagerServer.AddLootDrop(playerManagerServer.ActiveUnitControllerLookup[sourceUnitController], new LootDropSerializedData(lootDrop.LootDropId, lootDrop.InstantiatedItem.InstanceId));
             }
         }
 
-        public void AddNetworkLootDrop(int lootDropId, long itemInstanceId) {
+        public void AddNetworkLootDrop(LootDropSerializedData lootDropSerializedData) {
             //Debug.Log($"LootManager.AddNetworkLootDrop({lootDropId}, {itemId})");
 
-            if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) == false) {
+            if (systemItemManager.InstantiatedItems.ContainsKey(lootDropSerializedData.ItemInstanceId) == false) {
                 return;
             }
-            LootDrop lootDrop = new LootDrop(lootDropId, systemItemManager.InstantiatedItems[itemInstanceId], systemGameManager);
-            lootDropIndex.Add(lootDropId, lootDrop);
+            LootDrop lootDrop = new LootDrop(lootDropSerializedData.LootDropId, systemItemManager.InstantiatedItems[lootDropSerializedData.ItemInstanceId], systemGameManager);
+            lootDropIndex.Add(lootDropSerializedData.LootDropId, lootDrop);
         }
 
+        public LootDropSerializedData GetSerializedDataForLootDropId(int lootDropId) {
+            if (lootDropIndex.ContainsKey(lootDropId) == false) {
+                return null;
+            }
+            return new LootDropSerializedData(lootDropId, lootDropIndex[lootDropId].InstantiatedItem.InstanceId);
+
+        }
     }
 
 }

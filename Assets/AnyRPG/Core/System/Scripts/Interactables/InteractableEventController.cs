@@ -12,7 +12,7 @@ namespace AnyRPG {
         public event System.Action<string, int> OnPlayDialogNode = delegate { };
         public event System.Action<UnitController, InstantiatedItem> OnAddToBuyBackCollection = delegate { };
         public event System.Action<VendorItem, int, int, int> OnSellItemToPlayer = delegate { };
-        public event System.Action<Dictionary<int, List<int>>> OnDropLoot = delegate { };
+        public event System.Action<Dictionary<int, LootDropIdList>> OnDropLoot = delegate { };
         public event System.Action<int, int> OnRemoveDroppedItem = delegate { };
         public event System.Action<bool> OnStopMovementSound = delegate { };
         public event System.Action OnStopVoiceSound = delegate { };
@@ -62,7 +62,7 @@ namespace AnyRPG {
             OnSellItemToPlayer(vendorItem, componentIndex, collectionIndex, itemIndex);
         }
 
-        public void NotifyOnDropLoot(Dictionary<int, List<int>> lootDropIdLookup) {
+        public void NotifyOnDropLoot(Dictionary<int, LootDropIdList> lootDropIdLookup) {
             OnDropLoot(lootDropIdLookup);
         }
 

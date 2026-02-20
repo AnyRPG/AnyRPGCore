@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace AnyRPG {
@@ -70,8 +71,9 @@ namespace AnyRPG {
         private float interactionMaxRange = 2f;
 
         [Tooltip("The prefered locations that units wanting to interact will move to, based on NavMeshPath completeness.")]
+        [FormerlySerializedAs("interactLocations")]
         [SerializeField]
-        protected List<GameObject> interactLocations = new List<GameObject>();
+        protected List<GameObject> interactionPoints = new List<GameObject>();
 
         [Header("Controller References")]
 
@@ -89,6 +91,7 @@ namespace AnyRPG {
         protected int interactableOptionCount = 0;
 
         // state
+        protected InteractableSaveData _interactableSaveData = null;
         protected bool isInteracting = false;
         protected bool miniMapIndicatorReady = false;
         protected bool isMouseOverUnit = false;
@@ -124,6 +127,7 @@ namespace AnyRPG {
         protected MainMapManager mainMapManager = null;
         protected InteractionManager interactionManager = null;
         protected NetworkManagerServer networkManagerServer = null;
+        protected SystemItemManager systemItemManager = null;
 
         // properties
         public bool IsInteracting { get => isInteracting; }
@@ -202,7 +206,7 @@ namespace AnyRPG {
         public bool SuppressInteractionWindow { get => suppressInteractionWindow; set => suppressInteractionWindow = value; }
         public bool IsTargeted { get => isTargeted; }
         public bool Initialized { get => initialized; }
-        public List<GameObject> InteractLocations { get => interactLocations; set => interactLocations = value; }
+        public List<GameObject> InteractionPoints { get => interactionPoints; set => interactionPoints = value; }
         public virtual bool OverrideInteractionColliderSize { get => overrideInteractionColliderSize; }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -285,6 +289,7 @@ namespace AnyRPG {
             interactionManager = systemGameManager.InteractionManager;
             networkManagerServer = systemGameManager.NetworkManagerServer;
             playerManager = systemGameManager.PlayerManager;
+            systemItemManager = systemGameManager.SystemItemManager;
         }
 
         public virtual void GetComponentReferences() {
@@ -1078,6 +1083,7 @@ namespace AnyRPG {
             initialized = false;
             eventSubscriptionsInitialized = false;
             isTargeted = false;
+            _interactableSaveData = null;
         }
 
         public virtual void OnSendObjectToPool() {
@@ -1211,6 +1217,24 @@ namespace AnyRPG {
             return false;
         }
 
+        public InteractableSaveData GetInteractableSaveData() {
+            Debug.Log($"{gameObject.name}.Interactable.GetInteractableSaveData()");
+
+            InteractableSaveData interactableSaveData = new InteractableSaveData();
+            foreach (InteractableOptionComponent interactableOptionComponent in interactables.Values) {
+                interactableOptionComponent.SetSaveData(interactableSaveData);
+            }
+            return interactableSaveData;
+        }
+
+        public void LoadInteractableSaveData(InteractableSaveData interactableSaveData) {
+            Debug.Log($"{gameObject.name}.Interactable.LoadInteractableSaveData()");
+            _interactableSaveData = interactableSaveData;
+            systemItemManager.LoadItemInstanceListSaveData(interactableSaveData.ItemInstanceListSaveData);
+            foreach (InteractableOptionComponent interactableOptionComponent in interactables.Values) {
+                interactableOptionComponent.LoadFromSaveData(interactableSaveData);
+            }
+        }
     }
 
 }

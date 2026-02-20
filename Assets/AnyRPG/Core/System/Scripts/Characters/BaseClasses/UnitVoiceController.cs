@@ -110,10 +110,17 @@ namespace AnyRPG {
         }
 
         public void HandleTakeDamage(IAbilityCaster caster, UnitController controller, int amount, CombatTextType type, CombatMagnitude magnitude, string abilityName, AbilityEffectContext context) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitVoiceController.HandleTakeDamage({caster.transform.name}, {controller.gameObject.name}, {amount}, {type}, {magnitude}, {abilityName})");
+
             if (unitController.UnitProfile == null) {
                 return;
             }
-            unitController.InteractableEventController.NotifyOnPlayVoiceSound(unitController.UnitProfile.VoiceProps.RandomDamage);
+            AudioClip audioClip = unitController.UnitProfile.VoiceProps.RandomDamage;
+            if (audioClip == null) {
+                //Debug.LogWarning($"{unitController.gameObject.name}.UnitVoiceController.HandleTakeDamage: No audio clip found for damage");
+                return;
+            }
+            unitController.InteractableEventController.NotifyOnPlayVoiceSound(audioClip);
         }
 
         public void HandleTakeFallDamage() {
