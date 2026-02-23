@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 251337143587947253}
   - component: {fileID: 8596961643164384451}
   - component: {fileID: 349439365473122481}
+  - component: {fileID: -1346495468030016341}
   m_Layer: 0
   m_Name: FishNetNetworkManager
   m_TagString: Untagged
@@ -159,4 +160,21 @@ MonoBehaviour:
   _maximumFrameTicks: 3
   _tickRate: 30
   _pingInterval: 1
-  _physicsMode: 0
+  _physicsMode: 1
+--- !u!114 &-1346495468030016341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48716581094196645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e08bb003fce297d4086cf8cba5aa459a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Managing.Predicting.PredictionManager
+  _dropExcessiveReplicates: 1
+  _maximumServerReplicates: 15
+  _createLocalStates: 1
+  _stateInterpolation: 2
+  _stateOrder: 1

@@ -164,6 +164,18 @@ namespace AnyRPG {
         [SerializeField]
         private DefaultControllerConfiguration defaultControllerConfiguration;
 
+        [Tooltip("Targets must be closer than this distance for tab target to target them.")]
+        [SerializeField]
+        private float tabTargetMaxDistance = 40f;
+
+        [Tooltip("When standing on any object in this layer mask, the character will be considered to be grounded")]
+        [SerializeField]
+        private LayerMask defaultGroundMask;
+
+        [Tooltip("The maximum movement speed in meters per second.  Any movement over this speed will be capped.")]
+        [SerializeField]
+        private float maxMovementSpeed = 20f;
+
         [Tooltip("The maximum turn speed in degrees per second.")]
         [SerializeField]
         private float maxTurnSpeed = 360f;
@@ -897,6 +909,9 @@ namespace AnyRPG {
         public bool AllowFreeMove { get => allowFreeMove; set => allowFreeMove = value; }
         public bool AllowClickToMove { get => allowClickToMove; set => allowClickToMove = value; }
         public Material DefaultMovementTargetCircle { get => defaultMovementTargetCircle; set => defaultMovementTargetCircle = value; }
+        public float MaxMovementSpeed { get => maxMovementSpeed; set => maxMovementSpeed = value; }
+        public LayerMask DefaultGroundMask { get => defaultGroundMask; set => defaultGroundMask = value; }
+        public float TabTargetMaxDistance { get => tabTargetMaxDistance; set => tabTargetMaxDistance = value; }
 
         //public Currency PostageCurrency { get => postageCurrency; set => postageCurrency = value; }
 

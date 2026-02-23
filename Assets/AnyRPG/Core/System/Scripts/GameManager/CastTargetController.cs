@@ -46,7 +46,7 @@ namespace AnyRPG {
 
         void Update() {
             //Debug.Log("CastTargettingController.Update()");
-            if (controlsManager.GamePadModeActive == true) {
+            if (controlsManager.GamepadModeActive == true) {
                 FollowVirtualCursor();
             } else {
                 FollowMouse();
@@ -89,7 +89,7 @@ namespace AnyRPG {
             Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(followVector);
             RaycastHit hit;
             //if (Physics.Raycast(ray, out hit, 100)) {
-            if (Physics.Raycast(ray, out hit, 100, playerManager.PlayerController.movementMask.value)) {
+            if (Physics.Raycast(ray, out hit, 100, systemConfigurationManager.DefaultGroundMask)) {
                 //Debug.Log("CastTargettingController.FollowMouse() hit movement mask at hit.point: " + hit.point + "; gameObject: " + hit.transform.gameObject.name + hit.transform.gameObject.layer);
                 Vector3 cameraPoint = new Vector3(hit.point.x, hit.point.y + 0.1f, hit.point.z);
                 if (Vector3.Distance(hit.point, playerManager.ActiveUnitController.transform.position) < 40f) {

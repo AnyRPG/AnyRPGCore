@@ -75,7 +75,7 @@ namespace AnyRPG {
             // do this first because openwindow will update the page count
             //pageIndex = 0;
 
-            if (controlsManager.GamePadModeActive == true) {
+            if (controlsManager.GamepadModeActive == true) {
                 leftTriggerHint.SetActive(true);
                 rightTriggerHint.SetActive(true);
             } else {

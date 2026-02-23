@@ -43,7 +43,7 @@ namespace AnyRPG {
         private LayerMask explosionMask = 0;
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
 
         public KnockbackType KnockbackType { get => knockbackType; set => knockbackType = value; }
         public float KnockBackVelocity { get => knockBackVelocity; set => knockBackVelocity = value; }
@@ -70,7 +70,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManager;
         }
 
         public override Dictionary<PrefabProfile, List<GameObject>> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
@@ -89,9 +89,10 @@ namespace AnyRPG {
             targetCharacterUnit?.UnitController.UnitActionManager.TryToStopAction();
 
             if (knockbackType == KnockbackType.Knockback) {
-                if (targetCharacterUnit != null && targetCharacterUnit.UnitController.UnitMotor != null) {
+                if (targetCharacterUnit?.UnitController != null) {
                     //Debug.Log("KnockBackEffect.Cast(): casting on character");
-                    targetCharacterUnit.UnitController.UnitMotor.Move(GetKnockBackVelocity(sourcePosition, targetPosition), true);
+                    //targetCharacterUnit.UnitController.UnitMotor.Move(GetKnockBackVelocity(sourcePosition, targetPosition), true);
+                    targetCharacterUnit.UnitController.Knockback(GetKnockBackVelocity(sourcePosition, targetPosition));
                 } else {
                     Rigidbody rigidbody = target.GetComponent<Rigidbody>();
                     if (rigidbody != null) {
@@ -124,15 +125,14 @@ namespace AnyRPG {
 
                         //rigidbody.AddForce(GetKnockBackVelocity(targetPosition, collider.gameObject.transform.position), ForceMode.VelocityChange);
 
-                        // we have to handle player knockback specially, as they need to be in knockback state or the idle update will freeze them in place
-                        if (collider.gameObject == playerManager.ActiveUnitController.gameObject) {
-                            playerManager.PlayerUnitMovementController.KnockBack();
-                        }
-
                         // if this is a character, we want to freeze their rotation.  for inanimate objects, we want rotation
                         Interactable _interactable = collider.gameObject.GetComponent<Interactable>();
-                        if (_interactable != null && CharacterUnit.GetCharacterUnit(_interactable) != null) {
-                            rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+                        if (_interactable != null) {
+                            CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(_interactable);
+                            if (_characterUnit != null) {
+                                _characterUnit.UnitController.Knockback(explosionForce, explosionCenter, upwardModifier);
+                                continue;
+                            }
                         }
                         rigidbody.AddExplosionForce(explosionForce, explosionCenter, 0, upwardModifier, ForceMode.VelocityChange);
                     }

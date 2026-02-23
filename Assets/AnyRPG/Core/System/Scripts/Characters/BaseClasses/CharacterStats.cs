@@ -1394,12 +1394,17 @@ namespace AnyRPG {
                     // should only be done on server
                     unitController.CharacterCombat.HandleDie();
                 }
+                if (unitController.UnitMovementController != null) {
+                    unitController.UnitMovementController.localMoveVelocity = new Vector3(0, 0, 0);
+                }
                 if (systemGameManager.GameMode == GameMode.Local
-                    || unitController.IsOwner
-                    || (networkManagerServer.ServerModeActive && unitController.UnitControllerMode != UnitControllerMode.Player)
+                    || networkManagerServer.ServerModeActive
                     || levelManager.IsCutscene()) { 
                     // should only be done on server or authoritative client
                     unitController.FreezePositionXZ();
+                    if (unitController.UnitMovementController != null) {
+                        unitController.UnitMovementController.localMoveVelocity = new Vector3(0, 0, 0);
+                    }
                     // should only be done on server or authoritative client
                     unitController.UnitAnimator.HandleDie();
                 }

@@ -89,6 +89,7 @@ namespace AnyRPG {
         private IState currentState;
         private List<CombatStrategyNode> startedPhaseNodes = new List<CombatStrategyNode>();
         private bool aggroEnabled = false;
+        private UnitMovementController unitMovementController = null;
 
         // targeting
         private Interactable target = null;
@@ -490,6 +491,7 @@ namespace AnyRPG {
         public bool IsStealth { get => isStealth; set => isStealth = value; }
         public int CharacterId { get => characterId; set => characterId = value; }
         public bool AggroEnabled { get => aggroEnabled; }
+        public UnitMovementController UnitMovementController { get => unitMovementController; set => unitMovementController = value; }
 
         public override void AutoConfigure(SystemGameManager systemGameManager) {
             // don't do anything here.  Unitcontrollers should never be autoconfigured
@@ -880,6 +882,7 @@ namespace AnyRPG {
             }
             agent.avoidancePriority = 0;
             DisableAgent();
+            unitMovementController.Init();
         }
 
         /// <summary>
@@ -937,6 +940,7 @@ namespace AnyRPG {
             myCollider.isTrigger = true;
         }
 
+        /*
         public void ConfigurePlayer() {
             //Debug.Log($"{gameObject.name}.UnitController.ConfigurePlayer()");
             playerManager.SetUnitController(this);
@@ -945,11 +949,15 @@ namespace AnyRPG {
             // disabled for now, testing new method that checks for renderers before changing layer and allowing it to happen in EnablePlayer()
             //unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultPlayerUnitLayer);
         }
+        */
 
         public void SetUnitControllerMode(UnitControllerMode unitControllerMode) {
-            //Debug.Log($"{gameObject.name}.UnitController.SetUnitControllerMode(" + unitControllerMode + ")");
+            //Debug.Log($"{gameObject.name}.UnitController.SetUnitControllerMode({unitControllerMode})");
 
             this.unitControllerMode = unitControllerMode;
+            if (unitControllerMode == UnitControllerMode.Player) {
+                unitMovementController = new UnitMovementController(this, systemGameManager);
+            }
         }
 
         public void ActivateUnitControllerMode() {
@@ -1106,6 +1114,7 @@ namespace AnyRPG {
             unitActionManager = null;
             unitMountManager = null;
             unitVoiceController = null;
+            unitMovementController = null;
 
             uuid = null;
 
@@ -1366,7 +1375,7 @@ namespace AnyRPG {
         }
 
         private void SetUnitProfileInteractables() {
-            Debug.Log($"{gameObject.name}UnitController.SetUnitProfileInteractables()");
+            //Debug.Log($"{gameObject.name}UnitController.SetUnitProfileInteractables()");
 
             if (unitProfile == null) {
                 return;
@@ -1402,6 +1411,11 @@ namespace AnyRPG {
 
         private void SetStartPosition() {
             //Debug.Log($"{gameObject.name}.UnitController.SetStartPosition(): {transform.position}");
+
+            if (unitControllerMode == UnitControllerMode.Preview) {
+                // preview units should not have their position changed at all by the unit controller
+                return;
+            }
 
             // pets have their start position set by master
             if (unitControllerMode != UnitControllerMode.Pet) {
@@ -1512,9 +1526,7 @@ namespace AnyRPG {
             currentState.Enter(this);
         }
 
-        protected /*override*/ void Update() {
-            //base.Update();
-
+        protected void Update() {
             // with new network code that requests save data before the configuration is complete, we need to check if the unit is initialized
             // because it may take a while to get the save data back
             if (initialized == false) {
@@ -1529,6 +1541,12 @@ namespace AnyRPG {
             // no need to update if this is a preview unit
             if (unitControllerMode == UnitControllerMode.Preview) {
                 return;
+            }
+
+            // in network mode, this is handled by the FishNetUnitController inside a [Replicate] call for client side prediction
+            if ((unitControllerMode == UnitControllerMode.Mount || unitControllerMode == UnitControllerMode.Player) && systemGameManager.GameMode == GameMode.Local) {
+                MovementData movementData = unitMovementController.ProcessGatheredInput();
+                unitMovementController.StateUpdate(movementData, Time.deltaTime);
             }
 
             if (motorEnabled) {
@@ -1583,6 +1601,11 @@ namespace AnyRPG {
 
             if (apparentVelocity > 0.1f && lastApparentVelocity > 0.1f) {
                 //Debug.Log($"{gameObject.name}.UnitController.CalculateVelocityEffects() position: ({rigidBody.position.x}, {rigidBody.position.y}, {rigidBody.position.z}) ; apparentVelocity: {apparentVelocity}");
+                /*
+                if (unitControllerMode == UnitControllerMode.Player && networkManagerServer.ServerModeActive == true) {
+                    Physics.SyncTransforms();
+                }
+                */
                 characterAbilityManager.HandleApparentMovement();
                 unitActionManager.HandleApparentMovement();
                 unitEventController.NotifyOnMovement();
@@ -2597,6 +2620,22 @@ namespace AnyRPG {
         public void StartBackgroundMusic() {
             behaviorController.StartBackgroundMusic();
         }
+
+        public void Knockback(float explosionForce, Vector3 explosionCenter, float upwardModifier) {
+            if (unitMovementController != null) {
+                unitMovementController.KnockBack();
+            }
+            unitMotor.Knockback(explosionForce, explosionCenter, upwardModifier);
+
+        }
+
+        public void Knockback(Vector3 direction) {
+            if (unitMovementController != null) {
+                unitMovementController.KnockBack();
+            }
+            unitMotor.Move(direction);
+        }
+
 
         #endregion
     }

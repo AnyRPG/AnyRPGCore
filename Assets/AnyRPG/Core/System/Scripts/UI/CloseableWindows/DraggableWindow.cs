@@ -98,7 +98,7 @@ namespace AnyRPG {
                 if (dragString != null && dragString != string.Empty && dragText != null) {
                     dragText.gameObject.SetActive(true);
                     dragText.raycastTarget = true;
-                    if (controlsManager.GamePadModeActive == true) {
+                    if (controlsManager.GamepadModeActive == true) {
                         dragText.text = gamepadDragString;
                     } else {
                         dragText.text = dragString;

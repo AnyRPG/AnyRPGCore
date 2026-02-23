@@ -6696,6 +6696,10 @@ MonoBehaviour:
   defaultBackpackItem: 
   defaultBankContents: []
   defaultControllerConfiguration: 0
+  defaultGroundMask:
+    serializedVersion: 2
+    m_Bits: 33554433
+  maxMovementSpeed: 20
   maxTurnSpeed: 360
   walkSpeed: 1
   runSpeed: 7
@@ -7010,10 +7014,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcda888b4a7d23648afb618e0bf3b481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxMovementSpeed: 20
-  defaultGroundMask:
-    serializedVersion: 2
-    m_Bits: 33554433
   playerConnectionParent: {fileID: 6420953126111558378}
   playerConnectionPrefab: {fileID: 2692339740015506113, guid: 1a2ebeec0a9dc3748a0522c6673b909f,
     type: 3}

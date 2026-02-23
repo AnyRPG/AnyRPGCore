@@ -12,18 +12,7 @@ namespace AnyRPG {
         public event System.Action<int> AbilityButtonPressedHandler = delegate { };
         public event System.Action<bool> ToggleRunHandler = delegate { };
 
-        //Inputs.
-        [HideInInspector] public bool inputJump;
-        // inputFly is inputJump but true if held or pressed
-        [HideInInspector] public bool inputFly;
-        [HideInInspector] public bool inputSink;
-        [HideInInspector] public bool inputStrafe;
-        [HideInInspector] public bool inputCrouch;
-        //[HideInInspector] public float inputAimVertical = 0;
-        //[HideInInspector] public float inputAimHorizontal = 0;
-        [HideInInspector] public float inputHorizontal = 0;
-        [HideInInspector] public float inputTurn = 0;
-        [HideInInspector] public float inputVertical = 0;
+        private MovementData movementData = new MovementData();
 
         //Variables
         [HideInInspector]
@@ -31,17 +20,6 @@ namespace AnyRPG {
 
         [HideInInspector]
         public bool autorunActive = false;
-
-        public bool canMove = false;
-        public bool canAction = false;
-
-        [HideInInspector] public Vector3 NormalizedMoveInput;
-        [HideInInspector] public Vector3 TurnInput;
-        [HideInInspector] public Vector2 aimInput;
-
-        public LayerMask movementMask;
-
-        public float tabTargetMaxDistance = 20f;
 
         private List<Interactable> interactables = new List<Interactable>();
         private Interactable mouseOverInteractable = null;
@@ -56,7 +34,7 @@ namespace AnyRPG {
 
         // game manager references
         protected InputManager inputManager = null;
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected MessageFeedManager messageFeedManager = null;
         protected NamePlateManager namePlateManager = null;
         protected CameraManager cameraManager = null;
@@ -73,11 +51,12 @@ namespace AnyRPG {
 
         public List<Interactable> Interactables { get => interactables; }
         public RaycastHit MouseOverhit { get => mouseOverhit; set => mouseOverhit = value; }
+        public MovementData MovementData { get => movementData; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             inputManager = systemGameManager.InputManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
             namePlateManager = systemGameManager.UIManager.NamePlateManager;
             cameraManager = systemGameManager.CameraManager;
@@ -100,10 +79,10 @@ namespace AnyRPG {
                 interactables.Add(interactable);
             }
 
-            if (playerManager.ActiveUnitController.UnitMotor.InteractionTarget != null
-                && playerManager.ActiveUnitController.UnitMotor.InteractionTarget == interactable
-                && playerManager.ActiveUnitController.UnitMotor.InteractionTransform == null) { 
-                playerManager.ActiveUnitController.UnitMotor.StopFollowingTarget();
+            if (playerManagerClient.ActiveUnitController.UnitMotor.InteractionTarget != null
+                && playerManagerClient.ActiveUnitController.UnitMotor.InteractionTarget == interactable
+                && playerManagerClient.ActiveUnitController.UnitMotor.InteractionTransform == null) { 
+                playerManagerClient.ActiveUnitController.UnitMotor.StopFollowingTarget();
                 InterActWithTarget(interactable);
                 return;
             }
@@ -128,7 +107,7 @@ namespace AnyRPG {
             //Debug.Log("PlayerController.ShowHideInteractionPopup() count: " + interactables.Count);
 
             if (interactables.Count > 0
-                && interactables[interactables.Count - 1].GetCurrentInteractables(playerManager.UnitController).Count > 0) {
+                && interactables[interactables.Count - 1].GetCurrentInteractables(playerManagerClient.UnitController).Count > 0) {
                 uIManager.ShowInteractionTooltip(interactables[interactables.Count - 1]);
             } else {
                 uIManager.HideInteractionToolTip();
@@ -156,105 +135,105 @@ namespace AnyRPG {
             interactables.Clear();
         }
 
-        public void ResetMoveInput() {
-            inputJump = false;
-            inputFly = false;
-            inputSink = false;
-            inputStrafe = false;
-            inputCrouch = false;
-            //inputAimVertical = 0f;
-            //inputAimHorizontal = 0f;
-            inputHorizontal = 0;
-            inputVertical = 0;
-            inputTurn = 0;
-
-            NormalizedMoveInput = NormalizedVelocity(new Vector3(inputHorizontal, 0, inputVertical));
-            TurnInput = new Vector3(inputTurn, 0, 0);
-        }
-
-
         private void CollectMoveInput() {
             //Debug.Log("PlayerController.CollectMoveInput()");
+            movementData.ResetMoveInput();
+
+            if (allowedInput == false) {
+                //Debug.Log("Not allowed to Collect Move Input. Exiting PlayerController.CollectMoveInput()");
+                return;
+            }
+            if (inputManager.rightMouseButtonDown
+                && (inputManager.rightMouseButtonClickedOverUI == false || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))) {
+                movementData.RightMouseButtonDown = true;
+                if (inputManager.rightMouseButtonDownPosition != Input.mousePosition) {
+                    movementData.RightMouseDragged = true;
+                }
+            }
+            
+            if (windowManager.CurrentWindow == null) {
+                movementData.RightAnalogHorizontal = Input.GetAxis("RightAnalogHorizontal");
+            }
+
+            movementData.CameraWantedDirection = cameraManager.MainCameraController.WantedDirection;
+            movementData.CameraLocalEulerAngleX = cameraManager.MainCamera.transform.localEulerAngles.x;
+
+            movementData.GamepadModeActive = controlsManager.GamepadModeActive;
 
             // don't allow jump or crouch while activating action bars
             if (controlsManager.LeftTriggerDown == false && controlsManager.RightTriggerDown == false) {
-                inputJump = inputManager.KeyBindWasPressed("JUMP");
-                inputFly = inputManager.KeyBindWasPressedOrHeld("JUMP");
-                inputSink = inputManager.KeyBindWasPressedOrHeld("CROUCH");
-                inputCrouch = inputManager.KeyBindWasPressed("CROUCH");
+                if (inputManager.KeyBindWasPressed("JUMP")) {
+                     movementData.inputJump = true;
+                }
+                if (inputManager.KeyBindWasPressedOrHeld("JUMP")) {
+                    movementData.inputFly = true;
+                }
+                if (inputManager.KeyBindWasPressedOrHeld("CROUCH")) {
+                    movementData.inputSink = true;
+                }
+                if (inputManager.KeyBindWasPressed("CROUCH")) {
+                    movementData.inputCrouch = true;
+                }
             }
 
-            inputStrafe = inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") || inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT");
-            //inputAimVertical = Input.GetAxisRaw("AimVertical");
-            //inputAimHorizontal = Input.GetAxisRaw("AimHorizontal");
+            movementData.inputStrafe = inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") || inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT");
 
             // gather joystick move input
-            inputHorizontal = Input.GetAxis("LeftAnalogHorizontal");
-            inputVertical = Input.GetAxis("LeftAnalogVertical");
-            //Debug.Log("Joystick inputHorizontal: " + inputHorizontal + "; vertical: " + inputVertical);
+            movementData.inputHorizontal = Input.GetAxis("LeftAnalogHorizontal");
+            movementData.inputVertical = Input.GetAxis("LeftAnalogVertical");
 
             // gather keyboard move input
-            inputHorizontal += (inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT") ? 1 : 0);
-            inputVertical += (inputManager.KeyBindWasPressedOrHeld("BACK") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("FORWARD") ? 1 : 0);
-
-            // only gather gamepad turn input while moving
-            // temporarily disabled because gamepad movement turning is done by rotating the camera since everything is camera relative
-            /*
-            if (inputHorizontal != 0f || inputVertical != 0f) {
-                inputTurn = Input.GetAxis("RightAnalogHorizontal");
-            }
-            */
+            movementData.inputHorizontal += (inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT") ? 1 : 0);
+            movementData.inputVertical += (inputManager.KeyBindWasPressedOrHeld("BACK") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("FORWARD") ? 1 : 0);
 
             // gather keyboard turn input
-            inputTurn += (inputManager.KeyBindWasPressedOrHeld("TURNLEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("TURNRIGHT") ? 1 : 0);
+            movementData.inputTurn += (inputManager.KeyBindWasPressedOrHeld("TURNLEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("TURNRIGHT") ? 1 : 0);
 
             // turn off autorun if there is any movement input
             if (autorunActive
-                && ((inputHorizontal != 0f) || (inputVertical != 0f) || inputJump || inputFly || inputSink || inputStrafe || inputCrouch)) {
+                && ((movementData.inputHorizontal != 0f) || (movementData.inputVertical != 0f) || movementData.inputJump || movementData.inputFly || movementData.inputSink || movementData.inputStrafe || movementData.inputCrouch)) {
                 ToggleAutorun();
             }
 
             if (autorunActive) {
-                inputVertical = 1;
+                movementData.inputVertical = 1;
             }
 
-            NormalizedMoveInput = NormalizedVelocity(new Vector3(inputHorizontal, 0, inputVertical));
-            TurnInput = new Vector3(inputTurn, 0, 0);
+            movementData.NormalizedMoveInput = NormalizedVelocity(new Vector3(movementData.inputHorizontal, 0, movementData.inputVertical));
+            movementData.TurnInput = new Vector3(movementData.inputTurn, 0, 0);
 
-            if (HasAnyInput()) {
-                //Debug.Log("PlayerController.CollectMoveInput(): hasMoveInput");
-                playerManager.ActiveUnitController.UnitMotor.StopFollowingTarget();
-                playerManager.ActiveUnitController.CommonMovementNotifier();
+            if (movementData.HasAnyInput()) {
+                // turn off the projector, so it has to be done client side
+                playerManagerClient.ActiveUnitController.CommonMovementNotifier();
             }
-        }
 
-        /*
-        private void CollectAimInput() {
-            aimInput = new Vector2(inputAimHorizontal, inputAimVertical);
+            playerManagerClient.ActiveUnitController.UnitMovementController.AddMovementData(movementData);
         }
-        */
 
         public void ProcessInput() {
-            //Debug.Log("PlayerController.Update()");
+            //Debug.Log("PlayerController.ProcessInput()");
             //ResetMoveInput();
 
-            if (playerManager.ActiveUnitController == null) {
-                //Debug.Log($"{gameObject.name}.PlayerController.Update(): Player Unit is not spawned. Exiting");
+            if (playerManagerClient.ActiveUnitController == null) {
+                //Debug.Log($"{gameObject.name}.PlayerController.ProcessInput(): Player Unit is not spawned. Exiting");
+                return;
+            }
+
+            if (playerManagerClient.ActiveUnitController.CameraTargetReady == false) {
+                //Debug.Log($"{gameObject.name}.PlayerController.ProcessInput(): Camera Target is not ready. Exiting");
                 return;
             }
 
             if (allowedInput == false) {
-                //Debug.Log("Not allowed to Collect Move Input. Exiting PlayerController Update!");
+                //Debug.Log("Not allowed to Collect Move Input. Exiting PlayerController ProcessInput!");
                 return;
             }
-
-            //CollectAimInput();
 
             HandleCancelButtonPressed();
 
             HandleMouseOver();
 
-            if (playerManager.ActiveUnitController?.CharacterStats.IsAlive == false) {
+            if (playerManagerClient.ActiveUnitController?.CharacterStats.IsAlive == false) {
                 // can't interact, perform abilities or handle movement when dead
                 return;
             }
@@ -269,7 +248,7 @@ namespace AnyRPG {
             RegisterTab();
 
             // everything below this point cannot be done while control locked
-            if (playerManager?.ActiveUnitController != null && playerManager.ActiveUnitController.ControlLocked == true) {
+            if (playerManagerClient.ActiveUnitController.ControlLocked == true) {
                 return;
             }
 
@@ -282,8 +261,6 @@ namespace AnyRPG {
             ProcessGamepadButtonClicks();
 
             RegisterAbilityButtonPresses();
-
-
         }
 
 
@@ -294,69 +271,21 @@ namespace AnyRPG {
             return inputVelocity;
         }
 
-        public bool HasAnyInput() {
-            if (allowedInput && (NormalizedMoveInput != Vector3.zero || TurnInput != Vector3.zero || aimInput != Vector2.zero || inputJump != false)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        public bool HasWaterMoveInput() {
-            if (allowedInput && (NormalizedMoveInput != Vector3.zero || TurnInput != Vector3.zero || inputSink != false || inputFly != false)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        public bool HasFlyMoveInput() {
-            if (allowedInput && (NormalizedMoveInput != Vector3.zero || TurnInput != Vector3.zero || inputSink != false || inputFly != false)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        public bool HasMoveInput() {
-            if (allowedInput && NormalizedMoveInput != Vector3.zero) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        public bool HasTurnInput() {
-            if (allowedInput && TurnInput != Vector3.zero) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        public bool HasAimInput() {
-            if (allowedInput && (aimInput.x < -0.8f || aimInput.x > 0.8f) || (aimInput.y < -0.8f || aimInput.y > 0.8f)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
         private void ToggleRun() {
             //Debug.Log("PlayerController.ToggleRun()");
             if (inputManager.KeyBindWasPressed("TOGGLERUN")
                 || (controlsManager.DPadDownPressed == true && controlsManager.LeftTriggerDown == false && controlsManager.RightTriggerDown == false)) {
                 EventParamProperties eventParamProperties = new EventParamProperties();
-                if (playerManager.ActiveUnitController.Walking == false) {
-                    playerManager.ActiveUnitController.Walking = true;
+                if (playerManagerClient.ActiveUnitController.Walking == false) {
+                    playerManagerClient.ActiveUnitController.Walking = true;
                     eventParamProperties.simpleParams.BoolParam = true;
                 } else {
-                    playerManager.ActiveUnitController.Walking = false;
+                    playerManagerClient.ActiveUnitController.Walking = false;
                     eventParamProperties.simpleParams.BoolParam = false;
                 }
                 SystemEventManager.TriggerEvent("OnToggleRun", eventParamProperties);
-                messageFeedManager.WriteMessage("Walk: " + playerManager.ActiveUnitController.Walking.ToString());
-                ToggleRunHandler(playerManager.ActiveUnitController.Walking);
+                messageFeedManager.WriteMessage("Walk: " + playerManagerClient.ActiveUnitController.Walking.ToString());
+                ToggleRunHandler(playerManagerClient.ActiveUnitController.Walking);
             }
         }
 
@@ -378,13 +307,6 @@ namespace AnyRPG {
             }
             SystemEventManager.TriggerEvent("OnToggleAutorun", eventParamProperties);
             messageFeedManager.WriteMessage("Autorun: " + autorunActive.ToString());
-        }
-
-        protected void FixedUpdate() {
-            // TODO : work out click to move and delayed interaction logic in a way that properly tracks the target you are trying to get to
-            // instead of just using the generic target variable
-            // disabled until click-to-move is re-enabled in a consistent way
-            //CheckForInteraction();
         }
 
         private bool MouseOutsideScreen() {
@@ -434,8 +356,8 @@ namespace AnyRPG {
             if (!EventSystem.current.IsPointerOverGameObject() && !mouseOverNamePlate) {
                 if (Physics.Raycast(ray, out mouseOverhit, 100, layerMask)) {
                     // prevent clicking on mount
-                    if (mouseOverhit.collider.gameObject != playerManager.ActiveUnitController.gameObject
-                        && mouseOverhit.collider.gameObject != playerManager.UnitController.gameObject) {
+                    if (mouseOverhit.collider.gameObject != playerManagerClient.ActiveUnitController.gameObject
+                        && mouseOverhit.collider.gameObject != playerManagerClient.UnitController.gameObject) {
                         Interactable newInteractable = mouseOverhit.collider.GetComponent<Interactable>();
                         if (newInteractable == null) {
                             newInteractable = mouseOverhit.collider.GetComponentInParent<Interactable>();
@@ -529,13 +451,13 @@ namespace AnyRPG {
                 return;
             }
 
-            if (playerManager.UnitController.Target == null || playerManager.UnitController.Target != interactable) {
-                playerManager.UnitController.ClearTarget();
-                playerManager.UnitController.SetTarget(interactable);
+            if (playerManagerClient.UnitController.Target == null || playerManagerClient.UnitController.Target != interactable) {
+                playerManagerClient.UnitController.ClearTarget();
+                playerManagerClient.UnitController.SetTarget(interactable);
             }
 
-            Dictionary<int, InteractableOptionComponent> inRangeInteractables = interactable.GetInRangeInteractables(playerManager.UnitController);
-            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.GetCurrentInteractables(playerManager.UnitController);
+            Dictionary<int, InteractableOptionComponent> inRangeInteractables = interactable.GetInRangeInteractables(playerManagerClient.UnitController);
+            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.GetCurrentInteractables(playerManagerClient.UnitController);
 
             // there are no options to interact with
             if (currentInteractables.Count == 0) {
@@ -545,9 +467,9 @@ namespace AnyRPG {
 
             // the player is trying to interact with something that is out of range, but there are interactables available, so we should move toward the target
             if (inRangeInteractables.Count == 0) {
-                if (playerManager.PlayerUnitMovementController.useMeshNav && systemConfigurationManager.AllowClickToMove) {
+                if (playerManagerClient.ActiveUnitController.UnitMovementController.useMeshNav && systemConfigurationManager.AllowClickToMove) {
                     //Debug.Log($"{gameObject.name}.InterActWithTarget({interactable.gameObject.name}) out of range, following target");
-                    playerManager.ActiveUnitController.UnitMotor.FollowInteractionTarget(playerManager.UnitController.Target);
+                    playerManagerClient.ActiveUnitController.UnitMotor.FollowInteractionTarget(playerManagerClient.UnitController.Target);
                 }
                 return;
             }
@@ -556,13 +478,13 @@ namespace AnyRPG {
             // Attack interactions are always valid at any range, so we need to check if within attack range for the currently equipped weapon.
             // If not, move toward the target.
             if (inRangeInteractables.Count == 1 && inRangeInteractables.First().Value.InteractionType == InteractionType.Attack) {
-                if (playerManager.UnitController.CharacterAbilityManager.AutoAttackAbility != null) {
-                    float attackRange = playerManager.UnitController.CharacterAbilityManager.AutoAttackAbility.GetTargetOptions(playerManager.UnitController).MaxRange;
-                    float distanceToTarget = Vector3.Distance(playerManager.ActiveUnitController.transform.position, interactable.transform.position);
+                if (playerManagerClient.UnitController.CharacterAbilityManager.AutoAttackAbility != null) {
+                    float attackRange = playerManagerClient.UnitController.CharacterAbilityManager.AutoAttackAbility.GetTargetOptions(playerManagerClient.UnitController).MaxRange;
+                    float distanceToTarget = Vector3.Distance(playerManagerClient.ActiveUnitController.transform.position, interactable.transform.position);
                     if (distanceToTarget > attackRange) {
-                        if (playerManager.PlayerUnitMovementController.useMeshNav && systemConfigurationManager.AllowClickToMove) {
+                        if (playerManagerClient.ActiveUnitController.UnitMovementController.useMeshNav && systemConfigurationManager.AllowClickToMove) {
                             //Debug.Log($"{gameObject.name}.InterActWithTarget({interactable.gameObject.name}) out of range for attack, following target");
-                            playerManager.ActiveUnitController.UnitMotor.FollowAttackTarget(interactable, attackRange);
+                            playerManagerClient.ActiveUnitController.UnitMotor.FollowAttackTarget(interactable, attackRange);
                         }
                         //return;
                     }
@@ -616,46 +538,49 @@ namespace AnyRPG {
             // no crossbar was activated, buttons will perform their native functions
             if (inputManager.KeyBindWasPressed("ACCEPT")) {
                 // accept button when targeting should just confirm target and nothing else
-                if (playerManager.ActiveUnitController?.CharacterAbilityManager.WaitingForTarget() == false) {
+                if (playerManagerClient.ActiveUnitController?.CharacterAbilityManager.WaitingForTarget() == false) {
 
                     if (interactables.Count > 0) {
                         // range interactables are priority
                         InterActWithTarget(interactables[interactables.Count - 1]);
                     } else {
                         // allow friendly target when nothing is targeted
-                        if (playerManager.UnitController.Target == null) {
-                            GetNextTabTarget(playerManager.UnitController.Target, true, true);
+                        if (playerManagerClient.UnitController.Target == null) {
+                            GetNextTabTarget(playerManagerClient.UnitController.Target, true, true);
                         } else {
-                            InterActWithTarget(playerManager.UnitController.Target);
+                            InterActWithTarget(playerManagerClient.UnitController.Target);
                         }
                     }
                 } else {
-                    if (playerManager.ActiveUnitController.CharacterAbilityManager.WaitingForTarget()) {
+                    if (playerManagerClient.ActiveUnitController.CharacterAbilityManager.WaitingForTarget()) {
                         FinishGroundTarget(castTargettingManager.CastTargetController.VirtualCursor);
                     }
                 }
             } else if (controlsManager.DPadRightPressed) {
-                GetNextTabTarget(playerManager.UnitController.Target, true, false);
+                GetNextTabTarget(playerManagerClient.UnitController.Target, true, false);
             } else if (controlsManager.DPadLeftPressed) {
-                GetNextTabTarget(playerManager.UnitController.Target, true, false, false);
+                GetNextTabTarget(playerManagerClient.UnitController.Target, true, false, false);
             }
         }
 
         private void FinishGroundTarget(Vector3 targetPosition) {
             Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(targetPosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100, movementMask)) {
-                playerManager.ActiveUnitController.CharacterAbilityManager.SetGroundTargetClient(hit.point);
+            if (Physics.Raycast(ray, out hit, 100, systemConfigurationManager.DefaultGroundMask)) {
+                playerManagerClient.ActiveUnitController.CharacterAbilityManager.SetGroundTargetClient(hit.point);
             }
         }
 
         private void ClickToMove(Vector3 targetPosition) {
             Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(targetPosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100, movementMask)) {
+            if (Physics.Raycast(ray, out hit, 100, systemConfigurationManager.DefaultGroundMask)) {
                 uIManager.MovementTargetController.SetPosition(hit.point);
-                playerManager.ActiveUnitController.EnableAgent();
-                playerManager.ActiveUnitController.UnitMotor.MoveToPoint(hit.point);
+                if (systemGameManager.GameMode == GameMode.Local) {
+                    playerManagerClient.ActiveUnitController.UnitMotor.ClickToMove(hit.point);
+                } else {
+                    playerManagerClient.ActiveUnitController.UnitEventController.NotifyOnRequestClickToMove(hit.point);
+                }
             }
         }
 
@@ -677,8 +602,6 @@ namespace AnyRPG {
                 return;
             }
 
-            //Debug.Log("PlayerController.HandleLeftMouseClick()");
-
             if (EventSystem.current.IsPointerOverGameObject() && !namePlateManager.MouseOverNamePlate()) {
                 //Debug.Log("PlayerController.HandleLeftMouseClick(): clicked over UI and not nameplate.  exiting");
                 return;
@@ -686,25 +609,20 @@ namespace AnyRPG {
 
             contextMenuService.CloseContextMenu();
 
-            //if (inputManager.leftMouseButtonClicked && !EventSystem.current.IsPointerOverGameObject()) {
             if (mouseOverInteractable == null && !namePlateManager.MouseOverNamePlate()) {
-                // Stop focusing any object
-                //RemoveFocus();
-                playerManager.UnitController.ClearTarget();
+                playerManagerClient.UnitController.ClearTarget();
             } else if (mouseOverInteractable != null) {
-                //playerManager.UnitController.SetTarget(mouseOverInteractable);
                 if (mouseOverInteractable.IsMouseOverBlocked() == false) {
                     //Debug.Log("PlayerController.HandleLeftMouseClick(): mouseover blocked");
-                    playerManager.UnitController.SetTarget(mouseOverInteractable.CharacterTarget);
+                    playerManagerClient.UnitController.SetTarget(mouseOverInteractable.CharacterTarget);
                     return;
                 }
             }
-            //}
 
-            if (playerManager.ActiveUnitController.CharacterAbilityManager.WaitingForTarget()) {
+            if (playerManagerClient.ActiveUnitController.CharacterAbilityManager.WaitingForTarget()) {
                 FinishGroundTarget(Input.mousePosition);
             } else if (systemConfigurationManager.AllowClickToMove == true) {
-                if (playerManager?.ActiveUnitController != null && playerManager.ActiveUnitController.ControlLocked == true) {
+                if (playerManagerClient?.ActiveUnitController != null && playerManagerClient.ActiveUnitController.ControlLocked == true) {
                     return;
                 }
                 ClickToMove(Input.mousePosition);
@@ -735,7 +653,7 @@ namespace AnyRPG {
         private bool InteractionSucceeded(Interactable target) {
             //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded()");
 
-            if (playerManager.UnitController == null) {
+            if (playerManagerClient.UnitController == null) {
                 return false;
             }
 
@@ -744,7 +662,7 @@ namespace AnyRPG {
                 return false;
             }
 
-            return interactionManager.Interact(playerManager.UnitController, target);
+            return interactionManager.Interact(playerManagerClient.UnitController, target);
         }
 
         private void RegisterTab() {
@@ -754,7 +672,7 @@ namespace AnyRPG {
             // register keyboard tab target, only allow enemy target
             if (inputManager.KeyBindWasPressed("NEXTTARGET")) {
                 //Debug.Log("Tab Target Registered");
-                GetNextTabTarget(playerManager.UnitController.Target, false, false);
+                GetNextTabTarget(playerManagerClient.UnitController.Target, false, false);
             }
         }
 
@@ -771,7 +689,7 @@ namespace AnyRPG {
             UnitController targetCharacterUnit = interactable.GetComponent<UnitController>();
             if (targetCharacterUnit != null
                 && targetCharacterUnit.CharacterStats.IsAlive == true
-                && Faction.RelationWith(targetCharacterUnit, playerManager.UnitController.BaseCharacter.Faction) <= -1) {
+                && Faction.RelationWith(targetCharacterUnit, playerManagerClient.UnitController.BaseCharacter.Faction) <= -1) {
                 return true;
             }
             return false;
@@ -786,14 +704,14 @@ namespace AnyRPG {
                 validMask = 1 << LayerMask.NameToLayer("CharacterUnit") | (1 << LayerMask.NameToLayer("Player"));
             }
             Collider[] hitColliders = new Collider[100];
-            playerManager.UnitController.PhysicsScene.OverlapSphere(playerManager.ActiveUnitController.transform.position, tabTargetMaxDistance, hitColliders, validMask, QueryTriggerInteraction.UseGlobal);
+            playerManagerClient.UnitController.PhysicsScene.OverlapSphere(playerManagerClient.ActiveUnitController.transform.position, systemConfigurationManager.TabTargetMaxDistance, hitColliders, validMask, QueryTriggerInteraction.UseGlobal);
             //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length + "; index: " + tabTargetIndex);
 
             // although the layermask on the collider should have only delivered us valid characterUnits, they may be dead or friendly.  We need to put all the valid attack targets in a list first
             foreach (Collider hitCollider in hitColliders) {
                 //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length);
                 //GameObject collidedGameObject = hitCollider.gameObject;
-                if (hitCollider == null || hitCollider.gameObject == playerManager.UnitController.gameObject) {
+                if (hitCollider == null || hitCollider.gameObject == playerManagerClient.UnitController.gameObject) {
                     continue;
                 }
                 Interactable targetInteractable = hitCollider.gameObject.GetComponent<Interactable>();
@@ -805,7 +723,7 @@ namespace AnyRPG {
 
                     // check if the unit is actually in front of our character.
                     // not doing any cone or angles for now, anywhere in front will do.  might adjust this a bit later to prevent targetting units nearly adjacent to us and far away
-                    Vector3 transformedPosition = playerManager.ActiveUnitController.transform.InverseTransformPoint(targetInteractable.transform.position);
+                    Vector3 transformedPosition = playerManagerClient.ActiveUnitController.transform.InverseTransformPoint(targetInteractable.transform.position);
                     if (transformedPosition.z > 0f) {
                         allTabTargets.Add(targetInteractable.CharacterTarget);
 
@@ -849,13 +767,13 @@ namespace AnyRPG {
             int farthestRightIndex = -1;
 
             if (oldTarget != null) {
-                currentx = playerManager.ActiveUnitController.transform.InverseTransformPoint(oldTarget.transform.position).x;
+                currentx = playerManagerClient.ActiveUnitController.transform.InverseTransformPoint(oldTarget.transform.position).x;
             }
 
             int i = 0;
             foreach (Interactable collidedGameObject in allTabTargets) {
                 //Debug.Log("PlayerController.GetNextTabTarget(): processing target: " + i + "; " + collidedGameObject.name);
-                targetDistance = Vector3.Distance(playerManager.ActiveUnitController.transform.position, collidedGameObject.transform.position);
+                targetDistance = Vector3.Distance(playerManagerClient.ActiveUnitController.transform.position, collidedGameObject.transform.position);
                 if (closestTargetIndex == -1) {
                     closestTargetIndex = i;
                     closestTargetDistance = targetDistance;
@@ -864,7 +782,7 @@ namespace AnyRPG {
                     closestTargetIndex = i;
                     closestTargetDistance = targetDistance;
                 }
-                xPosition = playerManager.ActiveUnitController.transform.InverseTransformPoint(collidedGameObject.transform.position).x;
+                xPosition = playerManagerClient.ActiveUnitController.transform.InverseTransformPoint(collidedGameObject.transform.position).x;
                 if (closestLeftIndex == -1 && xPosition <= currentx) {
                     //Debug.Log("no left index and x position " + xPosition + " < currentx " + currentx);
                     closestLeftDistance = xPosition;
@@ -920,37 +838,37 @@ namespace AnyRPG {
             // reset to closest unit every 3 seconds if starting a new round of tabbing.
             // otherwise, just keep going through the index
             if (controlsManager.DPadRightPressed == true) {
-                playerManager.UnitController.ClearTarget();
+                playerManagerClient.UnitController.ClearTarget();
                 if (oldTarget == null) {
                     //Debug.Log("DPadRightPressed : setting closest Target Index: " + closestTargetIndex + "; " + allTabTargets[closestTargetIndex]);
-                    playerManager.UnitController.SetTarget(allTabTargets[closestTargetIndex]);
+                    playerManagerClient.UnitController.SetTarget(allTabTargets[closestTargetIndex]);
                     return;
                 }
                 if (closestRightIndex != -1) {
                     //Debug.Log("DPadRightPressed : setting closest Right Index: " + closestRightIndex + "; " + allTabTargets[closestRightIndex]);
-                    playerManager.UnitController.SetTarget(allTabTargets[closestRightIndex]);
+                    playerManagerClient.UnitController.SetTarget(allTabTargets[closestRightIndex]);
                 } else {
                     //Debug.Log("DPadRightPressed : setting farthest Left Index: " + farthestLeftIndex + "; " + allTabTargets[farthestLeftIndex]);
-                    playerManager.UnitController.SetTarget(allTabTargets[farthestLeftIndex]);
+                    playerManagerClient.UnitController.SetTarget(allTabTargets[farthestLeftIndex]);
                 }
                 return;
             } else if (controlsManager.DPadLeftPressed == true) {
-                playerManager.UnitController.ClearTarget();
+                playerManagerClient.UnitController.ClearTarget();
                 if (oldTarget == null) {
-                    playerManager.UnitController.SetTarget(allTabTargets[closestTargetIndex]);
+                    playerManagerClient.UnitController.SetTarget(allTabTargets[closestTargetIndex]);
                     return;
                 }
                 if (closestLeftIndex != -1) {
-                    playerManager.UnitController.SetTarget(allTabTargets[closestLeftIndex]);
+                    playerManagerClient.UnitController.SetTarget(allTabTargets[closestLeftIndex]);
                 } else {
-                    playerManager.UnitController.SetTarget(allTabTargets[farthestRightIndex]);
+                    playerManagerClient.UnitController.SetTarget(allTabTargets[farthestRightIndex]);
                 }
                 return;
             }
             if (timeSinceLastTab.TotalSeconds > 3f || oldTarget == null) {
                 //Debug.Log("PlayerController.GetNextTabTarget(): More than 3 seconds since last tab");
-                playerManager.UnitController.ClearTarget();
-                playerManager.UnitController.SetTarget(allTabTargets[closestTargetIndex]);
+                playerManagerClient.UnitController.ClearTarget();
+                playerManagerClient.UnitController.SetTarget(allTabTargets[closestTargetIndex]);
                 /*
                 if (closestTargetIndex != -1 && allTabTargets[closestTargetIndex] != playerManager.UnitController.Target) {
                     // prevent a tab from re-targetting the same unit just because it's closest to us
@@ -978,9 +896,9 @@ namespace AnyRPG {
                 }
                 */
                 if (closestRightIndex != -1) {
-                    playerManager.UnitController.SetTarget(allTabTargets[closestRightIndex]);
+                    playerManagerClient.UnitController.SetTarget(allTabTargets[closestRightIndex]);
                 } else {
-                    playerManager.UnitController.SetTarget(allTabTargets[farthestLeftIndex]);
+                    playerManagerClient.UnitController.SetTarget(allTabTargets[farthestLeftIndex]);
                 }
             }
         }
@@ -993,9 +911,9 @@ namespace AnyRPG {
                 return;
             }
 
-            if ((playerManager.UnitController.Target == null || playerManager.UnitController.Target != interactable) && resetTarget == true) {
-                playerManager.UnitController.ClearTarget();
-                playerManager.UnitController.SetTarget(interactable);
+            if ((playerManagerClient.UnitController.Target == null || playerManagerClient.UnitController.Target != interactable) && resetTarget == true) {
+                playerManagerClient.UnitController.ClearTarget();
+                playerManagerClient.UnitController.SetTarget(interactable);
             }
 
             // the interactable is in range
@@ -1051,8 +969,8 @@ namespace AnyRPG {
             if (inputManager.KeyBindWasPressed("CANCELALL")
                 || (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1") && controlsManager.RightTriggerDown == false && controlsManager.LeftTriggerDown == false)) {
                 uIManager.MovementTargetController.DisableProjector();
-                playerManager.UnitController.ClearTarget();
-                if (playerManager.ActiveUnitController.CharacterStats.IsAlive != false) {
+                playerManagerClient.UnitController.ClearTarget();
+                if (playerManagerClient.ActiveUnitController.CharacterStats.IsAlive != false) {
                     // that stuff is already done by ClearTarget()
                     /*
                     if (playerManager.ActiveUnitController.UnitMotor.HasDestination() == true) {
@@ -1060,10 +978,10 @@ namespace AnyRPG {
                         playerManager.ActiveUnitController.UnitMotor.StopFollowingTarget();
                     }
                     */
-                    playerManager.ActiveUnitController.CharacterAbilityManager.TryToStopAnyAbility();
-                    playerManager.UnitController.UnitActionManager.TryToStopAction();
+                    playerManagerClient.ActiveUnitController.CharacterAbilityManager.TryToStopAnyAbility();
+                    playerManagerClient.UnitController.UnitActionManager.TryToStopAction();
                 }
-                playerManager.ActiveUnitController.CharacterAbilityManager.DeactivateTargetingMode();
+                playerManagerClient.ActiveUnitController.CharacterAbilityManager.DeactivateTargetingMode();
             }
         }
 
@@ -1106,101 +1024,11 @@ namespace AnyRPG {
             newTarget?.PhysicalTarget.SetTargeted();
         }
 
-        /// <summary>
-        /// Keep character from doing actions.
-        /// </summary>
-        void LockAction() {
-            canAction = false;
-        }
-
-        /// <summary>
-        /// Let character move and act again.
-        /// </summary>
-        void UnLock(bool movement, bool actions) {
-            if (movement) {
-                UnlockMovement();
-            }
-            if (actions) {
-                canAction = true;
-            }
-        }
-
-        /// <summary>
-        /// Lock character movement and/or action, on a delay for a set time.
-        /// </summary>
-        /// <param name="lockMovement">If set to <c>true</c> lock movement.</param>
-        /// <param name="lockAction">If set to <c>true</c> lock action.</param>
-        /// <param name="timed">If set to <c>true</c> timed.</param>
-        /// <param name="delayTime">Delay time.</param>
-        /// <param name="lockTime">Lock time.</param>
-        public void Lock(bool lockMovement, bool lockAction, bool timed, float delayTime, float lockTime) {
-            StopCoroutine("_Lock");
-            StartCoroutine(_Lock(lockMovement, lockAction, timed, delayTime, lockTime));
-        }
-
-        //Timed -1 = infinite, 0 = no, 1 = yes.
-        public IEnumerator _Lock(bool lockMovement, bool lockAction, bool timed, float delayTime, float lockTime) {
-            if (delayTime > 0) {
-                yield return new WaitForSeconds(delayTime);
-            }
-            if (lockMovement) {
-                LockMovement();
-            }
-            if (lockAction) {
-                LockAction();
-            }
-            if (timed) {
-                if (lockTime > 0) {
-                    yield return new WaitForSeconds(lockTime);
-                }
-                UnLock(lockMovement, lockAction);
-            }
-        }
-
-        public void HandleDie() {
-            //Debug.Log($"{gameObject.name}.PlayerController.HandleDeath()");
-            Lock(true, true, false, 0.1f, 0f);
-        }
-
-        public void HandleReviveBegin() {
-            HandleReviveBegin(8.0f);
-        }
-
-        public void HandleReviveBegin(float reviveTime) {
-            // add 0.1f to the revive time to prevent the player from being able to move immediately after reviving
-            Lock(true, true, true, 0f, reviveTime+0.1f);
-        }
-
-        //Keep character from moving.
-        public void LockMovement() {
-            //Debug.Log($"{gameObject.name}.PlayerController.LockMovement()");
-            canMove = false;
-            if (playerManager.ActiveUnitController != null) {
-                playerManager.ActiveUnitController.UnitAnimator.SetMoving(false);
-
-                // why do we do this?
-                //baseCharacter.UnitController.MyCharacterAnimator.EnableRootMotion();
-
-                if (playerManager.PlayerUnitMovementController != null) {
-                    playerManager.PlayerUnitMovementController.localMoveVelocity = new Vector3(0, 0, 0);
-                }
-            }
-        }
-
-        public void UnlockMovement() {
-            //Debug.Log($"{gameObject.name}.PlayerController.UnlockMovement()");
-            canMove = true;
-
-            // why do we do this?
-            // is it because this function is never really called ?
-            //baseCharacter.UnitController.MyCharacterAnimator.DisableRootMotion();
-        }
-
         public void StopInteract() {
             // the idea of this code is that it will allow us to keep an NPC focused if we back out of range while its interactable popup closes
             // if we don't have anything focused, then we were interacting with someting environmental and definitely want to clear that because it can lead to a hidden target being set
-            if (uIManager.FocusUnitFramePanel.UnitController == null && playerManager.UnitController != null) {
-                playerManager.UnitController.ClearTarget();
+            if (uIManager.FocusUnitFramePanel.UnitController == null && playerManagerClient.UnitController != null) {
+                playerManagerClient.UnitController.ClearTarget();
             }
         }
 
@@ -1208,51 +1036,51 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.PlayerController.SubscribeToUnitEvents()");
 
             // if player was agrod at spawn, they may have a target already since we subscribe on model ready
-            playerManager.ActiveUnitController.UnitEventController.OnSetTarget += HandleSetTarget;
-            if (playerManager.ActiveUnitController.Target != null) {
-                HandleSetTarget(playerManager.ActiveUnitController.Target);
+            playerManagerClient.ActiveUnitController.UnitEventController.OnSetTarget += HandleSetTarget;
+            if (playerManagerClient.ActiveUnitController.Target != null) {
+                HandleSetTarget(playerManagerClient.ActiveUnitController.Target);
             }
 
-            playerManager.ActiveUnitController.UnitEventController.OnClearTarget += HandleClearTarget;
-            playerManager.ActiveUnitController.UnitEventController.OnActivateMountedState += HandleActivateMountedState;
-            playerManager.ActiveUnitController.UnitEventController.OnDeactivateMountedState += HandleDeactivateMountedState;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnClearTarget += HandleClearTarget;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnActivateMountedState += HandleActivateMountedState;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnDeactivateMountedState += HandleDeactivateMountedState;
             systemEventManager.OnPlayerUnitDespawn += HandleUnitDespawn;
-            playerManager.ActiveUnitController.UnitEventController.OnCastCancel += HandleCastCancel;
-            playerManager.ActiveUnitController.UnitModelController.OnModelUpdated += HandleModelUpdated;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnCastCancel += HandleCastCancel;
+            playerManagerClient.ActiveUnitController.UnitModelController.OnModelUpdated += HandleModelUpdated;
 
             // subscribe and call in case the namePlate is already spawned
-            playerManager.ActiveUnitController.OnInitializeNamePlate += HandleInitializeNamePlate;
+            playerManagerClient.ActiveUnitController.OnInitializeNamePlate += HandleInitializeNamePlate;
             HandleInitializeNamePlate();
         }
 
         public void UnsubscribeFromUnitEvents() {
             //Debug.Log($"{gameObject.name}.PlayerController.UnsubscribeFromUnitEvents()");
-            playerManager.ActiveUnitController.UnitEventController.OnSetTarget -= HandleSetTarget;
-            playerManager.ActiveUnitController.UnitEventController.OnClearTarget -= HandleClearTarget;
-            playerManager.ActiveUnitController.UnitEventController.OnActivateMountedState -= HandleActivateMountedState;
-            playerManager.ActiveUnitController.UnitEventController.OnDeactivateMountedState -= HandleDeactivateMountedState;
-            playerManager.ActiveUnitController.OnInitializeNamePlate -= HandleInitializeNamePlate;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnSetTarget -= HandleSetTarget;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnClearTarget -= HandleClearTarget;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnActivateMountedState -= HandleActivateMountedState;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnDeactivateMountedState -= HandleDeactivateMountedState;
+            playerManagerClient.ActiveUnitController.OnInitializeNamePlate -= HandleInitializeNamePlate;
             systemEventManager.OnPlayerUnitDespawn -= HandleUnitDespawn;
-            playerManager.ActiveUnitController.UnitEventController.OnCastCancel -= HandleCastCancel;
-            playerManager.ActiveUnitController.UnitModelController.OnModelUpdated -= HandleModelUpdated;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnCastCancel -= HandleCastCancel;
+            playerManagerClient.ActiveUnitController.UnitModelController.OnModelUpdated -= HandleModelUpdated;
 
         }
 
         public void HandleModelUpdated() {
             if (systemGameManager.GameMode == GameMode.Local) {
-                playerManager.UnitController.CharacterSaveManager.SaveAppearanceData();
+                playerManagerClient.UnitController.CharacterSaveManager.SaveAppearanceData();
             }
         }
 
         public void HandleCastCancel() {
             //Debug.Log("PlayerController.HandleCastCancel()");
-            playerManager.UnitController.CharacterCraftingManager.ClearCraftingQueue();
+            playerManagerClient.UnitController.CharacterCraftingManager.ClearCraftingQueue();
         }
 
         public void HandleInitializeNamePlate() {
             //Debug.Log("PlayerController.HandleInitializeNamePlate()");
-            if (playerManager?.ActiveUnitController?.NamePlateController?.NamePlate != null) {
-                playerManager.ActiveUnitController.NamePlateController.NamePlate.SetPlayerOwnerShip();
+            if (playerManagerClient?.ActiveUnitController?.NamePlateController?.NamePlate != null) {
+                playerManagerClient.ActiveUnitController.NamePlateController.NamePlate.SetPlayerOwnerShip();
             }
         }
 
@@ -1264,52 +1092,24 @@ namespace AnyRPG {
 
         public void NotifyInteractablesOnDespawn() {
             foreach (Interactable interactable in interactables) {
-                interactable.RegisterDespawn(playerManager.ActiveUnitController.gameObject);
+                interactable.RegisterDespawn(playerManagerClient.ActiveUnitController.gameObject);
             }
         }
-
-        /*
-        public void HandleMessageFeed(string message) {
-            messageFeedManager.WriteMessage(message);
-        }
-        */
 
         public void HandleActivateMountedState(UnitController mountUnitController) {
 
-            playerManager.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
-
-            playerManager.SetActiveUnitController(mountUnitController);
+            playerManagerClient.SetActiveUnitController(mountUnitController);
 
             cameraManager.SwitchToMainCamera();
-            cameraManager.MainCameraController.InitializeCamera(playerManager.ActiveUnitController.transform);
-            /*
-            if (systemConfigurationManager.UseThirdPartyMovementControl == true) {
-                playerManager.EnableMovementControllers();
-            }
-            */
-
-            EventParamProperties eventParam = new EventParamProperties();
-            SystemEventManager.TriggerEvent("OnStartRiding", eventParam);
+            cameraManager.MainCameraController.InitializeCamera(playerManagerClient.ActiveUnitController.transform);
         }
 
         public void HandleDeactivateMountedState() {
 
-            /*
-            if (systemConfigurationManager.UseThirdPartyMovementControl == true) {
-                playerManager.DisableMovementControllers();
-            }
-            */
-            playerManager.SetActiveUnitController(playerManager.UnitController);
-            if (playerManager.UnitController != null) {
-                playerManager.UnitController.UnitAnimator.SetCorrectOverrideController();
-            }
+            playerManagerClient.SetActiveUnitController(playerManagerClient.UnitController);
 
             cameraManager.ActivateMainCamera();
-            cameraManager.MainCameraController.InitializeCamera(playerManager.UnitController.transform);
-
-            EventParamProperties eventParam = new EventParamProperties();
-            SystemEventManager.TriggerEvent("OnEndRiding", eventParam);
-
+            cameraManager.MainCameraController.InitializeCamera(playerManagerClient.UnitController.transform);
         }
 
         public void OnSendObjectToPool() {

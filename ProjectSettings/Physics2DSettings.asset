@@ -39,7 +39,7 @@ Physics2DSettings:
     m_IslandSolverJointCostScale: 10
     m_IslandSolverBodiesPerJob: 50
     m_IslandSolverContactsPerJob: 50
-  m_SimulationMode: 0
+  m_SimulationMode: 2
   m_SimulationLayers:
     serializedVersion: 2
     m_Bits: 4294967295

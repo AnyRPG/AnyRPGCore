@@ -315,7 +315,7 @@ namespace AnyRPG {
             }
             updateString += "\n";
 
-            updateString += "Movement Speed: " + Mathf.Clamp(playerManager.UnitController.CharacterStats.RunSpeed, 0, playerManager.MaxMovementSpeed).ToString("F2") + " (m/s)\n\n";
+            updateString += "Movement Speed: " + Mathf.Clamp(playerManager.UnitController.CharacterStats.RunSpeed, 0, systemConfigurationManager.MaxMovementSpeed).ToString("F2") + " (m/s)\n\n";
 
             statsDescription.text = updateString;
         }

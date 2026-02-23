@@ -193,6 +193,7 @@ namespace AnyRPG {
         public event Action OnDisableAggro = delegate { };
         public event Action OnEnableAggro = delegate { };
         public event Action OnReachDestination = delegate { };
+        public event Action<Vector3> OnRequestClickToMove = delegate { };
 
         //public event System.Action<BaseAbilityProperties, Interactable> OnTargetInAbilityRangeFail = delegate { };
 
@@ -206,6 +207,12 @@ namespace AnyRPG {
         }
 
         #region EventNotifications
+
+        public void NotifyOnRequestClickToMove(Vector3 destination) {
+            Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnRequestClickToMove({destination})");
+
+            OnRequestClickToMove(destination);
+        }
 
         public void NotifyOnDespawn(UnitController despawnController) {
             //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnDespawn()");

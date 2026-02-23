@@ -189,7 +189,7 @@ namespace AnyRPG {
         public override void Select() {
             base.Select();
 
-            if (controlsManager.GamePadInputActive == false && controlsManager.GamePadModeActive == false) {
+            if (controlsManager.GamePadInputActive == false && controlsManager.GamepadModeActive == false) {
                 // no reason to show gamepad tooltip if gamepad mode is not active
                 return;
             }

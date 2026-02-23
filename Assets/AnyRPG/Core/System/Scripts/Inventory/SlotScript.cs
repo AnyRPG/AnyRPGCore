@@ -81,7 +81,7 @@ namespace AnyRPG {
             //Debug.Log("SlotScript.SendItemToHandScript(): setting inventorymanager.myinstance.fromslot to this");
             handScript.TakeMoveable(inventorySlot.InstantiatedItem);
             playerManager.UnitController.CharacterInventoryManager.FromSlot = this;
-            if (controlsManager.GamePadModeActive == true) {
+            if (controlsManager.GamepadModeActive == true) {
                 handScript.SetPosition(transform.position);
             }
         }
@@ -282,7 +282,7 @@ namespace AnyRPG {
         public override void JoystickButton9() {
             base.JoystickButton9();
 
-            if (controlsManager.GamePadModeActive == true && handScript.Moveable != null) {
+            if (controlsManager.GamepadModeActive == true && handScript.Moveable != null) {
                 if (playerManager.UnitController.CharacterInventoryManager.FromSlot != null) {
                     DropItemFromInventorySlot();
                     ShowContextInfo();
@@ -304,7 +304,7 @@ namespace AnyRPG {
             //Debug.Log("SlotScript.Select()");
             base.Select();
 
-            if (controlsManager.GamePadModeActive == true && handScript.Moveable != null) {
+            if (controlsManager.GamepadModeActive == true && handScript.Moveable != null) {
                 handScript.SetPosition(transform.position);
             }
 

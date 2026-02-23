@@ -373,7 +373,7 @@ namespace AnyRPG {
                 Vector3 tempVector = new Vector3(transform.position.x + xLocation, transform.position.y + (ySize / 2), transform.position.z + zLocation);
                 Vector3 attemptVector = tempVector;
                 RaycastHit hit;
-                if (PhysicsScene.Raycast(attemptVector, Vector3.down, out hit, 500f, playerManager.PlayerController.movementMask)) {
+                if (PhysicsScene.Raycast(attemptVector, Vector3.down, out hit, 500f, systemConfigurationManager.DefaultGroundMask)) {
                     gotLocation = true;
                     spawnLocation = hit.point;
                     //Debug.Log("We hit " + hit.collider.name + " " + hit.point);

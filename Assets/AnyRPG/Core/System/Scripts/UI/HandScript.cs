@@ -51,7 +51,7 @@ namespace AnyRPG {
         public void ProcessInput() {
             //Debug.Log("HandScript.ProcessInput()");
 
-            if (controlsManager.GamePadModeActive == false) {
+            if (controlsManager.GamepadModeActive == false) {
                 transform.position = Input.mousePosition + offset;
                 if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && Moveable != null) {
                     if (Moveable is InstantiatedItem) {
@@ -82,7 +82,7 @@ namespace AnyRPG {
             icon.color = Color.white;
 
 
-            if (controlsManager.GamePadModeActive == true) {
+            if (controlsManager.GamepadModeActive == true) {
                 rectTransform.pivot = new Vector2(0, 1);
             } else {
                 rectTransform.pivot = new Vector2(0.5f, 0.5f);

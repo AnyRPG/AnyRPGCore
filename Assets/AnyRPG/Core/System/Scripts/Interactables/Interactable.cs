@@ -1218,7 +1218,7 @@ namespace AnyRPG {
         }
 
         public InteractableSaveData GetInteractableSaveData() {
-            Debug.Log($"{gameObject.name}.Interactable.GetInteractableSaveData()");
+            //Debug.Log($"{gameObject.name}.Interactable.GetInteractableSaveData()");
 
             InteractableSaveData interactableSaveData = new InteractableSaveData();
             foreach (InteractableOptionComponent interactableOptionComponent in interactables.Values) {
@@ -1228,7 +1228,8 @@ namespace AnyRPG {
         }
 
         public void LoadInteractableSaveData(InteractableSaveData interactableSaveData) {
-            Debug.Log($"{gameObject.name}.Interactable.LoadInteractableSaveData()");
+            //Debug.Log($"{gameObject.name}.Interactable.LoadInteractableSaveData()");
+
             _interactableSaveData = interactableSaveData;
             systemItemManager.LoadItemInstanceListSaveData(interactableSaveData.ItemInstanceListSaveData);
             foreach (InteractableOptionComponent interactableOptionComponent in interactables.Values) {

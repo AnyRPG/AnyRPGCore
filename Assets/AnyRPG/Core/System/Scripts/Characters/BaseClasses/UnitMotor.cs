@@ -35,6 +35,7 @@ namespace AnyRPG {
         protected float navMeshDistancePadding = 0.1f;
 
         private UnitController unitController;
+        private IMovementBody movementBody;
 
         // default value meant to be overwritten by a controller (AI/player)
         protected float movementSpeed = 0f;
@@ -76,17 +77,25 @@ namespace AnyRPG {
         public Interactable InteractionTarget { get => interactionTarget; }
         public Interactable AttackTarget { get => attackTarget; }
         public Transform InteractionTransform { get => interactionTransform; set => interactionTransform = value; }
+        public IMovementBody MovementBody { get => movementBody; }
 
         public UnitMotor(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
             Configure(systemGameManager);
             defaultLayerMask = 1 << LayerMask.NameToLayer("Default");
             capsuleRadius = unitController.GetComponent<CapsuleCollider>().radius;
+            // setting the standard movement body for now so there is something to refer to during startup
+            // this can be replaced by network units that use prediction
+            SetMovementBody(new StandardMovementBody(unitController.RigidBody));
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             playerManager = systemGameManager.PlayerManager;
+        }
+
+        public void SetMovementBody(IMovementBody movementBody) {
+            this.movementBody = movementBody;
         }
 
         protected void SetMovementSpeed() {
@@ -109,14 +118,6 @@ namespace AnyRPG {
             if (unitController?.NavMeshAgent != null && unitController.UseAgent == true) {
                 SetMovementSpeed();
             } else {
-                //Debug.Log($"{gameObject.name}: motor.FixedUpdate(): agent is disabled. Motor will do nothing");
-                // unused gravity stuff
-                //unitController.MyRigidBody.velocity = new Vector3(0, unitController.MyRigidBody.velocity.y + (-9.81f * Time.deltaTime), 0);
-                /*
-                Vector3 newRelativeForce = new Vector3(0, -(9.81f * 9.81f * Time.fixedDeltaTime), 0);
-                //Debug.Log(gameObject.name + ".UnitMotor.FixedUpdate(): newRelativeForce: " + newRelativeForce);
-                unitController.MyRigidBody.AddRelativeForce(newRelativeForce);
-                */
                 return;
             }
             CheckSetMoveDestination();
@@ -130,7 +131,6 @@ namespace AnyRPG {
             }
 
             if (setMoveDestination && unitController.NavMeshAgent.pathPending == false && unitController.NavMeshAgent.hasPath == false) {
-                //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CheckSetMoveDestination(): setMoveDestination: true.  Set move destination: {destinationPosition}; current location: {unitController.transform.position}");
                 unitController.EnableAgent();
                 if (unitController.NavMeshAgent.enabled == true && unitController.NavMeshAgent.isOnNavMesh == true) {
                     moveToDestination = true;
@@ -220,7 +220,7 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FollowTargetTick() targetPosition: {target.transform.position} lastTargetPosition: {lastTargetPosition}");
 
             //if (attackTarget != null && unitController.IsTargetInHitBox(target)) {
-            if (attackTarget != null && Vector3.Distance(unitController.transform.position, attackTarget.transform.position) <= attackRange) {
+            if (attackTarget != null && Vector3.Distance(movementBody.GetPosition(), attackTarget.transform.position) <= attackRange) {
                 StopFollowingTarget();
                 return;
             }
@@ -229,7 +229,7 @@ namespace AnyRPG {
                 // YES THESE 2 BLOCKS OF CODE ARE COMPLETELY IDENTICAL.  IT'S LIKE THAT SO I CAN ADJUST THE LONG DISTANCE PATHING DIFFERENT IN THE FUTURE.
                 // EG, ENEMY MORE THAN 10 YARDS AWAY CAN HAVE LESS PRECISE UPDATES TO AVOID A LOT OF PATHING CALCULATIONS FOR SOMETHING THAT ONLY NEEDS TO HEAD IN YOUR APPROXIMATE DIRECTION
                 //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FollowTargetTick(): target has moved.  current location: {unitController.transform.position}; target position: {target.transform.position}; last target position: {lastTargetPosition}");
-                if (Vector3.Distance(target.transform.position, unitController.transform.position) > (unitController.CharacterUnit.HitBoxSize * 2)) {
+                if (Vector3.Distance(target.transform.position, movementBody.GetPosition()) > (unitController.CharacterUnit.HitBoxSize * 2)) {
                     // we are more than 3x the hitbox size away, and should be trying to move toward the targets fuzzy location to prevent movement stutter
                     // this next line is meant to at long distances, move toward the character even if he is off the navmesh and prevent enemy movement stutter chasing a moving target
                     //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FollowTargetTick(): target is far away.  Using corrected navmesh position to prevent stutter.  current location: {unitController.transform.position}; target position: {target.transform.position}; last target position: {lastTargetPosition}");
@@ -303,7 +303,7 @@ namespace AnyRPG {
 
             // repeat the above sample in steps of 0.1f to current max sample radius, with the testposition moving closer to the character by the step size each time
             for (float positionOffset = 0.1f; positionOffset <= currentMaxSampleRadius; positionOffset += navMeshSampleStepSize) {
-                Vector3 directionToCharacter = (unitController.transform.position - testPosition).normalized;
+                Vector3 directionToCharacter = (movementBody.GetPosition() - testPosition).normalized;
                 Vector3 samplePosition = testPosition + (directionToCharacter * positionOffset);
                 if (NavMesh.SamplePosition(samplePosition, out hit, 0.1f, NavMesh.AllAreas)) {
                     //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CorrectedNavmeshPosition(): testPosition {testPosition} was not on current NavMesh, but found a point on the NavMesh near: {hit.position})");
@@ -315,13 +315,13 @@ namespace AnyRPG {
             // use just the default layer when doing the raycast to prevent hitting things that are not actually the ground and getting stuck trying to find a navmesh on something we can't actually walk on
             // get a layermask for the default layer
             RaycastHit raycastHit;
-            Vector3 firstTestPosition = unitController.transform.position;
+            Vector3 firstTestPosition = movementBody.GetPosition();
             bool foundMatch = false;
             float sampleRadius = 0.5f;
 
             // try raycast downward in case we are at the top of a hill or object is floating or on a wall
             // doing this first because the raycast later that starts from above can find a walkable roof that cannot be navigated to
-            firstTestPosition = unitController.transform.position;
+            firstTestPosition = movementBody.GetPosition();
             foundMatch = false;
             if (unitController.PhysicsScene.Raycast(testPosition, Vector3.down, out raycastHit, 10f, defaultLayerMask)) {
                 firstTestPosition = raycastHit.point;
@@ -361,7 +361,7 @@ namespace AnyRPG {
                 // if we actually got a hit, but did not detect a navmesh, then don't try raycast downward.  the hit was probably on a steep up hill and trying a downcast from our current
                 // level would result in a ray inside the hill shooting downward to a potentially inaccessible navmesh below
                 //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CorrectedNavmeshPosition(): testPosition " + testPosition + "return vector3.zero");
-                return unitController.transform.position;
+                return movementBody.GetPosition();
             }
 
             // we didn't find anything on the same navmesharea above the raycast hit  try just searching outward for any navmesh instead
@@ -387,7 +387,7 @@ namespace AnyRPG {
             }
 
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CorrectedNavmeshPosition(" + testPosition + "): COULD NOT FIND VALID POSITION WITH RADIUS: " + maxNavMeshSampleRadius + ", " + currentMaxSampleRadius + "; minAttackRange: " + minAttackRange + "; RETURNING VECTOR3.ZERO!!!");
-            return unitController.transform.position;
+            return movementBody.GetPosition();
         }
 
         public void FreezeCharacter() {
@@ -402,13 +402,19 @@ namespace AnyRPG {
             frozen = false;
         }
 
+        public void ClickToMove(Vector3 point) {
+            //Debug.Log($"{gameObject.name}UnitMotor.ClickToMove(" + point + ")");
+            unitController.EnableAgent();
+            MoveToPoint(point);
+        }
+
         // move toward the position at a normal speed
         public Vector3 MoveToPoint(Vector3 point, float minAttackRange = -1f) {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.MoveToPoint({point}, {minAttackRange}). current location: {unitController.transform.position}; frame: {Time.frameCount}");
 
             if (frozen) {
                 //Debug.Log($"{gameObject.name}UnitMotor.MoveToPoint(" + point + "). current location: " + transform.position + "; frame: " + Time.frameCount + "; FROZEN, DOING NOTHING!!!");
-                return unitController.transform.position;
+                return movementBody.GetPosition();
             }
 
             // testing - don't bother with this check since patrolstate is really the only thing that checks for this
@@ -437,49 +443,23 @@ namespace AnyRPG {
             return destinationPosition;
         }
 
-        public void MoveToPosition(Vector3 newPosition) {
-            //Debug.Log($"{gameObject.name}.UnitMotor.MoveToPosition(" + newPosition + ")");
-            if (frozen) {
-                return;
-            }
-            unitController.RigidBody.MovePosition(newPosition);
-            BroadcastMovement();
-        }
-
         public Vector3 getVelocity() {
             return unitController.NavMeshAgent.velocity;
         }
 
-        public void Move(Vector3 moveDirection, bool isKnockBack = false) {
+        public void Move(Vector3 moveDirection) {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.Move({moveDirection.x}, {moveDirection.y}, {moveDirection.z}). current position: {unitController.transform.position}; Rigidbody velocity: {unitController.RigidBody.linearVelocity}");
             
-            if (isKnockBack
-                && unitController.UnitControllerMode == UnitControllerMode.Player) {
-                if (playerManager.PlayerUnitMovementController != null) {
-                    playerManager.PlayerUnitMovementController.KnockBack();
-                }
-            }
             if (frozen) {
                 //Debug.Log($"{unitController.gameObject.name}.UnitMotor.Move({moveDirection}: frozen and doing nothing!!!");
                 return;
             }
 
             if (unitController?.NavMeshAgent != null && unitController.NavMeshAgent.enabled) {
-                //Debug.Log($"{gameObject.name}.UnitMotor.Move(" + moveDirection + "): moving via navmeshagent");
-
-                //agent.Move(moveDirection);
                 ResetPath();
-                // TEST DISABLE TO PREVENT GETTING STUCK SIDEWAYS WALKING AROUND CORNERS
-                //unitController.MyAgent.updateRotation = false;
                 unitController.NavMeshAgent.velocity = moveDirection;
             } else {
-                //float currentYVelocity = moveDirection.y != 0 ? moveDirection.y : unitController.MyRigidBody.velocity.y;
-                //Debug.Log("characterUnit.yVelocity is " + currentYVelocity);
-                //Vector3 newMoveDirection = new Vector3(moveDirection.x, currentYVelocity, moveDirection.z);
-                //Debug.Log($"{unitController.gameObject.name}.UnitMotor.Move() newMoveDirection: {moveDirection}; constraints: {unitController.RigidBody.constraints}");
-                unitController.RigidBody.linearVelocity = moveDirection;
-                //unitController.MyRigidBody.MovePosition(transform.position + moveDirection);
-                //unitController.MyRigidBody.AddForce(moveDirection, ForceMode.VelocityChange);
+                movementBody.SetLinearVelocity(moveDirection);
             }
             if (moveDirection != Vector3.zero) {
                 BroadcastMovement();
@@ -491,9 +471,10 @@ namespace AnyRPG {
             if (frozen) {
                 return;
             }
-            unitController.RigidBody.AddRelativeForce(new Vector3(0, jumpSpeed, 0), ForceMode.VelocityChange);
+            movementBody.AddForce(new Vector3(0, jumpSpeed, 0));
         }
 
+        /*
         public void RotateTowardsTarget(Vector3 targetPosition, float rotationSpeed) {
             //Debug.Log("UnitMotor.RotateTowardsTarget(" + targetPosition + ", " + rotationSpeed + ")");
             if (frozen) {
@@ -502,12 +483,11 @@ namespace AnyRPG {
             Quaternion targetRotation = Quaternion.LookRotation(targetPosition - new Vector3(unitController.transform.position.x, 0, unitController.transform.position.z));
             unitController.transform.eulerAngles = Vector3.up * Mathf.MoveTowardsAngle(unitController.transform.eulerAngles.y, targetRotation.eulerAngles.y, (rotationSpeed * Time.deltaTime) * rotationSpeed);
         }
+        */
 
         public void BeginFaceSouthEast() {
             //Debug.Log($"{gameObject.name}.UnitMotor.BeginFaceSouthEast()");
-            //RotateToward((new Vector3(1, 0, -1)).normalized);
             Rotate((new Vector3(1, 0, -1)).normalized);
-            //Rotate((new Vector3(-1, 0, 1)).normalized);
         }
 
         public void RotateToward(Vector3 rotateDirection) {
@@ -524,7 +504,7 @@ namespace AnyRPG {
                 unitController.NavMeshAgent.velocity = rotateDirection;
             } else {
                 //Debug.Log("nav mesh agent is disabled");
-                unitController.RigidBody.linearVelocity = rotateDirection;
+                movementBody.SetLinearVelocity(rotateDirection);
             }
         }
 
@@ -534,8 +514,16 @@ namespace AnyRPG {
             if (frozen) {
                 return;
             }
-            //(characterUnit as MonoBehaviour).transform.Rotate(rotateDirection);
-            unitController.transform.Rotate(rotateDirection);
+            Quaternion currentRotation = movementBody.GetRotation();
+
+            // 2. Calculate the new rotation by multiplying the delta
+            // In Unity, adding euler rotations is done by multiplying Quaternions
+            Quaternion deltaRotation = Quaternion.Euler(rotateDirection);
+            Quaternion nextRotation = currentRotation * deltaRotation;
+
+            // 3. Apply it back to the body
+            movementBody.SetRotation(nextRotation);
+
         }
 
         public void FollowAttackTarget(Interactable newTarget, float minAttackRange) {
@@ -582,10 +570,10 @@ namespace AnyRPG {
             // cycle through newTarget interactaionLocations and determine the shortest path, then move to that one
             if (newTarget.InteractionPoints.Count > 0) { 
                 Transform bestTarget = newTarget.InteractionPoints[0].transform;
-                float bestDistance = GetPathLength(unitController.transform.position, bestTarget.position);
+                float bestDistance = GetPathLength(movementBody.GetPosition(), bestTarget.position);
                 for (int i = 1; i < newTarget.InteractionPoints.Count; i++) {
                     Transform testTarget = newTarget.InteractionPoints[i].transform;
-                    float testDistance = GetPathLength(unitController.transform.position, testTarget.position);
+                    float testDistance = GetPathLength(movementBody.GetPosition(), testTarget.position);
                     if (testDistance < bestDistance) {
                         bestDistance = testDistance;
                         bestTarget = testTarget;
@@ -645,40 +633,33 @@ namespace AnyRPG {
             if (frozen) {
                 return;
             }
-            Vector3 direction = (newTarget.transform.position - unitController.transform.position).normalized;
+            Vector3 direction = (newTarget.transform.position - movementBody.GetPosition()).normalized;
 
             FaceDirection(direction);
         }
 
-        private void FaceDirection(Vector3 direction) {
+        public void FaceDirection(Vector3 direction) {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FaceDirection({direction})");
 
-            if (frozen) {
+            if (frozen || direction == Vector3.zero) {
                 return;
             }
-            // prevent turning updward
-            direction = new Vector3(direction.x, 0f, direction.z);
+
+            // 1. Flatten direction to prevent upward/downward tilting
+            direction = new Vector3(direction.x, 0f, direction.z).normalized;
+
+            // 2. Convert direction vector to a Quaternion
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+
             if (unitController.NavMeshAgent.enabled) {
                 unitController.NavMeshAgent.updateRotation = false;
             }
-            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FaceDirection(): direction: " + direction + "; current: " + unitController.transform.forward);
-            if (direction != Vector3.zero) {
-                unitController.transform.forward = direction;
-            }
+            movementBody.SetRotation(targetRotation);
+
             if (unitController.NavMeshAgent.enabled) {
                 unitController.NavMeshAgent.updateRotation = true;
             }
         }
-
-        /*
-        public void StartNavAgent() {
-            //Debug.Log($"{gameObject.name}.UnitMotor.StartNavAgent()");
-            if (!unitController.NavMeshAgent.enabled) {
-                unitController.EnableAgent();
-                unitController.RigidBody.isKinematic = true;
-            }
-        }
-        */
 
         public void ResetPath(bool forceStop = false) {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.ResetPath(forceStop: {forceStop}) in frame: {Time.frameCount}");
@@ -709,7 +690,7 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.ReceiveAnimatorMovement(): " + unitController.UnitAnimator.Animator.deltaPosition.x + " " + unitController.UnitAnimator.Animator.deltaPosition.y + " " + unitController.UnitAnimator.Animator.deltaPosition.z);
             if (UseRootMotion) {
                 // will this work for navmeshAgents?  do we need to warp them?
-                unitController.transform.position += unitController.UnitAnimator.Animator.deltaPosition;
+                movementBody.SetPosition(movementBody.GetPosition() + unitController.UnitAnimator.Animator.deltaPosition);
                 //Debug.Log($"{unitController.gameObject.name}.UnitMotor.ReceiveAnimatorMovement() userootmotion is true, apply position: " + unitController.UnitAnimator.Animator.deltaPosition.x + " " + unitController.UnitAnimator.Animator.deltaPosition.y + " " + unitController.UnitAnimator.Animator.deltaPosition.z);
             }
         }
@@ -741,21 +722,14 @@ namespace AnyRPG {
                 targetY += 0.0001f;
 
                 // Only snap if we are actually above the target to avoid "launching"
-                //Debug.Log($"{unitController.gameObject.name}.UnitMotor.StickToGround(): positionY: {unitController.transform.position.y} hitY: {centerDownHitInfo.point.y} targetY: {targetY} position difference: {(unitController.transform.position.y - targetY)}");
                 
-                if (Mathf.Abs(unitController.transform.position.y - targetY) > 0.001f) {
-                    //Debug.Log($"{unitController.gameObject.name}.UnitMotor.StickToGround(): positionY: {unitController.transform.position.y} hitY: {centerDownHitInfo.point.y} targetY: {targetY} position difference: {(unitController.transform.position.y - targetY)}");
+                if (Mathf.Abs(movementBody.GetPosition().y - targetY) > 0.001f) {
 
-                    unitController.RigidBody.position = new Vector3(
+                    movementBody.SetPosition(new Vector3(
                         unitController.RigidBody.position.x,
                         targetY,
                         unitController.RigidBody.position.z
-                    );
-
-                    Physics.SyncTransforms();
-
-                    //Debug.Log($"{unitController.gameObject.name}.UnitMotor.StickToGround(): positionY: {unitController.RigidBody.position.y} after move");
-
+                    ));
                 }
             }
         }
@@ -771,6 +745,10 @@ namespace AnyRPG {
                 return true;
             }
             return false;
+        }
+
+        public void Knockback(float explosionForce, Vector3 explosionCenter, float upwardModifier) {
+            movementBody.AddExplosionForce(explosionForce, explosionCenter, upwardModifier);
         }
     }
 

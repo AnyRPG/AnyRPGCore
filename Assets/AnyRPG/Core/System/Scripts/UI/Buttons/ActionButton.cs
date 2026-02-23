@@ -121,7 +121,7 @@ namespace AnyRPG {
         public void OnClickFromButton() {
 
             // do not allow clicks to have any effect when gamepad mode is active to prevent pickup with hand script
-            if (controlsManager.GamePadModeActive == true) {
+            if (controlsManager.GamepadModeActive == true) {
                 //Debug.Log("ActionButton.OnClickFromButton() gamepad mode active, returning");
                 return;
             }
@@ -151,7 +151,7 @@ namespace AnyRPG {
 
         protected override void HandleLeftClick() {
             // do not allow clicks to have any effect when gamepad mode is active to prevent pickup with hand script
-            if (controlsManager.GamePadModeActive == true) {
+            if (controlsManager.GamepadModeActive == true) {
                 //Debug.Log("ActionButton.OnPointerClick() gamepad mode active, returning");
                 return;
             }

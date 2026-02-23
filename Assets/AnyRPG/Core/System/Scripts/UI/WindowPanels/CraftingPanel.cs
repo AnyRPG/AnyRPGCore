@@ -289,7 +289,7 @@ namespace AnyRPG {
 
             DeactivateButtons();
 
-            if (controlsManager.GamePadModeActive == true) {
+            if (controlsManager.GamepadModeActive == true) {
                 leftButton.gameObject.SetActive(true);
                 rightButton.gameObject.SetActive(true);
             } else {

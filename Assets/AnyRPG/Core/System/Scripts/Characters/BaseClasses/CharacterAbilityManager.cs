@@ -1540,7 +1540,7 @@ namespace AnyRPG {
         }
 
         protected bool BeginAbilityInternal(AbilityProperties ability, Interactable target, AbilityEffectContext abilityEffectContext, bool playerInitiated = false) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.BeginAbilityInternal({ability.ResourceName}, {(target == null ? "null" : target.gameObject.name)}, {playerInitiated})");
+            Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.BeginAbilityInternal({ability.ResourceName}, {(target == null ? "null" : target.gameObject.name)}, {playerInitiated})");
 
             if (ability == null) {
                 Debug.LogError($"CharacterAbilityManager.BeginAbilityInternal({(ability == null ? "null" : ability.DisplayName)}, {(target == null ? "null" : target.name)}) NO ABILITY FOUND");
@@ -1839,12 +1839,21 @@ namespace AnyRPG {
         }
 
         public void HandleApparentMovement() {
+            
+            // commenting this for now because on server, these constraints are never set
             // exit if rigidbody constraints x and z are are both freeze and we haven't moved more than 10 centimeters since we stopped
+            /*
             if ((unitController.RigidBody.constraints & RigidbodyConstraints.FreezePositionX) == RigidbodyConstraints.FreezePositionX
                 && (unitController.RigidBody.constraints & RigidbodyConstraints.FreezePositionZ) == RigidbodyConstraints.FreezePositionZ
                 && (Mathf.Abs(abilityStartPosition.y - unitController.RigidBody.position.y) < 0.1f)) {
                 return;
             }
+            */
+            if (Mathf.Abs(abilityStartPosition.y - unitController.RigidBody.position.y) < 0.1f) {
+                return;
+            }
+            //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.HandleApparentMovement(): apparent velocity: {unitController.ApparentVelocity}; position difference: {Mathf.Abs(abilityStartPosition.y - unitController.RigidBody.position.y)}, start: {abilityStartPosition}, now: {unitController.RigidBody.position}");
+
             HandleManualMovement();
         }
 
@@ -1936,7 +1945,7 @@ namespace AnyRPG {
         }
 
         private void StopCasting() {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.StopCasting()");
+            Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.StopCasting()");
 
             abilityCasterMonoBehaviour.StopCoroutine(currentCastCoroutine);
             currentCastCoroutine = null;

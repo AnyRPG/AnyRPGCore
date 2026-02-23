@@ -806,7 +806,7 @@ namespace AnyRPG {
         }
 
         public void ShowInteractionTooltip(Interactable interactable) {
-            if (controlsManager.GamePadModeActive == false) {
+            if (controlsManager.GamepadModeActive == false) {
                 return;
             }
             interactionTooltipController.ShowInteractionTooltip(interactable);
@@ -942,7 +942,7 @@ namespace AnyRPG {
         private void ToggleMainMenu() {
             //Debug.Log("UIManager.ToggleMainMenu()");
 
-            if (controlsManager.GamePadModeActive == true) {
+            if (controlsManager.GamepadModeActive == true) {
                 gamepadMainMenuWindow.ToggleOpenClose();
                 return;
             }
@@ -1513,7 +1513,7 @@ namespace AnyRPG {
             MessageFeedManager.LockUI();
             floatingCastBarWindow.LockUI();
             xpBarWindow.LockUI();
-            if (!controlsManager.GamePadModeActive) {
+            if (!controlsManager.GamepadModeActive) {
                 bottomPanel.LockUI();
                 sidePanel.LockUI();
                 mouseOverWindow.LockUI();
@@ -1522,7 +1522,7 @@ namespace AnyRPG {
                 //Debug.Log("UIManager.UpdateLockUI(): playerprefs has key LockUI");
                 if (PlayerPrefs.GetInt("LockUI") == 0) {
                     //Debug.Log("UIManager.UpdateLockUI(): playerprefs has key LockUI and it IS 0");
-                    if (controlsManager.GamePadModeActive == false) {
+                    if (controlsManager.GamepadModeActive == false) {
                         mouseOverWindow.gameObject.SetActive(true);
                     }
                     AddNavigableInterfaceElement(playerUnitFramePanel);
@@ -1535,7 +1535,7 @@ namespace AnyRPG {
                     AddNavigableInterfaceElement(xpBarController);
                 } else {
                     //Debug.Log("UIManager.UpdateLockUI(): playerprefs has key LockUI and it IS NOT 0");
-                    if (controlsManager.GamePadModeActive == false) {
+                    if (controlsManager.GamepadModeActive == false) {
                         mouseOverWindow.gameObject.SetActive(false);
                     }
                     RemoveNavigableInterfaceElement(playerUnitFramePanel);

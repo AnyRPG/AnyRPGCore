@@ -1,19 +1,11 @@
-using FishNet.Object;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEngine.GraphicsBuffer;
 
 namespace AnyRPG {
     public class PlayerManagerClient : ConfiguredMonoBehaviour, ICharacterRequestor {
-
-        [SerializeField]
-        private float maxMovementSpeed = 20f;
-
-        [SerializeField]
-        private LayerMask defaultGroundMask;
 
         [SerializeField]
         private GameObject playerConnectionParent = null;
@@ -34,8 +26,6 @@ namespace AnyRPG {
         /// The invisible gameobject that stores all the player scripts. A reference to an instantiated playerPrefab
         /// </summary>
         private GameObject playerConnectionObject = null;
-
-        private PlayerUnitMovementController playerUnitMovementController = null;
 
         private PlayerController playerController = null;
 
@@ -83,11 +73,8 @@ namespace AnyRPG {
         protected InteractionManager interactionManager = null;
 
         public GameObject PlayerConnectionObject { get => playerConnectionObject; set => playerConnectionObject = value; }
-        public float MaxMovementSpeed { get => maxMovementSpeed; set => maxMovementSpeed = value; }
         public bool PlayerUnitSpawned { get => playerUnitSpawned; }
         public bool PlayerConnectionSpawned { get => playerConnectionSpawned; }
-        public LayerMask DefaultGroundMask { get => defaultGroundMask; set => defaultGroundMask = value; }
-        public PlayerUnitMovementController PlayerUnitMovementController { get => playerUnitMovementController; set => playerUnitMovementController = value; }
         public UnitController UnitController { get => unitController; set => unitController = value; }
         public UnitController ActiveUnitController { get => activeUnitController; }
         public PlayerController PlayerController { get => playerController; set => playerController = value; }
@@ -350,16 +337,11 @@ namespace AnyRPG {
 
             if (levelManager.NavMeshAvailable) {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Enabling NavMeshAgent()");
-                //unitController.EnableAgent();
-                if (playerUnitMovementController != null) {
-                    playerUnitMovementController.useMeshNav = true;
-                }
+                unitController.UnitMovementController.useMeshNav = true;
             } else {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Disabling NavMeshAgent()");
                 //unitController.DisableAgent();
-                if (playerUnitMovementController != null) {
-                    playerUnitMovementController.useMeshNav = false;
-                }
+                unitController.UnitMovementController.useMeshNav = false;
             }
 
             //unitController.UnitModelController.SetInitialSavedAppearance(playerCharacterSaveData.SaveData);
@@ -388,7 +370,7 @@ namespace AnyRPG {
             */
 
             if (PlayerPrefs.HasKey("ShowNewPlayerHints") == false) {
-                if (controlsManager.GamePadModeActive == true) {
+                if (controlsManager.GamepadModeActive == true) {
                     uIManager.gamepadHintWindow.OpenWindow();
                 } else {
                     uIManager.keyboardHintWindow.OpenWindow();
@@ -447,31 +429,10 @@ namespace AnyRPG {
 
             playerController.SubscribeToUnitEvents();
 
-            //if (systemConfigurationManager.UseThirdPartyMovementControl == false) {
-                playerUnitMovementController.Init();
-            //} else {
-            //    DisableMovementControllers();
-            //}
-            
             if (unitController.CharacterStats.IsAlive == false) {
                 // when a dead player spawns, we need to lock controller and allow popup to respawn
                 DeathActions();
             }
-        }
-
-        public void DisableMovementControllers() {
-            //Debug.Log("PlayerManager.DisableMovementControllers()");
-
-            playerUnitMovementController.enabled = false;
-            playerUnitMovementController.MovementStateController.enabled = false;
-        }
-
-        public void EnableMovementControllers() {
-            //Debug.Log("PlayerManager.EnableMovementControllers()");
-
-            playerUnitMovementController.enabled = true;
-            playerUnitMovementController.MovementStateController.enabled = true;
-            playerUnitMovementController.Init();
         }
 
         public void SubscribeToModelReady() {
@@ -514,8 +475,6 @@ namespace AnyRPG {
             playerConnectionObject = objectPooler.GetPooledObject(playerConnectionPrefab, playerConnectionParent.transform);
             playerController = playerConnectionObject.GetComponent<PlayerController>();
             playerController.Configure(systemGameManager);
-            playerUnitMovementController = playerConnectionObject.GetComponent<PlayerUnitMovementController>();
-            playerUnitMovementController.Configure(systemGameManager);
 
             SystemEventManager.TriggerEvent("OnBeforePlayerConnectionSpawn", new EventParamProperties());
             playerConnectionSpawned = true;
@@ -538,7 +497,6 @@ namespace AnyRPG {
             SystemEventManager.TriggerEvent("OnPlayerConnectionDespawn", new EventParamProperties());
             objectPooler.ReturnObjectToPool(playerConnectionObject);
             playerConnectionObject = null;
-            playerUnitMovementController = null;
             playerConnectionSpawned = false;
         }
 
@@ -548,8 +506,6 @@ namespace AnyRPG {
             unitController.UnitEventController.OnImmuneToEffect += HandleImmuneToEffect;
             unitController.UnitEventController.OnBeforeDie += HandleBeforeDie;
             //unitController.UnitEventController.OnAfterDie += HandleAfterDie;
-            unitController.UnitEventController.OnReviveBegin += HandleReviveBegin;
-            unitController.UnitEventController.OnReviveComplete += HandleReviveComplete;
             unitController.UnitEventController.OnLevelChanged += HandleLevelChanged;
             unitController.UnitEventController.OnGainXP += HandleGainXP;
             unitController.UnitEventController.OnRecoverResource += HandleRecoverResource;
@@ -619,8 +575,6 @@ namespace AnyRPG {
             unitController.UnitEventController.OnImmuneToEffect -= HandleImmuneToEffect;
             unitController.UnitEventController.OnBeforeDie -= HandleBeforeDie;
             //unitController.UnitEventController.OnAfterDie -= HandleAfterDie;
-            unitController.UnitEventController.OnReviveBegin -= HandleReviveBegin;
-            unitController.UnitEventController.OnReviveComplete -= HandleReviveComplete;
             unitController.UnitEventController.OnLevelChanged -= HandleLevelChanged;
             unitController.UnitEventController.OnGainXP -= HandleGainXP;
             unitController.UnitEventController.OnRecoverResource -= HandleRecoverResource;
@@ -982,24 +936,12 @@ namespace AnyRPG {
             messageFeedManager.WriteMessage(string.Format("YOU HAVE REACHED LEVEL {0}!", newLevel.ToString()));
         }
 
-        public void HandleReviveComplete(UnitController sourceUnitController) {
-            SystemEventManager.TriggerEvent("OnReviveComplete", new EventParamProperties());
-            if (activeUnitController != null) {
-                activeUnitController.UnitAnimator.SetCorrectOverrideController();
-            }
-        }
-
-        public void HandleReviveBegin(float reviveTime) {
-            playerController.HandleReviveBegin(reviveTime);
-        }
-
         public void HandleBeforeDie(UnitController deadUnitController) {
             DeathActions();
             systemEventManager.NotifyOnPlayerDeath();
         }
 
         private void DeathActions() {
-            playerController.HandleDie();
             uIManager.PlayerDeathHandler(unitController);
         }
 

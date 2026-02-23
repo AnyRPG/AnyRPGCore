@@ -279,7 +279,7 @@ namespace AnyRPG {
                     //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.InitializeAnimator() creating new override controller");
                     overrideController = new AnimatorOverrideController(animatorController);
                     //SetOverrideController(overrideController);
-                    SetCorrectOverrideController(false);
+                    SetOverrideController(overrideController/*, false*/);
                 }
             }
             //Debug.Log($"{gameObject.name}: setting override controller to: " + overrideController.name);
@@ -300,19 +300,7 @@ namespace AnyRPG {
             }
         }
 
-        public void SetCorrectOverrideController(bool runUpdate = true) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetCorrectOverrideController()");
-
-            // AI or no third party movement control case
-            SetOverrideController(overrideController, runUpdate);
-        }
-
-        public void SetDefaultOverrideController(bool runUpdate = true) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetDefaultOverrideController()");
-            SetOverrideController(overrideController, runUpdate);
-        }
-
-        public void SetOverrideController(AnimatorOverrideController animatorOverrideController, bool runUpdate = true) {
+        public void SetOverrideController(AnimatorOverrideController animatorOverrideController/*, bool runUpdate = true*/) {
             //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetOverrideController({animatorOverrideController.GetInstanceID()}, {runUpdate})");
 
             if (animator.runtimeAnimatorController != animatorOverrideController && animatorOverrideController != null) {
@@ -334,9 +322,11 @@ namespace AnyRPG {
                     unitController.UnitModelController.SetAnimatorOverrideController(animatorOverrideController);
                 }
 
+                /*
                 if (runUpdate) {
                     animator.Update(0f);
                 }
+                */
             }
         }
 
@@ -618,7 +608,7 @@ namespace AnyRPG {
             HandleUnStunned();
 
             SetAnimationSpeed(1);
-
+            SetMoving(false);
             SetJumping(0);
 
             ResetTrigger("TakeDamageTrigger");
@@ -750,10 +740,6 @@ namespace AnyRPG {
             if (animator == null) {
                 return;
             }
-            if (varValue == true) {
-                SetDefaultOverrideController();
-
-            }
             if (ParameterExists("Riding")) {
                 animator.SetBool("Riding", varValue);
             }
@@ -798,11 +784,11 @@ namespace AnyRPG {
 
             // testing, no real need to restrict this to player.  anything should be able to rotate instead of strafe?
             //if (unitController.UnitProfile.UnitPrefabProps.RotateModel && unitControllerMode == UnitControllerMode.Player) {
-            if (unitController.UnitProfile.UnitPrefabProps.RotateModel || controlsManager.GamePadModeActive == true) {
+            if (unitController.UnitProfile.UnitPrefabProps.RotateModel || controlsManager.GamepadModeActive == true) {
                 //Debug.Log($"{gameObject.name}.CharacterAnimator.SetVelocity(" + varValue + "): rotating model");
 
                 if (varValue == Vector3.zero) {
-                    if (controlsManager.GamePadModeActive == false) {
+                    if (controlsManager.GamepadModeActive == false) {
                         animator.transform.forward = unitController.transform.forward;
                     }
                 } else {

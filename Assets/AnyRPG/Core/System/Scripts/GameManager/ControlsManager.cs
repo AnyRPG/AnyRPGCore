@@ -49,7 +49,7 @@ namespace AnyRPG {
         protected ActionBarManager actionBarManager = null;
         protected CutsceneBarController cutSceneBarController = null;
 
-        public bool GamePadModeActive { get => gamePadModeActive; }
+        public bool GamepadModeActive { get => gamePadModeActive; }
         public bool GamePadInputActive { get => gamePadInputActive; }
         public bool DPadDownPressed { get => dPadDownPressed; }
         public bool DPadUpPressed { get => dPadUpPressed; }
@@ -166,9 +166,11 @@ namespace AnyRPG {
         }
 
         public void Update() {
+            /*
             if (playerManager.PlayerController != null) {
                 playerManager.PlayerController.ResetMoveInput();
             }
+            */
             RegisterAxis();
             inputManager.RegisterInput();
             CheckMouse();
