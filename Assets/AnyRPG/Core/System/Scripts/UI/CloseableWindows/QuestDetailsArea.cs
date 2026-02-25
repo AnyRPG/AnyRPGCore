@@ -77,7 +77,7 @@ namespace AnyRPG {
 
         // game manager references
         private ObjectPooler objectPooler = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private CurrencyConverter currencyConverter = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -90,7 +90,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             objectPooler = systemGameManager.ObjectPooler;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             currencyConverter = systemGameManager.CurrencyConverter;
         }
 
@@ -166,7 +166,7 @@ namespace AnyRPG {
         public void HandleAttemptSelect(RewardButton rewardButton) {
             //Debug.Log("QuestDetailsArea.HandleAttemptSelect()");
 
-            string questStatus = quest.GetStatus(playerManager.UnitController);
+            string questStatus = quest.GetStatus(playerManagerClient.UnitController);
             if (questStatus != "completed" && questStatus != "complete" && quest.AllowRawComplete == false) {
                 // this should not be possible, but just in case
                 rewardButton.Unselect();
@@ -192,7 +192,7 @@ namespace AnyRPG {
                 //Debug.Log("QuestDetailsArea.HandleAttemptSelect(): it's an ability reward; current count of highlighted icons: " + GetHighlightedAbilityRewardIcons().Count + "; max: " + quest.MyMaxAbilityRewards);
                 if (quest.MaxAbilityRewards == 0
                     || (quest.MaxAbilityRewards > 0 && GetHighlightedAbilityRewardIcons().Count > quest.MaxAbilityRewards)
-                    || rewardButton.Rewardable.HasReward(playerManager.UnitController) == true) {
+                    || rewardButton.Rewardable.HasReward(playerManagerClient.UnitController) == true) {
                     rewardButton.Unselect();
                 }
             }
@@ -201,7 +201,7 @@ namespace AnyRPG {
                 //Debug.Log("QuestDetailsArea.HandleAttemptSelect(): it's an ability reward; current count of highlighted icons: " + GetHighlightedAbilityRewardIcons().Count + "; max: " + quest.MyMaxAbilityRewards);
                 if (quest.MaxSkillRewards == 0
                     || (quest.MaxSkillRewards > 0 && GetHighlightedSkillRewardIcons().Count > quest.MaxSkillRewards)
-                    || rewardButton.Rewardable.HasReward(playerManager.UnitController) == true) {
+                    || rewardButton.Rewardable.HasReward(playerManagerClient.UnitController) == true) {
                     rewardButton.Unselect();
                 }
             }
@@ -218,13 +218,13 @@ namespace AnyRPG {
             }
             this.quest = quest;
 
-            questDescription.text = quest.GetObjectiveDescription(playerManager.UnitController);
+            questDescription.text = quest.GetObjectiveDescription(playerManagerClient.UnitController);
 
-            experienceReward.text += LevelEquations.GetXPAmountForQuest(playerManager.UnitController, quest, systemConfigurationManager) + " XP";
+            experienceReward.text += LevelEquations.GetXPAmountForQuest(playerManagerClient.UnitController, quest, systemConfigurationManager) + " XP";
 
             // display currency rewards
 
-            List<CurrencyNode> currencyNodes = quest.GetCurrencyReward(playerManager.UnitController);
+            List<CurrencyNode> currencyNodes = quest.GetCurrencyReward(playerManagerClient.UnitController);
 
             // currencies could be different
             if (currencyNodes.Count > 0) {

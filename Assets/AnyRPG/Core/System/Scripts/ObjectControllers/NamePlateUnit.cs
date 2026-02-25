@@ -69,7 +69,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.Interactable.HandlePrerequisiteUpdates()");
 
             base.HandlePrerequisiteUpdates();
-            if (!playerManager.PlayerUnitSpawned) {
+            if (!playerManagerClient.PlayerUnitSpawned) {
                 //Debug.Log($"{gameObject.name}.Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");
                 return;
             }
@@ -79,7 +79,7 @@ namespace AnyRPG {
         public void UpdateNamePlateImage() {
             //Debug.Log($"{gameObject.name}.NamePlateUnit.UpdateNamePlateImage()");
 
-            if (playerManager.UnitController == null) {
+            if (playerManagerClient.UnitController == null) {
                 //Debug.Log($"{gameObject.name}.Interactable.UpdateNamePlateImage(): player has no character");
                 return;
             }
@@ -93,7 +93,7 @@ namespace AnyRPG {
                 }
             }
 
-            Dictionary<int, InteractableOptionComponent> currentInteractables = GetCurrentInteractables(playerManager.UnitController);
+            Dictionary<int, InteractableOptionComponent> currentInteractables = GetCurrentInteractables(playerManagerClient.UnitController);
 
             int currentInteractableCount = currentInteractables.Count;
             //Debug.Log($"{gameObject.name}.Interactable.UpdateDialogStatus(): currentInteractableCount: " + currentInteractableCount);
@@ -103,7 +103,7 @@ namespace AnyRPG {
             foreach (InteractableOptionComponent interactableOption in currentInteractables.Values) {
                 if (interactableOption is QuestGiverComponent) {
                     questGiverCurrent = true;
-                    (interactableOption as QuestGiverComponent).UpdateQuestStatus(playerManager.UnitController);
+                    (interactableOption as QuestGiverComponent).UpdateQuestStatus(playerManagerClient.UnitController);
                 }
             }
 
@@ -166,7 +166,7 @@ namespace AnyRPG {
         }
 
         public override Color GetGlowColor() {
-            return Faction.GetFactionColor(playerManager, this);
+            return Faction.GetFactionColor(playerManagerClient, this);
         }
 
         public virtual void ConfigureUnitFrame(UnitFramePanelBase unitFramePanelBase, bool previewCameraExists) {
@@ -175,7 +175,7 @@ namespace AnyRPG {
 
         public override Color GetDescriptionColor() {
             if (NamePlateController != null && NamePlateController.Faction != null) {
-                return Faction.GetFactionColor(playerManager, this);
+                return Faction.GetFactionColor(playerManagerClient, this);
             }
             return base.GetDescriptionColor();
         }

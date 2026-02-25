@@ -52,9 +52,9 @@ namespace AnyRPG {
 
         // game manager references
         protected SaveManager saveManager = null;
-        protected LevelManager levelManager = null;
+        protected LevelManagerClient levelManagerClient = null;
         protected InteractionManager interactionManager = null;
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected SystemAchievementManager systemAchievementManager = null;
         protected QuestGiverManagerClient questGiverManager = null;
         protected MessageFeedManager messageFeedManager = null;
@@ -63,6 +63,7 @@ namespace AnyRPG {
         protected CharacterGroupServiceServer characterGroupServiceServer = null;
         protected TradeServiceServer tradeServiceServer = null;
         protected GuildServiceServer guildServiceServer = null;
+        protected SceneUtilityService sceneUtilityService = null;
 
         /// <summary>
         /// accountId, PlayerCharacterMonitor
@@ -99,9 +100,9 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             saveManager = systemGameManager.SaveManager;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             interactionManager = systemGameManager.InteractionManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             systemAchievementManager = systemGameManager.SystemAchievementManager;
             questGiverManager = systemGameManager.QuestGiverManagerClient;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
@@ -110,6 +111,7 @@ namespace AnyRPG {
             characterGroupServiceServer = systemGameManager.CharacterGroupServiceServer;
             tradeServiceServer = systemGameManager.TradeServiceServer;
             guildServiceServer = systemGameManager.GuildServiceServer;
+            sceneUtilityService = systemGameManager.SceneUtilityService;
         }
 
 
@@ -192,7 +194,7 @@ namespace AnyRPG {
             }
             SubscribeToPlayerEvents(unitController);
 
-            if (levelManager.SceneDictionary.ContainsKey(unitController.gameObject.scene.name) == false) {
+            if (sceneUtilityService.GetSceneNodeBySceneName(unitController.gameObject.scene.name) == null) {
                 return;
             }
             // commented out for now because it happens too early and the save data is overwritten later
@@ -342,7 +344,7 @@ namespace AnyRPG {
             //Debug.Log($"PlayerManagerServer.LoadScene({sceneName}, {accountId})");
             
             if (systemGameManager.GameMode == GameMode.Local) {
-                levelManager.LoadLevel(sceneName);
+                levelManagerClient.LoadLevel(sceneName);
             } else if (networkManagerServer.ServerModeActive) {
                 networkManagerServer.AdvertiseLoadScene(sourceUnitController, sceneName, accountId);
             }
@@ -399,7 +401,7 @@ namespace AnyRPG {
             // local mode active, continue with teleport
             if (teleportEffectProperties.levelName != null) {
                 DespawnPlayerUnit(accountId);
-                levelManager.LoadLevel(teleportEffectProperties.levelName);
+                levelManagerClient.LoadLevel(teleportEffectProperties.levelName);
             }
         }
 
@@ -567,7 +569,7 @@ namespace AnyRPG {
                 // load local player
                 CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(systemDataFactory, playerCharacterMonitors[accountId].characterSaveData);
                 characterConfigurationRequest.unitControllerMode = UnitControllerMode.Player;
-                CharacterRequestData characterRequestData = new CharacterRequestData(playerManager,
+                CharacterRequestData characterRequestData = new CharacterRequestData(playerManagerClient,
                     systemGameManager.GameMode,
                     characterConfigurationRequest);
                 characterRequestData.characterId = playerCharacterMonitors[accountId].characterSaveData.CharacterId;
@@ -813,7 +815,7 @@ namespace AnyRPG {
                     networkManagerServer.AdvertiseLoadCutscene(cutscene, accountId);
                 } else {
                     // local mode active, continue with cutscene
-                    levelManager.LoadCutSceneWithDelay(cutscene);
+                    levelManagerClient.LoadCutSceneWithDelay(cutscene);
                 }
             }
         }

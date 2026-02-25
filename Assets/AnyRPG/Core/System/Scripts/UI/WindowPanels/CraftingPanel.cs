@@ -81,7 +81,7 @@ namespace AnyRPG {
 
         // game manager references
         private CraftingManager craftingManager = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private ObjectPooler objectPooler = null;
         private UIManager uIManager = null;
 
@@ -105,7 +105,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             craftingManager = systemGameManager.CraftingManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             objectPooler = systemGameManager.ObjectPooler;
             uIManager = systemGameManager.UIManager;
         }
@@ -143,7 +143,7 @@ namespace AnyRPG {
         public List<Recipe> GetRecipes() {
             //Debug.Log("CraftAbility.GetRecipes() this: " + this.name);
             List<Recipe> returnList = new List<Recipe>();
-            foreach (Recipe recipe in playerManager.UnitController.CharacterRecipeManager.RecipeList.Values) {
+            foreach (Recipe recipe in playerManagerClient.UnitController.CharacterRecipeManager.RecipeList.Values) {
                 if (craftAbility == recipe.CraftAbility) {
                     returnList.Add(recipe);
                 }
@@ -326,7 +326,7 @@ namespace AnyRPG {
             //Debug.Log("CraftingUI.CraftAll()");
 
             if (selectedRecipeScript != null) {
-                craftAmount = playerManager.UnitController.CharacterCraftingManager.GetMaxCraftAmount(selectedRecipeScript.Recipe);
+                craftAmount = playerManagerClient.UnitController.CharacterCraftingManager.GetMaxCraftAmount(selectedRecipeScript.Recipe);
                 UpdateCraftAmountArea();
                 BeginCrafting();
             } else {
@@ -338,7 +338,7 @@ namespace AnyRPG {
             //Debug.Log("CraftingPanel.BeginCrafting()");
 
             if (selectedRecipeScript != null) {
-                craftingManager.RequestBeginCrafting(playerManager.UnitController, selectedRecipeScript.Recipe, craftAmount);
+                craftingManager.RequestBeginCrafting(playerManagerClient.UnitController, selectedRecipeScript.Recipe, craftAmount);
             } else {
                 Debug.LogWarning("CraftingUI.BeginCrafting() selectedRecipeScript is null");
             }
@@ -349,7 +349,7 @@ namespace AnyRPG {
             //Debug.Log("CraftingUI.UpdateCraftAmountArea()");
             int maxAmount = 0;
             if (selectedRecipeScript != null) {
-                maxAmount = playerManager.UnitController.CharacterCraftingManager.GetMaxCraftAmount(selectedRecipeScript.Recipe);
+                maxAmount = playerManagerClient.UnitController.CharacterCraftingManager.GetMaxCraftAmount(selectedRecipeScript.Recipe);
                 if (craftAmount == 0 && maxAmount > 0) {
                     craftAmount = 1;
                 }

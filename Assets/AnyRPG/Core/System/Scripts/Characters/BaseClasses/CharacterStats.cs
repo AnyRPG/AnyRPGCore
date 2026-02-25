@@ -56,8 +56,8 @@ namespace AnyRPG {
         private Coroutine resurrectionCoroutine = null;
 
         // game manager references
-        protected LevelManager levelManager = null;
-        protected PlayerManagerClient playerManager = null;
+        protected LevelManagerClient levelManagerClient = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected CombatTextManager combatTextManager = null;
 
         public float WalkSpeed { get => walkSpeed; }
@@ -181,8 +181,8 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            levelManager = systemGameManager.LevelManager;
-            playerManager = systemGameManager.PlayerManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             combatTextManager = systemGameManager.UIManager.CombatTextManager;
         }
 
@@ -1376,7 +1376,7 @@ namespace AnyRPG {
 
             if (isAlive) {
                 isAlive = false;
-                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManager.IsCutscene()) {
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManagerClient.IsCutscene()) {
                     // should only be done on server
                     ClearStatusEffects(false);
                     // should only be done on server
@@ -1388,7 +1388,7 @@ namespace AnyRPG {
                 // because this results in loot roll, it needs to be done after status effects are cleared, but before aggro table is cleared
                 unitController.UnitEventController.NotifyOnBeforeDie(unitController);
 
-                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManager.IsCutscene()) {
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManagerClient.IsCutscene()) {
                     // should only be done on server
                     unitController.CharacterPetManager.HandleDie();
                     // should only be done on server
@@ -1399,7 +1399,7 @@ namespace AnyRPG {
                 }
                 if (systemGameManager.GameMode == GameMode.Local
                     || networkManagerServer.ServerModeActive
-                    || levelManager.IsCutscene()) { 
+                    || levelManagerClient.IsCutscene()) { 
                     // should only be done on server or authoritative client
                     unitController.FreezePositionXZ();
                     if (unitController.UnitMovementController != null) {
@@ -1408,7 +1408,7 @@ namespace AnyRPG {
                     // should only be done on server or authoritative client
                     unitController.UnitAnimator.HandleDie();
                 }
-                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false || levelManager.IsCutscene()) {
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false || levelManagerClient.IsCutscene()) {
                     // should be done on client
                     unitController.RemoveNamePlate();
                     // should be done on client
@@ -1447,7 +1447,7 @@ namespace AnyRPG {
             }
             unitController.UnitAnimator.EnableAnimator();
             isReviving = true;
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManager.IsCutscene()) {
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManagerClient.IsCutscene()) {
                 // should only be done on server
                 unitController.CancelDespawnDelay();
             }
@@ -1456,10 +1456,10 @@ namespace AnyRPG {
             if (systemGameManager.GameMode == GameMode.Local
                 || unitController.IsOwner
                 || (networkManagerServer.ServerModeActive && unitController.UnitControllerMode != UnitControllerMode.Player)
-                || levelManager.IsCutscene()) {
+                || levelManagerClient.IsCutscene()) {
                 unitController.UnitAnimator.HandleReviveBegin();
             }
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManager.IsCutscene()) {
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {
                 resurrectionCoroutine = unitController.StartCoroutine(WaitForResurrection(reviveTime));
             }
         }
@@ -1484,18 +1484,18 @@ namespace AnyRPG {
             if (systemGameManager.GameMode == GameMode.Local
                 || unitController.IsOwner
                 || (networkManagerServer.ServerModeActive && unitController.UnitControllerMode != UnitControllerMode.Player)
-                || levelManager.IsCutscene()) {
+                || levelManagerClient.IsCutscene()) {
                 // should only be done on server or authoritative client
                 unitController.UnitAnimator.HandleReviveComplete();
             }
             isReviving = false;
             isAlive = true;
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManager.IsCutscene()) {
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {
                 // should only be done on server
                 ReviveRaw();
             }
             unitController.FreezeRotation();
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false || levelManager.IsCutscene()) {
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false || levelManagerClient.IsCutscene()) {
                 // should be done on client
                 unitController.InitializeNamePlate();
                 // minimap updates
@@ -1571,7 +1571,7 @@ namespace AnyRPG {
                 statusEffectNode.SetRemainingDuration(statusEffect.Duration);
             }
             if (statusEffect.CastZeroTick) {
-                if (characterSource?.AbilityManager != null && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManager.IsCutscene())) {
+                if (characterSource?.AbilityManager != null && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManagerClient.IsCutscene())) {
                     statusEffect.CastTick(characterSource, unitController, abilityEffectContext);
                 }
             }
@@ -1587,7 +1587,7 @@ namespace AnyRPG {
 
                 if (elapsedTime >= statusEffect.TickRate && statusEffect.TickRate != 0) {
                     if (characterSource?.AbilityManager != null) {
-                        if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManager.IsCutscene()) {
+                        if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManagerClient.IsCutscene()) {
                             statusEffect.CastTick(characterSource, unitController, abilityEffectContext);
                         }
                     }
@@ -1595,17 +1595,17 @@ namespace AnyRPG {
                 }
                 statusEffectNode.UpdateStatusNode();
             }
-            if (characterSource?.AbilityManager != null && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManager.IsCutscene())) {
+            if (characterSource?.AbilityManager != null && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManagerClient.IsCutscene())) {
                 statusEffect.CastComplete(characterSource, unitController, abilityEffectContext);
             }
 
-            if (statusEffects.ContainsKey(statusEffect.ResourceName) && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManager.IsCutscene())) {
+            if (statusEffects.ContainsKey(statusEffect.ResourceName) && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive || levelManagerClient.IsCutscene())) {
                 statusEffects[statusEffect.ResourceName].CancelStatusEffect();
             }
         }
 
         public void Update() {
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManager.IsCutscene()) {
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {
                 PerformResourceRegen();
             }
         }

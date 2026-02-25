@@ -21,7 +21,7 @@ namespace AnyRPG {
         private Coroutine dialogCoroutine = null;
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private MessageLogClient messageLogClient = null;
 
         public int DialogIndex { get => shownNodeCount; }
@@ -33,7 +33,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             messageLogClient = systemGameManager.MessageLogClient;
         }
 
@@ -160,8 +160,8 @@ namespace AnyRPG {
                 return;
             }
             //bool writeMessage = true;
-            if (playerManager != null && playerManager.ActiveUnitController != null) {
-                if (Vector3.Distance(interactable.transform.position, playerManager.ActiveUnitController.transform.position) > systemConfigurationManager.MaxChatTextDistance) {
+            if (playerManagerClient != null && playerManagerClient.ActiveUnitController != null) {
+                if (Vector3.Distance(interactable.transform.position, playerManagerClient.ActiveUnitController.transform.position) > systemConfigurationManager.MaxChatTextDistance) {
                     //writeMessage = false;
                     return;
                 }

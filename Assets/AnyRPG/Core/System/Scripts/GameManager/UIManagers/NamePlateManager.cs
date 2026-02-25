@@ -22,22 +22,20 @@ namespace AnyRPG {
         private Dictionary<NamePlateUnit, NamePlateController> namePlates = new Dictionary<NamePlateUnit, NamePlateController>();
 
         // game manager references
-        private CameraManager cameraManager = null;
-        private PlayerManagerClient playerManager = null;
         private ObjectPooler objectPooler = null;
+        private LevelManagerClient levelManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
-            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
+            levelManagerClient.OnLevelUnload += HandleLevelUnload;
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            cameraManager = systemGameManager.CameraManager;
-            playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         public void AddMouseOver(NamePlateController namePlateController) {
@@ -152,7 +150,7 @@ namespace AnyRPG {
 
         public void CleanupEventSubscriptions() {
             SystemEventManager.StopListening("AfterCameraUpdate", HandleAfterCameraUpdate);
-            systemEventManager.OnLevelUnloadClient -= HandleLevelUnload;
+            levelManagerClient.OnLevelUnload -= HandleLevelUnload;
         }
 
         public void OnDestroy() {

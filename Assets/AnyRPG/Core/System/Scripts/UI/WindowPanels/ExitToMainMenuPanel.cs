@@ -16,7 +16,7 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
-        private LevelManager levelManager = null;
+        private LevelManagerClient levelManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -28,7 +28,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         public void CancelExit() {
@@ -40,7 +40,7 @@ namespace AnyRPG {
             //Debug.Log("ExitMenuController.ConfirmExit()");
             uIManager.exitToMainMenuWindow.CloseWindow();
             uIManager.playerOptionsMenuWindow.CloseWindow();
-            levelManager.LoadMainMenu(false);
+            levelManagerClient.LoadMainMenu(false);
         }
 
     }

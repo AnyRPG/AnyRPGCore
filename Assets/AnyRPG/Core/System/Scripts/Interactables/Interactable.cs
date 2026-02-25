@@ -120,7 +120,7 @@ namespace AnyRPG {
 
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected UIManager uIManager = null;
         protected NamePlateManager namePlateManager = null;
         protected MiniMapManager miniMapManager = null;
@@ -237,9 +237,9 @@ namespace AnyRPG {
             ProcessInit();
 
             // moved here from CreateEventSubscriptions.  Init should have time to occur before processing this
-            if (playerManager.PlayerUnitSpawned) {
+            if (playerManagerClient.PlayerUnitSpawned) {
                 //Debug.Log($"{gameObject.name}.Interactable.CreateEventSubscriptions(): Player Unit is spawned.  Handling immediate spawn!");
-                ProcessPlayerUnitSpawn(playerManager.UnitController);
+                ProcessPlayerUnitSpawn(playerManagerClient.UnitController);
             } else {
                 //Debug.Log($"{gameObject.name}.Interactable.CreateEventSubscriptions(): Player Unit is not spawned. Added Handle Spawn listener");
             }
@@ -288,7 +288,7 @@ namespace AnyRPG {
             mainMapManager = uIManager.MainMapManager;
             interactionManager = systemGameManager.InteractionManager;
             networkManagerServer = systemGameManager.NetworkManagerServer;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             systemItemManager = systemGameManager.SystemItemManager;
         }
 
@@ -314,7 +314,6 @@ namespace AnyRPG {
 
         public virtual void CleanupEverything() {
             //Debug.Log($"{gameObject.name}.Interactable.CleanupEverything()");
-            ClearFromPlayerRangeTable();
             if (dialogController != null) {
                 dialogController.Cleanup();
             }
@@ -410,7 +409,7 @@ namespace AnyRPG {
         public virtual void HandlePrerequisiteUpdates() {
             //Debug.Log($"{gameObject.name}.Interactable.HandlePrerequisiteUpdates()");
 
-            if (!playerManager.PlayerUnitSpawned) {
+            if (!playerManagerClient.PlayerUnitSpawned) {
                 return;
             }
 
@@ -465,12 +464,12 @@ namespace AnyRPG {
                 return false;
             }
 
-            if (!playerManager.PlayerUnitSpawned) {
+            if (!playerManagerClient.PlayerUnitSpawned) {
                 //Debug.Log($"{gameObject.name}.Interactable.InstantiateMiniMapIndicator(): player unit not spawned yet.  returning");
                 return false;
             }
 
-            Dictionary<int, InteractableOptionComponent> validInteractables = GetValidInteractables(playerManager.UnitController);
+            Dictionary<int, InteractableOptionComponent> validInteractables = GetValidInteractables(playerManagerClient.UnitController);
             if (validInteractables.Count == 0) {
                 //if (GetValidInteractables(playerManager.UnitController.MyCharacterUnit).Count == 0) {
                 //Debug.Log($"{gameObject.name}.Interactable.InstantiateMiniMapIndicator(): No valid Interactables.  Not spawning indicator.");
@@ -542,7 +541,7 @@ namespace AnyRPG {
                 return false;
             }
             //Debug.Log($"{gameObject.name}.Interactable.CanInteract()");
-            if (playerManager == null || playerManager.PlayerUnitSpawned == false) {
+            if (playerManagerClient == null || playerManagerClient.PlayerUnitSpawned == false) {
                 return false;
             }
             Dictionary<int, InteractableOptionComponent> validInteractables = GetValidInteractables(sourceUnitController);
@@ -730,14 +729,14 @@ namespace AnyRPG {
                 return;
             }
 
-            if (playerManager == null) {
+            if (playerManagerClient == null) {
                 return;
             }
-            if (playerManager.PlayerUnitSpawned == false) {
+            if (playerManagerClient.PlayerUnitSpawned == false) {
                 return;
             }
 
-            if (playerManager.ActiveUnitController.gameObject == gameObject) {
+            if (playerManagerClient.ActiveUnitController.gameObject == gameObject) {
                 return;
             }
 
@@ -775,7 +774,7 @@ namespace AnyRPG {
             uIManager.ShowToolTip(new Vector2(0, 1), uIManager.MouseOverWindow.transform.position, CharacterTarget);
 
             // this function will not be triggered on the server, so sending the client player is ok
-            if (CharacterTarget.GetCurrentInteractables(playerManager.ActiveUnitController).Count == 0) {
+            if (CharacterTarget.GetCurrentInteractables(playerManagerClient.ActiveUnitController).Count == 0) {
                 //if (GetValidInteractables(playerManager.UnitController.MyCharacterUnit).Count == 0) {
                 //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): No current Interactables.  Not glowing.");
                 return;
@@ -803,14 +802,14 @@ namespace AnyRPG {
         public void OnMouseOut() {
             //Debug.Log($"{gameObject.name}.Interactable.OnMouseOut()");
 
-            if (playerManager == null) {
+            if (playerManagerClient == null) {
                 return;
             }
-            if (playerManager.PlayerUnitSpawned == false) {
+            if (playerManagerClient.PlayerUnitSpawned == false) {
                 return;
             }
 
-            if (playerManager.ActiveUnitController.gameObject == gameObject) {
+            if (playerManagerClient.ActiveUnitController.gameObject == gameObject) {
                 return;
             }
 
@@ -852,6 +851,7 @@ namespace AnyRPG {
         /// putting this in InteractableOptionComponent for now also
         /// </summary>
         public virtual void StopInteract() {
+            // this is currently unused?  no references to it.
             //Debug.Log($"{gameObject.name}.Interactable.StopInteract()");
             foreach (InteractableOptionComponent interactable in interactables.Values) {
                 interactable.StopInteract();
@@ -910,18 +910,6 @@ namespace AnyRPG {
 
         }
 
-        public void ClearFromPlayerRangeTable() {
-            //Debug.Log($"{gameObject.name}.Interactable.ClearFromPlayerRangeTable()");
-            // prevent bugs if a unit despawns before the player moves out of range of it
-            if (playerManager != null
-                && playerManager.PlayerController != null
-                && playerManager.ActiveUnitController != null) {
-                if (playerManager.PlayerController.Interactables.Contains(this)) {
-                    playerManager.PlayerController.Interactables.Remove(this);
-                }
-            }
-        }
-
         public virtual string GetSummary() {
             //Debug.Log($"{gameObject.name}.Interactable.GetDescription()");
 
@@ -954,14 +942,14 @@ namespace AnyRPG {
 
             // switched this to current interactables so that we don't see mouseover options that we can't current interact with
             //List<InteractableOptionComponent> validInteractables = GetValidInteractables(playerManager.UnitController.MyCharacterUnit);
-            Dictionary<int, InteractableOptionComponent> currentInteractables = GetCurrentInteractables(playerManager.UnitController);
+            Dictionary<int, InteractableOptionComponent> currentInteractables = GetCurrentInteractables(playerManagerClient.UnitController);
 
             // perform default interaction or open a window if there are multiple valid interactions
             List<string> returnStrings = new List<string>();
             foreach (InteractableOptionComponent interactableOptionComponent in currentInteractables.Values) {
                 //if (!(_interactable is INamePlateUnit)) {
                 // we already put the character name in the description so skip it here
-                returnStrings.Add(interactableOptionComponent.GetSummary(playerManager.UnitController));
+                returnStrings.Add(interactableOptionComponent.GetSummary(playerManagerClient.UnitController));
                 //}
             }
             returnString = string.Join("\n", returnStrings);
@@ -984,7 +972,7 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessStatusIndicatorSourceInit() {
-            Dictionary<int, InteractableOptionComponent> currentInteractables = GetCurrentInteractables(playerManager.UnitController);
+            Dictionary<int, InteractableOptionComponent> currentInteractables = GetCurrentInteractables(playerManagerClient.UnitController);
             foreach (InteractableOptionComponent _interactable in currentInteractables.Values) {
                 //if (!(_interactable is INamePlateUnit)) {
                 // we already put the character name in the description so skip it here
@@ -1101,7 +1089,6 @@ namespace AnyRPG {
         public virtual void ProcessCreateEventSubscriptions() {
             //Debug.Log($"{gameObject.name}.Interactable.ProcessCreateEventSubscriptions() Interactable instance: {GetInstanceID()}");
 
-            systemEventManager.OnLevelUnloadClient += HandleLevelUnloadClient;
             systemEventManager.OnLevelUnloadServer += HandleLevelUnloadServer;
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
                 systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
@@ -1121,15 +1108,10 @@ namespace AnyRPG {
         public virtual void ProcessCleanupEventSubscriptions() {
             //Debug.Log($"{gameObject.name}.Interactable.ProcessCleanupEventSubscriptions() Interactable Instance: {GetInstanceID()}");
 
-            systemEventManager.OnLevelUnloadClient -= HandleLevelUnloadClient;
             systemEventManager.OnLevelUnloadServer -= HandleLevelUnloadServer;
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
                 systemEventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
             }
-        }
-
-        public void HandleLevelUnloadClient(int sceneHandle, string sceneName) {
-            ProcessLevelUnload();
         }
 
         private void HandlePlayerUnitSpawn(UnitController sourceUnitController) {

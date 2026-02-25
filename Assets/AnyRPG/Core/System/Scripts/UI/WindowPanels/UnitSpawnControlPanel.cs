@@ -54,7 +54,7 @@ namespace AnyRPG {
         private UnitToughness unitToughness;
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private SystemDataFactory systemDataFactory = null;
         private UnitPreviewManager unitPreviewManager = null;
         private CameraManager cameraManager = null;
@@ -75,7 +75,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             systemDataFactory = systemGameManager.SystemDataFactory;
             unitPreviewManager = systemGameManager.UnitPreviewManager;
             cameraManager = systemGameManager.CameraManager;
@@ -104,7 +104,7 @@ namespace AnyRPG {
             options.Clear();
 
             // EXTRA LEVELS
-            for (int i = 0; i < systemConfigurationManager.MaxLevel - playerManager.UnitController.CharacterStats.Level; i++) {
+            for (int i = 0; i < systemConfigurationManager.MaxLevel - playerManagerClient.UnitController.CharacterStats.Level; i++) {
                 options.Add(i.ToString());
             }
             extraLevelsDropdown.AddOptions(options);

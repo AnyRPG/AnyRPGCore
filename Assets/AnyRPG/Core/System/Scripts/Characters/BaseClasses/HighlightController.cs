@@ -22,7 +22,7 @@ namespace AnyRPG {
         private float circleRadius = 0f;
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -31,7 +31,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public void SetupController() {
@@ -145,7 +145,7 @@ namespace AnyRPG {
             if (unitController.CharacterStats?.IsAlive == false) {
                 SetMaterial(Color.gray);
             } else {
-                Color newColor = Faction.GetFactionColor(playerManager, unitController);
+                Color newColor = Faction.GetFactionColor(playerManagerClient, unitController);
                 SetMaterial(newColor);
             }
         }

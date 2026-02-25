@@ -22,8 +22,8 @@ namespace AnyRPG {
         protected SaveManager saveManager = null;
         protected MessageFeedManager messageFeedManager = null;
         protected SystemEventManager systemEventManager = null;
-        protected PlayerManagerClient playerManager = null;
-        protected LevelManager levelManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
+        protected LevelManagerClient levelManagerClient = null;
 
         public int Amount {
             get {
@@ -59,8 +59,8 @@ namespace AnyRPG {
             saveManager = systemGameManager.SaveManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
             systemEventManager = systemGameManager.SystemEventManager;
-            playerManager = systemGameManager.PlayerManager;
-            levelManager = systemGameManager.LevelManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         public virtual int CurrentAmount(UnitController sourceUnitController) {

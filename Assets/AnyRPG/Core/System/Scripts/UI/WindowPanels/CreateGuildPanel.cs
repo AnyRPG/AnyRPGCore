@@ -20,7 +20,7 @@ namespace AnyRPG {
         // game manager references
         private GuildmasterManagerClient guildMasterManagerClient = null;
         private GuildServiceClient guildServiceClient = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -38,7 +38,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             guildMasterManagerClient = systemGameManager.GuildmasterManagerClient;
             guildServiceClient = systemGameManager.GuildServiceClient;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace AnyRPG {
             currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, systemConfigurationManager.CreateGuildCurrencyAmount, "Fee:");
 
             // check that player has enough money and disable create button if not
-            if (playerManager.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency) < systemConfigurationManager.CreateGuildCurrencyAmount) {
+            if (playerManagerClient.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency) < systemConfigurationManager.CreateGuildCurrencyAmount) {
                 createButton.Button.interactable = false;
             } else {
                 createButton.Button.interactable = true;

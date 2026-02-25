@@ -49,14 +49,14 @@ namespace AnyRPG {
         */
 
         // game manager references
-        protected LevelManager levelManager = null;
+        protected LevelManagerClient levelManagerClient = null;
         protected PlayerManagerServer playerManagerServer = null;
 
         public string LevelName { get => levelName; set => levelName = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             playerManagerServer = systemGameManager.PlayerManagerServer;
         }
 

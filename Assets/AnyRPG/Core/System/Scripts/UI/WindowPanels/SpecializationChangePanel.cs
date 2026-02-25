@@ -35,7 +35,7 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private ObjectPooler objectPooler = null;
         private SpecializationChangeManagerClient specializationChangeManagerClient = null;
 
@@ -49,7 +49,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             objectPooler = systemGameManager.ObjectPooler;
             specializationChangeManagerClient = systemGameManager.SpecializationChangeManagerClient;
         }
@@ -59,7 +59,7 @@ namespace AnyRPG {
 
             ClearTraitRewardIcons();
             // show trait rewards
-            CapabilityProps capabilityProps = specializationChangeManagerClient.SpecializationChangeProps.ClassSpecialization.GetFilteredCapabilities(playerManager.UnitController.BaseCharacter);
+            CapabilityProps capabilityProps = specializationChangeManagerClient.SpecializationChangeProps.ClassSpecialization.GetFilteredCapabilities(playerManagerClient.UnitController.BaseCharacter);
             if (capabilityProps.TraitList.Count > 0) {
                 traitsArea.gameObject.SetActive(true);
             } else {
@@ -73,7 +73,7 @@ namespace AnyRPG {
                     rewardIcon.SetOptions(rectTransform, false);
                     rewardIcon.SetDescribable(capabilityProps.TraitList[i]);
                     traitRewardIcons.Add(rewardIcon);
-                    if ((capabilityProps.TraitList[i].AbilityEffectProperties as StatusEffectProperties).RequiredLevel > playerManager.UnitController.CharacterStats.Level) {
+                    if ((capabilityProps.TraitList[i].AbilityEffectProperties as StatusEffectProperties).RequiredLevel > playerManagerClient.UnitController.CharacterStats.Level) {
                         rewardIcon.StackSizeText.text = "Level\n" + (capabilityProps.TraitList[i].AbilityEffectProperties as StatusEffectProperties).RequiredLevel;
                         rewardIcon.HighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
@@ -86,7 +86,7 @@ namespace AnyRPG {
 
             ClearRewardIcons();
             // show ability rewards
-            CapabilityProps capabilityProps = specializationChangeManagerClient.SpecializationChangeProps.ClassSpecialization.GetFilteredCapabilities(playerManager.UnitController.BaseCharacter);
+            CapabilityProps capabilityProps = specializationChangeManagerClient.SpecializationChangeProps.ClassSpecialization.GetFilteredCapabilities(playerManagerClient.UnitController.BaseCharacter);
             if (capabilityProps.AbilityList.Count > 0) {
                 abilitiesArea.gameObject.SetActive(true);
             } else {
@@ -100,7 +100,7 @@ namespace AnyRPG {
                     rewardIcon.SetOptions(rectTransform, false);
                     rewardIcon.SetDescribable(capabilityProps.AbilityList[i]);
                     abilityRewardIcons.Add(rewardIcon);
-                    if (capabilityProps.AbilityList[i].RequiredLevel > playerManager.UnitController.CharacterStats.Level) {
+                    if (capabilityProps.AbilityList[i].RequiredLevel > playerManagerClient.UnitController.CharacterStats.Level) {
                         rewardIcon.StackSizeText.text = "Level\n" + capabilityProps.AbilityList[i].RequiredLevel;
                         rewardIcon.HighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
@@ -133,7 +133,7 @@ namespace AnyRPG {
 
         public void ConfirmAction() {
             //Debug.Log("ClassChangePanelController.ConfirmAction()");
-            specializationChangeManagerClient.RequestChangeCharacterSpecialization(playerManager.UnitController);
+            specializationChangeManagerClient.RequestChangeCharacterSpecialization(playerManagerClient.UnitController);
             uIManager.specializationChangeWindow.CloseWindow();
         }
 

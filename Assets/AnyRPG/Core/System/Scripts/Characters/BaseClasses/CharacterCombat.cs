@@ -51,7 +51,7 @@ namespace AnyRPG {
         private Coroutine dropCombatCoroutine = null;
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected UIManager uIManager = null;
         protected SystemEventManager systemEventManager = null;
 
@@ -77,7 +77,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             uIManager = systemGameManager.UIManager;
             systemEventManager = systemGameManager.SystemEventManager;
         }

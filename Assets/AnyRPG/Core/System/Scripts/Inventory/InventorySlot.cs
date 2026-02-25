@@ -21,7 +21,7 @@ namespace AnyRPG {
 
         // game manager references
         protected HandScript handScript = null;
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
 
         /// <summary>
         /// A referecne to the bag that this slot belongs to
@@ -72,7 +72,7 @@ namespace AnyRPG {
 
             //inventoryManager = systemGameManager.InventoryManager;
             handScript = systemGameManager.UIManager.HandScript;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         protected virtual void UpdateSlot() {

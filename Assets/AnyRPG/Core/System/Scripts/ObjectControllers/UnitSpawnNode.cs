@@ -128,11 +128,11 @@ namespace AnyRPG {
         private List<UnitController> spawnReferences = new List<UnitController>();
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private SystemDataFactory systemDataFactory = null;
         private CharacterManager characterManager = null;
         private NetworkManagerServer networkManagerServer = null;
-        private LevelManager levelManager = null;
+        private LevelManagerClient levelManagerClient = null;
         private PlayerManagerServer playerManagerServer = null;
 
         // later on make this spawn mob as player walks into collider ;>
@@ -165,7 +165,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
             bool isCutscene = false;
             if (networkManagerServer.ServerModeActive == false) {
-                isCutscene = levelManager.IsCutscene();
+                isCutscene = levelManagerClient.IsCutscene();
             }
             if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false && isCutscene == false) {
                 //Debug.Log($"{gameObject.name}.UnitSpawnNode.Configure() setting not active");
@@ -190,11 +190,11 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             systemDataFactory = systemGameManager.SystemDataFactory;
             characterManager = systemGameManager.CharacterManager;
             networkManagerServer = systemGameManager.NetworkManagerServer;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             playerManagerServer = systemGameManager.PlayerManagerServer;
         }
 
@@ -209,10 +209,10 @@ namespace AnyRPG {
                 return;
             }
             systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
-            systemEventManager.OnLevelUnloadClient += HandleLevelUnloadClient;
-            if (playerManager.PlayerUnitSpawned == true) {
+            levelManagerClient.OnLevelUnload += HandleLevelUnloadClient;
+            if (playerManagerClient.PlayerUnitSpawned == true) {
                 //Debug.Log($"{gameObject.name}.UnitSpawnNode.CreateEventSubscriptions(): player unit already spawned.  Handling player unit spawn");
-                ProcessPlayerUnitSpawn(playerManager.UnitController);
+                ProcessPlayerUnitSpawn(playerManagerClient.UnitController);
             }
             eventSubscriptionsInitialized = true;
         }
@@ -224,7 +224,7 @@ namespace AnyRPG {
             }
 
             systemEventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
-            systemEventManager.OnLevelUnloadClient -= HandleLevelUnloadClient;
+            levelManagerClient.OnLevelUnload -= HandleLevelUnloadClient;
 
             eventSubscriptionsInitialized = false;
         }
@@ -622,8 +622,8 @@ namespace AnyRPG {
             // clearing the coroutine so the next round can start
             delayRoutine = null;
             if (disabled == false) {
-                if (systemGameManager.GameMode == GameMode.Local && playerManager.UnitController != null) {
-                    Spawn(playerManager.UnitController);
+                if (systemGameManager.GameMode == GameMode.Local && playerManagerClient.UnitController != null) {
+                    Spawn(playerManagerClient.UnitController);
                 } else {
                     Spawn(null);
                 }
@@ -671,8 +671,8 @@ namespace AnyRPG {
             //clearing the coroutine so the next timer will be allowed to start
             countDownRoutine = null;
             if (disabled == false) {
-                if (systemGameManager.GameMode == GameMode.Local && playerManager.UnitController != null) {
-                    SpawnWithDelay(playerManager.UnitController);
+                if (systemGameManager.GameMode == GameMode.Local && playerManagerClient.UnitController != null) {
+                    SpawnWithDelay(playerManagerClient.UnitController);
                 } else {
                     SpawnWithDelay(null);
                 }

@@ -84,7 +84,6 @@ namespace AnyRPG {
         private CharacterActionBarManager characterActionBarManager = null;
         private CharacterDialogManager characterDialogManager = null;
 
-
         // control logic
         private IState currentState;
         private List<CombatStrategyNode> startedPhaseNodes = new List<CombatStrategyNode>();
@@ -166,11 +165,13 @@ namespace AnyRPG {
         bool characterConfigured = false;
 
         // game manager references
-        protected LevelManager levelManager = null;
+        protected LevelManagerClient levelManagerClient = null;
         protected KeyBindManager keyBindManager = null;
         protected AudioManager audioManager = null;
         protected CharacterManager characterManager = null;
         protected SystemAchievementManager systemAchievementManager = null;
+        protected SceneUtilityService sceneUtilityService = null;
+        protected LevelManagerServer levelManagerServer = null;
 
         //public INamePlateTarget NamePlateTarget { get => namePlateTarget; set => namePlateTarget = value; }
         public NavMeshAgent NavMeshAgent { get => agent; set => agent = value; }
@@ -285,8 +286,8 @@ namespace AnyRPG {
                     if (movementSoundArea != null && movementSoundArea.MovementLoopProfile != null) {
                         return movementSoundArea.MovementLoopProfile;
                     }
-                    if (levelManager.GetActiveSceneNode()?.MovementLoopProfile != null) {
-                        return levelManager.GetActiveSceneNode().MovementLoopProfile;
+                    if (levelManagerClient.GetActiveSceneNode()?.MovementLoopProfile != null) {
+                        return levelManagerClient.GetActiveSceneNode().MovementLoopProfile;
                     }
                 }
                 if (unitProfile != null && (unitProfile.FootstepType == FootstepType.Unit || unitProfile.FootstepType == FootstepType.UnitFallback)) {
@@ -539,11 +540,13 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             keyBindManager = systemGameManager.KeyBindManager;
             audioManager = systemGameManager.AudioManager;
             characterManager = systemGameManager.CharacterManager;
             systemAchievementManager = systemGameManager.SystemAchievementManager;
+            sceneUtilityService = systemGameManager.SceneUtilityService;
+            levelManagerServer = systemGameManager.LevelManagerServer;
         }
 
         public void SetCharacterRequestData(CharacterRequestData characterRequestData) {
@@ -644,13 +647,13 @@ namespace AnyRPG {
             }
 
             // try the terrain layer based movement profile of the active scene node
-            environmentFootstepAudioProfile = levelManager.GetTerrainFootStepProfile(transform.position);
+            environmentFootstepAudioProfile = levelManagerClient.GetTerrainFootStepProfile(transform.position);
             if (environmentFootstepAudioProfile != null) {
                 return;
             }
 
             // try the default footstep profile of the active scene node
-            environmentFootstepAudioProfile = levelManager.GetActiveSceneNode()?.MovementHitProfile;
+            environmentFootstepAudioProfile = levelManagerClient.GetActiveSceneNode()?.MovementHitProfile;
             if (environmentFootstepAudioProfile != null) {
                 return;
             }
@@ -774,7 +777,7 @@ namespace AnyRPG {
             unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultCharacterUnitLayer);
             if (masterUnitController != null) {
                 ApplyControlEffects(masterUnitController);
-                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManager.IsCutscene()) {
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {
                     characterStats.SetLevelInternal(masterUnitController.CharacterStats.Level);
                     ChangeState(new IdleState());
                     SetAggroRange();
@@ -799,7 +802,7 @@ namespace AnyRPG {
             // enabling idle state will reset the destination so we need to re-enable it
             //Vector3 leashDestination = LeashPosition;
 
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManager.IsCutscene()) {
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {
                 ChangeState(new IdleState());
                 SetAggroRange();
                 SetDestination(LeashPosition);
@@ -821,6 +824,7 @@ namespace AnyRPG {
                 myCollider.isTrigger = false;
             }
             rigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+            /*
             if (systemGameManager.GameMode == GameMode.Local || (networkManagerServer.ServerModeActive == false && isOwner == true)) {
                 // movement is client authoritative, so physics should be applied in local games, or on the authoritative network client
                 rigidBody.isKinematic = false;
@@ -833,13 +837,27 @@ namespace AnyRPG {
             } else {
                 rigidBody.useGravity = true;
             }
+            */
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && isOwner == true)) {
+                rigidBody.isKinematic = false;
+                rigidBody.useGravity = true;
+                FreezePositionXZ();
+            } else {
+                // gravity and physics should not be applied on non authoritative clients.  They are moved by networkTransform
+                rigidBody.isKinematic = true;
+                rigidBody.useGravity = false;
+                FreezeAll();
+            }
+
             rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-            if (systemConfigurationManager.AllowClickToMove == true) {
+            if (systemConfigurationManager.AllowClickToMove == true && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true)) {
                 useAgent = true;
             } else {
+                // agents are only used in single player or on the server
                 useAgent = false;
             }
             DisableAgent();
+            unitMovementController.Init();
         }
 
         /// <summary>
@@ -853,20 +871,16 @@ namespace AnyRPG {
             unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultPlayerUnitLayer);
             DisableAggro();
 
-            if (networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && isOwner == false)) {
-                // movement is client authoritative, so gravity should not be applied on the server
-                rigidBody.useGravity = false;
-                FreezeAll();
-            } else {
-                // local games or authoritative clients
+
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && isOwner == true)) {
+                rigidBody.isKinematic = false;
                 rigidBody.useGravity = true;
                 FreezePositionXZ();
-            }
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && isOwner == true)) {
-                // movement is client authoritative, so physics should be applied on the authoritative client
-                rigidBody.isKinematic = false;
             } else {
+                // gravity and physics should not be applied on non authoritative clients.  They are moved by networkTransform
                 rigidBody.isKinematic = true;
+                rigidBody.useGravity = false;
+                FreezeAll();
             }
             rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
@@ -875,9 +889,10 @@ namespace AnyRPG {
 
             myCollider.isTrigger = false;
 
-            if (systemConfigurationManager.AllowClickToMove == true) {
+            if (systemConfigurationManager.AllowClickToMove == true && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true)) {
                 useAgent = true;
             } else {
+                // agents are only used in single player or on the server
                 useAgent = false;
             }
             agent.avoidancePriority = 0;
@@ -895,7 +910,7 @@ namespace AnyRPG {
             InitializeNamePlateController();
             EnableAICommon();
 
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManager.IsCutscene()) {
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {
                 if (systemConfigurationManager.EnableLeashing == true) {
                     enableLeashing = true;
                 }
@@ -912,7 +927,7 @@ namespace AnyRPG {
             unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultCharacterUnitLayer);
 
             // enable agent needs to be done before changing state or idle -> patrol transition will not work because of an inactive navmeshagent
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManager.IsCutscene()) {
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {
                 if (unitProfile != null && unitProfile.IsMobile == true) {
                     useAgent = true;
                 }
@@ -957,6 +972,12 @@ namespace AnyRPG {
             this.unitControllerMode = unitControllerMode;
             if (unitControllerMode == UnitControllerMode.Player) {
                 unitMovementController = new UnitMovementController(this, systemGameManager);
+                SceneData sceneData = levelManagerServer.GetSceneData(gameObject.scene);
+                if (sceneData != null && sceneData.HasNavMesh) {
+                    unitMovementController.useMeshNav = true;
+                } else {
+                    unitMovementController.useMeshNav = false;
+                }
             }
         }
 
@@ -1325,7 +1346,7 @@ namespace AnyRPG {
             characterEquipmentManager.LoadDefaultEquipment((characterConfigurationRequest.unitControllerMode == UnitControllerMode.Player ? false : true));
 
             if (characterConfigurationRequest.unitControllerMode == UnitControllerMode.Player
-                && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManager.IsCutscene())) {
+                && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene())) {
                 systemAchievementManager.AcceptAchievements(this);
             }
 
@@ -1643,7 +1664,7 @@ namespace AnyRPG {
                     //Debug.Log($"{gameObject.name}.AIController.ApplyControlEffects(): masterUnit is null, returning");
                     return;
                 }
-                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManager.IsCutscene()) {
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {
                     masterUnit.UnitEventController.OnClearTarget += HandleClearTarget;
                     masterUnit.UnitEventController.OnBeginCastOnEnemy += HandleMasterAttack;
                     masterUnit.UnitEventController.OnDropCombat += HandleMasterDropCombat;
@@ -1862,7 +1883,7 @@ namespace AnyRPG {
             if (CombatStrategy != null) {
                 if (CombatStrategy.HasMusic() == true && networkManagerServer.ServerModeActive == false) {
                     //Debug.Log($"{gameObject.name}.AIController.ResetCombat(): attempting to turn off fight music");
-                    SceneNode sceneNode = levelManager.SceneDictionary[gameObject.scene.name];
+                    SceneNode sceneNode = sceneUtilityService.GetSceneNodeBySceneName(gameObject.scene.name);
                     if (sceneNode != null) {
                         AudioClip musicClip = sceneNode.BackgroundMusicAudio;
                         if (musicClip != null) {
@@ -2412,6 +2433,7 @@ namespace AnyRPG {
             if (NavMeshAgent != null && useAgent == true && NavMeshAgent.enabled == false) {
                 NavMeshAgent.enabled = true;
             }
+            NavMeshAgent.updateRotation = true;
         }
 
         public void DisableAgent() {

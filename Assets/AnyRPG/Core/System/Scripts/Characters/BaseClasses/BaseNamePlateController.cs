@@ -20,7 +20,7 @@ namespace AnyRPG {
         // game manager references
         protected NamePlateManager namePlateManager = null;
         protected UIManager uIManager = null;
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
 
         public virtual NamePlateController NamePlate { get => namePlate; }
 
@@ -127,7 +127,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             namePlateManager = systemGameManager.UIManager.NamePlateManager;
             uIManager = systemGameManager.UIManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public void SetNameplatePosition() {

@@ -37,8 +37,6 @@ namespace AnyRPG {
         public event System.Action<int> OnTakeLoot = delegate { };
         public event System.Action OnPlayerDeath = delegate { };
         public event System.Action OnCalculateRelativeTime = delegate { };
-        public event System.Action OnLevelLoad = delegate { };
-        public event System.Action<int, string> OnLevelUnloadClient = delegate { };
         public event System.Action<int, string> OnLevelUnloadServer = delegate { };
         public event System.Action<int, WeatherProfile, bool> OnEndWeather = delegate { };
         public event System.Action<int, WeatherProfile> OnChooseWeather = delegate { };
@@ -260,14 +258,6 @@ namespace AnyRPG {
 
         public void NotifyOnCalculateRelativeTime() {
             OnCalculateRelativeTime();
-        }
-
-        public void NotifyOnLevelLoad() {
-            OnLevelLoad();
-        }
-
-        public void NotifyOnLevelUnloadClient(int sceneHandle, string sceneName) {
-            OnLevelUnloadClient(sceneHandle, sceneName);
         }
 
         public void NotifyOnLevelUnloadServer(int sceneHandle, string sceneName) {

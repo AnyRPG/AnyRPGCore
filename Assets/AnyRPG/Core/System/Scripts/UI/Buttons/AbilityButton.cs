@@ -24,13 +24,13 @@ namespace AnyRPG {
         protected TextMeshProUGUI description = null;
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected ActionBarManager actionBarManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             actionBarManager = systemGameManager.UIManager.ActionBarManager;
         }
 
@@ -57,7 +57,7 @@ namespace AnyRPG {
 
         protected override void HandleRightClick() {
             base.HandleRightClick();
-            playerManager.UnitController.CharacterAbilityManager.BeginAbility(ability);
+            playerManagerClient.UnitController.CharacterAbilityManager.BeginAbility(ability);
         }
 
         public override void Select() {
@@ -79,8 +79,8 @@ namespace AnyRPG {
         public override void Accept() {
             //Debug.Log("AbilityButton.Accept()");
             base.Accept();
-            if (ability.CanCast(playerManager.UnitController, true)) {
-                playerManager.UnitController.CharacterAbilityManager.BeginAbility(ability);
+            if (ability.CanCast(playerManagerClient.UnitController, true)) {
+                playerManagerClient.UnitController.CharacterAbilityManager.BeginAbility(ability);
             }
         }
 

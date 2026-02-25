@@ -43,7 +43,7 @@ namespace AnyRPG {
 
         // game manager references
         protected SystemItemManager systemItemManager = null;
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         //protected InventoryManager inventoryManager = null;
         protected MessageFeedManager messageFeedManager = null;
         protected CurrencyConverter currencyConverter = null;
@@ -62,7 +62,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             systemItemManager = systemGameManager.SystemItemManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             //inventoryManager = systemGameManager.InventoryManager;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
@@ -99,7 +99,7 @@ namespace AnyRPG {
                     quantity.text = string.Empty;
                 }
                 descriptionText.text = vendorItem.Item.Description;
-                if (vendorItem.BuyPrice(playerManager.UnitController) > 0
+                if (vendorItem.BuyPrice(playerManagerClient.UnitController) > 0
                     && vendorItem.Item.Currency != null
                     && vendorItem.Item.Currency.ResourceName != null
                     && vendorItem.Item.Currency.ResourceName != string.Empty) {
@@ -107,9 +107,9 @@ namespace AnyRPG {
                     //price.text = "Price:";
                     if (currencyBarController != null) {
                         if (buyBackButton == false) {
-                            currencyBarController.UpdateCurrencyAmount(vendorItem.Item.Currency, vendorItem.BuyPrice(playerManager.UnitController));
+                            currencyBarController.UpdateCurrencyAmount(vendorItem.Item.Currency, vendorItem.BuyPrice(playerManagerClient.UnitController));
                         } else {
-                            currencyBarController.UpdateCurrencyAmount(vendorItem.Item.GetSellPrice(vendorItem.InstantiatedItem, playerManager.UnitController).Key, vendorItem.Item.GetSellPrice(vendorItem.InstantiatedItem, playerManager.UnitController).Value, "Buy Back Price:");
+                            currencyBarController.UpdateCurrencyAmount(vendorItem.Item.GetSellPrice(vendorItem.InstantiatedItem, playerManagerClient.UnitController).Key, vendorItem.Item.GetSellPrice(vendorItem.InstantiatedItem, playerManagerClient.UnitController).Value, "Buy Back Price:");
                         }
                     }
                 } else {
@@ -143,7 +143,7 @@ namespace AnyRPG {
         }
 
         public void ProcessMouseClick() {
-            vendorManager.RequestBuyItemFromVendor(playerManager.UnitController, vendorItem, collectionIndex, itemIndex);
+            vendorManager.RequestBuyItemFromVendor(playerManagerClient.UnitController, vendorItem, collectionIndex, itemIndex);
         }
 
         public override void OnPointerEnter(PointerEventData eventData) {

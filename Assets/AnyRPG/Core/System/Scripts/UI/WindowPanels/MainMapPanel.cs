@@ -32,10 +32,10 @@ namespace AnyRPG {
 
         // system component references
         protected CameraManager cameraManager = null;
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected MapManager mapManager = null;
         protected MainMapManager mainMapManager = null;
-        protected LevelManager levelManager = null;
+        protected LevelManagerClient levelManagerclient = null;
         protected UIManager uIManager = null;
         protected ObjectPooler objectPooler = null;
 
@@ -55,11 +55,11 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             cameraManager = systemGameManager.CameraManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             uIManager = systemGameManager.UIManager;
             mapManager = uIManager.MapManager;
             mainMapManager = uIManager.MainMapManager;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerclient = systemGameManager.LevelManagerClient;
             objectPooler = systemGameManager.ObjectPooler;
         }
 
@@ -131,7 +131,7 @@ namespace AnyRPG {
         private void UpdateIndicatorPositions() {
             foreach (Interactable interactable in mapIndicatorControllers.Keys) {
                 if (mapIndicatorControllers[interactable].gameObject.activeSelf == true) {
-                    mapIndicatorControllers[interactable].transform.localPosition = new Vector3((interactable.transform.position.x - levelManager.SceneBounds.center.x) * levelScaleFactor, (interactable.transform.position.z - levelManager.SceneBounds.center.z) * levelScaleFactor, 0);
+                    mapIndicatorControllers[interactable].transform.localPosition = new Vector3((interactable.transform.position.x - levelManagerclient.SceneBounds.center.x) * levelScaleFactor, (interactable.transform.position.z - levelManagerclient.SceneBounds.center.z) * levelScaleFactor, 0);
                     mapIndicatorControllers[interactable].transform.localScale = new Vector3(1f / mapGraphic.transform.localScale.x, 1f / mapGraphic.transform.localScale.y, 1f / mapGraphic.transform.localScale.z);
                     interactable.UpdateMainMapIndicator();
                 }
@@ -206,7 +206,7 @@ namespace AnyRPG {
             graphicLayoutElement.preferredHeight = graphicLayoutElement.preferredWidth;
 
             // the image will be scaled to the largest dimension
-            levelScaleFactor = graphicLayoutElement.preferredWidth / (levelManager.SceneBounds.size.x > levelManager.SceneBounds.size.z ? levelManager.SceneBounds.size.x : levelManager.SceneBounds.size.z);
+            levelScaleFactor = graphicLayoutElement.preferredWidth / (levelManagerclient.SceneBounds.size.x > levelManagerclient.SceneBounds.size.z ? levelManagerclient.SceneBounds.size.x : levelManagerclient.SceneBounds.size.z);
         }
        
 

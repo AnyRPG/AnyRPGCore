@@ -76,11 +76,11 @@ namespace AnyRPG {
 
         public string GetCooldownTimeString() {
             string coolDownString = string.Empty;
-            if (playerManager?.UnitController?.CharacterAbilityManager != null
-                && playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(ResourceName)) {
+            if (playerManagerClient?.UnitController?.CharacterAbilityManager != null
+                && playerManagerClient.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(ResourceName)) {
                 float dictionaryCooldown = 0f;
-                if (playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(ResourceName)) {
-                    dictionaryCooldown = playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary[ResourceName].RemainingCoolDown;
+                if (playerManagerClient.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(ResourceName)) {
+                    dictionaryCooldown = playerManagerClient.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary[ResourceName].RemainingCoolDown;
                 }
                 coolDownString = "\n\nCooldown Remaining: " + SystemAbilityController.GetTimeText(dictionaryCooldown);
             }

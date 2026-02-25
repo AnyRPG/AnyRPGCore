@@ -74,7 +74,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private ObjectPooler objectPooler = null;
         private MessageFeedManager messageFeedManager = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private DialogManagerClient dialogManagerClient = null;
 
         public QuestGiverQuestScript SelectedQuestGiverQuestScript { get => selectedQuestGiverQuestScript; set => selectedQuestGiverQuestScript = value; }
@@ -97,7 +97,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             objectPooler = systemGameManager.ObjectPooler;
             messageFeedManager = uIManager.MessageFeedManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             dialogManagerClient = systemGameManager.DialogManagerClient;
         }
 
@@ -253,7 +253,7 @@ namespace AnyRPG {
                 completeButton.Button.enabled = true;
                 return;
             }
-            if (newQuest.GetStatus(playerManager.UnitController) == "available" && playerManager.UnitController.CharacterQuestLog.HasQuest(newQuest.ResourceName) == false) {
+            if (newQuest.GetStatus(playerManagerClient.UnitController) == "available" && playerManagerClient.UnitController.CharacterQuestLog.HasQuest(newQuest.ResourceName) == false) {
                 acceptButton.gameObject.SetActive(true);
                 acceptButton.Button.enabled = true;
                 completeButton.gameObject.SetActive(false);
@@ -261,7 +261,7 @@ namespace AnyRPG {
             }
 
             //Debug.Log("questGiver: " + questGiver.ToString());
-            if (newQuest.GetStatus(playerManager.UnitController) == "complete" && playerManager.UnitController.CharacterQuestLog.HasQuest(newQuest.ResourceName) == true && questGiver != null && questGiver.EndsQuest(newQuest.ResourceName)) {
+            if (newQuest.GetStatus(playerManagerClient.UnitController) == "complete" && playerManagerClient.UnitController.CharacterQuestLog.HasQuest(newQuest.ResourceName) == true && questGiver != null && questGiver.EndsQuest(newQuest.ResourceName)) {
                 completeButton.gameObject.SetActive(true);
                 completeButton.Button.enabled = true;
                 acceptButton.gameObject.SetActive(false);
@@ -298,7 +298,7 @@ namespace AnyRPG {
             currentQuest = quest;
 
             if (quest.HasOpeningDialog == true) {
-                if (quest.OpeningDialog != null && quest.OpeningDialog.TurnedIn(playerManager.UnitController) == false) {
+                if (quest.OpeningDialog != null && quest.OpeningDialog.TurnedIn(playerManagerClient.UnitController) == false) {
                     //Debug.Log("QuestGiverUI.ShowDescription(): opening dialog is not complete, showing dialog");
                     // FIX ME - that 0 should be the optionIndex of the interactableOption, but some quests can start from items.  There is no interactableOption in that case...
                     dialogManagerClient.SetQuestDialog(quest, interactable, questGiver.InteractableOptionComponent, 0, 0);
@@ -393,7 +393,7 @@ namespace AnyRPG {
                 if (questGiver != null) {
                     // notify a bag item so it can remove itself
                     //Debug.Log("QuestGiverUI.AcceptQuest() questgiver was not null");
-                    questGiver.RequestAcceptQuest(playerManager.UnitController, currentQuest);
+                    questGiver.RequestAcceptQuest(playerManagerClient.UnitController, currentQuest);
                 } else {
                     //Debug.Log("QuestGiverUI.AcceptQuest() questgiver was null");
                 }
@@ -405,7 +405,7 @@ namespace AnyRPG {
 
         public void CompleteQuest() {
             //Debug.Log("QuestGiverUI.CompleteQuest()");
-            if (!currentQuest.IsComplete(playerManager.UnitController)) {
+            if (!currentQuest.IsComplete(playerManagerClient.UnitController)) {
                 Debug.LogWarning("QuestGiverUI.CompleteQuest(): currentQuest is not complete, exiting!");
                 return;
             }
@@ -436,7 +436,7 @@ namespace AnyRPG {
             // item rewards first in case not enough space in inventory
             // TO FIX: THIS CODE DOES NOT DEAL WITH PARTIAL STACKS AND WILL REQUEST ONE FULL SLOT FOR EVERY REWARD
             if (questDetailsArea.GetHighlightedItemRewardIcons().Count > 0) {
-                if (playerManager.UnitController.CharacterInventoryManager.EmptySlotCount() < questDetailsArea.GetHighlightedItemRewardIcons().Count) {
+                if (playerManagerClient.UnitController.CharacterInventoryManager.EmptySlotCount() < questDetailsArea.GetHighlightedItemRewardIcons().Count) {
                     messageFeedManager.WriteMessage("Not enough room in inventory!");
                     return;
                 }
@@ -498,7 +498,7 @@ namespace AnyRPG {
             // DO THIS HERE OR TURNING THE QUEST RESULTING IN THIS WINDOW RE-OPENING WOULD JUST INSTA-CLOSE IT INSTEAD
             uIManager.questGiverWindow.CloseWindow();
 
-            questGiver.RequestCompleteQuest(playerManager.UnitController, currentQuest, questRewardChoices);
+            questGiver.RequestCompleteQuest(playerManagerClient.UnitController, currentQuest, questRewardChoices);
             //playerManager.UnitController.CharacterQuestLog.TurnInQuest(currentQuest);
 
         }

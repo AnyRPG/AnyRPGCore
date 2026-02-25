@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static SceneLoader;
 
 namespace AnyRPG {
     public class LevelManagerServer : ConfiguredClass {
@@ -24,7 +24,7 @@ namespace AnyRPG {
 
         // game manager references
         private CameraManager cameraManager = null;
-        private LevelManager levelManager = null;
+        private SceneUtilityService sceneUtilityService = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -36,7 +36,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             cameraManager = systemGameManager.CameraManager;
-            levelManager = systemGameManager.LevelManager;
+            sceneUtilityService = systemGameManager.SceneUtilityService;
         }
 
         private void HandleStartServer() {
@@ -119,17 +119,26 @@ namespace AnyRPG {
                 sceneInstanceType = sceneLoadRequestHashCodes[hashCode];
                 sceneLoadRequestHashCodes.Remove(hashCode);
             }
+            cameraManager.DisableCutsceneCameras(scene);
+            AddLoadedScene(scene, sceneInstanceType);
+        }
+
+        public void AddLoadedScene(Scene scene, SceneInstanceType sceneInstanceType) {
+            Debug.Log($"LevelManagerServer.AddLoadedScene(scene: ({scene.name} {scene.handle}), sceneInstanceType: {sceneInstanceType.ToString()})");
 
             if (loadedScenes.ContainsKey(scene.name) == false) {
                 loadedScenes.Add(scene.name, new Dictionary<int, SceneData>());
             }
-            SceneData sceneData = new SceneData(sceneInstanceType, scene, levelManager.GetSceneNodeBySceneName(scene.name));
+            SceneData sceneData = new SceneData(sceneInstanceType, scene, sceneUtilityService.GetSceneNodeBySceneName(scene.name), SceneUtilityService.DoesSceneHaveNavMesh(scene));
             loadedScenes[scene.name].Add(scene.handle, sceneData);
+
+            systemGameManager.AutoConfigureMonoBehaviours(scene);
+
             OnAddLoadedScene(scene.handle, sceneData);
         }
 
         public void RemoveLoadedScene(int sceneHandle, string sceneName) {
-            //Debug.Log($"LevelManagerServer.RemoveLoadedScene({sceneHandle}, {sceneName})");
+            Debug.Log($"LevelManagerServer.RemoveLoadedScene({sceneHandle}, {sceneName})");
 
             if (loadedScenes.ContainsKey(sceneName) == false) {
                 //Debug.LogError($"LevelManagerServer.RemoveLoadedScene() - scene {sceneName} not found in loaded scenes");
@@ -144,8 +153,6 @@ namespace AnyRPG {
             //Debug.Log($"LevelManagerServer.ProcessLevelLoad({loadedScene.name}({loadedScene.handle}))");
 
             cameraManager.ActivateMainCamera();
-            systemGameManager.AutoConfigureMonoBehaviours(loadedScene);
-
         }
 
         public void SetSceneLoadRequestHashCode(SceneInstanceType sceneInstanceType, int hashCode) {
@@ -180,6 +187,16 @@ namespace AnyRPG {
                 }
             }
             return returnValue;
+        }
+
+        public SceneData GetSceneData(Scene scene) {
+            if (loadedScenes.ContainsKey(scene.name) == false) {
+                return null;
+            }
+            if (loadedScenes[scene.name].ContainsKey(scene.handle) == false) {
+                return null;
+            }
+            return loadedScenes[scene.name][scene.handle];
         }
     }
 

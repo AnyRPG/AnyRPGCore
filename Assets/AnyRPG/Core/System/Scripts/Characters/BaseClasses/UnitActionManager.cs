@@ -25,7 +25,7 @@ namespace AnyRPG {
         // game manager references
         //private PlayerManager playerManager = null;
         protected ObjectPooler objectPooler = null;
-        protected LevelManager levelManager = null;
+        protected LevelManagerClient levelManagerClient = null;
 
         public bool ControlLocked {
             get {
@@ -54,7 +54,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             //playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         public AttachmentPointNode GetHeldAttachmentPointNode(AbilityAttachmentNode attachmentNode) {
@@ -307,7 +307,7 @@ namespace AnyRPG {
             
             unitController.UnitEventController.NotifyOnBeginAction(animatedAction.ResourceName, playerInitiated);
             
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManager.IsCutscene()) {
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {
                 BeginActionInternal(animatedAction, playerInitiated);
             }
         }

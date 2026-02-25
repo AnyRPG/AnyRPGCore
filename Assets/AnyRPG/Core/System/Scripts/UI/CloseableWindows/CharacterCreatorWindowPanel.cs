@@ -41,11 +41,11 @@ namespace AnyRPG {
 
         // game manager references
         protected UIManager uIManager = null;
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected PlayerManagerServer playerManagerServer = null;
         protected CharacterCreatorManager characterCreatorManager = null;
         protected SaveManager saveManager = null;
-        protected LevelManager levelManager = null;
+        protected LevelManagerClient levelManagerClient = null;
         protected CharacterAppearanceManagerClient characterAppearanceManagerClient = null;
         protected ObjectPooler objectPooler = null;
         protected SystemDataFactory systemDataFactory = null;
@@ -74,11 +74,11 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
             saveManager = systemGameManager.SaveManager;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             characterAppearanceManagerClient = systemGameManager.CharacterAppearanceManagerClient;
             objectPooler = systemGameManager.ObjectPooler;
             systemDataFactory = systemGameManager.SystemDataFactory;
@@ -178,17 +178,17 @@ namespace AnyRPG {
             // set unit profile to default
             if (characterAppearanceManagerClient.CharacterCreator.Props.UnitProfileList.Count == 0) {
                 if (characterAppearanceManagerClient.CharacterCreator.Props.AllowGenderChange == true) {
-                    characterRace = playerManager.UnitController.UnitProfile.CharacterRace;
+                    characterRace = playerManagerClient.UnitController.UnitProfile.CharacterRace;
                 }
-                UpdateUnitProfile(playerManager.UnitController.UnitProfile);
+                UpdateUnitProfile(playerManagerClient.UnitController.UnitProfile);
                 return;
             }
 
-            if (characterAppearanceManagerClient.CharacterCreator.Props.UnitProfileList.Contains(playerManager.UnitController.UnitProfile)) {
+            if (characterAppearanceManagerClient.CharacterCreator.Props.UnitProfileList.Contains(playerManagerClient.UnitController.UnitProfile)) {
                 if (characterAppearanceManagerClient.CharacterCreator.Props.AllowGenderChange == true) {
-                    characterRace = playerManager.UnitController.UnitProfile.CharacterRace;
+                    characterRace = playerManagerClient.UnitController.UnitProfile.CharacterRace;
                 }
-                UpdateUnitProfile(playerManager.UnitController.UnitProfile);
+                UpdateUnitProfile(playerManagerClient.UnitController.UnitProfile);
             } else {
                 if (characterAppearanceManagerClient.CharacterCreator.Props.AllowGenderChange == true) {
                     characterRace = characterAppearanceManagerClient.CharacterCreator.Props.UnitProfileList[0].CharacterRace;
@@ -256,14 +256,14 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorPanel.SaveCharacter()");
 
             if (characterCreatorManager.PreviewUnitController.UnitModelController != null) {
-                characterCreatorManager.PreviewUnitController.UnitModelController.SaveAppearanceSettings(playerManager.ActiveUnitController.CharacterSaveManager.SaveData);
+                characterCreatorManager.PreviewUnitController.UnitModelController.SaveAppearanceSettings(playerManagerClient.ActiveUnitController.CharacterSaveManager.SaveData);
             }
 
             // copy the the appearance settings so they don't get overwritten when the character despawns and saves
-            string appearanceString = String.Copy(playerManager.ActiveUnitController.CharacterSaveManager.SaveData.AppearanceString);
-            List<SwappableMeshSaveData> swappableMeshSaveData = new List<SwappableMeshSaveData>(playerManager.ActiveUnitController.CharacterSaveManager.SaveData.SwappableMeshSaveData);
+            string appearanceString = String.Copy(playerManagerClient.ActiveUnitController.CharacterSaveManager.SaveData.AppearanceString);
+            List<SwappableMeshSaveData> swappableMeshSaveData = new List<SwappableMeshSaveData>(playerManagerClient.ActiveUnitController.CharacterSaveManager.SaveData.SwappableMeshSaveData);
 
-            characterAppearanceManagerClient.RequestUpdatePlayerAppearance(playerManager.UnitController, unitProfile.ResourceName, appearanceString, swappableMeshSaveData);
+            characterAppearanceManagerClient.RequestUpdatePlayerAppearance(playerManagerClient.UnitController, unitProfile.ResourceName, appearanceString, swappableMeshSaveData);
         }
 
         public void OpenAppearancePanel() {
@@ -292,8 +292,8 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorWindowPanel.EquipCharacter()");
 
             // TO DO : FIX ME index already exists in the equipment manager
-            foreach (EquipmentSlotProfile equipmentSlotProfile in playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment.Keys) {
-                characterCreatorManager.PreviewUnitController.CharacterEquipmentManager.AddCurrentEquipmentSlot(equipmentSlotProfile, playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
+            foreach (EquipmentSlotProfile equipmentSlotProfile in playerManagerClient.UnitController.CharacterEquipmentManager.CurrentEquipment.Keys) {
+                characterCreatorManager.PreviewUnitController.CharacterEquipmentManager.AddCurrentEquipmentSlot(equipmentSlotProfile, playerManagerClient.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
             }
 
         }
@@ -327,9 +327,9 @@ namespace AnyRPG {
             CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(this);
             
             // only set saved appearance if displaying the same unit as the existing player unit
-            if (playerManager.UnitController.UnitProfile == UnitProfile) {
+            if (playerManagerClient.UnitController.UnitProfile == UnitProfile) {
                 //Debug.Log("CharacterCreatorWindowPanel.GetCharacterConfigurationRequest() setting saved appearance data from player");
-                characterConfigurationRequest.characterAppearanceData = new CharacterAppearanceData(playerManager.ActiveUnitController.CharacterSaveManager.SaveData);
+                characterConfigurationRequest.characterAppearanceData = new CharacterAppearanceData(playerManagerClient.ActiveUnitController.CharacterSaveManager.SaveData);
             }
 
             return characterConfigurationRequest;

@@ -40,7 +40,7 @@ namespace AnyRPG {
 
         // game manager references
         private ObjectPooler objectPooler = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private PlayerManagerServer playerManagerServer = null;
 
         public List<UnitController> LocalUnits { get => localUnits; }
@@ -65,7 +65,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             playerManagerServer = systemGameManager.PlayerManagerServer;
         }
 
@@ -253,7 +253,7 @@ namespace AnyRPG {
                 if (unitController.CharacterRequestData.characterConfigurationRequest.unitControllerMode == UnitControllerMode.Player) {
                     if (unitController.CharacterRequestData.isOwner) {
                         // this is only true on the client
-                        playerManager.SetUnitController(unitController);
+                        playerManagerClient.SetUnitController(unitController);
                         playerManagerServer.AddActivePlayer(networkManagerClient.AccountId, unitController);
                         playerManagerServer.MonitorPlayer(unitController);
                     } else if (networkManagerServer.ServerModeActive) {
@@ -274,7 +274,7 @@ namespace AnyRPG {
         }
 
         public void HandleAfterDie(CharacterStats deadCharacterStats) {
-            if (playerManager.UnitController == null || deadCharacterStats.UnitController.GetCurrentInteractables(playerManager.UnitController).Count == 0) {
+            if (playerManagerClient.UnitController == null || deadCharacterStats.UnitController.GetCurrentInteractables(playerManagerClient.UnitController).Count == 0) {
                 deadCharacterStats.UnitController.OutlineController.TurnOffOutline();
             }
         }

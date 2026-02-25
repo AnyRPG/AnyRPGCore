@@ -29,6 +29,7 @@ namespace AnyRPG {
         // game manager references
         private ObjectPooler objectPooler = null;
         private NetworkManagerServer networkManagerServer = null;
+        private LevelManagerClient levelManagerClient = null;
 
         public IAbilityManager AbilityManager { get => abilityManager; }
         public MonoBehaviour MonoBehaviour { get => this; }
@@ -37,7 +38,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             abilityManager = new AbilityManager(this, systemGameManager);
-            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
+            levelManagerClient.OnLevelUnload += HandleLevelUnload;
             systemEventManager.OnLevelUnloadServer += HandleLevelUnload;
         }
 
@@ -45,6 +46,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
             networkManagerServer = systemGameManager.NetworkManagerServer;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         public virtual void AddDestroyAbilityEffectObjectCoroutine(int sceneHandle, Coroutine coroutine) {

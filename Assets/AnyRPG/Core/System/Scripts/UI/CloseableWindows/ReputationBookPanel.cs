@@ -10,11 +10,11 @@ namespace AnyRPG {
         [SerializeField]
         private List<FactionButton> factionButtons = new List<FactionButton>();
 
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
 
             foreach (FactionButton factionButton in factionButtons) {
                 factionButton.Configure(systemGameManager);
@@ -24,8 +24,8 @@ namespace AnyRPG {
         protected override void PopulatePages() {
             //Debug.Log("ReputationBookUI.CreatePages()");
             FactionDispositionContentList page = new FactionDispositionContentList();
-            for (int i = 0; i < playerManager.UnitController.CharacterFactionManager.DispositionDictionary.Count; i++) {
-                page.factionDispositions.Add(playerManager.UnitController.CharacterFactionManager.DispositionDictionary[i]);
+            for (int i = 0; i < playerManagerClient.UnitController.CharacterFactionManager.DispositionDictionary.Count; i++) {
+                page.factionDispositions.Add(playerManagerClient.UnitController.CharacterFactionManager.DispositionDictionary[i]);
                 if (page.factionDispositions.Count == pageSize) {
                     pages.Add(page);
                     page = new FactionDispositionContentList();

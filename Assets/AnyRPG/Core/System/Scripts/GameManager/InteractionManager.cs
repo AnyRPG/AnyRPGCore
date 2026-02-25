@@ -16,14 +16,14 @@ namespace AnyRPG {
         private InteractableOptionComponent currentInteractableOptionComponent = null;
         private InteractableOptionManager interactableOptionManager = null;
 
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private UIManager uIManager = null;
 
         public override void SetGameManagerReferences() {
             //Debug.Log($"InteractionManager.SetGameManagerReferences()");
 
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             uIManager = systemGameManager.UIManager;
         }
 
@@ -33,7 +33,7 @@ namespace AnyRPG {
             // get reference to name now since interactable could change scene and then target reference is lost
             //string targetDisplayName = target.DisplayName;
 
-            if (InteractWithInteractable(playerManager.UnitController, target)) {
+            if (InteractWithInteractable(playerManagerClient.UnitController, target)) {
                 //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
                 return true;
             }

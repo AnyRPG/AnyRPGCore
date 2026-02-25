@@ -54,9 +54,6 @@ namespace AnyRPG {
         private InputManager inputManager = null;
 
         [SerializeField]
-        private PlayerManagerClient playerManager = null;
-
-        [SerializeField]
         private UIManager uIManager = null;
 
         [SerializeField]
@@ -96,7 +93,7 @@ namespace AnyRPG {
         private InspectCharacterService inspectCharacterService = new InspectCharacterService();
         private InteractionManager interactionManager = new InteractionManager();
         private KeyBindManager keyBindManager = new KeyBindManager();
-        private LevelManager levelManager = new LevelManager();
+        private LevelManagerClient levelManagerClient = new LevelManagerClient();
         private LevelManagerServer levelManagerServer = new LevelManagerServer();
         private LoadGameManager loadGameManager = new LoadGameManager();
         private MessageLogClient messageLogClient = new MessageLogClient();
@@ -110,11 +107,13 @@ namespace AnyRPG {
         private NewGameManager newGameManager = new NewGameManager();
         private PlayerCharacterService playerCharacterService = new PlayerCharacterService();
         private MailService mailService = new MailService();
+        private PlayerManagerClient playerManagerClient = new PlayerManagerClient();
         private PlayerManagerServer playerManagerServer = new PlayerManagerServer();
         private QuestGiverManagerClient questGiverManagerClient = new QuestGiverManagerClient();
         private QuestGiverManagerServer questGiverManagerServer = new QuestGiverManagerServer();
         private SaveManager saveManager = new SaveManager();
         //private LocalGameServerClient localGameServerClient = new LocalGameServerClient();
+        private SceneUtilityService sceneUtilityService = new SceneUtilityService();
         private SkillTrainerManagerClient skillTrainerManagerClient = new SkillTrainerManagerClient();
         private SkillTrainerManagerServer skillTrainerManagerServer = new SkillTrainerManagerServer();
         private SpecializationChangeManagerClient specializationChangeManagerClient = new SpecializationChangeManagerClient();
@@ -175,9 +174,10 @@ namespace AnyRPG {
         public SystemAbilityController SystemAbilityController { get => systemAbilityController; set => systemAbilityController = value; }
         public CastTargettingManager CastTargettingManager { get => castTargettingManager; set => castTargettingManager = value; }
         public InputManager InputManager { get => inputManager; set => inputManager = value; }
-        public LevelManager LevelManager { get => levelManager; }
+        public LevelManagerClient LevelManagerClient { get => levelManagerClient; }
         public LevelManagerServer LevelManagerServer { get => levelManagerServer; set => levelManagerServer = value; }
-        public PlayerManagerClient PlayerManager { get => playerManager; set => playerManager = value; }
+        public SceneUtilityService SceneUtilityService { get => sceneUtilityService; set => sceneUtilityService = value; }
+        public PlayerManagerClient PlayerManagerClient { get => playerManagerClient; set => playerManagerClient = value; }
         public PlayerManagerServer PlayerManagerServer { get => playerManagerServer; set => playerManagerServer = value; }
         public SystemItemManager SystemItemManager { get => systemItemManager; set => systemItemManager = value; }
         public MessageLogClient MessageLogClient { get => messageLogClient; set => messageLogClient = value; }
@@ -249,12 +249,15 @@ namespace AnyRPG {
             UIManager.PerformSetupActivities();
 
             // then launch level manager to start loading the game
-            LevelManager.PerformSetupActivities();
+            sceneUtilityService.PerformSetupActivities();
+            LevelManagerClient.PerformSetupActivities();
 
         }
 
         private void Init() {
             //Debug.Log("SystemGameManager.Init()");
+            UpdateSimulationMode();
+
             SetupPermanentObjects();
 
             // we are going to handle the initialization of all system managers here so we can control the start order and it isn't random
@@ -289,9 +292,10 @@ namespace AnyRPG {
             systemAbilityController.Configure(this);
             castTargettingManager.Configure(this);
             inputManager.Configure(this);
-            levelManager.Configure(this);
+            levelManagerClient.Configure(this);
             levelManagerServer.Configure(this);
-            playerManager.Configure(this);
+            sceneUtilityService.Configure(this);
+            playerManagerClient.Configure(this);
             playerManagerServer.Configure(this);
             systemItemManager.Configure(this);
             systemAchievementManager.Configure(this);
@@ -391,15 +395,20 @@ namespace AnyRPG {
             //Debug.Log($"SystemGameManager.SetGameMode({gameMode})");
 
             this.gameMode = gameMode;
-            // set physics simulation off for network mode
-            /*
+
+            UpdateSimulationMode();
+            //networkManagerServer.OnSetGameMode(gameMode);
+        }
+
+        private void UpdateSimulationMode() {
+            // Re-enabled this check.  Since we are now using CSP, we have physics mode in FishNet set to TimeManager, and it expects SimulationMode.Script
+            // However for offline play, we want to use the default physics mode of FixedUpdate, so we need to switch between them based on game mode
+            // because setting the physics mode in FishNet UI automatically changes it for the entire project, so we can never guarantee it's at script
             if (gameMode == GameMode.Network) {
                 Physics.simulationMode = SimulationMode.Script;
             } else {
                 Physics.simulationMode = SimulationMode.FixedUpdate;
             }
-            */
-            //networkManagerServer.OnSetGameMode(gameMode);
         }
 
         /// <summary>

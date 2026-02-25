@@ -20,9 +20,9 @@ namespace AnyRPG {
 
         // game manager references
         private CameraManager cameraManager = null;
-        private PlayerManagerClient playerManager = null;
         private ObjectPooler objectPooler = null;
         private CutsceneBarController cutSceneBarController = null;
+        private LevelManagerClient levelManagerClient = null;
 
         public Canvas CombatTextCanvas { get => combatTextCanvas; set => combatTextCanvas = value; }
 
@@ -31,15 +31,15 @@ namespace AnyRPG {
 
             //Debug.Log("NamePlateManager.Awake(): " + SystemGameManager.Instance.UIManager.NamePlateManager.gameObject.name);
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
-            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
+            levelManagerClient.OnLevelUnload += HandleLevelUnload;
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             cameraManager = systemGameManager.CameraManager;
-            playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
             cutSceneBarController = systemGameManager.UIManager.CutSceneBarController;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         public void HandleAfterCameraUpdate(string eventName, EventParamProperties eventParamProperties) {

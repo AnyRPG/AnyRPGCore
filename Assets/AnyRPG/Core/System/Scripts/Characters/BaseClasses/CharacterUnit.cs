@@ -130,8 +130,8 @@ namespace AnyRPG {
         }
 
         public override Color GetMiniMapIconColor() {
-            if (unitController != playerManager.UnitController) {
-                return Faction.GetFactionColor(playerManager, playerManager.UnitController, unitController);
+            if (unitController != playerManagerClient.UnitController) {
+                return Faction.GetFactionColor(playerManagerClient, playerManagerClient.UnitController, unitController);
             }
 
             return base.GetMiniMapIconColor();

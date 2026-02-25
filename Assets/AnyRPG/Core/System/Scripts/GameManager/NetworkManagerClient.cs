@@ -44,11 +44,11 @@ namespace AnyRPG {
         private Dictionary<int, string> lobbyPlayers = new Dictionary<int, string>();
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private PlayerManagerServer playerManagerServer = null;
         private CharacterManager characterManager = null;
         private UIManager uIManager = null;
-        private LevelManager levelManager = null;
+        private LevelManagerClient levelManagerClient = null;
         private MessageLogClient messageLogClient = null;
         private MessageFeedManager messageFeedManager = null;
         private SystemItemManager systemItemManager = null;
@@ -80,9 +80,9 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             characterManager = systemGameManager.CharacterManager;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             uIManager = systemGameManager.UIManager;
             messageLogClient = systemGameManager.MessageLogClient;
             messageFeedManager = uIManager.MessageFeedManager;
@@ -197,12 +197,12 @@ namespace AnyRPG {
 
             systemGameManager.SetGameMode(GameMode.Local);
             OnClientConnectionStopped();
-            if (levelManager.GetActiveSceneNode() != systemConfigurationManager.MainMenuSceneNode) {
+            if (levelManagerClient.GetActiveSceneNode() != systemConfigurationManager.MainMenuSceneNode) {
                 if (isLoggingInOrOut == false) {
                     uIManager.AddPopupWindowToQueue(uIManager.disconnectedWindow);
                 }
                 isLoggingInOrOut = false;
-                levelManager.LoadMainMenu(false);
+                levelManagerClient.LoadMainMenu(false);
                 return;
             }
 
@@ -428,8 +428,8 @@ namespace AnyRPG {
             //Debug.Log($"NetworkManagerClient.LaunchNetworkGame()");
 
             //systemItemManager.ClearInstantiatedItems();
-            playerManager.SpawnPlayerConnection();
-            levelManager.ProcessBeforeLevelUnload();
+            playerManagerClient.SpawnPlayerConnection();
+            levelManagerClient.ProcessBeforeLevelUnload();
         }
 
         public void LaunchLobbyGame(int gameId) {
@@ -459,7 +459,7 @@ namespace AnyRPG {
         public void AdvertiseUnloadSceneClient() {
             //Debug.Log($"NetworkManagerClient.AdvertiseLoadSceneClient({sceneName})");
 
-            levelManager.ProcessBeforeLevelUnload();
+            levelManagerClient.ProcessBeforeLevelUnload();
         }
 
         public void InteractWithOption(UnitController sourceUnitController, Interactable targetInteractable, int componentIndex, int choiceIndex) {
@@ -475,11 +475,11 @@ namespace AnyRPG {
         */
 
         public void HandleSceneLoadStart(string sceneName) {
-            levelManager.NotifyOnBeginLoadingLevel(sceneName);
+            levelManagerClient.NotifyOnBeginLoadingLevel(sceneName);
         }
 
         public void HandleSceneLoadPercentageChange(float percent) {
-            levelManager.SetLoadingProgress(percent);
+            levelManagerClient.SetLoadingProgress(percent);
         }
 
         public void RequestSetPlayerCharacterClass(Interactable interactable, int componentIndex) {
@@ -640,7 +640,7 @@ namespace AnyRPG {
         }
 
         public void AdvertiseLoadCutscene(Cutscene cutscene) {
-            levelManager.LoadCutSceneWithDelay(cutscene);
+            levelManagerClient.LoadCutSceneWithDelay(cutscene);
 
         }
 

@@ -15,15 +15,6 @@ namespace AnyRPG {
 
         List<List<IEventTrigger>> allEventTriggers = new List<List<IEventTrigger>>();
 
-
-        // game manager references
-        private PlayerManagerClient playerManager = null;
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
-        }
-
         private void HandleEventTriggered() {
             //Debug.Log("EventTriggers.HandleEventTriggered()");
 

@@ -33,7 +33,7 @@ namespace AnyRPG {
         public void SetRotation(Quaternion targetRotation) {
             predictionRigidbody.Rigidbody.rotation = targetRotation;
 
-            Physics.SyncTransforms();
+            //Physics.SyncTransforms();
         }
 
         public void AddExplosionForce(float explosionForce, Vector3 explosionCenter, float upwardModifier) {

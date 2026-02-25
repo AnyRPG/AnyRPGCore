@@ -29,7 +29,7 @@ namespace AnyRPG {
         private Color fullSlotColor = new Color32(255, 255, 255, 255);
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private UIManager uIManager = null;
         private CameraManager cameraManager = null;
         private InspectCharacterService inspectCharacterService = null;
@@ -59,7 +59,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             uIManager = systemGameManager.UIManager;
             cameraManager = systemGameManager.CameraManager;
             unitPreviewManager = systemGameManager.UnitPreviewManager;

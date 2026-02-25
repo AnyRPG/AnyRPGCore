@@ -11,7 +11,7 @@ namespace AnyRPG {
         private Dictionary<string, Skill> skillList = new Dictionary<string, Skill>();
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected SystemEventManager systemEventManager = null;
 
         public Dictionary<string, Skill> MySkillList { get => skillList; }
@@ -24,7 +24,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             systemEventManager = systemGameManager.SystemEventManager;
         }
 

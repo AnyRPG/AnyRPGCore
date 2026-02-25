@@ -18,7 +18,7 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -29,7 +29,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public override void ProcessOpenWindowNotification() {
@@ -37,7 +37,7 @@ namespace AnyRPG {
 
             base.ProcessOpenWindowNotification();
 
-            if (playerManager.UnitController.CharacterStats.CanRevive() == true) {
+            if (playerManagerClient.UnitController.CharacterStats.CanRevive() == true) {
                 //Debug.Log("PlayerDeathPanelController.ProcessOpenWindowNotification(): CanRevive is true, enabling revive button");
                 reviveButton.gameObject.SetActive(true);
             } else {
@@ -48,14 +48,14 @@ namespace AnyRPG {
 
         public void RespawnPlayer() {
             uIManager.playerOptionsMenuWindow.CloseWindow();
-            playerManager.RequestRespawnPlayer();
+            playerManagerClient.RequestRespawnPlayer();
         }
 
         public void RevivePlayer() {
             //Debug.Log("PlayerOptionsController.RevivePlayer()");
 
             uIManager.playerOptionsMenuWindow.CloseWindow();
-            playerManager.RequestRevivePlayer();
+            playerManagerClient.RequestRevivePlayer();
         }
 
     }

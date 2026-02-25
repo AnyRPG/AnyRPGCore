@@ -19,7 +19,6 @@ namespace AnyRPG {
         private bool lateJoin = false;
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
         private PlayerManagerServer playerManagerServer = null;
         private CharacterManager characterManager = null;
 
@@ -32,7 +31,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
             characterManager = systemGameManager.CharacterManager;
             playerManagerServer = systemGameManager.PlayerManagerServer;
         }

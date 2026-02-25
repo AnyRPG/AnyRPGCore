@@ -22,7 +22,7 @@ namespace AnyRPG {
         protected InventorySlot slot = null;
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected UIManager uIManager = null;
         protected MessageFeedManager messageFeedManager = null;
 
@@ -75,7 +75,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
         }
@@ -185,7 +185,7 @@ namespace AnyRPG {
         public virtual void UpdateActionButtonVisual(ActionButton actionButton) {
             //Debug.Log($"{ResourceName}.InstantiatedItem.UpdateActionButtonVisual({actionButton.gameObject.name})");
 
-            int count = playerManager.UnitController.CharacterInventoryManager.GetUseableCount(this);
+            int count = playerManagerClient.UnitController.CharacterInventoryManager.GetUseableCount(this);
 
             // redundant since this is already done in ActionButton.UpdateVisual()
             //uIManager.UpdateStackSize(actionButton, count, true);
@@ -209,7 +209,7 @@ namespace AnyRPG {
 
         public virtual int GetChargeCount() {
             //Debug.Log(DisplayName + ".Item.UpdateChargeCount()");
-            return playerManager.UnitController.CharacterInventoryManager.GetUseableCount(this);
+            return playerManagerClient.UnitController.CharacterInventoryManager.GetUseableCount(this);
         }
 
         public IUseable GetFactoryUseable() {
@@ -219,10 +219,10 @@ namespace AnyRPG {
 
         public void AssignToActionButton(ActionButton actionButton) {
             //Debug.Log("the useable is an item");
-            if (playerManager.UnitController.CharacterInventoryManager.FromSlot != null) {
+            if (playerManagerClient.UnitController.CharacterInventoryManager.FromSlot != null) {
                 // white, really?  this doesn't actually happen...
-                playerManager.UnitController.CharacterInventoryManager.FromSlot.Icon.color = Color.white;
-                playerManager.UnitController.CharacterInventoryManager.FromSlot = null;
+                playerManagerClient.UnitController.CharacterInventoryManager.FromSlot.Icon.color = Color.white;
+                playerManagerClient.UnitController.CharacterInventoryManager.FromSlot = null;
             } else {
                 //Debug.Log("ActionButton.SetUseable(): This must have come from another actionbar, not the inventory");
             }
@@ -274,7 +274,7 @@ namespace AnyRPG {
         public virtual string GetDescription() {
             //Debug.Log($"{item.ResourceName}.InstantiatedItem.GetDescription()");
 
-            return item.GetItemDescription(ItemQuality, GetItemLevel(playerManager.UnitController.CharacterStats.Level));
+            return item.GetItemDescription(ItemQuality, GetItemLevel(playerManagerClient.UnitController.CharacterStats.Level));
         }
 
 

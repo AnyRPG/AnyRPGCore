@@ -18,8 +18,6 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
-        private CharacterManager characterManager = null;
-        private PlayerManagerClient playerManager = null;
         private MessageLogClient messageLogClient = null;
 
         public string InviteCharacterName { get => inviteCharacterName; }
@@ -34,8 +32,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
-            characterManager = systemGameManager.CharacterManager;
-            playerManager = systemGameManager.PlayerManager;
             messageLogClient = systemGameManager.MessageLogClient;
         }
 

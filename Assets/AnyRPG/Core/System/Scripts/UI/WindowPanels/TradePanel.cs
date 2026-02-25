@@ -46,7 +46,7 @@ namespace AnyRPG {
 
         // game manager references
         private TradeServiceClient tradeServiceClient = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -99,7 +99,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             tradeServiceClient = systemGameManager.TradeServiceClient;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         private void HandleRecalculateBaseCurrency() {
@@ -132,9 +132,9 @@ namespace AnyRPG {
         private void HandleStartTradeSession() {
             //Debug.Log($"TradePanel.HandleStartTradeSession()");
 
-            playerNameText.text = playerManager.UnitController.DisplayName;
+            playerNameText.text = playerManagerClient.UnitController.DisplayName;
             targetNameText.text = tradeServiceClient.TargetUnitController.DisplayName;
-            playerImage.sprite = playerManager.UnitController.UnitProfile.Icon;
+            playerImage.sprite = playerManagerClient.UnitController.UnitProfile.Icon;
             targetImage.sprite = tradeServiceClient.TargetUnitController.UnitProfile.Icon;
             foreach (TradeButton button in playerTradeButtons) {
                 button.RemoveItem();

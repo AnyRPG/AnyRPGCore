@@ -26,9 +26,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private ActionBarManager actionBarManager = null;
         private InputManager inputManager = null;
-        //InventoryManager inventoryManager = null;
-        private PlayerManagerClient playerManager = null;
-        private MessageLogClient logManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private ControlsManager controlsManager = null;
 
 
@@ -37,9 +35,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             actionBarManager = uIManager.ActionBarManager;
             inputManager = systemGameManager.InputManager;
-            //inventoryManager = systemGameManager.InventoryManager;
-            playerManager = systemGameManager.PlayerManager;
-            logManager = systemGameManager.MessageLogClient;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             controlsManager = systemGameManager.ControlsManager;
         }
 
@@ -101,14 +97,14 @@ namespace AnyRPG {
         public void Drop() {
             //Debug.Log("HandScript.Drop()");
             ClearMoveable();
-            playerManager.UnitController.CharacterInventoryManager.FromSlot = null;
+            playerManagerClient.UnitController.CharacterInventoryManager.FromSlot = null;
             actionBarManager.FromButton = null;
         }
 
         private void ClearMoveable() {
             //Debug.Log("HandScript.ClearMoveable()");
-            if (playerManager.UnitController.CharacterInventoryManager.FromSlot?.InventorySlot != null) {
-                playerManager.UnitController.CharacterInventoryManager.FromSlot.PutItemBack();
+            if (playerManagerClient.UnitController.CharacterInventoryManager.FromSlot?.InventorySlot != null) {
+                playerManagerClient.UnitController.CharacterInventoryManager.FromSlot.PutItemBack();
             }
             Moveable = null;
 
@@ -130,7 +126,7 @@ namespace AnyRPG {
         public void DeleteItem() {
             //Debug.Log("HandScript.DeleteItem()");
             if (Moveable is InstantiatedItem) {
-                playerManager.UnitController.CharacterInventoryManager.RequestDeleteItem((InstantiatedItem)Moveable);
+                playerManagerClient.UnitController.CharacterInventoryManager.RequestDeleteItem((InstantiatedItem)Moveable);
             }
             Drop();
         }

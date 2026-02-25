@@ -26,10 +26,10 @@ namespace AnyRPG {
         private Light sunLight = null;
 
         // game manager references
-        protected LevelManager levelManager = null;
+        protected LevelManagerClient levelManagerClient = null;
         protected AudioManager audioManager = null;
         protected ObjectPooler objectPooler = null;
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected CameraManager cameraManager = null;
         protected TimeOfDayManagerServer timeOfDayManagerServer = null;
         protected TimeOfDayManagerClient timeOfDayManagerClient = null;
@@ -40,8 +40,8 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
-            systemEventManager.OnLevelLoad += HandleLevelLoad;
+            levelManagerClient.OnLevelUnload += HandleLevelUnload;
+            levelManagerClient.OnLevelLoad += HandleLevelLoad;
             systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             systemEventManager.OnChooseWeather += HandleChooseWeather;
             systemEventManager.OnStartWeather += HandleStartWeather;
@@ -53,10 +53,10 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             audioManager = systemGameManager.AudioManager;
             objectPooler = systemGameManager.ObjectPooler;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             cameraManager = systemGameManager.CameraManager;
             timeOfDayManagerServer = systemGameManager.TimeOfDayManagerServer;
             timeOfDayManagerClient = systemGameManager.TimeOfDayManagerClient;
@@ -94,7 +94,7 @@ namespace AnyRPG {
         public void HandleLevelUnload(int sceneHandle, string sceneName) {
             //Debug.Log($"WeatherManagerClient.HandleLevelUnload({sceneHandle}, {sceneName})");
 
-            if (levelManager.IsMainMenu(sceneName) == true || levelManager.IsInitializationScene(sceneName) == true) {
+            if (levelManagerClient.IsMainMenu(sceneName) == true || levelManagerClient.IsInitializationScene(sceneName) == true) {
                 // there is no weather in the main menu or initialization scene, so nothing to do
                 return;
             }
@@ -115,12 +115,12 @@ namespace AnyRPG {
             if (networkManagerServer.ServerModeActive == true) {
                 return;
             }
-            if (levelManager.IsMainMenu() == true || levelManager.IsInitializationScene() == true) {
+            if (levelManagerClient.IsMainMenu() == true || levelManagerClient.IsInitializationScene() == true) {
                 return;
             }
             GetSceneFogSettings();
             GetSceneShadowSettings();
-            if (systemGameManager.GameMode == GameMode.Local || levelManager.IsCutscene()) {
+            if (systemGameManager.GameMode == GameMode.Local || levelManagerClient.IsCutscene()) {
                 return;
             }
             // if the game is not in local mode, then the weather needs to be requested from the server
@@ -399,7 +399,7 @@ namespace AnyRPG {
         }
 
         private void FollowPlayer() {
-            if (weatherEffectController != null && playerManager.ActiveUnitController != null) {
+            if (weatherEffectController != null && playerManagerClient.ActiveUnitController != null) {
                 weatherEffectController.SetTarget(cameraManager.MainCameraGameObject);
             }
         }

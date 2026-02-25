@@ -21,7 +21,6 @@ namespace AnyRPG {
         private string ownerName = null;
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
         private SystemEventManager systemEventManager = null;
 
         public void UpdateStatus(UnitController unitController, bool notify = true) {
@@ -50,7 +49,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             //Debug.Log("CharacterClassPrerequisite.SetGameManagerReferences()");
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
             systemEventManager = systemGameManager.SystemEventManager;
         }
 

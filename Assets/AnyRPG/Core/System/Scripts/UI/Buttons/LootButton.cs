@@ -25,7 +25,7 @@ namespace AnyRPG {
         protected LootDrop lootDrop = null;
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected LootManager lootManager = null;
 
         public TextMeshProUGUI Title { get => title; }
@@ -35,7 +35,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             lootManager = systemGameManager.LootManager;
         }
 
@@ -67,7 +67,7 @@ namespace AnyRPG {
                 return;
             }
 
-            lootManager.RequestTakeLoot(LootDrop, playerManager.UnitController);
+            lootManager.RequestTakeLoot(LootDrop, playerManagerClient.UnitController);
         }
 
         public override void OnPointerEnter(PointerEventData eventData) {

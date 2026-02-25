@@ -13,8 +13,7 @@ namespace AnyRPG {
         public bool disconnected = false;
 
         // game manager references
-        private SaveManager saveManager = null;
-        private LevelManager levelManager = null;
+        private SceneUtilityService sceneUtilityService = null;
 
         public PlayerCharacterMonitor(SystemGameManager systemGameManager, int accountId, CharacterSaveData characterSaveData, UnitController unitController) {
             Configure(systemGameManager);
@@ -28,8 +27,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            saveManager = systemGameManager.SaveManager;
-            levelManager = systemGameManager.LevelManager;
+            sceneUtilityService = systemGameManager.SceneUtilityService;
         }
 
         public void ProcessBeforeDespawn() {
@@ -90,7 +88,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnSaveDataUpdated += HandleSaveDataUpdated;
             unitController.UnitEventController.OnLevelChanged += HandleLevelChanged;
             unitController.UnitEventController.OnClassChange += HandleClassChange;
-            SceneNode sceneNode = levelManager.GetSceneNodeBySceneName(unitController.gameObject.scene.name);
+            SceneNode sceneNode = sceneUtilityService.GetSceneNodeBySceneName(unitController.gameObject.scene.name);
             if (sceneNode != null) {
                 playerCharacterService.SetCharacterZone(unitController.CharacterId, sceneNode.DisplayName);
             }

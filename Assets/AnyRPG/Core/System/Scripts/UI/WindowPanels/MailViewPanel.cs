@@ -39,7 +39,7 @@ namespace AnyRPG {
         private bool windowSubscriptionsInitialized = false;
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected MailboxManagerClient mailboxManagerClient = null;
         protected SystemItemManager systemItemManager = null;
 
@@ -49,7 +49,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             mailboxManagerClient = systemGameManager.MailboxManagerClient;
             systemItemManager = systemGameManager.SystemItemManager;
         }

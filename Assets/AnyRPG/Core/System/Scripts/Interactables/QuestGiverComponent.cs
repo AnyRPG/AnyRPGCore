@@ -54,7 +54,7 @@ namespace AnyRPG {
 
         public override void ProcessStatusIndicatorSourceInit() {
             base.ProcessStatusIndicatorSourceInit();
-            HandlePrerequisiteUpdates(playerManager.UnitController);
+            HandlePrerequisiteUpdates(playerManagerClient.UnitController);
         }
 
         public override bool CanInteract(UnitController sourceUnitController, bool processRangeCheck, bool passedRangeCheck, bool processNonCombatCheck, bool viaSwitch = false) {
@@ -162,7 +162,7 @@ namespace AnyRPG {
 
         public void UpdateQuestStatus(UnitController sourceUnitController) {
             //Debug.Log(interactable.gameObject.name + ".QuestGiver.UpdateQuestStatus()");
-            if (playerManager.UnitController == null) {
+            if (playerManagerClient.UnitController == null) {
                 //Debug.Log($"{gameObject.name}.QuestGiver.UpdateQuestStatus(): player has no character");
                 return;
             }
@@ -183,13 +183,13 @@ namespace AnyRPG {
         public string GetIndicatorType(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.QuestGiver.GetIndicatorType()");
 
-            if (playerManager.UnitController == null) {
+            if (playerManagerClient.UnitController == null) {
                 //Debug.Log($"{gameObject.name}.QuestGiver.GetIndicatorType(): playerManager.UnitController is null. returning empty");
                 return string.Empty;
             }
 
-            float relationValue = interactable.PerformFactionCheck(playerManager.UnitController);
-            if (CanInteract(playerManager.UnitController, false, false, true) == false) {
+            float relationValue = interactable.PerformFactionCheck(playerManagerClient.UnitController);
+            if (CanInteract(playerManagerClient.UnitController, false, false, true) == false) {
                 //Debug.Log($"{gameObject.name}.QuestGiver.GetIndicatorType(): Cannot interact.  Return empty string");
                 return string.Empty;
             }
@@ -201,7 +201,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}QuestGiver.GetIndicatorType(): quests.length: " + quests.Length);
             foreach (QuestNode questNode in QuestGiverProps.Quests) {
                 if (questNode != null && questNode.Quest != null) {
-                    if (playerManager.UnitController.CharacterQuestLog.HasQuest(questNode.Quest.ResourceName)) {
+                    if (playerManagerClient.UnitController.CharacterQuestLog.HasQuest(questNode.Quest.ResourceName)) {
                         if (questNode.Quest.IsComplete(sourceUnitController) && !questNode.Quest.TurnedIn(sourceUnitController) && questNode.EndQuest) {
                             //Debug.Log($"{gameObject.name}: There is a complete quest to turn in.  Incrementing inProgressCount.");
                             completeCount++;
@@ -211,7 +211,7 @@ namespace AnyRPG {
                         } else {
                             //Debug.Log($"{gameObject.name}: This quest must have been turned in already or we are not responsible for ending it.  doing nothing.");
                         }
-                    } else if ((questNode.Quest.TurnedIn(sourceUnitController) == false || (questNode.Quest.RepeatableQuest == true && playerManager.UnitController.CharacterQuestLog.HasQuest(questNode.Quest.ResourceName) == false)) && questNode.StartQuest && questNode.Quest.PrerequisitesMet(playerManager.UnitController) == true) {
+                    } else if ((questNode.Quest.TurnedIn(sourceUnitController) == false || (questNode.Quest.RepeatableQuest == true && playerManagerClient.UnitController.CharacterQuestLog.HasQuest(questNode.Quest.ResourceName) == false)) && questNode.StartQuest && questNode.Quest.PrerequisitesMet(playerManagerClient.UnitController) == true) {
                         availableCount++;
                         //Debug.Log($"{gameObject.name}: The quest is not in the log and hasn't been turned in yet.  Incrementing available count");
                     }
@@ -274,7 +274,7 @@ namespace AnyRPG {
                 text.color = new Color32(0, 0, 0, 0);
                 return false;
             }
-            SetIndicatorText(GetIndicatorType(playerManager.UnitController), text);
+            SetIndicatorText(GetIndicatorType(playerManagerClient.UnitController), text);
             return true;
         }
 
@@ -344,11 +344,11 @@ namespace AnyRPG {
         }
 
         public void RequestAcceptQuest(UnitController unitController, Quest currentQuest) {
-            questGiverManagerClient.RequestAcceptQuest(playerManager.UnitController, currentQuest);
+            questGiverManagerClient.RequestAcceptQuest(playerManagerClient.UnitController, currentQuest);
         }
 
         public void RequestCompleteQuest(UnitController unitController, Quest currentQuest, QuestRewardChoices questRewardChoices) {
-            questGiverManagerClient.RequestCompleteQuest(playerManager.UnitController, currentQuest, questRewardChoices);
+            questGiverManagerClient.RequestCompleteQuest(playerManagerClient.UnitController, currentQuest, questRewardChoices);
         }
     }
 

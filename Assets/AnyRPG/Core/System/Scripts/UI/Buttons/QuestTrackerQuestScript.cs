@@ -18,7 +18,7 @@ namespace AnyRPG {
         // game manager references
         protected UIManager uIManager = null;
         protected WindowManager windowManager = null;
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
 
         public Quest Quest { get; set; }
         public TextMeshProUGUI Text {
@@ -35,14 +35,14 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             windowManager = systemGameManager.WindowManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public override void Interact() {
             //Debug.Log("QuestTrackerQuestScript.Select()");
             windowManager.EndNavigateInterface();
             uIManager.questLogWindow.OpenWindow();
-            playerManager.UnitController.CharacterQuestLog.ShowQuestLogDescription(Quest);
+            playerManagerClient.UnitController.CharacterQuestLog.ShowQuestLogDescription(Quest);
         }
 
 

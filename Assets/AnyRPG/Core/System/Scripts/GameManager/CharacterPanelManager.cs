@@ -9,7 +9,7 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected SaveManager saveManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -18,8 +18,9 @@ namespace AnyRPG {
         }
 
         public override void SetGameManagerReferences() {
+            Debug.Log("CharacterPanelManager.SetGameManagerReferences()");
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             saveManager = systemGameManager.SaveManager;
         }
 
@@ -30,7 +31,7 @@ namespace AnyRPG {
             }
             systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             systemEventManager.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
-            if (playerManager.PlayerUnitSpawned == true) {
+            if (playerManagerClient.PlayerUnitSpawned == true) {
                 ProcessPlayerUnitSpawn();
             }
             eventSubscriptionsInitialized = true;
@@ -55,28 +56,27 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn()");
-            unitProfile = playerManager.ActiveUnitController.UnitProfile;
+            unitProfile = playerManagerClient.ActiveUnitController.UnitProfile;
             CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(unitProfile);
             // commented out these next two because they should have come from the unit profile
             //characterConfigurationRequest.unitType = playerManager.UnitController.BaseCharacter.UnitType;
             //characterConfigurationRequest.characterRace = playerManager.UnitController.BaseCharacter.CharacterRace;
-            characterConfigurationRequest.faction = playerManager.UnitController.BaseCharacter.Faction;
-            characterConfigurationRequest.characterClass = playerManager.UnitController.BaseCharacter.CharacterClass;
-            characterConfigurationRequest.classSpecialization = playerManager.UnitController.BaseCharacter.ClassSpecialization;
-            characterConfigurationRequest.unitLevel = playerManager.UnitController.CharacterStats.Level;
+            characterConfigurationRequest.faction = playerManagerClient.UnitController.BaseCharacter.Faction;
+            characterConfigurationRequest.characterClass = playerManagerClient.UnitController.BaseCharacter.CharacterClass;
+            characterConfigurationRequest.classSpecialization = playerManagerClient.UnitController.BaseCharacter.ClassSpecialization;
+            characterConfigurationRequest.unitLevel = playerManagerClient.UnitController.CharacterStats.Level;
 
             // if the game is in lobby mode, there will be no save data
-            if (playerManager.ActiveUnitController.CharacterSaveManager.SaveData != null) {
-                characterConfigurationRequest.characterAppearanceData = new CharacterAppearanceData(playerManager.ActiveUnitController.CharacterSaveManager.SaveData);
+            if (playerManagerClient.ActiveUnitController.CharacterSaveManager.SaveData != null) {
+                characterConfigurationRequest.characterAppearanceData = new CharacterAppearanceData(playerManagerClient.ActiveUnitController.CharacterSaveManager.SaveData);
             }
 
             SpawnUnit(characterConfigurationRequest);
-            playerManager.ActiveUnitController.UnitEventController.OnUnitTypeChange += HandleUnitTypeChange;
-            //playerManager.ActiveUnitController.UnitEventController.OnRaceChange += HandleRaceChange;
-            playerManager.ActiveUnitController.UnitEventController.OnFactionChange += HandleFactionChange;
-            playerManager.ActiveUnitController.UnitEventController.OnClassChange += HandleClassChange;
-            playerManager.ActiveUnitController.UnitEventController.OnSpecializationChange += HandleSpecializationChange;
-            playerManager.ActiveUnitController.UnitEventController.OnLevelChanged += HandleLevelChanged;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnUnitTypeChange += HandleUnitTypeChange;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnFactionChange += HandleFactionChange;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnClassChange += HandleClassChange;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnSpecializationChange += HandleSpecializationChange;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnLevelChanged += HandleLevelChanged;
         }
 
         public void HandleUnitTypeChange(UnitType newUnitType, UnitType oldUnitType) {
@@ -108,12 +108,12 @@ namespace AnyRPG {
 
         public void HandlePlayerUnitDespawn(UnitController unitController) {
             //Debug.Log("CharacterPanel.HandlePlayerUnitDespawn()");
-            playerManager.ActiveUnitController.UnitEventController.OnUnitTypeChange -= HandleUnitTypeChange;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnUnitTypeChange -= HandleUnitTypeChange;
             //playerManager.ActiveUnitController.UnitEventController.OnRaceChange -= HandleRaceChange;
-            playerManager.ActiveUnitController.UnitEventController.OnFactionChange -= HandleFactionChange;
-            playerManager.ActiveUnitController.UnitEventController.OnClassChange -= HandleClassChange;
-            playerManager.ActiveUnitController.UnitEventController.OnSpecializationChange -= HandleSpecializationChange;
-            playerManager.ActiveUnitController.UnitEventController.OnLevelChanged -= HandleLevelChanged;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnFactionChange -= HandleFactionChange;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnClassChange -= HandleClassChange;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnSpecializationChange -= HandleSpecializationChange;
+            playerManagerClient.ActiveUnitController.UnitEventController.OnLevelChanged -= HandleLevelChanged;
 
             DespawnUnit();
         }
@@ -146,14 +146,14 @@ namespace AnyRPG {
             CharacterEquipmentManager characterEquipmentManager = unitController.CharacterEquipmentManager;
 
             if (characterEquipmentManager != null) {
-                if (playerManager.UnitController?.CharacterEquipmentManager != null) {
+                if (playerManagerClient.UnitController?.CharacterEquipmentManager != null) {
 
                     //characterEquipmentManager.CurrentEquipment = playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment;
                     // testing new code to avoid just making a pointer to the player gear, which results in equip/unequip not working properly
                     characterEquipmentManager.ClearSubscriptions();
-                    foreach (EquipmentSlotProfile equipmentSlotProfile in playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment.Keys) {
+                    foreach (EquipmentSlotProfile equipmentSlotProfile in playerManagerClient.UnitController.CharacterEquipmentManager.CurrentEquipment.Keys) {
                         //characterEquipmentManager.CurrentEquipment[equipmentSlotProfile] = playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile];
-                        characterEquipmentManager.AddCurrentEquipmentSlot(equipmentSlotProfile, playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
+                        characterEquipmentManager.AddCurrentEquipmentSlot(equipmentSlotProfile, playerManagerClient.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
                     }
                     characterEquipmentManager.CreateSubscriptions();
                 }

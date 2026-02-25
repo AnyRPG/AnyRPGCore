@@ -32,7 +32,7 @@ namespace AnyRPG {
         //InteractableOptionComponent interactableOptionComponent = null;
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected UIManager uIManager = null;
         protected MessageFeedManager messageFeedManager = null;
         protected CurrencyConverter currencyConverter = null;
@@ -63,7 +63,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
             currencyConverter = systemGameManager.CurrencyConverter;
@@ -174,7 +174,7 @@ namespace AnyRPG {
             if (uIManager.vendorWindow.IsOpen == false) {
                 return;
             }
-            Dictionary<Currency, int> playerBaseCurrency = playerManager.UnitController.CharacterCurrencyManager.GetRedistributedCurrency();
+            Dictionary<Currency, int> playerBaseCurrency = playerManagerClient.UnitController.CharacterCurrencyManager.GetRedistributedCurrency();
             if (playerBaseCurrency != null) {
                 //Debug.Log("VendorUI.UpdateCurrencyAmount(): " + playerBaseCurrency.Count);
                 KeyValuePair<Currency, int> keyValuePair = playerBaseCurrency.First();
@@ -223,7 +223,7 @@ namespace AnyRPG {
         }
 
         public bool SellItem(InstantiatedItem instantiatedItem) {
-            vendorManager.RequestSellItemToVendor(playerManager.UnitController, instantiatedItem);
+            vendorManager.RequestSellItemToVendor(playerManagerClient.UnitController, instantiatedItem);
 
             /*
             if (systemConfigurationManager.VendorAudioClip != null) {

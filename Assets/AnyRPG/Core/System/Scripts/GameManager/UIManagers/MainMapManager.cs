@@ -24,12 +24,20 @@ namespace AnyRPG {
         // indicators
         private List<Interactable> mapIndicatorControllers = new List<Interactable>();
 
+        // game manager references
+        private LevelManagerClient levelManagerClient = null;
+
         public List<Interactable> MapIndicatorControllers { get => mapIndicatorControllers; set => mapIndicatorControllers = value; }
         public GameObject MapIndicatorPrefab { get => mapIndicatorPrefab; set => mapIndicatorPrefab = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             CreateEventSubscriptions();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         public void HandleLevelUnload(int sceneHandle, string sceneName) {
@@ -64,13 +72,12 @@ namespace AnyRPG {
             OnUpdateIndicatorRotation(interactable);
         }
 
-
         private void CreateEventSubscriptions() {
             //Debug.Log("MainMapController.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
+            levelManagerClient.OnLevelUnload += HandleLevelUnload;
             eventSubscriptionsInitialized = true;
         }
 
@@ -79,7 +86,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            systemEventManager.OnLevelUnloadClient -= HandleLevelUnload;
+            levelManagerClient.OnLevelUnload -= HandleLevelUnload;
             eventSubscriptionsInitialized = false;
         }
 

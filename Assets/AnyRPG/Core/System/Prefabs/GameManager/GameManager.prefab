@@ -6614,7 +6614,6 @@ GameObject:
   - component: {fileID: 5684895214070870784}
   - component: {fileID: 8448294747759913886}
   - component: {fileID: 1383451363317585712}
-  - component: {fileID: 5684895214070870786}
   - component: {fileID: 5291358111946708745}
   - component: {fileID: 5332626292093196242}
   - component: {fileID: 5149191970440176744}
@@ -6649,7 +6648,6 @@ Transform:
   - {fileID: 7762260261805047376}
   - {fileID: 4550848698743069559}
   - {fileID: 2768693142991436970}
-  - {fileID: 2551203173472110218}
   - {fileID: 6168445959692371746}
   - {fileID: 383574321005136760}
   - {fileID: 3050209401115269747}
@@ -6696,6 +6694,7 @@ MonoBehaviour:
   defaultBackpackItem: 
   defaultBankContents: []
   defaultControllerConfiguration: 0
+  tabTargetMaxDistance: 40
   defaultGroundMask:
     serializedVersion: 2
     m_Bits: 33554433
@@ -6998,26 +6997,9 @@ MonoBehaviour:
   systemAbilityController: {fileID: 5149191970440176744}
   castTargettingManager: {fileID: 5332626292093196242}
   inputManager: {fileID: 5291358111946708745}
-  playerManager: {fileID: 5684895214070870786}
   uIManager: {fileID: 6765758701573424388}
   networkManagerClient: {fileID: 3998034025469170594}
   networkManagerServer: {fileID: 8065635434469254371}
---- !u!114 &5684895214070870786
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5684895214070870814}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcda888b4a7d23648afb618e0bf3b481, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerConnectionParent: {fileID: 6420953126111558378}
-  playerConnectionPrefab: {fileID: 2692339740015506113, guid: 1a2ebeec0a9dc3748a0522c6673b909f,
-    type: 3}
-  autoSpawnPlayerOnLevelLoad: 1
 --- !u!114 &5291358111946708745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7837,37 +7819,6 @@ MonoBehaviour:
   loadBar: {fileID: 8647269751378741284}
   finishedLoadingText: {fileID: 3709255656516705278}
   backgroundImage: {fileID: 2310559591653891464}
---- !u!1 &6420953126111558378
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2551203173472110218}
-  m_Layer: 0
-  m_Name: PlayerConnections
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2551203173472110218
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6420953126111558378}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5684895214070870784}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6447947644401188782
 GameObject:
   m_ObjectHideFlags: 0

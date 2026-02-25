@@ -20,7 +20,7 @@ namespace AnyRPG {
         // game manager references
         protected PlayerManagerServer playerManagerServer = null;
         protected NetworkManagerServer networkManagerServer = null;
-        protected LevelManager levelManager = null;
+        protected LevelManagerClient levelManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -32,7 +32,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             playerManagerServer = systemGameManager.PlayerManagerServer;
             networkManagerServer = systemGameManager.NetworkManagerServer;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         public void SetInteractable(Interactable interactable) {

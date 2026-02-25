@@ -33,7 +33,7 @@ namespace AnyRPG {
         private AuctionPanel auctionPanel = null;
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected HandScript handScript = null;
 
         public TextMeshProUGUI Title { get => title; }
@@ -71,7 +71,7 @@ namespace AnyRPG {
 
             base.SetGameManagerReferences();
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             handScript = systemGameManager.UIManager.HandScript;
         }
 
@@ -102,7 +102,7 @@ namespace AnyRPG {
         }
 
         protected override void HandleLeftClick() {
-            if (playerManager.UnitController.CharacterInventoryManager.FromSlot != null) {
+            if (playerManagerClient.UnitController.CharacterInventoryManager.FromSlot != null) {
                 AddItemFromInventorySlot();
                 return;
             }
@@ -113,7 +113,7 @@ namespace AnyRPG {
 
             //Debug.Log("Dropping an item from an inventory slot");
             items.Clear();
-            items.AddRange(playerManager.UnitController.CharacterInventoryManager.FromSlot.InventorySlot.InstantiatedItems.Values);
+            items.AddRange(playerManagerClient.UnitController.CharacterInventoryManager.FromSlot.InventorySlot.InstantiatedItems.Values);
             UpdateVisual();
             handScript.Drop();
             OnAddAttachment();

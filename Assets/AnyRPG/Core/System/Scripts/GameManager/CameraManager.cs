@@ -1,6 +1,8 @@
 using AnyRPG;
+using FishNet.Managing.Scened;
 using System;
 using System.Collections;
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -57,8 +59,8 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
-        LevelManager levelManager = null;
-        PlayerManagerClient playerManager = null;
+        LevelManagerClient levelManagerClient = null;
+        PlayerManagerClient playerManagerClient = null;
 
         public Camera MainCamera { get => mainCamera; set => mainCamera = value; }
         public GameObject MainCameraGameObject { get => mainCameraGameObject; }
@@ -129,8 +131,8 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            levelManager = systemGameManager.LevelManager;
-            playerManager = systemGameManager.PlayerManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public void HidePlayers() {
@@ -143,16 +145,39 @@ namespace AnyRPG {
             mainCamera.cullingMask = mainCamera.cullingMask | hideLayers;
         }
 
-        public void CheckForCutsceneCamera() {
+        public void DisableCutsceneCameras(Scene loadedScene) {
             //Debug.Log("CameraManager.CheckForCutsceneCamera()");
 
-            //currentCutsceneCameraController = null;
-            currentCutsceneCameraController = GameObject.FindAnyObjectByType<CutsceneCameraController>(FindObjectsInactive.Include);
-            if (currentCutsceneCameraController != null && currentCutsceneCameraController.gameObject.activeSelf == false) {
-                currentCutsceneCameraController.Configure(systemGameManager);
+            GameObject[] rootObjects = loadedScene.GetRootGameObjects();
+            foreach (GameObject root in rootObjects) {
+                CutsceneCameraController cutsceneCameraController = root.GetComponentInChildren<CutsceneCameraController>(true);
+                if (cutsceneCameraController != null && cutsceneCameraController.gameObject.activeSelf == false) {
+                    cutsceneCameraController.gameObject.SetActive(false);
+                }
             }
-            DisableCutsceneCamera();
         }
+
+        public void CheckForCutsceneCamera(Scene loadedScene) {
+            //Debug.Log($"CameraManager.CheckForCutsceneCamera({loadedScene.name})");
+
+            GameObject[] rootObjects = loadedScene.GetRootGameObjects();
+
+            foreach (GameObject root in rootObjects) {
+                CutsceneCameraController cutsceneCameraController = root.GetComponentInChildren<CutsceneCameraController>(true);
+                if (cutsceneCameraController != null) {
+                    // if the camera was inactive, then it has not been configured yet.
+                    // If it was active, then it has already been configured and we can just leave it alone.
+                    if (cutsceneCameraController.gameObject.activeSelf == false) {
+                        cutsceneCameraController.Configure(systemGameManager);
+                    }
+                    // there could potentially be more than one cutscene camera in the scene.
+                    // we will use the last one found as the current cutscene camera, but we will disable all of them
+                    currentCutsceneCameraController = cutsceneCameraController;
+                    currentCutsceneCameraController.gameObject.SetActive(false);
+                }
+            }
+        }
+
 
         /*
         private void CheckConfiguration() {
@@ -169,8 +194,8 @@ namespace AnyRPG {
                 // can't get camera settings, so just return
                 return;
             }
-            if (levelManager.IsMainMenu()
-                || levelManager.IsInitializationScene()) {
+            if (levelManagerClient.IsMainMenu()
+                || levelManagerClient.IsInitializationScene()) {
                 mainCameraGameObject.SetActive(true);
                 return;
             }
@@ -326,7 +351,7 @@ namespace AnyRPG {
             // if there is a cutscene in the level, the player will spawn after the cutscene so the need to initialize the camera remains
             //if (levelManager.GetActiveSceneNode().SuppressMainCamera != true) {
                 //Debug.Log("CameraManager.ProcessPlayerUnitSpawn(): suppressed by level = false, spawning camera");
-                mainCameraController.InitializeCamera(playerManager.ActiveUnitController.transform);
+                mainCameraController.InitializeCamera(playerManagerClient.ActiveUnitController.transform);
             //}
         }
 

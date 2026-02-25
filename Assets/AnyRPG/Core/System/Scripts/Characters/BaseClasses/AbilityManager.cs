@@ -20,7 +20,7 @@ namespace AnyRPG {
 
         // game manager references
         protected ObjectPooler objectPooler = null;
-        protected LevelManager levelManager = null;
+        protected LevelManagerClient levelManagerClient = null;
 
         public virtual bool ControlLocked {
             get {
@@ -83,7 +83,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         public virtual CharacterUnit GetCharacterUnit() {
@@ -632,7 +632,7 @@ namespace AnyRPG {
                 }
 
                 // delayed damage
-                if (networkManagerServer.ServerModeActive == true || systemGameManager.GameMode == GameMode.Local || levelManager.IsCutscene()) {
+                if (networkManagerServer.ServerModeActive == true || systemGameManager.GameMode == GameMode.Local || levelManagerClient.IsCutscene()) {
                     BeginPerformAbilityHitDelay(abilityCaster, target, abilityEffectContext, channeledEffectProperties);
                 }
             } else {
@@ -646,7 +646,7 @@ namespace AnyRPG {
         public void HandleProjectileCollision(IAbilityCaster source, Interactable target, GameObject abilityEffectObject, AbilityEffectContext abilityEffectInput, ProjectileScript projectileScript) {
             //Debug.Log($"{abilityCaster.gameObject.name}.AbilityManager.HandleProjectileCollision({source.AbilityManager.Name}, {(target == null ? "null" : target.gameObject.name)}, {abilityEffectObject.name}, {projectileScript.ProjectileEffectProperties.ResourceName})");
 
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManager.IsCutscene()) {
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {
                 projectileScript.ProjectileEffectProperties.PerformAbilityHit(source, target, abilityEffectInput);
             }
             projectileScript.OnCollission -= HandleProjectileCollision;

@@ -29,8 +29,7 @@ namespace AnyRPG {
         private Dictionary<int, LootDrop> lootDropIndex = new Dictionary<int, LootDrop>();
 
         // game manager references
-        private MessageFeedManager messageFeedManager = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private PlayerManagerServer playerManagerServer = null;
         private SystemEventManager systemEventManager = null;
 
@@ -54,8 +53,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             systemEventManager = systemGameManager.SystemEventManager;
         }
@@ -111,7 +109,7 @@ namespace AnyRPG {
             //Debug.Log($"LootManager.RequestTakeLoot({lootDrop.LootDropId}, {sourceUnitController.gameObject.name})");
 
             if (systemGameManager.GameMode == GameMode.Local) {
-                lootDrop.TakeLoot(playerManager.UnitController);
+                lootDrop.TakeLoot(playerManagerClient.UnitController);
             } else {
                 networkManagerClient.RequestTakeLoot(lootDrop.LootDropId);
             }

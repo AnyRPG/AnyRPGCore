@@ -50,7 +50,7 @@ namespace AnyRPG {
         SystemPlayableDirectorManager systemPlayableDirectorManager = null;
         CameraManager cameraManager = null;
         UIManager uIManager = null;
-        LevelManager levelManager = null;
+        LevelManagerClient levelManagerClient = null;
         AudioManager audioManager = null;
         InputManager inputManager = null;
 
@@ -61,7 +61,7 @@ namespace AnyRPG {
             systemPlayableDirectorManager = systemGameManager.SystemPlayableDirectorManager;
             cameraManager = systemGameManager.CameraManager;
             uIManager = systemGameManager.UIManager;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             audioManager = systemGameManager.AudioManager;
             inputManager = systemGameManager.InputManager;
         }
@@ -150,7 +150,7 @@ namespace AnyRPG {
             if (currentCutscene != null) {
                 currentCutscene.Viewed = true;
             }
-            levelManager.EndCutscene(currentCutscene);
+            levelManagerClient.EndCutscene(currentCutscene);
             currentCutscene = null;
         }
 

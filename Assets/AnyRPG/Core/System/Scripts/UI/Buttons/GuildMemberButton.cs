@@ -50,7 +50,7 @@ namespace AnyRPG {
         private GuildMemberData guildMemberData = null;
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private GuildServiceClient guildServiceClient = null;
 
         public GuildMemberData GuildMemberData { get => guildMemberData; set => guildMemberData = value; }
@@ -65,7 +65,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             guildServiceClient = systemGameManager.GuildServiceClient;
         }
 
@@ -75,7 +75,7 @@ namespace AnyRPG {
             this.guildMemberData = guildMemberData;
 
             string extraInfoString = string.Empty;
-            if (playerManager.UnitController.CharacterId == guildMemberData.CharacterSummaryData.CharacterId) {
+            if (playerManagerClient.UnitController.CharacterId == guildMemberData.CharacterSummaryData.CharacterId) {
                 extraInfoString = " (You)";
             }
             characterNameText.text = $"{guildMemberData.CharacterSummaryData.CharacterName}{extraInfoString}";
@@ -96,7 +96,7 @@ namespace AnyRPG {
                 zoneNameText.color = Color.white;
 				zoneNameText.text = this.guildMemberData.CharacterSummaryData.CurrentZoneName;
                 rankText.color = Color.white;
-				if (guildMemberData.CharacterSummaryData.CharacterId != playerManager.UnitController.CharacterId) {
+				if (guildMemberData.CharacterSummaryData.CharacterId != playerManagerClient.UnitController.CharacterId) {
                     messageButton.gameObject.SetActive(true);
                 } else {
                     messageButton.gameObject.SetActive(false);
@@ -112,8 +112,8 @@ namespace AnyRPG {
                 statusText.color = Color.gray;
                 characterNameText.color = Color.gray;
             }
-            GuildRank playerRank = guildServiceClient.CurrentGuild.MemberList[playerManager.UnitController.CharacterId].Rank;
-            if (guildMemberData.CharacterSummaryData.CharacterId == playerManager.UnitController.CharacterId) {
+            GuildRank playerRank = guildServiceClient.CurrentGuild.MemberList[playerManagerClient.UnitController.CharacterId].Rank;
+            if (guildMemberData.CharacterSummaryData.CharacterId == playerManagerClient.UnitController.CharacterId) {
                 promoteCharacterButton.gameObject.SetActive(false);
                 kickCharacterButton.gameObject.SetActive(false);
             } else if (playerRank == GuildRank.Leader) {

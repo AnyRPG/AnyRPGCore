@@ -21,13 +21,13 @@ namespace AnyRPG {
         protected List<QuestTrackerQuestScript> questScripts = new List<QuestTrackerQuestScript>();
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected ObjectPooler objectPooler = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             objectPooler = systemGameManager.ObjectPooler;
         }
 
@@ -40,7 +40,7 @@ namespace AnyRPG {
             systemEventManager.OnMarkQuestComplete += HandleMarkQuestComplete;
             systemEventManager.OnQuestObjectiveStatusUpdated += HandleQuestObjectiveStatusUpdated;
             systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
-            if (playerManager.PlayerUnitSpawned == true) {
+            if (playerManagerClient.PlayerUnitSpawned == true) {
                 ShowQuests();
             }
         }
@@ -93,13 +93,13 @@ namespace AnyRPG {
         public void ShowQuestsCommon() {
             //Debug.Log("QuestTrackerUI.ShowQuestsCommon()");
 
-            if (playerManager != null && playerManager.PlayerUnitSpawned == false) {
+            if (playerManagerClient != null && playerManagerClient.PlayerUnitSpawned == false) {
                 // shouldn't be doing anything without a player spawned.
                 return;
             }
             ClearQuests();
 
-            foreach (Quest quest in playerManager.UnitController.CharacterQuestLog.Quests.Values) {
+            foreach (Quest quest in playerManagerClient.UnitController.CharacterQuestLog.Quests.Values) {
                 //Debug.Log("QuestTrackerUI.ShowQuestsCommon(): quest: " + quest);
                 GameObject go = objectPooler.GetPooledObject(questPrefab, questParent);
                 QuestTrackerQuestScript qs = go.GetComponent<QuestTrackerQuestScript>();
@@ -108,16 +108,16 @@ namespace AnyRPG {
                 if (qs == null) {
                     //Debug.Log("QuestTrackerUI.ShowQuestsCommon(): QuestGiverQuestScript is null");
                 }
-                qs.Text.text = "[" + quest.ExperienceLevel(playerManager.UnitController) + "] " + quest.DisplayName;
-                if (quest.IsComplete(playerManager.UnitController)) {
+                qs.Text.text = "[" + quest.ExperienceLevel(playerManagerClient.UnitController) + "] " + quest.DisplayName;
+                if (quest.IsComplete(playerManagerClient.UnitController)) {
                     qs.Text.text += " (Complete)";
                 }
                 string objectives = string.Empty;
 
-                qs.Text.text += "\n<size=12>" + quest.GetUnformattedObjectiveList(playerManager.UnitController) + "</size>";
+                qs.Text.text += "\n<size=12>" + quest.GetUnformattedObjectiveList(playerManagerClient.UnitController) + "</size>";
 
                 //Debug.Log("QuestTrackerUI.ShowQuestsCommon(" + questGiver.name + "): " + questNode.MyQuest.MyTitle);
-                qs.Text.color = LevelEquations.GetTargetColor(playerManager.UnitController.CharacterStats.Level, quest.ExperienceLevel(playerManager.UnitController));
+                qs.Text.color = LevelEquations.GetTargetColor(playerManagerClient.UnitController.CharacterStats.Level, quest.ExperienceLevel(playerManagerClient.UnitController));
                 //quests.Add(go);
                 questScripts.Add(qs);
                 uINavigationControllers[0].AddActiveButton(qs);
@@ -164,7 +164,7 @@ namespace AnyRPG {
             base.ProcessOpenWindowNotification();
 
             // prevent attempting to show quests if no player is logged in
-            if (playerManager.PlayerConnectionSpawned == false) {
+            if (playerManagerClient.PlayerUnitSpawned == false) {
                 return;
             }
             ShowQuests();

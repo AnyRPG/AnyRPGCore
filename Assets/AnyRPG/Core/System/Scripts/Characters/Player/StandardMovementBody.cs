@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 namespace AnyRPG {
     public class StandardMovementBody : IMovementBody {
@@ -11,6 +10,8 @@ namespace AnyRPG {
         }
 
         public void SetLinearVelocity(Vector3 velocity) {
+            //Debug.Log($"StandardMovementBody.SetLinearVelocity({velocity})");
+
             rigidBody.linearVelocity = velocity;
         }
 
@@ -19,17 +20,26 @@ namespace AnyRPG {
         }
 
         public void AddForce(Vector3 force) {
+            //Debug.Log($"StandardMovementBody.AddForce({force})");
+
             rigidBody.AddRelativeForce(force, ForceMode.VelocityChange);
         }
 
         public void SetPosition(Vector3 position) {
+            //Debug.Log($"StandardMovementBody.SetPosition({position})");
+
             rigidBody.position = position;
 
             Physics.SyncTransforms();
         }
 
         public void SetRotation(Quaternion targetRotation) {
+            //Debug.Log($"StandardMovementBody.SetRotation({targetRotation})");
+
             rigidBody.rotation = targetRotation;
+            //rigidBody.MoveRotation(targetRotation);
+
+            //Physics.SyncTransforms();
         }
 
         public void AddExplosionForce(float explosionForce, Vector3 explosionCenter, float upwardModifier) {

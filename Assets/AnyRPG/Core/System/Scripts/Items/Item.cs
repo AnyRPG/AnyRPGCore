@@ -88,7 +88,7 @@ namespace AnyRPG {
         protected MessageFeedManager messageFeedManager = null;
         protected UIManager uIManager = null;
         protected SystemItemManager systemItemManager = null;
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected CurrencyConverter currencyConverter = null;
 
         public int MaximumStackSize { get => stackSize; set => stackSize = value; }
@@ -113,7 +113,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
             systemItemManager = systemGameManager.SystemItemManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             currencyConverter = systemGameManager.CurrencyConverter;
         }
 
@@ -165,7 +165,7 @@ namespace AnyRPG {
 
         public override string GetSummary() {
             //Debug.Log($"{ResourceName}.Item.GetSummary() itemQualityRef: {(itemQualityRef == null ? "null" : itemQualityRef.ResourceName)} player: {(playerManager?.UnitController == null ? "null" : "not null")}");
-            return GetSummary(itemQualityRef, GetItemLevel(playerManager.UnitController.CharacterStats.Level));
+            return GetSummary(itemQualityRef, GetItemLevel(playerManagerClient.UnitController.CharacterStats.Level));
         }
 
         public virtual string GetSummary(ItemQuality usedItemQuality, int usedItemLevel) {
@@ -175,7 +175,7 @@ namespace AnyRPG {
 
         public override string GetDescription() {
             //Debug.Log(DisplayName + ".Item.GetDescription()");
-            return GetDescription(itemQualityRef, GetItemLevel(playerManager.UnitController.CharacterStats.Level));
+            return GetDescription(itemQualityRef, GetItemLevel(playerManagerClient.UnitController.CharacterStats.Level));
         }
 
         public virtual string GetDescription(ItemQuality usedItemQuality, int usedItemLevel) {
@@ -190,7 +190,7 @@ namespace AnyRPG {
             }
             if (characterClassRequirementList.Count > 0) {
                 string colorString = "red";
-                if (realCharacterClassRequirementList.Contains(playerManager.UnitController.BaseCharacter.CharacterClass)) {
+                if (realCharacterClassRequirementList.Contains(playerManagerClient.UnitController.BaseCharacter.CharacterClass)) {
                     colorString = "white";
                 }
                 descriptionString += string.Format("\n\n<color={0}>Required Classes: {1}</color>", colorString, string.Join(",", characterClassRequirementList));

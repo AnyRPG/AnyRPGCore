@@ -78,7 +78,7 @@ namespace AnyRPG {
         private SocialPanelTab currentTab = SocialPanelTab.Group;
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private CharacterGroupServiceClient characterGroupServiceClient = null;
         private GuildServiceClient guildServiceClient = null;
         private UIManager uiManager = null;
@@ -90,7 +90,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             characterGroupServiceClient = systemGameManager.CharacterGroupServiceClient;
             guildServiceClient = systemGameManager.GuildServiceClient;
             uiManager = systemGameManager.UIManager;
@@ -126,7 +126,7 @@ namespace AnyRPG {
             friendServiceClient.OnRenameFriend += HandleRenameFriend;
 
             windowSubscriptionsInitialized = true;
-            if (playerManager.UnitController == null) {
+            if (playerManagerClient.UnitController == null) {
                 return;
             }
 
@@ -196,7 +196,7 @@ namespace AnyRPG {
         private void SetupGuildTabButtons() {
             if (guildServiceClient.CurrentGuild != null) {
                 leaveButton.SetActive(true);
-                if (guildServiceClient.CurrentGuild.MemberList[playerManager.UnitController.CharacterId].Rank != GuildRank.Member) {
+                if (guildServiceClient.CurrentGuild.MemberList[playerManagerClient.UnitController.CharacterId].Rank != GuildRank.Member) {
                     inviteButton.Button.interactable = true;
                 } else {
                     inviteButton.Button.interactable = false;
@@ -225,10 +225,10 @@ namespace AnyRPG {
         private void SetupGroupTabButtons() {
             if (characterGroupServiceClient.CurrentCharacterGroup != null) {
                 leaveButton.SetActive(true);
-                if (characterGroupServiceClient.CurrentCharacterGroup.leaderPlayerCharacterId == playerManager.UnitController.CharacterId) {
+                if (characterGroupServiceClient.CurrentCharacterGroup.leaderPlayerCharacterId == playerManagerClient.UnitController.CharacterId) {
                     disbandButton.SetActive(true);
                     inviteButton.Button.interactable = true;
-                } else if (characterGroupServiceClient.CurrentCharacterGroup.MemberList[UnitControllerMode.Player][playerManager.UnitController.CharacterId].Rank == CharacterGroupRank.Assistant) {
+                } else if (characterGroupServiceClient.CurrentCharacterGroup.MemberList[UnitControllerMode.Player][playerManagerClient.UnitController.CharacterId].Rank == CharacterGroupRank.Assistant) {
                     inviteButton.Button.interactable = true;
                     disbandButton.SetActive(false);
                 } else {

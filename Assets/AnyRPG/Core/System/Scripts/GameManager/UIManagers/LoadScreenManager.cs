@@ -17,28 +17,28 @@ namespace AnyRPG {
         public Image backgroundImage = null;
 
         // game manager references
-        private LevelManager levelManager = null;
+        private LevelManagerClient levelManagerClient = null;
         private UIManager uIManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            levelManager.OnBeginLoadingLevel += HandleBeginLoadingLevel;
-            levelManager.OnSetLoadingProgress += HandleSetLoadingProgress;
+            levelManagerClient.OnBeginLoadingLevel += HandleBeginLoadingLevel;
+            levelManagerClient.OnSetLoadingProgress += HandleSetLoadingProgress;
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             uIManager = systemGameManager.UIManager;
         }
 
         public void HandleBeginLoadingLevel(string sceneName) {
             uIManager.ActivateLoadingUI();
 
-            if (levelManager.LoadingSceneNode != null && levelManager.LoadingSceneNode.LoadingScreenImage != null) {
-                backgroundImage.sprite = levelManager.LoadingSceneNode.LoadingScreenImage;
+            if (levelManagerClient.LoadingSceneNode != null && levelManagerClient.LoadingSceneNode.LoadingScreenImage != null) {
+                backgroundImage.sprite = levelManagerClient.LoadingSceneNode.LoadingScreenImage;
                 backgroundImage.color = Color.white;
             } else {
                 backgroundImage.sprite = null;

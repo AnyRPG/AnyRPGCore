@@ -208,8 +208,9 @@ namespace AnyRPG {
 
 
         // game manager references
-        protected LevelManager levelManager = null;
-        protected PlayerManagerClient playerManager = null;
+        protected LevelManagerClient levelManagerClient = null;
+        protected SceneUtilityService sceneUtilityService = null;
+        protected PlayerManagerClient playerManagerClient = null;
 
         public int StatAmount { get => statAmount; }
         public float StatMultiplier { get => statMultiplier; set => statMultiplier = value; }
@@ -296,8 +297,9 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            levelManager = systemGameManager.LevelManager;
-            playerManager = systemGameManager.PlayerManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
+            sceneUtilityService = systemGameManager.SceneUtilityService;
         }
 
         public override void CancelEffect(UnitController targetCharacter) {
@@ -343,10 +345,7 @@ namespace AnyRPG {
             if (SceneNames.Count > 0) {
                 bool sceneFound = false;
                 foreach (string sceneName in SceneNames) {
-                    SceneNode sceneNode = null;
-                    if (levelManager.SceneDictionary.ContainsKey(target.gameObject.scene.name)) {
-                        sceneNode = levelManager.SceneDictionary[target.gameObject.scene.name];
-                    }
+                    SceneNode sceneNode = sceneUtilityService.GetSceneNodeBySceneName(target.gameObject.scene.name);
                     if (sceneName == target.gameObject.scene.name
                         || (sceneNode != null && (sceneName == sceneNode.SceneFile || sceneName == sceneNode.ResourceName))) {
                         sceneFound = true;
@@ -514,8 +513,8 @@ namespace AnyRPG {
 
             if (limitedDuration == true && classTrait == false) {
                 float remainingDuration = 0f;
-                if (playerManager.UnitController?.CharacterStats?.HasStatusEffect(this) == true) {
-                    remainingDuration = playerManager.UnitController.CharacterStats.GetStatusEffectNode(this).RemainingDuration;
+                if (playerManagerClient.UnitController?.CharacterStats?.HasStatusEffect(this) == true) {
+                    remainingDuration = playerManagerClient.UnitController.CharacterStats.GetStatusEffectNode(this).RemainingDuration;
                 }
                 if (remainingDuration != 0f) {
                     durationLabel = "Remaining Duration: ";

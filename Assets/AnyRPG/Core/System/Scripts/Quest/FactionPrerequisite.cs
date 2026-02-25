@@ -25,12 +25,10 @@ namespace AnyRPG {
         private Faction prerequisiteFaction = null;
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
         private SystemEventManager systemEventManager = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
             systemEventManager = systemGameManager.SystemEventManager;
         }
 

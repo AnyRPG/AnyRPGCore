@@ -227,7 +227,7 @@ namespace AnyRPG {
         public Color32 GetTextColor() {
 
             // player is always green
-            if (playerManager.UnitController != null && unitController == playerManager.UnitController) {
+            if (playerManagerClient.UnitController != null && unitController == playerManagerClient.UnitController) {
                 return Color.green;
             }
 
@@ -238,7 +238,7 @@ namespace AnyRPG {
 
             // faction is not null, check for cutscene
             if (uIManager.CutSceneBarController.CurrentCutscene == null) {
-                return Faction.GetFactionColor(playerManager, NamePlateUnit);
+                return Faction.GetFactionColor(playerManagerClient, NamePlateUnit);
             }
 
             // cutscene is not null, check for faction color setting
@@ -255,13 +255,13 @@ namespace AnyRPG {
 
                 string nameString = string.Empty;
                 string tagString = string.Empty;
-                if (playerManager.UnitController == null ||unitController != playerManager.UnitController || PlayerPrefs.GetInt("ShowPlayerName") == 1) {
+                if (playerManagerClient.UnitController == null ||unitController != playerManagerClient.UnitController || PlayerPrefs.GetInt("ShowPlayerName") == 1) {
                     // player is not spawned, or this is not the player, or player is allowed to show name
                     nameString = UnitDisplayName;
                 }
 
                 // faction is lowest priority
-                if (playerManager.UnitController == null || unitController != playerManager.UnitController || PlayerPrefs.GetInt("ShowPlayerFaction") == 1) {
+                if (playerManagerClient.UnitController == null || unitController != playerManagerClient.UnitController || PlayerPrefs.GetInt("ShowPlayerFaction") == 1) {
                     if (SuppressFaction == false) {
                         tagString = $"<{Faction.DisplayName}>";
                     }

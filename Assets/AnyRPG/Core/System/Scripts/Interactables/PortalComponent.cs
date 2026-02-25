@@ -9,7 +9,7 @@ namespace AnyRPG {
     public abstract class PortalComponent : InteractableOptionComponent {
 
         // game manager references
-        protected LevelManager levelManager = null;
+        protected LevelManagerClient levelManagerClient = null;
 
         public PortalProps Props { get => interactableOptionProps as PortalProps; }
 
@@ -18,7 +18,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex = 0) {

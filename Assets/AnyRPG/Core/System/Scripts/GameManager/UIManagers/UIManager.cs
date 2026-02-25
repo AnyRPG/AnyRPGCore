@@ -309,12 +309,12 @@ namespace AnyRPG {
         */
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private KeyBindManager keyBindManager = null;
         private InputManager inputManager = null;
         private ControlsManager controlsManager = null;
         private WindowManager windowManager = null;
-        private LevelManager levelManager = null;
+        private LevelManagerClient levelManagerClient = null;
         private NetworkManagerClient networkManagerClient = null;
         private CharacterGroupServiceClient characterGroupServiceClient = null;
         private SaveManager saveManager = null;
@@ -500,12 +500,12 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             keyBindManager = systemGameManager.KeyBindManager;
             inputManager = systemGameManager.InputManager;
             controlsManager = systemGameManager.ControlsManager;
             windowManager = systemGameManager.WindowManager;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             networkManagerClient = systemGameManager.NetworkManagerClient;
             characterGroupServiceClient = systemGameManager.CharacterGroupServiceClient;
             saveManager = systemGameManager.SaveManager;
@@ -539,7 +539,7 @@ namespace AnyRPG {
             focusUnitFramePanel.ClearTarget();
             miniMapController.ClearTarget();
 
-            if (playerManager.PlayerUnitSpawned) {
+            if (playerManagerClient.PlayerUnitSpawned) {
                 ProcessPlayerUnitSpawn();
             }
 
@@ -719,7 +719,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            systemEventManager.OnLevelLoad += HandleLevelLoad;
+            levelManagerClient.OnLevelLoad += HandleLevelLoad;
             systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             systemEventManager.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
             SystemEventManager.StartListening("OnBeforePlayerConnectionSpawn", HandleBeforePlayerConnectionSpawn);
@@ -744,7 +744,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            systemEventManager.OnLevelLoad -= HandleLevelLoad;
+            levelManagerClient.OnLevelLoad -= HandleLevelLoad;
             systemEventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
             systemEventManager.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
             //SystemEventManager.StopListening("OnPlayerUnitSpawn", HandleMainCamera);
@@ -846,7 +846,7 @@ namespace AnyRPG {
             }
 
             // don't hide windows while binding keys
-            if (keyBindManager.BindName == string.Empty && playerManager.PlayerUnitSpawned != false) {
+            if (keyBindManager.BindName == string.Empty && playerManagerClient.PlayerUnitSpawned != false) {
 
                 // ui element keys pressed
                 if (inputManager.KeyBindWasPressed("HIDEUI")) {
@@ -908,8 +908,8 @@ namespace AnyRPG {
                     // special case for escape key to open main menu if no windows are open
                     // this is necessary because the system bar could be disabled and this is the only way to open it 
                     // (assuming player forgot / doesn't know about f12 keybind
-                    if (playerManager.UnitController == null
-                        || (playerManager.UnitController.Target == null && playerManager.UnitController.UnitMotor.HasDestination() == false)) {
+                    if (playerManagerClient.UnitController == null
+                        || (playerManagerClient.UnitController.Target == null && playerManagerClient.UnitController.UnitMotor.HasDestination() == false)) {
                         ToggleMainMenu();
                     }
                     return;
@@ -928,7 +928,7 @@ namespace AnyRPG {
                 CloseSystemPopupWindows();
 
                 // do not allow accidentally closing this while dead
-                if (playerManager.PlayerUnitSpawned == true && playerManager.UnitController.CharacterStats.IsAlive != false) {
+                if (playerManagerClient.PlayerUnitSpawned == true && playerManagerClient.UnitController.CharacterStats.IsAlive != false) {
                     playerOptionsMenuWindow.CloseWindow();
                 }
             }
@@ -1206,12 +1206,12 @@ namespace AnyRPG {
 
             // enable things that track the character
             // initialize unit frame
-            playerUnitFramePanel.SetTarget(playerManager.ActiveUnitController);
-            floatingCastBarController.SetTarget(playerManager.ActiveUnitController);
-            (statusEffectWindow.CloseableWindowContents as StatusEffectWindowPanel).SetTarget(playerManager.ActiveUnitController);
+            playerUnitFramePanel.SetTarget(playerManagerClient.ActiveUnitController);
+            floatingCastBarController.SetTarget(playerManagerClient.ActiveUnitController);
+            (statusEffectWindow.CloseableWindowContents as StatusEffectWindowPanel).SetTarget(playerManagerClient.ActiveUnitController);
 
             // intialize mini map
-            InitializeMiniMapTarget(playerManager.ActiveUnitController.gameObject);
+            InitializeMiniMapTarget(playerManagerClient.ActiveUnitController.gameObject);
         }
 
         public void HandlePlayerUnitDespawn(UnitController unitController) {
@@ -1781,7 +1781,7 @@ namespace AnyRPG {
             ActivateInGameUI();
             DeactivatePlayerUI();
             ActivateSystemMenuUI();
-            if (levelManager.IsMainMenu()) {
+            if (levelManagerClient.IsMainMenu()) {
                 mainMenuWindow.OpenWindow();
             } else {
                 // just in case

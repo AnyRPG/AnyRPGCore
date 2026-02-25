@@ -23,6 +23,7 @@ namespace AnyRPG {
 
         // game manager references
         protected NetworkManagerServer networkManagerServer = null;
+        protected LevelManagerClient levelManagerClient = null;
 
         public List<Interactable> MapIndicatorControllers { get => mapIndicatorControllers; set => mapIndicatorControllers = value; }
 
@@ -34,6 +35,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             networkManagerServer = systemGameManager.NetworkManagerServer;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         public void HandleLevelUnload(int sceneHandle, string sceneName) {
@@ -75,7 +77,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
+            levelManagerClient.OnLevelUnload += HandleLevelUnload;
             eventSubscriptionsInitialized = true;
         }
 
@@ -84,7 +86,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            systemEventManager.OnLevelUnloadClient -= HandleLevelUnload;
+            levelManagerClient.OnLevelUnload -= HandleLevelUnload;
             eventSubscriptionsInitialized = false;
         }
 

@@ -18,7 +18,7 @@ namespace AnyRPG {
         protected bool markedComplete = false;
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected QuestGiverManagerClient questGiverManagerClient = null;
 
         public Quest Quest { get => quest;}
@@ -27,7 +27,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             questGiverManagerClient = systemGameManager.QuestGiverManagerClient;
         }
 
@@ -48,12 +48,12 @@ namespace AnyRPG {
             }
 
             questGiverManagerClient.SetQuestGiver(questGiverComponent, optionIndex, 0, false);
-            if (quest.HasOpeningDialog == true && quest.OpeningDialog != null && quest.OpeningDialog.TurnedIn(playerManager.UnitController) == false) {
+            if (quest.HasOpeningDialog == true && quest.OpeningDialog != null && quest.OpeningDialog.TurnedIn(playerManagerClient.UnitController) == false) {
                 //Debug.Log("InteractionPanelQuestScript.Select(): dialog is not completed, popping dialog with questGiver: " + (questGiver == null ? "null" : questGiver.Interactable.DisplayName));
-                playerManager.UnitController.CharacterQuestLog.ShowQuestGiverDescription(quest, questGiverComponent);
+                playerManagerClient.UnitController.CharacterQuestLog.ShowQuestGiverDescription(quest, questGiverComponent);
             } else {
                 //Debug.Log("InteractionPanelQuestScript.Select(): has no dialog, or dialog is completed, opening questgiver window");
-                playerManager.UnitController.CharacterQuestLog.ShowQuestGiverDescription(quest, questGiverComponent);
+                playerManagerClient.UnitController.CharacterQuestLog.ShowQuestGiverDescription(quest, questGiverComponent);
             }
         }
 

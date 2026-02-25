@@ -11,11 +11,11 @@ namespace AnyRPG {
         private List<SkillButton> skillButtons = new List<SkillButton>();
 
 
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
 
             foreach (SkillButton skillButton in skillButtons) {
                 skillButton.Configure(systemGameManager);
@@ -25,7 +25,7 @@ namespace AnyRPG {
         protected override void PopulatePages() {
             //Debug.Log("SkillBookUI.CreatePages()");
             SkillContentList page = new SkillContentList();
-            foreach (Skill playerSkill in playerManager.UnitController.CharacterSkillManager.MySkillList.Values) {
+            foreach (Skill playerSkill in playerManagerClient.UnitController.CharacterSkillManager.MySkillList.Values) {
                 page.skills.Add(playerSkill);
                 if (page.skills.Count == pageSize) {
                     pages.Add(page);

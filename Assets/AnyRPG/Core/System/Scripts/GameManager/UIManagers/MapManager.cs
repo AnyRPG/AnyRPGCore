@@ -24,7 +24,7 @@ namespace AnyRPG {
 
 
         // game manager references
-        private LevelManager levelManager = null;
+        private LevelManagerClient levelManagerClient = null;
         private CameraManager cameraManager = null;
 
         public Texture2D MapTexture { get => mapTexture; }
@@ -41,7 +41,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             cameraManager = systemGameManager.CameraManager;
         }
 
@@ -131,15 +131,15 @@ namespace AnyRPG {
         private void UpdateCameraSize() {
             //Debug.Log("MainMapController.UpdateCameraSize()");
             //float newCameraSize = cameraSizeDefault;
-            cameraSize = Mathf.Max(levelManager.SceneBounds.extents.x, levelManager.SceneBounds.extents.z);
+            cameraSize = Mathf.Max(levelManagerClient.SceneBounds.extents.x, levelManagerClient.SceneBounds.extents.z);
             cameraManager.MainMapCamera.orthographicSize = cameraSize;
         }
 
         private void UpdateCameraPosition() {
             //Debug.Log("MainMapController.UpdateCameraPosition()");
-            Vector3 wantedPosition = new Vector3(levelManager.SceneBounds.center.x, levelManager.SceneBounds.center.y + levelManager.SceneBounds.extents.y + 1f, levelManager.SceneBounds.center.z);
+            Vector3 wantedPosition = new Vector3(levelManagerClient.SceneBounds.center.x, levelManagerClient.SceneBounds.center.y + levelManagerClient.SceneBounds.extents.y + 1f, levelManagerClient.SceneBounds.center.z);
             //Debug.Log("MainMapController.UpdateCameraPosition() wantedposition: " + wantedPosition);
-            Vector3 wantedLookPosition = new Vector3(levelManager.SceneBounds.center.x, levelManager.SceneBounds.center.y, levelManager.SceneBounds.center.z);
+            Vector3 wantedLookPosition = new Vector3(levelManagerClient.SceneBounds.center.x, levelManagerClient.SceneBounds.center.y, levelManagerClient.SceneBounds.center.z);
             //Debug.Log("MainMapController.UpdateCameraPosition() wantedLookPosition: " + wantedLookPosition);
             cameraManager.MainMapCamera.transform.position = wantedPosition;
             cameraManager.MainMapCamera.transform.LookAt(wantedLookPosition);

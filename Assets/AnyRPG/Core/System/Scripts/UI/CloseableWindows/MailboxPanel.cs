@@ -17,7 +17,7 @@ namespace AnyRPG {
         private bool windowSubscriptionsInitialized = false;
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private MailboxManagerClient mailboxManagerClient = null;
         private UIManager uiManager = null;
 
@@ -27,7 +27,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             mailboxManagerClient = systemGameManager.MailboxManagerClient;
             uiManager = systemGameManager.UIManager;
         }
@@ -42,7 +42,7 @@ namespace AnyRPG {
             mailboxManagerClient.OnTakeMailAttachment += HandleTakeMailAttachment;
             mailboxManagerClient.OnMarkMessageAsRead += HandleMarkMessageAsRead;
             windowSubscriptionsInitialized = true;
-            if (playerManager.UnitController == null) {
+            if (playerManagerClient.UnitController == null) {
                 return;
             }
         }

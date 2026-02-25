@@ -36,10 +36,11 @@ namespace AnyRPG {
         private KeyBindManager keyBindManager = null;
         private UIManager uIManager = null;
         private NamePlateManager namePlateManager = null;
+        private LevelManagerClient levelManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            systemEventManager.OnLevelLoad += HandleLevelLoad;
+            levelManagerClient.OnLevelLoad += HandleLevelLoad;
         }
 
         public override void SetGameManagerReferences() {
@@ -47,6 +48,7 @@ namespace AnyRPG {
             keyBindManager = systemGameManager.KeyBindManager;
             uIManager = systemGameManager.UIManager;
             namePlateManager = uIManager.NamePlateManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         public void HandleLevelLoad() {

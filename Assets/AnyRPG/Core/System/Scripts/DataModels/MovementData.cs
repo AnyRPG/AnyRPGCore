@@ -32,6 +32,7 @@ namespace AnyRPG {
             inputHorizontal = 0;
             inputVertical = 0;
             inputTurn = 0;
+
             RightMouseButtonDown = false;
             RightMouseDragged = false;
             RightAnalogHorizontal = 0;

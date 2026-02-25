@@ -38,7 +38,7 @@ namespace AnyRPG {
         protected CloseableWindowContents parentPanel = null;
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected UIManager uIManager = null;
         protected HandScript handScript = null;
         protected SystemDataFactory systemDataFactory = null;
@@ -78,7 +78,7 @@ namespace AnyRPG {
 
             base.Configure(systemGameManager);
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             uIManager = systemGameManager.UIManager;
             handScript = uIManager.HandScript;
             systemDataFactory = systemGameManager.SystemDataFactory;
@@ -147,7 +147,7 @@ namespace AnyRPG {
                 uIManager.SetItemBackground(equippedEquipment.Equipment, emptySlotImage, fullBackGroundColor, equippedEquipment.ItemQuality);
             }
 
-            if (playerManager.PlayerUnitSpawned == false) {
+            if (playerManagerClient.PlayerUnitSpawned == false) {
                 // prevent unnecessary actions when player is not spawned
                 return;
             }

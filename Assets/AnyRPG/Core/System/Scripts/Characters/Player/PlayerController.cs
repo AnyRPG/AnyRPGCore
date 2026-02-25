@@ -1,13 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace AnyRPG {
-    public class PlayerController : ConfiguredMonoBehaviour {
+    public class PlayerController : ConfiguredClass {
 
         public event System.Action<int> AbilityButtonPressedHandler = delegate { };
         public event System.Action<bool> ToggleRunHandler = delegate { };
@@ -48,6 +46,7 @@ namespace AnyRPG {
         protected SaveManager saveManager = null;
         protected InteractionManager interactionManager = null;
         protected ContextMenuService contextMenuService = null;
+        protected SystemEventManager systemEventManager = null;
 
         public List<Interactable> Interactables { get => interactables; }
         public RaycastHit MouseOverhit { get => mouseOverhit; set => mouseOverhit = value; }
@@ -56,7 +55,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             inputManager = systemGameManager.InputManager;
-            playerManagerClient = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
             namePlateManager = systemGameManager.UIManager.NamePlateManager;
             cameraManager = systemGameManager.CameraManager;
@@ -70,6 +69,7 @@ namespace AnyRPG {
             saveManager = systemGameManager.SaveManager;
             interactionManager = systemGameManager.InteractionManager;
             contextMenuService = systemGameManager.ContextMenuService;
+            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         public void AddInteractable(Interactable interactable) {
@@ -143,13 +143,6 @@ namespace AnyRPG {
                 //Debug.Log("Not allowed to Collect Move Input. Exiting PlayerController.CollectMoveInput()");
                 return;
             }
-            if (inputManager.rightMouseButtonDown
-                && (inputManager.rightMouseButtonClickedOverUI == false || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))) {
-                movementData.RightMouseButtonDown = true;
-                if (inputManager.rightMouseButtonDownPosition != Input.mousePosition) {
-                    movementData.RightMouseDragged = true;
-                }
-            }
             
             if (windowManager.CurrentWindow == null) {
                 movementData.RightAnalogHorizontal = Input.GetAxis("RightAnalogHorizontal");
@@ -201,6 +194,17 @@ namespace AnyRPG {
 
             movementData.NormalizedMoveInput = NormalizedVelocity(new Vector3(movementData.inputHorizontal, 0, movementData.inputVertical));
             movementData.TurnInput = new Vector3(movementData.inputTurn, 0, 0);
+
+            if (inputManager.rightMouseButtonDown
+                && (inputManager.rightMouseButtonClickedOverUI == false || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))) {
+                movementData.RightMouseButtonDown = true;
+                // we will pretend the right mouse was dragged if we have move input so the character will run away from the screen if the camera was pointing
+                // behind them at the start of the right mouse down, which is a common situation when trying to run away from something attacking you.
+                // Otherwise, the player would have to drag the mouse in a direction before the character would start moving, which could be frustrating in a combat situation.
+                if (inputManager.rightMouseButtonDownPosition != Input.mousePosition || movementData.HasMoveInput()) {
+                    movementData.RightMouseDragged = true;
+                }
+            }
 
             if (movementData.HasAnyInput()) {
                 // turn off the projector, so it has to be done client side
@@ -469,7 +473,11 @@ namespace AnyRPG {
             if (inRangeInteractables.Count == 0) {
                 if (playerManagerClient.ActiveUnitController.UnitMovementController.useMeshNav && systemConfigurationManager.AllowClickToMove) {
                     //Debug.Log($"{gameObject.name}.InterActWithTarget({interactable.gameObject.name}) out of range, following target");
-                    playerManagerClient.ActiveUnitController.UnitMotor.FollowInteractionTarget(playerManagerClient.UnitController.Target);
+                    if (systemGameManager.GameMode == GameMode.Local) {
+                        playerManagerClient.ActiveUnitController.UnitMotor.FollowInteractionTarget(interactable);
+                    } else {
+                        playerManagerClient.ActiveUnitController.UnitEventController.NotifyOnRequestFollowInteractionTarget(interactable);
+                    }
                 }
                 return;
             }
@@ -484,7 +492,12 @@ namespace AnyRPG {
                     if (distanceToTarget > attackRange) {
                         if (playerManagerClient.ActiveUnitController.UnitMovementController.useMeshNav && systemConfigurationManager.AllowClickToMove) {
                             //Debug.Log($"{gameObject.name}.InterActWithTarget({interactable.gameObject.name}) out of range for attack, following target");
-                            playerManagerClient.ActiveUnitController.UnitMotor.FollowAttackTarget(interactable, attackRange);
+                            if (systemGameManager.GameMode == GameMode.Local) {
+                                playerManagerClient.ActiveUnitController.UnitMotor.FollowAttackTarget(interactable, attackRange);
+                            } else {
+                                playerManagerClient.ActiveUnitController.UnitEventController.NotifyOnRequestFollowAttackTarget(interactable, attackRange);
+                            }
+
                         }
                         //return;
                     }

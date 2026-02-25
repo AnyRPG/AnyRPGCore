@@ -49,7 +49,7 @@ namespace AnyRPG {
         protected UIManager uIManager = null;
         protected MessageLogClient messageLogClient = null;
         protected DialogManagerClient dialogManagerClient = null;
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected QuestGiverManagerClient questGiverManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -61,7 +61,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             messageLogClient = systemGameManager.MessageLogClient;
             dialogManagerClient = systemGameManager.DialogManagerClient;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             questGiverManager = systemGameManager.QuestGiverManagerClient;
         }
 
@@ -75,11 +75,11 @@ namespace AnyRPG {
             dialogIndex++;
             if (dialogIndex >= dialogManagerClient.Dialog.DialogNodes.Count) {
                 if (dialogManagerClient.Quest == null) {
-                    dialogManagerClient.RequestTurnInDialog(playerManager.UnitController);
+                    dialogManagerClient.RequestTurnInDialog(playerManagerClient.UnitController);
                     uIManager.dialogWindow.CloseWindow();
                 } else {
-                    dialogManagerClient.RequestTurnInQuestDialog(playerManager.UnitController);
-                    if (!dialogManagerClient.Quest.TurnedIn(playerManager.UnitController)) {
+                    dialogManagerClient.RequestTurnInQuestDialog(playerManagerClient.UnitController);
+                    if (!dialogManagerClient.Quest.TurnedIn(playerManagerClient.UnitController)) {
                         DisplayQuestText();
                         continueButton.gameObject.SetActive(false);
                         viewQuestButton.gameObject.SetActive(true);
@@ -105,13 +105,13 @@ namespace AnyRPG {
         public void DisplayQuestText() {
             //Debug.Log("DialogPanelController.DisplayQuestText()");
             if (dialogManagerClient.Quest != null) {
-                dialogText.text = dialogManagerClient.Quest.GetObjectiveDescription(playerManager.UnitController);
+                dialogText.text = dialogManagerClient.Quest.GetObjectiveDescription(playerManagerClient.UnitController);
             }
         }
 
         public void ViewQuest() {
             uIManager.questGiverWindow.OpenWindow();
-            playerManager.UnitController.CharacterQuestLog.ShowQuestGiverDescription(dialogManagerClient.Quest, null);
+            playerManagerClient.UnitController.CharacterQuestLog.ShowQuestGiverDescription(dialogManagerClient.Quest, null);
             uIManager.dialogWindow.CloseWindow();
         }
 
@@ -122,7 +122,7 @@ namespace AnyRPG {
             // CLOSE THIS FIRST SO OTHER WINDOWS AREN'T BLOCKED FROM POPPING
             uIManager.dialogWindow.CloseWindow();
 
-            questGiverManager.RequestAcceptQuest(playerManager.UnitController, quest);
+            questGiverManager.RequestAcceptQuest(playerManagerClient.UnitController, quest);
 
             //interactable.CheckForInteractableObjectives(MyQuest.DisplayName);
         }

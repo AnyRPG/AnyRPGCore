@@ -40,7 +40,7 @@ namespace AnyRPG {
         private CharacterGroupServiceClient characterGroupServiceClient = null;
         private ContextMenuService contextMenuService = null;
         private InspectCharacterService inspectCharacterService = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private TradeServiceClient tradeServiceClient = null;
 
         public override void SetGameManagerReferences() {
@@ -48,7 +48,7 @@ namespace AnyRPG {
             characterGroupServiceClient = systemGameManager.CharacterGroupServiceClient;
             contextMenuService = systemGameManager.ContextMenuService;
             inspectCharacterService = systemGameManager.InspectCharacterService;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             tradeServiceClient = systemGameManager.TradeServiceClient;
         }
 
@@ -83,7 +83,7 @@ namespace AnyRPG {
 
         private void SetupInspectButton() {
             // inspect button
-            if (contextMenuService.TargetUnitController == playerManager.UnitController) {
+            if (contextMenuService.TargetUnitController == playerManagerClient.UnitController) {
                 // inspect button should not be available if the target is the player
                 inspectButton.gameObject.SetActive(false);
                 return;
@@ -93,7 +93,7 @@ namespace AnyRPG {
         }
 
         private void SetupTradeButton() {
-            if (contextMenuService.TargetUnitController == playerManager.UnitController) {
+            if (contextMenuService.TargetUnitController == playerManagerClient.UnitController) {
                 // cannot trade with ourselves
                 //Debug.Log("ContextMenuPanel.SetupMessageButton() target is player, disabling invite button");
                 tradeButton.gameObject.SetActive(false);
@@ -114,7 +114,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (Faction.RelationWith(contextMenuService.TargetUnitController, playerManager.UnitController) < 0) {
+            if (Faction.RelationWith(contextMenuService.TargetUnitController, playerManagerClient.UnitController) < 0) {
                 // can only trade neutral or better
                 //Debug.Log("ContextMenuPanel.SetupMessageButton() target faction relationship is negative, disabling invite button");
                 tradeButton.gameObject.SetActive(false);
@@ -126,7 +126,7 @@ namespace AnyRPG {
         }
 
         private void SetupMessageButton() {
-            if (contextMenuService.TargetUnitController == playerManager.UnitController) {
+            if (contextMenuService.TargetUnitController == playerManagerClient.UnitController) {
                 // cannot message ourselves
                 //Debug.Log("ContextMenuPanel.SetupMessageButton() target is player, disabling invite button");
                 messageButton.gameObject.SetActive(false);
@@ -147,7 +147,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (Faction.RelationWith(contextMenuService.TargetUnitController, playerManager.UnitController) < 0) {
+            if (Faction.RelationWith(contextMenuService.TargetUnitController, playerManagerClient.UnitController) < 0) {
                 // can only message neutral or better
                 //Debug.Log("ContextMenuPanel.SetupMessageButton() target faction relationship is negative, disabling invite button");
                 messageButton.gameObject.SetActive(false);
@@ -165,7 +165,7 @@ namespace AnyRPG {
         }
 
         private void SetupInviteButton() {
-            if (contextMenuService.TargetUnitController == playerManager.UnitController) {
+            if (contextMenuService.TargetUnitController == playerManagerClient.UnitController) {
                 // invite button should not be available if the target is the player
                 //Debug.Log("ContextMenuPanel.SetupInviteButton() target is player, disabling invite button");
                 inviteButton.gameObject.SetActive(false);
@@ -186,7 +186,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (Faction.RelationWith(contextMenuService.TargetUnitController, playerManager.UnitController) < 0) {
+            if (Faction.RelationWith(contextMenuService.TargetUnitController, playerManagerClient.UnitController) < 0) {
                 // can only invite neutral or better
                 //Debug.Log("ContextMenuPanel.SetupInviteButton() target faction relationship is negative, disabling invite button");
                 inviteButton.gameObject.SetActive(false);
@@ -214,14 +214,14 @@ namespace AnyRPG {
             }
 
             // check if the player is the leader
-            if (characterGroup.leaderPlayerCharacterId != playerManager.UnitController.CharacterId) {
+            if (characterGroup.leaderPlayerCharacterId != playerManagerClient.UnitController.CharacterId) {
                 // player is not the leader
                 promoteButton.gameObject.SetActive(false);
                 return;
             }
 
             // check that the target is not the player
-            if (contextMenuService.TargetUnitController == playerManager.UnitController) {
+            if (contextMenuService.TargetUnitController == playerManagerClient.UnitController) {
                 // cannot promote yourself
                 promoteButton.gameObject.SetActive(false);
                 return;
@@ -239,7 +239,7 @@ namespace AnyRPG {
         }
 
         private void SetupKickButton() {
-            if (contextMenuService.TargetUnitController == playerManager.UnitController) {
+            if (contextMenuService.TargetUnitController == playerManagerClient.UnitController) {
                 // invite button should not be available if the target is the player
                 kickButton.gameObject.SetActive(false);
                 return;
@@ -260,7 +260,7 @@ namespace AnyRPG {
             }
 
             // check if the player is the leader
-            if (characterGroup.leaderPlayerCharacterId != playerManager.UnitController.CharacterId) {
+            if (characterGroup.leaderPlayerCharacterId != playerManagerClient.UnitController.CharacterId) {
                 // player is not the leader
                 kickButton.gameObject.SetActive(false);
                 return;
@@ -277,7 +277,7 @@ namespace AnyRPG {
         }
 
         private void SetupDisbandButton() {
-            if (contextMenuService.TargetUnitController != playerManager.UnitController) {
+            if (contextMenuService.TargetUnitController != playerManagerClient.UnitController) {
                 // only the leader can disband themselves
                 disbandButton.gameObject.SetActive(false);
                 return;
@@ -298,7 +298,7 @@ namespace AnyRPG {
             }
 
             // check if the player is the leader
-            if (characterGroup.leaderPlayerCharacterId != playerManager.UnitController.CharacterId) {
+            if (characterGroup.leaderPlayerCharacterId != playerManagerClient.UnitController.CharacterId) {
                 // player is not the leader
                 disbandButton.gameObject.SetActive(false);
                 return;
@@ -309,7 +309,7 @@ namespace AnyRPG {
         }
 
         private void SetupLeaveButton() {
-            if (contextMenuService.TargetUnitController != playerManager.UnitController) {
+            if (contextMenuService.TargetUnitController != playerManagerClient.UnitController) {
                 // only the leader can leave themselves
                 leaveButton.gameObject.SetActive(false);
                 return;

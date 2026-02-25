@@ -75,7 +75,7 @@ namespace AnyRPG {
         private List<CharacterClassCapabilityNode> classCapabilityList = new List<CharacterClassCapabilityNode>();
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
 
         public bool NewGameOption { get => newGameOption; set => newGameOption = value; }
         public string DefaultStartingZone { get => defaultStartingZone; set => defaultStartingZone = value; }
@@ -88,7 +88,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
@@ -173,14 +173,14 @@ namespace AnyRPG {
 
         // return the description of relationship between the player and the source faction
         public string GetColoredDescription(Faction sourceFaction) {
-            Color factionColor = GetFactionColor(playerManager, sourceFaction);
+            Color factionColor = GetFactionColor(playerManagerClient, sourceFaction);
             string colorString = ColorUtility.ToHtmlStringRGB(factionColor);
             return string.Format("<color=#{0}>{1}</color>\n{2}", colorString, DisplayName, GetReputationSummary(sourceFaction));
         }
 
         // return the summary of relationship between the player and the source faction
         public string GetReputationSummary(Faction sourceFaction) {
-            float relationValue = RelationWith(playerManager.UnitController, sourceFaction);
+            float relationValue = RelationWith(playerManagerClient.UnitController, sourceFaction);
             return string.Format("Reputation: {0}", relationValue);
         }
 

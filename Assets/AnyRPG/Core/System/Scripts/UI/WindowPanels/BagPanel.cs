@@ -22,7 +22,7 @@ namespace AnyRPG {
 
         // game manager references
         protected ObjectPooler objectPooler = null;
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
 
         public List<SlotScript> Slots { get => slots; }
         public Transform ContentArea { get => contentArea; }
@@ -31,7 +31,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             objectPooler = systemGameManager.ObjectPooler;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
         
         protected override void ProcessCreateEventSubscriptions() {

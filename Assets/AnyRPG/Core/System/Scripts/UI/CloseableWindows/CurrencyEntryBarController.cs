@@ -19,7 +19,7 @@ namespace AnyRPG {
 
         // game manager references
         private CurrencyConverter currencyConverter = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private ControlsManager controlsManager = null;
 
         [SerializeField]
@@ -54,7 +54,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             currencyConverter = systemGameManager.CurrencyConverter;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             controlsManager = systemGameManager.ControlsManager;
         }
 
@@ -70,7 +70,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (currencyNode.Amount > playerManager.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(currencyNode.currency)) {
+            if (currencyNode.Amount > playerManagerClient.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(currencyNode.currency)) {
                 foreach (CurrencyEntryAmountController currencyEntryAmountController in currencyEntryAmountControllers) {
                     currencyEntryAmountController.SetAmountTooHigh();
                 }

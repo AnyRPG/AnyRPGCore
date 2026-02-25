@@ -30,7 +30,7 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
 
         public TextMeshProUGUI Timer { get => timer; }
         public TextMeshProUGUI StackCount { get => stackCount; set => stackCount = value; }
@@ -49,7 +49,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         protected override void HandleRightClick() {
@@ -61,7 +61,7 @@ namespace AnyRPG {
         }
 
         private void RequestCancelStatusEffect() {
-            if (target == playerManager.UnitController?.CharacterUnit) {
+            if (target == playerManagerClient.UnitController?.CharacterUnit) {
                 target.UnitController.CharacterStats.RequestCancelStatusEffect(statusEffectNode);
             }
         }

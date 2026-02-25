@@ -15,7 +15,7 @@ namespace AnyRPG {
         private CurrencyBarController currencyBarController = null;
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private GuildmasterManagerClient guildMasterManagerClient = null;
         private GuildServiceClient guildServiceClient = null;
 
@@ -27,7 +27,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             guildMasterManagerClient = systemGameManager.GuildmasterManagerClient;
             guildServiceClient = systemGameManager.GuildServiceClient;
         }
@@ -43,7 +43,7 @@ namespace AnyRPG {
 
         public void ConfirmAction() {
             //Debug.Log("NameChangePanelController.ConfirmAction()");
-            guildMasterManagerClient.RequestCreateGuild(playerManager.UnitController);
+            guildMasterManagerClient.RequestCreateGuild(playerManagerClient.UnitController);
             Close();
         }
 

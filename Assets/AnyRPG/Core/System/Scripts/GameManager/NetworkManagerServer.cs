@@ -97,7 +97,6 @@ namespace AnyRPG {
         private LootManager lootManager = null;
         private CraftingManager craftingManager = null;
         private UnitSpawnManager unitSpawnManager = null;
-        private LevelManager levelManager = null;
         private TimeOfDayManagerServer timeOfDayManagerServer = null;
         private WeatherManagerServer weatherManagerServer = null;
         private ClassChangeManagerServer classChangeManagerServer = null;
@@ -119,6 +118,7 @@ namespace AnyRPG {
         private GuildmasterManagerServer guildmasterManagerServer = null;
         private FriendServiceServer friendServiceServer = null;
         private ServerDataService gameDataService = null;
+        private SceneUtilityService sceneUtilityService = null;
 
         public bool ServerModeActive { get => serverModeActive; }
         public NetworkServerMode ServerMode { get => serverMode; }
@@ -149,7 +149,6 @@ namespace AnyRPG {
             lootManager = systemGameManager.LootManager;
             craftingManager = systemGameManager.CraftingManager;
             unitSpawnManager = systemGameManager.UnitSpawnManager;
-            levelManager = systemGameManager.LevelManager;
             timeOfDayManagerServer = systemGameManager.TimeOfDayManagerServer;
             weatherManagerServer = systemGameManager.WeatherManagerServer;
             classChangeManagerServer = systemGameManager.ClassChangeManagerServer;
@@ -473,8 +472,9 @@ namespace AnyRPG {
                 // player already has a spawn request, so this is a rejoin.  Leave it alone because it contains the last correct position and direction
                 //Debug.Log($"NetworkManagerServer.JoinLobbyGameInProgress({gameId}, {accountId}) - reusing existing scene from save data");
                 sceneName = playerManagerServer.PlayerCharacterMonitors[accountId].characterSaveData.CurrentScene;
-                if (levelManager.SceneDictionary.ContainsKey(sceneName)) {
-                    sceneName = levelManager.SceneDictionary[sceneName].ResourceName;
+                SceneNode sceneNode = sceneUtilityService.GetSceneNodeBySceneName(sceneName);
+                if (sceneNode != null) {
+                    sceneName = sceneNode.ResourceName;
                 }
             }
             networkController.AdvertiseJoinLobbyGameInProgress(gameId, accountId, sceneName);
@@ -603,7 +603,7 @@ namespace AnyRPG {
 
             int playerCharacterId = playerManagerServer.GetPlayerCharacterId(accountId);
 
-            SceneNode sceneNode = levelManager.GetSceneNodeBySceneName(sceneName);
+            SceneNode sceneNode = sceneUtilityService.GetSceneNodeBySceneName(sceneName);
             if (sceneNode == null) {
                 Debug.LogWarning($"NetworkManagerServer.ChangeScene(accountId: {accountId}, sceneName: {sceneName}) could not find scene node");
                 return;
@@ -1320,7 +1320,7 @@ namespace AnyRPG {
                 friendServiceServer.SendFriendListInfo(accountId);
             }
 
-            SceneNode sceneNode = levelManager.GetSceneNodeBySceneName(sceneName);
+            SceneNode sceneNode = sceneUtilityService.GetSceneNodeBySceneName(sceneName);
             if (sceneNode == null) {
                 Debug.LogWarning($"NetworkManagerServer.RequestLoadPlayerCharacter(clientId: {clientId}, playerCharacterId: {playerCharacterId}) could not find scene node for {sceneName}");
                 return;

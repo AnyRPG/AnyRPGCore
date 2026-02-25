@@ -21,7 +21,7 @@ namespace AnyRPG {
         private int choiceIndex = 0;
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected InteractionManager interactionManager = null;
 
         public Image Icon { get => icon; set => icon = value; }
@@ -45,14 +45,14 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             interactionManager = systemGameManager.InteractionManager;
         }
 
         public void Setup(InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
 
             InteractableOption = interactableOptionComponent;
-            text.text = interactableOptionComponent?.GetInteractionButtonText(playerManager.UnitController, componentIndex, choiceIndex);
+            text.text = interactableOptionComponent?.GetInteractionButtonText(playerManagerClient.UnitController, componentIndex, choiceIndex);
             text.color = Color.white;
             this.componentIndex = componentIndex;
             this.choiceIndex = choiceIndex;
@@ -62,8 +62,8 @@ namespace AnyRPG {
             //Debug.Log($"InteractionPanelScript.ButtonClickAction({text.text}, {componentIndex}, {choiceIndex})");
 
             base.ButtonClickAction();
-            if (playerManager.UnitController != null) {
-                interactionManager.InteractWithOptionClient(playerManager.UnitController, InteractableOption.Interactable, interactableOption, componentIndex, choiceIndex);
+            if (playerManagerClient.UnitController != null) {
+                interactionManager.InteractWithOptionClient(playerManagerClient.UnitController, InteractableOption.Interactable, interactableOption, componentIndex, choiceIndex);
             }
             InteractableOption.Interactable.CloseInteractionWindow();
 

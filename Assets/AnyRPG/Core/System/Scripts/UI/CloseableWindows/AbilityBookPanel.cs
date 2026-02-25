@@ -15,11 +15,11 @@ namespace AnyRPG {
         [SerializeField]
         private List<GameObject> abilityButtonHolders = new List<GameObject>();
 
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
 
             foreach (AbilityButton abilityButton in abilityButtons) {
                 abilityButton.Configure(systemGameManager);
@@ -29,8 +29,8 @@ namespace AnyRPG {
         protected override void PopulatePages() {
             //Debug.Log("AbilityBookUI.CreatePages()");
             BaseAbilityContentList page = new BaseAbilityContentList();
-            foreach (AbilityProperties newAbility in playerManager.UnitController.CharacterAbilityManager.AbilityList.Values) {
-                if (newAbility.RequirementsAreMet(playerManager.UnitController)) {
+            foreach (AbilityProperties newAbility in playerManagerClient.UnitController.CharacterAbilityManager.AbilityList.Values) {
+                if (newAbility.RequirementsAreMet(playerManagerClient.UnitController)) {
                     page.baseAbilities.Add(newAbility);
                     if (page.baseAbilities.Count == pageSize) {
                         pages.Add(page);

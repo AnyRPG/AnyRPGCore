@@ -24,7 +24,7 @@ namespace AnyRPG {
         // game manager references
         private UIManager uIManager = null;
         private CharacterManager characterManager = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private MessageLogClient messageLogClient = null;
 
         public Guild CurrentGuild { get => currentGuild; }
@@ -40,7 +40,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             characterManager = systemGameManager.CharacterManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             messageLogClient = systemGameManager.MessageLogClient;
         }
 
@@ -76,7 +76,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (guildMemberNetworkData.CharacterSummaryNetworkData.CharacterId == playerManager.UnitController.CharacterId) {
+            if (guildMemberNetworkData.CharacterSummaryNetworkData.CharacterId == playerManagerClient.UnitController.CharacterId) {
                 messageLogClient.WriteSystemMessage("You have joined a guild.");
                 OnJoinGuild();
                 return;
@@ -148,7 +148,7 @@ namespace AnyRPG {
                 Debug.LogWarning("GuildService.RemoveCharacterFromGuild: character guild not found");
                 return;
             }
-            if (removedCharacterId == playerManager.UnitController.CharacterId) {
+            if (removedCharacterId == playerManagerClient.UnitController.CharacterId) {
                 ProcessLeaveGuild();
                 return;
             }
@@ -164,7 +164,7 @@ namespace AnyRPG {
             if (currentGuild != null) {
                 foreach (int characterId in currentGuild.MemberList.Keys) {
                     UnitController unitController = characterManager.GetUnitController(UnitControllerMode.Player, characterId);
-                    if (unitController != null && unitController != playerManager.UnitController) {
+                    if (unitController != null && unitController != playerManagerClient.UnitController) {
                         //Debug.Log($"GuildServiceClient.GetCurrentGuildMemberUnitControllers(): adding {unitController.gameObject.name}");
                         returnList.Add(characterId, unitController);
                     } else if (unitController == null) {

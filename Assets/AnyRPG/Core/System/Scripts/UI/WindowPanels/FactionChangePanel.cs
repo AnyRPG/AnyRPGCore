@@ -32,7 +32,7 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private ObjectPooler objectPooler = null;
         private NewGameManager newGameManager = null;
         private FactionChangeManagerClient factionChangeManagerClient = null;
@@ -47,7 +47,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             objectPooler = systemGameManager.ObjectPooler;
             newGameManager = systemGameManager.NewGameManager;
             factionChangeManagerClient = systemGameManager.FactionChangeManagerClient;
@@ -72,7 +72,7 @@ namespace AnyRPG {
                 rewardIcon.SetOptions(rectTransform, false);
                 rewardIcon.SetDescribable(capabilityProps.AbilityList[i]);
                 abilityRewardIcons.Add(rewardIcon);
-                if (capabilityProps.AbilityList[i].RequiredLevel > playerManager.UnitController.CharacterStats.Level) {
+                if (capabilityProps.AbilityList[i].RequiredLevel > playerManagerClient.UnitController.CharacterStats.Level) {
                     rewardIcon.StackSizeText.text = "Level\n" + capabilityProps.AbilityList[i].RequiredLevel;
                     rewardIcon.HighlightIcon.color = new Color32(255, 255, 255, 80);
                 }
@@ -98,7 +98,7 @@ namespace AnyRPG {
         public void ConfirmAction() {
             //Debug.Log("FactionChangePanelController.ConfirmAction()");
 
-            factionChangeManagerClient.RequestChangeCharacterFaction(playerManager.UnitController);
+            factionChangeManagerClient.RequestChangeCharacterFaction(playerManagerClient.UnitController);
             uIManager.factionChangeWindow.CloseWindow();
         }
 

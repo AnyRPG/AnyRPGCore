@@ -40,7 +40,7 @@ namespace AnyRPG {
 
         // game manager references
 
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected SystemDataFactory systemDataFactory = null;
         protected ObjectPooler objectPooler = null;
 
@@ -72,7 +72,7 @@ namespace AnyRPG {
 
             SetupScriptableObjects();
             CreateEventSubscriptions();
-            if (playerManager.PlayerUnitSpawned == false) {
+            if (playerManagerClient.PlayerUnitSpawned == false) {
                 // this allows us to spawn things with no prerequisites that don't need to check against the player
                 PrerequisiteCheck(null);
             }
@@ -81,7 +81,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             systemDataFactory = systemGameManager.SystemDataFactory;
             objectPooler = systemGameManager.ObjectPooler;
         }
@@ -99,9 +99,9 @@ namespace AnyRPG {
             }
 
             // moved here from CreateEventSubscriptions.  Init should have time to occur before processing this
-            if (playerManager.PlayerUnitSpawned) {
+            if (playerManagerClient.PlayerUnitSpawned) {
                 //Debug.Log($"{gameObject.name}.Spawnable.CreateEventSubscriptions(): Player Unit is spawned.  Handling immediate spawn!");
-                ProcessPlayerUnitSpawn(playerManager.UnitController);
+                ProcessPlayerUnitSpawn(playerManagerClient.UnitController);
             } else {
                 //Debug.Log($"{gameObject.name}.Spawnable.CreateEventSubscriptions(): Player Unit is not spawned. Added Handle Spawn listener");
             }

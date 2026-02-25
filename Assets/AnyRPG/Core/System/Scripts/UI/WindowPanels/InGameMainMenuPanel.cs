@@ -35,7 +35,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private SaveManager saveManager = null;
         private MessageFeedManager messageFeedManager = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -61,7 +61,7 @@ namespace AnyRPG {
             saveManager = systemGameManager.SaveManager;
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public override void ProcessOpenWindowNotification() {
@@ -113,7 +113,7 @@ namespace AnyRPG {
         public void SaveGame() {
             //Debug.Log("MainMenuController.SaveGame()");
             currentNavigationController?.CurrentNavigableElement?.DeSelect();
-            if (saveManager.SaveGame(playerManager.UnitController.CharacterSaveManager.SaveData)) {
+            if (saveManager.SaveGame(playerManagerClient.UnitController.CharacterSaveManager.SaveData)) {
                 uIManager.CloseSystemPopupWindows();
                 messageFeedManager.WriteMessage("Game Saved");
             }

@@ -90,7 +90,7 @@ namespace AnyRPG {
         protected SystemDataFactory systemDataFactory = null;
         protected CharacterCreatorManager characterCreatorManager = null;
         protected UIManager uIManager = null;
-        protected LevelManager levelManager = null;
+        protected LevelManagerClient levelManagerClient = null;
         protected NewGameManager newGameManager = null;
         protected ObjectPooler objectPooler = null;
         protected NetworkManagerClient networkManagerClient = null;
@@ -120,7 +120,7 @@ namespace AnyRPG {
             systemDataFactory = systemGameManager.SystemDataFactory;
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
             uIManager = systemGameManager.UIManager;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             newGameManager = systemGameManager.NewGameManager;
             objectPooler = systemGameManager.ObjectPooler;
             networkManagerClient = systemGameManager.NetworkManagerClient;
@@ -733,7 +733,7 @@ namespace AnyRPG {
             //Debug.Log("NewGamePanel.ClosePanel()");
 
             uIManager.newGameWindow.CloseWindow();
-            levelManager.PlayLevelSounds();
+            levelManagerClient.PlayLevelSounds();
             if (systemGameManager.GameMode == GameMode.Network && networkManagerClient.ClientMode != NetworkServerMode.Lobby) {
                 uIManager.loadGameWindow.OpenWindow();
             }

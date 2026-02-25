@@ -37,7 +37,7 @@ namespace AnyRPG {
         //private float elapsedSeconds = 0f;
 
         // game manager references
-        protected LevelManager levelManager = null;
+        protected LevelManagerClient levelManagerClient = null;
         protected AudioManager audioManager = null;
         protected WeatherManagerClient weatherManager = null;
         protected TimeOfDayManagerServer timeOfDayManagerServer = null;
@@ -46,8 +46,8 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
-            systemEventManager.OnLevelLoad += HandleLevelLoad;
+            levelManagerClient.OnLevelUnload += HandleLevelUnload;
+            levelManagerClient.OnLevelLoad += HandleLevelLoad;
 
             networkManagerServer.OnStartServer += HandleStartServer;
             networkManagerServer.OnStopServer += HandleStopServer;
@@ -65,7 +65,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             audioManager = systemGameManager.AudioManager;
             weatherManager = systemGameManager.WeatherManagerClient;
             timeOfDayManagerServer = systemGameManager.TimeOfDayManagerServer;
@@ -117,7 +117,7 @@ namespace AnyRPG {
             }
 
             levelLoaded = true;
-            activeSceneNode = levelManager.GetActiveSceneNode();
+            activeSceneNode = levelManagerClient.GetActiveSceneNode();
             if (activeSceneNode != null) {
                 sunLight = RenderSettings.sun;
                 if (sunLight != null) {

@@ -41,7 +41,7 @@ namespace AnyRPG {
         private CharacterSummaryData characterSummaryData = null;
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private FriendServiceClient friendServiceClient = null;
 
         public CharacterSummaryData CharacterSummaryData { get => characterSummaryData; set => characterSummaryData = value; }
@@ -55,7 +55,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             friendServiceClient = systemGameManager.FriendServiceClient;
         }
 

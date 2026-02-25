@@ -60,7 +60,7 @@ namespace AnyRPG {
         private List<PendingEvent> hitEventCache = new List<PendingEvent>();
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private CastTargettingManager castTargettingManager = null;
         private CharacterManager characterManager = null;
         private SystemAbilityController systemAbilityController = null;
@@ -142,7 +142,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             castTargettingManager = systemGameManager.CastTargettingManager;
             characterManager = systemGameManager.CharacterManager;
             systemAbilityController = systemGameManager.SystemAbilityController;
@@ -1026,7 +1026,7 @@ namespace AnyRPG {
 
         public override bool IsPlayerControlled() {
             if (unitController.MasterUnit != null &&
-                unitController.MasterUnit == playerManager.UnitController) {
+                unitController.MasterUnit == playerManagerClient.UnitController) {
 
                 return true;
             }
@@ -1183,7 +1183,7 @@ namespace AnyRPG {
         public void SetGroundTargetClient(Vector3 newGroundTarget) {
             //Debug.Log("CharacterAbilityManager.SetGroundTarget(" + newGroundTarget + ")");
             SetGroundTarget(newGroundTarget);
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false || levelManager.IsCutscene()) {
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false || levelManagerClient.IsCutscene()) {
                 AbilityProperties ability = groundTargetAbility;
                 DeactivateTargetingMode();
                 BeginAbility(ability, null);
@@ -1445,7 +1445,7 @@ namespace AnyRPG {
 
             unitController.UnitEventController.NotifyOnBeginAbility(ability, target, playerInitiated);
 
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManager.IsCutscene()) {
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {
                 AbilityEffectContext abilityEffectContext = new AbilityEffectContext(unitController);
                 abilityEffectContext.baseAbility = ability;
                 abilityEffectContext.groundTargetLocation = GetGroundTarget();

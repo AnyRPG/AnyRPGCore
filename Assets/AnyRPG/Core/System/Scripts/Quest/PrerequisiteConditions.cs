@@ -48,9 +48,6 @@ namespace AnyRPG {
 
         List<List<IPrerequisite>> allPrerequisites = new List<List<IPrerequisite>>();
 
-        // game manager references
-        private PlayerManagerClient playerManager = null;
-
         public bool ReverseMatch {
             get => reverseMatch;
         }
@@ -145,11 +142,6 @@ namespace AnyRPG {
                     prerequisite.UpdateStatus(sourceUnitController, notify);
                 }
             }
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
         }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager, IPrerequisiteOwner prerequisiteOwner) {

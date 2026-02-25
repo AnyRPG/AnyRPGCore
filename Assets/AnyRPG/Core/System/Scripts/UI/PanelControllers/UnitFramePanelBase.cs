@@ -118,7 +118,7 @@ namespace AnyRPG {
         //private int lastWaitFrame = 0;
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected ContextMenuService contextMenuService = null;
         protected CharacterGroupServiceClient characterGroupServiceClient = null;
 
@@ -146,7 +146,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             contextMenuService = systemGameManager.ContextMenuService;
             characterGroupServiceClient = systemGameManager.CharacterGroupServiceClient;
         }
@@ -299,7 +299,7 @@ namespace AnyRPG {
             if (unitController != null) {
                 castBarController.SetTarget(unitController);
                 statusEffectPanelController.SetTarget(unitController);
-                if (unitController != playerManager.UnitController) {
+                if (unitController != playerManagerClient.UnitController) {
                     systemEventManager.OnReputationChange += HandleReputationChange;
                 }
             }
@@ -458,7 +458,7 @@ namespace AnyRPG {
         private void InitializeStats() {
             //Debug.Log($"{gameObject.name}.UnitFramePanelBase.InitializeStats()");
 
-            HandleReputationChange(playerManager.UnitController);
+            HandleReputationChange(playerManagerClient.UnitController);
             //Debug.Log("Charcter name is " + baseCharacter.MyCharacterName);
             unitNameText.text = unitController.DisplayName;
 
@@ -614,8 +614,8 @@ namespace AnyRPG {
                 return;
             }
             unitLevelText.text = _level.ToString();
-            if (playerManager.UnitController?.CharacterStats != null) {
-                unitLevelText.color = LevelEquations.GetTargetColor(playerManager.UnitController.CharacterStats.Level, _level);
+            if (playerManagerClient.UnitController?.CharacterStats != null) {
+                unitLevelText.color = LevelEquations.GetTargetColor(playerManagerClient.UnitController.CharacterStats.Level, _level);
             }
         }
 
@@ -660,10 +660,10 @@ namespace AnyRPG {
         public void HandleReputationChange(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.UnitFramePanelBase.HandleReputationChange({sourceUnitController.gameObject.name}) instanceId: {GetInstanceID()}");
 
-            if (playerManager == null || playerManager.PlayerUnitSpawned == false) {
+            if (playerManagerClient == null || playerManagerClient.PlayerUnitSpawned == false) {
                 return;
             }
-            reputationColor = Faction.GetFactionColor(playerManager, unitController);
+            reputationColor = Faction.GetFactionColor(playerManagerClient, unitController);
             //Color tmp = Faction.GetFactionColor(baseCharacter.Faction);
             reputationColor.a = 0.5f;
             unitNameBackground.color = reputationColor;

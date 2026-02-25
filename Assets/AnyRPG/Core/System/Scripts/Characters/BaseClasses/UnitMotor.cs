@@ -64,9 +64,8 @@ namespace AnyRPG {
         LayerMask defaultLayerMask;
         float capsuleRadius;
 
-
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
 
         // properties
         public float MovementSpeed { get => movementSpeed; set => movementSpeed = value; }
@@ -91,7 +90,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public void SetMovementBody(IMovementBody movementBody) {
@@ -405,6 +404,9 @@ namespace AnyRPG {
         public void ClickToMove(Vector3 point) {
             //Debug.Log($"{gameObject.name}UnitMotor.ClickToMove(" + point + ")");
             unitController.EnableAgent();
+            unitController.RigidBody.isKinematic = true;
+            unitController.RigidBody.useGravity = false;
+            unitController.RigidBody.interpolation = RigidbodyInterpolation.None;
             MoveToPoint(point);
         }
 
@@ -529,6 +531,10 @@ namespace AnyRPG {
         public void FollowAttackTarget(Interactable newTarget, float minAttackRange) {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FollowAttackTarget({newTarget.name}, minAttackRange: {minAttackRange})");
 
+            unitController.RigidBody.isKinematic = true;
+            unitController.RigidBody.useGravity = false;
+            unitController.RigidBody.interpolation = RigidbodyInterpolation.None;
+
             attackTarget = newTarget;
             this.attackRange = minAttackRange;
             FollowTarget(newTarget, minAttackRange);
@@ -536,6 +542,10 @@ namespace AnyRPG {
 
         public void FollowInteractionTarget(Interactable newTarget) {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FollowInteractionTarget({(newTarget == null ? "null" : newTarget.name)})");
+
+            unitController.RigidBody.isKinematic = true;
+            unitController.RigidBody.useGravity = false;
+            unitController.RigidBody.interpolation = RigidbodyInterpolation.None;
 
             interactionTarget = newTarget;
             FollowTarget(newTarget, unitController.CharacterUnit.HitBoxSize);
@@ -653,12 +663,18 @@ namespace AnyRPG {
 
             if (unitController.NavMeshAgent.enabled) {
                 unitController.NavMeshAgent.updateRotation = false;
+                unitController.transform.rotation = targetRotation;
+            } else {
+                movementBody.SetRotation(targetRotation);
             }
-            movementBody.SetRotation(targetRotation);
 
+            // this code should only be called at the end of a pathing movement,
+            // so it should be safe to leave the setting, because we'll turn it back on next time we enabled the navmesh agent.
+            /*
             if (unitController.NavMeshAgent.enabled) {
                 unitController.NavMeshAgent.updateRotation = true;
             }
+            */
         }
 
         public void ResetPath(bool forceStop = false) {
@@ -678,6 +694,9 @@ namespace AnyRPG {
                         unitController.NavMeshAgent.velocity = Vector3.zero;
                         unitController.ResetApparentVelocity();
                         unitController.DisableAgent();
+                        unitController.RigidBody.isKinematic = false;
+                        unitController.RigidBody.useGravity = true;
+                        unitController.RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
                     }
                 }
                 lastResetFrame = Time.frameCount;
@@ -698,7 +717,7 @@ namespace AnyRPG {
         public void StickToGround() {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.StickToGround()");
 
-            if (unitController.PhysicsScene.Raycast(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f), -Vector3.up, out centerDownHitInfo, Mathf.Infinity, defaultLayerMask)) {
+            if (unitController.PhysicsScene.Raycast(playerManagerClient.ActiveUnitController.transform.position + (Vector3.up * 0.25f), -Vector3.up, out centerDownHitInfo, Mathf.Infinity, defaultLayerMask)) {
                 
                 // 3. Calculate the slope angle
                 float angle = Vector3.Angle(Vector3.up, centerDownHitInfo.normal);

@@ -20,7 +20,7 @@ namespace AnyRPG {
         private AnimatedActionProperties actionProperties = new AnimatedActionProperties();
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected UIManager uIManager = null;
         protected SystemAbilityController systemAbilityController = null;
 
@@ -43,7 +43,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             uIManager = systemGameManager.UIManager;
             systemAbilityController = systemGameManager.SystemAbilityController;
         }
@@ -92,7 +92,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (!CanCast(playerManager.UnitController)) {
+            if (!CanCast(playerManagerClient.UnitController)) {
                 //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): can't cast due to spell restrictions");
                 actionButton.EnableFullCoolDownIcon();
                 return;

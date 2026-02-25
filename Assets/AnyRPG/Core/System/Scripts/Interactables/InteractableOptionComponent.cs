@@ -18,7 +18,7 @@ namespace AnyRPG {
 
         // game manager references
         protected SystemEventManager systemEventManager = null;
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected PlayerManagerServer playerManagerServer = null;
         protected UIManager uIManager = null;
         protected InteractionManager interactionManager = null;
@@ -65,7 +65,7 @@ namespace AnyRPG {
             //Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.SetGameManagerReferences");
             base.SetGameManagerReferences();
             systemEventManager = systemGameManager.SystemEventManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             uIManager = systemGameManager.UIManager;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             interactionManager = systemGameManager.InteractionManager;
@@ -207,7 +207,8 @@ namespace AnyRPG {
 
         public virtual void StopInteract() {
             //Debug.Log($"{gameObject.name}.InanimateUnit.StopInteract()");
-            playerManager.PlayerController.StopInteract();
+            // this doesn't seem compatible with online mode, but nothing was calling this method anyway.
+            //playerManagerClient.PlayerController.StopInteract();
         }
 
         public virtual void ProcessStartInteract(int componentIndex, int choiceIndex) {
@@ -255,15 +256,15 @@ namespace AnyRPG {
 
         public virtual bool SetMiniMapText(TextMeshProUGUI text) {
             //Debug.Log($"{interactable.gameObject.name}.InteractableOptionComponent.SetMiniMapText()");
-            if (playerManager.UnitController == null) {
+            if (playerManagerClient.UnitController == null) {
                 return false;
             }
-            return (GetCurrentOptionCount(playerManager.UnitController) > 0);
+            return (GetCurrentOptionCount(playerManagerClient.UnitController) > 0);
         }
 
         public virtual void SetMiniMapIcon(Image icon) {
             //Debug.Log($"{gameObject.name}.InteractableOption.SetMiniMapIcon()");
-            if (CanShowMiniMapIcon(playerManager.UnitController)) {
+            if (CanShowMiniMapIcon(playerManagerClient.UnitController)) {
                 icon.sprite = GetMiniMapIcon();
                 icon.color = GetMiniMapIconColor();
             } else {
@@ -290,7 +291,7 @@ namespace AnyRPG {
         }
 
         public virtual string GetDescription() {
-            return string.Format("<color=#ffff00ff>{0}</color>", GetSummary(playerManager.UnitController));
+            return string.Format("<color=#ffff00ff>{0}</color>", GetSummary(playerManagerClient.UnitController));
         }
 
         public virtual string GetSummary(UnitController sourceUnitController) {

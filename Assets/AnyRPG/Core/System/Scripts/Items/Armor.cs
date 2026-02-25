@@ -49,7 +49,7 @@ namespace AnyRPG {
            
             if (armorClassName != null && armorClassName != string.Empty) {
                 string colorString = "white";
-                if (!CanEquip(usedItemLevel, playerManager.UnitController)) {
+                if (!CanEquip(usedItemLevel, playerManagerClient.UnitController)) {
                     colorString = "red";
                 }
                 abilitiesString += string.Format("\n<color={0}>{1}</color>", colorString, armorClassName);

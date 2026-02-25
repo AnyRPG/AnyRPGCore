@@ -214,6 +214,8 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestCompleteQuestItemQuest += HandleRequestCompleteQuestItemQuest;
                 unitController.UnitEventController.OnRequestDeleteItem += HandleRequestDeleteItem;
                 unitController.UnitEventController.OnRequestClickToMove += HandleRequestClickToMove;
+                unitController.UnitEventController.OnRequestFollowInteractionTarget += HandleRequestFollowInteractionTarget;
+                unitController.UnitEventController.OnRequestFollowAttackTarget += HandleRequestFollowAttackTarget;
             }
             // all clients
             unitController.UnitEventController.OnUnsetParent += HandleUnsetParent;
@@ -256,12 +258,13 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestCompleteQuestItemQuest -= HandleRequestCompleteQuestItemQuest;
                 unitController.UnitEventController.OnRequestDeleteItem -= HandleRequestDeleteItem;
                 unitController.UnitEventController.OnRequestClickToMove -= HandleRequestClickToMove;
+                unitController.UnitEventController.OnRequestFollowInteractionTarget -= HandleRequestFollowInteractionTarget;
+                unitController.UnitEventController.OnRequestFollowAttackTarget -= HandleRequestFollowAttackTarget;
             }
             // all clients
             unitController.UnitEventController.OnUnsetParent -= HandleUnsetParent;
             //unitController.UnitEventController.OnDespawn -= HandleDespawnClient;
         }
-
 
         public void SubscribeToServerUnitEvents() {
             if (unitController == null) {
@@ -818,6 +821,33 @@ namespace AnyRPG {
             }
             unitController.CharacterQuestLog.AcceptQuestItemQuest(instantiatedItem as InstantiatedQuestStartItem, quest);
         }
+
+        private void HandleRequestFollowAttackTarget(Interactable interactable, float attackRange) {
+            FishNetInteractable targetNetworkInteractable = interactable.GetComponent<FishNetInteractable>();
+            if (targetNetworkInteractable == null) {
+                return;
+            }
+            HandleRequestFollowAttackTargetServer(targetNetworkInteractable, attackRange);
+        }
+
+        [ServerRpc]
+        private void HandleRequestFollowAttackTargetServer(FishNetInteractable targetNetworkInteractable, float attackRange) {
+            unitController.UnitMotor.FollowAttackTarget(targetNetworkInteractable.Interactable, attackRange);
+        }
+
+        private void HandleRequestFollowInteractionTarget(Interactable interactable) {
+            FishNetInteractable targetNetworkInteractable = interactable.GetComponent<FishNetInteractable>();
+            if (targetNetworkInteractable == null) {
+                return;
+            }
+            HandleRequestFollowInteractionTargetServer(targetNetworkInteractable);
+        }
+
+        [ServerRpc]
+        private void HandleRequestFollowInteractionTargetServer(FishNetInteractable targetNetworkInteractable) {
+            unitController.UnitMotor.FollowInteractionTarget(targetNetworkInteractable.Interactable);
+        }
+
 
         private void HandleRequestClickToMove(Vector3 destination) {
             HandleRequestClickToMoveServer(destination);
@@ -2179,7 +2209,7 @@ namespace AnyRPG {
                 characterRequestData.characterGuildId = guildId;
                 characterRequestData.characterGuildName = guildName;
                 if (isOwner == true && unitControllerMode.Value == UnitControllerMode.Player) {
-                    characterRequestData.characterRequestor = systemGameManager.PlayerManager;
+                    characterRequestData.characterRequestor = systemGameManager.PlayerManagerClient;
                 }
                 if (playerCharacterSaveData != null) {
                     characterRequestData.saveData = playerCharacterSaveData.CharacterSaveData;
@@ -2190,7 +2220,7 @@ namespace AnyRPG {
             }
 
             if (unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) {
-                Debug.Log($"{gameObject.name}.FishNetUnitController.BeginCharacterRequest() unitcontrollermode: {unitController.UnitControllerMode} InstanceId: {GetInstanceID()}");
+                //Debug.Log($"{gameObject.name}.FishNetUnitController.BeginCharacterRequest() unitcontrollermode: {unitController.UnitControllerMode} InstanceId: {GetInstanceID()}");
                 base.TimeManager.OnPostTick += TimeManager_OnPostTick;
                 base.TimeManager.OnTick += TimeManager_OnTick;
                 predictionRigidbody.Initialize(Rigidbody);

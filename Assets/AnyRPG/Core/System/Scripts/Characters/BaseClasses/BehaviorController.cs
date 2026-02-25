@@ -27,7 +27,7 @@ namespace AnyRPG {
 
         // game manager references
         private AudioManager audioManager = null;
-        private LevelManager levelManager = null;
+        private LevelManagerClient levelManagerClient = null;
         private CutsceneBarController cutsceneBarController = null;
 
         public int BehaviorIndex { get => behaviorIndex; }
@@ -48,7 +48,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             audioManager = systemGameManager.AudioManager;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             cutsceneBarController = systemGameManager.UIManager.CutSceneBarController;
         }
 
@@ -275,7 +275,7 @@ namespace AnyRPG {
         }
 
         public void StartBackgroundMusic() {
-            levelManager.PlayLevelSounds();
+            levelManagerClient.PlayLevelSounds();
         }
 
 

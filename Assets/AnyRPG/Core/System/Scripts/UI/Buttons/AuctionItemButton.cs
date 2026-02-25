@@ -41,8 +41,7 @@ namespace AnyRPG {
 
         // game manager references
         private AuctionManagerClient auctionManagerClient = null;
-        private SystemItemManager systemItemManager = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
 
         public AuctionItemSearchResult AuctionItem { get => auctionItem; set => auctionItem = value; }
 
@@ -58,8 +57,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             auctionManagerClient = systemGameManager.AuctionManagerClient;
-            systemItemManager = systemGameManager.SystemItemManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public void AddAuctionItem(AuctionItemSearchResult auctionItem) {
@@ -87,14 +85,14 @@ namespace AnyRPG {
             itemNameText.text = $"<color={displayNameColorString}>{instantiatedItem.DisplayName}</color>";
             sellerText.text = auctionItem.SellerName;
 
-            if (auctionItem.SellerPlayerCharacterId == playerManager.UnitController.CharacterId) {
+            if (auctionItem.SellerPlayerCharacterId == playerManagerClient.UnitController.CharacterId) {
                 buyAuctionButton.gameObject.SetActive(false);
                 cancelAuctionButton.gameObject.SetActive(true);
             } else {
                 buyAuctionButton.gameObject.SetActive(true);
                 cancelAuctionButton.gameObject.SetActive(false);
                 //Debug.Log($"AuctionItemButton.AddAuctionItem(): Checking currency for auction item. Player has {playerManager.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency)}, auction item costs {auctionItem.CurrencyAmount}");
-                if (playerManager.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency) < auctionItem.CurrencyAmount) {
+                if (playerManagerClient.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency) < auctionItem.CurrencyAmount) {
                     buyAuctionButton.Button.interactable = false;
                 } else {
                     buyAuctionButton.Button.interactable = true;

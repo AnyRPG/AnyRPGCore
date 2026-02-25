@@ -40,7 +40,7 @@ namespace AnyRPG {
         private AuctionManagerClient auctionManagerClient = null;
         private UIManager uiManager = null;
         private SystemItemManager systemItemManager = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -55,7 +55,7 @@ namespace AnyRPG {
             auctionManagerClient = systemGameManager.AuctionManagerClient;
             uiManager = systemGameManager.UIManager;
             systemItemManager = systemGameManager.SystemItemManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public override void ProcessOpenWindowNotification() {
@@ -94,7 +94,7 @@ namespace AnyRPG {
                 if (instantiatedItem == null) {
                     continue;
                 }
-                KeyValuePair<Currency, int> sellAmount = instantiatedItem.Item.GetSellPrice(instantiatedItem, playerManager.UnitController);
+                KeyValuePair<Currency, int> sellAmount = instantiatedItem.Item.GetSellPrice(instantiatedItem, playerManagerClient.UnitController);
                 if (sellAmount.Value == 0 || sellAmount.Key == null) {
                     // don't print a sell price on things that cannot be sold
                     continue;

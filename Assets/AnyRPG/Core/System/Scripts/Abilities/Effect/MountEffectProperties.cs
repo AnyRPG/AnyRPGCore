@@ -49,7 +49,7 @@ namespace AnyRPG {
         }
 
         public override bool CanCast() {
-            if (levelManager.GetActiveSceneNode()?.AllowMount == false) {
+            if (levelManagerClient.GetActiveSceneNode()?.AllowMount == false) {
                 //Debug.Log(DisplayName + ".MountEffect.CanCast(): scene does not allow mount");
                 return false;
             }

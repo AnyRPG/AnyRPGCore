@@ -11,11 +11,11 @@ namespace AnyRPG {
         private Recipe currentRecipe = null;
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public void ClearSelectedRecipe() {
@@ -47,7 +47,7 @@ namespace AnyRPG {
 
         public void RequestCancelCrafting() {
             if (systemGameManager.GameMode == GameMode.Local) {
-                CancelCrafting(playerManager.UnitController);
+                CancelCrafting(playerManagerClient.UnitController);
             } else if (systemGameManager.GameMode == GameMode.Network) {
                 networkManagerClient.RequestCancelCrafting();
             }

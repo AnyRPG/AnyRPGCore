@@ -313,7 +313,7 @@ namespace AnyRPG {
         protected List<AnimationClip> castClips = new List<AnimationClip>();
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected UIManager uIManager = null;
         protected SystemAbilityController systemAbilityController = null;
 
@@ -461,7 +461,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             uIManager = systemGameManager.UIManager;
             systemAbilityController = systemGameManager.SystemAbilityController;
         }
@@ -558,8 +558,8 @@ namespace AnyRPG {
         public virtual bool HadSpecialIcon(ActionButton actionButton) {
             if (systemConfigurationManager.AllowAutoAttack == true && IsAutoAttack == true) {
 
-                if (playerManager.UnitController.CharacterCombat.GetInCombat() == true
-                    && playerManager.UnitController.CharacterCombat.AutoAttackActive == true) {
+                if (playerManagerClient.UnitController.CharacterCombat.GetInCombat() == true
+                    && playerManagerClient.UnitController.CharacterCombat.AutoAttackActive == true) {
                     if (actionButton.CoolDownIcon.isActiveAndEnabled == false) {
                         actionButton.CoolDownIcon.enabled = true;
                     }
@@ -610,13 +610,13 @@ namespace AnyRPG {
             // auto-attack buttons are special and display the current weapon of the character
             if (IsAutoAttack == true) {
                 //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
-                foreach (EquipmentSlotProfile equipmentSlotProfile in playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment.Keys) {
+                foreach (EquipmentSlotProfile equipmentSlotProfile in playerManagerClient.UnitController.CharacterEquipmentManager.CurrentEquipment.Keys) {
                     //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
                     if (equipmentSlotProfile.MainWeaponSlot == true
-                        && playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].InstantiatedEquipment != null
-                        && playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].InstantiatedEquipment.Equipment is Weapon) {
-                        if (actionButton.Icon.sprite != playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].InstantiatedEquipment.Icon) {
-                            actionButton.Icon.sprite = playerManager.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].InstantiatedEquipment.Icon;
+                        && playerManagerClient.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].InstantiatedEquipment != null
+                        && playerManagerClient.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].InstantiatedEquipment.Equipment is Weapon) {
+                        if (actionButton.Icon.sprite != playerManagerClient.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].InstantiatedEquipment.Icon) {
+                            actionButton.Icon.sprite = playerManagerClient.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].InstantiatedEquipment.Icon;
                             break;
                         }
                     }
@@ -625,7 +625,7 @@ namespace AnyRPG {
 
             // set cooldown icon on abilities that don't have enough resources to cast
             if (PowerResource != null
-                && (GetResourceCost(playerManager.UnitController) > playerManager.UnitController.CharacterStats.GetPowerResourceAmount(PowerResource))) {
+                && (GetResourceCost(playerManagerClient.UnitController) > playerManagerClient.UnitController.CharacterStats.GetPowerResourceAmount(PowerResource))) {
                 //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): not enough resources to cast this ability.  enabling full cooldown");
                 actionButton.EnableFullCoolDownIcon();
                 return;
@@ -636,7 +636,7 @@ namespace AnyRPG {
             }
 
             if (RequireOutOfCombat) {
-                if (playerManager.UnitController.CharacterCombat.GetInCombat() == true) {
+                if (playerManagerClient.UnitController.CharacterCombat.GetInCombat() == true) {
                     //Debug.Log("ActionButton.UpdateVisual(): can't cast due to being in combat");
                     actionButton.EnableFullCoolDownIcon();
                     return;
@@ -644,22 +644,22 @@ namespace AnyRPG {
             }
 
             if (RequireStealth) {
-                if (playerManager.UnitController.CharacterStats.IsStealthed == false) {
+                if (playerManagerClient.UnitController.CharacterStats.IsStealthed == false) {
                     //Debug.Log("ActionButton.UpdateVisual(): can't cast due to not being stealthed");
                     actionButton.EnableFullCoolDownIcon();
                     return;
                 }
             }
 
-            if (!CanCast(playerManager.UnitController)) {
+            if (!CanCast(playerManagerClient.UnitController)) {
                 //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): can't cast due to spell restrictions");
                 actionButton.EnableFullCoolDownIcon();
                 return;
             }
 
 
-            if (playerManager.UnitController.CharacterAbilityManager.RemainingGlobalCoolDown > 0f
-                || playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName)) {
+            if (playerManagerClient.UnitController.CharacterAbilityManager.RemainingGlobalCoolDown > 0f
+                || playerManagerClient.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName)) {
                 //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): Ability is on cooldown");
                 if (actionButton.CoolDownIcon.isActiveAndEnabled != true) {
                     //Debug.Log("ActionButton.UpdateVisual(): coolDownIcon is not enabled: " + (useable == null ? "null" : useable.DisplayName));
@@ -673,15 +673,15 @@ namespace AnyRPG {
                 }
                 float remainingAbilityCoolDown = 0f;
                 float initialCoolDown = 0f;
-                if (playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName)) {
-                    remainingAbilityCoolDown = playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary[DisplayName].RemainingCoolDown;
-                    initialCoolDown = playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary[DisplayName].InitialCoolDown;
+                if (playerManagerClient.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName)) {
+                    remainingAbilityCoolDown = playerManagerClient.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary[DisplayName].RemainingCoolDown;
+                    initialCoolDown = playerManagerClient.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary[DisplayName].InitialCoolDown;
                 } else {
                     initialCoolDown = abilityCoolDown;
                 }
                 //float globalCoolDown
-                float fillAmount = Mathf.Max(remainingAbilityCoolDown, playerManager.UnitController.CharacterAbilityManager.RemainingGlobalCoolDown) /
-                    (remainingAbilityCoolDown > playerManager.UnitController.CharacterAbilityManager.RemainingGlobalCoolDown ? initialCoolDown : playerManager.UnitController.CharacterAbilityManager.InitialGlobalCoolDown);
+                float fillAmount = Mathf.Max(remainingAbilityCoolDown, playerManagerClient.UnitController.CharacterAbilityManager.RemainingGlobalCoolDown) /
+                    (remainingAbilityCoolDown > playerManagerClient.UnitController.CharacterAbilityManager.RemainingGlobalCoolDown ? initialCoolDown : playerManagerClient.UnitController.CharacterAbilityManager.InitialGlobalCoolDown);
                 //Debug.Log("Setting fill amount to: " + fillAmount);
                 if (actionButton.CoolDownIcon.fillAmount != fillAmount) {
                     actionButton.CoolDownIcon.fillAmount = fillAmount;
@@ -818,7 +818,7 @@ namespace AnyRPG {
             string colorString = string.Empty;
             string addString = string.Empty;
             if (requireStealth == true) {
-                if (playerManager.UnitController.CharacterStats.IsStealthed == false) {
+                if (playerManagerClient.UnitController.CharacterStats.IsStealthed == false) {
                     addString = string.Format("\n<color={0}>Requires Stealth</color>", "#ff0000ff");
                 }
             }
@@ -830,7 +830,7 @@ namespace AnyRPG {
                 List<string> requireWeaponSkills = new List<string>();
                 foreach (WeaponSkill _weaponAffinity in weaponAffinityList) {
                     requireWeaponSkills.Add(_weaponAffinity.DisplayName);
-                    if (playerManager.UnitController.CharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
+                    if (playerManagerClient.UnitController.CharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
                         affinityMet = true;
                     }
                 }
@@ -842,17 +842,17 @@ namespace AnyRPG {
                 addString += string.Format("\n<color={0}>Requires: {1}</color>", colorString, string.Join(",", requireWeaponSkills));
             }
 
-            string abilityRange = (GetTargetOptions(playerManager.UnitController).UseMeleeRange == true ? "melee" : GetTargetOptions(playerManager.UnitController).MaxRange + " meters");
+            string abilityRange = (GetTargetOptions(playerManagerClient.UnitController).UseMeleeRange == true ? "melee" : GetTargetOptions(playerManagerClient.UnitController).MaxRange + " meters");
 
             string costString = string.Empty;
             if (powerResource != null) {
-                costString = "\nCost: " + GetResourceCost(playerManager.UnitController) + " " + powerResource.DisplayName;
+                costString = "\nCost: " + GetResourceCost(playerManagerClient.UnitController) + " " + powerResource.DisplayName;
             }
 
             string coolDownString = GetCooldownString();
 
             return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s){2}\nRange: {3}\n<color=#ffff00ff>{4}</color>{5}{6}",
-                GetAbilityCastingTime(playerManager.UnitController).ToString("F1"),
+                GetAbilityCastingTime(playerManagerClient.UnitController).ToString("F1"),
                 abilityCoolDown,
                 costString,
                 abilityRange,
@@ -863,14 +863,14 @@ namespace AnyRPG {
 
         public string GetCooldownString() {
             string coolDownString = string.Empty;
-            if (playerManager?.UnitController?.CharacterAbilityManager != null
-                && (playerManager.UnitController.CharacterAbilityManager.RemainingGlobalCoolDown > 0f
-                || playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName))) {
+            if (playerManagerClient?.UnitController?.CharacterAbilityManager != null
+                && (playerManagerClient.UnitController.CharacterAbilityManager.RemainingGlobalCoolDown > 0f
+                || playerManagerClient.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName))) {
                 float dictionaryCooldown = 0f;
-                if (playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName)) {
-                    dictionaryCooldown = playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary[DisplayName].RemainingCoolDown;
+                if (playerManagerClient.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(DisplayName)) {
+                    dictionaryCooldown = playerManagerClient.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary[DisplayName].RemainingCoolDown;
                 }
-                coolDownString = "\n\nCooldown Remaining: " + SystemAbilityController.GetTimeText(Mathf.Max(dictionaryCooldown, playerManager.UnitController.CharacterAbilityManager.RemainingGlobalCoolDown)); ;
+                coolDownString = "\n\nCooldown Remaining: " + SystemAbilityController.GetTimeText(Mathf.Max(dictionaryCooldown, playerManagerClient.UnitController.CharacterAbilityManager.RemainingGlobalCoolDown)); ;
             }
             return coolDownString;
         }

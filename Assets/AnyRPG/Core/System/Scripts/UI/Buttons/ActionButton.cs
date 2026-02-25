@@ -55,7 +55,7 @@ namespace AnyRPG {
 
         // game manager references
         protected UIManager uIManager = null;
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected HandScript handScript = null;
         protected ActionBarManager actionBarManager = null;
         //InventoryManager inventoryManager = null;
@@ -79,7 +79,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             handScript = uIManager.HandScript;
             actionBarManager = uIManager.ActionBarManager;
 
@@ -145,7 +145,7 @@ namespace AnyRPG {
             }
 
             if (Useable != null) {
-                Useable.ActionButtonUse(playerManager.UnitController);
+                Useable.ActionButtonUse(playerManagerClient.UnitController);
             }
         }
 
@@ -157,8 +157,8 @@ namespace AnyRPG {
             }
 
             base.HandleLeftClick();
-            if (playerManager.ActiveUnitController != null) {
-                if (playerManager.ActiveUnitController.ControlLocked == true) {
+            if (playerManagerClient.ActiveUnitController != null) {
+                if (playerManagerClient.ActiveUnitController.ControlLocked == true) {
                     return;
                 }
             }
@@ -254,23 +254,23 @@ namespace AnyRPG {
         public void SubscribeToAbilityEvents() {
             //Debug.Log($"{gameObject.name}.ActionButton.SubscribeToAbilityEvents()");
 
-            playerManager.UnitController.UnitEventController.OnAttemptPerformAbility += HandleAttemptPerformAbility;
-            playerManager.UnitController.UnitEventController.OnPerformAbility += HandlePerformAbility;
-            playerManager.UnitController.UnitEventController.OnBeginAbilityCoolDown += HandleBeginAbilityCooldown;
-            playerManager.UnitController.UnitEventController.OnBeginActionCoolDown += HandleBeginActionCooldown;
+            playerManagerClient.UnitController.UnitEventController.OnAttemptPerformAbility += HandleAttemptPerformAbility;
+            playerManagerClient.UnitController.UnitEventController.OnPerformAbility += HandlePerformAbility;
+            playerManagerClient.UnitController.UnitEventController.OnBeginAbilityCoolDown += HandleBeginAbilityCooldown;
+            playerManagerClient.UnitController.UnitEventController.OnBeginActionCoolDown += HandleBeginActionCooldown;
         }
 
         public void SubscribeToAutoAttackEvents() {
             //Debug.Log($"{gameObject.name}.ActionButton.SubscribeToAutoAttackEvents()");
 
-            playerManager.UnitController.UnitEventController.OnActivateAutoAttack += HandleActivateAutoAttack;
+            playerManagerClient.UnitController.UnitEventController.OnActivateAutoAttack += HandleActivateAutoAttack;
         }
 
 
         public void UnsubscribeFromAutoAttackEvents() {
             //Debug.Log($"{gameObject.name}.ActionButton.UnsubscribeFromAutoAttackEvents()");
 
-            playerManager.UnitController.UnitEventController.OnActivateAutoAttack -= HandleActivateAutoAttack;
+            playerManagerClient.UnitController.UnitEventController.OnActivateAutoAttack -= HandleActivateAutoAttack;
         }
 
         private void HandleActivateAutoAttack() {
@@ -283,15 +283,15 @@ namespace AnyRPG {
 
         public void SubscribeToCombatEvents() {
             if (Useable != null && Useable.RequireOutOfCombat == true) {
-                playerManager.ActiveUnitController.UnitEventController.OnEnterCombat += HandleEnterCombat;
-                playerManager.ActiveUnitController.UnitEventController.OnDropCombat += HandleDropCombat;
+                playerManagerClient.ActiveUnitController.UnitEventController.OnEnterCombat += HandleEnterCombat;
+                playerManagerClient.ActiveUnitController.UnitEventController.OnDropCombat += HandleDropCombat;
             }
         }
 
         public void SubscribeToStealthEvents() {
             if (Useable != null && Useable.RequireStealth == true) {
-                playerManager.ActiveUnitController.UnitEventController.OnEnterStealth += HandleEnterStealth;
-                playerManager.ActiveUnitController.UnitEventController.OnLeaveStealth += HandleLeaveStealth;
+                playerManagerClient.ActiveUnitController.UnitEventController.OnEnterStealth += HandleEnterStealth;
+                playerManagerClient.ActiveUnitController.UnitEventController.OnLeaveStealth += HandleLeaveStealth;
             }
         }
 
@@ -342,8 +342,8 @@ namespace AnyRPG {
             yield return null;
 
             while (Useable != null
-                && playerManager.UnitController.CharacterCombat.GetInCombat() == true
-                && playerManager.UnitController.CharacterCombat.AutoAttackActive == true) {
+                && playerManagerClient.UnitController.CharacterCombat.GetInCombat() == true
+                && playerManagerClient.UnitController.CharacterCombat.AutoAttackActive == true) {
                 UpdateVisual();
                 yield return new WaitForSeconds(0.5f);
             }
@@ -359,7 +359,7 @@ namespace AnyRPG {
         public IEnumerator MonitorCooldown(IUseable useable) {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + ")");
             while (Useable != null
-                && playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(useable.DisplayName)) {
+                && playerManagerClient.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(useable.DisplayName)) {
                 UpdateVisual();
                 yield return null;
             }
@@ -376,8 +376,8 @@ namespace AnyRPG {
         public IEnumerator MonitorAbility(string abilityName) {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + ")");
             while (Useable != null
-                && (playerManager.UnitController.CharacterAbilityManager.RemainingGlobalCoolDown > 0f
-                || playerManager.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(abilityName))) {
+                && (playerManagerClient.UnitController.CharacterAbilityManager.RemainingGlobalCoolDown > 0f
+                || playerManagerClient.UnitController.CharacterAbilityManager.AbilityCoolDownDictionary.ContainsKey(abilityName))) {
                 UpdateVisual();
                 yield return null;
             }
@@ -407,7 +407,7 @@ namespace AnyRPG {
         public void RemoveStaleActions() {
             //Debug.Log($"{gameObject.name}.ActionButton.RemoveStaleActions()");
 
-            if (Useable != null && Useable.IsUseableStale(playerManager.UnitController) == true) {
+            if (Useable != null && Useable.IsUseableStale(playerManagerClient.UnitController) == true) {
                 //Debug.Log($"{gameObject.name}.ActionButton.RemoveStaleActions() removing useable: {Useable.ResourceName}");
                 savedUseable = Useable;
                 useable = null;
@@ -421,7 +421,7 @@ namespace AnyRPG {
         public void UpdateVisual() {
             //Debug.Log($"{gameObject.name} ({GetInstanceID()}).ActionButton.UpdateVisual() useable: {(useable == null ? "null" : useable.DisplayName)}");
 
-            if (playerManager == null || playerManager.UnitController == null) {
+            if (playerManagerClient == null || playerManagerClient.UnitController == null) {
                 return;
             }
 
@@ -526,15 +526,15 @@ namespace AnyRPG {
 
         public void UnsubscribeFromCombatEvents() {
             if (Useable != null && Useable.RequireOutOfCombat == true) {
-                playerManager.ActiveUnitController.UnitEventController.OnEnterCombat -= HandleEnterCombat;
-                playerManager.ActiveUnitController.UnitEventController.OnDropCombat -= HandleDropCombat;
+                playerManagerClient.ActiveUnitController.UnitEventController.OnEnterCombat -= HandleEnterCombat;
+                playerManagerClient.ActiveUnitController.UnitEventController.OnDropCombat -= HandleDropCombat;
             }
         }
 
         public void UnsubscribeFromStealthEvents() {
             if (Useable != null && Useable.RequireStealth == true) {
-                playerManager.ActiveUnitController.UnitEventController.OnEnterStealth -= HandleEnterStealth;
-                playerManager.ActiveUnitController.UnitEventController.OnLeaveStealth -= HandleLeaveStealth;
+                playerManagerClient.ActiveUnitController.UnitEventController.OnEnterStealth -= HandleEnterStealth;
+                playerManagerClient.ActiveUnitController.UnitEventController.OnLeaveStealth -= HandleLeaveStealth;
             }
         }
 
@@ -559,10 +559,10 @@ namespace AnyRPG {
         public void UnsubscribeFromAbilityEvents() {
             //Debug.Log($"{gameObject.name}.ActionButton.UnsubscribeFromAbilityEvents()");
 
-            playerManager.UnitController.UnitEventController.OnAttemptPerformAbility -= HandleAttemptPerformAbility;
-            playerManager.UnitController.UnitEventController.OnPerformAbility -= HandlePerformAbility;
-            playerManager.UnitController.UnitEventController.OnBeginAbilityCoolDown -= HandleBeginAbilityCooldown;
-            playerManager.UnitController.UnitEventController.OnBeginActionCoolDown -= HandleBeginActionCooldown;
+            playerManagerClient.UnitController.UnitEventController.OnAttemptPerformAbility -= HandleAttemptPerformAbility;
+            playerManagerClient.UnitController.UnitEventController.OnPerformAbility -= HandlePerformAbility;
+            playerManagerClient.UnitController.UnitEventController.OnBeginAbilityCoolDown -= HandleBeginAbilityCooldown;
+            playerManagerClient.UnitController.UnitEventController.OnBeginActionCoolDown -= HandleBeginActionCooldown;
         }
 
         public override void Select() {

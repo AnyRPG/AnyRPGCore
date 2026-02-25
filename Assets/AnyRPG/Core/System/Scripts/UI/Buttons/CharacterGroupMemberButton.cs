@@ -50,7 +50,7 @@ namespace AnyRPG {
         private CharacterGroupMemberData characterGroupMemberData = null;
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private CharacterGroupServiceClient characterGroupServiceClient = null;
 
         public CharacterGroupMemberData CharacterGroupMemberData { get => characterGroupMemberData; set => characterGroupMemberData = value; }
@@ -65,7 +65,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             characterGroupServiceClient = systemGameManager.CharacterGroupServiceClient;
         }
 
@@ -74,7 +74,7 @@ namespace AnyRPG {
 
             this.characterGroupMemberData = characterGroupMemberData;
             string extraInfoString = string.Empty;
-            if (playerManager.UnitController.CharacterId == characterGroupMemberData.CharacterSummaryData.CharacterId) {
+            if (playerManagerClient.UnitController.CharacterId == characterGroupMemberData.CharacterSummaryData.CharacterId) {
                 extraInfoString = " (You)";
             }
             characterNameText.text = $"{characterGroupMemberData.CharacterSummaryData.CharacterName}{extraInfoString}";
@@ -94,7 +94,7 @@ namespace AnyRPG {
                 characterLevelText.color = Color.white;
                 zoneNameText.text = characterGroupMemberData.CharacterSummaryData.CurrentZoneName;
                 zoneNameText.color = Color.white;
-                if (characterGroupMemberData.CharacterSummaryData.CharacterId == playerManager.UnitController.CharacterId) {
+                if (characterGroupMemberData.CharacterSummaryData.CharacterId == playerManagerClient.UnitController.CharacterId) {
                     messageButton.gameObject.SetActive(false);
                 } else {
                     messageButton.gameObject.SetActive(true);
@@ -111,16 +111,16 @@ namespace AnyRPG {
                 characterNameText.color = Color.gray;
             }
 
-            if (characterGroupServiceClient.CurrentCharacterGroup.leaderPlayerCharacterId == playerManager.UnitController.CharacterId
-                && characterGroupMemberData.CharacterSummaryData.CharacterId != playerManager.UnitController.CharacterId) {
+            if (characterGroupServiceClient.CurrentCharacterGroup.leaderPlayerCharacterId == playerManagerClient.UnitController.CharacterId
+                && characterGroupMemberData.CharacterSummaryData.CharacterId != playerManagerClient.UnitController.CharacterId) {
                 promoteCharacterButton.gameObject.SetActive(true);
                 kickCharacterButton.gameObject.SetActive(true);
             } else {
                 promoteCharacterButton.gameObject.SetActive(false);
                 kickCharacterButton.gameObject.SetActive(false);
             }
-            CharacterGroupRank playerRank = characterGroupServiceClient.CurrentCharacterGroup.MemberList[UnitControllerMode.Player][playerManager.UnitController.CharacterId].Rank;
-            if (characterGroupMemberData.CharacterSummaryData.CharacterId == playerManager.UnitController.CharacterId) {
+            CharacterGroupRank playerRank = characterGroupServiceClient.CurrentCharacterGroup.MemberList[UnitControllerMode.Player][playerManagerClient.UnitController.CharacterId].Rank;
+            if (characterGroupMemberData.CharacterSummaryData.CharacterId == playerManagerClient.UnitController.CharacterId) {
                 promoteCharacterButton.gameObject.SetActive(false);
                 kickCharacterButton.gameObject.SetActive(false);
             } else if (playerRank == CharacterGroupRank.Leader) {

@@ -34,7 +34,7 @@ namespace AnyRPG {
         private IPersistentObjectOwner persistentObjectOwner = null;
 
         // game manager references
-        protected LevelManager levelManager = null;
+        protected LevelManagerClient levelManagerClient = null;
         protected SystemEventManager systemEventManager = null;
 
 		public bool MoveOnStart { get => moveOnStart; set => moveOnStart = value; }
@@ -47,7 +47,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             systemEventManager = systemGameManager.SystemEventManager;
 		}
 
@@ -80,8 +80,8 @@ namespace AnyRPG {
         public PersistentState GetPersistentState() {
             //Debug.Log(persistentObjectOwner.gameObject.name + "PersistentObjectComponent.GetPersistentState()");
             if (persistentObjectOwner.UUID != null) {
-                if (levelManager != null) {
-                    SceneNode activeSceneNode = levelManager.GetActiveSceneNode();
+                if (levelManagerClient != null) {
+                    SceneNode activeSceneNode = levelManagerClient.GetActiveSceneNode();
                     if (activeSceneNode != null && activeSceneNode.PersistentObjects != null) {
                         PersistentObjectSaveData persistentObjectSaveData = activeSceneNode.GetPersistentObject(persistentObjectOwner.UUID.ID);
                         if (!persistentObjectSaveData.Equals(default(PersistentObjectSaveData))) {
@@ -119,7 +119,7 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessCreateEventSubscriptions() {
-            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
+            levelManagerClient.OnLevelUnload += HandleLevelUnload;
             SystemEventManager.StartListening("OnSaveGame", HandleSaveGame);
         }
 
@@ -132,7 +132,7 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessCleanupEventSubscriptions() {
-            systemEventManager.OnLevelUnloadClient -= HandleLevelUnload;
+            levelManagerClient.OnLevelUnload -= HandleLevelUnload;
             SystemEventManager.StopListening("OnSaveGame", HandleSaveGame);
         }
 
@@ -175,8 +175,8 @@ namespace AnyRPG {
             }
 
             // save this data to the scene node that is active
-            if (levelManager != null) {
-                SceneNode currentSceneNode = levelManager.GetActiveSceneNode();
+            if (levelManagerClient != null) {
+                SceneNode currentSceneNode = levelManagerClient.GetActiveSceneNode();
                 if (currentSceneNode != null) {
                     //currentSceneNode.PersistentObjects[storedUUID] = MakeSaveData();
                     currentSceneNode.SavePersistentObject(storedUUID, MakeSaveData());

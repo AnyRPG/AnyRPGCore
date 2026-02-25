@@ -49,7 +49,7 @@ namespace AnyRPG {
         // the action bar target for range checks
         private Interactable target = null;
 
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected KeyBindManager keyBindManager = null;
         protected ControlsManager controlsManager = null;
         protected InputManager inputManager = null;
@@ -66,7 +66,7 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             keyBindManager = systemGameManager.KeyBindManager;
             controlsManager = systemGameManager.ControlsManager;
             inputManager = systemGameManager.InputManager;
@@ -173,31 +173,31 @@ namespace AnyRPG {
         }
 
         public void RequestMoveGamepadUseable(int oldIndex, int newIndex) {
-            playerManager.UnitController.CharacterActionBarManager.RequestMoveGamepadUseable(oldIndex, newIndex);
+            playerManagerClient.UnitController.CharacterActionBarManager.RequestMoveGamepadUseable(oldIndex, newIndex);
         }
 
         public void RequestAssignGamepadUseable(IUseable useable, int buttonIndex) {
-            playerManager.UnitController.CharacterActionBarManager.RequestAssignGamepadUseable(useable, buttonIndex);
+            playerManagerClient.UnitController.CharacterActionBarManager.RequestAssignGamepadUseable(useable, buttonIndex);
         }
 
         public void RequestClearGamepadUseable(int index) {
             //Debug.Log($"ActionBarManager.RequestClearGamepadUseable({index})");
 
-            playerManager.UnitController.CharacterActionBarManager.RequestClearGamepadUseable((currentActionBarSet * 16) + index);
+            playerManagerClient.UnitController.CharacterActionBarManager.RequestClearGamepadUseable((currentActionBarSet * 16) + index);
         }
 
         public void RequestMoveMouseUseable(int oldIndex, int newIndex) {
-            playerManager.UnitController.CharacterActionBarManager.RequestMoveMouseUseable(oldIndex, newIndex);
+            playerManagerClient.UnitController.CharacterActionBarManager.RequestMoveMouseUseable(oldIndex, newIndex);
         }
 
         public void RequestAssignMouseUseable(IUseable useable, int actionButtonIndex) {
-            playerManager.UnitController.CharacterActionBarManager.RequestAssignMouseUseable(useable, actionButtonIndex);
+            playerManagerClient.UnitController.CharacterActionBarManager.RequestAssignMouseUseable(useable, actionButtonIndex);
         }
 
         public void RequestClearMouseUseable(int index) {
             //Debug.Log($"ActionBarManager.RequestClearGamepadUseable({index})");
 
-            playerManager.UnitController.CharacterActionBarManager.RequestClearMouseUseable(index);
+            playerManagerClient.UnitController.CharacterActionBarManager.RequestClearMouseUseable(index);
         }
 
 
@@ -287,8 +287,8 @@ namespace AnyRPG {
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("ActionBarmanager.ProcessPlayerUnitSpawn()");
 
-            playerManager.UnitController.UnitEventController.OnSetTarget += HandleSetTarget;
-            playerManager.UnitController.UnitEventController.OnClearTarget += HandleClearTarget;
+            playerManagerClient.UnitController.UnitEventController.OnSetTarget += HandleSetTarget;
+            playerManagerClient.UnitController.UnitEventController.OnClearTarget += HandleClearTarget;
         }
 
         public void HandlePlayerUnitDespawn(UnitController unitController) {
@@ -299,8 +299,8 @@ namespace AnyRPG {
             // this needs to be called manually here because if the character controller processes the player unit despawn after us, we will miss the event
             HandleClearTarget(null);
 
-            playerManager.UnitController.UnitEventController.OnSetTarget -= HandleSetTarget;
-            playerManager.UnitController.UnitEventController.OnClearTarget -= HandleClearTarget;
+            playerManagerClient.UnitController.UnitEventController.OnSetTarget -= HandleSetTarget;
+            playerManagerClient.UnitController.UnitEventController.OnClearTarget -= HandleClearTarget;
         }
 
         public void HandleSetTarget(Interactable target) {
@@ -347,7 +347,7 @@ namespace AnyRPG {
             //Debug.Log("ActionBarmanager.UpdateTargetRange()");
             //float distanceToTarget = 0f;
             while (HasTarget()) {
-                if (playerManager.UnitController == null || playerManager.ActiveUnitController == null) {
+                if (playerManagerClient.UnitController == null || playerManagerClient.ActiveUnitController == null) {
                     break;
                 }
                 //Debug.Log("ActionBarmanager.UpdateTargetRange(): still have target at distance: " + distanceToTarget);
@@ -363,9 +363,9 @@ namespace AnyRPG {
         public void UpdateAbilityTargetRange(AbilityProperties baseAbilityProperties, ActionButton actionButton) {
             //Debug.Log($"ActionBarmanager.UpdateAbilityTargetRange({baseAbilityProperties.DisplayName})");
 
-            Interactable finalTarget = baseAbilityProperties.ReturnTarget(playerManager.UnitController, target, false);
+            Interactable finalTarget = baseAbilityProperties.ReturnTarget(playerManagerClient.UnitController, target, false);
 
-            if (finalTarget == null || playerManager.UnitController.CharacterAbilityManager.IsTargetInRange(finalTarget, baseAbilityProperties) == false) {
+            if (finalTarget == null || playerManagerClient.UnitController.CharacterAbilityManager.IsTargetInRange(finalTarget, baseAbilityProperties) == false) {
                 //Debug.Log($"ActionBarmanager.UpdateAbilityTargetRange({baseAbilityProperties.DisplayName}) finalTarget: {(finalTarget == null ? "null" : finalTarget.gameObject.name)}");
                 if (actionButton.RangeIndicator.color != Color.red && actionButton.Useable != null) {
                     actionButton.RangeIndicator.color = Color.red;

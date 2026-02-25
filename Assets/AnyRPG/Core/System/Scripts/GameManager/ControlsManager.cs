@@ -45,7 +45,7 @@ namespace AnyRPG {
         protected InputManager inputManager = null;
         protected UIManager uIManager = null;
         protected WindowManager windowManager = null;
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected ActionBarManager actionBarManager = null;
         protected CutsceneBarController cutSceneBarController = null;
 
@@ -81,7 +81,7 @@ namespace AnyRPG {
             inputManager = systemGameManager.InputManager;
             uIManager = systemGameManager.UIManager;
             windowManager = systemGameManager.WindowManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             actionBarManager = uIManager.ActionBarManager;
             cutSceneBarController = uIManager.CutSceneBarController;
         }
@@ -141,8 +141,8 @@ namespace AnyRPG {
             //Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             mouseDisabled = true;
-            if (playerManager.PlayerController != null) {
-                playerManager.PlayerController.DisableMouseOver();
+            if (playerManagerClient.PlayerController != null) {
+                playerManagerClient.PlayerController.DisableMouseOver();
             }
             //Debug.Log("ControlsManager.LockMouse() visibility: " + Cursor.visible);
         }
@@ -233,11 +233,11 @@ namespace AnyRPG {
                 if (cutSceneBarController.CurrentCutscene != null) {
                     cutSceneBarController.ProcessInput();
                 } else {
-                    if (playerManager.PlayerController != null) {
+                    if (playerManagerClient.PlayerController != null) {
                         if (gamePadModeActive) {
                             actionBarManager.ProcessGamepadInput();
                         }
-                        playerManager.PlayerController.ProcessInput();
+                        playerManagerClient.PlayerController.ProcessInput();
                     }
                 }
             }

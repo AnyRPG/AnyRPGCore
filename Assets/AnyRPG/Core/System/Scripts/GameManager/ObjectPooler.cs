@@ -21,10 +21,18 @@ namespace AnyRPG {
         private Dictionary<GameObject, List<GameObject>> freeObjects = new Dictionary<GameObject, List<GameObject>>();
         private Dictionary<GameObject, List<GameObject>> usedObjects = new Dictionary<GameObject, List<GameObject>>();
 
+        // game manager references
+        private LevelManagerClient levelManagerClient = null;
+
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
+            levelManagerClient.OnLevelUnload += HandleLevelUnload;
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         private void Start() {

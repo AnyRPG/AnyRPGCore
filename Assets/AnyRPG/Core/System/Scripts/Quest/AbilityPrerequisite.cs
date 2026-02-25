@@ -19,9 +19,6 @@ namespace AnyRPG {
 
         private string ownerName = null;
 
-        // game manager references
-        private PlayerManagerClient playerManager = null;
-
         public void HandleAbilityListChanged(UnitController unitController) {
             //Debug.Log("AbilityPrerequisite.HandleAbilityListChanged()");
             bool originalResult = prerequisiteMet;
@@ -44,11 +41,6 @@ namespace AnyRPG {
         public virtual bool IsMet(UnitController sourceUnitController) {
             //Debug.Log("AbilityPrerequisite.IsMet()");
             return prerequisiteMet;
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
         }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager, string ownerName) {

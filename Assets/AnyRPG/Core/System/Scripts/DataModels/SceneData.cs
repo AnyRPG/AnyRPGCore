@@ -7,6 +7,7 @@ namespace AnyRPG {
         public SceneInstanceType SceneInstanceType = SceneInstanceType.World;
         public Scene Scene;
         public SceneNode SceneNode = null;
+        public bool HasNavMesh = false;
 
         // the time that this scene became empty of players
         // used for tracking instance unloading timeouts
@@ -14,11 +15,12 @@ namespace AnyRPG {
 
         public int ClientCount = 0;
         
-        public SceneData(SceneInstanceType sceneInstanceType, Scene scene, SceneNode sceneNode) {
+        public SceneData(SceneInstanceType sceneInstanceType, Scene scene, SceneNode sceneNode, bool hasNavMesh) {
             SceneInstanceType = sceneInstanceType;
             Scene = scene;
             EmptyTime = DateTime.Now;
             SceneNode = sceneNode;
+            HasNavMesh = hasNavMesh;
         }
     }
 

@@ -63,7 +63,7 @@ namespace AnyRPG {
         protected ObjectPooler objectPooler = null;
         protected SystemDataFactory systemDataFactory = null;
         protected NetworkManagerServer networkManagerServer = null;
-        protected LevelManager levelManager = null;
+        protected LevelManagerClient levelManagerClient = null;
         protected AuthenticationService authenticationService = null;
         protected LevelManagerServer levelManagerServer = null;
 
@@ -79,7 +79,7 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
             systemDataFactory = systemGameManager.SystemDataFactory;
             networkManagerServer = systemGameManager.NetworkManagerServer;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             authenticationService = systemGameManager.AuthenticationService;
             levelManagerServer = systemGameManager.LevelManagerServer;
         }

@@ -353,20 +353,20 @@ namespace AnyRPG {
             }
         }
 
-        protected void LateGlobalStateUpdate() {
+        protected void LateGlobalStateUpdate(float timeInterval) {
 
             if (unitController.CharacterStats.IsAlive == true) {
                 if ((currentMovementData.RightMouseDragged == true && unitController.UnitProfile.UnitPrefabProps.RotateModel == false)
                     || (currentMovementData.GamepadModeActive == false && currentMovementData.RightAnalogHorizontal != 0f)) {
 
                     unitController.UnitMotor.FaceDirection(new Vector3(currentMovementData.CameraWantedDirection.x, 0, currentMovementData.CameraWantedDirection.z));
-                    if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
-                        cameraManager.MainCameraController.ResetWantedPosition();
-                    }
+                    //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
+                        //cameraManager.MainCameraController.ResetWantedPosition();
+                    //}
                 }
 
                 if (currentMovementData.inputTurn != 0) {
-                    unitController.UnitMotor.Rotate(new Vector3(0, currentTurnVelocity.x * Time.deltaTime, 0));
+                    unitController.UnitMotor.Rotate(new Vector3(0, currentTurnVelocity.x * timeInterval, 0));
                 }
             }
 
@@ -667,7 +667,6 @@ namespace AnyRPG {
 
             // limit upward momentum near stairs to prevent overshooting the stairs in the vertical direction
             if (nearBottomStairs) {
-                //Debug.Log("unclamped returnValue: " + newReturnValue.y + "; deltaTime: " + Time.deltaTime + "; fixedDeltaTime: " + Time.fixedDeltaTime);
                 float clampedReturnValue = Mathf.Clamp(newReturnValue.y, 0f, unitController.transform.InverseTransformPoint(stairDownHitPoint).y / calculatedSpeed / Time.fixedDeltaTime);
                 newReturnValue.y = clampedReturnValue;
             }
@@ -1194,7 +1193,7 @@ namespace AnyRPG {
 
             currentState.Update();
 
-            LateGlobalStateUpdate();
+            LateGlobalStateUpdate(timeInterval);
         }
 
         public void AddMovementData(MovementData frameData) {

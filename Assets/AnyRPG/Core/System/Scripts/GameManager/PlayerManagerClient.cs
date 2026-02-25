@@ -5,33 +5,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
-    public class PlayerManagerClient : ConfiguredMonoBehaviour, ICharacterRequestor {
-
-        [SerializeField]
-        private GameObject playerConnectionParent = null;
-
-        [SerializeField]
-        private GameObject playerConnectionPrefab = null;
-
-        /*
-        [Tooltip("If true, the system will enable the nav mesh agent for character navigation if a nav mesh exists in the scene")]
-        [SerializeField]
-        private bool autoDetectNavMeshes = false;
-        */
-
-        [SerializeField]
-        private bool autoSpawnPlayerOnLevelLoad = false;
-
-        /// <summary>
-        /// The invisible gameobject that stores all the player scripts. A reference to an instantiated playerPrefab
-        /// </summary>
-        private GameObject playerConnectionObject = null;
+    public class PlayerManagerClient : ConfiguredClass, ICharacterRequestor {
 
         private PlayerController playerController = null;
 
         private bool playerUnitSpawned = false;
-
-        private bool playerConnectionSpawned = false;
 
         // a reference to the 'main' unit.  This should be the main character when spawned, and null when not spawned
         private UnitController unitController = null;
@@ -52,11 +30,10 @@ namespace AnyRPG {
         // game manager references
         protected SaveManager saveManager = null;
         protected UIManager uIManager = null;
-        protected LevelManager levelManager = null;
+        protected LevelManagerClient levelManagerClient = null;
         protected CameraManager cameraManager = null;
         protected SystemAbilityController systemAbilityController = null;
         protected ClassChangeManagerClient classChangeManager = null;
-
         protected MessageLogClient messageLogClient = null;
         protected CastTargettingManager castTargettingManager = null;
         protected CombatTextManager combatTextManager = null;
@@ -64,17 +41,13 @@ namespace AnyRPG {
         protected MessageFeedManager messageFeedManager = null;
         protected ObjectPooler objectPooler = null;
         protected ControlsManager controlsManager = null;
-        protected NetworkManagerClient networkManagerClient = null;
         protected CharacterManager characterManager = null;
-        protected SystemDataFactory systemDataFactory = null;
-        protected NetworkManagerServer networkManagerServer = null;
         protected PlayerManagerServer playerManagerServer = null;
         protected SystemAchievementManager systemAchievementManager = null;
         protected InteractionManager interactionManager = null;
+        protected SystemEventManager systemEventManager = null;
 
-        public GameObject PlayerConnectionObject { get => playerConnectionObject; set => playerConnectionObject = value; }
         public bool PlayerUnitSpawned { get => playerUnitSpawned; }
-        public bool PlayerConnectionSpawned { get => playerConnectionSpawned; }
         public UnitController UnitController { get => unitController; set => unitController = value; }
         public UnitController ActiveUnitController { get => activeUnitController; }
         public PlayerController PlayerController { get => playerController; set => playerController = value; }
@@ -94,20 +67,18 @@ namespace AnyRPG {
             combatTextManager = uIManager.CombatTextManager;
             actionBarManager = uIManager.ActionBarManager;
             messageFeedManager = uIManager.MessageFeedManager;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             cameraManager = systemGameManager.CameraManager;
             systemAbilityController = systemGameManager.SystemAbilityController;
             messageLogClient = systemGameManager.MessageLogClient;
             castTargettingManager = systemGameManager.CastTargettingManager;
             objectPooler = systemGameManager.ObjectPooler;
             controlsManager = systemGameManager.ControlsManager;
-            networkManagerClient = systemGameManager.NetworkManagerClient;
             characterManager = systemGameManager.CharacterManager;
-            systemDataFactory = systemGameManager.SystemDataFactory;
-            networkManagerServer = systemGameManager.NetworkManagerServer;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             systemAchievementManager = systemGameManager.SystemAchievementManager;
             interactionManager = systemGameManager.InteractionManager;
+            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         private void CreateEventSubscriptions() {
@@ -115,8 +86,8 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
-            systemEventManager.OnLevelLoad += HandleLevelLoad;
+            levelManagerClient.OnLevelUnload += HandleLevelUnload;
+            levelManagerClient.OnLevelLoad += HandleLevelLoad;
             systemEventManager.OnLevelChanged += PlayLevelUpEffects;
             systemEventManager.OnPlayerDeath += HandlePlayerDeath;
             eventSubscriptionsInitialized = true;
@@ -127,8 +98,8 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            systemEventManager.OnLevelUnloadClient -= HandleLevelUnload;
-            systemEventManager.OnLevelLoad -= HandleLevelLoad;
+            levelManagerClient.OnLevelUnload -= HandleLevelUnload;
+            levelManagerClient.OnLevelLoad -= HandleLevelLoad;
             systemEventManager.OnLevelChanged -= PlayLevelUpEffects;
             systemEventManager.OnPlayerDeath -= HandlePlayerDeath;
             eventSubscriptionsInitialized = false;
@@ -170,16 +141,12 @@ namespace AnyRPG {
         public void HandleLevelLoad() {
             //Debug.Log("PlayerManager.HandleLevelLoad()");
 
-            SceneNode activeSceneNode = levelManager.GetActiveSceneNode();
+            SceneNode activeSceneNode = levelManagerClient.GetActiveSceneNode();
             
             if (activeSceneNode == null) {
-                if (levelManager.IsMainMenu()) {
+                if (levelManagerClient.IsMainMenu()) {
                     return;
                 }
-            }
-
-            if (autoSpawnPlayerOnLevelLoad == false) {
-                return;
             }
 
             //Debug.Log($"PlayerManagerClient.OnLevelLoad(): scene node {(activeSceneNode == null ? "null" : activeSceneNode.ResourceName)}");
@@ -291,7 +258,7 @@ namespace AnyRPG {
         public void HandleTargetReady() {
             //Debug.Log($"PlayerManagerClient.HandleTargetReady()");
 
-            waitForPlayerReadyCoroutine = StartCoroutine(WaitForPlayerReady());
+            waitForPlayerReadyCoroutine = systemGameManager.StartCoroutine(WaitForPlayerReady());
         }
 
         private IEnumerator WaitForPlayerReady() {
@@ -331,20 +298,6 @@ namespace AnyRPG {
         public void ConfigureSpawnedCharacter(UnitController unitController) {
             //Debug.Log($"PlayerManagerClient.ConfigureSpawnedCharacter({unitController.gameObject.name})");
 
-            //if (OwnPlayer(unitController, characterRequestData) == true) {
-                //SetUnitController(unitController);
-            //}
-
-            if (levelManager.NavMeshAvailable) {
-                //Debug.Log("PlayerManager.SpawnPlayerUnit(): Enabling NavMeshAgent()");
-                unitController.UnitMovementController.useMeshNav = true;
-            } else {
-                //Debug.Log("PlayerManager.SpawnPlayerUnit(): Disabling NavMeshAgent()");
-                //unitController.DisableAgent();
-                unitController.UnitMovementController.useMeshNav = false;
-            }
-
-            //unitController.UnitModelController.SetInitialSavedAppearance(playerCharacterSaveData.SaveData);
             if (subscribeToTargetReady) {
                 SubscribeToTargetReady();
             }
@@ -467,21 +420,16 @@ namespace AnyRPG {
         public void SpawnPlayerConnectionObject() {
             //Debug.Log("PlayerManager.SpawnPlayerConnectionObject()");
 
-            if (playerConnectionObject != null) {
+            if (playerController != null) {
                 //Debug.Log("PlayerManager.SpawnPlayerConnection(): The Player Connection is not null.  exiting.");
                 return;
             }
 
-            playerConnectionObject = objectPooler.GetPooledObject(playerConnectionPrefab, playerConnectionParent.transform);
-            playerController = playerConnectionObject.GetComponent<PlayerController>();
+            playerController = new PlayerController();
             playerController.Configure(systemGameManager);
 
             SystemEventManager.TriggerEvent("OnBeforePlayerConnectionSpawn", new EventParamProperties());
-            playerConnectionSpawned = true;
             SystemEventManager.TriggerEvent("OnPlayerConnectionSpawn", new EventParamProperties());
-
-            // this goes here so action bars can get abilities on them when the player is initialized
-            //SubscribeToPlayerEvents();
         }
 
         public void DespawnPlayerConnection() {
@@ -490,14 +438,12 @@ namespace AnyRPG {
             // this only runs on the client, so is safe to call here
             playerManagerServer.StopMonitoringPlayerUnit(networkManagerClient.AccountId);
 
-            if (playerConnectionObject == null) {
+            if (playerController == null) {
                 //Debug.Log("PlayerManager.SpawnPlayerConnection(): The Player Connection is null.  exiting.");
                 return;
             }
+            playerController = null;
             SystemEventManager.TriggerEvent("OnPlayerConnectionDespawn", new EventParamProperties());
-            objectPooler.ReturnObjectToPool(playerConnectionObject);
-            playerConnectionObject = null;
-            playerConnectionSpawned = false;
         }
 
         public void SubscribeToPlayerEvents() {

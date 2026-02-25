@@ -22,12 +22,12 @@ namespace AnyRPG {
         private string sceneName = string.Empty;
 
         // game manager references
-        LevelManager levelManager = null;
+        LevelManagerClient levelManagerClient = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         public override void ExecuteCommand(string commandParameters, int accountId) {

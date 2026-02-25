@@ -21,7 +21,8 @@ namespace AnyRPG {
         // game manager references
         private ActionBarManager actionBarManager = null;
         private SaveManager saveManager = null;
-        private LevelManager levelManager = null;
+        private LevelManagerClient levelManagerClient = null;
+        private SceneUtilityService sceneUtilityService = null;
 
         public Dictionary<string, DialogSaveData> DialogSaveDataDictionary { get => dialogSaveDataDictionary; }
 
@@ -40,7 +41,8 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             actionBarManager = systemGameManager.UIManager.ActionBarManager;
             saveManager = systemGameManager.SaveManager;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
+            sceneUtilityService = systemGameManager.SceneUtilityService;
         }
 
         public void CreateEventSubscriptions() {
@@ -884,7 +886,7 @@ namespace AnyRPG {
         public void VisitSceneNode() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.VisitSceneNode()");
 
-            SceneNode sceneNode = levelManager.SceneDictionary[unitController.gameObject.scene.name];
+            SceneNode sceneNode = sceneUtilityService.GetSceneNodeBySceneName(unitController.gameObject.scene.name);
             if (sceneNode != null) {
                 VisitSceneNode(sceneNode);
             }

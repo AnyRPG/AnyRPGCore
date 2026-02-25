@@ -17,7 +17,7 @@ namespace AnyRPG {
             if (handScript.Moveable is InstantiatedEquipment) {
                 InstantiatedEquipment tmp = (InstantiatedEquipment)handScript.Moveable;
                 if (equipmentSlotProfile.EquipmentSlotTypeList.Contains(tmp.Equipment.EquipmentSlotType)) {
-                    playerManager.UnitController.CharacterEquipmentManager.RequestEquipToSlot(tmp, equipmentSlotProfile);
+                    playerManagerClient.UnitController.CharacterEquipmentManager.RequestEquipToSlot(tmp, equipmentSlotProfile);
                     handScript.Drop();
                     uIManager.RefreshTooltip(tmp);
                 }
@@ -31,8 +31,8 @@ namespace AnyRPG {
         public override void Accept() {
             base.Accept();
             if (equippedEquipment != null) {
-                playerManager.UnitController.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
-                playerManager.UnitController.UnitModelController.RebuildModelAppearance();
+                playerManagerClient.UnitController.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
+                playerManagerClient.UnitController.UnitModelController.RebuildModelAppearance();
                 ShowContextInfo();
             }
         }

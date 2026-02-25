@@ -14,12 +14,12 @@ namespace AnyRPG {
         public UnitSpawnControllerProps UnitSpawnControllerProps { get => unitSpawnControllerProps; set => unitSpawnControllerProps = value; }
 
         // game manager references
-        PlayerManagerClient playerManager = null;
+        PlayerManagerClient playerManagerClient = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public void SetProps(UnitSpawnControllerProps unitSpawnControllerProps, UnitSpawnControllerComponent unitSpawnControllerComponent, int componentIndex, int choiceIndex) {
@@ -34,7 +34,7 @@ namespace AnyRPG {
             //Debug.Log("UnitSpawnManager.RequestSpawnUnit()");
 
             if (systemGameManager.GameMode == GameMode.Local) {
-                unitSpawnControllerComponent.SpawnUnit(playerManager.UnitController, unitLevel, extraLevels, useDynamicLevel, unitProfile, unitToughness);
+                unitSpawnControllerComponent.SpawnUnit(playerManagerClient.UnitController, unitLevel, extraLevels, useDynamicLevel, unitProfile, unitToughness);
             } else {
                 networkManagerClient.RequestSpawnUnit(unitSpawnControllerComponent.Interactable, componentIndex, unitLevel, extraLevels, useDynamicLevel, unitProfile.ResourceName, (unitToughness == null ? string.Empty : unitToughness.ResourceName));
             }

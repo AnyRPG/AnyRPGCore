@@ -36,11 +36,11 @@ namespace AnyRPG {
             string returnString = string.Empty;
             if (recipe != null) {
                 string alreadyKnownString = string.Empty;
-                if (playerManager.UnitController.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {
+                if (playerManagerClient.UnitController.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {
                     alreadyKnownString = "<color=red>already known</color>\n";
                 }
                 string abilityKnownString = string.Empty;
-                if (playerManager.UnitController.CharacterAbilityManager.AbilityList.ContainsValue(recipe.CraftAbility)) {
+                if (playerManagerClient.UnitController.CharacterAbilityManager.AbilityList.ContainsValue(recipe.CraftAbility)) {
                     abilityKnownString = "<color=white>Requires: " + recipe.CraftAbility.DisplayName  + "</color>\n";
                 } else {
                     abilityKnownString = "<color=red>Requires: " + recipe.CraftAbility.DisplayName + "</color>\n";

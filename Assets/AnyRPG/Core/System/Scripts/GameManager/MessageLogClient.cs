@@ -27,8 +27,7 @@ namespace AnyRPG {
 
         // game manager references
         SystemEventManager systemEventManager = null;
-        PlayerManagerClient playerManager = null;
-        ChatCommandManager chatCommandManager = null;
+        PlayerManagerClient playerManagerClient = null;
         MessageLogServer messageLogServer = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -44,8 +43,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             systemEventManager = systemGameManager.SystemEventManager;
-            playerManager = systemGameManager.PlayerManager;
-            chatCommandManager = systemGameManager.ChatCommandManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             messageLogServer = systemGameManager.MessageLogServer;
         }
 
@@ -147,7 +145,7 @@ namespace AnyRPG {
         public void HandleTakeDamage(IAbilityCaster source, UnitController targetUnitController, int damage, string abilityName) {
             //Debug.Log("LogManager.HandleTakeDamage()");
             Color textColor = Color.white;
-            if (playerManager.UnitController != null && targetUnitController == playerManager.UnitController) {
+            if (playerManagerClient.UnitController != null && targetUnitController == playerManagerClient.UnitController) {
                 textColor = Color.red;
             }
             string combatMessage = string.Format("<color=#{0}>{1} Takes {2} damage from {3}'s {4}</color>", ColorUtility.ToHtmlStringRGB(textColor), targetUnitController.BaseCharacter.CharacterName, damage, source.AbilityManager.Name, abilityName);

@@ -33,7 +33,7 @@ namespace AnyRPG {
         private LocalConnectionState serverState = LocalConnectionState.Stopped;
 
         // game manager references
-        private LevelManager levelManager = null;
+        private LevelManagerClient levelManagerClient = null;
         private NetworkManagerClient networkManagerClient = null;
         private NetworkManagerServer networkManagerServer = null;
 
@@ -63,7 +63,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             networkManagerServer = systemGameManager.NetworkManagerServer;
             networkManagerClient = systemGameManager.NetworkManagerClient;
         }
@@ -284,7 +284,7 @@ namespace AnyRPG {
             //Debug.Log($"FishNetNetworkController.HandleLoadEnd() AsServer: {obj.QueueData.AsServer}");
 
             if (systemGameManager.GameMode == GameMode.Network) {
-                levelManager.ProcessLevelLoad(true);
+                levelManagerClient.PerformNetworkLevelLoadActivities(obj.LoadedScenes[0]);
             }
 
         }

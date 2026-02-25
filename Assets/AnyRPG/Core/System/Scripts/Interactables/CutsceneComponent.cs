@@ -10,7 +10,7 @@ namespace AnyRPG {
     public class CutsceneComponent : InteractableOptionComponent {
 
         // game manager references
-        private LevelManager levelManager = null;
+        private LevelManagerClient levelManagerClient = null;
         private CutsceneBarController cutSceneBarController = null;
 
         public CutsceneProps Props { get => interactableOptionProps as CutsceneProps; }
@@ -20,7 +20,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             cutSceneBarController = uIManager.CutSceneBarController;
         }
 
@@ -30,13 +30,13 @@ namespace AnyRPG {
             // code to allow cutscenes activated by blocks etc to work in local mode
             UnitController usedUnitController = sourceUnitController;
             if (systemGameManager.GameMode == GameMode.Local && usedUnitController == null) {
-                usedUnitController = playerManager.UnitController;
+                usedUnitController = playerManagerClient.UnitController;
             }
 
             base.ProcessInteract(usedUnitController, componentIndex, choiceIndex);
 
             if (CanLoadCutscene() == true) {
-                if (Props.Cutscene.RequirePlayerUnitSpawn == false || (Props.Cutscene.RequirePlayerUnitSpawn == true && playerManager.PlayerUnitSpawned == true)) {
+                if (Props.Cutscene.RequirePlayerUnitSpawn == false || (Props.Cutscene.RequirePlayerUnitSpawn == true && playerManagerClient.PlayerUnitSpawned == true)) {
                     if (Props.Cutscene.LoadScene != null) {
                         playerManagerServer.LoadCutsceneWithDelay(Props.Cutscene, usedUnitController);
                     }
@@ -53,7 +53,7 @@ namespace AnyRPG {
             // save character position and stuff here
             //uIManager.interactionWindow.CloseWindow();
             if (CanLoadCutscene()) {
-                if (Props.Cutscene.RequirePlayerUnitSpawn == false || (Props.Cutscene.RequirePlayerUnitSpawn == true && playerManager.PlayerUnitSpawned == true)) {
+                if (Props.Cutscene.RequirePlayerUnitSpawn == false || (Props.Cutscene.RequirePlayerUnitSpawn == true && playerManagerClient.PlayerUnitSpawned == true)) {
                     if (Props.Cutscene.LoadScene != null) {
                         //networkManagerClient.RequestDespawnPlayer();
                         //levelManager.LoadCutSceneWithDelay(Props.Cutscene);
@@ -72,7 +72,7 @@ namespace AnyRPG {
             // code to allow cutscenes activated by blocks etc to work in local mode
             UnitController usedUnitController = sourceUnitController;
             if (systemGameManager.GameMode == GameMode.Local && usedUnitController == null) {
-                usedUnitController = playerManager.UnitController;
+                usedUnitController = playerManagerClient.UnitController;
             }
 
             base.ProcessClientNotifications(usedUnitController, componentIndex, choiceIndex);
@@ -88,7 +88,7 @@ namespace AnyRPG {
                 //Debug.LogError("CutSceneComponent.CanLoadCutScene(): cutSceneBarController.CurrentCutscene is not null");
                 return false;
             }
-            if (levelManager.LoadingLevel) {
+            if (levelManagerClient.LoadingLevel) {
                 Debug.LogError("CutSceneComponent.CanLoadCutScene(): levelManager.LoadingLevel is true");
                 return false;
             }

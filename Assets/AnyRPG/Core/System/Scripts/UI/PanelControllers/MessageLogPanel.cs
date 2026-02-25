@@ -146,7 +146,7 @@ namespace AnyRPG {
         protected UIManager uiManager = null;
         protected NetworkManagerClient networkManagerClient = null;
         protected ContextMenuService contextMenuService = null;
-        protected LevelManager levelManager = null;
+        protected LevelManagerClient levelManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("MessageLogPanel.Awake()");
@@ -170,7 +170,7 @@ namespace AnyRPG {
             uiManager = systemGameManager.UIManager;
             networkManagerClient = systemGameManager.NetworkManagerClient;
             contextMenuService = systemGameManager.ContextMenuService;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         private void ClearLog() {

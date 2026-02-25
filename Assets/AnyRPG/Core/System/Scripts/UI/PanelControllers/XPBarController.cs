@@ -23,12 +23,12 @@ namespace AnyRPG {
         protected float originalXPSliderWidth = 0f;
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         protected override void ProcessCreateEventSubscriptions() {
@@ -36,7 +36,7 @@ namespace AnyRPG {
             SystemEventManager.StartListening("OnXPGained", HandleXPGained);
             systemEventManager.OnLevelChanged += UpdateXPBar;
             systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
-            if (playerManager.PlayerUnitSpawned == true) {
+            if (playerManagerClient.PlayerUnitSpawned == true) {
                 ProcessPlayerUnitSpawn();
             }
         }
@@ -65,20 +65,20 @@ namespace AnyRPG {
                 //originalXPSliderWidth = xpBarBackGround.GetComponent<RectTransform>().rect.width;
                 //Debug.Log("XPBarController.HandlePlayerUnitSpawn(): originalXPSliderWidth was 0, now: " + originalXPSliderWidth);
             }
-            UpdateXPBar(playerManager.UnitController, playerManager.UnitController.CharacterStats.Level);
+            UpdateXPBar(playerManagerClient.UnitController, playerManagerClient.UnitController.CharacterStats.Level);
         }
 
         public void UpdateXP() {
             //Debug.Log("XPBarController.UpdateXP()");
-            UpdateXPBar(playerManager.UnitController, playerManager.UnitController.CharacterStats.Level);
+            UpdateXPBar(playerManagerClient.UnitController, playerManagerClient.UnitController.CharacterStats.Level);
         }
 
         public void UpdateXPBar(UnitController sourceUnitController, int _Level) {
-            if (!playerManager.PlayerUnitSpawned) {
+            if (!playerManagerClient.PlayerUnitSpawned) {
                 return;
             }
             //Debug.Log("XPBarController.UpdateXPBar(" + _Level + ")");
-            int currentXP = playerManager.UnitController.CharacterStats.CurrentXP;
+            int currentXP = playerManagerClient.UnitController.CharacterStats.CurrentXP;
             int neededXP = LevelEquations.GetXPNeededForLevel(_Level, systemConfigurationManager);
             float xpPercent = (float)currentXP / (float)neededXP;
 

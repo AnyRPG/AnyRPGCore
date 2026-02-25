@@ -38,7 +38,7 @@ namespace AnyRPG {
         // game manager references
         private InteractionManager interactionManager = null;
         private UIManager uIManager = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private ObjectPooler objectPooler = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -50,7 +50,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             interactionManager = systemGameManager.InteractionManager;
             uIManager = systemGameManager.UIManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             objectPooler = systemGameManager.ObjectPooler;
         }
 
@@ -110,11 +110,11 @@ namespace AnyRPG {
             ClearButtons();
 
             // updated to only use valid interactables
-            if (playerManager.PlayerUnitSpawned == false) {
+            if (playerManagerClient.PlayerUnitSpawned == false) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + ") player unit is null");
                 return;
             }
-            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.GetCurrentInteractables(playerManager.UnitController);
+            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.GetCurrentInteractables(playerManagerClient.UnitController);
             if (currentInteractables.Count == 0) {
                 // this could have been a refresh from while a quest was open overtop.  close it if there are no valid interactables
                 uIManager.interactionWindow.CloseWindow();
@@ -130,7 +130,7 @@ namespace AnyRPG {
                         Quest quest = questNode.Quest;
                         if (quest != null) {
                             string displayText = string.Empty;
-                            string questStatus = quest.GetStatus(playerManager.UnitController);
+                            string questStatus = quest.GetStatus(playerManagerClient.UnitController);
                             if (questStatus == "complete" && questNode.EndQuest == true) {
                                 displayText = "<color=yellow>?</color> ";
                             } else if (questNode.StartQuest == true && questStatus == "available") {
@@ -148,7 +148,7 @@ namespace AnyRPG {
                                 qs.Text.text = displayText;
 
                                 //Debug.Log("QuestTrackerUI.ShowQuestsCommon(" + questGiver.name + "): " + questNode.MyQuest.MyTitle);
-                                qs.Text.color = LevelEquations.GetTargetColor(playerManager.UnitController.CharacterStats.Level, quest.ExperienceLevel(playerManager.UnitController));
+                                qs.Text.color = LevelEquations.GetTargetColor(playerManagerClient.UnitController.CharacterStats.Level, quest.ExperienceLevel(playerManagerClient.UnitController));
                                 questScripts.Add(qs);
                                 // disabled this next bit because it was causing repeatables with no objectives to be marked as complete
                                 /*
@@ -166,9 +166,9 @@ namespace AnyRPG {
                     }
                 } else {
                     // handle generic stuff
-                    if (_interactable.Value.GetInteractionButtonText(playerManager.UnitController) != string.Empty && _interactable.Value.GetCurrentOptionCount(playerManager.UnitController) > 0) {
+                    if (_interactable.Value.GetInteractionButtonText(playerManagerClient.UnitController) != string.Empty && _interactable.Value.GetCurrentOptionCount(playerManagerClient.UnitController) > 0) {
                         //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Instantiating button");
-                        for (int i = 0; i < _interactable.Value.GetCurrentOptionCount(playerManager.UnitController); i++) {
+                        for (int i = 0; i < _interactable.Value.GetCurrentOptionCount(playerManagerClient.UnitController); i++) {
                             GameObject go = objectPooler.GetPooledObject(interactableButtonPrefab, interactableButtonParent);
                             InteractionPanelScript iPS = go.GetComponent<InteractionPanelScript>();
                             if (iPS != null) {
@@ -208,7 +208,7 @@ namespace AnyRPG {
             // priority open - completed quest first
             foreach (InteractionPanelQuestScript questScript in questScripts) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking questScript for complete quest");
-                if (questScript.Quest.MarkedComplete(playerManager.UnitController)) {
+                if (questScript.Quest.MarkedComplete(playerManagerClient.UnitController)) {
                     //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking questScript: quest is complete, selecting");
                     questScript.Interact();
                     //optionOpened = true;
@@ -219,7 +219,7 @@ namespace AnyRPG {
             // priority open - available quest second
             foreach (InteractionPanelQuestScript questScript in questScripts) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking questScript for available quest");
-                if (questScript.Quest.GetStatus(playerManager.UnitController) == "available") {
+                if (questScript.Quest.GetStatus(playerManagerClient.UnitController) == "available") {
                     //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking questScript: quest is available, selecting");
                     questScript.Interact();
                     //optionOpened = true;
@@ -229,9 +229,9 @@ namespace AnyRPG {
 
             foreach (InteractionPanelScript interactionPanelScript in interactionPanelScripts) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking interaction Panel Script");
-                if (interactionPanelScript.InteractableOption.CanInteract(playerManager.UnitController, false, false, true) && interactionPanelScript.InteractableOption.GetCurrentOptionCount(playerManager.UnitController) == 1) {
+                if (interactionPanelScript.InteractableOption.CanInteract(playerManagerClient.UnitController, false, false, true) && interactionPanelScript.InteractableOption.GetCurrentOptionCount(playerManagerClient.UnitController) == 1) {
                     //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking interaction Panel Script: canInteract is TRUE!!!");
-                    interactionManager.InteractWithOptionClient(playerManager.UnitController, interactable, interactionPanelScript.InteractableOption, interactionPanelScript.ComponentIndex, interactionPanelScript.ChoiceIndex);
+                    interactionManager.InteractWithOptionClient(playerManagerClient.UnitController, interactable, interactionPanelScript.InteractableOption, interactionPanelScript.ComponentIndex, interactionPanelScript.ChoiceIndex);
                     //interactionPanelScript.Value.InteractableOption.Interact(playerManager.UnitController.CharacterUnit, interactionPanelScript.Key);
                     //optionOpened = true;
                     return;

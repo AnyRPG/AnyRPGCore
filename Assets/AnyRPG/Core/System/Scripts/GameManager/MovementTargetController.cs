@@ -27,20 +27,22 @@ namespace AnyRPG {
         public Color CircleColor { get => circleColor; set => circleColor = value; }
 
         // game manager references
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected ControlsManager controlsManager = null;
+        protected LevelManagerClient levelManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             meshRenderer.enabled = false;
             DisableProjector();
+            levelManagerClient.OnLevelUnload += HandleLevelUnloadClient;
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             controlsManager = systemGameManager.ControlsManager;
-            systemEventManager.OnLevelUnloadClient += HandleLevelUnloadClient;
+            levelManagerClient = systemGameManager.LevelManagerClient;
         }
 
         private void HandleLevelUnloadClient(int sceneHandle, string sceneName) {

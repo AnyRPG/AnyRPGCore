@@ -40,7 +40,7 @@ namespace AnyRPG {
 
         // game manager references
         private ObjectPooler objectPooler = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
 
         public QuestScript SelectedQuestScript { get => selectedQuestScript; set => selectedQuestScript = value; }
 
@@ -62,7 +62,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         private void HandlePlayerUnitSpawn(UnitController unitController) {
@@ -82,7 +82,7 @@ namespace AnyRPG {
         }
 
         private void UpdateQuestCount() {
-            questCount.text = playerManager.UnitController.CharacterQuestLog.Quests.Count + " / " + maxCount;
+            questCount.text = playerManagerClient.UnitController.CharacterQuestLog.Quests.Count + " / " + maxCount;
         }
 
         public void ShowQuestsCommon() {
@@ -93,7 +93,7 @@ namespace AnyRPG {
 
             QuestScript firstAvailableQuest = null;
 
-            foreach (Quest quest in playerManager.UnitController.CharacterQuestLog.Quests.Values) {
+            foreach (Quest quest in playerManagerClient.UnitController.CharacterQuestLog.Quests.Values) {
                 GameObject go = objectPooler.GetPooledObject(questPrefab, questParent);
 
                 QuestScript qs = go.GetComponent<QuestScript>();
@@ -213,7 +213,7 @@ namespace AnyRPG {
         }
 
         public void AbandonQuest() {
-            playerManager.UnitController.CharacterQuestLog.AbandonQuest(SelectedQuestScript.Quest);
+            playerManagerClient.UnitController.CharacterQuestLog.AbandonQuest(SelectedQuestScript.Quest);
             ShowQuestsCommon();
         }
     }

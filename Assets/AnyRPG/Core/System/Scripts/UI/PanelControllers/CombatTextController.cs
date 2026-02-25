@@ -80,14 +80,14 @@ namespace AnyRPG {
         // game manager references
         protected CameraManager cameraManager = null;
         protected CombatTextManager combatTextManager = null;
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
 
         public RectTransform RectTransform { get => rectTransform; set => rectTransform = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             cameraManager = systemGameManager.CameraManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             combatTextManager = systemGameManager.UIManager.CombatTextManager;
         }
 
@@ -128,7 +128,7 @@ namespace AnyRPG {
             } else {
                 image.color = Color.white;
             }
-            if (mainTarget.InteractableGameObject == playerManager.ActiveUnitController.gameObject) {
+            if (mainTarget.InteractableGameObject == playerManagerClient.ActiveUnitController.gameObject) {
                 directionMultiplier = -1;
                 switch (textType) {
                     case CombatTextType.normal:

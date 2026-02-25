@@ -9,12 +9,12 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public void CancelAction() {
@@ -26,7 +26,7 @@ namespace AnyRPG {
             //Debug.Log("NewGameMenuController.ConfirmAction()");
             uIManager.confirmCharacterStuckWindow.CloseWindow();
             uIManager.helpMenuWindow.CloseWindow();
-            playerManager.RequestRespawnPlayer();
+            playerManagerClient.RequestRespawnPlayer();
         }
 
     }

@@ -16,7 +16,7 @@ namespace AnyRPG {
             //Debug.Log($"GroupUnitFramePanel.HandleLeftClick({mousePosition})");
 
             base.HandleLeftClick(mousePosition);
-            playerManager.UnitController.SetTarget(unitController);
+            playerManagerClient.UnitController.SetTarget(unitController);
         }
 
         public override void CreateSubscriptions() {

@@ -32,7 +32,7 @@ namespace AnyRPG {
 
         // game manager references
         protected UIManager uIManager = null;
-        protected PlayerManagerClient playerManager = null;
+        protected PlayerManagerClient playerManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -45,7 +45,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public void ShowToolTip(Vector2 pivot, Vector3 position, IDescribable describable) {
@@ -127,7 +127,7 @@ namespace AnyRPG {
             if (toolTipCurrencyBarController != null) {
                 toolTipCurrencyBarController.ClearCurrencyAmounts();
                 if (describable is InstantiatedItem && showSellPrice != string.Empty) {
-                    KeyValuePair<Currency, int> sellAmount = (describable as InstantiatedItem).Item.GetSellPrice((describable as InstantiatedItem), playerManager.UnitController);
+                    KeyValuePair<Currency, int> sellAmount = (describable as InstantiatedItem).Item.GetSellPrice((describable as InstantiatedItem), playerManagerClient.UnitController);
                     if (sellAmount.Value == 0 || sellAmount.Key == null) {
                         // don't print a sell price on things that cannot be sold
                         return;

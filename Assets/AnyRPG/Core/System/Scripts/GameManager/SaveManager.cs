@@ -24,10 +24,10 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private PlayerManagerServer playerManagerServer = null;
         private MessageFeedManager messageFeedManager = null;
-        private LevelManager levelManager = null;
+        private LevelManagerClient levelManagerClient = null;
         private UIManager uIManager = null;
         private NewGameManager newGameManager = null;
         private LoadGameManager loadGameManager = null;
@@ -42,9 +42,9 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             playerManagerServer = systemGameManager.PlayerManagerServer;
-            levelManager = systemGameManager.LevelManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
             newGameManager = systemGameManager.NewGameManager;
@@ -262,14 +262,14 @@ namespace AnyRPG {
             // check if the player is inside a trigger
             // disallow saving if they are because we don't want to trigger boss spawns
             // or cutscenes when the player loads back in the game
-            if (playerManager.ActiveUnitController != null) {
+            if (playerManagerClient.ActiveUnitController != null) {
                 bool canSave = true;
-                Collider playerCollider = playerManager.ActiveUnitController.Collider;
+                Collider playerCollider = playerManagerClient.ActiveUnitController.Collider;
                 int validMask = (1 << LayerMask.NameToLayer("Triggers") | 1 << LayerMask.NameToLayer("Interactable") | 1 << LayerMask.NameToLayer("Ignore Raycast"));
                 Collider[] hitColliders = new Collider[100];
-                playerManager.ActiveUnitController.PhysicsScene.OverlapCapsule(playerCollider.bounds.center + new Vector3(0, playerCollider.bounds.extents.y, 0),
+                playerManagerClient.ActiveUnitController.PhysicsScene.OverlapCapsule(playerCollider.bounds.center + new Vector3(0, playerCollider.bounds.extents.y, 0),
                     playerCollider.bounds.center - new Vector3(0, playerCollider.bounds.extents.y, 0),
-                    playerManager.ActiveUnitController.Collider.bounds.extents.x, hitColliders, validMask);
+                    playerManagerClient.ActiveUnitController.Collider.bounds.extents.x, hitColliders, validMask);
                 foreach (Collider hitCollider in hitColliders) {
                     if (hitCollider == null) {
                         continue;
@@ -292,7 +292,7 @@ namespace AnyRPG {
             SystemEventManager.TriggerEvent("OnSaveGame", new EventParamProperties());
 
             SaveCutsceneData(characterSaveData);
-            playerManager.UnitController.CharacterSaveManager.SaveGameData();
+            playerManagerClient.UnitController.CharacterSaveManager.SaveGameData();
 
             SaveWindowPositions();
 
@@ -414,12 +414,12 @@ namespace AnyRPG {
         public void CreateDefaultBackpack() {
             //Debug.Log("InventoryManager.CreateDefaultBackpack()");
             if (systemConfigurationManager.DefaultBackpackItem != null && systemConfigurationManager.DefaultBackpackItem != string.Empty) {
-                InstantiatedBag instantiatedBag = playerManager.UnitController.CharacterInventoryManager.GetNewInstantiatedItem(systemConfigurationManager.DefaultBackpackItem) as InstantiatedBag;
+                InstantiatedBag instantiatedBag = playerManagerClient.UnitController.CharacterInventoryManager.GetNewInstantiatedItem(systemConfigurationManager.DefaultBackpackItem) as InstantiatedBag;
                 if (instantiatedBag == null) {
                     Debug.LogError("InventoryManager.CreateDefaultBankBag(): CHECK INVENTORYMANAGER IN INSPECTOR AND SET DEFAULTBACKPACK TO VALID NAME");
                     return;
                 }
-                playerManager.UnitController.CharacterInventoryManager.AddInventoryBag(instantiatedBag);
+                playerManagerClient.UnitController.CharacterInventoryManager.AddInventoryBag(instantiatedBag);
             }
         }
 
@@ -518,7 +518,7 @@ namespace AnyRPG {
             Vector3 playerRotation = new Vector3(playerCharacterSaveData.CharacterSaveData.PlayerRotationX, playerCharacterSaveData.CharacterSaveData.PlayerRotationY, playerCharacterSaveData.CharacterSaveData.PlayerRotationZ);
             //Debug.Log("Savemanager.LoadGame() rotation: " + characterSaveData.PlayerRotationX + ", " + characterSaveData.PlayerRotationY + ", " + characterSaveData.PlayerRotationZ);
 
-            playerManager.SpawnPlayerConnection(playerCharacterSaveData.CharacterSaveData);
+            playerManagerClient.SpawnPlayerConnection(playerCharacterSaveData.CharacterSaveData);
 
             LoadCutsceneData(playerCharacterSaveData.CharacterSaveData);
 
@@ -544,7 +544,7 @@ namespace AnyRPG {
             playerManagerServer.AddSpawnRequest(networkManagerClient.AccountId, loadSceneRequest);
             //levelManager.LoadLevel(characterSaveData.CurrentScene, playerLocation, playerRotation);
             // load the proper level now that everything should be setup
-            levelManager.LoadLevel(playerCharacterSaveData.CharacterSaveData.CurrentScene);
+            levelManagerClient.LoadLevel(playerCharacterSaveData.CharacterSaveData.CurrentScene);
         }
 
         public void ClearSystemManagedSaveData() {

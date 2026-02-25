@@ -12,8 +12,8 @@ namespace AnyRPG {
         private Dictionary<int, WeatherMonitor> weatherMonitors = new Dictionary<int, WeatherMonitor>();
 
         // game manager references
-        protected LevelManager levelManager = null;
-        protected PlayerManagerClient playerManager = null;
+        protected LevelManagerClient levelManagerClient = null;
+        protected PlayerManagerClient playerManagerClient = null;
         protected CameraManager cameraManager = null;
         protected TimeOfDayManagerServer timeOfDayManagerServer = null;
         protected TimeOfDayManagerClient timeOfDayManagerClient = null;
@@ -23,8 +23,6 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            systemEventManager.OnLevelUnloadClient += HandleLevelUnload;
-            systemEventManager.OnLevelLoad += HandleLevelLoad;
             levelManagerServer.OnAddLoadedScene += HandleAddLoadedScene;
             levelManagerServer.OnRemoveLoadedScene += HandleRemoveLoadedScene;
         }
@@ -32,8 +30,8 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            levelManager = systemGameManager.LevelManager;
-            playerManager = systemGameManager.PlayerManager;
+            levelManagerClient = systemGameManager.LevelManagerClient;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             cameraManager = systemGameManager.CameraManager;
             timeOfDayManagerServer = systemGameManager.TimeOfDayManagerServer;
             timeOfDayManagerClient = systemGameManager.TimeOfDayManagerClient;
@@ -55,36 +53,12 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleLevelUnload(int sceneHandle, string sceneName) {
-            //Debug.Log($"WeatherManagerServer.HandleLevelUnload({sceneHandle}, {sceneName})");
-
-            if (systemGameManager.GameMode == GameMode.Network) {
-                return;
-            }
-
-            ProcessRemoveLoadedScene(sceneHandle, sceneName);
-        }
-
-        public void HandleLevelLoad() {
-            //Debug.Log("WeatherManagerServer.HandleLevelLoad()");
-
-            if (systemGameManager.GameMode == GameMode.Network) {
-                // network mode level loads are handled by a different event subscription
-                return;
-            }
-
-            if (levelManager.IsMainMenu() == true || levelManager.IsInitializationScene() == true) {
-                return;
-            }
-
-            if (levelManager.GetActiveSceneNode() != null) {
-                ProcessAddLoadedScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().handle, levelManager.GetActiveSceneNode());
-            }
-        }
-
         private void ProcessAddLoadedScene(int sceneHandle, SceneNode sceneNode) {
             //Debug.Log($"WeatherManagerServer.ProcessAddLoadedScene({sceneHandle}, {sceneNode.ResourceName})");
 
+            if (levelManagerClient.IsMainMenu(sceneNode.SceneName) == true || levelManagerClient.IsInitializationScene(sceneNode.SceneName) == true) {
+                return;
+            }
             weatherMonitors.Add(sceneHandle, new WeatherMonitor(systemGameManager, sceneHandle, sceneNode));
         }
 

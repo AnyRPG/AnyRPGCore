@@ -14,7 +14,7 @@ namespace AnyRPG {
         private TMP_InputField textInput = null;
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
         private NameChangeManagerClient nameChangeManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -28,7 +28,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
             nameChangeManager = systemGameManager.NameChangeManagerClient;
         }
 
@@ -52,14 +52,14 @@ namespace AnyRPG {
         public void ConfirmAction() {
             //Debug.Log("NameChangePanelController.ConfirmAction()");
             if (textInput.text != null && textInput.text != string.Empty) {
-                nameChangeManager.RequestChangePlayerName(playerManager.UnitController, textInput.text);
+                nameChangeManager.RequestChangePlayerName(playerManagerClient.UnitController, textInput.text);
             }
         }
 
         public override void ProcessOpenWindowNotification() {
             //Debug.Log("NameChangePanelController.ProcessOpenWindowNotification()");
             base.ProcessOpenWindowNotification();
-            textInput.text = playerManager.UnitController.BaseCharacter.CharacterName;
+            textInput.text = playerManagerClient.UnitController.BaseCharacter.CharacterName;
         }
 
         public override void ReceiveClosedWindowNotification() {

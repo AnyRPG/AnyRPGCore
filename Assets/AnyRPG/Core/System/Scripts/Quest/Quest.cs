@@ -233,7 +233,7 @@ namespace AnyRPG {
         }
 
         protected override Color GetTitleColor() {
-            return LevelEquations.GetTargetColor(playerManager.UnitController.CharacterStats.Level, ExperienceLevel(playerManager.UnitController));
+            return LevelEquations.GetTargetColor(playerManagerClient.UnitController.CharacterStats.Level, ExperienceLevel(playerManagerClient.UnitController));
         }
 
         protected override void ProcessAcceptQuest(UnitController sourceUnitController) {

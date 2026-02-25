@@ -19,7 +19,7 @@ namespace AnyRPG {
         private bool windowSubscriptionsInitialized = false;
 
         // game manager references
-        private PlayerManagerClient playerManager = null;
+        private PlayerManagerClient playerManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -32,7 +32,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public override void ProcessOpenWindowNotification() {
@@ -42,10 +42,10 @@ namespace AnyRPG {
             }
             systemEventManager.OnCurrencyChange += HandleCurrencyChange;
             windowSubscriptionsInitialized = true;
-            if (playerManager.UnitController == null) {
+            if (playerManagerClient.UnitController == null) {
                 return;
             }
-            currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, playerManager.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency));
+            currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, playerManagerClient.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency));
         }
 
         public override void ReceiveClosedWindowNotification() {
@@ -62,10 +62,10 @@ namespace AnyRPG {
 
             ClearPages();
             PopulatePages();
-            if (playerManager.UnitController == null) {
+            if (playerManagerClient.UnitController == null) {
                 return;
             }
-            currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, playerManager.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency));
+            currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, playerManagerClient.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency));
 
         }
 
@@ -73,7 +73,7 @@ namespace AnyRPG {
             //Debug.Log("CurrencyPanelUI.PopulatePages()");
 
             CurrencyNodeContentList page = new CurrencyNodeContentList();
-            foreach (CurrencyNode currencyNode in playerManager.UnitController.CharacterCurrencyManager.CurrencyList.Values) {
+            foreach (CurrencyNode currencyNode in playerManagerClient.UnitController.CharacterCurrencyManager.CurrencyList.Values) {
                 if (systemConfigurationManager.DefaultCurrencyGroup.GetCurrencyList().Contains(currencyNode.currency)) {
                     continue;
                 }
