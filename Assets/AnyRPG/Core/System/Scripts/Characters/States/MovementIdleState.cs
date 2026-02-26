@@ -12,6 +12,8 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay) {
+            Debug.Log($"{unitController.gameObject.name}.MovementIdleState.Enter(isReplay: {isReplay})");
+
             // 1. PERSISTENT PHYSICS & STATE (Always run during replays)
             // We must freeze position and reset velocity every replay to ensure 
             // the character doesn't "drift" during the 7-frame re-simulation.
@@ -39,7 +41,7 @@ namespace AnyRPG {
 
 
         public void Exit(bool isReplay) {
-            Debug.Log($"{unitController.gameObject.name}.MovementIdleState.Exit()");
+            Debug.Log($"{unitController.gameObject.name}.MovementIdleState.Exit(isReplay: {isReplay})");
 
             unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
         }

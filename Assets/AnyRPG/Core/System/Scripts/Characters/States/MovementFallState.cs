@@ -62,12 +62,9 @@ namespace AnyRPG {
 
             if (unitMovementController.touchingGround && unitMovementController.groundAngle <= unitMovementController.slopeLimit) {
                 if (unitMovementController.CurrentMovementData.HasMoveInput() || unitMovementController.CurrentMovementData.HasTurnInput()) {
-                    //Debug.Log("Idle-> Move: touchingGround: " + touchingGround);
                     unitMovementController.ChangeState(CharacterMovementState.Move, isReplay);
-                    //Debug.Break();
                     return;
                 }
-                Debug.Log($"{unitController.gameObject.name}.MovementFallState.Update() touching Ground - change to idle");
                 unitMovementController.ChangeState(CharacterMovementState.Idle, isReplay);
                 return;
             }

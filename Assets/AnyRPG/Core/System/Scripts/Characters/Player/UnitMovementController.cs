@@ -1197,10 +1197,6 @@ namespace AnyRPG {
                 && (networkManagerServer.ServerModeActive == true || systemGameManager.GameMode == GameMode.Local)) {
                 unitController.UnitMotor.StopFollowingTarget();
             }
-            // debug if movement has jump
-            if (movementData.InputJump) {
-                Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.StateUpdate() jump input detected");
-            }
 
             EarlyGlobalStateUpdate();
 

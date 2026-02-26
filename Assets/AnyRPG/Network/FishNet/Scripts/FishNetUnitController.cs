@@ -2365,9 +2365,6 @@ namespace AnyRPG {
                 MovementData md = unitController.UnitMovementController.ProcessGatheredInput();
                 md.SimulatedTick = base.TimeManager.Tick;
                 ReplicateData replicateData = new ReplicateData(md);
-                if (replicateData.MovementData.InputJump) {
-                    Debug.Log($"FishNetUnitController.TimeManager_OnTick() MovmentDataJump={replicateData.MovementData.InputJump}: tick: {md.SimulatedTick}");
-                }
                 Replicate(replicateData);
             } else if (IsServerInitialized) {
                 // IMPORTANT: On the server, we call Replicate with 'default' 
@@ -2384,14 +2381,12 @@ namespace AnyRPG {
                 // Capture state BEFORE processing movement
                 serverStateAtStartOfTick = unitController.UnitMovementController.CurrentCharacterMovementState;
             }
-            /*
-            if (IsServerInitialized) {
-                Debug.Log($"Server received input: MovmentDataJump={replicateData.MovementData.inputJump}, State={state}");
-            }
-            */
+            // use a bitmask to see if this replicate is being called as part of a replay or not.
+            // This is important because we want to process the movement data differently if it's a replay vs if it's the first time we're processing it.
+            bool isReplaying = (state & ReplicateState.Replayed) == ReplicateState.Replayed;
 
             if ((unitController.UnitControllerMode == UnitControllerMode.Mount || unitController.UnitControllerMode == UnitControllerMode.Player)) {
-                unitController.UnitMovementController.StateUpdate(replicateData.MovementData, (float)TimeManager.TickDelta, (state == ReplicateState.Replayed));
+                unitController.UnitMovementController.StateUpdate(replicateData.MovementData, (float)TimeManager.TickDelta, isReplaying);
             }
             predictionRigidbody.Simulate();
         }
