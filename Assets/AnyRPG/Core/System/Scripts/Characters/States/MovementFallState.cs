@@ -1,6 +1,3 @@
-using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -14,43 +11,51 @@ namespace AnyRPG {
             this.unitMovementController = unitMovementController;
         }
 
-        public void Enter() {
-            //Debug.Log($"{unitController.gameObject.name}.MovementFallState.Enter()");
+        public void Enter(bool isReplay) {
+            Debug.Log($"{unitController.gameObject.name}.MovementFallState.Enter(isReplay: {isReplay})");
+
             unitMovementController.canJump = false;
-            if (unitController.UnitAnimator.GetInt("Jumping") != 2) {
-                unitController.UnitAnimator.SetTrigger("FallTrigger");
-                unitController.UnitAnimator.SetJumping(2);
-            }
             unitMovementController.currentFallDistance = 0f;
             unitMovementController.fallStartHeight = unitController.transform.position.y;
+
+            if (isReplay == false) {
+                if (unitController.UnitAnimator.GetInt("Jumping") != 2) {
+                    unitController.UnitAnimator.SetTrigger("FallTrigger");
+                    unitController.UnitAnimator.SetJumping(2);
+                }
+            }
 
             // clamp y velocity to prevent launching off ramps
             unitController.UnitMotor?.Move(new Vector3(unitController.RigidBody.linearVelocity.x, Mathf.Clamp(unitController.RigidBody.linearVelocity.y, -53, 0), unitController.RigidBody.linearVelocity.z));
         }
 
-        public void Exit() {
-            //Debug.Log($"{unitController.gameObject.name}.MovementFallState.Exit()");
-            unitController.UnitAnimator.SetJumping(0);
+        public void Exit(bool isReplay) {
+            Debug.Log($"{unitController.gameObject.name}.MovementFallState.Exit(isReplay: {isReplay})");
+
             unitMovementController.currentFallDistance = unitMovementController.fallStartHeight - unitController.transform.position.y;
+
+            if (isReplay == false) {
+                unitController.UnitAnimator.SetJumping(0);
+            }
         }
 
-        public void Update() {
+        public void Update(bool isReplay) {
             //Debug.Log($"{unitController.gameObject.name}.MovementFallState.Update()");
             if (unitController.InWater == true) {
                 if (unitMovementController.CheckForSwimming() == true) {
-                    unitMovementController.ChangeState(CharacterMovementState.Swim);
+                    unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
                     return;
                 }
             }
 
             if (unitController.CanFly
-                && unitMovementController.CurrentMovementData.inputFly) {
-                unitMovementController.ChangeState(CharacterMovementState.Fly);
+                && unitMovementController.CurrentMovementData.InputFly) {
+                unitMovementController.ChangeState(CharacterMovementState.Fly, isReplay);
                 return;
             }
 
             if (unitController.CanGlide) {
-                unitMovementController.ChangeState(CharacterMovementState.Glide);
+                unitMovementController.ChangeState(CharacterMovementState.Glide, isReplay);
                 return;
             }
 
@@ -58,11 +63,12 @@ namespace AnyRPG {
             if (unitMovementController.touchingGround && unitMovementController.groundAngle <= unitMovementController.slopeLimit) {
                 if (unitMovementController.CurrentMovementData.HasMoveInput() || unitMovementController.CurrentMovementData.HasTurnInput()) {
                     //Debug.Log("Idle-> Move: touchingGround: " + touchingGround);
-                    unitMovementController.ChangeState(CharacterMovementState.Move);
+                    unitMovementController.ChangeState(CharacterMovementState.Move, isReplay);
                     //Debug.Break();
                     return;
                 }
-                unitMovementController.ChangeState(CharacterMovementState.Idle);
+                Debug.Log($"{unitController.gameObject.name}.MovementFallState.Update() touching Ground - change to idle");
+                unitMovementController.ChangeState(CharacterMovementState.Idle, isReplay);
                 return;
             }
 

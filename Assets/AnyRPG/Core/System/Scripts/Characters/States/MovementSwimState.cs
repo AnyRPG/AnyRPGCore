@@ -13,41 +13,45 @@ namespace AnyRPG {
             this.unitMovementController = unitMovementController;
         }
 
-        public void Enter() {
+        public void Enter(bool isReplay) {
             //Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Enter()");
             unitMovementController.currentFallDistance = 0f;
-            unitMovementController.EnterGroundStateCommon();
-            unitController.StartSwimming();
+            unitMovementController.EnterGroundStateCommon(isReplay);
+            unitController.StartSwimming(isReplay);
             unitController.RigidBody.useGravity = false;
-            unitController.UnitAnimator.SetTrigger("SwimTrigger");
-            unitController.UnitAnimator.SetBool("Swimming", true);
+            if (isReplay == false) {
+                unitController.UnitAnimator.SetTrigger("SwimTrigger");
+                unitController.UnitAnimator.SetBool("Swimming", true);
+            }
         }
 
-        public void Exit() {
+        public void Exit(bool isReplay) {
             //Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Exit()");
             unitController.StopSwimming();
             unitController.RigidBody.useGravity = true;
-            unitController.UnitAnimator.SetBool("Swimming", false);
+            if (isReplay == false) {
+                unitController.UnitAnimator.SetBool("Swimming", false);
+            }
         }
 
-        public void Update() {
+        public void Update(bool isReplay) {
             //Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Update()");
             unitMovementController.airForwardDirection = unitController.transform.forward;
 
             if (unitController.InWater == true) {
                 if (unitController.CanFly
-                    && unitMovementController.CurrentMovementData.inputFly
+                    && unitMovementController.CurrentMovementData.InputFly
                     && unitMovementController.CheckForSwimming() == false) {
-                    unitMovementController.ChangeState(CharacterMovementState.Fly);
+                    unitMovementController.ChangeState(CharacterMovementState.Fly, isReplay);
                     return;
                 }
                 if (unitMovementController.CheckForSwimming() == false) {
-                    unitMovementController.ChangeState(CharacterMovementState.Move);
+                    unitMovementController.ChangeState(CharacterMovementState.Move, isReplay);
                     return;
                 }
 
             } else {
-                unitMovementController.ChangeState(CharacterMovementState.Move);
+                unitMovementController.ChangeState(CharacterMovementState.Move, isReplay);
                 return;
             }
 
@@ -80,11 +84,11 @@ namespace AnyRPG {
                 }
                 unitMovementController.CalculateTurnVelocity();
 
-
-                // ============ ANIMATOR PARAMETERS ============
-                unitController.UnitAnimator.SetMoving(true);
-                unitController.UnitAnimator.SetTurnVelocity(unitMovementController.currentTurnVelocity.x);
-
+                if (isReplay == false ) {
+                    // ============ ANIMATOR PARAMETERS ============
+                    unitController.UnitAnimator.SetMoving(true);
+                    unitController.UnitAnimator.SetTurnVelocity(unitMovementController.currentTurnVelocity.x);
+                }
             } else {
                 // ============ RIGIDBODY CONSTRAINTS ============
                 // prevent constant drifting through water after stop moving
@@ -93,13 +97,16 @@ namespace AnyRPG {
                 // ============ VELOCITY CALCULATIONS ============
                 unitMovementController.localMoveVelocity = Vector3.zero;
                 unitMovementController.adjustedlocalMoveVelocity = unitMovementController.localMoveVelocity;
-
-                // ============ ANIMATOR PARAMETERS ============
-                unitController.UnitAnimator.SetMoving(false);
-                unitController.UnitAnimator.SetTurnVelocity(0f);
+                if (isReplay == false) {
+                    // ============ ANIMATOR PARAMETERS ============
+                    unitController.UnitAnimator.SetMoving(false);
+                    unitController.UnitAnimator.SetTurnVelocity(0f);
+                }
 
             }
-            unitController.UnitAnimator.SetVelocity(unitMovementController.localMoveVelocity);
+            if (isReplay == false) {
+                unitController.UnitAnimator.SetVelocity(unitMovementController.localMoveVelocity);
+            }
 
             unitMovementController.MoveRelative();
         }

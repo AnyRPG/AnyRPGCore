@@ -116,7 +116,7 @@ MonoBehaviour:
   _synchronizeWhenDisabled: 0
   _smoothFloats: 1
   _interpolation: 2
-  _clientAuthoritative: 1
+  _clientAuthoritative: 0
   _sendToOwner: 0
 --- !u!114 &-4845865212197059661
 MonoBehaviour:

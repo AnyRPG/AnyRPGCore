@@ -23,7 +23,7 @@ namespace AnyRPG {
         public bool useMeshNav = false;
         public Vector3 lookDirection { get; private set; }
 
-        private IMovementState currentState;
+        private IMovementState currentIMovementState;
         private CharacterMovementState currentCharacterMovementState;
         private Dictionary<CharacterMovementState, IMovementState> movementStates = new Dictionary<CharacterMovementState, IMovementState>();
 
@@ -216,8 +216,8 @@ namespace AnyRPG {
         private Quaternion airRotation;
 
         // the frame in which the player last entered a jump state
-        public int lastJumpFrame;
-        public int lastKnockbackFrame;
+        public uint lastJumpFrame;
+        public uint lastKnockbackFrame;
 
         // game manager references
         protected CameraManager cameraManager = null;
@@ -225,7 +225,7 @@ namespace AnyRPG {
         //protected WindowManager windowManager = null;
 
         public UnitController UnitController { get => unitController; }
-        public MovementData MovementData { get => accumulatedMovementData; set => accumulatedMovementData = value; }
+        public MovementData AccumulatedMovementData { get => accumulatedMovementData; set => accumulatedMovementData = value; }
         public MovementData CurrentMovementData { get => currentMovementData; set => currentMovementData = value; }
         public CharacterMovementState CurrentCharacterMovementState { get => currentCharacterMovementState; }
 
@@ -276,26 +276,26 @@ namespace AnyRPG {
             movementStates.Add(CharacterMovementState.Swim, new MovementSwimState(this, unitController));
             movementStates.Add(CharacterMovementState.Fly, new MovementFlyState(this, unitController));
             movementStates.Add(CharacterMovementState.Glide, new MovementGlideState(this, unitController));
-            ChangeState(CharacterMovementState.Idle);
+            ChangeState(CharacterMovementState.Idle, false);
         }
 
-        public void ChangeState(CharacterMovementState newState) {
+        public void ChangeState(CharacterMovementState newState, bool isReplay) {
             if (movementStates.ContainsKey(newState)) {
                 currentCharacterMovementState = newState;
-                ChangeState(movementStates[newState]);
+                ChangeState(movementStates[newState], isReplay);
             } else {
                 Debug.LogError($"UnitMovementController.ChangeState({newState.ToString()}): no state found in movementStates dictionary");
             }
         }
 
-        private void ChangeState(IMovementState newState) {
+        private void ChangeState(IMovementState newState, bool isReplay) {
             //Debug.Log($"{gameObject.name}: ChangeState({newState.ToString()})");
-            if (currentState != null) {
-                currentState.Exit();
+            if (currentIMovementState != null) {
+                currentIMovementState.Exit(isReplay);
             }
-            currentState = newState;
+            currentIMovementState = newState;
 
-            currentState.Enter();
+            currentIMovementState.Enter(isReplay);
         }
 
         //Put any code in here you want to run BEFORE the state's update function. This is run regardless of what state you're in.
@@ -315,7 +315,7 @@ namespace AnyRPG {
                 relativeMovement = CharacterRelativeInput(adjustedlocalMoveVelocity);
             //}
             //Debug.Log("relativeMovement: (" + relativeMovement.x + ", " + relativeMovement.y + ", " + relativeMovement.z + ")");
-            if (relativeMovement.magnitude > 0.1 || currentMovementData.inputJump) {
+            if (relativeMovement.magnitude > 0.1 || currentMovementData.InputJump) {
                 unitController.UnitMotor.Move(relativeMovement);
             }
         }
@@ -331,7 +331,7 @@ namespace AnyRPG {
                 // handle movement
                 if (localMoveVelocity.magnitude > 0 && currentMovementData.HasMoveInput()) {
                     //Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.LateGlobalSuperUpdate(): animator velocity: " + unitController.MyCharacterAnimator.MyAnimator.velocity + "; angular: " + unitController.MyCharacterAnimator.MyAnimator.angularVelocity);
-                    if (currentMovementData.inputStrafe == true) {
+                    if (currentMovementData.InputStrafe == true) {
                         unitController.UnitAnimator.SetStrafing(true);
                     } else {
                         unitController.UnitAnimator.SetStrafing(false);
@@ -365,17 +365,19 @@ namespace AnyRPG {
                     //}
                 }
 
-                if (currentMovementData.inputTurn != 0) {
+                if (currentMovementData.InputTurn != 0) {
                     unitController.UnitMotor.Rotate(new Vector3(0, currentTurnVelocity.x * timeInterval, 0));
                 }
             }
 
         }
 
-        public void EnterGroundStateCommon() {
+        public void EnterGroundStateCommon(bool isReplay) {
             canJump = true;
-            unitController.UnitAnimator.SetJumping(0);
             airForwardDirection = unitController.transform.forward;
+            if (isReplay == false) {
+                unitController.UnitAnimator.SetJumping(0);
+            }
         }
 
         public bool CheckForSwimming() {
@@ -393,16 +395,23 @@ namespace AnyRPG {
             }
         }
 
-        public void CalculateFallDamage() {
-            if (useFallDamage && currentFallDistance > fallDamageMinDistance) {
-                unitController.CharacterStats.TakeFallDamage(currentFallDistance * fallDamagePerMeter);
-            }
+        public void CalculateFallDamage(bool isReplay) {
             currentFallDistance = 0f;
+
+            if (systemGameManager.GameMode == GameMode.Network && systemGameManager.NetworkManagerServer.ServerModeActive == false) {
+                return;
+            }
+
+            if (isReplay == false) {
+                if (useFallDamage && currentFallDistance > fallDamageMinDistance) {
+                    unitController.CharacterStats.TakeFallDamage(currentFallDistance * fallDamagePerMeter);
+                }
+            }
         }
 
         public void KnockBack() {
             //Debug.Log("Knockback()");
-            ChangeState(CharacterMovementState.Knockback);
+            ChangeState(CharacterMovementState.Knockback, false);
         }
 
         public Vector3 NormalizedGlideMovement(float calculatedSpeed) {
@@ -563,9 +572,9 @@ namespace AnyRPG {
 
             // if the jump or crouch buttons were held down, their values override the camera angle and allow movement straight up or down
             // ignore if swim speed would not result in a bounce out of the water
-            if (currentMovementData.inputSink == true
-                || (currentMovementData.inputFly == true && (chestBelowWater == true || unitController.CanFly))) {
-                returnValue.y = (currentMovementData.inputFly == true ? 1 : 0) + (currentMovementData.inputSink == true ? -1 : 0);
+            if (currentMovementData.InputSink == true
+                || (currentMovementData.InputFly == true && (chestBelowWater == true || unitController.CanFly))) {
+                returnValue.y = (currentMovementData.InputFly == true ? 1 : 0) + (currentMovementData.InputSink == true ? -1 : 0);
             }
 
             return returnValue;
@@ -590,9 +599,9 @@ namespace AnyRPG {
 
             // if the jump or crouch buttons were held down, their values override the camera angle and allow movement straight up or down
             // ignore if swim speed would not result in a bounce out of the water
-            if (currentMovementData.inputSink == true
-                || currentMovementData.inputFly == true) {
-                returnValue.y = (currentMovementData.inputFly == true ? 1 : 0) + (currentMovementData.inputSink == true ? -1 : 0);
+            if (currentMovementData.InputSink == true
+                || currentMovementData.InputFly == true) {
+                returnValue.y = (currentMovementData.InputFly == true ? 1 : 0) + (currentMovementData.InputSink == true ? -1 : 0);
             }
 
             return returnValue;
@@ -1173,8 +1182,8 @@ namespace AnyRPG {
         }
         */
 
-        public void StateUpdate(MovementData movementData, float timeInterval) {
-            if (currentState == null) {
+        public void StateUpdate(MovementData movementData, float timeInterval, bool isReplay) {
+            if (currentIMovementState == null) {
                 return;
             }
 
@@ -1188,26 +1197,30 @@ namespace AnyRPG {
                 && (networkManagerServer.ServerModeActive == true || systemGameManager.GameMode == GameMode.Local)) {
                 unitController.UnitMotor.StopFollowingTarget();
             }
+            // debug if movement has jump
+            if (movementData.InputJump) {
+                Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.StateUpdate() jump input detected");
+            }
 
             EarlyGlobalStateUpdate();
 
-            currentState.Update();
+            currentIMovementState.Update(isReplay);
 
             LateGlobalStateUpdate(timeInterval);
         }
 
         public void AddMovementData(MovementData frameData) {
-            accumulatedMovementData.inputHorizontal += frameData.inputHorizontal;
-            accumulatedMovementData.inputVertical += frameData.inputVertical;
-            accumulatedMovementData.inputTurn += frameData.inputTurn;
+            accumulatedMovementData.InputHorizontal += frameData.InputHorizontal;
+            accumulatedMovementData.InputVertical += frameData.InputVertical;
+            accumulatedMovementData.InputTurn += frameData.InputTurn;
             accumulatedMovementData.RightAnalogHorizontal += frameData.RightAnalogHorizontal;
 
             // 2. Logical OR for buttons (if true in ANY frame, it stays true for the tick)
-            if (frameData.inputJump) accumulatedMovementData.inputJump = true;
-            if (frameData.inputFly) accumulatedMovementData.inputFly = true;
-            if (frameData.inputSink) accumulatedMovementData.inputSink = true;
-            if (frameData.inputStrafe) accumulatedMovementData.inputStrafe = true;
-            if (frameData.inputCrouch) accumulatedMovementData.inputCrouch = true;
+            if (frameData.InputJump) accumulatedMovementData.InputJump = true;
+            if (frameData.InputFly) accumulatedMovementData.InputFly = true;
+            if (frameData.InputSink) accumulatedMovementData.InputSink = true;
+            if (frameData.InputStrafe) accumulatedMovementData.InputStrafe = true;
+            if (frameData.InputCrouch) accumulatedMovementData.InputCrouch = true;
             if (frameData.RightMouseButtonDown) accumulatedMovementData.RightMouseButtonDown = true;
             if (frameData.RightMouseDragged) accumulatedMovementData.RightMouseDragged = true;
             if (frameData.GamepadModeActive) accumulatedMovementData.GamepadModeActive = true;
@@ -1216,26 +1229,26 @@ namespace AnyRPG {
             accumulatedMovementData.CameraLocalEulerAngleX = frameData.CameraLocalEulerAngleX;
 
             // 3. Increment frame counter
-            accumulatedMovementData.frameCount++;
+            accumulatedMovementData.FrameCount++;
         }
 
         public MovementData ProcessGatheredInput() {
             // 1. Create the final data for THIS tick
             MovementData tickReadyData = new MovementData();
 
-            if (accumulatedMovementData.frameCount > 0) {
+            if (accumulatedMovementData.FrameCount > 0) {
                 // Average the axes
-                tickReadyData.inputHorizontal = accumulatedMovementData.inputHorizontal / accumulatedMovementData.frameCount;
-                tickReadyData.inputVertical = accumulatedMovementData.inputVertical / accumulatedMovementData.frameCount;
-                tickReadyData.inputTurn = accumulatedMovementData.inputTurn / accumulatedMovementData.frameCount;
-                tickReadyData.RightAnalogHorizontal = accumulatedMovementData.RightAnalogHorizontal / accumulatedMovementData.frameCount;
+                tickReadyData.InputHorizontal = accumulatedMovementData.InputHorizontal / accumulatedMovementData.FrameCount;
+                tickReadyData.InputVertical = accumulatedMovementData.InputVertical / accumulatedMovementData.FrameCount;
+                tickReadyData.InputTurn = accumulatedMovementData.InputTurn / accumulatedMovementData.FrameCount;
+                tickReadyData.RightAnalogHorizontal = accumulatedMovementData.RightAnalogHorizontal / accumulatedMovementData.FrameCount;
 
                 // Copy the "OR'd" buttons
-                tickReadyData.inputJump = accumulatedMovementData.inputJump;
-                tickReadyData.inputFly = accumulatedMovementData.inputFly;
-                tickReadyData.inputSink = accumulatedMovementData.inputSink;
-                tickReadyData.inputStrafe = accumulatedMovementData.inputStrafe;
-                tickReadyData.inputCrouch = accumulatedMovementData.inputCrouch;
+                tickReadyData.InputJump = accumulatedMovementData.InputJump;
+                tickReadyData.InputFly = accumulatedMovementData.InputFly;
+                tickReadyData.InputSink = accumulatedMovementData.InputSink;
+                tickReadyData.InputStrafe = accumulatedMovementData.InputStrafe;
+                tickReadyData.InputCrouch = accumulatedMovementData.InputCrouch;
                 tickReadyData.RightMouseButtonDown = accumulatedMovementData.RightMouseButtonDown;
                 tickReadyData.RightMouseDragged = accumulatedMovementData.RightMouseDragged;
                 tickReadyData.GamepadModeActive = accumulatedMovementData.GamepadModeActive;
@@ -1245,8 +1258,8 @@ namespace AnyRPG {
                 tickReadyData.CameraLocalEulerAngleX = accumulatedMovementData.CameraLocalEulerAngleX;
 
                 // Update derived vectors
-                tickReadyData.NormalizedMoveInput = new Vector3(tickReadyData.inputHorizontal, 0, tickReadyData.inputVertical).normalized;
-                tickReadyData.TurnInput = new Vector3(tickReadyData.inputTurn, 0, 0);
+                tickReadyData.NormalizedMoveInput = new Vector3(tickReadyData.InputHorizontal, 0, tickReadyData.InputVertical).normalized;
+                tickReadyData.TurnInput = new Vector3(tickReadyData.InputTurn, 0, 0);
                 if (controlsManager.GamepadModeActive || unitController.UnitProfile.UnitPrefabProps.RotateModel) {
                     // calculate the input relative to the camera in world space
                     Vector3 cameraInput = Quaternion.Euler(0f, cameraManager.ActiveMainCamera.transform.rotation.eulerAngles.y, 0f) * currentMovementData.NormalizedMoveInput;
@@ -1262,6 +1275,28 @@ namespace AnyRPG {
             accumulatedMovementData.ResetMoveInput();
 
             return tickReadyData;
+        }
+
+        public void SetStateSilently(CharacterMovementState characterMovementState) {
+
+            if (movementStates.ContainsKey(characterMovementState)) {
+                currentCharacterMovementState = characterMovementState;
+                SetStateSilently(movementStates[characterMovementState]);
+            } else {
+                Debug.LogError($"UnitMovementController.SetStateSilently({characterMovementState.ToString()}): no state found in movementStates dictionary");
+            }
+        }
+
+        private void SetStateSilently(IMovementState newState) {
+            //Debug.Log($"{gameObject.name}: SetStateSilently({newState.ToString()})");
+            /*
+            if (currentIMovementState != null) {
+                currentIMovementState.Exit();
+            }
+            */
+            currentIMovementState = newState;
+
+            //currentIMovementState.Enter();
         }
     }
 

@@ -1,6 +1,3 @@
-using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -14,42 +11,59 @@ namespace AnyRPG {
             this.unitMovementController = unitMovementController;
         }
 
-        public void Enter() {
-            //Debug.Log($"{unitController.gameObject.name}.MovementGlideState.Enter()");
+        public void Enter(bool isReplay) {
+            // 1. PERSISTENT PHYSICS & DATA (Always run these during replays)
+            // This ensures the server and client agree on the starting physics state
             unitMovementController.currentFallDistance = 0f;
             unitMovementController.canJump = false;
-            if (unitController.UnitAnimator.GetInt("Jumping") != 2) {
-                unitController.UnitAnimator.SetTrigger("FallTrigger");
-                unitController.UnitAnimator.SetJumping(2);
-            }
+
+            // Rigidbody settings must be reapplied during replays because 
+            // a Reconcile might have reset them to default values.
             unitController.RigidBody.useGravity = false;
-            unitController.UnitAnimator.SetTurnVelocity(0f);
             unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
 
             // clamp y velocity to prevent launching off ramps
-            unitController.UnitMotor?.Move(new Vector3(unitController.RigidBody.linearVelocity.x, Mathf.Clamp(unitController.RigidBody.linearVelocity.y, -53, 0), unitController.RigidBody.linearVelocity.z));
+            // Clamp velocity - critical for determinism
+            unitController.UnitMotor?.Move(new Vector3(
+                unitController.RigidBody.linearVelocity.x,
+                Mathf.Clamp(unitController.RigidBody.linearVelocity.y, -53, 0),
+                unitController.RigidBody.linearVelocity.z
+            ));
+
+            // 2. VISUALS & ONE-SHOT TRIGGERS (Guard with !isReplay)
+            if (!isReplay) {
+                // Only set triggers and values on the first "Predicted" frame
+                if (unitController.UnitAnimator.GetInt("Jumping") != 2) {
+                    unitController.UnitAnimator.SetTrigger("FallTrigger");
+                    unitController.UnitAnimator.SetJumping(2);
+                }
+                unitController.UnitAnimator.SetTurnVelocity(0f);
+            }
         }
 
-        public void Exit() {
+
+        public void Exit(bool isReplay) {
             //Debug.Log($"{unitController.gameObject.name}.MovementGlideState.Exit()");
-            unitController.UnitAnimator.SetJumping(0);
             unitController.RigidBody.useGravity = true;
+            if (isReplay == false) {
+                unitController.UnitAnimator.SetJumping(0);
+            }
         }
 
-        public void Update() {
+        public void Update(bool isReplay) {
             //Debug.Log($"{unitController.gameObject.name}.MovementGlideState.Update()");
             if (unitController.InWater == true) {
                 if (unitMovementController.CheckForSwimming() == true) {
                     //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() swimming");
-                    unitMovementController.ChangeState(CharacterMovementState.Swim);
+                    unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
                     return;
                 }
             }
 
             if (unitController.CanFly
-                && unitMovementController.CurrentMovementData.inputFly) {
+                && unitMovementController.CurrentMovementData.InputFly) {
                 //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() flying");
-                unitMovementController.ChangeState(CharacterMovementState.Fly);
+                unitMovementController.ChangeState(CharacterMovementState.Fly, isReplay);
                 return;
             }
 
@@ -57,18 +71,18 @@ namespace AnyRPG {
                 if (unitMovementController.groundAngle <= unitMovementController.slopeLimit) {
                     if (unitMovementController.CurrentMovementData.HasMoveInput() || unitMovementController.CurrentMovementData.HasTurnInput()) {
                         //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() moving");
-                        unitMovementController.ChangeState(CharacterMovementState.Move);
+                        unitMovementController.ChangeState(CharacterMovementState.Move, isReplay);
                         return;
                     }
                     //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() idling");
-                    unitMovementController.ChangeState(CharacterMovementState.Idle);
+                    unitMovementController.ChangeState(CharacterMovementState.Idle, isReplay);
                     return;
                 }
             }
 
             if (unitController.CanGlide == false) {
                 //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() falling");
-                unitMovementController.ChangeState(CharacterMovementState.Fall);
+                unitMovementController.ChangeState(CharacterMovementState.Fall, isReplay);
                 return;
             }
 

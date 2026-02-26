@@ -188,7 +188,6 @@ MonoBehaviour:
   NetworkBehaviours:
   - {fileID: -6875091460629728191}
   - {fileID: -900613316086166064}
-  - {fileID: 0}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -213,7 +212,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 75
+  <PrefabId>k__BackingField: 18
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 5086065525672391408
   <SceneId>k__BackingField: 0

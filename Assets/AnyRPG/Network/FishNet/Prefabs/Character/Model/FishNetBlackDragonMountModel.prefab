@@ -192,7 +192,7 @@ MonoBehaviour:
   _synchronizeWhenDisabled: 0
   _smoothFloats: 1
   _interpolation: 2
-  _clientAuthoritative: 1
+  _clientAuthoritative: 0
   _sendToOwner: 0
 --- !u!114 &2316381857745387070
 MonoBehaviour:
@@ -241,7 +241,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 67
+  <PrefabId>k__BackingField: 11
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 3538135081885933762
   <SceneId>k__BackingField: 0

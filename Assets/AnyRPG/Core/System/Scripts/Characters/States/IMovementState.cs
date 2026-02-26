@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace AnyRPG {
     public interface IMovementState {
-        void Enter();
+        void Enter(bool isReplay);
 
-        void Update();
+        void Update(bool isReplay);
 
-        void Exit();
+        void Exit(bool isReplay);
     }
 }

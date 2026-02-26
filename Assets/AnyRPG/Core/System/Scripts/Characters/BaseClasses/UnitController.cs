@@ -89,6 +89,7 @@ namespace AnyRPG {
         private List<CombatStrategyNode> startedPhaseNodes = new List<CombatStrategyNode>();
         private bool aggroEnabled = false;
         private UnitMovementController unitMovementController = null;
+        private uint offlineTickCounter = 0;
 
         // targeting
         private Interactable target = null;
@@ -1567,7 +1568,10 @@ namespace AnyRPG {
             // in network mode, this is handled by the FishNetUnitController inside a [Replicate] call for client side prediction
             if ((unitControllerMode == UnitControllerMode.Mount || unitControllerMode == UnitControllerMode.Player) && systemGameManager.GameMode == GameMode.Local) {
                 MovementData movementData = unitMovementController.ProcessGatheredInput();
-                unitMovementController.StateUpdate(movementData, Time.deltaTime);
+                offlineTickCounter++;
+                //Debug.Log($"{gameObject.name}.UnitController.Update() offlineTickCounter: {offlineTickCounter}");
+                movementData.SimulatedTick = offlineTickCounter;
+                unitMovementController.StateUpdate(movementData, Time.deltaTime, false);
             }
 
             if (motorEnabled) {
@@ -2507,29 +2511,30 @@ namespace AnyRPG {
             }
         }
 
-        public void StartSwimming() {
+        public void StartSwimming(bool isReplay) {
             swimming = true;
-            StopMovementSound();
+            if (isReplay == false) {
+                StopMovementSound();
+            }
         }
 
         public void StopSwimming() {
             swimming = false;
         }
 
-        public void StartFlying() {
+        public void StartFlying(bool isReplay) {
             flying = true;
-            StopMovementSound();
-            //RigidBody.useGravity = false;
-            unitEventController.NotifyOnStartFlying();
+            if (isReplay == false) {
+                StopMovementSound();
+                unitEventController.NotifyOnStartFlying();
+            }
         }
 
-        public void StopFlying() {
+        public void StopFlying(bool isReplay) {
             flying = false;
-            /*
-            RigidBody.useGravity = true;
-            RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
-            */
-            unitEventController.NotifyOnStopFlying();
+            if (isReplay == false) {
+                unitEventController.NotifyOnStopFlying();
+            }
         }
 
         public void ExitWater(WaterBody water) {

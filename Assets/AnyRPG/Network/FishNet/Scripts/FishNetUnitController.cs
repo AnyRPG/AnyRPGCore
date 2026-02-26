@@ -27,6 +27,10 @@ namespace AnyRPG {
         private PredictionRigidbody predictionRigidbody = new PredictionRigidbody();
         private Rigidbody Rigidbody = null;
 
+        // state tracking for client side prediction reconciliation
+        private CharacterMovementState serverStateAtStartOfTick = CharacterMovementState.Idle;
+
+
         public UnitController UnitController { get => unitController; }
 
         protected override void Awake() {
@@ -2359,19 +2363,35 @@ namespace AnyRPG {
         private void TimeManager_OnTick() {
             if (IsOwner) {
                 MovementData md = unitController.UnitMovementController.ProcessGatheredInput();
+                md.SimulatedTick = base.TimeManager.Tick;
                 ReplicateData replicateData = new ReplicateData(md);
+                if (replicateData.MovementData.InputJump) {
+                    Debug.Log($"FishNetUnitController.TimeManager_OnTick() MovmentDataJump={replicateData.MovementData.InputJump}: tick: {md.SimulatedTick}");
+                }
                 Replicate(replicateData);
             } else if (IsServerInitialized) {
+                // IMPORTANT: On the server, we call Replicate with 'default' 
+                // FishNet will automatically replace 'default' with the 
+                // actual queued data from the client buffer if it exists!
                 Replicate(default);
             }
         }
 
         [Replicate]
         private void Replicate(ReplicateData replicateData, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable) {
-            // Core motor logic remains FishNet-agnostic
-            //unitMotor.ProcessMovement(new Vector3(md.Horizontal, 0, md.Vertical));
+
+            if (IsServerInitialized) {
+                // Capture state BEFORE processing movement
+                serverStateAtStartOfTick = unitController.UnitMovementController.CurrentCharacterMovementState;
+            }
+            /*
+            if (IsServerInitialized) {
+                Debug.Log($"Server received input: MovmentDataJump={replicateData.MovementData.inputJump}, State={state}");
+            }
+            */
+
             if ((unitController.UnitControllerMode == UnitControllerMode.Mount || unitController.UnitControllerMode == UnitControllerMode.Player)) {
-                unitController.UnitMovementController.StateUpdate(replicateData.MovementData, (float)TimeManager.TickDelta);
+                unitController.UnitMovementController.StateUpdate(replicateData.MovementData, (float)TimeManager.TickDelta, (state == ReplicateState.Replayed));
             }
             predictionRigidbody.Simulate();
         }
@@ -2397,7 +2417,7 @@ namespace AnyRPG {
                 return;
             }
             ReconcileData rd = new ReconcileData(predictionRigidbody) {
-                CharacterMovementState = unitController.UnitMovementController.CurrentCharacterMovementState
+                CharacterMovementState = serverStateAtStartOfTick
             };
             // Like with the replicate you could specify a channel here, though
             // it's unlikely you ever would with a reconcile.
@@ -2410,17 +2430,8 @@ namespace AnyRPG {
             // values from data.
             predictionRigidbody.Reconcile(data.PredictionRigidbody);
 
-            bool isServerForcedState = (data.CharacterMovementState == CharacterMovementState.Knockback);
-
-            if (isServerForcedState) {
-                // Force the client into the knockback/stun
-                if (unitController.UnitMovementController.CurrentCharacterMovementState != data.CharacterMovementState) {
-                    unitController.UnitMovementController.ChangeState(data.CharacterMovementState);
-                }
-            } else {
-                // For Move/Idle/Jump, the Client "re-simulates" during the replay.
-                // We don't snap the state here because the Replicate loop 
-                // will recalculate the correct state based on the replayed inputs.
+            if (unitController.UnitMovementController.CurrentCharacterMovementState != data.CharacterMovementState) {
+                unitController.UnitMovementController.SetStateSilently(data.CharacterMovementState);
             }
         }
 

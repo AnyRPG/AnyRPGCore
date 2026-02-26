@@ -170,6 +170,7 @@ namespace AnyRPG {
             guildmasterManagerServer = systemGameManager.GuildmasterManagerServer;
             friendServiceServer = systemGameManager.FriendServiceServer;
             gameDataService = systemGameManager.ServerDataService;
+            sceneUtilityService = systemGameManager.SceneUtilityService;
         }
 
         public void RequestCreatePlayerCharacter(int clientId, CharacterSaveData requestedSaveData) {

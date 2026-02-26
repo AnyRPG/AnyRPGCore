@@ -73,6 +73,12 @@ PrefabInstance:
       propertyPath: umaData
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6973582095505325909, guid: 9396e25e38decac4b8b80eb1f92213e2,
+        type: 3}
+      propertyPath: umaRecipe
+      value: 
+      objectReference: {fileID: 11400000, guid: 1d97eb041589729479af9716fd5b42b3,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -138,7 +144,6 @@ MonoBehaviour:
   NetworkBehaviours:
   - {fileID: -7566471697135072915}
   - {fileID: 6246445351948047085}
-  - {fileID: 0}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -163,7 +168,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 111
+  <PrefabId>k__BackingField: 29
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 6515862026244700016
   <SceneId>k__BackingField: 0
@@ -192,5 +197,5 @@ MonoBehaviour:
   _synchronizeWhenDisabled: 0
   _smoothFloats: 1
   _interpolation: 2
-  _clientAuthoritative: 1
+  _clientAuthoritative: 0
   _sendToOwner: 0

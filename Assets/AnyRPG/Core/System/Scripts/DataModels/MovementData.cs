@@ -2,15 +2,15 @@ using UnityEngine;
 
 namespace AnyRPG {
     public struct MovementData {
-        public int frameCount;
-        public bool inputJump;
-        public bool inputFly;
-        public bool inputSink;
-        public bool inputStrafe;
-        public bool inputCrouch;
-        public float inputHorizontal;
-        public float inputTurn;
-        public float inputVertical;
+        public int FrameCount;
+        public bool InputJump;
+        public bool InputFly;
+        public bool InputSink;
+        public bool InputStrafe;
+        public bool InputCrouch;
+        public float InputHorizontal;
+        public float InputTurn;
+        public float InputVertical;
         public Vector3 NormalizedMoveInput;
         public Vector3 TurnInput;
 
@@ -22,16 +22,18 @@ namespace AnyRPG {
         public float CameraLocalEulerAngleX;
         public bool GamepadModeActive;
 
+        public uint SimulatedTick;
+
         public void ResetMoveInput() {
-            frameCount = 0;
-            inputJump = false;
-            inputFly = false;
-            inputSink = false;
-            inputStrafe = false;
-            inputCrouch = false;
-            inputHorizontal = 0;
-            inputVertical = 0;
-            inputTurn = 0;
+            FrameCount = 0;
+            InputJump = false;
+            InputFly = false;
+            InputSink = false;
+            InputStrafe = false;
+            InputCrouch = false;
+            InputHorizontal = 0;
+            InputVertical = 0;
+            InputTurn = 0;
 
             RightMouseButtonDown = false;
             RightMouseDragged = false;
@@ -40,11 +42,11 @@ namespace AnyRPG {
             LocalInput = Vector3.zero;
 
             NormalizedMoveInput = Vector3.zero;
-            TurnInput = new Vector3(inputTurn, 0, 0);
+            TurnInput = new Vector3(InputTurn, 0, 0);
         }
 
         public bool HasAnyInput() {
-            if (NormalizedMoveInput != Vector3.zero || TurnInput != Vector3.zero || inputJump != false) {
+            if (NormalizedMoveInput != Vector3.zero || TurnInput != Vector3.zero || InputJump != false) {
                 return true;
             } else {
                 return false;
@@ -52,7 +54,7 @@ namespace AnyRPG {
         }
 
         public bool HasWaterMoveInput() {
-            if (NormalizedMoveInput != Vector3.zero || TurnInput != Vector3.zero || inputSink != false || inputFly != false) {
+            if (NormalizedMoveInput != Vector3.zero || TurnInput != Vector3.zero || InputSink != false || InputFly != false) {
                 return true;
             } else {
                 return false;
@@ -60,7 +62,7 @@ namespace AnyRPG {
         }
 
         public bool HasFlyMoveInput() {
-            if (NormalizedMoveInput != Vector3.zero || TurnInput != Vector3.zero || inputSink != false || inputFly != false) {
+            if (NormalizedMoveInput != Vector3.zero || TurnInput != Vector3.zero || InputSink != false || InputFly != false) {
                 return true;
             } else {
                 return false;

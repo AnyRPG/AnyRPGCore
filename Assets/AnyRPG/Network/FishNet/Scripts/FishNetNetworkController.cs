@@ -44,6 +44,7 @@ namespace AnyRPG {
             fishNetNetworkManager = InstanceFinder.NetworkManager;
             if (fishNetNetworkManager != null) {
                 //Debug.Log("FishNetNetworkController.Configure() Found FishNet NetworkManager");
+                fishNetNetworkManager.TimeManager.SetPhysicsMode(FishNet.Managing.Timing.PhysicsMode.Unity);
 
                 fishNetNetworkManager.ClientManager.OnClientConnectionState += HandleClientConnectionState;
                 //fishNetNetworkManager.SceneManager.OnClientLoadedStartScenes += HandleClientLoadedStartScenes;
@@ -119,6 +120,7 @@ namespace AnyRPG {
             if (serverState == LocalConnectionState.Started) {
                 //Debug.Log("FishNetNetworkController.HandleServerConnectionState() Server connection started.  Activating Server Mode.");
                 systemGameManager.SetGameMode(GameMode.Network);
+                fishNetNetworkManager.TimeManager.SetPhysicsMode(FishNet.Managing.Timing.PhysicsMode.TimeManager);
                 networkManagerServer.ActivateServerMode();
                 SubscribeToServerEvents();
                 InstantiateNetworkConnector();
@@ -127,6 +129,7 @@ namespace AnyRPG {
             } else if (serverState == LocalConnectionState.Stopped) {
                 //Debug.Log("FishNetNetworkController.HandleServerConnectionState() Stopped");
                 systemGameManager.SetGameMode(GameMode.Local);
+                fishNetNetworkManager.TimeManager.SetPhysicsMode(FishNet.Managing.Timing.PhysicsMode.Unity);
                 networkManagerServer.DeactivateServerMode();
                 UnsubscribeFromServerEvents();
             }
@@ -161,11 +164,13 @@ namespace AnyRPG {
             } else if (clientState == LocalConnectionState.Started) {
                 //Debug.Log("FishNetNetworkController.OnClientConnectionState() Connection Successful. Setting mode to network");
                 systemGameManager.SetGameMode(GameMode.Network);
+                fishNetNetworkManager.TimeManager.SetPhysicsMode(FishNet.Managing.Timing.PhysicsMode.TimeManager);
             } else if (clientState == LocalConnectionState.Stopping) {
                 //Debug.Log("FishNetNetworkController.OnClientConnectionState() Disconnected from server. Stopping");
             } else if (clientState == LocalConnectionState.Stopped) {
                 //Debug.Log("FishNetNetworkController.OnClientConnectionState() Disconnected from server. Setting mode to local");
                 systemGameManager.NetworkManagerClient.ProcessStopConnection();
+                fishNetNetworkManager.TimeManager.SetPhysicsMode(FishNet.Managing.Timing.PhysicsMode.Unity);
                 UnsubscribeFromClientEvents();
             }
         }

@@ -13,22 +13,26 @@ namespace AnyRPG {
             this.unitMovementController = unitMovementController;
         }
 
-        public void Enter() {
+        public void Enter(bool isReplay) {
             //Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Enter()");
+
             unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
             unitMovementController.canJump = false;
-            unitController.UnitAnimator.SetJumping(1);
-            unitController.UnitAnimator.SetTrigger("JumpTrigger");
-            unitMovementController.lastKnockbackFrame = Time.frameCount;
+            unitMovementController.lastKnockbackFrame = unitMovementController.CurrentMovementData.SimulatedTick;
+
+            if (isReplay == false) {
+                unitController.UnitAnimator.SetJumping(1);
+                unitController.UnitAnimator.SetTrigger("JumpTrigger");
+            }
         }
 
-        public void Exit() {
+        public void Exit(bool isReplay) {
             //Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Exit()");
         }
 
-        public void Update() {
+        public void Update(bool isReplay) {
             //Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Update()");
-            if (Time.frameCount <= (unitMovementController.lastKnockbackFrame + 2)) {
+            if (unitMovementController.CurrentMovementData.SimulatedTick <= (unitMovementController.lastKnockbackFrame + 2)) {
                 // rigidbody velocity does not immediately update, so a small delay must be added before checking
                 // if a different state should be entered
                 return;
@@ -36,7 +40,7 @@ namespace AnyRPG {
 
             if (unitController.InWater == true) {
                 if (unitMovementController.CheckForSwimming() == true) {
-                    unitMovementController.ChangeState(CharacterMovementState.Swim);
+                    unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
                     return;
                 }
             }
@@ -44,11 +48,11 @@ namespace AnyRPG {
             if (unitMovementController.touchingGround && unitController.RigidBody.linearVelocity.y < 0.1) {
                 if (unitMovementController.CurrentMovementData.HasMoveInput() || unitMovementController.CurrentMovementData.HasTurnInput()) {
                     // new code to allow not freezing up when landing - fix, should be fall or somehow prevent from getting into move during takeoff
-                    unitMovementController.ChangeState(CharacterMovementState.Move);
+                    unitMovementController.ChangeState(CharacterMovementState.Move, isReplay);
                     return;
                 }
                 //Debug.Log($"PlayerUnitMovementController.Knockback_StateUpdate() entering Idle state with y velocity: {unitController.RigidBody.velocity.y} on frame {Time.frameCount}");
-                unitMovementController.ChangeState(CharacterMovementState.Idle);
+                unitMovementController.ChangeState(CharacterMovementState.Idle, isReplay);
                 return;
             }
         }

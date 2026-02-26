@@ -1,6 +1,3 @@
-using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -14,42 +11,60 @@ namespace AnyRPG {
             this.unitMovementController = unitMovementController;
         }
 
-        public void Enter() {
-            //Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Enter()");
+        public void Enter(bool isReplay) {
+            Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Enter(isReplay: {isReplay})");
+
+            // 1. PERSISTENT PHYSICS & STATE (Always run during replays)
             unitMovementController.currentFallDistance = 0f;
-            unitController.StartFlying();
+
+            // Ensure the motor knows we are in 'Flying' mode for this tick's simulation
+            unitController.StartFlying(isReplay);
+
+            // Rigidbody state must be forced every replay to match the Server's simulation
             unitController.RigidBody.useGravity = false;
-            unitController.UnitAnimator.SetBool("Flying", true);
-            unitController.UnitAnimator.SetTrigger("FlyTrigger");
+
+            // 2. VISUALS & ONE-SHOT TRIGGERS (Guard with !isReplay)
+            if (!isReplay) {
+                // These only need to happen once on the initial "Prediction"
+                unitController.UnitAnimator.SetBool("Flying", true);
+                unitController.UnitAnimator.SetTrigger("FlyTrigger");
+
+                // If there's a "Takeoff" sound or effect, trigger it here:
+                // unitController.UnitEventController.NotifyOnFlyStart();
+            }
         }
 
-        public void Exit() {
-            //Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Exit()");
-            unitController.StopFlying();
+
+        public void Exit(bool isReplay) {
+            Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Exit(isReplay: {isReplay})");
+
+            unitController.StopFlying(isReplay);
             unitController.RigidBody.useGravity = true;
-            unitController.UnitAnimator.SetBool("Flying", false);
             unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+            if (isReplay == false) {
+                unitController.UnitAnimator.SetBool("Flying", false);
+            }
         }
 
-        public void Update() {
+        public void Update(bool isReplay) {
             //Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Update()");
-            unitMovementController.airForwardDirection = unitController.transform.forward;
 
-            if (unitMovementController.touchingGround == true && unitMovementController.CurrentMovementData.inputFly == false) {
+            unitMovementController.airForwardDirection = unitController.transform.forward;
+            if (unitMovementController.touchingGround == true && unitMovementController.CurrentMovementData.InputFly == false) {
                 if (unitMovementController.CurrentMovementData.HasMoveInput()) {
-                    unitMovementController.ChangeState(CharacterMovementState.Move);
+                    unitMovementController.ChangeState(CharacterMovementState.Move, isReplay);
                     return;
                 } else {
-                    unitMovementController.ChangeState(CharacterMovementState.Idle);
+                    unitMovementController.ChangeState(CharacterMovementState.Idle, isReplay);
                     return;
                 }
             }
             if (unitController.InWater == true && unitMovementController.CheckForSwimming() == true) {
-                unitMovementController.ChangeState(CharacterMovementState.Swim);
+                unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
                 return;
             }
             if (unitController.CanFly == false) {
-                unitMovementController.ChangeState(CharacterMovementState.Fall);
+                unitMovementController.ChangeState(CharacterMovementState.Fall, isReplay);
                 return;
             }
 
@@ -84,9 +99,11 @@ namespace AnyRPG {
                 unitMovementController.CalculateTurnVelocity();
 
 
-                // ============ ANIMATOR PARAMETERS ============
-                unitController.UnitAnimator.SetMoving(true);
-                unitController.UnitAnimator.SetTurnVelocity(unitMovementController.currentTurnVelocity.x);
+                if (isReplay == false) {
+                    // ============ ANIMATOR PARAMETERS ============
+                    unitController.UnitAnimator.SetMoving(true);
+                    unitController.UnitAnimator.SetTurnVelocity(unitMovementController.currentTurnVelocity.x);
+                }
 
             } else {
                 // ============ RIGIDBODY CONSTRAINTS ============
@@ -96,13 +113,16 @@ namespace AnyRPG {
                 // ============ VELOCITY CALCULATIONS ============
                 unitMovementController.localMoveVelocity = Vector3.zero;
                 unitMovementController.adjustedlocalMoveVelocity = unitMovementController.localMoveVelocity;
-
-                // ============ ANIMATOR PARAMETERS ============
-                unitController.UnitAnimator.SetMoving(false);
-                unitController.UnitAnimator.SetTurnVelocity(0f);
+                if (isReplay == false) {
+                    // ============ ANIMATOR PARAMETERS ============
+                    unitController.UnitAnimator.SetMoving(false);
+                    unitController.UnitAnimator.SetTurnVelocity(0f);
+                }
 
             }
-            unitController.UnitAnimator.SetVelocity(unitMovementController.localMoveVelocity);
+            if (isReplay == false) {
+                unitController.UnitAnimator.SetVelocity(unitMovementController.localMoveVelocity);
+            }
 
             unitMovementController.MoveRelative();
         }

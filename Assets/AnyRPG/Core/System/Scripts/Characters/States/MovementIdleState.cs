@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -13,57 +11,65 @@ namespace AnyRPG {
             this.unitMovementController = unitMovementController;
         }
 
-        public void Enter() {
-            //Debug.Log($"{unitController.gameObject.name}.MovementIdleState.Enter()");
-            // allow the character to fall until they reach the ground
+        public void Enter(bool isReplay) {
+            // 1. PERSISTENT PHYSICS & STATE (Always run during replays)
+            // We must freeze position and reset velocity every replay to ensure 
+            // the character doesn't "drift" during the 7-frame re-simulation.
             unitController.FreezePositionXZ();
 
-            // reset velocity from any falling movement that was happening
+            // Reset local move velocity for deterministic simulation
             unitMovementController.localMoveVelocity = Vector3.zero;
-            unitMovementController.EnterGroundStateCommon();
 
-            unitController.UnitAnimator.SetMoving(false);
-            unitController.UnitAnimator.SetStrafing(false);
-            unitController.UnitAnimator.SetTurnVelocity(0f);
+            // Ensure Grounded flags are set correctly for every replayed tick
+            unitMovementController.EnterGroundStateCommon(isReplay);
 
-            unitController.UnitAnimator.SetVelocity(unitMovementController.localMoveVelocity);
-
+            // Apply the stop to the motor (Physics simulation)
+            // We keep the Y-clamp to ensure we don't "bounce" off the floor during replay
             unitController.UnitMotor?.Move(new Vector3(0, Mathf.Clamp(unitController.RigidBody.linearVelocity.y, -53, 0), 0));
-            unitMovementController.CalculateFallDamage();
 
+            // 2. VISUALS & ONE-SHOT TRIGGERS (Guard with !isReplay)
+            if (isReplay == false) {
+                unitController.UnitAnimator.SetMoving(false);
+                unitController.UnitAnimator.SetStrafing(false);
+                unitController.UnitAnimator.SetTurnVelocity(0f);
+                unitController.UnitAnimator.SetVelocity(unitMovementController.localMoveVelocity);
+            }
+            unitMovementController.CalculateFallDamage(isReplay);
         }
 
-        public void Exit() {
-            //Debug.Log($"{unitController.gameObject.name}.MovementIdleState.Exit()");
+
+        public void Exit(bool isReplay) {
+            Debug.Log($"{unitController.gameObject.name}.MovementIdleState.Exit()");
+
             unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
         }
 
-        public void Update() {
+        public void Update(bool isReplay) {
             //Debug.Log($"{unitController.gameObject.name}.MovementIdleState.Update()");
             if (unitController.InWater == true) {
                 if (unitMovementController.CheckForSwimming() == true) {
-                    unitMovementController.ChangeState(CharacterMovementState.Swim);
+                    unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
                     return;
                 }
             }
 
-            if (unitMovementController.CurrentMovementData.inputJump) {
-                unitMovementController.ChangeState(CharacterMovementState.Jump);
+            if (unitMovementController.CurrentMovementData.InputJump) {
+                unitMovementController.ChangeState(CharacterMovementState.Jump, isReplay);
                 return;
             }
 
-            if (unitController.CanFly && unitMovementController.CurrentMovementData.inputFly) {
-                unitMovementController.ChangeState(CharacterMovementState.Jump);
+            if (unitController.CanFly && unitMovementController.CurrentMovementData.InputFly) {
+                unitMovementController.ChangeState(CharacterMovementState.Jump, isReplay);
                 return;
             }
 
             if (!unitMovementController.MaintainingGround() && unitMovementController.groundAngle > unitMovementController.slopeLimit) {
-                unitMovementController.ChangeState(CharacterMovementState.Fall);
+                unitMovementController.ChangeState(CharacterMovementState.Fall, isReplay);
                 return;
             }
             if (unitMovementController.CurrentMovementData.HasMoveInput() || unitMovementController.CurrentMovementData.HasTurnInput()) {
                 //Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.Idle_StateUpdate(): entering move state");
-                unitMovementController.ChangeState(CharacterMovementState.Move);
+                unitMovementController.ChangeState(CharacterMovementState.Move, isReplay);
                 return;
             }
         }

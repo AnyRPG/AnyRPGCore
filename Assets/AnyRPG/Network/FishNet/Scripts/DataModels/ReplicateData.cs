@@ -2,8 +2,8 @@ using FishNet.Object.Prediction;
 
 namespace AnyRPG {
     public struct ReplicateData : IReplicateData {
-        
-        public MovementData MovementData { get; private set; }
+
+        public MovementData MovementData;
 
         public ReplicateData(MovementData movementData) : this() {
             MovementData = movementData;

@@ -156,44 +156,44 @@ namespace AnyRPG {
             // don't allow jump or crouch while activating action bars
             if (controlsManager.LeftTriggerDown == false && controlsManager.RightTriggerDown == false) {
                 if (inputManager.KeyBindWasPressed("JUMP")) {
-                     movementData.inputJump = true;
+                     movementData.InputJump = true;
                 }
                 if (inputManager.KeyBindWasPressedOrHeld("JUMP")) {
-                    movementData.inputFly = true;
+                    movementData.InputFly = true;
                 }
                 if (inputManager.KeyBindWasPressedOrHeld("CROUCH")) {
-                    movementData.inputSink = true;
+                    movementData.InputSink = true;
                 }
                 if (inputManager.KeyBindWasPressed("CROUCH")) {
-                    movementData.inputCrouch = true;
+                    movementData.InputCrouch = true;
                 }
             }
 
-            movementData.inputStrafe = inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") || inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT");
+            movementData.InputStrafe = inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") || inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT");
 
             // gather joystick move input
-            movementData.inputHorizontal = Input.GetAxis("LeftAnalogHorizontal");
-            movementData.inputVertical = Input.GetAxis("LeftAnalogVertical");
+            movementData.InputHorizontal = Input.GetAxis("LeftAnalogHorizontal");
+            movementData.InputVertical = Input.GetAxis("LeftAnalogVertical");
 
             // gather keyboard move input
-            movementData.inputHorizontal += (inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT") ? 1 : 0);
-            movementData.inputVertical += (inputManager.KeyBindWasPressedOrHeld("BACK") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("FORWARD") ? 1 : 0);
+            movementData.InputHorizontal += (inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT") ? 1 : 0);
+            movementData.InputVertical += (inputManager.KeyBindWasPressedOrHeld("BACK") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("FORWARD") ? 1 : 0);
 
             // gather keyboard turn input
-            movementData.inputTurn += (inputManager.KeyBindWasPressedOrHeld("TURNLEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("TURNRIGHT") ? 1 : 0);
+            movementData.InputTurn += (inputManager.KeyBindWasPressedOrHeld("TURNLEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("TURNRIGHT") ? 1 : 0);
 
             // turn off autorun if there is any movement input
             if (autorunActive
-                && ((movementData.inputHorizontal != 0f) || (movementData.inputVertical != 0f) || movementData.inputJump || movementData.inputFly || movementData.inputSink || movementData.inputStrafe || movementData.inputCrouch)) {
+                && ((movementData.InputHorizontal != 0f) || (movementData.InputVertical != 0f) || movementData.InputJump || movementData.InputFly || movementData.InputSink || movementData.InputStrafe || movementData.InputCrouch)) {
                 ToggleAutorun();
             }
 
             if (autorunActive) {
-                movementData.inputVertical = 1;
+                movementData.InputVertical = 1;
             }
 
-            movementData.NormalizedMoveInput = NormalizedVelocity(new Vector3(movementData.inputHorizontal, 0, movementData.inputVertical));
-            movementData.TurnInput = new Vector3(movementData.inputTurn, 0, 0);
+            movementData.NormalizedMoveInput = NormalizedVelocity(new Vector3(movementData.InputHorizontal, 0, movementData.InputVertical));
+            movementData.TurnInput = new Vector3(movementData.InputTurn, 0, 0);
 
             if (inputManager.rightMouseButtonDown
                 && (inputManager.rightMouseButtonClickedOverUI == false || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))) {

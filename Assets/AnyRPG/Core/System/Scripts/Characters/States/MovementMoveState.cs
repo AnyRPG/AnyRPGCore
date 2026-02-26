@@ -1,4 +1,3 @@
-using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,18 +13,22 @@ namespace AnyRPG {
             this.unitMovementController = unitMovementController;
         }
 
-        public void Enter() {
-            //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Enter()");
-            unitMovementController.EnterGroundStateCommon();
-            unitMovementController.CalculateFallDamage();
+        public void Enter(bool isReplay) {
+            Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Enter(isReplay: {isReplay})");
+
+            unitMovementController.EnterGroundStateCommon(isReplay);
+            unitMovementController.CalculateFallDamage(isReplay);
         }
 
-        public void Exit() {
-            //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Exit()");
-            unitController.UnitAnimator.SetMoving(false);
+        public void Exit(bool isReplay) {
+            Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Exit(isReplay: {isReplay})");
+
+            if (isReplay == false) {
+                unitController.UnitAnimator.SetMoving(false);
+            }
         }
 
-        public void Update() {
+        public void Update(bool isReplay) {
             //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Update()");
             unitMovementController.airForwardDirection = unitController.transform.forward;
 
@@ -34,18 +37,18 @@ namespace AnyRPG {
 
             if (unitController.InWater == true) {
                 if (unitMovementController.CheckForSwimming() == true) {
-                    unitMovementController.ChangeState(CharacterMovementState.Swim);
+                    unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
                     return;
                 }
             }
 
-            if (unitMovementController.CurrentMovementData.inputJump) {
-                unitMovementController.ChangeState(CharacterMovementState.Jump);
+            if (unitMovementController.CurrentMovementData.InputJump) {
+                unitMovementController.ChangeState(CharacterMovementState.Jump, isReplay);
                 return;
             }
 
-            if (unitController.CanFly && unitMovementController.CurrentMovementData.inputFly) {
-                unitMovementController.ChangeState(CharacterMovementState.Jump);
+            if (unitController.CanFly && unitMovementController.CurrentMovementData.InputFly) {
+                unitMovementController.ChangeState(CharacterMovementState.Jump, isReplay);
                 return;
             }
 
@@ -101,15 +104,15 @@ namespace AnyRPG {
                 //Debug.Log("groundAngle: " + groundAngle + "; closestWalkablegrounddistance: " + closestWalkableGroundDistance + "; nearLowObstacle: " + nearLowObstacle + "; nearBottomFrontObstacle: " + nearBottomFrontObstacle + "; touchingGround: " + touchingGround);
                 //Debug.Break();
                 if (unitController.CanFly) {
-                    unitMovementController.ChangeState(CharacterMovementState.Fly);
+                    unitMovementController.ChangeState(CharacterMovementState.Fly, isReplay);
                     return;
                 } else {
                     if (unitController.CanGlide) {
-                        unitMovementController.ChangeState(CharacterMovementState.Glide);
+                        unitMovementController.ChangeState(CharacterMovementState.Glide, isReplay);
                         return;
                     }
                     //if (touchingGround == false) {
-                    unitMovementController.ChangeState(CharacterMovementState.Fall);
+                    unitMovementController.ChangeState(CharacterMovementState.Fall, isReplay);
                     return;
                     //}
                 }
@@ -123,13 +126,15 @@ namespace AnyRPG {
                 unitMovementController.CalculateTurnVelocity();
             } else {
                 unitMovementController.currentTurnVelocity = Vector3.zero;
-                unitMovementController.ChangeState(CharacterMovementState.Idle);
+                unitMovementController.ChangeState(CharacterMovementState.Idle, isReplay);
                 //rpgCharacterState = CharacterMovementState.Idle;
                 return;
             }
 
             unitMovementController.MoveRelative();
-            unitMovementController.AnimatorMoveUpdate();
+            if (isReplay == false) {
+                unitMovementController.AnimatorMoveUpdate();
+            }
         }
     }
 
