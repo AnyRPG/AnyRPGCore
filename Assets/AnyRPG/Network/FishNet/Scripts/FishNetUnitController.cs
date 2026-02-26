@@ -2386,7 +2386,7 @@ namespace AnyRPG {
             bool isReplaying = (state & ReplicateState.Replayed) == ReplicateState.Replayed;
 
             if ((unitController.UnitControllerMode == UnitControllerMode.Mount || unitController.UnitControllerMode == UnitControllerMode.Player)) {
-                unitController.UnitMovementController.StateUpdate(replicateData.MovementData, (float)TimeManager.TickDelta, isReplaying);
+                unitController.UnitMovementController.StateUpdate(replicateData.MovementData, TimeManager.TickDelta, isReplaying);
             }
             predictionRigidbody.Simulate();
         }

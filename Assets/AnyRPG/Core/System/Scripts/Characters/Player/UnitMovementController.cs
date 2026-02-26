@@ -353,7 +353,7 @@ namespace AnyRPG {
             }
         }
 
-        protected void LateGlobalStateUpdate(float timeInterval) {
+        protected void LateGlobalStateUpdate(double timeInterval) {
 
             if (unitController.CharacterStats.IsAlive == true) {
                 if ((currentMovementData.RightMouseDragged == true && unitController.UnitProfile.UnitPrefabProps.RotateModel == false)
@@ -366,7 +366,7 @@ namespace AnyRPG {
                 }
 
                 if (currentMovementData.InputTurn != 0) {
-                    unitController.UnitMotor.Rotate(new Vector3(0, currentTurnVelocity.x * timeInterval, 0));
+                    unitController.UnitMotor.Rotate(new Vector3(0, currentTurnVelocity.x * (float)timeInterval, 0));
                 }
             }
 
@@ -1182,7 +1182,7 @@ namespace AnyRPG {
         }
         */
 
-        public void StateUpdate(MovementData movementData, float timeInterval, bool isReplay) {
+        public void StateUpdate(MovementData movementData, double timeInterval, bool isReplay) {
             if (currentIMovementState == null) {
                 return;
             }
