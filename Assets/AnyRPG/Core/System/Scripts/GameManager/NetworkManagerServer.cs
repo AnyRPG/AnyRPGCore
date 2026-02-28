@@ -322,9 +322,9 @@ namespace AnyRPG {
             }
             LobbyGame lobbyGame = new LobbyGame(accountId, lobbyGameCounter, sceneResourceName, authenticationService.LoggedInAccounts[accountId].username, allowLateJoin);
             lobbyGameCounter++;
-            lobbyGames.Add(lobbyGame.gameId, lobbyGame);
-            lobbyGameAccountLookup.Add(accountId, lobbyGame.gameId);
-            lobbyGameChatText.Add(lobbyGame.gameId, string.Empty);
+            lobbyGames.Add(lobbyGame.GameId, lobbyGame);
+            lobbyGameAccountLookup.Add(accountId, lobbyGame.GameId);
+            lobbyGameChatText.Add(lobbyGame.GameId, string.Empty);
             OnCreateLobbyGame(lobbyGame);
             networkController.AdvertiseCreateLobbyGame(lobbyGame);
         }
@@ -334,7 +334,7 @@ namespace AnyRPG {
             if (accountId == -1) {
                 return;
             }
-            if (lobbyGames.ContainsKey(gameId) == false || lobbyGames[gameId].leaderAccountId != accountId) {
+            if (lobbyGames.ContainsKey(gameId) == false || lobbyGames[gameId].LeaderAccountId != accountId) {
                 // game not found, or requesting client is not leader
                 return;
             }
@@ -437,7 +437,7 @@ namespace AnyRPG {
             if (accountId == -1) {
                 return;
             }
-            if (lobbyGames.ContainsKey(gameId) == false || lobbyGames[gameId].leaderAccountId != accountId || lobbyGames[gameId].inProgress == true) {
+            if (lobbyGames.ContainsKey(gameId) == false || lobbyGames[gameId].LeaderAccountId != accountId || lobbyGames[gameId].InProgress == true) {
                 // game did not exist, non leader tried to start, or already in progress, nothing to do
                 return;
             }
@@ -449,7 +449,7 @@ namespace AnyRPG {
             if (accountId == -1) {
                 return;
             }
-            if (lobbyGames.ContainsKey(gameId) == false || lobbyGames[gameId].inProgress == false || lobbyGames[gameId].allowLateJoin == false) {
+            if (lobbyGames.ContainsKey(gameId) == false || lobbyGames[gameId].InProgress == false || lobbyGames[gameId].AllowLateJoin == false) {
                 // game did not exist or not in progress or does not allow late joins
                 return;
             }
@@ -463,7 +463,7 @@ namespace AnyRPG {
             //if (playerManagerServer.SpawnRequests.ContainsKey(accountId) == false) {
             if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId) == false) {
                 //Debug.Log($"NetworkManagerServer.JoinLobbyGameInProgress({gameId}, {accountId}) - new spawn setting appearance");
-                sceneName = lobbyGames[gameId].sceneResourceName;
+                sceneName = lobbyGames[gameId].SceneResourceName;
                 CharacterSaveData playerCharacterSaveData = GetNewLobbyGameCharacterSaveData(gameId, accountId, lobbyGames[gameId].PlayerList[accountId].unitProfileName);
                 playerCharacterSaveData.AppearanceString = lobbyGames[gameId].PlayerList[accountId].appearanceString;
                 playerCharacterSaveData.SwappableMeshSaveData = lobbyGames[gameId].PlayerList[accountId].swappableMeshSaveData;
@@ -485,7 +485,7 @@ namespace AnyRPG {
             // first try the scene resource name provided, then fallback to the lobby game default scene resource name
             SceneNode loadingSceneNode = systemDataFactory.GetResource<SceneNode>(sceneName);
             if (loadingSceneNode == null) {
-                loadingSceneNode = systemDataFactory.GetResource<SceneNode>(lobbyGame.sceneResourceName);
+                loadingSceneNode = systemDataFactory.GetResource<SceneNode>(lobbyGame.SceneResourceName);
                 if (loadingSceneNode == null) {
                     return;
                 }
@@ -497,7 +497,7 @@ namespace AnyRPG {
         public void StartLobbyGame(int gameId) {
             //Debug.Log($"NetworkManagerServer.StartLobbyGame({gameId})");
 
-            lobbyGames[gameId].inProgress = true;
+            lobbyGames[gameId].InProgress = true;
             OnStartLobbyGame(gameId);
             // create spawn requests for all players in the game
             foreach (KeyValuePair<int, LobbyGamePlayerInfo> playerInfo in lobbyGames[gameId].PlayerList) {
@@ -520,7 +520,7 @@ namespace AnyRPG {
                 // game or client doesn't exist
                 return;
             }
-            if (lobbyGames[gameId].leaderAccountId == accountId && lobbyGames[gameId].inProgress == false) {
+            if (lobbyGames[gameId].LeaderAccountId == accountId && lobbyGames[gameId].InProgress == false) {
                 CancelLobbyGame(accountId, gameId);
             } else {
                 lobbyGames[gameId].RemovePlayer(accountId);
@@ -621,11 +621,11 @@ namespace AnyRPG {
         public void LoadLobbyGameScene(int accountId, LobbyGame lobbyGame, SceneNode sceneNode) {
             //Debug.Log($"FishNetClientConnector.LoadLobbyGameScene({lobbyGame.gameId}, {sceneNode.SceneFile}, {networkConnection.ClientId}");
 
-            if (lobbyGameSceneHandles.ContainsKey(lobbyGame.gameId) == false || lobbyGameSceneHandles[lobbyGame.gameId].ContainsKey(sceneNode.SceneFile) == false) {
+            if (lobbyGameSceneHandles.ContainsKey(lobbyGame.GameId) == false || lobbyGameSceneHandles[lobbyGame.GameId].ContainsKey(sceneNode.SceneFile) == false) {
                 networkController.LoadNewLobbyGameScene(accountId, lobbyGame, sceneNode);
                 return;
             }
-            networkController.LoadExistingScene(accountId, lobbyGameSceneHandles[lobbyGame.gameId][sceneNode.SceneFile]);
+            networkController.LoadExistingScene(accountId, lobbyGameSceneHandles[lobbyGame.GameId][sceneNode.SceneFile]);
         }
 
         public void AdvertiseLoadCutscene(Cutscene cutscene, int accountId) {
@@ -1150,7 +1150,7 @@ namespace AnyRPG {
             characterSaveData.CharacterId = accountId;
             characterSaveData.CharacterName = lobbyGames[gameId].PlayerList[accountId].userName;
             characterSaveData.UnitProfileName = unitProfile.ResourceName;
-            characterSaveData.CurrentScene = lobbyGames[gameId].sceneResourceName;
+            characterSaveData.CurrentScene = lobbyGames[gameId].SceneResourceName;
             return characterSaveData;
         }
 
@@ -1321,7 +1321,8 @@ namespace AnyRPG {
                 friendServiceServer.SendFriendListInfo(accountId);
             }
 
-            SceneNode sceneNode = sceneUtilityService.GetSceneNodeBySceneName(sceneName);
+            // we need to check for both here because the data could contain scene resource name or a scene name.
+            SceneNode sceneNode = sceneUtilityService.GetSceneNodeBySceneOrResourceName(sceneName);
             if (sceneNode == null) {
                 Debug.LogWarning($"NetworkManagerServer.RequestLoadPlayerCharacter(clientId: {clientId}, playerCharacterId: {playerCharacterId}) could not find scene node for {sceneName}");
                 return;

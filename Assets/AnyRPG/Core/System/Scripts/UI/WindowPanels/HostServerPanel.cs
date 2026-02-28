@@ -133,7 +133,7 @@ namespace AnyRPG {
         }
 
         public void HandleCreateLobbyGame(LobbyGame lobbyGame) {
-            AddLobbyGameToList(lobbyGame.gameId, lobbyGame);
+            AddLobbyGameToList(lobbyGame.GameId, lobbyGame);
         }
 
         public void AddLobbyGameToList(int gameId, LobbyGame lobbyGame) {

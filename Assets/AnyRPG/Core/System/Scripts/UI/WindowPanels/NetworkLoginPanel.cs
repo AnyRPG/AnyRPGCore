@@ -20,7 +20,10 @@ namespace AnyRPG {
         private TMP_InputField serverInput = null;
 
         [SerializeField]
-        private Toggle toggle = null;
+        private Toggle rememberUsernameToggle = null;
+
+        [SerializeField]
+        private Toggle rememberServerToggle = null;
 
         // game manager references
         private UIManager uIManager = null;
@@ -62,12 +65,19 @@ namespace AnyRPG {
             string username = userNameInput.text;
             string password = passwordInput.text;
             string server = serverInput.text;
-            bool rememberMe = toggle.isOn;
-            if (rememberMe) {
+            bool rememberUsername = rememberUsernameToggle.isOn;
+            if (rememberUsername) {
                 PlayerPrefs.SetString("NetworkLoginPanel.username", username);
-                PlayerPrefs.SetInt("NetworkLoginPanel.rememberMe", 1);
+                PlayerPrefs.SetInt("NetworkLoginPanel.rememberUsername", 1);
             } else {
-                PlayerPrefs.SetInt("NetworkLoginPanel.rememberMe", 0);
+                PlayerPrefs.SetInt("NetworkLoginPanel.rememberUsername", 0);
+            }
+            bool rememberServer = rememberServerToggle.isOn;
+            if (rememberServer) {
+                PlayerPrefs.SetString("NetworkLoginPanel.server", server);
+                PlayerPrefs.SetInt("NetworkLoginPanel.rememberServer", 1);
+            } else {
+                PlayerPrefs.SetInt("NetworkLoginPanel.rememberServer", 0);
             }
             /*
             if (textInput.text != null && textInput.text != string.Empty) {
@@ -83,10 +93,16 @@ namespace AnyRPG {
         public override void ProcessOpenWindowNotification() {
             //Debug.Log("NetworkLoginPanelController.ProcessOpenWindowNotification()");
             base.ProcessOpenWindowNotification();
-            if (PlayerPrefs.HasKey("NetworkLoginPanel.rememberMe")) {
-                toggle.isOn = PlayerPrefs.GetInt("NetworkLoginPanel.rememberMe") == 1;
-                if (toggle.isOn && PlayerPrefs.HasKey("NetworkLoginPanel.username")) {
+            if (PlayerPrefs.HasKey("NetworkLoginPanel.rememberUsername")) {
+                rememberUsernameToggle.isOn = PlayerPrefs.GetInt("NetworkLoginPanel.rememberUsername") == 1;
+                if (rememberUsernameToggle.isOn && PlayerPrefs.HasKey("NetworkLoginPanel.username")) {
                     userNameInput.text = PlayerPrefs.GetString("NetworkLoginPanel.username");
+                }
+            }
+            if (PlayerPrefs.HasKey("NetworkLoginPanel.rememberServer")) {
+                rememberServerToggle.isOn = PlayerPrefs.GetInt("NetworkLoginPanel.rememberServer") == 1;
+                if (rememberServerToggle.isOn && PlayerPrefs.HasKey("NetworkLoginPanel.server")) {
+                    serverInput.text = PlayerPrefs.GetString("NetworkLoginPanel.server");
                 }
             }
         }

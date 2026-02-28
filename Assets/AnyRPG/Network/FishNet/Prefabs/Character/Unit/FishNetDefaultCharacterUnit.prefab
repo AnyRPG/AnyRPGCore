@@ -86,7 +86,7 @@ PrefabInstance:
     - target: {fileID: 7989242567668304555, guid: ba09f14eb0109ba459f4520b82c3fadc,
         type: 3}
       propertyPath: m_UUID
-      value: da04fb1c-b923-4a5c-a304-38a47e0824f6
+      value: e2112efb-9c2d-4cee-84a8-cfdeef60e021
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -132,6 +132,7 @@ MonoBehaviour:
     Position: 1
     Rotation: 1
     Scale: 0
+  _useScaledTime: 1
   _interpolation: 2
   _extrapolation: 2
   _enableTeleport: 0
@@ -140,6 +141,7 @@ MonoBehaviour:
   _sendToOwner: 0
   _interval: 1
   _synchronizePosition: 1
+  _positionSensitivity: 0.001
   _positionSnapping:
     X: 0
     Y: 0
@@ -150,6 +152,7 @@ MonoBehaviour:
     Y: 0
     Z: 0
   _synchronizeScale: 1
+  _scaleSensitivity: 0.001
   _scaleSnapping:
     X: 0
     Y: 0
@@ -200,9 +203,11 @@ MonoBehaviour:
   _initializeOrder: -1
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
+  _initializedTimestamp: -8584293353043093269
   NetworkObserver: {fileID: 0}
   _enablePrediction: 1
   _predictionType: 1
+  _localReconcileCorrectionType: 2
   _graphicalObject: {fileID: 0}
   _detachGraphicalObject: 0
   _enableStateForwarding: 0
@@ -214,10 +219,10 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 66
+  <PrefabId>k__BackingField: 17
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 16091646072967988289
-  <SceneId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 3807448907906634832
+  SceneId: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 1}

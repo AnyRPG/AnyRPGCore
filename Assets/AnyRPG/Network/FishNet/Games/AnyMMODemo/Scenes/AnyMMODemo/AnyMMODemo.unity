@@ -1957,6 +1957,17 @@ PrefabInstance:
       propertyPath: '_sceneNetworkObjects.Array.data[0]'
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 48716581094196644, guid: 4dd1a86132e2b214fb216a9711c60a8b,
+        type: 3}
+      propertyPath: _spawnablePrefabs
+      value: 
+      objectReference: {fileID: 11400000, guid: 119a40ed3988add46a0ca00d9a3667e2,
+        type: 2}
+    - target: {fileID: 48716581094196644, guid: 4dd1a86132e2b214fb216a9711c60a8b,
+        type: 3}
+      propertyPath: _refreshDefaultPrefabs
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 48716581094196645, guid: 4dd1a86132e2b214fb216a9711c60a8b,
         type: 3}
       propertyPath: m_Name

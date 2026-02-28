@@ -36,9 +36,9 @@ namespace AnyRPG {
 
         public void SetGame(LobbyGame lobbyGame) {
             this.lobbyGame = lobbyGame;
-            this.gameId = lobbyGame.gameId;
-            sceneNameText.text = lobbyGame.sceneResourceName;
-            leaderNameText.text = lobbyGame.leaderUserName;
+            this.gameId = lobbyGame.GameId;
+            sceneNameText.text = lobbyGame.SceneResourceName;
+            leaderNameText.text = lobbyGame.LeaderUserName;
             RefreshPlayerCount();
             RefreshStatus();
         }
@@ -48,9 +48,9 @@ namespace AnyRPG {
         }
 
         public void RefreshStatus() {
-            if (lobbyGame.inProgress) {
+            if (lobbyGame.InProgress) {
                 statusText.text = "In Progress";
-                if (lobbyGame.allowLateJoin) {
+                if (lobbyGame.AllowLateJoin) {
                     joinButton.Button.interactable = true;
                 } else {
                     joinButton.Button.interactable = false;

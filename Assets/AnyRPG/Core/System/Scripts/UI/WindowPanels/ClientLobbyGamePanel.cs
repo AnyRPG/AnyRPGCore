@@ -102,33 +102,33 @@ namespace AnyRPG {
         }
 
         public void StartGame() {
-            if (networkManagerClient.LobbyGame.inProgress == true) {
+            if (networkManagerClient.LobbyGame.InProgress == true) {
                 // we are already in a game, so just join it
-                networkManagerClient.RequestJoinLobbyGameInProgress(networkManagerClient.LobbyGame.gameId);
+                networkManagerClient.RequestJoinLobbyGameInProgress(networkManagerClient.LobbyGame.GameId);
                 return;
             }
-            networkManagerClient.RequestStartLobbyGame(networkManagerClient.LobbyGame.gameId);
+            networkManagerClient.RequestStartLobbyGame(networkManagerClient.LobbyGame.GameId);
         }
 
 
         public void CancelLobbyGame() {
-            networkManagerClient.CancelLobbyGame(networkManagerClient.LobbyGame.gameId);
+            networkManagerClient.CancelLobbyGame(networkManagerClient.LobbyGame.GameId);
         }
 
         public void ToggleReady() {
-            networkManagerClient.ToggleLobbyGameReadyStatus(networkManagerClient.LobbyGame.gameId);
+            networkManagerClient.ToggleLobbyGameReadyStatus(networkManagerClient.LobbyGame.GameId);
         }
 
         public void Leave() {
-            networkManagerClient.LeaveLobbyGame(networkManagerClient.LobbyGame.gameId);
+            networkManagerClient.LeaveLobbyGame(networkManagerClient.LobbyGame.GameId);
             uIManager.clientLobbyGameWindow.CloseWindow();
         }
 
         public void UpdateUIELements() {
             serverStatusText.text = $"Logged In As: {networkManagerClient.Username}";
-            SceneNode sceneNode = systemDataFactory.GetResource<SceneNode>(networkManagerClient.LobbyGame.sceneResourceName);
+            SceneNode sceneNode = systemDataFactory.GetResource<SceneNode>(networkManagerClient.LobbyGame.SceneResourceName);
             if (sceneNode == null) {
-                Debug.LogWarning($"Could not find scene {networkManagerClient.LobbyGame.sceneResourceName}");
+                Debug.LogWarning($"Could not find scene {networkManagerClient.LobbyGame.SceneResourceName}");
                 return;
             }
             if (sceneNode.LoadingScreenImage != null) {
@@ -148,14 +148,14 @@ namespace AnyRPG {
         }
 
         public void HandleJoinLobbyGame(int gameId, int accountId, string userName) {
-            if (gameId != networkManagerClient.LobbyGame.gameId) {
+            if (gameId != networkManagerClient.LobbyGame.GameId) {
                 return;
             }
             AddPlayerToList(accountId, userName, string.Empty);
         }
 
         public void HandleLeaveLobbyGame(int accountId, int gameId) {
-            if (gameId != networkManagerClient.LobbyGame.gameId) {
+            if (gameId != networkManagerClient.LobbyGame.GameId) {
                 return;
             }
             RemovePlayerFromList(accountId);
@@ -167,19 +167,19 @@ namespace AnyRPG {
         }
 
         public void HandleCancelLobbyGame(int gameId) {
-            if (gameId != networkManagerClient.LobbyGame.gameId) {
+            if (gameId != networkManagerClient.LobbyGame.GameId) {
                 return;
             }
             Close();
         }
 
         public void SendChatMessage() {
-            networkManagerClient.SendLobbyGameChatMessage(chatInput.text, networkManagerClient.LobbyGame.gameId);
+            networkManagerClient.SendLobbyGameChatMessage(chatInput.text, networkManagerClient.LobbyGame.GameId);
             chatInput.text = string.Empty;
         }
 
         public void HandleSendLobbyGameChatMessage(string messageText, int gameId) {
-            if (gameId != networkManagerClient.LobbyGame.gameId) {
+            if (gameId != networkManagerClient.LobbyGame.GameId) {
                 // this message is meant for a different lobby game and we will ignore it
                 return;
             }
@@ -200,7 +200,7 @@ namespace AnyRPG {
             foreach (KeyValuePair<int, LobbyGamePlayerInfo> loggedInAccount in userNames) {
                 AddPlayerToList(loggedInAccount.Key, loggedInAccount.Value.userName, loggedInAccount.Value.unitProfileName);
                 if (loggedInAccount.Value.ready == true) {
-                    HandleSetLobbyGameReadyStatus(networkManagerClient.LobbyGame.gameId, loggedInAccount.Key, true);
+                    HandleSetLobbyGameReadyStatus(networkManagerClient.LobbyGame.GameId, loggedInAccount.Key, true);
                 }
             }
         }
@@ -211,7 +211,7 @@ namespace AnyRPG {
             GameObject go = objectPooler.GetPooledObject(playerConnectionTemplate, playerConnectionContainer);
             ClientPlayerLobbyGameConnectionButton clientPlayerLobbyGameConnectionButton = go.GetComponent<ClientPlayerLobbyGameConnectionButton>();
             clientPlayerLobbyGameConnectionButton.Configure(systemGameManager);
-            if (networkManagerClient.LobbyGame.leaderAccountId == accountId) {
+            if (networkManagerClient.LobbyGame.LeaderAccountId == accountId) {
                 clientPlayerLobbyGameConnectionButton.SetClientId(accountId, $"{userName} (leader)", unitProfileName);
             } else {
                 clientPlayerLobbyGameConnectionButton.SetClientId(accountId, userName, unitProfileName);
@@ -220,7 +220,7 @@ namespace AnyRPG {
             playerButtons.Add(accountId, clientPlayerLobbyGameConnectionButton);
 
             if (accountId == networkManagerClient.AccountId) {
-                HandleChooseLobbyGameCharacter(networkManagerClient.LobbyGame.gameId, accountId, unitProfileName);
+                HandleChooseLobbyGameCharacter(networkManagerClient.LobbyGame.GameId, accountId, unitProfileName);
             }
         }
 
@@ -271,7 +271,7 @@ namespace AnyRPG {
         public void HandleSetLobbyGameReadyStatus(int gameId, int accountId, bool ready) {
             //Debug.Log($"ClientLobbyGamePanel.HandleSetLobbyGameReadyStatus({gameId}, {clientId}, {ready})");
 
-            if (networkManagerClient.LobbyGame.gameId != gameId) {
+            if (networkManagerClient.LobbyGame.GameId != gameId) {
                 return;
             }
 
@@ -279,7 +279,7 @@ namespace AnyRPG {
                 if (ready) {
                     readyButtonText.text = "Not Ready";
                     readyButton.Button.interactable = true;
-                    if (networkManagerClient.LobbyGame.inProgress == true && networkManagerClient.LobbyGame.allowLateJoin == true) {
+                    if (networkManagerClient.LobbyGame.InProgress == true && networkManagerClient.LobbyGame.AllowLateJoin == true) {
                         startGameButton.Button.interactable = true;
                     }
                 } else {
@@ -289,7 +289,7 @@ namespace AnyRPG {
             
             playerButtons[accountId].SetReadyStatus(ready);
 
-            if (networkManagerClient.AccountId == networkManagerClient.LobbyGame.leaderAccountId) {
+            if (networkManagerClient.AccountId == networkManagerClient.LobbyGame.LeaderAccountId) {
                 // check if the start button can be made interactable
                 if (AllPlayersReady()) {
                     startGameButton.Button.interactable = true;
@@ -315,7 +315,7 @@ namespace AnyRPG {
             readyButtonText.text = "Ready";
 
             // hide the cancel game button for anyone other than the leader
-            if (networkManagerClient.AccountId == networkManagerClient.LobbyGame.leaderAccountId) {
+            if (networkManagerClient.AccountId == networkManagerClient.LobbyGame.LeaderAccountId) {
                 leaveButton.Button.interactable = false;
                 cancelGameButton.gameObject.SetActive(true);
                 startGameButton.gameObject.SetActive(true);
@@ -323,7 +323,7 @@ namespace AnyRPG {
             } else {
                 leaveButton.Button.interactable = true;
                 cancelGameButton.gameObject.SetActive(false);
-                if (networkManagerClient.LobbyGame.inProgress == true && networkManagerClient.LobbyGame.allowLateJoin == true) {
+                if (networkManagerClient.LobbyGame.InProgress == true && networkManagerClient.LobbyGame.AllowLateJoin == true) {
                     startGameButton.gameObject.SetActive(true);
                     startGameButtonText.text = "Join Game";
                     startGameButton.Button.interactable = false;

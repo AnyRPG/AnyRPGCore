@@ -629,8 +629,8 @@ namespace AnyRPG {
             sceneLoadData.Options.AutomaticallyUnload = false;
             sceneLoadData.Options.LocalPhysics = LocalPhysicsMode.Physics3D;
             sceneLoadData.Options.AllowStacking = true;
-            sceneLoadData.PreferredActiveScene = new PreferredScene(SceneLookupData.CreateData(lobbyGame.sceneResourceName));
-            networkManagerServer.SetLobbyGameLoadRequestHashcode(lobbyGame.gameId, sceneLoadData.GetHashCode());
+            sceneLoadData.PreferredActiveScene = new PreferredScene(SceneLookupData.CreateData(lobbyGame.SceneResourceName));
+            networkManagerServer.SetLobbyGameLoadRequestHashcode(lobbyGame.GameId, sceneLoadData.GetHashCode());
             networkManagerServer.SetSceneLoadRequestHashCode(SceneInstanceType.LobbyGame, sceneLoadData.GetHashCode());
             //Debug.Log($"FishNetClientConnector.LoadLobbyGameScene({lobbyGame.gameId}) sceneloadDataHashCode {sceneLoadData.GetHashCode()}");
 
@@ -643,7 +643,7 @@ namespace AnyRPG {
             NetworkConnection[] networkConnections = new NetworkConnection[networkManagerServer.LobbyGames[gameId].PlayerList.Keys.Count];
             //Debug.Log($"FishNetClientConnector.StartLobbyGame() networkConnections.Length = {networkConnections.Length}");
             LobbyGame lobbyGame = networkManagerServer.LobbyGames[gameId];
-            SceneNode loadingSceneNode = systemDataFactory.GetResource<SceneNode>(lobbyGame.sceneResourceName);
+            SceneNode loadingSceneNode = systemDataFactory.GetResource<SceneNode>(lobbyGame.SceneResourceName);
             if (loadingSceneNode == null) {
                 return;
             }

@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2c95dfde7d73b54dbbdc23155d35d36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _refreshDefaultPrefabs: 0
+  _refreshDefaultPrefabs: 1
   _runInBackground: 1
   _dontDestroyOnLoad: 1
   _objectPool: {fileID: 0}
@@ -173,8 +173,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e08bb003fce297d4086cf8cba5aa459a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Managing.Predicting.PredictionManager
-  _dropExcessiveReplicates: 1
-  _maximumServerReplicates: 15
+  _reduceReconcilesWithFramerate: 1
+  _minimumClientReconcileFramerate: 50
   _createLocalStates: 1
   _stateInterpolation: 2
   _stateOrder: 1
+  _dropExcessiveReplicates: 1
+  _maximumServerReplicates: 15
