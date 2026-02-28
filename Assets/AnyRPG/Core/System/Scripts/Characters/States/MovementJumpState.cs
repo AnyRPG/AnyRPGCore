@@ -31,7 +31,7 @@ namespace AnyRPG {
         }
 
         public void Update(bool isReplay) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Update()");
+            Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Update(isReplay: {isReplay})");
 
             if (unitController.InWater == true) {
                 if (unitMovementController.CheckForSwimming() == true) {
