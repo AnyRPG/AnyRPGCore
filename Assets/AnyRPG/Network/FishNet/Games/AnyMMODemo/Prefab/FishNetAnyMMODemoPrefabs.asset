@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ad70174b079c2f4ebc7931d3dd1af6f, type: 3}
-  m_Name: DefaultPrefabObjects
-  m_EditorClassIdentifier: 
+  m_Script: {fileID: 11500000, guid: 4489d77032a81ef42b0067acf2737d4d, type: 3}
+  m_Name: FishNetAnyMMODemoPrefabs
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Managing.Object.SinglePrefabObjects
   _prefabs:
   - {fileID: -472247478717588986, guid: 54c88b44cda4a734dbd8248ec325f746, type: 3}
   - {fileID: 1310966602046123752, guid: b65bea1ad90bc3c4eabdd6defb60b4b5, type: 3}
