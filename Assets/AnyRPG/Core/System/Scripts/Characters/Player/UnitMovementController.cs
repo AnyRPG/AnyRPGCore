@@ -1285,14 +1285,12 @@ namespace AnyRPG {
 
         private void SetStateSilently(IMovementState newState) {
             //Debug.Log($"{gameObject.name}: SetStateSilently({newState.ToString()})");
-            /*
             if (currentIMovementState != null) {
-                currentIMovementState.Exit();
+                currentIMovementState.Exit(true);
             }
-            */
             currentIMovementState = newState;
 
-            //currentIMovementState.Enter();
+            currentIMovementState.Enter(true);
         }
     }
 
