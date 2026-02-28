@@ -81,8 +81,12 @@ namespace AnyRPG {
             return null;
         }
 
-
-
+        public SceneNode GetSceneNodeBySceneOrResourceName(string sceneName) {
+            if (sceneDictionary.ContainsKey(sceneName)) {
+                return sceneDictionary[sceneName];
+            }
+            return systemDataFactory.GetResource<SceneNode>(sceneName);
+        }
 
     }
 

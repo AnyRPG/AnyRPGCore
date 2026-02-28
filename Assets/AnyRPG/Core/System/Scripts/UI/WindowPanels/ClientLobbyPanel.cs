@@ -100,7 +100,7 @@ namespace AnyRPG {
         public void HandleCreateLobbyGame(LobbyGame lobbyGame) {
             //Debug.Log($"ClientLobbyPanel.HandleCreateLobbyGame()");
 
-            AddLobbyGameToList(lobbyGame.gameId, lobbyGame);
+            AddLobbyGameToList(lobbyGame.GameId, lobbyGame);
         }
 
         public void HandleCancelLobbyGame(int gameId) {
@@ -197,12 +197,12 @@ namespace AnyRPG {
                     //Debug.Log($"ClientLobbyPanelController.HandleSetLobbyGameList() - account {networkManagerClient.AccountId} not in game {lobbyGame.gameId}");
                     continue;
                 }
-                if (lobbyGame.inProgress) {
+                if (lobbyGame.InProgress) {
                     //Debug.Log($"ClientLobbyPanelController.HandleSetLobbyGameList() - rejoining game {lobbyGame.gameId}");
                     if (lobbyGame.PlayerList[networkManagerClient.AccountId].ready) {
                         //Debug.Log($"ClientLobbyPanelController.HandleSetLobbyGameList() - account {networkManagerClient.AccountId} is ready in game {lobbyGame.gameId}");
                         networkManagerClient.SetLobbyGame(lobbyGame);
-                        networkManagerClient.RequestJoinLobbyGameInProgress(lobbyGame.gameId);
+                        networkManagerClient.RequestJoinLobbyGameInProgress(lobbyGame.GameId);
                     } else {
                         //Debug.Log($"ClientLobbyPanelController.HandleSetLobbyGameList() - account {networkManagerClient.AccountId} is not ready in game {lobbyGame.gameId}");
                         networkManagerClient.SetLobbyGame(lobbyGame);
@@ -220,7 +220,7 @@ namespace AnyRPG {
             //Debug.Log($"ClientLobbyPanelController.PopulateLobbyGameList()");
 
             foreach (LobbyGame lobbyGame in lobbyGames) {
-                AddLobbyGameToList(lobbyGame.gameId, lobbyGame);
+                AddLobbyGameToList(lobbyGame.GameId, lobbyGame);
             }
         }
 

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace AnyRPG {
     public class LobbyGame {
-        public int leaderAccountId;
-        public string leaderUserName = string.Empty;
-        public int gameId;
-        public string gameName = string.Empty;
-        public string sceneResourceName = string.Empty;
-        public bool inProgress = false;
-        public bool allowLateJoin = false;
+        public int LeaderAccountId;
+        public string LeaderUserName = string.Empty;
+        public int GameId;
+        public string GameName = string.Empty;
+        public string SceneResourceName = string.Empty;
+        public bool InProgress = false;
+        public bool AllowLateJoin = false;
 
         /// <summary>
         /// accountId, LobbyGamePlayerInfo
@@ -27,12 +27,12 @@ namespace AnyRPG {
         }
 
         public LobbyGame(int accountId, int gameId, string sceneResourceName, string userName, bool allowLateJoin) {
-            this.leaderAccountId = accountId;
-            leaderUserName = userName;
-            this.gameId = gameId;
-            this.sceneResourceName = sceneResourceName;
+            this.LeaderAccountId = accountId;
+            LeaderUserName = userName;
+            this.GameId = gameId;
+            this.SceneResourceName = sceneResourceName;
             playerList.Add(accountId, new LobbyGamePlayerInfo(accountId, userName));
-            this.allowLateJoin = allowLateJoin;
+            this.AllowLateJoin = allowLateJoin;
         }
 
         public void AddPlayer(int accountId, string userName) {

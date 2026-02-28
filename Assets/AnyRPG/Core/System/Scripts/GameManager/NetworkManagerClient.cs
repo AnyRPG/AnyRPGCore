@@ -277,8 +277,8 @@ namespace AnyRPG {
         public void AdvertiseCreateLobbyGame(LobbyGame lobbyGame) {
             //Debug.Log($"NetworkManagerClient.AdvertiseCreateLobbyGame({lobbyGame.leaderAccountId}) accountId: {accountId}");
 
-            lobbyGames.Add(lobbyGame.gameId, lobbyGame);
-            if (lobbyGame.leaderAccountId == accountId) {
+            lobbyGames.Add(lobbyGame.GameId, lobbyGame);
+            if (lobbyGame.LeaderAccountId == accountId) {
                 this.lobbyGame = lobbyGame;
                 uIManager.clientLobbyGameWindow.OpenWindow();
             }
@@ -350,7 +350,7 @@ namespace AnyRPG {
 
             this.lobbyGames.Clear();
             foreach (LobbyGame lobbyGame in lobbyGames) {
-                this.lobbyGames.Add(lobbyGame.gameId, lobbyGame);
+                this.lobbyGames.Add(lobbyGame.GameId, lobbyGame);
             }
             OnSetLobbyGameList(this.lobbyGames.Values.ToList<LobbyGame>());
         }
@@ -366,7 +366,7 @@ namespace AnyRPG {
         public void ChooseLobbyGameCharacter(string unitProfileName, string appearanceString, List<SwappableMeshSaveData> swappableMeshSaveData) {
             //Debug.Log($"NetworkManagerClient.ChooseLobbyGameCharacter({unitProfileName})");
 
-            networkController.ChooseLobbyGameCharacter(unitProfileName, lobbyGame.gameId, appearanceString, swappableMeshSaveData);
+            networkController.ChooseLobbyGameCharacter(unitProfileName, lobbyGame.GameId, appearanceString, swappableMeshSaveData);
         }
 
         public void AdvertiseChooseLobbyGameCharacter(int gameId, int accountId, string unitProfileName) {
@@ -380,7 +380,7 @@ namespace AnyRPG {
             
             OnChooseLobbyGameCharacter(gameId, accountId, unitProfileName);
 
-            if (lobbyGame != null && gameId == lobbyGame.gameId && accountId == this.accountId) {
+            if (lobbyGame != null && gameId == lobbyGame.GameId && accountId == this.accountId) {
                 // the character was chosen for this client so close the new game window
                 uIManager.newGameWindow.CloseWindow();
             }
@@ -418,7 +418,7 @@ namespace AnyRPG {
                 // lobby game does not exist
                 return;
             }
-            lobbyGames[gameId].inProgress = true;
+            lobbyGames[gameId].InProgress = true;
             OnStartLobbyGame(gameId);
 
             LaunchLobbyGame(gameId);
@@ -435,7 +435,7 @@ namespace AnyRPG {
         public void LaunchLobbyGame(int gameId) {
             //Debug.Log($"NetworkManagerClient.LaunchLobbyGame({gameId})");
 
-            if (lobbyGame == null || lobbyGame.gameId != gameId) {
+            if (lobbyGame == null || lobbyGame.GameId != gameId) {
                 // have not joined lobby game, or joined different lobby game
                 return;
             }
