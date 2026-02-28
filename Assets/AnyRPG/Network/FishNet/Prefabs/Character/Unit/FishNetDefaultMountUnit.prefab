@@ -86,7 +86,7 @@ PrefabInstance:
     - target: {fileID: 7989242567668304555, guid: ba09f14eb0109ba459f4520b82c3fadc,
         type: 3}
       propertyPath: m_UUID
-      value: 09dd2f66-e01b-4133-bc30-845da8ef650e
+      value: 142f0e84-7248-4886-9098-f96519b5253a
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -203,7 +203,7 @@ MonoBehaviour:
   _initializeOrder: -3
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584294206781818282
+  _initializedTimestamp: -8584293353043093269
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -219,7 +219,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 42
+  <PrefabId>k__BackingField: 41
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 9898353508629357492
   SceneId: 0
