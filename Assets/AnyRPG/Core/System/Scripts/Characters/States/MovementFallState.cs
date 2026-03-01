@@ -12,7 +12,7 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay) {
-            Debug.Log($"{unitController.gameObject.name}.MovementFallState.Enter(isReplay: {isReplay})");
+            Debug.Log($"{unitController.gameObject.name}.MovementFallState.Enter(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
 
             unitMovementController.canJump = false;
             unitMovementController.currentFallDistance = 0f;
@@ -30,7 +30,7 @@ namespace AnyRPG {
         }
 
         public void Exit(bool isReplay) {
-            Debug.Log($"{unitController.gameObject.name}.MovementFallState.Exit(isReplay: {isReplay})");
+            Debug.Log($"{unitController.gameObject.name}.MovementFallState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
 
             unitMovementController.currentFallDistance = unitMovementController.fallStartHeight - unitController.transform.position.y;
 

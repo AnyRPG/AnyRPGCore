@@ -12,7 +12,7 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay) {
-            Debug.Log($"{unitController.gameObject.name}.MovementIdleState.Enter(isReplay: {isReplay})");
+            Debug.Log($"{unitController.gameObject.name}.MovementIdleState.Enter(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
 
             // 1. PERSISTENT PHYSICS & STATE (Always run during replays)
             // We must freeze position and reset velocity every replay to ensure 
@@ -41,7 +41,7 @@ namespace AnyRPG {
 
 
         public void Exit(bool isReplay) {
-            Debug.Log($"{unitController.gameObject.name}.MovementIdleState.Exit(isReplay: {isReplay})");
+            Debug.Log($"{unitController.gameObject.name}.MovementIdleState.Exit(isReplay: {isReplay}) tick:  {unitMovementController.CurrentMovementData.SimulatedTick} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
 
             unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
         }

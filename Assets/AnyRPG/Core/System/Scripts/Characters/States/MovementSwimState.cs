@@ -14,7 +14,8 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Enter()");
+            Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Enter(isReplay: {isReplay}) tick:  {unitMovementController.CurrentMovementData.SimulatedTick}");
+
             unitMovementController.currentFallDistance = 0f;
             unitMovementController.EnterGroundStateCommon(isReplay);
             unitController.StartSwimming(isReplay);
@@ -26,7 +27,8 @@ namespace AnyRPG {
         }
 
         public void Exit(bool isReplay) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Exit()");
+            Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+
             unitController.StopSwimming();
             unitController.RigidBody.useGravity = true;
             if (isReplay == false) {

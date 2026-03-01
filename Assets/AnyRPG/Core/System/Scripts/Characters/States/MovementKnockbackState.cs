@@ -14,7 +14,7 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Enter()");
+            Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Enter(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
             unitMovementController.canJump = false;
@@ -27,7 +27,7 @@ namespace AnyRPG {
         }
 
         public void Exit(bool isReplay) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Exit()");
+            Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
         }
 
         public void Update(bool isReplay, double timeInterval) {

@@ -12,6 +12,8 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay) {
+            Debug.Log($"{unitController.gameObject.name}.MovementGlideState.Enter(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+
             // 1. PERSISTENT PHYSICS & DATA (Always run these during replays)
             // This ensures the server and client agree on the starting physics state
             unitMovementController.currentFallDistance = 0f;
@@ -43,7 +45,8 @@ namespace AnyRPG {
 
 
         public void Exit(bool isReplay) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementGlideState.Exit()");
+            Debug.Log($"{unitController.gameObject.name}.MovementGlideState.Exit() tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+
             unitController.RigidBody.useGravity = true;
             if (isReplay == false) {
                 unitController.UnitAnimator.SetJumping(0);

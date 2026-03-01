@@ -12,7 +12,7 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay) {
-            Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Enter(isReplay: {isReplay})");
+            Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Enter(isReplay: {isReplay}) tick:  {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             // 1. PERSISTENT PHYSICS & STATE (Always run during replays)
             unitMovementController.currentFallDistance = 0f;
@@ -36,7 +36,7 @@ namespace AnyRPG {
 
 
         public void Exit(bool isReplay) {
-            Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Exit(isReplay: {isReplay})");
+            Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             unitController.StopFlying(isReplay);
             unitController.RigidBody.useGravity = true;

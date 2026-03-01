@@ -1012,6 +1012,7 @@ namespace AnyRPG {
         }
 
         public void SetJumping(int varValue) {
+            Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetJumping({varValue})");
             if (animator == null) {
                 return;
             }
@@ -1022,7 +1023,7 @@ namespace AnyRPG {
         }
 
         public void SetTrigger(string varName) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetTrigger({varName})");
+            Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetTrigger({varName})");
 
             if (animator != null && ParameterExists(varName)) {
                 ResetTrigger(varName);

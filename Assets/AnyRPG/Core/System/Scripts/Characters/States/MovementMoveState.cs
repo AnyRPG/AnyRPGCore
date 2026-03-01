@@ -14,14 +14,14 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay) {
-            Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Enter(isReplay: {isReplay})");
+            Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Enter(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             unitMovementController.EnterGroundStateCommon(isReplay);
             unitMovementController.CalculateFallDamage(isReplay);
         }
 
         public void Exit(bool isReplay) {
-            Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Exit(isReplay: {isReplay})");
+            Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             if (isReplay == false) {
                 unitController.UnitAnimator.SetMoving(false);

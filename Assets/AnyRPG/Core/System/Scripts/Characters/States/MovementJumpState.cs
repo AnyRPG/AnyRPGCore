@@ -12,7 +12,7 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay) {
-            Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Enter(isReplay: {isReplay})");
+            Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Enter(isReplay: {isReplay}) tick:  {unitMovementController.CurrentMovementData.SimulatedTick} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
 
             if (isReplay == false) {
                 unitMovementController.localMoveVelocity.y = (Vector3.up * unitMovementController.jumpAcceleration).y;
@@ -31,11 +31,11 @@ namespace AnyRPG {
         }
 
         public void Exit(bool isReplay) {
-            Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Exit(isReplay: {isReplay})");
+            Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Exit(isReplay: {isReplay}) tick:  {unitMovementController.CurrentMovementData.SimulatedTick} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
         }
 
         public void Update(bool isReplay, double timeInterval) {
-            Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Update(isReplay: {isReplay})");
+            Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Update(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
 
             if (unitController.InWater == true) {
                 if (unitMovementController.CheckForSwimming() == true) {
