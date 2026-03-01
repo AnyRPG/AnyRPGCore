@@ -36,6 +36,8 @@ namespace AnyRPG {
         private bool cachedFly;
         private bool cachedSink;
         private bool cachedStrafe;
+        private bool cachedRightMouseButtonDown;
+        private bool cachedRightMouseDragged;
 
 
         //Jumping.
@@ -1298,6 +1300,10 @@ namespace AnyRPG {
                 cachedSink = accumulatedMovementData.InputSink;
                 cachedStrafe = accumulatedMovementData.InputStrafe;
 
+                // Cache these so mouse-based turning doesn't drop out
+                cachedRightMouseButtonDown = accumulatedMovementData.RightMouseButtonDown;
+                cachedRightMouseDragged = accumulatedMovementData.RightMouseDragged;
+
                 // 3. ASSIGN ONE-SHOT TRIGGERS (KeyBindWasPressed)
                 // These are ONLY true for the first tick of the frame.
                 tickReadyData.InputJump = accumulatedMovementData.InputJump;
@@ -1321,6 +1327,9 @@ namespace AnyRPG {
             tickReadyData.InputFly = cachedFly;
             tickReadyData.InputSink = cachedSink;
             tickReadyData.InputStrafe = cachedStrafe;
+
+            tickReadyData.RightMouseButtonDown = cachedRightMouseButtonDown;
+            tickReadyData.RightMouseDragged = cachedRightMouseDragged;
 
             // 6. METADATA & DERIVED VECTORS
             tickReadyData.RightMouseButtonDown = accumulatedMovementData.RightMouseButtonDown;
