@@ -14,7 +14,11 @@ namespace AnyRPG {
         public void Enter(bool isReplay) {
             Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Enter(isReplay: {isReplay})");
 
-            unitMovementController.localMoveVelocity.y = (Vector3.up * unitMovementController.jumpAcceleration).y;
+            if (isReplay == false) {
+                unitMovementController.localMoveVelocity.y = (Vector3.up * unitMovementController.jumpAcceleration).y;
+            } else {
+                unitMovementController.localMoveVelocity = unitController.RigidBody.linearVelocity;
+            }
             unitMovementController.adjustedlocalMoveVelocity = unitMovementController.localMoveVelocity;
             unitMovementController.canJump = false;
             unitMovementController.lastJumpFrame = unitMovementController.CurrentMovementData.SimulatedTick;

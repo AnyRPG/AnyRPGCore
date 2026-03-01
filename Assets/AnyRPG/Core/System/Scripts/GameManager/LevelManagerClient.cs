@@ -210,7 +210,9 @@ namespace AnyRPG {
                 return;
             }
 
-            if (IsMainMenu(newScene.name) == false) {
+            if (IsMainMenu(newScene.name) == true) {
+                systemGameManager.AutoConfigureMonoBehaviours(newScene);
+            } else {
                 // just defaulting to world for now because this is a single player game
                 // might add type "single" or something if this is an issue in the future
                 levelManagerServer.AddLoadedScene(newScene, SceneInstanceType.World);
