@@ -29,6 +29,14 @@ namespace AnyRPG {
 
         MovementData accumulatedMovementData = new MovementData();
         MovementData currentMovementData = new MovementData();
+        private float cachedHorizontal;
+        private float cachedVertical;
+        private float cachedTurn;
+        private float cachedAnalogHorizontal;
+        private bool cachedFly;
+        private bool cachedSink;
+        private bool cachedStrafe;
+
 
         //Jumping.
         public bool canJump;
@@ -1228,6 +1236,7 @@ namespace AnyRPG {
             accumulatedMovementData.FrameCount++;
         }
 
+        /*
         public MovementData ProcessGatheredInput() {
             // 1. Create the final data for THIS tick
             MovementData tickReadyData = new MovementData();
@@ -1261,7 +1270,6 @@ namespace AnyRPG {
                     Vector3 cameraInput = Quaternion.Euler(0f, cameraManager.ActiveMainCamera.transform.rotation.eulerAngles.y, 0f) * currentMovementData.NormalizedMoveInput;
 
                     tickReadyData.LocalInput = unitController.transform.InverseTransformDirection(cameraInput);
-                    //Debug.Log("normalizedInput: " + playerManager.PlayerController.NormalizedMoveInput + "; cameraInput: " + cameraInput + "; localInput: " + localInput);
                 } else {
                     tickReadyData.LocalInput = currentMovementData.NormalizedMoveInput;
                 }
@@ -1272,6 +1280,69 @@ namespace AnyRPG {
 
             return tickReadyData;
         }
+        */
+
+        public MovementData ProcessGatheredInput() {
+            MovementData tickReadyData = new MovementData();
+
+            if (accumulatedMovementData.FrameCount > 0) {
+                // 1. CACHE CONTINUOUS AXES
+                cachedHorizontal = accumulatedMovementData.InputHorizontal / accumulatedMovementData.FrameCount;
+                cachedVertical = accumulatedMovementData.InputVertical / accumulatedMovementData.FrameCount;
+                cachedTurn = accumulatedMovementData.InputTurn / accumulatedMovementData.FrameCount;
+                cachedAnalogHorizontal = accumulatedMovementData.RightAnalogHorizontal / accumulatedMovementData.FrameCount;
+
+                // 2. CACHE HELD ACTIONS (KeyBindWasPressedOrHeld)
+                // These stay true for every tick in this frame.
+                cachedFly = accumulatedMovementData.InputFly;
+                cachedSink = accumulatedMovementData.InputSink;
+                cachedStrafe = accumulatedMovementData.InputStrafe;
+
+                // 3. ASSIGN ONE-SHOT TRIGGERS (KeyBindWasPressed)
+                // These are ONLY true for the first tick of the frame.
+                tickReadyData.InputJump = accumulatedMovementData.InputJump;
+                tickReadyData.InputCrouch = accumulatedMovementData.InputCrouch;
+
+                // 4. RESET THE ACCUMULATOR
+                // This clears the one-shots so tick #2 and #3 in this frame don't double-jump.
+                accumulatedMovementData.ResetMoveInput();
+            } else {
+                // SUB-TICK SCENARIO (Tick #2 or #3 in a single frame)
+                tickReadyData.InputJump = false;
+                tickReadyData.InputCrouch = false;
+            }
+
+            // 5. RE-APPLY PERSISTENT DATA (Axes + Held Actions)
+            tickReadyData.InputHorizontal = cachedHorizontal;
+            tickReadyData.InputVertical = cachedVertical;
+            tickReadyData.InputTurn = cachedTurn;
+            tickReadyData.RightAnalogHorizontal = cachedAnalogHorizontal;
+
+            tickReadyData.InputFly = cachedFly;
+            tickReadyData.InputSink = cachedSink;
+            tickReadyData.InputStrafe = cachedStrafe;
+
+            // 6. METADATA & DERIVED VECTORS
+            tickReadyData.RightMouseButtonDown = accumulatedMovementData.RightMouseButtonDown;
+            tickReadyData.RightMouseDragged = accumulatedMovementData.RightMouseDragged;
+            tickReadyData.GamepadModeActive = accumulatedMovementData.GamepadModeActive;
+            tickReadyData.CameraWantedDirection = accumulatedMovementData.CameraWantedDirection;
+            tickReadyData.CameraLocalEulerAngleX = accumulatedMovementData.CameraLocalEulerAngleX;
+
+            tickReadyData.NormalizedMoveInput = new Vector3(tickReadyData.InputHorizontal, 0, tickReadyData.InputVertical).normalized;
+            tickReadyData.TurnInput = new Vector3(tickReadyData.InputTurn, 0, 0);
+
+            if (controlsManager.GamepadModeActive || unitController.UnitProfile.UnitPrefabProps.RotateModel) {
+                Vector3 cameraInput = Quaternion.Euler(0f, cameraManager.ActiveMainCamera.transform.rotation.eulerAngles.y, 0f) * tickReadyData.NormalizedMoveInput;
+                tickReadyData.LocalInput = unitController.transform.InverseTransformDirection(cameraInput);
+            } else {
+                tickReadyData.LocalInput = tickReadyData.NormalizedMoveInput;
+            }
+
+            return tickReadyData;
+        }
+
+
 
         public void SetStateSilently(CharacterMovementState characterMovementState) {
 
