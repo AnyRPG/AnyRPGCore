@@ -39,7 +39,7 @@ namespace AnyRPG {
             }
         }
 
-        public void Update(bool isReplay) {
+        public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementFallState.Update()");
             if (unitController.InWater == true) {
                 if (unitMovementController.CheckForSwimming() == true) {

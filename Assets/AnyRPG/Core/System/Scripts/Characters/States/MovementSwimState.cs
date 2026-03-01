@@ -34,7 +34,7 @@ namespace AnyRPG {
             }
         }
 
-        public void Update(bool isReplay) {
+        public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Update()");
             unitMovementController.airForwardDirection = unitController.transform.forward;
 
@@ -78,7 +78,7 @@ namespace AnyRPG {
 
                 if (unitMovementController.CurrentMovementData.HasWaterMoveInput()) {
                     // multiply normalized movement by calculated speed to get actual movement
-                    unitMovementController.localMoveVelocity = unitMovementController.NormalizedSwimMovement() * calculatedSpeed;
+                    unitMovementController.localMoveVelocity = unitMovementController.NormalizedSwimMovement(timeInterval) * calculatedSpeed;
                     unitMovementController.adjustedlocalMoveVelocity = unitMovementController.localMoveVelocity;
                     //Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
                 }

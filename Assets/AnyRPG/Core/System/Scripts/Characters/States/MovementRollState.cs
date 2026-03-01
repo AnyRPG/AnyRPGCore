@@ -22,7 +22,7 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.MovementRollState.Exit()");
         }
 
-        public void Update(bool isReplay) {
+        public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementRollState.Update()");
         }
     }

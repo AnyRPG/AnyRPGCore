@@ -46,7 +46,7 @@ namespace AnyRPG {
             }
         }
 
-        public void Update(bool isReplay) {
+        public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Update()");
 
             unitMovementController.airForwardDirection = unitController.transform.forward;

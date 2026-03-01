@@ -28,7 +28,7 @@ namespace AnyRPG {
             }
         }
 
-        public void Update(bool isReplay) {
+        public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Update()");
             unitMovementController.airForwardDirection = unitController.transform.forward;
 
@@ -88,7 +88,7 @@ namespace AnyRPG {
                 }
 
                 // determine if there is an obstacle in front, and if it is stairs
-                unitMovementController.CheckFrontObstacle(calculatedSpeed, directionOfTravel);
+                unitMovementController.CheckFrontObstacle(calculatedSpeed, directionOfTravel, timeInterval);
 
             }
 
@@ -121,7 +121,7 @@ namespace AnyRPG {
             if (unitMovementController.CurrentMovementData.HasMoveInput() || unitMovementController.CurrentMovementData.HasTurnInput()) {
 
                 if (unitMovementController.CurrentMovementData.HasMoveInput()) {
-                    unitMovementController.adjustedlocalMoveVelocity = unitMovementController.NormalizedLocalMovement(calculatedSpeed, directionOfTravel) * calculatedSpeed;
+                    unitMovementController.adjustedlocalMoveVelocity = unitMovementController.NormalizedLocalMovement(calculatedSpeed, directionOfTravel, timeInterval) * calculatedSpeed;
                 }
                 unitMovementController.CalculateTurnVelocity();
             } else {

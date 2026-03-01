@@ -30,7 +30,7 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Exit()");
         }
 
-        public void Update(bool isReplay) {
+        public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Update()");
             if (unitMovementController.CurrentMovementData.SimulatedTick <= (unitMovementController.lastKnockbackFrame + 2)) {
                 // rigidbody velocity does not immediately update, so a small delay must be added before checking

@@ -29,16 +29,7 @@ namespace AnyRPG {
 
         MovementData accumulatedMovementData = new MovementData();
         MovementData currentMovementData = new MovementData();
-        private float cachedHorizontal;
-        private float cachedVertical;
-        private float cachedTurn;
-        private float cachedAnalogHorizontal;
-        private bool cachedFly;
-        private bool cachedSink;
-        private bool cachedStrafe;
-        private bool cachedRightMouseButtonDown;
-        private bool cachedRightMouseDragged;
-
+        MovementData cachedMovementData = new MovementData();
 
         //Jumping.
         public bool canJump;
@@ -555,13 +546,13 @@ namespace AnyRPG {
             return closeToGround;
         }
 
-        public Vector3 NormalizedSwimMovement() {
+        public Vector3 NormalizedSwimMovement(double timeInterval) {
             //Debug.Log("PlayerUnitMovementController.NormalizedSwimMovement(): groundAngle: " + groundAngle + "; backwardGroundAngle: " + backwardGroundAngle);
 
             Vector3 returnValue = currentMovementData.LocalInput;
 
             // check for right mouse button held down to adjust swim angle based on camera angle
-            bool chestBelowWater = (unitController.UnitMotor.MovementBody.GetPosition().y + unitController.FloatHeight) < (unitController.CurrentWater[0].SurfaceHeight - (unitController.SwimSpeed * Time.fixedDeltaTime));
+            bool chestBelowWater = (unitController.UnitMotor.MovementBody.GetPosition().y + unitController.FloatHeight) < (unitController.CurrentWater[0].SurfaceHeight - (unitController.SwimSpeed * timeInterval));
 
             if (currentMovementData.RightMouseButtonDown && currentMovementData.HasMoveInput()) {
 
@@ -617,7 +608,7 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public Vector3 NormalizedLocalMovement(float calculatedSpeed, Vector3 directionOfTravel) {
+        public Vector3 NormalizedLocalMovement(float calculatedSpeed, Vector3 directionOfTravel, double timeInterval) {
             //Debug.Log("PlayerUnitMovementController.NormalizedLocalMovement(" + directionOfTravel + ")");
 
             Vector3 newReturnValue;
@@ -686,7 +677,7 @@ namespace AnyRPG {
 
             // limit upward momentum near stairs to prevent overshooting the stairs in the vertical direction
             if (nearBottomStairs) {
-                float clampedReturnValue = Mathf.Clamp(newReturnValue.y, 0f, unitController.transform.InverseTransformPoint(stairDownHitPoint).y / calculatedSpeed / Time.fixedDeltaTime);
+                float clampedReturnValue = Mathf.Clamp(newReturnValue.y, 0f, unitController.transform.InverseTransformPoint(stairDownHitPoint).y / calculatedSpeed / (float)timeInterval);
                 newReturnValue.y = clampedReturnValue;
             }
 
@@ -697,7 +688,7 @@ namespace AnyRPG {
                 float yValue = 0f;
                 if (unitController.transform.InverseTransformPoint(groundPoint).y < -0.001f) {
                     // set a downforce value that should take the character exactly to the ground, and not lower to avoid losing momentum from physics colission with ground
-                    yValue = Mathf.Clamp(1, 0, -closestGroundDistance / calculatedSpeed / Time.fixedDeltaTime) * -1;
+                    yValue = Mathf.Clamp(1, 0, -closestGroundDistance / calculatedSpeed / (float)timeInterval) * -1;
                 }
                 newReturnValue = new Vector3(newReturnValue.x, yValue, newReturnValue.z);
             }
@@ -1079,7 +1070,7 @@ namespace AnyRPG {
             return 0.001f;
         }
 
-        public void CheckFrontObstacle(float calculatedSpeed, Vector3 directionOfTravel) {
+        public void CheckFrontObstacle(float calculatedSpeed, Vector3 directionOfTravel, double timeInterval) {
             // reset variables
             nearFrontObstacle = false;
             nearBottomFrontObstacle = false;
@@ -1088,7 +1079,7 @@ namespace AnyRPG {
             bottomFrontAngleDifferent = false;
             nearBottomStairs = false;
             nearTopStairs = false;
-            float detectionDistance = stairDetectionDistance + (calculatedSpeed * Time.fixedDeltaTime);
+            float detectionDistance = stairDetectionDistance + (calculatedSpeed * (float)timeInterval);
 
             PerformFrontObstacleCasts(directionOfTravel, detectionDistance, GetFrontObstacleCastHeight(directionOfTravel));
 
@@ -1210,7 +1201,7 @@ namespace AnyRPG {
 
             EarlyGlobalStateUpdate();
 
-            currentIMovementState.Update(isReplay);
+            currentIMovementState.Update(isReplay, timeInterval);
 
             LateGlobalStateUpdate(timeInterval);
         }
@@ -1289,20 +1280,22 @@ namespace AnyRPG {
 
             if (accumulatedMovementData.FrameCount > 0) {
                 // 1. CACHE CONTINUOUS AXES
-                cachedHorizontal = accumulatedMovementData.InputHorizontal / accumulatedMovementData.FrameCount;
-                cachedVertical = accumulatedMovementData.InputVertical / accumulatedMovementData.FrameCount;
-                cachedTurn = accumulatedMovementData.InputTurn / accumulatedMovementData.FrameCount;
-                cachedAnalogHorizontal = accumulatedMovementData.RightAnalogHorizontal / accumulatedMovementData.FrameCount;
+                cachedMovementData.InputHorizontal = accumulatedMovementData.InputHorizontal / accumulatedMovementData.FrameCount;
+                cachedMovementData.InputVertical = accumulatedMovementData.InputVertical / accumulatedMovementData.FrameCount;
+                cachedMovementData.InputTurn = accumulatedMovementData.InputTurn / accumulatedMovementData.FrameCount;
+                cachedMovementData.RightAnalogHorizontal = accumulatedMovementData.RightAnalogHorizontal / accumulatedMovementData.FrameCount;
 
                 // 2. CACHE HELD ACTIONS (KeyBindWasPressedOrHeld)
                 // These stay true for every tick in this frame.
-                cachedFly = accumulatedMovementData.InputFly;
-                cachedSink = accumulatedMovementData.InputSink;
-                cachedStrafe = accumulatedMovementData.InputStrafe;
+                cachedMovementData.InputFly = accumulatedMovementData.InputFly;
+                cachedMovementData.InputSink = accumulatedMovementData.InputSink;
+                cachedMovementData.InputStrafe = accumulatedMovementData.InputStrafe;
 
                 // Cache these so mouse-based turning doesn't drop out
-                cachedRightMouseButtonDown = accumulatedMovementData.RightMouseButtonDown;
-                cachedRightMouseDragged = accumulatedMovementData.RightMouseDragged;
+                cachedMovementData.RightMouseButtonDown = accumulatedMovementData.RightMouseButtonDown;
+                cachedMovementData.RightMouseDragged = accumulatedMovementData.RightMouseDragged;
+                cachedMovementData.CameraLocalEulerAngleX = accumulatedMovementData.CameraLocalEulerAngleX;
+                cachedMovementData.CameraWantedDirection = accumulatedMovementData.CameraWantedDirection;
 
                 // 3. ASSIGN ONE-SHOT TRIGGERS (KeyBindWasPressed)
                 // These are ONLY true for the first tick of the frame.
@@ -1319,24 +1312,22 @@ namespace AnyRPG {
             }
 
             // 5. RE-APPLY PERSISTENT DATA (Axes + Held Actions)
-            tickReadyData.InputHorizontal = cachedHorizontal;
-            tickReadyData.InputVertical = cachedVertical;
-            tickReadyData.InputTurn = cachedTurn;
-            tickReadyData.RightAnalogHorizontal = cachedAnalogHorizontal;
+            tickReadyData.InputHorizontal = cachedMovementData.InputHorizontal;
+            tickReadyData.InputVertical = cachedMovementData.InputVertical;
+            tickReadyData.InputTurn = cachedMovementData.InputTurn;
+            tickReadyData.RightAnalogHorizontal = cachedMovementData.RightAnalogHorizontal;
 
-            tickReadyData.InputFly = cachedFly;
-            tickReadyData.InputSink = cachedSink;
-            tickReadyData.InputStrafe = cachedStrafe;
+            tickReadyData.InputFly = cachedMovementData.InputFly;
+            tickReadyData.InputSink = cachedMovementData.InputSink;
+            tickReadyData.InputStrafe = cachedMovementData.InputStrafe;
 
-            tickReadyData.RightMouseButtonDown = cachedRightMouseButtonDown;
-            tickReadyData.RightMouseDragged = cachedRightMouseDragged;
+            tickReadyData.RightMouseButtonDown = cachedMovementData.RightMouseButtonDown;
+            tickReadyData.RightMouseDragged = cachedMovementData.RightMouseDragged;
+            tickReadyData.CameraLocalEulerAngleX = cachedMovementData.CameraLocalEulerAngleX;
+            tickReadyData.CameraWantedDirection = cachedMovementData.CameraWantedDirection;
 
             // 6. METADATA & DERIVED VECTORS
-            tickReadyData.RightMouseButtonDown = accumulatedMovementData.RightMouseButtonDown;
-            tickReadyData.RightMouseDragged = accumulatedMovementData.RightMouseDragged;
             tickReadyData.GamepadModeActive = accumulatedMovementData.GamepadModeActive;
-            tickReadyData.CameraWantedDirection = accumulatedMovementData.CameraWantedDirection;
-            tickReadyData.CameraLocalEulerAngleX = accumulatedMovementData.CameraLocalEulerAngleX;
 
             tickReadyData.NormalizedMoveInput = new Vector3(tickReadyData.InputHorizontal, 0, tickReadyData.InputVertical).normalized;
             tickReadyData.TurnInput = new Vector3(tickReadyData.InputTurn, 0, 0);
