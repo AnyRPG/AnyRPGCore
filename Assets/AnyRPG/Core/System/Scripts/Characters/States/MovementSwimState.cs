@@ -13,7 +13,7 @@ namespace AnyRPG {
             this.unitMovementController = unitMovementController;
         }
 
-        public void Enter(bool isReplay) {
+        public void Enter(bool isReplay, bool isSilent) {
             Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Enter(isReplay: {isReplay}) tick:  {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             unitMovementController.currentFallDistance = 0f;
@@ -26,7 +26,7 @@ namespace AnyRPG {
             }
         }
 
-        public void Exit(bool isReplay) {
+        public void Exit(bool isReplay, bool isSilent) {
             Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             unitController.StopSwimming();
@@ -38,7 +38,7 @@ namespace AnyRPG {
 
         public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Update()");
-            unitMovementController.airForwardDirection = unitController.transform.forward;
+            //unitMovementController.airForwardDirection = unitController.transform.forward;
 
             if (unitController.InWater == true) {
                 if (unitController.CanFly

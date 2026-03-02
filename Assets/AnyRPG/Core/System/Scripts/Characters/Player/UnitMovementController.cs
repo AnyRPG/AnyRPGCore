@@ -32,7 +32,7 @@ namespace AnyRPG {
         MovementData cachedMovementData = new MovementData();
 
         //Jumping.
-        public bool canJump;
+        //public bool canJump;
         public float gravity = 50.0f;
         public float jumpAcceleration = 5.0f;
         public float jumpHeight = 3.0f;
@@ -213,7 +213,7 @@ namespace AnyRPG {
         //private Vector3 backwardDirection;
 
         // keep the player moving the same direction in the air
-        public Vector3 airForwardDirection;
+        //public Vector3 airForwardDirection;
         private Quaternion airRotation;
 
         // the frame in which the player last entered a jump state
@@ -292,11 +292,11 @@ namespace AnyRPG {
         private void ChangeState(IMovementState newState, bool isReplay) {
             //Debug.Log($"{gameObject.name}: ChangeState({newState.ToString()})");
             if (currentIMovementState != null) {
-                currentIMovementState.Exit(isReplay);
+                currentIMovementState.Exit(isReplay, false);
             }
             currentIMovementState = newState;
 
-            currentIMovementState.Enter(isReplay);
+            currentIMovementState.Enter(isReplay, false);
         }
 
         //Put any code in here you want to run BEFORE the state's update function. This is run regardless of what state you're in.
@@ -315,7 +315,7 @@ namespace AnyRPG {
             //} else {
                 relativeMovement = CharacterRelativeInput(adjustedlocalMoveVelocity);
             //}
-            //Debug.Log("relativeMovement: (" + relativeMovement.x + ", " + relativeMovement.y + ", " + relativeMovement.z + ")");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMovementController.MoveRelative() adjustedLocalMoveVelocity: {adjustedlocalMoveVelocity} relativeMovement: ({relativeMovement.x}, {relativeMovement.y}, {relativeMovement.z})");
             if (relativeMovement.magnitude > 0.1 || currentMovementData.InputJump) {
                 unitController.UnitMotor.Move(relativeMovement);
             }
@@ -374,8 +374,7 @@ namespace AnyRPG {
         }
 
         public void EnterGroundStateCommon(bool isReplay) {
-            canJump = true;
-            airForwardDirection = unitController.transform.forward;
+            //airForwardDirection = unitController.transform.forward;
             if (isReplay == false) {
                 unitController.UnitAnimator.SetJumping(0);
             }
@@ -429,7 +428,7 @@ namespace AnyRPG {
         }
 
         private Vector3 CharacterRelativeInput(Vector3 inputVector) {
-            //Debug.Log("PlayerUnitMovementController.CharacterRelativeInput(" + inputVector + ")");
+            //Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.CharacterRelativeInput({inputVector})");
 
             return unitController.transform.TransformDirection(inputVector);
         }
@@ -1345,6 +1344,7 @@ namespace AnyRPG {
 
 
         public void SetStateSilently(CharacterMovementState characterMovementState) {
+            Debug.Log($"{unitController.gameObject.name}: SetStateSilently({characterMovementState.ToString()})");
 
             if (movementStates.ContainsKey(characterMovementState)) {
                 currentCharacterMovementState = characterMovementState;
@@ -1357,11 +1357,11 @@ namespace AnyRPG {
         private void SetStateSilently(IMovementState newState) {
             //Debug.Log($"{gameObject.name}: SetStateSilently({newState.ToString()})");
             if (currentIMovementState != null) {
-                currentIMovementState.Exit(true);
+                currentIMovementState.Exit(true, true);
             }
             currentIMovementState = newState;
 
-            currentIMovementState.Enter(true);
+            currentIMovementState.Enter(true, true);
         }
     }
 

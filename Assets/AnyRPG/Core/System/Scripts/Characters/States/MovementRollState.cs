@@ -14,11 +14,11 @@ namespace AnyRPG {
             this.unitMovementController = unitMovementController;
         }
 
-        public void Enter(bool isReplay) {
+        public void Enter(bool isReplay, bool isSilent) {
             //Debug.Log($"{unitController.gameObject.name}.MovementRollState.Enter()");
         }
 
-        public void Exit(bool isReplay) {
+        public void Exit(bool isReplay, bool isSilent) {
             //Debug.Log($"{unitController.gameObject.name}.MovementRollState.Exit()");
         }
 

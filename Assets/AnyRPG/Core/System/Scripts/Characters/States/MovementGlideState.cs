@@ -11,13 +11,15 @@ namespace AnyRPG {
             this.unitMovementController = unitMovementController;
         }
 
-        public void Enter(bool isReplay) {
+        public void Enter(bool isReplay, bool isSilent) {
             Debug.Log($"{unitController.gameObject.name}.MovementGlideState.Enter(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+
+            if (isSilent) return;
 
             // 1. PERSISTENT PHYSICS & DATA (Always run these during replays)
             // This ensures the server and client agree on the starting physics state
             unitMovementController.currentFallDistance = 0f;
-            unitMovementController.canJump = false;
+            //unitMovementController.canJump = false;
 
             // Rigidbody settings must be reapplied during replays because 
             // a Reconcile might have reset them to default values.
@@ -44,7 +46,7 @@ namespace AnyRPG {
         }
 
 
-        public void Exit(bool isReplay) {
+        public void Exit(bool isReplay, bool isSilent) {
             Debug.Log($"{unitController.gameObject.name}.MovementGlideState.Exit() tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             unitController.RigidBody.useGravity = true;

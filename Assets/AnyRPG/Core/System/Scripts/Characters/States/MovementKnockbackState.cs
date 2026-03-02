@@ -13,20 +13,21 @@ namespace AnyRPG {
             this.unitMovementController = unitMovementController;
         }
 
-        public void Enter(bool isReplay) {
+        public void Enter(bool isReplay, bool isSilent) {
             Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Enter(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
 
+            if (isSilent) return;
+
             unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
-            unitMovementController.canJump = false;
-            unitMovementController.lastKnockbackFrame = unitMovementController.CurrentMovementData.SimulatedTick;
 
             if (isReplay == false) {
+                unitMovementController.lastKnockbackFrame = unitMovementController.CurrentMovementData.SimulatedTick;
                 unitController.UnitAnimator.SetJumping(1);
                 unitController.UnitAnimator.SetTrigger("JumpTrigger");
             }
         }
 
-        public void Exit(bool isReplay) {
+        public void Exit(bool isReplay, bool isSilent) {
             Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
         }
 

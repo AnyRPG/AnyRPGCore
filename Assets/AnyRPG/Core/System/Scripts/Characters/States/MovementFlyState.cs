@@ -11,7 +11,7 @@ namespace AnyRPG {
             this.unitMovementController = unitMovementController;
         }
 
-        public void Enter(bool isReplay) {
+        public void Enter(bool isReplay, bool isSilent) {
             Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Enter(isReplay: {isReplay}) tick:  {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             // 1. PERSISTENT PHYSICS & STATE (Always run during replays)
@@ -35,7 +35,7 @@ namespace AnyRPG {
         }
 
 
-        public void Exit(bool isReplay) {
+        public void Exit(bool isReplay, bool isSilent) {
             Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             unitController.StopFlying(isReplay);
@@ -49,7 +49,7 @@ namespace AnyRPG {
         public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Update()");
 
-            unitMovementController.airForwardDirection = unitController.transform.forward;
+            //unitMovementController.airForwardDirection = unitController.transform.forward;
             if (unitMovementController.touchingGround == true && unitMovementController.CurrentMovementData.InputFly == false) {
                 if (unitMovementController.CurrentMovementData.HasMoveInput()) {
                     unitMovementController.ChangeState(CharacterMovementState.Move, isReplay);

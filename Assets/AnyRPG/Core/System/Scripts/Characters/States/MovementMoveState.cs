@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -13,14 +11,14 @@ namespace AnyRPG {
             this.unitMovementController = unitMovementController;
         }
 
-        public void Enter(bool isReplay) {
+        public void Enter(bool isReplay, bool isSilent) {
             Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Enter(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             unitMovementController.EnterGroundStateCommon(isReplay);
             unitMovementController.CalculateFallDamage(isReplay);
         }
 
-        public void Exit(bool isReplay) {
+        public void Exit(bool isReplay, bool isSilent) {
             Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             if (isReplay == false) {
@@ -30,7 +28,7 @@ namespace AnyRPG {
 
         public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Update()");
-            unitMovementController.airForwardDirection = unitController.transform.forward;
+            //unitMovementController.airForwardDirection = unitController.transform.forward;
 
             float calculatedSpeed = 0f;
 
