@@ -296,13 +296,10 @@ namespace AnyRPG {
             unitController.RigidBody.detectCollisions = true;
             unitController.RigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             unitController.RigidBody.isKinematic = false;
-            if (networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && unitController.IsOwner == false)) {
-                // movement is client authoritative, so gravity should not be applied on the server
-                //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics() turn OFF gravity");
-                unitController.RigidBody.useGravity = false;
-            } else {
-                //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics() turn ON gravity");
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && unitController.IsOwner == true)) {
                 unitController.RigidBody.useGravity = true;
+            } else {
+                unitController.RigidBody.useGravity = false;
             }
             unitController.RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
             if (systemGameManager.GameMode == GameMode.Local || (systemGameManager.GameMode == GameMode.Network && unitController.IsOwner == true)) {
