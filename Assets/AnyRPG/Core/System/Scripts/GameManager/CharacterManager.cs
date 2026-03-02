@@ -131,7 +131,6 @@ namespace AnyRPG {
                 return;
             }
 
-
             // add default case because network disconnect could happen before initialization is completed
             unitController.Despawn(0f, false, true);
 

@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 
@@ -86,25 +87,24 @@ namespace AnyRPG {
                 return;
             }
 
-            if (networkManagerServer.ServerModeActive == true) {
-                // controller is client authoritative so this code should never be run on the server
-                return;
-            }
+            if (networkManagerServer.ServerModeActive == false) {
+                // there is no camera on the server, so this is only run on the client
+                if (useFog == true
+                    && other.tag == "MainCamera"
+                    && fogActivated == false) {
+                    fogActivated = true;
 
-            // configure camera
-            if (useFog == true
-                && other.tag == "MainCamera"
-                && fogActivated == false) {
-                fogActivated = true;
-
-                // set overrides
-                weatherManager.ActivateWaterFogSettings(true, fogColor, fogDensity);
+                    // set overrides
+                    weatherManager.ActivateWaterFogSettings(true, fogColor, fogDensity);
+                }
             }
 
             // configure character
             UnitController unitController = other.gameObject.GetComponent<UnitController>();
             if (unitController != null) {
-                unitController.EnterWater(this);
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && unitController.IsOwner == true)) {
+                    unitController.EnterWater(this);
+                }
             }
         }
 
@@ -116,25 +116,23 @@ namespace AnyRPG {
                 return;
             }
 
-            if (networkManagerServer.ServerModeActive == true) {
-                // controller is client authoritative so this code should never be run on the server
-                return;
+            if (networkManagerServer.ServerModeActive == false) {
+                // configure camera
+                if (useFog == true
+                    && other.tag == "MainCamera"
+                    && fogActivated == true) {
+                    fogActivated = false;
+
+                    // restore original settings
+                    weatherManager.DeactivateWaterFogSettings();
+                }
             }
 
-            // configure camera
-            if (useFog == true
-                && other.tag == "MainCamera"
-                && fogActivated == true) {
-                fogActivated = false;
-
-                // restore original settings
-                weatherManager.DeactivateWaterFogSettings();
-            }
-
-            // configure character
             UnitController unitController = other.gameObject.GetComponent<UnitController>();
             if (unitController != null) {
-                unitController.ExitWater(this);
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && unitController.IsOwner == true)) {
+                    unitController.ExitWater(this);
+                }
             }
 
         }

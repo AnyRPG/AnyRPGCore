@@ -825,20 +825,7 @@ namespace AnyRPG {
                 myCollider.isTrigger = false;
             }
             rigidBody.interpolation = RigidbodyInterpolation.Interpolate;
-            /*
-            if (systemGameManager.GameMode == GameMode.Local || (networkManagerServer.ServerModeActive == false && isOwner == true)) {
-                // movement is client authoritative, so physics should be applied in local games, or on the authoritative network client
-                rigidBody.isKinematic = false;
-            } else {
-                rigidBody.isKinematic = true;
-            }
-            if (networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && isOwner == false)) {
-                // movement is client authoritative, so gravity should not be applied on the server
-                rigidBody.useGravity = false;
-            } else {
-                rigidBody.useGravity = true;
-            }
-            */
+
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && isOwner == true)) {
                 rigidBody.isKinematic = false;
                 rigidBody.useGravity = true;
