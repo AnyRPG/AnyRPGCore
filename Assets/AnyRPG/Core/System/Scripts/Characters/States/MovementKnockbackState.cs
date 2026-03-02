@@ -13,24 +13,25 @@ namespace AnyRPG {
             this.unitMovementController = unitMovementController;
         }
 
-        public void Enter(bool isReplay) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Enter()");
+        public void Enter(bool isReplay, bool isSilent) {
+            Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Enter(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+
+            if (isSilent) return;
 
             unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
-            unitMovementController.canJump = false;
-            unitMovementController.lastKnockbackFrame = unitMovementController.CurrentMovementData.SimulatedTick;
 
             if (isReplay == false) {
+                unitMovementController.lastKnockbackFrame = unitMovementController.CurrentMovementData.SimulatedTick;
                 unitController.UnitAnimator.SetJumping(1);
                 unitController.UnitAnimator.SetTrigger("JumpTrigger");
             }
         }
 
-        public void Exit(bool isReplay) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Exit()");
+        public void Exit(bool isReplay, bool isSilent) {
+            Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
         }
 
-        public void Update(bool isReplay) {
+        public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Update()");
             if (unitMovementController.CurrentMovementData.SimulatedTick <= (unitMovementController.lastKnockbackFrame + 2)) {
                 // rigidbody velocity does not immediately update, so a small delay must be added before checking

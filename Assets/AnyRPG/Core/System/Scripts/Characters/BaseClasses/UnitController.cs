@@ -457,8 +457,8 @@ namespace AnyRPG {
         public bool InWater { get => inWater; }
         public List<WaterBody> CurrentWater { get => currentWater; set => currentWater = value; }
         public float FloatHeight { get => floatHeight; set => floatHeight = value; }
-        public bool Swimming { get => swimming; }
-        public bool Flying { get => flying; }
+        //public bool Swimming { get => swimming; }
+        //public bool Flying { get => flying; }
         public bool CanFly { get => (canFly || canFlyOverride); set => canFly = value; }
         public bool CanGlide { get => (canGlide || canGlideOverride); set => canGlide = value; }
         public bool CanFlyOverride { get => canFlyOverride; set => canFlyOverride = value; }

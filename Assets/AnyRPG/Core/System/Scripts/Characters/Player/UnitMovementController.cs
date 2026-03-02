@@ -29,9 +29,10 @@ namespace AnyRPG {
 
         MovementData accumulatedMovementData = new MovementData();
         MovementData currentMovementData = new MovementData();
+        MovementData cachedMovementData = new MovementData();
 
         //Jumping.
-        public bool canJump;
+        //public bool canJump;
         public float gravity = 50.0f;
         public float jumpAcceleration = 5.0f;
         public float jumpHeight = 3.0f;
@@ -212,7 +213,7 @@ namespace AnyRPG {
         //private Vector3 backwardDirection;
 
         // keep the player moving the same direction in the air
-        public Vector3 airForwardDirection;
+        //public Vector3 airForwardDirection;
         private Quaternion airRotation;
 
         // the frame in which the player last entered a jump state
@@ -291,11 +292,11 @@ namespace AnyRPG {
         private void ChangeState(IMovementState newState, bool isReplay) {
             //Debug.Log($"{gameObject.name}: ChangeState({newState.ToString()})");
             if (currentIMovementState != null) {
-                currentIMovementState.Exit(isReplay);
+                currentIMovementState.Exit(isReplay, false);
             }
             currentIMovementState = newState;
 
-            currentIMovementState.Enter(isReplay);
+            currentIMovementState.Enter(isReplay, false);
         }
 
         //Put any code in here you want to run BEFORE the state's update function. This is run regardless of what state you're in.
@@ -314,7 +315,7 @@ namespace AnyRPG {
             //} else {
                 relativeMovement = CharacterRelativeInput(adjustedlocalMoveVelocity);
             //}
-            //Debug.Log("relativeMovement: (" + relativeMovement.x + ", " + relativeMovement.y + ", " + relativeMovement.z + ")");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMovementController.MoveRelative() adjustedLocalMoveVelocity: {adjustedlocalMoveVelocity} relativeMovement: ({relativeMovement.x}, {relativeMovement.y}, {relativeMovement.z})");
             if (relativeMovement.magnitude > 0.1 || currentMovementData.InputJump) {
                 unitController.UnitMotor.Move(relativeMovement);
             }
@@ -373,8 +374,7 @@ namespace AnyRPG {
         }
 
         public void EnterGroundStateCommon(bool isReplay) {
-            canJump = true;
-            airForwardDirection = unitController.transform.forward;
+            //airForwardDirection = unitController.transform.forward;
             if (isReplay == false) {
                 unitController.UnitAnimator.SetJumping(0);
             }
@@ -428,7 +428,7 @@ namespace AnyRPG {
         }
 
         private Vector3 CharacterRelativeInput(Vector3 inputVector) {
-            //Debug.Log("PlayerUnitMovementController.CharacterRelativeInput(" + inputVector + ")");
+            //Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.CharacterRelativeInput({inputVector})");
 
             return unitController.transform.TransformDirection(inputVector);
         }
@@ -545,13 +545,13 @@ namespace AnyRPG {
             return closeToGround;
         }
 
-        public Vector3 NormalizedSwimMovement() {
+        public Vector3 NormalizedSwimMovement(double timeInterval) {
             //Debug.Log("PlayerUnitMovementController.NormalizedSwimMovement(): groundAngle: " + groundAngle + "; backwardGroundAngle: " + backwardGroundAngle);
 
             Vector3 returnValue = currentMovementData.LocalInput;
 
             // check for right mouse button held down to adjust swim angle based on camera angle
-            bool chestBelowWater = (unitController.UnitMotor.MovementBody.GetPosition().y + unitController.FloatHeight) < (unitController.CurrentWater[0].SurfaceHeight - (unitController.SwimSpeed * Time.fixedDeltaTime));
+            bool chestBelowWater = (unitController.UnitMotor.MovementBody.GetPosition().y + unitController.FloatHeight) < (unitController.CurrentWater[0].SurfaceHeight - (unitController.SwimSpeed * timeInterval));
 
             if (currentMovementData.RightMouseButtonDown && currentMovementData.HasMoveInput()) {
 
@@ -607,7 +607,7 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public Vector3 NormalizedLocalMovement(float calculatedSpeed, Vector3 directionOfTravel) {
+        public Vector3 NormalizedLocalMovement(float calculatedSpeed, Vector3 directionOfTravel, double timeInterval) {
             //Debug.Log("PlayerUnitMovementController.NormalizedLocalMovement(" + directionOfTravel + ")");
 
             Vector3 newReturnValue;
@@ -676,7 +676,7 @@ namespace AnyRPG {
 
             // limit upward momentum near stairs to prevent overshooting the stairs in the vertical direction
             if (nearBottomStairs) {
-                float clampedReturnValue = Mathf.Clamp(newReturnValue.y, 0f, unitController.transform.InverseTransformPoint(stairDownHitPoint).y / calculatedSpeed / Time.fixedDeltaTime);
+                float clampedReturnValue = Mathf.Clamp(newReturnValue.y, 0f, unitController.transform.InverseTransformPoint(stairDownHitPoint).y / calculatedSpeed / (float)timeInterval);
                 newReturnValue.y = clampedReturnValue;
             }
 
@@ -687,7 +687,7 @@ namespace AnyRPG {
                 float yValue = 0f;
                 if (unitController.transform.InverseTransformPoint(groundPoint).y < -0.001f) {
                     // set a downforce value that should take the character exactly to the ground, and not lower to avoid losing momentum from physics colission with ground
-                    yValue = Mathf.Clamp(1, 0, -closestGroundDistance / calculatedSpeed / Time.fixedDeltaTime) * -1;
+                    yValue = Mathf.Clamp(1, 0, -closestGroundDistance / calculatedSpeed / (float)timeInterval) * -1;
                 }
                 newReturnValue = new Vector3(newReturnValue.x, yValue, newReturnValue.z);
             }
@@ -1069,7 +1069,7 @@ namespace AnyRPG {
             return 0.001f;
         }
 
-        public void CheckFrontObstacle(float calculatedSpeed, Vector3 directionOfTravel) {
+        public void CheckFrontObstacle(float calculatedSpeed, Vector3 directionOfTravel, double timeInterval) {
             // reset variables
             nearFrontObstacle = false;
             nearBottomFrontObstacle = false;
@@ -1078,7 +1078,7 @@ namespace AnyRPG {
             bottomFrontAngleDifferent = false;
             nearBottomStairs = false;
             nearTopStairs = false;
-            float detectionDistance = stairDetectionDistance + (calculatedSpeed * Time.fixedDeltaTime);
+            float detectionDistance = stairDetectionDistance + (calculatedSpeed * (float)timeInterval);
 
             PerformFrontObstacleCasts(directionOfTravel, detectionDistance, GetFrontObstacleCastHeight(directionOfTravel));
 
@@ -1200,7 +1200,7 @@ namespace AnyRPG {
 
             EarlyGlobalStateUpdate();
 
-            currentIMovementState.Update(isReplay);
+            currentIMovementState.Update(isReplay, timeInterval);
 
             LateGlobalStateUpdate(timeInterval);
         }
@@ -1228,6 +1228,7 @@ namespace AnyRPG {
             accumulatedMovementData.FrameCount++;
         }
 
+        /*
         public MovementData ProcessGatheredInput() {
             // 1. Create the final data for THIS tick
             MovementData tickReadyData = new MovementData();
@@ -1261,7 +1262,6 @@ namespace AnyRPG {
                     Vector3 cameraInput = Quaternion.Euler(0f, cameraManager.ActiveMainCamera.transform.rotation.eulerAngles.y, 0f) * currentMovementData.NormalizedMoveInput;
 
                     tickReadyData.LocalInput = unitController.transform.InverseTransformDirection(cameraInput);
-                    //Debug.Log("normalizedInput: " + playerManager.PlayerController.NormalizedMoveInput + "; cameraInput: " + cameraInput + "; localInput: " + localInput);
                 } else {
                     tickReadyData.LocalInput = currentMovementData.NormalizedMoveInput;
                 }
@@ -1272,8 +1272,79 @@ namespace AnyRPG {
 
             return tickReadyData;
         }
+        */
+
+        public MovementData ProcessGatheredInput() {
+            MovementData tickReadyData = new MovementData();
+
+            if (accumulatedMovementData.FrameCount > 0) {
+                // 1. CACHE CONTINUOUS AXES
+                cachedMovementData.InputHorizontal = accumulatedMovementData.InputHorizontal / accumulatedMovementData.FrameCount;
+                cachedMovementData.InputVertical = accumulatedMovementData.InputVertical / accumulatedMovementData.FrameCount;
+                cachedMovementData.InputTurn = accumulatedMovementData.InputTurn / accumulatedMovementData.FrameCount;
+                cachedMovementData.RightAnalogHorizontal = accumulatedMovementData.RightAnalogHorizontal / accumulatedMovementData.FrameCount;
+
+                // 2. CACHE HELD ACTIONS (KeyBindWasPressedOrHeld)
+                // These stay true for every tick in this frame.
+                cachedMovementData.InputFly = accumulatedMovementData.InputFly;
+                cachedMovementData.InputSink = accumulatedMovementData.InputSink;
+                cachedMovementData.InputStrafe = accumulatedMovementData.InputStrafe;
+
+                // Cache these so mouse-based turning doesn't drop out
+                cachedMovementData.RightMouseButtonDown = accumulatedMovementData.RightMouseButtonDown;
+                cachedMovementData.RightMouseDragged = accumulatedMovementData.RightMouseDragged;
+                cachedMovementData.CameraLocalEulerAngleX = accumulatedMovementData.CameraLocalEulerAngleX;
+                cachedMovementData.CameraWantedDirection = accumulatedMovementData.CameraWantedDirection;
+
+                // 3. ASSIGN ONE-SHOT TRIGGERS (KeyBindWasPressed)
+                // These are ONLY true for the first tick of the frame.
+                tickReadyData.InputJump = accumulatedMovementData.InputJump;
+                tickReadyData.InputCrouch = accumulatedMovementData.InputCrouch;
+
+                // 4. RESET THE ACCUMULATOR
+                // This clears the one-shots so tick #2 and #3 in this frame don't double-jump.
+                accumulatedMovementData.ResetMoveInput();
+            } else {
+                // SUB-TICK SCENARIO (Tick #2 or #3 in a single frame)
+                tickReadyData.InputJump = false;
+                tickReadyData.InputCrouch = false;
+            }
+
+            // 5. RE-APPLY PERSISTENT DATA (Axes + Held Actions)
+            tickReadyData.InputHorizontal = cachedMovementData.InputHorizontal;
+            tickReadyData.InputVertical = cachedMovementData.InputVertical;
+            tickReadyData.InputTurn = cachedMovementData.InputTurn;
+            tickReadyData.RightAnalogHorizontal = cachedMovementData.RightAnalogHorizontal;
+
+            tickReadyData.InputFly = cachedMovementData.InputFly;
+            tickReadyData.InputSink = cachedMovementData.InputSink;
+            tickReadyData.InputStrafe = cachedMovementData.InputStrafe;
+
+            tickReadyData.RightMouseButtonDown = cachedMovementData.RightMouseButtonDown;
+            tickReadyData.RightMouseDragged = cachedMovementData.RightMouseDragged;
+            tickReadyData.CameraLocalEulerAngleX = cachedMovementData.CameraLocalEulerAngleX;
+            tickReadyData.CameraWantedDirection = cachedMovementData.CameraWantedDirection;
+
+            // 6. METADATA & DERIVED VECTORS
+            tickReadyData.GamepadModeActive = accumulatedMovementData.GamepadModeActive;
+
+            tickReadyData.NormalizedMoveInput = new Vector3(tickReadyData.InputHorizontal, 0, tickReadyData.InputVertical).normalized;
+            tickReadyData.TurnInput = new Vector3(tickReadyData.InputTurn, 0, 0);
+
+            if (controlsManager.GamepadModeActive || unitController.UnitProfile.UnitPrefabProps.RotateModel) {
+                Vector3 cameraInput = Quaternion.Euler(0f, cameraManager.ActiveMainCamera.transform.rotation.eulerAngles.y, 0f) * tickReadyData.NormalizedMoveInput;
+                tickReadyData.LocalInput = unitController.transform.InverseTransformDirection(cameraInput);
+            } else {
+                tickReadyData.LocalInput = tickReadyData.NormalizedMoveInput;
+            }
+
+            return tickReadyData;
+        }
+
+
 
         public void SetStateSilently(CharacterMovementState characterMovementState) {
+            Debug.Log($"{unitController.gameObject.name}: SetStateSilently({characterMovementState.ToString()})");
 
             if (movementStates.ContainsKey(characterMovementState)) {
                 currentCharacterMovementState = characterMovementState;
@@ -1285,14 +1356,12 @@ namespace AnyRPG {
 
         private void SetStateSilently(IMovementState newState) {
             //Debug.Log($"{gameObject.name}: SetStateSilently({newState.ToString()})");
-            /*
             if (currentIMovementState != null) {
-                currentIMovementState.Exit();
+                currentIMovementState.Exit(true, true);
             }
-            */
             currentIMovementState = newState;
 
-            //currentIMovementState.Enter();
+            currentIMovementState.Enter(true, true);
         }
     }
 

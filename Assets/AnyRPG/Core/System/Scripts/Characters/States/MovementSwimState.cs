@@ -13,8 +13,9 @@ namespace AnyRPG {
             this.unitMovementController = unitMovementController;
         }
 
-        public void Enter(bool isReplay) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Enter()");
+        public void Enter(bool isReplay, bool isSilent) {
+            Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Enter(isReplay: {isReplay}) tick:  {unitMovementController.CurrentMovementData.SimulatedTick}");
+
             unitMovementController.currentFallDistance = 0f;
             unitMovementController.EnterGroundStateCommon(isReplay);
             unitController.StartSwimming(isReplay);
@@ -25,8 +26,9 @@ namespace AnyRPG {
             }
         }
 
-        public void Exit(bool isReplay) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Exit()");
+        public void Exit(bool isReplay, bool isSilent) {
+            Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+
             unitController.StopSwimming();
             unitController.RigidBody.useGravity = true;
             if (isReplay == false) {
@@ -34,9 +36,9 @@ namespace AnyRPG {
             }
         }
 
-        public void Update(bool isReplay) {
+        public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Update()");
-            unitMovementController.airForwardDirection = unitController.transform.forward;
+            //unitMovementController.airForwardDirection = unitController.transform.forward;
 
             if (unitController.InWater == true) {
                 if (unitController.CanFly
@@ -78,7 +80,7 @@ namespace AnyRPG {
 
                 if (unitMovementController.CurrentMovementData.HasWaterMoveInput()) {
                     // multiply normalized movement by calculated speed to get actual movement
-                    unitMovementController.localMoveVelocity = unitMovementController.NormalizedSwimMovement() * calculatedSpeed;
+                    unitMovementController.localMoveVelocity = unitMovementController.NormalizedSwimMovement(timeInterval) * calculatedSpeed;
                     unitMovementController.adjustedlocalMoveVelocity = unitMovementController.localMoveVelocity;
                     //Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
                 }

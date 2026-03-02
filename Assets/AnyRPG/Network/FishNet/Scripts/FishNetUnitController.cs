@@ -2383,7 +2383,7 @@ namespace AnyRPG {
             }
             // use a bitmask to see if this replicate is being called as part of a replay or not.
             // This is important because we want to process the movement data differently if it's a replay vs if it's the first time we're processing it.
-            bool isReplaying = (state & ReplicateState.Replayed) == ReplicateState.Replayed;
+            bool isReplaying = state.ContainsReplayed();
 
             if ((unitController.UnitControllerMode == UnitControllerMode.Mount || unitController.UnitControllerMode == UnitControllerMode.Player)) {
                 unitController.UnitMovementController.StateUpdate(replicateData.MovementData, TimeManager.TickDelta, isReplaying);
@@ -2412,8 +2412,13 @@ namespace AnyRPG {
                 return;
             }
             ReconcileData rd = new ReconcileData(predictionRigidbody) {
+                CharacterMovementState = unitController.UnitMovementController.CurrentCharacterMovementState
+            };
+            /*
+            ReconcileData rd = new ReconcileData(predictionRigidbody) {
                 CharacterMovementState = serverStateAtStartOfTick
             };
+            */
             // Like with the replicate you could specify a channel here, though
             // it's unlikely you ever would with a reconcile.
             ReconcileState(rd);
