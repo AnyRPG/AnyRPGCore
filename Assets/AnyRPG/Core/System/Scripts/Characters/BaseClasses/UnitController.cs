@@ -872,7 +872,12 @@ namespace AnyRPG {
             }
             rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
-            rigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+            if (systemGameManager.GameMode == GameMode.Local) {
+                rigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+            } else {
+                // do not interpolate in network mode or it will interfere with client side prediction and predictionRigidbody
+                rigidBody.interpolation = RigidbodyInterpolation.None;
+            }
 
 
             myCollider.isTrigger = false;

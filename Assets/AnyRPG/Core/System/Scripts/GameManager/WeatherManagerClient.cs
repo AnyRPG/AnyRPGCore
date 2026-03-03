@@ -328,7 +328,7 @@ namespace AnyRPG {
         }
 
         public void EndWeather(WeatherProfile previousWeather, bool immediate) {
-            //Debug.Log($"WeatherManagerClient.EndWeather({(previousWeather == null ? "null" : previousWeather.ResourceName)}, {immediate})");
+            //Debug.Log($"WeatherManagerClient.EndWeather({(previousWeather == null ? "null" : previousWeather.ResourceName)}, immediate: {immediate})");
 
             currentAmbientSound = null;
 
@@ -362,10 +362,12 @@ namespace AnyRPG {
             }
         }
 
+        /*
         private void EndWeather(WeatherProfile previousWeather) {
 
             EndWeather(previousWeather, false);
         }
+*/
 
         private IEnumerator WeatherFade(WeatherEffectController weatherEffectController, float fadeTime) {
             float elapsedTime = 0f;

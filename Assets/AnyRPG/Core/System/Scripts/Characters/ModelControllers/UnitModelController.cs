@@ -364,7 +364,9 @@ namespace AnyRPG {
         }
 
         public void CalculateFloatHeight() {
-            unitController.FloatHeight += unitController.UnitProfile.UnitPrefabProps.FloatHeight;
+            //Debug.Log($"{unitController.gameObject.name}.UnitModelController.CalculateFloatHeight()");
+
+            unitController.FloatHeight = unitController.UnitProfile.UnitPrefabProps.FloatHeight;
 
             if (unitController.UnitProfile?.UnitPrefabProps?.FloatTransform == string.Empty) {
                 return;
@@ -376,11 +378,9 @@ namespace AnyRPG {
             }
 
             unitController.FloatHeight = floatTransform.position.y - unitController.transform.position.y;
-            if (unitController.UnitProfile.UnitPrefabProps.AddFloatHeightToTransform == false) {
-                return;
+            if (unitController.UnitProfile.UnitPrefabProps.AddFloatHeightToTransform == true) {
+                unitController.FloatHeight += unitController.UnitProfile.UnitPrefabProps.FloatHeight;
             }
-            unitController.FloatHeight += unitController.UnitProfile.UnitPrefabProps.FloatHeight;
-
 
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.CalculateFloatHeight() new float height: " + unitController.FloatHeight);
         }
