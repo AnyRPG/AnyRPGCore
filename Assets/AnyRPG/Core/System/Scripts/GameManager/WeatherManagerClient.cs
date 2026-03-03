@@ -85,7 +85,7 @@ namespace AnyRPG {
         }
 
         private void HandleChooseWeather(int sceneHandle, WeatherProfile weatherProfile) {
-            //Debug.Log($"WeatherManagerClient.HandleChooseWeather({sceneHandle}, {(weatherProfile == null ? "null" : weatherProfile.ResourceName)})");
+            Debug.Log($"WeatherManagerClient.HandleChooseWeather({sceneHandle}, {(weatherProfile == null ? "null" : weatherProfile.ResourceName)})");
 
             ChooseWeather(weatherProfile);
         }
@@ -110,7 +110,7 @@ namespace AnyRPG {
         }
 
         public void HandleLevelLoad() {
-            //Debug.Log("WeatherManagerClient.HandleLevelLoad()");
+            Debug.Log("WeatherManagerClient.HandleLevelLoad()");
 
             if (networkManagerServer.ServerModeActive == true) {
                 return;
@@ -293,7 +293,7 @@ namespace AnyRPG {
         }
 
         public void StartWeather() {
-            //Debug.Log($"WeatherManagerClient.StartWeather()");
+            Debug.Log($"WeatherManagerClient.StartWeather()");
 
             if (currentWeather != null) {
                 if (currentWeather.PrefabProfile?.Prefab != null) {
@@ -328,7 +328,7 @@ namespace AnyRPG {
         }
 
         public void EndWeather(WeatherProfile previousWeather, bool immediate) {
-            //Debug.Log($"WeatherManagerClient.EndWeather({(previousWeather == null ? "null" : previousWeather.ResourceName)}, {immediate})");
+            Debug.Log($"WeatherManagerClient.EndWeather({(previousWeather == null ? "null" : previousWeather.ResourceName)}, immediate: {immediate})");
 
             currentAmbientSound = null;
 
@@ -362,10 +362,12 @@ namespace AnyRPG {
             }
         }
 
+        /*
         private void EndWeather(WeatherProfile previousWeather) {
 
             EndWeather(previousWeather, false);
         }
+*/
 
         private IEnumerator WeatherFade(WeatherEffectController weatherEffectController, float fadeTime) {
             float elapsedTime = 0f;

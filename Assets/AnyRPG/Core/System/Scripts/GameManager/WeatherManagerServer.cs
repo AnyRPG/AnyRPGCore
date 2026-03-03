@@ -72,19 +72,19 @@ namespace AnyRPG {
         }
 
         public void ProcessEndWeather(int sceneHandle, WeatherProfile previousWeather, bool immediate) {
-            //Debug.Log($"WeatherManagerServer.ProcessEndWeather({sceneHandle}, {(previousWeather == null ? "null" : previousWeather.ResourceName)}, {immediate})");
+            Debug.Log($"WeatherManagerServer.ProcessEndWeather(sceneHandle: {sceneHandle}, {(previousWeather == null ? "null" : previousWeather.ResourceName)}, {immediate})");
 
             systemEventManager.NotifyOnEndWeather(sceneHandle, previousWeather, immediate);
         }
 
         public void ProcessChooseWeather(int sceneHandle, WeatherProfile currentWeather) {
-            //Debug.Log($"WeatherManagerServer.ChooseWeather({sceneHandle}, {(currentWeather == null ? "null" : currentWeather?.ResourceName)})");
+            Debug.Log($"WeatherManagerServer.ProcessChooseWeather(sceneHandle: {sceneHandle}, {(currentWeather == null ? "null" : currentWeather?.ResourceName)})");
 
             systemEventManager.NotifyOnChooseWeather(sceneHandle, currentWeather);
         }
 
         public void ProcessStartWeather(int sceneHandle) {
-            //Debug.Log($"WeatherManagerServer.StartWeather({sceneHandle})");
+            Debug.Log($"WeatherManagerServer.ProcessStartWeather(sceneHandle: {sceneHandle})");
 
             systemEventManager.NotifyOnStartWeather(sceneHandle);
         }
