@@ -364,7 +364,7 @@ namespace AnyRPG {
         }
 
         public void CalculateFloatHeight() {
-            Debug.Log($"{unitController.gameObject.name}.UnitModelController.CalculateFloatHeight()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitModelController.CalculateFloatHeight()");
 
             unitController.FloatHeight = unitController.UnitProfile.UnitPrefabProps.FloatHeight;
 

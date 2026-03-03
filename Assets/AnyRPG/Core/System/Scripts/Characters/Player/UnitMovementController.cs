@@ -382,7 +382,6 @@ namespace AnyRPG {
 
         public bool CheckForSwimming() {
             if (unitController.InWater == true) {
-                Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.CheckForSwimming(): yPosition: {unitController.UnitMotor.MovementBody.GetPosition().y} waterSurfaceHeight: {unitController.CurrentWater[0].SurfaceHeight} floatHeight: {unitController.FloatHeight} worldFloatHeight: {(unitController.transform.position.y + unitController.FloatHeight)}");
                 if ((unitController.UnitMotor.MovementBody.GetPosition().y + unitController.FloatHeight) <= unitController.CurrentWater[0].SurfaceHeight) {
                     return true;
                 }

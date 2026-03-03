@@ -85,7 +85,7 @@ namespace AnyRPG {
         }
 
         private void HandleChooseWeather(int sceneHandle, WeatherProfile weatherProfile) {
-            Debug.Log($"WeatherManagerClient.HandleChooseWeather({sceneHandle}, {(weatherProfile == null ? "null" : weatherProfile.ResourceName)})");
+            //Debug.Log($"WeatherManagerClient.HandleChooseWeather({sceneHandle}, {(weatherProfile == null ? "null" : weatherProfile.ResourceName)})");
 
             ChooseWeather(weatherProfile);
         }
@@ -110,7 +110,7 @@ namespace AnyRPG {
         }
 
         public void HandleLevelLoad() {
-            Debug.Log("WeatherManagerClient.HandleLevelLoad()");
+            //Debug.Log("WeatherManagerClient.HandleLevelLoad()");
 
             if (networkManagerServer.ServerModeActive == true) {
                 return;
@@ -328,7 +328,7 @@ namespace AnyRPG {
         }
 
         public void EndWeather(WeatherProfile previousWeather, bool immediate) {
-            Debug.Log($"WeatherManagerClient.EndWeather({(previousWeather == null ? "null" : previousWeather.ResourceName)}, immediate: {immediate})");
+            //Debug.Log($"WeatherManagerClient.EndWeather({(previousWeather == null ? "null" : previousWeather.ResourceName)}, immediate: {immediate})");
 
             currentAmbientSound = null;
 

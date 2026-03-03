@@ -66,7 +66,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             surfaceHeight = myCollider.bounds.max.y;
-            Debug.Log($"{gameObject.name}.Water.Configure() surfaceHeight = {surfaceHeight}");
+            //Debug.Log($"{gameObject.name}.Water.Configure() surfaceHeight = {surfaceHeight}");
 
             SetupScriptableObjects();
         }
