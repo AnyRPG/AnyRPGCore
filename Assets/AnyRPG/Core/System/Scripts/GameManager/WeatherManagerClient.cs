@@ -293,7 +293,7 @@ namespace AnyRPG {
         }
 
         public void StartWeather() {
-            Debug.Log($"WeatherManagerClient.StartWeather()");
+            //Debug.Log($"WeatherManagerClient.StartWeather()");
 
             if (currentWeather != null) {
                 if (currentWeather.PrefabProfile?.Prefab != null) {

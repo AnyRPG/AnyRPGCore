@@ -8,7 +8,6 @@ namespace AnyRPG {
 
     public class WeatherManagerServer : ConfiguredClass {
 
-
         private Dictionary<int, WeatherMonitor> weatherMonitors = new Dictionary<int, WeatherMonitor>();
 
         // game manager references
@@ -23,8 +22,8 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            levelManagerServer.OnAddLoadedScene += HandleAddLoadedScene;
-            levelManagerServer.OnRemoveLoadedScene += HandleRemoveLoadedScene;
+            networkManagerServer.OnStartServer += HandleStartServer;
+            networkManagerServer.OnStopServer += HandlStopServer;
         }
 
         public override void SetGameManagerReferences() {
@@ -37,6 +36,22 @@ namespace AnyRPG {
             timeOfDayManagerClient = systemGameManager.TimeOfDayManagerClient;
             systemEventManager = systemGameManager.SystemEventManager;
             levelManagerServer = systemGameManager.LevelManagerServer;
+        }
+
+        private void HandleStartServer() {
+            levelManagerServer.OnAddLoadedScene += HandleAddLoadedScene;
+            levelManagerServer.OnRemoveLoadedScene += HandleRemoveLoadedScene;
+        }
+
+        private void HandlStopServer() {
+            levelManagerServer.OnAddLoadedScene -= HandleAddLoadedScene;
+            levelManagerServer.OnRemoveLoadedScene -= HandleRemoveLoadedScene;
+            
+            // loop through all active weathermonitors and end their weather
+            foreach (KeyValuePair<int, WeatherMonitor> kvp in weatherMonitors) {
+                kvp.Value.EndWeather();
+            }
+            weatherMonitors.Clear();
         }
 
         private void HandleRemoveLoadedScene(int sceneHandle, string sceneName) {
@@ -72,19 +87,19 @@ namespace AnyRPG {
         }
 
         public void ProcessEndWeather(int sceneHandle, WeatherProfile previousWeather, bool immediate) {
-            Debug.Log($"WeatherManagerServer.ProcessEndWeather(sceneHandle: {sceneHandle}, {(previousWeather == null ? "null" : previousWeather.ResourceName)}, {immediate})");
+            //Debug.Log($"WeatherManagerServer.ProcessEndWeather(sceneHandle: {sceneHandle}, {(previousWeather == null ? "null" : previousWeather.ResourceName)}, {immediate})");
 
             systemEventManager.NotifyOnEndWeather(sceneHandle, previousWeather, immediate);
         }
 
         public void ProcessChooseWeather(int sceneHandle, WeatherProfile currentWeather) {
-            Debug.Log($"WeatherManagerServer.ProcessChooseWeather(sceneHandle: {sceneHandle}, {(currentWeather == null ? "null" : currentWeather?.ResourceName)})");
+            //Debug.Log($"WeatherManagerServer.ProcessChooseWeather(sceneHandle: {sceneHandle}, {(currentWeather == null ? "null" : currentWeather?.ResourceName)})");
 
             systemEventManager.NotifyOnChooseWeather(sceneHandle, currentWeather);
         }
 
         public void ProcessStartWeather(int sceneHandle) {
-            Debug.Log($"WeatherManagerServer.ProcessStartWeather(sceneHandle: {sceneHandle})");
+            //Debug.Log($"WeatherManagerServer.ProcessStartWeather(sceneHandle: {sceneHandle})");
 
             systemEventManager.NotifyOnStartWeather(sceneHandle);
         }
