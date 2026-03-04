@@ -701,10 +701,12 @@ namespace AnyRPG {
                         unitController.NavMeshAgent.velocity = Vector3.zero;
                         unitController.ResetApparentVelocity();
                         unitController.DisableAgent();
-                        unitController.RigidBody.isKinematic = false;
-                        unitController.RigidBody.useGravity = true;
-                        if (unitController.UnitControllerMode == UnitControllerMode.Player && systemGameManager.GameMode == GameMode.Local) {
-                            unitController.RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+                        if (unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) {
+                            if (systemGameManager.GameMode == GameMode.Local) {
+                                unitController.RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+                            }
+                            unitController.RigidBody.isKinematic = false;
+                            unitController.RigidBody.useGravity = true;
                         }
                     }
                 }
