@@ -485,7 +485,7 @@ namespace AnyRPG {
         [SerializeField]
         private Material defaultCastTargetCircle;
 
-        [Tooltip("The material that will be used to display the cast target on the ground when casting ground targeted spells.")]
+        [Tooltip("The material that will be used to display the movement target on the ground when using click-to-move.")]
         [SerializeField]
         private Material defaultMovementTargetCircle;
 

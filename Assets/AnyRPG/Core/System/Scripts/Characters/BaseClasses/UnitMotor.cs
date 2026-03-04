@@ -180,9 +180,13 @@ namespace AnyRPG {
                         // this will cause an interaction to happen if the interactionTransform was not null
                         unitController.UnitEventController.NotifyOnReachDestination();
                         // clear variables related to following an interaction target since we have reached the destination and are now interacting
-                        if (interactionTransform != null) {
+                        
+                        // testing - commented this out so that click-to-move will also disable the agent
+                        // this is necessary because on the client, when it starts trying to move, it won't be snapped back for the first few reconciles
+                        // until the movement input disables the agent.
+                        //if (interactionTransform != null) {
                             StopFollowingTarget();
-                        }
+                        //}
                     }
                 }
             }
@@ -407,6 +411,7 @@ namespace AnyRPG {
             unitController.RigidBody.isKinematic = true;
             unitController.RigidBody.useGravity = false;
             unitController.RigidBody.interpolation = RigidbodyInterpolation.None;
+            unitController.UnitMovementController.ChangeState(CharacterMovementState.NavMesh, false);
             MoveToPoint(point);
         }
 
@@ -558,6 +563,8 @@ namespace AnyRPG {
                 return;
             }
             unitController.EnableAgent();
+            unitController.UnitMovementController.ChangeState(CharacterMovementState.NavMesh, false);
+
             unitController.NavMeshAgent.stoppingDistance = 0.2f;
             //agent.stoppingDistance = myStats.hitBox;
             // moving to a target happens when we click on an interactable.  Since it might be moving, we will manually update the rotation every frame
@@ -696,7 +703,9 @@ namespace AnyRPG {
                         unitController.DisableAgent();
                         unitController.RigidBody.isKinematic = false;
                         unitController.RigidBody.useGravity = true;
-                        unitController.RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+                        if (unitController.UnitControllerMode == UnitControllerMode.Player && systemGameManager.GameMode == GameMode.Local) {
+                            unitController.RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+                        }
                     }
                 }
                 lastResetFrame = Time.frameCount;

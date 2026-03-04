@@ -377,6 +377,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnNameChangeFail += HandleNameChangeFailServer;
             unitController.UnitEventController.OnSetGroupId += HandleSetGroupId;
             unitController.UnitEventController.OnSetGuildId += HandleSetGuildId;
+            unitController.UnitEventController.OnReachDestination += HandleReachDestinationServer;
         }
 
 
@@ -481,7 +482,9 @@ namespace AnyRPG {
             unitController.UnitEventController.OnNameChangeFail -= HandleNameChangeFailServer;
             unitController.UnitEventController.OnSetGroupId -= HandleSetGroupId;
             unitController.UnitEventController.OnSetGuildId -= HandleSetGuildId;
+            unitController.UnitEventController.OnReachDestination -= HandleReachDestinationServer;
         }
+
 
         [ObserversRpc]
         private void HandleSetGroupId(int newGroupId) {
@@ -493,6 +496,15 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetGuildId({newGuildId},{guildName})");
 
             unitController.CharacterGuildManager.SetGuildId(newGuildId, guildName);
+        }
+
+        private void HandleReachDestinationServer() {
+            HandleReachDestinationClient(base.Owner);
+        }
+
+        [TargetRpc]
+        private void HandleReachDestinationClient(NetworkConnection networkConnection) {
+            unitController.UnitEventController.NotifyOnReachDestination();
         }
 
         private void HandleNameChangeFailServer() {
@@ -2433,6 +2445,7 @@ namespace AnyRPG {
             if (unitController.UnitMovementController.CurrentCharacterMovementState != data.CharacterMovementState) {
                 unitController.UnitMovementController.SetStateSilently(data.CharacterMovementState);
             }
+            unitController.UnitMovementController.ReconciledNavMeshAgentVelocity = data.NavMeshAgentVelocity;
         }
 
 

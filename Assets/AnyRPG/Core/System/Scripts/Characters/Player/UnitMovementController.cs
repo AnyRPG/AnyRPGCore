@@ -13,7 +13,8 @@ namespace AnyRPG {
         Roll = 5,
         Swim = 6,
         Fly = 7,
-        Glide = 8
+        Glide = 8,
+        NavMesh = 9
     }
 
     public class UnitMovementController : ConfiguredClass {
@@ -30,6 +31,8 @@ namespace AnyRPG {
         MovementData accumulatedMovementData = new MovementData();
         MovementData currentMovementData = new MovementData();
         MovementData cachedMovementData = new MovementData();
+
+        private Vector3 reconciledNavMeshAgentVelocity = Vector3.zero;
 
         //Jumping.
         //public bool canJump;
@@ -213,7 +216,6 @@ namespace AnyRPG {
         //private Vector3 backwardDirection;
 
         // keep the player moving the same direction in the air
-        //public Vector3 airForwardDirection;
         private Quaternion airRotation;
 
         // the frame in which the player last entered a jump state
@@ -229,6 +231,7 @@ namespace AnyRPG {
         public MovementData AccumulatedMovementData { get => accumulatedMovementData; set => accumulatedMovementData = value; }
         public MovementData CurrentMovementData { get => currentMovementData; set => currentMovementData = value; }
         public CharacterMovementState CurrentCharacterMovementState { get => currentCharacterMovementState; }
+        public Vector3 ReconciledNavMeshAgentVelocity { get => reconciledNavMeshAgentVelocity; set => reconciledNavMeshAgentVelocity = value; }
 
         public UnitMovementController(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
@@ -277,6 +280,7 @@ namespace AnyRPG {
             movementStates.Add(CharacterMovementState.Swim, new MovementSwimState(this, unitController));
             movementStates.Add(CharacterMovementState.Fly, new MovementFlyState(this, unitController));
             movementStates.Add(CharacterMovementState.Glide, new MovementGlideState(this, unitController));
+            movementStates.Add(CharacterMovementState.NavMesh, new MovementNavMeshState(this, unitController, systemGameManager));
             ChangeState(CharacterMovementState.Idle, false);
         }
 
@@ -374,7 +378,6 @@ namespace AnyRPG {
         }
 
         public void EnterGroundStateCommon(bool isReplay) {
-            //airForwardDirection = unitController.transform.forward;
             if (isReplay == false) {
                 unitController.UnitAnimator.SetJumping(0);
             }
