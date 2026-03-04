@@ -2424,7 +2424,8 @@ namespace AnyRPG {
                 return;
             }
             ReconcileData rd = new ReconcileData(predictionRigidbody) {
-                CharacterMovementState = unitController.UnitMovementController.CurrentCharacterMovementState
+                CharacterMovementState = unitController.UnitMovementController.CurrentCharacterMovementState,
+                NavMeshAgentVelocity = unitController.NavMeshAgent.velocity
             };
             /*
             ReconcileData rd = new ReconcileData(predictionRigidbody) {
