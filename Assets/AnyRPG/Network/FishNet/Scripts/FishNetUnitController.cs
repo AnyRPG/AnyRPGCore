@@ -499,7 +499,10 @@ namespace AnyRPG {
         }
 
         private void HandleReachDestinationServer() {
-            HandleReachDestinationClient(base.Owner);
+            if (base.OwnerId != -1 && base.ServerManager.Clients.ContainsKey(base.OwnerId)) {
+                NetworkConnection networkConnection = base.ServerManager.Clients[base.OwnerId];
+                HandleReachDestinationClient(networkConnection);
+            }
         }
 
         [TargetRpc]
