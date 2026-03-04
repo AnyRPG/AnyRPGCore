@@ -1,4 +1,5 @@
 using FishNet.Object.Prediction;
+using UnityEngine;
 
 namespace AnyRPG {
     public struct ReconcileData : IReconcileData {
@@ -11,6 +12,7 @@ namespace AnyRPG {
 
         // Sync the state machine
         public CharacterMovementState CharacterMovementState;
+        public Vector3 NavMeshAgentVelocity;
 
         public ReconcileData(PredictionRigidbody pr) : this() {
             PredictionRigidbody = pr;

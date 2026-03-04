@@ -38,7 +38,6 @@ namespace AnyRPG {
 
         public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Update()");
-            //unitMovementController.airForwardDirection = unitController.transform.forward;
 
             if (unitController.InWater == true) {
                 if (unitController.CanFly

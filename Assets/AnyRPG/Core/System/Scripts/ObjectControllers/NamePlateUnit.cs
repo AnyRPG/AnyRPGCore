@@ -16,7 +16,8 @@ namespace AnyRPG {
         // created components
         protected BaseNamePlateController namePlateController = null;
 
-        private Transform nameplateTransform = null;
+        protected Transform nameplateTransform = null;
+        protected Vector3 nameplateVector = Vector3.zero;
 
         // track startup state
         protected bool namePlateReady = false;
@@ -205,11 +206,14 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             if (componentController != null) {
-                nameplateTransform = componentController.GetNameplateTransform();
+                //nameplateTransform = componentController.GetNameplateTransform();
+                nameplateVector = componentController.NameplateVector;
             }
-            if (nameplateTransform == null) {
+            
+            //if (nameplateTransform == null) {
                 nameplateTransform = transform;
-            }
+            //}
+            
 
             namePlateController = new BaseNamePlateController(this, systemGameManager);
             if (startHasRun && namePlateController != null) {
@@ -252,8 +256,8 @@ namespace AnyRPG {
             dialogPanelController.ConfigureSnapshotPortrait();
         }
 
-        public Transform GetNameplateTransform() {
-            return nameplateTransform;
+        public virtual Vector3 GetNameplatePosition() {
+            return transform.position + nameplateVector;
         }
     }
 

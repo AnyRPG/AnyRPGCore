@@ -89,6 +89,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: -2094280854867614279}
+    - targetCorrespondingSourceObject: {fileID: 2985534377770187114, guid: 49ede4650496e4f4d9d3d3f4162f7386,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2190051803715307228}
   m_SourcePrefab: {fileID: 100100000, guid: 49ede4650496e4f4d9d3d3f4162f7386, type: 3}
 --- !u!1 &786607657040755256 stripped
 GameObject:
@@ -149,7 +153,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584293353043093269
+  _initializedTimestamp: -8584289966276215643
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -189,6 +193,30 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: -4845865212197059661}
   _networkObjectCache: {fileID: -4845865212197059661}
+--- !u!114 &-2190051803715307228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786607657040755256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2361c564b0f77b94dbc549ff9caa72a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.Beta.OfflineTickSmoother
+  _automaticallyInitialize: 0
+  _initializationSettings:
+    TargetTransform: {fileID: 0}
+    DetachOnStart: 0
+    AttachOnStop: 0
+  _movementSettings:
+    EnableTeleport: 0
+    TeleportThreshold: 0
+    AdaptiveInterpolationValue: 0
+    InterpolationValue: 1
+    SmoothedProperties: 4294967295
+    SnapNonSmoothedProperties: 0
 --- !u!95 &6287424232733915896 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 8414206017104574890, guid: 49ede4650496e4f4d9d3d3f4162f7386,

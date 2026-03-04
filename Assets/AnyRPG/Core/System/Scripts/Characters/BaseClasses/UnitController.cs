@@ -414,6 +414,15 @@ namespace AnyRPG {
             }
         }
 
+        public Transform CameraTransform {
+            get {
+                if (unitModelController?.UnitModel != null) {
+                    return unitModelController.UnitModel.transform;
+                }
+                return transform;
+            }
+        }
+
 
         public override float InteractionMaxRange {
             get {
@@ -1468,6 +1477,9 @@ namespace AnyRPG {
 
             unitMaterialController.ProcessSetModelReady();
             OnCameraTargetReady();
+            if (UnitModelController.UnitModel != null) {
+                nameplateTransform = UnitModelController.UnitModel.transform;
+            }
         }
 
         public void SetMovementSoundArea(MovementSoundArea movementSoundArea) {
@@ -2604,6 +2616,10 @@ namespace AnyRPG {
             if (componentController != null) {
                 componentController.SetUnitController(this);
             }
+        }
+
+        public override Vector3 GetNameplatePosition() {
+            return nameplateTransform.position + nameplateVector;
         }
 
         #region MessagePassthroughs

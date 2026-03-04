@@ -377,8 +377,8 @@ namespace AnyRPG {
             unitController.UnitEventController.OnNameChangeFail += HandleNameChangeFailServer;
             unitController.UnitEventController.OnSetGroupId += HandleSetGroupId;
             unitController.UnitEventController.OnSetGuildId += HandleSetGuildId;
+            unitController.UnitEventController.OnReachDestination += HandleReachDestinationServer;
         }
-
 
         public void UnsubscribeFromServerUnitEvents() {
             if (unitController == null) {
@@ -481,6 +481,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnNameChangeFail -= HandleNameChangeFailServer;
             unitController.UnitEventController.OnSetGroupId -= HandleSetGroupId;
             unitController.UnitEventController.OnSetGuildId -= HandleSetGuildId;
+            unitController.UnitEventController.OnReachDestination -= HandleReachDestinationServer;
         }
 
         [ObserversRpc]
@@ -493,6 +494,18 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetGuildId({newGuildId},{guildName})");
 
             unitController.CharacterGuildManager.SetGuildId(newGuildId, guildName);
+        }
+
+        private void HandleReachDestinationServer() {
+            if (base.OwnerId != -1 && base.ServerManager.Clients.ContainsKey(base.OwnerId)) {
+                NetworkConnection networkConnection = base.ServerManager.Clients[base.OwnerId];
+                HandleReachDestinationClient(networkConnection);
+            }
+        }
+
+        [TargetRpc]
+        private void HandleReachDestinationClient(NetworkConnection networkConnection) {
+            unitController.UnitEventController.NotifyOnReachDestination();
         }
 
         private void HandleNameChangeFailServer() {
@@ -2412,7 +2425,8 @@ namespace AnyRPG {
                 return;
             }
             ReconcileData rd = new ReconcileData(predictionRigidbody) {
-                CharacterMovementState = unitController.UnitMovementController.CurrentCharacterMovementState
+                CharacterMovementState = unitController.UnitMovementController.CurrentCharacterMovementState,
+                NavMeshAgentVelocity = unitController.NavMeshAgent.velocity
             };
             /*
             ReconcileData rd = new ReconcileData(predictionRigidbody) {
@@ -2433,6 +2447,7 @@ namespace AnyRPG {
             if (unitController.UnitMovementController.CurrentCharacterMovementState != data.CharacterMovementState) {
                 unitController.UnitMovementController.SetStateSilently(data.CharacterMovementState);
             }
+            unitController.UnitMovementController.ReconciledNavMeshAgentVelocity = data.NavMeshAgentVelocity;
         }
 
 

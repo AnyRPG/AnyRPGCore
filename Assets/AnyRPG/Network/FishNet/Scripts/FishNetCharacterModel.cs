@@ -1,4 +1,6 @@
 using FishNet.Component.Animating;
+using FishNet.Component.Transforming;
+using FishNet.Component.Transforming.Beta;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
@@ -104,8 +106,18 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.OnStartClient() owner: {base.OwnerId}");
 
             base.OnStartClient();
+
             isClient = true;
             FindGameManager();
+            if (unitController == null) { 
+                return;
+            }
+            
+            OfflineTickSmoother smoother = GetComponent<OfflineTickSmoother>();
+            if (smoother != null) {
+                smoother.SetTargetTransform(unitController.transform);
+                smoother.Initialize(base.TimeManager);
+            }
         }
 
         private void CompleteClientConfiguration() {

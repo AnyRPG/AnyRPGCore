@@ -31,10 +31,13 @@ namespace AnyRPG {
 
         private Vector3 initialNamePlatePosition = Vector3.zero;
         private bool gotInitialNamePlatePosition = false;
+        private Vector3 nameplateVector = Vector3.zero;
 
         // game manager references
         protected NetworkManagerServer networkManagerServer = null;
         protected LevelManagerClient levelManagerClient = null;
+
+        public Vector3 NameplateVector { get => nameplateVector; }
 
         public override void Configure(SystemGameManager systemGameManager) {
 
@@ -86,6 +89,8 @@ namespace AnyRPG {
             this.interactable = interactable;
             interactableRange.SetInteractable(interactable);
             namePlateTransform.localPosition = initialNamePlatePosition;
+            nameplateVector = namePlateTransform.position - interactable.transform.position;
+            Debug.Log($"{gameObject.name}.ComponentController.SetInteractable(): nameplateVector: {nameplateVector}");
 
             interactable.InteractableEventController.OnPlayCastSound += HandlePlayCastSound;
             interactable.InteractableEventController.OnStopCastSound += HandleStopCastSound;
@@ -127,7 +132,8 @@ namespace AnyRPG {
         }
 
         private void HandleSetNameplatePosition(Vector3 overridePosition) {
-                namePlateTransform.localPosition = overridePosition;
+            namePlateTransform.localPosition = overridePosition;
+            nameplateVector = namePlateTransform.localPosition - interactable.transform.localPosition;
         }
 
         public bool MovementSoundIsPlaying(bool ignoreOneShots = true) {

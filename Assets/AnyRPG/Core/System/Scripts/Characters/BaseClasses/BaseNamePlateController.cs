@@ -105,9 +105,9 @@ namespace AnyRPG {
             }
         }
 
-        public virtual Transform NamePlateTransform {
+        public virtual Vector3 NameplatePosition {
             get {
-                return namePlateUnit.GetNameplateTransform();
+                return namePlateUnit.GetNameplatePosition();
             }
         }
         public virtual int Level {
