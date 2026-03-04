@@ -138,7 +138,7 @@ namespace AnyRPG {
         }
 
         public void InitializeCamera(Transform newTarget) {
-            //Debug.Log($"AnyRPGCameraController.InitializeCamera({newTarget.gameObject.name})");
+            Debug.Log($"AnyRPGCameraController.InitializeCamera({newTarget.gameObject.name})");
 
             SetTarget(newTarget);
             JumpToFollowSpot();

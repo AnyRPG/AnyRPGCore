@@ -414,6 +414,15 @@ namespace AnyRPG {
             }
         }
 
+        public Transform CameraTransform {
+            get {
+                if (unitModelController?.UnitModel != null) {
+                    return unitModelController.UnitModel.transform;
+                }
+                return transform;
+            }
+        }
+
 
         public override float InteractionMaxRange {
             get {

@@ -46,12 +46,12 @@ namespace AnyRPG {
 
             if (unitMovementController.ReconciledNavMeshAgentVelocity.sqrMagnitude > 0) {
                 if (unitController.UnitAnimator != null) {
-                    Debug.Log($"{unitController.gameObject.name}.MovementNavMeshState.Update() setting moving true because velocity is {unitMovementController.ReconciledNavMeshAgentVelocity}");
+                    //Debug.Log($"{unitController.gameObject.name}.MovementNavMeshState.Update() setting moving true because velocity is {unitMovementController.ReconciledNavMeshAgentVelocity}");
                     unitController.UnitAnimator.SetMoving(true);
                     unitController.UnitAnimator.SetVelocity(unitController.transform.InverseTransformDirection(unitMovementController.ReconciledNavMeshAgentVelocity));
                 }
             } else {
-                Debug.Log($"{unitController.gameObject.name}.MovementNavMeshState.Update() setting moving false because velocity is zero");
+                //Debug.Log($"{unitController.gameObject.name}.MovementNavMeshState.Update() setting moving false because velocity is zero");
                 if (unitController.UnitAnimator != null) {
                     unitController.UnitAnimator.SetMoving(false);
                     unitController.UnitAnimator.SetVelocity(Vector3.zero);

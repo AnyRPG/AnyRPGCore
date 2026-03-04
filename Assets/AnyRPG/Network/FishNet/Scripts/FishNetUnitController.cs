@@ -380,7 +380,6 @@ namespace AnyRPG {
             unitController.UnitEventController.OnReachDestination += HandleReachDestinationServer;
         }
 
-
         public void UnsubscribeFromServerUnitEvents() {
             if (unitController == null) {
                 return;
@@ -484,7 +483,6 @@ namespace AnyRPG {
             unitController.UnitEventController.OnSetGuildId -= HandleSetGuildId;
             unitController.UnitEventController.OnReachDestination -= HandleReachDestinationServer;
         }
-
 
         [ObserversRpc]
         private void HandleSetGroupId(int newGroupId) {

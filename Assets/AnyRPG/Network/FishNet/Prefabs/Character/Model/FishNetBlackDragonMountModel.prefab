@@ -79,6 +79,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 635065767607159233}
+    - targetCorrespondingSourceObject: {fileID: 943068409625311753, guid: 022ab4d98a489344283da6d08ddec94c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2733524557036461055}
     - targetCorrespondingSourceObject: {fileID: 6232705376418351611, guid: 022ab4d98a489344283da6d08ddec94c,
         type: 3}
       insertIndex: -1
@@ -143,7 +147,7 @@ MonoBehaviour:
   _initializeOrder: -2
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584293353043093269
+  _initializedTimestamp: -8584290026940723083
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -229,7 +233,7 @@ MonoBehaviour:
   _initializeOrder: -2
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584293353043093269
+  _initializedTimestamp: -8584290026940723083
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -269,6 +273,40 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 2316381857745387070}
   _networkObjectCache: {fileID: 2316381857745387070}
+--- !u!114 &2733524557036461055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4245539758358560495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 453481867b26f7c43b5bf38802a5f50e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.Beta.NetworkTickSmoother
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 2316381857745387070}
+  _networkObjectCache: {fileID: 0}
+  _initializationSettings:
+    TargetTransform: {fileID: 0}
+    DetachOnStart: 0
+    AttachOnStop: 0
+  _controllerMovementSettings:
+    EnableTeleport: 0
+    TeleportThreshold: 0
+    AdaptiveInterpolationValue: 0
+    InterpolationValue: 2
+    SmoothedProperties: 4294967295
+    SnapNonSmoothedProperties: 0
+  _favorPredictionNetworkTransform: 1
+  _spectatorMovementSettings:
+    EnableTeleport: 0
+    TeleportThreshold: 0
+    AdaptiveInterpolationValue: 0
+    InterpolationValue: 2
+    SmoothedProperties: 4294967295
+    SnapNonSmoothedProperties: 0
 --- !u!1 &7026276045691866397 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6232705376418351611, guid: 022ab4d98a489344283da6d08ddec94c,

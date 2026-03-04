@@ -100,6 +100,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 3486158094288589070}
+    - targetCorrespondingSourceObject: {fileID: 2692339740015506113, guid: 2da13b91748b5f042bdc582eebb82983,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -4192245640195175611}
   m_SourcePrefab: {fileID: 100100000, guid: 2da13b91748b5f042bdc582eebb82983, type: 3}
 --- !u!1 &3985010815240365227 stripped
 GameObject:
@@ -160,7 +164,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584293353043093269
+  _initializedTimestamp: -8584290026940723083
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -200,6 +204,40 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: -7870416232258276795}
   _networkObjectCache: {fileID: -7870416232258276795}
+--- !u!114 &-4192245640195175611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3985010815240365227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 453481867b26f7c43b5bf38802a5f50e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.Beta.NetworkTickSmoother
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: -7870416232258276795}
+  _networkObjectCache: {fileID: 0}
+  _initializationSettings:
+    TargetTransform: {fileID: 0}
+    DetachOnStart: 0
+    AttachOnStop: 0
+  _controllerMovementSettings:
+    EnableTeleport: 0
+    TeleportThreshold: 0
+    AdaptiveInterpolationValue: 0
+    InterpolationValue: 2
+    SmoothedProperties: 4294967295
+    SnapNonSmoothedProperties: 0
+  _favorPredictionNetworkTransform: 1
+  _spectatorMovementSettings:
+    EnableTeleport: 0
+    TeleportThreshold: 0
+    AdaptiveInterpolationValue: 0
+    InterpolationValue: 2
+    SmoothedProperties: 4294967295
+    SnapNonSmoothedProperties: 0
 --- !u!95 &4610800127188084869 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 3309121852376907503, guid: 2da13b91748b5f042bdc582eebb82983,

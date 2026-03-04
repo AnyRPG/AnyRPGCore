@@ -1114,7 +1114,7 @@ namespace AnyRPG {
             playerManagerClient.SetActiveUnitController(mountUnitController);
 
             cameraManager.SwitchToMainCamera();
-            cameraManager.MainCameraController.InitializeCamera(playerManagerClient.ActiveUnitController.transform);
+            cameraManager.MainCameraController.InitializeCamera(playerManagerClient.ActiveUnitController.CameraTransform);
         }
 
         public void HandleDeactivateMountedState() {
@@ -1122,7 +1122,7 @@ namespace AnyRPG {
             playerManagerClient.SetActiveUnitController(playerManagerClient.UnitController);
 
             cameraManager.ActivateMainCamera();
-            cameraManager.MainCameraController.InitializeCamera(playerManagerClient.UnitController.transform);
+            cameraManager.MainCameraController.InitializeCamera(playerManagerClient.UnitController.CameraTransform);
         }
 
         public void OnSendObjectToPool() {
