@@ -107,16 +107,17 @@ namespace AnyRPG {
 
             base.OnStartClient();
 
+            isClient = true;
+            FindGameManager();
+            if (unitController == null) { 
+                return;
+            }
+            
             OfflineTickSmoother smoother = GetComponent<OfflineTickSmoother>();
-
             if (smoother != null) {
-                // 3. Set the target to the root transform of this NetworkObject
-                // This satisfies the "cannot be null" requirement at runtime
                 smoother.SetTargetTransform(transform);
                 smoother.Initialize(base.TimeManager);
             }
-            isClient = true;
-            FindGameManager();
         }
 
         private void CompleteClientConfiguration() {
