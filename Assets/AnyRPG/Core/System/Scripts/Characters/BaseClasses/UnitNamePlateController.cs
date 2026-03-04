@@ -31,16 +31,14 @@ namespace AnyRPG {
                 return (unitController.BaseCharacter != null ? unitController.BaseCharacter.Title : base.Title); }
         }
 
-        public override Transform NamePlateTransform {
+        public override Vector3 NameplatePosition {
             get {
                 //Debug.Log($"{unitController.gameObject.name}.UnitNamePlateController.NamePlateTransform() mount: {(unitController.UnitMountManager.MountUnitController == null ? "null" : unitController.UnitMountManager.MountUnitController.gameObject.name)}");
                 if (unitController.IsMounted == true
-                    && unitController.UnitMountManager.MountUnitController != null
-                    && unitController.UnitMountManager.MountUnitController.NamePlateController != null
-                    && unitController.UnitMountManager.MountUnitController.NamePlateController.NamePlateTransform != null) {
-                    return unitController.UnitMountManager.MountUnitController.NamePlateController.NamePlateTransform;
+                    && unitController.UnitMountManager.MountUnitController != null) {
+                    return unitController.UnitMountManager.MountUnitController.GetNameplatePosition();
                 }
-                return base.NamePlateTransform;
+                return base.NameplatePosition;
             }
         }
         public override int Level {

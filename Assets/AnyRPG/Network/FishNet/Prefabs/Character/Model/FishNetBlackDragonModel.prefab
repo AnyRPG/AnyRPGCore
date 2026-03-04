@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a6a39c46bf52104ba8efe3100bce3f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 4
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 2316381857745387070}
   _networkObjectCache: {fileID: 2316381857745387070}
 --- !u!1 &4245539758358560495 stripped
@@ -163,7 +163,6 @@ MonoBehaviour:
   - {fileID: 7120541827290435551}
   - {fileID: 635065767607159233}
   - {fileID: -4081660806447593747}
-  - {fileID: 0}
   - {fileID: 174868717524669793}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
@@ -175,7 +174,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584290018874483966
+  _initializedTimestamp: -8584289966276215643
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -282,7 +281,7 @@ MonoBehaviour:
     EnableTeleport: 0
     TeleportThreshold: 0
     AdaptiveInterpolationValue: 0
-    InterpolationValue: 2
+    InterpolationValue: 1
     SmoothedProperties: 4294967295
     SnapNonSmoothedProperties: 0
 --- !u!95 &7440179210700717615 stripped

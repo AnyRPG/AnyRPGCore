@@ -267,7 +267,6 @@ MonoBehaviour:
   NetworkBehaviours:
   - {fileID: -6090600766578093432}
   - {fileID: -83274313534577005}
-  - {fileID: 0}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -278,7 +277,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584290018874483966
+  _initializedTimestamp: -8584289966276215643
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -346,6 +345,6 @@ MonoBehaviour:
     EnableTeleport: 0
     TeleportThreshold: 0
     AdaptiveInterpolationValue: 0
-    InterpolationValue: 2
+    InterpolationValue: 1
     SmoothedProperties: 4294967295
     SnapNonSmoothedProperties: 0

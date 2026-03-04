@@ -1477,6 +1477,9 @@ namespace AnyRPG {
 
             unitMaterialController.ProcessSetModelReady();
             OnCameraTargetReady();
+            if (UnitModelController.UnitModel != null) {
+                nameplateTransform = UnitModelController.UnitModel.transform;
+            }
         }
 
         public void SetMovementSoundArea(MovementSoundArea movementSoundArea) {
@@ -2613,6 +2616,10 @@ namespace AnyRPG {
             if (componentController != null) {
                 componentController.SetUnitController(this);
             }
+        }
+
+        public override Vector3 GetNameplatePosition() {
+            return nameplateTransform.position + nameplateVector;
         }
 
         #region MessagePassthroughs
