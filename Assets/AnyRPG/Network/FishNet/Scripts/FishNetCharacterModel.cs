@@ -115,7 +115,7 @@ namespace AnyRPG {
             
             OfflineTickSmoother smoother = GetComponent<OfflineTickSmoother>();
             if (smoother != null) {
-                smoother.SetTargetTransform(transform);
+                smoother.SetTargetTransform(unitController.transform);
                 smoother.Initialize(base.TimeManager);
             }
         }
