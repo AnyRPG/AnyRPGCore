@@ -578,6 +578,8 @@ namespace AnyRPG {
         }
 
         private void ClickToMove(Vector3 targetPosition) {
+            Debug.Log($"PlayerController.ClickToMove({targetPosition})");
+
             Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(targetPosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100, systemConfigurationManager.DefaultGroundMask)) {
@@ -617,9 +619,10 @@ namespace AnyRPG {
 
             if (mouseOverInteractable == null && !namePlateManager.MouseOverNamePlate()) {
                 playerManagerClient.UnitController.ClearTarget();
-            } else if (mouseOverInteractable != null) {
+            } else if (mouseOverInteractable != null && mouseOverInteractable.IsTrigger == false) {
+                //Debug.Log($"PlayerController.HandleLeftMouseClick(): mouseover interactable: {mouseOverInteractable.gameObject.name}");
                 if (mouseOverInteractable.IsMouseOverBlocked() == false) {
-                    //Debug.Log("PlayerController.HandleLeftMouseClick(): mouseover blocked");
+                    Debug.Log("PlayerController.HandleLeftMouseClick(): mouseover not blocked");
                     playerManagerClient.UnitController.SetTarget(mouseOverInteractable.CharacterTarget);
                     return;
                 }
