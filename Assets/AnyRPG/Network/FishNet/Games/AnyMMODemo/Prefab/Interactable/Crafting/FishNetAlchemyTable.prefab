@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2232754343567841329}
   - component: {fileID: 2232754343567841358}
   - component: {fileID: 8058713820508115698}
-  - component: {fileID: 1114266477532291690}
+  - component: {fileID: 2991338055145781717}
   m_Layer: 25
   m_Name: DefaultInteractableUnit
   m_TagString: Untagged
@@ -81,8 +81,10 @@ MonoBehaviour:
   interactOnExit: 0
   isTrigger: 0
   suppressInteractionWindow: 0
+  overrideInteractionColliderSize: 0
   interactionMaxRange: 2
-  interactLocations: []
+  interactionPoints:
+  - {fileID: 6263454068297487095}
   componentController: {fileID: 5893705775157587616}
   namePlateProps:
     displayName: Alchemy Table
@@ -128,9 +130,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 1114266477532291690}
+  _addedNetworkObject: {fileID: 2991338055145781717}
   _networkObjectCache: {fileID: 0}
---- !u!114 &1114266477532291690
+--- !u!114 &2991338055145781717
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -141,7 +143,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
   <IsNested>k__BackingField: 0
   WasActiveDuringEdit: 0
   WasActiveDuringEdit_Set1: 1
@@ -159,9 +161,11 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
+  _initializedTimestamp: 0
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
+  _localReconcileCorrectionType: 2
   _graphicalObject: {fileID: 0}
   _detachGraphicalObject: 0
   _enableStateForwarding: 1
@@ -176,7 +180,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  <SceneId>k__BackingField: 0
+  SceneId: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -486,6 +490,12 @@ PrefabInstance:
 --- !u!4 &1548350280852765156 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7690196726187887841, guid: 845c97cd3b4b4d5419724d42618d4d51,
+    type: 3}
+  m_PrefabInstance: {fileID: 9206986349726921989}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6263454068297487095 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2966054695481583602, guid: 845c97cd3b4b4d5419724d42618d4d51,
     type: 3}
   m_PrefabInstance: {fileID: 9206986349726921989}
   m_PrefabAsset: {fileID: 0}
