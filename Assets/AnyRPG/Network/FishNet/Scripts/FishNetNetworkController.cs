@@ -490,6 +490,10 @@ namespace AnyRPG {
             clientConnector.InteractWithOptionClient(sourceUnitController, targetInteractable, componentIndex, choiceIndex);
         }
 
+        public override void RequestInteractWithInteractable(Interactable target) {
+            clientConnector.RequestInteractWithInteractable(target);
+        }
+
         public override void RequestSetPlayerCharacterClass(Interactable interactable, int componentIndex) {
             clientConnector.RequestSetPlayerCharacterClass(interactable, componentIndex);
         }
@@ -1133,6 +1137,10 @@ namespace AnyRPG {
 
         public override void AdvertiseAddToBuyBackCollection(UnitController sourceUnitController, int accountId, Interactable interactable, int componentIndex, InstantiatedItem newInstantiatedItem) {
             clientConnector.AdvertiseAddToBuyBackCollection(sourceUnitController, accountId, interactable, componentIndex, newInstantiatedItem);
+        }
+
+        public override void AdvertiseOpenInteractionWindow(int accountId, Interactable targetInteractable) {
+            clientConnector.AdvertiseOpenInteractionWindow(accountId, targetInteractable);
         }
 
         public override void AddAvailableDroppedLoot(int accountId, List<int> lootDropIds) {

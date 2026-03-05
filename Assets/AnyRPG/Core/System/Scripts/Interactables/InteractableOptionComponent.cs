@@ -21,7 +21,7 @@ namespace AnyRPG {
         protected PlayerManagerClient playerManagerClient = null;
         protected PlayerManagerServer playerManagerServer = null;
         protected UIManager uIManager = null;
-        protected InteractionManager interactionManager = null;
+        protected InteractionManagerClient interactionManagerClient = null;
 
         public Interactable Interactable { get => interactable; set => interactable = value; }
         public virtual InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; }
@@ -68,7 +68,7 @@ namespace AnyRPG {
             playerManagerClient = systemGameManager.PlayerManagerClient;
             uIManager = systemGameManager.UIManager;
             playerManagerServer = systemGameManager.PlayerManagerServer;
-            interactionManager = systemGameManager.InteractionManager;
+            interactionManagerClient = systemGameManager.InteractionManagerClient;
         }
 
         /*

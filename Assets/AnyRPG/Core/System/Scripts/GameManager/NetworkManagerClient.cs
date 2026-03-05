@@ -64,6 +64,7 @@ namespace AnyRPG {
         private AuctionManagerClient auctionManagerClient = null;
         private GuildServiceClient guildServiceClient = null;
         private FriendServiceClient friendServiceClient = null;
+        private InteractionManagerClient interactionManagerClient = null;
 
         public string Username { get => username; }
         public string Password { get => password; }
@@ -100,6 +101,7 @@ namespace AnyRPG {
             auctionManagerClient = systemGameManager.AuctionManagerClient;
             guildServiceClient = systemGameManager.GuildServiceClient;
             friendServiceClient = systemGameManager.FriendServiceClient;
+            interactionManagerClient = systemGameManager.InteractionManagerClient;
         }
 
         public bool Login(string username, string password, string server) {
@@ -462,7 +464,7 @@ namespace AnyRPG {
             levelManagerClient.ProcessBeforeLevelUnload();
         }
 
-        public void InteractWithOption(UnitController sourceUnitController, Interactable targetInteractable, int componentIndex, int choiceIndex) {
+        public void RequestInteractWithOption(UnitController sourceUnitController, Interactable targetInteractable, int componentIndex, int choiceIndex) {
             //Debug.Log($"NetworkManagerClient.InteractWithOption({targetInteractable.gameObject.name}, {componentIndex}, {choiceIndex})");
 
             networkController.InteractWithOption(sourceUnitController, targetInteractable, componentIndex, choiceIndex);
@@ -1031,6 +1033,13 @@ namespace AnyRPG {
             networkController.RequestDemoteGuildCharacter(characterId);
         }
 
+        public void AdvertiseOpenInteractionWindow(Interactable interactable) {
+            interactionManagerClient.OpenInteractionWindow(interactable);
+        }
+
+        public void RequestInteractWithInteractable(Interactable target) {
+            networkController.RequestInteractWithInteractable(target);
+        }
     }
 
 }

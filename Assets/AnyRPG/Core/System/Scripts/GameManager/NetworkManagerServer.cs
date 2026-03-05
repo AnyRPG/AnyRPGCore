@@ -89,7 +89,7 @@ namespace AnyRPG {
         private MessageLogServer messageLogServer = null;
         private PlayerManagerServer playerManagerServer = null;
         private CharacterManager characterManager = null;
-        private InteractionManager interactionManager = null;
+        private InteractionManagerServer interactionManagerServer = null;
         private LevelManagerServer levelManagerServer = null;
         private SystemDataFactory systemDataFactory = null;
         private VendorManagerServer vendorManagerServer = null;
@@ -141,7 +141,7 @@ namespace AnyRPG {
             messageLogServer = systemGameManager.MessageLogServer;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             characterManager = systemGameManager.CharacterManager;
-            interactionManager = systemGameManager.InteractionManager;
+            interactionManagerServer = systemGameManager.InteractionManagerServer;
             levelManagerServer = systemGameManager.LevelManagerServer;
             systemDataFactory = systemGameManager.SystemDataFactory;
             vendorManagerServer = systemGameManager.VendorManagerServer;
@@ -696,7 +696,7 @@ namespace AnyRPG {
         */
 
         public void InteractWithOption(UnitController sourceUnitController, Interactable interactable, int componentIndex, int choiceIndex) {
-            interactionManager.InteractWithOptionServer(sourceUnitController, interactable, componentIndex, choiceIndex);
+            interactionManagerServer.InteractWithOption(sourceUnitController, interactable, componentIndex, choiceIndex);
         }
 
         /*
@@ -1962,8 +1962,26 @@ namespace AnyRPG {
             networkController.UnloadScene(handle);
         }
 
-        internal void SetSceneClientCount(string name, int handle, int clientCount) {
+        public void SetSceneClientCount(string name, int handle, int clientCount) {
             levelManagerServer.SetSceneClientCount(name, handle, clientCount);
+        }
+
+        public void AdvertiseOpenInteractionWindow(UnitController sourceUnitController, Interactable targetInteractable) {
+            int accountId = playerManagerServer.GetAccountIdFromUnitController(sourceUnitController);
+            networkController.AdvertiseOpenInteractionWindow(accountId, targetInteractable);
+        }
+
+        public void RequestInteractWithInteractable(int clientId, Interactable interactable) {
+            int accountId = authenticationService.GetAccountId(clientId);
+            if (accountId == -1) {
+                return;
+            }
+            UnitController unitController = playerManagerServer.GetUnitControllerFromAccountId(accountId);
+            if (unitController == null) {
+                Debug.LogWarning($"NetworkManagerServer.RequestInteractWithOption() could not find unit controller for account id {accountId}");
+                return;
+            }
+            interactionManagerServer.InteractWithInteractable(unitController, interactable);
         }
     }
 

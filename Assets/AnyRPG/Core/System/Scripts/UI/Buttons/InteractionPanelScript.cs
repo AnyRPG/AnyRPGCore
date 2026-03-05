@@ -22,7 +22,7 @@ namespace AnyRPG {
 
         // game manager references
         protected PlayerManagerClient playerManagerClient = null;
-        protected InteractionManager interactionManager = null;
+        protected InteractionManagerClient interactionManagerClient = null;
 
         public Image Icon { get => icon; set => icon = value; }
         public InteractableOptionComponent InteractableOption {
@@ -46,7 +46,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             playerManagerClient = systemGameManager.PlayerManagerClient;
-            interactionManager = systemGameManager.InteractionManager;
+            interactionManagerClient = systemGameManager.InteractionManagerClient;
         }
 
         public void Setup(InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
@@ -63,7 +63,7 @@ namespace AnyRPG {
 
             base.ButtonClickAction();
             if (playerManagerClient.UnitController != null) {
-                interactionManager.InteractWithOptionClient(playerManagerClient.UnitController, InteractableOption.Interactable, interactableOption, componentIndex, choiceIndex);
+                interactionManagerClient.InteractWithOption(playerManagerClient.UnitController, InteractableOption.Interactable, interactableOption, componentIndex, choiceIndex);
             }
             InteractableOption.Interactable.CloseInteractionWindow();
 

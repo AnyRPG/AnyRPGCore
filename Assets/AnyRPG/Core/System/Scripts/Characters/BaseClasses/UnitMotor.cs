@@ -65,7 +65,7 @@ namespace AnyRPG {
         float capsuleRadius;
 
         // game manager references
-        private PlayerManagerClient playerManagerClient = null;
+        private InteractionManagerServer interactionManagerServer = null;
 
         // properties
         public float MovementSpeed { get => movementSpeed; set => movementSpeed = value; }
@@ -77,6 +77,8 @@ namespace AnyRPG {
         public Interactable AttackTarget { get => attackTarget; }
         public Transform InteractionTransform { get => interactionTransform; set => interactionTransform = value; }
         public IMovementBody MovementBody { get => movementBody; }
+        public bool SetMoveDestination { get => setMoveDestination; }
+        public bool HasDestinationPosition { get => hasDestinationPosition; set => hasDestinationPosition = value; }
 
         public UnitMotor(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
@@ -90,7 +92,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManagerClient = systemGameManager.PlayerManagerClient;
+            interactionManagerServer = systemGameManager.InteractionManagerServer;
         }
 
         public void SetMovementBody(IMovementBody movementBody) {
@@ -133,7 +135,7 @@ namespace AnyRPG {
                 unitController.EnableAgent();
                 if (unitController.NavMeshAgent.enabled == true && unitController.NavMeshAgent.isOnNavMesh == true) {
                     moveToDestination = true;
-                    //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CheckSetMoveDestination(): ISSUING SETDESTINATION: current location: {unitController.transform.position}; MyAgent.SetDestination({destinationPosition}) on frame: " + Time.frameCount + " with last reset: " + lastResetFrame + "; pathpending: {unitController.NavMeshAgent.pathPending}; pathstatus: {unitController.NavMeshAgent.pathStatus}; hasPath: {unitController.NavMeshAgent.hasPath}");
+                    //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CheckSetMoveDestination(): ISSUING SETDESTINATION: current location: {unitController.transform.position}; MyAgent.SetDestination({destinationPosition}) on frame: {Time.frameCount} with last reset: {lastResetFrame}; pathpending: {unitController.NavMeshAgent.pathPending}; pathstatus: {unitController.NavMeshAgent.pathStatus}; hasPath: {unitController.NavMeshAgent.hasPath}");
                     unitController.NavMeshAgent.SetDestination(destinationPosition);
                     //Debug.Log($"{gameObject.name}: UnitMotor.CheckSetMoveDestination(): AFTER SETDESTINATION: current location: {transform.position}; NavMeshAgentDestination: " + unitController.MyAgent.destination + "; destinationPosition: " + destinationPosition + "; frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; pathpending: {unitController.MyAgent.pathPending}; pathstatus: {unitController.MyAgent.pathStatus}; hasPath: {unitController.MyAgent.hasPath}");
                     lastCommandFrame = Time.frameCount;
@@ -168,11 +170,16 @@ namespace AnyRPG {
             if (unitController.NavMeshAgent.enabled == true
                 && unitController.NavMeshAgent.isOnNavMesh == true
                 && hasDestinationPosition
+                && setMoveDestination == false
                 && !unitController.NavMeshAgent.pathPending) {
                 if (unitController.NavMeshAgent.remainingDistance <= unitController.NavMeshAgent.stoppingDistance) {
                     if (!unitController.NavMeshAgent.hasPath || unitController.NavMeshAgent.velocity.sqrMagnitude == 0f) {
                         //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FixedUpdate(): REACHED DESTINATION: {destinationPosition}; current location: {unitController.transform.position}; frame: {Time.frameCount}; last reset: {lastResetFrame}; ");
                         hasDestinationPosition = false;
+
+                        // cache the interaction variables because they will be reset in StopFollowingTarget()
+                        Transform cachedInteractionTransform = interactionTransform;
+                        Interactable cachedInteractionTarget = interactionTarget;
                         // face the prefered direction of the interaction
                         if (interactionTransform != null) {
                             FaceDirection(interactionTransform.forward);
@@ -187,6 +194,10 @@ namespace AnyRPG {
                         //if (interactionTransform != null) {
                             StopFollowingTarget();
                         //}
+                        if (cachedInteractionTransform != null) {
+                            interactionManagerServer.InteractWithInteractable(unitController, cachedInteractionTarget);
+                        }
+
                     }
                 }
             }
@@ -701,10 +712,12 @@ namespace AnyRPG {
                         unitController.NavMeshAgent.velocity = Vector3.zero;
                         unitController.ResetApparentVelocity();
                         unitController.DisableAgent();
-                        unitController.RigidBody.isKinematic = false;
-                        unitController.RigidBody.useGravity = true;
-                        if (unitController.UnitControllerMode == UnitControllerMode.Player && systemGameManager.GameMode == GameMode.Local) {
-                            unitController.RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+                        if (unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) {
+                            if (systemGameManager.GameMode == GameMode.Local) {
+                                unitController.RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+                            }
+                            unitController.RigidBody.isKinematic = false;
+                            unitController.RigidBody.useGravity = true;
                         }
                     }
                 }
@@ -726,7 +739,7 @@ namespace AnyRPG {
         public void StickToGround() {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.StickToGround()");
 
-            if (unitController.PhysicsScene.Raycast(playerManagerClient.ActiveUnitController.transform.position + (Vector3.up * 0.25f), -Vector3.up, out centerDownHitInfo, Mathf.Infinity, defaultLayerMask)) {
+            if (unitController.PhysicsScene.Raycast(unitController.transform.position + (Vector3.up * 0.25f), -Vector3.up, out centerDownHitInfo, Mathf.Infinity, defaultLayerMask)) {
                 
                 // 3. Calculate the slope angle
                 float angle = Vector3.Angle(Vector3.up, centerDownHitInfo.normal);

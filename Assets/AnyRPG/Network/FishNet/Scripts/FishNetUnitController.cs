@@ -1841,7 +1841,7 @@ namespace AnyRPG {
             if (networkInteractable != null) {
                 interactable = networkInteractable.Interactable;
             }
-            unitController.UnitEventController.NotifyOnEnterInteractableRange(interactable);
+            unitController.EnterInteractableRange(interactable);
         }
 
         private void HandleExitInteractableRangeServer(UnitController controller, Interactable interactable) {

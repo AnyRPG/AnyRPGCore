@@ -36,7 +36,7 @@ namespace AnyRPG {
         private List<InteractionPanelScript> interactionPanelScripts = new List<InteractionPanelScript>();
 
         // game manager references
-        private InteractionManager interactionManager = null;
+        private InteractionManagerClient interactionManagerClient = null;
         private UIManager uIManager = null;
         private PlayerManagerClient playerManagerClient = null;
         private ObjectPooler objectPooler = null;
@@ -48,7 +48,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            interactionManager = systemGameManager.InteractionManager;
+            interactionManagerClient = systemGameManager.InteractionManagerClient;
             uIManager = systemGameManager.UIManager;
             playerManagerClient = systemGameManager.PlayerManagerClient;
             objectPooler = systemGameManager.ObjectPooler;
@@ -68,13 +68,13 @@ namespace AnyRPG {
         protected override void ProcessCreateEventSubscriptions() {
             //Debug.Log("InteractionPanelUI.CreateEventSubscriptions()");
             base.ProcessCreateEventSubscriptions();
-            interactionManager.OnSetInteractable += HandleSetInteractable;
+            interactionManagerClient.OnSetInteractable += HandleSetInteractable;
         }
 
         protected override void ProcessCleanupEventSubscriptions() {
             //Debug.Log("InteractionPanelUI.CleanupEventSubscriptions()");
             base.ProcessCleanupEventSubscriptions();
-            interactionManager.OnSetInteractable -= HandleSetInteractable;
+            interactionManagerClient.OnSetInteractable -= HandleSetInteractable;
         }
 
         public void CheckPrerequisites(Skill skill) {
@@ -231,7 +231,7 @@ namespace AnyRPG {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking interaction Panel Script");
                 if (interactionPanelScript.InteractableOption.CanInteract(playerManagerClient.UnitController, false, false, true) && interactionPanelScript.InteractableOption.GetCurrentOptionCount(playerManagerClient.UnitController) == 1) {
                     //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking interaction Panel Script: canInteract is TRUE!!!");
-                    interactionManager.InteractWithOptionClient(playerManagerClient.UnitController, interactable, interactionPanelScript.InteractableOption, interactionPanelScript.ComponentIndex, interactionPanelScript.ChoiceIndex);
+                    interactionManagerClient.InteractWithOption(playerManagerClient.UnitController, interactable, interactionPanelScript.InteractableOption, interactionPanelScript.ComponentIndex, interactionPanelScript.ChoiceIndex);
                     //interactionPanelScript.Value.InteractableOption.Interact(playerManager.UnitController.CharacterUnit, interactionPanelScript.Key);
                     //optionOpened = true;
                     return;
@@ -249,7 +249,7 @@ namespace AnyRPG {
 
         public void ShowInteractables(Interactable interactable) {
             //Debug.Log("InteractionPanelUI.ShowInteractables(" + interactable.name + ")");
-            interactionManager.SetInteractable(interactable);
+            interactionManagerClient.SetInteractable(interactable);
             ShowInteractablesCommon(this.interactable);
         }
 
@@ -276,7 +276,7 @@ namespace AnyRPG {
             //ClearButtons();
             base.ReceiveClosedWindowNotification();
             // clear this so window doesn't pop open again when it's closed
-            interactionManager.SetInteractable(null);
+            interactionManagerClient.SetInteractable(null);
         }
 
         public override void ProcessOpenWindowNotification() {

@@ -90,7 +90,7 @@ namespace AnyRPG {
             interactableRange.SetInteractable(interactable);
             namePlateTransform.localPosition = initialNamePlatePosition;
             nameplateVector = namePlateTransform.position - interactable.transform.position;
-            Debug.Log($"{gameObject.name}.ComponentController.SetInteractable(): nameplateVector: {nameplateVector}");
+            //Debug.Log($"{gameObject.name}.ComponentController.SetInteractable(): nameplateVector: {nameplateVector}");
 
             interactable.InteractableEventController.OnPlayCastSound += HandlePlayCastSound;
             interactable.InteractableEventController.OnStopCastSound += HandleStopCastSound;
