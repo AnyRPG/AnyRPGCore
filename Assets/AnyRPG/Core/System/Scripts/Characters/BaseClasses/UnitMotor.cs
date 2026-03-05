@@ -77,6 +77,8 @@ namespace AnyRPG {
         public Interactable AttackTarget { get => attackTarget; }
         public Transform InteractionTransform { get => interactionTransform; set => interactionTransform = value; }
         public IMovementBody MovementBody { get => movementBody; }
+        public bool SetMoveDestination { get => setMoveDestination; }
+        public bool HasDestinationPosition { get => hasDestinationPosition; set => hasDestinationPosition = value; }
 
         public UnitMotor(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
@@ -133,7 +135,7 @@ namespace AnyRPG {
                 unitController.EnableAgent();
                 if (unitController.NavMeshAgent.enabled == true && unitController.NavMeshAgent.isOnNavMesh == true) {
                     moveToDestination = true;
-                    //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CheckSetMoveDestination(): ISSUING SETDESTINATION: current location: {unitController.transform.position}; MyAgent.SetDestination({destinationPosition}) on frame: " + Time.frameCount + " with last reset: " + lastResetFrame + "; pathpending: {unitController.NavMeshAgent.pathPending}; pathstatus: {unitController.NavMeshAgent.pathStatus}; hasPath: {unitController.NavMeshAgent.hasPath}");
+                    //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CheckSetMoveDestination(): ISSUING SETDESTINATION: current location: {unitController.transform.position}; MyAgent.SetDestination({destinationPosition}) on frame: {Time.frameCount} with last reset: {lastResetFrame}; pathpending: {unitController.NavMeshAgent.pathPending}; pathstatus: {unitController.NavMeshAgent.pathStatus}; hasPath: {unitController.NavMeshAgent.hasPath}");
                     unitController.NavMeshAgent.SetDestination(destinationPosition);
                     //Debug.Log($"{gameObject.name}: UnitMotor.CheckSetMoveDestination(): AFTER SETDESTINATION: current location: {transform.position}; NavMeshAgentDestination: " + unitController.MyAgent.destination + "; destinationPosition: " + destinationPosition + "; frame: " + Time.frameCount + "; last reset: " + lastResetFrame + "; pathpending: {unitController.MyAgent.pathPending}; pathstatus: {unitController.MyAgent.pathStatus}; hasPath: {unitController.MyAgent.hasPath}");
                     lastCommandFrame = Time.frameCount;
@@ -168,6 +170,7 @@ namespace AnyRPG {
             if (unitController.NavMeshAgent.enabled == true
                 && unitController.NavMeshAgent.isOnNavMesh == true
                 && hasDestinationPosition
+                && setMoveDestination == false
                 && !unitController.NavMeshAgent.pathPending) {
                 if (unitController.NavMeshAgent.remainingDistance <= unitController.NavMeshAgent.stoppingDistance) {
                     if (!unitController.NavMeshAgent.hasPath || unitController.NavMeshAgent.velocity.sqrMagnitude == 0f) {
