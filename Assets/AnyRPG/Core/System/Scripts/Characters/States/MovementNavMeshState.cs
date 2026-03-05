@@ -19,6 +19,13 @@ namespace AnyRPG {
 
         public void Exit(bool isReplay, bool isSilent) {
             Debug.Log($"{unitController.gameObject.name}.MovementNavMeshState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+
+            // this needs to be cleared here because if we exit on the same frame we stopped,
+            // the update will not run to clear it, and the animator will be left in a moving state with the last velocity
+            if (unitController.UnitAnimator != null) {
+                unitController.UnitAnimator.SetMoving(false);
+                unitController.UnitAnimator.SetVelocity(Vector3.zero);
+            }
         }
 
         public void Update(bool isReplay, double timeInterval) {
