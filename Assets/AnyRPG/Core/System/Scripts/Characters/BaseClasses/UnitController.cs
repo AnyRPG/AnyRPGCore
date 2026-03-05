@@ -2644,6 +2644,7 @@ namespace AnyRPG {
                 // we have entered the range of the interactable we were following, and it doesn't have a specific interaction point
                 // stop following the target and interact with it
                 unitMotor.StopFollowingTarget();
+                unitMovementController.ChangeState(CharacterMovementState.Idle, false);
                 interactionManagerServer.InteractWithInteractable(this, interactable);
                 return;
             }

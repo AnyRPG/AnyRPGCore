@@ -184,16 +184,16 @@ namespace AnyRPG {
                         if (interactionTransform != null) {
                             FaceDirection(interactionTransform.forward);
                         }
-                        // this will cause an interaction to happen if the interactionTransform was not null
-                        unitController.UnitEventController.NotifyOnReachDestination();
-                        // clear variables related to following an interaction target since we have reached the destination and are now interacting
                         
-                        // testing - commented this out so that click-to-move will also disable the agent
-                        // this is necessary because on the client, when it starts trying to move, it won't be snapped back for the first few reconciles
-                        // until the movement input disables the agent.
-                        //if (interactionTransform != null) {
-                            StopFollowingTarget();
-                        //}
+                        unitController.UnitEventController.NotifyOnReachDestination();
+
+                        if (unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) {
+                            unitController.UnitMovementController.ChangeState(CharacterMovementState.Idle, false);
+                        }
+
+                        // clear variables related to following an interaction target since we have reached the destination and are now interacting
+                        StopFollowingTarget();
+
                         if (cachedInteractionTransform != null) {
                             interactionManagerServer.InteractWithInteractable(unitController, cachedInteractionTarget);
                         }
