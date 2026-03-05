@@ -92,6 +92,7 @@ namespace AnyRPG {
         private uint offlineTickCounter = 0;
 
         // targeting
+        private List<Interactable> inRangeInteractables = new List<Interactable>();
         private Interactable target = null;
         private float distanceToTarget = 0f;
         // keep track of target position to determine of distance check is needed
@@ -173,6 +174,8 @@ namespace AnyRPG {
         protected SystemAchievementManager systemAchievementManager = null;
         protected SceneUtilityService sceneUtilityService = null;
         protected LevelManagerServer levelManagerServer = null;
+        private InteractionManagerServer interactionManagerServer = null;
+
 
         //public INamePlateTarget NamePlateTarget { get => namePlateTarget; set => namePlateTarget = value; }
         public NavMeshAgent NavMeshAgent { get => agent; set => agent = value; }
@@ -557,6 +560,7 @@ namespace AnyRPG {
             systemAchievementManager = systemGameManager.SystemAchievementManager;
             sceneUtilityService = systemGameManager.SceneUtilityService;
             levelManagerServer = systemGameManager.LevelManagerServer;
+            interactionManagerServer = systemGameManager.InteractionManagerServer;
         }
 
         public void SetCharacterRequestData(CharacterRequestData characterRequestData) {
@@ -2620,6 +2624,30 @@ namespace AnyRPG {
 
         public override Vector3 GetNameplatePosition() {
             return nameplateTransform.position + nameplateVector;
+        }
+
+        public void EnterInteractableRange(Interactable interactable) {
+            Debug.Log($"{gameObject.name}.UnitController.EnterInteractableRange({interactable.gameObject.name})");
+
+            if ((unitControllerMode == UnitControllerMode.Player || unitControllerMode == UnitControllerMode.Mount) == false) {
+                return;
+            }
+
+            if (inRangeInteractables.Contains(interactable) == false) {
+                inRangeInteractables.Add(interactable);
+            }
+            unitEventController.NotifyOnEnterInteractableRange(interactable);
+
+            if (unitMotor.InteractionTarget != null
+                && unitMotor.InteractionTarget == interactable
+                && unitMotor.InteractionTransform == null) {
+                // we have entered the range of the interactable we were following, and it doesn't have a specific interaction point
+                // stop following the target and interact with it
+                unitMotor.StopFollowingTarget();
+                interactionManagerServer.InteractWithInteractable(this, interactable);
+                return;
+            }
+
         }
 
         #region MessagePassthroughs

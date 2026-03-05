@@ -125,7 +125,7 @@ namespace AnyRPG {
         protected NamePlateManager namePlateManager = null;
         protected MiniMapManager miniMapManager = null;
         protected MainMapManager mainMapManager = null;
-        protected InteractionManager interactionManager = null;
+        protected InteractionManagerClient interactionManagerClient = null;
         protected NetworkManagerServer networkManagerServer = null;
         protected SystemItemManager systemItemManager = null;
 
@@ -286,7 +286,7 @@ namespace AnyRPG {
             namePlateManager = uIManager.NamePlateManager;
             miniMapManager = uIManager.MiniMapManager;
             mainMapManager = uIManager.MainMapManager;
-            interactionManager = systemGameManager.InteractionManager;
+            interactionManagerClient = systemGameManager.InteractionManagerClient;
             networkManagerServer = systemGameManager.NetworkManagerServer;
             playerManagerClient = systemGameManager.PlayerManagerClient;
             systemItemManager = systemGameManager.SystemItemManager;
@@ -422,7 +422,7 @@ namespace AnyRPG {
                 if (GetCurrentInteractables(inRangeUnitController).Count == 0) {
                     inRangeUnitController.UnitEventController.NotifyOnExitInteractableRange(this);
                 } else {
-                    inRangeUnitController.UnitEventController.NotifyOnEnterInteractableRange(this);
+                    inRangeUnitController.EnterInteractableRange(this);
                 }
             }
         }
@@ -530,7 +530,7 @@ namespace AnyRPG {
 
 
         public void CloseInteractionWindow() {
-            interactionManager.SetInteractable(null);
+            interactionManagerClient.SetInteractable(null);
             uIManager.interactionWindow.CloseWindow();
         }
 
@@ -1166,7 +1166,7 @@ namespace AnyRPG {
                 if (GetCurrentInteractables(unitController).Count == 0) {
                     return;
                 }
-                unitController.UnitEventController.NotifyOnEnterInteractableRange(this);
+                unitController.EnterInteractableRange(this);
             }
         }
 

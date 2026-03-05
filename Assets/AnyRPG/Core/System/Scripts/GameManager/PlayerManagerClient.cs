@@ -44,7 +44,6 @@ namespace AnyRPG {
         protected CharacterManager characterManager = null;
         protected PlayerManagerServer playerManagerServer = null;
         protected SystemAchievementManager systemAchievementManager = null;
-        protected InteractionManager interactionManager = null;
         protected SystemEventManager systemEventManager = null;
 
         public bool PlayerUnitSpawned { get => playerUnitSpawned; }
@@ -77,7 +76,6 @@ namespace AnyRPG {
             characterManager = systemGameManager.CharacterManager;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             systemAchievementManager = systemGameManager.SystemAchievementManager;
-            interactionManager = systemGameManager.InteractionManager;
             systemEventManager = systemGameManager.SystemEventManager;
         }
 
@@ -588,11 +586,6 @@ namespace AnyRPG {
             //Debug.Log("PlayerManagerClient.HandleReachDestination()");
 
             uIManager.MovementTargetController.DisableProjector();
-            if (activeUnitController.UnitMotor.InteractionTransform != null) {
-                interactionManager.Interact(unitController, activeUnitController.UnitMotor.InteractionTarget);
-            }/* else {
-                //Debug.Log("PlayerManager.HandleReachDestination(): reached destination but no interaction transform was set");
-            }*/
         }
 
         private void HandleManualMovement() {

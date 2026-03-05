@@ -2451,6 +2451,43 @@ namespace AnyRPG {
             networkManagerClient.AdvertiseListAuctionItems();
         }
 
+        public void AdvertiseOpenInteractionWindow(int accountId, Interactable interactable) {
+            FishNetInteractable networkInteractable = null;
+            if (interactable != null) {
+                networkInteractable = interactable.GetComponent<FishNetInteractable>();
+            }
+            int clientId = networkManagerServer.GetClientIDForAccount(accountId);
+            if (clientId == -1) {
+                return;
+            }
+            if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId) == false) {
+                //Debug.Log($"FishNetClientConnector.AdvertiseAddToBuyBackCollection() could not find client id {clientId}");
+                return;
+            }
+            AdvertiseOpenInteractionWindowClient(fishNetNetworkManager.ServerManager.Clients[clientId], networkInteractable);
+        }
+
+        [TargetRpc]
+        public void AdvertiseOpenInteractionWindowClient(NetworkConnection networkConnection, FishNetInteractable networkInteractable) {
+            networkManagerClient.AdvertiseOpenInteractionWindow(networkInteractable.Interactable);
+        }
+
+        public void RequestInteractWithInteractable(Interactable targetInteractable) {
+            FishNetInteractable networkInteractable = null;
+            if (targetInteractable != null) {
+                networkInteractable = targetInteractable.GetComponent<FishNetInteractable>();
+            }
+            InteractWithInteractableServer(networkInteractable);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void InteractWithInteractableServer(FishNetInteractable networkInteractable, NetworkConnection networkConnection = null) {
+            if (networkInteractable == null) {
+                return;
+            }
+            networkManagerServer.RequestInteractWithInteractable(networkConnection.ClientId, networkInteractable.Interactable);
+        }
+
         /*
         public override void OnStartServer() {
             base.OnStartServer();

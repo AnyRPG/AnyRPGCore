@@ -132,7 +132,7 @@ namespace AnyRPG {
             questGiverManagerClient.SetQuestGiver(this, componentIndex, choiceIndex, false);
             if (sourceUnitController.CharacterQuestLog.GetCompleteQuests(QuestGiverProps.Quests, true).Count + sourceUnitController.CharacterQuestLog.GetAvailableQuests(QuestGiverProps.Quests).Count > 1) {
                 // there are multiple available or complete quests to choose from, so open the questgiver window to let the player choose
-                interactionManager.OpenInteractionWindow(Interactable);
+                interactionManagerClient.OpenInteractionWindow(Interactable);
                 return;
             } else if (sourceUnitController.CharacterQuestLog.GetAvailableQuests(QuestGiverProps.Quests).Count == 1 && sourceUnitController.CharacterQuestLog.GetCompleteQuests(QuestGiverProps.Quests).Count == 0) {
                 // there is only one available quest and no complete quests

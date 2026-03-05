@@ -19,9 +19,7 @@ namespace AnyRPG {
         UnitController unitController = null;
 
         // game manager references
-        protected InteractionManager interactionManager = null;
         protected UIManager uIManager = null;
-        protected DialogManagerClient dialogManager = null;
 
         public Dictionary<string, Quest> Quests { get => quests; }
         public Dictionary<string, Achievement> Achievements { get => achievements; }
@@ -48,9 +46,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            interactionManager = systemGameManager.InteractionManager;
             uIManager = systemGameManager.UIManager;
-            dialogManager = systemGameManager.DialogManagerClient;
         }
 
         public void LoadQuest(QuestSaveData questSaveData) {

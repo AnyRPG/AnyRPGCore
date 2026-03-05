@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEngine.GraphicsBuffer;
 
 namespace AnyRPG {
     public class PlayerController : ConfiguredClass {
@@ -44,7 +45,7 @@ namespace AnyRPG {
         protected ActionBarManager actionBarManager = null;
         protected CastTargettingManager castTargettingManager = null;
         protected SaveManager saveManager = null;
-        protected InteractionManager interactionManager = null;
+        protected InteractionManagerClient interactionManagerClient = null;
         protected ContextMenuService contextMenuService = null;
         protected SystemEventManager systemEventManager = null;
 
@@ -67,7 +68,7 @@ namespace AnyRPG {
             actionBarManager = uIManager.ActionBarManager;
             castTargettingManager = systemGameManager.CastTargettingManager;
             saveManager = systemGameManager.SaveManager;
-            interactionManager = systemGameManager.InteractionManager;
+            interactionManagerClient = systemGameManager.InteractionManagerClient;
             contextMenuService = systemGameManager.ContextMenuService;
             systemEventManager = systemGameManager.SystemEventManager;
         }
@@ -77,14 +78,6 @@ namespace AnyRPG {
 
             if (interactables.Contains(interactable) == false) {
                 interactables.Add(interactable);
-            }
-
-            if (playerManagerClient.ActiveUnitController.UnitMotor.InteractionTarget != null
-                && playerManagerClient.ActiveUnitController.UnitMotor.InteractionTarget == interactable
-                && playerManagerClient.ActiveUnitController.UnitMotor.InteractionTransform == null) { 
-                playerManagerClient.ActiveUnitController.UnitMotor.StopFollowingTarget();
-                InterActWithTarget(interactable);
-                return;
             }
 
             ShowHideInteractionPopup();
@@ -663,6 +656,7 @@ namespace AnyRPG {
         }
         */
 
+        /*
         private bool InteractionSucceeded(Interactable target) {
             //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded()");
 
@@ -677,6 +671,7 @@ namespace AnyRPG {
 
             return interactionManager.Interact(playerManagerClient.UnitController, target);
         }
+        */
 
         private void RegisterTab() {
 
@@ -929,48 +924,13 @@ namespace AnyRPG {
                 playerManagerClient.UnitController.SetTarget(interactable);
             }
 
-            // the interactable is in range
-            if (InteractionSucceeded(interactable)) {
-                //Debug.Log("We were able to interact with the target");
-                if (resetTarget == true) {
-                    // not actually stopping interacting.  just clearing target if this was a trigger interaction and we are not interacting with a focus
-                    StopInteract();
-                }
-            }
-        }
+            interactionManagerClient.InteractWithInteractable(playerManagerClient.UnitController, interactable);
 
-        // not currently in use - this is for when click to move is enabled
-        // click to move is now enabled without the use of the following 2 methods - can probably delete them
-        /*
-        public void InterActWithInteractableOption(Interactable interactable, InteractableOptionComponent interactableOption, int componentIndex, int choiceIndex) {
-            playerManager.UnitController.SetTarget(interactable);
-            if (InteractionWithOptionSucceeded(interactableOption, componentIndex, choiceIndex)) {
+            if (resetTarget == true) {
                 // not actually stopping interacting.  just clearing target if this was a trigger interaction and we are not interacting with a focus
                 StopInteract();
-            } else {
-                //Debug.Log("we were out of range and must move toward the target to be able to interact with it");
-                if (playerManager.PlayerUnitMovementController.useMeshNav) {
-                    //Debug.Log("Nav Mesh Agent is enabled. Setting follow target: " + target.name);
-                    playerManager.ActiveUnitController.UnitMotor.FollowInteractionTarget(playerManager.UnitController.Target);
-                } else {
-                    //Debug.Log("Nav Mesh Agent is disabled and you are out of range");
-                }
             }
         }
-        */
-
-        /*
-        private bool InteractionWithOptionSucceeded(InteractableOptionComponent interactableOption, int componentIndex, int choiceIndex) {
-            //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded()");
-            if (interactableOption.Interact(playerManager.ActiveUnitController, componentIndex, choiceIndex)) {
-                //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
-                //systemEventManager.NotifyOnInteractionStarted(playerManager.UnitController, playerManager.UnitController.Target.DisplayName);
-                return true;
-            }
-            //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded(): returning false");
-            return false;
-        }
-        */
 
         private void HandleCancelButtonPressed() {
             //Debug.Log("HandleCancelButtonPressed()");

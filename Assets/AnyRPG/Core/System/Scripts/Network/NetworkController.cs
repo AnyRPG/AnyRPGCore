@@ -200,6 +200,8 @@ namespace AnyRPG {
         public abstract void LoadExistingScene(int accountId, int sceneHandle);
         public abstract void LoadNewScene(int accountId, int playerCharacterId, SceneInstanceType dungeon, SceneNode sceneNode);
         public abstract void LoadNewLobbyGameScene(int accountId, LobbyGame lobbyGame, SceneNode sceneNode);
+        public abstract void AdvertiseOpenInteractionWindow(int accountId, Interactable targetInteractable);
+        public abstract void RequestInteractWithInteractable(Interactable target);
     }
 
 }

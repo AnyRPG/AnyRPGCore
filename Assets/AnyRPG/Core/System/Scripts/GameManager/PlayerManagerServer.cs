@@ -53,7 +53,7 @@ namespace AnyRPG {
         // game manager references
         protected SaveManager saveManager = null;
         protected LevelManagerClient levelManagerClient = null;
-        protected InteractionManager interactionManager = null;
+        protected InteractionManagerServer interactionManagerServer = null;
         protected PlayerManagerClient playerManagerClient = null;
         protected SystemAchievementManager systemAchievementManager = null;
         protected QuestGiverManagerClient questGiverManager = null;
@@ -101,7 +101,7 @@ namespace AnyRPG {
 
             saveManager = systemGameManager.SaveManager;
             levelManagerClient = systemGameManager.LevelManagerClient;
-            interactionManager = systemGameManager.InteractionManager;
+            interactionManagerServer = systemGameManager.InteractionManagerServer;
             playerManagerClient = systemGameManager.PlayerManagerClient;
             systemAchievementManager = systemGameManager.SystemAchievementManager;
             questGiverManager = systemGameManager.QuestGiverManagerClient;
@@ -241,7 +241,7 @@ namespace AnyRPG {
             //Debug.Log($"PlayerManagerServer.HandleEnterInteractableTrigger({unitController.gameObject.name})");
 
             if (networkManagerServer.ServerModeActive || systemGameManager.GameMode == GameMode.Local) {
-                interactionManager.InteractWithTrigger(unitController, interactable);
+                interactionManagerServer.InteractWithTrigger(unitController, interactable);
             }
         }
 
@@ -249,7 +249,7 @@ namespace AnyRPG {
             //Debug.Log($"PlayerManagerServer.HandleEnterInteractableTrigger({unitController.gameObject.name})");
 
             if (networkManagerServer.ServerModeActive || systemGameManager.GameMode == GameMode.Local) {
-                interactionManager.InteractWithTrigger(unitController, interactable);
+                interactionManagerServer.InteractWithTrigger(unitController, interactable);
             }
         }
 

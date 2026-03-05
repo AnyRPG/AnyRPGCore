@@ -91,7 +91,8 @@ namespace AnyRPG {
         private GuildServiceClient guildServiceClient = new GuildServiceClient();
         private GuildServiceServer guildServiceServer = new GuildServiceServer();
         private InspectCharacterService inspectCharacterService = new InspectCharacterService();
-        private InteractionManager interactionManager = new InteractionManager();
+        private InteractionManagerClient interactionManagerClient = new InteractionManagerClient();
+        private InteractionManagerServer interactionManagerServer = new InteractionManagerServer();
         private KeyBindManager keyBindManager = new KeyBindManager();
         private LevelManagerClient levelManagerClient = new LevelManagerClient();
         private LevelManagerServer levelManagerServer = new LevelManagerServer();
@@ -151,7 +152,8 @@ namespace AnyRPG {
         public MailService MailService { get => mailService; }
         public SystemEnvironmentManager SystemEnvironmentManager { get => systemEnvironmentManager; set => systemEnvironmentManager = value; }
         public CraftingManager CraftingManager { get => craftingManager; set => craftingManager = value; }
-        public InteractionManager InteractionManager { get => interactionManager; set => interactionManager = value; }
+        public InteractionManagerClient InteractionManagerClient { get => interactionManagerClient; set => interactionManagerClient = value; }
+        public InteractionManagerServer InteractionManagerServer { get => interactionManagerServer; set => interactionManagerServer = value; }
         public LootManager LootManager { get => lootManager; set => lootManager = value; }
         public SystemPlayableDirectorManager SystemPlayableDirectorManager { get => systemPlayableDirectorManager; set => systemPlayableDirectorManager = value; }
         public SaveManager SaveManager { get => saveManager; }
@@ -307,7 +309,8 @@ namespace AnyRPG {
             KeyBindManager.Configure(this);
             systemEnvironmentManager.Configure(this);
             craftingManager.Configure(this);
-            interactionManager.Configure(this);
+            interactionManagerClient.Configure(this);
+            interactionManagerServer.Configure(this);
             lootManager.Configure(this);
             systemPlayableDirectorManager.Configure(this);
             uIManager.Configure(this);
