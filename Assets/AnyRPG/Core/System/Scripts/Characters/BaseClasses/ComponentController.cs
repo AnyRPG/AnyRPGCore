@@ -133,7 +133,7 @@ namespace AnyRPG {
         }
 
         private void HandleSetNameplatePosition(Vector3 overridePosition) {
-            Debug.Log($"{interactable.gameObject.name}.ComponentController.HandleSetNameplatePosition({overridePosition})");
+            //Debug.Log($"{interactable.gameObject.name}.ComponentController.HandleSetNameplatePosition({overridePosition})");
 
             namePlateTransform.localPosition = overridePosition;
             SetNameplateVector();

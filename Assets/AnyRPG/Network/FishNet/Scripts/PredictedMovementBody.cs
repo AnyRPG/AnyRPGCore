@@ -47,5 +47,9 @@ namespace AnyRPG {
         public Vector3 GetPosition() {
             return predictionRigidbody.Rigidbody.position;
         }
+
+        public Vector3 GetForward() {
+            return predictionRigidbody.Rigidbody.rotation * Vector3.forward;
+        }
     }
 }

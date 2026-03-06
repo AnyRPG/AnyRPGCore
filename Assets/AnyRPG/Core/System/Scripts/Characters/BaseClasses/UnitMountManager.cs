@@ -205,14 +205,21 @@ namespace AnyRPG {
                 if (systemGameManager.GameMode == GameMode.Local) {
                     unitController.transform.parent = null;
                 }
-
-                if (systemGameManager.GameMode == GameMode.Local || (networkManagerServer.ServerModeActive == false && unitController.IsOwner == true)) {
-                    unitController.transform.localEulerAngles = mountUnitController.transform.localEulerAngles;
-                    // we could skip this and just let the player fall through gravity
-                    unitController.transform.position = mountUnitController.transform.position;
-                }
+                unitController.transform.position = mountUnitController.UnitMotor.MovementBody.GetPosition();
+                unitController.transform.rotation = mountUnitController.UnitMotor.MovementBody.GetRotation();
 
                 ConfigureCharacterRegularPhysics();
+
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                    //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState() setting position and rotation to mount {mountUnitController.UnitMotor.MovementBody.GetPosition()}");
+                    unitController.UnitMotor.SetPosition(mountUnitController.UnitMotor.MovementBody.GetPosition());
+                    unitController.UnitMotor.FaceDirection(mountUnitController.UnitMotor.MovementBody.GetForward());
+                    Physics.SyncTransforms();
+                    //unitController.transform.localEulerAngles = mountUnitController.transform.localEulerAngles;
+                    // we could skip this and just let the player fall through gravity
+                    //unitController.transform.position = mountUnitController.transform.position;
+                }
+
 
                 // set player unit to normal state
                 unitController.IsMounted = false;
@@ -222,7 +229,9 @@ namespace AnyRPG {
                     playerManager.PlayerUnitMovementController.enabled = true;
                 }
                 */
-                if (systemGameManager.GameMode == GameMode.Local || (networkManagerServer.ServerModeActive == false && unitController.IsOwner == true)) {
+                if (systemGameManager.GameMode == GameMode.Local
+                    || (networkManagerServer.ServerModeActive == false && unitController.IsOwner == true)
+                    || networkManagerServer.ServerModeActive == true) {
                     unitController.UnitAnimator.SetRiding(false);
                 }
                 //playerManager.UnitController.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);

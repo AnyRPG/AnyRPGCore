@@ -199,7 +199,15 @@ namespace AnyRPG {
                         StopFollowingTarget();
 
                         if (cachedInteractionTransform != null) {
-                            interactionManagerServer.InteractWithInteractable(unitController, cachedInteractionTarget);
+                            if (unitController.UnitControllerMode == UnitControllerMode.Mount) {
+                                UnitController riderUnitController = unitController.RiderUnitController;
+                                riderUnitController.CancelMountEffects();
+                                cachedInteractionTarget.InteractableTriggerEnter(riderUnitController.Collider);
+                                interactionManagerServer.InteractWithInteractable(riderUnitController, cachedInteractionTarget);
+                                return;
+                            } else {
+                                interactionManagerServer.InteractWithInteractable(unitController, cachedInteractionTarget);
+                            }
                         }
 
                     }
@@ -741,6 +749,11 @@ namespace AnyRPG {
                 movementBody.SetPosition(movementBody.GetPosition() + unitController.UnitAnimator.Animator.deltaPosition);
                 //Debug.Log($"{unitController.gameObject.name}.UnitMotor.ReceiveAnimatorMovement() userootmotion is true, apply position: " + unitController.UnitAnimator.Animator.deltaPosition.x + " " + unitController.UnitAnimator.Animator.deltaPosition.y + " " + unitController.UnitAnimator.Animator.deltaPosition.z);
             }
+        }
+
+        public void SetPosition(Vector3 newPosition) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.SetPosition({newPosition})");
+            movementBody.SetPosition(newPosition);
         }
 
         public void StickToGround() {

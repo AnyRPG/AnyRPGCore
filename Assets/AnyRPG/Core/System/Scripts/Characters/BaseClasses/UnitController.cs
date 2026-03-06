@@ -2651,7 +2651,18 @@ namespace AnyRPG {
                 // stop following the target and interact with it
                 unitMotor.StopFollowingTarget();
                 unitMovementController.ChangeState(CharacterMovementState.Idle, false);
-                interactionManagerServer.InteractWithInteractable(this, interactable);
+                if (unitControllerMode == UnitControllerMode.Mount) {
+                    UnitController cachedRiderUnitController = riderUnitController;
+                    cachedRiderUnitController.CancelMountEffects();
+                    // if we don't manually trigger this here, the unit is considered out of range for interaction because the triggerEnter()
+                    // happens on physics ticks
+                    interactable.InteractableTriggerEnter(cachedRiderUnitController.Collider);
+                    interactionManagerServer.InteractWithInteractable(cachedRiderUnitController, interactable);
+                    return;
+                } else {
+                    interactionManagerServer.InteractWithInteractable(this, interactable);
+                }
+
                 return;
             }
 

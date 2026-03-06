@@ -9,6 +9,7 @@ namespace AnyRPG {
         void SetRotation(Quaternion targetRotation);
         void AddExplosionForce(float explosionForce, Vector3 explosionCenter, float upwardModifier);
         Quaternion GetRotation();
+        Vector3 GetForward();
         Vector3 GetPosition();
     }
 

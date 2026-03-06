@@ -1,4 +1,3 @@
-using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -48,7 +47,7 @@ namespace AnyRPG {
         */
 
         public void WriteMessage(string message) {
-            //Debug.Log($"MessageFeedManager.WriteMessage({message})");
+            Debug.Log($"MessageFeedManager.WriteMessage({message})");
 
             if (PlayerPrefs.GetInt("UseMessageFeed") == 0) {
                 return;
