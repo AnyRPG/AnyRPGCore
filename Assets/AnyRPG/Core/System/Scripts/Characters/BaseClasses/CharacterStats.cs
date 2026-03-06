@@ -1399,12 +1399,10 @@ namespace AnyRPG {
                 }
                 if (systemGameManager.GameMode == GameMode.Local
                     || networkManagerServer.ServerModeActive
+                    || unitController.IsOwner
                     || levelManagerClient.IsCutscene()) { 
                     // should only be done on server or authoritative client
                     unitController.FreezePositionXZ();
-                    if (unitController.UnitMovementController != null) {
-                        unitController.UnitMovementController.localMoveVelocity = new Vector3(0, 0, 0);
-                    }
                     // should only be done on server or authoritative client
                     unitController.UnitAnimator.HandleDie();
                 }
