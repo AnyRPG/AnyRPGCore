@@ -122,6 +122,7 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnCharacterConfigured -= HandleCharacterConfigured;
             }
             unitController = null;
+            interactableRange.ResetSettings();
         }
 
         private void HandleCharacterConfigured() {

@@ -117,7 +117,7 @@ namespace AnyRPG {
 
 
         public void HandleMountUnitSpawn() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn()");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn()");
 
             string originalPrefabSourceBone = mountUnitProfile.UnitPrefabProps.TargetBone;
             // NOTE: mount effects used sheathed position for character position.  do not use regular position to avoid putting mount below ground when spawning
@@ -130,13 +130,15 @@ namespace AnyRPG {
                     if (systemGameManager.GameMode == GameMode.Local) {
                         unitController.transform.parent = mountPoint;
                     }
-                    if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
+                    if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
                         unitController.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
                         unitController.transform.localEulerAngles = mountUnitProfile.UnitPrefabProps.Rotation;
                     }
-                    if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                    
+                    // testing - is there a reason we wouldn't want to activemounted state on all server and clients?
+                    //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
                         ActivateMountedState();
-                    }
+                    //}
                 }
             }
             unitController.UnitEventController.NotifyOnMountUnitSpawn();
@@ -149,7 +151,8 @@ namespace AnyRPG {
 
             // set player animator to riding state
             if (systemGameManager.GameMode == GameMode.Local
-                || (networkManagerServer.ServerModeActive == false && unitController.IsOwner == true)
+                || networkManagerServer.ServerModeActive == true
+                || unitController.IsOwner == true
                 || lateJoin == true) {
                 unitController.UnitAnimator.SetRiding(true);
             }
