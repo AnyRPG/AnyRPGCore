@@ -976,7 +976,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.UnitController.SetUnitControllerMode({unitControllerMode})");
 
             this.unitControllerMode = unitControllerMode;
-            if (unitControllerMode == UnitControllerMode.Player) {
+            if (unitControllerMode == UnitControllerMode.Player || unitControllerMode == UnitControllerMode.Mount) {
                 unitMovementController = new UnitMovementController(this, systemGameManager);
                 SceneData sceneData = levelManagerServer.GetSceneData(gameObject.scene);
                 if (sceneData != null && sceneData.HasNavMesh) {
@@ -1482,6 +1482,7 @@ namespace AnyRPG {
             unitMaterialController.ProcessSetModelReady();
             OnCameraTargetReady();
             if (UnitModelController.UnitModel != null) {
+                //Debug.Log($"{gameObject.name}.UnitController.SetModelReady() setting nameplate transform to unit model transform");
                 nameplateTransform = UnitModelController.UnitModel.transform;
             }
         }
@@ -2623,11 +2624,16 @@ namespace AnyRPG {
         }
 
         public override Vector3 GetNameplatePosition() {
-            return nameplateTransform.position + nameplateVector;
+            //Debug.Log($"{gameObject.name}.UnitController.GetNameplatePosition()");
+            
+            Vector3 returnValue = nameplateTransform.position + nameplateVector;
+            //Debug.Log($"{gameObject.name}.UnitController.GetNameplatePosition() nameplateTransform.position: {nameplateTransform.position} nameplateVector: {nameplateVector} returnValue: {returnValue}");
+            return returnValue;
+            //return nameplateTransform.position + nameplateVector;
         }
 
         public void EnterInteractableRange(Interactable interactable) {
-            Debug.Log($"{gameObject.name}.UnitController.EnterInteractableRange({interactable.gameObject.name})");
+            //Debug.Log($"{gameObject.name}.UnitController.EnterInteractableRange({interactable.gameObject.name})");
 
             if ((unitControllerMode == UnitControllerMode.Player || unitControllerMode == UnitControllerMode.Mount) == false) {
                 return;
@@ -2644,7 +2650,19 @@ namespace AnyRPG {
                 // we have entered the range of the interactable we were following, and it doesn't have a specific interaction point
                 // stop following the target and interact with it
                 unitMotor.StopFollowingTarget();
-                interactionManagerServer.InteractWithInteractable(this, interactable);
+                unitMovementController.ChangeState(CharacterMovementState.Idle, false);
+                if (unitControllerMode == UnitControllerMode.Mount) {
+                    UnitController cachedRiderUnitController = riderUnitController;
+                    cachedRiderUnitController.CancelMountEffects();
+                    // if we don't manually trigger this here, the unit is considered out of range for interaction because the triggerEnter()
+                    // happens on physics ticks
+                    interactable.InteractableTriggerEnter(cachedRiderUnitController.Collider);
+                    interactionManagerServer.InteractWithInteractable(cachedRiderUnitController, interactable);
+                    return;
+                } else {
+                    interactionManagerServer.InteractWithInteractable(this, interactable);
+                }
+
                 return;
             }
 

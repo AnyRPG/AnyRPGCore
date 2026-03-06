@@ -908,8 +908,8 @@ namespace AnyRPG {
                     // special case for escape key to open main menu if no windows are open
                     // this is necessary because the system bar could be disabled and this is the only way to open it 
                     // (assuming player forgot / doesn't know about f12 keybind
-                    if (playerManagerClient.UnitController == null
-                        || (playerManagerClient.UnitController.Target == null && playerManagerClient.UnitController.UnitMotor.HasDestination() == false)) {
+                    if (playerManagerClient.ActiveUnitController == null
+                        || (playerManagerClient.ActiveUnitController.Target == null && playerManagerClient.ActiveUnitController.UnitMovementController.CurrentCharacterMovementState != CharacterMovementState.NavMesh)) {
                         ToggleMainMenu();
                     }
                     return;

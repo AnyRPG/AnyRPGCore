@@ -1153,18 +1153,26 @@ namespace AnyRPG {
         }
 
         public void InteractableTriggerEnter(Collider collider) {
+            //Debug.Log($"{gameObject.name}.Interactable.InteractableTriggerEnter({collider.gameObject.name})");
+
             if (inRangeUnitControllers.ContainsKey(collider.gameObject) == false) {
                 UnitController unitController = collider.gameObject.GetComponent<UnitController>();
-                if (unitController == null || unitController.UnitControllerMode != UnitControllerMode.Player) {
+                if (unitController == null || ((unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) == false)) {
                     return;
                 }
-                inRangeUnitControllers.Add(collider.gameObject, unitController);
+                if (unitController.UnitControllerMode == UnitControllerMode.Player) {
+                    inRangeUnitControllers.Add(collider.gameObject, unitController);
+                }/* else if (unitController.UnitControllerMode == UnitControllerMode.Mount && unitController.RiderUnitController != null) {
+                    inRangeUnitControllers.Add(unitController.RiderUnitController.gameObject, unitController.RiderUnitController);
+                }*/
                 if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false) {
                     // events from triggers are server authoritative
                     return;
                 }
-                if (GetCurrentInteractables(unitController).Count == 0) {
-                    return;
+                if (unitController.UnitControllerMode == UnitControllerMode.Player) {
+                    if (GetCurrentInteractables(unitController).Count == 0) {
+                        return;
+                    }
                 }
                 unitController.EnterInteractableRange(this);
             }

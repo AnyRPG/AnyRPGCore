@@ -124,7 +124,7 @@ namespace AnyRPG {
         }
 
         public void AddLoadedScene(Scene scene, SceneInstanceType sceneInstanceType) {
-            Debug.Log($"LevelManagerServer.AddLoadedScene(scene: ({scene.name} {scene.handle}), sceneInstanceType: {sceneInstanceType.ToString()})");
+            //Debug.Log($"LevelManagerServer.AddLoadedScene(scene: ({scene.name} {scene.handle}), sceneInstanceType: {sceneInstanceType.ToString()})");
 
             if (loadedScenes.ContainsKey(scene.name) == false) {
                 loadedScenes.Add(scene.name, new Dictionary<int, SceneData>());
@@ -138,7 +138,7 @@ namespace AnyRPG {
         }
 
         public void RemoveLoadedScene(int sceneHandle, string sceneName) {
-            Debug.Log($"LevelManagerServer.RemoveLoadedScene({sceneHandle}, {sceneName})");
+            //Debug.Log($"LevelManagerServer.RemoveLoadedScene({sceneHandle}, {sceneName})");
 
             if (loadedScenes.ContainsKey(sceneName) == false) {
                 //Debug.LogError($"LevelManagerServer.RemoveLoadedScene() - scene {sceneName} not found in loaded scenes");

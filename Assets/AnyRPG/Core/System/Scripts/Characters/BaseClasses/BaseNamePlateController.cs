@@ -131,7 +131,7 @@ namespace AnyRPG {
         }
 
         public void SetNameplatePosition() {
-            //Debug.Log(namePlateUnit.gameObject.name + "BaseNamePlateController.SetnamePlatePosition()");
+            //Debug.Log($"{namePlateUnit.gameObject.name}.BaseNamePlateController.SetNameplatePosition() override: {OverrideNamePlatePosition} position: {NamePlatePosition}");
 
             if (OverrideNamePlatePosition) {
                 Interactable.InteractableEventController.NotifyOnSetNameplatePosition(NamePlatePosition);

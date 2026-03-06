@@ -211,7 +211,7 @@ namespace AnyRPG {
         #region EventNotifications
 
         public void NotifyOnRequestClickToMove(Vector3 destination) {
-            Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnRequestClickToMove({destination})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnRequestClickToMove({destination})");
 
             OnRequestClickToMove(destination);
         }

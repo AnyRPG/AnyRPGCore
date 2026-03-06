@@ -18,7 +18,8 @@ namespace AnyRPG {
         }
 
         public override void SetGameManagerReferences() {
-            Debug.Log("CharacterPanelManager.SetGameManagerReferences()");
+            //Debug.Log("CharacterPanelManager.SetGameManagerReferences()");
+
             base.SetGameManagerReferences();
             playerManagerClient = systemGameManager.PlayerManagerClient;
             saveManager = systemGameManager.SaveManager;

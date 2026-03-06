@@ -205,14 +205,21 @@ namespace AnyRPG {
                 if (systemGameManager.GameMode == GameMode.Local) {
                     unitController.transform.parent = null;
                 }
-
-                if (systemGameManager.GameMode == GameMode.Local || (networkManagerServer.ServerModeActive == false && unitController.IsOwner == true)) {
-                    unitController.transform.localEulerAngles = mountUnitController.transform.localEulerAngles;
-                    // we could skip this and just let the player fall through gravity
-                    unitController.transform.position = mountUnitController.transform.position;
-                }
+                unitController.transform.position = mountUnitController.UnitMotor.MovementBody.GetPosition();
+                unitController.transform.rotation = mountUnitController.UnitMotor.MovementBody.GetRotation();
 
                 ConfigureCharacterRegularPhysics();
+
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                    //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState() setting position and rotation to mount {mountUnitController.UnitMotor.MovementBody.GetPosition()}");
+                    unitController.UnitMotor.SetPosition(mountUnitController.UnitMotor.MovementBody.GetPosition());
+                    unitController.UnitMotor.FaceDirection(mountUnitController.UnitMotor.MovementBody.GetForward());
+                    Physics.SyncTransforms();
+                    //unitController.transform.localEulerAngles = mountUnitController.transform.localEulerAngles;
+                    // we could skip this and just let the player fall through gravity
+                    //unitController.transform.position = mountUnitController.transform.position;
+                }
+
 
                 // set player unit to normal state
                 unitController.IsMounted = false;
@@ -222,7 +229,9 @@ namespace AnyRPG {
                     playerManager.PlayerUnitMovementController.enabled = true;
                 }
                 */
-                if (systemGameManager.GameMode == GameMode.Local || (networkManagerServer.ServerModeActive == false && unitController.IsOwner == true)) {
+                if (systemGameManager.GameMode == GameMode.Local
+                    || (networkManagerServer.ServerModeActive == false && unitController.IsOwner == true)
+                    || networkManagerServer.ServerModeActive == true) {
                     unitController.UnitAnimator.SetRiding(false);
                 }
                 //playerManager.UnitController.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);
@@ -267,20 +276,6 @@ namespace AnyRPG {
                 //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
                 yield return null;
             }
-            /*
-            yield return null;
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
-            //Debug.Break();
-            yield return null;
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
-            yield return null;
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
-            yield return null;
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
-            yield return null;
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
-            */
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {(unitController.transform.parent == null ? "null" : unitController.transform.parent.gameObject.name)}");
 
             // reset the character unit before despawn so the mount doesn't send despawn events to the player that was riding it
             mountUnitController.CharacterUnit = mountUnitController.GetFirstInteractableOption(typeof(CharacterUnit)) as CharacterUnit;

@@ -184,18 +184,30 @@ namespace AnyRPG {
                         if (interactionTransform != null) {
                             FaceDirection(interactionTransform.forward);
                         }
-                        // this will cause an interaction to happen if the interactionTransform was not null
-                        unitController.UnitEventController.NotifyOnReachDestination();
-                        // clear variables related to following an interaction target since we have reached the destination and are now interacting
                         
-                        // testing - commented this out so that click-to-move will also disable the agent
-                        // this is necessary because on the client, when it starts trying to move, it won't be snapped back for the first few reconciles
-                        // until the movement input disables the agent.
-                        //if (interactionTransform != null) {
-                            StopFollowingTarget();
-                        //}
+                        unitController.UnitEventController.NotifyOnReachDestination();
+
+                        // if this is a mount, we need to let the rider know we reached the destination so they can turn off the movement target
+                        if (unitController.UnitControllerMode == UnitControllerMode.Mount) {
+                            unitController.RiderUnitController.UnitEventController.NotifyOnReachDestination();
+                        }
+                        if (unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) {
+                            unitController.UnitMovementController.ChangeState(CharacterMovementState.Idle, false);
+                        }
+
+                        // clear variables related to following an interaction target since we have reached the destination and are now interacting
+                        StopFollowingTarget();
+
                         if (cachedInteractionTransform != null) {
-                            interactionManagerServer.InteractWithInteractable(unitController, cachedInteractionTarget);
+                            if (unitController.UnitControllerMode == UnitControllerMode.Mount) {
+                                UnitController riderUnitController = unitController.RiderUnitController;
+                                riderUnitController.CancelMountEffects();
+                                cachedInteractionTarget.InteractableTriggerEnter(riderUnitController.Collider);
+                                interactionManagerServer.InteractWithInteractable(riderUnitController, cachedInteractionTarget);
+                                return;
+                            } else {
+                                interactionManagerServer.InteractWithInteractable(unitController, cachedInteractionTarget);
+                            }
                         }
 
                     }
@@ -574,7 +586,10 @@ namespace AnyRPG {
                 return;
             }
             unitController.EnableAgent();
-            unitController.UnitMovementController.ChangeState(CharacterMovementState.NavMesh, false);
+
+            if (unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) {
+                unitController.UnitMovementController.ChangeState(CharacterMovementState.NavMesh, false);
+            }
 
             unitController.NavMeshAgent.stoppingDistance = 0.2f;
             //agent.stoppingDistance = myStats.hitBox;
@@ -734,6 +749,11 @@ namespace AnyRPG {
                 movementBody.SetPosition(movementBody.GetPosition() + unitController.UnitAnimator.Animator.deltaPosition);
                 //Debug.Log($"{unitController.gameObject.name}.UnitMotor.ReceiveAnimatorMovement() userootmotion is true, apply position: " + unitController.UnitAnimator.Animator.deltaPosition.x + " " + unitController.UnitAnimator.Animator.deltaPosition.y + " " + unitController.UnitAnimator.Animator.deltaPosition.z);
             }
+        }
+
+        public void SetPosition(Vector3 newPosition) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.SetPosition({newPosition})");
+            movementBody.SetPosition(newPosition);
         }
 
         public void StickToGround() {
