@@ -36,7 +36,7 @@ namespace AnyRPG {
         }
 
         public void SummonMount(UnitProfile mountUnitProfile) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SummonMount({mountUnitProfile.ResourceName})");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SummonMount({mountUnitProfile.ResourceName})");
 
             CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(mountUnitProfile);
             characterConfigurationRequest.unitControllerMode = UnitControllerMode.Mount;
@@ -67,7 +67,7 @@ namespace AnyRPG {
         }
 
         public void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SetMountedState({mountUnitController.gameObject.name}, {mountUnitProfile.ResourceName})");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SetMountedState({mountUnitController.gameObject.name}, {mountUnitProfile.ResourceName})");
 
             unitController.CharacterPetManager.DespawnAllPets();
 
@@ -87,6 +87,8 @@ namespace AnyRPG {
         }
 
         public void SubscribeToMountModelReady() {
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SubscribeToMountModelReady()");
+
             if (mountUnitController?.UnitModelController != null) {
                 //mountUnitController.UnitModelController.OnModelUpdated += HandleMountModelReady;
                 mountUnitController.UnitModelController.OnModelCreated += HandleMountModelReady;
@@ -141,7 +143,7 @@ namespace AnyRPG {
         }
 
         public void ActivateMountedState(bool lateJoin = false) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ActivateMountedState()");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ActivateMountedState()");
 
             unitController?.UnitModelController?.SheathWeapons();
 

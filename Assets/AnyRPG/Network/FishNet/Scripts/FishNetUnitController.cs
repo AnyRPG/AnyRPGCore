@@ -2213,8 +2213,10 @@ namespace AnyRPG {
             if (networkManagerServer.ServerModeActive == true) {
                 systemGameManager.CharacterManager.CompleteCharacterRequest(unitController);
             } else {
-                // first load items
-                systemItemManager.LoadItemInstanceListSaveData(playerCharacterSaveData.ItemInstanceListSaveData);
+                // first load items if this came from a character that included saveData
+                if (playerCharacterSaveData != null) {
+                    systemItemManager.LoadItemInstanceListSaveData(playerCharacterSaveData.ItemInstanceListSaveData);
+                }
 
                 CharacterConfigurationRequest characterConfigurationRequest;
                 characterConfigurationRequest = new CharacterConfigurationRequest(unitProfile);

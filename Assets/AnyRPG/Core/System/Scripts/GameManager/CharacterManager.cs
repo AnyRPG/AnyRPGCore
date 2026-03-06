@@ -100,7 +100,7 @@ namespace AnyRPG {
 
         // on the network
         public UnitController SpawnUnitPrefab(CharacterRequestData characterRequestData, Transform parentTransform, Vector3 position, Vector3 forward, Scene scene) {
-            //Debug.Log($"CharacterManager.SpawnUnitPrefab({characterRequestData.characterConfigurationRequest.unitProfile.ResourceName}, {position}, {forward}, {scene.name})");
+            Debug.Log($"CharacterManager.SpawnUnitPrefab({characterRequestData.characterConfigurationRequest.unitProfile.ResourceName}, {position}, {forward}, {scene.name})");
 
             return networkManagerServer.SpawnCharacterPrefab(characterRequestData, parentTransform, position, forward, scene);
         }
@@ -157,7 +157,7 @@ namespace AnyRPG {
         }
 
         public void CompleteCharacterRequest(UnitController unitController) {
-            //Debug.Log($"CharacterManager.CompleteCharacterRequest({unitController.gameObject.name})");
+            Debug.Log($"CharacterManager.CompleteCharacterRequest({unitController.gameObject.name})");
 
             SetUnitControllerConfiguration(unitController);
 
@@ -352,7 +352,7 @@ namespace AnyRPG {
         */
 
         private GameObject SpawnModelPrefab(GameMode spawnMode, GameObject spawnPrefab, Transform parentTransform, Vector3 position, Vector3 forward) {
-            //Debug.Log($"CharacterManager.SpawnModelPrefab({spawnMode}, {spawnPrefab.name}, {parentTransform.gameObject.name}, {position}, {forward})");
+            Debug.Log($"CharacterManager.SpawnModelPrefab({spawnMode}, {spawnPrefab.name}, {parentTransform.gameObject.name}, {position}, {forward})");
 
             if (spawnMode == GameMode.Network) {
                 if (networkManagerServer.ServerModeActive == true) {
@@ -372,7 +372,7 @@ namespace AnyRPG {
         /// <param name="settingsTransform"></param>
         /// <returns></returns>
         public GameObject SpawnModelPrefab(UnitController unitController, UnitProfile unitProfile, Transform parentTransform, Vector3 position, Vector3 forward) {
-            //Debug.Log($"CharacterManager.SpawnModelPrefab({unitController.gameObject.name}, {unitProfile.ResourceName}, {parentTransform.gameObject.name}, {position}, {forward})");
+            Debug.Log($"CharacterManager.SpawnModelPrefab({unitController.gameObject.name}, {unitProfile.ResourceName}, {parentTransform.gameObject.name}, {position}, {forward})");
 
             if (networkUnownedUnits.Contains(unitController)) {
                 //Debug.Log($"CharacterManager.SpawnModelPrefab() network unowned unit");
@@ -391,6 +391,7 @@ namespace AnyRPG {
                 return SpawnModelPrefab(GameMode.Network, unitProfile.UnitPrefabProps.NetworkModelPrefab, parentTransform, position, forward);
             }
 
+            Debug.Log($"CharacterManager.SpawnModelPrefab() unit controller {unitController.gameObject.name} not found in any unit lists");
             return null;
         }
 

@@ -564,6 +564,8 @@ namespace AnyRPG {
         }
 
         public void SetCharacterRequestData(CharacterRequestData characterRequestData) {
+            Debug.Log($"{gameObject.name}.UnitController.SetCharacterRequestData() characterId: {characterRequestData.characterId}");
+
             this.characterRequestData = characterRequestData;
             this.characterId = characterRequestData.characterId;
         }
@@ -827,7 +829,7 @@ namespace AnyRPG {
         /// set this unit to be a mount
         /// </summary>
         private void SetMountMode() {
-            //Debug.Log($"{gameObject.name}.UnitController.SetMountMode()");
+            Debug.Log($"{gameObject.name}.UnitController.SetMountMode()");
 
             // mount namePlates do not need full initialization, only the position to be set
             namePlateController.SetNameplatePosition();
@@ -1267,7 +1269,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="unitProfile"></param>
         public void SetCharacterConfiguration() {
-            //Debug.Log($"{gameObject.name}.UnitController.SetCharacterConfiguration({characterRequestData.isServerOwned})");
+            Debug.Log($"{gameObject.name}.UnitController.SetCharacterConfiguration({characterRequestData.isServerOwned})");
 
             CharacterConfigurationRequest characterConfigurationRequest = characterRequestData.characterConfigurationRequest;
 
