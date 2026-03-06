@@ -267,20 +267,6 @@ namespace AnyRPG {
                 //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
                 yield return null;
             }
-            /*
-            yield return null;
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
-            //Debug.Break();
-            yield return null;
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
-            yield return null;
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
-            yield return null;
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
-            yield return null;
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
-            */
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountDelay() frame: {Time.frameCount} parent: {(unitController.transform.parent == null ? "null" : unitController.transform.parent.gameObject.name)}");
 
             // reset the character unit before despawn so the mount doesn't send despawn events to the player that was riding it
             mountUnitController.CharacterUnit = mountUnitController.GetFirstInteractableOption(typeof(CharacterUnit)) as CharacterUnit;

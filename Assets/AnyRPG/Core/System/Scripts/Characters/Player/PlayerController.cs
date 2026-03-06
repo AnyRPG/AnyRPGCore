@@ -578,7 +578,7 @@ namespace AnyRPG {
         }
 
         private void ClickToMove(Vector3 targetPosition) {
-            Debug.Log($"PlayerController.ClickToMove({targetPosition})");
+            //Debug.Log($"PlayerController.ClickToMove({targetPosition})");
 
             Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(targetPosition);
             RaycastHit hit;

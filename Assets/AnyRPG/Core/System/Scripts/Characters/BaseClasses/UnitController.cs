@@ -976,7 +976,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.UnitController.SetUnitControllerMode({unitControllerMode})");
 
             this.unitControllerMode = unitControllerMode;
-            if (unitControllerMode == UnitControllerMode.Player) {
+            if (unitControllerMode == UnitControllerMode.Player || unitControllerMode == UnitControllerMode.Mount) {
                 unitMovementController = new UnitMovementController(this, systemGameManager);
                 SceneData sceneData = levelManagerServer.GetSceneData(gameObject.scene);
                 if (sceneData != null && sceneData.HasNavMesh) {
@@ -1482,6 +1482,7 @@ namespace AnyRPG {
             unitMaterialController.ProcessSetModelReady();
             OnCameraTargetReady();
             if (UnitModelController.UnitModel != null) {
+                //Debug.Log($"{gameObject.name}.UnitController.SetModelReady() setting nameplate transform to unit model transform");
                 nameplateTransform = UnitModelController.UnitModel.transform;
             }
         }
@@ -2623,7 +2624,12 @@ namespace AnyRPG {
         }
 
         public override Vector3 GetNameplatePosition() {
-            return nameplateTransform.position + nameplateVector;
+            //Debug.Log($"{gameObject.name}.UnitController.GetNameplatePosition()");
+            
+            Vector3 returnValue = nameplateTransform.position + nameplateVector;
+            //Debug.Log($"{gameObject.name}.UnitController.GetNameplatePosition() nameplateTransform.position: {nameplateTransform.position} nameplateVector: {nameplateVector} returnValue: {returnValue}");
+            return returnValue;
+            //return nameplateTransform.position + nameplateVector;
         }
 
         public void EnterInteractableRange(Interactable interactable) {

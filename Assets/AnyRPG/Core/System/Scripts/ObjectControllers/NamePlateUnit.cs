@@ -205,19 +205,24 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            if (componentController != null) {
-                //nameplateTransform = componentController.GetNameplateTransform();
-                nameplateVector = componentController.NameplateVector;
-            }
-            
+            SetNameplateVector();
+
             //if (nameplateTransform == null) {
-                nameplateTransform = transform;
+            nameplateTransform = transform;
             //}
             
 
             namePlateController = new BaseNamePlateController(this, systemGameManager);
             if (startHasRun && namePlateController != null) {
                 namePlateController.InitializeNamePlate();
+            }
+        }
+
+        public void SetNameplateVector() {
+            if (componentController != null) {
+                //nameplateTransform = componentController.GetNameplateTransform();
+                nameplateVector = componentController.NameplateVector;
+                //Debug.Log($"{gameObject.name}.NamePlateUnit.Configure() nameplateVector: {nameplateVector}");
             }
         }
 

@@ -187,6 +187,10 @@ namespace AnyRPG {
                         
                         unitController.UnitEventController.NotifyOnReachDestination();
 
+                        // if this is a mount, we need to let the rider know we reached the destination so they can turn off the movement target
+                        if (unitController.UnitControllerMode == UnitControllerMode.Mount) {
+                            unitController.RiderUnitController.UnitEventController.NotifyOnReachDestination();
+                        }
                         if (unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) {
                             unitController.UnitMovementController.ChangeState(CharacterMovementState.Idle, false);
                         }
@@ -574,7 +578,10 @@ namespace AnyRPG {
                 return;
             }
             unitController.EnableAgent();
-            unitController.UnitMovementController.ChangeState(CharacterMovementState.NavMesh, false);
+
+            if (unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) {
+                unitController.UnitMovementController.ChangeState(CharacterMovementState.NavMesh, false);
+            }
 
             unitController.NavMeshAgent.stoppingDistance = 0.2f;
             //agent.stoppingDistance = myStats.hitBox;

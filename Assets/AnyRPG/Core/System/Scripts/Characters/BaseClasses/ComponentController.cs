@@ -49,6 +49,7 @@ namespace AnyRPG {
 
             if (gotInitialNamePlatePosition == false) {
                 initialNamePlatePosition = namePlateTransform.localPosition;
+                //Debug.Log($"{gameObject.name}.ComponentController.Configure(): initialNamePlatePosition: {initialNamePlatePosition} GetInstanceId: {GetInstanceID()}");
                 gotInitialNamePlatePosition = true;
             }
 
@@ -89,8 +90,8 @@ namespace AnyRPG {
             this.interactable = interactable;
             interactableRange.SetInteractable(interactable);
             namePlateTransform.localPosition = initialNamePlatePosition;
-            nameplateVector = namePlateTransform.position - interactable.transform.position;
-            //Debug.Log($"{gameObject.name}.ComponentController.SetInteractable(): nameplateVector: {nameplateVector}");
+            SetNameplateVector();
+            //Debug.Log($"ComponentController.SetInteractable({interactable.gameObject.name}) nameplateVector: {nameplateVector} instanceId: {GetInstanceID()}");
 
             interactable.InteractableEventController.OnPlayCastSound += HandlePlayCastSound;
             interactable.InteractableEventController.OnStopCastSound += HandleStopCastSound;
@@ -132,8 +133,17 @@ namespace AnyRPG {
         }
 
         private void HandleSetNameplatePosition(Vector3 overridePosition) {
+            Debug.Log($"{interactable.gameObject.name}.ComponentController.HandleSetNameplatePosition({overridePosition})");
+
             namePlateTransform.localPosition = overridePosition;
-            nameplateVector = namePlateTransform.localPosition - interactable.transform.localPosition;
+            SetNameplateVector();
+            if (unitController != null) {
+                unitController.SetNameplateVector();
+            }
+        }
+
+        private void SetNameplateVector() {
+            nameplateVector = namePlateTransform.position - interactable.transform.position;
         }
 
         public bool MovementSoundIsPlaying(bool ignoreOneShots = true) {

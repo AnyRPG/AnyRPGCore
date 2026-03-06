@@ -129,7 +129,7 @@ namespace AnyRPG {
         /// <param name="newScene"></param>
         /// <param name="loadSceneMode"></param>
         public void HandleLoadLevel(Scene newScene, LoadSceneMode loadSceneMode) {
-            //Debug.Log($"Levelmanager.HandleLoadLevel({newScene.name}) SceneManager.GetActiveScene().name: {SceneManager.GetActiveScene().name}");
+            //Debug.Log($"LevelmanagerClient.HandleLoadLevel({newScene.name}) SceneManager.GetActiveScene().name: {SceneManager.GetActiveScene().name}");
 
             if (!levelManagerInitialized) {
                 //Debug.Log("Levelmanager.OnLoadLevel(): Start has not run yet, returning!");
@@ -145,14 +145,14 @@ namespace AnyRPG {
         }
 
         private void HandleSceneUnloaded(Scene scene) {
-            Debug.Log($"LevelmanagerClient.HandleSceneUnloaded({scene.name})");
+            //Debug.Log($"LevelmanagerClient.HandleSceneUnloaded({scene.name})");
 
             levelManagerServer.RemoveLoadedScene(scene.handle, scene.name);
         }
 
         /*
         private void HandleActiveSceneChanged(Scene oldScene, Scene newScene) {
-            //Debug.Log($"Levelmanager.HandleActiveSceneChanged({oldScene.name}, {newScene.name})");
+            //Debug.Log($"LevelmanagerClient.HandleActiveSceneChanged({oldScene.name}, {newScene.name})");
         }
         */
 
@@ -160,7 +160,7 @@ namespace AnyRPG {
             //Debug.Log("Levelmanager.SetActiveSceneNode()");
 
             activeSceneName = SceneManager.GetActiveScene().name;
-            //Debug.Log($"Levelmanager.SetActiveSceneNode(): {activeSceneName}");
+            //Debug.Log($"LevelmanagerClient.SetActiveSceneNode(): {activeSceneName}");
             activeSceneNode = sceneUtilityService.GetSceneNodeBySceneName(activeSceneName);
         }
 
@@ -193,14 +193,15 @@ namespace AnyRPG {
         }
 
         public void PerformNetworkLevelLoadActivities(Scene newScene) {
-            Debug.Log($"Levelmanager.PerformNetworkLevelLoadActivities({newScene.name})");
+            //Debug.Log($"LevelmanagerClient.PerformNetworkLevelLoadActivities({newScene.name})");
+
             // this method is only called on network client
             SetActiveSceneNode();
             PerformLevelLoadActivities(newScene);
         }
 
         public void PerformLevelLoadActivities(Scene newScene) {
-            Debug.Log($"Levelmanager.PerformLevelLoadActivities({newScene.name})");
+            //Debug.Log($"LevelmanagerClient.PerformLevelLoadActivities({newScene.name})");
 
             loadingLevel = false;
 
@@ -294,7 +295,7 @@ namespace AnyRPG {
         }
 
         public void LoadCutSceneWithDelay(Cutscene cutscene) {
-            //Debug.Log($"Levelmanager.LoadCutSceneWithDelay({(cutscene == null ? null : cutscene.ResourceName)})");
+            //Debug.Log($"LevelmanagerClient.LoadCutSceneWithDelay({(cutscene == null ? null : cutscene.ResourceName)})");
             // doing this so that methods that needs to do something on successful interaction have time before the level unloads
 
             if (loadingLevel == false) {
@@ -394,7 +395,8 @@ namespace AnyRPG {
         }
 
         public void ProcessBeforeLevelUnload() {
-            Debug.Log("LevelManagerClient.ProcessBeforeLevelUnload()");
+            //Debug.Log("LevelManagerClient.ProcessBeforeLevelUnload()");
+
             mapManager.ProcessLevelUnload();
             OnLevelUnload(SceneManager.GetActiveScene().handle, SceneManager.GetActiveScene().name);
 

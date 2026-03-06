@@ -1347,7 +1347,7 @@ namespace AnyRPG {
 
 
         public void SetStateSilently(CharacterMovementState characterMovementState) {
-            Debug.Log($"{unitController.gameObject.name}: SetStateSilently({characterMovementState.ToString()})");
+            //Debug.Log($"{unitController.gameObject.name}: SetStateSilently({characterMovementState.ToString()})");
 
             if (movementStates.ContainsKey(characterMovementState)) {
                 currentCharacterMovementState = characterMovementState;
