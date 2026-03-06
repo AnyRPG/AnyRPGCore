@@ -338,11 +338,12 @@ namespace AnyRPG {
 
             if (!rightCameraPan) {
                 if (playerManagerClient.PlayerController != null
-                    && (playerManagerClient.PlayerController.MovementData.HasMoveInput() || playerManagerClient.PlayerController.MovementData.HasTurnInput())) {
+                    && (playerManagerClient.PlayerController.MovementData.HasMoveInput() || playerManagerClient.PlayerController.MovementData.HasTurnInput())
+                    && playerManagerClient.ActiveUnitController.UnitProfile.UnitPrefabProps.RotateModel == false) {
                     // STANDARD: Stick to the character's rotation (camera moves with character turns)
                     currentXDegrees = target.eulerAngles.y + userOffsetAngle;
                 } else {
-                    // NAVMESH MODE: Do nothing to currentXDegrees. 
+                    // NAVMESH MODE and ROTATE MODEL MODE: Do nothing to currentXDegrees. 
                     // The camera will stay at its current world angle while the character turns beneath it.
 
                     // Re-calculate userOffsetAngle so if you press a key, the camera doesn't snap.
