@@ -108,7 +108,7 @@ namespace AnyRPG {
 
 
         private void OnTriggerExit(Collider collider) {
-            //Debug.Log($"{interactable.gameObject.name}.InteractableRange.OnTriggerExit({collider.gameObject.name})");
+            Debug.Log($"{interactable.gameObject.name}.InteractableRange.OnTriggerExit({collider.gameObject.name})");
 
             interactable.InteractableTriggerExit(collider);
 

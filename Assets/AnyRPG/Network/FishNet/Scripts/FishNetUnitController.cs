@@ -2376,6 +2376,12 @@ namespace AnyRPG {
         }
 
         private void TimeManager_OnTick() {
+            if (unitController == null
+                || unitController.Initialized == false
+                || (unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) == false) {
+                return;
+            }
+
             if (IsOwner) {
                 MovementData md = unitController.UnitMovementController.ProcessGatheredInput();
                 md.SimulatedTick = base.TimeManager.Tick;
@@ -2408,6 +2414,12 @@ namespace AnyRPG {
 
         private void TimeManager_OnPostTick() {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.TimeManager_OnPostTick() instanceId: {GetInstanceID()}");
+
+            if (unitController == null
+                || unitController.Initialized == false
+                || (unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) == false) {
+                return;
+            }
 
             CreateReconcile();
         }

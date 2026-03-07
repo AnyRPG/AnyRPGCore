@@ -32,6 +32,8 @@ namespace AnyRPG {
         }
 
         public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
+            Debug.Log($"{interactable.gameObject.name}.CharacterCreatorInteractable.ClientInteraction()");
+
             base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
 
             // moved to coroutine because UMA will crash here due to its use of DestroyImmediate in the case where an UMAData was attached to the model.
@@ -45,6 +47,8 @@ namespace AnyRPG {
         }
 
         public void OpenWindow() {
+            Debug.Log($"{interactable.gameObject.name}.CharacterCreatorInteractable.OpenWindow()");
+
             uIManager.characterCreatorWindow.OpenWindow();
         }
 
