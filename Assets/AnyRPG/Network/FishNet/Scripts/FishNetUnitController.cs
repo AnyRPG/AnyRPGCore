@@ -91,7 +91,7 @@ namespace AnyRPG {
         }
 
         public override void OnStopClient() {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStopClient()");
+            Debug.Log($"{gameObject.name}.FishNetUnitController.OnStopClient()");
 
             base.OnStopClient();
 
@@ -212,7 +212,6 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestMoveMouseUseable += HandleRequestMoveMouseUseable;
                 unitController.UnitEventController.OnRequestAssignMouseUseable += HandleRequestAssignMouseUseable;
                 unitController.UnitEventController.OnRequestClearMouseUseable += HandleRequestClearMouseUseable;
-                unitController.UnitEventController.OnSetParent += HandleSetParent;
                 unitController.UnitEventController.OnDeactivateMountedState += HandleDeactivateMountedStateOwner;
                 unitController.UnitEventController.OnRequestAcceptQuestItemQuest += HandleRequestAcceptQuestItemQuest;
                 unitController.UnitEventController.OnRequestCompleteQuestItemQuest += HandleRequestCompleteQuestItemQuest;
@@ -222,7 +221,6 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestFollowAttackTarget += HandleRequestFollowAttackTarget;
             }
             // all clients
-            unitController.UnitEventController.OnUnsetParent += HandleUnsetParent;
             //unitController.UnitEventController.OnDespawn += HandleDespawnClient;
         }
 
@@ -256,7 +254,7 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestMoveMouseUseable -= HandleRequestMoveMouseUseable;
                 unitController.UnitEventController.OnRequestAssignMouseUseable -= HandleRequestAssignMouseUseable;
                 unitController.UnitEventController.OnRequestClearMouseUseable -= HandleRequestClearMouseUseable;
-                unitController.UnitEventController.OnSetParent -= HandleSetParent;
+                //unitController.UnitEventController.OnSetParent -= HandleSetParent;
                 unitController.UnitEventController.OnDeactivateMountedState -= HandleDeactivateMountedStateOwner;
                 unitController.UnitEventController.OnRequestAcceptQuestItemQuest -= HandleRequestAcceptQuestItemQuest;
                 unitController.UnitEventController.OnRequestCompleteQuestItemQuest -= HandleRequestCompleteQuestItemQuest;
@@ -266,7 +264,7 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestFollowAttackTarget -= HandleRequestFollowAttackTarget;
             }
             // all clients
-            unitController.UnitEventController.OnUnsetParent -= HandleUnsetParent;
+            //unitController.UnitEventController.OnUnsetParent -= HandleUnsetParent;
             //unitController.UnitEventController.OnDespawn -= HandleDespawnClient;
         }
 
@@ -378,6 +376,8 @@ namespace AnyRPG {
             unitController.UnitEventController.OnSetGroupId += HandleSetGroupId;
             unitController.UnitEventController.OnSetGuildId += HandleSetGuildId;
             unitController.UnitEventController.OnReachDestination += HandleReachDestinationServer;
+            unitController.UnitEventController.OnSetParent += HandleSetParent;
+            unitController.UnitEventController.OnUnsetParent += HandleUnsetParent;
         }
 
         public void UnsubscribeFromServerUnitEvents() {

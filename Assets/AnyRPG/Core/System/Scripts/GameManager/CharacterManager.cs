@@ -112,9 +112,8 @@ namespace AnyRPG {
             return SpawnCharacterPrefab(characterRequestData, parentTransform, position, forward);
         }
 
-
         public void ProcessStopNetworkUnit(UnitController unitController) {
-            //Debug.Log($"CharacterManager.ProcessStopNetworkUnit({unitController.gameObject.name})");
+            Debug.Log($"CharacterManager.ProcessStopNetworkUnit({unitController.gameObject.name})");
 
             if (unitController.IsOwner == true && networkOwnedUnits.Contains(unitController)) {
                 //HandleNetworkOwnedUnitDespawn(unitController);

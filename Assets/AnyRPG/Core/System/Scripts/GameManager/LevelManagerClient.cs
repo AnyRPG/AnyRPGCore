@@ -65,6 +65,7 @@ namespace AnyRPG {
 
         public void PerformSetupActivities() {
             InitializeLevelManager();
+            SetActiveSceneNode();
             PerformLevelLoadActivities(SceneManager.GetActiveScene());
         }
 
@@ -157,10 +158,10 @@ namespace AnyRPG {
         */
 
         public void SetActiveSceneNode() {
-            //Debug.Log("Levelmanager.SetActiveSceneNode()");
+            //Debug.Log("LevelmanagerClient.SetActiveSceneNode()");
 
             activeSceneName = SceneManager.GetActiveScene().name;
-            //Debug.Log($"LevelmanagerClient.SetActiveSceneNode(): {activeSceneName}");
+            Debug.Log($"LevelmanagerClient.SetActiveSceneNode(): {activeSceneName}");
             activeSceneNode = sceneUtilityService.GetSceneNodeBySceneName(activeSceneName);
         }
 
@@ -179,10 +180,14 @@ namespace AnyRPG {
         }
 
         public bool IsInitializationScene() {
+            //Debug.Log($"LevelManagerClient.IsInitializationScene(): activeSceneName: {activeSceneName}");
+
             return IsInitializationScene(activeSceneName);
         }
 
         public bool IsInitializationScene(string matchSceneName) {
+            //Debug.Log($"LevelManagerClient.IsInitializationScene({matchSceneName}): initializationScene: {systemConfigurationManager.InitializationSceneNode?.SceneFile}");
+
             if (matchSceneName == systemConfigurationManager.InitializationSceneNode?.SceneFile) {
                 return true;
             }
@@ -370,7 +375,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="levelName"></param>
         public void LoadLevel(string levelName) {
-            //Debug.Log($"LevelManagerClient.LoadLevel({levelName})");
+            Debug.Log($"LevelManagerClient.LoadLevel({levelName})");
 
             if (levelName == null || levelName == string.Empty) {
                 return;
@@ -395,7 +400,7 @@ namespace AnyRPG {
         }
 
         public void ProcessBeforeLevelUnload() {
-            //Debug.Log("LevelManagerClient.ProcessBeforeLevelUnload()");
+            Debug.Log("LevelManagerClient.ProcessBeforeLevelUnload()");
 
             mapManager.ProcessLevelUnload();
             OnLevelUnload(SceneManager.GetActiveScene().handle, SceneManager.GetActiveScene().name);

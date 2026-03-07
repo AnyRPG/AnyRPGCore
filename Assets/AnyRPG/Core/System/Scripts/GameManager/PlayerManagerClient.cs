@@ -47,7 +47,7 @@ namespace AnyRPG {
         protected SystemEventManager systemEventManager = null;
 
         public bool PlayerUnitSpawned { get => playerUnitSpawned; }
-        public UnitController UnitController { get => unitController; set => unitController = value; }
+        public UnitController UnitController { get => unitController; }
         public UnitController ActiveUnitController { get => activeUnitController; }
         public PlayerController PlayerController { get => playerController; set => playerController = value; }
         //public PlayerCharacterSaveData PlayerCharacterSaveData { get => playerCharacterSaveData; }
@@ -125,12 +125,15 @@ namespace AnyRPG {
         */
 
         public void ProcessExitToMainMenu() {
-            //Debug.Log("PlayerManager.ProcessExitToMainMenu()");
+            Debug.Log("PlayerManagerClient.ProcessExitToMainMenu()");
 
             if (unitController != null) {
                 // we need to check here because the exit to main menu could have come from a network disconnection
                 // that occured before the player unit was spawned
                 playerManagerServer.DespawnPlayerUnit(networkManagerClient.AccountId);
+            } else {
+                Debug.Log("PlayerManagerClient.ProcessExitToMainMenu(): player unit was not spawned, so no need to despawn");
+                playerManagerServer.RemoveActivePlayer(networkManagerClient.AccountId);
             }
             DespawnPlayerConnection();
             saveManager.ClearSharedData();
@@ -338,7 +341,7 @@ namespace AnyRPG {
         }
 
         public void SetUnitController(UnitController unitController) {
-            //Debug.Log($"PlayerManagerClient.SetUnitController({(unitController == null ? "null" : unitController.gameObject.name)})");
+            Debug.Log($"PlayerManagerClient.SetUnitController({(unitController == null ? "null" : unitController.gameObject.name)})");
 
             this.unitController = unitController;
             activeUnitController = unitController;

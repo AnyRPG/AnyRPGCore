@@ -98,7 +98,7 @@ namespace AnyRPG {
         protected bool isMouseOverNameplate = false;
         protected bool isTargeted = false;
 
-        protected bool initialized = false;
+        protected bool isInitialized = false;
         protected bool startHasRun = false;
         protected bool componentReferencesInitialized = false;
         protected bool eventSubscriptionsInitialized = false;
@@ -205,7 +205,7 @@ namespace AnyRPG {
         public ObjectMaterialController ObjectMaterialController { get => objectMaterialController; }
         public bool SuppressInteractionWindow { get => suppressInteractionWindow; set => suppressInteractionWindow = value; }
         public bool IsTargeted { get => isTargeted; }
-        public bool Initialized { get => initialized; }
+        public bool Initialized { get => isInitialized; }
         public List<GameObject> InteractionPoints { get => interactionPoints; set => interactionPoints = value; }
         public virtual bool OverrideInteractionColliderSize { get => overrideInteractionColliderSize; }
 
@@ -229,9 +229,10 @@ namespace AnyRPG {
         }
 
         public virtual void Init() {
-            //Debug.Log($"{gameObject.name}.Interactable.Init()");
+            Debug.Log($"{gameObject.name}.Interactable.Init()");
 
-            if (initialized == true) {
+            if (isInitialized == true) {
+                Debug.LogWarning($"{gameObject.name}.Interactable.Init(): already initialized.  Returning.");
                 return;
             }
             ProcessInit();
@@ -244,7 +245,7 @@ namespace AnyRPG {
                 //Debug.Log($"{gameObject.name}.Interactable.CreateEventSubscriptions(): Player Unit is not spawned. Added Handle Spawn listener");
             }
             startHasRun = true;
-            initialized = true;
+            isInitialized = true;
         }
         protected virtual void LateConfigure() {
             //DisableInteraction();
@@ -817,7 +818,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (initialized == false) {
+            if (isInitialized == false) {
                 // if the unit despawns while the mouse is over it, we don't want to do anything
                 return;
             }
@@ -1068,7 +1069,7 @@ namespace AnyRPG {
 
             startHasRun = false;
             componentReferencesInitialized = false;
-            initialized = false;
+            isInitialized = false;
             eventSubscriptionsInitialized = false;
             isTargeted = false;
             _interactableSaveData = null;
