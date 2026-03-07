@@ -2423,7 +2423,9 @@ namespace AnyRPG {
                 return;
             }
             if (unitController.UnitMovementController == null) {
-                Debug.LogError($"{gameObject.name}.FishNetUnitController.CreateReconcile() unitController.UnitMovementController is null, cannot create reconcile data");
+                // for some reason, this method can trigger even after a client disconnection causes this unit to despawn
+                // in that case, the unit movement controller will be null and we should just skip creating reconcile data instead of throwing an error
+                //Debug.LogError($"{gameObject.name}.FishNetUnitController.CreateReconcile() unitController.UnitMovementController is null, cannot create reconcile data");
                 return;
             }
             ReconcileData rd = new ReconcileData(predictionRigidbody) {
