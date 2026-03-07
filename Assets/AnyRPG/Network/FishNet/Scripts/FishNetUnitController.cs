@@ -51,19 +51,20 @@ namespace AnyRPG {
             }
             networkObject = GetComponent<NetworkObject>();
 
-
             Rigidbody = GetComponent<Rigidbody>();
             if (Rigidbody == null) {
                 Debug.LogError($"{gameObject.name}.FishNetUnitController.Configure() could not find Rigidbody component");
                 return;
             }
         }
-
-        /*
+        
         public override void OnStartNetwork() {
-            base.TimeManager.OnTick += TimeManager_OnTick;
+            base.OnStartNetwork();
+            if (!IsOwner) {
+                NetworkObject.PredictionType = PredictionType.None;
+            }
         }
-        */
+        
 
         public override void OnStopNetwork() {
             base.TimeManager.OnTick -= TimeManager_OnTick;
