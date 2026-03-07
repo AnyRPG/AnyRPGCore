@@ -1158,7 +1158,9 @@ namespace AnyRPG {
 
             if (inRangeUnitControllers.ContainsKey(collider.gameObject) == false) {
                 UnitController unitController = collider.gameObject.GetComponent<UnitController>();
-                if (unitController == null || ((unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) == false)) {
+                if (unitController == null
+                    || unitController.isInitialized == false
+                    || ((unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) == false)) {
                     return;
                 }
                 if (unitController.UnitControllerMode == UnitControllerMode.Player) {

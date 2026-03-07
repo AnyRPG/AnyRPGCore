@@ -95,13 +95,13 @@ namespace AnyRPG {
         }
 
         public void DisableCollider() {
-            //Debug.Log($"{gameObject.transform.parent.parent.name}.InteractableRange.DisableCollider() instanceId: {GetInstanceID()}");
+            Debug.Log($"{gameObject.transform.parent.parent.name}.InteractableRange.DisableCollider() instanceId: {GetInstanceID()}");
 
             rangeCollider.enabled = false;
         }
 
         private void OnTriggerEnter(Collider collider) {
-            //Debug.Log($"{interactable.gameObject.name}.InteractableRange.OnTriggerEnter({collider.gameObject.name}) count : {inRangeGameObjects.Count}");
+            Debug.Log($"{interactable.gameObject.name}.InteractableRange.OnTriggerEnter({collider.gameObject.name})");
 
             interactable.InteractableTriggerEnter(collider);
         }
@@ -124,6 +124,7 @@ namespace AnyRPG {
         }
 
         public void ResetSettings() {
+            Debug.Log($"{gameObject.transform.parent.parent.name}.InteractableRange.ResetSettings() instanceId: {GetInstanceID()}");
             interactable = null;
             DisableCollider();
         }

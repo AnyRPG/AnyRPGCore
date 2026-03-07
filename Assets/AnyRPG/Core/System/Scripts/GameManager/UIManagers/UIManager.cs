@@ -190,6 +190,13 @@ namespace AnyRPG {
         public CloseableWindow assignToActionBarsWindow;
         public CloseableWindow contextMenuWindow;
 
+        public CloseableWindow characterCreatorWindow;
+        public CloseableWindow petSpawnWindow;
+        public CloseableWindow unitSpawnWindow;
+        public CloseableWindow nameChangeWindow;
+        public CloseableWindow createGuildWindow;
+
+
         [Header("System Windows")]
 
         public CloseableWindow mainMenuWindow;
@@ -197,9 +204,6 @@ namespace AnyRPG {
         public CloseableWindow gamepadMainMenuWindow;
         public CloseableWindow keyBindConfirmWindow;
         public CloseableWindow playerOptionsMenuWindow;
-        public CloseableWindow characterCreatorWindow;
-        public CloseableWindow unitSpawnWindow;
-        public CloseableWindow petSpawnWindow;
         public CloseableWindow playMenuWindow;
         public CloseableWindow playOnlineMenuWindow;
         public CloseableWindow settingsMenuWindow;
@@ -235,8 +239,6 @@ namespace AnyRPG {
         public CloseableWindow confirmCancelAuctionWindow;
         public CloseableWindow confirmListAuctionWindow;
         public CloseableWindow confirmWindow;
-        public CloseableWindow nameChangeWindow;
-        public CloseableWindow createGuildWindow;
         public CloseableWindow confirmCreateGuildWindow;
         public CloseableWindow networkLoginWindow;
         public CloseableWindow exitToMainMenuWindow;
@@ -396,31 +398,40 @@ namespace AnyRPG {
 
             // initialize popup windows
             abilityBookWindow.Configure(systemGameManager);
-            skillBookWindow.Configure(systemGameManager);
-            reputationBookWindow.Configure(systemGameManager);
-            currencyListWindow.Configure(systemGameManager);
+            assignToActionBarsWindow.Configure(systemGameManager);
+            auctionWindow.Configure(systemGameManager);
             achievementListWindow.Configure(systemGameManager);
-            characterPanelWindow.Configure(systemGameManager);
-            inspectCharacterPanelWindow.Configure(systemGameManager);
-            lootWindow.Configure(systemGameManager);
-            vendorWindow.Configure(systemGameManager);
-            //chestWindow.Configure(systemGameManager);
             bankWindow.Configure(systemGameManager);
-            inventoryWindow.Configure(systemGameManager);
-            questLogWindow.Configure(systemGameManager);
-            questGiverWindow.Configure(systemGameManager);
-            skillTrainerWindow.Configure(systemGameManager);
-            musicPlayerWindow.Configure(systemGameManager);
-            interactionWindow.Configure(systemGameManager);
+            characterCreatorWindow.Configure(systemGameManager);
+            characterPanelWindow.Configure(systemGameManager);
+            classChangeWindow.Configure(systemGameManager);
+            contextMenuWindow.Configure(systemGameManager);
             craftingWindow.Configure(systemGameManager);
-            tradeWindow.Configure(systemGameManager);
-            mainMapWindow.Configure(systemGameManager);
+            createGuildWindow.Configure(systemGameManager);
+            currencyListWindow.Configure(systemGameManager);
             dialogWindow.Configure(systemGameManager);
             factionChangeWindow.Configure(systemGameManager);
-            classChangeWindow.Configure(systemGameManager);
+            inspectCharacterPanelWindow.Configure(systemGameManager);
+            interactionWindow.Configure(systemGameManager);
+            inventoryWindow.Configure(systemGameManager);
+            lootWindow.Configure(systemGameManager);
+            musicPlayerWindow.Configure(systemGameManager);
+            mainMapWindow.Configure(systemGameManager);
+            mailboxWindow.Configure(systemGameManager);
+            mailComposeWindow.Configure(systemGameManager);
+            mailViewWindow.Configure(systemGameManager);
+            nameChangeWindow.Configure(systemGameManager);
+            petSpawnWindow.Configure(systemGameManager);
+            questLogWindow.Configure(systemGameManager);
+            questGiverWindow.Configure(systemGameManager);
+            reputationBookWindow.Configure(systemGameManager);
+            skillBookWindow.Configure(systemGameManager);
+            skillTrainerWindow.Configure(systemGameManager);
+            socialWindow.Configure(systemGameManager);
             specializationChangeWindow.Configure(systemGameManager);
-            contextMenuWindow.Configure(systemGameManager);
-            assignToActionBarsWindow.Configure(systemGameManager);
+            tradeWindow.Configure(systemGameManager);
+            unitSpawnWindow.Configure(systemGameManager);
+            vendorWindow.Configure(systemGameManager);
 
             // initialize system windows
             mainMenuWindow.Configure(systemGameManager);
@@ -428,9 +439,6 @@ namespace AnyRPG {
             gamepadMainMenuWindow.Configure(systemGameManager);
             keyBindConfirmWindow.Configure(systemGameManager);
             playerOptionsMenuWindow.Configure(systemGameManager);
-            characterCreatorWindow.Configure(systemGameManager);
-            unitSpawnWindow.Configure(systemGameManager);
-            petSpawnWindow.Configure(systemGameManager);
             playMenuWindow.Configure(systemGameManager);
             playOnlineMenuWindow.Configure(systemGameManager);
             creditsWindow.Configure(systemGameManager);
@@ -462,13 +470,6 @@ namespace AnyRPG {
             confirmCancelAuctionWindow.Configure(systemGameManager);
             confirmListAuctionWindow.Configure(systemGameManager);
             confirmWindow.Configure(systemGameManager);
-            auctionWindow.Configure(systemGameManager);
-            mailboxWindow.Configure(systemGameManager);
-            socialWindow.Configure(systemGameManager);
-            mailComposeWindow.Configure(systemGameManager);
-            mailViewWindow.Configure(systemGameManager);
-            nameChangeWindow.Configure(systemGameManager);
-            createGuildWindow.Configure(systemGameManager);
             confirmCreateGuildWindow.Configure(systemGameManager);
             networkLoginWindow.Configure(systemGameManager);
             exitToMainMenuWindow.Configure(systemGameManager);
@@ -960,40 +961,43 @@ namespace AnyRPG {
         }
 
         public void CloseAllPopupWindows() {
-            //Debug.Log("CloseAllWindows()");
+            //Debug.Log("UIManager.CloseAllPopupWindows()");
+
             abilityBookWindow.CloseWindow();
             achievementListWindow.CloseWindow();
             assignToActionBarsWindow.CloseWindow();
+            auctionWindow.CloseWindow();
             bankWindow.CloseWindow();
+            characterCreatorWindow.CloseWindow();
             characterPanelWindow.CloseWindow();
-            inspectCharacterPanelWindow.CloseWindow();
-            //chestWindow.CloseWindow();
             classChangeWindow.CloseWindow();
             contextMenuWindow.CloseWindow();
             craftingWindow.CloseWindow();
-            tradeWindow.CloseWindow();
+            createGuildWindow.CloseWindow();
             currencyListWindow.CloseWindow();
             dialogWindow.CloseWindow();
             factionChangeWindow.CloseWindow();
+            inspectCharacterPanelWindow.CloseWindow();
             interactionWindow.CloseWindow();
             inventoryWindow.CloseWindow();
             lootWindow.CloseWindow();
             mainMapWindow.CloseWindow();
             musicPlayerWindow.CloseWindow();
-            nameChangeWindow.CloseWindow();
-            createGuildWindow.CloseWindow();
-            auctionWindow.CloseWindow();
             mailboxWindow.CloseWindow();
             mailComposeWindow.CloseWindow();
             mailViewWindow.CloseWindow();
-            socialWindow.CloseWindow();
+            nameChangeWindow.CloseWindow();
             onScreenKeyboardWindow.CloseWindow();
+            petSpawnWindow.CloseWindow();
             questLogWindow.CloseWindow();
             questGiverWindow.CloseWindow();
             reputationBookWindow.CloseWindow();
             skillTrainerWindow.CloseWindow();
             skillBookWindow.CloseWindow();
+            socialWindow.CloseWindow();
             specializationChangeWindow.CloseWindow();
+            tradeWindow.CloseWindow();
+            unitSpawnWindow.CloseWindow();
             vendorWindow.CloseWindow();
         }
 
@@ -1042,7 +1046,6 @@ namespace AnyRPG {
             helpMenuWindow.CloseWindow();
             inGameMainMenuWindow.CloseWindow();
             keyboardHintWindow.CloseWindow();
-            petSpawnWindow.CloseWindow();
             playMenuWindow.CloseWindow();
             playOnlineMenuWindow.CloseWindow();
             settingsMenuWindow.CloseWindow();
@@ -1600,28 +1603,28 @@ namespace AnyRPG {
             int opacityLevel = (int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255);
             abilityBookWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             achievementListWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            reputationBookWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            skillBookWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            skillTrainerWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            musicPlayerWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             auctionWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            craftingWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            createGuildWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            characterPanelWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            currencyListWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            dialogWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            lootWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            inspectCharacterPanelWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            interactionWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            musicPlayerWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             mailboxWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             mailComposeWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             mailViewWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            socialWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            nameChangeWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            createGuildWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            characterPanelWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            inspectCharacterPanelWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            craftingWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            tradeWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            currencyListWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            interactionWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            lootWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             mainMapWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            dialogWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            nameChangeWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             questGiverWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             questLogWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            reputationBookWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            skillBookWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            skillTrainerWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            socialWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            tradeWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             vendorWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
         }
 
