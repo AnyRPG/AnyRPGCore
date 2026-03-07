@@ -40,6 +40,12 @@ namespace AnyRPG {
             //Debug.Log($"InteractableRange.SetInteractable({interactable.gameObject.name}) instanceId: {GetInstanceID()}");
 
             this.interactable = interactable;
+            
+            // colliders should be server side only (or cutscene) because with client side prediction,
+            // reconciliation will cause the false exit and enters every frame
+            if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false && levelManagerClient.IsCutscene() == false) {
+                return;
+            }
             /*
             if (autoSetRadius == true) {
                 //Debug.Log("setting bounds");
@@ -91,6 +97,9 @@ namespace AnyRPG {
 
 
         public void EnableCollider() {
+            if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false && levelManagerClient.IsCutscene() == false) {
+                return;
+            }
             rangeCollider.enabled = true;
         }
 

@@ -60,9 +60,11 @@ namespace AnyRPG {
         
         public override void OnStartNetwork() {
             base.OnStartNetwork();
-            if (!IsOwner) {
-                NetworkObject.PredictionType = PredictionType.None;
+            /*
+            if (!base.IsOwner) {
+                networkObject.pre = PredictionType.None;
             }
+            */
         }
         
 
