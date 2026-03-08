@@ -1042,7 +1042,7 @@ namespace AnyRPG {
         }
 
         public void Despawn(float delayTime = 0f, bool addSystemDefaultTime = true, bool forceDespawn = false) {
-            Debug.Log($"{gameObject.name}.UnitController.Despawn({delayTime}, {addSystemDefaultTime}, {forceDespawn}) {GetInstanceID()}");
+            //Debug.Log($"{gameObject.name}.UnitController.Despawn({delayTime}, {addSystemDefaultTime}, {forceDespawn}) {GetInstanceID()}");
 
             // if an error happens and the model request is never complete, intialized will be false
             // therefore this is commented out to allow the despawn to complete so references to this character

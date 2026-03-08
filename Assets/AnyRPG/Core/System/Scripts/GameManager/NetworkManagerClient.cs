@@ -177,7 +177,7 @@ namespace AnyRPG {
         }
 
         public void ProcessStopNetworkUnitClient(UnitController unitController) {
-            Debug.Log($"NetworkManagerClient.ProcessStopNetworkUnitClient({unitController.gameObject.name})");
+            //Debug.Log($"NetworkManagerClient.ProcessStopNetworkUnitClient({unitController.gameObject.name})");
 
             //if (playerManager.UnitController == unitController) {
             //playerManager.ProcessStopClient();

@@ -248,6 +248,7 @@ namespace AnyRPG {
             isInitialized = true;
 
             Debug.Log($"{gameObject.name}.Interactable.Init() complete");
+            PostInit();
         }
 
         protected virtual void PostInit() {
@@ -451,7 +452,7 @@ namespace AnyRPG {
         }
 
         public void EnableCollider() {
-            //Debug.Log($"{gameObject.name}.UnitController.EnableCollider()");
+            Debug.Log($"{gameObject.name}.UnitController.EnableCollider()");
 
             if (myCollider != null) {
                 myCollider.enabled = true;
@@ -459,7 +460,7 @@ namespace AnyRPG {
         }
 
         public void DisableCollider() {
-            //Debug.Log($"{gameObject.name}.UnitController.DisableCollider()");
+            Debug.Log($"{gameObject.name}.UnitController.DisableCollider()");
 
             if (myCollider != null) {
                 myCollider.enabled = false;
