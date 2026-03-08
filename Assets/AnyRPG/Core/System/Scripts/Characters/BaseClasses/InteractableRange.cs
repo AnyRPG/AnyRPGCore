@@ -1,10 +1,3 @@
-using AnyRPG;
-using FishNet;
-using FishNet.Managing.Timing;
-using FishNet.Object;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -116,30 +109,13 @@ namespace AnyRPG {
 
         private void OnTriggerEnter(Collider collider) {
             Debug.Log($"{interactable.gameObject.name}.InteractableRange.OnTriggerEnter({collider.gameObject.name})");
-            if (IsReplaying(collider)) return;
             interactable.InteractableTriggerEnter(collider);
         }
 
-
         private void OnTriggerExit(Collider collider) {
             Debug.Log($"{interactable.gameObject.name}.InteractableRange.OnTriggerExit({collider.gameObject.name})");
-            if (IsReplaying(collider)) return;
             interactable.InteractableTriggerExit(collider);
 
-        }
-
-        private bool IsReplaying(Collider other) {
-            // 1. Get the NetworkObject from the thing that entered the trigger (the Player)
-            NetworkObject no = other.GetComponentInParent<NetworkObject>();
-
-            // 2. If it's a networked object, check if it's currently replaying a prediction
-            if (no != null && InstanceFinder.PredictionManager.ServerReplayTick != TimeManager.UNSET_TICK) {
-                Debug.Log($"{gameObject.transform.parent.parent.name}.InteractableRange.IsReplaying({other.gameObject.name}): replaying is true");
-                return true;
-            }
-
-            Debug.Log($"{gameObject.transform.parent.parent.name}.InteractableRange.IsReplaying({other.gameObject.name}): replaying is false");
-            return false;
         }
 
         private void Awake() {
