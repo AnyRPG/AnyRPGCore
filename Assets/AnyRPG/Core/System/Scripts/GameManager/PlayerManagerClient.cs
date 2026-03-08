@@ -341,7 +341,7 @@ namespace AnyRPG {
         }
 
         public void SetUnitController(UnitController unitController) {
-            Debug.Log($"PlayerManagerClient.SetUnitController({(unitController == null ? "null" : unitController.gameObject.name)})");
+            //Debug.Log($"PlayerManagerClient.SetUnitController({(unitController == null ? "null" : unitController.gameObject.name)})");
 
             this.unitController = unitController;
             activeUnitController = unitController;

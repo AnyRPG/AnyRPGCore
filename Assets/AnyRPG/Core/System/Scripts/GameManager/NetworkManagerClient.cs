@@ -147,7 +147,7 @@ namespace AnyRPG {
         }
 
         public GameObject RequestSpawnModelPrefab(GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward) {
-            //Debug.Log($"NetworkManagerClient.RequestSpawnModelPrefab({prefab.name}, {parentTransform.gameObject.name}, {position}, {forward})");
+            Debug.Log($"NetworkManagerClient.RequestSpawnModelPrefab({prefab.name}, {parentTransform.gameObject.name}, {position}, {forward})");
 
             return networkController.RequestSpawnModelPrefab(prefab, parentTransform, position, forward);
         }

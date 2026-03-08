@@ -128,7 +128,8 @@ namespace AnyRPG {
         }
 
         public void ResetSettings() {
-            Debug.Log($"{gameObject.transform.parent.parent.name}.InteractableRange.ResetSettings() instanceId: {GetInstanceID()}");
+            //Debug.Log($"{gameObject.transform.parent.parent.name}.InteractableRange.ResetSettings() instanceId: {GetInstanceID()}");
+
             interactable = null;
             DisableCollider();
         }
