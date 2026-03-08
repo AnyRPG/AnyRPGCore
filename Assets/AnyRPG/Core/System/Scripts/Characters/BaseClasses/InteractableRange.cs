@@ -134,11 +134,11 @@ namespace AnyRPG {
 
             // 2. If it's a networked object, check if it's currently replaying a prediction
             if (no != null && InstanceFinder.PredictionManager.ServerReplayTick != TimeManager.UNSET_TICK) {
-                Debug.Log($"{gameObject.transform.parent.parent.name}.InteractableRange.IsReplaying({other.gameObject.name}): ignoring trigger event because we are currently replaying a prediction");
+                Debug.Log($"{gameObject.transform.parent.parent.name}.InteractableRange.IsReplaying({other.gameObject.name}): replaying is true");
                 return true;
             }
 
-            Debug.Log($"{gameObject.transform.parent.parent.name}.InteractableRange.IsReplaying({other.gameObject.name}): not ignoring trigger event");
+            Debug.Log($"{gameObject.transform.parent.parent.name}.InteractableRange.IsReplaying({other.gameObject.name}): replaying is false");
             return false;
         }
 

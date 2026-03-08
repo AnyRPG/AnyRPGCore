@@ -568,7 +568,7 @@ namespace AnyRPG {
         }
 
         public void SetCharacterRequestData(CharacterRequestData characterRequestData) {
-            Debug.Log($"{gameObject.name}.UnitController.SetCharacterRequestData() characterId: {characterRequestData.characterId}");
+            //Debug.Log($"{gameObject.name}.UnitController.SetCharacterRequestData() characterId: {characterRequestData.characterId}");
 
             this.characterRequestData = characterRequestData;
             this.characterId = characterRequestData.characterId;
@@ -1293,7 +1293,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="unitProfile"></param>
         public void SetCharacterConfiguration() {
-            Debug.Log($"{gameObject.name}.UnitController.SetCharacterConfiguration({characterRequestData.isServerOwned})");
+            //Debug.Log($"{gameObject.name}.UnitController.SetCharacterConfiguration({characterRequestData.isServerOwned})");
 
             CharacterConfigurationRequest characterConfigurationRequest = characterRequestData.characterConfigurationRequest;
 
@@ -1545,7 +1545,7 @@ namespace AnyRPG {
         }
 
         public virtual void CancelMountEffects() {
-            Debug.Log($"{gameObject.name}.UnitController.CancelMountEffects() instanceId: {GetInstanceID()}");
+            //Debug.Log($"{gameObject.name}.UnitController.CancelMountEffects() instanceId: {GetInstanceID()}");
 
             if (isMounted == true) {
                 //Debug.Log($"{gameObject.name}.UnitController.CancelMountEffects(): unit is mounted");

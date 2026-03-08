@@ -161,7 +161,7 @@ namespace AnyRPG {
             //Debug.Log("LevelmanagerClient.SetActiveSceneNode()");
 
             activeSceneName = SceneManager.GetActiveScene().name;
-            Debug.Log($"LevelmanagerClient.SetActiveSceneNode(): {activeSceneName}");
+            //Debug.Log($"LevelmanagerClient.SetActiveSceneNode(): {activeSceneName}");
             activeSceneNode = sceneUtilityService.GetSceneNodeBySceneName(activeSceneName);
         }
 
@@ -375,7 +375,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="levelName"></param>
         public void LoadLevel(string levelName) {
-            Debug.Log($"LevelManagerClient.LoadLevel({levelName})");
+            //Debug.Log($"LevelManagerClient.LoadLevel({levelName})");
 
             if (levelName == null || levelName == string.Empty) {
                 return;
@@ -400,7 +400,7 @@ namespace AnyRPG {
         }
 
         public void ProcessBeforeLevelUnload() {
-            Debug.Log("LevelManagerClient.ProcessBeforeLevelUnload()");
+            //Debug.Log("LevelManagerClient.ProcessBeforeLevelUnload()");
 
             mapManager.ProcessLevelUnload();
             OnLevelUnload(SceneManager.GetActiveScene().handle, SceneManager.GetActiveScene().name);

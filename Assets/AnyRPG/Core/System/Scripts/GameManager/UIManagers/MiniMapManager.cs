@@ -39,7 +39,7 @@ namespace AnyRPG {
         }
 
         public void HandleLevelUnload(int sceneHandle, string sceneName) {
-            Debug.Log($"MiniMapManager.HandleLevelUnload({sceneHandle}, {sceneName})");
+            //Debug.Log($"MiniMapManager.HandleLevelUnload({sceneHandle}, {sceneName})");
 
             List<Interactable> removeList = new List<Interactable>();
             removeList.AddRange(mapIndicatorControllers);

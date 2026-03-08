@@ -32,7 +32,7 @@ namespace AnyRPG {
         }
 
         public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
-            Debug.Log($"{interactable.gameObject.name}.CharacterCreatorInteractable.ClientInteraction()");
+            Debug.Log($"{interactable.gameObject.name}.CharacterCreatorComponent.ClientInteraction()");
 
             base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
 
@@ -47,18 +47,20 @@ namespace AnyRPG {
         }
 
         public void OpenWindow() {
-            Debug.Log($"{interactable.gameObject.name}.CharacterCreatorInteractable.OpenWindow()");
+            Debug.Log($"{interactable.gameObject.name}.CharacterCreatorComponent.OpenWindow()");
 
             uIManager.characterCreatorWindow.OpenWindow();
         }
 
         public override void StopInteract() {
+            Debug.Log($"{interactable.gameObject.name}.CharacterCreatorComponent.StopInteract()");
+
             base.StopInteract();
             uIManager.characterCreatorWindow.CloseWindow();
         }
 
         public override int GetCurrentOptionCount(UnitController sourceUnitController) {
-            //Debug.Log($"{gameObject.name}.CharacterCreatorInteractable.GetCurrentOptionCount()");
+            //Debug.Log($"{gameObject.name}.CharacterCreatorComponent.GetCurrentOptionCount()");
             return GetValidOptionCount(sourceUnitController);
         }
 

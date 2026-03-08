@@ -1169,7 +1169,7 @@ namespace AnyRPG {
                 UnitController unitController = collider.gameObject.GetComponent<UnitController>();
                 if (unitController != null
                     && unitController.isInitialized == false) {
-                    Debug.LogWarning($"{gameObject.name}.Interactable.InteractableTriggerEnter({collider.gameObject.name}): unit controller is not initialized.  ignoring trigger enter.");
+                    //Debug.LogWarning($"{gameObject.name}.Interactable.InteractableTriggerEnter({collider.gameObject.name}): unit controller is not initialized.  ignoring trigger enter.");
                 }
                 if (unitController == null
                     || unitController.isInitialized == false

@@ -156,7 +156,7 @@ namespace AnyRPG {
         }
 
         public void CompleteCharacterRequest(UnitController unitController) {
-            Debug.Log($"CharacterManager.CompleteCharacterRequest({unitController.gameObject.name})");
+            //Debug.Log($"CharacterManager.CompleteCharacterRequest({unitController.gameObject.name})");
 
             SetUnitControllerConfiguration(unitController);
 
