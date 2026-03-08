@@ -70,8 +70,9 @@ namespace AnyRPG {
                 return;
             }
             CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(targetInteractable);
-            if (_characterUnit == null) {
+            if (_characterUnit == null || _characterUnit.UnitController.IsInitialized == false) {
                 // this was not a character that entered, and therefore we cannot agro it
+                // or it was a character but it has not finished initializing yet, so we cannot agro it
                 return;
             }
 

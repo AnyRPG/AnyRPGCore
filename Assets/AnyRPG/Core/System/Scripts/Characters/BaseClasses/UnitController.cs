@@ -609,6 +609,15 @@ namespace AnyRPG {
             patrolController.Init();
         }
 
+        protected override void PostInit() {
+            base.PostInit();
+
+            // interactable range did not pick this unit up when it spawned because it wasn't initalized yet
+            // so force it to trigger interactable ranges now that initialization is complete
+            DisableCollider();
+            EnableCollider();
+        }
+
         protected override void CheckEnableInteractableRange() {
             // do nothing here, unit controller will handle enabling and disabling the interactable range based on the unit controller mode
         }
@@ -1240,7 +1249,7 @@ namespace AnyRPG {
         }
 
         public override void GetComponentReferences() {
-            Debug.Log($"{gameObject.name}.UnitController.GetComponentReferences() instanceId: {GetInstanceID()}");
+            //Debug.Log($"{gameObject.name}.UnitController.GetComponentReferences() instanceId: {GetInstanceID()}");
 
             if (componentReferencesInitialized == true) {
                 //Debug.Log($"{gameObject.name}.UnitController.GetComponentReferences() already initialized");

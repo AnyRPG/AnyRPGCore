@@ -192,7 +192,7 @@ namespace AnyRPG {
             // TESTING IT NOW
             // duplicate collider triggers since mount is redirected - disabling
             //unitController.Collider.isTrigger = true;
-            unitController.Collider.enabled = false;
+            unitController.DisableCollider();
 
 
             unitController.RigidBody.WakeUp();
@@ -310,7 +310,7 @@ namespace AnyRPG {
             // testing - this used to disable the collider
             // since mounts redirect to character, this results in 2 collider triggers
             //unitController.Collider.isTrigger = false;
-            unitController.Collider.enabled = true;
+            unitController.EnableCollider();
 
             unitController.RigidBody.WakeUp();
         }

@@ -97,6 +97,8 @@ namespace AnyRPG {
 
 
         public void EnableCollider() {
+            Debug.Log($"{gameObject.transform.parent.parent.name}.InteractableRange.EnableCollider() instanceId: {GetInstanceID()}");
+
             if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false && levelManagerClient.IsCutscene() == false) {
                 return;
             }

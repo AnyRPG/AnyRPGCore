@@ -205,7 +205,7 @@ namespace AnyRPG {
         public ObjectMaterialController ObjectMaterialController { get => objectMaterialController; }
         public bool SuppressInteractionWindow { get => suppressInteractionWindow; set => suppressInteractionWindow = value; }
         public bool IsTargeted { get => isTargeted; }
-        public bool Initialized { get => isInitialized; }
+        public bool IsInitialized { get => isInitialized; }
         public List<GameObject> InteractionPoints { get => interactionPoints; set => interactionPoints = value; }
         public virtual bool OverrideInteractionColliderSize { get => overrideInteractionColliderSize; }
 
@@ -246,7 +246,15 @@ namespace AnyRPG {
             }
             startHasRun = true;
             isInitialized = true;
+
+            Debug.Log($"{gameObject.name}.Interactable.Init() complete");
         }
+
+        protected virtual void PostInit() {
+            //Debug.Log($"{gameObject.name}.Interactable.PostInit()");
+            // do something in inherited class
+        }
+
         protected virtual void LateConfigure() {
             //DisableInteraction();
         }
@@ -1158,6 +1166,10 @@ namespace AnyRPG {
 
             if (inRangeUnitControllers.ContainsKey(collider.gameObject) == false) {
                 UnitController unitController = collider.gameObject.GetComponent<UnitController>();
+                if (unitController != null
+                    && unitController.isInitialized == false) {
+                    Debug.LogWarning($"{gameObject.name}.Interactable.InteractableTriggerEnter({collider.gameObject.name}): unit controller is not initialized.  ignoring trigger enter.");
+                }
                 if (unitController == null
                     || unitController.isInitialized == false
                     || ((unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) == false)) {
