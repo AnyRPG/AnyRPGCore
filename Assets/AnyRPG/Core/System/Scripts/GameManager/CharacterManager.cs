@@ -373,9 +373,9 @@ namespace AnyRPG {
         /// <param name="settingsTransform"></param>
         /// <returns></returns>
         public GameObject SpawnModelPrefab(UnitController unitController, UnitProfile unitProfile, Transform parentTransform, Vector3 position, Vector3 forward) {
-            Debug.Log($"CharacterManager.SpawnModelPrefab({unitController.gameObject.name}, {unitProfile.ResourceName}, {parentTransform.gameObject.name}, {position}, {forward})");
+            //Debug.Log($"CharacterManager.SpawnModelPrefab({unitController.gameObject.name}, {unitProfile.ResourceName}, {parentTransform.gameObject.name}, {position}, {forward})");
 
-            if (systemGameManager.GameMode == GameMode.Local) {
+            if (localUnits.Contains(unitController)) {
                 return SpawnModelPrefab(GameMode.Local, unitProfile.UnitPrefabProps.ModelPrefab, parentTransform, position, forward);
             }
 

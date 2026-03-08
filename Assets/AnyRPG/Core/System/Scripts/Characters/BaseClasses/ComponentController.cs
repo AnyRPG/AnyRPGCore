@@ -123,7 +123,9 @@ namespace AnyRPG {
             }
             unitController = null;
             interactableRange.ResetSettings();
-            highlightController.ResetSettings();
+            if (highlightController != null) {
+                highlightController.ResetSettings();
+            }
         }
 
         private void HandleCharacterConfigured() {

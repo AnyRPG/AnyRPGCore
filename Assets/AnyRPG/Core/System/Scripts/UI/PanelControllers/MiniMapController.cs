@@ -184,7 +184,7 @@ namespace AnyRPG {
         }
 
         public void HandleRemoveIndicator(Interactable interactable) {
-            Debug.Log($"MiniMapController.HandleRemoveIndicator({interactable.gameObject.name} ({interactable.gameObject.GetInstanceID()}))");
+            //Debug.Log($"MiniMapController.HandleRemoveIndicator({interactable.gameObject.name} ({interactable.gameObject.GetInstanceID()}))");
 
             if (mapIndicatorControllers.ContainsKey(interactable)) {
                 mapIndicatorControllers[interactable].ResetSettings();
