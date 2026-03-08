@@ -611,7 +611,10 @@ namespace AnyRPG {
 
         protected override void PostInit() {
             base.PostInit();
-
+            if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false && levelManagerClient.IsCutscene() == false) {
+                // if this is a client in a network game, don't enable the collider because the server will handle it
+                return;
+            }
             // interactable range did not pick this unit up when it spawned because it wasn't initalized yet
             // so force it to trigger interactable ranges now that initialization is complete
             DisableCollider();

@@ -229,7 +229,7 @@ namespace AnyRPG {
         }
 
         public virtual void Init() {
-            Debug.Log($"{gameObject.name}.Interactable.Init()");
+            //Debug.Log($"{gameObject.name}.Interactable.Init()");
 
             if (isInitialized == true) {
                 Debug.LogWarning($"{gameObject.name}.Interactable.Init(): already initialized.  Returning.");
@@ -247,7 +247,7 @@ namespace AnyRPG {
             startHasRun = true;
             isInitialized = true;
 
-            Debug.Log($"{gameObject.name}.Interactable.Init() complete");
+            //Debug.Log($"{gameObject.name}.Interactable.Init() complete");
             PostInit();
         }
 
@@ -452,7 +452,7 @@ namespace AnyRPG {
         }
 
         public void EnableCollider() {
-            Debug.Log($"{gameObject.name}.UnitController.EnableCollider()");
+            //Debug.Log($"{gameObject.name}.UnitController.EnableCollider()");
 
             if (myCollider != null) {
                 myCollider.enabled = true;
@@ -460,7 +460,7 @@ namespace AnyRPG {
         }
 
         public void DisableCollider() {
-            Debug.Log($"{gameObject.name}.UnitController.DisableCollider()");
+            //Debug.Log($"{gameObject.name}.UnitController.DisableCollider()");
 
             if (myCollider != null) {
                 myCollider.enabled = false;
@@ -1214,12 +1214,14 @@ namespace AnyRPG {
         }
 
         public bool IsInInteractableRange(GameObject go) {
-            //Debug.Log($"{interactable.gameObject.name}.InteractableRange.IsInRange({go.name}) count: {inRangeGameObjects.Count} instanceId: {GetInstanceID()}"); 
+            Debug.Log($"{gameObject.name}.Interactable.IsInInteractableRange({go.name}) count: {inRangeUnitControllers.Count}"); 
             //Debug.Log($"InteractableRange.IsInRange({go.name}) count: {inRangeUnitControllers.Count} instanceId: {GetInstanceID()}");
 
             if (inRangeUnitControllers.ContainsKey(go)) {
+                Debug.Log($"{gameObject.name}.Interactable.IsInInteractableRange({go.name}): in range");
                 return true;
             }
+            Debug.Log($"{gameObject.name}.Interactable.IsInInteractableRange({go.name}): not in range");
             return false;
         }
 

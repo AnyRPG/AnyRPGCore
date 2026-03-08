@@ -123,6 +123,7 @@ namespace AnyRPG {
             }
             unitController = null;
             interactableRange.ResetSettings();
+            highlightController.ResetSettings();
         }
 
         private void HandleCharacterConfigured() {
