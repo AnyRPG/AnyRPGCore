@@ -13,7 +13,7 @@ namespace AnyRPG {
         public event System.Action OnAggroTarget = delegate { };
         public event System.Action OnAttack = delegate { };
         public event System.Action<IAbilityCaster, UnitController, int, CombatTextType, CombatMagnitude, string, AbilityEffectContext> OnTakeDamage = delegate { };
-        public event System.Action OnTakeFallDamage = delegate { };
+        public event System.Action<int> OnTakeFallDamage = delegate { };
         public event System.Action OnKillTarget = delegate { };
         public event System.Action OnInteract = delegate { };
         public event System.Action OnMovement = delegate { };
@@ -401,8 +401,10 @@ namespace AnyRPG {
             OnTakeDamage(source, target, damage, combatTextType, combatMagnitude, abilityName, abilityEffectContext);
         }
 
-        public void NotifyOnTakeFallDamage() {
-            OnTakeFallDamage();
+        public void NotifyOnTakeFallDamage(int damageAmount) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnTakeFallDamage({damageAmount})");
+
+            OnTakeFallDamage(damageAmount);
         }
 
         public void NotifyOnKillTarget() {

@@ -28,10 +28,13 @@ namespace AnyRPG {
             unitController.UnitEventController.OnAggroTarget += HandleAggroTarget;
             unitController.UnitEventController.OnAttack += HandleAttack;
             unitController.UnitEventController.OnTakeDamage += HandleTakeDamage;
-            unitController.UnitEventController.OnTakeFallDamage += HandleTakeFallDamage;
             unitController.UnitEventController.OnKillTarget += HandleKillTarget;
             unitController.UnitEventController.OnBeforeDie += HandleBeforeDie;
             unitController.UnitEventController.OnJump += HandleJump;
+
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
+                unitController.UnitEventController.OnTakeFallDamage += HandleTakeFallDamage;
+            }
         }
 
         public void ResetSettings() {
@@ -41,10 +44,13 @@ namespace AnyRPG {
             unitController.UnitEventController.OnAggroTarget -= HandleAggroTarget;
             unitController.UnitEventController.OnAttack -= HandleAttack;
             unitController.UnitEventController.OnTakeDamage -= HandleTakeDamage;
-            unitController.UnitEventController.OnTakeFallDamage -= HandleTakeFallDamage;
             unitController.UnitEventController.OnKillTarget -= HandleKillTarget;
             unitController.UnitEventController.OnBeforeDie -= HandleBeforeDie;
             unitController.UnitEventController.OnJump -= HandleJump;
+
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
+                unitController.UnitEventController.OnTakeFallDamage += HandleTakeFallDamage;
+            }
         }
 
         public void HandleStartInteract() {
@@ -123,7 +129,9 @@ namespace AnyRPG {
             unitController.InteractableEventController.NotifyOnPlayVoiceSound(audioClip);
         }
 
-        public void HandleTakeFallDamage() {
+        public void HandleTakeFallDamage(int damageAmount) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitVoiceController.HandleTakeFallDamage({damageAmount})");
+
             if (unitController.UnitProfile == null) {
                 return;
             }

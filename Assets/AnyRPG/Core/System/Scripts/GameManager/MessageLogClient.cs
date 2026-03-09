@@ -31,7 +31,7 @@ namespace AnyRPG {
         MessageLogServer messageLogServer = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
-            //Debug.Log("LogManager.Awake()");
+            //Debug.Log("MessageLogClient.Awake()");
             base.Configure(systemGameManager);
 
             SetWelcomeString();
@@ -76,7 +76,7 @@ namespace AnyRPG {
         }
 
         public void WriteGroupMessage(string newMessage) {
-            //Debug.Log("LogManager.WriteGroupMessage(" + newMessage + ")");
+            //Debug.Log("MessageLogClient.WriteGroupMessage(" + newMessage + ")");
 
             OnWriteGroupMessage(newMessage);
             WriteGeneralMessage($"[group] {newMessage}");
@@ -90,14 +90,14 @@ namespace AnyRPG {
         }
 
         public void WritePrivateMessage(string newMessage) {
-            //Debug.Log("LogManager.WritePrivateMessage(" + newMessage + ")");
+            //Debug.Log("MessageLogClient.WritePrivateMessage(" + newMessage + ")");
 
             OnWritePrivateMessage(newMessage);
             WriteGeneralMessage($"[private] {newMessage}");
         }
 
         public void WriteCombatMessage(string newMessage) {
-            //Debug.Log("LogManager.WriteCombatMessage(" + newMessage + ")");
+            //Debug.Log("MessageLogClient.WriteCombatMessage(" + newMessage + ")");
 
             OnWriteCombatMessage(newMessage);
         }
@@ -110,11 +110,12 @@ namespace AnyRPG {
         }
 
         private void CreateEventSubscriptions() {
-            //Debug.Log("LogManager.CreateEventSubscriptions()");
+            //Debug.Log("MessageLogClient.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
             systemEventManager.OnTakeDamage += HandleTakeDamage;
+            playerManagerClient.OnTakeFallDamage += HandleTakeFallDamage;
             SystemEventManager.StartListening("OnPlayerConnectionSpawn", handlePlayerConnectionSpawn);
             SystemEventManager.StartListening("OnPlayerConnectionDespawn", handlePlayerConnectionDespawn);
             eventSubscriptionsInitialized = true;
@@ -127,6 +128,7 @@ namespace AnyRPG {
             }
             if (systemEventManager != null) {
                 systemEventManager.OnTakeDamage -= HandleTakeDamage;
+                playerManagerClient.OnTakeFallDamage -= HandleTakeFallDamage;
                 SystemEventManager.StopListening("OnPlayerConnectionSpawn", handlePlayerConnectionSpawn);
                 SystemEventManager.StopListening("OnPlayerConnectionDespawn", handlePlayerConnectionDespawn);
             }
@@ -143,7 +145,7 @@ namespace AnyRPG {
 
 
         public void HandleTakeDamage(IAbilityCaster source, UnitController targetUnitController, int damage, string abilityName) {
-            //Debug.Log("LogManager.HandleTakeDamage()");
+            //Debug.Log("MessageLogClient.HandleTakeDamage()");
             Color textColor = Color.white;
             if (playerManagerClient.UnitController != null && targetUnitController == playerManagerClient.UnitController) {
                 textColor = Color.red;
@@ -153,8 +155,18 @@ namespace AnyRPG {
             WriteCombatMessage(combatMessage);
         }
 
+        public void HandleTakeFallDamage(UnitController targetUnitController, int damage) {
+            //Debug.Log("MessageLogClient.HandleTakeFallDamage()");
+            Color textColor = Color.white;
+            if (playerManagerClient.UnitController != null && targetUnitController == playerManagerClient.UnitController) {
+                textColor = Color.red;
+            }
+            string combatMessage = $"<color=#{ColorUtility.ToHtmlStringRGB(textColor)}>You take {damage} fall damage</color>";
+            WriteCombatMessage(combatMessage);
+        }
+
         public void ClearLog() {
-            //Debug.Log("LogManager.ClearLog()");
+            //Debug.Log("MessageLogClient.ClearLog()");
 
             ClearGroupMessages();
             ClearGuildMessages();
@@ -165,37 +177,37 @@ namespace AnyRPG {
         }
 
         private void ClearGroupMessages() {
-            //Debug.Log("LogManager.ClearGroupMessages()");
+            //Debug.Log("MessageLogClient.ClearGroupMessages()");
             OnClearGroupMessages();
         }
 
         private void ClearGuildMessages() {
-            //Debug.Log("LogManager.ClearGroupMessages()");
+            //Debug.Log("MessageLogClient.ClearGroupMessages()");
             OnClearGuildMessages();
         }
 
         private void ClearPrivateMessages() {
-            //Debug.Log("LogManager.ClearGroupMessages()");
+            //Debug.Log("MessageLogClient.ClearGroupMessages()");
             OnClearPrivateMessages();
         }
 
         private void ClearCombatMessages() {
-            //Debug.Log("LogManager.ClearCombatMessages()");
+            //Debug.Log("MessageLogClient.ClearCombatMessages()");
             OnClearCombatMessages();
         }
 
         private void ClearChatMessages() {
-            //Debug.Log("LogManager.ClearChatMessages()");
+            //Debug.Log("MessageLogClient.ClearChatMessages()");
             OnClearGeneralMessages();
         }
 
         private void ClearSystemMessages() {
-            //Debug.Log("LogManager.ClearSystemMessages()");
+            //Debug.Log("MessageLogClient.ClearSystemMessages()");
             OnClearSystemMessages();
         }
 
         public void PrintWelcomeMessages() {
-            //Debug.Log("LogManager.PrintWelcomeMessages()");
+            //Debug.Log("MessageLogClient.PrintWelcomeMessages()");
 
             WriteGeneralMessage(completeWelcomeString);
 

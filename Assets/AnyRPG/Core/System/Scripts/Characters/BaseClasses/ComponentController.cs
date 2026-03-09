@@ -192,6 +192,8 @@ namespace AnyRPG {
         }
 
         public void HandlePlayVoiceSound(AudioClip audioClip) {
+            //Debug.Log($"{gameObject.name}.UnitComponentController.PlayVoiceSound({(audioClip == null ? "null" : audioClip.name)})");
+
             if (audioClip == null) {
                 return;
             }

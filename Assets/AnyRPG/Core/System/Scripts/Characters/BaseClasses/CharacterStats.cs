@@ -1181,12 +1181,16 @@ namespace AnyRPG {
         }
 
         public void TakeFallDamage(float damagePercent) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.TakeFallDamage({damagePercent})");
+
+            int damageAmount = 0;
             foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
                 if (powerResource.IsHealth == true) {
-                    ReducePowerResource(powerResource, (int)((damagePercent / 100f) * GetPowerResourceMaxAmount(powerResource)));
+                    damageAmount = (int)((damagePercent / 100f) * GetPowerResourceMaxAmount(powerResource));
+                    ReducePowerResource(powerResource, damageAmount);
                 }
             }
-            unitController.UnitEventController.NotifyOnTakeFallDamage();
+            unitController.UnitEventController.NotifyOnTakeFallDamage(damageAmount);
         }
 
         public void PerformDeathCheck() {

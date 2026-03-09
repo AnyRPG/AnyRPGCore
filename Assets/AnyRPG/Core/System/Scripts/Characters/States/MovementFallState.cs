@@ -16,9 +16,9 @@ namespace AnyRPG {
             
             if (isSilent) return;
 
-            unitMovementController.currentFallDistance = 0f;
 
             if (isReplay == false) {
+                unitMovementController.currentFallDistance = 0f;
                 unitMovementController.fallStartHeight = unitController.transform.position.y;
                 if (unitController.UnitAnimator.GetInt("Jumping") != 2) {
                     unitController.UnitAnimator.SetTrigger("FallTrigger");

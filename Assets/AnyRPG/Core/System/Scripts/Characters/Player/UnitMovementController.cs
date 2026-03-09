@@ -416,7 +416,6 @@ namespace AnyRPG {
         }
 
         public void CalculateFallDamage(bool isReplay) {
-            currentFallDistance = 0f;
 
             if (systemGameManager.GameMode == GameMode.Network && systemGameManager.NetworkManagerServer.ServerModeActive == false) {
                 return;
@@ -426,7 +425,9 @@ namespace AnyRPG {
                 if (useFallDamage && currentFallDistance > fallDamageMinDistance) {
                     unitController.CharacterStats.TakeFallDamage(currentFallDistance * fallDamagePerMeter);
                 }
+                currentFallDistance = 0f;
             }
+
         }
 
         public void KnockBack() {
@@ -1347,6 +1348,10 @@ namespace AnyRPG {
 
         public void StateUpdate(MovementData movementData, double timeInterval, bool isReplay) {
             if (currentIMovementState == null) {
+                return;
+            }
+
+            if (unitController.IsMounted) {
                 return;
             }
 

@@ -345,6 +345,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnCombatMessage += HandleCombatMessageServer;
             unitController.UnitEventController.OnReceiveCombatTextEvent += HandleReceiveCombatTextEventServer;
             unitController.UnitEventController.OnTakeDamage += HandleTakeDamageServer;
+            unitController.UnitEventController.OnTakeFallDamage += HandleTakeFallDamageServer;
             unitController.UnitEventController.OnImmuneToEffect += HandleImmuneToEffectServer;
             unitController.UnitEventController.OnRecoverResource += HandleRecoverResourceServer;
             unitController.UnitEventController.OnCurrencyChange += HandleCurrencyChangeServer;
@@ -451,6 +452,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnCombatMessage -= HandleCombatMessageServer;
             unitController.UnitEventController.OnReceiveCombatTextEvent -= HandleReceiveCombatTextEventServer;
             unitController.UnitEventController.OnTakeDamage -= HandleTakeDamageServer;
+            unitController.UnitEventController.OnTakeFallDamage += HandleTakeFallDamageServer;
             unitController.UnitEventController.OnImmuneToEffect -= HandleImmuneToEffectServer;
             unitController.UnitEventController.OnRecoverResource -= HandleRecoverResourceServer;
             unitController.UnitEventController.OnCurrencyChange -= HandleCurrencyChangeServer;
@@ -1139,6 +1141,15 @@ namespace AnyRPG {
                 sourceCaster = sourceNetworkCharacterUnit.UnitController;
             }
             unitController.UnitEventController.NotifyOnTakeDamage(sourceCaster, unitController, amount, combatTextType, combatMagnitude, abilityName, new AbilityEffectContext(unitController, null, context, systemGameManager));
+        }
+
+        public void HandleTakeFallDamageServer(int damageAmount) {
+            HandleTakeFallDamageClient(damageAmount);
+        }
+
+        [ObserversRpc]
+        public void HandleTakeFallDamageClient(int damageAmount) {
+            unitController.UnitEventController.NotifyOnTakeFallDamage(damageAmount);
         }
 
         public void HandleReceiveCombatTextEventServer(UnitController targetUnitController, int amount, CombatTextType type, CombatMagnitude magnitude, AbilityEffectContext context) {

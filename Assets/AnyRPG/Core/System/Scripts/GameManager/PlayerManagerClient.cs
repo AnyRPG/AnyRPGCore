@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 namespace AnyRPG {
     public class PlayerManagerClient : ConfiguredClass, ICharacterRequestor {
 
+        public event Action<UnitController, int> OnTakeFallDamage = delegate {};
+
         private PlayerController playerController = null;
 
         private bool playerUnitSpawned = false;
@@ -490,6 +492,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnFactionChange += HandleFactionChange;
             unitController.UnitEventController.OnReceiveCombatTextEvent += HandleReceiveCombatTextEvent;
             unitController.UnitEventController.OnTakeDamage += HandleTakeDamage;
+            unitController.UnitEventController.OnTakeFallDamage += HandleTakeFallDamage;
             unitController.UnitEventController.OnDespawn += HandleDespawn;
             unitController.UnitEventController.OnCurrencyChange += HandleCurrencyChange;
             unitController.UnitEventController.OnSetGamepadActionButton += HandleSetGamepadActionButton;
@@ -559,6 +562,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnFactionChange -= HandleFactionChange;
             unitController.UnitEventController.OnReceiveCombatTextEvent -= HandleReceiveCombatTextEvent;
             unitController.UnitEventController.OnTakeDamage -= HandleTakeDamage;
+            unitController.UnitEventController.OnTakeFallDamage -= HandleTakeFallDamage;
             unitController.UnitEventController.OnDespawn -= HandleDespawn;
             unitController.UnitEventController.OnCurrencyChange -= HandleCurrencyChange;
             unitController.UnitEventController.OnSetGamepadActionButton += HandleSetGamepadActionButton;
@@ -658,6 +662,11 @@ namespace AnyRPG {
 
             combatTextManager.SpawnCombatText(targetUnitController, amount, combatTextType, combatMagnitude, abilityEffectContext);
             systemEventManager.NotifyOnTakeDamage(sourceCaster, unitController, amount, abilityName);
+        }
+
+        public void HandleTakeFallDamage(int damageAmount) {
+            combatTextManager.SpawnCombatText(unitController, damageAmount, CombatTextType.normal, CombatMagnitude.normal, null);
+            OnTakeFallDamage(unitController, damageAmount);
         }
 
         public void HandleReceiveCombatTextEvent(UnitController targetUnitController, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
