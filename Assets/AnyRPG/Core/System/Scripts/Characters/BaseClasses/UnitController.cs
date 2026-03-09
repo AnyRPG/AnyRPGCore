@@ -1089,8 +1089,7 @@ namespace AnyRPG {
         }
 
         private void DespawnImmediate() {
-            Debug.Log($"{gameObject.name}.UnitController.DespawnImmediate()");
-
+            //Debug.Log($"{gameObject.name}.UnitController.DespawnImmediate()");
             
             if (isStateReset == true) {
                 return;

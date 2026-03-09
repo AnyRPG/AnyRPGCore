@@ -12,7 +12,7 @@ namespace AnyRPG {
         }
 
         public void SetLinearVelocity(Vector3 velocity) {
-            Debug.Log($"PredictedMovementBody.SetLinearVelocity({velocity})");
+            //Debug.Log($"PredictedMovementBody.SetLinearVelocity({velocity})");
 
             predictionRigidbody.Velocity(velocity);
         }
@@ -33,7 +33,7 @@ namespace AnyRPG {
         }
 
         public void SetRotation(Quaternion targetRotation) {
-            Debug.Log($"PredictedMovementBody.SetRotation({targetRotation})");
+            //Debug.Log($"PredictedMovementBody.SetRotation({targetRotation})");
 
             predictionRigidbody.Rigidbody.rotation = targetRotation;
 
