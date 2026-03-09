@@ -33,11 +33,17 @@ namespace AnyRPG {
 
             base.Configure(systemGameManager);
 
-            currencyNode.currency = systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency;
+            if (systemConfigurationManager.DefaultCurrencyGroup?.BaseCurrency != null) {
+                currencyNode.currency = systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency;
+            }
 
             // intialize all controllers
             foreach (CurrencyEntryAmountController currencyEntryAmountController in currencyEntryAmountControllers) {
                 currencyEntryAmountController.Configure(systemGameManager);
+            }
+
+            if (systemConfigurationManager.DefaultCurrencyGroup == null) {
+                return;
             }
 
             // configure only the necessary ones
