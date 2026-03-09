@@ -108,12 +108,12 @@ namespace AnyRPG {
         }
 
         private void OnTriggerEnter(Collider collider) {
-            Debug.Log($"{interactable.gameObject.name}.InteractableRange.OnTriggerEnter({collider.gameObject.name})");
+            //Debug.Log($"{interactable.gameObject.name}.InteractableRange.OnTriggerEnter({collider.gameObject.name})");
             interactable.InteractableTriggerEnter(collider);
         }
 
         private void OnTriggerExit(Collider collider) {
-            Debug.Log($"{interactable.gameObject.name}.InteractableRange.OnTriggerExit({collider.gameObject.name})");
+            //Debug.Log($"{interactable.gameObject.name}.InteractableRange.OnTriggerExit({collider.gameObject.name})");
             interactable.InteractableTriggerExit(collider);
 
         }

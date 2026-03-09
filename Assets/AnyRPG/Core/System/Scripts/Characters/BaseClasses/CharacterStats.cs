@@ -1395,7 +1395,7 @@ namespace AnyRPG {
                     unitController.CharacterCombat.HandleDie();
                 }
                 if (unitController.UnitMovementController != null) {
-                    unitController.UnitMovementController.localMoveVelocity = new Vector3(0, 0, 0);
+                    unitController.UnitMovementController.intendedLocalMoveVelocity = new Vector3(0, 0, 0);
                 }
                 if (systemGameManager.GameMode == GameMode.Local
                     || networkManagerServer.ServerModeActive

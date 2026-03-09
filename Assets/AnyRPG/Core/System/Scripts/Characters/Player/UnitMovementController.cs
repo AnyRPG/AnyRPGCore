@@ -43,13 +43,17 @@ namespace AnyRPG {
         public float MaxMovementSpeed { get => systemConfigurationManager.MaxMovementSpeed; }
 
         // travel vector from the perspective of the character
-        public Vector3 localMoveVelocity;
+        public Vector3 intendedLocalMoveVelocity;
+
+        // travel vector from the perspective of the world
+        public Vector3 intendedWorldMoveVelocity;
 
         // the movement input in relation to the character, without speed adjustment
         //public Vector3 localInput;
 
         // travel vector rotated by ground angle from the perspective of the character
         public Vector3 adjustedlocalMoveVelocity;
+        public Vector3 adjustedWorldMoveVelocity;
         public Vector3 currentTurnVelocity;
 
         [Tooltip("Keyboard Rotation speed in degrees per second")]
@@ -325,8 +329,24 @@ namespace AnyRPG {
             }
         }
 
+        public void MoveWorld() {
+            // 1. We use the World-Space velocity calculated in the Update/Replicate loop.
+            // This vector is stable because it was derived from CameraWantedDirection, 
+            // not the character's jittery local transform.
+            Vector3 worldMovement = adjustedWorldMoveVelocity;
+
+            // 2. Magnitude check to prevent micro-movements/drifting.
+            // We also allow movement if a Jump input is detected (to maintain air momentum).
+            if (worldMovement.magnitude > 0.01f || currentMovementData.InputJump) {
+                // 3. Send the World-Space vector directly to the Motor.
+                // UnitMotor.Move then passes this straight to the Rigidbody.
+                unitController.UnitMotor.Move(worldMovement);
+            }
+        }
+
         public void AnimatorMoveUpdate() {
-            
+            //Debug.Log($"{unitController.gameObject.name}.UnitMovementController.AnimatorMoveUpdate() root: {unitController.UnitAnimator.applyRootMotion}");
+
             if (useMeshNav == true && unitController.NavMeshAgent.enabled == true) {
                 return;
             }
@@ -334,7 +354,7 @@ namespace AnyRPG {
             if (unitController.CharacterStats.IsAlive == true) {
 
                 // handle movement
-                if (localMoveVelocity.magnitude > 0 && currentMovementData.HasMoveInput()) {
+                if (intendedLocalMoveVelocity.magnitude > 0 && currentMovementData.HasMoveInput()) {
                     //Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.LateGlobalSuperUpdate(): animator velocity: " + unitController.MyCharacterAnimator.MyAnimator.velocity + "; angular: " + unitController.MyCharacterAnimator.MyAnimator.angularVelocity);
                     if (currentMovementData.InputStrafe == true) {
                         unitController.UnitAnimator.SetStrafing(true);
@@ -342,7 +362,7 @@ namespace AnyRPG {
                         unitController.UnitAnimator.SetStrafing(false);
                     }
                     unitController.UnitAnimator.SetMoving(true);
-                    unitController.UnitAnimator.SetVelocity(localMoveVelocity);
+                    unitController.UnitAnimator.SetVelocityFromLocal(intendedLocalMoveVelocity);
                 }/* else {
                     unitController.MyCharacterAnimator.SetMoving(false);
                     unitController.MyCharacterAnimator.SetStrafing(false);
@@ -365,9 +385,6 @@ namespace AnyRPG {
                     || (currentMovementData.GamepadModeActive == false && currentMovementData.RightAnalogHorizontal != 0f)) {
 
                     unitController.UnitMotor.FaceDirection(new Vector3(currentMovementData.CameraWantedDirection.x, 0, currentMovementData.CameraWantedDirection.z));
-                    //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
-                        //cameraManager.MainCameraController.ResetWantedPosition();
-                    //}
                 }
 
                 if (currentMovementData.InputTurn != 0) {
@@ -446,7 +463,7 @@ namespace AnyRPG {
         /// World space movement based off camera facing.
         /// </summary>
         private Vector3 CameraRelativeInput(Vector3 inputVector) {
-            //Debug.Log("PlayerUnitMovementController.CameraRelativeInput(" + inputVector + ")");
+            //Debug.Log("UnitMovementController.CameraRelativeInput(" + inputVector + ")");
             //Forward vector relative to the camera
             
             return Quaternion.LookRotation(new Vector3(cameraManager.ActiveMainCamera.transform.forward.x, 0f, cameraManager.ActiveMainCamera.transform.forward.z).normalized) * inputVector;
@@ -548,10 +565,10 @@ namespace AnyRPG {
             return closeToGround;
         }
 
-        public Vector3 NormalizedSwimMovement(double timeInterval) {
-            //Debug.Log("PlayerUnitMovementController.NormalizedSwimMovement(): groundAngle: " + groundAngle + "; backwardGroundAngle: " + backwardGroundAngle);
+        public Vector3 LocalNormalizedSwimMovement(double timeInterval) {
+            //Debug.Log("UnitMovementController.NormalizedSwimMovement(): groundAngle: " + groundAngle + "; backwardGroundAngle: " + backwardGroundAngle);
 
-            Vector3 returnValue = currentMovementData.LocalInput;
+            Vector3 returnValue = currentMovementData.IntendedLocalDirection;
 
             // check for right mouse button held down to adjust swim angle based on camera angle
             bool chestBelowWater = (unitController.UnitMotor.MovementBody.GetPosition().y + unitController.FloatHeight) < (unitController.CurrentWater[0].SurfaceHeight - (unitController.SwimSpeed * timeInterval));
@@ -583,10 +600,58 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public Vector3 NormalizedFlyMovement() {
-            //Debug.Log("PlayerUnitMovementController.NormalizedSwimMovement(): groundAngle: " + groundAngle + "; backwardGroundAngle: " + backwardGroundAngle);
+        public Vector3 WorldNormalizedSwimMovement(double timeInterval) {
+            // 1. Start with the PURE world-space horizontal intent
+            Vector3 returnValue = currentMovementData.IntendedWorldDirection;
 
-            Vector3 returnValue = currentMovementData.LocalInput;
+            // Determine vertical context
+            bool chestBelowWater = (unitController.UnitMotor.MovementBody.GetPosition().y + unitController.FloatHeight) <
+                                   (unitController.CurrentWater[0].SurfaceHeight - (unitController.SwimSpeed * (float)timeInterval));
+
+            // 2. Adjust swim pitch based on Camera Angle
+            if (currentMovementData.RightMouseButtonDown && currentMovementData.HasMoveInput()) {
+                float cameraAngle = (currentMovementData.CameraLocalEulerAngleX < 180f ?
+                                     currentMovementData.CameraLocalEulerAngleX :
+                                     currentMovementData.CameraLocalEulerAngleX - 360f);
+
+                /*
+                // We use the stable world direction and rotate it around the CAMERA's right axis
+                // instead of the character's right axis to avoid the feedback loop.
+                Vector3 cameraRight = Quaternion.Euler(0f, currentMovementData.CameraWantedDirection.y, 0f) * Vector3.right;
+                */
+                // CALCULATE DYNAMIC RIGHT AXIS (The pivot)
+                // Project the camera's forward, flatten it, and cross it with UP 
+                // to find the 'Right' vector relative to where you are looking.
+                Vector3 camForwardFlat = currentMovementData.CameraWantedDirection;
+                camForwardFlat.y = 0;
+                camForwardFlat.Normalize();
+                Vector3 camRightFlat = Vector3.Cross(Vector3.up, camForwardFlat);
+
+                if ((cameraAngle > 0f && currentMovementData.InputVertical > 0f && !touchingGround) ||
+                    (cameraAngle > 0f && currentMovementData.InputVertical < 0f && chestBelowWater) ||
+                    (cameraAngle < 0f && currentMovementData.InputVertical < 0f && !touchingGround) ||
+                    (cameraAngle < 0f && currentMovementData.InputVertical > 0f && chestBelowWater)) {
+                    // Apply the pitch to the world vector
+                    returnValue = Quaternion.AngleAxis(cameraAngle, camRightFlat) * returnValue;
+                }
+            }
+
+            // 3. Manual override (Fly/Sink keys)
+            if (currentMovementData.InputSink || (currentMovementData.InputFly && (chestBelowWater || unitController.CanFly))) {
+                float verticalInput = (currentMovementData.InputFly ? 1f : 0f) + (currentMovementData.InputSink ? -1f : 0f);
+                returnValue.y = verticalInput;
+            }
+
+            // 4. Return as a normalized World Direction
+            // The physics loop will multiply this by swim speed later.
+            return returnValue.normalized;
+        }
+
+
+        public Vector3 LocalNormalizedFlyMovement() {
+            //Debug.Log("UnitMovementController.NormalizedFlyMovement(): groundAngle: " + groundAngle + "; backwardGroundAngle: " + backwardGroundAngle);
+
+            Vector3 returnValue = currentMovementData.IntendedLocalDirection;
 
             if (currentMovementData.RightMouseButtonDown && currentMovementData.HasMoveInput()) {
 
@@ -610,37 +675,72 @@ namespace AnyRPG {
             return returnValue;
         }
 
+        public Vector3 WorldNormalizedFlyMovement() {
+            // 1. Start with the STABLE world-space horizontal intent (Camera-Relative)
+            Vector3 returnValue = currentMovementData.IntendedWorldDirection;
+
+            // 2. Adjust Flight Pitch based on Camera Angle (Right Mouse Held)
+            if (currentMovementData.RightMouseButtonDown && currentMovementData.HasMoveInput()) {
+
+                // Normalize camera angle to -180 to 180 range
+                float cameraAngle = (currentMovementData.CameraLocalEulerAngleX < 180f ?
+                                     currentMovementData.CameraLocalEulerAngleX :
+                                     currentMovementData.CameraLocalEulerAngleX - 360f);
+
+                /*
+                // Calculate the CAMERA'S right axis in world space for a stable rotation pivot
+                Vector3 cameraRight = Quaternion.Euler(0f, currentMovementData.CameraWantedDirection.y, 0f) * Vector3.right;
+                */
+                
+                // 1. PROJECT THE DYNAMIC RIGHT AXIS
+                // We take the Camera's forward, flatten it, then find the 'Right' relative to that.
+                // This axis is always perpendicular to the direction you are looking.
+                Vector3 camForwardFlat = currentMovementData.CameraWantedDirection;
+                camForwardFlat.y = 0;
+                camForwardFlat.Normalize();
+
+                Vector3 camRightFlat = Vector3.Cross(Vector3.up, camForwardFlat);
+
+                // Determine if we should apply pitch (Forward/Down or Back/Down logic)
+                // We use raw InputVertical (W/S) instead of local Z to ensure it's deterministic
+                if ((cameraAngle > 0f && currentMovementData.InputVertical > 0f && !touchingGround) ||
+                    (cameraAngle < 0f && currentMovementData.InputVertical < 0f && !touchingGround)) {
+                    // Rotate the world vector around the stable camera axis
+                    returnValue = Quaternion.AngleAxis(cameraAngle, camRightFlat) * returnValue;
+                }
+            }
+
+            // 3. Manual Vertical Override (Fly/Sink keys)
+            // These keys take priority over camera-aimed flight
+            if (currentMovementData.InputSink || currentMovementData.InputFly) {
+                returnValue.y = (currentMovementData.InputFly ? 1f : 0f) + (currentMovementData.InputSink ? -1f : 0f);
+            }
+
+            // 4. Return the final World Direction
+            return returnValue.normalized;
+        }
+
         public Vector3 NormalizedLocalMovement(float calculatedSpeed, Vector3 directionOfTravel, double timeInterval) {
-            //Debug.Log("PlayerUnitMovementController.NormalizedLocalMovement(" + directionOfTravel + ")");
+            //Debug.Log("UnitMovementController.NormalizedLocalMovement(" + directionOfTravel + ")");
 
             Vector3 newReturnValue;
             float usedAngle = groundAngle;
             
             // the normal is the normal of the ground below the player
             Vector3 localGroundNormal = unitController.transform.InverseTransformDirection(groundNormal);
-            //Vector3 usedGroundNormal = groundNormal;
 
             if (Vector3.Angle(groundNormal, Vector3.up) > slopeLimit) {
                 // if standing on jagged ground below stair height at angle greater than slope limit, prevent getting stuck due to capsule collider geometry
                 localGroundNormal = Vector3.up;
-                //usedGroundNormal = Vector3.up;
             }
 
             // the player is near a front obstacle, and that obstacle is below the slope limit, use its normal
-            
-            //Debug.Log("nearBottomFrontObstacle: " + nearBottomFrontObstacle +
-                //"; angle: " + bottomFrontObstacleAngle + "; nearTopFrontObstacle: " + nearTopFrontObstacle + "; nearBottomStairs: " + nearBottomStairs + "; nearFrontObstacle: " + nearFrontObstacle);
-               
             if (nearBottomFrontObstacle &&
                 ((bottomFrontAngleDifferent && bottomFrontObstacleAngle < slopeLimit && nearFrontObstacle == true)
                 || (nearTopFrontObstacle == false && nearBottomStairs == false && nearFrontObstacle == true))
                 ) {
                 localGroundNormal = unitController.transform.InverseTransformDirection(bottomForwardHitInfo.normal);
-                //Debug.Log("using bottomForwardHitInfo.normal");
-                //usedGroundNormal = bottomForwardHitInfo.normal;
-                //Debug.Break();
             } else {
-                //Debug.Log("nearBottomFrontObstacle: " + nearBottomFrontObstacle + "; bottomFrontAngleDifferent: " + bottomFrontAngleDifferent + "; neartopFrontObstacle: " + nearTopFrontObstacle);
                 // the player is near stairs in the direction of travel
                 if (nearBottomStairs) {
                     //Debug.Log("near bottom stairs, adjusting forward direction");
@@ -650,8 +750,8 @@ namespace AnyRPG {
                     // any angled approach will lose all momentum from running straight into the stair and the player will get stuck
                     // this value seems to be momentum dependent.  at walking speed of 1, player will not make it over stairs unless it's 0.15f
                     // at 0.15f there is a noticeable slowdown still, and even at 0.1f.  0.05f seems to do it at that speed
-
-                    if (//nearFrontObstacle == false && // if you are touching an obstacle in front, the stair ramp angle should not be used
+                    // if you are touching an obstacle in front, the stair ramp angle should not be used
+                    if (
                         (
                         bottomStairDownHitInfo.point.y - unitController.UnitMotor.MovementBody.GetPosition().y < 0.2f
                         || (unitController.transform.InverseTransformPoint(new Vector3(forwardHitPoint.x, unitController.UnitMotor.MovementBody.GetPosition().y, forwardHitPoint.z)).magnitude > (colliderRadius + 0.01f) && nearFrontObstacle == false)
@@ -667,15 +767,12 @@ namespace AnyRPG {
             // to prevent odd floating point issues, set any ground normal that is up to directly up
             if (Mathf.Approximately(localGroundNormal.y, 1f)) {
                 localGroundNormal = Vector3.up;
-                //Debug.Log("localGroundNormal is now vector3.up");
-            } else {
-                //Debug.Break();
             }
 
             // translate the input so that the up direction is the same as the normal (up direction) of whatever ground or slope the player is on
             // this prevents losing speed up hills from slamming horizontally into the hill
 
-            newReturnValue = Vector3.Cross(Quaternion.LookRotation(currentMovementData.LocalInput, Vector3.up) * unitController.transform.InverseTransformDirection(unitController.transform.right), localGroundNormal);
+            newReturnValue = Vector3.Cross(Quaternion.LookRotation(currentMovementData.IntendedLocalDirection, Vector3.up) * unitController.transform.InverseTransformDirection(unitController.transform.right), localGroundNormal);
 
             // limit upward momentum near stairs to prevent overshooting the stairs in the vertical direction
             if (nearBottomStairs) {
@@ -696,6 +793,69 @@ namespace AnyRPG {
             }
             return newReturnValue;
         }
+
+        public Vector3 NormalizedWorldMovement(float calculatedSpeed, double timeInterval) {
+            // 1. Start with our "Truth": The stable World-Space intent from the camera
+            Vector3 worldMoveInput = currentMovementData.IntendedWorldDirection;
+
+            // 2. Determine the "Working Normal" in World Space
+            Vector3 workingWorldNormal = groundNormal;
+
+            // Slope Limit Check: If ground is too steep, treat it as flat to avoid capsule sliding issues
+            if (Vector3.Angle(groundNormal, Vector3.up) > slopeLimit) {
+                workingWorldNormal = Vector3.up;
+            }
+
+            // Obstacle/Stair Logic: Override the normal if we are hitting a step or ramp
+            if (nearBottomFrontObstacle &&
+                ((bottomFrontAngleDifferent && bottomFrontObstacleAngle < slopeLimit && nearFrontObstacle)
+                || (!nearTopFrontObstacle && !nearBottomStairs && nearFrontObstacle))) {
+                workingWorldNormal = bottomForwardHitInfo.normal;
+            } else if (nearBottomStairs) {
+                // Stair Step-up logic
+                float heightOffset = bottomStairDownHitInfo.point.y - unitController.UnitMotor.MovementBody.GetPosition().y;
+                bool farEnoughFromObstacle = (new Vector2(forwardHitPoint.x - unitController.UnitMotor.MovementBody.GetPosition().x, forwardHitPoint.z - unitController.UnitMotor.MovementBody.GetPosition().z).magnitude > (colliderRadius + 0.01f));
+
+                if (heightOffset < 0.2f || (farEnoughFromObstacle && !nearFrontObstacle)) {
+                    workingWorldNormal = stairRampNormal;
+                } else {
+                    workingWorldNormal = bottomForwardHitInfo.normal;
+                }
+            }
+
+            // Cleanup vertical floating point issues
+            if (Mathf.Approximately(workingWorldNormal.y, 1f)) {
+                workingWorldNormal = Vector3.up;
+            }
+
+            // 3. PROJECT MOVE INPUT ONTO THE NORMAL (World Space)
+            // We find the 'Right' vector relative to our move direction, then Cross with the Normal
+            // to get a forward vector that perfectly hugs the slope.
+            Vector3 worldRight = Vector3.Cross(Vector3.up, worldMoveInput);
+            //Vector3 slopeForward = Vector3.Cross(workingWorldNormal, worldRight).normalized;
+            Vector3 slopeForward = Vector3.Cross(worldRight, workingWorldNormal).normalized;
+
+            // 4. Vertical Clamping for Stairs (preventing "launching" off steps)
+            if (nearBottomStairs) {
+                // Calculate the height of the stair relative to the body in world space
+                float localYatStair = stairDownHitPoint.y - unitController.UnitMotor.MovementBody.GetPosition().y;
+                float maxVerticalVelocity = localYatStair / (float)timeInterval;
+
+                float clampedY = Mathf.Clamp(slopeForward.y * calculatedSpeed, -100f, maxVerticalVelocity) / calculatedSpeed;
+                slopeForward = new Vector3(slopeForward.x, clampedY, slopeForward.z);
+            }
+
+            // 5. Ground Snapping (Stick to floor on flat ground)
+            if (groundAngle == 0 && !nearBottomFrontObstacle && !nearBottomStairs && !touchingGround) {
+                if (closestGroundDistance < -0.001f) {
+                    float snapDownForce = Mathf.Clamp(1f, 0f, -closestGroundDistance / calculatedSpeed / (float)timeInterval) * -1f;
+                    slopeForward.y = snapDownForce;
+                }
+            }
+
+            return slopeForward;
+        }
+
 
         /*
         /// <summary>
@@ -822,7 +982,7 @@ namespace AnyRPG {
         /// <param name="directionOfTravel"></param>
         /// <param name="detectionDistance"></param>
         private void PerformLowObstacleCasts(Vector3 directionOfTravel, float detectionDistance) {
-            //Debug.Log("PlayerUnitMovementController.PerformLowObstacleCasts()");
+            //Debug.Log("UnitMovementController.PerformLowObstacleCasts()");
 
             int validResultCount = 0;
 
@@ -1160,7 +1320,7 @@ namespace AnyRPG {
         /*
         private void ApplyGravity() {
             if (!closeToGround) {
-                //Debug.Log("PlayerUnitMovementController.ApplyGravity(): Not Grounded");
+                //Debug.Log("UnitMovementController.ApplyGravity(): Not Grounded");
             }
         }
         */
@@ -1200,7 +1360,7 @@ namespace AnyRPG {
                 && (networkManagerServer.ServerModeActive == true || systemGameManager.GameMode == GameMode.Local)) {
                 unitController.UnitMotor.StopFollowingTarget();
             }
-
+            // debug transform forward
             EarlyGlobalStateUpdate();
 
             currentIMovementState.Update(isReplay, timeInterval);
@@ -1230,52 +1390,6 @@ namespace AnyRPG {
             // 3. Increment frame counter
             accumulatedMovementData.FrameCount++;
         }
-
-        /*
-        public MovementData ProcessGatheredInput() {
-            // 1. Create the final data for THIS tick
-            MovementData tickReadyData = new MovementData();
-
-            if (accumulatedMovementData.FrameCount > 0) {
-                // Average the axes
-                tickReadyData.InputHorizontal = accumulatedMovementData.InputHorizontal / accumulatedMovementData.FrameCount;
-                tickReadyData.InputVertical = accumulatedMovementData.InputVertical / accumulatedMovementData.FrameCount;
-                tickReadyData.InputTurn = accumulatedMovementData.InputTurn / accumulatedMovementData.FrameCount;
-                tickReadyData.RightAnalogHorizontal = accumulatedMovementData.RightAnalogHorizontal / accumulatedMovementData.FrameCount;
-
-                // Copy the "OR'd" buttons
-                tickReadyData.InputJump = accumulatedMovementData.InputJump;
-                tickReadyData.InputFly = accumulatedMovementData.InputFly;
-                tickReadyData.InputSink = accumulatedMovementData.InputSink;
-                tickReadyData.InputStrafe = accumulatedMovementData.InputStrafe;
-                tickReadyData.InputCrouch = accumulatedMovementData.InputCrouch;
-                tickReadyData.RightMouseButtonDown = accumulatedMovementData.RightMouseButtonDown;
-                tickReadyData.RightMouseDragged = accumulatedMovementData.RightMouseDragged;
-                tickReadyData.GamepadModeActive = accumulatedMovementData.GamepadModeActive;
-
-                // copy last frame data
-                tickReadyData.CameraWantedDirection = accumulatedMovementData.CameraWantedDirection;
-                tickReadyData.CameraLocalEulerAngleX = accumulatedMovementData.CameraLocalEulerAngleX;
-
-                // Update derived vectors
-                tickReadyData.NormalizedMoveInput = new Vector3(tickReadyData.InputHorizontal, 0, tickReadyData.InputVertical).normalized;
-                tickReadyData.TurnInput = new Vector3(tickReadyData.InputTurn, 0, 0);
-                if (controlsManager.GamepadModeActive || unitController.UnitProfile.UnitPrefabProps.RotateModel) {
-                    // calculate the input relative to the camera in world space
-                    Vector3 cameraInput = Quaternion.Euler(0f, cameraManager.ActiveMainCamera.transform.rotation.eulerAngles.y, 0f) * currentMovementData.NormalizedMoveInput;
-
-                    tickReadyData.LocalInput = unitController.transform.InverseTransformDirection(cameraInput);
-                } else {
-                    tickReadyData.LocalInput = currentMovementData.NormalizedMoveInput;
-                }
-            }
-
-            // 2. RESET the accumulator immediately for the next window of frames
-            accumulatedMovementData.ResetMoveInput();
-
-            return tickReadyData;
-        }
-        */
 
         public MovementData ProcessGatheredInput() {
             MovementData tickReadyData = new MovementData();
@@ -1330,16 +1444,75 @@ namespace AnyRPG {
 
             // 6. METADATA & DERIVED VECTORS
             tickReadyData.GamepadModeActive = accumulatedMovementData.GamepadModeActive;
-
             tickReadyData.NormalizedMoveInput = new Vector3(tickReadyData.InputHorizontal, 0, tickReadyData.InputVertical).normalized;
             tickReadyData.TurnInput = new Vector3(tickReadyData.InputTurn, 0, 0);
 
+            /*
+            // 7. CALCULATE THE "STABLE" WORLD DIRECTION
+            // We use the camera's Y-rotation captured during this tick.
+            Quaternion cameraYRotation = Quaternion.Euler(0f, tickReadyData.CameraWantedDirection.y, 0f);
+            Debug.Log($"Camera Y Rotation for movement: {cameraYRotation.eulerAngles.y} degrees camerawanteddirection.y {tickReadyData.CameraWantedDirection.y}");
+
+            // This is the "Universal" intended direction (e.g., W always moves 'Into' the screen)
+            tickReadyData.IntendedWorldDirection = cameraYRotation * tickReadyData.NormalizedMoveInput;
+            Debug.Log($"Intended World Direction: {tickReadyData.IntendedWorldDirection} from NormalizedMoveInput {tickReadyData.NormalizedMoveInput} and Camera Y Rotation {cameraYRotation.eulerAngles.y}");
+            */
+            /*
+            // 1.Get the stable forward direction from the camera vector
+            Vector3 camForward = tickReadyData.CameraWantedDirection;
+            camForward.y = 0; // Flatten to horizontal plane
+            camForward.Normalize();
+
+            // 2. Derive the 'Right' vector from that forward
+            Vector3 camRight = Vector3.Cross(Vector3.up, camForward);
+
+            // 3. Combine with WASD/Joystick input to get the World Intent
+            // This ensures 'W' is always "Into the screen"
+            tickReadyData.IntendedWorldDirection = (camForward * tickReadyData.InputVertical) + (camRight * tickReadyData.InputHorizontal);
+            */
+
+            Quaternion headingRotation;
+
+            if (controlsManager.GamepadModeActive || unitController.UnitProfile.UnitPrefabProps.RotateModel) {
+                // FREE ROTATE: Forward is the CAMERA
+                Vector3 camForward = tickReadyData.CameraWantedDirection;
+                camForward.y = 0;
+                headingRotation = Quaternion.LookRotation(camForward.normalized);
+            } else {
+                // STRAFE MODE: Heading is the CHARACTER's physical rotation
+                // Use the Rigidbody/MovementBody rotation, NOT the smoothed transform
+                
+                Quaternion physicsRotation = unitController.UnitMotor.MovementBody.GetRotation();
+                Vector3 physicsEuler = physicsRotation.eulerAngles;
+
+                // Flatten to Y-axis only
+                headingRotation = Quaternion.Euler(0f, physicsEuler.y, 0f);
+            }
+
+            // 3. Calculate World Intent based on that heading
+            tickReadyData.IntendedWorldDirection = headingRotation * tickReadyData.NormalizedMoveInput;
+
+            //Debug.Log($"Intended World Direction: {tickReadyData.IntendedWorldDirection} from NormalizedMoveInput {tickReadyData.NormalizedMoveInput} and Camera Wanted Direction {tickReadyData.CameraWantedDirection}");
+
+            // 8. CALCULATE INTENDED LOCAL DIRECTION (Preserving your mode logic)
+            if (controlsManager.GamepadModeActive || unitController.UnitProfile.UnitPrefabProps.RotateModel) {
+                // FREE ROTATE MODE: Direction is relative to the Camera.
+                // We use the stable World Direction transformed by the CURRENT character rotation.
+                // This is safe for the animator, but we will use the World Direction for physics.
+                tickReadyData.IntendedLocalDirection = unitController.transform.InverseTransformDirection(tickReadyData.IntendedWorldDirection);
+            } else {
+                // STRAFE MODE: "W" is always the character's own forward.
+                // In this mode, we don't look at the camera; we just use the raw WASD input.
+                tickReadyData.IntendedLocalDirection = tickReadyData.NormalizedMoveInput;
+            }
+            /*
             if (controlsManager.GamepadModeActive || unitController.UnitProfile.UnitPrefabProps.RotateModel) {
                 Vector3 cameraInput = Quaternion.Euler(0f, cameraManager.ActiveMainCamera.transform.rotation.eulerAngles.y, 0f) * tickReadyData.NormalizedMoveInput;
-                tickReadyData.LocalInput = unitController.transform.InverseTransformDirection(cameraInput);
+                tickReadyData.IntendedLocalDirection = unitController.transform.InverseTransformDirection(cameraInput);
             } else {
-                tickReadyData.LocalInput = tickReadyData.NormalizedMoveInput;
+                tickReadyData.IntendedLocalDirection = tickReadyData.NormalizedMoveInput;
             }
+            */
 
             return tickReadyData;
         }

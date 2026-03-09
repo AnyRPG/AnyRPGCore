@@ -17,22 +17,22 @@ namespace AnyRPG {
             //if (isSilent) return;
 
             if (isReplay == false) {
-                unitMovementController.localMoveVelocity.y = (Vector3.up * unitMovementController.jumpAcceleration).y;
+                unitMovementController.intendedLocalMoveVelocity.y = (Vector3.up * unitMovementController.jumpAcceleration).y;
             } else {
                 // If we are replaying the tick where the jump started, 
                 // we MUST re-apply the jump force because the Reconcile 
                 // likely just set the Rigidbody velocity to 0.
                 if (unitMovementController.CurrentMovementData.SimulatedTick == unitMovementController.lastJumpFrame) {
-                    unitMovementController.localMoveVelocity.y = unitMovementController.jumpAcceleration;
+                    unitMovementController.intendedLocalMoveVelocity.y = unitMovementController.jumpAcceleration;
                 } else {
                     // For subsequent replay ticks, we use the Rigidbody velocity 
                     // (which will now include gravity applied in previous replay steps)
                     //unitMovementController.localMoveVelocity = unitController.UnitMotor.MovementBody.GetLinearVelocity();
                     Vector3 worldVelocity = unitController.UnitMotor.MovementBody.GetLinearVelocity();
-                    unitMovementController.localMoveVelocity = unitController.transform.InverseTransformDirection(worldVelocity);
+                    unitMovementController.intendedLocalMoveVelocity = unitController.transform.InverseTransformDirection(worldVelocity);
                 }
             }
-            unitMovementController.adjustedlocalMoveVelocity = unitMovementController.localMoveVelocity;
+            unitMovementController.adjustedlocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
             if (isReplay == false) {
                 unitMovementController.lastJumpFrame = unitMovementController.CurrentMovementData.SimulatedTick;
                 unitController.UnitAnimator.SetJumping(1);

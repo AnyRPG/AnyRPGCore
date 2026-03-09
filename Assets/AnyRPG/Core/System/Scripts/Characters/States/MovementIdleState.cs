@@ -20,7 +20,7 @@ namespace AnyRPG {
             unitController.FreezePositionXZ();
 
             // Reset local move velocity for deterministic simulation
-            unitMovementController.localMoveVelocity = Vector3.zero;
+            unitMovementController.intendedLocalMoveVelocity = Vector3.zero;
 
             //if (isSilent) return;
 
@@ -36,7 +36,7 @@ namespace AnyRPG {
                 unitController.UnitAnimator.SetMoving(false);
                 unitController.UnitAnimator.SetStrafing(false);
                 unitController.UnitAnimator.SetTurnVelocity(0f);
-                unitController.UnitAnimator.SetVelocity(unitMovementController.localMoveVelocity);
+                unitController.UnitAnimator.SetVelocityFromLocal(unitMovementController.intendedLocalMoveVelocity);
             }
             unitMovementController.CalculateFallDamage(isReplay);
         }

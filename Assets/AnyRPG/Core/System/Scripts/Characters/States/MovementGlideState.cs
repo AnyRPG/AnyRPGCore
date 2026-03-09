@@ -101,8 +101,8 @@ namespace AnyRPG {
             calculatedSpeed = Mathf.Clamp(calculatedSpeed, 0, clampValue);
 
             // multiply normalized movement by calculated speed to get actual movement
-            unitMovementController.localMoveVelocity = unitMovementController.NormalizedGlideMovement(calculatedSpeed) * calculatedSpeed;
-            unitMovementController.adjustedlocalMoveVelocity = unitMovementController.localMoveVelocity;
+            unitMovementController.intendedLocalMoveVelocity = unitMovementController.NormalizedGlideMovement(calculatedSpeed) * calculatedSpeed;
+            unitMovementController.adjustedlocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
             //Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
 
             unitMovementController.CalculateTurnVelocity();

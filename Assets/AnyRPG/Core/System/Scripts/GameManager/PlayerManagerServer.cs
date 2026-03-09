@@ -176,10 +176,10 @@ namespace AnyRPG {
         }
 
         public void AddActivePlayer(int accountId, UnitController unitController) {
-            Debug.Log($"PlayerManagerServer.AddActivePlayer(accountId: {accountId}, {unitController.gameObject.name})");
+            //Debug.Log($"PlayerManagerServer.AddActivePlayer(accountId: {accountId}, {unitController.gameObject.name})");
 
             int playerCharacterId = GetPlayerCharacterId(accountId);
-            Debug.Log($"PlayerManagerServer.AddActivePlayer(accountId: {accountId}, {unitController.gameObject.name}) playercharacterId: {playerCharacterId} unitcontrollerid: {unitController.CharacterId}");
+            //Debug.Log($"PlayerManagerServer.AddActivePlayer(accountId: {accountId}, {unitController.gameObject.name}) playercharacterId: {playerCharacterId} unitcontrollerid: {unitController.CharacterId}");
             activeUnitControllersByPlayerCharacterId.Add(playerCharacterId, unitController);
             activeUnitControllersByAccountId.Add(accountId, unitController);
             activeUnitControllerLookup.Add(unitController, accountId);
