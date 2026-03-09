@@ -100,7 +100,7 @@ namespace AnyRPG {
 
         // on the network
         public UnitController SpawnUnitPrefab(CharacterRequestData characterRequestData, Transform parentTransform, Vector3 position, Vector3 forward, Scene scene) {
-            //Debug.Log($"CharacterManager.SpawnUnitPrefab({characterRequestData.characterConfigurationRequest.unitProfile.ResourceName}, {position}, {forward}, {scene.name})");
+            Debug.Log($"CharacterManager.SpawnUnitPrefab({characterRequestData.characterConfigurationRequest.unitProfile.ResourceName}, {position}, {forward}, {scene.name})");
 
             return networkManagerServer.SpawnCharacterPrefab(characterRequestData, parentTransform, position, forward, scene);
         }
@@ -111,7 +111,6 @@ namespace AnyRPG {
 
             return SpawnCharacterPrefab(characterRequestData, parentTransform, position, forward);
         }
-
 
         public void ProcessStopNetworkUnit(UnitController unitController) {
             //Debug.Log($"CharacterManager.ProcessStopNetworkUnit({unitController.gameObject.name})");
@@ -358,7 +357,9 @@ namespace AnyRPG {
                 if (networkManagerServer.ServerModeActive == true) {
                     return networkManagerServer.SpawnModelPrefab(spawnPrefab, parentTransform, position, forward);
                 } else {
-                    return networkManagerClient.RequestSpawnModelPrefab(spawnPrefab, parentTransform, position, forward);
+                    // this function should be necessary anymore because clients don't spawn their own models for networked units, they wait for the server to spawn them
+                    //return networkManagerClient.RequestSpawnModelPrefab(spawnPrefab, parentTransform, position, forward);
+                    return null;
                 }
             }
             return LocalSpawnPrefab(spawnPrefab, parentTransform, position, forward);
@@ -373,6 +374,19 @@ namespace AnyRPG {
         /// <returns></returns>
         public GameObject SpawnModelPrefab(UnitController unitController, UnitProfile unitProfile, Transform parentTransform, Vector3 position, Vector3 forward) {
             //Debug.Log($"CharacterManager.SpawnModelPrefab({unitController.gameObject.name}, {unitProfile.ResourceName}, {parentTransform.gameObject.name}, {position}, {forward})");
+
+            if (localUnits.Contains(unitController)) {
+                return SpawnModelPrefab(GameMode.Local, unitProfile.UnitPrefabProps.ModelPrefab, parentTransform, position, forward);
+            }
+
+            if (networkManagerServer.ServerModeActive == true) {
+                // this is happening on the server, spawn the network model prefab
+                return SpawnModelPrefab(GameMode.Network, unitProfile.UnitPrefabProps.NetworkModelPrefab, parentTransform, position, forward);
+            }
+
+            // clients don't spawn their own models for networked units, they wait for the server to spawn them
+            return null;
+            /*
 
             if (networkUnownedUnits.Contains(unitController)) {
                 //Debug.Log($"CharacterManager.SpawnModelPrefab() network unowned unit");
@@ -391,7 +405,9 @@ namespace AnyRPG {
                 return SpawnModelPrefab(GameMode.Network, unitProfile.UnitPrefabProps.NetworkModelPrefab, parentTransform, position, forward);
             }
 
+            Debug.Log($"CharacterManager.SpawnModelPrefab() unit controller {unitController.gameObject.name} not found in any unit lists");
             return null;
+            */
         }
 
         public void PoolUnitController(UnitController unitController) {

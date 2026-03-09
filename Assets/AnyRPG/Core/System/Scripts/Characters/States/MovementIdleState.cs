@@ -20,7 +20,7 @@ namespace AnyRPG {
             unitController.FreezePositionXZ();
 
             // Reset local move velocity for deterministic simulation
-            unitMovementController.localMoveVelocity = Vector3.zero;
+            unitMovementController.intendedLocalMoveVelocity = Vector3.zero;
 
             //if (isSilent) return;
 
@@ -36,7 +36,7 @@ namespace AnyRPG {
                 unitController.UnitAnimator.SetMoving(false);
                 unitController.UnitAnimator.SetStrafing(false);
                 unitController.UnitAnimator.SetTurnVelocity(0f);
-                unitController.UnitAnimator.SetVelocity(unitMovementController.localMoveVelocity);
+                unitController.UnitAnimator.SetVelocityFromLocal(unitMovementController.intendedLocalMoveVelocity);
             }
             unitMovementController.CalculateFallDamage(isReplay);
         }
@@ -50,6 +50,7 @@ namespace AnyRPG {
 
         public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementIdleState.Update()");
+
             if (unitController.InWater == true) {
                 if (unitMovementController.CheckForSwimming() == true) {
                     unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
@@ -67,7 +68,10 @@ namespace AnyRPG {
                 return;
             }
 
-            if (!unitMovementController.MaintainingGround() && unitMovementController.groundAngle > unitMovementController.slopeLimit) {
+            // this condition was causing the character to stay in idle state even when dismounted high in the air, commenting out to see
+            // if it was actually needed for anything. it was supposed to cause a slide if the character was on steep slopes originally.
+            //if (!unitMovementController.MaintainingGround() && unitMovementController.groundAngle > unitMovementController.slopeLimit) {
+            if (!unitMovementController.MaintainingGround()) {
                 unitMovementController.ChangeState(CharacterMovementState.Fall, isReplay);
                 return;
             }

@@ -84,6 +84,9 @@ namespace AnyRPG {
         private CharacterActionBarManager characterActionBarManager = null;
         private CharacterDialogManager characterDialogManager = null;
 
+        // spawn state
+        private bool isStateReset = false;
+
         // control logic
         private IState currentState;
         private List<CombatStrategyNode> startedPhaseNodes = new List<CombatStrategyNode>();
@@ -173,8 +176,7 @@ namespace AnyRPG {
         protected CharacterManager characterManager = null;
         protected SystemAchievementManager systemAchievementManager = null;
         protected SceneUtilityService sceneUtilityService = null;
-        protected LevelManagerServer levelManagerServer = null;
-        private InteractionManagerServer interactionManagerServer = null;
+        protected InteractionManagerServer interactionManagerServer = null;
 
 
         //public INamePlateTarget NamePlateTarget { get => namePlateTarget; set => namePlateTarget = value; }
@@ -516,6 +518,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.UnitController.Configure() scene: {gameObject.scene.name} default physics scene: {(gameObject.scene.GetPhysicsScene() == Physics.defaultPhysicsScene)}");
 
             base.Configure(systemGameManager);
+            isStateReset = false;
             // create components here instead?  which ones rely on other things like unit profile being set before start?
             unitEventController.Configure(this, systemGameManager);
             namePlateController = new UnitNamePlateController(this, systemGameManager);
@@ -559,11 +562,12 @@ namespace AnyRPG {
             characterManager = systemGameManager.CharacterManager;
             systemAchievementManager = systemGameManager.SystemAchievementManager;
             sceneUtilityService = systemGameManager.SceneUtilityService;
-            levelManagerServer = systemGameManager.LevelManagerServer;
             interactionManagerServer = systemGameManager.InteractionManagerServer;
         }
 
         public void SetCharacterRequestData(CharacterRequestData characterRequestData) {
+            //Debug.Log($"{gameObject.name}.UnitController.SetCharacterRequestData() characterId: {characterRequestData.characterId}");
+
             this.characterRequestData = characterRequestData;
             this.characterId = characterRequestData.characterId;
         }
@@ -601,6 +605,18 @@ namespace AnyRPG {
 
             behaviorController.Init();
             patrolController.Init();
+        }
+
+        protected override void PostInit() {
+            base.PostInit();
+            if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false && levelManagerClient.IsCutscene() == false) {
+                // if this is a client in a network game, don't enable the collider because the server will handle it
+                return;
+            }
+            // interactable range did not pick this unit up when it spawned because it wasn't initalized yet
+            // so force it to trigger interactable ranges now that initialization is complete
+            DisableCollider();
+            EnableCollider();
         }
 
         protected override void CheckEnableInteractableRange() {
@@ -827,7 +843,7 @@ namespace AnyRPG {
         /// set this unit to be a mount
         /// </summary>
         private void SetMountMode() {
-            //Debug.Log($"{gameObject.name}.UnitController.SetMountMode()");
+            Debug.Log($"{gameObject.name}.UnitController.SetMountMode()");
 
             // mount namePlates do not need full initialization, only the position to be set
             namePlateController.SetNameplatePosition();
@@ -1029,9 +1045,14 @@ namespace AnyRPG {
         public void Despawn(float delayTime = 0f, bool addSystemDefaultTime = true, bool forceDespawn = false) {
             //Debug.Log($"{gameObject.name}.UnitController.Despawn({delayTime}, {addSystemDefaultTime}, {forceDespawn}) {GetInstanceID()}");
 
-            if (initialized == false) {
+            // if an error happens and the model request is never complete, intialized will be false
+            // therefore this is commented out to allow the despawn to complete so references to this character
+            // can be cleaned up properly.
+            
+            if (isStateReset == true) {
                 return;
             }
+            
 
             if (forceDespawn == true) {
                 DespawnImmediate();
@@ -1069,8 +1090,8 @@ namespace AnyRPG {
 
         private void DespawnImmediate() {
             //Debug.Log($"{gameObject.name}.UnitController.DespawnImmediate()");
-
-            if (initialized == false) {
+            
+            if (isStateReset == true) {
                 return;
             }
 
@@ -1207,6 +1228,8 @@ namespace AnyRPG {
 
             interactionPoints.Clear();
 
+            isStateReset = true;
+
             base.ResetSettings();
         }
 
@@ -1226,7 +1249,7 @@ namespace AnyRPG {
         }
 
         public override void GetComponentReferences() {
-            //Debug.Log($"{gameObject.name}.UnitController.GetComponentReferences()");
+            //Debug.Log($"{gameObject.name}.UnitController.GetComponentReferences() instanceId: {GetInstanceID()}");
 
             if (componentReferencesInitialized == true) {
                 //Debug.Log($"{gameObject.name}.UnitController.GetComponentReferences() already initialized");
@@ -1519,7 +1542,7 @@ namespace AnyRPG {
         }
 
         public virtual void CancelMountEffects() {
-            //Debug.Log($"{gameObject.name}.UnitController.CancelMountEffects()");
+            //Debug.Log($"{gameObject.name}.UnitController.CancelMountEffects() instanceId: {GetInstanceID()}");
 
             if (isMounted == true) {
                 //Debug.Log($"{gameObject.name}.UnitController.CancelMountEffects(): unit is mounted");
@@ -1560,7 +1583,7 @@ namespace AnyRPG {
         protected void Update() {
             // with new network code that requests save data before the configuration is complete, we need to check if the unit is initialized
             // because it may take a while to get the save data back
-            if (initialized == false) {
+            if (isInitialized == false) {
                 return;
             }
 

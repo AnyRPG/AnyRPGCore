@@ -179,6 +179,7 @@ namespace AnyRPG {
             //Debug.Log($"PlayerManagerServer.AddActivePlayer(accountId: {accountId}, {unitController.gameObject.name})");
 
             int playerCharacterId = GetPlayerCharacterId(accountId);
+            //Debug.Log($"PlayerManagerServer.AddActivePlayer(accountId: {accountId}, {unitController.gameObject.name}) playercharacterId: {playerCharacterId} unitcontrollerid: {unitController.CharacterId}");
             activeUnitControllersByPlayerCharacterId.Add(playerCharacterId, unitController);
             activeUnitControllersByAccountId.Add(accountId, unitController);
             activeUnitControllerLookup.Add(unitController, accountId);
@@ -208,9 +209,10 @@ namespace AnyRPG {
         }
 
         public void RemoveActivePlayer(int accountId) {
-            //Debug.Log($"PlayerManagerServer.RemoveActivePlayer({accountId})");
+            Debug.Log($"PlayerManagerServer.RemoveActivePlayer(accountId: {accountId})");
 
             if (ActiveUnitControllers.ContainsKey(accountId) == false) {
+                Debug.Log($"PlayerManagerServer.RemoveActivePlayer(accountId: {accountId}) - no active player found for accountId");
                 return;
             }
             UnsubscribeFromPlayerEvents(activeUnitControllersByAccountId[accountId]);
@@ -406,12 +408,17 @@ namespace AnyRPG {
         }
 
         public void DespawnPlayerUnit(int accountId) {
-            //Debug.Log($"PlayerManagerServer.DespawnPlayerUnit({accountId})");
+            Debug.Log($"PlayerManagerServer.DespawnPlayerUnit({accountId})");
 
             if (activeUnitControllersByAccountId.ContainsKey(accountId) == false) {
                 return;
             }
-            playerCharacterMonitors[accountId].ProcessBeforeDespawn();
+
+            // MonitorPlayerUnit() is only ever called on the server so we need to check if there is a monitor at all, in case
+            // this is happening on the client
+            if (playerCharacterMonitors.ContainsKey(accountId) == true) {
+                playerCharacterMonitors[accountId].ProcessBeforeDespawn();
+            }
 
             activeUnitControllersByAccountId[accountId].Despawn(0, false, true);
             RemoveActivePlayer(accountId);
@@ -633,7 +640,7 @@ namespace AnyRPG {
         }
 
         public void MonitorPlayerUnit(int accountId, UnitController unitController) {
-            //Debug.Log($"PlayerManagerServer.MonitorPlayerUnit({accountId}, {unitController.gameObject.name})");
+            Debug.Log($"PlayerManagerServer.MonitorPlayerUnit({accountId}, {unitController.gameObject.name})");
 
             if (playerCharacterMonitors.ContainsKey(accountId) == false) {
                 return;

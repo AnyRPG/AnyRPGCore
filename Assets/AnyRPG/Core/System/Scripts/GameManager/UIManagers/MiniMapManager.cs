@@ -39,6 +39,8 @@ namespace AnyRPG {
         }
 
         public void HandleLevelUnload(int sceneHandle, string sceneName) {
+            //Debug.Log($"MiniMapManager.HandleLevelUnload({sceneHandle}, {sceneName})");
+
             List<Interactable> removeList = new List<Interactable>();
             removeList.AddRange(mapIndicatorControllers);
             foreach (Interactable interactable in removeList) {
@@ -48,7 +50,7 @@ namespace AnyRPG {
         }
 
         public void AddIndicator(Interactable interactable) {
-            //Debug.Log("MainMapController.AddIndicator(" + interactable.gameObject.name + ")");
+            
             if (mapIndicatorControllers.Contains(interactable) == false) {
                 mapIndicatorControllers.Add(interactable);
                 OnAddIndicator(interactable);

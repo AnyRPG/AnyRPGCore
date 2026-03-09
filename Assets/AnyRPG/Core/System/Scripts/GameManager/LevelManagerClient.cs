@@ -65,6 +65,7 @@ namespace AnyRPG {
 
         public void PerformSetupActivities() {
             InitializeLevelManager();
+            SetActiveSceneNode();
             PerformLevelLoadActivities(SceneManager.GetActiveScene());
         }
 
@@ -157,7 +158,7 @@ namespace AnyRPG {
         */
 
         public void SetActiveSceneNode() {
-            //Debug.Log("Levelmanager.SetActiveSceneNode()");
+            //Debug.Log("LevelmanagerClient.SetActiveSceneNode()");
 
             activeSceneName = SceneManager.GetActiveScene().name;
             //Debug.Log($"LevelmanagerClient.SetActiveSceneNode(): {activeSceneName}");
@@ -179,10 +180,14 @@ namespace AnyRPG {
         }
 
         public bool IsInitializationScene() {
+            //Debug.Log($"LevelManagerClient.IsInitializationScene(): activeSceneName: {activeSceneName}");
+
             return IsInitializationScene(activeSceneName);
         }
 
         public bool IsInitializationScene(string matchSceneName) {
+            //Debug.Log($"LevelManagerClient.IsInitializationScene({matchSceneName}): initializationScene: {systemConfigurationManager.InitializationSceneNode?.SceneFile}");
+
             if (matchSceneName == systemConfigurationManager.InitializationSceneNode?.SceneFile) {
                 return true;
             }
@@ -377,6 +382,9 @@ namespace AnyRPG {
             }
 
             ProcessBeforeLevelUnload();
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
+                levelManagerServer.ProcessBeforeUnloadScene(SceneManager.GetActiveScene());
+            }
 
             loadingSceneNode = systemDataFactory.GetResource<SceneNode>(levelName);
 
@@ -395,7 +403,7 @@ namespace AnyRPG {
         }
 
         public void ProcessBeforeLevelUnload() {
-            //Debug.Log("LevelManagerClient.ProcessBeforeLevelUnload()");
+            Debug.Log("LevelManagerClient.ProcessBeforeLevelUnload()");
 
             mapManager.ProcessLevelUnload();
             OnLevelUnload(SceneManager.GetActiveScene().handle, SceneManager.GetActiveScene().name);

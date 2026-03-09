@@ -36,7 +36,7 @@ namespace AnyRPG {
         }
 
         public void SummonMount(UnitProfile mountUnitProfile) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SummonMount({mountUnitProfile.ResourceName})");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SummonMount({mountUnitProfile.ResourceName})");
 
             CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(mountUnitProfile);
             characterConfigurationRequest.unitControllerMode = UnitControllerMode.Mount;
@@ -67,7 +67,7 @@ namespace AnyRPG {
         }
 
         public void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SetMountedState({mountUnitController.gameObject.name}, {mountUnitProfile.ResourceName})");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SetMountedState({mountUnitController.gameObject.name}, {mountUnitProfile.ResourceName})");
 
             unitController.CharacterPetManager.DespawnAllPets();
 
@@ -87,6 +87,8 @@ namespace AnyRPG {
         }
 
         public void SubscribeToMountModelReady() {
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SubscribeToMountModelReady()");
+
             if (mountUnitController?.UnitModelController != null) {
                 //mountUnitController.UnitModelController.OnModelUpdated += HandleMountModelReady;
                 mountUnitController.UnitModelController.OnModelCreated += HandleMountModelReady;
@@ -128,13 +130,15 @@ namespace AnyRPG {
                     if (systemGameManager.GameMode == GameMode.Local) {
                         unitController.transform.parent = mountPoint;
                     }
-                    if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
+                    if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
                         unitController.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
                         unitController.transform.localEulerAngles = mountUnitProfile.UnitPrefabProps.Rotation;
                     }
-                    if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                    
+                    // testing - is there a reason we wouldn't want to activemounted state on all server and clients?
+                    //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
                         ActivateMountedState();
-                    }
+                    //}
                 }
             }
             unitController.UnitEventController.NotifyOnMountUnitSpawn();
@@ -147,7 +151,8 @@ namespace AnyRPG {
 
             // set player animator to riding state
             if (systemGameManager.GameMode == GameMode.Local
-                || (networkManagerServer.ServerModeActive == false && unitController.IsOwner == true)
+                || networkManagerServer.ServerModeActive == true
+                || unitController.IsOwner == true
                 || lateJoin == true) {
                 unitController.UnitAnimator.SetRiding(true);
             }
@@ -187,7 +192,7 @@ namespace AnyRPG {
             // TESTING IT NOW
             // duplicate collider triggers since mount is redirected - disabling
             //unitController.Collider.isTrigger = true;
-            unitController.Collider.enabled = false;
+            unitController.DisableCollider();
 
 
             unitController.RigidBody.WakeUp();
@@ -305,7 +310,7 @@ namespace AnyRPG {
             // testing - this used to disable the collider
             // since mounts redirect to character, this results in 2 collider triggers
             //unitController.Collider.isTrigger = false;
-            unitController.Collider.enabled = true;
+            unitController.EnableCollider();
 
             unitController.RigidBody.WakeUp();
         }

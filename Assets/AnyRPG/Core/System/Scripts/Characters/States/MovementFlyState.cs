@@ -12,7 +12,7 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay, bool isSilent) {
-            Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Enter(isReplay: {isReplay}) tick:  {unitMovementController.CurrentMovementData.SimulatedTick}");
+            //Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Enter(isReplay: {isReplay}) tick:  {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             // 1. PERSISTENT PHYSICS & STATE (Always run during replays)
             unitMovementController.currentFallDistance = 0f;
@@ -45,7 +45,7 @@ namespace AnyRPG {
                 unitController.UnitAnimator.SetBool("Flying", false);
             }
         }
-
+        /*
         public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Update()");
 
@@ -79,11 +79,10 @@ namespace AnyRPG {
                 float clampValue = unitMovementController.MaxMovementSpeed;
 
                 // set a clamp value to limit movement speed to walking if going backward
-                /*
-                if (currentMoveVelocity.z < 0) {
-                    clampValue = 1;
-                }
-                */
+                
+                //if (currentMoveVelocity.z < 0) {
+                //    clampValue = 1;
+                //}
 
                 // get current movement speed and clamp it to current clamp value
                 float calculatedSpeed = unitController.FlySpeed;
@@ -91,8 +90,8 @@ namespace AnyRPG {
 
                 if (unitMovementController.CurrentMovementData.HasFlyMoveInput()) {
                     // multiply normalized movement by calculated speed to get actual movement
-                    unitMovementController.localMoveVelocity = unitMovementController.NormalizedFlyMovement() * calculatedSpeed;
-                    unitMovementController.adjustedlocalMoveVelocity = unitMovementController.localMoveVelocity;
+                    unitMovementController.intendedLocalMoveVelocity = unitMovementController.LocalNormalizedFlyMovement() * calculatedSpeed;
+                    unitMovementController.adjustedlocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
                     //Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
                 }
                 unitMovementController.CalculateTurnVelocity();
@@ -110,8 +109,8 @@ namespace AnyRPG {
                 unitController.FreezeAll();
 
                 // ============ VELOCITY CALCULATIONS ============
-                unitMovementController.localMoveVelocity = Vector3.zero;
-                unitMovementController.adjustedlocalMoveVelocity = unitMovementController.localMoveVelocity;
+                unitMovementController.intendedLocalMoveVelocity = Vector3.zero;
+                unitMovementController.adjustedlocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
                 if (isReplay == false) {
                     // ============ ANIMATOR PARAMETERS ============
                     unitController.UnitAnimator.SetMoving(false);
@@ -120,11 +119,100 @@ namespace AnyRPG {
 
             }
             if (isReplay == false) {
-                unitController.UnitAnimator.SetVelocity(unitMovementController.localMoveVelocity);
+                unitController.UnitAnimator.SetVelocityFromLocal(unitMovementController.intendedLocalMoveVelocity);
             }
 
             unitMovementController.MoveRelative();
         }
+        */
+
+        public void Update(bool isReplay, double timeInterval) {
+            //Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Update()");
+
+            if (unitMovementController.touchingGround == true && unitMovementController.CurrentMovementData.InputFly == false) {
+                if (unitMovementController.CurrentMovementData.HasMoveInput()) {
+                    unitMovementController.ChangeState(CharacterMovementState.Move, isReplay);
+                    return;
+                } else {
+                    unitMovementController.ChangeState(CharacterMovementState.Idle, isReplay);
+                    return;
+                }
+            }
+            if (unitController.InWater == true && unitMovementController.CheckForSwimming() == true) {
+                unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
+                return;
+            }
+            if (unitController.CanFly == false) {
+                unitMovementController.ChangeState(CharacterMovementState.Fall, isReplay);
+                return;
+            }
+
+
+            if (unitMovementController.CurrentMovementData.HasFlyMoveInput() || unitMovementController.CurrentMovementData.HasTurnInput()) {
+                // ============ RIGIDBODY CONSTRAINTS ============
+                unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+
+                // ============ VELOCITY CALCULATIONS ============
+                float clampValue = unitMovementController.MaxMovementSpeed;
+                float calculatedSpeed = Mathf.Clamp(unitController.FlySpeed, 0, clampValue);
+
+                if (unitMovementController.CurrentMovementData.HasFlyMoveInput()) {
+                    // 2. CALCULATE WORLD VELOCITY (The Physics Truth)
+                    unitMovementController.intendedWorldMoveVelocity = unitMovementController.WorldNormalizedFlyMovement() * calculatedSpeed;
+                    unitMovementController.adjustedWorldMoveVelocity = unitMovementController.intendedWorldMoveVelocity;
+
+                    Vector3 horizontalDir = new Vector3(unitMovementController.intendedWorldMoveVelocity.x, 0, unitMovementController.intendedWorldMoveVelocity.z);
+
+                    // 3. ROTATE CHARACTER (Apply via Motor)
+                    if (unitController.UnitProfile.UnitPrefabProps.RotateModel || unitMovementController.CurrentMovementData.GamepadModeActive) {
+                        // If moving, face the world direction (ignoring Y for upright rotation)
+                        if (horizontalDir.sqrMagnitude > 0.001f) {
+                            unitController.UnitMotor.FaceDirection(horizontalDir);
+                        }
+                    }
+
+                    // 4. DERIVE LOCAL VELOCITY (For the Animator)
+                    // This is calculated AFTER FaceDirection so it reflects the correct strafe angles
+                    //unitMovementController.intendedLocalMoveVelocity = unitController.transform.InverseTransformDirection(unitMovementController.intendedWorldMoveVelocity);
+
+                    // Use the "Truth" (the Rigidbody's current rotation) to localize the velocity
+                    Quaternion physicsRot = unitController.UnitMotor.MovementBody.GetRotation();
+                    unitMovementController.intendedLocalMoveVelocity = Quaternion.Inverse(physicsRot) * unitMovementController.intendedWorldMoveVelocity;
+
+
+                    unitMovementController.adjustedLocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
+                }
+
+                unitMovementController.CalculateTurnVelocity();
+
+                if (isReplay == false) {
+                    unitController.UnitAnimator.SetMoving(true);
+                    unitController.UnitAnimator.SetTurnVelocity(unitMovementController.currentTurnVelocity.x);
+                }
+            } else {
+                // ============ STOPPING LOGIC ============
+                unitController.FreezeAll();
+                unitMovementController.intendedWorldMoveVelocity = Vector3.zero;
+                unitMovementController.adjustedWorldMoveVelocity = Vector3.zero;
+                unitMovementController.intendedLocalMoveVelocity = Vector3.zero;
+                unitMovementController.adjustedLocalMoveVelocity = Vector3.zero;
+
+                if (isReplay == false) {
+                    unitController.UnitAnimator.SetMoving(false);
+                    unitController.UnitAnimator.SetTurnVelocity(0f);
+                }
+            }
+
+            // 5. APPLY PHYSICS
+            // This now uses the stable world velocity
+            unitMovementController.MoveWorld();
+
+            // 6. UPDATE VISUALS
+            if (isReplay == false) {
+                unitController.UnitAnimator.SetVelocityFromLocal(unitMovementController.intendedLocalMoveVelocity);
+            }
+        }
+
     }
 
 }

@@ -347,7 +347,11 @@ namespace AnyRPG {
                     // The camera will stay at its current world angle while the character turns beneath it.
 
                     // Re-calculate userOffsetAngle so if you press a key, the camera doesn't snap.
-                    userOffsetAngle = Mathf.DeltaAngle(target.eulerAngles.y, currentXDegrees);
+                    if (systemGameManager.GameMode == GameMode.Local) {
+                        userOffsetAngle = Mathf.DeltaAngle(target.eulerAngles.y, currentXDegrees);
+                    } else {
+                        userOffsetAngle = Mathf.DeltaAngle(target.parent.transform.eulerAngles.y, currentXDegrees);
+                    }
                 }
             }
 

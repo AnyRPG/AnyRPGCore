@@ -79,6 +79,7 @@ namespace AnyRPG {
 
         public void InteractWithOption(UnitController sourceUnitController, Interactable targetInteractable, InteractableOptionComponent interactableOptionComponent, int componentIndex, int choiceIndex) {
             //Debug.Log($"InteractionManager.InteractWithOptionInternal({sourceUnitController.gameObject.name}, {targetInteractable.gameObject.name}, {componentIndex}, {choiceIndex})");
+            
             sourceUnitController.UnitMotor.StickToGround();
             sourceUnitController.ResetApparentVelocity();
 

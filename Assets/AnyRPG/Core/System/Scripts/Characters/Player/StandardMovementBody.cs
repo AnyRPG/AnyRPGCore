@@ -11,7 +11,9 @@ namespace AnyRPG {
 
         public void SetLinearVelocity(Vector3 velocity) {
             //Debug.Log($"StandardMovementBody.SetLinearVelocity({velocity})");
-
+            if (rigidBody.isKinematic) {
+                return;
+            }
             rigidBody.linearVelocity = velocity;
         }
 

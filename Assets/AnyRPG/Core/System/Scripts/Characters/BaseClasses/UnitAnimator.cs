@@ -774,7 +774,8 @@ namespace AnyRPG {
             }
         }
 
-        public void SetVelocity(Vector3 varValue) {
+        /*
+        public void SetVelocityFromLocal(Vector3 varValue) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterAnimator.SetVelocity(" + varValue + ")");
             // receives velocity in LOCAL SPACE
 
@@ -795,12 +796,7 @@ namespace AnyRPG {
                     Vector3 normalizedVector = varValue.normalized;
                     if (normalizedVector.x != 0 || normalizedVector.z != 0) {
                         Vector3 newDirection;
-                        //if (controlsManager.GamePadModeActive == true && unitControllerMode == UnitControllerMode.Player) {
-                        //newDirection = Quaternion.LookRotation(new Vector3(cameraManager.ActiveMainCamera.transform.forward.x, 0f, cameraManager.ActiveMainCamera.transform.forward.z).normalized) * new Vector3(normalizedVector.x, 0, normalizedVector.z);
-                        //newDirection = cameraManager.MainCameraGameObject.transform.TransformDirection
-                        //} else {
                         newDirection = unitController.transform.TransformDirection(new Vector3(normalizedVector.x, 0, normalizedVector.z));
-                        //}
                         if (newDirection != Vector3.zero) {
                             //animator.transform.forward = newDirection;
                             unitController.transform.forward = newDirection;
@@ -866,17 +862,11 @@ namespace AnyRPG {
                 // if the model is being rotated, animation speed is always based on the forward animation since that is what will be playing
                 if (unitController.UnitProfile.UnitPrefabProps.RotateModel || (absXValue < (absZValue / 2) && varValue.z > 0)) {
                     // the new condition above should account for any animations with extra sideways movement because you have to pass 22.5 degrees in either direction to be considered to be going sideways
-                    //} else if (varValue.x == 0 && varValue.z > 0) {
                     // run forward
-                    //usedBaseAnimationSpeed = (absZValue <= 1 ? baseWalkAnimationSpeed : baseRunAnimationSpeed);
-                    //usedBaseAnimationSpeed = (absZValue > baseWalkAnimationSpeed ? baseRunAnimationSpeed : baseWalkAnimationSpeed);
                     // since jog forward animation is hardcoded to 2 or more in animator, switched condition below to match
                     usedBaseAnimationSpeed = usedBaseMoveForwardAnimationSpeed;
-                    //Debug.Log($"{gameObject.name}.CharacterAnimator.SetVelocity(" + varValue + "): run: " + baseRunAnimationSpeed + "; walk: " + baseWalkAnimationSpeed + "; used: " + usedBaseAnimationSpeed);
-                    //multiplier = varValue.z;
                     multiplier = (absValue / usedBaseAnimationSpeed);
                 } else if (absXValue < (absZValue / 2) && varValue.z < 0) {
-                    //} else if (varValue.x == 0 && varValue.z < 0) {
                     // run back
                     usedBaseAnimationSpeed = usedbaseWalkBackAnimationSpeed;
                     multiplier = (absValue / usedBaseAnimationSpeed);
@@ -905,19 +895,134 @@ namespace AnyRPG {
                     usedBaseAnimationSpeed = usedBaseStrafeForwardRightAnimationSpeed;
                     multiplier = (absValue / usedBaseAnimationSpeed);
                 }
-                //Debug.Log($"{unitController.gameObject.name}.CharacterAnimator.SetVelocity(" + varValue + "): used: " + usedBaseAnimationSpeed + "; walk: " + baseWalkAnimationSpeed + "; run: " + baseRunAnimationSpeed + "; multiplier: " + multiplier);
 
                 // if velocity is zero, the unit is stopping and the default animation speed of 1 should be used
                 // if the velocity is greater than zero, and animation speed sync is enabled, use the correct multiplier calculated above
                 if (varValue.magnitude != 0f && systemConfigurationManager.SyncMovementAnimationSpeed == true) {
                     animationSpeed = multiplier;
-                    //Debug.Log($"{gameObject.name}.CharacterAnimator.SetVelocityZ(" + varValue + "): animationSpeed: " + animationSpeed);
                 }
             }
 
-            //Debug.Log($"{unitController.gameObject.name}.CharacterAnimator.SetVelocity(" + varValue + "): animationSpeed: " + animationSpeed);
             SetAnimationSpeed(animationSpeed);
         }
+        */
+
+        public void SetVelocityFromLocal(Vector3 varValue) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterAnimator.SetVelocity({varValue.x}, {varValue.y}, {varValue.z})");
+            // receives velocity in LOCAL SPACE
+
+            if (animator == null) {
+                return;
+            }
+
+            if (Mathf.Abs(varValue.x) < 0.001f) varValue.x = 0f;
+            if (Mathf.Abs(varValue.y) < 0.001f) varValue.y = 0f;
+            if (Mathf.Abs(varValue.z) < 0.001f) varValue.z = 0f;
+            if (varValue.z > 0f) {
+                //Debug.Log($"{unitController.gameObject.name}.CharacterAnimator.SetVelocity({varValue.x}, {varValue.y}, {varValue.z})");
+            }
+
+            if (unitController.UnitProfile.UnitPrefabProps.RotateModel || controlsManager.GamepadModeActive == true) {
+                SetFloat("Velocity X", 0f);
+                SetFloat("Velocity Z", Mathf.Abs(varValue.magnitude));
+            } else {
+                // if model is not rotated, send through the normal values
+                SetFloat("Velocity X", varValue.x);
+                SetFloat("Velocity Z", varValue.z);
+            }
+            SetFloat("Velocity Y", varValue.y);
+
+            float absXValue = Mathf.Abs(varValue.x);
+            float absYValue = Mathf.Abs(varValue.y);
+            float absZValue = Mathf.Abs(varValue.z);
+            float absValue = Mathf.Abs(varValue.magnitude);
+
+            float animationSpeed = 1f;
+            float usedBaseAnimationSpeed = 1f;
+            float multiplier = 1f;
+
+            if (currentAnimationProps.SuppressAdjustAnimatorSpeed == false) {
+                // nothing more to do if we are leaving animations at normal speed
+
+                float usedBaseMoveForwardAnimationSpeed;
+                float usedbaseWalkBackAnimationSpeed;
+                float usedBaseStrafeLeftAnimationSpeed;
+                float usedBaseStrafeRightAnimationSpeed;
+                float usedBaseWalkStrafeBackRightAnimationSpeed;
+                float usedBaseWalkStrafeBackLeftAnimationSpeed;
+                float usedBaseStrafeForwardLeftAnimationSpeed;
+                float usedBaseStrafeForwardRightAnimationSpeed;
+
+
+                if (unitController.CharacterCombat.GetInCombat() == true) {
+                    // in combat
+                    usedBaseMoveForwardAnimationSpeed = (absValue >= 2 ? baseCombatRunAnimationSpeed : baseCombatWalkAnimationSpeed);
+                    usedbaseWalkBackAnimationSpeed = (absValue >= 2 ? baseCombatRunBackAnimationSpeed : baseCombatWalkBackAnimationSpeed);
+                    usedBaseStrafeLeftAnimationSpeed = (absValue > baseCombatJogStrafeLeftAnimationSpeed ? baseCombatJogStrafeLeftAnimationSpeed : baseCombatWalkStrafeLeftAnimationSpeed);
+                    usedBaseStrafeRightAnimationSpeed = (absValue > baseCombatJogStrafeRightAnimationSpeed ? baseCombatJogStrafeRightAnimationSpeed : baseCombatWalkStrafeRightAnimationSpeed);
+                    usedBaseWalkStrafeBackRightAnimationSpeed = (absValue > baseCombatJogStrafeBackRightAnimationSpeed ? baseCombatJogStrafeBackRightAnimationSpeed : baseCombatWalkStrafeBackRightAnimationSpeed);
+                    usedBaseWalkStrafeBackLeftAnimationSpeed = (absValue > baseCombatJogStrafeBackLeftAnimationSpeed ? baseCombatJogStrafeBackLeftAnimationSpeed : baseCombatWalkStrafeBackLeftAnimationSpeed);
+                    usedBaseStrafeForwardLeftAnimationSpeed = (absValue > baseCombatJogStrafeForwardLeftAnimationSpeed ? baseCombatJogStrafeForwardLeftAnimationSpeed : baseCombatWalkStrafeForwardLeftAnimationSpeed);
+                    usedBaseStrafeForwardRightAnimationSpeed = (absValue > baseCombatJogStrafeForwardRightAnimationSpeed ? baseCombatJogStrafeForwardRightAnimationSpeed : baseCombatWalkStrafeForwardRightAnimationSpeed);
+                } else {
+                    // out of combat
+                    usedBaseMoveForwardAnimationSpeed = (absValue >= 2 ? baseRunAnimationSpeed : baseWalkAnimationSpeed);
+                    usedbaseWalkBackAnimationSpeed = (absValue >= 2 ? baseRunBackAnimationSpeed : baseWalkBackAnimationSpeed);
+                    usedBaseStrafeLeftAnimationSpeed = (absValue > baseJogStrafeLeftAnimationSpeed ? baseJogStrafeLeftAnimationSpeed : baseWalkStrafeLeftAnimationSpeed);
+                    usedBaseStrafeRightAnimationSpeed = (absValue > baseJogStrafeRightAnimationSpeed ? baseJogStrafeRightAnimationSpeed : baseWalkStrafeRightAnimationSpeed);
+                    usedBaseWalkStrafeBackRightAnimationSpeed = (absValue > baseJogStrafeBackRightAnimationSpeed ? baseJogStrafeBackRightAnimationSpeed : baseWalkStrafeBackRightAnimationSpeed);
+                    usedBaseWalkStrafeBackLeftAnimationSpeed = (absValue > baseJogStrafeBackLeftAnimationSpeed ? baseJogStrafeBackLeftAnimationSpeed : baseWalkStrafeBackLeftAnimationSpeed);
+                    usedBaseStrafeForwardLeftAnimationSpeed = (absValue > baseJogStrafeForwardLeftAnimationSpeed ? baseJogStrafeForwardLeftAnimationSpeed : baseWalkStrafeForwardLeftAnimationSpeed);
+                    usedBaseStrafeForwardRightAnimationSpeed = (absValue > baseJogStrafeForwardRightAnimationSpeed ? baseJogStrafeForwardRightAnimationSpeed : baseWalkStrafeForwardRightAnimationSpeed);
+                }
+
+                // if the model is being rotated, animation speed is always based on the forward animation since that is what will be playing
+                if (unitController.UnitProfile.UnitPrefabProps.RotateModel || (absXValue < (absZValue / 2) && varValue.z > 0)) {
+                    // the new condition above should account for any animations with extra sideways movement because you have to pass 22.5 degrees in either direction to be considered to be going sideways
+                    // run forward
+                    // since jog forward animation is hardcoded to 2 or more in animator, switched condition below to match
+                    usedBaseAnimationSpeed = usedBaseMoveForwardAnimationSpeed;
+                    multiplier = (absValue / usedBaseAnimationSpeed);
+                } else if (absXValue < (absZValue / 2) && varValue.z < 0) {
+                    // run back
+                    usedBaseAnimationSpeed = usedbaseWalkBackAnimationSpeed;
+                    multiplier = (absValue / usedBaseAnimationSpeed);
+                } else if (varValue.x > 0 && absZValue < (absXValue / 2)) {
+                    // strafe right
+                    usedBaseAnimationSpeed = usedBaseStrafeRightAnimationSpeed;
+                    multiplier = (absValue / usedBaseAnimationSpeed);
+                } else if (varValue.x < 0 && absZValue < (absXValue / 2)) {
+                    // strafe left
+                    usedBaseAnimationSpeed = usedBaseStrafeLeftAnimationSpeed;
+                    multiplier = (absValue / usedBaseAnimationSpeed);
+                } else if (varValue.x > 0 && varValue.z < 0) {
+                    // strafe back right
+                    usedBaseAnimationSpeed = usedBaseWalkStrafeBackRightAnimationSpeed;
+                    multiplier = (absValue / usedBaseAnimationSpeed);
+                } else if (varValue.x < 0 && varValue.z < 0) {
+                    // strafe back left
+                    usedBaseAnimationSpeed = usedBaseWalkStrafeBackLeftAnimationSpeed;
+                    multiplier = (absValue / usedBaseAnimationSpeed);
+                } else if (varValue.x < 0 && varValue.z > 0) {
+                    // strafe forward left
+                    usedBaseAnimationSpeed = usedBaseStrafeForwardLeftAnimationSpeed;
+                    multiplier = (absValue / usedBaseAnimationSpeed);
+                } else if (varValue.x > 0 && varValue.z > 0) {
+                    // strafe forward right
+                    usedBaseAnimationSpeed = usedBaseStrafeForwardRightAnimationSpeed;
+                    multiplier = (absValue / usedBaseAnimationSpeed);
+                }
+
+                // if velocity is zero, the unit is stopping and the default animation speed of 1 should be used
+                // if the velocity is greater than zero, and animation speed sync is enabled, use the correct multiplier calculated above
+                if (varValue.magnitude != 0f && systemConfigurationManager.SyncMovementAnimationSpeed == true) {
+                    animationSpeed = multiplier;
+                }
+            }
+
+            SetAnimationSpeed(animationSpeed);
+        }
+
 
         public void SetAnimationSpeed(float animationSpeed) {
             //Debug.Log($"{unitController.gameObject.name}.UnitAnimation.SetAnimationSpeed(" + animationSpeed + ")");

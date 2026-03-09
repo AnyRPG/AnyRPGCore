@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 namespace AnyRPG {
     public class PlayerManagerClient : ConfiguredClass, ICharacterRequestor {
 
+        public event Action<UnitController, int> OnTakeFallDamage = delegate {};
+
         private PlayerController playerController = null;
 
         private bool playerUnitSpawned = false;
@@ -47,7 +49,7 @@ namespace AnyRPG {
         protected SystemEventManager systemEventManager = null;
 
         public bool PlayerUnitSpawned { get => playerUnitSpawned; }
-        public UnitController UnitController { get => unitController; set => unitController = value; }
+        public UnitController UnitController { get => unitController; }
         public UnitController ActiveUnitController { get => activeUnitController; }
         public PlayerController PlayerController { get => playerController; set => playerController = value; }
         //public PlayerCharacterSaveData PlayerCharacterSaveData { get => playerCharacterSaveData; }
@@ -125,12 +127,15 @@ namespace AnyRPG {
         */
 
         public void ProcessExitToMainMenu() {
-            //Debug.Log("PlayerManager.ProcessExitToMainMenu()");
+            Debug.Log("PlayerManagerClient.ProcessExitToMainMenu()");
 
             if (unitController != null) {
                 // we need to check here because the exit to main menu could have come from a network disconnection
                 // that occured before the player unit was spawned
                 playerManagerServer.DespawnPlayerUnit(networkManagerClient.AccountId);
+            } else {
+                Debug.Log("PlayerManagerClient.ProcessExitToMainMenu(): player unit was not spawned, so no need to despawn");
+                playerManagerServer.RemoveActivePlayer(networkManagerClient.AccountId);
             }
             DespawnPlayerConnection();
             saveManager.ClearSharedData();
@@ -487,6 +492,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnFactionChange += HandleFactionChange;
             unitController.UnitEventController.OnReceiveCombatTextEvent += HandleReceiveCombatTextEvent;
             unitController.UnitEventController.OnTakeDamage += HandleTakeDamage;
+            unitController.UnitEventController.OnTakeFallDamage += HandleTakeFallDamage;
             unitController.UnitEventController.OnDespawn += HandleDespawn;
             unitController.UnitEventController.OnCurrencyChange += HandleCurrencyChange;
             unitController.UnitEventController.OnSetGamepadActionButton += HandleSetGamepadActionButton;
@@ -556,6 +562,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnFactionChange -= HandleFactionChange;
             unitController.UnitEventController.OnReceiveCombatTextEvent -= HandleReceiveCombatTextEvent;
             unitController.UnitEventController.OnTakeDamage -= HandleTakeDamage;
+            unitController.UnitEventController.OnTakeFallDamage -= HandleTakeFallDamage;
             unitController.UnitEventController.OnDespawn -= HandleDespawn;
             unitController.UnitEventController.OnCurrencyChange -= HandleCurrencyChange;
             unitController.UnitEventController.OnSetGamepadActionButton += HandleSetGamepadActionButton;
@@ -655,6 +662,11 @@ namespace AnyRPG {
 
             combatTextManager.SpawnCombatText(targetUnitController, amount, combatTextType, combatMagnitude, abilityEffectContext);
             systemEventManager.NotifyOnTakeDamage(sourceCaster, unitController, amount, abilityName);
+        }
+
+        public void HandleTakeFallDamage(int damageAmount) {
+            combatTextManager.SpawnCombatText(unitController, damageAmount, CombatTextType.normal, CombatMagnitude.normal, null);
+            OnTakeFallDamage(unitController, damageAmount);
         }
 
         public void HandleReceiveCombatTextEvent(UnitController targetUnitController, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {

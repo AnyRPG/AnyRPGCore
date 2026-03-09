@@ -232,12 +232,12 @@ namespace AnyRPG {
                 BroadcastMovement();
                 if (unitController.UnitAnimator != null) {
                     unitController.UnitAnimator.SetMoving(true);
-                    unitController.UnitAnimator.SetVelocity(unitController.transform.InverseTransformDirection(unitController.NavMeshAgent.velocity));
+                    unitController.UnitAnimator.SetVelocityFromLocal(unitController.transform.InverseTransformDirection(unitController.NavMeshAgent.velocity));
                 }
             } else {
                 if (unitController.UnitAnimator != null) {
                     unitController.UnitAnimator.SetMoving(false);
-                    unitController.UnitAnimator.SetVelocity(Vector3.zero);
+                    unitController.UnitAnimator.SetVelocityFromLocal(Vector3.zero);
                 }
             }
         }
@@ -521,7 +521,7 @@ namespace AnyRPG {
         }
 
         public void RotateToward(Vector3 rotateDirection) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.RotateToward({rotateDirection})");
+            Debug.Log($"{unitController.gameObject.name}.UnitMotor.RotateToward({rotateDirection})");
 
             if (frozen) {
                 return;
@@ -684,15 +684,14 @@ namespace AnyRPG {
         public void FaceDirection(Vector3 direction) {
             //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FaceDirection({direction})");
 
-            if (frozen || direction == Vector3.zero) {
+            Vector3 horizontalDirection = new Vector3(direction.x, 0f, direction.z);
+
+            if (frozen || horizontalDirection.sqrMagnitude < 0.0001f) {
                 return;
             }
 
-            // 1. Flatten direction to prevent upward/downward tilting
-            direction = new Vector3(direction.x, 0f, direction.z).normalized;
-
             // 2. Convert direction vector to a Quaternion
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            Quaternion targetRotation = Quaternion.LookRotation(horizontalDirection.normalized);
 
             if (unitController.NavMeshAgent.enabled) {
                 unitController.NavMeshAgent.updateRotation = false;
@@ -700,14 +699,6 @@ namespace AnyRPG {
             } else {
                 movementBody.SetRotation(targetRotation);
             }
-
-            // this code should only be called at the end of a pathing movement,
-            // so it should be safe to leave the setting, because we'll turn it back on next time we enabled the navmesh agent.
-            /*
-            if (unitController.NavMeshAgent.enabled) {
-                unitController.NavMeshAgent.updateRotation = true;
-            }
-            */
         }
 
         public void ResetPath(bool forceStop = false) {

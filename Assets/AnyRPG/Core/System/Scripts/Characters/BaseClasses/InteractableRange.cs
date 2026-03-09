@@ -1,6 +1,3 @@
-using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -39,6 +36,12 @@ namespace AnyRPG {
             //Debug.Log($"InteractableRange.SetInteractable({interactable.gameObject.name}) instanceId: {GetInstanceID()}");
 
             this.interactable = interactable;
+            
+            // colliders should be server side only (or cutscene) because with client side prediction,
+            // reconciliation will cause the false exit and enters every frame
+            if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false && levelManagerClient.IsCutscene() == false) {
+                return;
+            }
             /*
             if (autoSetRadius == true) {
                 //Debug.Log("setting bounds");
@@ -90,6 +93,11 @@ namespace AnyRPG {
 
 
         public void EnableCollider() {
+            //Debug.Log($"{gameObject.transform.parent.parent.name}.InteractableRange.EnableCollider() instanceId: {GetInstanceID()}");
+
+            if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false && levelManagerClient.IsCutscene() == false) {
+                return;
+            }
             rangeCollider.enabled = true;
         }
 
@@ -100,15 +108,12 @@ namespace AnyRPG {
         }
 
         private void OnTriggerEnter(Collider collider) {
-            //Debug.Log($"{interactable.gameObject.name}.InteractableRange.OnTriggerEnter({collider.gameObject.name}) count : {inRangeGameObjects.Count}");
-
+            //Debug.Log($"{interactable.gameObject.name}.InteractableRange.OnTriggerEnter({collider.gameObject.name})");
             interactable.InteractableTriggerEnter(collider);
         }
 
-
         private void OnTriggerExit(Collider collider) {
             //Debug.Log($"{interactable.gameObject.name}.InteractableRange.OnTriggerExit({collider.gameObject.name})");
-
             interactable.InteractableTriggerExit(collider);
 
         }
@@ -122,7 +127,12 @@ namespace AnyRPG {
             }
         }
 
+        public void ResetSettings() {
+            //Debug.Log($"{gameObject.transform.parent.parent.name}.InteractableRange.ResetSettings() instanceId: {GetInstanceID()}");
 
+            interactable = null;
+            DisableCollider();
+        }
     }
 
 }

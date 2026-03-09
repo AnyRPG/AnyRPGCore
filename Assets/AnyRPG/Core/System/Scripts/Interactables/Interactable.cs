@@ -98,7 +98,7 @@ namespace AnyRPG {
         protected bool isMouseOverNameplate = false;
         protected bool isTargeted = false;
 
-        protected bool initialized = false;
+        protected bool isInitialized = false;
         protected bool startHasRun = false;
         protected bool componentReferencesInitialized = false;
         protected bool eventSubscriptionsInitialized = false;
@@ -128,6 +128,7 @@ namespace AnyRPG {
         protected InteractionManagerClient interactionManagerClient = null;
         protected NetworkManagerServer networkManagerServer = null;
         protected SystemItemManager systemItemManager = null;
+        protected LevelManagerServer levelManagerServer = null;
 
         // properties
         public bool IsInteracting { get => isInteracting; }
@@ -205,7 +206,7 @@ namespace AnyRPG {
         public ObjectMaterialController ObjectMaterialController { get => objectMaterialController; }
         public bool SuppressInteractionWindow { get => suppressInteractionWindow; set => suppressInteractionWindow = value; }
         public bool IsTargeted { get => isTargeted; }
-        public bool Initialized { get => initialized; }
+        public bool IsInitialized { get => isInitialized; }
         public List<GameObject> InteractionPoints { get => interactionPoints; set => interactionPoints = value; }
         public virtual bool OverrideInteractionColliderSize { get => overrideInteractionColliderSize; }
 
@@ -231,7 +232,8 @@ namespace AnyRPG {
         public virtual void Init() {
             //Debug.Log($"{gameObject.name}.Interactable.Init()");
 
-            if (initialized == true) {
+            if (isInitialized == true) {
+                Debug.LogWarning($"{gameObject.name}.Interactable.Init(): already initialized.  Returning.");
                 return;
             }
             ProcessInit();
@@ -244,8 +246,17 @@ namespace AnyRPG {
                 //Debug.Log($"{gameObject.name}.Interactable.CreateEventSubscriptions(): Player Unit is not spawned. Added Handle Spawn listener");
             }
             startHasRun = true;
-            initialized = true;
+            isInitialized = true;
+
+            //Debug.Log($"{gameObject.name}.Interactable.Init() complete");
+            PostInit();
         }
+
+        protected virtual void PostInit() {
+            //Debug.Log($"{gameObject.name}.Interactable.PostInit()");
+            // do something in inherited class
+        }
+
         protected virtual void LateConfigure() {
             //DisableInteraction();
         }
@@ -290,6 +301,7 @@ namespace AnyRPG {
             networkManagerServer = systemGameManager.NetworkManagerServer;
             playerManagerClient = systemGameManager.PlayerManagerClient;
             systemItemManager = systemGameManager.SystemItemManager;
+            levelManagerServer = systemGameManager.LevelManagerServer;
         }
 
         public virtual void GetComponentReferences() {
@@ -817,7 +829,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (initialized == false) {
+            if (isInitialized == false) {
                 // if the unit despawns while the mouse is over it, we don't want to do anything
                 return;
             }
@@ -1068,7 +1080,7 @@ namespace AnyRPG {
 
             startHasRun = false;
             componentReferencesInitialized = false;
-            initialized = false;
+            isInitialized = false;
             eventSubscriptionsInitialized = false;
             isTargeted = false;
             _interactableSaveData = null;
@@ -1089,7 +1101,7 @@ namespace AnyRPG {
         public virtual void ProcessCreateEventSubscriptions() {
             //Debug.Log($"{gameObject.name}.Interactable.ProcessCreateEventSubscriptions() Interactable instance: {GetInstanceID()}");
 
-            systemEventManager.OnLevelUnloadServer += HandleLevelUnloadServer;
+            levelManagerServer.OnBeforeStartUnloadScene += HandleLevelUnloadServer;
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
                 systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             }
@@ -1108,7 +1120,7 @@ namespace AnyRPG {
         public virtual void ProcessCleanupEventSubscriptions() {
             //Debug.Log($"{gameObject.name}.Interactable.ProcessCleanupEventSubscriptions() Interactable Instance: {GetInstanceID()}");
 
-            systemEventManager.OnLevelUnloadServer -= HandleLevelUnloadServer;
+            levelManagerServer.OnBeforeStartUnloadScene -= HandleLevelUnloadServer;
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
                 systemEventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
             }
@@ -1157,7 +1169,13 @@ namespace AnyRPG {
 
             if (inRangeUnitControllers.ContainsKey(collider.gameObject) == false) {
                 UnitController unitController = collider.gameObject.GetComponent<UnitController>();
-                if (unitController == null || ((unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) == false)) {
+                if (unitController != null
+                    && unitController.isInitialized == false) {
+                    //Debug.LogWarning($"{gameObject.name}.Interactable.InteractableTriggerEnter({collider.gameObject.name}): unit controller is not initialized.  ignoring trigger enter.");
+                }
+                if (unitController == null
+                    || unitController.isInitialized == false
+                    || ((unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) == false)) {
                     return;
                 }
                 if (unitController.UnitControllerMode == UnitControllerMode.Player) {
@@ -1198,12 +1216,14 @@ namespace AnyRPG {
         }
 
         public bool IsInInteractableRange(GameObject go) {
-            //Debug.Log($"{interactable.gameObject.name}.InteractableRange.IsInRange({go.name}) count: {inRangeGameObjects.Count} instanceId: {GetInstanceID()}"); 
+            Debug.Log($"{gameObject.name}.Interactable.IsInInteractableRange({go.name}) count: {inRangeUnitControllers.Count}"); 
             //Debug.Log($"InteractableRange.IsInRange({go.name}) count: {inRangeUnitControllers.Count} instanceId: {GetInstanceID()}");
 
             if (inRangeUnitControllers.ContainsKey(go)) {
+                Debug.Log($"{gameObject.name}.Interactable.IsInInteractableRange({go.name}): in range");
                 return true;
             }
+            Debug.Log($"{gameObject.name}.Interactable.IsInInteractableRange({go.name}): not in range");
             return false;
         }
 

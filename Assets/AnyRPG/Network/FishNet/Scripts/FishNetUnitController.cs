@@ -51,19 +51,22 @@ namespace AnyRPG {
             }
             networkObject = GetComponent<NetworkObject>();
 
-
             Rigidbody = GetComponent<Rigidbody>();
             if (Rigidbody == null) {
                 Debug.LogError($"{gameObject.name}.FishNetUnitController.Configure() could not find Rigidbody component");
                 return;
             }
         }
-
-        /*
+        
         public override void OnStartNetwork() {
-            base.TimeManager.OnTick += TimeManager_OnTick;
+            base.OnStartNetwork();
+            /*
+            if (!base.IsOwner) {
+                networkObject.pre = PredictionType.None;
+            }
+            */
         }
-        */
+        
 
         public override void OnStopNetwork() {
             base.TimeManager.OnTick -= TimeManager_OnTick;
@@ -212,7 +215,6 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestMoveMouseUseable += HandleRequestMoveMouseUseable;
                 unitController.UnitEventController.OnRequestAssignMouseUseable += HandleRequestAssignMouseUseable;
                 unitController.UnitEventController.OnRequestClearMouseUseable += HandleRequestClearMouseUseable;
-                unitController.UnitEventController.OnSetParent += HandleSetParent;
                 unitController.UnitEventController.OnDeactivateMountedState += HandleDeactivateMountedStateOwner;
                 unitController.UnitEventController.OnRequestAcceptQuestItemQuest += HandleRequestAcceptQuestItemQuest;
                 unitController.UnitEventController.OnRequestCompleteQuestItemQuest += HandleRequestCompleteQuestItemQuest;
@@ -222,7 +224,6 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestFollowAttackTarget += HandleRequestFollowAttackTarget;
             }
             // all clients
-            unitController.UnitEventController.OnUnsetParent += HandleUnsetParent;
             //unitController.UnitEventController.OnDespawn += HandleDespawnClient;
         }
 
@@ -256,7 +257,7 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestMoveMouseUseable -= HandleRequestMoveMouseUseable;
                 unitController.UnitEventController.OnRequestAssignMouseUseable -= HandleRequestAssignMouseUseable;
                 unitController.UnitEventController.OnRequestClearMouseUseable -= HandleRequestClearMouseUseable;
-                unitController.UnitEventController.OnSetParent -= HandleSetParent;
+                //unitController.UnitEventController.OnSetParent -= HandleSetParent;
                 unitController.UnitEventController.OnDeactivateMountedState -= HandleDeactivateMountedStateOwner;
                 unitController.UnitEventController.OnRequestAcceptQuestItemQuest -= HandleRequestAcceptQuestItemQuest;
                 unitController.UnitEventController.OnRequestCompleteQuestItemQuest -= HandleRequestCompleteQuestItemQuest;
@@ -266,7 +267,7 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestFollowAttackTarget -= HandleRequestFollowAttackTarget;
             }
             // all clients
-            unitController.UnitEventController.OnUnsetParent -= HandleUnsetParent;
+            //unitController.UnitEventController.OnUnsetParent -= HandleUnsetParent;
             //unitController.UnitEventController.OnDespawn -= HandleDespawnClient;
         }
 
@@ -344,6 +345,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnCombatMessage += HandleCombatMessageServer;
             unitController.UnitEventController.OnReceiveCombatTextEvent += HandleReceiveCombatTextEventServer;
             unitController.UnitEventController.OnTakeDamage += HandleTakeDamageServer;
+            unitController.UnitEventController.OnTakeFallDamage += HandleTakeFallDamageServer;
             unitController.UnitEventController.OnImmuneToEffect += HandleImmuneToEffectServer;
             unitController.UnitEventController.OnRecoverResource += HandleRecoverResourceServer;
             unitController.UnitEventController.OnCurrencyChange += HandleCurrencyChangeServer;
@@ -378,6 +380,8 @@ namespace AnyRPG {
             unitController.UnitEventController.OnSetGroupId += HandleSetGroupId;
             unitController.UnitEventController.OnSetGuildId += HandleSetGuildId;
             unitController.UnitEventController.OnReachDestination += HandleReachDestinationServer;
+            unitController.UnitEventController.OnSetParent += HandleSetParent;
+            unitController.UnitEventController.OnUnsetParent += HandleUnsetParent;
         }
 
         public void UnsubscribeFromServerUnitEvents() {
@@ -448,6 +452,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnCombatMessage -= HandleCombatMessageServer;
             unitController.UnitEventController.OnReceiveCombatTextEvent -= HandleReceiveCombatTextEventServer;
             unitController.UnitEventController.OnTakeDamage -= HandleTakeDamageServer;
+            unitController.UnitEventController.OnTakeFallDamage += HandleTakeFallDamageServer;
             unitController.UnitEventController.OnImmuneToEffect -= HandleImmuneToEffectServer;
             unitController.UnitEventController.OnRecoverResource -= HandleRecoverResourceServer;
             unitController.UnitEventController.OnCurrencyChange -= HandleCurrencyChangeServer;
@@ -1136,6 +1141,15 @@ namespace AnyRPG {
                 sourceCaster = sourceNetworkCharacterUnit.UnitController;
             }
             unitController.UnitEventController.NotifyOnTakeDamage(sourceCaster, unitController, amount, combatTextType, combatMagnitude, abilityName, new AbilityEffectContext(unitController, null, context, systemGameManager));
+        }
+
+        public void HandleTakeFallDamageServer(int damageAmount) {
+            HandleTakeFallDamageClient(damageAmount);
+        }
+
+        [ObserversRpc]
+        public void HandleTakeFallDamageClient(int damageAmount) {
+            unitController.UnitEventController.NotifyOnTakeFallDamage(damageAmount);
         }
 
         public void HandleReceiveCombatTextEventServer(UnitController targetUnitController, int amount, CombatTextType type, CombatMagnitude magnitude, AbilityEffectContext context) {
@@ -2213,8 +2227,10 @@ namespace AnyRPG {
             if (networkManagerServer.ServerModeActive == true) {
                 systemGameManager.CharacterManager.CompleteCharacterRequest(unitController);
             } else {
-                // first load items
-                systemItemManager.LoadItemInstanceListSaveData(playerCharacterSaveData.ItemInstanceListSaveData);
+                // first load items if this came from a character that included saveData
+                if (playerCharacterSaveData != null) {
+                    systemItemManager.LoadItemInstanceListSaveData(playerCharacterSaveData.ItemInstanceListSaveData);
+                }
 
                 CharacterConfigurationRequest characterConfigurationRequest;
                 characterConfigurationRequest = new CharacterConfigurationRequest(unitProfile);
@@ -2374,6 +2390,12 @@ namespace AnyRPG {
         }
 
         private void TimeManager_OnTick() {
+            if (unitController == null
+                || unitController.IsInitialized == false
+                || (unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) == false) {
+                return;
+            }
+
             if (IsOwner) {
                 MovementData md = unitController.UnitMovementController.ProcessGatheredInput();
                 md.SimulatedTick = base.TimeManager.Tick;
@@ -2407,6 +2429,12 @@ namespace AnyRPG {
         private void TimeManager_OnPostTick() {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.TimeManager_OnPostTick() instanceId: {GetInstanceID()}");
 
+            if (unitController == null
+                || unitController.IsInitialized == false
+                || (unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) == false) {
+                return;
+            }
+
             CreateReconcile();
         }
 
@@ -2421,7 +2449,9 @@ namespace AnyRPG {
                 return;
             }
             if (unitController.UnitMovementController == null) {
-                Debug.LogError($"{gameObject.name}.FishNetUnitController.CreateReconcile() unitController.UnitMovementController is null, cannot create reconcile data");
+                // for some reason, this method can trigger even after a client disconnection causes this unit to despawn
+                // in that case, the unit movement controller will be null and we should just skip creating reconcile data instead of throwing an error
+                //Debug.LogError($"{gameObject.name}.FishNetUnitController.CreateReconcile() unitController.UnitMovementController is null, cannot create reconcile data");
                 return;
             }
             ReconcileData rd = new ReconcileData(predictionRigidbody) {

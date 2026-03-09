@@ -95,6 +95,8 @@ namespace AnyRPG {
         }
 
         public void NotifyOnPlayVoiceSound(AudioClip audioClip) {
+            //Debug.Log($"{interactable.gameObject.name}.InteractableEventController.NotifyOnPlayVoiceSound({(audioClip == null ? "null" : audioClip.name)})");
+
             OnPlayVoiceSound(audioClip);
         }
 

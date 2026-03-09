@@ -14,7 +14,8 @@ namespace AnyRPG {
         public Vector3 NormalizedMoveInput;
         public Vector3 TurnInput;
 
-        public Vector3 LocalInput;
+        public Vector3 IntendedLocalDirection;
+        public Vector3 IntendedWorldDirection;
         public bool RightMouseButtonDown;
         public bool RightMouseDragged;
         public float RightAnalogHorizontal;
@@ -39,7 +40,8 @@ namespace AnyRPG {
             RightMouseDragged = false;
             RightAnalogHorizontal = 0;
             CameraLocalEulerAngleX = 0;
-            LocalInput = Vector3.zero;
+            IntendedLocalDirection = Vector3.zero;
+            IntendedWorldDirection = Vector3.zero;
 
             NormalizedMoveInput = Vector3.zero;
             TurnInput = new Vector3(InputTurn, 0, 0);

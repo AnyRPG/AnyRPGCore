@@ -16,9 +16,8 @@ namespace AnyRPG {
             
             if (isSilent) return;
 
-            unitMovementController.currentFallDistance = 0f;
-
             if (isReplay == false) {
+                unitMovementController.currentFallDistance = 0f;
                 unitMovementController.fallStartHeight = unitController.transform.position.y;
                 if (unitController.UnitAnimator.GetInt("Jumping") != 2) {
                     unitController.UnitAnimator.SetTrigger("FallTrigger");
@@ -45,6 +44,7 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.MovementFallState.Update(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} pVelocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()} position: {unitController.RigidBody.position} transform.forward: {unitController.transform.forward}");
 
             if (unitController.InWater == true) {
+                Debug.Log($"{unitController.gameObject.name}.MovementFallState.Update() IN WATER = TRUE; CheckForSwimming() == {unitMovementController.CheckForSwimming()}");
                 if (unitMovementController.CheckForSwimming() == true) {
                     unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
                     return;

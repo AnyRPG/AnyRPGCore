@@ -776,12 +776,6 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleSceneUnloadStart(int sceneHandle, string sceneName) {
-            //Debug.Log($"NetworkManagerServer.HandleSceneUnloadStart({sceneName}, {sceneHandle})");
-
-            systemEventManager.NotifyOnLevelUnloadServer(sceneHandle, sceneName);
-        }
-
         public void HandleSceneUnloadEnd(int sceneHandle, string sceneName) {
             //Debug.Log($"NetworkManagerServer.HandleSceneUnloadEnd({sceneName}, {sceneHandle})");
 
@@ -819,7 +813,7 @@ namespace AnyRPG {
         }
 
         public GameObject SpawnModelPrefab(GameObject spawnPrefab, Transform parentTransform, Vector3 position, Vector3 forward) {
-            //Debug.Log($"NetworkManagerServer.SpawnModelPrefab({spawnRequestId})");
+            Debug.Log($"NetworkManagerServer.SpawnModelPrefab({spawnPrefab.gameObject.name})");
 
             return networkController.SpawnModelPrefabServer(spawnPrefab, parentTransform, position, forward);
         }

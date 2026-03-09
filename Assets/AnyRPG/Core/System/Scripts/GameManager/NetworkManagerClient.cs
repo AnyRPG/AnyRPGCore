@@ -147,7 +147,7 @@ namespace AnyRPG {
         }
 
         public GameObject RequestSpawnModelPrefab(GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward) {
-            //Debug.Log($"NetworkManagerClient.RequestSpawnModelPrefab({prefab.name}, {parentTransform.gameObject.name}, {position}, {forward})");
+            Debug.Log($"NetworkManagerClient.RequestSpawnModelPrefab({prefab.name}, {parentTransform.gameObject.name}, {position}, {forward})");
 
             return networkController.RequestSpawnModelPrefab(prefab, parentTransform, position, forward);
         }
@@ -177,10 +177,12 @@ namespace AnyRPG {
         }
 
         public void ProcessStopNetworkUnitClient(UnitController unitController) {
+            //Debug.Log($"NetworkManagerClient.ProcessStopNetworkUnitClient({unitController.gameObject.name})");
+
             //if (playerManager.UnitController == unitController) {
-                //playerManager.ProcessStopClient();
+            //playerManager.ProcessStopClient();
             //} else {
-                characterManager.ProcessStopNetworkUnit(unitController);
+            characterManager.ProcessStopNetworkUnit(unitController);
             //}
             /*
             if (unitController.UnitControllerMode == UnitControllerMode.Player) {

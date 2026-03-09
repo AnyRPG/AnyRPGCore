@@ -1181,12 +1181,16 @@ namespace AnyRPG {
         }
 
         public void TakeFallDamage(float damagePercent) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.TakeFallDamage({damagePercent})");
+
+            int damageAmount = 0;
             foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
                 if (powerResource.IsHealth == true) {
-                    ReducePowerResource(powerResource, (int)((damagePercent / 100f) * GetPowerResourceMaxAmount(powerResource)));
+                    damageAmount = (int)((damagePercent / 100f) * GetPowerResourceMaxAmount(powerResource));
+                    ReducePowerResource(powerResource, damageAmount);
                 }
             }
-            unitController.UnitEventController.NotifyOnTakeFallDamage();
+            unitController.UnitEventController.NotifyOnTakeFallDamage(damageAmount);
         }
 
         public void PerformDeathCheck() {
@@ -1395,16 +1399,14 @@ namespace AnyRPG {
                     unitController.CharacterCombat.HandleDie();
                 }
                 if (unitController.UnitMovementController != null) {
-                    unitController.UnitMovementController.localMoveVelocity = new Vector3(0, 0, 0);
+                    unitController.UnitMovementController.intendedLocalMoveVelocity = new Vector3(0, 0, 0);
                 }
                 if (systemGameManager.GameMode == GameMode.Local
                     || networkManagerServer.ServerModeActive
+                    || unitController.IsOwner
                     || levelManagerClient.IsCutscene()) { 
                     // should only be done on server or authoritative client
                     unitController.FreezePositionXZ();
-                    if (unitController.UnitMovementController != null) {
-                        unitController.UnitMovementController.localMoveVelocity = new Vector3(0, 0, 0);
-                    }
                     // should only be done on server or authoritative client
                     unitController.UnitAnimator.HandleDie();
                 }

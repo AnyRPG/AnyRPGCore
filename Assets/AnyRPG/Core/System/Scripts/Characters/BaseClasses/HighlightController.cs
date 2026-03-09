@@ -188,6 +188,9 @@ namespace AnyRPG {
             UpdateColors();
         }
 
+        public void ResetSettings() {
+            HandleUnTargeted();
+        }
     }
 
 }

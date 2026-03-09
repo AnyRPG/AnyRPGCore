@@ -122,6 +122,10 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnCharacterConfigured -= HandleCharacterConfigured;
             }
             unitController = null;
+            interactableRange.ResetSettings();
+            if (highlightController != null) {
+                highlightController.ResetSettings();
+            }
         }
 
         private void HandleCharacterConfigured() {
@@ -188,6 +192,8 @@ namespace AnyRPG {
         }
 
         public void HandlePlayVoiceSound(AudioClip audioClip) {
+            //Debug.Log($"{gameObject.name}.UnitComponentController.PlayVoiceSound({(audioClip == null ? "null" : audioClip.name)})");
+
             if (audioClip == null) {
                 return;
             }

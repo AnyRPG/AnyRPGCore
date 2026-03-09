@@ -59,6 +59,8 @@ namespace AnyRPG {
         }
 
         public void Cleanup() {
+            //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObjectComponent.Cleanup() hashCode: {GetHashCode()}");
+
             CleanupEventSubscriptions();
         }
 
@@ -110,7 +112,6 @@ namespace AnyRPG {
         }
 
         public void CreateEventSubscriptions() {
-            //Debug.Log($"{gameObject.name}CharacterAbilityManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
@@ -119,11 +120,14 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessCreateEventSubscriptions() {
+            //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObjectComponent.ProcessCreateEventSubscriptions() hashcode: {GetHashCode()}");
+
             levelManagerClient.OnLevelUnload += HandleLevelUnload;
             SystemEventManager.StartListening("OnSaveGame", HandleSaveGame);
         }
 
         public void CleanupEventSubscriptions() {
+            //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObjectComponent.CleanupEventSubscriptions() hashcode: {GetHashCode()}");
             if (!eventSubscriptionsInitialized) {
                 return;
             }
@@ -132,11 +136,15 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessCleanupEventSubscriptions() {
+            //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObjectComponent.ProcessCleanupEventSubscriptions() hashcode: {GetHashCode()}");
+
             levelManagerClient.OnLevelUnload -= HandleLevelUnload;
             SystemEventManager.StopListening("OnSaveGame", HandleSaveGame);
         }
 
         public void HandleLevelUnload(int sceneHandle, string sceneName) {
+            //Debug.Log($"PersistentObjectComponent.HandleLevelUnload(sceneHandle: {sceneHandle}, sceneName: {sceneName}) hashcode: {GetHashCode()}");
+            //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObjectComponent.HandleLevelUnload(sceneHandle: {sceneHandle}, sceneName: {sceneName}) hashcode: {GetHashCode()}");
             if (persistObjectPosition == false) {
                 return;
             }
