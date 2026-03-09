@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static SceneLoader;
 
 namespace AnyRPG {
     public class LevelManagerServer : ConfiguredClass {
@@ -11,6 +12,7 @@ namespace AnyRPG {
         public event System.Action<int, string> OnRemoveLoadedScene = delegate { };
         public event System.Action<int, SceneData> OnAddLoadedScene = delegate { };
         public event System.Action<int, int> OnSetSceneClientCount = delegate { };
+        public event System.Action<int, string> OnBeforeStartUnloadScene = delegate { };
 
         // dictionary of loaded scenes, where the key is the scene name and the value is a list of scene handles
         private Dictionary<string, Dictionary<int, SceneData>> loadedScenes = new Dictionary<string, Dictionary<int, SceneData>>();
@@ -75,6 +77,7 @@ namespace AnyRPG {
                             continue;
                         }
                         if (IsTimeExpired(sceneData.EmptyTime, timeoutMinutes) == true) {
+                            ProcessBeforeUnloadScene(sceneData.Scene.handle, sceneData.Scene.name);
                             networkManagerServer.UnloadScene(sceneData.Scene.handle);
                         }
                     }
@@ -138,7 +141,7 @@ namespace AnyRPG {
         }
 
         public void RemoveLoadedScene(int sceneHandle, string sceneName) {
-            //Debug.Log($"LevelManagerServer.RemoveLoadedScene({sceneHandle}, {sceneName})");
+            Debug.Log($"LevelManagerServer.RemoveLoadedScene({sceneHandle}, {sceneName})");
 
             if (loadedScenes.ContainsKey(sceneName) == false) {
                 //Debug.LogError($"LevelManagerServer.RemoveLoadedScene() - scene {sceneName} not found in loaded scenes");
@@ -197,6 +200,15 @@ namespace AnyRPG {
                 return null;
             }
             return loadedScenes[scene.name][scene.handle];
+        }
+
+        public void ProcessBeforeUnloadScene(Scene scene) {
+            //Debug.Log($"LevelManagerServer.ProcessBeforeLevelLoad({scene.name}({scene.handle}))");
+            ProcessBeforeUnloadScene(scene.handle, scene.name);
+        }
+
+        public void ProcessBeforeUnloadScene(int sceneHandle, string sceneName) {
+            OnBeforeStartUnloadScene(sceneHandle, sceneName);
         }
     }
 

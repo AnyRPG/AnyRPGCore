@@ -316,7 +316,7 @@ namespace AnyRPG {
         private void HandleUnloadStartServer(SceneUnloadStartEventArgs obj) {
             //Debug.Log($"FishNetNetworkController.HandleUnloadStart({obj.QueueData.SceneUnloadData.SceneLookupDatas[0].Name})");
 
-            networkManagerServer.HandleSceneUnloadStart(obj.QueueData.SceneUnloadData.SceneLookupDatas[0].Handle, obj.QueueData.SceneUnloadData.SceneLookupDatas[0].Name);
+            //networkManagerServer.HandleSceneUnloadStart(obj.QueueData.SceneUnloadData.SceneLookupDatas[0].Handle, obj.QueueData.SceneUnloadData.SceneLookupDatas[0].Name);
         }
 
 

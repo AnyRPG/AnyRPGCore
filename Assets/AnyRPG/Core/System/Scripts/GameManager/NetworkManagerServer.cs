@@ -776,12 +776,6 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleSceneUnloadStart(int sceneHandle, string sceneName) {
-            //Debug.Log($"NetworkManagerServer.HandleSceneUnloadStart({sceneName}, {sceneHandle})");
-
-            systemEventManager.NotifyOnLevelUnloadServer(sceneHandle, sceneName);
-        }
-
         public void HandleSceneUnloadEnd(int sceneHandle, string sceneName) {
             //Debug.Log($"NetworkManagerServer.HandleSceneUnloadEnd({sceneName}, {sceneHandle})");
 

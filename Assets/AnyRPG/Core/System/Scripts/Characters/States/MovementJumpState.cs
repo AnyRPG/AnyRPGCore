@@ -11,6 +11,7 @@ namespace AnyRPG {
             this.unitMovementController = unitMovementController;
         }
 
+        /*
         public void Enter(bool isReplay, bool isSilent) {
             //Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Enter(isReplay: {isReplay}, isSilent: {isSilent}) tick:  {unitMovementController.CurrentMovementData.SimulatedTick} pVelocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()} transform.forward: {unitController.transform.forward} localmoveVelocity: {unitMovementController.localMoveVelocity}");
 
@@ -32,7 +33,7 @@ namespace AnyRPG {
                     unitMovementController.intendedLocalMoveVelocity = unitController.transform.InverseTransformDirection(worldVelocity);
                 }
             }
-            unitMovementController.adjustedlocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
+            unitMovementController.adjustedLocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
             if (isReplay == false) {
                 unitMovementController.lastJumpFrame = unitMovementController.CurrentMovementData.SimulatedTick;
                 unitController.UnitAnimator.SetJumping(1);
@@ -41,6 +42,48 @@ namespace AnyRPG {
             }
             unitMovementController.MoveRelative();
         }
+        */
+
+        public void Enter(bool isReplay, bool isSilent) {
+            // 1. Determine the "Base" horizontal world velocity we are jumping WITH
+            // If we were moving, intendedWorldMoveVelocity should already be set from the previous state's Update
+            Vector3 currentWorldVelocity = unitMovementController.intendedWorldMoveVelocity;
+
+            if (isReplay == false) {
+                // Initial Jump: Apply the upward burst to the World Vector
+                currentWorldVelocity.y = unitMovementController.jumpAcceleration;
+                unitMovementController.lastJumpFrame = unitMovementController.CurrentMovementData.SimulatedTick;
+            } else {
+                // CSP Replay: If we are re-simulating the EXACT tick the jump happened
+                if (unitMovementController.CurrentMovementData.SimulatedTick == unitMovementController.lastJumpFrame) {
+                    currentWorldVelocity.y = unitMovementController.jumpAcceleration;
+                } else {
+                    // Replay Mid-Air: Use the Rigidbody's current velocity (which includes gravity from the replay)
+                    currentWorldVelocity = unitController.UnitMotor.MovementBody.GetLinearVelocity();
+                }
+            }
+
+            // 2. Set the stable World Velocity variables
+            unitMovementController.intendedWorldMoveVelocity = currentWorldVelocity;
+            unitMovementController.adjustedWorldMoveVelocity = currentWorldVelocity;
+
+            // 3. Derive Local Velocity (Physics-Safe for Animator)
+            // Using the Rigidbody rotation bypasses interpolation jitter
+            Quaternion physicsRot = unitController.UnitMotor.MovementBody.GetRotation();
+            unitMovementController.intendedLocalMoveVelocity = Quaternion.Inverse(physicsRot) * unitMovementController.intendedWorldMoveVelocity;
+            unitMovementController.adjustedLocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
+
+            // 4. Visuals & Events
+            if (!isReplay) {
+                unitController.UnitAnimator.SetJumping(1);
+                unitController.UnitAnimator.SetTrigger("JumpTrigger");
+                unitController.UnitEventController.NotifyOnJump();
+            }
+
+            // 5. Execute Physics via MoveWorld
+            unitMovementController.MoveWorld();
+        }
+
 
         public void Exit(bool isReplay, bool isSilent) {
             //Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Exit(isReplay: {isReplay}) tick:  {unitMovementController.CurrentMovementData.SimulatedTick} pVelocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");

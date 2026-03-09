@@ -128,6 +128,7 @@ namespace AnyRPG {
         protected InteractionManagerClient interactionManagerClient = null;
         protected NetworkManagerServer networkManagerServer = null;
         protected SystemItemManager systemItemManager = null;
+        protected LevelManagerServer levelManagerServer = null;
 
         // properties
         public bool IsInteracting { get => isInteracting; }
@@ -300,6 +301,7 @@ namespace AnyRPG {
             networkManagerServer = systemGameManager.NetworkManagerServer;
             playerManagerClient = systemGameManager.PlayerManagerClient;
             systemItemManager = systemGameManager.SystemItemManager;
+            levelManagerServer = systemGameManager.LevelManagerServer;
         }
 
         public virtual void GetComponentReferences() {
@@ -1099,7 +1101,7 @@ namespace AnyRPG {
         public virtual void ProcessCreateEventSubscriptions() {
             //Debug.Log($"{gameObject.name}.Interactable.ProcessCreateEventSubscriptions() Interactable instance: {GetInstanceID()}");
 
-            systemEventManager.OnLevelUnloadServer += HandleLevelUnloadServer;
+            levelManagerServer.OnBeforeStartUnloadScene += HandleLevelUnloadServer;
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
                 systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             }
@@ -1118,7 +1120,7 @@ namespace AnyRPG {
         public virtual void ProcessCleanupEventSubscriptions() {
             //Debug.Log($"{gameObject.name}.Interactable.ProcessCleanupEventSubscriptions() Interactable Instance: {GetInstanceID()}");
 
-            systemEventManager.OnLevelUnloadServer -= HandleLevelUnloadServer;
+            levelManagerServer.OnBeforeStartUnloadScene -= HandleLevelUnloadServer;
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
                 systemEventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
             }

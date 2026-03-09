@@ -539,7 +539,7 @@ namespace AnyRPG {
         }
 
         public void Rotate(Vector3 rotateDirection) {
-            Debug.Log($"{unitController.gameObject.name}.UnitMotor.Rotate({rotateDirection})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.Rotate({rotateDirection})");
 
             if (frozen) {
                 return;

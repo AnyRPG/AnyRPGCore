@@ -12,10 +12,9 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay, bool isSilent) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementFallState.Enter(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} pVelocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()} transform.forward: {unitController.transform.forward}");
+            Debug.Log($"{unitController.gameObject.name}.MovementFallState.Enter(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} pVelocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()} transform.forward: {unitController.transform.forward}");
             
             if (isSilent) return;
-
 
             if (isReplay == false) {
                 unitMovementController.currentFallDistance = 0f;
@@ -31,7 +30,7 @@ namespace AnyRPG {
         }
 
         public void Exit(bool isReplay, bool isSilent) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementFallState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} pVelocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()} transform.forward: {unitController.transform.forward}");
+            Debug.Log($"{unitController.gameObject.name}.MovementFallState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} pVelocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()} transform.forward: {unitController.transform.forward}");
             
             if (isSilent) return;
             unitMovementController.currentFallDistance = unitMovementController.fallStartHeight - unitController.transform.position.y;
@@ -45,6 +44,7 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.MovementFallState.Update(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} pVelocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()} position: {unitController.RigidBody.position} transform.forward: {unitController.transform.forward}");
 
             if (unitController.InWater == true) {
+                Debug.Log($"{unitController.gameObject.name}.MovementFallState.Update() IN WATER = TRUE; CheckForSwimming() == {unitMovementController.CheckForSwimming()}");
                 if (unitMovementController.CheckForSwimming() == true) {
                     unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
                     return;

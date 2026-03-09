@@ -382,6 +382,9 @@ namespace AnyRPG {
             }
 
             ProcessBeforeLevelUnload();
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
+                levelManagerServer.ProcessBeforeUnloadScene(SceneManager.GetActiveScene());
+            }
 
             loadingSceneNode = systemDataFactory.GetResource<SceneNode>(levelName);
 
@@ -400,7 +403,7 @@ namespace AnyRPG {
         }
 
         public void ProcessBeforeLevelUnload() {
-            //Debug.Log("LevelManagerClient.ProcessBeforeLevelUnload()");
+            Debug.Log("LevelManagerClient.ProcessBeforeLevelUnload()");
 
             mapManager.ProcessLevelUnload();
             OnLevelUnload(SceneManager.GetActiveScene().handle, SceneManager.GetActiveScene().name);

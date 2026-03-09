@@ -14,7 +14,7 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay, bool isSilent) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Enter(isReplay: {isReplay}) tick:  {unitMovementController.CurrentMovementData.SimulatedTick}");
+            Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Enter(isReplay: {isReplay}) tick:  {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             unitMovementController.currentFallDistance = 0f;
             unitMovementController.EnterGroundStateCommon(isReplay);
@@ -27,10 +27,11 @@ namespace AnyRPG {
         }
 
         public void Exit(bool isReplay, bool isSilent) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+            Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             unitController.StopSwimming();
             unitController.RigidBody.useGravity = true;
+            unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
             if (isReplay == false) {
                 unitController.UnitAnimator.SetBool("Swimming", false);
             }
@@ -155,21 +156,32 @@ namespace AnyRPG {
 
                     // 3. Derive Local Velocity ONLY for Animator blend trees
                     // This is now safe because FaceDirection updated the Rigidbody rotation for this tick
-                    unitMovementController.intendedLocalMoveVelocity = unitController.transform.InverseTransformDirection(unitMovementController.intendedWorldMoveVelocity);
-                    unitMovementController.adjustedlocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
+                    //unitMovementController.intendedLocalMoveVelocity = unitController.transform.InverseTransformDirection(unitMovementController.intendedWorldMoveVelocity);
+
+                    // Use the "Truth" (the Rigidbody's current rotation) to localize the velocity
+                    Quaternion physicsRot = unitController.UnitMotor.MovementBody.GetRotation();
+                    unitMovementController.intendedLocalMoveVelocity = Quaternion.Inverse(physicsRot) * unitMovementController.intendedWorldMoveVelocity;
+
+                    unitMovementController.adjustedLocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
                 }
 
                 unitMovementController.CalculateTurnVelocity();
 
-                if (!isReplay) {
+                if (isReplay == false) {
                     unitController.UnitAnimator.SetMoving(true);
                     unitController.UnitAnimator.SetTurnVelocity(unitMovementController.currentTurnVelocity.x);
                 }
             } else {
-                // ... [Stop / Freeze logic] ...
                 unitController.FreezeAll();
                 unitMovementController.intendedWorldMoveVelocity = Vector3.zero;
                 unitMovementController.adjustedWorldMoveVelocity = Vector3.zero;
+                unitMovementController.intendedLocalMoveVelocity = Vector3.zero;
+                unitMovementController.adjustedLocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
+                if (isReplay == false) {
+                    // ============ ANIMATOR PARAMETERS ============
+                    unitController.UnitAnimator.SetMoving(false);
+                    unitController.UnitAnimator.SetTurnVelocity(0f);
+                }
             }
 
             // 4. Apply Physics Movement

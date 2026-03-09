@@ -176,8 +176,7 @@ namespace AnyRPG {
         protected CharacterManager characterManager = null;
         protected SystemAchievementManager systemAchievementManager = null;
         protected SceneUtilityService sceneUtilityService = null;
-        protected LevelManagerServer levelManagerServer = null;
-        private InteractionManagerServer interactionManagerServer = null;
+        protected InteractionManagerServer interactionManagerServer = null;
 
 
         //public INamePlateTarget NamePlateTarget { get => namePlateTarget; set => namePlateTarget = value; }
@@ -563,7 +562,6 @@ namespace AnyRPG {
             characterManager = systemGameManager.CharacterManager;
             systemAchievementManager = systemGameManager.SystemAchievementManager;
             sceneUtilityService = systemGameManager.SceneUtilityService;
-            levelManagerServer = systemGameManager.LevelManagerServer;
             interactionManagerServer = systemGameManager.InteractionManagerServer;
         }
 
@@ -1091,7 +1089,7 @@ namespace AnyRPG {
         }
 
         private void DespawnImmediate() {
-            //Debug.Log($"{gameObject.name}.UnitController.DespawnImmediate()");
+            Debug.Log($"{gameObject.name}.UnitController.DespawnImmediate()");
 
             
             if (isStateReset == true) {

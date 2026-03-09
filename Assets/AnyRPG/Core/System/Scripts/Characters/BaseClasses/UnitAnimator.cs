@@ -908,11 +908,18 @@ namespace AnyRPG {
         */
 
         public void SetVelocityFromLocal(Vector3 varValue) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterAnimator.SetVelocity(" + varValue + ")");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterAnimator.SetVelocity({varValue.x}, {varValue.y}, {varValue.z})");
             // receives velocity in LOCAL SPACE
 
             if (animator == null) {
                 return;
+            }
+
+            if (Mathf.Abs(varValue.x) < 0.001f) varValue.x = 0f;
+            if (Mathf.Abs(varValue.y) < 0.001f) varValue.y = 0f;
+            if (Mathf.Abs(varValue.z) < 0.001f) varValue.z = 0f;
+            if (varValue.z > 0f) {
+                //Debug.Log($"{unitController.gameObject.name}.CharacterAnimator.SetVelocity({varValue.x}, {varValue.y}, {varValue.z})");
             }
 
             if (unitController.UnitProfile.UnitPrefabProps.RotateModel || controlsManager.GamepadModeActive == true) {

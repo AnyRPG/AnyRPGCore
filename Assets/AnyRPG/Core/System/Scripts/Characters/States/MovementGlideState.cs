@@ -54,7 +54,7 @@ namespace AnyRPG {
                 unitController.UnitAnimator.SetJumping(0);
             }
         }
-
+        /*
         public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementGlideState.Update()");
             if (unitController.InWater == true) {
@@ -102,13 +102,82 @@ namespace AnyRPG {
 
             // multiply normalized movement by calculated speed to get actual movement
             unitMovementController.intendedLocalMoveVelocity = unitMovementController.NormalizedGlideMovement(calculatedSpeed) * calculatedSpeed;
-            unitMovementController.adjustedlocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
+            unitMovementController.adjustedLocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
             //Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
 
             unitMovementController.CalculateTurnVelocity();
 
             unitMovementController.MoveRelative();
         }
+        */
+
+        public void Update(bool isReplay, double timeInterval) {
+            // 1. State Transitions (Stay the same)
+            //Debug.Log($"{unitController.gameObject.name}.MovementGlideState.Update()");
+            if (unitController.InWater == true) {
+                if (unitMovementController.CheckForSwimming() == true) {
+                    //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() swimming");
+                    unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
+                    return;
+                }
+            }
+
+            if (unitController.CanFly
+                && unitMovementController.CurrentMovementData.InputFly) {
+                //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() flying");
+                unitMovementController.ChangeState(CharacterMovementState.Fly, isReplay);
+                return;
+            }
+
+            if (unitMovementController.touchingGround) {
+                if (unitMovementController.groundAngle <= unitMovementController.slopeLimit) {
+                    if (unitMovementController.CurrentMovementData.HasMoveInput() || unitMovementController.CurrentMovementData.HasTurnInput()) {
+                        //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() moving");
+                        unitMovementController.ChangeState(CharacterMovementState.Move, isReplay);
+                        return;
+                    }
+                    //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() idling");
+                    unitMovementController.ChangeState(CharacterMovementState.Idle, isReplay);
+                    return;
+                }
+            }
+
+            if (unitController.CanGlide == false) {
+                //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() falling");
+                unitMovementController.ChangeState(CharacterMovementState.Fall, isReplay);
+                return;
+            }
+
+            // 2. Velocity Calculations
+            float clampValue = unitMovementController.MaxMovementSpeed;
+            float calculatedSpeed = Mathf.Clamp(unitController.GlideSpeed, 0, clampValue);
+
+            // 3. World-Space Direction (The Truth)
+            // You should create a 'WorldNormalizedGlideMovement' similar to the Fly/Swim ones
+            unitMovementController.intendedWorldMoveVelocity = unitMovementController.WorldNormalizedGlideMovement(calculatedSpeed) * calculatedSpeed;
+            unitMovementController.adjustedWorldMoveVelocity = unitMovementController.intendedWorldMoveVelocity;
+
+            // 4. Character Rotation (Face where we glide)
+            if (unitController.UnitProfile.UnitPrefabProps.RotateModel || unitMovementController.CurrentMovementData.GamepadModeActive) {
+                Vector3 horizontalDir = new Vector3(unitMovementController.intendedWorldMoveVelocity.x, 0, unitMovementController.intendedWorldMoveVelocity.z);
+                if (horizontalDir.sqrMagnitude > 0.001f) {
+                    unitController.UnitMotor.FaceDirection(horizontalDir);
+                }
+            }
+
+            unitMovementController.CalculateTurnVelocity();
+
+            // 5. Derive Local Velocity (Physics-Safe for Animator)
+            Quaternion physicsRot = unitController.UnitMotor.MovementBody.GetRotation();
+            unitMovementController.intendedLocalMoveVelocity = Quaternion.Inverse(physicsRot) * unitMovementController.intendedWorldMoveVelocity;
+
+            // 6. Execute Physics
+            unitMovementController.MoveWorld();
+
+        }
+
+
+
     }
 
 }

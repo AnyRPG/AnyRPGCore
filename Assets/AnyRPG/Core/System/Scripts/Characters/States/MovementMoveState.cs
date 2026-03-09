@@ -191,8 +191,13 @@ namespace AnyRPG {
 
                 // 8. DERIVE LOCAL VALUES FOR ANIMATOR
                 // This is safe because FaceDirection updated the rotation first
-                unitMovementController.intendedLocalMoveVelocity = unitController.transform.InverseTransformDirection(unitMovementController.intendedWorldMoveVelocity);
-                unitMovementController.adjustedlocalMoveVelocity = unitController.transform.InverseTransformDirection(unitMovementController.adjustedWorldMoveVelocity);
+                //unitMovementController.intendedLocalMoveVelocity = unitController.transform.InverseTransformDirection(unitMovementController.intendedWorldMoveVelocity);
+                //unitMovementController.adjustedLocalMoveVelocity = unitController.transform.InverseTransformDirection(unitMovementController.adjustedWorldMoveVelocity);
+
+                // Use the "Truth" (the Rigidbody's current rotation) to localize the velocity
+                Quaternion physicsRot = unitController.UnitMotor.MovementBody.GetRotation();
+                unitMovementController.intendedLocalMoveVelocity = Quaternion.Inverse(physicsRot) * unitMovementController.intendedWorldMoveVelocity;
+                unitMovementController.adjustedLocalMoveVelocity = Quaternion.Inverse(physicsRot) * unitMovementController.adjustedWorldMoveVelocity;
 
             } else {
                 unitMovementController.currentTurnVelocity = Vector3.zero;

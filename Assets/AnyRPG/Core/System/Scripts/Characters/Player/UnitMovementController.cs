@@ -52,7 +52,7 @@ namespace AnyRPG {
         //public Vector3 localInput;
 
         // travel vector rotated by ground angle from the perspective of the character
-        public Vector3 adjustedlocalMoveVelocity;
+        public Vector3 adjustedLocalMoveVelocity;
         public Vector3 adjustedWorldMoveVelocity;
         public Vector3 currentTurnVelocity;
 
@@ -321,7 +321,7 @@ namespace AnyRPG {
             //if (controlsManager.GamePadModeActive) {
                 //relativeMovement = CameraRelativeInput(adjustedlocalMoveVelocity);
             //} else {
-                relativeMovement = CharacterRelativeInput(adjustedlocalMoveVelocity);
+                relativeMovement = CharacterRelativeInput(adjustedLocalMoveVelocity);
             //}
             //Debug.Log($"{unitController.gameObject.name}.UnitMovementController.MoveRelative() adjustedLocalMoveVelocity: {adjustedlocalMoveVelocity} relativeMovement: ({relativeMovement.x}, {relativeMovement.y}, {relativeMovement.z})");
             if (relativeMovement.magnitude > 0.1 || currentMovementData.InputJump) {
@@ -402,11 +402,14 @@ namespace AnyRPG {
 
         public bool CheckForSwimming() {
             if (unitController.InWater == true) {
+                //Debug.Log($"{unitController.gameObject.name}.UnitMovementController.CheckForSwimming() IN WATER = TRUE; player chest height: {(unitController.UnitMotor.MovementBody.GetPosition().y + unitController.FloatHeight)}; water surface height: {unitController.CurrentWater[0].SurfaceHeight}");
                 if ((unitController.UnitMotor.MovementBody.GetPosition().y + unitController.FloatHeight) <= unitController.CurrentWater[0].SurfaceHeight) {
                     return true;
                 }
+            } else {
+                //Debug.Log($"{unitController.gameObject.name}.UnitMovementController.CheckForSwimming() called but not in water");
             }
-            return false;
+                return false;
         }
 
         public void CalculateTurnVelocity() {
@@ -435,7 +438,7 @@ namespace AnyRPG {
             ChangeState(CharacterMovementState.Knockback, false);
         }
 
-        public Vector3 NormalizedGlideMovement(float calculatedSpeed) {
+        public Vector3 LocalNormalizedGlideMovement(float calculatedSpeed) {
             // it's safe to check for touching ground here because although we should be gliding
             // we can still reach this block of code if we touch ground that is too sloped to walk on
             if (touchingSlope == true && (unitController.transform.InverseTransformPoint(slopePoint).z > 0f)) {
@@ -447,6 +450,27 @@ namespace AnyRPG {
                 return returnValue;
             }
         }
+
+        public Vector3 WorldNormalizedGlideMovement(float calculatedSpeed) {
+            // 1. Get the current Physics Forward (Stable Reference)
+            Quaternion physicsRot = unitController.UnitMotor.MovementBody.GetRotation();
+            Vector3 characterForward = physicsRot * Vector3.forward;
+
+            // 2. Handle Slope Interaction (Sliding down steep terrain)
+            if (touchingSlope && unitController.transform.InverseTransformPoint(slopePoint).z > 0f) {
+                // Use the world slope direction, scaled by the glide fall speed ratio
+                return (slopeDirection * (unitController.GlideFallSpeed / calculatedSpeed)).normalized;
+            } else {
+                // 3. Standard Glide (Forward + Constant Sink)
+                float glideGravityRatio = -unitController.GlideFallSpeed / calculatedSpeed;
+
+                // Construct the world vector: (Character Forward) + (Downwards Sink)
+                Vector3 worldGlideVector = characterForward + (Vector3.up * glideGravityRatio);
+
+                return worldGlideVector.normalized;
+            }
+        }
+
 
         private Vector3 CharacterRelativeInput(Vector3 inputVector) {
             //Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.CharacterRelativeInput({inputVector})");
@@ -720,7 +744,7 @@ namespace AnyRPG {
             // 4. Return the final World Direction
             return returnValue.normalized;
         }
-
+        /*
         public Vector3 NormalizedLocalMovement(float calculatedSpeed, Vector3 directionOfTravel, double timeInterval) {
             //Debug.Log("UnitMovementController.NormalizedLocalMovement(" + directionOfTravel + ")");
 
@@ -794,6 +818,7 @@ namespace AnyRPG {
             }
             return newReturnValue;
         }
+        */
 
         public Vector3 NormalizedWorldMovement(float calculatedSpeed, double timeInterval) {
             // 1. Start with our "Truth": The stable World-Space intent from the camera
