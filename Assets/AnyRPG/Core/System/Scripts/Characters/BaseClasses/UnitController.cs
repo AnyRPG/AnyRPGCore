@@ -1583,7 +1583,7 @@ namespace AnyRPG {
         protected void Update() {
             // with new network code that requests save data before the configuration is complete, we need to check if the unit is initialized
             // because it may take a while to get the save data back
-            if (isInitialized == false) {
+            if (isInitialized == false || isStateReset == true) {
                 return;
             }
 
@@ -1629,6 +1629,9 @@ namespace AnyRPG {
         }
 
         public void FixedUpdate() {
+            if (isInitialized == false || isStateReset == true) {
+                return;
+            }
             if (target != null) {
                 // prevent distance calculation if no movement has occured
                 if (rigidBody.position != lastPosition || target.transform.position != lastTargetPosition) {
