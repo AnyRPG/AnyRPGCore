@@ -8,6 +8,7 @@ using FishNet.Transporting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Overlays;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -115,6 +116,17 @@ namespace AnyRPG {
                 return;
             }
             BeginCharacterRequest();
+            StartCoroutine(DelayedModelSpawn());
+            
+        }
+
+        private IEnumerator DelayedModelSpawn() {
+            // Wait for the next network tick
+            uint currentTick = base.TimeManager.Tick;
+            while (base.TimeManager.Tick == currentTick) {
+                yield return null;
+            }
+
             CompleteCharacterRequest(false, null, -1, -1, string.Empty);
             SubscribeToServerUnitEvents();
         }
