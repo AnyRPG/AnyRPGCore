@@ -115,9 +115,7 @@ namespace AnyRPG {
             if (systemGameManager == null) {
                 return;
             }
-            BeginCharacterRequest();
             StartCoroutine(DelayedModelSpawn());
-            
         }
 
         private IEnumerator DelayedModelSpawn() {
@@ -126,7 +124,7 @@ namespace AnyRPG {
             while (base.TimeManager.Tick == currentTick) {
                 yield return null;
             }
-
+            BeginCharacterRequest();
             CompleteCharacterRequest(false, null, -1, -1, string.Empty);
             SubscribeToServerUnitEvents();
         }
