@@ -308,7 +308,7 @@ namespace AnyRPG {
         */
 
         private void SpawnPrefab(NetworkObject networkObject, NetworkConnection networkConnection, Scene scene) {
-            Debug.Log($"FishNetClientConnector.SpawnPrefab(object: {networkObject.gameObject.name}, client: {(networkConnection == null ? "null" : networkConnection.ClientId)}, {scene.name}({scene.handle}))");
+            Debug.Log($"FishNetClientConnector.SpawnPrefab(object: {networkObject.gameObject.name}, client: {(networkConnection == null ? "null" : networkConnection.ClientId)}, sceneName: {scene.name}(sceneHandle: {scene.handle}))");
 
             //fishNetNetworkManager.ServerManager.Spawn(networkObject, null, scene);
             fishNetNetworkManager.ServerManager.Spawn(networkObject, networkConnection, scene);
