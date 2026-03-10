@@ -272,15 +272,6 @@ namespace AnyRPG {
                 }
             }
 
-            //SpawnedNetworkObject spawnedNetworkObject = nob.gameObject.GetComponent<SpawnedNetworkObject>();
-            /*
-            if (spawnedNetworkObject != null) {
-                //Debug.Log($"FishNetClientConnector.SpawnPrefab({clientSpawnRequestId}, {prefab.name}) setting spawnRequestId on gameobject");
-                spawnedNetworkObject.clientSpawnRequestId.Value = clientSpawnRequestId;
-                spawnedNetworkObject.serverSpawnRequestId.Value = serverSpawnRequestId;
-            }
-            */
-
             return nob;
         }
 
