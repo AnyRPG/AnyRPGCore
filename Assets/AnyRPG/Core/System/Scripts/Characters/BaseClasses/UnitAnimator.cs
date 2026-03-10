@@ -1072,7 +1072,7 @@ namespace AnyRPG {
         }
 
         public void SetBool(string varName, bool varValue) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetBool({varName}, {varValue})");
+            Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetBool({varName}, {varValue})");
 
             if (animator != null) {
                 //if (animator.enabled == false) {
@@ -1085,7 +1085,8 @@ namespace AnyRPG {
         }
 
         public void SetFloat(string varName, float varValue) {
-            //Debug.Log($"{gameObject.name}.CharacterAnimator.SetFloat(" + varName + ", " + varValue + ")");
+            Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetFloat({varName}, {varValue})");
+
             if (animator != null && ParameterExists(varName)) {
                 animator.SetFloat(varName, varValue);
             }

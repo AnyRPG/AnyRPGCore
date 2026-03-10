@@ -12,14 +12,14 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay, bool isSilent) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Enter(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+            Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Enter(isReplay: {isReplay}, isSilent: {isSilent}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             unitMovementController.EnterGroundStateCommon(isReplay);
             unitMovementController.CalculateFallDamage(isReplay);
         }
 
         public void Exit(bool isReplay, bool isSilent) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+            Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Exit(isReplay: {isReplay}, isSilent: {isSilent}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             if (isReplay == false) {
                 unitController.UnitAnimator.SetMoving(false);
@@ -121,7 +121,7 @@ namespace AnyRPG {
         */
 
         public void Update(bool isReplay, double timeInterval) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Update()");
+            Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Update(isreplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             float calculatedSpeed = 0f;
 

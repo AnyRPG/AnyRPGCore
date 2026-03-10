@@ -350,12 +350,12 @@ namespace AnyRPG {
         }
         */
 
-        private GameObject SpawnModelPrefab(GameMode spawnMode, GameObject spawnPrefab, Transform parentTransform, Vector3 position, Vector3 forward) {
-            //Debug.Log($"CharacterManager.SpawnModelPrefab({spawnMode}, {spawnPrefab.name}, {parentTransform.gameObject.name}, {position}, {forward})");
+        private GameObject SpawnModelPrefab(GameMode spawnMode, GameObject spawnPrefab, Transform parentTransform, Vector3 position, Vector3 forward, int accountId) {
+            Debug.Log($"CharacterManager.SpawnModelPrefab({spawnMode}, {spawnPrefab.name}, {parentTransform.gameObject.name}, {position}, {forward}, accountId: {accountId})");
 
             if (spawnMode == GameMode.Network) {
                 if (networkManagerServer.ServerModeActive == true) {
-                    return networkManagerServer.SpawnModelPrefab(spawnPrefab, parentTransform, position, forward);
+                    return networkManagerServer.SpawnModelPrefab(spawnPrefab, parentTransform, position, forward, accountId);
                 } else {
                     // this function should be necessary anymore because clients don't spawn their own models for networked units, they wait for the server to spawn them
                     //return networkManagerClient.RequestSpawnModelPrefab(spawnPrefab, parentTransform, position, forward);
@@ -373,15 +373,15 @@ namespace AnyRPG {
         /// <param name="settingsTransform"></param>
         /// <returns></returns>
         public GameObject SpawnModelPrefab(UnitController unitController, UnitProfile unitProfile, Transform parentTransform, Vector3 position, Vector3 forward) {
-            //Debug.Log($"CharacterManager.SpawnModelPrefab({unitController.gameObject.name}, {unitProfile.ResourceName}, {parentTransform.gameObject.name}, {position}, {forward})");
+            Debug.Log($"CharacterManager.SpawnModelPrefab({unitController.gameObject.name}, {unitProfile.ResourceName}, {parentTransform.gameObject.name}, {position}, {forward})");
 
             if (localUnits.Contains(unitController)) {
-                return SpawnModelPrefab(GameMode.Local, unitProfile.UnitPrefabProps.ModelPrefab, parentTransform, position, forward);
+                return SpawnModelPrefab(GameMode.Local, unitProfile.UnitPrefabProps.ModelPrefab, parentTransform, position, forward, -1);
             }
 
             if (networkManagerServer.ServerModeActive == true) {
                 // this is happening on the server, spawn the network model prefab
-                return SpawnModelPrefab(GameMode.Network, unitProfile.UnitPrefabProps.NetworkModelPrefab, parentTransform, position, forward);
+                return SpawnModelPrefab(GameMode.Network, unitProfile.UnitPrefabProps.NetworkModelPrefab, parentTransform, position, forward, unitController.CharacterRequestData.accountId);
             }
 
             // clients don't spawn their own models for networked units, they wait for the server to spawn them

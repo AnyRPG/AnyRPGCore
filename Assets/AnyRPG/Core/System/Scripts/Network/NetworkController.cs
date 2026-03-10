@@ -133,7 +133,7 @@ namespace AnyRPG {
         public abstract void ReturnObjectToPool(GameObject returnedObject);
         //public abstract void AdvertiseAddSpawnRequest(int accountId, SpawnPlayerRequest loadSceneRequest);
         public abstract UnitController SpawnCharacterPrefab(CharacterRequestData characterRequestData, Transform parentTransform, Vector3 position, Vector3 forward, Scene scene);
-        public abstract GameObject SpawnModelPrefabServer(GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward);
+        public abstract GameObject SpawnModelPrefabServer(GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward, int clientId);
         public abstract void AdvertiseMessageFeedMessage(int accountId, string message);
         public abstract void AdvertiseSystemMessage(int accountId, string message);
         public abstract void AdvertiseAddToBuyBackCollection(UnitController sourceUnitController, int accountId, Interactable interactable, int componentIndex, InstantiatedItem newInstantiatedItem);
