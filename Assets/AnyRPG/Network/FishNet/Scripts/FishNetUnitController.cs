@@ -115,9 +115,12 @@ namespace AnyRPG {
             if (systemGameManager == null) {
                 return;
             }
-            StartCoroutine(DelayedModelSpawn());
+            BeginCharacterRequest();
+            CompleteCharacterRequest(false, null, -1, -1, string.Empty);
+            SubscribeToServerUnitEvents();
+            //StartCoroutine(DelayedModelSpawn());
         }
-
+        /*
         private IEnumerator DelayedModelSpawn() {
             // Wait for the next network tick
             uint currentTick = base.TimeManager.Tick;
@@ -128,6 +131,7 @@ namespace AnyRPG {
             CompleteCharacterRequest(false, null, -1, -1, string.Empty);
             SubscribeToServerUnitEvents();
         }
+        */
 
         public override void OnStopServer() {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStopServer() {GetInstanceID()}");
