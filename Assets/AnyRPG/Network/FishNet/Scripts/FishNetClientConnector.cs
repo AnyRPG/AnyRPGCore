@@ -250,6 +250,7 @@ namespace AnyRPG {
 
             NetworkObject nob = GetSpawnablePrefab(prefab, parentTransform, position, forward);
             SpawnPrefab(nob, networkConnection, default);
+            /*
             if (parentTransform != null) {
                 NetworkObject nob2 = parentTransform.GetComponent<NetworkObject>();
                 if (nob2 == null) {
@@ -261,6 +262,7 @@ namespace AnyRPG {
             } else {
                 Debug.Log($"FishNetClientConnector.SpawnModelPrefabServer(gameObject: {prefab.name}, parent: {(parentTransform == null ? "null" : parentTransform.name)} position: {position}, forward: {forward}) parentTransform was null");
             }
+            */
         }
 
         private NetworkObject GetSpawnablePrefab(GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward) {
@@ -282,7 +284,7 @@ namespace AnyRPG {
                     //nob = fishNetNetworkManager.GetPooledInstantiated(networkPrefab, position, Quaternion.LookRotation(forward), true);
                 } else {
                     Debug.Log($"FishNetClientConnector.SpawnPrefab(gameObject: {prefab.name}, parent: {(parentTransform == null ? "null" : parentTransform.name)} position: {position}, forward: {forward}) found a network object on {parentTransform.gameObject.name}");
-                    //nob.SetParent(nob2);
+                    nob.SetParent(nob2);
                     //nob = fishNetNetworkManager.GetPooledInstantiated(networkPrefab, position,Quaternion.LookRotation(forward), parentTransform, true);
                 }
             } else {
