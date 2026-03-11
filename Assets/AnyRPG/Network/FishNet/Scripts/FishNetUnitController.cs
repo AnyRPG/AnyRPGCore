@@ -79,7 +79,7 @@ namespace AnyRPG {
         }
 
         public override void OnStartClient() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.OnStartClient() owner: {base.OwnerId} instanceId: {GetInstanceID()}");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStartClient() owner: {base.OwnerId} instanceId: {GetInstanceID()}");
 
             base.OnStartClient();
 
