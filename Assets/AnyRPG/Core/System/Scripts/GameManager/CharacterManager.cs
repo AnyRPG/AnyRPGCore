@@ -379,13 +379,13 @@ namespace AnyRPG {
                 return SpawnModelPrefab(GameMode.Local, unitProfile.UnitPrefabProps.ModelPrefab, parentTransform, position, forward, -1);
             }
 
-            if (networkManagerServer.ServerModeActive == true) {
+            //if (networkManagerServer.ServerModeActive == true) {
                 // this is happening on the server, spawn the network model prefab
                 return SpawnModelPrefab(GameMode.Network, unitProfile.UnitPrefabProps.NetworkModelPrefab, parentTransform, position, forward, unitController.CharacterRequestData.accountId);
-            }
+            //}
 
             // clients don't spawn their own models for networked units, they wait for the server to spawn them
-            return null;
+            //return null;
             /*
 
             if (networkUnownedUnits.Contains(unitController)) {
