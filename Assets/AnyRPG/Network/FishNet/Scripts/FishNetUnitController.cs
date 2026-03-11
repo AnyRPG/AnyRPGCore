@@ -122,7 +122,7 @@ namespace AnyRPG {
             BeginCharacterRequest();
             CompleteCharacterRequest(false, null, -1, -1, string.Empty);
             SubscribeToServerUnitEvents();
-            if (base.OwnerId == -1) {
+            if (base.OwnerId != -1) {
                 ConfigureModel();
             }
             //StartCoroutine(DelayedModelSpawn());
@@ -2291,9 +2291,11 @@ namespace AnyRPG {
             unitProfile = systemGameManager.SystemDataFactory.GetResource<UnitProfile>(unitProfileName.Value);
             if (networkManagerServer.ServerModeActive == true) {
                 systemGameManager.CharacterManager.CompleteCharacterRequest(unitController);
+                /*
                 if (base.OwnerId != -1) {
                     systemGameManager.CharacterManager.CompleteModelRequest(unitController, false);
                 }
+                */
             } else {
                 // first load items if this came from a character that included saveData
                 if (playerCharacterSaveData != null) {

@@ -100,7 +100,7 @@ namespace AnyRPG {
 
         // on the network
         public UnitController SpawnUnitPrefab(CharacterRequestData characterRequestData, Transform parentTransform, Vector3 position, Vector3 forward, Scene scene) {
-            Debug.Log($"CharacterManager.SpawnUnitPrefab({characterRequestData.characterConfigurationRequest.unitProfile.ResourceName}, {position}, {forward}, {scene.name})");
+            //Debug.Log($"CharacterManager.SpawnUnitPrefab({characterRequestData.characterConfigurationRequest.unitProfile.ResourceName}, {position}, {forward}, {scene.name})");
 
             return networkManagerServer.SpawnCharacterPrefab(characterRequestData, parentTransform, position, forward, scene);
         }
@@ -176,7 +176,7 @@ namespace AnyRPG {
         }
 
         public void CompleteModelRequest(UnitController unitController, bool isServerOwner) {
-            //Debug.Log($"CharacterManager.CompleteModelRequest({unitController.gameObject.name}, {isServerOwner})");
+            Debug.Log($"CharacterManager.CompleteModelRequest({unitController.gameObject.name}, {isServerOwner})");
 
             unitController.UnitModelController.SetInitialSavedAppearance();
 
@@ -351,7 +351,11 @@ namespace AnyRPG {
         */
 
         private GameObject SpawnModelPrefab(GameMode spawnMode, GameObject spawnPrefab, Transform parentTransform, Vector3 position, Vector3 forward, int accountId) {
-            Debug.Log($"CharacterManager.SpawnModelPrefab(spawnMode: {spawnMode}, gameObject: {spawnPrefab.name}, parentTransform: {parentTransform.gameObject.name}, position: {position}, forward: {forward}, accountId: {accountId})");
+            //Debug.Log($"CharacterManager.SpawnModelPrefab(spawnMode: {spawnMode}, gameObject: {spawnPrefab.name}, parentTransform: {parentTransform.gameObject.name}, position: {position}, forward: {forward}, accountId: {accountId})");
+            
+            if (accountId != -1) {
+                return LocalSpawnPrefab(spawnPrefab, parentTransform, position, forward);
+            }
 
             if (spawnMode == GameMode.Network) {
                 if (networkManagerServer.ServerModeActive == true) {
@@ -362,6 +366,7 @@ namespace AnyRPG {
                     return null;
                 }
             }
+            
             return LocalSpawnPrefab(spawnPrefab, parentTransform, position, forward);
         }
 
@@ -373,7 +378,7 @@ namespace AnyRPG {
         /// <param name="settingsTransform"></param>
         /// <returns></returns>
         public GameObject SpawnModelPrefab(UnitController unitController, UnitProfile unitProfile, Transform parentTransform, Vector3 position, Vector3 forward) {
-            Debug.Log($"CharacterManager.SpawnModelPrefab(unitController: {unitController.gameObject.name}, unitProfile: {unitProfile.ResourceName}, parentTransform: {parentTransform.gameObject.name}, position: {position}, forward: {forward})");
+            //Debug.Log($"CharacterManager.SpawnModelPrefab(unitController: {unitController.gameObject.name}, unitProfile: {unitProfile.ResourceName}, parentTransform: {parentTransform.gameObject.name}, position: {position}, forward: {forward})");
 
             if (localUnits.Contains(unitController)) {
                 return SpawnModelPrefab(GameMode.Local, unitProfile.UnitPrefabProps.ModelPrefab, parentTransform, position, forward, -1);

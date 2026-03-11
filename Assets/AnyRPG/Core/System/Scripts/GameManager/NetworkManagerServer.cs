@@ -813,7 +813,7 @@ namespace AnyRPG {
         }
 
         public GameObject SpawnModelPrefab(GameObject spawnPrefab, Transform parentTransform, Vector3 position, Vector3 forward, int accountId) {
-            Debug.Log($"NetworkManagerServer.SpawnModelPrefab(gameObject: {spawnPrefab.gameObject.name} parent: {parentTransform.gameObject.name} position: {position} forward: {forward} accountId: {accountId})");
+            //Debug.Log($"NetworkManagerServer.SpawnModelPrefab(gameObject: {spawnPrefab.gameObject.name} parent: {parentTransform.gameObject.name} position: {position} forward: {forward} accountId: {accountId})");
 
             int clientId = GetClientIDForAccount(accountId);
 
