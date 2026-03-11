@@ -27,7 +27,7 @@ namespace AnyRPG {
         }
 
         public void Exit(bool isReplay, bool isSilent) {
-            Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+            Debug.Log($"{unitController.gameObject.name}.MovementSwimState.Exit(isReplay: {isReplay}) frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)}");
 
             unitController.StopSwimming();
             unitController.RigidBody.useGravity = true;

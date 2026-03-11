@@ -129,7 +129,7 @@ namespace AnyRPG {
         }
 
         private void ConfigureModel() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.ConfigureModel()");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.ConfigureModel()");
             /*
             OfflineTickSmoother smoother = GetComponentInChildren<OfflineTickSmoother>();
             if (smoother != null) {

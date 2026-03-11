@@ -36,7 +36,7 @@ namespace AnyRPG {
 
 
         public void Exit(bool isReplay, bool isSilent) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+            //Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Exit(isReplay: {isReplay}) frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)}");
 
             unitController.StopFlying(isReplay);
             unitController.RigidBody.useGravity = true;

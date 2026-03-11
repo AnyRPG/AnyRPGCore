@@ -14,7 +14,7 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay, bool isSilent) {
-            Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Enter(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+            Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Enter(isReplay: {isReplay}) frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)}");
 
             if (isSilent) return;
 
@@ -28,7 +28,7 @@ namespace AnyRPG {
         }
 
         public void Exit(bool isReplay, bool isSilent) {
-            Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+            Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Exit(isReplay: {isReplay}) frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)}");
         }
 
         public void Update(bool isReplay, double timeInterval) {
