@@ -157,6 +157,7 @@ MonoBehaviour:
   NetworkBehaviours:
   - {fileID: -7309775362673279277}
   - {fileID: -594503450825869110}
+  - {fileID: 5085593337565238894}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -167,7 +168,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584284388179274074
+  _initializedTimestamp: -8584284237386942694
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -228,9 +229,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.NetworkTransform
-  _componentIndexCache: 255
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 1186824742570145722}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 1186824742570145722}
   _componentConfiguration: 0
   _synchronizeParent: 1
   _packing:
