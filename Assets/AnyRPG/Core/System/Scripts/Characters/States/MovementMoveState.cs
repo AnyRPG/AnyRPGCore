@@ -12,14 +12,14 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay, bool isSilent) {
-            Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Enter(isReplay: {isReplay}, isSilent: {isSilent}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+            Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Enter(isReplay: {isReplay}, isSilent: {isSilent}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
 
             unitMovementController.EnterGroundStateCommon(isReplay);
             unitMovementController.CalculateFallDamage(isReplay);
         }
 
         public void Exit(bool isReplay, bool isSilent) {
-            Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Exit(isReplay: {isReplay}, isSilent: {isSilent}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position}");
+            Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Exit(isReplay: {isReplay}, isSilent: {isSilent}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
 
             if (isReplay == false) {
                 unitController.UnitAnimator.SetMoving(false);
