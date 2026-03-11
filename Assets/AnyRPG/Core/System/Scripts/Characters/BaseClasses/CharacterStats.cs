@@ -1400,6 +1400,7 @@ namespace AnyRPG {
                 }
                 if (unitController.UnitMovementController != null) {
                     unitController.UnitMovementController.intendedLocalMoveVelocity = new Vector3(0, 0, 0);
+                    unitController.UnitMovementController.intendedWorldMoveVelocity = new Vector3(0, 0, 0);
                 }
                 if (systemGameManager.GameMode == GameMode.Local
                     || networkManagerServer.ServerModeActive

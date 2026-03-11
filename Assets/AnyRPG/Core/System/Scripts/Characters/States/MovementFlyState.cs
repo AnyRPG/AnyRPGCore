@@ -173,12 +173,9 @@ namespace AnyRPG {
 
                     // 4. DERIVE LOCAL VELOCITY (For the Animator)
                     // This is calculated AFTER FaceDirection so it reflects the correct strafe angles
-                    //unitMovementController.intendedLocalMoveVelocity = unitController.transform.InverseTransformDirection(unitMovementController.intendedWorldMoveVelocity);
-
                     // Use the "Truth" (the Rigidbody's current rotation) to localize the velocity
                     Quaternion physicsRot = unitController.UnitMotor.MovementBody.GetRotation();
                     unitMovementController.intendedLocalMoveVelocity = Quaternion.Inverse(physicsRot) * unitMovementController.intendedWorldMoveVelocity;
-
 
                     unitMovementController.adjustedLocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
                 }

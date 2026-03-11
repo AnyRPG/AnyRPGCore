@@ -104,6 +104,6 @@ MonoBehaviour:
     EnableTeleport: 0
     TeleportThreshold: 0
     AdaptiveInterpolationValue: 0
-    InterpolationValue: 1
+    InterpolationValue: 0
     SmoothedProperties: 4294967295
     SnapNonSmoothedProperties: 0

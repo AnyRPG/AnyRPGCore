@@ -94,7 +94,7 @@ namespace AnyRPG {
             } else {
                 BeginCharacterRequest();
                 CompleteClientCharacterRequest(null, -1, -1, string.Empty);
-                ConfigureModel();
+                //ConfigureModel();
             }
         }
 
@@ -129,6 +129,8 @@ namespace AnyRPG {
         }
 
         private void ConfigureModel() {
+            Debug.Log($"{gameObject.name}.FishNetUnitController.ConfigureModel()");
+
             OfflineTickSmoother smoother = GetComponentInChildren<OfflineTickSmoother>();
             if (smoother != null) {
                 smoother.SetTargetTransform(unitController.transform);
@@ -224,7 +226,6 @@ namespace AnyRPG {
                     fishNetSpawnClientRequest.CharacterGroupId,
                     fishNetSpawnClientRequest.GuildId,
                     fishNetSpawnClientRequest.GuildName);
-                ConfigureModel();
             }
             if (unitControllerMode.Value == UnitControllerMode.Player
                 || unitControllerMode.Value == UnitControllerMode.Pet) {
@@ -2307,6 +2308,9 @@ namespace AnyRPG {
                 characterConfigurationRequest.unitControllerMode = unitControllerMode.Value;
                 CharacterRequestData characterRequestData = new CharacterRequestData(null, GameMode.Network, characterConfigurationRequest);
                 characterRequestData.isOwner = isOwner;
+                if (base.OwnerId != -1) {
+                    characterRequestData.accountId = systemGameManager.NetworkManagerClient.AccountId;
+                }
                 characterRequestData.characterId = characterId.Value;
                 characterRequestData.characterGroupId = characterGroupId;
                 characterRequestData.characterGuildId = guildId;
@@ -2321,7 +2325,7 @@ namespace AnyRPG {
                 unitController.SetCharacterRequestData(characterRequestData);
                 if (unitControllerMode.Value == UnitControllerMode.Player) {
                     systemGameManager.CharacterManager.CompleteNetworkCharacterRequest(unitController);
-                    systemGameManager.CharacterManager.CompleteModelRequest(unitController, false);
+                    //systemGameManager.CharacterManager.CompleteModelRequest(unitController, false);
                 } else {
                     systemGameManager.CharacterManager.CompleteNetworkCharacterRequest(unitController);
                 }

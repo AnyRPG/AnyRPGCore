@@ -351,7 +351,7 @@ namespace AnyRPG {
         */
 
         private GameObject SpawnModelPrefab(GameMode spawnMode, GameObject spawnPrefab, Transform parentTransform, Vector3 position, Vector3 forward, int accountId) {
-            //Debug.Log($"CharacterManager.SpawnModelPrefab(spawnMode: {spawnMode}, gameObject: {spawnPrefab.name}, parentTransform: {parentTransform.gameObject.name}, position: {position}, forward: {forward}, accountId: {accountId})");
+            Debug.Log($"CharacterManager.SpawnModelPrefab(spawnMode: {spawnMode}, gameObject: {spawnPrefab.name}, parentTransform: {parentTransform.gameObject.name}, position: {position}, forward: {forward}, accountId: {accountId})");
             
             if (accountId != -1) {
                 return LocalSpawnPrefab(spawnPrefab, parentTransform, position, forward);

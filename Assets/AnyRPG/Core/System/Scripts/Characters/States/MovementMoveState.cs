@@ -19,7 +19,7 @@ namespace AnyRPG {
         }
 
         public void Exit(bool isReplay, bool isSilent) {
-            Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Exit(isReplay: {isReplay}, isSilent: {isSilent}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+            Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Exit(isReplay: {isReplay}, isSilent: {isSilent}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position}");
 
             if (isReplay == false) {
                 unitController.UnitAnimator.SetMoving(false);
@@ -121,7 +121,7 @@ namespace AnyRPG {
         */
 
         public void Update(bool isReplay, double timeInterval) {
-            Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Update(isreplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+            //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Update(isreplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             float calculatedSpeed = 0f;
 

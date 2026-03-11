@@ -12,7 +12,7 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay, bool isSilent) {
-            Debug.Log($"{unitController.gameObject.name}.MovementIdleState.Enter(isReplay: {isReplay}, isSilent: {isSilent}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} pVelocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
+            Debug.Log($"{unitController.gameObject.name}.MovementIdleState.Enter(isReplay: {isReplay}, isSilent: {isSilent}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position}");
 
             // 1. PERSISTENT PHYSICS & STATE (Always run during replays)
             // We must freeze position and reset velocity every replay to ensure 
@@ -21,6 +21,7 @@ namespace AnyRPG {
 
             // Reset local move velocity for deterministic simulation
             unitMovementController.intendedLocalMoveVelocity = Vector3.zero;
+            unitMovementController.intendedWorldMoveVelocity = Vector3.zero;
 
             //if (isSilent) return;
 
@@ -43,7 +44,7 @@ namespace AnyRPG {
 
 
         public void Exit(bool isReplay, bool isSilent) {
-            Debug.Log($"{unitController.gameObject.name}.MovementIdleState.Exit(isReplay: {isReplay}, isSilent: {isSilent}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} pVelocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
+            Debug.Log($"{unitController.gameObject.name}.MovementIdleState.Exit(isReplay: {isReplay}, isSilent: {isSilent}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position}");
 
             unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
         }

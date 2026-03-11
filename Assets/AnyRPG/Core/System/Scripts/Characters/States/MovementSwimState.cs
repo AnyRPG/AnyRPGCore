@@ -156,12 +156,9 @@ namespace AnyRPG {
 
                     // 3. Derive Local Velocity ONLY for Animator blend trees
                     // This is now safe because FaceDirection updated the Rigidbody rotation for this tick
-                    //unitMovementController.intendedLocalMoveVelocity = unitController.transform.InverseTransformDirection(unitMovementController.intendedWorldMoveVelocity);
-
                     // Use the "Truth" (the Rigidbody's current rotation) to localize the velocity
                     Quaternion physicsRot = unitController.UnitMotor.MovementBody.GetRotation();
                     unitMovementController.intendedLocalMoveVelocity = Quaternion.Inverse(physicsRot) * unitMovementController.intendedWorldMoveVelocity;
-
                     unitMovementController.adjustedLocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
                 }
 
@@ -176,7 +173,7 @@ namespace AnyRPG {
                 unitMovementController.intendedWorldMoveVelocity = Vector3.zero;
                 unitMovementController.adjustedWorldMoveVelocity = Vector3.zero;
                 unitMovementController.intendedLocalMoveVelocity = Vector3.zero;
-                unitMovementController.adjustedLocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
+                unitMovementController.adjustedLocalMoveVelocity = Vector3.zero;
                 if (isReplay == false) {
                     // ============ ANIMATOR PARAMETERS ============
                     unitController.UnitAnimator.SetMoving(false);
