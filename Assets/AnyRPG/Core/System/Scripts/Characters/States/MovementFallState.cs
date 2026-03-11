@@ -12,7 +12,7 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay, bool isSilent) {
-            Debug.Log($"{unitController.gameObject.name}.MovementFallState.Enter(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
+            Debug.Log($"{unitController.gameObject.name}.MovementFallState.Enter(isReplay: {isReplay}, isSilent: {isSilent}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
             
             if (isSilent) return;
 
@@ -30,7 +30,7 @@ namespace AnyRPG {
         }
 
         public void Exit(bool isReplay, bool isSilent) {
-            Debug.Log($"{unitController.gameObject.name}.MovementFallState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
+            Debug.Log($"{unitController.gameObject.name}.MovementFallState.Exit(isReplay: {isReplay}, isSilent: {isSilent}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
             
             if (isSilent) return;
             unitMovementController.currentFallDistance = unitMovementController.fallStartHeight - unitController.transform.position.y;
