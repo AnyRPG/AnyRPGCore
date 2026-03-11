@@ -130,12 +130,13 @@ namespace AnyRPG {
 
         private void ConfigureModel() {
             Debug.Log($"{gameObject.name}.FishNetUnitController.ConfigureModel()");
-
+            /*
             OfflineTickSmoother smoother = GetComponentInChildren<OfflineTickSmoother>();
             if (smoother != null) {
                 smoother.SetTargetTransform(unitController.transform);
                 smoother.Initialize(base.TimeManager);
             }
+            */
             networkAnimator = GetComponent<NetworkAnimator>();
             animator = GetComponentInChildren<Animator>();
 

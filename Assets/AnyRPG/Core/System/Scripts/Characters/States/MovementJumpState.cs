@@ -45,7 +45,7 @@ namespace AnyRPG {
         */
 
         public void Enter(bool isReplay, bool isSilent) {
-            Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Enter(isReplay: {isReplay}, isSilent: {isSilent}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position}");
+            Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Enter(isReplay: {isReplay}, isSilent: {isSilent}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
             
             // 1. Determine the "Base" horizontal world velocity we are jumping WITH
             // If we were moving, intendedWorldMoveVelocity should already be set from the previous state's Update
@@ -88,11 +88,11 @@ namespace AnyRPG {
 
 
         public void Exit(bool isReplay, bool isSilent) {
-            Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Exit(isReplay: {isReplay}, isSilent: {isSilent}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position}");
+            Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Exit(isReplay: {isReplay}, isSilent: {isSilent}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
         }
 
         public void Update(bool isReplay, double timeInterval) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Update(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} position: {unitController.RigidBody.position} transform.forward: {unitController.transform.forward}");
+            //Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Update(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
 
             if (unitController.InWater == true) {
                 if (unitMovementController.CheckForSwimming() == true) {
