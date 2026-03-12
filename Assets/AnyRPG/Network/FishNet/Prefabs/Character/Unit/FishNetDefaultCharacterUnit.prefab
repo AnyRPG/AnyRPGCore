@@ -86,7 +86,7 @@ PrefabInstance:
     - target: {fileID: 7989242567668304555, guid: ba09f14eb0109ba459f4520b82c3fadc,
         type: 3}
       propertyPath: m_UUID
-      value: a9d36f3b-860c-46cd-807e-5e09ae426204
+      value: 8927058f-0afd-42c3-b6ae-dee684b60df1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -104,6 +104,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8873413205694323065}
+    - targetCorrespondingSourceObject: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2119713025537333558}
   m_SourcePrefab: {fileID: 100100000, guid: ba09f14eb0109ba459f4520b82c3fadc, type: 3}
 --- !u!1 &4649811912837811180 stripped
 GameObject:
@@ -133,7 +137,7 @@ MonoBehaviour:
     Rotation: 1
     Scale: 0
   _useScaledTime: 1
-  _interpolation: 2
+  _interpolation: 1
   _extrapolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
@@ -228,3 +232,26 @@ MonoBehaviour:
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
+--- !u!114 &2119713025537333558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4649811912837811180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8cac635f24954048aad3a6ff9110beb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Animating.NetworkAnimator
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 8873413205694323065, guid: 52481e2ce051acc469292f8e9bfcb7e0,
+    type: 3}
+  _networkObjectCache: {fileID: 0}
+  IgnoredParameters: []
+  _animator: {fileID: 0}
+  _synchronizeWhenDisabled: 0
+  _smoothFloats: 1
+  _interpolation: 2
+  _clientAuthoritative: 0
+  _sendToOwner: 0

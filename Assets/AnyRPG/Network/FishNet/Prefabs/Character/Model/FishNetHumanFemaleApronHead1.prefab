@@ -213,18 +213,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2985534377770187114, guid: 49ede4650496e4f4d9d3d3f4162f7386,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2194425872866134470}
+      addedObject: {fileID: -5886490251045198714}
     - targetCorrespondingSourceObject: {fileID: 2985534377770187114, guid: 49ede4650496e4f4d9d3d3f4162f7386,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: -5886490251045198714}
+      addedObject: {fileID: -3300774507461593391}
   m_SourcePrefab: {fileID: 100100000, guid: 49ede4650496e4f4d9d3d3f4162f7386, type: 3}
---- !u!95 &4409005227905130603 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 8414206017104574890, guid: 49ede4650496e4f4d9d3d3f4162f7386,
-    type: 3}
-  m_PrefabInstance: {fileID: 5326259930357356993}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6954704190252621995 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2985534377770187114, guid: 49ede4650496e4f4d9d3d3f4162f7386,
@@ -266,7 +260,7 @@ MonoBehaviour:
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
   - {fileID: 5360433006120305568}
-  - {fileID: 2194425872866134470}
+  - {fileID: 0}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -302,28 +296,6 @@ MonoBehaviour:
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
---- !u!114 &2194425872866134470
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6954704190252621995}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8cac635f24954048aad3a6ff9110beb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _componentIndexCache: 1
-  _addedNetworkObject: {fileID: -4507861128287439834}
-  _networkObjectCache: {fileID: -4507861128287439834}
-  IgnoredParameters: []
-  _animator: {fileID: 4409005227905130603}
-  _synchronizeWhenDisabled: 0
-  _smoothFloats: 1
-  _interpolation: 2
-  _clientAuthoritative: 0
-  _sendToOwner: 0
 --- !u!114 &-5886490251045198714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,3 +320,49 @@ MonoBehaviour:
     InterpolationValue: 1
     SmoothedProperties: 4294967295
     SnapNonSmoothedProperties: 0
+--- !u!114 &-3300774507461593391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6954704190252621995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.NetworkTransform
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: -4507861128287439834}
+  _networkObjectCache: {fileID: 0}
+  _componentConfiguration: 0
+  _synchronizeParent: 0
+  _packing:
+    Position: 1
+    Rotation: 1
+    Scale: 0
+  _useScaledTime: 1
+  _interpolation: 1
+  _extrapolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  _clientAuthoritative: 0
+  _sendToOwner: 0
+  _interval: 1
+  _synchronizePosition: 1
+  _positionSensitivity: 0.001
+  _positionSnapping:
+    X: 0
+    Y: 0
+    Z: 0
+  _synchronizeRotation: 1
+  _rotationSnapping:
+    X: 0
+    Y: 0
+    Z: 0
+  _synchronizeScale: 1
+  _scaleSensitivity: 0.001
+  _scaleSnapping:
+    X: 0
+    Y: 0
+    Z: 0

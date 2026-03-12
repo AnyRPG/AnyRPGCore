@@ -122,21 +122,27 @@ namespace AnyRPG {
             BeginCharacterRequest();
             CompleteCharacterRequest(false, null, -1, -1, string.Empty);
             SubscribeToServerUnitEvents();
+            /*
             if (base.OwnerId != -1) {
                 ConfigureModel();
             }
+            */
             //StartCoroutine(DelayedModelSpawn());
         }
 
+        /*
         private void ConfigureModel() {
+            // this code is for the usage of local models rather than a spawned networkObject
             //Debug.Log($"{gameObject.name}.FishNetUnitController.ConfigureModel()");
-            /*
-            OfflineTickSmoother smoother = GetComponentInChildren<OfflineTickSmoother>();
-            if (smoother != null) {
-                smoother.SetTargetTransform(unitController.transform);
-                smoother.Initialize(base.TimeManager);
+            
+            if (base.IsServerInitialized == true) {
+                OfflineTickSmoother smoother = GetComponentInChildren<OfflineTickSmoother>();
+                if (smoother != null) {
+                    smoother.SetTargetTransform(unitController.transform);
+                    smoother.Initialize(base.TimeManager);
+                }
             }
-            */
+
             networkAnimator = GetComponent<NetworkAnimator>();
             animator = GetComponentInChildren<Animator>();
 
@@ -148,6 +154,7 @@ namespace AnyRPG {
             }
             systemGameManager.CharacterManager.CompleteNetworkModelRequest(unitController, animator.gameObject, base.OwnerId == -1);
         }
+        */
 
         private void HandleSetTrigger(string triggerName) {
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.HandleSetTrigger({triggerName})");
@@ -228,10 +235,12 @@ namespace AnyRPG {
                     fishNetSpawnClientRequest.GuildId,
                     fishNetSpawnClientRequest.GuildName);
             }
+            /*
             if (unitControllerMode.Value == UnitControllerMode.Player
                 || unitControllerMode.Value == UnitControllerMode.Pet) {
                 ConfigureModel();
             }
+            */
 
             foreach (NetworkObject interactionNetworkObject in fishNetSpawnClientRequest.InteractionPoints) {
                 if (interactionNetworkObject != null) {
@@ -2324,12 +2333,12 @@ namespace AnyRPG {
                     //Debug.Log($"{gameObject.name}.FishNetUnitController.CompleteCharacterRequest({isOwner}, isMounted: {saveData.isMounted})");
                 }
                 unitController.SetCharacterRequestData(characterRequestData);
-                if (unitControllerMode.Value == UnitControllerMode.Player) {
+                //if (unitControllerMode.Value == UnitControllerMode.Player) {
+                    //systemGameManager.CharacterManager.CompleteNetworkCharacterRequest(unitController);
+                    ////systemGameManager.CharacterManager.CompleteModelRequest(unitController, false);
+                //} else {
                     systemGameManager.CharacterManager.CompleteNetworkCharacterRequest(unitController);
-                    //systemGameManager.CharacterManager.CompleteModelRequest(unitController, false);
-                } else {
-                    systemGameManager.CharacterManager.CompleteNetworkCharacterRequest(unitController);
-                }
+                //}
             }
 
             if (unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) {
@@ -2550,9 +2559,13 @@ namespace AnyRPG {
 
         [Reconcile]
         private void ReconcileState(ReconcileData data, Channel channel = Channel.Unreliable) {
-            // Call reconcile on your PredictionRigidbody field passing in
-            // values from data.
+
+            // here we are unlocking the constraints because the Reconcile() method will be unable to properly set velocity
+            // if the rigidbody is constrained in any way. This is because the constraints will override any changes to velocity that we try to make in the Reconcile() method.
+            //RigidbodyConstraints originalConstraints = unitController.RigidBody.constraints;
+            unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
             predictionRigidbody.Reconcile(data.PredictionRigidbody);
+            //unitController.RigidBody.constraints = originalConstraints;
 
             if (unitController.UnitMovementController.CurrentCharacterMovementState != data.CharacterMovementState) {
                 unitController.UnitMovementController.SetStateSilently(data.CharacterMovementState);

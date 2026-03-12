@@ -353,9 +353,12 @@ namespace AnyRPG {
         private GameObject SpawnModelPrefab(GameMode spawnMode, GameObject spawnPrefab, Transform parentTransform, Vector3 position, Vector3 forward, int accountId) {
             //Debug.Log($"CharacterManager.SpawnModelPrefab(spawnMode: {spawnMode}, gameObject: {spawnPrefab.name}, parentTransform: {parentTransform.gameObject.name}, position: {position}, forward: {forward}, accountId: {accountId})");
             
+            /*
+            // this code is for local models
             if (accountId != -1) {
                 return LocalSpawnPrefab(spawnPrefab, parentTransform, position, forward);
             }
+            */
 
             if (spawnMode == GameMode.Network) {
                 if (networkManagerServer.ServerModeActive == true) {
@@ -384,13 +387,13 @@ namespace AnyRPG {
                 return SpawnModelPrefab(GameMode.Local, unitProfile.UnitPrefabProps.ModelPrefab, parentTransform, position, forward, -1);
             }
 
-            //if (networkManagerServer.ServerModeActive == true) {
+            if (networkManagerServer.ServerModeActive == true) {
                 // this is happening on the server, spawn the network model prefab
                 return SpawnModelPrefab(GameMode.Network, unitProfile.UnitPrefabProps.NetworkModelPrefab, parentTransform, position, forward, unitController.CharacterRequestData.accountId);
-            //}
+            }
 
             // clients don't spawn their own models for networked units, they wait for the server to spawn them
-            //return null;
+            return null;
             /*
 
             if (networkUnownedUnits.Contains(unitController)) {

@@ -28,7 +28,6 @@ namespace AnyRPG {
             if (systemGameManager == null) {
                 return;
             }
-            networkAnimator = GetComponent<NetworkAnimator>();
             animator = GetComponent<Animator>();
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.FindGameManager(): animator: {animator.GetInstanceID()}");
             unitController = GetComponentInParent<UnitController>();
@@ -42,12 +41,15 @@ namespace AnyRPG {
         private void CompleteSharedConfiguration() {
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.CompleteSharedConfiguration(): ownerId: {base.OwnerId}");
 
+            networkAnimator = GetComponentInParent<NetworkAnimator>();
+
             unitController.UnitEventController.OnInitializeAnimator += HandleInitializeAnimator;
             //unitController.UnitModelController.OnModelCreated += HandleModelCreated;
 
             // clients are authoritative for their own animators, and server is authoritative for all others
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.FindGameManager(): IsOwner: {base.IsOwner}, OwnerId: {base.OwnerId}, ServerModeActive: {systemGameManager.NetworkManagerServer.ServerModeActive}");
-            if (base.IsOwner || (systemGameManager.NetworkManagerServer.ServerModeActive == true && base.OwnerId == -1)) {
+            //if (base.IsOwner || (systemGameManager.NetworkManagerServer.ServerModeActive == true && base.OwnerId == -1)) {
+            if (systemGameManager.NetworkManagerServer.ServerModeActive == true) {
                 unitController.UnitEventController.OnAnimatorSetTrigger += HandleSetTrigger;
                 unitController.UnitEventController.OnAnimatorResetTrigger += HandleResetTrigger;
             }

@@ -23,7 +23,7 @@ namespace AnyRPG {
             unitMovementController.intendedLocalMoveVelocity = Vector3.zero;
             unitMovementController.intendedWorldMoveVelocity = Vector3.zero;
 
-            //if (isSilent) return;
+            if (isSilent) return;
 
             // Ensure Grounded flags are set correctly for every replayed tick
             unitMovementController.EnterGroundStateCommon(isReplay);

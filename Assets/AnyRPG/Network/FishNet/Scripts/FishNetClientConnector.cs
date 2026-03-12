@@ -242,11 +242,14 @@ namespace AnyRPG {
             //Debug.Log($"FishNetClientConnector.SpawnModelPrefabServer(gameObject: {prefab.name}, parent: {(parentTransform == null ? "null" : parentTransform.gameObject.name)}, position: {position}, forward: {forward}, clientId: {clientId})");
 
             NetworkConnection networkConnection = null;
+            // sending null networkconnection for now to test server owned models again
+            /*
             if (clientId != -1) {
                 if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId)) {
                     networkConnection = fishNetNetworkManager.ServerManager.Clients[clientId];
                 }
             }
+            */
 
             NetworkObject nob = GetSpawnablePrefab(prefab, parentTransform, position, forward);
             SpawnPrefab(nob, networkConnection, default);
