@@ -46,7 +46,9 @@ namespace AnyRPG {
 
         public void Enter(bool isReplay, bool isSilent) {
             Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Enter(isReplay: {isReplay}, isSilent: {isSilent}) frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
-            
+
+            if (isSilent) return;
+
             // 1. Determine the "Base" horizontal world velocity we are jumping WITH
             // If we were moving, intendedWorldMoveVelocity should already be set from the previous state's Update
             Vector3 currentWorldVelocity = unitMovementController.intendedWorldMoveVelocity;

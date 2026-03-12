@@ -16,9 +16,9 @@ namespace AnyRPG {
         public void Enter(bool isReplay, bool isSilent) {
             Debug.Log($"{unitController.gameObject.name}.MovementKnockbackState.Enter(isReplay: {isReplay}) frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)}");
 
-            if (isSilent) return;
+			unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
 
-            unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+			if (isSilent) return;
 
             if (isReplay == false) {
                 unitMovementController.lastKnockbackFrame = unitMovementController.CurrentMovementData.SimulatedTick;
