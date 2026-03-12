@@ -716,7 +716,7 @@ namespace AnyRPG {
         private void HandleActivateMountedStateServer(UnitController mountUnitController) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleActivateMountedStateServer({mountUnitController.gameObject.name})");
 
-            HandleActiveateMountedStateClient();
+            //HandleActiveateMountedStateClient();
         }
 
         [ObserversRpc]
@@ -733,13 +733,17 @@ namespace AnyRPG {
                 return;
             }
 
-            HandleSetMountedStateClient(targetNetworkCharacterUnit, unitProfile.ResourceName);
+            //HandleSetMountedStateClient(targetNetworkCharacterUnit, unitProfile.ResourceName);
         }
 
         [ObserversRpc]
         private void HandleSetMountedStateClient(FishNetUnitController targetNetworkCharacterUnit, string unitProfileName) {
             UnitProfile unitProfile = systemDataFactory.GetResource<UnitProfile>(unitProfileName);
             if (unitProfile == null) {
+                return;
+            }
+            if (targetNetworkCharacterUnit == null) {
+                Debug.LogWarning($"{gameObject.name}.FishNetUnitController.HandleSetMountedStateClient(): targetNetworkCharacterUnit is null");
                 return;
             }
             unitController.UnitMountManager.SetMountedState(targetNetworkCharacterUnit.UnitController, unitProfile);
