@@ -716,14 +716,14 @@ namespace AnyRPG {
         private void HandleActivateMountedStateServer(UnitController mountUnitController) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleActivateMountedStateServer({mountUnitController.gameObject.name})");
 
-            //HandleActiveateMountedStateClient();
+            HandleActiveateMountedStateClient();
         }
 
         [ObserversRpc]
         public void HandleActiveateMountedStateClient() {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleActivateMountedStateClient()");
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleActivateMountedStateClient() tick: {base.TimeManager.Tick}");
 
-            unitController.UnitMountManager.ActivateMountedState();
+            //unitController.UnitMountManager.ActivateMountedState();
         }
 
         private void HandleSetMountedStateServer(UnitController sourceUnitController, UnitProfile unitProfile) {
@@ -733,11 +733,13 @@ namespace AnyRPG {
                 return;
             }
 
-            //HandleSetMountedStateClient(targetNetworkCharacterUnit, unitProfile.ResourceName);
+            HandleSetMountedStateClient(targetNetworkCharacterUnit, unitProfile.ResourceName);
         }
 
         [ObserversRpc]
         private void HandleSetMountedStateClient(FishNetUnitController targetNetworkCharacterUnit, string unitProfileName) {
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetMountedStateClient({targetNetworkCharacterUnit.gameObject.name}, {unitProfileName}) tick: {base.TimeManager.Tick}");
+
             UnitProfile unitProfile = systemDataFactory.GetResource<UnitProfile>(unitProfileName);
             if (unitProfile == null) {
                 return;
