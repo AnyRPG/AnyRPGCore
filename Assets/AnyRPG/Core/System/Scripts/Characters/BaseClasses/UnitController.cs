@@ -746,8 +746,11 @@ namespace AnyRPG {
         */
 
         public void SetRider(UnitController riderUnitController) {
+            Debug.Log($"{gameObject.name}.UnitController.SetRider({(riderUnitController == null ? "null" : riderUnitController.gameObject.name)})");
+
             this.riderUnitController = riderUnitController;
             characterStats.CalculateRunSpeed();
+
             unitEventController.NotifyOnSetRider(riderUnitController);
         }
 

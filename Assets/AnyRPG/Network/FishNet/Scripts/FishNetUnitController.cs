@@ -113,13 +113,14 @@ namespace AnyRPG {
 
         public override void OnStartServer() {
             base.OnStartServer();
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStartServer()");
+            Debug.Log($"{gameObject.name}.FishNetUnitController.OnStartServer()");
 
             Configure();
             if (systemGameManager == null) {
                 return;
             }
             BeginCharacterRequest();
+            SubscribeToEarlyServerUnitEvents();
             CompleteCharacterRequest(false, null, -1, -1, string.Empty);
             SubscribeToServerUnitEvents();
             /*
@@ -347,7 +348,20 @@ namespace AnyRPG {
             //unitController.UnitEventController.OnDespawn -= HandleDespawnClient;
         }
 
+        public void SubscribeToEarlyServerUnitEvents() {
+            Debug.Log($"{gameObject.name}.FishNetUnitController.SubscribeToEarlyServerUnitEvents()");
+
+            if (unitController == null) {
+                // something went wrong
+                return;
+            }
+            unitController.UnitEventController.OnSetRider += HandleSetRiderServer;
+            unitController.UnitEventController.OnRiderMounted += HandleRiderMountedServer;
+        }
+
         public void SubscribeToServerUnitEvents() {
+            Debug.Log($"{gameObject.name}.FishNetUnitController.SubscribeToServerUnitEvents()");
+
             if (unitController == null) {
                 // something went wrong
                 return;
@@ -458,8 +472,6 @@ namespace AnyRPG {
             unitController.UnitEventController.OnReachDestination += HandleReachDestinationServer;
             unitController.UnitEventController.OnSetParent += HandleSetParent;
             unitController.UnitEventController.OnUnsetParent += HandleUnsetParent;
-            unitController.UnitEventController.OnSetRider += HandleSetRiderServer;
-            unitController.UnitEventController.OnRiderMounted += HandleRiderMountedServer;
         }
 
         public void UnsubscribeFromServerUnitEvents() {

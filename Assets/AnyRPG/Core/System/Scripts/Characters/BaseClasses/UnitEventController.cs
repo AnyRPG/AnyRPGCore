@@ -1072,10 +1072,14 @@ namespace AnyRPG {
         }
 
         public void NotifyOnSetRider(UnitController riderUnitController) {
+            Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnSetRider({riderUnitController.gameObject.name})");
+
             OnSetRider(riderUnitController);
         }
 
         public void NotifyOnRiderMounted() {
+            Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnRiderMounted()");
+
             OnRiderMounted();
         }
 
