@@ -1,6 +1,3 @@
-using JetBrains.Annotations;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +12,8 @@ namespace AnyRPG {
         Swim = 6,
         Fly = 7,
         Glide = 8,
-        NavMesh = 9
+        NavMesh = 9,
+        Riding = 10
     }
 
     public class UnitMovementController : ConfiguredClass {
@@ -286,6 +284,7 @@ namespace AnyRPG {
             movementStates.Add(CharacterMovementState.Fly, new MovementFlyState(this, unitController));
             movementStates.Add(CharacterMovementState.Glide, new MovementGlideState(this, unitController));
             movementStates.Add(CharacterMovementState.NavMesh, new MovementNavMeshState(this, unitController, systemGameManager));
+            movementStates.Add(CharacterMovementState.Riding, new MovementRidingState(this, unitController));
             ChangeState(CharacterMovementState.Idle, false);
         }
 
