@@ -61,7 +61,7 @@ namespace AnyRPG {
         }
 
         public void PostInit(UnitController mountUnitController) {
-            //Debug.Log($"{mountUnitController.gameObject.name}.CharacterAbilityManager.PostInit()");
+            Debug.Log($"{mountUnitController.gameObject.name}.CharacterAbilityManager.PostInit()");
 
             SetMountedState(mountUnitController, mountUnitController.CharacterRequestData.characterConfigurationRequest.unitProfile);
         }
@@ -117,7 +117,7 @@ namespace AnyRPG {
 
 
         public void HandleMountUnitSpawn() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn()");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn()");
 
             string originalPrefabSourceBone = mountUnitProfile.UnitPrefabProps.TargetBone;
             // NOTE: mount effects used sheathed position for character position.  do not use regular position to avoid putting mount below ground when spawning

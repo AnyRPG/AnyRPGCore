@@ -570,15 +570,21 @@ namespace AnyRPG {
         }
 
         private void HandleRiderMountedServer() {
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRiderMountedServer()");
+
             HandleRiderMountedClient();
         }
 
         [ObserversRpc]
         private void HandleRiderMountedClient() {
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRiderMountedClient()");
+
             unitController.RiderUnitController.UnitMountManager.HandleMountUnitSpawn();
         }
 
         private void HandleSetRiderServer(UnitController riderUnitController) {
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetRiderServer({(riderUnitController == null ? "null" : riderUnitController.gameObject.name)})");
+
             FishNetUnitController fishNetUnitController = null;
             fishNetUnitController = riderUnitController.GetComponent<FishNetUnitController>();
             if (fishNetUnitController != null) {
@@ -588,6 +594,8 @@ namespace AnyRPG {
 
         [ObserversRpc]
         private void HandleSetRiderClient(FishNetUnitController riderNetworkCharacterUnit) {
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetRiderClient({(riderNetworkCharacterUnit == null ? "null" : riderNetworkCharacterUnit.gameObject.name)})");
+            
             riderNetworkCharacterUnit.unitController.UnitMountManager.PostInit(unitController);
         }
 
