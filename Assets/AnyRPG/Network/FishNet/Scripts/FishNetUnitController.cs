@@ -372,7 +372,7 @@ namespace AnyRPG {
         */
 
         public void SubscribeToServerUnitEvents() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.SubscribeToServerUnitEvents()");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.SubscribeToServerUnitEvents()");
 
             if (unitController == null) {
                 // something went wrong
