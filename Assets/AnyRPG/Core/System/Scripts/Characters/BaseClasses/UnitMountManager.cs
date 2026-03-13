@@ -61,7 +61,7 @@ namespace AnyRPG {
         }
 
         public void PostInit(UnitController mountUnitController) {
-            Debug.Log($"{mountUnitController.gameObject.name}.CharacterAbilityManager.PostInit()");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.PostInit({mountUnitController.gameObject.name})");
 
             SetMountedState(mountUnitController, mountUnitController.CharacterRequestData.characterConfigurationRequest.unitProfile);
         }

@@ -10,7 +10,6 @@ using FishNet.Transporting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Overlays;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -120,7 +119,6 @@ namespace AnyRPG {
                 return;
             }
             BeginCharacterRequest();
-            SubscribeToEarlyServerUnitEvents();
             CompleteCharacterRequest(false, null, -1, -1, string.Empty);
             SubscribeToServerUnitEvents();
             /*
@@ -222,6 +220,18 @@ namespace AnyRPG {
                 }
             }
             HandleSpawnServerUnitClient(connection, fishNetSpawnClientRequest);
+            if (unitController.UnitControllerMode == UnitControllerMode.Mount && unitController.RiderUnitController != null) {
+                FishNetUnitController riderUnitController = unitController.RiderUnitController.GetComponent<FishNetUnitController>();
+                if (riderUnitController != null) {
+                    HandleSpawnMountClient(connection, riderUnitController);
+                }
+            }
+        }
+
+        [TargetRpc]
+        private void HandleSpawnMountClient(NetworkConnection networkConnection, FishNetUnitController riderUnitController) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnMountClient() owner: {base.OwnerId}");
+            riderUnitController.unitController.UnitMountManager.PostInit(unitController);
         }
 
         [TargetRpc]
@@ -348,6 +358,7 @@ namespace AnyRPG {
             //unitController.UnitEventController.OnDespawn -= HandleDespawnClient;
         }
 
+        /*
         public void SubscribeToEarlyServerUnitEvents() {
             Debug.Log($"{gameObject.name}.FishNetUnitController.SubscribeToEarlyServerUnitEvents()");
 
@@ -358,6 +369,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnSetRider += HandleSetRiderServer;
             unitController.UnitEventController.OnRiderMounted += HandleRiderMountedServer;
         }
+        */
 
         public void SubscribeToServerUnitEvents() {
             Debug.Log($"{gameObject.name}.FishNetUnitController.SubscribeToServerUnitEvents()");
@@ -577,10 +589,11 @@ namespace AnyRPG {
             unitController.UnitEventController.OnSetGroupId -= HandleSetGroupId;
             unitController.UnitEventController.OnSetGuildId -= HandleSetGuildId;
             unitController.UnitEventController.OnReachDestination -= HandleReachDestinationServer;
-            unitController.UnitEventController.OnSetRider -= HandleSetRiderServer;
-            unitController.UnitEventController.OnRiderMounted -= HandleRiderMountedServer;
+            //unitController.UnitEventController.OnSetRider -= HandleSetRiderServer;
+            //unitController.UnitEventController.OnRiderMounted -= HandleRiderMountedServer;
         }
 
+        /*
         private void HandleRiderMountedServer() {
             Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRiderMountedServer()");
 
@@ -610,6 +623,7 @@ namespace AnyRPG {
             
             riderNetworkCharacterUnit.unitController.UnitMountManager.PostInit(unitController);
         }
+        */
 
         [ObserversRpc]
         private void HandleSetGroupId(int newGroupId) {

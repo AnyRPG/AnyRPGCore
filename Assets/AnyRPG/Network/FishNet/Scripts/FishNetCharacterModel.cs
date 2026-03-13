@@ -145,7 +145,7 @@ namespace AnyRPG {
         }
 
         public override void OnSpawnServer(NetworkConnection connection) {
-            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.OnSpawnServer() owner: {base.OwnerId}");
+            Debug.Log($"{gameObject.name}.FishNetCharacterModel.OnSpawnServer() owner: {base.OwnerId}");
 
             base.OnSpawnServer(connection);
 
@@ -154,7 +154,11 @@ namespace AnyRPG {
 
         [TargetRpc]
         private void HandleSpawnServerClient(NetworkConnection networkConnection) {
-            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.HandleSpawnServerClient() owner: {base.OwnerId}");
+            Debug.Log($"{gameObject.name}.FishNetCharacterModel.HandleSpawnServerClient() owner: {base.OwnerId}");
+
+            if (unitController?.RiderUnitController != null) {
+                unitController.RiderUnitController.UnitMountManager.HandleMountUnitSpawn();
+            }
         }
 
 
