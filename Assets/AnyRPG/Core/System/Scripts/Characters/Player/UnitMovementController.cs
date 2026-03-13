@@ -1376,26 +1376,26 @@ namespace AnyRPG {
                 return;
             }
 
-            if (unitController.IsMounted) {
-                return;
-            }
-
             if (unitController.CharacterStats.IsReviving == true) {
                 return;
             }
 
             currentMovementData = movementData;
 
-            if (movementData.HasAnyInput() == true
+            if (unitController.IsMounted == false) {
+                if (movementData.HasAnyInput() == true
                 && (networkManagerServer.ServerModeActive == true || systemGameManager.GameMode == GameMode.Local)) {
-                unitController.UnitMotor.StopFollowingTarget();
+                    unitController.UnitMotor.StopFollowingTarget();
+                }
+
+                EarlyGlobalStateUpdate();
             }
-            // debug transform forward
-            EarlyGlobalStateUpdate();
 
             currentIMovementState.Update(isReplay, timeInterval);
 
-            LateGlobalStateUpdate(timeInterval);
+            if (unitController.IsMounted == false) {
+                LateGlobalStateUpdate(timeInterval);
+            }
         }
 
         public void AddMovementData(MovementData frameData) {

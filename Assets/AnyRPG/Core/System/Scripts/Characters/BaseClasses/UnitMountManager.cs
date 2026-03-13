@@ -141,7 +141,6 @@ namespace AnyRPG {
                     //}
                 }
             }
-            unitController.UnitEventController.NotifyOnMountUnitSpawn();
         }
 
         public void ActivateMountedState(bool lateJoin = false) {
@@ -172,6 +171,7 @@ namespace AnyRPG {
                 unitController.SetUnTargeted();
                 mountUnitController.SetTargeted();
             }
+            unitController.UnitMovementController.ChangeState(CharacterMovementState.Riding, false);
         }
 
         public void ConfigureCharacterMountedPhysics() {
@@ -253,6 +253,7 @@ namespace AnyRPG {
             if (unitController.CharacterCombat.GetInCombat() == true) {
                 unitController.UnitModelController.HoldWeapons();
             }
+            unitController.UnitMovementController.ChangeState(CharacterMovementState.Idle, false);
         }
 
         public void DespawnMountUnit() {

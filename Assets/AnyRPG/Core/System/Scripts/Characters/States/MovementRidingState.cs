@@ -23,8 +23,10 @@ namespace AnyRPG {
 
         public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementIdleState.Update()");
-
-
+            if (unitController.transform.parent == null) {
+                return;
+            }
+            unitController.UnitMotor.SetPosition(unitController.transform.parent.position);
         }
     }
 

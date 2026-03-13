@@ -174,7 +174,6 @@ namespace AnyRPG {
         //public event System.Action<Transform, Vector3, Vector3> OnHandleMountUnitSpawn = delegate { };
         public event System.Action<Transform> OnSetParent = delegate { };
         public event System.Action OnUnsetParent = delegate { };
-        public event System.Action OnMountUnitSpawn = delegate { };
         public event System.Action OnDespawnMountUnit = delegate { };
         public event System.Action<string> OnWriteMessageFeedMessage = delegate { };
         public event System.Action<UnitController, Item> OnItemCountChanged = delegate { };
@@ -983,12 +982,6 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnUnSetParent()");
 
             OnUnsetParent();
-        }
-
-        public void NotifyOnMountUnitSpawn() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnMountUnitSpawn()");
-
-            OnMountUnitSpawn();
         }
 
         public void NotifyOnDespawnMountUnit() {
