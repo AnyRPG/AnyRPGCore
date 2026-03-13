@@ -746,12 +746,10 @@ namespace AnyRPG {
         */
 
         public void SetRider(UnitController riderUnitController) {
-            Debug.Log($"{gameObject.name}.UnitController.SetRider({(riderUnitController == null ? "null" : riderUnitController.gameObject.name)})");
+            //Debug.Log($"{gameObject.name}.UnitController.SetRider({(riderUnitController == null ? "null" : riderUnitController.gameObject.name)})");
 
             this.riderUnitController = riderUnitController;
             characterStats.CalculateRunSpeed();
-
-            unitEventController.NotifyOnSetRider(riderUnitController);
         }
 
         public override void EnableInteraction() {
@@ -847,7 +845,7 @@ namespace AnyRPG {
         /// set this unit to be a mount
         /// </summary>
         private void SetMountMode() {
-            Debug.Log($"{gameObject.name}.UnitController.SetMountMode()");
+            //Debug.Log($"{gameObject.name}.UnitController.SetMountMode()");
 
             // mount namePlates do not need full initialization, only the position to be set
             namePlateController.SetNameplatePosition();

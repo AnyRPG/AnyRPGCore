@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -1422,6 +1423,8 @@ namespace AnyRPG {
         }
 
         public MovementData ProcessGatheredInput() {
+            //Debug.Log($"{unitController.gameObject.name}.UnitMovementController.ProcessGatheredInput()");
+
             MovementData tickReadyData = new MovementData();
 
             if (accumulatedMovementData.FrameCount > 0) {
@@ -1507,6 +1510,11 @@ namespace AnyRPG {
                 // FREE ROTATE: Forward is the CAMERA
                 Vector3 camForward = tickReadyData.CameraWantedDirection;
                 camForward.y = 0;
+                if (camForward == Vector3.zero) {
+                    // If the camera forward is too small, default to character forward
+                    camForward = unitController.transform.forward;
+                    camForward.y = 0;
+                }
                 headingRotation = Quaternion.LookRotation(camForward.normalized);
             } else {
                 // STRAFE MODE: Heading is the CHARACTER's physical rotation

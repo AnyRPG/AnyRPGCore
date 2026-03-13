@@ -36,7 +36,7 @@ namespace AnyRPG {
         }
 
         public void SummonMount(UnitProfile mountUnitProfile) {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SummonMount({mountUnitProfile.ResourceName})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SummonMount({mountUnitProfile.ResourceName})");
 
             CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(mountUnitProfile);
             characterConfigurationRequest.unitControllerMode = UnitControllerMode.Mount;
@@ -61,13 +61,13 @@ namespace AnyRPG {
         }
 
         public void PostInit(UnitController mountUnitController) {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.PostInit({mountUnitController.gameObject.name})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.PostInit({mountUnitController.gameObject.name})");
 
             SetMountedState(mountUnitController, mountUnitController.CharacterRequestData.characterConfigurationRequest.unitProfile);
         }
 
         public void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SetMountedState({mountUnitController.gameObject.name}, {mountUnitProfile.ResourceName})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SetMountedState({mountUnitController.gameObject.name}, {mountUnitProfile.ResourceName})");
 
             unitController.CharacterPetManager.DespawnAllPets();
 
@@ -77,7 +77,7 @@ namespace AnyRPG {
 
             unitController.UnitEventController.NotifyOnSetMountedState(mountUnitController, mountUnitProfile);
 
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || unitController.IsOwner == true) {
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
                 if (mountUnitController?.UnitModelController != null && mountUnitController.UnitModelController.ModelCreated == false) {
                     SubscribeToMountModelReady();
                 } else {
@@ -142,7 +142,6 @@ namespace AnyRPG {
                 }
             }
             unitController.UnitEventController.NotifyOnMountUnitSpawn();
-            mountUnitController.UnitEventController.NotifyOnRiderMounted();
         }
 
         public void ActivateMountedState(bool lateJoin = false) {

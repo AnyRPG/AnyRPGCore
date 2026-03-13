@@ -110,7 +110,7 @@ namespace AnyRPG {
         }
 
         public override void OnStartClient() {
-            Debug.Log($"{gameObject.name}.FishNetCharacterModel.OnStartClient() owner: {base.OwnerId} instanceId: {GetInstanceID()} tick: {base.TimeManager.Tick}");
+            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.OnStartClient() owner: {base.OwnerId} instanceId: {GetInstanceID()} tick: {base.TimeManager.Tick}");
 
             base.OnStartClient();
 
@@ -154,7 +154,7 @@ namespace AnyRPG {
 
         [TargetRpc]
         private void HandleSpawnServerClient(NetworkConnection networkConnection) {
-            Debug.Log($"{gameObject.name}.FishNetCharacterModel.HandleSpawnServerClient() owner: {base.OwnerId}");
+            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.HandleSpawnServerClient() owner: {base.OwnerId}");
 
             if (unitController?.RiderUnitController != null) {
                 unitController.RiderUnitController.UnitMountManager.HandleMountUnitSpawn();

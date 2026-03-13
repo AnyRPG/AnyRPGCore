@@ -193,8 +193,6 @@ namespace AnyRPG {
         public event Action<Vector3> OnRequestClickToMove = delegate { };
         public event Action<Interactable> OnRequestFollowInteractionTarget = delegate { };
         public event Action<Interactable, float> OnRequestFollowAttackTarget = delegate { };
-        public event Action<UnitController> OnSetRider = delegate { };
-        public event Action OnRiderMounted = delegate { };
 
         //public event System.Action<BaseAbilityProperties, Interactable> OnTargetInAbilityRangeFail = delegate { };
 
@@ -1069,18 +1067,6 @@ namespace AnyRPG {
 
         public void NotifyOnRequestFollowAttackTarget(Interactable target, float attackRange) {
             OnRequestFollowAttackTarget(target, attackRange);
-        }
-
-        public void NotifyOnSetRider(UnitController riderUnitController) {
-            Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnSetRider({riderUnitController.gameObject.name})");
-
-            OnSetRider(riderUnitController);
-        }
-
-        public void NotifyOnRiderMounted() {
-            Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnRiderMounted()");
-
-            OnRiderMounted();
         }
 
         #endregion
