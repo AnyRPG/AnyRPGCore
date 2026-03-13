@@ -1372,6 +1372,8 @@ namespace AnyRPG {
         */
 
         public void StateUpdate(MovementData movementData, double timeInterval, bool isReplay) {
+            Debug.Log($"{unitController.gameObject.name}.UnitMovementController.StateUpdate()");
+
             if (currentIMovementState == null) {
                 return;
             }

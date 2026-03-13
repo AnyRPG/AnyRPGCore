@@ -2545,6 +2545,8 @@ namespace AnyRPG {
         }
 
         private void TimeManager_OnTick() {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.TimeManager_OnTick() instanceId: {GetInstanceID()}");
+
             if (unitController == null
                 || unitController.IsInitialized == false
                 || (unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) == false) {
@@ -2566,6 +2568,7 @@ namespace AnyRPG {
 
         [Replicate]
         private void Replicate(ReplicateData replicateData, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.Replicate() state: {state} channel: {channel}");
 
             if (IsServerInitialized) {
                 // Capture state BEFORE processing movement
