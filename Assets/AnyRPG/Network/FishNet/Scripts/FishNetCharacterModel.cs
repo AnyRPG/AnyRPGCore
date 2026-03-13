@@ -102,6 +102,11 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.CompleteModelRequest() isOwner: {isOwner}");
 
             systemGameManager.CharacterManager.CompleteNetworkModelRequest(unitController, gameObject, base.OwnerId == -1);
+            /*
+            if (unitController.UnitControllerMode == UnitControllerMode.Mount) {
+                
+            }
+            */
         }
 
         public override void OnStartClient() {

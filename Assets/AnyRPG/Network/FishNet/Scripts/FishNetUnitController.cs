@@ -458,6 +458,8 @@ namespace AnyRPG {
             unitController.UnitEventController.OnReachDestination += HandleReachDestinationServer;
             unitController.UnitEventController.OnSetParent += HandleSetParent;
             unitController.UnitEventController.OnUnsetParent += HandleUnsetParent;
+            unitController.UnitEventController.OnSetRider += HandleSetRiderServer;
+            unitController.UnitEventController.OnRiderMounted += HandleRiderMountedServer;
         }
 
         public void UnsubscribeFromServerUnitEvents() {
@@ -563,6 +565,30 @@ namespace AnyRPG {
             unitController.UnitEventController.OnSetGroupId -= HandleSetGroupId;
             unitController.UnitEventController.OnSetGuildId -= HandleSetGuildId;
             unitController.UnitEventController.OnReachDestination -= HandleReachDestinationServer;
+            unitController.UnitEventController.OnSetRider -= HandleSetRiderServer;
+            unitController.UnitEventController.OnRiderMounted -= HandleRiderMountedServer;
+        }
+
+        private void HandleRiderMountedServer() {
+            HandleRiderMountedClient();
+        }
+
+        [ObserversRpc]
+        private void HandleRiderMountedClient() {
+            unitController.RiderUnitController.UnitMountManager.HandleMountUnitSpawn();
+        }
+
+        private void HandleSetRiderServer(UnitController riderUnitController) {
+            FishNetUnitController fishNetUnitController = null;
+            fishNetUnitController = riderUnitController.GetComponent<FishNetUnitController>();
+            if (fishNetUnitController != null) {
+                HandleSetRiderClient(fishNetUnitController);
+            }
+        }
+
+        [ObserversRpc]
+        private void HandleSetRiderClient(FishNetUnitController riderNetworkCharacterUnit) {
+            riderNetworkCharacterUnit.unitController.UnitMountManager.PostInit(unitController);
         }
 
         [ObserversRpc]
@@ -716,14 +742,14 @@ namespace AnyRPG {
         private void HandleActivateMountedStateServer(UnitController mountUnitController) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleActivateMountedStateServer({mountUnitController.gameObject.name})");
 
-            HandleActiveateMountedStateClient();
+            //HandleActiveateMountedStateClient();
         }
 
         [ObserversRpc]
         public void HandleActiveateMountedStateClient() {
             Debug.Log($"{gameObject.name}.FishNetUnitController.HandleActivateMountedStateClient() tick: {base.TimeManager.Tick}");
 
-            //unitController.UnitMountManager.ActivateMountedState();
+            unitController.UnitMountManager.ActivateMountedState();
         }
 
         private void HandleSetMountedStateServer(UnitController sourceUnitController, UnitProfile unitProfile) {
@@ -733,12 +759,12 @@ namespace AnyRPG {
                 return;
             }
 
-            HandleSetMountedStateClient(targetNetworkCharacterUnit, unitProfile.ResourceName);
+            //HandleSetMountedStateClient(targetNetworkCharacterUnit, unitProfile.ResourceName);
         }
 
         [ObserversRpc]
         private void HandleSetMountedStateClient(FishNetUnitController targetNetworkCharacterUnit, string unitProfileName) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetMountedStateClient({targetNetworkCharacterUnit.gameObject.name}, {unitProfileName}) tick: {base.TimeManager.Tick}");
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetMountedStateClient({(targetNetworkCharacterUnit == null? "null" : targetNetworkCharacterUnit.gameObject.name)}, {unitProfileName}) tick: {base.TimeManager.Tick}");
 
             UnitProfile unitProfile = systemDataFactory.GetResource<UnitProfile>(unitProfileName);
             if (unitProfile == null) {

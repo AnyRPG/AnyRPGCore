@@ -142,6 +142,7 @@ namespace AnyRPG {
                 }
             }
             unitController.UnitEventController.NotifyOnMountUnitSpawn();
+            mountUnitController.UnitEventController.NotifyOnRiderMounted();
         }
 
         public void ActivateMountedState(bool lateJoin = false) {

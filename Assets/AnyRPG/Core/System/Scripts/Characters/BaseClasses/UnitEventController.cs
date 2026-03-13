@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace AnyRPG {
 
@@ -196,6 +193,8 @@ namespace AnyRPG {
         public event Action<Vector3> OnRequestClickToMove = delegate { };
         public event Action<Interactable> OnRequestFollowInteractionTarget = delegate { };
         public event Action<Interactable, float> OnRequestFollowAttackTarget = delegate { };
+        public event Action<UnitController> OnSetRider = delegate { };
+        public event Action OnRiderMounted = delegate { };
 
         //public event System.Action<BaseAbilityProperties, Interactable> OnTargetInAbilityRangeFail = delegate { };
 
@@ -1070,6 +1069,14 @@ namespace AnyRPG {
 
         public void NotifyOnRequestFollowAttackTarget(Interactable target, float attackRange) {
             OnRequestFollowAttackTarget(target, attackRange);
+        }
+
+        public void NotifyOnSetRider(UnitController riderUnitController) {
+            OnSetRider(riderUnitController);
+        }
+
+        public void NotifyOnRiderMounted() {
+            OnRiderMounted();
         }
 
         #endregion
