@@ -28,7 +28,6 @@ namespace AnyRPG {
             if (systemGameManager == null) {
                 return;
             }
-            networkAnimator = GetComponent<NetworkAnimator>();
             animator = GetComponent<Animator>();
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.FindGameManager(): animator: {animator.GetInstanceID()}");
             unitController = GetComponentInParent<UnitController>();
@@ -42,12 +41,15 @@ namespace AnyRPG {
         private void CompleteSharedConfiguration() {
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.CompleteSharedConfiguration(): ownerId: {base.OwnerId}");
 
+            networkAnimator = GetComponentInParent<NetworkAnimator>();
+
             unitController.UnitEventController.OnInitializeAnimator += HandleInitializeAnimator;
             //unitController.UnitModelController.OnModelCreated += HandleModelCreated;
 
             // clients are authoritative for their own animators, and server is authoritative for all others
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.FindGameManager(): IsOwner: {base.IsOwner}, OwnerId: {base.OwnerId}, ServerModeActive: {systemGameManager.NetworkManagerServer.ServerModeActive}");
-            if (base.IsOwner || (systemGameManager.NetworkManagerServer.ServerModeActive == true && base.OwnerId == -1)) {
+            //if (base.IsOwner || (systemGameManager.NetworkManagerServer.ServerModeActive == true && base.OwnerId == -1)) {
+            if (systemGameManager.NetworkManagerServer.ServerModeActive == true) {
                 unitController.UnitEventController.OnAnimatorSetTrigger += HandleSetTrigger;
                 unitController.UnitEventController.OnAnimatorResetTrigger += HandleResetTrigger;
             }
@@ -100,10 +102,15 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.CompleteModelRequest() isOwner: {isOwner}");
 
             systemGameManager.CharacterManager.CompleteNetworkModelRequest(unitController, gameObject, base.OwnerId == -1);
+            /*
+            if (unitController.UnitControllerMode == UnitControllerMode.Mount) {
+                
+            }
+            */
         }
 
         public override void OnStartClient() {
-            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.OnStartClient() owner: {base.OwnerId}");
+            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.OnStartClient() owner: {base.OwnerId} instanceId: {GetInstanceID()} tick: {base.TimeManager.Tick}");
 
             base.OnStartClient();
 
@@ -138,7 +145,7 @@ namespace AnyRPG {
         }
 
         public override void OnSpawnServer(NetworkConnection connection) {
-            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.OnSpawnServer() owner: {base.OwnerId}");
+            Debug.Log($"{gameObject.name}.FishNetCharacterModel.OnSpawnServer() owner: {base.OwnerId}");
 
             base.OnSpawnServer(connection);
 
@@ -148,6 +155,10 @@ namespace AnyRPG {
         [TargetRpc]
         private void HandleSpawnServerClient(NetworkConnection networkConnection) {
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.HandleSpawnServerClient() owner: {base.OwnerId}");
+
+            if (unitController?.RiderUnitController != null) {
+                unitController.RiderUnitController.UnitMountManager.HandleMountUnitSpawn();
+            }
         }
 
 

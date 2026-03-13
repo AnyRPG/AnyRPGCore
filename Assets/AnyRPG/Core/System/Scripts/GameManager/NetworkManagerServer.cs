@@ -812,10 +812,12 @@ namespace AnyRPG {
             return networkController.SpawnCharacterPrefab(characterRequestData, parentTransform, position, forward, scene);
         }
 
-        public GameObject SpawnModelPrefab(GameObject spawnPrefab, Transform parentTransform, Vector3 position, Vector3 forward) {
-            Debug.Log($"NetworkManagerServer.SpawnModelPrefab({spawnPrefab.gameObject.name})");
+        public GameObject SpawnModelPrefab(GameObject spawnPrefab, Transform parentTransform, Vector3 position, Vector3 forward, int accountId) {
+            //Debug.Log($"NetworkManagerServer.SpawnModelPrefab(gameObject: {spawnPrefab.gameObject.name} parent: {parentTransform.gameObject.name} position: {position} forward: {forward} accountId: {accountId})");
 
-            return networkController.SpawnModelPrefabServer(spawnPrefab, parentTransform, position, forward);
+            int clientId = GetClientIDForAccount(accountId);
+
+            return networkController.SpawnModelPrefabServer(spawnPrefab, parentTransform, position, forward, clientId);
         }
 
         public void TurnInDialog(Interactable interactable, int componentIndex, Dialog dialog, int clientId) {

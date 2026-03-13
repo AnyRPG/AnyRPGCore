@@ -1,5 +1,7 @@
 using FishNet;
+using FishNet.Component.Animating;
 using FishNet.Component.Transforming;
+using FishNet.Component.Transforming.Beta;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Prediction;
@@ -23,6 +25,8 @@ namespace AnyRPG {
         private UnitProfile unitProfile = null;
         private UnitController unitController = null;
         private NetworkObject networkObject = null;
+        private NetworkAnimator networkAnimator = null;
+        private Animator animator = null;
 
         private PredictionRigidbody predictionRigidbody = new PredictionRigidbody();
         private Rigidbody Rigidbody = null;
@@ -74,7 +78,7 @@ namespace AnyRPG {
         }
 
         public override void OnStartClient() {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStartClient()");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStartClient() owner: {base.OwnerId} instanceId: {GetInstanceID()}");
 
             base.OnStartClient();
 
@@ -86,10 +90,10 @@ namespace AnyRPG {
                 || unitControllerMode.Value == UnitControllerMode.Pet
                 || unitControllerMode.Value == UnitControllerMode.AI) {
                 BeginCharacterRequest();
-                //GetClientSaveData();
             } else {
                 BeginCharacterRequest();
                 CompleteClientCharacterRequest(null, -1, -1, string.Empty);
+                //ConfigureModel();
             }
         }
 
@@ -108,7 +112,7 @@ namespace AnyRPG {
 
         public override void OnStartServer() {
             base.OnStartServer();
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStartServer()");
+            Debug.Log($"{gameObject.name}.FishNetUnitController.OnStartServer()");
 
             Configure();
             if (systemGameManager == null) {
@@ -117,7 +121,71 @@ namespace AnyRPG {
             BeginCharacterRequest();
             CompleteCharacterRequest(false, null, -1, -1, string.Empty);
             SubscribeToServerUnitEvents();
+            /*
+            if (base.OwnerId != -1) {
+                ConfigureModel();
+            }
+            */
+            //StartCoroutine(DelayedModelSpawn());
         }
+
+        /*
+        private void ConfigureModel() {
+            // this code is for the usage of local models rather than a spawned networkObject
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.ConfigureModel()");
+            
+            if (base.IsServerInitialized == true) {
+                OfflineTickSmoother smoother = GetComponentInChildren<OfflineTickSmoother>();
+                if (smoother != null) {
+                    smoother.SetTargetTransform(unitController.transform);
+                    smoother.Initialize(base.TimeManager);
+                }
+            }
+
+            networkAnimator = GetComponent<NetworkAnimator>();
+            animator = GetComponentInChildren<Animator>();
+
+            unitController.UnitEventController.OnInitializeAnimator += HandleInitializeAnimator;
+
+            if (systemGameManager.NetworkManagerServer.ServerModeActive == true) {
+                unitController.UnitEventController.OnAnimatorSetTrigger += HandleSetTrigger;
+                unitController.UnitEventController.OnAnimatorResetTrigger += HandleResetTrigger;
+            }
+            systemGameManager.CharacterManager.CompleteNetworkModelRequest(unitController, animator.gameObject, base.OwnerId == -1);
+        }
+        */
+
+        private void HandleSetTrigger(string triggerName) {
+            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.HandleSetTrigger({triggerName})");
+
+            networkAnimator.SetTrigger(triggerName);
+        }
+
+        private void HandleResetTrigger(string triggerName) {
+            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.HandleResetTrigger({triggerName})");
+
+            networkAnimator.ResetTrigger(triggerName);
+        }
+
+        private void HandleInitializeAnimator() {
+            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.HandleInitializeAnimator()");
+
+            networkAnimator.SetAnimator(animator);
+        }
+
+
+        /*
+        private IEnumerator DelayedModelSpawn() {
+            // Wait for the next network tick
+            uint currentTick = base.TimeManager.Tick;
+            while (base.TimeManager.Tick == currentTick) {
+                yield return null;
+            }
+            BeginCharacterRequest();
+            CompleteCharacterRequest(false, null, -1, -1, string.Empty);
+            SubscribeToServerUnitEvents();
+        }
+        */
 
         public override void OnStopServer() {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStopServer() {GetInstanceID()}");
@@ -152,6 +220,18 @@ namespace AnyRPG {
                 }
             }
             HandleSpawnServerUnitClient(connection, fishNetSpawnClientRequest);
+            if (unitController.UnitControllerMode == UnitControllerMode.Mount && unitController.RiderUnitController != null) {
+                FishNetUnitController riderUnitController = unitController.RiderUnitController.GetComponent<FishNetUnitController>();
+                if (riderUnitController != null) {
+                    HandleSpawnMountClient(connection, riderUnitController);
+                }
+            }
+        }
+
+        [TargetRpc]
+        private void HandleSpawnMountClient(NetworkConnection networkConnection, FishNetUnitController riderUnitController) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnMountClient() owner: {base.OwnerId}");
+            riderUnitController.unitController.UnitMountManager.PostInit(unitController);
         }
 
         [TargetRpc]
@@ -166,6 +246,13 @@ namespace AnyRPG {
                     fishNetSpawnClientRequest.GuildId,
                     fishNetSpawnClientRequest.GuildName);
             }
+            /*
+            if (unitControllerMode.Value == UnitControllerMode.Player
+                || unitControllerMode.Value == UnitControllerMode.Pet) {
+                ConfigureModel();
+            }
+            */
+
             foreach (NetworkObject interactionNetworkObject in fishNetSpawnClientRequest.InteractionPoints) {
                 if (interactionNetworkObject != null) {
                     GameObject interactionObject = interactionNetworkObject.gameObject;
@@ -271,7 +358,22 @@ namespace AnyRPG {
             //unitController.UnitEventController.OnDespawn -= HandleDespawnClient;
         }
 
+        /*
+        public void SubscribeToEarlyServerUnitEvents() {
+            Debug.Log($"{gameObject.name}.FishNetUnitController.SubscribeToEarlyServerUnitEvents()");
+
+            if (unitController == null) {
+                // something went wrong
+                return;
+            }
+            unitController.UnitEventController.OnSetRider += HandleSetRiderServer;
+            unitController.UnitEventController.OnRiderMounted += HandleRiderMountedServer;
+        }
+        */
+
         public void SubscribeToServerUnitEvents() {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.SubscribeToServerUnitEvents()");
+
             if (unitController == null) {
                 // something went wrong
                 return;
@@ -487,7 +589,41 @@ namespace AnyRPG {
             unitController.UnitEventController.OnSetGroupId -= HandleSetGroupId;
             unitController.UnitEventController.OnSetGuildId -= HandleSetGuildId;
             unitController.UnitEventController.OnReachDestination -= HandleReachDestinationServer;
+            //unitController.UnitEventController.OnSetRider -= HandleSetRiderServer;
+            //unitController.UnitEventController.OnRiderMounted -= HandleRiderMountedServer;
         }
+
+        /*
+        private void HandleRiderMountedServer() {
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRiderMountedServer()");
+
+            HandleRiderMountedClient();
+        }
+
+        [ObserversRpc]
+        private void HandleRiderMountedClient() {
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRiderMountedClient()");
+
+            unitController.RiderUnitController.UnitMountManager.HandleMountUnitSpawn();
+        }
+
+        private void HandleSetRiderServer(UnitController riderUnitController) {
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetRiderServer({(riderUnitController == null ? "null" : riderUnitController.gameObject.name)})");
+
+            FishNetUnitController fishNetUnitController = null;
+            fishNetUnitController = riderUnitController.GetComponent<FishNetUnitController>();
+            if (fishNetUnitController != null) {
+                HandleSetRiderClient(fishNetUnitController);
+            }
+        }
+
+        [ObserversRpc]
+        private void HandleSetRiderClient(FishNetUnitController riderNetworkCharacterUnit) {
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetRiderClient({(riderNetworkCharacterUnit == null ? "null" : riderNetworkCharacterUnit.gameObject.name)})");
+            
+            riderNetworkCharacterUnit.unitController.UnitMountManager.PostInit(unitController);
+        }
+        */
 
         [ObserversRpc]
         private void HandleSetGroupId(int newGroupId) {
@@ -640,12 +776,12 @@ namespace AnyRPG {
         private void HandleActivateMountedStateServer(UnitController mountUnitController) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleActivateMountedStateServer({mountUnitController.gameObject.name})");
 
-            HandleActiveateMountedStateClient();
+            //HandleActiveateMountedStateClient();
         }
 
         [ObserversRpc]
         public void HandleActiveateMountedStateClient() {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleActivateMountedStateClient()");
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleActivateMountedStateClient() tick: {base.TimeManager.Tick}");
 
             unitController.UnitMountManager.ActivateMountedState();
         }
@@ -657,13 +793,19 @@ namespace AnyRPG {
                 return;
             }
 
-            HandleSetMountedStateClient(targetNetworkCharacterUnit, unitProfile.ResourceName);
+            //HandleSetMountedStateClient(targetNetworkCharacterUnit, unitProfile.ResourceName);
         }
 
         [ObserversRpc]
         private void HandleSetMountedStateClient(FishNetUnitController targetNetworkCharacterUnit, string unitProfileName) {
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetMountedStateClient({(targetNetworkCharacterUnit == null? "null" : targetNetworkCharacterUnit.gameObject.name)}, {unitProfileName}) tick: {base.TimeManager.Tick}");
+
             UnitProfile unitProfile = systemDataFactory.GetResource<UnitProfile>(unitProfileName);
             if (unitProfile == null) {
+                return;
+            }
+            if (targetNetworkCharacterUnit == null) {
+                Debug.LogWarning($"{gameObject.name}.FishNetUnitController.HandleSetMountedStateClient(): targetNetworkCharacterUnit is null");
                 return;
             }
             unitController.UnitMountManager.SetMountedState(targetNetworkCharacterUnit.UnitController, unitProfile);
@@ -2226,6 +2368,11 @@ namespace AnyRPG {
             unitProfile = systemGameManager.SystemDataFactory.GetResource<UnitProfile>(unitProfileName.Value);
             if (networkManagerServer.ServerModeActive == true) {
                 systemGameManager.CharacterManager.CompleteCharacterRequest(unitController);
+                /*
+                if (base.OwnerId != -1) {
+                    systemGameManager.CharacterManager.CompleteModelRequest(unitController, false);
+                }
+                */
             } else {
                 // first load items if this came from a character that included saveData
                 if (playerCharacterSaveData != null) {
@@ -2237,6 +2384,9 @@ namespace AnyRPG {
                 characterConfigurationRequest.unitControllerMode = unitControllerMode.Value;
                 CharacterRequestData characterRequestData = new CharacterRequestData(null, GameMode.Network, characterConfigurationRequest);
                 characterRequestData.isOwner = isOwner;
+                if (base.OwnerId != -1) {
+                    characterRequestData.accountId = systemGameManager.NetworkManagerClient.AccountId;
+                }
                 characterRequestData.characterId = characterId.Value;
                 characterRequestData.characterGroupId = characterGroupId;
                 characterRequestData.characterGuildId = guildId;
@@ -2249,7 +2399,12 @@ namespace AnyRPG {
                     //Debug.Log($"{gameObject.name}.FishNetUnitController.CompleteCharacterRequest({isOwner}, isMounted: {saveData.isMounted})");
                 }
                 unitController.SetCharacterRequestData(characterRequestData);
-                systemGameManager.CharacterManager.CompleteNetworkCharacterRequest(unitController);
+                //if (unitControllerMode.Value == UnitControllerMode.Player) {
+                    //systemGameManager.CharacterManager.CompleteNetworkCharacterRequest(unitController);
+                    ////systemGameManager.CharacterManager.CompleteModelRequest(unitController, false);
+                //} else {
+                    systemGameManager.CharacterManager.CompleteNetworkCharacterRequest(unitController);
+                //}
             }
 
             if (unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) {
@@ -2470,15 +2625,21 @@ namespace AnyRPG {
 
         [Reconcile]
         private void ReconcileState(ReconcileData data, Channel channel = Channel.Unreliable) {
-            // Call reconcile on your PredictionRigidbody field passing in
-            // values from data.
+
+            // here we are unlocking the constraints because the Reconcile() method will be unable to properly set velocity
+            // if the rigidbody is constrained in any way. This is because the constraints will override any changes to velocity that we try to make in the Reconcile() method.
+            //RigidbodyConstraints originalConstraints = unitController.RigidBody.constraints;
+            unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
             predictionRigidbody.Reconcile(data.PredictionRigidbody);
+            //unitController.RigidBody.constraints = originalConstraints;
 
             if (unitController.UnitMovementController.CurrentCharacterMovementState != data.CharacterMovementState) {
                 unitController.UnitMovementController.SetStateSilently(data.CharacterMovementState);
             }
             unitController.UnitMovementController.ReconciledNavMeshAgentVelocity = data.NavMeshAgentVelocity;
         }
+
+
 
 
     }

@@ -1085,7 +1085,8 @@ namespace AnyRPG {
         }
 
         public void SetFloat(string varName, float varValue) {
-            //Debug.Log($"{gameObject.name}.CharacterAnimator.SetFloat(" + varName + ", " + varValue + ")");
+            //Debug.Log($"{unitController.gameObject.name}.UnitAnimator.SetFloat({varName}, {varValue})");
+
             if (animator != null && ParameterExists(varName)) {
                 animator.SetFloat(varName, varValue);
             }

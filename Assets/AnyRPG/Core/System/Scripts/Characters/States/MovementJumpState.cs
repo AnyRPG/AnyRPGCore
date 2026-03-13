@@ -13,7 +13,7 @@ namespace AnyRPG {
 
         /*
         public void Enter(bool isReplay, bool isSilent) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Enter(isReplay: {isReplay}, isSilent: {isSilent}) tick:  {unitMovementController.CurrentMovementData.SimulatedTick} pVelocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()} transform.forward: {unitController.transform.forward} localmoveVelocity: {unitMovementController.localMoveVelocity}");
+            //Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Enter(isReplay: {isReplay}, isSilent: {isSilent}) tick:  {unitMovementController.CurrentMovementData.SimulatedTick} position: {unitController.UnitMotor.MovementBody.GetPosition()} localmoveVelocity: {unitMovementController.localMoveVelocity}");
 
             //if (isSilent) return;
 
@@ -45,6 +45,10 @@ namespace AnyRPG {
         */
 
         public void Enter(bool isReplay, bool isSilent) {
+            //Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Enter(isReplay: {isReplay}, isSilent: {isSilent}) frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
+
+            if (isSilent) return;
+
             // 1. Determine the "Base" horizontal world velocity we are jumping WITH
             // If we were moving, intendedWorldMoveVelocity should already be set from the previous state's Update
             Vector3 currentWorldVelocity = unitMovementController.intendedWorldMoveVelocity;
@@ -86,11 +90,11 @@ namespace AnyRPG {
 
 
         public void Exit(bool isReplay, bool isSilent) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Exit(isReplay: {isReplay}) tick:  {unitMovementController.CurrentMovementData.SimulatedTick} pVelocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
+            //Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Exit(isReplay: {isReplay}, isSilent: {isSilent}) frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
         }
 
         public void Update(bool isReplay, double timeInterval) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Update(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick} pVelocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()} position: {unitController.RigidBody.position} transform.forward: {unitController.transform.forward}");
+            //Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Update(isReplay: {isReplay}) frame: {Time.frameCount} tick: {unitMovementController.CurrentMovementData.SimulatedTick} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
 
             if (unitController.InWater == true) {
                 if (unitMovementController.CheckForSwimming() == true) {
@@ -105,7 +109,7 @@ namespace AnyRPG {
                 return;
             }
 
-            //Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Update() tick: {unitMovementController.CurrentMovementData.SimulatedTick}, frame: {unitMovementController.lastJumpFrame}");
+            //Debug.Log($"{unitController.gameObject.name}.MovementJumpState.Update() frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)}, frame: {unitMovementController.lastJumpFrame}");
             if (unitController.UnitMotor.MovementBody.GetLinearVelocity().y <= 0f && unitMovementController.CurrentMovementData.SimulatedTick > (unitMovementController.lastJumpFrame + 2)) {
                 if (unitController.CanGlide) {
                     unitMovementController.ChangeState(CharacterMovementState.Glide, isReplay);

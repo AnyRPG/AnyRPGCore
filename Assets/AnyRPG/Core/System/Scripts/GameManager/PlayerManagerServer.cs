@@ -588,6 +588,7 @@ namespace AnyRPG {
                 CharacterConfigurationRequest characterConfigurationRequest = new CharacterConfigurationRequest(systemDataFactory, playerCharacterMonitors[accountId].characterSaveData);
                 characterConfigurationRequest.unitControllerMode = UnitControllerMode.Player;
                 CharacterRequestData characterRequestData = new CharacterRequestData(this, GameMode.Network, characterConfigurationRequest);
+                characterRequestData.accountId = accountId;
                 characterRequestData.characterId = playerCharacterMonitors[accountId].characterSaveData.CharacterId;
                 characterRequestData.characterGroupId = characterGroupServiceServer.GetCharacterGroupIdFromCharacterId(characterRequestData.characterId);
                 Guild guild = guildServiceServer.GetGuildFromCharacterId(characterRequestData.characterId);

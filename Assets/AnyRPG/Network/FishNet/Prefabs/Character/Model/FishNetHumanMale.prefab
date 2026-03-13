@@ -79,15 +79,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5647419420616109803, guid: 0b163976c97d00a47bde453dc1ff0798,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: -594503450825869110}
-    - targetCorrespondingSourceObject: {fileID: 5647419420616109803, guid: 0b163976c97d00a47bde453dc1ff0798,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1186824742570145722}
     - targetCorrespondingSourceObject: {fileID: 5647419420616109803, guid: 0b163976c97d00a47bde453dc1ff0798,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: -2615965608019472263}
+    - targetCorrespondingSourceObject: {fileID: 5647419420616109803, guid: 0b163976c97d00a47bde453dc1ff0798,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -3124294066488304166}
   m_SourcePrefab: {fileID: 100100000, guid: 0b163976c97d00a47bde453dc1ff0798, type: 3}
 --- !u!1 &216510896445684654 stripped
 GameObject:
@@ -110,28 +110,6 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 1186824742570145722}
   _networkObjectCache: {fileID: 1186824742570145722}
---- !u!114 &-594503450825869110
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 216510896445684654}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8cac635f24954048aad3a6ff9110beb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _componentIndexCache: 1
-  _addedNetworkObject: {fileID: 1186824742570145722}
-  _networkObjectCache: {fileID: 1186824742570145722}
-  IgnoredParameters: []
-  _animator: {fileID: 6821493264687364974}
-  _synchronizeWhenDisabled: 0
-  _smoothFloats: 1
-  _interpolation: 2
-  _clientAuthoritative: 0
-  _sendToOwner: 0
 --- !u!114 &1186824742570145722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,7 +130,8 @@ MonoBehaviour:
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
   - {fileID: -7309775362673279277}
-  - {fileID: -594503450825869110}
+  - {fileID: 0}
+  - {fileID: 0}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -163,7 +142,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584289966276215643
+  _initializedTimestamp: -8584284237386942694
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -179,7 +158,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 60
+  <PrefabId>k__BackingField: 53
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 14703107776952415471
   SceneId: 0
@@ -212,9 +191,49 @@ MonoBehaviour:
     InterpolationValue: 1
     SmoothedProperties: 4294967295
     SnapNonSmoothedProperties: 0
---- !u!95 &6821493264687364974 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 1437869231629315627, guid: 0b163976c97d00a47bde453dc1ff0798,
-    type: 3}
-  m_PrefabInstance: {fileID: 5575062205907490117}
+--- !u!114 &-3124294066488304166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 216510896445684654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.NetworkTransform
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 1186824742570145722}
+  _networkObjectCache: {fileID: 0}
+  _componentConfiguration: 0
+  _synchronizeParent: 0
+  _packing:
+    Position: 1
+    Rotation: 1
+    Scale: 0
+  _useScaledTime: 1
+  _interpolation: 1
+  _extrapolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  _clientAuthoritative: 0
+  _sendToOwner: 0
+  _interval: 1
+  _synchronizePosition: 1
+  _positionSensitivity: 0.001
+  _positionSnapping:
+    X: 0
+    Y: 0
+    Z: 0
+  _synchronizeRotation: 1
+  _rotationSnapping:
+    X: 0
+    Y: 0
+    Z: 0
+  _synchronizeScale: 1
+  _scaleSensitivity: 0.001
+  _scaleSnapping:
+    X: 0
+    Y: 0
+    Z: 0

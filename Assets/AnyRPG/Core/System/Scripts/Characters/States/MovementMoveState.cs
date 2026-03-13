@@ -12,14 +12,14 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay, bool isSilent) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Enter(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+            //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Enter(isReplay: {isReplay}, isSilent: {isSilent}) frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
 
             unitMovementController.EnterGroundStateCommon(isReplay);
             unitMovementController.CalculateFallDamage(isReplay);
         }
 
         public void Exit(bool isReplay, bool isSilent) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Exit(isReplay: {isReplay}) tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+            //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Exit(isReplay: {isReplay}, isSilent: {isSilent}) frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
 
             if (isReplay == false) {
                 unitController.UnitAnimator.SetMoving(false);
@@ -121,7 +121,7 @@ namespace AnyRPG {
         */
 
         public void Update(bool isReplay, double timeInterval) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Update()");
+            //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Update(isreplay: {isReplay}) frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)}");
 
             float calculatedSpeed = 0f;
 

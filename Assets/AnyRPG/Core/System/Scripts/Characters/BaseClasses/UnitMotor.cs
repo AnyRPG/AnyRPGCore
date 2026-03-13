@@ -473,7 +473,7 @@ namespace AnyRPG {
             return destinationPosition;
         }
 
-        public Vector3 getVelocity() {
+        public Vector3 GetVelocity() {
             return unitController.NavMeshAgent.velocity;
         }
 

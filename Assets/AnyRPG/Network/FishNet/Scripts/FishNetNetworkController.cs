@@ -382,8 +382,9 @@ namespace AnyRPG {
 
         public override GameObject RequestSpawnModelPrefab(GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward) {
             //Debug.Log($"FishNetNetworkController.RequestSpawnModelPrefab({prefab.name}, {parentTransform.gameObject.name}, {position}, {forward})");
+            Debug.LogWarning($"FishNetNetworkController.RequestSpawnModelPrefab({prefab.name}, {parentTransform.gameObject.name}, {position}, {forward}) this should no be used anymore");
 
-            clientConnector.RequestSpawnModelPrefab(prefab, parentTransform, position, forward);
+            //clientConnector.RequestSpawnModelPrefab(prefab, parentTransform, position, forward);
             return null;
         }
 
@@ -1120,10 +1121,10 @@ namespace AnyRPG {
             return clientConnector.SpawnCharacterUnit(characterRequestData, parentTransform, position, forward, scene);
         }
 
-        public override GameObject SpawnModelPrefabServer(GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward) {
+        public override GameObject SpawnModelPrefabServer(GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward, int clientId) {
             //Debug.Log($"FishNetNetworkController.SpawnModelPrefabServer({spawnRequestId}, {parentTransform.gameObject.name})");
 
-            clientConnector.SpawnModelPrefabServer(prefab, parentTransform, position, forward);
+            clientConnector.SpawnModelPrefabServer(prefab, parentTransform, position, forward, clientId);
             return null;
         }
 

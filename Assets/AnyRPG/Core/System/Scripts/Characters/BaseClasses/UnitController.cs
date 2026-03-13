@@ -746,6 +746,8 @@ namespace AnyRPG {
         */
 
         public void SetRider(UnitController riderUnitController) {
+            //Debug.Log($"{gameObject.name}.UnitController.SetRider({(riderUnitController == null ? "null" : riderUnitController.gameObject.name)})");
+
             this.riderUnitController = riderUnitController;
             characterStats.CalculateRunSpeed();
         }
@@ -843,7 +845,7 @@ namespace AnyRPG {
         /// set this unit to be a mount
         /// </summary>
         private void SetMountMode() {
-            Debug.Log($"{gameObject.name}.UnitController.SetMountMode()");
+            //Debug.Log($"{gameObject.name}.UnitController.SetMountMode()");
 
             // mount namePlates do not need full initialization, only the position to be set
             namePlateController.SetNameplatePosition();
@@ -1583,7 +1585,7 @@ namespace AnyRPG {
         protected void Update() {
             // with new network code that requests save data before the configuration is complete, we need to check if the unit is initialized
             // because it may take a while to get the save data back
-            if (isInitialized == false) {
+            if (isInitialized == false || isStateReset == true) {
                 return;
             }
 
@@ -1629,6 +1631,9 @@ namespace AnyRPG {
         }
 
         public void FixedUpdate() {
+            if (isInitialized == false || isStateReset == true) {
+                return;
+            }
             if (target != null) {
                 // prevent distance calculation if no movement has occured
                 if (rigidBody.position != lastPosition || target.transform.position != lastTargetPosition) {
