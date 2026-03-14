@@ -883,7 +883,7 @@ namespace AnyRPG {
         /// set this unit to be a player
         /// </summary>
         private void EnablePlayer() {
-            //Debug.Log($"{gameObject.name}.UnitController.EnablePlayer()");
+            Debug.Log($"{gameObject.name}.UnitController.EnablePlayer()");
 
             InitializeNamePlateController();
 

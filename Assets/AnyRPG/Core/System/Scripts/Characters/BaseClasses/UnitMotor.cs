@@ -702,7 +702,7 @@ namespace AnyRPG {
         }
 
         public void ResetPath(bool forceStop = false) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.ResetPath(forceStop: {forceStop}) in frame: {Time.frameCount}");
+            Debug.Log($"{unitController.gameObject.name}.UnitMotor.ResetPath(forceStop: {forceStop}) in frame: {Time.frameCount}");
 
             hasDestinationPosition = false;
             moveToDestination = false;

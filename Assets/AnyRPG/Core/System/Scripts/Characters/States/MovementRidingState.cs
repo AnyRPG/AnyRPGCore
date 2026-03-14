@@ -13,7 +13,6 @@ namespace AnyRPG {
 
         public void Enter(bool isReplay, bool isSilent) {
             Debug.Log($"{unitController.gameObject.name}.MovementRidingState.Enter(isReplay: {isReplay}, isSilent: {isSilent}) frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
-
         }
 
 

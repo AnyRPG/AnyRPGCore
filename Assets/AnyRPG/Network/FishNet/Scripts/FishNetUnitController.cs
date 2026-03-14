@@ -33,7 +33,7 @@ namespace AnyRPG {
 
         // state tracking for client side prediction reconciliation
         private CharacterMovementState serverStateAtStartOfTick = CharacterMovementState.Idle;
-
+        private bool isFirstReconcile = true;
 
         public UnitController UnitController { get => unitController; }
 
@@ -108,6 +108,7 @@ namespace AnyRPG {
 
             UnsubscribeFromClientUnitEvents();
             systemGameManager.NetworkManagerClient.ProcessStopNetworkUnitClient(unitController);
+            isFirstReconcile = true;
         }
 
         public override void OnStartServer() {
@@ -201,6 +202,7 @@ namespace AnyRPG {
                 unitController.IsDisconnected = true;
             }
             systemGameManager.NetworkManagerServer.ProcessStopNetworkUnitServer(unitController);
+            isFirstReconcile = true;
         }
 
         public override void OnSpawnServer(NetworkConnection connection) {
@@ -2637,9 +2639,13 @@ namespace AnyRPG {
             unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
             predictionRigidbody.Reconcile(data.PredictionRigidbody);
             //unitController.RigidBody.constraints = originalConstraints;
-
-            if (unitController.UnitMovementController.CurrentCharacterMovementState != data.CharacterMovementState) {
-                unitController.UnitMovementController.SetStateSilently(data.CharacterMovementState);
+            if (isFirstReconcile == true) {
+                unitController.UnitMovementController.ChangeState(data.CharacterMovementState, false);
+                isFirstReconcile = false;
+            } else {
+                if (unitController.UnitMovementController.CurrentCharacterMovementState != data.CharacterMovementState) {
+                    unitController.UnitMovementController.SetStateSilently(data.CharacterMovementState);
+                }
             }
             unitController.UnitMovementController.ReconciledNavMeshAgentVelocity = data.NavMeshAgentVelocity;
         }

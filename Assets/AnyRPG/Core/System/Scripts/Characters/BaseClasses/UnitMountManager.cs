@@ -175,6 +175,8 @@ namespace AnyRPG {
         }
 
         public void ConfigureCharacterMountedPhysics() {
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterMountedPhysics()");
+
             unitController.RigidBody.WakeUp();
             //playerManager.UnitController.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.Discrete;
             // DO NOT EVER USE CONTINUOUS SPECULATIVE.  IT WILL MESS THINGS UP EVEN WHEN YOUR RIGIDBODY IS KINEMATIC
@@ -291,7 +293,7 @@ namespace AnyRPG {
         }
 
         public void ConfigureCharacterRegularPhysics() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics()");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics()");
 
             unitController.RigidBody.WakeUp();
             unitController.RigidBody.detectCollisions = true;
