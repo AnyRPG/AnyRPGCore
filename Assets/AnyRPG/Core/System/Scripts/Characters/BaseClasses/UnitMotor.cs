@@ -702,7 +702,7 @@ namespace AnyRPG {
         }
 
         public void ResetPath(bool forceStop = false) {
-            Debug.Log($"{unitController.gameObject.name}.UnitMotor.ResetPath(forceStop: {forceStop}) in frame: {Time.frameCount}");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.ResetPath(forceStop: {forceStop}) in frame: {Time.frameCount}");
 
             hasDestinationPosition = false;
             moveToDestination = false;
@@ -722,6 +722,7 @@ namespace AnyRPG {
                             if (systemGameManager.GameMode == GameMode.Local) {
                                 unitController.RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
                             }
+                            Debug.Log($"{unitController.gameObject.name}.UnitMotor.ResetPath(forceStop: {forceStop}) in frame: {Time.frameCount} set kinematic false");
                             unitController.RigidBody.isKinematic = false;
                             unitController.RigidBody.useGravity = true;
                         }

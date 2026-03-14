@@ -285,7 +285,6 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnSetTarget += HandleSetTargetClient;
                 unitController.UnitEventController.OnClearTarget += HandleClearTargetClient;
                 unitController.UnitEventController.OnRequestEquipToSlot += HandleRequestEquipToSlot;
-                //unitController.UnitEventController.OnRequestUnequipFromList += HandleRequestUnequipFromList;
                 unitController.UnitEventController.OnRequestDropItemFromInventorySlot += HandleRequestDropItemFromInventorySlot;
                 unitController.UnitEventController.OnRequestMoveFromBankToInventory += HandleRequestMoveFromBankToInventory;
                 unitController.UnitEventController.OnRequestMoveFromInventoryToBank += HandleRequestMoveFromInventoryToBank;
@@ -327,7 +326,6 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnSetTarget -= HandleSetTargetClient;
                 unitController.UnitEventController.OnClearTarget -= HandleClearTargetClient;
                 unitController.UnitEventController.OnRequestEquipToSlot -= HandleRequestEquipToSlot;
-                //unitController.UnitEventController.OnRequestUnequipFromList -= HandleRequestUnequipFromList;
                 unitController.UnitEventController.OnRequestDropItemFromInventorySlot -= HandleRequestDropItemFromInventorySlot;
                 unitController.UnitEventController.OnRequestMoveFromBankToInventory -= HandleRequestMoveFromBankToInventory;
                 unitController.UnitEventController.OnRequestMoveFromInventoryToBank -= HandleRequestMoveFromInventoryToBank;
@@ -347,7 +345,6 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestMoveMouseUseable -= HandleRequestMoveMouseUseable;
                 unitController.UnitEventController.OnRequestAssignMouseUseable -= HandleRequestAssignMouseUseable;
                 unitController.UnitEventController.OnRequestClearMouseUseable -= HandleRequestClearMouseUseable;
-                //unitController.UnitEventController.OnSetParent -= HandleSetParent;
                 unitController.UnitEventController.OnDeactivateMountedState -= HandleDeactivateMountedStateOwner;
                 unitController.UnitEventController.OnRequestAcceptQuestItemQuest -= HandleRequestAcceptQuestItemQuest;
                 unitController.UnitEventController.OnRequestCompleteQuestItemQuest -= HandleRequestCompleteQuestItemQuest;
@@ -356,23 +353,7 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestFollowInteractionTarget -= HandleRequestFollowInteractionTarget;
                 unitController.UnitEventController.OnRequestFollowAttackTarget -= HandleRequestFollowAttackTarget;
             }
-            // all clients
-            //unitController.UnitEventController.OnUnsetParent -= HandleUnsetParent;
-            //unitController.UnitEventController.OnDespawn -= HandleDespawnClient;
         }
-
-        /*
-        public void SubscribeToEarlyServerUnitEvents() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.SubscribeToEarlyServerUnitEvents()");
-
-            if (unitController == null) {
-                // something went wrong
-                return;
-            }
-            unitController.UnitEventController.OnSetRider += HandleSetRiderServer;
-            unitController.UnitEventController.OnRiderMounted += HandleRiderMountedServer;
-        }
-        */
 
         public void SubscribeToServerUnitEvents() {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.SubscribeToServerUnitEvents()");
@@ -471,12 +452,9 @@ namespace AnyRPG {
             unitController.UnitEventController.OnDeactivateAutoAttack += HandleDeactivateAutoAttackServer;
             unitController.UnitEventController.OnSpawnActionObjects += HandleSpawnActionObjectsServer;
             unitController.UnitEventController.OnDespawnActionObjects += HandleDespawnActionObjectsServer;
-            unitController.UnitEventController.OnSetMountedState += HandleSetMountedStateServer;
-            unitController.UnitEventController.OnActivateMountedState += HandleActivateMountedStateServer;
+            //unitController.UnitEventController.OnSetMountedState += HandleSetMountedStateServer;
+            //unitController.UnitEventController.OnActivateMountedState += HandleActivateMountedStateServer;
             unitController.UnitEventController.OnDeactivateMountedState += HandleDeactivateMountedState;
-            //unitController.UnitEventController.OnSetParent += HandleSetParent;
-            unitController.UnitEventController.OnUnsetParent += HandleUnsetParent;
-            //unitController.UnitEventController.OnMountUnitSpawn += HandleMountUnitSpawnServer;
             unitController.UnitEventController.OnDespawnMountUnit += HandleDespawnMountUnitServer;
             unitController.UnitEventController.OnWriteMessageFeedMessage += HandleWriteMessageFeedMessageServer;
             unitController.UnitEventController.OnDialogCompleted += HandleDialogCompletedServer;
@@ -578,12 +556,11 @@ namespace AnyRPG {
             unitController.UnitEventController.OnDeactivateAutoAttack -= HandleDeactivateAutoAttackServer;
             unitController.UnitEventController.OnSpawnActionObjects -= HandleSpawnActionObjectsServer;
             unitController.UnitEventController.OnDespawnActionObjects -= HandleDespawnActionObjectsServer;
-            unitController.UnitEventController.OnSetMountedState -= HandleSetMountedStateServer;
-            unitController.UnitEventController.OnActivateMountedState -= HandleActivateMountedStateServer;
+            //unitController.UnitEventController.OnSetMountedState -= HandleSetMountedStateServer;
+            //unitController.UnitEventController.OnActivateMountedState -= HandleActivateMountedStateServer;
             unitController.UnitEventController.OnDeactivateMountedState -= HandleDeactivateMountedState;
-            //unitController.UnitEventController.OnSetParent -= HandleSetParent;
+            unitController.UnitEventController.OnSetParent -= HandleSetParent;
             unitController.UnitEventController.OnUnsetParent -= HandleUnsetParent;
-            //unitController.UnitEventController.OnMountUnitSpawn -= HandleMountUnitSpawnServer;
             unitController.UnitEventController.OnDespawnMountUnit -= HandleDespawnMountUnitServer;
             unitController.UnitEventController.OnWriteMessageFeedMessage -= HandleWriteMessageFeedMessageServer;
             unitController.UnitEventController.OnDialogCompleted -= HandleDialogCompletedServer;
@@ -592,8 +569,6 @@ namespace AnyRPG {
             unitController.UnitEventController.OnSetGroupId -= HandleSetGroupId;
             unitController.UnitEventController.OnSetGuildId -= HandleSetGuildId;
             unitController.UnitEventController.OnReachDestination -= HandleReachDestinationServer;
-            //unitController.UnitEventController.OnSetRider -= HandleSetRiderServer;
-            //unitController.UnitEventController.OnRiderMounted -= HandleRiderMountedServer;
         }
 
         /*
@@ -773,45 +748,6 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedState()");
 
             unitController.UnitMountManager.DeactivateMountedState();
-        }
-
-
-        private void HandleActivateMountedStateServer(UnitController mountUnitController) {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleActivateMountedStateServer({mountUnitController.gameObject.name})");
-
-            //HandleActiveateMountedStateClient();
-        }
-
-        [ObserversRpc]
-        public void HandleActiveateMountedStateClient() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleActivateMountedStateClient() tick: {base.TimeManager.Tick}");
-
-            unitController.UnitMountManager.ActivateMountedState();
-        }
-
-        private void HandleSetMountedStateServer(UnitController sourceUnitController, UnitProfile unitProfile) {
-
-            FishNetUnitController targetNetworkCharacterUnit = sourceUnitController.GetComponent<FishNetUnitController>();
-            if (targetNetworkCharacterUnit == null) {
-                return;
-            }
-
-            //HandleSetMountedStateClient(targetNetworkCharacterUnit, unitProfile.ResourceName);
-        }
-
-        [ObserversRpc]
-        private void HandleSetMountedStateClient(FishNetUnitController targetNetworkCharacterUnit, string unitProfileName) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetMountedStateClient({(targetNetworkCharacterUnit == null? "null" : targetNetworkCharacterUnit.gameObject.name)}, {unitProfileName}) tick: {base.TimeManager.Tick}");
-
-            UnitProfile unitProfile = systemDataFactory.GetResource<UnitProfile>(unitProfileName);
-            if (unitProfile == null) {
-                return;
-            }
-            if (targetNetworkCharacterUnit == null) {
-                Debug.LogWarning($"{gameObject.name}.FishNetUnitController.HandleSetMountedStateClient(): targetNetworkCharacterUnit is null");
-                return;
-            }
-            unitController.UnitMountManager.SetMountedState(targetNetworkCharacterUnit.UnitController, unitProfile);
         }
 
         private void HandleDespawnActionObjectsServer() {
@@ -2592,7 +2528,6 @@ namespace AnyRPG {
 
             if (unitController == null
                 || unitController.IsInitialized == false
-                || unitController.IsMounted == true
                 || (unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) == false) {
                 return;
             }
@@ -2633,12 +2568,20 @@ namespace AnyRPG {
         [Reconcile]
         private void ReconcileState(ReconcileData data, Channel channel = Channel.Unreliable) {
 
+            if (unitController.IsMounted == true && transform.parent != null) {
+                return;
+            }
+
             // here we are unlocking the constraints because the Reconcile() method will be unable to properly set velocity
             // if the rigidbody is constrained in any way. This is because the constraints will override any changes to velocity that we try to make in the Reconcile() method.
             //RigidbodyConstraints originalConstraints = unitController.RigidBody.constraints;
-            unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
-            predictionRigidbody.Reconcile(data.PredictionRigidbody);
-            //unitController.RigidBody.constraints = originalConstraints;
+            //if (transform.parent == null) {
+                unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+                predictionRigidbody.Reconcile(data.PredictionRigidbody);
+            //}
+            if (unitController.IsMounted) {
+                return;
+            }
             if (isFirstReconcile == true) {
                 unitController.UnitMovementController.ChangeState(data.CharacterMovementState, false);
                 isFirstReconcile = false;

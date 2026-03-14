@@ -175,7 +175,7 @@ namespace AnyRPG {
         }
 
         public void ConfigureCharacterMountedPhysics() {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterMountedPhysics()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterMountedPhysics()");
 
             unitController.RigidBody.WakeUp();
             //playerManager.UnitController.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.Discrete;
@@ -184,6 +184,7 @@ namespace AnyRPG {
             //playerManager.UnitController.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
             unitController.RigidBody.interpolation = RigidbodyInterpolation.None;
             unitController.RigidBody.detectCollisions = false;
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterMountedPhysics() set kinematic true");
             unitController.RigidBody.isKinematic = true;
             unitController.RigidBody.useGravity = false;
             unitController.FreezeAll();
@@ -293,11 +294,12 @@ namespace AnyRPG {
         }
 
         public void ConfigureCharacterRegularPhysics() {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics()");
 
             unitController.RigidBody.WakeUp();
             unitController.RigidBody.detectCollisions = true;
             unitController.RigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics() set kinematic false");
             unitController.RigidBody.isKinematic = false;
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && unitController.IsOwner == true)) {
                 unitController.RigidBody.useGravity = true;

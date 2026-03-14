@@ -858,11 +858,13 @@ namespace AnyRPG {
             rigidBody.interpolation = RigidbodyInterpolation.Interpolate;
 
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && isOwner == true)) {
+                Debug.Log($"{gameObject.name}.UnitController.SetMountMode() set kinematic false");
                 rigidBody.isKinematic = false;
                 rigidBody.useGravity = true;
                 FreezePositionXZ();
             } else {
                 // gravity and physics should not be applied on non authoritative clients.  They are moved by networkTransform
+                Debug.Log($"{gameObject.name}.UnitController.SetMountMode() set kinematic true");
                 rigidBody.isKinematic = true;
                 rigidBody.useGravity = false;
                 FreezeAll();
@@ -883,7 +885,7 @@ namespace AnyRPG {
         /// set this unit to be a player
         /// </summary>
         private void EnablePlayer() {
-            Debug.Log($"{gameObject.name}.UnitController.EnablePlayer()");
+            //Debug.Log($"{gameObject.name}.UnitController.EnablePlayer()");
 
             InitializeNamePlateController();
 
@@ -892,11 +894,13 @@ namespace AnyRPG {
 
 
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && isOwner == true)) {
+                Debug.Log($"{gameObject.name}.UnitController.EnablePlayer() set kinematic false");
                 rigidBody.isKinematic = false;
                 rigidBody.useGravity = true;
                 FreezePositionXZ();
             } else {
                 // gravity and physics should not be applied on non authoritative clients.  They are moved by networkTransform
+                Debug.Log($"{gameObject.name}.UnitController.EnablePlayer() set kinematic true");
                 rigidBody.isKinematic = true;
                 rigidBody.useGravity = false;
                 FreezeAll();
