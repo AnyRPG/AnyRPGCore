@@ -111,8 +111,9 @@ namespace AnyRPG {
         }
 
         public override void OnStartServer() {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStartServer()");
+
             base.OnStartServer();
-            Debug.Log($"{gameObject.name}.FishNetUnitController.OnStartServer()");
 
             Configure();
             if (systemGameManager == null) {
@@ -2589,6 +2590,7 @@ namespace AnyRPG {
 
             if (unitController == null
                 || unitController.IsInitialized == false
+                || unitController.IsMounted == true
                 || (unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) == false) {
                 return;
             }
