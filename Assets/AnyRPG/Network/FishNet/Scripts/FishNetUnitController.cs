@@ -707,11 +707,13 @@ namespace AnyRPG {
 
             if (networkObject != null && parentTransform != null) {
                 //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({(parentTransform == null ? "null" : parentTransform.gameObject.name)}) networkObject is not null");
-                NetworkBehaviour nobParent = parentTransform.GetComponent<NetworkBehaviour>();
+                //NetworkBehaviour nobParent = parentTransform.GetComponent<NetworkBehaviour>();
+                NetworkObject nobParent = parentTransform.GetComponent<NetworkObject>();
                 if (nobParent == null) {
                     Debug.LogWarning($"{gameObject.name}.FishNetUnitController.HandleSetParent({parentTransform.gameObject.name}) No EmptyNetworkBehaviour found on parent.  Please check inspector!");
                 } else {
-                    //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({parentTransform.gameObject.name}) setting parent transform");
+                    Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({parentTransform.gameObject.name}) setting parent transform and giving ownership");
+                    networkObject.GiveOwnership(base.Owner);
                     networkObject.SetParent(nobParent);
                 }
             }
