@@ -142,9 +142,9 @@ MonoBehaviour:
   RuntimeParentNetworkBehaviour: {fileID: 0}
   RuntimeChildNetworkBehaviours: []
   _isNetworked: 1
-  _isSpawnable: 0
+  _isSpawnable: 1
   _isGlobal: 0
-  _initializeOrder: -2
+  _initializeOrder: -3
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: -8584289966276215643
@@ -208,7 +208,7 @@ MonoBehaviour:
   _isNetworked: 1
   _isSpawnable: 1
   _isGlobal: 0
-  _initializeOrder: -2
+  _initializeOrder: -3
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: -8584289966276215643

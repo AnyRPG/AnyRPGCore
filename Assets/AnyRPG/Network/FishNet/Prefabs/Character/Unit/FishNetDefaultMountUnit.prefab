@@ -86,7 +86,7 @@ PrefabInstance:
     - target: {fileID: 7989242567668304555, guid: ba09f14eb0109ba459f4520b82c3fadc,
         type: 3}
       propertyPath: m_UUID
-      value: 94798a0f-51d2-452b-b44b-729477dca42c
+      value: 7d75249e-affa-40f1-82e8-2ddaa8c8faee
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -197,6 +197,7 @@ MonoBehaviour:
   NetworkBehaviours:
   - {fileID: -429084771394341867}
   - {fileID: 184589603481072904}
+  - {fileID: 7458286026064787442}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -204,10 +205,10 @@ MonoBehaviour:
   _isNetworked: 1
   _isSpawnable: 1
   _isGlobal: 0
-  _initializeOrder: -3
+  _initializeOrder: -4
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584293353043093269
+  _initializedTimestamp: -8584281416660847116
   NetworkObserver: {fileID: 0}
   _enablePrediction: 1
   _predictionType: 1
@@ -223,7 +224,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 41
+  <PrefabId>k__BackingField: 36
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 9898353508629357492
   SceneId: 0
@@ -244,10 +245,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8cac635f24954048aad3a6ff9110beb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Animating.NetworkAnimator
-  _componentIndexCache: 255
-  _addedNetworkObject: {fileID: 8873413205694323065, guid: 52481e2ce051acc469292f8e9bfcb7e0,
-    type: 3}
-  _networkObjectCache: {fileID: 0}
+  _componentIndexCache: 2
+  _addedNetworkObject: {fileID: 8873413205694323065}
+  _networkObjectCache: {fileID: 8873413205694323065}
   IgnoredParameters: []
   _animator: {fileID: 0}
   _synchronizeWhenDisabled: 0
