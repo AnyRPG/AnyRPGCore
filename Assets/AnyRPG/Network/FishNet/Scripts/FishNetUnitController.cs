@@ -2568,20 +2568,24 @@ namespace AnyRPG {
         [Reconcile]
         private void ReconcileState(ReconcileData data, Channel channel = Channel.Unreliable) {
 
+            /*
             if (unitController.IsMounted == true && transform.parent != null) {
                 return;
             }
-
+            Debug.Log($"{gameObject.name}.FishNetUnitController.ReconcileState() channel: {channel} isMounted: {unitController.IsMounted} parent: {(transform.parent == null ? "null" : transform.parent.gameObject.name)}");
+            */
             // here we are unlocking the constraints because the Reconcile() method will be unable to properly set velocity
             // if the rigidbody is constrained in any way. This is because the constraints will override any changes to velocity that we try to make in the Reconcile() method.
             //RigidbodyConstraints originalConstraints = unitController.RigidBody.constraints;
             //if (transform.parent == null) {
-                unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
-                predictionRigidbody.Reconcile(data.PredictionRigidbody);
+            unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+            predictionRigidbody.Reconcile(data.PredictionRigidbody);
             //}
+            /*
             if (unitController.IsMounted) {
                 return;
             }
+            */
             if (isFirstReconcile == true) {
                 unitController.UnitMovementController.ChangeState(data.CharacterMovementState, false);
                 isFirstReconcile = false;

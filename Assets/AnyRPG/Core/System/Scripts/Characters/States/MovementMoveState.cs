@@ -121,7 +121,7 @@ namespace AnyRPG {
         */
 
         public void Update(bool isReplay, double timeInterval) {
-            Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Update(isreplay: {isReplay}) frame: {Time.frameCount} tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+            //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Update(isreplay: {isReplay}) frame: {Time.frameCount} tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             float calculatedSpeed = 0f;
 
