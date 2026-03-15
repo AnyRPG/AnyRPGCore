@@ -139,7 +139,7 @@ namespace AnyRPG {
         }
 
         public void RemoveLoadedScene(int sceneHandle, string sceneName) {
-            Debug.Log($"LevelManagerServer.RemoveLoadedScene({sceneHandle}, {sceneName})");
+            //Debug.Log($"LevelManagerServer.RemoveLoadedScene({sceneHandle}, {sceneName})");
 
             if (loadedScenes.ContainsKey(sceneName) == false) {
                 //Debug.LogError($"LevelManagerServer.RemoveLoadedScene() - scene {sceneName} not found in loaded scenes");

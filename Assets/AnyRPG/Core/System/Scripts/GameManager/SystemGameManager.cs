@@ -9,7 +9,7 @@ namespace AnyRPG {
 
         // private fields
         private GameMode gameMode = GameMode.Local;
-        private bool isServer = false;
+        //private bool isServer = false;
         private ushort commandLineServerPort = 7770;
         private NetworkServerMode commandLineServerMode = NetworkServerMode.MMO;
 
@@ -237,7 +237,7 @@ namespace AnyRPG {
         public FriendServiceClient FriendServiceClient { get => friendServiceClient; set => friendServiceClient = value; }
         public FriendServiceServer FriendServiceServer { get => friendServiceServer; set => friendServiceServer = value; }
         public ServerDataService ServerDataService { get => serverDataService; set => serverDataService = value; }
-        public bool IsServer { get => isServer; set => isServer = value; }
+        //public bool IsServer { get => isServer; set => isServer = value; }
         public ushort CommandLineServerPort { get => commandLineServerPort; set => commandLineServerPort = value; }
         public NetworkServerMode CommandLineServerMode { get => commandLineServerMode; set => commandLineServerMode = value; }
 
@@ -377,15 +377,16 @@ namespace AnyRPG {
                 string arg = args[i].ToLower();
 
                 switch (arg) {
+                    /*
                     case "-d":
                         isServer = true;
                         Debug.Log("Command Line: Server Mode Enabled");
                         break;
-
+                    */
                     case "--serverport":
                         if (i + 1 < args.Length && ushort.TryParse(args[i + 1], out ushort parsedPort)) {
                             commandLineServerPort = parsedPort;
-                            Debug.Log($"Command Line: Port set to {commandLineServerPort}");
+                            //Debug.Log($"Command Line: Server port set to {commandLineServerPort}");
                         }
                         break;
 
@@ -398,7 +399,7 @@ namespace AnyRPG {
                             if (mode == "MMO") {
                                 commandLineServerMode = NetworkServerMode.MMO;
                             }
-                            Debug.Log($"Command Line: Server mode set to {commandLineServerMode}");
+                            //Debug.Log($"Command Line: Server mode set to {commandLineServerMode}");
                         }
                         break;
                 }

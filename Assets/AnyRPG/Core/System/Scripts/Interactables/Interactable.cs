@@ -1216,14 +1216,14 @@ namespace AnyRPG {
         }
 
         public bool IsInInteractableRange(GameObject go) {
-            Debug.Log($"{gameObject.name}.Interactable.IsInInteractableRange({go.name}) count: {inRangeUnitControllers.Count}"); 
+            //Debug.Log($"{gameObject.name}.Interactable.IsInInteractableRange({go.name}) count: {inRangeUnitControllers.Count}"); 
             //Debug.Log($"InteractableRange.IsInRange({go.name}) count: {inRangeUnitControllers.Count} instanceId: {GetInstanceID()}");
 
             if (inRangeUnitControllers.ContainsKey(go)) {
-                Debug.Log($"{gameObject.name}.Interactable.IsInInteractableRange({go.name}): in range");
+                //Debug.Log($"{gameObject.name}.Interactable.IsInInteractableRange({go.name}): in range");
                 return true;
             }
-            Debug.Log($"{gameObject.name}.Interactable.IsInInteractableRange({go.name}): not in range");
+            //Debug.Log($"{gameObject.name}.Interactable.IsInInteractableRange({go.name}): not in range");
             return false;
         }
 

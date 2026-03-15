@@ -413,7 +413,7 @@ namespace AnyRPG {
                 return SpawnModelPrefab(GameMode.Network, unitProfile.UnitPrefabProps.NetworkModelPrefab, parentTransform, position, forward);
             }
 
-            Debug.Log($"CharacterManager.SpawnModelPrefab() unit controller {unitController.gameObject.name} not found in any unit lists");
+            //Debug.Log($"CharacterManager.SpawnModelPrefab() unit controller {unitController.gameObject.name} not found in any unit lists");
             return null;
             */
         }

@@ -65,7 +65,7 @@ namespace AnyRPG {
             } else {
                 // attempt physics sync on server in case character was moving
                 if (networkManagerServer.ServerModeActive == true) {
-                    Debug.Log($"{interactable.gameObject.name}.GatheringNode.ProcessInteract() calling Physics.SyncTransforms()");
+                    //Debug.Log($"{interactable.gameObject.name}.GatheringNode.ProcessInteract() calling Physics.SyncTransforms()");
                     Physics.SyncTransforms();
                 }
                 sourceUnitController.CharacterAbilityManager.BeginAbility(GatheringNodeProps.BaseAbility.AbilityProperties, interactable);

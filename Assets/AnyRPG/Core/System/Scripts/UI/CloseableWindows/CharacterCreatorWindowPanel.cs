@@ -98,7 +98,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveClosedWindowNotification() {
-            Debug.Log("CharacterCreatorPanel.ReceiveClosedWindowNotification()");
+            //Debug.Log("CharacterCreatorPanel.ReceiveClosedWindowNotification()");
 
             base.ReceiveClosedWindowNotification();
 

@@ -112,7 +112,7 @@ namespace AnyRPG {
         }
 
         public override void OnStartServer() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.OnStartServer() frame: {Time.frameCount}");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStartServer() frame: {Time.frameCount}");
 
             base.OnStartServer();
 
@@ -573,20 +573,20 @@ namespace AnyRPG {
 
         /*
         private void HandleRiderMountedServer() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRiderMountedServer()");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRiderMountedServer()");
 
             HandleRiderMountedClient();
         }
 
         [ObserversRpc]
         private void HandleRiderMountedClient() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRiderMountedClient()");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRiderMountedClient()");
 
             unitController.RiderUnitController.UnitMountManager.HandleMountUnitSpawn();
         }
 
         private void HandleSetRiderServer(UnitController riderUnitController) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetRiderServer({(riderUnitController == null ? "null" : riderUnitController.gameObject.name)})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetRiderServer({(riderUnitController == null ? "null" : riderUnitController.gameObject.name)})");
 
             FishNetUnitController fishNetUnitController = null;
             fishNetUnitController = riderUnitController.GetComponent<FishNetUnitController>();
@@ -597,7 +597,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         private void HandleSetRiderClient(FishNetUnitController riderNetworkCharacterUnit) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetRiderClient({(riderNetworkCharacterUnit == null ? "null" : riderNetworkCharacterUnit.gameObject.name)})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetRiderClient({(riderNetworkCharacterUnit == null ? "null" : riderNetworkCharacterUnit.gameObject.name)})");
             
             riderNetworkCharacterUnit.unitController.UnitMountManager.PostInit(unitController);
         }
@@ -712,8 +712,7 @@ namespace AnyRPG {
                 if (nobParent == null) {
                     Debug.LogWarning($"{gameObject.name}.FishNetUnitController.HandleSetParent({parentTransform.gameObject.name}) No EmptyNetworkBehaviour found on parent.  Please check inspector!");
                 } else {
-                    Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({parentTransform.gameObject.name}) setting parent transform and giving ownership");
-                    networkObject.GiveOwnership(base.Owner);
+                    //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({parentTransform.gameObject.name}) setting parent transform and giving ownership");
                     networkObject.SetParent(nobParent);
                 }
             }
@@ -2569,12 +2568,12 @@ namespace AnyRPG {
 
         [Reconcile]
         private void ReconcileState(ReconcileData data, Channel channel = Channel.Unreliable) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.ReconcileState() channel: {channel} isMounted: {unitController.IsMounted} parent: {(transform.parent == null ? "null" : transform.parent.gameObject.name)}");
 
             /*
             if (unitController.IsMounted == true && transform.parent != null) {
                 return;
             }
-            Debug.Log($"{gameObject.name}.FishNetUnitController.ReconcileState() channel: {channel} isMounted: {unitController.IsMounted} parent: {(transform.parent == null ? "null" : transform.parent.gameObject.name)}");
             */
             // here we are unlocking the constraints because the Reconcile() method will be unable to properly set velocity
             // if the rigidbody is constrained in any way. This is because the constraints will override any changes to velocity that we try to make in the Reconcile() method.

@@ -521,7 +521,7 @@ namespace AnyRPG {
         }
 
         public void RotateToward(Vector3 rotateDirection) {
-            Debug.Log($"{unitController.gameObject.name}.UnitMotor.RotateToward({rotateDirection})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.RotateToward({rotateDirection})");
 
             if (frozen) {
                 return;
@@ -722,7 +722,7 @@ namespace AnyRPG {
                             if (systemGameManager.GameMode == GameMode.Local) {
                                 unitController.RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
                             }
-                            Debug.Log($"{unitController.gameObject.name}.UnitMotor.ResetPath(forceStop: {forceStop}) in frame: {Time.frameCount} set kinematic false");
+                            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.ResetPath(forceStop: {forceStop}) in frame: {Time.frameCount} set kinematic false");
                             unitController.RigidBody.isKinematic = false;
                             unitController.RigidBody.useGravity = true;
                         }

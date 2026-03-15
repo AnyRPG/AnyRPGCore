@@ -87,7 +87,7 @@ namespace AnyRPG {
         }
 
         public void SubscribeToMountModelReady() {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SubscribeToMountModelReady()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SubscribeToMountModelReady()");
 
             if (mountUnitController?.UnitModelController != null) {
                 //mountUnitController.UnitModelController.OnModelUpdated += HandleMountModelReady;
@@ -117,7 +117,7 @@ namespace AnyRPG {
 
 
         public void HandleMountUnitSpawn() {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn()");
 
             string originalPrefabSourceBone = mountUnitProfile.UnitPrefabProps.TargetBone;
             // NOTE: mount effects used sheathed position for character position.  do not use regular position to avoid putting mount below ground when spawning
@@ -185,7 +185,7 @@ namespace AnyRPG {
             //playerManager.UnitController.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
             unitController.RigidBody.interpolation = RigidbodyInterpolation.None;
             unitController.RigidBody.detectCollisions = false;
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterMountedPhysics() set kinematic true");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterMountedPhysics() set kinematic true");
             unitController.RigidBody.isKinematic = true;
             unitController.RigidBody.useGravity = false;
             unitController.FreezeAll();
@@ -300,7 +300,7 @@ namespace AnyRPG {
             unitController.RigidBody.WakeUp();
             unitController.RigidBody.detectCollisions = true;
             unitController.RigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics() set kinematic false");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics() set kinematic false");
             unitController.RigidBody.isKinematic = false;
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && unitController.IsOwner == true)) {
                 unitController.RigidBody.useGravity = true;
