@@ -243,29 +243,16 @@ namespace AnyRPG {
 
             NetworkConnection networkConnection = null;
             // sending null networkconnection for now to test server owned models again
-            /*
+            
             if (clientId != -1) {
                 if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId)) {
                     networkConnection = fishNetNetworkManager.ServerManager.Clients[clientId];
                 }
             }
-            */
+            
 
             NetworkObject nob = GetSpawnablePrefab(prefab, parentTransform, position, forward);
             SpawnPrefab(nob, networkConnection, default);
-            /*
-            if (parentTransform != null) {
-                NetworkObject nob2 = parentTransform.GetComponent<NetworkObject>();
-                if (nob2 == null) {
-                    Debug.Log($"FishNetClientConnector.SpawnModelPrefabServer(gameObject: {prefab.name}, parent: {(parentTransform == null ? "null" : parentTransform.name)} position: {position}, forward: {forward}) could not find a network object on {parentTransform.gameObject.name}");
-                } else {
-                    Debug.Log($"FishNetClientConnector.SpawnModelPrefabServer(gameObject: {prefab.name}, parent: {(parentTransform == null ? "null" : parentTransform.name)} position: {position}, forward: {forward}) found a network object on {parentTransform.gameObject.name}");
-                    nob.SetParent(nob2);
-                }
-            } else {
-                Debug.Log($"FishNetClientConnector.SpawnModelPrefabServer(gameObject: {prefab.name}, parent: {(parentTransform == null ? "null" : parentTransform.name)} position: {position}, forward: {forward}) parentTransform was null");
-            }
-            */
         }
 
         private NetworkObject GetSpawnablePrefab(GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward) {
@@ -278,21 +265,12 @@ namespace AnyRPG {
             }
 
             NetworkObject nob = fishNetNetworkManager.GetPooledInstantiated(networkPrefab, position, Quaternion.LookRotation(forward), true);
-            //NetworkObject nob;
 
             if (parentTransform != null) {
                 NetworkObject nob2 = parentTransform.GetComponent<NetworkObject>();
-                if (nob2 == null) {
-                    //Debug.Log($"FishNetClientConnector.SpawnPrefab(gameObject: {prefab.name}, parent: {(parentTransform == null ? "null" : parentTransform.name)} position: {position}, forward: {forward}) could not find a network object on {parentTransform.gameObject.name}");
-                    //nob = fishNetNetworkManager.GetPooledInstantiated(networkPrefab, position, Quaternion.LookRotation(forward), true);
-                } else {
-                    //Debug.Log($"FishNetClientConnector.SpawnPrefab(gameObject: {prefab.name}, parent: {(parentTransform == null ? "null" : parentTransform.name)} position: {position}, forward: {forward}) found a network object on {parentTransform.gameObject.name}");
+                if (nob2 != null) {
                     nob.SetParent(nob2);
-                    //nob = fishNetNetworkManager.GetPooledInstantiated(networkPrefab, position,Quaternion.LookRotation(forward), parentTransform, true);
                 }
-            } else {
-                //Debug.Log($"FishNetClientConnector.SpawnPrefab(gameObject: {prefab.name}, parent: {(parentTransform == null ? "null" : parentTransform.name)} position: {position}, forward: {forward}) parentTransform was null");
-                //nob = fishNetNetworkManager.GetPooledInstantiated(networkPrefab, position, Quaternion.LookRotation(forward), true);
             }
 
             return nob;
@@ -311,13 +289,6 @@ namespace AnyRPG {
                     networkObject.SetParent(networkObjectParent);
                 }
             }
-        }
-        */
-
-        /*
-        private void SpawnScenePrefab(NetworkObject nob, Scene scene) {
-            //Debug.Log($"FishNetNetworkController.SpawnPlayer() Spawning player at {position}");
-            fishNetNetworkManager.ServerManager.Spawn(nob, null, scene);
         }
         */
 
