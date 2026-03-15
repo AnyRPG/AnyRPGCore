@@ -269,14 +269,20 @@ namespace AnyRPG {
             networkController?.AdvertiseChooseWeather(sceneHandle, profile);
         }
 
-        public void StartServer() {
+        public void StartServer(ushort serverPort) {
             //Debug.Log($"NetworkManagerServer.StartServer()");
 
             if (serverModeActive == true) {
                 return;
             }
 
-            networkController?.StartServer(port);
+            networkController?.StartServer(serverPort);
+        }
+
+        public void StartServer() {
+            //Debug.Log($"NetworkManagerServer.StartServer()");
+
+            StartServer(port);
         }
 
         public void StopServer() {

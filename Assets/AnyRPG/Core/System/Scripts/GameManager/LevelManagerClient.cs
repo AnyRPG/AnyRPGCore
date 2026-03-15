@@ -252,6 +252,11 @@ namespace AnyRPG {
             }
 
             OnLevelLoad();
+
+            if (IsMainMenu(newScene.name) == true && Application.isBatchMode) {
+                networkManagerServer.SetServerMode(systemGameManager.CommandLineServerMode);
+                networkManagerServer.StartServer(systemGameManager.CommandLineServerPort);
+            }
         }
 
         public AudioProfile GetTerrainFootStepProfile(Vector3 transformPosition) {
