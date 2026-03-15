@@ -31,7 +31,7 @@ PrefabInstance:
     - target: {fileID: 6307183516646880328, guid: d000c5c25fdbc114696a5e9443f6ac45,
         type: 3}
       propertyPath: m_Name
-      value: NetworkHumanMaleHeavyArmorHead2Blue
+      value: FishNetHumanMaleHeavyArmorHead2Blue
       objectReference: {fileID: 0}
     - target: {fileID: 6321914210949928993, guid: d000c5c25fdbc114696a5e9443f6ac45,
         type: 3}
@@ -168,7 +168,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584293353043093269
+  _initializedTimestamp: -8584280554809220994
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0

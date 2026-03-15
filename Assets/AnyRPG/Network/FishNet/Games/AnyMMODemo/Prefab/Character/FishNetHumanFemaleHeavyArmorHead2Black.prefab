@@ -121,7 +121,7 @@ PrefabInstance:
     - target: {fileID: 2985534377770187114, guid: 49ede4650496e4f4d9d3d3f4162f7386,
         type: 3}
       propertyPath: m_Name
-      value: NetworkHumanFemaleHeavyArmorHead2Black
+      value: FishNetHumanFemaleHeavyArmorHead2Black
       objectReference: {fileID: 0}
     - target: {fileID: 3881328588568597761, guid: 49ede4650496e4f4d9d3d3f4162f7386,
         type: 3}
@@ -278,7 +278,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584293353043093269
+  _initializedTimestamp: -8584280554809220994
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -294,7 +294,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 38
+  <PrefabId>k__BackingField: 33
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 9669018674161770084
   SceneId: 0

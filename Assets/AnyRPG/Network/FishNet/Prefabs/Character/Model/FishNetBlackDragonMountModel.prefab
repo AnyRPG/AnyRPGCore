@@ -69,7 +69,7 @@ MonoBehaviour:
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
   - {fileID: 932433760365696859}
-  InitializedParentNetworkBehaviour: {fileID: 0}
+  InitializedParentNetworkBehaviour: {fileID: 635065767607159233}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
   RuntimeChildNetworkBehaviours: []
@@ -79,7 +79,7 @@ MonoBehaviour:
   _initializeOrder: -3
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584289966276215643
+  _initializedTimestamp: -8584280554809220994
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -100,8 +100,8 @@ MonoBehaviour:
   <AssetPathHash>k__BackingField: 0
   SceneId: 0
   SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0.00707}
-    Rotation: {x: 0.7071067, y: -0.0000000037252899, z: 0.00000001117587, w: 0.7071069}
+    Position: {x: 0, y: 0, z: 0.007069994}
+    Rotation: {x: 0.7071067, y: -0.0000000037252903, z: 0.000000011175871, w: 0.7071069}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
 --- !u!114 &144491342056804218
@@ -243,12 +243,12 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 0}
   - {fileID: 635065767607159233}
+  - {fileID: 7966557238758202500}
   - {fileID: -9211909170405411979}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects:
-  - {fileID: 0}
+  - {fileID: 6665351657440112548}
   RuntimeParentNetworkBehaviour: {fileID: 0}
   RuntimeChildNetworkBehaviours: []
   _isNetworked: 1
@@ -257,7 +257,7 @@ MonoBehaviour:
   _initializeOrder: -3
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584289966276215643
+  _initializedTimestamp: -8584280554809220994
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -273,7 +273,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 43
+  <PrefabId>k__BackingField: 38
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 10670521890023526643
   SceneId: 0
@@ -294,7 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6fc7cb308a137f41b18fdb48773834f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 1
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 2316381857745387070}
   _networkObjectCache: {fileID: 2316381857745387070}
 --- !u!114 &3501383696632737680
@@ -333,9 +333,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.NetworkTransform
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 2316381857745387070}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 2316381857745387070}
   _componentConfiguration: 0
   _synchronizeParent: 0
   _packing:
