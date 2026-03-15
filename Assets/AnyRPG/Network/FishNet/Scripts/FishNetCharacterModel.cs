@@ -138,7 +138,8 @@ namespace AnyRPG {
         }
 
         public override void OnStartServer() {
-            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.OnStartServer()");
+            Debug.Log($"{gameObject.name}.FishNetCharacterModel.OnStartServer() frame: {Time.frameCount}");
+            
             base.OnStartClient();
             isClient = false;
             FindGameManager();

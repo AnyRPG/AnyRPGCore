@@ -161,7 +161,7 @@ namespace AnyRPG {
             SetUnitControllerConfiguration(unitController);
 
             if (unitController.CharacterRequestData.requestMode == GameMode.Network) {
-                // if this is being spawned over the network, the model is not spawned yet, so return and wait for it to spawn
+                // if this is being spawned over the network, the model will initalize itself in its OnStartServer() method
                 return;
             }
 

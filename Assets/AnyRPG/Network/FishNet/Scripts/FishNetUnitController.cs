@@ -112,7 +112,7 @@ namespace AnyRPG {
         }
 
         public override void OnStartServer() {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStartServer()");
+            Debug.Log($"{gameObject.name}.FishNetUnitController.OnStartServer() frame: {Time.frameCount}");
 
             base.OnStartServer();
 
