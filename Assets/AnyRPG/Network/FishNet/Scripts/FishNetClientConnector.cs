@@ -195,6 +195,10 @@ namespace AnyRPG {
             }
 
             NetworkObject nob = GetSpawnablePrefab(unitProfile.UnitPrefabProps.NetworkUnitPrefab, null, position, forward);
+            if (nob == null) {
+                Debug.LogWarning($"Could not spawn prefab {unitProfile.UnitPrefabProps.NetworkUnitPrefab.name} for unit {unitProfile.ResourceName}");
+                return null;
+            }
             // update syncvars
             FishNetUnitController networkCharacterUnit = nob.gameObject.GetComponent<FishNetUnitController>();
             if (networkCharacterUnit != null) {
@@ -231,7 +235,7 @@ namespace AnyRPG {
         /*
         [ServerRpc(RequireOwnership = false)]
         public void RequestSpawnModelPrefab(GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward, NetworkConnection networkConnection = null) {
-            Debug.Log($"FishNetClientConnector.RequestSpawnModelPrefab({prefab.name}, {parentTransform.gameObject.name}, {position}, {forward})");
+            //Debug.Log($"FishNetClientConnector.RequestSpawnModelPrefab({prefab.name}, {parentTransform.gameObject.name}, {position}, {forward})");
 
             NetworkObject nob = GetSpawnablePrefab(prefab, parentTransform, position, forward);
             SpawnPrefab(nob, networkConnection, default);
@@ -253,19 +257,6 @@ namespace AnyRPG {
 
             NetworkObject nob = GetSpawnablePrefab(prefab, parentTransform, position, forward);
             SpawnPrefab(nob, networkConnection, default);
-            /*
-            if (parentTransform != null) {
-                NetworkObject nob2 = parentTransform.GetComponent<NetworkObject>();
-                if (nob2 == null) {
-                    Debug.Log($"FishNetClientConnector.SpawnModelPrefabServer(gameObject: {prefab.name}, parent: {(parentTransform == null ? "null" : parentTransform.name)} position: {position}, forward: {forward}) could not find a network object on {parentTransform.gameObject.name}");
-                } else {
-                    Debug.Log($"FishNetClientConnector.SpawnModelPrefabServer(gameObject: {prefab.name}, parent: {(parentTransform == null ? "null" : parentTransform.name)} position: {position}, forward: {forward}) found a network object on {parentTransform.gameObject.name}");
-                    nob.SetParent(nob2);
-                }
-            } else {
-                Debug.Log($"FishNetClientConnector.SpawnModelPrefabServer(gameObject: {prefab.name}, parent: {(parentTransform == null ? "null" : parentTransform.name)} position: {position}, forward: {forward}) parentTransform was null");
-            }
-            */
         }
 
         private NetworkObject GetSpawnablePrefab(GameObject prefab, Transform parentTransform, Vector3 position, Vector3 forward) {
@@ -278,21 +269,12 @@ namespace AnyRPG {
             }
 
             NetworkObject nob = fishNetNetworkManager.GetPooledInstantiated(networkPrefab, position, Quaternion.LookRotation(forward), true);
-            //NetworkObject nob;
 
             if (parentTransform != null) {
                 NetworkObject nob2 = parentTransform.GetComponent<NetworkObject>();
-                if (nob2 == null) {
-                    //Debug.Log($"FishNetClientConnector.SpawnPrefab(gameObject: {prefab.name}, parent: {(parentTransform == null ? "null" : parentTransform.name)} position: {position}, forward: {forward}) could not find a network object on {parentTransform.gameObject.name}");
-                    //nob = fishNetNetworkManager.GetPooledInstantiated(networkPrefab, position, Quaternion.LookRotation(forward), true);
-                } else {
-                    //Debug.Log($"FishNetClientConnector.SpawnPrefab(gameObject: {prefab.name}, parent: {(parentTransform == null ? "null" : parentTransform.name)} position: {position}, forward: {forward}) found a network object on {parentTransform.gameObject.name}");
+                if (nob2 != null) {
                     nob.SetParent(nob2);
-                    //nob = fishNetNetworkManager.GetPooledInstantiated(networkPrefab, position,Quaternion.LookRotation(forward), parentTransform, true);
                 }
-            } else {
-                //Debug.Log($"FishNetClientConnector.SpawnPrefab(gameObject: {prefab.name}, parent: {(parentTransform == null ? "null" : parentTransform.name)} position: {position}, forward: {forward}) parentTransform was null");
-                //nob = fishNetNetworkManager.GetPooledInstantiated(networkPrefab, position, Quaternion.LookRotation(forward), true);
             }
 
             return nob;
@@ -311,13 +293,6 @@ namespace AnyRPG {
                     networkObject.SetParent(networkObjectParent);
                 }
             }
-        }
-        */
-
-        /*
-        private void SpawnScenePrefab(NetworkObject nob, Scene scene) {
-            //Debug.Log($"FishNetNetworkController.SpawnPlayer() Spawning player at {position}");
-            fishNetNetworkManager.ServerManager.Spawn(nob, null, scene);
         }
         */
 
@@ -588,56 +563,6 @@ namespace AnyRPG {
             
             fishNetNetworkManager.SceneManager.LoadConnectionScenes(networkConnection, sceneLoadData);
         }
-
-        /*
-        public void LoadMMOGameScene(int accountId, SceneNode sceneNode, NetworkConnection networkConnection) {
-            //Debug.Log($"FishNetClientConnector.LoadMMOGameScene(accountId: {accountId}, {sceneNode.SceneFile}, clientId: {networkConnection.ClientId}");
-
-            // get characterGroupId for accountId
-            int playerId = playerManagerServer.GetPlayerCharacterId(accountId);
-            int characterGroupId = characterGroupServiceServer.GetCharacterGroupIdFromCharacterId(playerId);
-            //Debug.Log($"playerId: {playerId}; characterGroupId: {characterGroupId}");
-
-            if (characterGroupId != -1
-                && sceneNode.IsDungeon == true
-                && networkManagerServer.CharacterGroupSceneHandles.ContainsKey(characterGroupId)
-                && networkManagerServer.CharacterGroupSceneHandles[characterGroupId].ContainsKey(sceneNode.SceneFile) == true) {
-                // this is a dungeon and an existing scene exists for this character group
-                //Debug.Log("this is a dungeon and an existing scene exists for this character group");
-                SceneLoadData sceneLoadData = new(networkManagerServer.CharacterGroupSceneHandles[characterGroupId][sceneNode.SceneFile]);
-                sceneLoadData.Options.AutomaticallyUnload = false;
-                sceneLoadData.ReplaceScenes = ReplaceOption.All;
-                sceneLoadData.Options.LocalPhysics = LocalPhysicsMode.Physics3D;
-                sceneLoadData.Options.AllowStacking = true;
-                sceneLoadData.PreferredActiveScene = new PreferredScene(SceneLookupData.CreateData(sceneNode.SceneFile));
-                fishNetNetworkManager.SceneManager.LoadConnectionScenes(networkConnection, sceneLoadData);
-            } else {
-                // load new scene
-                //Debug.Log("loading a new scene");
-                SceneLoadData sceneLoadData = new SceneLoadData(sceneNode.SceneFile);
-                sceneLoadData.ReplaceScenes = ReplaceOption.All;
-                sceneLoadData.Options.AutomaticallyUnload = false;
-                sceneLoadData.Options.LocalPhysics = LocalPhysicsMode.Physics3D;
-                sceneLoadData.PreferredActiveScene = new PreferredScene(SceneLookupData.CreateData(sceneNode.SceneFile));
-                SceneInstanceType sceneInstanceType = SceneInstanceType.World;
-                if (characterGroupId > 0 && sceneNode.IsDungeon == true) {
-                    // this is a dungeon and the character is in a group. set the request hash and stacking so that this instance gets linked to the group
-                    sceneLoadData.Options.AllowStacking = true;
-                    networkManagerServer.SetCharacterGroupLoadRequestHashcode(characterGroupId, sceneLoadData.GetHashCode());
-                    sceneInstanceType = SceneInstanceType.Dungeon;
-                } else if (sceneNode.IsDungeon == true) {
-                    // this is a dungeon and the character is not in a group.  no hash code will be set because this instance will be unique to this character
-                    sceneInstanceType = SceneInstanceType.Dungeon;
-                    sceneLoadData.Options.AllowStacking = true;
-                } else {
-                    // this is a world scene and should not be stacked
-                    sceneLoadData.Options.AllowStacking = false;
-                }
-                networkManagerServer.SetSceneLoadRequestHashCode(sceneInstanceType, sceneLoadData.GetHashCode());
-                fishNetNetworkManager.SceneManager.LoadConnectionScenes(networkConnection, sceneLoadData);
-            }
-        }
-        */
 
         public void LoadNewLobbyGameScene(int accountId, LobbyGame lobbyGame, SceneNode sceneNode) {
             //Debug.Log($"FishNetClientConnector.LoadNewLobbyGameScene(accountId: {accountId}, lobbyGameId: {lobbyGame.gameId}, sceneFile: {sceneNode.SceneFile}");

@@ -334,7 +334,7 @@ namespace AnyRPG {
         }
 
         public int GetLootCount(UnitController sourceUnitController) {
-            Debug.Log($"{interactable.gameObject.name}.LootableCharacter.GetLootCount({sourceUnitController.gameObject.name})");
+            //Debug.Log($"{interactable.gameObject.name}.LootableCharacter.GetLootCount({sourceUnitController.gameObject.name})");
 
             int lootCount = 0;
 

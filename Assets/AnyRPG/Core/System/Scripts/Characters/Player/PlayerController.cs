@@ -622,7 +622,7 @@ namespace AnyRPG {
             } else if (mouseOverInteractable != null && mouseOverInteractable.IsTrigger == false) {
                 //Debug.Log($"PlayerController.HandleLeftMouseClick(): mouseover interactable: {mouseOverInteractable.gameObject.name}");
                 if (mouseOverInteractable.IsMouseOverBlocked() == false) {
-                    Debug.Log("PlayerController.HandleLeftMouseClick(): mouseover not blocked");
+                    //Debug.Log("PlayerController.HandleLeftMouseClick(): mouseover not blocked");
                     playerManagerClient.UnitController.SetTarget(mouseOverInteractable.CharacterTarget);
                     return;
                 }

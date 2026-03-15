@@ -127,14 +127,14 @@ namespace AnyRPG {
         */
 
         public void ProcessExitToMainMenu() {
-            Debug.Log("PlayerManagerClient.ProcessExitToMainMenu()");
+            //Debug.Log("PlayerManagerClient.ProcessExitToMainMenu()");
 
             if (unitController != null) {
                 // we need to check here because the exit to main menu could have come from a network disconnection
                 // that occured before the player unit was spawned
                 playerManagerServer.DespawnPlayerUnit(networkManagerClient.AccountId);
             } else {
-                Debug.Log("PlayerManagerClient.ProcessExitToMainMenu(): player unit was not spawned, so no need to despawn");
+                //Debug.Log("PlayerManagerClient.ProcessExitToMainMenu(): player unit was not spawned, so no need to despawn");
                 playerManagerServer.RemoveActivePlayer(networkManagerClient.AccountId);
             }
             DespawnPlayerConnection();

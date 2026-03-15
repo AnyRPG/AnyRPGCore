@@ -87,7 +87,7 @@ namespace AnyRPG {
         }
 
         public void SubscribeToMountModelReady() {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SubscribeToMountModelReady()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SubscribeToMountModelReady()");
 
             if (mountUnitController?.UnitModelController != null) {
                 //mountUnitController.UnitModelController.OnModelUpdated += HandleMountModelReady;
@@ -117,7 +117,7 @@ namespace AnyRPG {
 
 
         public void HandleMountUnitSpawn() {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn()");
 
             string originalPrefabSourceBone = mountUnitProfile.UnitPrefabProps.TargetBone;
             // NOTE: mount effects used sheathed position for character position.  do not use regular position to avoid putting mount below ground when spawning
@@ -127,6 +127,7 @@ namespace AnyRPG {
                 Transform mountPoint = mountUnitController.transform.FindChildByRecursive(originalPrefabSourceBone);
                 if (mountPoint != null) {
                     unitController.UnitEventController.NotifyOnSetParent(mountPoint);
+                    //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
                     if (systemGameManager.GameMode == GameMode.Local) {
                         unitController.transform.parent = mountPoint;
                     }
@@ -141,7 +142,6 @@ namespace AnyRPG {
                     //}
                 }
             }
-            unitController.UnitEventController.NotifyOnMountUnitSpawn();
         }
 
         public void ActivateMountedState(bool lateJoin = false) {
@@ -172,9 +172,12 @@ namespace AnyRPG {
                 unitController.SetUnTargeted();
                 mountUnitController.SetTargeted();
             }
+            unitController.UnitMovementController.ChangeState(CharacterMovementState.Riding, false);
         }
 
         public void ConfigureCharacterMountedPhysics() {
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterMountedPhysics()");
+
             unitController.RigidBody.WakeUp();
             //playerManager.UnitController.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.Discrete;
             // DO NOT EVER USE CONTINUOUS SPECULATIVE.  IT WILL MESS THINGS UP EVEN WHEN YOUR RIGIDBODY IS KINEMATIC
@@ -182,6 +185,7 @@ namespace AnyRPG {
             //playerManager.UnitController.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
             unitController.RigidBody.interpolation = RigidbodyInterpolation.None;
             unitController.RigidBody.detectCollisions = false;
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterMountedPhysics() set kinematic true");
             unitController.RigidBody.isKinematic = true;
             unitController.RigidBody.useGravity = false;
             unitController.FreezeAll();
@@ -253,6 +257,7 @@ namespace AnyRPG {
             if (unitController.CharacterCombat.GetInCombat() == true) {
                 unitController.UnitModelController.HoldWeapons();
             }
+            unitController.UnitMovementController.ChangeState(CharacterMovementState.Idle, false);
         }
 
         public void DespawnMountUnit() {
@@ -295,6 +300,7 @@ namespace AnyRPG {
             unitController.RigidBody.WakeUp();
             unitController.RigidBody.detectCollisions = true;
             unitController.RigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics() set kinematic false");
             unitController.RigidBody.isKinematic = false;
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && unitController.IsOwner == true)) {
                 unitController.RigidBody.useGravity = true;

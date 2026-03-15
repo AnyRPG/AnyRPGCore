@@ -161,7 +161,7 @@ namespace AnyRPG {
             SetUnitControllerConfiguration(unitController);
 
             if (unitController.CharacterRequestData.requestMode == GameMode.Network) {
-                // if this is being spawned over the network, the model is not spawned yet, so return and wait for it to spawn
+                // if this is being spawned over the network, the model will initalize itself in its OnStartServer() method
                 return;
             }
 
@@ -413,7 +413,7 @@ namespace AnyRPG {
                 return SpawnModelPrefab(GameMode.Network, unitProfile.UnitPrefabProps.NetworkModelPrefab, parentTransform, position, forward);
             }
 
-            Debug.Log($"CharacterManager.SpawnModelPrefab() unit controller {unitController.gameObject.name} not found in any unit lists");
+            //Debug.Log($"CharacterManager.SpawnModelPrefab() unit controller {unitController.gameObject.name} not found in any unit lists");
             return null;
             */
         }

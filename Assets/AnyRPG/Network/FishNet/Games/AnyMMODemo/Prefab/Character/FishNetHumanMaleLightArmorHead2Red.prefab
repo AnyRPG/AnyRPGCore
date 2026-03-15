@@ -31,7 +31,7 @@ PrefabInstance:
     - target: {fileID: 6307183516646880328, guid: a08198b12b6a5504d81d0fb9bc96e49c,
         type: 3}
       propertyPath: m_Name
-      value: NetworkHumanMaleLightArmorHead2Red
+      value: FishNetHumanMaleLightArmorHead2Red
       objectReference: {fileID: 0}
     - target: {fileID: 6321914210949928993, guid: a08198b12b6a5504d81d0fb9bc96e49c,
         type: 3}
@@ -162,7 +162,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584293353043093269
+  _initializedTimestamp: -8584280552682747715
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -178,7 +178,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 53
+  <PrefabId>k__BackingField: 48
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 13330549335516107652
   SceneId: 0

@@ -9,6 +9,9 @@ namespace AnyRPG {
 
         // private fields
         private GameMode gameMode = GameMode.Local;
+        //private bool isServer = false;
+        private ushort commandLineServerPort = 7770;
+        private NetworkServerMode commandLineServerMode = NetworkServerMode.MMO;
 
         // serialized fields
         [Header("Configuration")]
@@ -234,6 +237,9 @@ namespace AnyRPG {
         public FriendServiceClient FriendServiceClient { get => friendServiceClient; set => friendServiceClient = value; }
         public FriendServiceServer FriendServiceServer { get => friendServiceServer; set => friendServiceServer = value; }
         public ServerDataService ServerDataService { get => serverDataService; set => serverDataService = value; }
+        //public bool IsServer { get => isServer; set => isServer = value; }
+        public ushort CommandLineServerPort { get => commandLineServerPort; set => commandLineServerPort = value; }
+        public NetworkServerMode CommandLineServerMode { get => commandLineServerMode; set => commandLineServerMode = value; }
 
         private void Awake() {
             Init();
@@ -257,6 +263,8 @@ namespace AnyRPG {
         }
 
         private void Init() {
+            ProcessCommandLineParameters();
+
             //Debug.Log("SystemGameManager.Init()");
             UpdateSimulationMode();
 
@@ -360,6 +368,42 @@ namespace AnyRPG {
             //localGameServerClient.Configure(this);
             friendServiceClient.Configure(this);
             friendServiceServer.Configure(this);
+        }
+
+        private void ProcessCommandLineParameters() {
+            string[] args = Environment.GetCommandLineArgs();
+
+            for (int i = 0; i < args.Length; i++) {
+                string arg = args[i].ToLower();
+
+                switch (arg) {
+                    /*
+                    case "-d":
+                        isServer = true;
+                        Debug.Log("Command Line: Server Mode Enabled");
+                        break;
+                    */
+                    case "--serverport":
+                        if (i + 1 < args.Length && ushort.TryParse(args[i + 1], out ushort parsedPort)) {
+                            commandLineServerPort = parsedPort;
+                            //Debug.Log($"Command Line: Server port set to {commandLineServerPort}");
+                        }
+                        break;
+
+                    case "--servermode":
+                        if (i + 1 < args.Length) {
+                            string mode = args[i + 1];
+                            if (mode == "Lobby") {
+                                commandLineServerMode = NetworkServerMode.Lobby;
+                            }
+                            if (mode == "MMO") {
+                                commandLineServerMode = NetworkServerMode.MMO;
+                            }
+                            //Debug.Log($"Command Line: Server mode set to {commandLineServerMode}");
+                        }
+                        break;
+                }
+            }
         }
 
         private void Update() {

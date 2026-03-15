@@ -12,7 +12,7 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay, bool isSilent) {
-            Debug.Log($"{unitController.gameObject.name}.MovementGlideState.Enter(isReplay: {isReplay}) frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)}");
+            //Debug.Log($"{unitController.gameObject.name}.MovementGlideState.Enter(isReplay: {isReplay}) frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)}");
 
             if (isSilent) return;
 
@@ -47,73 +47,17 @@ namespace AnyRPG {
 
 
         public void Exit(bool isReplay, bool isSilent) {
-            Debug.Log($"{unitController.gameObject.name}.MovementGlideState.Exit() frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)}");
+            //Debug.Log($"{unitController.gameObject.name}.MovementGlideState.Exit() frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)}");
 
             unitController.RigidBody.useGravity = true;
             if (isReplay == false) {
                 unitController.UnitAnimator.SetJumping(0);
             }
         }
-        /*
-        public void Update(bool isReplay, double timeInterval) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementGlideState.Update()");
-            if (unitController.InWater == true) {
-                if (unitMovementController.CheckForSwimming() == true) {
-                    //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() swimming");
-                    unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
-                    return;
-                }
-            }
-
-            if (unitController.CanFly
-                && unitMovementController.CurrentMovementData.InputFly) {
-                //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() flying");
-                unitMovementController.ChangeState(CharacterMovementState.Fly, isReplay);
-                return;
-            }
-
-            if (unitMovementController.touchingGround) {
-                if (unitMovementController.groundAngle <= unitMovementController.slopeLimit) {
-                    if (unitMovementController.CurrentMovementData.HasMoveInput() || unitMovementController.CurrentMovementData.HasTurnInput()) {
-                        //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() moving");
-                        unitMovementController.ChangeState(CharacterMovementState.Move, isReplay);
-                        return;
-                    }
-                    //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() idling");
-                    unitMovementController.ChangeState(CharacterMovementState.Idle, isReplay);
-                    return;
-                }
-            }
-
-            if (unitController.CanGlide == false) {
-                //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() falling");
-                unitMovementController.ChangeState(CharacterMovementState.Fall, isReplay);
-                return;
-            }
-
-            // ============ VELOCITY CALCULATIONS ============
-
-            // set clampValue to default of max movement speed
-            float clampValue = unitMovementController.MaxMovementSpeed;
-
-            // get current movement speed and clamp it to current clamp value
-            float calculatedSpeed = unitController.GlideSpeed;
-            calculatedSpeed = Mathf.Clamp(calculatedSpeed, 0, clampValue);
-
-            // multiply normalized movement by calculated speed to get actual movement
-            unitMovementController.intendedLocalMoveVelocity = unitMovementController.NormalizedGlideMovement(calculatedSpeed) * calculatedSpeed;
-            unitMovementController.adjustedLocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
-            //Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
-
-            unitMovementController.CalculateTurnVelocity();
-
-            unitMovementController.MoveRelative();
-        }
-        */
 
         public void Update(bool isReplay, double timeInterval) {
-            // 1. State Transitions (Stay the same)
             //Debug.Log($"{unitController.gameObject.name}.MovementGlideState.Update()");
+
             if (unitController.InWater == true) {
                 if (unitMovementController.CheckForSwimming() == true) {
                     //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() swimming");

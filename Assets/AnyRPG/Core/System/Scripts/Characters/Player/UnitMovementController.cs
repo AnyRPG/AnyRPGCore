@@ -1,6 +1,3 @@
-using JetBrains.Annotations;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +12,8 @@ namespace AnyRPG {
         Swim = 6,
         Fly = 7,
         Glide = 8,
-        NavMesh = 9
+        NavMesh = 9,
+        Riding = 10
     }
 
     public class UnitMovementController : ConfiguredClass {
@@ -286,6 +284,7 @@ namespace AnyRPG {
             movementStates.Add(CharacterMovementState.Fly, new MovementFlyState(this, unitController));
             movementStates.Add(CharacterMovementState.Glide, new MovementGlideState(this, unitController));
             movementStates.Add(CharacterMovementState.NavMesh, new MovementNavMeshState(this, unitController, systemGameManager));
+            movementStates.Add(CharacterMovementState.Riding, new MovementRidingState(this, unitController));
             ChangeState(CharacterMovementState.Idle, false);
         }
 
@@ -1373,11 +1372,9 @@ namespace AnyRPG {
         */
 
         public void StateUpdate(MovementData movementData, double timeInterval, bool isReplay) {
-            if (currentIMovementState == null) {
-                return;
-            }
+            //Debug.Log($"{unitController.gameObject.name}.UnitMovementController.StateUpdate()");
 
-            if (unitController.IsMounted) {
+            if (currentIMovementState == null) {
                 return;
             }
 
@@ -1387,16 +1384,20 @@ namespace AnyRPG {
 
             currentMovementData = movementData;
 
-            if (movementData.HasAnyInput() == true
+            if (unitController.IsMounted == false) {
+                if (movementData.HasAnyInput() == true
                 && (networkManagerServer.ServerModeActive == true || systemGameManager.GameMode == GameMode.Local)) {
-                unitController.UnitMotor.StopFollowingTarget();
+                    unitController.UnitMotor.StopFollowingTarget();
+                }
+
+                EarlyGlobalStateUpdate();
             }
-            // debug transform forward
-            EarlyGlobalStateUpdate();
 
             currentIMovementState.Update(isReplay, timeInterval);
 
-            LateGlobalStateUpdate(timeInterval);
+            if (unitController.IsMounted == false) {
+                LateGlobalStateUpdate(timeInterval);
+            }
         }
 
         public void AddMovementData(MovementData frameData) {
@@ -1480,30 +1481,6 @@ namespace AnyRPG {
             tickReadyData.NormalizedMoveInput = new Vector3(tickReadyData.InputHorizontal, 0, tickReadyData.InputVertical).normalized;
             tickReadyData.TurnInput = new Vector3(tickReadyData.InputTurn, 0, 0);
 
-            /*
-            // 7. CALCULATE THE "STABLE" WORLD DIRECTION
-            // We use the camera's Y-rotation captured during this tick.
-            Quaternion cameraYRotation = Quaternion.Euler(0f, tickReadyData.CameraWantedDirection.y, 0f);
-            Debug.Log($"Camera Y Rotation for movement: {cameraYRotation.eulerAngles.y} degrees camerawanteddirection.y {tickReadyData.CameraWantedDirection.y}");
-
-            // This is the "Universal" intended direction (e.g., W always moves 'Into' the screen)
-            tickReadyData.IntendedWorldDirection = cameraYRotation * tickReadyData.NormalizedMoveInput;
-            Debug.Log($"Intended World Direction: {tickReadyData.IntendedWorldDirection} from NormalizedMoveInput {tickReadyData.NormalizedMoveInput} and Camera Y Rotation {cameraYRotation.eulerAngles.y}");
-            */
-            /*
-            // 1.Get the stable forward direction from the camera vector
-            Vector3 camForward = tickReadyData.CameraWantedDirection;
-            camForward.y = 0; // Flatten to horizontal plane
-            camForward.Normalize();
-
-            // 2. Derive the 'Right' vector from that forward
-            Vector3 camRight = Vector3.Cross(Vector3.up, camForward);
-
-            // 3. Combine with WASD/Joystick input to get the World Intent
-            // This ensures 'W' is always "Into the screen"
-            tickReadyData.IntendedWorldDirection = (camForward * tickReadyData.InputVertical) + (camRight * tickReadyData.InputHorizontal);
-            */
-
             Quaternion headingRotation;
 
             if (controlsManager.GamepadModeActive || unitController.UnitProfile.UnitPrefabProps.RotateModel) {
@@ -1543,14 +1520,6 @@ namespace AnyRPG {
                 // In this mode, we don't look at the camera; we just use the raw WASD input.
                 tickReadyData.IntendedLocalDirection = tickReadyData.NormalizedMoveInput;
             }
-            /*
-            if (controlsManager.GamepadModeActive || unitController.UnitProfile.UnitPrefabProps.RotateModel) {
-                Vector3 cameraInput = Quaternion.Euler(0f, cameraManager.ActiveMainCamera.transform.rotation.eulerAngles.y, 0f) * tickReadyData.NormalizedMoveInput;
-                tickReadyData.IntendedLocalDirection = unitController.transform.InverseTransformDirection(cameraInput);
-            } else {
-                tickReadyData.IntendedLocalDirection = tickReadyData.NormalizedMoveInput;
-            }
-            */
 
             return tickReadyData;
         }

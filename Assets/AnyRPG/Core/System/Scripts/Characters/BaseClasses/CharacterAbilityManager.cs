@@ -1945,7 +1945,7 @@ namespace AnyRPG {
         }
 
         private void StopCasting() {
-            Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.StopCasting()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.StopCasting()");
 
             abilityCasterMonoBehaviour.StopCoroutine(currentCastCoroutine);
             currentCastCoroutine = null;

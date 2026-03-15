@@ -138,14 +138,15 @@ namespace AnyRPG {
         }
 
         public override void OnStartServer() {
-            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.OnStartServer()");
+            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.OnStartServer() frame: {Time.frameCount}");
+            
             base.OnStartClient();
             isClient = false;
             FindGameManager();
         }
 
         public override void OnSpawnServer(NetworkConnection connection) {
-            Debug.Log($"{gameObject.name}.FishNetCharacterModel.OnSpawnServer() owner: {base.OwnerId}");
+            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.OnSpawnServer() owner: {base.OwnerId}");
 
             base.OnSpawnServer(connection);
 
