@@ -27,9 +27,8 @@ namespace AnyRPG {
         public float minVerticalPan = -45;
 
         public float initialYDegrees = 0f;
-
-        public float initialYOffset = 1f;
-        public float initialZOffset = 4f;
+        public float initialXDegrees = 0f;
+        public float initialZoomDistance = 4f;
 
         public float pitch = 2f;
         public float yawSpeed = 10f;
@@ -40,11 +39,7 @@ namespace AnyRPG {
 
         // private variables
         private Vector3 wantedPosition;
-        private Vector3 cameraOffsetVector;
-        private Vector3 lastPlayerPosition;
-        private Vector3 lastTargetForward;
         private Vector3 targetPosition;
-        private Vector3 initialCameraOffset;
         private float userOffsetAngle;
         // needed to prevent annoying debug messages in console log
         private Vector3 cameraTransformForward;
@@ -82,12 +77,12 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            currentZoomDistance = initialZOffset;
-            currentYDegrees = initialYDegrees;
 
             if (usedCamera != null) {
                 cameraTransform = usedCamera.transform;
             }
+
+            SetInitialValues();
         }
 
         public override void SetGameManagerReferences() {
@@ -100,6 +95,32 @@ namespace AnyRPG {
             controlsManager = systemGameManager.ControlsManager;
         }
 
+        private void SetInitialValues() {
+            if (systemConfigurationManager.CameraViewMode == CameraViewMode.Isometric) {
+                SetIsometricInitialValues();
+            } else if (systemConfigurationManager.CameraViewMode == CameraViewMode.Free) {
+                SetFreeInitialvalues();
+            }
+        }
+
+        private void SetIsometricInitialValues() {
+            currentZoomDistance = systemConfigurationManager.InitialIsometricVector.magnitude;
+
+            // Use LookRotation to find the angles required to point from the camera to the player
+            // We negate the vector because we want the rotation LOOKING at the target
+            Quaternion isoRotation = Quaternion.LookRotation(-systemConfigurationManager.InitialIsometricVector);
+
+            currentXDegrees = isoRotation.eulerAngles.y;
+            currentYDegrees = -isoRotation.eulerAngles.x; // Negated to match your orbit math
+        }
+
+        private void SetFreeInitialvalues() {
+            // reset the camera to directly behind the player at the previous zoom level
+            currentZoomDistance = initialZoomDistance;
+            currentYDegrees = initialYDegrees;
+            currentXDegrees = initialXDegrees;
+        }
+
         public void ClearTarget() {
             target = null;
         }
@@ -107,7 +128,6 @@ namespace AnyRPG {
         public void SetTarget(Transform newTarget) {
             //Debug.Log("AnyRPGCameraController.SetTarget(" + newTarget + ")");
             target = newTarget;
-            lastTargetForward = newTarget.transform.forward;
             SetTargetPosition();
 
         }
@@ -122,17 +142,29 @@ namespace AnyRPG {
         public void SetTargetPositionRaw(Vector3 rawTargetPosition, Vector3 forwardDirection) {
             //Debug.Log($"SetTargetPositionRaw({rawTargetPosition}, {forwardDirection})");
 
-            // reset the camera to directly behind the player at the previous zoom level
-            currentXDegrees = 0f;
-            currentYDegrees = 0f;
-            currentZoomDistance = initialZOffset;
+            SetInitialValues();
 
             targetPosition = rawTargetPosition + Vector3.up * pitch;
+            if (systemConfigurationManager.CameraViewMode == CameraViewMode.Isometric) {
+                // Use the isometric rotation we just calculated in SetInitialValues
+                Quaternion isoRotation = Quaternion.Euler(-currentYDegrees, currentXDegrees, 0);
+                // Position the camera offset by the zoom distance along that rotation
+                transform.position = targetPosition + (isoRotation * Vector3.back * currentZoomDistance);
+            } else {
+                // Standard FREE mode behavior: Stay behind the forwardDirection
+                if (forwardDirection == Vector3.zero) {
+                    transform.position = targetPosition - new Vector3(0, 0, currentZoomDistance);
+                } else {
+                    transform.position = targetPosition - (Quaternion.LookRotation(forwardDirection) * new Vector3(0, 0, currentZoomDistance));
+                }
+            }
+            /*
             if (forwardDirection == Vector3.zero) {
                 transform.position = targetPosition - new Vector3(0, 0, currentZoomDistance);
             } else {
                 transform.position = targetPosition - (Quaternion.LookRotation(forwardDirection) * new Vector3(0, 0, currentZoomDistance));
             }
+            */
 
             LookAtTargetPosition();
         }
@@ -142,7 +174,6 @@ namespace AnyRPG {
 
             SetTarget(newTarget);
             JumpToFollowSpot();
-            lastPlayerPosition = target.position;
         }
 
         private void LateUpdate() {
@@ -165,7 +196,6 @@ namespace AnyRPG {
             lastTargetForward = target.transform.forward;
             */
 
-            lastPlayerPosition = target.position;
             SetTargetPosition();
 
             // ====MOUSE ZOOM====
@@ -188,62 +218,60 @@ namespace AnyRPG {
                 }
             }
 
-            // ====MOUSE PAN====
-            // pan with the left or turn with the right mouse button
-            if (!uIManager.DragInProgress && ((inputManager.rightMouseButtonDown && !inputManager.rightMouseButtonClickedOverUI) || (inputManager.leftMouseButtonDown && !inputManager.leftMouseButtonClickedOverUI))) {
-                float usedTurnSpeed = 0f;
-                if (inputManager.rightMouseButtonDown
-                    && (inputManager.rightMouseButtonDownPosition != Input.mousePosition || playerManagerClient.PlayerController.MovementData.HasMoveInput())) {
-                    usedTurnSpeed = PlayerPrefs.GetFloat("MouseTurnSpeed") + 0.5f;
-                    rightCameraPan = true;
-                    userOffsetAngle = 0f;
-                } else {
-                    usedTurnSpeed = PlayerPrefs.GetFloat("MouseLookSpeed") + 0.5f;
-                }
-                currentXDegrees += Input.GetAxis("Mouse X") * yawSpeed * usedTurnSpeed;
-                currentYDegrees += (Input.GetAxis("Mouse Y") * yawSpeed * usedTurnSpeed) * (PlayerPrefs.GetInt("MouseInvert") == 0 ? 1 : -1);
+            if (systemConfigurationManager.CameraViewMode == CameraViewMode.Free) {
+                // ====MOUSE PAN====
+                // pan with the left or turn with the right mouse button
+                if (!uIManager.DragInProgress && ((inputManager.rightMouseButtonDown && !inputManager.rightMouseButtonClickedOverUI) || (inputManager.leftMouseButtonDown && !inputManager.leftMouseButtonClickedOverUI))) {
+                    float usedTurnSpeed = 0f;
+                    if (inputManager.rightMouseButtonDown
+                        && (inputManager.rightMouseButtonDownPosition != Input.mousePosition || playerManagerClient.PlayerController.MovementData.HasMoveInput())) {
+                        usedTurnSpeed = PlayerPrefs.GetFloat("MouseTurnSpeed") + 0.5f;
+                        rightCameraPan = true;
+                        userOffsetAngle = 0f;
+                    } else {
+                        usedTurnSpeed = PlayerPrefs.GetFloat("MouseLookSpeed") + 0.5f;
+                    }
+                    currentXDegrees += Input.GetAxis("Mouse X") * yawSpeed * usedTurnSpeed;
+                    currentYDegrees += (Input.GetAxis("Mouse Y") * yawSpeed * usedTurnSpeed) * (PlayerPrefs.GetInt("MouseInvert") == 0 ? 1 : -1);
 
-                if (!inputManager.rightMouseButtonDown) {
-                    // RE-ANCHOR: Calculate how far 'off-center' we are from the player's current facing.
-                    // This allows the camera to stay at this specific side-angle when you let go.
-                    userOffsetAngle = Mathf.DeltaAngle(target.eulerAngles.y, currentXDegrees);
-                }
-
-                cameraPan = true;
-            }
-
-            // ====GAMEPAD PAN====
-            if (playerManagerClient.ActiveUnitController?.CharacterAbilityManager.WaitingForTarget() == false) {
-
-                if ((windowManager.CurrentWindow == null || windowManager.CurrentWindow.CaptureCamera == false)
-                && inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9") == false
-                && (Input.GetAxis("RightAnalogHorizontal") != 0f || Input.GetAxis("RightAnalogVertical") != 0f)) {
-
-
-                    if (Input.GetAxis("RightAnalogHorizontal") != 0f) {
-                        currentXDegrees += Input.GetAxis("RightAnalogHorizontal") * analogYawSpeed * (PlayerPrefs.GetFloat("JoystickLookSpeed"));
-                        cameraPan = true;
+                    if (!inputManager.rightMouseButtonDown) {
+                        // RE-ANCHOR: Calculate how far 'off-center' we are from the player's current facing.
+                        // This allows the camera to stay at this specific side-angle when you let go.
+                        userOffsetAngle = Mathf.DeltaAngle(target.eulerAngles.y, currentXDegrees);
                     }
 
-                    if (Input.GetAxis("RightAnalogVertical") != 0f) {
-                        currentYDegrees += (Input.GetAxis("RightAnalogVertical") * analogYawSpeed * (PlayerPrefs.GetFloat("JoystickLookSpeed"))) * (PlayerPrefs.GetInt("JoystickInvert") == 0 ? 1 : -1);
-                        cameraPan = true;
-                    }
+                    cameraPan = true;
+                }
 
+                // ====GAMEPAD PAN====
+                if (playerManagerClient.ActiveUnitController?.CharacterAbilityManager.WaitingForTarget() == false) {
+                    if ((windowManager.CurrentWindow == null || windowManager.CurrentWindow.CaptureCamera == false)
+                    && inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9") == false
+                    && (Input.GetAxis("RightAnalogHorizontal") != 0f || Input.GetAxis("RightAnalogVertical") != 0f)) {
+                        if (Input.GetAxis("RightAnalogHorizontal") != 0f) {
+                            currentXDegrees += Input.GetAxis("RightAnalogHorizontal") * analogYawSpeed * (PlayerPrefs.GetFloat("JoystickLookSpeed"));
+                            cameraPan = true;
+                        }
+                        if (Input.GetAxis("RightAnalogVertical") != 0f) {
+                            currentYDegrees += (Input.GetAxis("RightAnalogVertical") * analogYawSpeed * (PlayerPrefs.GetFloat("JoystickLookSpeed"))) * (PlayerPrefs.GetInt("JoystickInvert") == 0 ? 1 : -1);
+                            cameraPan = true;
+                        }
+                    }
+                }
+
+                if (currentXDegrees > 180f) {
+                    currentXDegrees -= 360f;
+                }
+
+                if (currentXDegrees < -180f) {
+                    currentXDegrees += 360f;
+                }
+
+                if (cameraPan) {
+                    currentYDegrees = Mathf.Clamp(currentYDegrees, minVerticalPan, maxVerticalPan);
                 }
             }
 
-            if (currentXDegrees > 180f) {
-                currentXDegrees -= 360f;
-            }
-
-            if (currentXDegrees < -180f) {
-                currentXDegrees += 360f;
-            }
-
-            if (cameraPan) {
-                currentYDegrees = Mathf.Clamp(currentYDegrees, minVerticalPan, maxVerticalPan);
-            }
 
             // follow the player
             //if (hasMoved || cameraZoom || (cameraPan && !inputManager.rightMouseButtonClickedOverUI && !inputManager.leftMouseButtonClickedOverUI) ) {
@@ -275,61 +303,6 @@ namespace AnyRPG {
             }
         }
 
-        /*
-        private void SetWantedPosition() {
-            //Debug.Log("SetWantedPosition(): targetPosition: " + targetPosition);
-
-            cameraOffsetVector = Quaternion.AngleAxis(currentXDegrees, Vector3.up) * Quaternion.AngleAxis(currentYDegrees, -Vector3.right) * initialCameraOffset;
-
-            wantedPosition = target.TransformPoint((cameraOffsetVector.normalized * currentZoomDistance) + new Vector3(0, pitch, 0));
-            wantedDirection = (target.transform.position - wantedPosition).normalized;
-        }
-        */
-
-        /*
-        private void SetWantedPosition() {
-            // 1. Calculate the 'World Orbit' angle
-            // If we aren't dragging the mouse, the camera stays at its side-offset relative to the player
-            if (!rightCameraPan) {
-                // currentXDegrees = Player's World Facing + our side-offset
-                currentXDegrees = target.eulerAngles.y + userOffsetAngle;
-            }
-
-            // 2. Create the rotation from our STABLE floats (currentX/YDegrees)
-            // This is the "Truth" - it doesn't jitter because it's not reading target.rotation
-            //Quaternion orbitRotation = Quaternion.Euler(currentYDegrees, currentXDegrees, 0);
-            Quaternion orbitRotation = Quaternion.Euler(-currentYDegrees, currentXDegrees, 0);
-
-            // 3. Calculate the world position using target.position (which is smooth)
-            // We add the 'pitch' height manually to avoid using TransformPoint
-            Vector3 worldOffset = orbitRotation * (Vector3.back * currentZoomDistance);
-
-            wantedPosition = target.position + worldOffset + new Vector3(0, pitch, 0);
-
-            // 4. Direction to look (aiming at the target's height)
-            wantedDirection = (target.position + new Vector3(0, pitch, 0) - wantedPosition).normalized;
-        }
-        */
-
-        /*
-        private void SetWantedPosition() {
-            //Debug.Log($"AnyRPGCameraController.SetWantedPosition()");
-
-            // 1. Maintain the relative offset if not manually panning
-            if (!rightCameraPan) {
-                currentXDegrees = target.eulerAngles.y + userOffsetAngle;
-            }
-
-            Quaternion orbitRotation = Quaternion.Euler(-currentYDegrees, currentXDegrees, 0);
-
-            Vector3 lookDirection = orbitRotation * Vector3.back;
-
-            wantedPosition = target.position + new Vector3(0, pitch, 0) + (lookDirection * currentZoomDistance);
-
-            wantedDirection = orbitRotation * Vector3.forward;
-        }
-        */
-
         private void SetWantedPosition() {
             // 1. Determine if we should "lock" to character's back or stay in world space
             // If we're right-clicking, the character follows the camera (already fixed).
@@ -338,6 +311,7 @@ namespace AnyRPG {
 
             if (!rightCameraPan) {
                 if (playerManagerClient.PlayerController != null
+                    && systemConfigurationManager.CameraViewMode != CameraViewMode.Isometric
                     && (playerManagerClient.PlayerController.MovementData.HasMoveInput() || playerManagerClient.PlayerController.MovementData.HasTurnInput())
                     && playerManagerClient.ActiveUnitController.UnitProfile.UnitPrefabProps.RotateModel == false) {
                     // STANDARD: Stick to the character's rotation (camera moves with character turns)
@@ -386,30 +360,19 @@ namespace AnyRPG {
             }
             cameraTransform.LookAt(targetPosition);
         }
-        /*
-        private void InitializeFollowLocation() {
-            Vector3 initialCameraLocalLocation = new Vector3(0, pitch, -initialZOffset);
-            Vector3 initialCameraLocation = target.TransformPoint(initialCameraLocalLocation);
-            cameraOffsetVector = target.InverseTransformPoint(initialCameraLocation) - target.InverseTransformPoint(targetPosition);
-            initialCameraOffset = cameraOffsetVector;
-        }
-        */
 
         private void InitializeFollowLocation() {
             //Debug.Log($"AnyRPGCameraController.InitializeFollowLocation()");
 
-            /*
-            Vector3 initialCameraLocalLocation = new Vector3(0, pitch, -initialZOffset);
-            // Calculate the angle relative to the player's back
-            // If the offset is directly behind, this is 0. If it's to the side, it's 90.
-            userOffsetAngle = Vector3.SignedAngle(Vector3.forward, initialCameraLocalLocation.normalized, Vector3.up);
-            */
-
-            //userOffsetAngle = 180f;
-            userOffsetAngle = 0f;
-
-            // Ensure currentXDegrees starts synced with the player + offset
-            currentXDegrees = target.eulerAngles.y + userOffsetAngle;
+            if (systemConfigurationManager.CameraViewMode != CameraViewMode.Isometric) {
+                userOffsetAngle = 0f;
+                currentXDegrees = target.eulerAngles.y + userOffsetAngle;
+            } else {
+                // In Isometric, we want to keep the currentXDegrees 
+                // derived from your isoMetricVector.
+                // We just need to update the offset so if we DO switch modes, it doesn't snap.
+                userOffsetAngle = Mathf.DeltaAngle(target.eulerAngles.y, currentXDegrees);
+            }
         }
 
         private void JumpToFollowSpot() {
