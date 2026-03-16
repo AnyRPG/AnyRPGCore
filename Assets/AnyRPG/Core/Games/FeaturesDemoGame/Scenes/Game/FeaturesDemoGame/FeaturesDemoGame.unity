@@ -190,11 +190,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4274970778586282433, guid: bc279f25aecaf1d458fb06ce740ea524,
         type: 3}
-      propertyPath: cameraViewMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4274970778586282433, guid: bc279f25aecaf1d458fb06ce740ea524,
-        type: 3}
       propertyPath: allowClickToMove
       value: 1
       objectReference: {fileID: 0}
