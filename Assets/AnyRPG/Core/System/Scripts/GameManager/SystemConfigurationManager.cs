@@ -152,6 +152,16 @@ namespace AnyRPG {
         private string defaultBankBagItem = "Bank";
         */
 
+        [Header("CAMERA")]
+
+        [Tooltip("In free mode, the player can move the camera.  In isometric mode, the camera is locked to the specified angle")]
+        [SerializeField]
+        private CameraViewMode cameraViewMode = CameraViewMode.Free;
+
+        [Tooltip("When the camera is in isometric mode, this is the world space initial vector from the target (defaults to looking NorthEast).")]
+        [SerializeField]
+        private Vector3 initialIsometricVector = new Vector3(-4f, 4f, -4f);
+
         [Header("CONTROLLER")]
 
         /*
@@ -912,6 +922,8 @@ namespace AnyRPG {
         public float MaxMovementSpeed { get => maxMovementSpeed; set => maxMovementSpeed = value; }
         public LayerMask DefaultGroundMask { get => defaultGroundMask; set => defaultGroundMask = value; }
         public float TabTargetMaxDistance { get => tabTargetMaxDistance; set => tabTargetMaxDistance = value; }
+        public CameraViewMode CameraViewMode { get => cameraViewMode; set => cameraViewMode = value; }
+        public Vector3 InitialIsometricVector { get => initialIsometricVector; set => initialIsometricVector = value; }
 
         //public Currency PostageCurrency { get => postageCurrency; set => postageCurrency = value; }
 
@@ -1161,5 +1173,7 @@ namespace AnyRPG {
     public enum CharacterSelectionType { DefaultCharacter, CharacterList, RaceAndGender }
 
     public enum PlayerNameSource { DefaultPlayerName, UnitProfile }
+
+    public enum CameraViewMode { Free, Isometric }
 
 }

@@ -313,7 +313,7 @@ namespace AnyRPG {
         }
 
         public Vector3 CorrectedNavmeshPosition(Vector3 testPosition, float minAttackRange = -1f) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CorrectedNavmeshPosition(testPosition: {testPosition}, minAttackRange: {minAttackRange})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CorrectedNavmeshPosition(testPosition: {testPosition}, minAttackRange: {minAttackRange}) currentMaxSampleRadius: {currentMaxSampleRadius}");
 
             if (minAttackRange > 0f) {
                 currentMaxSampleRadius = minAttackRange;
@@ -323,8 +323,17 @@ namespace AnyRPG {
 
             // attempt sample at 0.5f radius using current navmesharea.  if this works, we found a valid point on the current navmesh
             if (NavMesh.SamplePosition(testPosition, out hit, 0.1f, NavMesh.AllAreas)) {
-                //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CorrectedNavmeshPosition(): testPosition {testPosition} was on current NavMesh near: {hit.position})");
+                //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CorrectedNavmeshPosition(): testPosition {testPosition} was within 0.1f of NavMesh near: {hit.position})");
                 return hit.position;
+            }
+
+            // repeat the above sample in steps of 0.1f to current max sample radius
+            for (float positionOffset = 0.1f; positionOffset <= currentMaxSampleRadius; positionOffset += navMeshSampleStepSize) {
+                //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CorrectedNavmeshPosition(): trying again with position offset: {positionOffset}");
+                if (NavMesh.SamplePosition(testPosition, out hit, positionOffset, NavMesh.AllAreas)) {
+                    //Debug.Log($"{unitController.gameObject.name}.UnitMotor.CorrectedNavmeshPosition(): testPosition {testPosition} was not within 0.1f of NavMesh, but found a point on the NavMesh near: {hit.position})");
+                    return hit.position;
+                }
             }
 
             // repeat the above sample in steps of 0.1f to current max sample radius, with the testposition moving closer to the character by the step size each time
@@ -440,7 +449,7 @@ namespace AnyRPG {
 
         // move toward the position at a normal speed
         public Vector3 MoveToPoint(Vector3 point, float minAttackRange = -1f) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.MoveToPoint({point}, {minAttackRange}). current location: {unitController.transform.position}; frame: {Time.frameCount}");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMotor.MoveToPoint(point: {point}, minAttackRange: {minAttackRange}). current location: {unitController.transform.position}; frame: {Time.frameCount}");
 
             if (frozen) {
                 //Debug.Log($"{gameObject.name}UnitMotor.MoveToPoint(" + point + "). current location: " + transform.position + "; frame: " + Time.frameCount + "; FROZEN, DOING NOTHING!!!");

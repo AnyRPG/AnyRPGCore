@@ -1442,8 +1442,10 @@ namespace AnyRPG {
                 cachedMovementData.InputStrafe = accumulatedMovementData.InputStrafe;
 
                 // Cache these so mouse-based turning doesn't drop out
-                cachedMovementData.RightMouseButtonDown = accumulatedMovementData.RightMouseButtonDown;
-                cachedMovementData.RightMouseDragged = accumulatedMovementData.RightMouseDragged;
+                if (systemConfigurationManager.CameraViewMode == CameraViewMode.Free) {
+                    cachedMovementData.RightMouseButtonDown = accumulatedMovementData.RightMouseButtonDown;
+                    cachedMovementData.RightMouseDragged = accumulatedMovementData.RightMouseDragged;
+                }
                 cachedMovementData.CameraLocalEulerAngleX = accumulatedMovementData.CameraLocalEulerAngleX;
                 cachedMovementData.CameraWantedDirection = accumulatedMovementData.CameraWantedDirection;
 
