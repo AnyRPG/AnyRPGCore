@@ -1,4 +1,5 @@
 using AnyRPG;
+using System.Drawing.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -25,6 +26,10 @@ namespace AnyRPG {
         public float maxZoom = 15f;
         public float maxVerticalPan = 45;
         public float minVerticalPan = -45;
+        public float firstPersonMaxVerticalPan = 75;
+        public float firstPersonMinVerticalPan = -35;
+        private float currentMaxVerticalPan = 45;
+        private float currentMinVerticalPan = -45;
 
         public float initialYDegrees = 0f;
         public float initialXDegrees = 0f;
@@ -81,8 +86,13 @@ namespace AnyRPG {
             if (usedCamera != null) {
                 cameraTransform = usedCamera.transform;
             }
+            currentMaxVerticalPan = maxVerticalPan;
+            currentMinVerticalPan = minVerticalPan;
 
-            SetInitialValues();
+            SetInitialDegreesAndZoom();
+            if (systemConfigurationManager.AllowFirstPersonCamera) {
+                minZoom = 0.1f;
+            }
         }
 
         public override void SetGameManagerReferences() {
@@ -95,7 +105,7 @@ namespace AnyRPG {
             controlsManager = systemGameManager.ControlsManager;
         }
 
-        private void SetInitialValues() {
+        private void SetInitialDegreesAndZoom() {
             if (systemConfigurationManager.CameraViewMode == CameraViewMode.Isometric) {
                 SetIsometricInitialValues();
             } else if (systemConfigurationManager.CameraViewMode == CameraViewMode.Free) {
@@ -142,7 +152,7 @@ namespace AnyRPG {
         public void SetTargetPositionRaw(Vector3 rawTargetPosition, Vector3 forwardDirection) {
             //Debug.Log($"SetTargetPositionRaw({rawTargetPosition}, {forwardDirection})");
 
-            SetInitialValues();
+            SetInitialDegreesAndZoom();
 
             targetPosition = rawTargetPosition + Vector3.up * pitch;
             if (systemConfigurationManager.CameraViewMode == CameraViewMode.Isometric) {
@@ -186,6 +196,7 @@ namespace AnyRPG {
             cameraPan = false;
             cameraZoom = false;
             rightCameraPan = false;
+            bool wasMinZoom = currentZoomDistance == minZoom;
 
             /*
             if (lastTargetForward != target.transform.forward
@@ -205,6 +216,13 @@ namespace AnyRPG {
                 currentZoomDistance += (Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * -1);
                 currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, maxZoom);
                 cameraZoom = true;
+                if (currentZoomDistance == minZoom && wasMinZoom == false) {
+                    //Debug.Log("Camera zoomed to min zoom distance.  Jumping to Wanted Position.");
+                    ActivateFirstPersonView();
+                } else if (currentZoomDistance > minZoom && wasMinZoom == true) {
+                    //Debug.Log("Camera zoomed out of first person view.  Jumping to Wanted Position.");
+                    DeactivateFirstPersonView();
+                }
             }
 
             // ====GAMEPAD ZOOM====
@@ -267,11 +285,11 @@ namespace AnyRPG {
                     currentXDegrees += 360f;
                 }
 
-                if (cameraPan) {
-                    currentYDegrees = Mathf.Clamp(currentYDegrees, minVerticalPan, maxVerticalPan);
+                // if the camera was panned or we just zoomed into first person view, clamp the vertical angle to prevent weird camera angles
+                if (cameraPan || (currentZoomDistance == minZoom && wasMinZoom == false)) {
+                    currentYDegrees = Mathf.Clamp(currentYDegrees, currentMinVerticalPan, currentMaxVerticalPan);
                 }
             }
-
 
             // follow the player
             //if (hasMoved || cameraZoom || (cameraPan && !inputManager.rightMouseButtonClickedOverUI && !inputManager.leftMouseButtonClickedOverUI) ) {
@@ -289,6 +307,22 @@ namespace AnyRPG {
             LookAtTargetPosition();
 
             SystemEventManager.TriggerEvent("AfterCameraUpdate", new EventParamProperties());
+        }
+
+        private void ActivateFirstPersonView() {
+            Debug.Log("AnyRPGCameraController.ActivateFirstPersonView()");
+
+            playerManagerClient.UnitController?.UnitModelController.ActivateFirstPersonView();
+            currentMaxVerticalPan = firstPersonMaxVerticalPan;
+            currentMinVerticalPan = firstPersonMinVerticalPan;
+        }
+
+        private void DeactivateFirstPersonView() {
+            Debug.Log("AnyRPGCameraController.DeactivateFirstPersonView()");
+
+            playerManagerClient.UnitController.UnitModelController.DeactivateFirstPersonView();
+            currentMaxVerticalPan = maxVerticalPan;
+            currentMinVerticalPan = minVerticalPan;
         }
 
         private void CompensateForWalls() {
@@ -336,8 +370,6 @@ namespace AnyRPG {
             wantedPosition = target.position + new Vector3(0, pitch, 0) + (directionToCamera * currentZoomDistance);
             wantedDirection = orbitRotation * Vector3.forward;
         }
-
-
 
         private void JumpToWantedPosition() {
             //Debug.Log($"AnyRPGCameraController.JumpToWantedPosition() wantedPosition: {wantedPosition}");

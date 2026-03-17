@@ -1,8 +1,5 @@
-using AnyRPG;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace AnyRPG {
 
@@ -107,6 +104,15 @@ namespace AnyRPG {
 
         public virtual void SetAnimatorOverrideController(AnimatorOverrideController animatorOverrideController) {
             // nothing to do here.  This is really only necessary for UMA
+        }
+
+        public virtual void ActivateFirstPersonView() {
+            Debug.Log($"{unitController.gameObject.name}.ModelAppearanceController.ActivateFirstPersonView()");
+            // overwrite in child classes that need to do something when first person view is activated
+        }
+
+        public virtual void DeactivateFirstPersonView() {
+            // overwrite in child classes that need to do something when first person view is deactivated
         }
     }
 
