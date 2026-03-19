@@ -252,7 +252,7 @@ MonoBehaviour:
   ensureSharedColors: 0
   defaultSaveOptions: 15
   BoundsOffset: {x: 0, y: 0, z: 0}
-  editorTimeGeneration: 0
+  editorTimeGeneration: 1
   showPlaceholder: 1
   previewModel: 0
   customModel: {fileID: 0}

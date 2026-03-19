@@ -228,16 +228,21 @@ namespace AnyRPG {
                 }
             }
 
+            if (unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount) {
+                // players and mounts handle animation updates in the UnitMovementController, so skip the rest of this method which is meant for AI units
+                return;
+            }
+
             if (unitController.NavMeshAgent.velocity.sqrMagnitude > 0) {
                 BroadcastMovement();
                 if (unitController.UnitAnimator != null) {
                     unitController.UnitAnimator.SetMoving(true);
-                    unitController.UnitAnimator.SetVelocityFromLocal(unitController.transform.InverseTransformDirection(unitController.NavMeshAgent.velocity));
+                    unitController.UnitAnimator.SetVelocityFromLocal(unitController.transform.InverseTransformDirection(unitController.NavMeshAgent.velocity), unitController.UnitProfile.UnitPrefabProps.ForceRotateModelMode);
                 }
             } else {
                 if (unitController.UnitAnimator != null) {
                     unitController.UnitAnimator.SetMoving(false);
-                    unitController.UnitAnimator.SetVelocityFromLocal(Vector3.zero);
+                    unitController.UnitAnimator.SetVelocityFromLocal(Vector3.zero, unitController.UnitProfile.UnitPrefabProps.ForceRotateModelMode);
                 }
             }
         }

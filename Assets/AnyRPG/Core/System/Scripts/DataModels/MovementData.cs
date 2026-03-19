@@ -14,14 +14,13 @@ namespace AnyRPG {
         public Vector3 NormalizedMoveInput;
         public Vector3 TurnInput;
 
-        public Vector3 IntendedLocalDirection;
         public Vector3 IntendedWorldDirection;
         public bool RightMouseButtonDown;
-        public bool RightMouseDragged;
+        public bool FaceCameraDirection;
         public float RightAnalogHorizontal;
         public Vector3 CameraWantedDirection;
         public float CameraLocalEulerAngleX;
-        public bool GamepadModeActive;
+        public bool RotateModelMode;
 
         public uint SimulatedTick;
 
@@ -37,10 +36,10 @@ namespace AnyRPG {
             InputTurn = 0;
 
             RightMouseButtonDown = false;
-            RightMouseDragged = false;
+            FaceCameraDirection = false;
+            RotateModelMode = false;
             RightAnalogHorizontal = 0;
             CameraLocalEulerAngleX = 0;
-            IntendedLocalDirection = Vector3.zero;
             IntendedWorldDirection = Vector3.zero;
 
             NormalizedMoveInput = Vector3.zero;

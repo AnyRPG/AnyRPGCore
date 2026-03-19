@@ -362,7 +362,7 @@ namespace AnyRPG {
                         unitController.UnitAnimator.SetStrafing(false);
                     }
                     unitController.UnitAnimator.SetMoving(true);
-                    unitController.UnitAnimator.SetVelocityFromLocal(intendedLocalMoveVelocity);
+                    unitController.UnitAnimator.SetVelocityFromLocal(intendedLocalMoveVelocity, currentMovementData.RotateModelMode);
                 }/* else {
                     unitController.MyCharacterAnimator.SetMoving(false);
                     unitController.MyCharacterAnimator.SetStrafing(false);
@@ -381,8 +381,8 @@ namespace AnyRPG {
         protected void LateGlobalStateUpdate(double timeInterval) {
 
             if (unitController.CharacterStats.IsAlive == true) {
-                if ((currentMovementData.RightMouseDragged == true && unitController.UnitProfile.UnitPrefabProps.RotateModel == false)
-                    || (currentMovementData.GamepadModeActive == false && currentMovementData.RightAnalogHorizontal != 0f)) {
+                if ((currentMovementData.FaceCameraDirection == true)
+                    || (currentMovementData.RotateModelMode == false && currentMovementData.RightAnalogHorizontal != 0f)) {
 
                     unitController.UnitMotor.FaceDirection(new Vector3(currentMovementData.CameraWantedDirection.x, 0, currentMovementData.CameraWantedDirection.z));
                 }
@@ -590,41 +590,6 @@ namespace AnyRPG {
             return closeToGround;
         }
 
-        public Vector3 LocalNormalizedSwimMovement(double timeInterval) {
-            //Debug.Log("UnitMovementController.NormalizedSwimMovement(): groundAngle: " + groundAngle + "; backwardGroundAngle: " + backwardGroundAngle);
-
-            Vector3 returnValue = currentMovementData.IntendedLocalDirection;
-
-            // check for right mouse button held down to adjust swim angle based on camera angle
-            bool chestBelowWater = (unitController.UnitMotor.MovementBody.GetPosition().y + unitController.FloatHeight) < (unitController.CurrentWater[0].SurfaceHeight - (unitController.SwimSpeed * timeInterval));
-
-            if (currentMovementData.RightMouseButtonDown && currentMovementData.HasMoveInput()) {
-
-                // prevent constant bouncing out of water using right mouse
-                // always allow downward motion
-                // only allow upward motion if the swim speed would not result in a bounce
-                float cameraAngle = (currentMovementData.CameraLocalEulerAngleX < 180f ? currentMovementData.CameraLocalEulerAngleX : currentMovementData.CameraLocalEulerAngleX - 360f);
-                //Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle);
-                // ignore angle if already touching ground underwater to prevent hitting bottom and stopping while trying to swim forward
-                if ((cameraAngle > 0f && returnValue.z > 0f && !touchingGround) // camera above and moving forward / down
-                    || (cameraAngle > 0f && returnValue.z < 0f && chestBelowWater == true) // camera above and moving back / up
-                    || (cameraAngle < 0f && returnValue.z < 0f && !touchingGround) // camera below and moving back / down
-                    || (cameraAngle < 0f && returnValue.z > 0f && chestBelowWater == true) // camera below and forward / up
-                    ) {
-                    returnValue = Quaternion.AngleAxis(currentMovementData.CameraLocalEulerAngleX, Vector3.right) * returnValue;
-                }
-            }
-
-            // if the jump or crouch buttons were held down, their values override the camera angle and allow movement straight up or down
-            // ignore if swim speed would not result in a bounce out of the water
-            if (currentMovementData.InputSink == true
-                || (currentMovementData.InputFly == true && (chestBelowWater == true || unitController.CanFly))) {
-                returnValue.y = (currentMovementData.InputFly == true ? 1 : 0) + (currentMovementData.InputSink == true ? -1 : 0);
-            }
-
-            return returnValue;
-        }
-
         public Vector3 WorldNormalizedSwimMovement(double timeInterval) {
             // 1. Start with the PURE world-space horizontal intent
             Vector3 returnValue = currentMovementData.IntendedWorldDirection;
@@ -672,34 +637,6 @@ namespace AnyRPG {
             return returnValue.normalized;
         }
 
-
-        public Vector3 LocalNormalizedFlyMovement() {
-            //Debug.Log("UnitMovementController.NormalizedFlyMovement(): groundAngle: " + groundAngle + "; backwardGroundAngle: " + backwardGroundAngle);
-
-            Vector3 returnValue = currentMovementData.IntendedLocalDirection;
-
-            if (currentMovementData.RightMouseButtonDown && currentMovementData.HasMoveInput()) {
-
-                float cameraAngle = (currentMovementData.CameraLocalEulerAngleX < 180f ? currentMovementData.CameraLocalEulerAngleX : currentMovementData.CameraLocalEulerAngleX - 360f);
-                //Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle);
-                // ignore angle if already touching ground underwater to prevent hitting bottom and stopping while trying to swim forward
-                if ((cameraAngle > 0f && returnValue.z > 0f && !touchingGround) // camera above and moving forward / down
-                    || (cameraAngle < 0f && returnValue.z < 0f && !touchingGround) // camera below and moving back / down
-                    ) {
-                    returnValue = Quaternion.AngleAxis(currentMovementData.CameraLocalEulerAngleX, Vector3.right) * returnValue;
-                }
-            }
-
-            // if the jump or crouch buttons were held down, their values override the camera angle and allow movement straight up or down
-            // ignore if swim speed would not result in a bounce out of the water
-            if (currentMovementData.InputSink == true
-                || currentMovementData.InputFly == true) {
-                returnValue.y = (currentMovementData.InputFly == true ? 1 : 0) + (currentMovementData.InputSink == true ? -1 : 0);
-            }
-
-            return returnValue;
-        }
-
         public Vector3 WorldNormalizedFlyMovement() {
             // 1. Start with the STABLE world-space horizontal intent (Camera-Relative)
             Vector3 returnValue = currentMovementData.IntendedWorldDirection;
@@ -744,81 +681,6 @@ namespace AnyRPG {
             // 4. Return the final World Direction
             return returnValue.normalized;
         }
-        /*
-        public Vector3 NormalizedLocalMovement(float calculatedSpeed, Vector3 directionOfTravel, double timeInterval) {
-            //Debug.Log("UnitMovementController.NormalizedLocalMovement(" + directionOfTravel + ")");
-
-            Vector3 newReturnValue;
-            float usedAngle = groundAngle;
-            
-            // the normal is the normal of the ground below the player
-            Vector3 localGroundNormal = unitController.transform.InverseTransformDirection(groundNormal);
-
-            if (Vector3.Angle(groundNormal, Vector3.up) > slopeLimit) {
-                // if standing on jagged ground below stair height at angle greater than slope limit, prevent getting stuck due to capsule collider geometry
-                localGroundNormal = Vector3.up;
-            }
-
-            // the player is near a front obstacle, and that obstacle is below the slope limit, use its normal
-            if (nearBottomFrontObstacle &&
-                ((bottomFrontAngleDifferent && bottomFrontObstacleAngle < slopeLimit && nearFrontObstacle == true)
-                || (nearTopFrontObstacle == false && nearBottomStairs == false && nearFrontObstacle == true))
-                ) {
-                localGroundNormal = unitController.transform.InverseTransformDirection(bottomForwardHitInfo.normal);
-            } else {
-                // the player is near stairs in the direction of travel
-                if (nearBottomStairs) {
-                    //Debug.Log("near bottom stairs, adjusting forward direction");
-
-                    // 0.2f is an arbitrary distance at the top of the stair is below the start of the curve on the bottom of a capsule collider of 2m height
-                    // if the stairs are higher than 0.3f (the start of the vertical section on the collider) and the player is too close to the stair,
-                    // any angled approach will lose all momentum from running straight into the stair and the player will get stuck
-                    // this value seems to be momentum dependent.  at walking speed of 1, player will not make it over stairs unless it's 0.15f
-                    // at 0.15f there is a noticeable slowdown still, and even at 0.1f.  0.05f seems to do it at that speed
-                    // if you are touching an obstacle in front, the stair ramp angle should not be used
-                    if (
-                        (
-                        bottomStairDownHitInfo.point.y - unitController.UnitMotor.MovementBody.GetPosition().y < 0.2f
-                        || (unitController.transform.InverseTransformPoint(new Vector3(forwardHitPoint.x, unitController.UnitMotor.MovementBody.GetPosition().y, forwardHitPoint.z)).magnitude > (colliderRadius + 0.01f) && nearFrontObstacle == false)
-                        )
-                        ) {
-                        localGroundNormal = unitController.transform.InverseTransformDirection(stairRampNormal);
-                    } else {
-                        localGroundNormal = unitController.transform.InverseTransformDirection(bottomForwardHitInfo.normal);
-                    }
-                }
-            }
-
-            // to prevent odd floating point issues, set any ground normal that is up to directly up
-            if (Mathf.Approximately(localGroundNormal.y, 1f)) {
-                localGroundNormal = Vector3.up;
-            }
-
-            // translate the input so that the up direction is the same as the normal (up direction) of whatever ground or slope the player is on
-            // this prevents losing speed up hills from slamming horizontally into the hill
-
-            newReturnValue = Vector3.Cross(Quaternion.LookRotation(currentMovementData.IntendedLocalDirection, Vector3.up) * unitController.transform.InverseTransformDirection(unitController.transform.right), localGroundNormal);
-
-            // limit upward momentum near stairs to prevent overshooting the stairs in the vertical direction
-            if (nearBottomStairs) {
-                float clampedReturnValue = Mathf.Clamp(newReturnValue.y, 0f, unitController.transform.InverseTransformPoint(stairDownHitPoint).y / calculatedSpeed / (float)timeInterval);
-                newReturnValue.y = clampedReturnValue;
-            }
-
-            // apply downforce
-            if (groundAngle == 0 && nearBottomFrontObstacle == false && nearBottomStairs == false && touchingGround == false) {
-                // this should make the character stick to the ground better when actively moving while grounded
-                // ONLY APPLY Y DOWNFORCE ON FLAT GROUND, this will apply a y downforce multiplied by speed, not the existing y downforce from physics (gravity)
-                float yValue = 0f;
-                if (unitController.transform.InverseTransformPoint(groundPoint).y < -0.001f) {
-                    // set a downforce value that should take the character exactly to the ground, and not lower to avoid losing momentum from physics colission with ground
-                    yValue = Mathf.Clamp(1, 0, -closestGroundDistance / calculatedSpeed / (float)timeInterval) * -1;
-                }
-                newReturnValue = new Vector3(newReturnValue.x, yValue, newReturnValue.z);
-            }
-            return newReturnValue;
-        }
-        */
 
         public Vector3 NormalizedWorldMovement(float calculatedSpeed, double timeInterval) {
             // 1. Start with our "Truth": The stable World-Space intent from the camera
@@ -1413,8 +1275,9 @@ namespace AnyRPG {
             if (frameData.InputStrafe) accumulatedMovementData.InputStrafe = true;
             if (frameData.InputCrouch) accumulatedMovementData.InputCrouch = true;
             if (frameData.RightMouseButtonDown) accumulatedMovementData.RightMouseButtonDown = true;
-            if (frameData.RightMouseDragged) accumulatedMovementData.RightMouseDragged = true;
-            if (frameData.GamepadModeActive) accumulatedMovementData.GamepadModeActive = true;
+            if (frameData.FaceCameraDirection) accumulatedMovementData.FaceCameraDirection = true;
+            if (frameData.RotateModelMode) accumulatedMovementData.RotateModelMode = true;
+            //Debug.Log($"frameData.RotateModelMode: {accumulatedMovementData.RotateModelMode}");
 
             accumulatedMovementData.CameraWantedDirection = frameData.CameraWantedDirection;
             accumulatedMovementData.CameraLocalEulerAngleX = frameData.CameraLocalEulerAngleX;
@@ -1444,10 +1307,11 @@ namespace AnyRPG {
                 // Cache these so mouse-based turning doesn't drop out
                 if (systemConfigurationManager.CameraViewMode == CameraViewMode.Free) {
                     cachedMovementData.RightMouseButtonDown = accumulatedMovementData.RightMouseButtonDown;
-                    cachedMovementData.RightMouseDragged = accumulatedMovementData.RightMouseDragged;
+                    cachedMovementData.FaceCameraDirection = accumulatedMovementData.FaceCameraDirection;
                 }
                 cachedMovementData.CameraLocalEulerAngleX = accumulatedMovementData.CameraLocalEulerAngleX;
                 cachedMovementData.CameraWantedDirection = accumulatedMovementData.CameraWantedDirection;
+                cachedMovementData.RotateModelMode = accumulatedMovementData.RotateModelMode;
 
                 // 3. ASSIGN ONE-SHOT TRIGGERS (KeyBindWasPressed)
                 // These are ONLY true for the first tick of the frame.
@@ -1474,18 +1338,19 @@ namespace AnyRPG {
             tickReadyData.InputStrafe = cachedMovementData.InputStrafe;
 
             tickReadyData.RightMouseButtonDown = cachedMovementData.RightMouseButtonDown;
-            tickReadyData.RightMouseDragged = cachedMovementData.RightMouseDragged;
+            tickReadyData.FaceCameraDirection = cachedMovementData.FaceCameraDirection;
             tickReadyData.CameraLocalEulerAngleX = cachedMovementData.CameraLocalEulerAngleX;
             tickReadyData.CameraWantedDirection = cachedMovementData.CameraWantedDirection;
+            tickReadyData.RotateModelMode = cachedMovementData.RotateModelMode;
 
             // 6. METADATA & DERIVED VECTORS
-            tickReadyData.GamepadModeActive = accumulatedMovementData.GamepadModeActive;
+            //Debug.Log($"tickReadyData.RotateModelMode: {tickReadyData.RotateModelMode}");
             tickReadyData.NormalizedMoveInput = new Vector3(tickReadyData.InputHorizontal, 0, tickReadyData.InputVertical).normalized;
             tickReadyData.TurnInput = new Vector3(tickReadyData.InputTurn, 0, 0);
 
             Quaternion headingRotation;
 
-            if (controlsManager.GamepadModeActive || unitController.UnitProfile.UnitPrefabProps.RotateModel) {
+            if (tickReadyData.RotateModelMode) {
                 // FREE ROTATE: Forward is the CAMERA
                 Vector3 camForward = tickReadyData.CameraWantedDirection;
                 camForward.y = 0;
@@ -1511,22 +1376,8 @@ namespace AnyRPG {
 
             //Debug.Log($"Intended World Direction: {tickReadyData.IntendedWorldDirection} from NormalizedMoveInput {tickReadyData.NormalizedMoveInput} and Camera Wanted Direction {tickReadyData.CameraWantedDirection}");
 
-            // 8. CALCULATE INTENDED LOCAL DIRECTION (Preserving your mode logic)
-            if (controlsManager.GamepadModeActive || unitController.UnitProfile.UnitPrefabProps.RotateModel) {
-                // FREE ROTATE MODE: Direction is relative to the Camera.
-                // We use the stable World Direction transformed by the CURRENT character rotation.
-                // This is safe for the animator, but we will use the World Direction for physics.
-                tickReadyData.IntendedLocalDirection = unitController.transform.InverseTransformDirection(tickReadyData.IntendedWorldDirection);
-            } else {
-                // STRAFE MODE: "W" is always the character's own forward.
-                // In this mode, we don't look at the camera; we just use the raw WASD input.
-                tickReadyData.IntendedLocalDirection = tickReadyData.NormalizedMoveInput;
-            }
-
             return tickReadyData;
         }
-
-
 
         public void SetStateSilently(CharacterMovementState characterMovementState) {
             //Debug.Log($"{unitController.gameObject.name}: SetStateSilently({characterMovementState.ToString()})");

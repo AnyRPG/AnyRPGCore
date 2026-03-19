@@ -20,6 +20,12 @@ namespace AnyRPG {
         [HideInInspector]
         public bool autorunActive = false;
 
+        [HideInInspector]
+        public bool mouseLookActive = false;
+
+        [HideInInspector]
+        public bool strafeModeActive = true;
+
         private List<Interactable> interactables = new List<Interactable>();
         private Interactable mouseOverInteractable = null;
 
@@ -144,12 +150,20 @@ namespace AnyRPG {
             movementData.CameraWantedDirection = cameraManager.MainCameraController.WantedDirection;
             movementData.CameraLocalEulerAngleX = cameraManager.MainCamera.transform.localEulerAngles.x;
 
-            movementData.GamepadModeActive = controlsManager.GamepadModeActive;
+            //movementData.GamepadModeActive = controlsManager.GamepadModeActive;
+            if (strafeModeActive == false
+                && cameraManager.MainCameraController.FirstPersonView == false) {
+                //Debug.Log("PlayerController.CollectMoveInput() setting RotateModelMode to true because strafe mode is off and we are not in first person view");
+                movementData.RotateModelMode = true;
+            } else {
+                //Debug.Log("PlayerController.CollectMoveInput() setting RotateModelMode to false because strafe mode is on or we are in first person view");
+                movementData.RotateModelMode = false;
+            }
 
             // don't allow jump or crouch while activating action bars
             if (controlsManager.LeftTriggerDown == false && controlsManager.RightTriggerDown == false) {
                 if (inputManager.KeyBindWasPressed("JUMP")) {
-                     movementData.InputJump = true;
+                    movementData.InputJump = true;
                 }
                 if (inputManager.KeyBindWasPressedOrHeld("JUMP")) {
                     movementData.InputFly = true;
@@ -195,8 +209,24 @@ namespace AnyRPG {
                 // behind them at the start of the right mouse down, which is a common situation when trying to run away from something attacking you.
                 // Otherwise, the player would have to drag the mouse in a direction before the character would start moving, which could be frustrating in a combat situation.
                 if (inputManager.rightMouseButtonDownPosition != Input.mousePosition || movementData.HasMoveInput()) {
-                    movementData.RightMouseDragged = true;
+                    if (movementData.RotateModelMode == false
+                        || cameraManager.MainCameraController.FirstPersonView == true) {
+                        movementData.FaceCameraDirection = true;
+                    }
                 }
+            }
+
+            if (cameraManager.MainCameraController.FirstPersonView == true
+                && inputManager.leftMouseButtonDown
+                && (inputManager.leftMouseButtonClickedOverUI == false || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))
+                && (inputManager.rightMouseButtonDownPosition != Input.mousePosition || movementData.HasMoveInput())) {
+                movementData.FaceCameraDirection = true;
+            }
+
+            if (mouseLookActive
+                && (movementData.RotateModelMode == false || cameraManager.MainCameraController.FirstPersonView == true)
+                && (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f)) { 
+                movementData.FaceCameraDirection = true;
             }
 
             if (movementData.HasAnyInput()) {
@@ -238,7 +268,9 @@ namespace AnyRPG {
             // test move this below death check to prevent player getting up after death
             ToggleRun();
 
+            CheckToggleStrafe();
             CheckToggleAutorun();
+            CheckToggleMouseLook();
 
             HandleLeftMouseClick();
 
@@ -260,6 +292,28 @@ namespace AnyRPG {
             RegisterAbilityButtonPresses();
         }
 
+        private void CheckToggleStrafe() {
+            //Debug.Log("PlayerController.CheckToggleStrafe()");
+
+            if (inputManager.KeyBindWasPressed("TOGGLESTRAFE") && playerManagerClient.ActiveUnitController.UnitProfile.UnitPrefabProps.ForceRotateModelMode == false) {
+                ToggleStrafe();
+            }
+        }
+
+        private void ToggleStrafe() {
+            strafeModeActive = !strafeModeActive;
+            messageFeedManager.WriteMessage($"Strafe Mode: {(strafeModeActive ? "On" : "Off")}");
+        }
+
+        private void CheckToggleMouseLook() {
+            if (inputManager.KeyBindWasPressed("TOGGLEMOUSELOOK")) {
+                ToggleMouseLook();
+            }
+        }
+
+        private void ToggleMouseLook() {
+            mouseLookActive = !mouseLookActive;
+        }
 
         private Vector3 NormalizedVelocity(Vector3 inputVelocity) {
             if (inputVelocity.magnitude > 1) {
@@ -1010,6 +1064,10 @@ namespace AnyRPG {
 
         public void SubscribeToUnitEvents() {
             //Debug.Log($"{gameObject.name}.PlayerController.SubscribeToUnitEvents()");
+
+            if (playerManagerClient.ActiveUnitController.UnitProfile.UnitPrefabProps.ForceRotateModelMode == true) {
+                strafeModeActive = false;
+            }
 
             // if player was agrod at spawn, they may have a target already since we subscribe on model ready
             playerManagerClient.ActiveUnitController.UnitEventController.OnSetTarget += HandleSetTarget;

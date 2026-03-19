@@ -164,7 +164,7 @@ namespace AnyRPG {
                     Vector3 horizontalDir = new Vector3(unitMovementController.intendedWorldMoveVelocity.x, 0, unitMovementController.intendedWorldMoveVelocity.z);
 
                     // 3. ROTATE CHARACTER (Apply via Motor)
-                    if (unitController.UnitProfile.UnitPrefabProps.RotateModel || unitMovementController.CurrentMovementData.GamepadModeActive) {
+                    if (unitMovementController.CurrentMovementData.RotateModelMode) {
                         // If moving, face the world direction (ignoring Y for upright rotation)
                         if (horizontalDir.sqrMagnitude > 0.001f) {
                             unitController.UnitMotor.FaceDirection(horizontalDir);
@@ -206,7 +206,7 @@ namespace AnyRPG {
 
             // 6. UPDATE VISUALS
             if (isReplay == false) {
-                unitController.UnitAnimator.SetVelocityFromLocal(unitMovementController.intendedLocalMoveVelocity);
+                unitController.UnitAnimator.SetVelocityFromLocal(unitMovementController.intendedLocalMoveVelocity, unitMovementController.CurrentMovementData.RotateModelMode);
             }
         }
 
