@@ -107,7 +107,7 @@ namespace AnyRPG {
         }
 
         public virtual void ActivateFirstPersonView() {
-            Debug.Log($"{unitController.gameObject.name}.ModelAppearanceController.ActivateFirstPersonView()");
+            //Debug.Log($"{unitController.gameObject.name}.ModelAppearanceController.ActivateFirstPersonView()");
             // overwrite in child classes that need to do something when first person view is activated
         }
 

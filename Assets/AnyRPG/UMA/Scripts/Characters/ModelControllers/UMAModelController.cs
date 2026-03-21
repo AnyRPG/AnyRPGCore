@@ -546,7 +546,7 @@ namespace AnyRPG {
         }
 
         public override void BuildModelAppearance() {
-            Debug.Log($"{unitController.gameObject.name}.UMAModelController.BuildModelAppearance()");
+            //Debug.Log($"{unitController.gameObject.name}.UMAModelController.BuildModelAppearance()");
 
             if (dynamicCharacterAvatar != null) {
                 buildInProgress = true;
@@ -612,7 +612,7 @@ namespace AnyRPG {
         }
 
         public override void ActivateFirstPersonView() {
-            Debug.Log($"{unitController.gameObject.name}.UMAModelController.ActivateFirstPersonView()");
+            //Debug.Log($"{unitController.gameObject.name}.UMAModelController.ActivateFirstPersonView()");
 
             base.ActivateFirstPersonView();
             if (dcaRendererManager == null) {
@@ -622,7 +622,7 @@ namespace AnyRPG {
         }
 
         public override void DeactivateFirstPersonView() {
-            Debug.Log($"{unitController.gameObject.name}.UMAModelController.DeactivateFirstPersonView()");
+            //Debug.Log($"{unitController.gameObject.name}.UMAModelController.DeactivateFirstPersonView()");
 
             base.DeactivateFirstPersonView();
             if (dcaRendererManager == null) {

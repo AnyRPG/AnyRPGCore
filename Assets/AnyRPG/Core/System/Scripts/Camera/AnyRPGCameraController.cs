@@ -200,15 +200,6 @@ namespace AnyRPG {
             turnWithCamera = false;
             bool wasMinZoom = currentZoomDistance == minZoom;
 
-            /*
-            if (lastTargetForward != target.transform.forward
-                && playerManager.PlayerController.MovementData.inputTurn == 0f) {
-                calculatedAngle = Vector3.SignedAngle(target.transform.forward, transform.forward, Vector3.up);
-                currentXDegrees = calculatedAngle;
-            }
-            lastTargetForward = target.transform.forward;
-            */
-
             SetTargetPosition();
 
             // ====MOUSE ZOOM====
@@ -253,7 +244,6 @@ namespace AnyRPG {
                     currentXDegrees += Input.GetAxis("Mouse X") * yawSpeed * usedTurnSpeed;
                     currentYDegrees += (Input.GetAxis("Mouse Y") * yawSpeed * usedTurnSpeed) * (PlayerPrefs.GetInt("MouseInvert") == 0 ? 1 : -1);
 
-                    //if (!inputManager.rightMouseButtonDown) {
                     if (inputManager.rightMouseButtonDown == false && playerManagerClient.PlayerController.mouseLookActive == false) {
                         // RE-ANCHOR: Calculate how far 'off-center' we are from the player's current facing.
                         // This allows the camera to stay at this specific side-angle when you let go.
@@ -261,6 +251,14 @@ namespace AnyRPG {
                     }
 
                     cameraPan = true;
+                } else if (firstPersonView == true && playerManagerClient.PlayerController.MovementData.HasMoveInput()) {
+                    // fps moving
+                    if (playerManagerClient.PlayerController.MovementData.HasTurnInput() == false) {
+                        turnWithCamera = true;
+                        userOffsetAngle = 0f;
+                    } else {
+                        //userOffsetAngle = Mathf.DeltaAngle(target.eulerAngles.y, currentXDegrees);
+                    }
                 }
 
                 // ====GAMEPAD PAN====

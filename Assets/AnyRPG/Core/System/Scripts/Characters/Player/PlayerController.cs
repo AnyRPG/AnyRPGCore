@@ -219,7 +219,12 @@ namespace AnyRPG {
             if (cameraManager.MainCameraController.FirstPersonView == true
                 && inputManager.leftMouseButtonDown
                 && (inputManager.leftMouseButtonClickedOverUI == false || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))
-                && (inputManager.rightMouseButtonDownPosition != Input.mousePosition || movementData.HasMoveInput())) {
+                && (inputManager.leftMouseButtonDownPosition != Input.mousePosition || movementData.HasMoveInput())) {
+                movementData.FaceCameraDirection = true;
+            }
+
+            // if we are in first person view, we want to face the camera direction anytime we have move input, even if the mouse is not being used, because the player will expect that pushing forward will move them in the direction they are looking, and pushing back will move them backwards relative to the direction they are looking, etc.  This is a common behavior in first person games, and not having it would be frustrating.
+            if (cameraManager.MainCameraController.FirstPersonView == true && movementData.HasMoveInput() && movementData.HasTurnInput() == false) {
                 movementData.FaceCameraDirection = true;
             }
 

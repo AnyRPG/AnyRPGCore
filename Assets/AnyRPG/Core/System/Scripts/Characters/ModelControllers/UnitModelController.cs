@@ -410,7 +410,7 @@ namespace AnyRPG {
         }
 
         public void ActivateFirstPersonView() {
-            Debug.Log($"{unitController.gameObject.name}.UnitModelController.ActivateFirstPersonView()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitModelController.ActivateFirstPersonView()");
 
             modelAppearanceController.ActivateFirstPersonView();
         }
