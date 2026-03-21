@@ -213,12 +213,14 @@ namespace AnyRPG {
                 currentZoomDistance += (Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * -1);
                 currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, maxZoom);
                 cameraZoom = true;
-                if (currentZoomDistance == minZoom && wasMinZoom == false) {
-                    //Debug.Log("Camera zoomed to min zoom distance.  Jumping to Wanted Position.");
-                    ActivateFirstPersonView();
-                } else if (currentZoomDistance > minZoom && wasMinZoom == true) {
-                    //Debug.Log("Camera zoomed out of first person view.  Jumping to Wanted Position.");
-                    DeactivateFirstPersonView();
+                if (systemConfigurationManager.AllowFirstPersonCamera) {
+                    if (currentZoomDistance == minZoom && wasMinZoom == false) {
+                        //Debug.Log("Camera zoomed to min zoom distance.  Jumping to Wanted Position.");
+                        ActivateFirstPersonView();
+                    } else if (currentZoomDistance > minZoom && wasMinZoom == true) {
+                        //Debug.Log("Camera zoomed out of first person view.  Jumping to Wanted Position.");
+                        DeactivateFirstPersonView();
+                    }
                 }
             }
 
