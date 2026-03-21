@@ -1,7 +1,4 @@
-using AnyRPG;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.AI;
 
 
 namespace AnyRPG {
@@ -26,7 +23,7 @@ namespace AnyRPG {
         // the source we are going to clone from 
         protected UnitProfile unitProfile = null;
 
-        public UnitController PreviewUnitController { get => unitController; set => unitController = value; }
+        public UnitController UnitController { get => unitController; set => unitController = value; }
         public UnitProfile UnitProfile { get => unitProfile; }
 
         //public int PreviewLayer { get => previewLayer; set => previewLayer = value; }
@@ -68,6 +65,10 @@ namespace AnyRPG {
         public virtual UnitProfile GetCloneSource() {
             // override this in all child classes
             return null;
+        }
+
+        public virtual void SpawnUnit(UnitController targetUnitController) {
+
         }
 
         public virtual void SpawnUnit(CharacterConfigurationRequest characterConfigurationRequest) {

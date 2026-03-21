@@ -28,6 +28,10 @@ namespace AnyRPG {
         [SerializeField]
         private string hidesGroup = string.Empty;
 
+        [Tooltip("If true, meshes in this group will be set to shadows only in first person view.")]
+        [SerializeField]
+        private bool hideInFirstPerson = false;
+
         [Tooltip("The names of the GameObjects that contain meshes in the model prefab.")]
         [SerializeField]
         private List<SwappableMeshOptionChoice> meshes = new List<SwappableMeshOptionChoice>();
@@ -38,6 +42,7 @@ namespace AnyRPG {
         public bool Hidden { get => hidden; set => hidden = value; }
         public SwappableMeshOptionGroupType DisplayAs { get => displayAs; set => displayAs = value; }
         public string HidesGroup { get => hidesGroup; set => hidesGroup = value; }
+        public bool HideInFirstPerson { get => hideInFirstPerson; set => hideInFirstPerson = value; }
     }
 
     public enum SwappableMeshOptionGroupType { List, Grid }

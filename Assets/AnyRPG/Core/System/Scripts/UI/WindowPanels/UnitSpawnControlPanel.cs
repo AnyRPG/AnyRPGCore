@@ -166,7 +166,7 @@ namespace AnyRPG {
         public void SetPreviewTarget() {
             //Debug.Log("CharacterPanel.SetPreviewTarget()");
             
-            if (unitPreviewManager.PreviewUnitController != null) {
+            if (unitPreviewManager.UnitController != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget() character is already spawned!");
                 return;
             }
@@ -178,7 +178,7 @@ namespace AnyRPG {
             if (cameraManager.UnitPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (PreviewCameraController != null) {
-                    PreviewCameraController.InitializeCamera(unitPreviewManager.PreviewUnitController);
+                    PreviewCameraController.InitializeCamera(unitPreviewManager.UnitController);
                     //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting Target Ready Callback");
                     PreviewCameraController.OnTargetReady += TargetReadyCallback;
                 } else {

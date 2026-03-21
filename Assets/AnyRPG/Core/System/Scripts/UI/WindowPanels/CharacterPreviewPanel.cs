@@ -86,7 +86,7 @@ namespace AnyRPG {
         private void SetPreviewTarget() {
             //Debug.Log("CharacterPreviewPanel.SetPreviewTarget()");
 
-            if (characterCreatorManager.PreviewUnitController != null
+            if (characterCreatorManager.UnitController != null
                 || characterConfigurationProvider == null
                 //|| capabilityConsumer.UnitProfile == null
                 ) {
@@ -107,7 +107,7 @@ namespace AnyRPG {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (PreviewCameraController != null) {
                     PreviewCameraController.OnTargetReady += HandleTargetReady;
-                    PreviewCameraController.InitializeCamera(characterCreatorManager.PreviewUnitController);
+                    PreviewCameraController.InitializeCamera(characterCreatorManager.UnitController);
                     //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting Target Ready Callback");
                 } else {
                     Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Preview Camera Controller is null. Please set it in the inspector");

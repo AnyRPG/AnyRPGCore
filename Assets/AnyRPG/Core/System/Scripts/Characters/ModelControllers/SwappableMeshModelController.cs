@@ -11,22 +11,29 @@ namespace AnyRPG {
         protected SwappableMeshModelOptions modelOptions = null;
 
         private Dictionary<string, SwappableMeshOptionGroup> optionGroups = new Dictionary<string, SwappableMeshOptionGroup>();
-        
+
         // all options in a single dictionary for the purpose of actual mesh name lookup
+        // groupname, optionchoiceDisplayName, OptionChoiceMeshName
         private Dictionary<string, Dictionary<string, string>> allModelOptions = new Dictionary<string, Dictionary<string, string>>();
         
-        // defaults to set when nothing is chosen (groupName, optionName)
+        // defaults to set when nothing is chosen
+        // groupName, optionName
         private Dictionary<string, string> optionGroupDefaults = new Dictionary<string, string>();
 
-        // user choices (groupName, optionName)
+        // user choices
+        // groupName, optionName
         private Dictionary<string, string> optionGroupChoices = new Dictionary<string, string>();
 
-        // applied configuration takes group hiding by other groups into account (groupName, optionName)
+        // applied configuration takes group hiding by other groups into account
+        // groupName, optionName
         private Dictionary<string, string> optionGroupAppliedConfiguration = new Dictionary<string, string>();
 
         // track mesh renderers
-        private List<GameObject> meshRenderers = new List<GameObject>();
+        //private List<GameObject> meshRenderers = new List<GameObject>();
+        private Dictionary<string, SkinnedMeshRenderer> meshRendererLookup = new Dictionary<string, SkinnedMeshRenderer>();
 
+        public SwappableMeshModelOptions ModelOptions { get => modelOptions; }
+        public Dictionary<string, string> OptionGroupChoices { get => optionGroupChoices; }
 
         public SwappableMeshModelController(UnitController unitController, UnitModelController unitModelController, SystemGameManager systemGameManager, SwappableMeshModelOptions modelOptions)
             : base(unitController, unitModelController, systemGameManager) {
@@ -35,7 +42,7 @@ namespace AnyRPG {
             this.modelOptions = modelOptions;
 
             // populate the default dictionary
-            foreach (SwappableMeshOptionDefaults optionDefault in ModelOptions.GroupDefaults) {
+            foreach (SwappableMeshOptionDefaults optionDefault in modelOptions.GroupDefaults) {
                 if (optionGroupDefaults.ContainsKey(optionDefault.GroupName)) {
                     Debug.LogWarning($"{unitController.gameObject.name}.SwappableMeshModelController(): Key '{optionDefault.GroupName}' already exists.  Ensure group names are unique in group defaults.");
                     continue;
@@ -45,7 +52,7 @@ namespace AnyRPG {
             }
 
             // populate the option choice group dictionaries
-            foreach (SwappableMeshOptionGroup modelGroup in ModelOptions.MeshGroups) {
+            foreach (SwappableMeshOptionGroup modelGroup in modelOptions.MeshGroups) {
                 // option group dictionary
                 optionGroups.Add(modelGroup.GroupName, modelGroup);
 
@@ -65,9 +72,6 @@ namespace AnyRPG {
             }
 
         }
-
-        public SwappableMeshModelOptions ModelOptions { get => modelOptions; }
-        public Dictionary<string, string> OptionGroupChoices { get => optionGroupChoices; }
 
         public override T GetModelAppearanceController<T>() {
             return this as T;
@@ -153,13 +157,13 @@ namespace AnyRPG {
 
             // enable all chosen meshes and disable all others
             //foreach (Transform child in unitModelController.UnitModel.transform) {
-            foreach (GameObject go in meshRenderers) {
-                if (enabledMeshes.Contains(go.name)) {
+            foreach (KeyValuePair<string, SkinnedMeshRenderer> go in meshRendererLookup) {
+                if (enabledMeshes.Contains(go.Key)) {
                     // enable chosen mesh
-                    go.SetActive(true);
+                    go.Value.gameObject.SetActive(true);
                 } else {
                     // disable meshes that were not chosen
-                    go.SetActive(false);
+                    go.Value.gameObject.SetActive(false);
                 }
             }
 
@@ -279,10 +283,15 @@ namespace AnyRPG {
         private void GetMeshRenderers() {
             //Debug.Log($"{unitController.gameObject.name}.SwappableMeshModelController.GetMeshRenderers()");
 
-            foreach (Transform childTransform in unitModelController.UnitModel.transform) {
-                if (childTransform.GetComponent<SkinnedMeshRenderer>() != null) {
-                    meshRenderers.Add(childTransform.gameObject);
+            // search entire heirarchy for skinned mesh renderers and add them to the list of renderers to manage
+            SkinnedMeshRenderer[] meshRenderers = unitModelController.UnitModel.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+
+            foreach (SkinnedMeshRenderer meshRenderer in meshRenderers) {
+                if (meshRendererLookup.ContainsKey(meshRenderer.gameObject.name)) {
+                    //Debug.LogWarning($"{unitController.gameObject.name}.SwappableMeshModelController.GetMeshRenderers() duplicate mesh name '{meshRenderer.gameObject.name}' found.  Ensure all meshes have unique names.");
+                    continue;
                 }
+                meshRendererLookup.Add(meshRenderer.gameObject.name, meshRenderer);
             }
         }
 
@@ -296,6 +305,36 @@ namespace AnyRPG {
                 return true;
             }
             return false;
+        }
+
+        public override void ActivateFirstPersonView() {
+            base.ActivateFirstPersonView();
+
+            // loop through mesh option groups and set shadows only = true on all renderers that are part of groups with hideInFirstPersonView enabled
+            foreach (SwappableMeshOptionGroup modelGroup in modelOptions.MeshGroups) {
+                if (modelGroup.HideInFirstPerson == false) {
+                    continue;
+                }
+                foreach (string meshName in allModelOptions[modelGroup.GroupName].Values) {
+                    if (meshRendererLookup.ContainsKey(meshName) == true) {
+                        meshRendererLookup[meshName].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+                    }
+                }
+            }
+        }
+
+        public override void DeactivateFirstPersonView() {
+            base.DeactivateFirstPersonView();
+            foreach (SwappableMeshOptionGroup modelGroup in modelOptions.MeshGroups) {
+                if (modelGroup.HideInFirstPerson == false) {
+                    continue;
+                }
+                foreach (string meshName in allModelOptions[modelGroup.GroupName].Values) {
+                    if (meshRendererLookup.ContainsKey(meshName) == true) {
+                        meshRendererLookup[meshName].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+                    }
+                }
+            }
         }
 
     }

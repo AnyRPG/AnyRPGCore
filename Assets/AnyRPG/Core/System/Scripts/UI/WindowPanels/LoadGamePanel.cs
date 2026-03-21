@@ -272,10 +272,10 @@ namespace AnyRPG {
         public void LoadEquipmentData() {
             //Debug.Log("LoadGamePanel.LoadEquipmentData()");
 
-            if (characterCreatorManager.PreviewUnitController != null) {
+            if (characterCreatorManager.UnitController != null) {
                 //Debug.Log("LoadGamePanel.LoadEquipmentData(): preview controller found");
 
-                characterCreatorManager.PreviewUnitController.CharacterSaveManager.LoadEquipmentData(loadGameManager.CharacterSaveData);
+                characterCreatorManager.UnitController.CharacterSaveManager.LoadEquipmentData(loadGameManager.CharacterSaveData);
             }
         }
 

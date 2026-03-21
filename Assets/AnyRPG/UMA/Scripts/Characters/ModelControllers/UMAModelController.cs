@@ -1,16 +1,11 @@
-using AnyRPG;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 using UMA;
 using UMA.CharacterSystem;
 using UMA.PoseTools;
-using System;
 
 namespace AnyRPG {
     public class UMAModelController : ModelAppearanceController {
-
 
         // reference to unit
         private UMAModelOptions umaModelOptions = null;
@@ -18,6 +13,7 @@ namespace AnyRPG {
         private UMAExpressionPlayer expressionPlayer = null;
         private AvatarDefinition originalAvatarDefinition = new AvatarDefinition();
         private AvatarDefinition avatarDefinition = new AvatarDefinition();
+        private DCARendererManager dcaRendererManager = null;
 
         public DynamicCharacterAvatar DynamicCharacterAvatar { get => dynamicCharacterAvatar; }
         public UMAModelOptions UMAModelOptions { get => umaModelOptions; set => umaModelOptions = value; }
@@ -207,38 +203,15 @@ namespace AnyRPG {
             return adf;
         }
 
-        /*
-        public void LoadSavedAppearanceSettings(string recipeString = null, bool rebuildAppearance = false) {
-            //Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings()");
-
-            if (dynamicCharacterAvatar != null) {
-                if (recipeString != null && recipeString != string.Empty) {
-                    //Debug.Log($"{unitController.gameObject.name}.UMAModelController.LoadSavedAppearanceSettings() : loading string from parameters : " + recipeString);
-                    buildInProgress = true;
-                    //dynamicCharacterAvatar.SetLoadString(recipeString);
-
-                } else if (recipeString == null
-                    && saveManager.RecipeString != null
-                    && saveManager.RecipeString != string.Empty) {
-                    //Debug.Log($"{unitController.gameObject.name}.UMAModelController.LoadSavedAppearanceSettings() : loading string from SaveManager : " + saveManager.RecipeString);
-                    buildInProgress = true;
-                    dynamicCharacterAvatar.SetLoadString(saveManager.RecipeString);
-                }
-                if (rebuildAppearance == true && dynamicCharacterAvatar.BuildCharacterEnabled == false) {
-                    // by default an UMA will build appearance unless the option is disabled, so this call is redundant unless the UMA is configured to not build
-                    //Debug.Log($"{unitController.gameObject.name}.UMAModelController.LoadSavedAppearanceSettings() : building model appearance");
-                    BuildModelAppearance();
-                }
-            }
-        }
-        */
-
         public override void FindUnitModel(GameObject unitModel) {
             //Debug.Log($"{unitController.gameObject.name}.UMAModelController.FindUnitModel(" + (unitModel == null ? "null" : unitModel.name) + ")");
             
             // try to find the dynamicCharacterAvatar on the unitModel gameObject
             if (unitModel != null && dynamicCharacterAvatar == null) {
                 dynamicCharacterAvatar = unitModel.GetComponent<DynamicCharacterAvatar>();
+            }
+            if (unitModel != null && dcaRendererManager == null) {
+                dcaRendererManager = unitModel.GetComponent<DCARendererManager>();
             }
 
             // unit model was null or dynamicCharacterAvatar was not found on the unitModel
@@ -248,6 +221,10 @@ namespace AnyRPG {
             }
             if (dynamicCharacterAvatar != null) {
                 originalAvatarDefinition = GetAvatarDefinition(dynamicCharacterAvatar);
+            }
+
+            if (dcaRendererManager == null) {
+                dcaRendererManager = unitController.GetComponentInChildren<DCARendererManager>();
             }
         }
 
@@ -632,6 +609,26 @@ namespace AnyRPG {
             }
 
             InitializeModel();
+        }
+
+        public override void ActivateFirstPersonView() {
+            //Debug.Log($"{unitController.gameObject.name}.UMAModelController.ActivateFirstPersonView()");
+
+            base.ActivateFirstPersonView();
+            if (dcaRendererManager == null) {
+                return;
+            }
+            dcaRendererManager.RenderersEnabled = true;
+        }
+
+        public override void DeactivateFirstPersonView() {
+            //Debug.Log($"{unitController.gameObject.name}.UMAModelController.DeactivateFirstPersonView()");
+
+            base.DeactivateFirstPersonView();
+            if (dcaRendererManager == null) {
+                return;
+            }
+            dcaRendererManager.RenderersEnabled = false;
         }
 
     }

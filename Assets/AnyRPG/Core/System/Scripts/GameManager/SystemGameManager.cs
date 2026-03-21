@@ -42,6 +42,9 @@ namespace AnyRPG {
         private UnitPreviewManager unitPreviewManager = null;
 
         [SerializeField]
+        private FocusTargetManager focusTargetManager = null;
+
+        [SerializeField]
         private CharacterPanelManager characterPanelManager = null;
 
         [SerializeField]
@@ -173,6 +176,7 @@ namespace AnyRPG {
         public PetPreviewManager PetPreviewManager { get => petPreviewManager; set => petPreviewManager = value; }
         public UnitPreviewManager UnitPreviewManager { get => unitPreviewManager; set => unitPreviewManager = value; }
         public CharacterPanelManager CharacterPanelManager { get => characterPanelManager; set => characterPanelManager = value; }
+        public FocusTargetManager FocusTargetManager { get => focusTargetManager; set => focusTargetManager = value; }
         public CharacterCreatorManager CharacterCreatorManager { get => characterCreatorManager; set => characterCreatorManager = value; }
         public SystemAchievementManager SystemAchievementManager { get => systemAchievementManager; set => systemAchievementManager = value; }
         public UIManager UIManager { get => uIManager; set => uIManager = value; }
@@ -297,6 +301,7 @@ namespace AnyRPG {
             //audioManager.Configure(this);
             petPreviewManager.Configure(this);
             unitPreviewManager.Configure(this);
+            focusTargetManager.Configure(this);
             characterPanelManager.Configure(this);
             characterCreatorManager.Configure(this);
             systemAbilityController.Configure(this);

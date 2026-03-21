@@ -17,6 +17,7 @@ namespace AnyRPG {
 
         // track model
         private bool modelCreated = false;
+        private string defaultLayerName = string.Empty;
 
         // specific controllers
         private ModelAppearanceController modelAppearanceController = null;
@@ -298,10 +299,13 @@ namespace AnyRPG {
             }
         }
 
-
+        public void ResetDefaultLayer() {
+            SetDefaultLayer(defaultLayerName);
+        }
 
         public void SetDefaultLayer(string layerName) {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.SetDefaultLayer(" + layerName + ")");
+            defaultLayerName = layerName;
 
             if (layerName != null && layerName != string.Empty) {
                 int defaultLayer = LayerMask.NameToLayer(layerName);
@@ -403,6 +407,17 @@ namespace AnyRPG {
             }
             statusEffect.PerformMaterialChange(unitController);
 
+        }
+
+        public void ActivateFirstPersonView() {
+            //Debug.Log($"{unitController.gameObject.name}.UnitModelController.ActivateFirstPersonView()");
+
+            modelAppearanceController.ActivateFirstPersonView();
+            unitController.NamePlateController.RemoveNamePlate();
+        }
+
+        public void DeactivateFirstPersonView() {
+            modelAppearanceController.DeactivateFirstPersonView();
         }
     }
 

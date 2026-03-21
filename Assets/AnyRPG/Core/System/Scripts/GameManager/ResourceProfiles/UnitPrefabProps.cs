@@ -51,9 +51,10 @@ namespace AnyRPG {
         [SerializeField]
         private AnimationProps animationProps = new AnimationProps();
 
-        [Tooltip("Should the model be rotated in the direction of travel while moving?  True is the best setting if no strafe or backing up animations exist on the animation profile.")]
+        [Tooltip("If true, the model will not be able to enable strafe mode in third person view.  True is the best setting if no strafe or backing up animations exist on the animation profile.")]
+        [FormerlySerializedAs("rotateModel")]
         [SerializeField]
-        protected bool rotateModel = false;
+        protected bool forceRotateModelMode = false;
 
         [Header("NamePlate")]
 
@@ -119,7 +120,7 @@ namespace AnyRPG {
         public AttachmentProfile AttachmentProfile { get => attachmentProfile; set => attachmentProfile = value; }
         public GameObject UnitPrefab { get => unitPrefab; set => unitPrefab = value; }
         public GameObject ModelPrefab { get => modelPrefab; set => modelPrefab = value; }
-        public bool RotateModel { get => rotateModel; set => rotateModel = value; }
+        public bool ForceRotateModelMode { get => forceRotateModelMode; set => forceRotateModelMode = value; }
         public NamePlateProps NamePlateProps { get => namePlateProps; set => namePlateProps = value; }
         public AnimationProps AnimationProps { get => animationProps; set => animationProps = value; }
         public string FloatTransform { get => floatTransform; set => floatTransform = value; }

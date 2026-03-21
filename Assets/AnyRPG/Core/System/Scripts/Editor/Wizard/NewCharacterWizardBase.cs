@@ -192,7 +192,7 @@ namespace AnyRPG.EditorTools {
             GameObject unitPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets" + pathToDefaultCharacterUnitPrefab);
             unitProfileAsset.UnitPrefabProps.UnitPrefab = unitPrefab;
             unitProfileAsset.UnitPrefabProps.ModelPrefab = characterModel;
-            unitProfileAsset.UnitPrefabProps.RotateModel = true;
+            unitProfileAsset.UnitPrefabProps.ForceRotateModelMode = true;
             unitProfileAsset.UnitPrefabProps.UseInlineAnimationProps = true;
             unitProfileAsset.UnitPrefabProps.AttachmentProfileName = attachmentProfile;
             if (spineBone != string.Empty) {

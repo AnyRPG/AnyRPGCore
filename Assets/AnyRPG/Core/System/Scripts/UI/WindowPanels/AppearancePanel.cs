@@ -84,7 +84,7 @@ namespace AnyRPG {
         public virtual void GetUnitModelController() {
             //Debug.Log($"{gameObject.name}.AppearancePanel.GetUnitModelController()");
 
-            unitModelController = characterCreatorManager.PreviewUnitController?.UnitModelController;
+            unitModelController = characterCreatorManager.UnitController?.UnitModelController;
         }
 
         protected void InitializeGenderButtons() {

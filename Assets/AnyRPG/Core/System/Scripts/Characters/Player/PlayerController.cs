@@ -20,6 +20,12 @@ namespace AnyRPG {
         [HideInInspector]
         public bool autorunActive = false;
 
+        [HideInInspector]
+        public bool mouseLookActive = false;
+
+        [HideInInspector]
+        public bool strafeModeActive = true;
+
         private List<Interactable> interactables = new List<Interactable>();
         private Interactable mouseOverInteractable = null;
 
@@ -144,12 +150,20 @@ namespace AnyRPG {
             movementData.CameraWantedDirection = cameraManager.MainCameraController.WantedDirection;
             movementData.CameraLocalEulerAngleX = cameraManager.MainCamera.transform.localEulerAngles.x;
 
-            movementData.GamepadModeActive = controlsManager.GamepadModeActive;
+            //movementData.GamepadModeActive = controlsManager.GamepadModeActive;
+            if (strafeModeActive == false
+                && cameraManager.MainCameraController.FirstPersonView == false) {
+                //Debug.Log("PlayerController.CollectMoveInput() setting RotateModelMode to true because strafe mode is off and we are not in first person view");
+                movementData.RotateModelMode = true;
+            } else {
+                //Debug.Log("PlayerController.CollectMoveInput() setting RotateModelMode to false because strafe mode is on or we are in first person view");
+                movementData.RotateModelMode = false;
+            }
 
             // don't allow jump or crouch while activating action bars
             if (controlsManager.LeftTriggerDown == false && controlsManager.RightTriggerDown == false) {
                 if (inputManager.KeyBindWasPressed("JUMP")) {
-                     movementData.InputJump = true;
+                    movementData.InputJump = true;
                 }
                 if (inputManager.KeyBindWasPressedOrHeld("JUMP")) {
                     movementData.InputFly = true;
@@ -195,8 +209,29 @@ namespace AnyRPG {
                 // behind them at the start of the right mouse down, which is a common situation when trying to run away from something attacking you.
                 // Otherwise, the player would have to drag the mouse in a direction before the character would start moving, which could be frustrating in a combat situation.
                 if (inputManager.rightMouseButtonDownPosition != Input.mousePosition || movementData.HasMoveInput()) {
-                    movementData.RightMouseDragged = true;
+                    if (movementData.RotateModelMode == false
+                        || cameraManager.MainCameraController.FirstPersonView == true) {
+                        movementData.FaceCameraDirection = true;
+                    }
                 }
+            }
+
+            if (cameraManager.MainCameraController.FirstPersonView == true
+                && inputManager.leftMouseButtonDown
+                && (inputManager.leftMouseButtonClickedOverUI == false || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))
+                && (inputManager.leftMouseButtonDownPosition != Input.mousePosition || movementData.HasMoveInput())) {
+                movementData.FaceCameraDirection = true;
+            }
+
+            // if we are in first person view, we want to face the camera direction anytime we have move input, even if the mouse is not being used, because the player will expect that pushing forward will move them in the direction they are looking, and pushing back will move them backwards relative to the direction they are looking, etc.  This is a common behavior in first person games, and not having it would be frustrating.
+            if (cameraManager.MainCameraController.FirstPersonView == true && movementData.HasMoveInput() && movementData.HasTurnInput() == false) {
+                movementData.FaceCameraDirection = true;
+            }
+
+            if (mouseLookActive
+                && (movementData.RotateModelMode == false || cameraManager.MainCameraController.FirstPersonView == true)
+                && (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f)) { 
+                movementData.FaceCameraDirection = true;
             }
 
             if (movementData.HasAnyInput()) {
@@ -238,7 +273,9 @@ namespace AnyRPG {
             // test move this below death check to prevent player getting up after death
             ToggleRun();
 
+            CheckToggleStrafe();
             CheckToggleAutorun();
+            CheckToggleMouseLook();
 
             HandleLeftMouseClick();
 
@@ -260,6 +297,29 @@ namespace AnyRPG {
             RegisterAbilityButtonPresses();
         }
 
+        private void CheckToggleStrafe() {
+            //Debug.Log("PlayerController.CheckToggleStrafe()");
+
+            if (inputManager.KeyBindWasPressed("TOGGLESTRAFE") && playerManagerClient.ActiveUnitController.UnitProfile.UnitPrefabProps.ForceRotateModelMode == false) {
+                ToggleStrafe();
+            }
+        }
+
+        private void ToggleStrafe() {
+            strafeModeActive = !strafeModeActive;
+            messageFeedManager.WriteMessage($"Strafe Mode: {(strafeModeActive ? "On" : "Off")}");
+        }
+
+        private void CheckToggleMouseLook() {
+            if (inputManager.KeyBindWasPressed("TOGGLEMOUSELOOK")) {
+                ToggleMouseLook();
+            }
+        }
+
+        private void ToggleMouseLook() {
+            mouseLookActive = !mouseLookActive;
+            messageFeedManager.WriteMessage($"Mouse Look: {(mouseLookActive ? "On" : "Off")}");
+        }
 
         private Vector3 NormalizedVelocity(Vector3 inputVelocity) {
             if (inputVelocity.magnitude > 1) {
@@ -339,12 +399,12 @@ namespace AnyRPG {
             }
 
             Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(Input.mousePosition);
-            //int playerMask = 1 << LayerMask.NameToLayer("Player");
+            int playerMask = 1 << LayerMask.NameToLayer("Player");
             int ignoreMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
             int spellMask = 1 << LayerMask.NameToLayer("SpellEffects");
             int waterMask = 1 << LayerMask.NameToLayer("Water");
-            //int layerMask = ~(playerMask | ignoreMask | spellMask | waterMask);
-            int layerMask = ~( ignoreMask | spellMask | waterMask);
+            int layerMask = ~(playerMask | ignoreMask | spellMask | waterMask);
+            //int layerMask = ~( ignoreMask | spellMask | waterMask);
 
             bool disableMouseOver = false;
             bool mouseOverNamePlate = false;
@@ -628,6 +688,10 @@ namespace AnyRPG {
                 }
             }
 
+            if (namePlateManager.MouseOverNamePlate()) {
+                return;
+            }
+
             if (playerManagerClient.ActiveUnitController.CharacterAbilityManager.WaitingForTarget()) {
                 FinishGroundTarget(Input.mousePosition);
             } else if (systemConfigurationManager.AllowClickToMove == true) {
@@ -638,47 +702,7 @@ namespace AnyRPG {
             }
         }
 
-        /*
-        /// <summary>
-        /// if an interactable is set, try to interact with it if it's in range.
-        /// </summary>
-        private void CheckForInteraction() {
-            //Debug.Log($"{gameObject.name}.PlayerController.CheckForInteraction()");
-
-            if (playerManager.UnitController == null) {
-                return;
-            }
-            if (playerManager.UnitController.Target == null) {
-                return;
-            }
-            if (InteractionSucceeded(playerManager.UnitController.Target)) {
-                if (playerManager.ActiveUnitController != null && playerManager.ActiveUnitController.UnitMotor != null) {
-                    playerManager.ActiveUnitController.UnitMotor.StopFollowingTarget();
-                }
-            }
-        }
-        */
-
-        /*
-        private bool InteractionSucceeded(Interactable target) {
-            //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded()");
-
-            if (playerManagerClient.UnitController == null) {
-                return false;
-            }
-
-            if (target == null) {
-                //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded(): target is null. return false.");
-                return false;
-            }
-
-            return interactionManager.Interact(playerManagerClient.UnitController, target);
-        }
-        */
-
         private void RegisterTab() {
-
-            //Interactable oldTarget = playerManager.UnitController.Target;
 
             // register keyboard tab target, only allow enemy target
             if (inputManager.KeyBindWasPressed("NEXTTARGET")) {
@@ -686,15 +710,6 @@ namespace AnyRPG {
                 GetNextTabTarget(playerManagerClient.UnitController.Target, false, false);
             }
         }
-
-        /*
-        private bool ValidFriendlyTarget(Interactable interactable) {
-            if (interactable != null) {
-                return true;
-            }
-            return false;
-        }
-        */
 
         private bool ValidEnemyTarget(Interactable interactable) {
             UnitController targetCharacterUnit = interactable.GetComponent<UnitController>();
@@ -1010,6 +1025,10 @@ namespace AnyRPG {
 
         public void SubscribeToUnitEvents() {
             //Debug.Log($"{gameObject.name}.PlayerController.SubscribeToUnitEvents()");
+
+            if (playerManagerClient.ActiveUnitController.UnitProfile.UnitPrefabProps.ForceRotateModelMode == true) {
+                strafeModeActive = false;
+            }
 
             // if player was agrod at spawn, they may have a target already since we subscribe on model ready
             playerManagerClient.ActiveUnitController.UnitEventController.OnSetTarget += HandleSetTarget;

@@ -159,6 +159,7 @@ namespace AnyRPG {
             return holdableObjects;
         }
 
+        /*
         public void SetLayerRecursive(GameObject objectName, int newLayer) {
             // set the preview unit layer to the PlayerPreview layer so the preview camera can see it and all other cameras will ignore it
             int spellMask = 1 << LayerMask.NameToLayer("SpellEffects");
@@ -171,8 +172,8 @@ namespace AnyRPG {
                     meshRenderer.gameObject.layer = newLayer;
                 }
             }
-
         }
+        */
 
         public void SheathObject(GameObject go, AttachmentNode attachmentNode, GameObject searchObject) {
             if (searchObject == null) {

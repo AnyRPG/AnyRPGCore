@@ -228,16 +228,23 @@ namespace AnyRPG {
                 }
             }
 
+            if ((unitController.UnitControllerMode == UnitControllerMode.Player || unitController.UnitControllerMode == UnitControllerMode.Mount)
+                && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) == false) {
+                // players and mounts handle animation updates in the UnitMovementController, so skip the rest of this method which is meant for AI units
+                // unless this is a local game or happening on the server, because in that case, we have access to NavmeshAgent.Velocity instead of the reconciled version
+                return;
+            }
+
             if (unitController.NavMeshAgent.velocity.sqrMagnitude > 0) {
                 BroadcastMovement();
                 if (unitController.UnitAnimator != null) {
                     unitController.UnitAnimator.SetMoving(true);
-                    unitController.UnitAnimator.SetVelocityFromLocal(unitController.transform.InverseTransformDirection(unitController.NavMeshAgent.velocity));
+                    unitController.UnitAnimator.SetVelocityFromLocal(unitController.transform.InverseTransformDirection(unitController.NavMeshAgent.velocity), unitController.UnitProfile.UnitPrefabProps.ForceRotateModelMode);
                 }
             } else {
                 if (unitController.UnitAnimator != null) {
                     unitController.UnitAnimator.SetMoving(false);
-                    unitController.UnitAnimator.SetVelocityFromLocal(Vector3.zero);
+                    unitController.UnitAnimator.SetVelocityFromLocal(Vector3.zero, unitController.UnitProfile.UnitPrefabProps.ForceRotateModelMode);
                 }
             }
         }

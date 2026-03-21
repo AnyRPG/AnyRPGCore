@@ -389,6 +389,9 @@ namespace AnyRPG {
                 // when a dead player spawns, we need to lock controller and allow popup to respawn
                 DeathActions();
             }
+            if (cameraManager.MainCameraController.FirstPersonView == true) {
+                unitController.UnitModelController.ActivateFirstPersonView();
+            }
         }
 
         public void SubscribeToModelReady() {

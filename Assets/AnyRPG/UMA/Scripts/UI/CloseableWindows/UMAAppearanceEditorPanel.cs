@@ -281,7 +281,7 @@ namespace AnyRPG {
 
         public override void GetUnitModelController() {
             base.GetUnitModelController();
-            umaModelController = characterCreatorManager.PreviewUnitController?.UnitModelController.ModelAppearanceController.GetModelAppearanceController<UMAModelController>();
+            umaModelController = characterCreatorManager.UnitController?.UnitModelController.ModelAppearanceController.GetModelAppearanceController<UMAModelController>();
             umaModelOptions = umaModelController.UMAModelOptions;
         }
 

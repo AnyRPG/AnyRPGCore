@@ -13,7 +13,6 @@ namespace AnyRPG {
         [SerializeField]
         protected TextMeshProUGUI unitNameText = null;
 
-
         [SerializeField]
         protected Image unitNameBackground = null;
 
@@ -52,14 +51,6 @@ namespace AnyRPG {
 
         [Header("Unit Preview")]
 
-        // the next 2 things need to be updated to focus on the right character
-        [SerializeField]
-        protected Transform cameraTransform = null;
-
-        // replaces cameraTransform;
-        [SerializeField]
-        protected Camera previewCamera = null;
-
         [SerializeField]
         protected Image leaderIcon = null;
 
@@ -69,23 +60,9 @@ namespace AnyRPG {
         [SerializeField]
         protected Image portraitImage = null;
 
-        [SerializeField]
-        protected RawImage portraitSnapshotImage = null;
-
-        [SerializeField]
-        protected Vector3 cameraLookOffsetDefault = new Vector3(0, 1.6f, 0);
-
-        [SerializeField]
-        protected Vector3 cameraPositionOffsetDefault = new Vector3(0, 1.6f, 0.66f);
-
-        protected Vector3 cameraLookOffset = Vector3.zero;
-
-        protected Vector3 cameraPositionOffset = Vector3.zero;
-
         protected float originalPrimaryResourceSliderWidth = 0f;
         protected float originalSecondaryResourceSliderWidth = 0f;
 
-        //protected BaseNamePlateController namePlateController = null;
         protected UnitController unitController = null;
 
         [Header("Status Effects")]
@@ -108,15 +85,6 @@ namespace AnyRPG {
 
         protected Color reputationColor;
 
-        protected Coroutine waitForCameraCoroutine = null;
-
-        // avoid GC by using global variables for these
-        protected Vector3 wantedPosition = Vector3.zero;
-        protected Vector3 wantedLookPosition = Vector3.zero;
-
-        // track the camera wait start frame to ensure the current camera wait routine is still valid
-        //private int lastWaitFrame = 0;
-
         // game manager references
         protected PlayerManagerClient playerManagerClient = null;
         protected ContextMenuService contextMenuService = null;
@@ -133,9 +101,6 @@ namespace AnyRPG {
 
             InitializeController();
             statusEffectPanelController.Configure(systemGameManager);
-            if (previewCamera != null) {
-                previewCamera.enabled = false;
-            }
             if (!targetInitialized) {
                 this.gameObject.SetActive(false);
             }
@@ -156,44 +121,15 @@ namespace AnyRPG {
             if (controllerInitialized) {
                 return;
             }
-            portraitSnapshotImage.texture = portraitTexture;
-            originalPrimaryResourceSliderWidth = primaryResourceSliderLayout.preferredWidth;
-            originalSecondaryResourceSliderWidth = secondaryResourceSliderLayout.preferredWidth;
-            DeactivateCastBar();
+            ProcessInitializeController();
             controllerInitialized = true;
             //Debug.Log($"{gameObject.name}: UnitFrameController.Awake() originalHealthSliderWidth: " + originalHealthSliderWidth);
         }
 
-        private void LateUpdate() {
-            if (systemConfigurationManager.UIConfiguration.RealTimeUnitFrameCamera) {
-                UpdateCameraPosition();
-            }
-        }
-
-        private void UpdateCameraPosition() {
-            if (!targetInitialized || unitController.CameraTargetReady == false) {
-                //Debug.Log("UnitFrameController.Update(). Not initialized yet.  Exiting.");
-                return;
-            }
-            if (unitController.CameraTargetReady == true && followTransform == null) {
-                //Debug.Log($"{gameObject.name}UnitFrameController.Update(). Follow transform is null. possibly dead unit despawned. Exiting.");
-                ClearTarget();
-                return;
-            }
-
-            if (cameraTransform != null) {
-                //Vector3 wantedPosition = followTransform.TransformPoint(0, offsetY, offsetZ);
-                //Vector3 wantedLookPosition = followTransform.TransformPoint(0, offsetY, 0);
-
-                //Vector3 wantedPosition = followTransform.TransformPoint(cameraPositionOffset);
-                wantedPosition = unitController.transform.TransformPoint(unitController.transform.InverseTransformPoint(followTransform.position) + cameraPositionOffset);
-                //Vector3 wantedLookPosition = followTransform.TransformPoint(cameraLookOffset);
-                wantedLookPosition = unitController.transform.TransformPoint(unitController.transform.InverseTransformPoint(followTransform.position) + cameraLookOffset);
-                cameraTransform.position = wantedPosition;
-                cameraTransform.LookAt(wantedLookPosition);
-
-            } else {
-            }
+        protected virtual void ProcessInitializeController() {
+            originalPrimaryResourceSliderWidth = primaryResourceSliderLayout.preferredWidth;
+            originalSecondaryResourceSliderWidth = secondaryResourceSliderLayout.preferredWidth;
+            DeactivateCastBar();
         }
 
         private void TargetInitialization() {
@@ -203,7 +139,6 @@ namespace AnyRPG {
                 return;
             }
             InitializeStats();
-            InitializePosition();
             gameObject.SetActive(true);
             targetInitialized = true;
             if (isActiveAndEnabled == false) {
@@ -212,72 +147,17 @@ namespace AnyRPG {
                 return;
             }
             partialTargetInitialization = false;
-            unitController.ConfigureUnitFrame(this, previewCamera != null);
-
+            PostTargetInitialization();
         }
 
-        public void ConfigurePortrait(Sprite icon) {
-            portraitSnapshotImage.gameObject.SetActive(false);
+        protected virtual void PostTargetInitialization() {
+            // overridden in derived classes, if necessary
+        }
+
+        public virtual void ConfigurePortrait(Sprite icon) {
             portraitImage.gameObject.SetActive(true);
 
             portraitImage.sprite = icon;
-        }
-
-        public void ConfigureSnapshotPortrait() {
-            portraitImage.gameObject.SetActive(false);
-            portraitSnapshotImage.gameObject.SetActive(true);
-            if (unitController.CameraTargetReady) {
-                HandleTargetReady();
-            }// else {
-             // testing subscribe no matter what in case unit appearance changes
-            SubscribeToTargetReady();
-            //}
-        }
-
-        public void SubscribeToTargetReady() {
-            unitController.OnCameraTargetReady += HandleTargetReady;
-            subscribedToTargetReady = true;
-        }
-
-        public void UnsubscribeFromTargetReady() {
-            if (subscribedToTargetReady == false) {
-                return;
-            }
-
-            if (unitController != null) {
-                unitController.OnCameraTargetReady -= HandleTargetReady;
-            }
-
-            subscribedToTargetReady = false;
-        }
-
-        public void HandleTargetReady() {
-            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.HandleTargetReady()");
-
-            //UnsubscribeFromTargetReady();
-            GetFollowTarget();
-            UpdateCameraPosition();
-            //lastWaitFrame++;
-            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.HandleTargetReady() " + namePlateController.Interactable.GetInstanceID() + "; frame : " + lastWaitFrame);
-            //if (waitForCameraCoroutine == null) {
-            //waitForCameraCoroutine = StartCoroutine(WaitForCamera(lastWaitFrame));
-            //}
-            waitForCameraCoroutine = StartCoroutine(WaitForCamera());
-            //namePlateController?.NamePlateUnit.RequestSnapshot();
-        }
-
-        public void InitializePosition() {
-            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.InitializePosition()");
-            if (unitController != null) {
-                cameraPositionOffset = unitController.NamePlateController.UnitFrameCameraPositionOffset;
-            } else {
-                cameraPositionOffset = cameraPositionOffsetDefault;
-            }
-            if (unitController.NamePlateController.UnitFrameCameraLookOffset != null) {
-                cameraLookOffset = unitController.NamePlateController.UnitFrameCameraLookOffset;
-            } else {
-                cameraLookOffset = cameraLookOffsetDefault;
-            }
         }
 
         public virtual void SetTarget(UnitController unitController) {
@@ -291,7 +171,6 @@ namespace AnyRPG {
                 gameObject.SetActive(true);
             }
 
-            InitializeController();
             this.unitController = unitController;
 
             CalculateResourceColors();
@@ -307,19 +186,7 @@ namespace AnyRPG {
             if (isActiveAndEnabled) {
                 //Debug.Log($"{gameObject.name}.UnitFramePanelBase.SetTarget(" + target.name + "):  WE ARE NOW ACTIVE AND ENABLED");
                 TargetInitialization();
-            } else {
-                //Debug.Log($"{gameObject.name}.UnitFramePanelBase.SetTarget(): Unit Frame Not active after activate command.  Likely gameobject under inactive canvas.  Will run TargetInitialization() on enable instead.");
             }
-            if (systemConfigurationManager.UIConfiguration.RealTimeUnitFrameCamera == true && previewCamera != null) {
-                previewCamera.enabled = true;
-            }/* else {
-            // this code disabled because it is handled by TargetInitialization(), which results in an extra render request here
-                //previewCamera.Render();
-                lastWaitFrame++;
-                //if (waitForCameraCoroutine == null) {
-                    waitForCameraCoroutine = StartCoroutine(WaitForCamera(lastWaitFrame));
-                //}
-            }*/
         }
 
         public void UpdateLeaderIcon() {
@@ -377,32 +244,8 @@ namespace AnyRPG {
 
         }
 
-        private IEnumerator WaitForCamera() {
-            //private IEnumerator WaitForCamera(int frameNumber) {
-            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.WaitForCamera(): " + namePlateController.Interactable.GetInstanceID() + "; frame: " + frameNumber);
-            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.WaitForCamera(): " + namePlateController.Interactable.GetInstanceID());
-            //yield return new WaitForEndOfFrame();
-            yield return null;
-            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.WaitForCamera(): about to render " + namePlateController.Interactable.GetInstanceID() + "; initial frame: " + frameNumber + "; current frame: " + lastWaitFrame);
-            //if (lastWaitFrame != frameNumber) {
-            if (unitController.IsBuilding() == true) {
-                //Debug.Log($"{gameObject.name}.UnitFramePanelBase.WaitForCamera(): a new wait was started. initial frame: " + frameNumber +  "; current wait: " + lastWaitFrame);
-            } else {
-                //Debug.Log($"{gameObject.name}.UnitFramePanelBase.WaitForCamera(): rendering");
-                UpdateCameraPosition();
-                previewCamera.Render();
-                waitForCameraCoroutine = null;
-                //namePlateController?.Interactable.ClearSnapshotRequest();
-            }
-        }
-
-        public void ClearTarget(bool closeWindowOnClear = true) {
+        public virtual void ClearTarget(bool closeWindowOnClear = true) {
             //Debug.Log($"{gameObject.name}.UnitFramePanelBase.ClearTarget({closeWindowOnClear})");
-
-            if (waitForCameraCoroutine != null) {
-                StopCoroutine(waitForCameraCoroutine);
-            }
-            UnsubscribeFromTargetReady();
 
             if (unitController != null) {
                 ClearSubscriptions();
@@ -418,9 +261,6 @@ namespace AnyRPG {
             secondaryPowerResource = null;
             if (closeWindowOnClear) {
                 gameObject.SetActive(false);
-            }
-            if (previewCamera != null) {
-                previewCamera.enabled = false;
             }
         }
 
@@ -516,22 +356,6 @@ namespace AnyRPG {
             ClearPrimaryResourceBar();
             ClearSecondaryResourceBar();
 
-        }
-
-        private void GetFollowTarget() {
-            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.WaitForFollowTarget()");
-            Transform targetBone = unitController.NamePlateController.NamePlateUnit.transform;
-            string unitFrameTarget = unitController.NamePlateController.UnitFrameTarget;
-            //Debug.Log("Unit Frame: Searching for target: " + unitFrameTarget);
-            if (unitFrameTarget != string.Empty) {
-                if (unitController.gameObject != null) {
-                    targetBone = unitController.transform.FindChildByRecursive(unitFrameTarget);
-                    if (targetBone == null) {
-                        Debug.LogWarning($"{gameObject.name}.UnitFramePanelBase.GetFollowTarget(): Could not find targetBone: {unitFrameTarget}");
-                    }
-                }
-            }
-            this.followTransform = targetBone;
         }
 
         private void DeactivateCastBar() {
@@ -677,15 +501,6 @@ namespace AnyRPG {
             if (partialTargetInitialization && unitController != null) {
                 TargetInitialization();
             }
-        }
-
-        public void OnDisable() {
-            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.OnDisable(): {GetInstanceID()}");
-
-            if (SystemGameManager.IsShuttingDown) {
-                return;
-            }
-            UnsubscribeFromTargetReady();
         }
 
         public void OnPointerClick(PointerEventData pointerEventData) {

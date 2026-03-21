@@ -162,6 +162,10 @@ namespace AnyRPG {
         [SerializeField]
         private Vector3 initialIsometricVector = new Vector3(-4f, 4f, -4f);
 
+        [Tooltip("If true, when the camera is in free mode, allow it to be zoomed all the way in.")]
+        [SerializeField]
+        private bool allowFirstPersonCamera = false;
+
         [Header("CONTROLLER")]
 
         /*
@@ -924,6 +928,7 @@ namespace AnyRPG {
         public float TabTargetMaxDistance { get => tabTargetMaxDistance; set => tabTargetMaxDistance = value; }
         public CameraViewMode CameraViewMode { get => cameraViewMode; set => cameraViewMode = value; }
         public Vector3 InitialIsometricVector { get => initialIsometricVector; set => initialIsometricVector = value; }
+        public bool AllowFirstPersonCamera { get => allowFirstPersonCamera; set => allowFirstPersonCamera = value; }
 
         //public Currency PostageCurrency { get => postageCurrency; set => postageCurrency = value; }
 

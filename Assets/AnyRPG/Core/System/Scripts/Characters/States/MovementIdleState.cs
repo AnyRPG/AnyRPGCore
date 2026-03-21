@@ -37,7 +37,7 @@ namespace AnyRPG {
                 unitController.UnitAnimator.SetMoving(false);
                 unitController.UnitAnimator.SetStrafing(false);
                 unitController.UnitAnimator.SetTurnVelocity(0f);
-                unitController.UnitAnimator.SetVelocityFromLocal(unitMovementController.intendedLocalMoveVelocity);
+                unitController.UnitAnimator.SetVelocityFromLocal(unitMovementController.intendedLocalMoveVelocity, unitMovementController.CurrentMovementData.RotateModelMode);
             }
             unitMovementController.CalculateFallDamage(isReplay);
         }

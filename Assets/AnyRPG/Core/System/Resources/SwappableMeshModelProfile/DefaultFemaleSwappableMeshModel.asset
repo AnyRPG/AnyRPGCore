@@ -27,6 +27,7 @@ MonoBehaviour:
       optional: 0
       displayAs: 1
       hidesGroup: 
+      hideInFirstPerson: 1
       meshes:
       - displayName: Head 1
         icon: {fileID: 21300000, guid: 853f26297062a9441843e25e9591ebef, type: 3}
@@ -42,6 +43,7 @@ MonoBehaviour:
       optional: 1
       displayAs: 0
       hidesGroup: 
+      hideInFirstPerson: 1
       meshes:
       - displayName: Hair 1
         icon: {fileID: 21300000, guid: 3825ffb3229d4fd4da7bb6ca70477eeb, type: 3}
@@ -57,6 +59,7 @@ MonoBehaviour:
       optional: 0
       displayAs: 0
       hidesGroup: 
+      hideInFirstPerson: 0
       meshes:
       - displayName: Default Body
         icon: {fileID: 0}
@@ -66,6 +69,7 @@ MonoBehaviour:
       optional: 0
       displayAs: 0
       hidesGroup: 
+      hideInFirstPerson: 0
       meshes:
       - displayName: Default Hands
         icon: {fileID: 0}
@@ -75,6 +79,7 @@ MonoBehaviour:
       optional: 0
       displayAs: 0
       hidesGroup: 
+      hideInFirstPerson: 0
       meshes:
       - displayName: Default Feet
         icon: {fileID: 0}
@@ -84,6 +89,7 @@ MonoBehaviour:
       optional: 0
       displayAs: 0
       hidesGroup: Body
+      hideInFirstPerson: 0
       meshes:
       - displayName: Heavy Armor
         icon: {fileID: 0}
@@ -108,6 +114,7 @@ MonoBehaviour:
       optional: 0
       displayAs: 0
       hidesGroup: Hair
+      hideInFirstPerson: 1
       meshes:
       - displayName: Heavy Helmet
         icon: {fileID: 0}
@@ -123,6 +130,7 @@ MonoBehaviour:
       optional: 0
       displayAs: 0
       hidesGroup: Hands
+      hideInFirstPerson: 0
       meshes:
       - displayName: Heavy Gloves
         icon: {fileID: 0}
@@ -141,6 +149,7 @@ MonoBehaviour:
       optional: 0
       displayAs: 0
       hidesGroup: Feet
+      hideInFirstPerson: 0
       meshes:
       - displayName: Heavy Boots
         icon: {fileID: 0}

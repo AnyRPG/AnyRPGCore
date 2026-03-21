@@ -982,7 +982,15 @@ namespace AnyRPG {
         }
 
         public bool Use(UnitController sourceUnitController) {
-            //Debug.Log(DisplayName + ".BaseAbility.Use()");
+            //Debug.Log($"{ResourceName}.BaseAbility.Use({(sourceUnitController == null ? "null" : sourceUnitController.gameObject.name)})");
+
+            // toggle auto-attack
+            if (isAutoAttack && sourceUnitController.CharacterCombat.AutoAttackActive == true) {
+                //Debug.Log(DisplayName + ".BaseAbility.Use(): can't use because auto-attack is active");
+                sourceUnitController.CharacterCombat.DeactivateAutoAttack();
+                return false;
+            }
+
             // prevent casting any ability without the proper weapon affinity
             if (CanCast(sourceUnitController, true)) {
                 //Debug.Log(DisplayName + ".BaseAbility.Use(): cancast is true");

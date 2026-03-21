@@ -102,7 +102,7 @@ namespace AnyRPG {
             unitMovementController.adjustedWorldMoveVelocity = unitMovementController.intendedWorldMoveVelocity;
 
             // 4. Character Rotation (Face where we glide)
-            if (unitController.UnitProfile.UnitPrefabProps.RotateModel || unitMovementController.CurrentMovementData.GamepadModeActive) {
+            if (unitMovementController.CurrentMovementData.RotateModelMode) {
                 Vector3 horizontalDir = new Vector3(unitMovementController.intendedWorldMoveVelocity.x, 0, unitMovementController.intendedWorldMoveVelocity.z);
                 if (horizontalDir.sqrMagnitude > 0.001f) {
                     unitController.UnitMotor.FaceDirection(horizontalDir);

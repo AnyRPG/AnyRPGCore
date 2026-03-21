@@ -566,19 +566,19 @@ namespace AnyRPG {
                 //Debug.Log("NewGamePanel.ActivateCorrectAppearancePanel() null");
             }
             */
-            if (characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider == null) {
+            if (characterCreatorManager.UnitController.UnitProfile.UnitPrefabProps.ModelProvider == null) {
                 currentAppearanceEditorPanel = defaultAppearancePanel;
                 return;
             }
 
             //Debug.Log("provider type is " + characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType());
 
-            if (appearanceEditorPanelTypes.ContainsKey(characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType()) == false) {
+            if (appearanceEditorPanelTypes.ContainsKey(characterCreatorManager.UnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType()) == false) {
                 currentAppearanceEditorPanel = defaultAppearancePanel;
                 return;
             }
 
-            GameObject panelPrefab = appearanceEditorPanelTypes[characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType()];
+            GameObject panelPrefab = appearanceEditorPanelTypes[characterCreatorManager.UnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType()];
 
             if (appearanceEditorPanels.ContainsKey(panelPrefab) == false) {
                 AppearancePanel appearancePanel = objectPooler.GetPooledObject(panelPrefab, panelParent.transform).GetComponent<AppearancePanel>();
@@ -671,14 +671,14 @@ namespace AnyRPG {
         public void EquipCharacter() {
             //Debug.Log("NewGamePanel.EquipCharacter()");
 
-            if (characterCreatorManager.PreviewUnitController == null) {
+            if (characterCreatorManager.UnitController == null) {
                 // if this is called on the initial load then the preview panel isn't open yet
                 //Debug.Log("NewGamePanel.EquipCharacter(): no preview unit available");
                 return;
             }
 
             int changes = 0;
-            CharacterEquipmentManager characterEquipmentManager = characterCreatorManager.PreviewUnitController.CharacterEquipmentManager;
+            CharacterEquipmentManager characterEquipmentManager = characterCreatorManager.UnitController.CharacterEquipmentManager;
             if (characterEquipmentManager != null) {
                 //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): found equipment manager");
 
@@ -714,7 +714,7 @@ namespace AnyRPG {
                 }
                 if (characterPreviewPanel.CharacterReady == true && changes > 0) {
                     //Debug.Log("NewGamePanel.EquipCharacter(): character is ready");
-                    characterCreatorManager.PreviewUnitController.UnitModelController.RebuildModelAppearance();
+                    characterCreatorManager.UnitController.UnitModelController.RebuildModelAppearance();
                 }
             }
         }
@@ -754,10 +754,10 @@ namespace AnyRPG {
         public void SaveAppearanceData(CharacterSaveData saveData) {
             //Debug.Log("CharacterPreviewPanelController.SaveAppearanceData()");
 
-            if (characterCreatorManager.PreviewUnitController?.UnitModelController == null) {
+            if (characterCreatorManager.UnitController?.UnitModelController == null) {
                 return;
             }
-            characterCreatorManager.PreviewUnitController.UnitModelController.SaveAppearanceSettings(saveData);
+            characterCreatorManager.UnitController.UnitModelController.SaveAppearanceSettings(saveData);
         }
 
 
