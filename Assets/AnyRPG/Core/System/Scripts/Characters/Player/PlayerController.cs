@@ -398,12 +398,12 @@ namespace AnyRPG {
             }
 
             Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(Input.mousePosition);
-            //int playerMask = 1 << LayerMask.NameToLayer("Player");
+            int playerMask = 1 << LayerMask.NameToLayer("Player");
             int ignoreMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
             int spellMask = 1 << LayerMask.NameToLayer("SpellEffects");
             int waterMask = 1 << LayerMask.NameToLayer("Water");
-            //int layerMask = ~(playerMask | ignoreMask | spellMask | waterMask);
-            int layerMask = ~( ignoreMask | spellMask | waterMask);
+            int layerMask = ~(playerMask | ignoreMask | spellMask | waterMask);
+            //int layerMask = ~( ignoreMask | spellMask | waterMask);
 
             bool disableMouseOver = false;
             bool mouseOverNamePlate = false;

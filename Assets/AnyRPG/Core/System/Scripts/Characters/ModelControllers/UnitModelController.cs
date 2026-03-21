@@ -17,7 +17,7 @@ namespace AnyRPG {
 
         // track model
         private bool modelCreated = false;
-        string defaultLayerName = string.Empty;
+        private string defaultLayerName = string.Empty;
 
         // specific controllers
         private ModelAppearanceController modelAppearanceController = null;

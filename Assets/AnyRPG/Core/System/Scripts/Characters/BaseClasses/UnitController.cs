@@ -889,9 +889,14 @@ namespace AnyRPG {
 
             InitializeNamePlateController();
 
-            unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultPlayerUnitLayer);
+            if (systemGameManager.GameMode == GameMode.Local || (networkManagerServer.ServerModeActive == false && isOwner == true)) {
+                // to allow the player to click on objects through their model, the player unit on authoritative clients
+                // needs to be on the player layer
+                unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultPlayerUnitLayer);
+            } else {
+                unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultCharacterUnitLayer);
+            }
             DisableAggro();
-
 
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (systemGameManager.GameMode == GameMode.Network && isOwner == true)) {
                 //Debug.Log($"{gameObject.name}.UnitController.EnablePlayer() set kinematic false");

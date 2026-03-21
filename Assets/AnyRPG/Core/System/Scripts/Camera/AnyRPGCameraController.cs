@@ -91,10 +91,10 @@ namespace AnyRPG {
             currentMaxVerticalPan = maxVerticalPan;
             currentMinVerticalPan = minVerticalPan;
 
-            SetInitialDegreesAndZoom();
             if (systemConfigurationManager.AllowFirstPersonCamera) {
-                minZoom = 0.1f;
+                minZoom = 0.05f;
             }
+            SetInitialDegreesAndZoom();
         }
 
         public override void SetGameManagerReferences() {
@@ -128,7 +128,11 @@ namespace AnyRPG {
 
         private void SetFreeInitialvalues() {
             // reset the camera to directly behind the player at the previous zoom level
-            currentZoomDistance = initialZoomDistance;
+            if (firstPersonView == true) {
+                currentZoomDistance = minZoom;
+            } else {
+                currentZoomDistance = initialZoomDistance;
+            }
             currentYDegrees = initialYDegrees;
             currentXDegrees = initialXDegrees;
         }
