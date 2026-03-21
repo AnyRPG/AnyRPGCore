@@ -318,6 +318,7 @@ namespace AnyRPG {
 
         private void ToggleMouseLook() {
             mouseLookActive = !mouseLookActive;
+            messageFeedManager.WriteMessage($"Mouse Look: {(mouseLookActive ? "On" : "Off")}");
         }
 
         private Vector3 NormalizedVelocity(Vector3 inputVelocity) {
