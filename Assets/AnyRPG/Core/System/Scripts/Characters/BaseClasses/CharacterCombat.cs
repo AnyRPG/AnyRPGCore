@@ -363,7 +363,7 @@ namespace AnyRPG {
         }
 
         public void ActivateAutoAttack() {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.ActivateAutoAttack()");
+            Debug.Log($"{unitController.gameObject.name}.CharacterCombat.ActivateAutoAttack()");
 
             if (systemConfigurationManager.AllowAutoAttack == true) {
                 autoAttackActive = true;
@@ -372,7 +372,7 @@ namespace AnyRPG {
         }
 
         public void DeactivateAutoAttack() {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.DeactivateAutoAttack()");
+            Debug.Log($"{unitController.gameObject.name}.CharacterCombat.DeactivateAutoAttack()");
 
             autoAttackActive = false;
             unitController.UnitEventController.NotifyOnDeactivateAutoAttack();
