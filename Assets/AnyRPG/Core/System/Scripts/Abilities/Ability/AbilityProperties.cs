@@ -982,7 +982,7 @@ namespace AnyRPG {
         }
 
         public bool Use(UnitController sourceUnitController) {
-            Debug.Log($"{ResourceName}.BaseAbility.Use({(sourceUnitController == null ? "null" : sourceUnitController.gameObject.name)})");
+            //Debug.Log($"{ResourceName}.BaseAbility.Use({(sourceUnitController == null ? "null" : sourceUnitController.gameObject.name)})");
 
             // toggle auto-attack
             if (isAutoAttack && sourceUnitController.CharacterCombat.AutoAttackActive == true) {

@@ -252,7 +252,9 @@ namespace AnyRPG {
 
                     cameraPan = true;
                 } else if (firstPersonView == true && playerManagerClient.PlayerController.MovementData.HasMoveInput()) {
-                    // fps moving
+                    //Debug.Log("Player is moving in first person view");
+                    // fps moving.  This is for the case where you are in first person view and start moving with keyboard input.
+                    // We want the player to face the camera direction in case of movement, so we need to re-anchor the camera to the back of the player if it isn't already.
                     if (playerManagerClient.PlayerController.MovementData.HasTurnInput() == false) {
                         turnWithCamera = true;
                         userOffsetAngle = 0f;
@@ -311,7 +313,8 @@ namespace AnyRPG {
 
         private bool IsTurningWithCamera() {
             if (playerManagerClient.PlayerController.mouseLookActive
-                && (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f)) {
+                //&& (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f)
+                ) {
                 return true;
             }
             if (inputManager.rightMouseButtonDown
@@ -342,7 +345,6 @@ namespace AnyRPG {
 
             firstPersonView = true;
             playerManagerClient.UnitController?.UnitModelController.ActivateFirstPersonView();
-            playerManagerClient.UnitController.NamePlateController.RemoveNamePlate();
 
             currentMaxVerticalPan = firstPersonMaxVerticalPan;
             currentMinVerticalPan = firstPersonMinVerticalPan;

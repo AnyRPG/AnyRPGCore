@@ -413,6 +413,7 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.UnitModelController.ActivateFirstPersonView()");
 
             modelAppearanceController.ActivateFirstPersonView();
+            unitController.NamePlateController.RemoveNamePlate();
         }
 
         public void DeactivateFirstPersonView() {
