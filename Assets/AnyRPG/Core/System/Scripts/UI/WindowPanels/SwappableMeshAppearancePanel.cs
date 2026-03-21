@@ -101,7 +101,7 @@ namespace AnyRPG {
 
             // get reference to model controller
             SwappableMeshModelController oldSwappableMeshModelController = swappableMeshModelController;
-            swappableMeshModelController = characterCreatorManager.PreviewUnitController.UnitModelController.ModelAppearanceController.GetModelAppearanceController<SwappableMeshModelController>();
+            swappableMeshModelController = characterCreatorManager.UnitController.UnitModelController.ModelAppearanceController.GetModelAppearanceController<SwappableMeshModelController>();
 
             if (swappableMeshModelController == null) {
                 // this panel has somehow been opened but the preview unit is not a swappable mesh model

@@ -682,6 +682,10 @@ namespace AnyRPG {
                 }
             }
 
+            if (namePlateManager.MouseOverNamePlate()) {
+                return;
+            }
+
             if (playerManagerClient.ActiveUnitController.CharacterAbilityManager.WaitingForTarget()) {
                 FinishGroundTarget(Input.mousePosition);
             } else if (systemConfigurationManager.AllowClickToMove == true) {
@@ -692,47 +696,7 @@ namespace AnyRPG {
             }
         }
 
-        /*
-        /// <summary>
-        /// if an interactable is set, try to interact with it if it's in range.
-        /// </summary>
-        private void CheckForInteraction() {
-            //Debug.Log($"{gameObject.name}.PlayerController.CheckForInteraction()");
-
-            if (playerManager.UnitController == null) {
-                return;
-            }
-            if (playerManager.UnitController.Target == null) {
-                return;
-            }
-            if (InteractionSucceeded(playerManager.UnitController.Target)) {
-                if (playerManager.ActiveUnitController != null && playerManager.ActiveUnitController.UnitMotor != null) {
-                    playerManager.ActiveUnitController.UnitMotor.StopFollowingTarget();
-                }
-            }
-        }
-        */
-
-        /*
-        private bool InteractionSucceeded(Interactable target) {
-            //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded()");
-
-            if (playerManagerClient.UnitController == null) {
-                return false;
-            }
-
-            if (target == null) {
-                //Debug.Log($"{gameObject.name}.PlayerController.InteractionSucceeded(): target is null. return false.");
-                return false;
-            }
-
-            return interactionManager.Interact(playerManagerClient.UnitController, target);
-        }
-        */
-
         private void RegisterTab() {
-
-            //Interactable oldTarget = playerManager.UnitController.Target;
 
             // register keyboard tab target, only allow enemy target
             if (inputManager.KeyBindWasPressed("NEXTTARGET")) {
@@ -740,15 +704,6 @@ namespace AnyRPG {
                 GetNextTabTarget(playerManagerClient.UnitController.Target, false, false);
             }
         }
-
-        /*
-        private bool ValidFriendlyTarget(Interactable interactable) {
-            if (interactable != null) {
-                return true;
-            }
-            return false;
-        }
-        */
 
         private bool ValidEnemyTarget(Interactable interactable) {
             UnitController targetCharacterUnit = interactable.GetComponent<UnitController>();

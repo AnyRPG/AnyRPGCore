@@ -201,19 +201,19 @@ namespace AnyRPG {
         private void ActivateCorrectAppearancePanel() {
             //Debug.Log("CharacterCreatorWindowPanel.ActivateCorrectAppearancePanel()");
 
-            if (characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider == null) {
+            if (characterCreatorManager.UnitController.UnitProfile.UnitPrefabProps.ModelProvider == null) {
                 currentAppearanceEditorPanel = defaultAppearancePanel;
                 return;
             }
 
             //Debug.Log($"CharacterCreatorWindowPanel.ActivateCorrectAppearancePanel() provider type is {characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType()}");
 
-            if (appearanceEditorPanelTypes.ContainsKey(characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType()) == false) {
+            if (appearanceEditorPanelTypes.ContainsKey(characterCreatorManager.UnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType()) == false) {
                 currentAppearanceEditorPanel = defaultAppearancePanel;
                 return;
             }
 
-            GameObject panelPrefab = appearanceEditorPanelTypes[characterCreatorManager.PreviewUnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType()];
+            GameObject panelPrefab = appearanceEditorPanelTypes[characterCreatorManager.UnitController.UnitProfile.UnitPrefabProps.ModelProvider.GetType()];
 
             if (appearanceEditorPanels.ContainsKey(panelPrefab) == false) {
                 AppearancePanel appearancePanel = objectPooler.GetPooledObject(panelPrefab, panelParent.transform).GetComponent<AppearancePanel>();
@@ -255,8 +255,8 @@ namespace AnyRPG {
         public void SaveCharacter() {
             //Debug.Log("CharacterCreatorPanel.SaveCharacter()");
 
-            if (characterCreatorManager.PreviewUnitController.UnitModelController != null) {
-                characterCreatorManager.PreviewUnitController.UnitModelController.SaveAppearanceSettings(playerManagerClient.ActiveUnitController.CharacterSaveManager.SaveData);
+            if (characterCreatorManager.UnitController.UnitModelController != null) {
+                characterCreatorManager.UnitController.UnitModelController.SaveAppearanceSettings(playerManagerClient.ActiveUnitController.CharacterSaveManager.SaveData);
             }
 
             // copy the the appearance settings so they don't get overwritten when the character despawns and saves
@@ -293,7 +293,7 @@ namespace AnyRPG {
 
             // TO DO : FIX ME index already exists in the equipment manager
             foreach (EquipmentSlotProfile equipmentSlotProfile in playerManagerClient.UnitController.CharacterEquipmentManager.CurrentEquipment.Keys) {
-                characterCreatorManager.PreviewUnitController.CharacterEquipmentManager.AddCurrentEquipmentSlot(equipmentSlotProfile, playerManagerClient.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
+                characterCreatorManager.UnitController.CharacterEquipmentManager.AddCurrentEquipmentSlot(equipmentSlotProfile, playerManagerClient.UnitController.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
             }
 
         }

@@ -340,19 +340,22 @@ namespace AnyRPG {
         }
 
         private void ActivateFirstPersonView() {
-            Debug.Log("AnyRPGCameraController.ActivateFirstPersonView()");
+            //Debug.Log("AnyRPGCameraController.ActivateFirstPersonView()");
 
             firstPersonView = true;
             playerManagerClient.UnitController?.UnitModelController.ActivateFirstPersonView();
+            playerManagerClient.UnitController.NamePlateController.RemoveNamePlate();
+
             currentMaxVerticalPan = firstPersonMaxVerticalPan;
             currentMinVerticalPan = firstPersonMinVerticalPan;
         }
 
         private void DeactivateFirstPersonView() {
-            Debug.Log("AnyRPGCameraController.DeactivateFirstPersonView()");
+            //Debug.Log("AnyRPGCameraController.DeactivateFirstPersonView()");
 
             firstPersonView = false;
             playerManagerClient.UnitController.UnitModelController.DeactivateFirstPersonView();
+            playerManagerClient.UnitController.NamePlateController.AddNamePlate();
             currentMaxVerticalPan = maxVerticalPan;
             currentMinVerticalPan = minVerticalPan;
         }

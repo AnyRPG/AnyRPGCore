@@ -631,7 +631,7 @@ namespace AnyRPG {
             }
         }
 
-        public override void ConfigureUnitFrame(UnitFramePanelBase unitFramePanelBase, bool previewCameraExists) {
+        public override void ConfigureUnitFrame(UnitFramePanel unitFramePanelBase, bool previewCameraExists) {
             //Debug.Log($"{gameObject.name}.UnitController.ConfigureUnitFrame()");
 
             if (unitProfile != null && (unitProfile.UnitPrefabProps.NamePlateProps.UseSnapShot == false || previewCameraExists == false)) {

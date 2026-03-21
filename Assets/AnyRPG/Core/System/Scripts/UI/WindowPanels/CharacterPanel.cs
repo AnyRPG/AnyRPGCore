@@ -168,7 +168,7 @@ namespace AnyRPG {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (previewCameraController != null) {
                     //previewCameraController.OnTargetReady += HandleTargetReady;
-                    previewCameraController.InitializeCamera(characterPanelManager.PreviewUnitController);
+                    previewCameraController.InitializeCamera(characterPanelManager.UnitController);
                     //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting Target Ready Callback");
                 } else {
                     Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Panel Camera Controller is null. Please set it in the inspector");

@@ -170,7 +170,7 @@ namespace AnyRPG {
             return Faction.GetFactionColor(playerManagerClient, this);
         }
 
-        public virtual void ConfigureUnitFrame(UnitFramePanelBase unitFramePanelBase, bool previewCameraExists) {
+        public virtual void ConfigureUnitFrame(UnitFramePanel unitFramePanelBase, bool previewCameraExists) {
             unitFramePanelBase.ConfigureSnapshotPortrait();
         }
 

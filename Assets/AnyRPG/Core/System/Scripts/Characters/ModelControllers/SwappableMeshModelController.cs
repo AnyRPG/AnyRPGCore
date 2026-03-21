@@ -30,7 +30,7 @@ namespace AnyRPG {
 
         // track mesh renderers
         //private List<GameObject> meshRenderers = new List<GameObject>();
-        private Dictionary<string, MeshRenderer> meshRendererLookup = new Dictionary<string, MeshRenderer>();
+        private Dictionary<string, SkinnedMeshRenderer> meshRendererLookup = new Dictionary<string, SkinnedMeshRenderer>();
 
         public SwappableMeshModelOptions ModelOptions { get => modelOptions; }
         public Dictionary<string, string> OptionGroupChoices { get => optionGroupChoices; }
@@ -157,7 +157,7 @@ namespace AnyRPG {
 
             // enable all chosen meshes and disable all others
             //foreach (Transform child in unitModelController.UnitModel.transform) {
-            foreach (KeyValuePair<string, MeshRenderer> go in meshRendererLookup) {
+            foreach (KeyValuePair<string, SkinnedMeshRenderer> go in meshRendererLookup) {
                 if (enabledMeshes.Contains(go.Key)) {
                     // enable chosen mesh
                     go.Value.gameObject.SetActive(true);
@@ -283,14 +283,12 @@ namespace AnyRPG {
         private void GetMeshRenderers() {
             //Debug.Log($"{unitController.gameObject.name}.SwappableMeshModelController.GetMeshRenderers()");
 
-            // search entire heirarchy for mesh renderers and add them to the list of renderers to manage
-            MeshRenderer[] meshRenderers = unitModelController.UnitModel.GetComponentsInChildren<MeshRenderer>(true);
+            // search entire heirarchy for skinned mesh renderers and add them to the list of renderers to manage
+            SkinnedMeshRenderer[] meshRenderers = unitModelController.UnitModel.GetComponentsInChildren<SkinnedMeshRenderer>(true);
 
-            foreach (MeshRenderer meshRenderer in meshRenderers) {
-                //this.meshRenderers.Add(meshRenderer.gameObject);
-
+            foreach (SkinnedMeshRenderer meshRenderer in meshRenderers) {
                 if (meshRendererLookup.ContainsKey(meshRenderer.gameObject.name)) {
-                    Debug.LogWarning($"{unitController.gameObject.name}.SwappableMeshModelController.GetMeshRenderers() duplicate mesh name '{meshRenderer.gameObject.name}' found.  Ensure all meshes have unique names.");
+                    //Debug.LogWarning($"{unitController.gameObject.name}.SwappableMeshModelController.GetMeshRenderers() duplicate mesh name '{meshRenderer.gameObject.name}' found.  Ensure all meshes have unique names.");
                     continue;
                 }
                 meshRendererLookup.Add(meshRenderer.gameObject.name, meshRenderer);

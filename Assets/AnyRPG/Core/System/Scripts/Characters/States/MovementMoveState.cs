@@ -181,12 +181,10 @@ namespace AnyRPG {
 
                     // 7. ROTATE CHARACTER (Apply via Motor for CSP safety)
                     if (unitMovementController.CurrentMovementData.RotateModelMode) {
-                        Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Update() RotateModelMode is true, so facing intendedWorldMoveVelocity: {unitMovementController.intendedWorldMoveVelocity}");
+                        //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Update() RotateModelMode is true, so facing intendedWorldMoveVelocity: {unitMovementController.intendedWorldMoveVelocity}");
                         if (unitMovementController.intendedWorldMoveVelocity.sqrMagnitude > 0.001f) {
                             unitController.UnitMotor.FaceDirection(unitMovementController.intendedWorldMoveVelocity);
                         }
-                    } else {
-                        Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Update() RotateModelMode is false");
                     }
                 }
 
