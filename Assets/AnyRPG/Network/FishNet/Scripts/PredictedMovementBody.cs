@@ -13,6 +13,9 @@ namespace AnyRPG {
 
         public void SetLinearVelocity(Vector3 velocity) {
             //Debug.Log($"PredictedMovementBody.SetLinearVelocity({velocity})");
+            if (predictionRigidbody.Rigidbody.isKinematic) {
+                return;
+            }
 
             predictionRigidbody.Velocity(velocity);
         }
