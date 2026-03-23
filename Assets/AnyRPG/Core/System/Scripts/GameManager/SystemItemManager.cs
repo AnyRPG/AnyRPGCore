@@ -46,13 +46,6 @@ namespace AnyRPG {
             ClearInstantiatedItems();
         }
 
-        public void LoadAllItems() {
-            //Debug.Log("SystemItemManager.LoadAllItems()");
-
-            // this is only called in network mode.  In offline mode, items are loaded as part of the player data load
-            serverDataService.LoadAllItems();
-        }
-
         public void ProcessLoadAllItemInstances(List<ItemInstanceSerializedData> itemInstances) {
 
             List<ItemInstanceSaveData> itemInstanceSaveDataList = new List<ItemInstanceSaveData>();
@@ -69,6 +62,7 @@ namespace AnyRPG {
         }
 
         public void ProcessLoadAllItemInstances(List<ItemInstanceSaveData> itemInstances) {
+            Debug.Log($"SystemItemManager.ProcessLoadAllItemInstances(count: {itemInstances.Count})");
 
             foreach (ItemInstanceSaveData itemInstanceSaveData in itemInstances) {
                 //Debug.Log($"Loading user account from file: {fileName}");
@@ -82,6 +76,7 @@ namespace AnyRPG {
                 }
                 LoadItemInstanceSaveData(itemInstanceSaveData);
             }
+            serverDataService.ProcessItemsLoaded();
         }
 
         private void LoadItemInstanceSaveData(ItemInstanceSaveData itemInstanceSaveData) {

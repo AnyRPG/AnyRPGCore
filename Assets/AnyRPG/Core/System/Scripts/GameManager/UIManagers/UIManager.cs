@@ -245,6 +245,7 @@ namespace AnyRPG {
         public CloseableWindow confirmNewGameMenuWindow;
         public CloseableWindow onScreenKeyboardWindow;
         public CloseableWindow playerNameNotAvailableWindow;
+        public CloseableWindow startingServerWindow;
 
         [Header("Navigable Interface Elements")]
 
@@ -479,6 +480,7 @@ namespace AnyRPG {
             gamepadHintWindow.Configure(systemGameManager);
             keyboardHintWindow.Configure(systemGameManager);
             playerNameNotAvailableWindow.Configure(systemGameManager);
+            startingServerWindow.Configure(systemGameManager);
 
             // setting menu must go last because it checks all other windows opacity
             // which requires them to have configured their panels first
@@ -1050,6 +1052,7 @@ namespace AnyRPG {
             playOnlineMenuWindow.CloseWindow();
             settingsMenuWindow.CloseWindow();
             playerNameNotAvailableWindow.CloseWindow();
+            startingServerWindow.CloseWindow();
         }
 
         public void DeactivateInGameUI() {

@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 namespace AnyRPG {
     public class GuildServiceServer : ConfiguredClass {
@@ -49,9 +45,11 @@ namespace AnyRPG {
             ClearGuilds();
         }
 
+        /*
         public void LoadAllGuilds() {
             serverDataService.LoadAllGuilds();
         }
+        */
 
         public void ProcessLoadGuildListResponse(List<GuildSerializedData> guildSerializedDataList) {
             //Debug.Log($"NetworkManagerServer.ProcessLoadCharacterListResponse({accountId})");
@@ -92,6 +90,7 @@ namespace AnyRPG {
                     guildMemberLookup.Add(memberId, guild.GuildId);
                 }
             }
+            serverDataService.NotifyOnLoadGuilds(guildDictionary.Count);
         }
 
         private void ClearGuilds() {

@@ -54,6 +54,10 @@ namespace AnyRPG {
             serverDataService = systemGameManager.ServerDataService;
         }
 
+        public int GetPlayerNameMapCount() {
+            return playerNameMap.Count;
+        }
+
         private void HandleStopServer() {
             ClearPlayerNameMap();
         }
@@ -84,12 +88,6 @@ namespace AnyRPG {
                 return playerNameLookupMap[playerCharacterId];
             }
             return "Unknown";
-        }
-
-        public void LoadPlayerNameList() {
-            //Debug.Log("PlayerCharacterService.LoadPlayerNameMap()");
-
-            serverDataService.LoadPlayerNameList();
         }
 
         public void ProcessLoadPlayerNameList(List<PlayerCharacterSerializedData> playerCharacterList) {
@@ -139,7 +137,7 @@ namespace AnyRPG {
             }
 
             CharacterSaveData characterSaveData = newGameManager.CreateNewPlayerSaveData(requestedSaveData);
-            serverDataService.CreatePlayerCharacter(accountId, characterSaveData);
+            serverDataService.CreatePlayerCharacterAsync(accountId, characterSaveData);
         }
 
         public void ProcessCreatePlayerCharacterResponse(int accountId, bool createSucceeded, int characterId, CharacterSaveData characterSaveData) {

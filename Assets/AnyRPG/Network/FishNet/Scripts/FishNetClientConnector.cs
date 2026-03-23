@@ -419,7 +419,6 @@ namespace AnyRPG {
             networkManagerServer.CreateLobbyGame(sceneResourceName, networkConnection.ClientId, allowLateJoin);
         }
 
-
         [ObserversRpc]
         public void AdvertiseCreateLobbyGame(LobbyGame lobbyGame) {
             networkManagerClient.AdvertiseCreateLobbyGame(lobbyGame);

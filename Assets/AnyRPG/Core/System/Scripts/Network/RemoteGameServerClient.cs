@@ -1082,7 +1082,6 @@ namespace AnyRPG {
                 } else {
                     ItemInstanceListResponse itemInstanceListResponse = JsonUtility.FromJson<ItemInstanceListResponse>(webRequest.downloadHandler.text);
                     systemItemManager.ProcessLoadAllItemInstances(itemInstanceListResponse.itemInstances);
-                    serverDataService.ProcessItemsLoaded();
                 }
             }
         }

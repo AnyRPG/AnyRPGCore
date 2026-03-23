@@ -5,23 +5,59 @@ using UnityEngine;
 namespace AnyRPG {
     public class ServerDataService : ConfiguredClass {
 
+        public Action OnBeforeLoadItems = delegate { };
+        public Action <int> OnLoadItem = delegate { };
+        public Action<int> OnLoadItems = delegate { };
+        public Action OnBeforeLoadPlayerNameMap = delegate { };
+        public Action<int> OnLoadPlayerName = delegate { };
+        public Action<int> OnLoadPlayerNameMap = delegate { };
+        public Action OnBeforeLoadGuilds = delegate { };
+        public Action<int> OnLoadGuild = delegate { };
+        public Action<int> OnLoadGuilds = delegate { };
+        public Action OnBeforeLoadFriends = delegate { };
+        public Action<int> OnLoadFriend = delegate { };
+        public Action<int> OnLoadFriends = delegate { };
+        public Action OnBeforeLoadAuctionItems = delegate { };
+        public Action<int> OnLoadAuctionItem = delegate { };
+        public Action<int> OnLoadAuctionItems = delegate { };
+
         private LocalGameServerClient localGameServerClient = null;
         private RemoteGameServerClient remoteGameServerClient = null;
 
+        private bool itemsLoaded = false;
+        private bool playerNameMapLoaded = false;
+        private bool guildsLoaded = false;
+        private bool friendsLoaded = false;
+        private bool auctionItemsLoaded = false;
+
         // game manager references
-        private AuthenticationService authenticationService = null;
         private MailService mailService = null;
         private AuctionService auctionService = null;
         private GuildServiceServer guildServiceServer = null;
-        private FriendServiceServer friendServiceServer = null;
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            networkManagerServer.OnBeforeStartServer += HandleBeforeStartServer;
+        }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            authenticationService = systemGameManager.AuthenticationService;
             mailService = systemGameManager.MailService;
             auctionService = systemGameManager.AuctionService;
             guildServiceServer = systemGameManager.GuildServiceServer;
-            friendServiceServer = systemGameManager.FriendServiceServer;
+        }
+
+        private void HandleBeforeStartServer() {
+            itemsLoaded = false;
+            playerNameMapLoaded = false;
+            guildsLoaded = false;
+            friendsLoaded = false;
+            auctionItemsLoaded = false;
+        }
+
+        public bool IsServerDataLoaded() {
+            return itemsLoaded && playerNameMapLoaded && guildsLoaded && friendsLoaded && auctionItemsLoaded;
         }
 
         public void LoadServerData() {
@@ -41,47 +77,60 @@ namespace AnyRPG {
         }
 
         public void ProcessServerStarted() {
-            //Debug.Log($"NetworkManagerServer.ProcessServerStarted()");
+            //Debug.Log($"ServerDataService.ProcessServerStarted()");
             if (networkManagerServer.ServerMode == NetworkServerMode.Lobby) {
                 // no persistent data is loaded in Lobby mode
                 return;
             }
 
             // load items and players first, as they have no dependencies on each other
-            systemItemManager.LoadAllItems();
-            playerCharacterService.LoadPlayerNameList();
+            LoadAllItems();
+            LoadPlayerNameList();
+        }
+
+        public void NotifyOnLoadItem(int count) {
+            Debug.Log($"ServerDataService.NotifyOnLoadItem(count: {count})");
+
+            OnLoadItem(count);
         }
 
         public void ProcessItemsLoaded() {
-            //Debug.Log($"NetworkManagerServer.ProcessItemsLoaded()");
+            Debug.Log($"ServerDataService.ProcessItemsLoaded()");
+            itemsLoaded = true;
+            OnLoadItems(systemItemManager.InstantiatedItems.Count);
 
             // auction has dependency on items for item displayName
-            auctionService.LoadAuctionItemMap();
+            LoadAuctionItemMap();
         }
 
         public void ProcessPlayerNameMapLoaded() {
             //Debug.Log($"NetworkManagerServer.ProcessPlayerNameMapLoaded()");
+            playerNameMapLoaded = true;
+            OnLoadPlayerNameMap(playerCharacterService.GetPlayerNameMapCount());
 
             // guild has dependency on player character service for summary data
-            guildServiceServer.LoadAllGuilds();
+            //guildServiceServer.LoadAllGuilds();
+            LoadAllGuilds();
 
             // friendlist has dependency on player character service for summary data
-            friendServiceServer.LoadAllFriends();
+            //friendServiceServer.LoadAllFriends();
+            LoadAllFriends();
         }
 
 
         public void LoadAllItems() {
+            OnBeforeLoadItems();
             if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                localGameServerClient.LoadAllItems();
-                ProcessItemsLoaded();
+                localGameServerClient.LoadAllItemsAsync();
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 remoteGameServerClient.LoadItemInstanceList();
             }
         }
 
         public void LoadPlayerNameList() {
+            OnBeforeLoadPlayerNameMap();
             if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                localGameServerClient.LoadPlayerNameList();
+                localGameServerClient.LoadPlayerNameListAsync();
                 ProcessPlayerNameMapLoaded();
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 remoteGameServerClient.LoadAllPlayerCharacters();
@@ -109,22 +158,26 @@ namespace AnyRPG {
             return null;
         }
 
-        public void CreatePlayerCharacter(int accountId, CharacterSaveData characterSaveData) {
+        public async void CreatePlayerCharacterAsync(int accountId, CharacterSaveData characterSaveData) {
             if (networkManagerServer.ServerMode == NetworkServerMode.Lobby) {
                 // no persistent data is saved in Lobby mode
                 return;
             }
-            // create save data from parameters
+
             if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 remoteGameServerClient.CreatePlayerCharacter(accountId, characterSaveData);
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                int characterId = localGameServerClient.AddPlayerCharacter(accountId, characterSaveData);
+                // 1. Wait for the file to actually be written to disk
+                int characterId = await localGameServerClient.AddPlayerCharacterAsync(accountId, characterSaveData);
+
+                // 2. Now these are safe to call because the file exists
                 playerCharacterService.ProcessCreatePlayerCharacterResponse(accountId, true, characterId, characterSaveData);
                 playerCharacterService.LoadCharacterList(accountId);
             }
         }
 
-        public void SavePlayerCharacter(PlayerCharacterMonitor playerCharacterMonitor) {
+
+        public async void SavePlayerCharacter(PlayerCharacterMonitor playerCharacterMonitor) {
             if (networkManagerServer.ServerMode == NetworkServerMode.Lobby) {
                 // no persistent data is saved in Lobby mode
                 return;
@@ -135,7 +188,7 @@ namespace AnyRPG {
                     playerCharacterMonitor.characterSaveData.CharacterId,
                     playerCharacterMonitor.characterSaveData);
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                localGameServerClient.SavePlayerCharacter(playerCharacterMonitor.accountId, playerCharacterMonitor.characterSaveData);
+                await localGameServerClient.SavePlayerCharacterDataFileAsync(playerCharacterMonitor.accountId, playerCharacterMonitor.characterSaveData);
             }
         }
 
@@ -154,7 +207,7 @@ namespace AnyRPG {
 
         public void LoadAllUserAccounts() {
             if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                localGameServerClient.LoadAllUserAccounts();
+                localGameServerClient.LoadAllUserAccountsAsync();
             }
             
             // user accounts are not cached when using the APIServer
@@ -169,17 +222,19 @@ namespace AnyRPG {
 
         public void SaveAccount(UserAccount userAccount) {
             if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                localGameServerClient.SaveAccount(userAccount);
+                localGameServerClient.SaveAccountAsync(userAccount);
             }
         }
 
         public void LoadAuctionItemMap() {
+            OnBeforeLoadAuctionItems();
             if (networkManagerServer.ServerMode == NetworkServerMode.Lobby) {
                 // no persistent data is saved in Lobby mode
+                OnLoadAuctionItems(0);
                 return;
             }
             if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                localGameServerClient.GetAuctionItemList();
+                localGameServerClient.GetAuctionItemListAsync();
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 remoteGameServerClient.LoadAuctionItemList();
             }
@@ -208,7 +263,7 @@ namespace AnyRPG {
             }
 
             if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                localGameServerClient.GetPlayerCharacters(accountId);
+                localGameServerClient.GetPlayerCharactersAsync(accountId);
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 remoteGameServerClient.LoadCharacterList(accountId);
             }
@@ -220,7 +275,7 @@ namespace AnyRPG {
                 return;
             }
             if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                localGameServerClient.SaveAuctionFile(playerCharacterId, auctionItem);
+                localGameServerClient.SaveAuctionFileAsync(playerCharacterId, auctionItem);
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 remoteGameServerClient.SaveAuctionItem(auctionItem);
             }
@@ -250,7 +305,7 @@ namespace AnyRPG {
             }
 
             if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                localGameServerClient.SaveMailFile(playerCharacterId, mailMessage);
+                localGameServerClient.SaveMailFileAsync(playerCharacterId, mailMessage);
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 remoteGameServerClient.SaveMailMessage(mailMessage);
             }
@@ -264,8 +319,8 @@ namespace AnyRPG {
             }
 
             if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                localGameServerClient.SaveMailFile(playerCharacterId, mailMessage);
-                localGameServerClient.GetMailMessageList(accountId, playerCharacterId);
+                localGameServerClient.SaveMailFileAsync(playerCharacterId, mailMessage);
+                localGameServerClient.GetMailMessageListAsync(accountId, playerCharacterId);
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 remoteGameServerClient.SaveMailAndRefreshMessages(accountId, playerCharacterId, mailMessage);
             }
@@ -285,12 +340,14 @@ namespace AnyRPG {
         }
 
         public void LoadAllGuilds() {
+            OnBeforeLoadGuilds();
             if (networkManagerServer.ServerMode == NetworkServerMode.Lobby) {
                 // no persistent data is saved in Lobby mode
+                OnLoadGuilds(0);
                 return;
             }
             if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                localGameServerClient.LoadGuildList();
+                localGameServerClient.LoadGuildListAsync();
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 remoteGameServerClient.LoadGuildList();
             }
@@ -315,7 +372,7 @@ namespace AnyRPG {
                 return;
             }
             if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                localGameServerClient.SaveGuild(guild);
+                localGameServerClient.SaveGuildAsync(guild);
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 remoteGameServerClient.SaveGuild(guild);
             }
@@ -341,7 +398,7 @@ namespace AnyRPG {
             }
 
             if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                localGameServerClient.GetMailMessageList(accountId, playerCharacterId);
+                localGameServerClient.GetMailMessageListAsync(accountId, playerCharacterId);
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 remoteGameServerClient.LoadMailMessageList(accountId, playerCharacterId);
             }
@@ -398,7 +455,7 @@ namespace AnyRPG {
             if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 remoteGameServerClient.SaveItemInstance(instantiatedItem);
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                localGameServerClient.SaveItemInstanceDataFile(instantiatedItem);
+                localGameServerClient.SaveItemInstanceDataFileAsync(instantiatedItem);
             }
         }
 
@@ -410,15 +467,16 @@ namespace AnyRPG {
             if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 remoteGameServerClient.CreateItemInstance(instantiatedItem);
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                localGameServerClient.SaveItemInstanceDataFile(instantiatedItem);
+                localGameServerClient.SaveItemInstanceDataFileAsync(instantiatedItem);
             }
         }
 
         public void LoadAllFriends() {
+            OnBeforeLoadFriends();
             if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 remoteGameServerClient.LoadAllFriendLists();
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                localGameServerClient.LoadAllFriends();
+                localGameServerClient.LoadAllFriendsAsync();
             }
         }
 
@@ -431,7 +489,46 @@ namespace AnyRPG {
             if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 remoteGameServerClient.SaveFriendList(friendList);
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
-                localGameServerClient.SaveFriendList(friendList);
+                localGameServerClient.SaveFriendListAsync(friendList);
+            }
+        }
+
+        public void NotifyOnLoadGuilds(int count) {
+            guildsLoaded = true;
+            OnLoadGuilds(count);
+        }
+
+        public void NotifyOnLoadFriends(int count) {
+            friendsLoaded = true;
+            OnLoadFriends(count);
+        }
+
+        public void NotifyOnLoadAuctionItems(int count) {
+            auctionItemsLoaded = true;
+            OnLoadAuctionItems(count);
+        }
+
+        public void NotifyOnLoadGuild(int count) {
+            OnLoadGuild(count);
+        }
+
+        public void NotifyOnLoadAuctionItem(int count) {
+            OnLoadAuctionItem(count);
+        }
+
+        public void NotifyOnLoadPlayerName(int count) {
+            OnLoadPlayerName(count);
+        }
+
+        public void NotifyOnLoadFriend(int count) {
+            OnLoadFriend(count);
+        }
+
+        public int GetActiveSaveTasks() {
+            if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
+                return 0;
+            } else {
+                return localGameServerClient.ActiveSaveTasks;
             }
         }
     }

@@ -41,11 +41,13 @@ namespace AnyRPG {
             ClearFriends();
         }
 
+        /*
         public void LoadAllFriends() {
             //Debug.Log("FriendServiceServer.LoadAllFriends()");
 
             serverDataService.LoadAllFriends();
         }
+        */
 
         public void ProcessLoadAllFriendLists(List<FriendListSaveData> friendListSaveDatas) {
             foreach (FriendListSaveData friendListSaveData in friendListSaveDatas) {
@@ -62,6 +64,7 @@ namespace AnyRPG {
                 //Debug.Log($"FriendServiceServer.LoadAllFriends(): Loaded friend list with id {friendList.playerCharacterId} and {friendList.MemberIdList.Count} members.");
                 friendListDictionary.Add(friendList.playerCharacterId, friendList);
             }
+            serverDataService.NotifyOnLoadFriends(friendListDictionary.Count);
         }
 
         public void ProcessLoadAllFriendLists(List<FriendListSerializedData> friendListSerializedDatas) {

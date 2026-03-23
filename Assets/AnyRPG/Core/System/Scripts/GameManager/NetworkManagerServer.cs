@@ -12,6 +12,7 @@ namespace AnyRPG {
         public event Action<int, int, string> OnJoinLobbyGame = delegate { };
         public event Action<int> OnStartLobbyGame = delegate { };
         public event Action<int, int> OnLeaveLobbyGame = delegate { };
+        public event Action OnBeforeStartServer = delegate { };
         public event Action OnStartServer = delegate { };
         public event Action OnBeforeStopServer = delegate { };
         public event Action OnStopServer = delegate { };
@@ -275,6 +276,7 @@ namespace AnyRPG {
             if (serverModeActive == true) {
                 return;
             }
+            OnBeforeStartServer();
 
             networkController?.StartServer(serverPort);
         }
