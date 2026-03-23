@@ -32,6 +32,7 @@ namespace AnyRPG {
         private PlayerManagerClient playerManagerClient = null;
         private PlayerManagerServer playerManagerServer = null;
         private SystemEventManager systemEventManager = null;
+        private ServerDataService serverDataService = null;
 
         public Dictionary<int, List<LootDrop>> AvailableDroppedLoot { get => availableDroppedLoot; }
         public CurrencyItem CurrencyLootItem { get => currencyLootItem; }
@@ -56,6 +57,7 @@ namespace AnyRPG {
             playerManagerClient = systemGameManager.PlayerManagerClient;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             systemEventManager = systemGameManager.SystemEventManager;
+            serverDataService = systemGameManager.ServerDataService;
         }
 
         public void AddAvailableLoot(UnitController sourceUnitController, List<LootDrop> items) {
@@ -141,7 +143,6 @@ namespace AnyRPG {
                 networkManagerServer.AdvertiseTakeLoot(accountId, lootDrop.LootDropId);
             }
 
-            systemEventManager.NotifyOnTakeLoot(accountId);
             OnTakeLoot();
         }
 
@@ -209,6 +210,16 @@ namespace AnyRPG {
         public void RemoveLootTableStateIndex(int lootDropId) {
             if (lootTableStateDict.ContainsKey(lootDropId) == false) {
                 return;
+            }
+
+            // this is the point at which we loot an item, so we need to save the item to the database to make it persistent
+            // and available to the player when they log back in
+            LootDrop lootDrop = lootDropIndex[lootDropId];
+            if (lootDrop != null) {
+                InstantiatedItem instantiatedItem = lootDrop.InstantiatedItem;
+                if (instantiatedItem != null && networkManagerServer.ServerModeActive == true) {
+                    serverDataService.CreateItemInstance(instantiatedItem);
+                }
             }
             LootTableState lootTableState = lootTableStateDict[lootDropId];
             lootTableState.RemoveDroppedItem(lootDropIndex[lootDropId]);

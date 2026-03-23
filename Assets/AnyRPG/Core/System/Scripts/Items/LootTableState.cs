@@ -193,9 +193,11 @@ namespace AnyRPG {
             OnInitializeItem(instantiatedItem);
 
             // loot table is the only implementation of IInstantiatedItemRequestor, but only currency loot needs to be created(saved to database for first time)
+            /*
             if (networkManagerServer.ServerModeActive == true && instantiatedItem.Item == lootManager.CurrencyLootItem) {
                 systemItemManager.CreateItemInstance(instantiatedItem);
             }
+            */
         }
 
 

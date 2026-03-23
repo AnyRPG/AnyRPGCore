@@ -338,48 +338,11 @@ namespace AnyRPG {
             auctionIdCounter = newCounterValue;
         }
 
-        /*
-        private void MakeAuctionItemSaveFolder(int playerCharacterId) {
-            //Debug.Log("AuctionService.MakeAuctionItemSaveFolder()");
-
-            string saveFolderName = GetAuctionItemSaveFolder(playerCharacterId);
-            if (!Directory.Exists(saveFolderName)) {
-                Directory.CreateDirectory(saveFolderName);
-            }
-        }
-        */
-
         private string GetAuctionItemSaveFolder(int playerCharacterId) {
             //Debug.Log("AuctionService.GetAuctionItemSaveFolder()");
 
             return $"{auctionSaveFolderName}/{playerCharacterId}";
         }
-
-        /*
-        public void GetAuctionItemListAsync() {
-            //Debug.Log("AuctionService.GetAuctionItemList()");
-            List<AuctionItem> auctionItemList = new List<AuctionItem>();
-            if (Directory.Exists(auctionSaveFolderName)) {
-                string[] accountDirectories = Directory.GetDirectories(auctionSaveFolderName);
-                foreach (string playerCharacterDirectory in accountDirectories) {
-                    string[] fileEntries = Directory.GetFiles(playerCharacterDirectory);
-                    foreach (string fileName in fileEntries) {
-                        if (fileName.EndsWith(".json")) {
-                            string jsonString = File.ReadAllText(fileName);
-                            AuctionItem auctionItem = JsonUtility.FromJson<AuctionItem>(jsonString);
-                            if (auctionItem == null) {
-                                Debug.LogWarning($"LocalGameServerClient.GetAuctionItemList() file {fileName} produced an invalid Auction Item. It will be skipped.");
-                                continue;
-                            }
-                            auctionItemList.Add(auctionItem);
-                        }
-                    }
-                }
-            }
-
-            auctionService.ProcessLoadAuctionItemList(auctionItemList);
-        }
-        */
 
         public async void GetAuctionItemListAsync() {
             var progressReporter = new Progress<int>(count => {
@@ -495,15 +458,6 @@ namespace AnyRPG {
             mailIdCounter = newCounterValue;
         }
 
-        private void MakeMessageSaveFolder(int playerCharacterId) {
-            //Debug.Log("PlayerCharacterService.MakeSaveFolder()");
-
-            string saveFolderName = GetMessageSaveFolder(playerCharacterId);
-            if (!Directory.Exists(saveFolderName)) {
-                Directory.CreateDirectory(saveFolderName);
-            }
-        }
-
         private string GetMessageSaveFolder(int playerCharacterId) {
 
             return $"{mailSaveFolderName}/{playerCharacterId}";
@@ -569,30 +523,6 @@ namespace AnyRPG {
             return null;
         }
 
-        /*
-        public void GetMailMessageListAsync(int accountId, int playerCharacterId) {
-            //Debug.Log($"MailService.GetMailMessages(accountId: {accountId}, playerCharacterId: {playerCharacterId})");
-
-            List<MailMessage> mailMessageList = new List<MailMessage>();
-            string accountSaveFolder = GetMessageSaveFolder(playerCharacterId);
-            if (Directory.Exists(accountSaveFolder)) {
-                string[] fileEntries = Directory.GetFiles(accountSaveFolder);
-                foreach (string fileName in fileEntries) {
-                    if (fileName.EndsWith(".json")) {
-                        string jsonString = File.ReadAllText(fileName);
-                        MailMessage mailMessage = JsonUtility.FromJson<MailMessage>(jsonString);
-                        if (mailMessage == null) {
-                            Debug.LogWarning($"LocalGameServerClient.GetMailMessages(accountId: {accountId}, playerCharacterId: {playerCharacterId}) file {fileName} produced an invalid Mail Message.  It will be skipped.");
-                            continue;
-                        }
-                        mailMessageList.Add(mailMessage);
-                    }
-                }
-            }
-            mailService.ProcessMailMessageListResponse(accountId, mailMessageList);
-        }
-        */
-
         public async void GetMailMessageListAsync(int accountId, int playerCharacterId) {
             // 1. Capture the path on the Main Thread
             string accountSaveFolder = GetMessageSaveFolder(playerCharacterId);
@@ -644,27 +574,6 @@ namespace AnyRPG {
 
             accountIdCounter = counterValue;
         }
-
-        /*
-        public void LoadAllUserAccountsAsync() {
-            //Debug.Log("UserAccountService.LoadAllUserAccounts()");
-
-            List<UserAccount> userAccounts = new List<UserAccount>();
-            // load all user accounts from storage
-            string[] fileEntries = Directory.GetFiles(accountSaveFolderName, "*.json");
-            foreach (string fileName in fileEntries) {
-                //Debug.Log($"Loading user account from file: {fileName}");
-                string jsonString = File.ReadAllText(fileName);
-                UserAccount userAccount = JsonUtility.FromJson<UserAccount>(jsonString);
-                if (userAccount == null) {
-                    Debug.LogWarning($"LocalGameServerClient.LoadAllUserAccounts() file {fileName} produced an invalid User Account.  It will be skipped.");
-                    continue;
-                }
-                userAccounts.Add(userAccount);
-            }
-            userAccountService.ProcessLoadAllUserAccounts(userAccounts);
-        }
-        */
 
         public async void LoadAllUserAccountsAsync() {
             // 1. Snapshot any paths needed on the Main Thread
@@ -754,33 +663,6 @@ namespace AnyRPG {
             saveDataDirty = true;
         }
 
-        /*
-        public void LoadPlayerNameListAsync() {
-            //Debug.Log("PlayerCharacterService.LoadPlayerNameMap()");
-
-            List<CharacterSaveData> characterSaveDataList = new List<CharacterSaveData>();
-            if (Directory.Exists(playerCharacterSaveFolderName)) {
-                string[] accountDirectories = Directory.GetDirectories(playerCharacterSaveFolderName);
-                foreach (string accountDirectory in accountDirectories) {
-                    string[] fileEntries = Directory.GetFiles(accountDirectory);
-                    foreach (string fileName in fileEntries) {
-                        if (fileName.EndsWith(".json")) {
-                            string jsonString = File.ReadAllText(fileName);
-                            CharacterSaveData characterSaveData = JsonUtility.FromJson<CharacterSaveData>(jsonString);
-                            if (characterSaveData == null) {
-                                Debug.LogWarning($"LocalGameServerClient.LoadPlayerNameList() file {fileName} produced an invalid Character Save Data.  It will be skipped.");
-                                continue;
-                            }
-                            characterSaveDataList.Add(characterSaveData);
-                        }
-                    }
-                }
-            }
-
-            playerCharacterService.ProcessLoadPlayerNameList(characterSaveDataList);
-        }
-        */
-
         public async void LoadPlayerNameListAsync() {
             // 1. Setup the reporter to send integers back to the UI/Status window
             var progressReporter = new Progress<int>(count => {
@@ -835,15 +717,6 @@ namespace AnyRPG {
             //Debug.Log($"PlayerCharacterService.LoadPlayerCharacterIdCounter({newCounterValue})");
 
             playerCharacterIdCounter = newCounterValue;
-        }
-
-        private void MakeAccountSaveFolder(int accountId) {
-            //Debug.Log("PlayerCharacterService.MakeSaveFolder()");
-
-            string saveFolderName = GetAccountSaveFolder(accountId);
-            if (!Directory.Exists(saveFolderName)) {
-                Directory.CreateDirectory(saveFolderName);
-            }
         }
 
         private string GetAccountSaveFolder(int accountId) {
@@ -901,29 +774,6 @@ namespace AnyRPG {
             //Debug.Log($"PlayerCharacterService.GetNewPlayerCharacterId() return {returnValue}");
             return returnValue;
         }
-
-        /*
-        public void GetPlayerCharactersAsync(int accountId) {
-            List<CharacterSaveData> characterSaveDataList = new List<CharacterSaveData>();
-            string accountSaveFolder = GetAccountSaveFolder(accountId);
-            if (Directory.Exists(accountSaveFolder)) {
-                string[] fileEntries = Directory.GetFiles(accountSaveFolder);
-                foreach (string fileName in fileEntries) {
-                    if (fileName.EndsWith(".json")) {
-                        string jsonString = File.ReadAllText(fileName);
-                        CharacterSaveData characterSaveData = JsonUtility.FromJson<CharacterSaveData>(jsonString);
-                        if (characterSaveData == null) {
-                            Debug.LogWarning($"PlayerCharacterService.GetPlayerCharacters({accountId}): Could not load player character save data from file {fileName}. This character will be skipped.");
-                            continue;
-                        }
-                        characterSaveDataList.Add(characterSaveData);
-                    }
-                }
-            }
-
-            playerCharacterService.ProcessLoadCharacterListResponse(accountId, characterSaveDataList);
-        }
-        */
 
         public async void GetPlayerCharactersAsync(int accountId) {
             // 1. Capture the path on the Main Thread
@@ -987,25 +837,6 @@ namespace AnyRPG {
         // ITEM INSTANCES
         // ****************************
 
-        /*
-                public void LoadAllItems() {
-                    //Debug.Log("LocalGameServerClient.LoadAllItems()");
-
-                    List<ItemInstanceSaveData> itemInstanceListResponse = new List<ItemInstanceSaveData>();
-                    string[] fileEntries = Directory.GetFiles(itemInstanceSaveFolderName, "*.json");
-                    foreach (string fileName in fileEntries) {
-                        string jsonString = File.ReadAllText(fileName);
-                        ItemInstanceSaveData itemInstanceSaveData = JsonUtility.FromJson<ItemInstanceSaveData>(jsonString);
-                        if (itemInstanceSaveData == null) {
-                            Debug.LogWarning($"LocalGameServerClient.LoadAllItems(): Could not load item save data from file {fileName}. This item will be skipped.");
-                            continue;
-                        }
-                        itemInstanceListResponse.Add(itemInstanceSaveData);
-                    }
-                    systemItemManager.ProcessLoadAllItemInstances(itemInstanceListResponse);
-                }
-                */
-
         public async void LoadAllItemsAsync() {
             Debug.Log("LocalGameServerClient.LoadAllItemsAsync()");
 
@@ -1067,6 +898,18 @@ namespace AnyRPG {
             } finally {
                 // 3. ALWAYS decrement the counter when finished
                 System.Threading.Interlocked.Decrement(ref activeSaveTasks);
+            }
+        }
+
+        public void DeleteItemInstance(InstantiatedItem instantiatedItem) {
+            //Debug.Log($"AuctionService.DeleteAuctionItem({auctionItem.AuctionItemId})");
+
+            string folderPath = itemInstanceSaveFolderName;
+            string fileName = $"{instantiatedItem.InstanceId}.json";
+            string fullPath = Path.Combine(folderPath, fileName);
+
+            if (File.Exists(fullPath)) {
+                File.Delete(fullPath);
             }
         }
 

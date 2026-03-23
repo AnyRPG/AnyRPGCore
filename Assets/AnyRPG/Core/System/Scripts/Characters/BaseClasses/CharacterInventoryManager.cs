@@ -35,6 +35,7 @@ namespace AnyRPG {
         // game manager references
         private LootManager lootManager = null;
         private MessageLogServer messageLogServer = null;
+        private ServerDataService serverDataService = null;
 
         protected bool eventSubscriptionsInitialized = false;
 
@@ -88,6 +89,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             lootManager = systemGameManager.LootManager;
             messageLogServer = systemGameManager.MessageLogServer;
+            serverDataService = systemGameManager.ServerDataService;
         }
 
 
@@ -707,16 +709,30 @@ namespace AnyRPG {
         */
 
 
-        public InstantiatedItem GetNewInstantiatedItem(string itemName, ItemQuality itemQuality = null) {
+        public InstantiatedItem GetNewInstantiatedItem(string itemName) {
+            //Debug.Log(this.GetType().Name + ".GetNewResource(" + resourceName + ")");
+            
+            return GetNewInstantiatedItem(itemName, null);
+        }
+
+        public InstantiatedItem GetNewInstantiatedItem(string itemName, ItemQuality itemQuality) {
             //Debug.Log(this.GetType().Name + ".GetNewResource(" + resourceName + ")");
             Item item = systemDataFactory.GetResource<Item>(itemName);
             if (item == null) {
                 return null;
             }
-            return GetNewInstantiatedItem(item, itemQuality);
+            return GetNewInstantiatedItem(item, itemQuality, null);
         }
 
-        public InstantiatedItem GetNewInstantiatedItem(Item item, ItemQuality itemQuality = null, IInstantiatedItemRequestor requestor = null) {
+        public InstantiatedItem GetNewInstantiatedItem(Item item) {
+            return GetNewInstantiatedItem(item, null, null);
+        }
+
+        public InstantiatedItem GetNewInstantiatedItem(Item item, ItemQuality itemQuality) {
+            return GetNewInstantiatedItem(item, itemQuality, null);
+        }
+
+        public InstantiatedItem GetNewInstantiatedItem(Item item, ItemQuality itemQuality, IInstantiatedItemRequestor requestor) {
             //Debug.Log(this.GetType().Name + ".GetNewResource(" + resourceName + ")");
             InstantiatedItem instantiatedItem = systemItemManager.GetNewInstantiatedItem(item, itemQuality);
             //instantiatedItem.InitializeNewItem(itemQuality);
@@ -816,8 +832,12 @@ namespace AnyRPG {
         public void DeleteItem(InstantiatedItem instantiatedItem) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.DeleteItem({instantiatedItem.InstanceId}({instantiatedItem.ResourceName}))");
 
+            List<InstantiatedItem> itemsToRemove = new List<InstantiatedItem>();
             if (instantiatedItem.Slot != null) {
                 //instantiatedItem.Slot.Clear();
+                foreach (InstantiatedItem item in instantiatedItem.Slot.InstantiatedItems.Values) {
+                    itemsToRemove.Add(item);
+                }
                 instantiatedItem.Slot.RemoveAllItems();
                 NotifyOnItemCountChanged(instantiatedItem.Item);
             } else {
@@ -827,10 +847,19 @@ namespace AnyRPG {
                 if (instantiatedItem is InstantiatedEquipment) {
                     unitController.CharacterEquipmentManager.Unequip(instantiatedItem as InstantiatedEquipment);
                     if (instantiatedItem.Slot != null) {
+                        foreach (InstantiatedItem item in instantiatedItem.Slot.InstantiatedItems.Values) {
+                            itemsToRemove.Add(item);
+                        }
                         instantiatedItem.Slot.RemoveAllItems();
                         NotifyOnItemCountChanged(instantiatedItem.Item);
                     }
                     unitController.UnitModelController.RebuildModelAppearance();
+                }
+            }
+
+            if (networkManagerServer.ServerModeActive == true) {
+                foreach (InstantiatedItem instantiatedItemToRemove in itemsToRemove) {
+                    serverDataService.DeleteItemInstance(instantiatedItemToRemove);
                 }
             }
             //unitController.UnitEventController.NotifyOnDeleteItem(instantiatedItem);

@@ -34,7 +34,6 @@ namespace AnyRPG {
         public event System.Action<IUseable, int> OnSetMouseActionButton = delegate { };
         public event System.Action<int> OnUnsetMouseActionButton = delegate { };
         public event System.Action<UnitProfile> OnRemoveActivePet = delegate { };
-        public event System.Action<int> OnTakeLoot = delegate { };
         public event System.Action OnPlayerDeath = delegate { };
         public event System.Action OnCalculateRelativeTime = delegate { };
         public event System.Action<int, WeatherProfile, bool> OnEndWeather = delegate { };
@@ -245,10 +244,6 @@ namespace AnyRPG {
 
         public void NotifyOnRemoveActivePet(UnitProfile unitProfile) {
             OnRemoveActivePet(unitProfile);
-        }
-
-        public void NotifyOnTakeLoot(int accountId) {
-            OnTakeLoot(accountId);
         }
 
         public void NotifyOnPlayerDeath() {

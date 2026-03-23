@@ -89,7 +89,7 @@ namespace AnyRPG {
         }
 
         public void NotifyOnLoadItem(int count) {
-            Debug.Log($"ServerDataService.NotifyOnLoadItem(count: {count})");
+            //Debug.Log($"ServerDataService.NotifyOnLoadItem(count: {count})");
 
             OnLoadItem(count);
         }
@@ -131,7 +131,6 @@ namespace AnyRPG {
             OnBeforeLoadPlayerNameMap();
             if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
                 localGameServerClient.LoadPlayerNameListAsync();
-                ProcessPlayerNameMapLoaded();
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 remoteGameServerClient.LoadAllPlayerCharacters();
             }
@@ -164,6 +163,8 @@ namespace AnyRPG {
                 return;
             }
 
+            SaveNewItemList(characterSaveData);
+
             if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 remoteGameServerClient.CreatePlayerCharacter(accountId, characterSaveData);
             } else if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
@@ -176,6 +177,66 @@ namespace AnyRPG {
             }
         }
 
+        private void SaveNewItemList(CharacterSaveData characterSaveData) {
+            List<InstantiatedItem> newInstantiatedItems = new List<InstantiatedItem>();
+            foreach (InventorySlotSaveData inventorySlotSaveData in characterSaveData.InventorySlotSaveData) {
+                foreach (long itemInstanceId in inventorySlotSaveData.ItemInstanceIds) {
+                    InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemInstanceId);
+                    if (instantiatedItem == null) {
+                        Debug.LogWarning($"PlayerCharacterSaveData.PlayerCharacterSaveData(): Could not find instantiated item with id {itemInstanceId} in inventory for character {characterSaveData.CharacterName}");
+                        continue;
+                    }
+                    newInstantiatedItems.Add(instantiatedItem);
+                }
+            }
+            foreach (InventorySlotSaveData inventorySlotSaveData in characterSaveData.BankSlotSaveData) {
+                foreach (long itemInstanceId in inventorySlotSaveData.ItemInstanceIds) {
+                    InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemInstanceId);
+                    if (instantiatedItem == null) {
+                        Debug.LogWarning($"PlayerCharacterSaveData.PlayerCharacterSaveData(): Could not find instantiated item with id {itemInstanceId} in bank for character {characterSaveData.CharacterName}");
+                        continue;
+                    }
+                    newInstantiatedItems.Add(instantiatedItem);
+                }
+            }
+            foreach (EquipmentInventorySlotSaveData equipmentInventorySlotSaveData in characterSaveData.EquipmentSaveData) {
+                //Debug.Log($"PlayerCharacterSaveData.Constructor() equipmentId: {equipmentSaveData.ItemInstanceId}");
+                if (equipmentInventorySlotSaveData.HasItem == false) {
+                    continue;
+                }
+                InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(equipmentInventorySlotSaveData.ItemInstanceId);
+                if (instantiatedItem == null) {
+                    Debug.LogWarning($"PlayerCharacterSaveData.PlayerCharacterSaveData(): Could not find instantiated item with id {equipmentInventorySlotSaveData.ItemInstanceId} in equipment for character {characterSaveData.CharacterName}");
+                    continue;
+                }
+                newInstantiatedItems.Add(instantiatedItem);
+            }
+            foreach (EquippedBagSaveData equippedBagSaveData in characterSaveData.EquippedBagSaveData) {
+                if (equippedBagSaveData.HasItem == false) {
+                    continue;
+                }
+                InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(equippedBagSaveData.ItemInstanceId);
+                if (instantiatedItem == null) {
+                    Debug.LogWarning($"PlayerCharacterSaveData.PlayerCharacterSaveData(): Could not find instantiated item with id {equippedBagSaveData.ItemInstanceId} in equipped bags for character {characterSaveData.CharacterName}");
+                    continue;
+                }
+                newInstantiatedItems.Add(instantiatedItem);
+            }
+            foreach (EquippedBagSaveData equippedBagSaveData in characterSaveData.EquippedBankBagSaveData) {
+                if (equippedBagSaveData.HasItem == false) {
+                    continue;
+                }
+                InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(equippedBagSaveData.ItemInstanceId);
+                if (instantiatedItem == null) {
+                    Debug.LogWarning($"PlayerCharacterSaveData.PlayerCharacterSaveData(): Could not find instantiated item with id {equippedBagSaveData.ItemInstanceId} in equipped bank bags for character {characterSaveData.CharacterName}");
+                    continue;
+                }
+                newInstantiatedItems.Add(instantiatedItem);
+            }
+            foreach (InstantiatedItem instantiatedItem in newInstantiatedItems) {
+                CreateItemInstance(instantiatedItem);
+            }
+        }
 
         public async void SavePlayerCharacter(PlayerCharacterMonitor playerCharacterMonitor) {
             if (networkManagerServer.ServerMode == NetworkServerMode.Lobby) {
@@ -447,6 +508,7 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public void SaveItemInstance(InstantiatedItem instantiatedItem) {
             if (networkManagerServer.ServerMode == NetworkServerMode.Lobby) {
                 // no persistent data is saved in Lobby mode
@@ -458,6 +520,7 @@ namespace AnyRPG {
                 localGameServerClient.SaveItemInstanceDataFileAsync(instantiatedItem);
             }
         }
+        */
 
         public void CreateItemInstance(InstantiatedItem instantiatedItem) {
             if (networkManagerServer.ServerMode == NetworkServerMode.Lobby) {
@@ -529,6 +592,18 @@ namespace AnyRPG {
                 return 0;
             } else {
                 return localGameServerClient.ActiveSaveTasks;
+            }
+        }
+
+        public void DeleteItemInstance(InstantiatedItem itemToRemove) {
+            if (networkManagerServer.ServerMode == NetworkServerMode.Lobby) {
+                // no persistent data is saved in Lobby mode
+                return;
+            }
+            if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
+                remoteGameServerClient.DeleteItemInstance(itemToRemove.InstanceId);
+            } else if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
+                localGameServerClient.DeleteItemInstance(itemToRemove);
             }
         }
     }

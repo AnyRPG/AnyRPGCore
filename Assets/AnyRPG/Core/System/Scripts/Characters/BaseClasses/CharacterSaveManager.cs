@@ -854,7 +854,6 @@ namespace AnyRPG {
                 if (actionBarSaveData.IsItem == true) {
                     // find item in bag
                     //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadActionBarData(): searching for usable(" + actionBarSaveData.MyName + ") in inventory");
-                    //useable = systemDataFactory.GetResource<Item>(actionBarSaveData.DisplayName);
                     useable = systemItemManager.GetNewInstantiatedItem(actionBarSaveData.DisplayName);
                 } else {
                     // find ability from system ability manager

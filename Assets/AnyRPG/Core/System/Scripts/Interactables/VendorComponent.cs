@@ -14,6 +14,7 @@ namespace AnyRPG {
         // game manager references
         private VendorManagerClient vendorManager = null;
         private CurrencyConverter currencyConverter = null;
+        private ServerDataService serverDataService = null;
 
         public VendorProps Props { get => interactableOptionProps as VendorProps; }
         //public Dictionary<int, VendorCollection> BuyBackCollections { get => buyBackCollections; set => buyBackCollections = value; }
@@ -31,6 +32,7 @@ namespace AnyRPG {
 
             vendorManager = systemGameManager.VendorManagerClient;
             currencyConverter = systemGameManager.CurrencyConverter;
+            serverDataService = systemGameManager.ServerDataService;
         }
 
         /*
@@ -154,6 +156,9 @@ namespace AnyRPG {
                 }
 
                 if (sourceUnitController.CharacterInventoryManager.AddItem(tmpInstantiatedItem, false)) {
+                    if (networkManagerServer.ServerModeActive == true) {
+                        serverDataService.CreateItemInstance(tmpInstantiatedItem);
+                    }
                     if (collectionIndex != 0) {
                         tmpInstantiatedItem.DropLevel = sourceUnitController.CharacterStats.Level;
                     }
