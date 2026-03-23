@@ -16,6 +16,7 @@ namespace AnyRPG {
         private int saveInterval = 10;
         private bool saveDataDirty = false;
         private int activeSaveTasks = 0;
+        private bool isSavingStateFile = false;
 
         int nextGuildId = 1;
         private string guildSaveFolderName = string.Empty;
@@ -129,6 +130,8 @@ namespace AnyRPG {
         }
 
         private void HandleStopServer() {
+            //Debug.Log($"ServerStateService.HandleStopServer()");
+
             SaveStateDataFileAsync();
             EndMonitoringServerState();
         }
@@ -149,17 +152,23 @@ namespace AnyRPG {
         public IEnumerator MonitorServerState() {
             //Debug.Log($"ServerStateService.MonitorServerState()");
 
+            var wait = new WaitForSeconds(saveInterval);
+
             while (systemGameManager.GameMode == GameMode.Network) {
-                if (saveDataDirty == true) {
+                if (saveDataDirty == true && !isSavingStateFile) {
                     SaveStateDataFileAsync();
                 }
-                yield return new WaitForSeconds(saveInterval);
+                yield return wait;
             }
         }
 
         public async void SaveStateDataFileAsync() {
             //Debug.Log($"ServerStateService.SaveStateDataFileAsync()");
 
+            if (isSavingStateFile) {
+                return;
+            }
+            isSavingStateFile = true;
             // 1. Mark the save task as active on the Main Thread
             System.Threading.Interlocked.Increment(ref activeSaveTasks);
 
@@ -188,6 +197,7 @@ namespace AnyRPG {
                     }
                 });
             } finally {
+                isSavingStateFile = false;
                 // 3. ALWAYS decrement the counter when finished
                 System.Threading.Interlocked.Decrement(ref activeSaveTasks);
             }
