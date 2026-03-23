@@ -214,7 +214,7 @@ namespace AnyRPG {
 
         public IUseable GetFactoryUseable() {
             //return systemDataFactory.GetResource<Item>(ResourceName);
-            return systemItemManager.GetNewInstantiatedItem(ResourceName);
+            return systemItemManager.GetNewInstantiatedItem(ResourceName, null);
         }
 
         public void AssignToActionButton(ActionButton actionButton) {

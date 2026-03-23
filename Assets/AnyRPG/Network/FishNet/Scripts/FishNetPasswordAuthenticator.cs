@@ -80,7 +80,6 @@ namespace AnyRPG
             base.NetworkManager.ClientManager.Broadcast(pb);
         }
 
-
         /// <summary>
         /// Received on server when a client sends the password broadcast message.
         /// </summary>
@@ -88,6 +87,17 @@ namespace AnyRPG
         /// <param name="pb"></param>
         private void OnPasswordBroadcast(NetworkConnection conn, PasswordBroadcast pb, Channel channel) {
             //Debug.Log("FishNetPasswordAuthenticator.OnPasswordBroadcst()");
+
+            // NEW: Check if the server is ready before doing ANYTHING else
+            if (!systemGameManager.ServerDataService.IsServerDataLoaded()) {
+                NetworkManager.Log($"Client {conn.ClientId} attempted to login, but server data is still loading. Disconnecting.");
+
+                // You might want to send a specific "Server Starting" broadcast here 
+                // if you want the client to show a nice error message.
+
+                conn.Disconnect(true);
+                return;
+            }
 
             /* If client is already authenticated this could be an attack. Connections
              * are removed when a client disconnects so there is no reason they should

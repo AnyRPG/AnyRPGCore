@@ -669,53 +669,18 @@ namespace AnyRPG {
 
             equipmentManager.ClearEquipmentList();
 
-            // testing - the new game manager should ignore special UnitProfile equipment that is only meant for NPCs
-            // commented out the following code : 
-            /*
-            if (unitProfile != null) {
-                foreach (Equipment equipment in unitProfile.EquipmentList) {
-                    if (equipmentList.ContainsKey(equipment.EquipmentSlotType)) {
-                        equipmentList[equipment.EquipmentSlotType] = equipment;
-                    } else {
-                        equipmentList.Add(equipment.EquipmentSlotType, equipment);
-                    }
-                }
-            }
-            */
-
             if (characterRace != null) {
                 foreach (Equipment equipment in characterRace.EquipmentList) {
-                    /*
-                    if (equipmentList.ContainsKey(equipment.EquipmentSlotType)) {
-                        equipmentList[equipment.EquipmentSlotType] = equipment;
-                    } else {
-                        equipmentList.Add(equipment.EquipmentSlotType, equipment);
-                    }
-                    */
                     equipmentManager.EquipEquipment(systemItemManager.GetNewInstantiatedItem(equipment) as InstantiatedEquipment);
                 }
             }
 
             if (systemConfigurationManager.NewGameClass == true && characterClass != null) {
                 foreach (Equipment equipment in characterClass.EquipmentList) {
-                    /*
-                    if (equipmentList.ContainsKey(equipment.EquipmentSlotType)) {
-                        equipmentList[equipment.EquipmentSlotType] = equipment;
-                    } else {
-                        equipmentList.Add(equipment.EquipmentSlotType, equipment);
-                    }
-                    */
                     equipmentManager.EquipEquipment(systemItemManager.GetNewInstantiatedItem(equipment) as InstantiatedEquipment);
                 }
                 if (systemConfigurationManager.NewGameSpecialization == true && classSpecialization != null) {
                     foreach (Equipment equipment in classSpecialization.EquipmentList) {
-                        /*
-                        if (equipmentList.ContainsKey(equipment.EquipmentSlotType)) {
-                            equipmentList[equipment.EquipmentSlotType] = equipment;
-                        } else {
-                            equipmentList.Add(equipment.EquipmentSlotType, equipment);
-                        }
-                        */
                         equipmentManager.EquipEquipment(systemItemManager.GetNewInstantiatedItem(equipment) as InstantiatedEquipment);
                     }
                 }
@@ -723,13 +688,6 @@ namespace AnyRPG {
 
             if (systemConfigurationManager.NewGameFaction == true && faction != null) {
                 foreach (Equipment equipment in faction.EquipmentList) {
-                    /*
-                    if (equipmentList.ContainsKey(equipment.EquipmentSlotType)) {
-                        equipmentList[equipment.EquipmentSlotType] = equipment;
-                    } else {
-                        equipmentList.Add(equipment.EquipmentSlotType, equipment);
-                    }
-                    */
                     equipmentManager.EquipEquipment(systemItemManager.GetNewInstantiatedItem(equipment) as InstantiatedEquipment);
                 }
             }

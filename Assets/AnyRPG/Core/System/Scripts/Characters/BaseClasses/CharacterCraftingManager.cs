@@ -15,11 +15,19 @@ namespace AnyRPG {
 
         private Coroutine waitCoroutine = null;
 
+        // game manager references
+        private ServerDataService serverDataService = null;
+
         public List<Recipe> CraftingQueue { get => craftingQueue; set => craftingQueue = value; }
 
         public CharacterCraftingManager(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
             Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            serverDataService = systemGameManager.ServerDataService;
         }
 
         public void SetCraftAbility(CraftAbilityProperties craftAbility) {
@@ -78,12 +86,19 @@ namespace AnyRPG {
             if (GetMaxCraftAmount(craftingQueue[0]) > 0) {
                 InstantiatedItem tmpItem = unitController.CharacterInventoryManager.GetNewInstantiatedItem(craftingQueue[0].Output.ResourceName);
                 if (unitController.CharacterInventoryManager.AddItem(tmpItem, false)) {
+                    if (networkManagerServer.ServerModeActive == true) {
+                        serverDataService.CreateItemInstance(tmpItem);
+                    }
                     //Debug.Log("CraftingUI.CraftNextItem(): got an item successfully");
                     foreach (CraftingMaterial craftingMaterial in craftingQueue[0].CraftingMaterials) {
                         //Debug.Log("CraftingUI.CraftNextItem(): looping through crafting materials");
                         for (int i = 0; i < craftingMaterial.Count; i++) {
                             //Debug.Log("CraftingUI.CraftNextItem(): about to remove item from inventory");
-                            unitController.CharacterInventoryManager.RemoveInventoryItem(unitController.CharacterInventoryManager.GetItems(craftingMaterial.Item.ResourceName, 1)[0]);
+                            InstantiatedItem itemToRemove = unitController.CharacterInventoryManager.GetItems(craftingMaterial.Item.ResourceName, 1)[0];
+                            unitController.CharacterInventoryManager.RemoveInventoryItem(itemToRemove);
+                            if (networkManagerServer.ServerModeActive == true) {
+                                serverDataService.DeleteItemInstance(itemToRemove);
+                            }
                         }
                     }
                     unitController.UnitEventController.NotifyOnCraftItem();

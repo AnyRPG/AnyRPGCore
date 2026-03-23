@@ -46,9 +46,11 @@ namespace AnyRPG {
             auctionItemInstances.Clear();
         }
 
+        /*
         public void LoadAuctionItemMap() {
             serverDataService.LoadAuctionItemMap();
         }
+        */
 
         public void ProcessLoadAuctionItemListResponse(List<AuctionItemSerializedData> auctionItemSerializedData) {
             //Debug.Log("AuctionService.LoadAuctionItemMap()");
@@ -77,6 +79,7 @@ namespace AnyRPG {
                     Debug.LogWarning($"AuctionService.ProcessLoadAuctionItemListResponse(): Duplicate auction item id ({auctionItem.AuctionItemId}) found . This item will be skipped.");
                 }
             }
+            serverDataService.NotifyOnLoadAuctionItems(this.auctionItems.Count);
         }
 
         public void ListNewItems(UnitController sourceUnitController, ListAuctionItemRequest listAuctionItemRequest) {

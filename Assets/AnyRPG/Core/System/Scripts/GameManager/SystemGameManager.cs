@@ -12,6 +12,7 @@ namespace AnyRPG {
         //private bool isServer = false;
         private ushort commandLineServerPort = 7770;
         private NetworkServerMode commandLineServerMode = NetworkServerMode.MMO;
+        private bool safeToQuit = false;
 
         // serialized fields
         [Header("Configuration")]
@@ -266,7 +267,27 @@ namespace AnyRPG {
 
         }
 
+        private bool HandleWantsToQuit() {
+            // If we've already finished our cleanup, allow the quit
+            if (safeToQuit) return true;
+
+            // Check if there are active background saves
+            if (serverDataService.GetActiveSaveTasks() > 0 || saveManager.ActiveSaveTasks > 0) {
+                //Debug.Log($"Waiting for {serverDataService.GetActiveSaveTasks()} saves before quitting...");
+
+                // Start a coroutine to monitor the tasks and re-trigger the quit
+                StartCoroutine(WaitForSavesToFinish());
+
+                // Returning false cancels the current quit attempt
+                return false;
+            }
+
+            return true;
+        }
+
         private void Init() {
+            Application.wantsToQuit += HandleWantsToQuit;
+
             ProcessCommandLineParameters();
 
             //Debug.Log("SystemGameManager.Init()");
@@ -382,12 +403,6 @@ namespace AnyRPG {
                 string arg = args[i].ToLower();
 
                 switch (arg) {
-                    /*
-                    case "-d":
-                        isServer = true;
-                        Debug.Log("Command Line: Server Mode Enabled");
-                        break;
-                    */
                     case "--serverport":
                         if (i + 1 < args.Length && ushort.TryParse(args[i + 1], out ushort parsedPort)) {
                             commandLineServerPort = parsedPort;
@@ -441,6 +456,20 @@ namespace AnyRPG {
         private void OnApplicationQuit() {
             //Debug.Log("SystemGameManager.OnApplicationQuit()");
             isShuttingDown = true;
+        }
+
+        private IEnumerator WaitForSavesToFinish() {
+            //Debug.Log("Server shutting down... waiting for background saves.");
+
+            // Check the counter we made in the previous step
+            // We wait until activeSaveTasks reaches 0
+            while (serverDataService.GetActiveSaveTasks() > 0 || saveManager.ActiveSaveTasks > 0) {
+                yield return null; // Wait one frame and check again
+            }
+
+            //Debug.Log("All saves finished. Closing server.");
+            safeToQuit = true;
+            Application.Quit();
         }
 
         public void SetGameMode(GameMode gameMode) {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -11,6 +12,7 @@ namespace AnyRPG {
 
         private string baseSaveFolderName = string.Empty;
         private int playerCharacterIdCounter = 1;
+        private int activeSaveTasks = 0;
 
         private string offlineStateSaveFolderName = string.Empty;
         private const string offlineStateSaveFileName = "OfflineState.json";
@@ -33,6 +35,7 @@ namespace AnyRPG {
         private LoadGameManager loadGameManager = null;
 
         public Dictionary<string, CutsceneSaveData> CutsceneSaveDataDictionary { get => cutsceneSaveDataDictionary; set => cutsceneSaveDataDictionary = value; }
+        public int ActiveSaveTasks { get => activeSaveTasks; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -83,13 +86,35 @@ namespace AnyRPG {
             }
         }
 
-        public void SaveOfflineStateSaveData() {
-            //Debug.Log($"SaveManager.SaveOfflineStateSaveData()");
+        public async void SaveOfflineStateSaveDataAsync() {
+            // 1. Mark the save task as active on the Main Thread
+            System.Threading.Interlocked.Increment(ref activeSaveTasks);
 
-            string jsonString = JsonUtility.ToJson(offlineStateSaveData);
-            string jsonSavePath = $"{offlineStateSaveFolderName}/{offlineStateSaveFileName}";
-            File.WriteAllText(jsonSavePath, jsonString);
+            try {
+                // Snapshot the data and paths on the Main Thread
+                string jsonString = JsonUtility.ToJson(offlineStateSaveData);
+                string folderPath = offlineStateSaveFolderName;
+                string fileName = offlineStateSaveFileName;
+                string fullPath = Path.Combine(folderPath, fileName);
+
+                // 2. Offload the folder check and file writing to a background thread
+                await Task.Run(() => {
+                    try {
+                        if (!Directory.Exists(folderPath)) {
+                            Directory.CreateDirectory(folderPath);
+                        }
+                        File.WriteAllText(fullPath, jsonString);
+                    } catch (System.Exception ex) {
+                        // Log errors back to the Unity console
+                        Debug.LogError($"[Offline State Save Error]: {ex.Message}");
+                    }
+                });
+            } finally {
+                // 3. ALWAYS decrement the counter when finished
+                System.Threading.Interlocked.Decrement(ref activeSaveTasks);
+            }
         }
+
 
         private int GetNewPlayerCharacterId() {
             //Debug.Log("SaveManager.GetNewPlayerCharacterId()");
@@ -97,7 +122,7 @@ namespace AnyRPG {
             int returnValue = playerCharacterIdCounter;
             playerCharacterIdCounter++;
             offlineStateSaveData.playerCharacterIdCounter = playerCharacterIdCounter;
-            SaveOfflineStateSaveData();
+            SaveOfflineStateSaveDataAsync();
 
             //Debug.Log($"SaveManager.GetNewPlayerCharacterId() return {returnValue}");
             return returnValue;
@@ -300,26 +325,45 @@ namespace AnyRPG {
 
             // create save data bundle
             PlayerCharacterSaveData playerCharacterSaveData = new PlayerCharacterSaveData(characterSaveData, systemItemManager);
-            bool saveResult = SaveDataFile(playerCharacterSaveData);
-            if (saveResult) {
-                PlayerPrefs.SetInt("LastOfflinePlayerCharacterId", characterSaveData.CharacterId);
-            }
+            SaveDataFileAsync(playerCharacterSaveData);
+            PlayerPrefs.SetInt("LastOfflinePlayerCharacterId", characterSaveData.CharacterId);
 
-            return saveResult;
-        }
-
-        public bool SaveDataFile(PlayerCharacterSaveData playerCharacterSaveData) {
-
-            playerCharacterSaveData.CharacterSaveData.DataSavedOn = DateTime.Now.ToLongDateString();
-
-            string jsonString = JsonUtility.ToJson(playerCharacterSaveData);
-            //Debug.Log(jsonString);
-            string jsonSavePath = $"{baseSaveFolderName}/{playerCharacterSaveData.CharacterSaveData.CharacterId}.json";
-            File.WriteAllText(jsonSavePath, jsonString);
-            
             return true;
         }
-    
+
+        public async void SaveDataFileAsync(PlayerCharacterSaveData playerCharacterSaveData) {
+            // 1. Mark the save task as active on the Main Thread
+            System.Threading.Interlocked.Increment(ref activeSaveTasks);
+
+            try {
+                // 2. Perform "Main Thread Only" logic and snapshotting
+                // Update the timestamp while still on the Main Thread
+                playerCharacterSaveData.CharacterSaveData.DataSavedOn = DateTime.Now.ToLongDateString();
+
+                // Convert to JSON now so the background thread has a static string to write
+                string jsonString = JsonUtility.ToJson(playerCharacterSaveData);
+
+                string folderPath = baseSaveFolderName;
+                string fileName = $"{playerCharacterSaveData.CharacterSaveData.CharacterId}.json";
+                string fullPath = Path.Combine(folderPath, fileName);
+
+                // 3. Offload the disk work
+                await Task.Run(() => {
+                    try {
+                        if (!Directory.Exists(folderPath)) {
+                            Directory.CreateDirectory(folderPath);
+                        }
+                        File.WriteAllText(fullPath, jsonString);
+                    } catch (System.Exception ex) {
+                        Debug.LogError($"[Player Save Error] ID {playerCharacterSaveData.CharacterSaveData.CharacterId}: {ex.Message}");
+                    }
+                });
+            } finally {
+                // 4. ALWAYS decrement so the Shutdown Guard knows this specific write finished
+                System.Threading.Interlocked.Decrement(ref activeSaveTasks);
+            }
+        }
+
         public void NewGame(CharacterSaveData characterSaveData) {
             //Debug.Log($"Savemanager.NewGame({characterSaveData.UnitProfileName})");
 
@@ -338,7 +382,7 @@ namespace AnyRPG {
             // create save data bundle
             PlayerCharacterSaveData playerCharacterSaveData = new PlayerCharacterSaveData(characterSaveData, systemItemManager);
 
-            SaveDataFile(playerCharacterSaveData);
+            SaveDataFileAsync(playerCharacterSaveData);
             PlayerPrefs.SetInt("LastOfflinePlayerCharacterId", characterSaveData.CharacterId);
 
             LoadGame(playerCharacterSaveData);
@@ -768,7 +812,7 @@ namespace AnyRPG {
             File.Copy(sourceFileName, newSaveFileName);
             PlayerCharacterSaveData tmpSaveData = LoadPlayerCharacterSaveDataFromFile(newSaveFileName);
             tmpSaveData.CharacterSaveData.CharacterId = newCharacterId;
-            SaveDataFile(tmpSaveData);
+            SaveDataFileAsync(tmpSaveData);
         }
 
         public List<PersistentObjectSaveData> GetPersistentObjects(SceneNode sceneNode) {

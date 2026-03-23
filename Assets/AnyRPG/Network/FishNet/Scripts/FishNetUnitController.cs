@@ -1014,7 +1014,7 @@ namespace AnyRPG {
         public void RequestAssignMouseUseableServer(string useableName, bool isItem, int buttonIndex) {
             IUseable useable = null;
             if (isItem) {
-                useable = unitController.CharacterInventoryManager.GetNewInstantiatedItem(useableName);
+                useable = unitController.CharacterInventoryManager.GetNewInstantiatedItem(useableName, null);
             } else {
                 useable = systemDataFactory.GetResource<Ability>(useableName).AbilityProperties;
             }
@@ -1051,7 +1051,7 @@ namespace AnyRPG {
         public void RequestAssignGamepadUseableServer(string useableName, bool isItem, int buttonIndex) {
             IUseable useable = null;
             if (isItem) {
-                useable = unitController.CharacterInventoryManager.GetNewInstantiatedItem(useableName);
+                useable = unitController.CharacterInventoryManager.GetNewInstantiatedItem(useableName, null);
             } else {
                 useable = systemDataFactory.GetResource<Ability>(useableName).AbilityProperties;
             }
@@ -1098,7 +1098,7 @@ namespace AnyRPG {
         public void SetMouseActionButtonClient(string useableName, bool isItem, int buttonIndex) {
             IUseable useable = null;
             if (isItem) {
-                useable = unitController.CharacterInventoryManager.GetNewInstantiatedItem(useableName);
+                useable = unitController.CharacterInventoryManager.GetNewInstantiatedItem(useableName, null);
             } else {
                 useable = systemDataFactory.GetResource<Ability>(useableName)?.AbilityProperties;
             }
@@ -1116,7 +1116,7 @@ namespace AnyRPG {
         public void SetGamepadActionButtonClient(string useableName, bool isItem, int buttonIndex) {
             IUseable useable = null;
             if (isItem) {
-                useable = unitController.CharacterInventoryManager.GetNewInstantiatedItem(useableName);
+                useable = unitController.CharacterInventoryManager.GetNewInstantiatedItem(useableName, null);
             } else {
                 useable = systemDataFactory.GetResource<Ability>(useableName).AbilityProperties;
             }

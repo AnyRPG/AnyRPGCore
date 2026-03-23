@@ -706,7 +706,7 @@ namespace AnyRPG {
                             (characterEquipmentManager.CurrentEquipment[equipmentSlotProfile].InstantiatedEquipment == null
                             || characterEquipmentManager.CurrentEquipment[equipmentSlotProfile].InstantiatedEquipment.Equipment != newGameManager.EquipmentList[equipmentSlotProfile].InstantiatedEquipment.Equipment)) {
                             Equipment equipment = newGameManager.EquipmentList[equipmentSlotProfile].InstantiatedEquipment.Equipment;
-                            InstantiatedEquipment instantiatedEquipment = characterEquipmentManager.UnitController.CharacterInventoryManager.GetNewInstantiatedItem(equipment) as InstantiatedEquipment;
+                            InstantiatedEquipment instantiatedEquipment = characterEquipmentManager.UnitController.CharacterInventoryManager.GetNewInstantiatedItem(equipment, null, null) as InstantiatedEquipment;
                             characterEquipmentManager.Equip(instantiatedEquipment, equipmentSlotProfile);
                             changes++;
                         }

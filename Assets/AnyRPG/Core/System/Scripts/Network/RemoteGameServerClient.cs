@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Net;
 using System.Text;
@@ -329,7 +330,6 @@ namespace AnyRPG {
                 } else {
                     PlayerCharacterListResponse playerCharacterListResponse = JsonUtility.FromJson<PlayerCharacterListResponse>(webRequest.downloadHandler.text);
                     playerCharacterService.ProcessLoadPlayerNameList(playerCharacterListResponse.playerCharacters);
-                    serverDataService.ProcessPlayerNameMapLoaded();
                 }
             }
         }
@@ -1082,7 +1082,6 @@ namespace AnyRPG {
                 } else {
                     ItemInstanceListResponse itemInstanceListResponse = JsonUtility.FromJson<ItemInstanceListResponse>(webRequest.downloadHandler.text);
                     systemItemManager.ProcessLoadAllItemInstances(itemInstanceListResponse.itemInstances);
-                    serverDataService.ProcessItemsLoaded();
                 }
             }
         }
@@ -1160,6 +1159,8 @@ namespace AnyRPG {
             }
         }
 
+        public void ResetSettings() {
+        }
     }
 
 }

@@ -46,13 +46,6 @@ namespace AnyRPG {
             ClearInstantiatedItems();
         }
 
-        public void LoadAllItems() {
-            //Debug.Log("SystemItemManager.LoadAllItems()");
-
-            // this is only called in network mode.  In offline mode, items are loaded as part of the player data load
-            serverDataService.LoadAllItems();
-        }
-
         public void ProcessLoadAllItemInstances(List<ItemInstanceSerializedData> itemInstances) {
 
             List<ItemInstanceSaveData> itemInstanceSaveDataList = new List<ItemInstanceSaveData>();
@@ -69,6 +62,7 @@ namespace AnyRPG {
         }
 
         public void ProcessLoadAllItemInstances(List<ItemInstanceSaveData> itemInstances) {
+            //Debug.Log($"SystemItemManager.ProcessLoadAllItemInstances(count: {itemInstances.Count})");
 
             foreach (ItemInstanceSaveData itemInstanceSaveData in itemInstances) {
                 //Debug.Log($"Loading user account from file: {fileName}");
@@ -82,6 +76,7 @@ namespace AnyRPG {
                 }
                 LoadItemInstanceSaveData(itemInstanceSaveData);
             }
+            serverDataService.ProcessItemsLoaded();
         }
 
         private void LoadItemInstanceSaveData(ItemInstanceSaveData itemInstanceSaveData) {
@@ -105,13 +100,13 @@ namespace AnyRPG {
             instantiatedItem.LoadSaveData(itemInstanceSaveData);
         }
 
-        public InstantiatedItem GetNewInstantiatedItem(Item item) {
-            //Debug.Log($"SystemItemManager.GetNewInstantiatedItem({item.ResourceName})");
-
-            return GetNewInstantiatedItem(item, null);
+        public InstantiatedItem GetNewInstantiatedItem(string itemName) {
+            //Debug.Log(this.GetType().Name + ".GetNewResource(" + resourceName + ")");
+            
+            return GetNewInstantiatedItem(itemName, null);
         }
 
-        public InstantiatedItem GetNewInstantiatedItem(string itemName, ItemQuality usedItemQuality = null) {
+        public InstantiatedItem GetNewInstantiatedItem(string itemName, ItemQuality usedItemQuality) {
             //Debug.Log(this.GetType().Name + ".GetNewResource(" + resourceName + ")");
             Item item = systemDataFactory.GetResource<Item>(itemName);
             if (item == null) {
@@ -120,17 +115,25 @@ namespace AnyRPG {
             return GetNewInstantiatedItem(item, usedItemQuality);
         }
 
+        public InstantiatedItem GetNewInstantiatedItem(Item item) {
+            //Debug.Log($"SystemItemManager.GetNewInstantiatedItem({item.ResourceName})");
+
+            return GetNewInstantiatedItem(item, null);
+        }
+
         public InstantiatedItem GetNewInstantiatedItem(Item item, ItemQuality usedItemQuality) {
             //Debug.Log($"SystemItemManager.GetNewInstantiatedItem({item.ResourceName})");
 
             InstantiatedItem instantiatedItem = GetNewInstantiatedItem(GetNewItemInstanceId(), item, usedItemQuality);
+            /*
             if (networkManagerServer.ServerModeActive == true && item != lootManager.CurrencyLootItem) {
                 serverDataService.CreateItemInstance(instantiatedItem);
             }
+            */
             return instantiatedItem;
         }
 
-        public InstantiatedItem GetNewInstantiatedItem(long itemInstanceId, Item item, ItemQuality usedItemQuality = null) {
+        public InstantiatedItem GetNewInstantiatedItem(long itemInstanceId, Item item, ItemQuality usedItemQuality) {
             //Debug.Log($"SystemItemManager.GetNewInstantiatedItem({itemInstanceId}, {item?.ResourceName}, {usedItemQuality?.ResourceName})");
             if (instantiatedItems.ContainsKey(itemInstanceId)) {
                 return instantiatedItems[itemInstanceId];
@@ -141,10 +144,11 @@ namespace AnyRPG {
             return instantiatedItem;
         }
 
-
+        /*
         public void SaveItemInstance(InstantiatedItem instantiatedItem) {
             serverDataService.SaveItemInstance(instantiatedItem);
         }
+        */
 
         public void CreateItemInstance(InstantiatedItem instantiatedItem) {
             serverDataService.CreateItemInstance(instantiatedItem);

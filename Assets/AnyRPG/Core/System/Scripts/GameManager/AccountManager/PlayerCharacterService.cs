@@ -54,6 +54,10 @@ namespace AnyRPG {
             serverDataService = systemGameManager.ServerDataService;
         }
 
+        public int GetPlayerNameMapCount() {
+            return playerNameMap.Count;
+        }
+
         private void HandleStopServer() {
             ClearPlayerNameMap();
         }
@@ -86,12 +90,6 @@ namespace AnyRPG {
             return "Unknown";
         }
 
-        public void LoadPlayerNameList() {
-            //Debug.Log("PlayerCharacterService.LoadPlayerNameMap()");
-
-            serverDataService.LoadPlayerNameList();
-        }
-
         public void ProcessLoadPlayerNameList(List<PlayerCharacterSerializedData> playerCharacterList) {
             //Debug.Log($"PlayerCharacterService.ProcessLoadPlayerNameList(count: {playerCharacterList.Count})");
 
@@ -122,6 +120,7 @@ namespace AnyRPG {
                     Debug.LogWarning($"PlayerCharacterService.ProcessLoadPlayerNameList(): Duplicate player name ({characterSaveData.CharacterName}) or character ID ({characterSaveData.CharacterId}) found. This character will be skipped.");
                 }
             }
+            serverDataService.ProcessPlayerNameMapLoaded();
         }
 
         private void ClearPlayerNameMap() {
@@ -139,7 +138,7 @@ namespace AnyRPG {
             }
 
             CharacterSaveData characterSaveData = newGameManager.CreateNewPlayerSaveData(requestedSaveData);
-            serverDataService.CreatePlayerCharacter(accountId, characterSaveData);
+            serverDataService.CreatePlayerCharacterAsync(accountId, characterSaveData);
         }
 
         public void ProcessCreatePlayerCharacterResponse(int accountId, bool createSucceeded, int characterId, CharacterSaveData characterSaveData) {

@@ -86,7 +86,7 @@ namespace AnyRPG {
         /// <summary>
         /// meant to be called by SetUnitProfile since it relies on that for the equipment list
         /// </summary>
-        public void LoadDefaultEquipment(bool loadProviderEquipment) {
+        public void LoadDefaultEquipment(bool isPlayer) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment(" + loadProviderEquipment + ")");
 
             if (unitController?.UnitProfile?.EquipmentList == null) {
@@ -101,7 +101,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (loadProviderEquipment == false || unitController.UnitProfile.UseProviderEquipment == false) {
+            if (isPlayer == true || unitController.UnitProfile.UseProviderEquipment == false) {
                 return;
             }
 

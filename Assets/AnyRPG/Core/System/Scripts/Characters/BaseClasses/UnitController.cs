@@ -1383,7 +1383,7 @@ namespace AnyRPG {
             }
 
             // this must be called after setting the level in case the character has gear that is higher than level 1
-            characterEquipmentManager.LoadDefaultEquipment((characterConfigurationRequest.unitControllerMode == UnitControllerMode.Player ? false : true));
+            characterEquipmentManager.LoadDefaultEquipment(characterConfigurationRequest.unitControllerMode == UnitControllerMode.Player);
 
             if (characterConfigurationRequest.unitControllerMode == UnitControllerMode.Player
                 && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene())) {
