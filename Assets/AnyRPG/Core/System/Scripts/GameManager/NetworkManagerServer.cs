@@ -118,7 +118,7 @@ namespace AnyRPG {
         private GuildServiceServer guildServiceServer = null;
         private GuildmasterManagerServer guildmasterManagerServer = null;
         private FriendServiceServer friendServiceServer = null;
-        private ServerDataService gameDataService = null;
+        private ServerDataService serverDataService = null;
         private SceneUtilityService sceneUtilityService = null;
 
         public bool ServerModeActive { get => serverModeActive; }
@@ -170,7 +170,7 @@ namespace AnyRPG {
             guildServiceServer = systemGameManager.GuildServiceServer;
             guildmasterManagerServer = systemGameManager.GuildmasterManagerServer;
             friendServiceServer = systemGameManager.FriendServiceServer;
-            gameDataService = systemGameManager.ServerDataService;
+            serverDataService = systemGameManager.ServerDataService;
             sceneUtilityService = systemGameManager.SceneUtilityService;
         }
 
@@ -239,7 +239,7 @@ namespace AnyRPG {
             // run functions with no dependencies on database data
             OnStartServer();
 
-            gameDataService.LoadServerData();
+            serverDataService.LoadServerData();
         }
 
         public void DeactivateServerMode() {
@@ -255,6 +255,8 @@ namespace AnyRPG {
             systemEventManager.OnChooseWeather -= HandleChooseWeather;
             systemEventManager.OnStartWeather -= HandleStartWeather;
             systemEventManager.OnEndWeather -= HandleEndWeather;
+
+            serverDataService.ResetSettings();
 
         }
 

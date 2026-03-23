@@ -612,6 +612,16 @@ namespace AnyRPG {
                 localGameServerClient.DeleteItemInstance(itemToRemove);
             }
         }
+
+        public void ResetSettings() {
+            if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
+                remoteGameServerClient.ResetSettings();
+                remoteGameServerClient = null;
+            } else if (systemConfigurationManager.ServerBackend == ServerBackend.File) {
+                localGameServerClient.ResetSettings();
+                localGameServerClient = null;
+            }
+        }
     }
 
 }

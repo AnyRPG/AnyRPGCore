@@ -54,7 +54,6 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
             
             MakeSaveFolders();
-            //networkManagerServer.OnStartServer += HandleStartServer;
             networkManagerServer.OnStopServer += HandleStopServer;
         }
 
@@ -163,7 +162,7 @@ namespace AnyRPG {
         }
 
         public async void SaveStateDataFileAsync() {
-            //Debug.Log($"ServerStateService.SaveStateDataFileAsync()");
+            //Debug.Log($"ServerStateService.SaveStateDataFileAsync() frame: {Time.frameCount}");
 
             if (isSavingStateFile) {
                 return;
@@ -1006,7 +1005,9 @@ namespace AnyRPG {
             return friendListSaveDatas;
         }
 
-
+        public void ResetSettings() {
+            networkManagerServer.OnStopServer -= HandleStopServer;
+        }
     }
 
 }
