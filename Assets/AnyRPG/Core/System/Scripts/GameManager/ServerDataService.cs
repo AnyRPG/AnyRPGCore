@@ -95,7 +95,8 @@ namespace AnyRPG {
         }
 
         public void ProcessItemsLoaded() {
-            Debug.Log($"ServerDataService.ProcessItemsLoaded()");
+            //Debug.Log($"ServerDataService.ProcessItemsLoaded()");
+
             itemsLoaded = true;
             OnLoadItems(systemItemManager.InstantiatedItems.Count);
 
@@ -104,7 +105,8 @@ namespace AnyRPG {
         }
 
         public void ProcessPlayerNameMapLoaded() {
-            //Debug.Log($"NetworkManagerServer.ProcessPlayerNameMapLoaded()");
+            //Debug.Log($"ServerDataService.ProcessPlayerNameMapLoaded()");
+
             playerNameMapLoaded = true;
             OnLoadPlayerNameMap(playerCharacterService.GetPlayerNameMapCount());
 
@@ -588,6 +590,10 @@ namespace AnyRPG {
         }
 
         public int GetActiveSaveTasks() {
+            if (networkManagerServer.ServerModeActive == false) {
+                return 0;
+            }
+
             if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
                 return 0;
             } else {

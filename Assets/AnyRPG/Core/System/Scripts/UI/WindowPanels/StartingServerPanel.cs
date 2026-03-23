@@ -8,11 +8,6 @@ namespace AnyRPG {
 
         [Header("Starting Server Panel")]
 
-        /*
-        [SerializeField]
-        private TextMeshProUGUI messageText = null;
-        */
-
         [SerializeField]
         private Toggle loadingItemsToggle = null;
 
@@ -43,6 +38,9 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI loadingAuctionItemsText = null;
 
+        [SerializeField]
+        private HighlightButton confirmButton = null;
+
 
         // game manager references
         private NetworkManagerServer networkManagerServer = null;
@@ -68,9 +66,16 @@ namespace AnyRPG {
             serverDataService.OnLoadFriends += HandleLoadFriends;
         }
 
-        private void HandleBeforeStartServer() {
-            Debug.Log("StartingServerPanel.HandleBeforeStartServer()");
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            networkManagerServer = systemGameManager.NetworkManagerServer;
+            serverDataService = systemGameManager.ServerDataService;
+        }
 
+        private void HandleBeforeStartServer() {
+            //Debug.Log("StartingServerPanel.HandleBeforeStartServer()");
+
+            confirmButton.Button.interactable = false;
             loadingItemsText.text = "Items: waiting to load";
             loadingPlayersText.text = "Player names: waiting to load";
             loadingGuildsText.text = "Guilds: waiting to load";
@@ -84,105 +89,110 @@ namespace AnyRPG {
             Open();
         }
 
+        private void CheckConfirmButtonStatus() {
+            if (serverDataService.IsServerDataLoaded()) {
+                confirmButton.Button.interactable = true;
+            }
+        }
+
         private void HandleLoadFriend(int count) {
-            Debug.Log($"StartingServerPanel.HandleLoadFriend({count})");
+            //Debug.Log($"StartingServerPanel.HandleLoadFriend({count})");
 
             loadingFriendsText.text = $"Friends: {count} loaded...";
         }
 
         private void HandleLoadFriends(int count) {
-            Debug.Log($"StartingServerPanel.HandleLoadFriends({count})");
+            //Debug.Log($"StartingServerPanel.HandleLoadFriends({count})");
 
             loadingFriendsText.text = $"Friends: {count} loaded.";
             loadingFriendsToggle.isOn = true;
+            CheckConfirmButtonStatus();
         }
 
         private void HandleBeforeLoadFriends() {
-            Debug.Log($"StartingServerPanel.HandleBeforeLoadFriends()");
+            //Debug.Log($"StartingServerPanel.HandleBeforeLoadFriends()");
 
             loadingFriendsText.text = "Friends: loading...";
         }
 
         private void HandleLoadGuild(int count) {
-            Debug.Log($"StartingServerPanel.HandleLoadGuild({count})");
+            //Debug.Log($"StartingServerPanel.HandleLoadGuild({count})");
 
             loadingItemsText.text = $"Guilds: {count} loaded...";
         }
 
         private void HandleLoadGuilds(int count) {
-            Debug.Log($"StartingServerPanel.HandleLoadGuilds({count})");
+            //Debug.Log($"StartingServerPanel.HandleLoadGuilds({count})");
 
             loadingGuildsText.text = $"Guilds: {count} loaded.";
             loadingGuildsToggle.isOn = true;
+            CheckConfirmButtonStatus();
         }
 
         private void HandleBeforeLoadGuilds() {
-            Debug.Log($"StartingServerPanel.HandleBeforeLoadGuilds()");
+            //Debug.Log($"StartingServerPanel.HandleBeforeLoadGuilds()");
 
             loadingGuildsText.text = "Guilds: loading...";
         }
 
         private void HandleLoadPlayerName(int count) {
-            Debug.Log($"StartingServerPanel.HandleLoadPlayerName({count})");
+            //Debug.Log($"StartingServerPanel.HandleLoadPlayerName({count})");
 
             loadingPlayersText.text = $"Player names: {count} loaded...";
         }
 
         private void HandleLoadPlayerNameMap(int count) {
-            Debug.Log($"StartingServerPanel.HandleLoadPlayerNameMap({count})");
+            //Debug.Log($"StartingServerPanel.HandleLoadPlayerNameMap({count})");
 
             loadingPlayersText.text = $"Player names: {count} loaded.";
             loadingPlayersToggle.isOn = true;
+            CheckConfirmButtonStatus();
         }
 
         private void HandleBeforeLoadPlayerNameMap() {
-            Debug.Log($"StartingServerPanel.HandleBeforeLoadPlayerNameMap()");
+            //Debug.Log($"StartingServerPanel.HandleBeforeLoadPlayerNameMap()");
 
             loadingPlayersText.text = "Player names: loading...";
         }
 
         private void HandleLoadItem(int count) {
-            Debug.Log($"StartingServerPanel.HandleLoadItem({count})");
+            //Debug.Log($"StartingServerPanel.HandleLoadItem({count})");
 
             loadingItemsText.text = $"Items: {count} loaded...";
         }
 
         private void HandleLoadItems(int count) {
-            Debug.Log($"StartingServerPanel.HandleLoadItems({count})");
+            //Debug.Log($"StartingServerPanel.HandleLoadItems({count})");
 
             loadingItemsText.text = $"Items: {count} loaded.";
             loadingItemsToggle.isOn = true;
+            CheckConfirmButtonStatus();
         }
 
         private void HandleBeforeLoadItems() {
-            Debug.Log($"StartingServerPanel.HandleBeforeLoadItems()");
+            //Debug.Log($"StartingServerPanel.HandleBeforeLoadItems()");
 
             loadingItemsText.text = "Items: loading...";
         }
 
         private void HandleLoadAuctionItem(int count) {
-            Debug.Log($"StartingServerPanel.HandleLoadAuctionItem({count})");
+            //Debug.Log($"StartingServerPanel.HandleLoadAuctionItem({count})");
 
             loadingAuctionItemsText.text = $"Auction items: {count} loaded...";
         }
 
         private void HandleLoadAuctionItems(int count) {
-            Debug.Log($"StartingServerPanel.HandleLoadAuctionItems({count})");
+            //Debug.Log($"StartingServerPanel.HandleLoadAuctionItems({count})");
 
             loadingAuctionItemsText.text = $"Auction items: {count} loaded.";
             loadingAuctionItemsToggle.isOn = true;
+            CheckConfirmButtonStatus();
         }
 
         private void HandleBeforeLoadAuctionItems() {
-            Debug.Log($"StartingServerPanel.HandleBeforeLoadAuctionItems()");
+            //Debug.Log($"StartingServerPanel.HandleBeforeLoadAuctionItems()");
 
             loadingAuctionItemsText.text = "Auction items: loading...";
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            networkManagerServer = systemGameManager.NetworkManagerServer;
-            serverDataService = systemGameManager.ServerDataService;
         }
 
         public void HandleRequestBeginTrade() {

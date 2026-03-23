@@ -144,7 +144,6 @@ namespace AnyRPG {
             if (monitorCoroutine != null) {
                 systemGameManager.StopCoroutine(monitorCoroutine);
             }
-            SaveStateDataFileAsync();
         }
 
         public IEnumerator MonitorServerState() {
@@ -159,6 +158,8 @@ namespace AnyRPG {
         }
 
         public async void SaveStateDataFileAsync() {
+            //Debug.Log($"ServerStateService.SaveStateDataFileAsync()");
+
             // 1. Mark the save task as active on the Main Thread
             System.Threading.Interlocked.Increment(ref activeSaveTasks);
 
@@ -234,7 +235,7 @@ namespace AnyRPG {
         */
 
         public async void LoadGuildListAsync() {
-            Debug.Log("LocalGameServerClient.LoadGuildListAsync()");
+            //Debug.Log("LocalGameServerClient.LoadGuildListAsync()");
 
             var progressReporter = new Progress<int>(count => {
                 serverDataService.NotifyOnLoadGuild(count);
@@ -354,8 +355,6 @@ namespace AnyRPG {
 
             // Back on Main Thread: Hand the final list to the service
             auctionService.ProcessLoadAuctionItemList(results);
-
-            Debug.Log($"Auction loading complete. Total items: {results.Count}");
         }
 
         private List<AuctionItem> PerformAuctionFileIOWork(IProgress<int> progress) {
@@ -838,7 +837,7 @@ namespace AnyRPG {
         // ****************************
 
         public async void LoadAllItemsAsync() {
-            Debug.Log("LocalGameServerClient.LoadAllItemsAsync()");
+            //Debug.Log("LocalGameServerClient.LoadAllItemsAsync()");
 
             var progressReporter = new Progress<int>(status => {
                 serverDataService.NotifyOnLoadItem(status);
@@ -848,7 +847,7 @@ namespace AnyRPG {
         }
 
         private List<ItemInstanceSaveData> LoadAllItems(IProgress<int> progress) {
-            Debug.Log("LocalGameServerClient.LoadAllItems()");
+            //Debug.Log("LocalGameServerClient.LoadAllItems()");
 
             List<ItemInstanceSaveData> itemInstanceListResponse = new List<ItemInstanceSaveData>();
             string[] fileEntries = Directory.GetFiles(itemInstanceSaveFolderName, "*.json");
@@ -967,8 +966,6 @@ namespace AnyRPG {
 
             // 3. Back on Main Thread: Hand the data to the service
             friendServiceServer.ProcessLoadAllFriendLists(results);
-
-            Debug.Log($"Successfully loaded {results.Count} friend lists.");
         }
 
         private List<FriendListSaveData> PerformFriendFileIOWork(string folderPath, IProgress<int> progress) {

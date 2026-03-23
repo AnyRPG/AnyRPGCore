@@ -120,6 +120,7 @@ namespace AnyRPG {
                     Debug.LogWarning($"PlayerCharacterService.ProcessLoadPlayerNameList(): Duplicate player name ({characterSaveData.CharacterName}) or character ID ({characterSaveData.CharacterId}) found. This character will be skipped.");
                 }
             }
+            serverDataService.ProcessPlayerNameMapLoaded();
         }
 
         private void ClearPlayerNameMap() {

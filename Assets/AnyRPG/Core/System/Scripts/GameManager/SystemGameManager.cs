@@ -272,8 +272,8 @@ namespace AnyRPG {
             if (safeToQuit) return true;
 
             // Check if there are active background saves
-            if (serverDataService.GetActiveSaveTasks() > 0) {
-                Debug.Log($"Waiting for {serverDataService.GetActiveSaveTasks()} saves before quitting...");
+            if (serverDataService.GetActiveSaveTasks() > 0 || saveManager.ActiveSaveTasks > 0) {
+                //Debug.Log($"Waiting for {serverDataService.GetActiveSaveTasks()} saves before quitting...");
 
                 // Start a coroutine to monitor the tasks and re-trigger the quit
                 StartCoroutine(WaitForSavesToFinish());
@@ -403,12 +403,6 @@ namespace AnyRPG {
                 string arg = args[i].ToLower();
 
                 switch (arg) {
-                    /*
-                    case "-d":
-                        isServer = true;
-                        Debug.Log("Command Line: Server Mode Enabled");
-                        break;
-                    */
                     case "--serverport":
                         if (i + 1 < args.Length && ushort.TryParse(args[i + 1], out ushort parsedPort)) {
                             commandLineServerPort = parsedPort;
@@ -465,7 +459,7 @@ namespace AnyRPG {
         }
 
         private IEnumerator WaitForSavesToFinish() {
-            Debug.Log("Server shutting down... waiting for background saves.");
+            //Debug.Log("Server shutting down... waiting for background saves.");
 
             // Check the counter we made in the previous step
             // We wait until activeSaveTasks reaches 0
@@ -473,7 +467,7 @@ namespace AnyRPG {
                 yield return null; // Wait one frame and check again
             }
 
-            Debug.Log("All saves finished. Closing server.");
+            //Debug.Log("All saves finished. Closing server.");
             safeToQuit = true;
             Application.Quit();
         }

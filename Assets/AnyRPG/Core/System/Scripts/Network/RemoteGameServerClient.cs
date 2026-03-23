@@ -329,7 +329,6 @@ namespace AnyRPG {
                 } else {
                     PlayerCharacterListResponse playerCharacterListResponse = JsonUtility.FromJson<PlayerCharacterListResponse>(webRequest.downloadHandler.text);
                     playerCharacterService.ProcessLoadPlayerNameList(playerCharacterListResponse.playerCharacters);
-                    serverDataService.ProcessPlayerNameMapLoaded();
                 }
             }
         }

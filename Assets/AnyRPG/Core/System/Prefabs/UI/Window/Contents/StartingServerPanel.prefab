@@ -699,6 +699,7 @@ MonoBehaviour:
   loadingFriendsText: {fileID: 3297734470831442191}
   loadingAuctionItemsToggle: {fileID: 5221452434587223021}
   loadingAuctionItemsText: {fileID: 4928204023795418496}
+  confirmButton: {fileID: 4237624683138131053}
 --- !u!114 &700021199439417818
 MonoBehaviour:
   m_ObjectHideFlags: 0
