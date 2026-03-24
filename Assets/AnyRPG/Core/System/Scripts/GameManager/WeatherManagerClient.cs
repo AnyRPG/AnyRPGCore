@@ -77,6 +77,8 @@ namespace AnyRPG {
         }
 
         private void HandleStartWeather(int sceneHandle) {
+            //Debug.Log($"WeatherManagerClient.HandleStartWeather(sceneHandle: {sceneHandle})");
+
             StartWeather();
         }
 
@@ -85,7 +87,7 @@ namespace AnyRPG {
         }
 
         private void HandleChooseWeather(int sceneHandle, WeatherProfile weatherProfile) {
-            //Debug.Log($"WeatherManagerClient.HandleChooseWeather({sceneHandle}, {(weatherProfile == null ? "null" : weatherProfile.ResourceName)})");
+            //Debug.Log($"WeatherManagerClient.HandleChooseWeather(sceneHandle: {sceneHandle}, weatherProfile: {(weatherProfile == null ? "null" : weatherProfile.ResourceName)})");
 
             ChooseWeather(weatherProfile);
         }

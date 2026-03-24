@@ -22,8 +22,10 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            networkManagerServer.OnStartServer += HandleStartServer;
+            //networkManagerServer.OnStartServer += HandleStartServer;
             networkManagerServer.OnStopServer += HandlStopServer;
+            levelManagerServer.OnAddLoadedScene += HandleAddLoadedScene;
+            levelManagerServer.OnRemoveLoadedScene += HandleRemoveLoadedScene;
         }
 
         public override void SetGameManagerReferences() {
@@ -38,14 +40,16 @@ namespace AnyRPG {
             levelManagerServer = systemGameManager.LevelManagerServer;
         }
 
+        /*
         private void HandleStartServer() {
             levelManagerServer.OnAddLoadedScene += HandleAddLoadedScene;
             levelManagerServer.OnRemoveLoadedScene += HandleRemoveLoadedScene;
         }
+        */
 
         private void HandlStopServer() {
-            levelManagerServer.OnAddLoadedScene -= HandleAddLoadedScene;
-            levelManagerServer.OnRemoveLoadedScene -= HandleRemoveLoadedScene;
+            //levelManagerServer.OnAddLoadedScene -= HandleAddLoadedScene;
+            //levelManagerServer.OnRemoveLoadedScene -= HandleRemoveLoadedScene;
             
             // loop through all active weathermonitors and end their weather
             foreach (KeyValuePair<int, WeatherMonitor> kvp in weatherMonitors) {
@@ -61,7 +65,13 @@ namespace AnyRPG {
         }
 
         private void HandleAddLoadedScene(int sceneHandle, SceneData sceneData) {
-            //Debug.Log($"WeatherManagerServer.HandleAddLoadedScene({sceneHandle}, {sceneName})");
+            //Debug.Log($"WeatherManagerServer.HandleAddLoadedScene(sceneHandle: {sceneHandle})");
+
+            if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false) {
+                // only single player games and server will create weather.
+                // Clients will get weather information from the server, but won't create their own weather monitors
+                return;
+            }
 
             if (sceneData.SceneNode != null) {
                 ProcessAddLoadedScene(sceneHandle, sceneData.SceneNode);
@@ -69,7 +79,7 @@ namespace AnyRPG {
         }
 
         private void ProcessAddLoadedScene(int sceneHandle, SceneNode sceneNode) {
-            //Debug.Log($"WeatherManagerServer.ProcessAddLoadedScene({sceneHandle}, {sceneNode.ResourceName})");
+            //Debug.Log($"WeatherManagerServer.ProcessAddLoadedScene(sceneHandle: {sceneHandle}, sceneNode: {sceneNode.ResourceName})");
 
             if (levelManagerClient.IsMainMenu(sceneNode.SceneName) == true || levelManagerClient.IsInitializationScene(sceneNode.SceneName) == true) {
                 return;
