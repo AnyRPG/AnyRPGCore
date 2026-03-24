@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.ParticleSystemJobs;
@@ -87,6 +88,7 @@ namespace AnyRPG {
         /// Teleport the particles to stay within +/- 25m horizontal and +/- 10m vertical from the camera when it is moving.
         /// This particle teleportation looks much more realistic than setting the snow effect to world space and having it move with the character
         /// </summary>
+        [BurstCompile]
         struct UpdateParticlesJob : IJobParticleSystemParallelFor {
 
             public Vector3 followTransformPosition;
@@ -148,7 +150,7 @@ namespace AnyRPG {
 
         void OnParticleUpdateJobScheduled() {
             if (followTarget != null && teleportParticles == true) {
-                job.Schedule(weatherParticleSystem, 5000);
+                job.Schedule(weatherParticleSystem, 64);
             }
         }
     }
