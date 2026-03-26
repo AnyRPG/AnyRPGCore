@@ -724,7 +724,7 @@ namespace AnyRPG {
                 //Debug.Log($"FishNetClientConnector.AdvertiseLoadSceneServer() no scenes found for client {clientId}");
                 //return;
             } else {
-                //Debug.Log($"FishNetClientConnector.AdvertiseLoadSceneServer() unloading current scene {networkConnection.Scenes.First().name}({networkConnection.Scenes.First().handle}) for client {clientId}");
+                Debug.Log($"FishNetClientConnector.AdvertiseUnloadSceneServer() unloading current scene {networkConnection.Scenes.First().name}({networkConnection.Scenes.First().handle}) for client {clientId}");
                 // testing - disabled this block because it seems to be instantly unloading the previous scene on the server
                 // which is overriding the manual scene unload timers
                 //SceneUnloadData sceneUnloadData = new SceneUnloadData(networkConnection.Scenes.First());
