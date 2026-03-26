@@ -295,7 +295,6 @@ namespace AnyRPG {
             if (serverModeActive == false) {
                 return;
             }
-            OnBeforeStopServer();
 
             CancelLobbyGames();
 
@@ -304,6 +303,8 @@ namespace AnyRPG {
             foreach (int accountId in loggedInAccountIds) {
                 Logout(accountId);
             }
+
+            levelManagerServer.ProcessBeforeStopServer();
 
             networkController?.StopServer();
         }

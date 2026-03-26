@@ -216,7 +216,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             GetComponentReferences();
-            CreateEventSubscriptions();
+            //CreateEventSubscriptions();
             ConfigureComponents();
             CreateComponents();
             LateConfigure();
@@ -226,6 +226,9 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.Interactable.PostConfigure()");
 
             base.PostConfigure();
+            // this is only called if by AutoConfigure() so we know this is a static scene object, and need to
+            // register to the level manager
+            levelManagerServer.RegisterInteractable(this);
             Init();
         }
 
@@ -1020,11 +1023,6 @@ namespace AnyRPG {
             return IsInInteractableRange(sourceUnitController.gameObject);
         }
 
-        public virtual void ProcessLevelUnload() {
-            // this is meant to not be called from child classes as they will call ResetSettings() during Despawn()
-            ResetSettings();
-        }
-
         public void NotifyOnInteractableDisable() {
             OnInteractableDisable();
         }
@@ -1069,7 +1067,7 @@ namespace AnyRPG {
             //miniMapIndicator = null;
             //mainMapIndicator = null;
 
-            CleanupEventSubscriptions();
+            //CleanupEventSubscriptions();
             CleanupEverything();
 
             characterUnit = null;
@@ -1081,14 +1079,22 @@ namespace AnyRPG {
             startHasRun = false;
             componentReferencesInitialized = false;
             isInitialized = false;
-            eventSubscriptionsInitialized = false;
+            //eventSubscriptionsInitialized = false;
             isTargeted = false;
             _interactableSaveData = null;
+
+            UnregisterWithLevelManager();
+        }
+
+        protected virtual void UnregisterWithLevelManager() {
+            //Debug.Log($"{gameObject.name}.Interactable.UnregisterWithLevelManager()");
+            levelManagerServer.UnregisterInteractable(this);
         }
 
         public virtual void OnSendObjectToPool() {
         }
 
+        /*
         public void CreateEventSubscriptions() {
             //Debug.Log($"{gameObject.name}.Interactable.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
@@ -1100,11 +1106,6 @@ namespace AnyRPG {
 
         public virtual void ProcessCreateEventSubscriptions() {
             //Debug.Log($"{gameObject.name}.Interactable.ProcessCreateEventSubscriptions() Interactable instance: {GetInstanceID()}");
-
-            levelManagerServer.OnBeforeStartUnloadScene += HandleLevelUnloadServer;
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
-                systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
-            }
         }
 
         public void CleanupEventSubscriptions() {
@@ -1119,27 +1120,8 @@ namespace AnyRPG {
 
         public virtual void ProcessCleanupEventSubscriptions() {
             //Debug.Log($"{gameObject.name}.Interactable.ProcessCleanupEventSubscriptions() Interactable Instance: {GetInstanceID()}");
-
-            levelManagerServer.OnBeforeStartUnloadScene -= HandleLevelUnloadServer;
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
-                systemEventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
-            }
         }
-
-        private void HandlePlayerUnitSpawn(UnitController sourceUnitController) {
-            //Debug.Log($"{gameObject.name}.Interactable.HandlePlayerUnitSpawn({sourceUnitController?.gameObject.name})");
-
-            ProcessPlayerUnitSpawn(sourceUnitController);
-        }
-
-        private void HandleLevelUnloadServer(int sceneHandle, string sceneName) {
-            //Debug.Log($"{gameObject.name}.Interactable.HandleLevelUnloadServer({sceneHandle}, {sceneName})");
-
-            if (sceneHandle != gameObject.scene.handle) {
-                return;
-            }
-            ProcessLevelUnload();
-        }
+        */
 
 
         public void SetTargeted() {

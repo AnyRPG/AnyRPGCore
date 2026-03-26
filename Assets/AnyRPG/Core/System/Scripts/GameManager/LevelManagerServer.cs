@@ -25,18 +25,57 @@ namespace AnyRPG {
         // game manager references
         private CameraManager cameraManager = null;
         private SceneUtilityService sceneUtilityService = null;
+        private SystemEventManager systemEventManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             SceneManager.sceneUnloaded += HandleSceneUnloaded;
             networkManagerServer.OnStartServer += HandleStartServer;
             networkManagerServer.OnStopServer += HandleStopServer;
+            systemEventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+            systemEventManager.OnReputationChange += HandleReputationChange;
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             cameraManager = systemGameManager.CameraManager;
             sceneUtilityService = systemGameManager.SceneUtilityService;
+            systemEventManager = systemGameManager.SystemEventManager;
+        }
+
+        private void HandlePlayerUnitSpawn(UnitController sourceUnitController) {
+            //Debug.Log($"{gameObject.name}.Interactable.HandlePlayerUnitSpawn({sourceUnitController?.gameObject.name})");
+            
+            // the event that triggers this is only called on clients so the next steps are safe
+
+            SceneData sceneData = GetSceneData(sourceUnitController.gameObject.scene);
+            if (sceneData == null) {
+                return;
+            }
+            foreach (Interactable interactable in sceneData.Interactables) {
+                if (interactable != null) {
+                    interactable.ProcessPlayerUnitSpawn(sourceUnitController);
+                }
+            }
+            foreach (UnitController unitController in sceneData.UnitControllers) {
+                if (unitController != null && unitController != sourceUnitController) {
+                    unitController.ProcessPlayerUnitSpawn(sourceUnitController);
+                }
+            }
+        }
+
+        private void HandleReputationChange(UnitController sourceUnitController) {
+            // the event that triggers this is only called on clients so the next steps are safe
+            SceneData sceneData = GetSceneData(sourceUnitController.gameObject.scene);
+            if (sceneData == null) {
+                return;
+            }
+            foreach (UnitController unitController in sceneData.UnitControllers) {
+                if (unitController != null && unitController != sourceUnitController) {
+                    unitController.HandleReputationChange(sourceUnitController);
+                }
+            }
+
         }
 
         private void HandleStartServer() {
@@ -75,7 +114,7 @@ namespace AnyRPG {
                             continue;
                         }
                         if (IsTimeExpired(sceneData.EmptyTime, timeoutMinutes) == true) {
-                            ProcessBeforeUnloadScene(sceneData.Scene.handle, sceneData.Scene.name);
+                            ProcessBeforeUnloadScene(sceneData.Scene);
                             networkManagerServer.UnloadScene(sceneData.Scene.handle);
                         }
                     }
@@ -150,7 +189,7 @@ namespace AnyRPG {
             OnRemoveLoadedScene(sceneHandle, sceneName);
         }
 
-        public void ProcessLevelLoad(Scene loadedScene)  {
+        public void ProcessLevelLoad(Scene loadedScene) {
             //Debug.Log($"LevelManagerServer.ProcessLevelLoad({loadedScene.name}({loadedScene.handle}))");
 
             cameraManager.ActivateMainCamera();
@@ -178,7 +217,7 @@ namespace AnyRPG {
             OnSetSceneClientCount(handle, clientCount);
         }
 
-        public Dictionary<int, SceneData> GetLoadedSceneData() { 
+        public Dictionary<int, SceneData> GetLoadedSceneData() {
             Dictionary<int, SceneData> returnValue = new Dictionary<int, SceneData>();
             foreach (Dictionary<int, SceneData> sceneDataDictionary in loadedScenes.Values) {
                 foreach (KeyValuePair<int, SceneData> kvp in sceneDataDictionary) {
@@ -201,12 +240,82 @@ namespace AnyRPG {
         }
 
         public void ProcessBeforeUnloadScene(Scene scene) {
-            //Debug.Log($"LevelManagerServer.ProcessBeforeLevelLoad({scene.name}({scene.handle}))");
-            ProcessBeforeUnloadScene(scene.handle, scene.name);
+            Debug.Log($"LevelManagerServer.ProcessBeforeUnloadScene({scene.name} ({scene.handle}))");
+
+            SceneData sceneData = GetSceneData(scene);
+            if (sceneData != null) {
+                List<Interactable> interactables = new List<Interactable>(sceneData.Interactables);
+                foreach (Interactable interactable in interactables) {
+                    if (interactable != null) {
+                        interactable.ResetSettings();
+                    }
+                }
+                List<UnitController> unitControllers = new List<UnitController>(sceneData.UnitControllers);
+                foreach (UnitController unitController in unitControllers) {
+                    if (unitController != null) {
+                        unitController.Despawn(0f, false, true);
+                    }
+                }
+            }
+
+            OnBeforeStartUnloadScene(scene.handle, scene.name);
         }
 
-        public void ProcessBeforeUnloadScene(int sceneHandle, string sceneName) {
-            OnBeforeStartUnloadScene(sceneHandle, sceneName);
+
+        public void RegisterInteractable(Interactable interactable) {
+            //Debug.Log($"LevelManagerServer.RegisterInteractable({interactable.gameObject.name})");
+            Scene scene = interactable.gameObject.scene;
+            if (loadedScenes.ContainsKey(scene.name) == false) {
+                return;
+            }
+            if (loadedScenes[scene.name].ContainsKey(scene.handle) == false) {
+                return;
+            }
+            loadedScenes[scene.name][scene.handle].RegisterInteractable(interactable);
+        }
+
+        public void UnregisterInteractable(Interactable interactable) {
+            //Debug.Log($"LevelManagerServer.UnregisterInteractable({interactable.gameObject.name})");
+            Scene scene = interactable.gameObject.scene;
+            if (loadedScenes.ContainsKey(scene.name) == false) {
+                return;
+            }
+            if (loadedScenes[scene.name].ContainsKey(scene.handle) == false) {
+                return;
+            }
+            loadedScenes[scene.name][scene.handle].UnregisterInteractable(interactable);
+        }
+
+        public void RegisterUnitController(UnitController unitController) {
+            //Debug.Log($"LevelManagerServer.RegisterUnitController({unitController.gameObject.name})");
+            Scene scene = unitController.gameObject.scene;
+            if (loadedScenes.ContainsKey(scene.name) == false) {
+                return;
+            }
+            if (loadedScenes[scene.name].ContainsKey(scene.handle) == false) {
+                return;
+            }
+            loadedScenes[scene.name][scene.handle].RegisterUnitController(unitController);
+        }
+
+        public void UnregisterUnitController(UnitController unitController) {
+            //Debug.Log($"LevelManagerServer.UnregisterUnitController({unitController.gameObject.name})");
+            Scene scene = unitController.gameObject.scene;
+            if (loadedScenes.ContainsKey(scene.name) == false) {
+                return;
+            }
+            if (loadedScenes[scene.name].ContainsKey(scene.handle) == false) {
+                return;
+            }
+            loadedScenes[scene.name][scene.handle].UnregisterUnitController(unitController);
+        }
+
+        public void ProcessBeforeStopServer() {
+                foreach (Dictionary<int, SceneData> sceneDictionary in loadedScenes.Values) {
+                    foreach (SceneData sceneData in sceneDictionary.Values) {
+                        ProcessBeforeUnloadScene(sceneData.Scene);
+                    }
+            }
         }
     }
 

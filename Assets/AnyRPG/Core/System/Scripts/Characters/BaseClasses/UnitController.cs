@@ -578,18 +578,6 @@ namespace AnyRPG {
             objectMaterialController = unitMaterialController;
         }
 
-        public override void ProcessCreateEventSubscriptions() {
-            base.ProcessCreateEventSubscriptions();
-            systemEventManager.OnReputationChange += HandleReputationChange;
-            //systemEventManager.OnLevelLoad += HandleLevelLoad;
-        }
-
-        public override void ProcessCleanupEventSubscriptions() {
-            base.ProcessCleanupEventSubscriptions();
-            systemEventManager.OnReputationChange -= HandleReputationChange;
-            //systemEventManager.OnLevelLoad -= HandleLevelLoad;
-        }
-
         public override void ProcessInit() {
             //Debug.Log($"{gameObject.name}.UnitController.ProcessInit()");
 
@@ -1030,6 +1018,10 @@ namespace AnyRPG {
             }
         }
 
+        protected override void UnregisterWithLevelManager() {
+            levelManagerServer.UnregisterUnitController(this);
+        }
+
         public void TryToDespawn() {
             //Debug.Log($"{gameObject.name}.BaseCharacter.TryToDespawn()");
 
@@ -1054,7 +1046,7 @@ namespace AnyRPG {
         }
 
         public void Despawn(float delayTime = 0f, bool addSystemDefaultTime = true, bool forceDespawn = false) {
-            //Debug.Log($"{gameObject.name}.UnitController.Despawn({delayTime}, {addSystemDefaultTime}, {forceDespawn}) {GetInstanceID()}");
+            Debug.Log($"{gameObject.name}.UnitController.Despawn({delayTime}, {addSystemDefaultTime}, {forceDespawn}) {GetInstanceID()}");
 
             // if an error happens and the model request is never complete, intialized will be false
             // therefore this is commented out to allow the despawn to complete so references to this character
@@ -2136,19 +2128,6 @@ namespace AnyRPG {
             */
             lastPosition = rigidBody.position;
             //Debug.Log($"{gameObject.name}.UnitController.UpdateApparentVelocity() set lastposition to: ({lastPosition.x}, {lastPosition.y}, {lastPosition.z})");
-        }
-
-        public override void ProcessLevelUnload() {
-            //Debug.Log($"UnitController.ProcessLevelUnload() {GetInstanceID()}");
-            //Debug.Log($"{gameObject.name}.UnitController.ProcessLevelUnload()");
-
-            if (gameObject == null || gameObject.activeSelf == false) {
-                // this could be a mount unit that was already despawned via the player CancelMountEffects() calls
-                return;
-            }
-
-            base.ProcessNamePlateLevelUnload();
-            Despawn(0f, false, true);
         }
 
         /// <summary>
