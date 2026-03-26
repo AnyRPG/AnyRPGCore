@@ -539,7 +539,9 @@ namespace AnyRPG {
                 networkManagerServer.SetPersonalLoadRequestHashcode(playerCharacterId, sceneLoadData.GetHashCode());
             } else {
                 // this is a world scene and should not be stacked
-                sceneLoadData.Options.AllowStacking = false;
+                //sceneLoadData.Options.AllowStacking = false;
+                sceneLoadData.Options.AllowStacking = true;
+                networkManagerServer.SetWorldLoadRequestHashcode(sceneLoadData.GetHashCode());
             }
             networkManagerServer.SetSceneLoadRequestHashCode(sceneInstanceType, sceneLoadData.GetHashCode());
             fishNetNetworkManager.SceneManager.LoadConnectionScenes(networkConnection, sceneLoadData);
@@ -724,11 +726,11 @@ namespace AnyRPG {
                 //Debug.Log($"FishNetClientConnector.AdvertiseLoadSceneServer() no scenes found for client {clientId}");
                 //return;
             } else {
-                Debug.Log($"FishNetClientConnector.AdvertiseUnloadSceneServer() unloading current scene {networkConnection.Scenes.First().name}({networkConnection.Scenes.First().handle}) for client {clientId}");
                 // testing - disabled this block because it seems to be instantly unloading the previous scene on the server
                 // which is overriding the manual scene unload timers
                 //SceneUnloadData sceneUnloadData = new SceneUnloadData(networkConnection.Scenes.First());
                 //base.NetworkManager.SceneManager.UnloadConnectionScenes(networkConnection, sceneUnloadData);
+                Debug.Log($"FishNetClientConnector.AdvertiseUnloadSceneServer() unloading current scene {networkConnection.Scenes.First().name}({networkConnection.Scenes.First().handle}) for client {clientId}");
 
                 // new hopefully safe code
                 // 1. Define which scenes the client should leave
