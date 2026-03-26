@@ -412,6 +412,11 @@ namespace AnyRPG {
             fishNetNetworkController.RegisterConnector(this);
         }
 
+        public override void OnStopNetwork() {
+            Debug.Log($"FishNetClientConnector.OnStopNetwork()");
+            base.OnStopNetwork();
+        }
+
         [ServerRpc(RequireOwnership = false)]
         public void RequestCreateLobbyGame(string sceneResourceName, bool allowLateJoin, NetworkConnection networkConnection = null) {
             //Debug.Log($"FishNetClientConnector.RequestCreateLobbyGame(sceneResourceName: {sceneResourceName}, allowLateJoin: {allowLateJoin})");

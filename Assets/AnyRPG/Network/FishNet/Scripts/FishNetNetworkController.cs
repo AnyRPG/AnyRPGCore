@@ -166,7 +166,7 @@ namespace AnyRPG {
                 systemGameManager.SetGameMode(GameMode.Network);
                 fishNetNetworkManager.TimeManager.SetPhysicsMode(FishNet.Managing.Timing.PhysicsMode.TimeManager);
             } else if (clientState == LocalConnectionState.Stopping) {
-                //Debug.Log("FishNetNetworkController.OnClientConnectionState() Disconnected from server. Stopping");
+                Debug.Log("FishNetNetworkController.OnClientConnectionState() Disconnected from server. Stopping");
             } else if (clientState == LocalConnectionState.Stopped) {
                 //Debug.Log("FishNetNetworkController.OnClientConnectionState() Disconnected from server. Setting mode to local");
                 systemGameManager.NetworkManagerClient.ProcessStopConnection();
