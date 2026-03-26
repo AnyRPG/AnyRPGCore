@@ -1,4 +1,3 @@
-using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,7 +15,7 @@ namespace AnyRPG {
         private float originalMovementSpeed = 0f;
 
         public void Enter(UnitController unitController) {
-            Debug.Log($"{unitController.gameObject.name}.PatrolState.Enter()");
+            //Debug.Log($"{unitController.gameObject.name}.PatrolState.Enter()");
 
             this.unitController = unitController;
             if (unitController.PatrolController.CurrentPatrolSaveState.PatrolComplete() == false) {
