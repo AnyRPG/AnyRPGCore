@@ -512,7 +512,7 @@ namespace AnyRPG {
         }
 
         public void LoadNewScene(int accountId, int playerCharacterId, SceneInstanceType sceneInstanceType, SceneNode sceneNode) {
-            //Debug.Log($"FishNetClientConnector.LoadNewScene(accountId: {accountId}, playerCharacterId: {playerCharacterId}, sceneInstanceType: {sceneInstanceType.ToString()})");
+            Debug.Log($"FishNetClientConnector.LoadNewScene(accountId: {accountId}, playerCharacterId: {playerCharacterId}, sceneInstanceType: {sceneInstanceType.ToString()})");
 
             int clientId = networkManagerServer.GetClientIDForAccount(accountId);
             if (clientId == -1) {
@@ -547,7 +547,7 @@ namespace AnyRPG {
         }
 
         public void LoadExistingScene(int accountId, int sceneHandle) {
-            //Debug.Log($"FishNetClientConnector.LoadExistingScene(accountId: {accountId}, sceneHandle: {sceneHandle})");
+            Debug.Log($"FishNetClientConnector.LoadExistingScene(accountId: {accountId}, sceneHandle: {sceneHandle})");
 
             int clientId = networkManagerServer.GetClientIDForAccount(accountId);
             if (clientId == -1) {
