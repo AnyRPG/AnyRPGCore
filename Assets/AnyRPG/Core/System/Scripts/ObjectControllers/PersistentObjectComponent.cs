@@ -93,7 +93,7 @@ namespace AnyRPG {
         }
 
         public void LoadPersistentState() {
-            Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObject.LoadPersistentState()");
+            //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObject.LoadPersistentState()");
 
             PersistentObjectSaveData persistentObjectSaveData = GetPersistentObjectSaveData();
             if (persistentObjectSaveData == null) {
@@ -102,7 +102,9 @@ namespace AnyRPG {
             if (persistObjectPosition == true) {
                 //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObject.LoadPersistentState() setting transform.position on UUID {persistentObjectOwner.UUID.ID}");
                 persistentObjectOwner.transform.position = storedPosition;
-                persistentObjectOwner.transform.forward = storedForwardDirection;
+                if (storedForwardDirection != Vector3.zero) {
+                    persistentObjectOwner.transform.forward = storedForwardDirection;
+                }
             }
             persistentObjectOwner.LoadPersistentObjectSaveData(persistentObjectSaveData);
         }
@@ -115,7 +117,7 @@ namespace AnyRPG {
         }
 
         public void ProcessSaveGame() {
-            Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.ProcessSaveGame()");
+            //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.ProcessSaveGame()");
 
             if (saveOnGameSave == true) {
                 SaveProperties();
@@ -123,7 +125,7 @@ namespace AnyRPG {
         }
 
         public void SaveProperties() {
-            Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties()");
+            //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties()");
 
             // since all units automatically have this component, give it a chance to not save based on configuration
             if (systemGameManager.GameMode == GameMode.Network) {
@@ -135,7 +137,7 @@ namespace AnyRPG {
             storedForwardDirection = persistentObjectOwner.transform.forward;
             if (persistentObjectOwner.UUID != null) {
                 storedUUID = persistentObjectOwner.UUID.ID;
-                Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties() UUID: {persistentObjectOwner.UUID.ID}");
+                //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties() UUID: {persistentObjectOwner.UUID.ID}");
             }
 
             // save this data to the scene node that is active
@@ -149,7 +151,7 @@ namespace AnyRPG {
         }
 
         public PersistentObjectSaveData MakeSaveData() {
-            Debug.Log($"{ persistentObjectOwner.gameObject.name}.PersistentObjectComponent.MakeSaveData() storedUUID: {storedUUID}");
+            //Debug.Log($"{ persistentObjectOwner.gameObject.name}.PersistentObjectComponent.MakeSaveData() storedUUID: {storedUUID}");
 
             PersistentObjectSaveData returnValue = new PersistentObjectSaveData();
             returnValue.UUID = storedUUID;

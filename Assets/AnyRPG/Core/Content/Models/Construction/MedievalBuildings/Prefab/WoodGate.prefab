@@ -558,6 +558,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: -5108201945181213206}
+    - targetCorrespondingSourceObject: {fileID: 2832885398968050513, guid: 49fa53f8e9525ba448a7044028305b44,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3120614004648260466}
     - targetCorrespondingSourceObject: {fileID: 8516459820401750285, guid: 49fa53f8e9525ba448a7044028305b44,
         type: 3}
       insertIndex: -1
@@ -586,10 +590,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2178554594267333769}
-    - targetCorrespondingSourceObject: {fileID: 8040424233924493148, guid: 49fa53f8e9525ba448a7044028305b44,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7249292035893328166}
   m_SourcePrefab: {fileID: 100100000, guid: 49fa53f8e9525ba448a7044028305b44, type: 3}
 --- !u!1 &393345111013423631 stripped
 GameObject:
@@ -645,6 +645,11 @@ MonoBehaviour:
   interactionMaxRange: 2
   interactionPoints: []
   componentController: {fileID: 6698979376309176863}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!114 &2178554594267333769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -663,7 +668,7 @@ MonoBehaviour:
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     switchOnly: 0
-    animationComponent: {fileID: 7249292035893328166}
+    animationComponent: {fileID: 3120614004648260466}
     openAnimationClip: {fileID: -8091027984389603180, guid: d97e7ceb17cab0d458fd9425c012ab61,
       type: 3}
     openAudioClip: {fileID: 8300000, guid: f131d43dcc18ca549b7a878d5e1c9138, type: 3}
@@ -672,24 +677,6 @@ MonoBehaviour:
       type: 2}
     closeAudioClip: {fileID: 8300000, guid: 0689bc336842fd941a458ef0e5a3cc99, type: 3}
     closeAudioProfile: 
---- !u!111 &7249292035893328166
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 393345111013423631}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 0}
-  m_Animations:
-  - {fileID: -8091027984389603180, guid: d97e7ceb17cab0d458fd9425c012ab61, type: 3}
-  - {fileID: 7400000, guid: 714512c60893fd64bbf0ae4be5c572c8, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 0
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
 --- !u!4 &1604938904690523094 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8981797344825441925, guid: 49fa53f8e9525ba448a7044028305b44,
@@ -730,6 +717,11 @@ MonoBehaviour:
   - {fileID: 6959729691050552273}
   - {fileID: 5329738773490934753}
   componentController: {fileID: 2310320318097876426}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!114 &776649250393353682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -784,6 +776,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!111 &3120614004648260466
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5598058123386693122}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: -8091027984389603180, guid: d97e7ceb17cab0d458fd9425c012ab61, type: 3}
+  - {fileID: 7400000, guid: 714512c60893fd64bbf0ae4be5c572c8, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &6801561424717635737 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3784187393832052170, guid: 49fa53f8e9525ba448a7044028305b44,
@@ -818,6 +828,11 @@ MonoBehaviour:
   - {fileID: 6959729691050552273}
   - {fileID: 5329738773490934753}
   componentController: {fileID: 3798958122362171342}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!114 &8646619113171398421
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -128,7 +128,7 @@ namespace AnyRPG {
         }
 
         public virtual void DropLoot(UnitController sourceUnitController) {
-            Debug.Log($"{interactable.gameObject.name}.LootableNode.DropLoot()");
+            //Debug.Log($"{interactable.gameObject.name}.LootableNode.DropLoot()");
 
             // is the below code necessary?  it was causing stuff that was already dropped but not picked up to not pop a window again and just remain unlootable
             /*
@@ -222,6 +222,7 @@ namespace AnyRPG {
 
         public override bool CanInteract(UnitController sourceUnitController, bool processRangeCheck, bool passedRangeCheck, bool processNonCombatCheck, bool viaSwitch = false) {
             //Debug.Log(interactable.gameObject.name + ".LootableNode.CanInteract()");
+
             bool returnValue = base.CanInteract(sourceUnitController, processRangeCheck, passedRangeCheck, processNonCombatCheck);
             if (returnValue == false) {
                 return false;
@@ -233,29 +234,37 @@ namespace AnyRPG {
         }
 
         public override void SetSaveData(InteractableSaveData interactableSaveData) {
-            Debug.Log($"{interactable.gameObject.name}.LootableNodeComponent.SetSaveData() lootDropped: {lootDropped} pickupCount: {pickupCount}");
+            //Debug.Log($"{interactable.gameObject.name}.LootableNodeComponent.SetSaveData() lootDropped: {lootDropped} pickupCount: {pickupCount}");
 
             base.SetSaveData(interactableSaveData);
-
-            interactableSaveData.LootableNodeSaveData.LootDropped = lootDropped;
-            interactableSaveData.LootableNodeSaveData.PickupCount = pickupCount;
-            interactableSaveData.LootableNodeSaveData.SpawnObjectActive = (Props.SpawnObject != null ? Props.SpawnObject.activeSelf : false);
-            interactableSaveData.LootableNodeSaveData.LootHolderSerializedData = lootHolder.GetSerializedData();
+            LootableNodeSaveData lootableNodeSaveData = new LootableNodeSaveData() {
+                    LootDropped = lootDropped,
+                    PickupCount = pickupCount,
+                    SpawnObjectActive = (Props.SpawnObject != null ? Props.SpawnObject.activeSelf : false),
+                    LootHolderSerializedData = lootHolder.GetSerializedData()
+            };
+            if (interactableSaveData.LootableNodeSaveData.Count == 0) {
+                interactableSaveData.LootableNodeSaveData.Add(lootableNodeSaveData);
+            } else {
+                interactableSaveData.LootableNodeSaveData[0] = lootableNodeSaveData;
+            }
         }
 
         public override void LoadFromSaveData(InteractableSaveData interactableSaveData) {
-            Debug.Log($"{interactable.gameObject.name}.LootableNodeComponent.LoadFromSaveData() lootDropped: {interactableSaveData.LootableNodeSaveData.LootDropped} SpawnObjectActive: {interactableSaveData.LootableNodeSaveData.SpawnObjectActive}");
+            //Debug.Log($"{interactable.gameObject.name}.LootableNodeComponent.LoadFromSaveData() lootDropped: {interactableSaveData.LootableNodeSaveData.LootDropped} SpawnObjectActive: {interactableSaveData.LootableNodeSaveData.SpawnObjectActive}");
 
             base.LoadFromSaveData(interactableSaveData);
-
-            lootDropped = interactableSaveData.LootableNodeSaveData.LootDropped;
-            pickupCount = interactableSaveData.LootableNodeSaveData.PickupCount;
+            if (interactableSaveData.LootableNodeSaveData.Count == 0) {
+                return;
+            }
+            lootDropped = interactableSaveData.LootableNodeSaveData[0].LootDropped;
+            pickupCount = interactableSaveData.LootableNodeSaveData[0].PickupCount;
             if (Props.SpawnObject != null) {
-                Props.SpawnObject.SetActive(interactableSaveData.LootableNodeSaveData.SpawnObjectActive);
+                Props.SpawnObject.SetActive(interactableSaveData.LootableNodeSaveData[0].SpawnObjectActive);
             }
 
             // first, add the loot drops
-            lootHolder.LoadFromSerializedData(interactableSaveData.LootableNodeSaveData.LootHolderSerializedData);
+            lootHolder.LoadFromSerializedData(interactableSaveData.LootableNodeSaveData[0].LootHolderSerializedData);
         }
     }
 

@@ -519,7 +519,9 @@ namespace AnyRPG {
             // now that we have a good final position and rotation, set it
             unitController.StartPosition = newSpawnLocation;
             unitController.NavMeshAgent.Warp(newSpawnLocation);
-            unitController.transform.forward = newSpawnForward;
+            if (newSpawnForward != Vector3.zero) {
+                unitController.transform.forward = newSpawnForward;
+            }
 
 
             //Debug.Log("UnitSpawnNode.Spawn(): afterMove: navhaspath: " + navMeshAgent.hasPath + "; isOnNavMesh: " + navMeshAgent.isOnNavMesh + "; pathpending: " + navMeshAgent.pathPending);

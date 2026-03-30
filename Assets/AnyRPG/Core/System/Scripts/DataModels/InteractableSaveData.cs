@@ -7,28 +7,34 @@ namespace AnyRPG {
 
     [Serializable]
     public class InteractableSaveData {
-        public LootableNodeSaveData LootableNodeSaveData = new LootableNodeSaveData();
-        public LootableCharacterSaveData LootableCharacterSaveData = new LootableCharacterSaveData();
+        public List<LootableNodeSaveData> LootableNodeSaveData = new List<LootableNodeSaveData>();
+        public List<LootableCharacterSaveData> LootableCharacterSaveData = new List<LootableCharacterSaveData>();
         public ItemInstanceListSaveData ItemInstanceListSaveData = new ItemInstanceListSaveData();
+        public List<MoveableObjectSaveData> MoveableObjectSaveData = new List<MoveableObjectSaveData>();
+        public List<AnimatedObjectSaveData> AnimatedObjectSaveData = new List<AnimatedObjectSaveData>();
 
         public void BundleItems(SystemItemManager systemItemManager) {
             // bundle items from lootable character and lootable node into one list to be saved with the interactable
-            foreach (LootDropSerializedData lootDropSerializedData in LootableCharacterSaveData.LootDropSerializedDataList) {
-                InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(lootDropSerializedData.ItemInstanceId);
-                if (instantiatedItem == null) {
-                    Debug.LogWarning($"InteractableSaveData.BundleItems() Item with instanceId {lootDropSerializedData.ItemInstanceId} not found!");
-                    continue;
-                }
-                ItemInstanceListSaveData.ItemInstances.Add(instantiatedItem.GetItemSaveData());
-            }
-            foreach (LootTableStateSerializedData lootTableStateSerializedData in LootableNodeSaveData.LootHolderSerializedData.LootTableStateSerializedDataList) {
-                foreach (LootDropSerializedData lootDropSerializedData in lootTableStateSerializedData.LootDropSerializedDataList) {
+            if (LootableCharacterSaveData.Count > 0) {
+                foreach (LootDropSerializedData lootDropSerializedData in LootableCharacterSaveData[0].LootDropSerializedDataList) {
                     InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(lootDropSerializedData.ItemInstanceId);
                     if (instantiatedItem == null) {
                         Debug.LogWarning($"InteractableSaveData.BundleItems() Item with instanceId {lootDropSerializedData.ItemInstanceId} not found!");
                         continue;
                     }
                     ItemInstanceListSaveData.ItemInstances.Add(instantiatedItem.GetItemSaveData());
+                }
+            }
+            if (LootableNodeSaveData.Count > 0) {
+                foreach (LootTableStateSerializedData lootTableStateSerializedData in LootableNodeSaveData[0].LootHolderSerializedData.LootTableStateSerializedDataList) {
+                    foreach (LootDropSerializedData lootDropSerializedData in lootTableStateSerializedData.LootDropSerializedDataList) {
+                        InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(lootDropSerializedData.ItemInstanceId);
+                        if (instantiatedItem == null) {
+                            Debug.LogWarning($"InteractableSaveData.BundleItems() Item with instanceId {lootDropSerializedData.ItemInstanceId} not found!");
+                            continue;
+                        }
+                        ItemInstanceListSaveData.ItemInstances.Add(instantiatedItem.GetItemSaveData());
+                    }
                 }
             }
         }
@@ -58,6 +64,23 @@ namespace AnyRPG {
         public string LootTableName;
         public int AccountId;
         public List<LootDropSerializedData> LootDropSerializedDataList = new List<LootDropSerializedData>();
+    }
+
+    [Serializable]
+    public class MoveableObjectSaveData {
+        public bool ObjectOpen;
+        public float ObjectPositionX;
+        public float ObjectPositionY;
+        public float ObjectPositionZ;
+        public float ObjectRotationX;
+        public float ObjectRotationY;
+        public float ObjectRotationZ;
+        public float ObjectRotationW;
+    }
+
+    [Serializable]
+    public class AnimatedObjectSaveData { 
+        public bool ObjectOpen;
     }
 
 }
