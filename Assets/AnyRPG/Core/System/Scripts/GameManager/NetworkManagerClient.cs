@@ -744,7 +744,11 @@ namespace AnyRPG {
         }
 
         public void SetCharacterList(List<PlayerCharacterSaveData> playerCharacterSaveDataList) {
-            loadGameManager.SetCharacterList(playerCharacterSaveDataList);
+            List<SinglePlayerSaveData> singlePlayerSaveDataList = new List<SinglePlayerSaveData>();
+            foreach (PlayerCharacterSaveData playerCharacterSaveData in playerCharacterSaveDataList) {
+                singlePlayerSaveDataList.Add(new SinglePlayerSaveData(playerCharacterSaveData));
+            }
+            loadGameManager.SetCharacterList(singlePlayerSaveDataList);
         }
 
         public void ProcessDeclineCharacterGroupInvite(string decliningPlayerName) {

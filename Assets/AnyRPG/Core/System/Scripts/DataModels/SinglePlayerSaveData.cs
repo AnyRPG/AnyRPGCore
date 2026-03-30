@@ -5,14 +5,21 @@ using UnityEngine;
 namespace AnyRPG {
     
     [Serializable]
-    public class PlayerCharacterSaveData {
+    public class SinglePlayerSaveData {
         
         public CharacterSaveData CharacterSaveData = new CharacterSaveData();
         public ItemInstanceListSaveData ItemInstanceListSaveData = new ItemInstanceListSaveData();
+        public List<SceneNodeSaveData> SceneNodeSaveData = new List<SceneNodeSaveData>();
+        public List<CutsceneSaveData> CutsceneSaveData = new List<CutsceneSaveData>();
 
-        public PlayerCharacterSaveData() { }
+        public SinglePlayerSaveData() { }
 
-        public PlayerCharacterSaveData(CharacterSaveData characterSaveData, SystemItemManager systemItemManager) { 
+        public SinglePlayerSaveData(PlayerCharacterSaveData playerCharacterSaveData) {
+            CharacterSaveData = playerCharacterSaveData.CharacterSaveData;
+            ItemInstanceListSaveData = playerCharacterSaveData.ItemInstanceListSaveData;
+        }
+
+        public SinglePlayerSaveData(CharacterSaveData characterSaveData, SystemItemManager systemItemManager) { 
             CharacterSaveData = characterSaveData;
             foreach (InventorySlotSaveData inventorySlotSaveData in characterSaveData.InventorySlotSaveData) {
                 foreach (long itemInstanceId in inventorySlotSaveData.ItemInstanceIds) {

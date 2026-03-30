@@ -2,7 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using UnityEditor.EditorTools;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -18,6 +18,7 @@ namespace AnyRPG {
 
         // game manager references
         private PlayerManagerServer playerManagerServer = null;
+        private LootManager lootManager = null;
 
         public Dictionary<LootTable, Dictionary<int, LootTableState>> LootTableStates { get => lootTableStates; }
 
@@ -28,6 +29,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             playerManagerServer = systemGameManager.PlayerManagerServer;
+            lootManager = systemGameManager.LootManager;
         }
         
         public void InitializeLootTableStates() {
@@ -75,6 +77,50 @@ namespace AnyRPG {
             //Debug.Log($"LootHolder.HandleRemoveDroppedItem({lootDrop.InstantiatedItem.ResourceName}, {accountId})");
 
             OnRemoveDroppedItem(lootDrop, accountId);
+        }
+
+        public LootHolderSerializedData GetSerializedData() {
+            LootHolderSerializedData returnValue = new LootHolderSerializedData();
+            foreach (KeyValuePair<LootTable, Dictionary<int, LootTableState>> lootTableEntry in lootTableStates) {
+                foreach (KeyValuePair<int, LootTableState> accountEntry in lootTableEntry.Value) {
+                    LootTableStateSerializedData lootTableStateSerializedData = new LootTableStateSerializedData();
+                    lootTableStateSerializedData.LootTableName = lootTableEntry.Key.ResourceName;
+                    lootTableStateSerializedData.AccountId = accountEntry.Key;
+                    foreach (LootDrop lootDrop in accountEntry.Value.DroppedItems) {
+                        lootTableStateSerializedData.LootDropSerializedDataList.Add(new LootDropSerializedData(lootDrop.LootDropId, lootDrop.InstantiatedItem.InstanceId));
+                    }
+                    returnValue.LootTableStateSerializedDataList.Add(lootTableStateSerializedData);
+                }
+            }
+            return returnValue;
+
+        }
+
+        public void LoadFromSerializedData(LootHolderSerializedData lootHolderSerializedData) {
+            lootTableStates = new Dictionary<LootTable, Dictionary<int, LootTableState>>();
+            foreach (LootTableStateSerializedData lootTableStateSerializedData in lootHolderSerializedData.LootTableStateSerializedDataList) {
+                LootTable lootTable = systemDataFactory.GetResource<LootTable>(lootTableStateSerializedData.LootTableName);
+                if (lootTable == null) {
+                    Debug.LogWarning($"LootHolder.LoadFromSerializedData(): loot table {lootTableStateSerializedData.LootTableName} not found");
+                    continue;
+                }
+                if (lootTableStates.ContainsKey(lootTable) == false) {
+                    AddLootTableState(lootTable);
+                }
+                LootTableState lootTableState = new LootTableState(systemGameManager, lootTableStateSerializedData.AccountId);
+                lootTableState.OnRemoveDroppedItem += HandleRemoveDroppedItem;
+                lootTableState.OnInitializeItem += HandleInitializeItem;
+                foreach (LootDropSerializedData lootDropSerializedData in lootTableStateSerializedData.LootDropSerializedDataList) {
+                    InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(lootDropSerializedData.ItemInstanceId);
+                    if (instantiatedItem == null) {
+                        Debug.LogWarning($"LootHolder.LoadFromSerializedData(): item with instance id {lootDropSerializedData.ItemInstanceId} not found");
+                        continue;
+                    }
+                    LootDrop lootDrop = lootManager.AddNetworkLootDrop(lootDropSerializedData);
+                    lootTableState.DroppedItems.Add(lootDrop);
+                }
+                lootTableStates[lootTable].Add(lootTableStateSerializedData.AccountId, lootTableState);
+            }
         }
     }
 }

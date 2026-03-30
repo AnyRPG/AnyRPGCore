@@ -57,8 +57,7 @@ namespace AnyRPG {
         public List<QuestSaveData> QuestSaveData = new List<QuestSaveData>();
         public List<QuestSaveData> AchievementSaveData = new List<QuestSaveData>();
         public List<DialogSaveData> DialogSaveData = new List<DialogSaveData>();
-        public List<SceneNodeSaveData> SceneNodeSaveData = new List<SceneNodeSaveData>();
-        public List<CutsceneSaveData> CutsceneSaveData = new List<CutsceneSaveData>();
+        public List<String> VisitedSceneNodes = new List<String>();
     }
 
 
@@ -98,8 +97,7 @@ namespace AnyRPG {
     [Serializable]
     public class SceneNodeSaveData {
 
-        public string SceneName;
-        public bool Visited;
+        public string SceneResourceName;
 
         public List<PersistentObjectSaveData> PersistentObjects = new List<PersistentObjectSaveData>();
     }
@@ -110,18 +108,6 @@ namespace AnyRPG {
         public string CutsceneName;
 
         public bool IsCutSceneViewed;
-    }
-
-    [Serializable]
-    public struct PersistentObjectSaveData {
-
-        public string UUID;
-        public float LocationX;
-        public float LocationY;
-        public float LocationZ;
-        public float DirectionX;
-        public float DirectionY;
-        public float DirectionZ;
     }
 
     [Serializable]

@@ -2,13 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class Interactable : AutoConfiguredMonoBehaviour, IDescribable {
+    public class Interactable : AutoConfiguredMonoBehaviour, IPersistentObjectOwner, IDescribable {
 
         public event System.Action OnPrerequisiteUpdates = delegate { };
         public event System.Action OnInteractableDisable = delegate { };
@@ -81,6 +82,15 @@ namespace AnyRPG {
         [SerializeField]
         protected ComponentController componentController = null;
 
+        [Header("Persistence")]
+
+        [SerializeField]
+        protected PersistentObjectComponent persistentObjectComponent = new PersistentObjectComponent();
+
+        [Tooltip("Set this to true to save and load interactable data for this interactable.  This is only necessary if the interactable has interactable options that need to save data, such as loot or a door that can be opened/closed.")]
+        [SerializeField]
+        protected bool persistInteractableData = false;
+
         /*
         [Tooltip("Reference to local component controller prefab with nameplate target, speakers, etc.")]
         [SerializeField]
@@ -109,6 +119,7 @@ namespace AnyRPG {
         protected Collider myCollider;
         //protected MiniMapIndicatorController miniMapIndicator = null;
         //protected MainMapIndicatorController mainMapIndicator = null;
+        protected UUID uuid = null;
 
 
         // created components
@@ -209,12 +220,20 @@ namespace AnyRPG {
         public bool IsInitialized { get => isInitialized; }
         public List<GameObject> InteractionPoints { get => interactionPoints; set => interactionPoints = value; }
         public virtual bool OverrideInteractionColliderSize { get => overrideInteractionColliderSize; }
+        public virtual IUUID UUID {
+            get {
+                return uuid;
+            }
+        }
+        public PersistentObjectComponent PersistentObjectComponent { get => persistentObjectComponent; set => persistentObjectComponent = value; }
+
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log($"{gameObject.name}.Interactable.Configure() instanceId: {GetInstanceID()}");
 
             base.Configure(systemGameManager);
 
+            persistentObjectComponent.Setup(this, systemGameManager);
             GetComponentReferences();
             //CreateEventSubscriptions();
             ConfigureComponents();
@@ -233,7 +252,7 @@ namespace AnyRPG {
         }
 
         public virtual void Init() {
-            //Debug.Log($"{gameObject.name}.Interactable.Init()");
+            Debug.Log($"{gameObject.name}.Interactable.Init()");
 
             if (isInitialized == true) {
                 Debug.LogWarning($"{gameObject.name}.Interactable.Init(): already initialized.  Returning.");
@@ -343,6 +362,8 @@ namespace AnyRPG {
                 objectMaterialController.PopulateOriginalMaterials();
             //}
             CheckEnableInteractableRange();
+
+            persistentObjectComponent.Init();
         }
 
         protected virtual void CheckEnableInteractableRange() { 
@@ -1028,14 +1049,12 @@ namespace AnyRPG {
         }
 
         public void NotifyOnInteractableResetSettings() {
-            //Debug.Log($"Interactable.NotifyOnInteractableResetSettings() {GetInstanceID()}");
             //Debug.Log($"{gameObject.name}.Interactable.NotifyOnInteractableResetSettings() {GetInstanceID()}");
 
             OnInteractableResetSettings();
         }
 
         public virtual void ResetSettings() {
-            //Debug.Log($"Interactable.ResetSettings() {GetInstanceID()}");
             //Debug.Log($"{gameObject.name}.Interactable.ResetSettings() {GetInstanceID()}");
 
             if (glowOnMouseOver) {
@@ -1220,13 +1239,21 @@ namespace AnyRPG {
         }
 
         public void LoadInteractableSaveData(InteractableSaveData interactableSaveData) {
-            //Debug.Log($"{gameObject.name}.Interactable.LoadInteractableSaveData()");
+            Debug.Log($"{gameObject.name}.Interactable.LoadInteractableSaveData()");
 
             _interactableSaveData = interactableSaveData;
             systemItemManager.LoadItemInstanceListSaveData(interactableSaveData.ItemInstanceListSaveData);
             foreach (InteractableOptionComponent interactableOptionComponent in interactables.Values) {
                 interactableOptionComponent.LoadFromSaveData(interactableSaveData);
             }
+        }
+
+        public virtual void PopulatePersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {
+            //Debug.Log($"{gameObject.name}.Interactable.PopulatePersistentObjectSaveData()");
+            if (persistInteractableData == false) {
+                return;
+            }
+            persistentObjectSaveData.InteractableSaveData = GetInteractableSaveData();
         }
     }
 

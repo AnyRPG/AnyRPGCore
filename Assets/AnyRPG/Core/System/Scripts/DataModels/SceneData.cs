@@ -11,6 +11,7 @@ namespace AnyRPG {
         public bool HasNavMesh = false;
         public List<Interactable> Interactables = new List<Interactable>();
         public List<UnitController> UnitControllers = new List<UnitController>();
+        public List<IPersistentObjectOwner> PersistentObjectOwners = new List<IPersistentObjectOwner>();
 
         // the time that this scene became empty of players
         // used for tracking instance unloading timeouts
@@ -50,6 +51,17 @@ namespace AnyRPG {
             }
         }
 
+        public void RegisterPersistentObject(IPersistentObjectOwner persistentObjectOwner) {
+            if (!PersistentObjectOwners.Contains(persistentObjectOwner)) {
+                PersistentObjectOwners.Add(persistentObjectOwner);
+            }
+        }
+
+        public void UnregisterPersistentObject(IPersistentObjectOwner persistentObjectOwner) {
+            if (PersistentObjectOwners.Contains(persistentObjectOwner)) {
+                PersistentObjectOwners.Remove(persistentObjectOwner);
+            }
+        }
     }
 
 }

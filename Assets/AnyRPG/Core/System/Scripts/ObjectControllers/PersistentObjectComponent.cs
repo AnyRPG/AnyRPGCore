@@ -37,7 +37,7 @@ namespace AnyRPG {
         protected LevelManagerClient levelManagerClient = null;
         protected SystemEventManager systemEventManager = null;
 
-		public bool MoveOnStart { get => moveOnStart; set => moveOnStart = value; }
+        public bool MoveOnStart { get => moveOnStart; set => moveOnStart = value; }
         public bool PersistObjectPosition { get => persistObjectPosition; set => persistObjectPosition = value; }
         public bool SaveOnLevelUnload { get => saveOnLevelUnload; set => saveOnLevelUnload = value; }
         public bool SaveOnGameSave { get => saveOnGameSave; set => saveOnGameSave = value; }
@@ -49,19 +49,12 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             levelManagerClient = systemGameManager.LevelManagerClient;
             systemEventManager = systemGameManager.SystemEventManager;
-		}
+        }
 
         public void Setup(IPersistentObjectOwner persistentObjectOwner, SystemGameManager systemGameManager) {
             //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.Setup() setting UUID {persistentObjectOwner.UUID.ID}");
             this.persistentObjectOwner = persistentObjectOwner;
             Configure(systemGameManager);
-            CreateEventSubscriptions();
-        }
-
-        public void Cleanup() {
-            //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObjectComponent.Cleanup() hashCode: {GetHashCode()}");
-
-            CleanupEventSubscriptions();
         }
 
         public void Init() {
@@ -111,52 +104,14 @@ namespace AnyRPG {
             }
         }
 
-        public void CreateEventSubscriptions() {
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            ProcessCreateEventSubscriptions();
-            eventSubscriptionsInitialized = true;
-        }
-
-        public virtual void ProcessCreateEventSubscriptions() {
-            //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObjectComponent.ProcessCreateEventSubscriptions() hashcode: {GetHashCode()}");
-
-            levelManagerClient.OnLevelUnload += HandleLevelUnload;
-            SystemEventManager.StartListening("OnSaveGame", HandleSaveGame);
-        }
-
-        public void CleanupEventSubscriptions() {
-            //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObjectComponent.CleanupEventSubscriptions() hashcode: {GetHashCode()}");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
-            ProcessCleanupEventSubscriptions();
-            eventSubscriptionsInitialized = false;
-        }
-
-        public virtual void ProcessCleanupEventSubscriptions() {
-            //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObjectComponent.ProcessCleanupEventSubscriptions() hashcode: {GetHashCode()}");
-
-            levelManagerClient.OnLevelUnload -= HandleLevelUnload;
-            SystemEventManager.StopListening("OnSaveGame", HandleSaveGame);
-        }
-
-        public void HandleLevelUnload(int sceneHandle, string sceneName) {
+        public void ProcessBeforeUnloadScene() {
             //Debug.Log($"PersistentObjectComponent.HandleLevelUnload(sceneHandle: {sceneHandle}, sceneName: {sceneName}) hashcode: {GetHashCode()}");
-            //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObjectComponent.HandleLevelUnload(sceneHandle: {sceneHandle}, sceneName: {sceneName}) hashcode: {GetHashCode()}");
-            if (persistObjectPosition == false) {
-                return;
-            }
             if (saveOnLevelUnload == true) {
                 SaveProperties();
             }
         }
 
-        public void HandleSaveGame(string eventName, EventParamProperties eventParamProperties) {
-            if (persistObjectPosition == false) {
-                return;
-            }
+        public void ProcessSaveGame() {
             if (saveOnGameSave == true) {
                 SaveProperties();
             }
@@ -166,10 +121,6 @@ namespace AnyRPG {
             //Debug.Log($"{ persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties()");
 
             // since all units automatically have this component, give it a chance to not save based on configuration
-            if (persistObjectPosition == false) {
-                return;
-            }
-
             if (systemGameManager.GameMode == GameMode.Network) {
                 return;
             }
@@ -202,6 +153,8 @@ namespace AnyRPG {
             returnValue.DirectionX = storedForwardDirection.x;
             returnValue.DirectionY = storedForwardDirection.y;
             returnValue.DirectionZ = storedForwardDirection.z;
+
+            persistentObjectOwner.PopulatePersistentObjectSaveData(returnValue);
 
             return returnValue;
         }

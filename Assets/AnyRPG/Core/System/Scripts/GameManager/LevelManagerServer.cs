@@ -247,13 +247,27 @@ namespace AnyRPG {
                 List<Interactable> interactables = new List<Interactable>(sceneData.Interactables);
                 foreach (Interactable interactable in interactables) {
                     if (interactable != null) {
+                        if (systemGameManager.GameMode == GameMode.Local) {
+                            interactable.PersistentObjectComponent.ProcessBeforeUnloadScene();
+                        }
                         interactable.ResetSettings();
                     }
                 }
                 List<UnitController> unitControllers = new List<UnitController>(sceneData.UnitControllers);
                 foreach (UnitController unitController in unitControllers) {
                     if (unitController != null) {
+                        if (systemGameManager.GameMode == GameMode.Local) {
+                            unitController.PersistentObjectComponent.ProcessBeforeUnloadScene();
+                        }
                         unitController.Despawn(0f, false, true);
+                    }
+                }
+                if (systemGameManager.GameMode == GameMode.Local) {
+                    List<IPersistentObjectOwner> persistentObjectOwners = new List<IPersistentObjectOwner>(sceneData.PersistentObjectOwners);
+                    foreach (IPersistentObjectOwner persistentObjectOwner in persistentObjectOwners) {
+                        if (persistentObjectOwner != null && persistentObjectOwner.PersistentObjectComponent.SaveOnLevelUnload == true) {
+                            persistentObjectOwner.PersistentObjectComponent.ProcessBeforeUnloadScene();
+                        }
                     }
                 }
             }
@@ -261,6 +275,34 @@ namespace AnyRPG {
             OnBeforeStartUnloadScene(scene.handle, scene.name);
         }
 
+        public void SavePersistentObjects(Scene scene) {
+            if (systemGameManager.GameMode != GameMode.Local) {
+                return;
+            }
+
+            SceneData sceneData = GetSceneData(scene);
+            if (sceneData != null) {
+                foreach (Interactable interactable in sceneData.Interactables) {
+                    if (interactable != null && interactable.PersistentObjectComponent.SaveOnGameSave == true) {
+                        interactable.PersistentObjectComponent.ProcessSaveGame();
+                    }
+                }
+                List<UnitController> unitControllers = new List<UnitController>(sceneData.UnitControllers);
+                foreach (UnitController unitController in unitControllers) {
+                    if (unitController != null && unitController.UnitControllerMode == UnitControllerMode.AI && unitController.PersistentObjectComponent.SaveOnGameSave == true) {
+                        unitController.PersistentObjectComponent.ProcessSaveGame();
+                    }
+                }
+                if (systemGameManager.GameMode == GameMode.Local) {
+                    List<IPersistentObjectOwner> persistentObjectOwners = new List<IPersistentObjectOwner>(sceneData.PersistentObjectOwners);
+                    foreach (IPersistentObjectOwner persistentObjectOwner in persistentObjectOwners) {
+                        if (persistentObjectOwner != null && persistentObjectOwner.PersistentObjectComponent.SaveOnGameSave == true) {
+                            persistentObjectOwner.PersistentObjectComponent.ProcessSaveGame();
+                        }
+                    }
+                }
+            }
+        }
 
         public void RegisterInteractable(Interactable interactable) {
             //Debug.Log($"LevelManagerServer.RegisterInteractable({interactable.gameObject.name})");
@@ -317,6 +359,29 @@ namespace AnyRPG {
                     }
             }
         }
+
+        public void RegisterPersistentObject(IPersistentObjectOwner persistentObjectOwner) {
+           Scene scene = persistentObjectOwner.gameObject.scene;
+            if (loadedScenes.ContainsKey(scene.name) == false) {
+                return;
+            }
+            if (loadedScenes[scene.name].ContainsKey(scene.handle) == false) {
+                return;
+            }
+            loadedScenes[scene.name][scene.handle].RegisterPersistentObject(persistentObjectOwner);
+        }
+
+        public void UnregisterPersistentObject(IPersistentObjectOwner persistentObjectOwner) {
+            Scene scene = persistentObjectOwner.gameObject.scene;
+            if (loadedScenes.ContainsKey(scene.name) == false) {
+                return;
+            }
+            if (loadedScenes[scene.name].ContainsKey(scene.handle) == false) {
+                return;
+            }
+            loadedScenes[scene.name][scene.handle].UnregisterPersistentObject(persistentObjectOwner);
+        }
+
     }
 
 }

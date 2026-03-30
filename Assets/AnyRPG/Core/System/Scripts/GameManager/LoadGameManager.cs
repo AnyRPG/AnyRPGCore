@@ -7,11 +7,11 @@ namespace AnyRPG {
     public class LoadGameManager : ConfiguredClass, ICapabilityConsumer, ICharacterConfigurationProvider {
 
         //public event System.Action<LoadGameButton> OnSetSavedGame = delegate { };
-        public event System.Action OnDeleteGame = delegate { };
-        public event System.Action OnCopyGame = delegate { };
-        public event System.Action OnLoadCharacterList = delegate { };
+        public event Action OnDeleteGame = delegate { };
+        public event Action OnCopyGame = delegate { };
+        public event Action OnLoadCharacterList = delegate { };
 
-        private List<PlayerCharacterSaveData> characterList = new List<PlayerCharacterSaveData>();
+        private List<SinglePlayerSaveData> characterList = new List<SinglePlayerSaveData>();
         private UnitProfile unitProfile = null;
         private UnitType unitType = null;
         private CharacterRace characterRace = null;
@@ -40,7 +40,7 @@ namespace AnyRPG {
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
         public CharacterSaveData CharacterSaveData { get => characterSaveData; set => characterSaveData = value; }
         public CapabilityConsumerSnapshot CapabilityConsumerSnapshot { get => capabilityConsumerSnapshot; set => capabilityConsumerSnapshot = value; }
-        public List<PlayerCharacterSaveData> CharacterList { get => characterList; }
+        public List<SinglePlayerSaveData> CharacterList { get => characterList; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -54,10 +54,10 @@ namespace AnyRPG {
         }
 
 
-        public void SetSavedGame(PlayerCharacterSaveData playerCharacterSaveData) {
+        public void SetSavedGame(SinglePlayerSaveData singlePlayerSaveData) {
             //Debug.Log("LoadGameManager.SetSavedGame()");
 
-            characterSaveData = playerCharacterSaveData.CharacterSaveData;
+            characterSaveData = singlePlayerSaveData.CharacterSaveData;
             capabilityConsumerSnapshot = saveManager.GetCapabilityConsumerSnapshot(characterSaveData);
 
             unitProfile = capabilityConsumerSnapshot.UnitProfile;
@@ -68,7 +68,7 @@ namespace AnyRPG {
             faction = capabilityConsumerSnapshot.Faction;
 
             saveManager.ClearSharedData();
-            systemItemManager.LoadPlayerCharacterSaveData(playerCharacterSaveData);
+            systemItemManager.LoadItemInstanceListSaveData(singlePlayerSaveData.ItemInstanceListSaveData);
         }
 
         public void ResetData() {
@@ -86,13 +86,13 @@ namespace AnyRPG {
         }
 
 
-        public void LoadGame(PlayerCharacterSaveData playerCharacterSaveData) {
+        public void LoadGame(SinglePlayerSaveData singlePlayerSaveData) {
             //Debug.Log("LoadGameManager.LoadGame()");
 
             if (systemGameManager.GameMode == GameMode.Local) {
-                saveManager.LoadGame(playerCharacterSaveData);
+                saveManager.LoadGame(singlePlayerSaveData);
             } else {
-                networkManagerClient.RequestLoadPlayerCharacter(playerCharacterSaveData.CharacterSaveData.CharacterId);
+                networkManagerClient.RequestLoadPlayerCharacter(singlePlayerSaveData.CharacterSaveData.CharacterId);
             }
         }
 
@@ -127,7 +127,7 @@ namespace AnyRPG {
             OnLoadCharacterList();
         }
 
-        public void SetCharacterList(List<PlayerCharacterSaveData> playerCharacterSaveDataList) {
+        public void SetCharacterList(List<SinglePlayerSaveData> playerCharacterSaveDataList) {
             //Debug.Log("LoadGameManager.SetCharacterList()");
 
             characterList.Clear();

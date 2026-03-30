@@ -1,10 +1,6 @@
-using AnyRPG;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
     public abstract class LootableNodeComponent : InteractableOptionComponent, ILootHolder {
@@ -159,39 +155,6 @@ namespace AnyRPG {
             uIManager.lootWindow.OpenWindow();
         }
 
-        /*
-        //public void ClearTakeLootHandler(ICloseableWindowContents windowContents) {
-        public void ClearTakeLootHandler(CloseableWindowContents windowContents) {
-            //Debug.Log($"{gameObject.name}.LootableNode.ClearTakeLootHandler()");
-            CleanupWindowEventSubscriptions();
-        }
-
-        public void CreateWindowEventSubscriptions() {
-            //Debug.Log($"{gameObject.name}.LootableNode.CreateWindowEventSubscriptions()");
-            systemEventManager.OnTakeLoot += HandleTakeLoot;
-        }
-
-        public void CleanupWindowEventSubscriptions() {
-            //Debug.Log($"{gameObject.name}.LootableNode.CleanupWindowEventSubscriptions()");
-            systemEventManager.OnTakeLoot -= HandleTakeLoot;
-            if (uIManager?.lootWindow?.CloseableWindowContents != null) {
-                uIManager.lootWindow.CloseableWindowContents.OnCloseWindow -= ClearTakeLootHandler;
-            }
-        }
-
-        public override void ProcessCleanupEventSubscriptions() {
-            //Debug.Log("GatheringNode.CleanupEventSubscriptions()");
-            base.ProcessCleanupEventSubscriptions();
-            CleanupWindowEventSubscriptions();
-        }
-
-        public void HandleTakeLoot(int accountId) {
-            //Debug.Log($"{interactable.gameObject.name}.LootableNode.HandleTakeLoot({accountId})");
-
-            CheckDropListSize();
-        }
-        */
-
         public void ClearLootTables() {
             Props.LootTables.Clear();
         }
@@ -267,6 +230,45 @@ namespace AnyRPG {
                 return false;
             }
             return (GetCurrentOptionCount(sourceUnitController) == 0 ? false : true);
+        }
+
+        public override void SetSaveData(InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.SetSaveData()");
+
+            base.SetSaveData(interactableSaveData);
+
+            interactableSaveData.LootableNodeSaveData.LootDropped = lootDropped;
+            interactableSaveData.LootableNodeSaveData.SpawnObjectActive = (Props.SpawnObject != null ? Props.SpawnObject.activeSelf : false);
+            interactableSaveData.LootableNodeSaveData.LootHolderSerializedData = lootHolder.GetSerializedData();
+        }
+
+        public override void LoadFromSaveData(InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.LoadFromSaveData()");
+
+            base.LoadFromSaveData(interactableSaveData);
+
+            lootDropped = interactableSaveData.LootableNodeSaveData.LootDropped;
+            if (Props.SpawnObject != null) {
+                Props.SpawnObject.SetActive(interactableSaveData.LootableNodeSaveData.SpawnObjectActive);
+            }
+
+            // first, add the loot drops
+            lootHolder.LoadFromSerializedData(interactableSaveData.LootableNodeSaveData.LootHolderSerializedData);
+
+            /*
+            // first, add the loot drops
+            foreach (LootDropSerializedData lootDropSerializedData in interactableSaveData.LootableNodeSaveData.LootDropSerializedDataList) {
+                lootManager.AddNetworkLootDrop(lootDropSerializedData);
+            }
+
+            // next, load the loot drop id lookups
+            lootDropIdLookup = new Dictionary<int, LootDropIdList>();
+            if (interactableSaveData.LootableNodeSaveData.LootDropIds != null) {
+                foreach (LootDropIdList lootDropList in interactableSaveData.LootableNodeSaveData.LootDropIds) {
+                    lootDropIdLookup.Add(lootDropList.AccountId, lootDropList);
+                }
+            }
+            */
         }
     }
 
