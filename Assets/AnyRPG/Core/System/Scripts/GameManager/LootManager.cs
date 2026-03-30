@@ -61,7 +61,7 @@ namespace AnyRPG {
         }
 
         public void AddAvailableLoot(UnitController sourceUnitController, List<LootDrop> items) {
-            //Debug.Log($"LootManager.AddAvailableLoot({sourceUnitController.gameObject.name}, count: {items.Count})");
+            Debug.Log($"LootManager.AddAvailableLoot({sourceUnitController.gameObject.name}, count: {items.Count})");
 
             if (playerManagerServer.ActiveUnitControllerLookup.ContainsKey(sourceUnitController)) {
                 AddAvailableLoot(playerManagerServer.ActiveUnitControllerLookup[sourceUnitController], items);
@@ -81,7 +81,7 @@ namespace AnyRPG {
         }
 
         public void AddAvailableLoot(int accountId, List<LootDrop> items) {
-            //Debug.Log($"LootManager.AddAvailableLoot({accountId}, count: {items.Count})");
+            Debug.Log($"LootManager.AddAvailableLoot(accountId: {accountId}, count: {items.Count})");
 
             if (availableDroppedLoot.ContainsKey(accountId)) {
                 availableDroppedLoot[accountId] = items;
@@ -184,7 +184,7 @@ namespace AnyRPG {
         }
 
         public void AddLootTableState(LootTableState lootTableState) {
-            //Debug.Log("LootManager.AddLootTableState()");
+            Debug.Log($"LootManager.AddLootTableState()");
 
             if (lootTableStates.Contains(lootTableState) == false) {
                 lootTableStates.Add(lootTableState);

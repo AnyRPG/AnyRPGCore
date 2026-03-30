@@ -15,7 +15,7 @@ namespace AnyRPG {
         public float DirectionY;
         public float DirectionZ;
 
-        public CharacterSaveData CharacterSaveData = null;
+        //public CharacterSaveData CharacterSaveData = null;
         public InteractableSaveData InteractableSaveData = null;
 
     }

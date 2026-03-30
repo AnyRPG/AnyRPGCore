@@ -618,6 +618,7 @@ namespace AnyRPG {
         public void ClearSystemManagedSaveData() {
             //Debug.Log("Savemanager.ClearSystemmanagedCharacterData()");
             cutsceneSaveDataDictionary.Clear();
+            sceneNodeSaveDataDictionary.Clear();
         }
 
         public void LoadWindowPositions() {

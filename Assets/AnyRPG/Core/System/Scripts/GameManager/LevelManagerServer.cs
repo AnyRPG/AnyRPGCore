@@ -44,7 +44,7 @@ namespace AnyRPG {
         }
 
         private void HandlePlayerUnitSpawn(UnitController sourceUnitController) {
-            Debug.Log($"LevelManagerServer.HandlePlayerUnitSpawn({sourceUnitController?.gameObject.name})");
+            //Debug.Log($"LevelManagerServer.HandlePlayerUnitSpawn({sourceUnitController?.gameObject.name})");
             
             // the event that triggers this is only called on clients so the next steps are safe
 
@@ -240,7 +240,7 @@ namespace AnyRPG {
         }
 
         public void ProcessBeforeUnloadScene(Scene scene) {
-            Debug.Log($"LevelManagerServer.ProcessBeforeUnloadScene({scene.name} ({scene.handle}))");
+            //Debug.Log($"LevelManagerServer.ProcessBeforeUnloadScene({scene.name} ({scene.handle}))");
 
             SceneData sceneData = GetSceneData(scene);
             if (sceneData != null) {

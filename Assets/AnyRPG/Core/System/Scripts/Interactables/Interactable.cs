@@ -252,7 +252,7 @@ namespace AnyRPG {
         }
 
         public virtual void Init() {
-            Debug.Log($"{gameObject.name}.Interactable.Init()");
+            //Debug.Log($"{gameObject.name}.Interactable.Init()");
 
             if (isInitialized == true) {
                 Debug.LogWarning($"{gameObject.name}.Interactable.Init(): already initialized.  Returning.");
@@ -275,7 +275,7 @@ namespace AnyRPG {
         }
 
         protected virtual void PostInit() {
-            Debug.Log($"{gameObject.name}.Interactable.PostInit()");
+            //Debug.Log($"{gameObject.name}.Interactable.PostInit()");
 
             if (systemGameManager.GameMode != GameMode.Local) {
                 return;
@@ -354,6 +354,7 @@ namespace AnyRPG {
                     AddInteractableOption(interactableOption.InteractableOptionProps.GetInteractableOption(this, interactableOption));
                 }
             }
+            uuid = GetComponent<UUID>();
         }
 
         public virtual void CleanupEverything() {
@@ -1099,6 +1100,7 @@ namespace AnyRPG {
             //CleanupEventSubscriptions();
             CleanupEverything();
 
+            uuid = null;
             characterUnit = null;
             outlineController = null;
             objectMaterialController = null;
@@ -1239,7 +1241,7 @@ namespace AnyRPG {
         }
 
         public InteractableSaveData GetInteractableSaveData() {
-            //Debug.Log($"{gameObject.name}.Interactable.GetInteractableSaveData()");
+            Debug.Log($"{gameObject.name}.Interactable.GetInteractableSaveData()");
 
             InteractableSaveData interactableSaveData = new InteractableSaveData();
             foreach (InteractableOptionComponent interactableOptionComponent in interactables.Values) {
@@ -1259,7 +1261,8 @@ namespace AnyRPG {
         }
 
         public virtual void PopulatePersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {
-            //Debug.Log($"{gameObject.name}.Interactable.PopulatePersistentObjectSaveData()");
+            Debug.Log($"{gameObject.name}.Interactable.PopulatePersistentObjectSaveData()");
+
             if (persistInteractableData == false) {
                 return;
             }
@@ -1273,7 +1276,7 @@ namespace AnyRPG {
                 return;
             }
             if (persistentObjectSaveData.InteractableSaveData == null) {
-                Debug.LogWarning($"{gameObject.name}.Interactable.LoadPersistentObjectSaveData(): no interactable save data found.  skipping.");
+                //Debug.LogWarning($"{gameObject.name}.Interactable.LoadPersistentObjectSaveData(): no interactable save data found.  skipping.");
                 return;
             }
             LoadInteractableSaveData(persistentObjectSaveData.InteractableSaveData);

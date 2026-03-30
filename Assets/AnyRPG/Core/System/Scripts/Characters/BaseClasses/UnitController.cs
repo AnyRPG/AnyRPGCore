@@ -1028,7 +1028,7 @@ namespace AnyRPG {
         }
 
         public void Despawn(float delayTime = 0f, bool addSystemDefaultTime = true, bool forceDespawn = false) {
-            Debug.Log($"{gameObject.name}.UnitController.Despawn({delayTime}, {addSystemDefaultTime}, {forceDespawn}) {GetInstanceID()}");
+            //Debug.Log($"{gameObject.name}.UnitController.Despawn({delayTime}, {addSystemDefaultTime}, {forceDespawn}) {GetInstanceID()}");
 
             // if an error happens and the model request is never complete, intialized will be false
             // therefore this is commented out to allow the despawn to complete so references to this character
@@ -1074,7 +1074,7 @@ namespace AnyRPG {
         }
 
         private void DespawnImmediate() {
-            Debug.Log($"{gameObject.name}.UnitController.DespawnImmediate()");
+            //Debug.Log($"{gameObject.name}.UnitController.DespawnImmediate()");
             
             if (isStateReset == true) {
                 return;
@@ -1147,8 +1147,6 @@ namespace AnyRPG {
             unitMountManager = null;
             unitVoiceController = null;
             unitMovementController = null;
-
-            uuid = null;
 
             baseCharacter = null;
             characterCombat = null;
@@ -1248,7 +1246,6 @@ namespace AnyRPG {
 
             base.GetComponentReferences();
 
-            uuid = GetComponent<UUID>();
             lootableCharacter = LootableCharacterComponent.GetLootableCharacterComponent(this);
             agent = GetComponent<NavMeshAgent>();
             rigidBody = GetComponent<Rigidbody>();

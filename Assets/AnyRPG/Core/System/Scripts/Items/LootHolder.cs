@@ -46,7 +46,7 @@ namespace AnyRPG {
         }
 
         public List<LootDrop> GetLoot(UnitController sourceUnitController, LootTable lootTable, bool rollLoot) {
-            //Debug.Log($"LootHolder.GetLoot({sourceUnitController?.gameObject.name}, {rollLoot})");
+            Debug.Log($"LootHolder.GetLoot({sourceUnitController?.gameObject.name}, {rollLoot})");
 
             if (playerManagerServer.ActiveUnitControllerLookup.ContainsKey(sourceUnitController) == false) {
                 return new List<LootDrop>();

@@ -42,11 +42,10 @@ namespace AnyRPG {
 
     [Serializable]
     public class LootableNodeSaveData {
-        //public List<LootDropIdList> LootDropIds = new List<LootDropIdList>();
-        //public List<LootDropSerializedData> LootDropSerializedDataList = new List<LootDropSerializedData>();
         public LootHolderSerializedData LootHolderSerializedData = new LootHolderSerializedData();
         public bool SpawnObjectActive = false;
         public bool LootDropped = false;
+        public int PickupCount = 0;
     }
 
     [Serializable]

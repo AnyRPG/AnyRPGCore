@@ -128,7 +128,7 @@ namespace AnyRPG {
         }
 
         public virtual void DropLoot(UnitController sourceUnitController) {
-            //Debug.Log($"{interactable.gameObject.name}.LootableNode.DropLoot()");
+            Debug.Log($"{interactable.gameObject.name}.LootableNode.DropLoot()");
 
             // is the below code necessary?  it was causing stuff that was already dropped but not picked up to not pop a window again and just remain unlootable
             /*
@@ -233,42 +233,29 @@ namespace AnyRPG {
         }
 
         public override void SetSaveData(InteractableSaveData interactableSaveData) {
-            //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.SetSaveData()");
+            Debug.Log($"{interactable.gameObject.name}.LootableNodeComponent.SetSaveData() lootDropped: {lootDropped} pickupCount: {pickupCount}");
 
             base.SetSaveData(interactableSaveData);
 
             interactableSaveData.LootableNodeSaveData.LootDropped = lootDropped;
+            interactableSaveData.LootableNodeSaveData.PickupCount = pickupCount;
             interactableSaveData.LootableNodeSaveData.SpawnObjectActive = (Props.SpawnObject != null ? Props.SpawnObject.activeSelf : false);
             interactableSaveData.LootableNodeSaveData.LootHolderSerializedData = lootHolder.GetSerializedData();
         }
 
         public override void LoadFromSaveData(InteractableSaveData interactableSaveData) {
-            //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.LoadFromSaveData()");
+            Debug.Log($"{interactable.gameObject.name}.LootableNodeComponent.LoadFromSaveData() lootDropped: {interactableSaveData.LootableNodeSaveData.LootDropped} SpawnObjectActive: {interactableSaveData.LootableNodeSaveData.SpawnObjectActive}");
 
             base.LoadFromSaveData(interactableSaveData);
 
             lootDropped = interactableSaveData.LootableNodeSaveData.LootDropped;
+            pickupCount = interactableSaveData.LootableNodeSaveData.PickupCount;
             if (Props.SpawnObject != null) {
                 Props.SpawnObject.SetActive(interactableSaveData.LootableNodeSaveData.SpawnObjectActive);
             }
 
             // first, add the loot drops
             lootHolder.LoadFromSerializedData(interactableSaveData.LootableNodeSaveData.LootHolderSerializedData);
-
-            /*
-            // first, add the loot drops
-            foreach (LootDropSerializedData lootDropSerializedData in interactableSaveData.LootableNodeSaveData.LootDropSerializedDataList) {
-                lootManager.AddNetworkLootDrop(lootDropSerializedData);
-            }
-
-            // next, load the loot drop id lookups
-            lootDropIdLookup = new Dictionary<int, LootDropIdList>();
-            if (interactableSaveData.LootableNodeSaveData.LootDropIds != null) {
-                foreach (LootDropIdList lootDropList in interactableSaveData.LootableNodeSaveData.LootDropIds) {
-                    lootDropIdLookup.Add(lootDropList.AccountId, lootDropList);
-                }
-            }
-            */
         }
     }
 
