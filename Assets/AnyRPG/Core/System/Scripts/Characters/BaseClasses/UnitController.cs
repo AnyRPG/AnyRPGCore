@@ -2665,6 +2665,7 @@ namespace AnyRPG {
 
         }
 
+        /*
         public override void PopulatePersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {
             base.PopulatePersistentObjectSaveData(persistentObjectSaveData);
 
@@ -2675,6 +2676,20 @@ namespace AnyRPG {
             characterSaveManager.SaveGameData();
             persistentObjectSaveData.CharacterSaveData = characterSaveManager.SaveData;
         }
+
+        public override void LoadPersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {
+            base.LoadPersistentObjectSaveData(persistentObjectSaveData);
+            if (unitProfile.PersistCharacterState == false) {
+                // this unit is not configured to persist character state, so skip loading character data
+                return;
+            }
+            if (persistentObjectSaveData.CharacterSaveData == null) {
+                // no character data was saved, so skip loading character data
+                return;
+            }
+            //characterSaveManager.LoadGameData(persistentObjectSaveData.CharacterSaveData);
+        }
+        */
 
         #region MessagePassthroughs
 

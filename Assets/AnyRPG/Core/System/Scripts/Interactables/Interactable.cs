@@ -275,8 +275,18 @@ namespace AnyRPG {
         }
 
         protected virtual void PostInit() {
-            //Debug.Log($"{gameObject.name}.Interactable.PostInit()");
-            // do something in inherited class
+            Debug.Log($"{gameObject.name}.Interactable.PostInit()");
+
+            if (systemGameManager.GameMode != GameMode.Local) {
+                return;
+            }
+            if (persistentObjectComponent.SaveOnGameSave == false && persistentObjectComponent.SaveOnLevelUnload == false) {
+                return;
+            }
+            if (persistentObjectComponent.PersistObjectPosition == false && persistInteractableData == false) {
+                return;
+            }
+            persistentObjectComponent.LoadPersistentState();
         }
 
         protected virtual void LateConfigure() {
@@ -359,14 +369,14 @@ namespace AnyRPG {
 
         public virtual void ProcessInit() {
             //if (spawnReference != null) {
-                objectMaterialController.PopulateOriginalMaterials();
+            objectMaterialController.PopulateOriginalMaterials();
             //}
             CheckEnableInteractableRange();
 
             persistentObjectComponent.Init();
         }
 
-        protected virtual void CheckEnableInteractableRange() { 
+        protected virtual void CheckEnableInteractableRange() {
             EnableInteractableRange();
         }
 
@@ -414,7 +424,7 @@ namespace AnyRPG {
             interactableOptionCount++;
         }
 
-        
+
         /*
         protected virtual void Update() {
         }
@@ -817,11 +827,11 @@ namespace AnyRPG {
             }
             if (glowOnMouseOver) {
                 outlineController.TurnOnOutline();
-                
+
             }
         }
 
-        
+
 
         /*
         public void OnMouseExit() {
@@ -914,7 +924,7 @@ namespace AnyRPG {
                 if (unitController != null) {
                     if (unitController.RiderUnitController != null) {
                         unitController.RiderUnitController.UnitEventController.NotifyOnEnterInteractableTrigger(this);
-                    } else if (unitController.UnitEventController != null ) {
+                    } else if (unitController.UnitEventController != null) {
                         unitController.UnitEventController.NotifyOnEnterInteractableTrigger(this);
                     }
                 } else if (interactWithAny) {
@@ -931,7 +941,7 @@ namespace AnyRPG {
             }
 
             if (isTrigger == true && interactOnExit == true) {
-                if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false ) {
+                if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false) {
                     // triggers are server authoritative
                     return;
                 }
@@ -1255,6 +1265,20 @@ namespace AnyRPG {
             }
             persistentObjectSaveData.InteractableSaveData = GetInteractableSaveData();
         }
+
+        public virtual void LoadPersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {
+            Debug.Log($"{gameObject.name}.Interactable.LoadPersistentObjectSaveData()");
+
+            if (persistInteractableData == false) {
+                return;
+            }
+            if (persistentObjectSaveData.InteractableSaveData == null) {
+                Debug.LogWarning($"{gameObject.name}.Interactable.LoadPersistentObjectSaveData(): no interactable save data found.  skipping.");
+                return;
+            }
+            LoadInteractableSaveData(persistentObjectSaveData.InteractableSaveData);
+        }
+
     }
 
 }

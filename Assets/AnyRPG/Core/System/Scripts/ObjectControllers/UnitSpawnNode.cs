@@ -465,6 +465,18 @@ namespace AnyRPG {
                 characterRequestData.requestMode = GameMode.Network;
                 unitController = characterManager.SpawnUnitPrefab(characterRequestData, null, transform.position, transform.forward, gameObject.scene);
             } else {
+                // local game
+                /*
+                if (unitProfile.OverwriteUnitUUID == true && unitProfile.PersistCharacterState == true) {
+                    SceneNode activeSceneNode = levelManagerClient.GetActiveSceneNode();
+                    if (activeSceneNode != null && activeSceneNode.PersistentObjects != null) {
+                        PersistentObjectSaveData persistentObjectSaveData = activeSceneNode.GetPersistentObjectSaveData(unitProfile.UUID);
+                        if (persistentObjectSaveData != null) {
+                            characterRequestData.saveData = persistentObjectSaveData.CharacterSaveData;
+                        }
+                    }
+                }
+                */
                 unitController = characterManager.SpawnUnitPrefabLocal(characterRequestData, (parentUnit == false ? null : transform.parent), transform.position, transform.forward);
             }
             if (unitController != null) {
@@ -489,12 +501,12 @@ namespace AnyRPG {
             if (unitController.PersistentObjectComponent.PersistObjectPosition == true) {
                 //Debug.Log($"{gameObject.name}.UnitSpawnNode.CommonSpawn(): persist ojbect position is true on {unitController.gameObject.name}");
 
-                PersistentState persistentState = unitController.PersistentObjectComponent.GetPersistentState();
-                if (persistentState != null) {
+                PersistentObjectSaveData persistentObjectSaveData = unitController.PersistentObjectComponent.GetPersistentObjectSaveData();
+                if (persistentObjectSaveData != null) {
                     // since we will be using navMeshAgent.warp, do not attempt to move unit manually
                     unitController.PersistentObjectComponent.MoveOnStart = false;
-                    newSpawnLocation = persistentState.Position;
-                    newSpawnForward = persistentState.Forward;
+                    newSpawnLocation = new Vector3(persistentObjectSaveData.LocationX, persistentObjectSaveData.LocationY, persistentObjectSaveData.LocationZ);
+                    newSpawnForward = new Vector3(persistentObjectSaveData.DirectionX, persistentObjectSaveData.DirectionY, persistentObjectSaveData.DirectionZ);
                 } else {
                     newSpawnLocation = GetSpawnLocation();
                     newSpawnForward = transform.forward;

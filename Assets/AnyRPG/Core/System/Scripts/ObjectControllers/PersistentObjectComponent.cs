@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
@@ -72,21 +70,21 @@ namespace AnyRPG {
             }
         }
 
-        public PersistentState GetPersistentState() {
+        public PersistentObjectSaveData GetPersistentObjectSaveData() {
             //Debug.Log(persistentObjectOwner.gameObject.name + "PersistentObjectComponent.GetPersistentState()");
             if (persistentObjectOwner.UUID != null) {
                 if (levelManagerClient != null) {
                     SceneNode activeSceneNode = levelManagerClient.GetActiveSceneNode();
                     if (activeSceneNode != null && activeSceneNode.PersistentObjects != null) {
-                        PersistentObjectSaveData persistentObjectSaveData = activeSceneNode.GetPersistentObject(persistentObjectOwner.UUID.ID);
-                        if (!persistentObjectSaveData.Equals(default(PersistentObjectSaveData))) {
+                        PersistentObjectSaveData persistentObjectSaveData = activeSceneNode.GetPersistentObjectSaveData(persistentObjectOwner.UUID.ID);
+                        if (persistentObjectSaveData != null) {
                             storedUUID = persistentObjectSaveData.UUID;
                             storedPosition = new Vector3(persistentObjectSaveData.LocationX, persistentObjectSaveData.LocationY, persistentObjectSaveData.LocationZ);
                             storedForwardDirection = new Vector3(persistentObjectSaveData.DirectionX, persistentObjectSaveData.DirectionY, persistentObjectSaveData.DirectionZ);
                             PersistentState persistentState = new PersistentState();
                             persistentState.Position = storedPosition;
                             persistentState.Forward = storedForwardDirection;
-                            return persistentState;
+                            return persistentObjectSaveData;
                         }
                     }
                 }
@@ -95,13 +93,15 @@ namespace AnyRPG {
         }
 
         public void LoadPersistentState() {
-            //Debug.Log($"{gameObject.name}PersistentObject.LoadPersistentState()");
-            PersistentState persistentState = GetPersistentState();
-            if (persistentState != null) {
+            Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObject.LoadPersistentState()");
+
+            PersistentObjectSaveData persistentObjectSaveData = GetPersistentObjectSaveData();
+            if (persistentObjectSaveData != null && persistObjectPosition == true) {
                 //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObject.LoadPersistentState() setting transform.position on UUID {persistentObjectOwner.UUID.ID}");
-                persistentObjectOwner.transform.position = persistentState.Position;
-                persistentObjectOwner.transform.forward = persistentState.Forward;
+                persistentObjectOwner.transform.position = storedPosition;
+                persistentObjectOwner.transform.forward = storedForwardDirection;
             }
+            persistentObjectOwner.LoadPersistentObjectSaveData(persistentObjectSaveData);
         }
 
         public void ProcessBeforeUnloadScene() {

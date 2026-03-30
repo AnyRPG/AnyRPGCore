@@ -40,13 +40,16 @@ namespace AnyRPG {
             }
         }
 
-
         public void GetComponentReferences() {
             uuid = GetComponent<UUID>();
         }
 
         public void PopulatePersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {
             // nothing to do here.  This object doesn't have any data to save, but the method needs to be here to satisfy the interface
+        }
+
+        public void LoadPersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {
+            // nothing to do here.  This object doesn't have any data to load, but the method needs to be here to satisfy the interface
         }
 
     }

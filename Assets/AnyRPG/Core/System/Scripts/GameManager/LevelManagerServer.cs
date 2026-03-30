@@ -32,7 +32,7 @@ namespace AnyRPG {
             SceneManager.sceneUnloaded += HandleSceneUnloaded;
             networkManagerServer.OnStartServer += HandleStartServer;
             networkManagerServer.OnStopServer += HandleStopServer;
-            systemEventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+            systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             systemEventManager.OnReputationChange += HandleReputationChange;
         }
 
@@ -44,7 +44,7 @@ namespace AnyRPG {
         }
 
         private void HandlePlayerUnitSpawn(UnitController sourceUnitController) {
-            //Debug.Log($"{gameObject.name}.Interactable.HandlePlayerUnitSpawn({sourceUnitController?.gameObject.name})");
+            Debug.Log($"LevelManagerServer.HandlePlayerUnitSpawn({sourceUnitController?.gameObject.name})");
             
             // the event that triggers this is only called on clients so the next steps are safe
 

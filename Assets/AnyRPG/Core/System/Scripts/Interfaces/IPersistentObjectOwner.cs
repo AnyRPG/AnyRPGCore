@@ -13,6 +13,7 @@ namespace AnyRPG {
         PersistentObjectComponent PersistentObjectComponent { get; }
 
         void PopulatePersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData);
+        void LoadPersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData);
     }
 
 }

@@ -250,9 +250,11 @@ namespace AnyRPG {
         [SerializeField]
         private bool persistObjectPosition = false;
 
+        /*
         [Tooltip("If true, the character will save it state. This option only applies to AI units, and result in the same level of save data as a player save.")]
         [SerializeField]
         private bool persistCharacterState = false;
+        */
 
         [Tooltip("If true, this object will save it's position when switching from one scene to another (including the main menu).  It will not save if the game is quit directly from the main menu.")]
         [SerializeField]
@@ -363,7 +365,7 @@ namespace AnyRPG {
         public List<string> MovementAudioProfileNames { get => movementAudioProfileNames; set => movementAudioProfileNames = value; }
         public bool FaceInteractionTarget { get => faceInteractionTarget; set => faceInteractionTarget = value; }
         public List<AbilityEffectProperties> DefaultHitEffectList { get => defaultHitEffectList; set => defaultHitEffectList = value; }
-        public bool PersistCharacterState { get => persistCharacterState; set => persistCharacterState = value; }
+        //public bool PersistCharacterState { get => persistCharacterState; set => persistCharacterState = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
