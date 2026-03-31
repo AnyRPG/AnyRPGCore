@@ -60,12 +60,15 @@ MonoBehaviour:
   interactOnExit: 0
   isTrigger: 0
   suppressInteractionWindow: 0
+  overrideInteractionColliderSize: 0
   interactionMaxRange: 2
-  checkOptionsToSpawn: 1
-  spawnRequiresValidOption: 0
-  despawnRequiresNoValidOption: 0
+  interactionPoints: []
   componentController: {fileID: 8401149646931028938}
-  unitComponentController: {fileID: 0}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!114 &8851426205781705841
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,9 +157,11 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
+  _initializedTimestamp: 0
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
+  _localReconcileCorrectionType: 2
   _graphicalObject: {fileID: 0}
   _detachGraphicalObject: 0
   _enableStateForwarding: 1
@@ -171,7 +176,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 10
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 1472734941375028797
-  <SceneId>k__BackingField: 0
+  SceneId: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 1}
@@ -248,11 +253,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1952742938381504616, guid: 3bff7b3f3f7c3f444acf9322988e786b,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5775833240422739161}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3bff7b3f3f7c3f444acf9322988e786b, type: 3}
 --- !u!1 &1310028743811977547 stripped
 GameObject:
@@ -260,21 +261,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 664176940719472931}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5775833240422739161
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310028743811977547}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3031df960f211854caec2058304bcc38, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _componentIndexCache: 255
-  _addedNetworkObject: {fileID: -5737949669860185077}
-  _networkObjectCache: {fileID: 0}
 --- !u!4 &1830142186365553649 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1176101372795390674, guid: 3bff7b3f3f7c3f444acf9322988e786b,

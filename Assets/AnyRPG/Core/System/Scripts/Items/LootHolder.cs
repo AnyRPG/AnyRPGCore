@@ -33,20 +33,25 @@ namespace AnyRPG {
         }
         
         public void InitializeLootTableStates() {
+            //Debug.Log($"LootHolder.InitializeLootTableStates() hashCode: {GetHashCode()}");
+
             lootTableStates = new Dictionary<LootTable, Dictionary<int, LootTableState>>();
         }
-        
 
         public void AddLootTableState(LootTable lootTable) {
+            //Debug.Log($"LootHolder.AddLootTableState({lootTable.ResourceName}) hashCode: {GetHashCode()}");
+
             lootTableStates.Add(lootTable, new Dictionary<int, LootTableState>());
         }
 
         public void ClearLootTableStates() {
+            //Debug.Log($"LootHolder.ClearLootTableStates() hashCode: {GetHashCode()}");
+
             lootTableStates.Clear();
         }
 
         public List<LootDrop> GetLoot(UnitController sourceUnitController, LootTable lootTable, bool rollLoot) {
-            //Debug.Log($"LootHolder.GetLoot({sourceUnitController?.gameObject.name}, {rollLoot})");
+            //Debug.Log($"LootHolder.GetLoot({sourceUnitController?.gameObject.name}, lootTable: {lootTable.ResourceName}, {rollLoot}) hashCode: {GetHashCode()}");
 
             if (playerManagerServer.ActiveUnitControllerLookup.ContainsKey(sourceUnitController) == false) {
                 return new List<LootDrop>();
@@ -97,8 +102,11 @@ namespace AnyRPG {
         }
 
         public void LoadFromSerializedData(LootHolderSerializedData lootHolderSerializedData) {
+            Debug.Log($"LootHolder.LoadFromSerializedData() hashCode: {GetHashCode()} lootTableStateCount: {lootHolderSerializedData.LootTableStateSerializedDataList.Count}");
+
             lootTableStates = new Dictionary<LootTable, Dictionary<int, LootTableState>>();
             foreach (LootTableStateSerializedData lootTableStateSerializedData in lootHolderSerializedData.LootTableStateSerializedDataList) {
+                Debug.Log($"LootHolder.LoadFromSerializedData() lootTable: {lootTableStateSerializedData.LootTableName} accountId: {lootTableStateSerializedData.AccountId} lootDropCount: {lootTableStateSerializedData.LootDropSerializedDataList.Count}");
                 LootTable lootTable = systemDataFactory.GetResource<LootTable>(lootTableStateSerializedData.LootTableName);
                 if (lootTable == null) {
                     Debug.LogWarning($"LootHolder.LoadFromSerializedData(): loot table {lootTableStateSerializedData.LootTableName} not found");

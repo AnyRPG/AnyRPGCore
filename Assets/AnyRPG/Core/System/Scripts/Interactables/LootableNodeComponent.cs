@@ -263,8 +263,9 @@ namespace AnyRPG {
                 Props.SpawnObject.SetActive(interactableSaveData.LootableNodeSaveData[0].SpawnObjectActive);
             }
 
-            // first, add the loot drops
-            lootHolder.LoadFromSerializedData(interactableSaveData.LootableNodeSaveData[0].LootHolderSerializedData);
+            if (lootDropped == true) {
+                lootHolder.LoadFromSerializedData(interactableSaveData.LootableNodeSaveData[0].LootHolderSerializedData);
+            }
         }
     }
 

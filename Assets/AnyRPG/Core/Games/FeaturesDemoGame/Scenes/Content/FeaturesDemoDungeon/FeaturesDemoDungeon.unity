@@ -3800,6 +3800,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2875940014991222441, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2875940014991222441, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2875940014991222441, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3508439011802585147, guid: e2cff9046c11c454489acee9c72b547b,
         type: 3}
       propertyPath: animatedObjectProps.switchOnly
@@ -3897,6 +3912,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 173601749}
+    - targetCorrespondingSourceObject: {fileID: 637662437291012175, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 173601750}
   m_SourcePrefab: {fileID: 100100000, guid: e2cff9046c11c454489acee9c72b547b, type: 3}
 --- !u!4 &173601745 stripped
 Transform:
@@ -3971,6 +3990,20 @@ MonoBehaviour:
     - {fileID: 173601748}
     switchGroup: []
     activationLimit: 0
+--- !u!114 &173601750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173601746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: 5a74672d-0579-4086-bf76-98c94602921f
+  forceUpdateUUID: 0
 --- !u!1001 &173820498
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11645,9 +11678,15 @@ MonoBehaviour:
   interactOnExit: 0
   isTrigger: 1
   suppressInteractionWindow: 1
+  overrideInteractionColliderSize: 0
   interactionMaxRange: 2
-  interactLocations: []
+  interactionPoints: []
   componentController: {fileID: 0}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!65 &696891891
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18501,6 +18540,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2875940014991222441, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2875940014991222441, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2875940014991222441, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3508439011802585147, guid: e2cff9046c11c454489acee9c72b547b,
         type: 3}
       propertyPath: animatedObjectProps.switchOnly
@@ -18598,6 +18652,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1048743558}
+    - targetCorrespondingSourceObject: {fileID: 637662437291012175, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1048743559}
   m_SourcePrefab: {fileID: 100100000, guid: e2cff9046c11c454489acee9c72b547b, type: 3}
 --- !u!4 &1048743554 stripped
 Transform:
@@ -18672,6 +18730,20 @@ MonoBehaviour:
     - {fileID: 1048743557}
     switchGroup: []
     activationLimit: 0
+--- !u!114 &1048743559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048743555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: f3fe1d04-3196-4e08-9700-f7df487a1ce7
+  forceUpdateUUID: 0
 --- !u!1001 &1052158592
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31051,6 +31123,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.x
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 2875940014991222441, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2875940014991222441, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2875940014991222441, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3508439011802585147, guid: e2cff9046c11c454489acee9c72b547b,
         type: 3}
       propertyPath: animatedObjectProps.switchOnly
@@ -31183,6 +31270,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1909848366}
+    - targetCorrespondingSourceObject: {fileID: 637662437291012175, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1909848367}
   m_SourcePrefab: {fileID: 100100000, guid: e2cff9046c11c454489acee9c72b547b, type: 3}
 --- !u!4 &1909848362 stripped
 Transform:
@@ -31257,6 +31348,20 @@ MonoBehaviour:
     - {fileID: 1909848365}
     switchGroup: []
     activationLimit: 0
+--- !u!114 &1909848367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909848363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: 61175803-a3fe-4b75-8793-b02407d00960
+  forceUpdateUUID: 0
 --- !u!1001 &1912362165
 PrefabInstance:
   m_ObjectHideFlags: 0
