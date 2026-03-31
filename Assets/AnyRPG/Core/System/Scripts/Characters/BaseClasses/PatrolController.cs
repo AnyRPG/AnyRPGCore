@@ -37,6 +37,11 @@ namespace AnyRPG {
 
             SetupScriptableObjects();
 
+            if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false) {
+                // network clients should not start patrols on their own
+                return;
+            }
+
             FindAutomaticPatrol();
         }
 

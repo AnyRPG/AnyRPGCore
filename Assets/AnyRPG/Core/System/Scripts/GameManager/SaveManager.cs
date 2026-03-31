@@ -9,6 +9,7 @@ namespace AnyRPG {
     public class SaveManager : ConfiguredClass {
 
         private Dictionary<string, CutsceneSaveData> cutsceneSaveDataDictionary = new Dictionary<string, CutsceneSaveData>();
+        private Dictionary<string, SceneNodeSaveData> sceneNodeSaveDataDictionary = new Dictionary<string, SceneNodeSaveData>();
 
         private string baseSaveFolderName = string.Empty;
         private int playerCharacterIdCounter = 1;
@@ -30,6 +31,7 @@ namespace AnyRPG {
         private PlayerManagerServer playerManagerServer = null;
         private MessageFeedManager messageFeedManager = null;
         private LevelManagerClient levelManagerClient = null;
+        private LevelManagerServer levelManagerServer = null;
         private UIManager uIManager = null;
         private NewGameManager newGameManager = null;
         private LoadGameManager loadGameManager = null;
@@ -48,6 +50,7 @@ namespace AnyRPG {
             playerManagerClient = systemGameManager.PlayerManagerClient;
             playerManagerServer = systemGameManager.PlayerManagerServer;
             levelManagerClient = systemGameManager.LevelManagerClient;
+            levelManagerServer = systemGameManager.LevelManagerServer;
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
             newGameManager = systemGameManager.NewGameManager;
@@ -128,24 +131,41 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public List<PlayerCharacterSaveData> GetSaveDataList() {
+        public List<SinglePlayerSaveData> GetSaveDataList() {
             //Debug.Log($"SaveManager.GetSaveDataList()");
-            List<PlayerCharacterSaveData> saveDataList = new List<PlayerCharacterSaveData>();
+            List<SinglePlayerSaveData> saveDataList = new List<SinglePlayerSaveData>();
             foreach (FileInfo fileInfo in GetSaveFileList()) {
                 //Debug.Log("GetSaveDataList(): fileInfo.Name: " + fileInfo.Name);
-                PlayerCharacterSaveData playerCharacterSaveData = LoadPlayerCharacterSaveDataFromFile($"{baseSaveFolderName}/{fileInfo.Name}");
-                saveDataList.Add(playerCharacterSaveData);
+                SinglePlayerSaveData singlePlayerSaveData = LoadPlayerCharacterSaveDataFromFile($"{baseSaveFolderName}/{fileInfo.Name}");
+                saveDataList.Add(singlePlayerSaveData);
             }
             return saveDataList;
         }
 
-        public PlayerCharacterSaveData LoadPlayerCharacterSaveDataFromFile(string fileName) {
+        public SinglePlayerSaveData LoadPlayerCharacterSaveDataFromFile(string fileName) {
             //Debug.Log($"SaveManager.LoadSaveDataFromFile({fileName})");
 
             string fileContents = File.ReadAllText(fileName);
             return LoadPlayerCharacterSaveDataFromString(fileContents);
         }
 
+        public SinglePlayerSaveData LoadPlayerCharacterSaveDataFromString(string fileContents) {
+            SinglePlayerSaveData singlePlayerSaveData = JsonUtility.FromJson<SinglePlayerSaveData>(fileContents);
+            string saveDate = string.Empty;
+            if (singlePlayerSaveData.CharacterSaveData.DataCreatedOn == string.Empty) {
+                //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): DataCreatedOn is null setting to now");
+                singlePlayerSaveData.CharacterSaveData.DataCreatedOn = DateTime.Now.ToLongDateString();
+            }
+            if (singlePlayerSaveData.CharacterSaveData.DataSavedOn == string.Empty) {
+                //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): DataSavedOn is null setting to now");
+                singlePlayerSaveData.CharacterSaveData.DataSavedOn = DateTime.Now.ToLongDateString();
+            }
+            CharacterSaveDataPostLoad(singlePlayerSaveData.CharacterSaveData);
+            return singlePlayerSaveData;
+        }
+
+
+        /*
         public PlayerCharacterSaveData LoadPlayerCharacterSaveDataFromString(string fileContents) {
             PlayerCharacterSaveData playerCharacterSaveData = JsonUtility.FromJson<PlayerCharacterSaveData>(fileContents);
             string saveDate = string.Empty;
@@ -160,6 +180,7 @@ namespace AnyRPG {
             CharacterSaveDataPostLoad(playerCharacterSaveData.CharacterSaveData);
             return playerCharacterSaveData;
         }
+        */
 
         public CharacterSaveData LoadCharacterSaveDataFromString(string fileContents) {
             //Debug.Log($"SaveManager.LoadSaveDataFromString({fileContents})");
@@ -315,8 +336,8 @@ namespace AnyRPG {
 
             // do this first because persistent objects need to add their locations to the scene node before we write it to disk
             SystemEventManager.TriggerEvent("OnSaveGame", new EventParamProperties());
+            levelManagerServer.SavePersistentObjects(playerManagerClient.UnitController.gameObject.scene);
 
-            SaveCutsceneData(characterSaveData);
             playerManagerClient.UnitController.CharacterSaveManager.SaveGameData();
 
             SaveWindowPositions();
@@ -324,27 +345,29 @@ namespace AnyRPG {
             //Debug.Log("Savemanager.SaveQuestData(): size: " + characterSaveData.questSaveData.Count);
 
             // create save data bundle
-            PlayerCharacterSaveData playerCharacterSaveData = new PlayerCharacterSaveData(characterSaveData, systemItemManager);
-            SaveDataFileAsync(playerCharacterSaveData);
+            SinglePlayerSaveData singlePlayerSaveData = new SinglePlayerSaveData(characterSaveData, systemItemManager);
+            SaveCutsceneData(singlePlayerSaveData);
+            SaveSceneNodeData(singlePlayerSaveData);
+            SaveDataFileAsync(singlePlayerSaveData);
             PlayerPrefs.SetInt("LastOfflinePlayerCharacterId", characterSaveData.CharacterId);
 
             return true;
         }
 
-        public async void SaveDataFileAsync(PlayerCharacterSaveData playerCharacterSaveData) {
+        public async void SaveDataFileAsync(SinglePlayerSaveData singlePlayerSaveData) {
             // 1. Mark the save task as active on the Main Thread
             System.Threading.Interlocked.Increment(ref activeSaveTasks);
 
             try {
                 // 2. Perform "Main Thread Only" logic and snapshotting
                 // Update the timestamp while still on the Main Thread
-                playerCharacterSaveData.CharacterSaveData.DataSavedOn = DateTime.Now.ToLongDateString();
+                singlePlayerSaveData.CharacterSaveData.DataSavedOn = DateTime.Now.ToLongDateString();
 
                 // Convert to JSON now so the background thread has a static string to write
-                string jsonString = JsonUtility.ToJson(playerCharacterSaveData);
+                string jsonString = JsonUtility.ToJson(singlePlayerSaveData);
 
                 string folderPath = baseSaveFolderName;
-                string fileName = $"{playerCharacterSaveData.CharacterSaveData.CharacterId}.json";
+                string fileName = $"{singlePlayerSaveData.CharacterSaveData.CharacterId}.json";
                 string fullPath = Path.Combine(folderPath, fileName);
 
                 // 3. Offload the disk work
@@ -355,7 +378,7 @@ namespace AnyRPG {
                         }
                         File.WriteAllText(fullPath, jsonString);
                     } catch (System.Exception ex) {
-                        Debug.LogError($"[Player Save Error] ID {playerCharacterSaveData.CharacterSaveData.CharacterId}: {ex.Message}");
+                        Debug.LogError($"[Player Save Error] ID {singlePlayerSaveData.CharacterSaveData.CharacterId}: {ex.Message}");
                     }
                 });
             } finally {
@@ -380,7 +403,7 @@ namespace AnyRPG {
             characterSaveData.CharacterId = newCharacterId;
 
             // create save data bundle
-            PlayerCharacterSaveData playerCharacterSaveData = new PlayerCharacterSaveData(characterSaveData, systemItemManager);
+            SinglePlayerSaveData playerCharacterSaveData = new SinglePlayerSaveData(characterSaveData, systemItemManager);
 
             SaveDataFileAsync(playerCharacterSaveData);
             PlayerPrefs.SetInt("LastOfflinePlayerCharacterId", characterSaveData.CharacterId);
@@ -472,10 +495,10 @@ namespace AnyRPG {
             if (PlayerPrefs.HasKey("LastOfflinePlayerCharacterId")) {
                 //Debug.Log("SaveManager.LoadGame(): Last Save Data: " + PlayerPrefs.GetString("LastSaveDataFileName"));
                 loadGameManager.LoadCharacterList();
-                foreach (PlayerCharacterSaveData playerCharacterSaveData in loadGameManager.CharacterList) {
-                    if (playerCharacterSaveData.CharacterSaveData.CharacterId == PlayerPrefs.GetInt("LastOfflinePlayerCharacterId")) {
+                foreach (SinglePlayerSaveData singlePlayerSaveData in loadGameManager.CharacterList) {
+                    if (singlePlayerSaveData.CharacterSaveData.CharacterId == PlayerPrefs.GetInt("LastOfflinePlayerCharacterId")) {
                         //Debug.Log("SaveManager.LoadGame(): Last Save Data: " + PlayerPrefs.GetString("LastSaveDataFileName") + " was found.  Loading Game...");
-                        LoadGame(playerCharacterSaveData);
+                        LoadGame(singlePlayerSaveData);
                         return;
                     }
                 }
@@ -549,36 +572,37 @@ namespace AnyRPG {
         */
 
 
-        public void LoadGame(PlayerCharacterSaveData playerCharacterSaveData) {
+        public void LoadGame(SinglePlayerSaveData singlePlayerSaveData) {
             //Debug.Log($"Savemanager.LoadGame({playerCharacterSaveData.SaveData.unitProfileName})");
 
             uIManager.loadGameWindow.CloseWindow();
 
             ClearSharedData();
-            systemItemManager.LoadPlayerCharacterSaveData(playerCharacterSaveData);
+            systemItemManager.LoadItemInstanceListSaveData(singlePlayerSaveData.ItemInstanceListSaveData);
 
             // scene and location
-            Vector3 playerLocation = new Vector3(playerCharacterSaveData.CharacterSaveData.PlayerLocationX, playerCharacterSaveData.CharacterSaveData.PlayerLocationY, playerCharacterSaveData.CharacterSaveData.PlayerLocationZ);
-            Vector3 playerRotation = new Vector3(playerCharacterSaveData.CharacterSaveData.PlayerRotationX, playerCharacterSaveData.CharacterSaveData.PlayerRotationY, playerCharacterSaveData.CharacterSaveData.PlayerRotationZ);
+            Vector3 playerLocation = new Vector3(singlePlayerSaveData.CharacterSaveData.PlayerLocationX, singlePlayerSaveData.CharacterSaveData.PlayerLocationY, singlePlayerSaveData.CharacterSaveData.PlayerLocationZ);
+            Vector3 playerRotation = new Vector3(singlePlayerSaveData.CharacterSaveData.PlayerRotationX, singlePlayerSaveData.CharacterSaveData.PlayerRotationY, singlePlayerSaveData.CharacterSaveData.PlayerRotationZ);
             //Debug.Log("Savemanager.LoadGame() rotation: " + characterSaveData.PlayerRotationX + ", " + characterSaveData.PlayerRotationY + ", " + characterSaveData.PlayerRotationZ);
 
-            playerManagerClient.SpawnPlayerConnection(playerCharacterSaveData.CharacterSaveData);
+            playerManagerClient.SpawnPlayerConnection(singlePlayerSaveData.CharacterSaveData);
 
-            LoadCutsceneData(playerCharacterSaveData.CharacterSaveData);
+            LoadCutsceneData(singlePlayerSaveData);
+            LoadSceneNodeData(singlePlayerSaveData);
 
             // testing - moved to UIManager initialization so it works in online mode
             //LoadWindowPositions();
 
-            CapabilityConsumerSnapshot capabilityConsumerSnapshot = GetCapabilityConsumerSnapshot(playerCharacterSaveData.CharacterSaveData);
+            CapabilityConsumerSnapshot capabilityConsumerSnapshot = GetCapabilityConsumerSnapshot(singlePlayerSaveData.CharacterSaveData);
 
             SpawnPlayerRequest loadSceneRequest = new SpawnPlayerRequest();
             // configure location and rotation overrides
-            if (playerCharacterSaveData.CharacterSaveData.OverrideLocation == true) {
+            if (singlePlayerSaveData.CharacterSaveData.OverrideLocation == true) {
                 loadSceneRequest.overrideSpawnLocation = true;
                 loadSceneRequest.spawnLocation = playerLocation;
                 //Debug.Log($"Savemanager.LoadGame() overrideSpawnLocation: {loadSceneRequest.overrideSpawnLocation} location: {loadSceneRequest.spawnLocation}");
             }
-            if (playerCharacterSaveData.CharacterSaveData.OverrideRotation == true) {
+            if (singlePlayerSaveData.CharacterSaveData.OverrideRotation == true) {
                 loadSceneRequest.overrideSpawnDirection = true;
                 loadSceneRequest.spawnForwardDirection = playerRotation;
                 //Debug.Log($"Savemanager.LoadGame() overrideRotation: {loadSceneRequest.overrideSpawnDirection} location: {loadSceneRequest.spawnForwardDirection}");
@@ -588,12 +612,13 @@ namespace AnyRPG {
             playerManagerServer.AddSpawnRequest(networkManagerClient.AccountId, loadSceneRequest);
             //levelManager.LoadLevel(characterSaveData.CurrentScene, playerLocation, playerRotation);
             // load the proper level now that everything should be setup
-            levelManagerClient.LoadLevel(playerCharacterSaveData.CharacterSaveData.CurrentScene);
+            levelManagerClient.LoadLevel(singlePlayerSaveData.CharacterSaveData.CurrentScene);
         }
 
         public void ClearSystemManagedSaveData() {
             //Debug.Log("Savemanager.ClearSystemmanagedCharacterData()");
             cutsceneSaveDataDictionary.Clear();
+            sceneNodeSaveDataDictionary.Clear();
         }
 
         public void LoadWindowPositions() {
@@ -810,7 +835,7 @@ namespace AnyRPG {
             string newSaveFileName = $"{baseSaveFolderName}/{newCharacterId}.json";
 
             File.Copy(sourceFileName, newSaveFileName);
-            PlayerCharacterSaveData tmpSaveData = LoadPlayerCharacterSaveDataFromFile(newSaveFileName);
+            SinglePlayerSaveData tmpSaveData = LoadPlayerCharacterSaveDataFromFile(newSaveFileName);
             tmpSaveData.CharacterSaveData.CharacterId = newCharacterId;
             SaveDataFileAsync(tmpSaveData);
         }
@@ -823,29 +848,47 @@ namespace AnyRPG {
             return GetSceneNodeSaveData(sceneNode).PersistentObjects;
         }
 
-        public SceneNodeSaveData GetSceneNodeSaveData(SceneNode sceneNode) {
-            CharacterSaveData characterSaveData = playerManagerServer.PlayerCharacterMonitors[0].characterSaveData;
-            foreach (SceneNodeSaveData sceneNodeSaveData in characterSaveData.SceneNodeSaveData) {
-                if (sceneNodeSaveData.SceneName == sceneNode.ResourceName) {
-                    return sceneNodeSaveData;
-                }
+        public void SaveSceneNodeSaveData(SceneNodeSaveData sceneNodeSaveData) {
+            //Debug.Log(DisplayName + ".SceneNode.SaveSceneNodeSaveData(" + sceneNodeSaveData.SceneName + ")");
+
+            if (sceneNodeSaveDataDictionary.ContainsKey(sceneNodeSaveData.SceneResourceName)) {
+                sceneNodeSaveDataDictionary[sceneNodeSaveData.SceneResourceName] = sceneNodeSaveData;
+            } else {
+                sceneNodeSaveDataDictionary.Add(sceneNodeSaveData.SceneResourceName, sceneNodeSaveData);
             }
-            SceneNodeSaveData saveData = new SceneNodeSaveData();
-            saveData.PersistentObjects = new List<PersistentObjectSaveData>();
-            saveData.SceneName = sceneNode.ResourceName;
+        }
+
+        public SceneNodeSaveData GetSceneNodeSaveData(SceneNode sceneNode) {
+            SceneNodeSaveData saveData;
+            if (sceneNodeSaveDataDictionary.ContainsKey(sceneNode.ResourceName)) {
+                saveData = sceneNodeSaveDataDictionary[sceneNode.ResourceName];
+            } else {
+                saveData = new SceneNodeSaveData();
+                saveData.PersistentObjects = new List<PersistentObjectSaveData>();
+                saveData.SceneResourceName = sceneNode.ResourceName;
+                sceneNodeSaveDataDictionary.Add(sceneNode.ResourceName, saveData);
+            }
             return saveData;
         }
 
-        public void SaveSceneNodeSaveData(SceneNodeSaveData sceneNodeSaveData) {
-            //Debug.Log(DisplayName + ".SceneNode.SaveSceneNodeSaveData(" + sceneNodeSaveData.SceneName + ")");
-            CharacterSaveData characterSaveData = playerManagerServer.PlayerCharacterMonitors[0].characterSaveData;
-            foreach (SceneNodeSaveData _sceneNodeSaveData in characterSaveData.SceneNodeSaveData) {
-                if (_sceneNodeSaveData.SceneName == sceneNodeSaveData.SceneName) {
-                    characterSaveData.SceneNodeSaveData.Remove(_sceneNodeSaveData);
-                    break;
+        public void LoadSceneNodeData(SinglePlayerSaveData singlePlayerSaveData) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadSceneNodeData()");
+
+            sceneNodeSaveDataDictionary.Clear();
+            foreach (SceneNodeSaveData sceneNodeSaveData in singlePlayerSaveData.SceneNodeSaveData) {
+                if (sceneNodeSaveData.SceneResourceName != null && sceneNodeSaveData.SceneResourceName != string.Empty) {
+                    sceneNodeSaveDataDictionary.Add(sceneNodeSaveData.SceneResourceName, sceneNodeSaveData);
                 }
             }
-            characterSaveData.SceneNodeSaveData.Add(sceneNodeSaveData);
+        }
+
+        public void SaveSceneNodeData(SinglePlayerSaveData singlePlayerSaveData) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveSceneNodeData()");
+
+            singlePlayerSaveData.SceneNodeSaveData.Clear();
+            foreach (SceneNodeSaveData sceneNodeSaveData in sceneNodeSaveDataDictionary.Values) {
+                singlePlayerSaveData.SceneNodeSaveData.Add(sceneNodeSaveData);
+            }
         }
 
         public void SavePersistentObject(string UUID, PersistentObjectSaveData persistentObjectSaveData, SceneNode sceneNode) {
@@ -885,21 +928,21 @@ namespace AnyRPG {
             return saveData;
         }
 
-        public void LoadCutsceneData(CharacterSaveData characterSaveData) {
+        public void LoadCutsceneData(SinglePlayerSaveData singlePlayerSaveData) {
             cutsceneSaveDataDictionary.Clear();
-            foreach (CutsceneSaveData cutsceneSaveData in characterSaveData.CutsceneSaveData) {
+            foreach (CutsceneSaveData cutsceneSaveData in singlePlayerSaveData.CutsceneSaveData) {
                 if (cutsceneSaveData.CutsceneName != null && cutsceneSaveData.CutsceneName != string.Empty) {
                     cutsceneSaveDataDictionary.Add(cutsceneSaveData.CutsceneName, cutsceneSaveData);
                 }
             }
         }
 
-        public void SaveCutsceneData(CharacterSaveData characterSaveData) {
+        public void SaveCutsceneData(SinglePlayerSaveData singlePlayerSaveData) {
             //Debug.Log("Savemanager.SaveSceneNodeData()");
 
-            characterSaveData.CutsceneSaveData.Clear();
+            singlePlayerSaveData.CutsceneSaveData.Clear();
             foreach (CutsceneSaveData cutsceneSaveData in cutsceneSaveDataDictionary.Values) {
-                characterSaveData.CutsceneSaveData.Add(cutsceneSaveData);
+                singlePlayerSaveData.CutsceneSaveData.Add(cutsceneSaveData);
             }
         }
 

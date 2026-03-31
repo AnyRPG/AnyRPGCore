@@ -7,7 +7,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 
 namespace AnyRPG {
@@ -86,48 +85,7 @@ namespace AnyRPG {
                 return;
             }
 
-            // network objects will not be active on clients when the autoconfigure runs, so they must configure themselves
-            //interactable.AutoConfigure(systemGameManager);
-
             SubscribeToServerInteractableEvents();
-            SubscribeToSystemEvents();
-        }
-
-        public override void OnStopServer() {
-            //Debug.Log($"{gameObject.name}.FishNetInteractable.OnStopServer() {GetInstanceID()}");
-
-            base.OnStopServer();
-
-            if (SystemGameManager.IsShuttingDown == true) {
-                return;
-            }
-
-            // enabling this here is needed because if a level unload occurs on the server as a result of the last player leaving the scene,
-            // the object will not have Despawn() called on it.  Despawn() is only triggered by client level unloads, and stop server calls
-            // now that all interactables can respond to level unloads on the server, this should no longer be needed
-            //UnsubscribeFromServerInteractableEvents();
-            //UnsubscribeFromSystemEvents();
-        }
-
-        private void SubscribeToSystemEvents() {
-            //Debug.Log($"{gameObject.name}.FishNetInteractable.SubscribeToSystemEvents() {GetInstanceID()}");
-
-            systemGameManager.NetworkManagerServer.OnBeforeStopServer += HandleBeforeStopServer;
-        }
-
-        private void UnsubscribeFromSystemEvents() {
-            //Debug.Log($"{gameObject.name}.FishNetInteractable.UnsubscribeFromSystemEvents() {GetInstanceID()}");
-
-            systemGameManager.NetworkManagerServer.OnBeforeStopServer -= HandleBeforeStopServer;
-        }
-
-        private void HandleBeforeStopServer() {
-            //Debug.Log($"FishNetInteractable.HandleBeforeStopServer() {GetInstanceID()}");
-
-            // stopping the server results in the objects being destroyed without levelUnload being called, which is the usual way to initiate cleanup
-            UnsubscribeFromSystemEvents();
-            UnsubscribeFromServerInteractableEvents();
-            interactable.ProcessLevelUnload();
         }
 
         public void SubscribeToServerInteractableEvents() {
@@ -144,7 +102,6 @@ namespace AnyRPG {
                 return;
             }
 
-            //interactable.InteractableEventController.OnAnimatedObjectChooseMovement += HandleAnimatedObjectChooseMovementServer;
             interactable.InteractableEventController.OnInteractionWithOptionStarted += HandleInteractionWithOptionStarted;
             interactable.InteractableEventController.OnPlayDialogNode += HandlePlayDialogNode;
             interactable.OnInteractableResetSettings += HandleInteractableResetSettingsServer;
@@ -160,6 +117,8 @@ namespace AnyRPG {
             interactable.InteractableEventController.OnPlayVoiceSound += HandlePlayVoiceSound;
             interactable.InteractableEventController.OnMiniMapStatusUpdate += HandleMiniMapStatusUpdate;
             interactable.InteractableEventController.OnSellItemToPlayer += HandleSellItemToPlayer;
+            interactable.InteractableEventController.OnLootableNodeSpawnObjectSetActive += HandleLootableNodeSpawnObjectSetActive;
+            interactable.InteractableEventController.OnActivatableObjectSetActive += HandleActivatableObjectSetActive;
 
             eventRegistrationComplete = true;
         }
@@ -168,7 +127,6 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleInteractableResetSettingsServer(): {GetInstanceID()}");
 
             UnsubscribeFromServerInteractableEvents();
-            UnsubscribeFromSystemEvents();
         }
 
         public void UnsubscribeFromServerInteractableEvents() {
@@ -179,7 +137,6 @@ namespace AnyRPG {
                //Debug.Log($"{gameObject.name}.FishNetInteractable.UnsubscribeFromServerInteractableEvents(): not registered");
                 return;
             }
-            //interactable.InteractableEventController.OnAnimatedObjectChooseMovement -= HandleAnimatedObjectChooseMovementServer;
             interactable.InteractableEventController.OnInteractionWithOptionStarted -= HandleInteractionWithOptionStarted;
             interactable.InteractableEventController.OnPlayDialogNode -= HandlePlayDialogNode;
             interactable.OnInteractableResetSettings -= HandleInteractableResetSettingsServer;
@@ -195,8 +152,50 @@ namespace AnyRPG {
             interactable.InteractableEventController.OnPlayVoiceSound -= HandlePlayVoiceSound;
             interactable.InteractableEventController.OnMiniMapStatusUpdate -= HandleMiniMapStatusUpdate;
             interactable.InteractableEventController.OnSellItemToPlayer -= HandleSellItemToPlayer;
+            interactable.InteractableEventController.OnLootableNodeSpawnObjectSetActive -= HandleLootableNodeSpawnObjectSetActive;
+            interactable.InteractableEventController.OnActivatableObjectSetActive -= HandleActivatableObjectSetActive;
 
             eventRegistrationComplete = false;
+        }
+
+        private void HandleActivatableObjectSetActive(bool active) {
+            HandleActivatableObjectSetActiveClient(active);
+        }
+
+        [ObserversRpc]
+        private void HandleActivatableObjectSetActiveClient(bool active) {
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleActivatableObjectSetActiveClient({active})");
+
+            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.Interactables;
+            foreach (KeyValuePair<int, InteractableOptionComponent> kvp in currentInteractables) {
+                if (kvp.Value is ActivatableObjectComponent) {
+                    if (active == true) {
+                        (kvp.Value as ActivatableObjectComponent).Spawn();
+                    } else {
+                        (kvp.Value as ActivatableObjectComponent).Despawn();
+                    }
+                    break;
+                }
+            }
+        }
+
+        private void HandleLootableNodeSpawnObjectSetActive(bool active) {
+            HandleLootableNodeSpawnObjectSetActiveClient(active);
+        }
+
+        [ObserversRpc]
+        private void HandleLootableNodeSpawnObjectSetActiveClient(bool active) {
+            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.Interactables;
+            foreach (KeyValuePair<int, InteractableOptionComponent> kvp in currentInteractables) {
+                if (kvp.Value is LootableNodeComponent) {
+                    if (active == true) {
+                        (kvp.Value as LootableNodeComponent).Spawn();
+                    } else {
+                        (kvp.Value as LootableNodeComponent).Despawn();
+                    }
+                    break;
+                }
+            }
         }
 
         private void HandleSellItemToPlayer(VendorItem item, int componentIndex, int collectionIndex, int itemIndex) {

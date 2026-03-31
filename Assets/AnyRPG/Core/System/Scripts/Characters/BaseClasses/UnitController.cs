@@ -1,4 +1,3 @@
-using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,23 +5,15 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace AnyRPG {
-    public class UnitController : NamePlateUnit, IPersistentObjectOwner, IAbilityCaster {
+    public class UnitController : NamePlateUnit, IAbilityCaster {
 
-
-        public override event System.Action OnCameraTargetReady = delegate { };
-        //public event System.Action OnDespawn = delegate { };
+        public override event Action OnCameraTargetReady = delegate { };
 
         [Header("Unit Controller")]
 
         // by default, a unit will enter AI mode if no mode is set before Init()
         [SerializeField]
         private UnitControllerMode unitControllerMode = UnitControllerMode.AI;
-
-        /*
-        [Tooltip("If true, this unit will turn to face any target that interacts with it")]
-        [SerializeField]
-        private bool faceInteractionTarget = true;
-        */
 
         [Header("Patrol")]
 
@@ -38,11 +29,6 @@ namespace AnyRPG {
         [Tooltip("instantiate a new behavior profile or not when loading behavior profiles")]
         [SerializeField]
         private bool useBehaviorCopy = false;
-
-        [Header("Persistence")]
-
-        [SerializeField]
-        private PersistentObjectComponent persistentObjectComponent = new PersistentObjectComponent();
 
         // unit profile and settings
         private UnitProfile unitProfile = null;
@@ -64,7 +50,6 @@ namespace AnyRPG {
         private UnitMaterialController unitMaterialController = null;
         private UnitVoiceController unitVoiceController = null;
         private UnitActionManager unitActionManager = null;
-        private UUID uuid = null;
         private BaseCharacter baseCharacter = null;
         private CharacterCombat characterCombat = null;
         private CharacterAbilityManager characterAbilityManager = null;
@@ -337,15 +322,14 @@ namespace AnyRPG {
         public bool IsMounted { get => isMounted; set => isMounted = value; }
         public List<string> BehaviorNames { get => behaviorNames; set => behaviorNames = value; }
         public bool UseBehaviorCopy { get => useBehaviorCopy; set => useBehaviorCopy = value; }
-        public IUUID UUID {
+        public override IUUID UUID {
             get {
                 if (unitProfile != null && unitProfile.OverwriteUnitUUID) {
                     return unitProfile;
                 }
-                return uuid;
+                return base.uuid;
             }
         }
-        public PersistentObjectComponent PersistentObjectComponent { get => persistentObjectComponent; set => persistentObjectComponent = value; }
         public UnitProfile UnitProfile { get => unitProfile; }
         public override NamePlateProps NamePlateProps {
             get {
@@ -531,7 +515,6 @@ namespace AnyRPG {
             unitVoiceController = new UnitVoiceController(this, systemGameManager);
             unitMountManager = new UnitMountManager(this, systemGameManager);
             unitActionManager = new UnitActionManager(this, systemGameManager);
-            persistentObjectComponent.Setup(this, systemGameManager);
 
             baseCharacter = new BaseCharacter(this, systemGameManager);
             characterStats = new CharacterStats(this, systemGameManager);
@@ -578,18 +561,6 @@ namespace AnyRPG {
             objectMaterialController = unitMaterialController;
         }
 
-        public override void ProcessCreateEventSubscriptions() {
-            base.ProcessCreateEventSubscriptions();
-            systemEventManager.OnReputationChange += HandleReputationChange;
-            //systemEventManager.OnLevelLoad += HandleLevelLoad;
-        }
-
-        public override void ProcessCleanupEventSubscriptions() {
-            base.ProcessCleanupEventSubscriptions();
-            systemEventManager.OnReputationChange -= HandleReputationChange;
-            //systemEventManager.OnLevelLoad -= HandleLevelLoad;
-        }
-
         public override void ProcessInit() {
             //Debug.Log($"{gameObject.name}.UnitController.ProcessInit()");
 
@@ -597,7 +568,6 @@ namespace AnyRPG {
 
             base.ProcessInit();
 
-            persistentObjectComponent.Init();
 
             SetStartPosition();
 
@@ -1030,6 +1000,10 @@ namespace AnyRPG {
             }
         }
 
+        protected override void UnregisterWithLevelManager() {
+            levelManagerServer.UnregisterUnitController(this);
+        }
+
         public void TryToDespawn() {
             //Debug.Log($"{gameObject.name}.BaseCharacter.TryToDespawn()");
 
@@ -1133,7 +1107,6 @@ namespace AnyRPG {
             // now that the model is unequipped, return the model to the pool
             unitModelController.DespawnModel();
 
-            persistentObjectComponent.Cleanup();
             if (behaviorController != null) {
                 behaviorController.Cleanup();
             }
@@ -1174,8 +1147,6 @@ namespace AnyRPG {
             unitMountManager = null;
             unitVoiceController = null;
             unitMovementController = null;
-
-            uuid = null;
 
             baseCharacter = null;
             characterCombat = null;
@@ -1275,7 +1246,6 @@ namespace AnyRPG {
 
             base.GetComponentReferences();
 
-            uuid = GetComponent<UUID>();
             lootableCharacter = LootableCharacterComponent.GetLootableCharacterComponent(this);
             agent = GetComponent<NavMeshAgent>();
             rigidBody = GetComponent<Rigidbody>();
@@ -2138,19 +2108,6 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.UnitController.UpdateApparentVelocity() set lastposition to: ({lastPosition.x}, {lastPosition.y}, {lastPosition.z})");
         }
 
-        public override void ProcessLevelUnload() {
-            //Debug.Log($"UnitController.ProcessLevelUnload() {GetInstanceID()}");
-            //Debug.Log($"{gameObject.name}.UnitController.ProcessLevelUnload()");
-
-            if (gameObject == null || gameObject.activeSelf == false) {
-                // this could be a mount unit that was already despawned via the player CancelMountEffects() calls
-                return;
-            }
-
-            base.ProcessNamePlateLevelUnload();
-            Despawn(0f, false, true);
-        }
-
         /// <summary>
         /// This function is called only by entry into an aggro range collider
         /// </summary>
@@ -2704,6 +2661,32 @@ namespace AnyRPG {
             }
 
         }
+
+        /*
+        public override void PopulatePersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {
+            base.PopulatePersistentObjectSaveData(persistentObjectSaveData);
+
+            if (unitProfile.PersistCharacterState == false) {
+                // this unit is not configured to persist character state, so skip saving character data
+                return;
+            }
+            characterSaveManager.SaveGameData();
+            persistentObjectSaveData.CharacterSaveData = characterSaveManager.SaveData;
+        }
+
+        public override void LoadPersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {
+            base.LoadPersistentObjectSaveData(persistentObjectSaveData);
+            if (unitProfile.PersistCharacterState == false) {
+                // this unit is not configured to persist character state, so skip loading character data
+                return;
+            }
+            if (persistentObjectSaveData.CharacterSaveData == null) {
+                // no character data was saved, so skip loading character data
+                return;
+            }
+            //characterSaveManager.LoadGameData(persistentObjectSaveData.CharacterSaveData);
+        }
+        */
 
         #region MessagePassthroughs
 

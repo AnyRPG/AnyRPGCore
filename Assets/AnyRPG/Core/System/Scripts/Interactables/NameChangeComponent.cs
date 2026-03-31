@@ -49,8 +49,10 @@ namespace AnyRPG {
         }
 
         public void SetPlayerName(UnitController sourceUnitController, string newName) {
+            //Debug.Log($"{interactable.gameObject.name}.NameChangeComponent.SetPlayerName({sourceUnitController.gameObject.name}, {newName})");
+
             if (newName != null && newName != string.Empty) {
-                if (playerCharacterService.RenamePlayerCharacter(sourceUnitController, newName)) {
+                if (systemGameManager.GameMode == GameMode.Local || playerCharacterService.RenamePlayerCharacter(sourceUnitController, newName)) {
                     sourceUnitController.BaseCharacter.ChangeCharacterName(newName);
                 } else {
                     sourceUnitController.UnitEventController.NotifyOnNameChangeFail();

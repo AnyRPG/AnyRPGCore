@@ -3,12 +3,9 @@ using FishNet.Managing.Scened;
 using FishNet.Object;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.TextCore.Text;
 
 namespace AnyRPG {
     public class FishNetClientConnector : ConfiguredNetworkBehaviour {
@@ -412,6 +409,13 @@ namespace AnyRPG {
             fishNetNetworkController.RegisterConnector(this);
         }
 
+        /*
+        public override void OnStopNetwork() {
+            //Debug.Log($"FishNetClientConnector.OnStopNetwork()");
+            base.OnStopNetwork();
+        }
+        */
+
         [ServerRpc(RequireOwnership = false)]
         public void RequestCreateLobbyGame(string sceneResourceName, bool allowLateJoin, NetworkConnection networkConnection = null) {
             //Debug.Log($"FishNetClientConnector.RequestCreateLobbyGame(sceneResourceName: {sceneResourceName}, allowLateJoin: {allowLateJoin})");
@@ -535,7 +539,9 @@ namespace AnyRPG {
                 networkManagerServer.SetPersonalLoadRequestHashcode(playerCharacterId, sceneLoadData.GetHashCode());
             } else {
                 // this is a world scene and should not be stacked
-                sceneLoadData.Options.AllowStacking = false;
+                //sceneLoadData.Options.AllowStacking = false;
+                sceneLoadData.Options.AllowStacking = true;
+                networkManagerServer.SetWorldLoadRequestHashcode(sceneLoadData.GetHashCode());
             }
             networkManagerServer.SetSceneLoadRequestHashCode(sceneInstanceType, sceneLoadData.GetHashCode());
             fishNetNetworkManager.SceneManager.LoadConnectionScenes(networkConnection, sceneLoadData);
@@ -716,19 +722,28 @@ namespace AnyRPG {
 
             AdvertiseUnloadSceneClient(networkConnection);
 
-            // testing - disabled this block because it seems to be instantly unloading the previous scene on the server
-            // which is overriding the manual scene unload timers
-            /*
             if (networkConnection.Scenes.Count == 0) {
                 //Debug.Log($"FishNetClientConnector.AdvertiseLoadSceneServer() no scenes found for client {clientId}");
                 //return;
             } else {
-                //Debug.Log($"FishNetClientConnector.AdvertiseLoadSceneServer() unloading current scene {networkConnection.Scenes.First().name}({networkConnection.Scenes.First().handle}) for client {clientId}");
-                SceneUnloadData sceneUnloadData = new SceneUnloadData(networkConnection.Scenes.First());
-                base.NetworkManager.SceneManager.UnloadConnectionScenes(networkConnection, sceneUnloadData);
+                // testing - disabled this block because it seems to be instantly unloading the previous scene on the server
+                // which is overriding the manual scene unload timers
+                //SceneUnloadData sceneUnloadData = new SceneUnloadData(networkConnection.Scenes.First());
+                //base.NetworkManager.SceneManager.UnloadConnectionScenes(networkConnection, sceneUnloadData);
+                //Debug.Log($"FishNetClientConnector.AdvertiseUnloadSceneServer() unloading current scene {networkConnection.Scenes.First().name}({networkConnection.Scenes.First().handle}) for client {clientId}");
+
+                // new hopefully safe code
+                // 1. Define which scenes the client should leave
+                SceneUnloadData sud = new SceneUnloadData(networkConnection.Scenes.ToArray());
+
+                // 2. Configure options to keep the scene loaded on the server
+                sud.Options.Mode = UnloadOptions.ServerUnloadMode.KeepUnused;
+
+                // 3. Perform the unload for this specific connection
+                base.NetworkManager.SceneManager.UnloadConnectionScenes(networkConnection, sud);
             }
-            */
         }
+            
 
         [TargetRpc]
         public void AdvertiseUnloadSceneClient(NetworkConnection networkConnection) {
@@ -1669,6 +1684,17 @@ namespace AnyRPG {
             SceneUnloadData sceneUnloadData = new SceneUnloadData(networkConnection.Scenes.First());
             base.NetworkManager.SceneManager.UnloadConnectionScenes(networkConnection, sceneUnloadData);
             */
+
+            // new hopefully safe code
+            // 1. Define which scenes the client should leave
+            NetworkConnection networkConnection = fishNetNetworkManager.ServerManager.Clients[clientId];
+            SceneUnloadData sud = new SceneUnloadData(networkConnection.Scenes.ToArray());
+
+            // 2. Configure options to keep the scene loaded on the server
+            sud.Options.Mode = UnloadOptions.ServerUnloadMode.KeepUnused;
+
+            // 3. Perform the unload for this specific connection
+            base.NetworkManager.SceneManager.UnloadConnectionScenes(networkConnection, sud);
 
             AdvertiseLoadCutsceneClient(fishNetNetworkManager.ServerManager.Clients[clientId], cutscene.ResourceName);
         }

@@ -129,12 +129,18 @@ namespace AnyRPG {
             //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.SetSaveData()");
 
             base.SetSaveData(interactableSaveData);
-            interactableSaveData.LootableCharacterSaveData.LootDropIds = lootDropIdLookup.Values.ToList();
-            foreach (LootDropIdList lootDropIdList in interactableSaveData.LootableCharacterSaveData.LootDropIds) {
+            LootableCharacterSaveData lootableCharacterSaveData = new LootableCharacterSaveData();
+            lootableCharacterSaveData.LootDropIds = lootDropIdLookup.Values.ToList();
+            foreach (LootDropIdList lootDropIdList in lootableCharacterSaveData.LootDropIds) {
                 foreach (int lootDropId in lootDropIdList.LootDropIds) {
                     //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.SetSaveData(): adding loot drop id to save data: {lootDropId}");
-                    interactableSaveData.LootableCharacterSaveData.LootDropSerializedDataList.Add(lootManager.GetSerializedDataForLootDropId(lootDropId));
+                    lootableCharacterSaveData.LootDropSerializedDataList.Add(lootManager.GetSerializedDataForLootDropId(lootDropId));
                 }
+            }
+            if (interactableSaveData.LootableCharacterSaveData.Count > 0) {
+                interactableSaveData.LootableCharacterSaveData[0] = lootableCharacterSaveData;
+            } else {
+                interactableSaveData.LootableCharacterSaveData.Add(lootableCharacterSaveData);
             }
         }
 
@@ -143,15 +149,19 @@ namespace AnyRPG {
 
             base.LoadFromSaveData(interactableSaveData);
 
+            if (interactableSaveData.LootableCharacterSaveData.Count == 0) {
+                return;
+            }
+
             // first, add the loot drops
-            foreach (LootDropSerializedData lootDropSerializedData in interactableSaveData.LootableCharacterSaveData.LootDropSerializedDataList) {
+            foreach (LootDropSerializedData lootDropSerializedData in interactableSaveData.LootableCharacterSaveData[0].LootDropSerializedDataList) {
                 lootManager.AddNetworkLootDrop(lootDropSerializedData);
             }
 
             // next, load the loot drop id lookups
             lootDropIdLookup = new Dictionary<int, LootDropIdList>();
-            if (interactableSaveData.LootableCharacterSaveData.LootDropIds != null) {
-                foreach (LootDropIdList lootDropList in interactableSaveData.LootableCharacterSaveData.LootDropIds) {
+            if (interactableSaveData.LootableCharacterSaveData[0].LootDropIds != null) {
+                foreach (LootDropIdList lootDropList in interactableSaveData.LootableCharacterSaveData[0].LootDropIds) {
                     lootDropIdLookup.Add(lootDropList.AccountId, lootDropList);
                 }
             }

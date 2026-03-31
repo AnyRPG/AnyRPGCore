@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
@@ -8,6 +9,9 @@ namespace AnyRPG {
         public Scene Scene;
         public SceneNode SceneNode = null;
         public bool HasNavMesh = false;
+        public List<Interactable> Interactables = new List<Interactable>();
+        public List<UnitController> UnitControllers = new List<UnitController>();
+        public List<IPersistentObjectOwner> PersistentObjectOwners = new List<IPersistentObjectOwner>();
 
         // the time that this scene became empty of players
         // used for tracking instance unloading timeouts
@@ -21,6 +25,42 @@ namespace AnyRPG {
             EmptyTime = DateTime.Now;
             SceneNode = sceneNode;
             HasNavMesh = hasNavMesh;
+        }
+
+        public void RegisterInteractable(Interactable interactable) {
+            if (!Interactables.Contains(interactable)) {
+                Interactables.Add(interactable);
+            }
+        }
+
+        public void UnregisterInteractable(Interactable interactable) {
+            if (Interactables.Contains(interactable)) {
+                Interactables.Remove(interactable);
+            }
+        }
+
+        public void RegisterUnitController(UnitController unitController) {
+            if (!UnitControllers.Contains(unitController)) {
+                UnitControllers.Add(unitController);
+            }
+        }
+
+        public void UnregisterUnitController(UnitController unitController) {
+            if (UnitControllers.Contains(unitController)) {
+                UnitControllers.Remove(unitController);
+            }
+        }
+
+        public void RegisterPersistentObject(IPersistentObjectOwner persistentObjectOwner) {
+            if (!PersistentObjectOwners.Contains(persistentObjectOwner)) {
+                PersistentObjectOwners.Add(persistentObjectOwner);
+            }
+        }
+
+        public void UnregisterPersistentObject(IPersistentObjectOwner persistentObjectOwner) {
+            if (PersistentObjectOwners.Contains(persistentObjectOwner)) {
+                PersistentObjectOwners.Remove(persistentObjectOwner);
+            }
         }
     }
 

@@ -61,6 +61,30 @@ namespace AnyRPG {
             }
         }
 
+        public override void LoadFromSaveData(InteractableSaveData interactableSaveData) {
+            base.LoadFromSaveData(interactableSaveData);
+            if (interactableSaveData.AnimatedObjectSaveData.Count > 0) {
+                objectOpen = interactableSaveData.AnimatedObjectSaveData[0].ObjectOpen;
+                if (objectOpen) {
+                    Props.AnimationComponent.Play(Props.OpenAnimationClip.name);
+                } else {
+                    Props.AnimationComponent.Play(Props.CloseAnimationClip.name);
+                }
+            }
+        }
+
+        public override void SetSaveData(InteractableSaveData interactableSaveData) {
+            base.SetSaveData(interactableSaveData);
+            AnimatedObjectSaveData animatedObjectSaveData = new AnimatedObjectSaveData() {
+                ObjectOpen = objectOpen
+            };
+            if (interactableSaveData.AnimatedObjectSaveData.Count > 0) {
+                interactableSaveData.AnimatedObjectSaveData[0] = animatedObjectSaveData;
+            } else {
+                interactableSaveData.AnimatedObjectSaveData.Add(animatedObjectSaveData);
+            }
+        }
+
 
     }
 

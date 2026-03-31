@@ -73,6 +73,10 @@ namespace AnyRPG {
         /// </summary>
         private Dictionary<int, int> personalSceneHandleLookup = new Dictionary<int, int>();
 
+        private List<int> worldLoadRequestHashCodes = new List<int>();
+
+        private Dictionary<string, int> worldSceneHandles = new Dictionary<string, int>();
+
 
         private int lobbyGameCounter = 0;
         private int maxLobbyChatTextSize = 64000;
@@ -295,7 +299,6 @@ namespace AnyRPG {
             if (serverModeActive == false) {
                 return;
             }
-            OnBeforeStopServer();
 
             CancelLobbyGames();
 
@@ -304,6 +307,8 @@ namespace AnyRPG {
             foreach (int accountId in loggedInAccountIds) {
                 Logout(accountId);
             }
+
+            levelManagerServer.ProcessBeforeStopServer();
 
             networkController?.StopServer();
         }
@@ -739,6 +744,11 @@ namespace AnyRPG {
                 AddPersonalSceneHandle(personalLoadRequestHashCodes[loadRequestHashCode], scene);
                 personalLoadRequestHashCodes.Remove(loadRequestHashCode);
             }
+            if (worldLoadRequestHashCodes.Contains(loadRequestHashCode) == true) {
+                //Debug.Log($"NetworkManagerServer.HandleSceneLoadEnd({scene.name}, {loadRequestHashCode}) - world load request");
+                AddWorldSceneHandle(scene);
+                worldLoadRequestHashCodes.Remove(loadRequestHashCode);
+            }
 
             levelManagerServer.AddLoadedScene(loadRequestHashCode, scene);
             levelManagerServer.ProcessLevelLoad(scene);
@@ -786,6 +796,17 @@ namespace AnyRPG {
             }
         }
 
+        private void AddWorldSceneHandle(Scene scene) {
+            if (worldSceneHandles.ContainsKey(scene.name) == false) {
+                worldSceneHandles.Add(scene.name, scene.handle);
+            }
+            /*
+            if (worldSceneHandleLookup.ContainsKey(scene.handle) == false) {
+                worldSceneHandleLookup.Add(scene.handle, scene.name);
+            }
+            */
+        }
+
         public void HandleSceneUnloadEnd(int sceneHandle, string sceneName) {
             //Debug.Log($"NetworkManagerServer.HandleSceneUnloadEnd({sceneName}, {sceneHandle})");
 
@@ -813,9 +834,9 @@ namespace AnyRPG {
                 }
                 personalSceneHandleLookup.Remove(sceneHandle);
             }
-
-
-            //levelManagerServer.RemoveLoadedScene(sceneHandle, sceneName);
+            if (worldSceneHandles.ContainsKey(sceneName) == true) {
+                worldSceneHandles.Remove(sceneName);
+            }
         }
 
         public UnitController SpawnCharacterPrefab(CharacterRequestData characterRequestData, Transform parentTransform, Vector3 position, Vector3 forward, Scene scene) {
@@ -1124,6 +1145,14 @@ namespace AnyRPG {
             }
         }
 
+        public void SetWorldLoadRequestHashcode(int hashCode) {
+            //Debug.Log($"NetworkManagerServer.SetLobbyGameLoadRequestHashcode({gameId}, {hashCode})");
+
+            if (worldLoadRequestHashCodes.Contains(hashCode) == false) {
+                worldLoadRequestHashCodes.Add(hashCode);
+            }
+        }
+
         public void RequestSpawnLobbyGamePlayer(int accountId, int gameId, string sceneName) {
             //Debug.Log($"NetworkManagerServer.RequestSpawnLobbyGamePlayer({accountId}, {gameId}, {sceneName})");
 
@@ -1350,9 +1379,9 @@ namespace AnyRPG {
                 
                 if (characterGroupId != -1) {
                     // group dungeon with existing instance
-                    if (CharacterGroupSceneHandles.ContainsKey(characterGroupId)
-                    && CharacterGroupSceneHandles[characterGroupId].ContainsKey(sceneNode.SceneFile) == true) {
-                        networkController.LoadExistingScene(accountId, CharacterGroupSceneHandles[characterGroupId][sceneNode.SceneFile]);
+                    if (characterGroupSceneHandles.ContainsKey(characterGroupId)
+                    && characterGroupSceneHandles[characterGroupId].ContainsKey(sceneNode.SceneFile) == true) {
+                        networkController.LoadExistingScene(accountId, characterGroupSceneHandles[characterGroupId][sceneNode.SceneFile]);
                         return;
                     }
                     // group dungeon with new instance
@@ -1372,7 +1401,13 @@ namespace AnyRPG {
                 return;
             }
 
-            // world scene case
+            // world scene with existing instance
+            if (worldSceneHandles.ContainsKey(sceneNode.SceneFile) == true) {
+                networkController.LoadExistingScene(accountId, worldSceneHandles[sceneNode.SceneFile]);
+                return;
+            }
+
+            // world scene with new instance
             networkController.LoadNewScene(accountId, playerCharacterId, SceneInstanceType.World, sceneNode);
         }
 

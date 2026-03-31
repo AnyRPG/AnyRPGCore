@@ -84,6 +84,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 1d97eb041589729479af9716fd5b42b3,
         type: 2}
+    - target: {fileID: 6973582095505325909, guid: 2da13b91748b5f042bdc582eebb82983,
+        type: 3}
+      propertyPath: defaultLoadOptions
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6973582095505325909, guid: 2da13b91748b5f042bdc582eebb82983,
+        type: 3}
+      propertyPath: defaultSaveOptions
+      value: -1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -142,7 +152,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584280552682747715
+  _initializedTimestamp: -8584270967360982685
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0

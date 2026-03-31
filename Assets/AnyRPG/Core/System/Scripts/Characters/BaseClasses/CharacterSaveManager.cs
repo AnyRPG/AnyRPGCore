@@ -14,8 +14,6 @@ namespace AnyRPG {
         private Dictionary<string, BehaviorSaveData> behaviorSaveDataDictionary = new Dictionary<string, BehaviorSaveData>();
         private Dictionary<string, DialogSaveData> dialogSaveDataDictionary = new Dictionary<string, DialogSaveData>();
 
-        private Dictionary<string, SceneNodeSaveData> sceneNodeSaveDataDictionary = new Dictionary<string, SceneNodeSaveData>();
-
         private bool eventSubscriptionsInitialized = false;
 
         // game manager references
@@ -25,8 +23,6 @@ namespace AnyRPG {
         private SceneUtilityService sceneUtilityService = null;
 
         public Dictionary<string, DialogSaveData> DialogSaveDataDictionary { get => dialogSaveDataDictionary; }
-
-        public Dictionary<string, SceneNodeSaveData> SceneNodeSaveDataDictionary { get => sceneNodeSaveDataDictionary; set => sceneNodeSaveDataDictionary = value; }
 
         public CharacterSaveData SaveData { get => saveData; }
 
@@ -152,11 +148,24 @@ namespace AnyRPG {
             SaveReputationData();
             SaveEquipmentData();
             SaveCurrencyData();
-            SaveSceneNodeData();
             SaveStatusEffectData();
             SavePetData();
             unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
+
+        public bool IsSceneNodeVisited(SceneNode sceneNode) {
+            return saveData.VisitedSceneNodes.Contains(sceneNode.ResourceName);
+        }
+
+        public void VisitSceneNode(SceneNode sceneNode) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.VisitSceneNode({sceneNode.ResourceName})");
+
+            if (saveData.VisitedSceneNodes.Contains(sceneNode.ResourceName) == false) {
+                saveData.VisitedSceneNodes.Add(sceneNode.ResourceName);
+                unitController.UnitEventController.NotifyOnSaveDataUpdated();
+            }
+        }
+
 
         private void HandleUnsetGamepadActionButton(int buttonIndex) {
             SaveActionBarData();
@@ -504,20 +513,6 @@ namespace AnyRPG {
             SaveDialogData();
         }
 
-        public SceneNodeSaveData GetSceneNodeSaveData(SceneNode sceneNode) {
-            SceneNodeSaveData saveData;
-            if (sceneNodeSaveDataDictionary.ContainsKey(sceneNode.ResourceName)) {
-                saveData = sceneNodeSaveDataDictionary[sceneNode.ResourceName];
-            } else {
-                saveData = new SceneNodeSaveData();
-                saveData.PersistentObjects = new List<PersistentObjectSaveData>();
-                saveData.SceneName = sceneNode.ResourceName;
-                sceneNodeSaveDataDictionary.Add(sceneNode.ResourceName, saveData);
-            }
-            return saveData;
-        }
-
-
         public void LoadSaveDataToCharacter() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadSaveDataToCharacter()");
 
@@ -525,7 +520,6 @@ namespace AnyRPG {
 
             LoadDialogData(saveData);
             LoadBehaviorData(saveData);
-            LoadSceneNodeData(saveData);
 
             // complex data
             LoadEquippedBagData(saveData);
@@ -569,17 +563,6 @@ namespace AnyRPG {
             foreach (BehaviorSaveData behaviorSaveData in characterSaveData.BehaviorSaveData) {
                 if (behaviorSaveData.BehaviorName != null && behaviorSaveData.BehaviorName != string.Empty) {
                     behaviorSaveDataDictionary.Add(behaviorSaveData.BehaviorName, behaviorSaveData);
-                }
-            }
-        }
-
-        public void LoadSceneNodeData(CharacterSaveData characterSaveData) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadSceneNodeData()");
-
-            sceneNodeSaveDataDictionary.Clear();
-            foreach (SceneNodeSaveData sceneNodeSaveData in characterSaveData.SceneNodeSaveData) {
-                if (sceneNodeSaveData.SceneName != null && sceneNodeSaveData.SceneName != string.Empty) {
-                    sceneNodeSaveDataDictionary.Add(sceneNodeSaveData.SceneName, sceneNodeSaveData);
                 }
             }
         }
@@ -886,25 +869,9 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.VisitSceneNode()");
 
             SceneNode sceneNode = sceneUtilityService.GetSceneNodeBySceneName(unitController.gameObject.scene.name);
-            if (sceneNode != null) {
-                VisitSceneNode(sceneNode);
+            if (sceneNode != null && saveData.VisitedSceneNodes.Contains(sceneNode.ResourceName) == false) {
+                saveData.VisitedSceneNodes.Add(sceneNode.ResourceName);
             }
-        }
-
-        public void VisitSceneNode(SceneNode sceneNode) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.VisitSceneNode({sceneNode.ResourceName})");
-
-            SceneNodeSaveData saveData = GetSceneNodeSaveData(sceneNode);
-            if (saveData.Visited == false) {
-                saveData.Visited = true;
-                sceneNodeSaveDataDictionary[saveData.SceneName] = saveData;
-                SaveSceneNodeData();
-            }
-        }
-
-        public bool IsSceneNodeVisited(SceneNode sceneNode) {
-            SceneNodeSaveData saveData = GetSceneNodeSaveData(sceneNode);
-            return saveData.Visited;
         }
 
         public void SavePlayerLocation() {
@@ -994,15 +961,6 @@ namespace AnyRPG {
             saveData.BehaviorSaveData.Clear();
             foreach (BehaviorSaveData behaviorSaveData in behaviorSaveDataDictionary.Values) {
                 saveData.BehaviorSaveData.Add(behaviorSaveData);
-            }
-        }
-
-        public void SaveSceneNodeData() {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveSceneNodeData()");
-
-            saveData.SceneNodeSaveData.Clear();
-            foreach (SceneNodeSaveData sceneNodeSaveData in sceneNodeSaveDataDictionary.Values) {
-                saveData.SceneNodeSaveData.Add(sceneNodeSaveData);
             }
         }
 

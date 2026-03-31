@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
@@ -37,7 +35,7 @@ namespace AnyRPG {
         protected LevelManagerClient levelManagerClient = null;
         protected SystemEventManager systemEventManager = null;
 
-		public bool MoveOnStart { get => moveOnStart; set => moveOnStart = value; }
+        public bool MoveOnStart { get => moveOnStart; set => moveOnStart = value; }
         public bool PersistObjectPosition { get => persistObjectPosition; set => persistObjectPosition = value; }
         public bool SaveOnLevelUnload { get => saveOnLevelUnload; set => saveOnLevelUnload = value; }
         public bool SaveOnGameSave { get => saveOnGameSave; set => saveOnGameSave = value; }
@@ -49,19 +47,12 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             levelManagerClient = systemGameManager.LevelManagerClient;
             systemEventManager = systemGameManager.SystemEventManager;
-		}
+        }
 
         public void Setup(IPersistentObjectOwner persistentObjectOwner, SystemGameManager systemGameManager) {
             //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.Setup() setting UUID {persistentObjectOwner.UUID.ID}");
             this.persistentObjectOwner = persistentObjectOwner;
             Configure(systemGameManager);
-            CreateEventSubscriptions();
-        }
-
-        public void Cleanup() {
-            //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObjectComponent.Cleanup() hashCode: {GetHashCode()}");
-
-            CleanupEventSubscriptions();
         }
 
         public void Init() {
@@ -79,21 +70,21 @@ namespace AnyRPG {
             }
         }
 
-        public PersistentState GetPersistentState() {
+        public PersistentObjectSaveData GetPersistentObjectSaveData() {
             //Debug.Log(persistentObjectOwner.gameObject.name + "PersistentObjectComponent.GetPersistentState()");
             if (persistentObjectOwner.UUID != null) {
                 if (levelManagerClient != null) {
                     SceneNode activeSceneNode = levelManagerClient.GetActiveSceneNode();
                     if (activeSceneNode != null && activeSceneNode.PersistentObjects != null) {
-                        PersistentObjectSaveData persistentObjectSaveData = activeSceneNode.GetPersistentObject(persistentObjectOwner.UUID.ID);
-                        if (!persistentObjectSaveData.Equals(default(PersistentObjectSaveData))) {
+                        PersistentObjectSaveData persistentObjectSaveData = activeSceneNode.GetPersistentObjectSaveData(persistentObjectOwner.UUID.ID);
+                        if (persistentObjectSaveData != null) {
                             storedUUID = persistentObjectSaveData.UUID;
                             storedPosition = new Vector3(persistentObjectSaveData.LocationX, persistentObjectSaveData.LocationY, persistentObjectSaveData.LocationZ);
                             storedForwardDirection = new Vector3(persistentObjectSaveData.DirectionX, persistentObjectSaveData.DirectionY, persistentObjectSaveData.DirectionZ);
                             PersistentState persistentState = new PersistentState();
                             persistentState.Position = storedPosition;
                             persistentState.Forward = storedForwardDirection;
-                            return persistentState;
+                            return persistentObjectSaveData;
                         }
                     }
                 }
@@ -102,74 +93,41 @@ namespace AnyRPG {
         }
 
         public void LoadPersistentState() {
-            //Debug.Log($"{gameObject.name}PersistentObject.LoadPersistentState()");
-            PersistentState persistentState = GetPersistentState();
-            if (persistentState != null) {
+            //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObject.LoadPersistentState()");
+
+            PersistentObjectSaveData persistentObjectSaveData = GetPersistentObjectSaveData();
+            if (persistentObjectSaveData == null) {
+                return;
+            }
+            if (persistObjectPosition == true) {
                 //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObject.LoadPersistentState() setting transform.position on UUID {persistentObjectOwner.UUID.ID}");
-                persistentObjectOwner.transform.position = persistentState.Position;
-                persistentObjectOwner.transform.forward = persistentState.Forward;
+                persistentObjectOwner.transform.position = storedPosition;
+                if (storedForwardDirection != Vector3.zero) {
+                    persistentObjectOwner.transform.forward = storedForwardDirection;
+                }
             }
+            persistentObjectOwner.LoadPersistentObjectSaveData(persistentObjectSaveData);
         }
 
-        public void CreateEventSubscriptions() {
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            ProcessCreateEventSubscriptions();
-            eventSubscriptionsInitialized = true;
-        }
-
-        public virtual void ProcessCreateEventSubscriptions() {
-            //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObjectComponent.ProcessCreateEventSubscriptions() hashcode: {GetHashCode()}");
-
-            levelManagerClient.OnLevelUnload += HandleLevelUnload;
-            SystemEventManager.StartListening("OnSaveGame", HandleSaveGame);
-        }
-
-        public void CleanupEventSubscriptions() {
-            //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObjectComponent.CleanupEventSubscriptions() hashcode: {GetHashCode()}");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
-            ProcessCleanupEventSubscriptions();
-            eventSubscriptionsInitialized = false;
-        }
-
-        public virtual void ProcessCleanupEventSubscriptions() {
-            //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObjectComponent.ProcessCleanupEventSubscriptions() hashcode: {GetHashCode()}");
-
-            levelManagerClient.OnLevelUnload -= HandleLevelUnload;
-            SystemEventManager.StopListening("OnSaveGame", HandleSaveGame);
-        }
-
-        public void HandleLevelUnload(int sceneHandle, string sceneName) {
+        public void ProcessBeforeUnloadScene() {
             //Debug.Log($"PersistentObjectComponent.HandleLevelUnload(sceneHandle: {sceneHandle}, sceneName: {sceneName}) hashcode: {GetHashCode()}");
-            //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObjectComponent.HandleLevelUnload(sceneHandle: {sceneHandle}, sceneName: {sceneName}) hashcode: {GetHashCode()}");
-            if (persistObjectPosition == false) {
-                return;
-            }
             if (saveOnLevelUnload == true) {
                 SaveProperties();
             }
         }
 
-        public void HandleSaveGame(string eventName, EventParamProperties eventParamProperties) {
-            if (persistObjectPosition == false) {
-                return;
-            }
+        public void ProcessSaveGame() {
+            //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.ProcessSaveGame()");
+
             if (saveOnGameSave == true) {
                 SaveProperties();
             }
         }
 
         public void SaveProperties() {
-            //Debug.Log($"{ persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties()");
+            //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties()");
 
             // since all units automatically have this component, give it a chance to not save based on configuration
-            if (persistObjectPosition == false) {
-                return;
-            }
-
             if (systemGameManager.GameMode == GameMode.Network) {
                 return;
             }
@@ -179,7 +137,7 @@ namespace AnyRPG {
             storedForwardDirection = persistentObjectOwner.transform.forward;
             if (persistentObjectOwner.UUID != null) {
                 storedUUID = persistentObjectOwner.UUID.ID;
-                //Debug.Log($"{ persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties() UUID: {storedUUID}");
+                //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties() UUID: {persistentObjectOwner.UUID.ID}");
             }
 
             // save this data to the scene node that is active
@@ -193,7 +151,8 @@ namespace AnyRPG {
         }
 
         public PersistentObjectSaveData MakeSaveData() {
-            //Debug.Log(persistentObjectOwner.gameObject.name + ".PersistentObjectComponent.MakeSaveData()");
+            //Debug.Log($"{ persistentObjectOwner.gameObject.name}.PersistentObjectComponent.MakeSaveData() storedUUID: {storedUUID}");
+
             PersistentObjectSaveData returnValue = new PersistentObjectSaveData();
             returnValue.UUID = storedUUID;
             returnValue.LocationX = storedPosition.x;
@@ -202,6 +161,8 @@ namespace AnyRPG {
             returnValue.DirectionX = storedForwardDirection.x;
             returnValue.DirectionY = storedForwardDirection.y;
             returnValue.DirectionZ = storedForwardDirection.z;
+
+            persistentObjectOwner.PopulatePersistentObjectSaveData(returnValue);
 
             return returnValue;
         }

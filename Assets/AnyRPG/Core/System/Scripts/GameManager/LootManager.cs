@@ -81,7 +81,7 @@ namespace AnyRPG {
         }
 
         public void AddAvailableLoot(int accountId, List<LootDrop> items) {
-            //Debug.Log($"LootManager.AddAvailableLoot({accountId}, count: {items.Count})");
+            //Debug.Log($"LootManager.AddAvailableLoot(accountId: {accountId}, count: {items.Count})");
 
             if (availableDroppedLoot.ContainsKey(accountId)) {
                 availableDroppedLoot[accountId] = items;
@@ -184,7 +184,7 @@ namespace AnyRPG {
         }
 
         public void AddLootTableState(LootTableState lootTableState) {
-            //Debug.Log("LootManager.AddLootTableState()");
+            //Debug.Log($"LootManager.AddLootTableState()");
 
             if (lootTableStates.Contains(lootTableState) == false) {
                 lootTableStates.Add(lootTableState);
@@ -260,14 +260,16 @@ namespace AnyRPG {
             }
         }
 
-        public void AddNetworkLootDrop(LootDropSerializedData lootDropSerializedData) {
+        public LootDrop AddNetworkLootDrop(LootDropSerializedData lootDropSerializedData) {
             //Debug.Log($"LootManager.AddNetworkLootDrop({lootDropId}, {itemId})");
 
             if (systemItemManager.InstantiatedItems.ContainsKey(lootDropSerializedData.ItemInstanceId) == false) {
-                return;
+                return null;
             }
             LootDrop lootDrop = new LootDrop(lootDropSerializedData.LootDropId, systemItemManager.InstantiatedItems[lootDropSerializedData.ItemInstanceId], systemGameManager);
             lootDropIndex.Add(lootDropSerializedData.LootDropId, lootDrop);
+
+            return lootDrop;
         }
 
         public LootDropSerializedData GetSerializedDataForLootDropId(int lootDropId) {

@@ -42,6 +42,7 @@ namespace AnyRPG {
         private ObjectPooler objectPooler = null;
         private PlayerManagerClient playerManagerClient = null;
         private PlayerManagerServer playerManagerServer = null;
+        private LevelManagerServer levelManagerServer = null;
 
         public List<UnitController> LocalUnits { get => localUnits; }
 
@@ -67,6 +68,7 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
             playerManagerClient = systemGameManager.PlayerManagerClient;
             playerManagerServer = systemGameManager.PlayerManagerServer;
+            levelManagerServer = systemGameManager.LevelManagerServer;
         }
 
         public int GetNewCharacterId(UnitControllerMode unitControllerMode) {
@@ -213,6 +215,7 @@ namespace AnyRPG {
             //Debug.Log($"CharacterManager.ConfigureUnitController({unitController.gameObject.name})");
 
             if (unitController != null) {
+                levelManagerServer.RegisterUnitController(unitController);
                 //Debug.Log($"CharacterManager.ConfigureUnitController({prefabObject.name}) adding {unitController.gameObject.name} to modelSpawnRequests");
                 //modelSpawnRequests.Add(unitController, characterRequestData);
 

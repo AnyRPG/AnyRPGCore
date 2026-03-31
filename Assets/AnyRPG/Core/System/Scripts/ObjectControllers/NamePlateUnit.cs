@@ -226,17 +226,6 @@ namespace AnyRPG {
             }
         }
 
-        // some nameplates seem to get removed late due to async loading
-        // attempt to remove them before the level load to avoid this
-        public override void ProcessLevelUnload() {
-            base.ProcessLevelUnload();
-            ProcessNamePlateLevelUnload();
-        }
-
-        public virtual void ProcessNamePlateLevelUnload() {
-            RemoveNamePlate();
-        }
-
         public virtual void OnDisable() {
             //Debug.Log($"NamePlateUnit.OnDisable() instanceId: {GetInstanceID()}");
             // characters can get disabled by cutscenes, so need to remove nameplate

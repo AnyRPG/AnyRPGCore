@@ -195,12 +195,6 @@ namespace AnyRPG {
             return null;
         }
 
-        public void LoadPlayerCharacterSaveData(PlayerCharacterSaveData playerCharacterSaveData) {
-            //Debug.Log($"SystemItemManager.LoadPlayerCharacterSaveData(characterId: {playerCharacterSaveData.CharacterSaveData.CharacterId})");
-
-            LoadItemInstanceListSaveData(playerCharacterSaveData.ItemInstanceListSaveData);
-        }
-
         public void LoadItemInstanceListSaveData(ItemInstanceListSaveData itemInstanceListSaveData) {
             //Debug.Log($"SystemItemManager.LoadItemInstanceListSaveData(count: {itemInstanceListSaveData.ItemInstances.Count})");
 

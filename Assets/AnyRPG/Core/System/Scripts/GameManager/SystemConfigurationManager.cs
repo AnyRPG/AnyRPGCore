@@ -651,6 +651,14 @@ namespace AnyRPG {
         [SerializeField]
         private Sprite musicPlayerNamePlateImage = null;
 
+        [Tooltip("An image to use beside an activatable object option in the interaction UI window.")]
+        [SerializeField]
+        private Sprite activatableObjectInteractionPanelImage = null;
+
+        [Tooltip("An image to for an activatable object option on a nameplate.")]
+        [SerializeField]
+        private Sprite activatableObjectNamePlateImage = null;
+
         [Header("Quest Configuration")]
 
         [SerializeField]
@@ -772,6 +780,8 @@ namespace AnyRPG {
         public Sprite UnitSpawnControllerNamePlateImage { get => unitSpawnControllerNamePlateImage; set => unitSpawnControllerNamePlateImage = value; }
         public Sprite MusicPlayerInteractionPanelImage { get => musicPlayerInteractionPanelImage; set => musicPlayerInteractionPanelImage = value; }
         public Sprite MusicPlayerNamePlateImage { get => musicPlayerNamePlateImage; set => musicPlayerNamePlateImage = value; }
+        public Sprite ActivatableObjectInteractionPanelImage { get => activatableObjectInteractionPanelImage; set => activatableObjectInteractionPanelImage = value; }
+        public Sprite ActivatableObjectNamePlateImage { get => activatableObjectNamePlateImage; set => activatableObjectNamePlateImage = value; }
         public RuntimeAnimatorController DefaultAnimatorController { get => defaultAnimatorController; set => defaultAnimatorController = value; }
         public AnimationProfile DefaultAnimationProfile { get => defaultAnimationProfile; set => defaultAnimationProfile = value; }
         public Material DefaultCastingLightProjector { get => defaultCastTargetCircle; set => defaultCastTargetCircle = value; }

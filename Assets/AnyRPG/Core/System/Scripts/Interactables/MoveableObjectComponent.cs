@@ -161,6 +161,35 @@ namespace AnyRPG {
             return new Vector3(MathF.Round(originalAngle.x, 4) < 0f ? MathF.Round(originalAngle.x, 4) + 360f : MathF.Round(originalAngle.x, 4), MathF.Round(originalAngle.y, 4) < 0f ? MathF.Round(originalAngle.y, 4) + 360f : MathF.Round(originalAngle.y, 4), MathF.Round(originalAngle.z, 4) < 0f ? MathF.Round(originalAngle.z, 4) + 360f : MathF.Round(originalAngle.z, 4));
         }
 
+        public override void SetSaveData(InteractableSaveData interactableSaveData) {
+            base.SetSaveData(interactableSaveData);
+            MoveableObjectSaveData moveableObjectSaveData = new MoveableObjectSaveData() {
+                ObjectOpen = objectOpen,
+                ObjectPositionX = Props.MoveableObject.transform.position.x,
+                ObjectPositionY = Props.MoveableObject.transform.position.y,
+                ObjectPositionZ = Props.MoveableObject.transform.position.z,
+                ObjectRotationX = Props.MoveableObject.transform.rotation.x,
+                ObjectRotationY = Props.MoveableObject.transform.rotation.y,
+                ObjectRotationZ = Props.MoveableObject.transform.rotation.z,
+                ObjectRotationW = Props.MoveableObject.transform.rotation.w
+            };
+            if (interactableSaveData.MoveableObjectSaveData.Count > 0) {
+                interactableSaveData.MoveableObjectSaveData[0] = moveableObjectSaveData;
+            } else {
+                interactableSaveData.MoveableObjectSaveData.Add(moveableObjectSaveData);
+            }
+        }
+
+        public override void LoadFromSaveData(InteractableSaveData interactableSaveData) {
+            base.LoadFromSaveData(interactableSaveData);
+            if (interactableSaveData.MoveableObjectSaveData.Count > 0) {
+                MoveableObjectSaveData moveableObjectSaveData = interactableSaveData.MoveableObjectSaveData[0];
+                objectOpen = moveableObjectSaveData.ObjectOpen;
+                Props.MoveableObject.transform.position = new Vector3(moveableObjectSaveData.ObjectPositionX, moveableObjectSaveData.ObjectPositionY, moveableObjectSaveData.ObjectPositionZ);
+                Props.MoveableObject.transform.rotation = new Quaternion(moveableObjectSaveData.ObjectRotationX, moveableObjectSaveData.ObjectRotationY, moveableObjectSaveData.ObjectRotationZ, moveableObjectSaveData.ObjectRotationW);
+            }
+        }
+
         /*
         public override void StopInteract() {
             base.StopInteract();

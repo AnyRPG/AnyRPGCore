@@ -2,13 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class Interactable : AutoConfiguredMonoBehaviour, IDescribable {
+    public class Interactable : AutoConfiguredMonoBehaviour, IPersistentObjectOwner, IDescribable {
 
         public event System.Action OnPrerequisiteUpdates = delegate { };
         public event System.Action OnInteractableDisable = delegate { };
@@ -81,6 +82,15 @@ namespace AnyRPG {
         [SerializeField]
         protected ComponentController componentController = null;
 
+        [Header("Persistence")]
+
+        [SerializeField]
+        protected PersistentObjectComponent persistentObjectComponent = new PersistentObjectComponent();
+
+        [Tooltip("Set this to true to save and load interactable data for this interactable.  This is only necessary if the interactable has interactable options that need to save data, such as loot or a door that can be opened/closed.")]
+        [SerializeField]
+        protected bool persistInteractableData = false;
+
         /*
         [Tooltip("Reference to local component controller prefab with nameplate target, speakers, etc.")]
         [SerializeField]
@@ -109,6 +119,7 @@ namespace AnyRPG {
         protected Collider myCollider;
         //protected MiniMapIndicatorController miniMapIndicator = null;
         //protected MainMapIndicatorController mainMapIndicator = null;
+        protected UUID uuid = null;
 
 
         // created components
@@ -209,14 +220,22 @@ namespace AnyRPG {
         public bool IsInitialized { get => isInitialized; }
         public List<GameObject> InteractionPoints { get => interactionPoints; set => interactionPoints = value; }
         public virtual bool OverrideInteractionColliderSize { get => overrideInteractionColliderSize; }
+        public virtual IUUID UUID {
+            get {
+                return uuid;
+            }
+        }
+        public PersistentObjectComponent PersistentObjectComponent { get => persistentObjectComponent; set => persistentObjectComponent = value; }
+
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log($"{gameObject.name}.Interactable.Configure() instanceId: {GetInstanceID()}");
 
             base.Configure(systemGameManager);
 
+            persistentObjectComponent.Setup(this, systemGameManager);
             GetComponentReferences();
-            CreateEventSubscriptions();
+            //CreateEventSubscriptions();
             ConfigureComponents();
             CreateComponents();
             LateConfigure();
@@ -226,6 +245,9 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.Interactable.PostConfigure()");
 
             base.PostConfigure();
+            // this is only called if by AutoConfigure() so we know this is a static scene object, and need to
+            // register to the level manager
+            levelManagerServer.RegisterInteractable(this);
             Init();
         }
 
@@ -254,7 +276,17 @@ namespace AnyRPG {
 
         protected virtual void PostInit() {
             //Debug.Log($"{gameObject.name}.Interactable.PostInit()");
-            // do something in inherited class
+
+            if (systemGameManager.GameMode != GameMode.Local) {
+                return;
+            }
+            if (persistentObjectComponent.SaveOnGameSave == false && persistentObjectComponent.SaveOnLevelUnload == false) {
+                return;
+            }
+            if (persistentObjectComponent.PersistObjectPosition == false && persistInteractableData == false) {
+                return;
+            }
+            persistentObjectComponent.LoadPersistentState();
         }
 
         protected virtual void LateConfigure() {
@@ -322,6 +354,7 @@ namespace AnyRPG {
                     AddInteractableOption(interactableOption.InteractableOptionProps.GetInteractableOption(this, interactableOption));
                 }
             }
+            uuid = GetComponent<UUID>();
         }
 
         public virtual void CleanupEverything() {
@@ -337,12 +370,14 @@ namespace AnyRPG {
 
         public virtual void ProcessInit() {
             //if (spawnReference != null) {
-                objectMaterialController.PopulateOriginalMaterials();
+            objectMaterialController.PopulateOriginalMaterials();
             //}
             CheckEnableInteractableRange();
+
+            persistentObjectComponent.Init();
         }
 
-        protected virtual void CheckEnableInteractableRange() { 
+        protected virtual void CheckEnableInteractableRange() {
             EnableInteractableRange();
         }
 
@@ -390,7 +425,7 @@ namespace AnyRPG {
             interactableOptionCount++;
         }
 
-        
+
         /*
         protected virtual void Update() {
         }
@@ -793,11 +828,11 @@ namespace AnyRPG {
             }
             if (glowOnMouseOver) {
                 outlineController.TurnOnOutline();
-                
+
             }
         }
 
-        
+
 
         /*
         public void OnMouseExit() {
@@ -890,7 +925,7 @@ namespace AnyRPG {
                 if (unitController != null) {
                     if (unitController.RiderUnitController != null) {
                         unitController.RiderUnitController.UnitEventController.NotifyOnEnterInteractableTrigger(this);
-                    } else if (unitController.UnitEventController != null ) {
+                    } else if (unitController.UnitEventController != null) {
                         unitController.UnitEventController.NotifyOnEnterInteractableTrigger(this);
                     }
                 } else if (interactWithAny) {
@@ -907,7 +942,7 @@ namespace AnyRPG {
             }
 
             if (isTrigger == true && interactOnExit == true) {
-                if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false ) {
+                if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false) {
                     // triggers are server authoritative
                     return;
                 }
@@ -1020,24 +1055,17 @@ namespace AnyRPG {
             return IsInInteractableRange(sourceUnitController.gameObject);
         }
 
-        public virtual void ProcessLevelUnload() {
-            // this is meant to not be called from child classes as they will call ResetSettings() during Despawn()
-            ResetSettings();
-        }
-
         public void NotifyOnInteractableDisable() {
             OnInteractableDisable();
         }
 
         public void NotifyOnInteractableResetSettings() {
-            //Debug.Log($"Interactable.NotifyOnInteractableResetSettings() {GetInstanceID()}");
             //Debug.Log($"{gameObject.name}.Interactable.NotifyOnInteractableResetSettings() {GetInstanceID()}");
 
             OnInteractableResetSettings();
         }
 
         public virtual void ResetSettings() {
-            //Debug.Log($"Interactable.ResetSettings() {GetInstanceID()}");
             //Debug.Log($"{gameObject.name}.Interactable.ResetSettings() {GetInstanceID()}");
 
             if (glowOnMouseOver) {
@@ -1069,9 +1097,10 @@ namespace AnyRPG {
             //miniMapIndicator = null;
             //mainMapIndicator = null;
 
-            CleanupEventSubscriptions();
+            //CleanupEventSubscriptions();
             CleanupEverything();
 
+            uuid = null;
             characterUnit = null;
             outlineController = null;
             objectMaterialController = null;
@@ -1081,14 +1110,22 @@ namespace AnyRPG {
             startHasRun = false;
             componentReferencesInitialized = false;
             isInitialized = false;
-            eventSubscriptionsInitialized = false;
+            //eventSubscriptionsInitialized = false;
             isTargeted = false;
             _interactableSaveData = null;
+
+            UnregisterWithLevelManager();
+        }
+
+        protected virtual void UnregisterWithLevelManager() {
+            //Debug.Log($"{gameObject.name}.Interactable.UnregisterWithLevelManager()");
+            levelManagerServer.UnregisterInteractable(this);
         }
 
         public virtual void OnSendObjectToPool() {
         }
 
+        /*
         public void CreateEventSubscriptions() {
             //Debug.Log($"{gameObject.name}.Interactable.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
@@ -1100,11 +1137,6 @@ namespace AnyRPG {
 
         public virtual void ProcessCreateEventSubscriptions() {
             //Debug.Log($"{gameObject.name}.Interactable.ProcessCreateEventSubscriptions() Interactable instance: {GetInstanceID()}");
-
-            levelManagerServer.OnBeforeStartUnloadScene += HandleLevelUnloadServer;
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
-                systemEventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
-            }
         }
 
         public void CleanupEventSubscriptions() {
@@ -1119,27 +1151,8 @@ namespace AnyRPG {
 
         public virtual void ProcessCleanupEventSubscriptions() {
             //Debug.Log($"{gameObject.name}.Interactable.ProcessCleanupEventSubscriptions() Interactable Instance: {GetInstanceID()}");
-
-            levelManagerServer.OnBeforeStartUnloadScene -= HandleLevelUnloadServer;
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
-                systemEventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
-            }
         }
-
-        private void HandlePlayerUnitSpawn(UnitController sourceUnitController) {
-            //Debug.Log($"{gameObject.name}.Interactable.HandlePlayerUnitSpawn({sourceUnitController?.gameObject.name})");
-
-            ProcessPlayerUnitSpawn(sourceUnitController);
-        }
-
-        private void HandleLevelUnloadServer(int sceneHandle, string sceneName) {
-            //Debug.Log($"{gameObject.name}.Interactable.HandleLevelUnloadServer({sceneHandle}, {sceneName})");
-
-            if (sceneHandle != gameObject.scene.handle) {
-                return;
-            }
-            ProcessLevelUnload();
-        }
+        */
 
 
         public void SetTargeted() {
@@ -1246,6 +1259,29 @@ namespace AnyRPG {
                 interactableOptionComponent.LoadFromSaveData(interactableSaveData);
             }
         }
+
+        public virtual void PopulatePersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {
+            //Debug.Log($"{gameObject.name}.Interactable.PopulatePersistentObjectSaveData()");
+
+            if (persistInteractableData == false) {
+                return;
+            }
+            persistentObjectSaveData.InteractableSaveData = GetInteractableSaveData();
+        }
+
+        public virtual void LoadPersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {
+            //Debug.Log($"{gameObject.name}.Interactable.LoadPersistentObjectSaveData()");
+
+            if (persistInteractableData == false) {
+                return;
+            }
+            if (persistentObjectSaveData.InteractableSaveData == null) {
+                //Debug.LogWarning($"{gameObject.name}.Interactable.LoadPersistentObjectSaveData(): no interactable save data found.  skipping.");
+                return;
+            }
+            LoadInteractableSaveData(persistentObjectSaveData.InteractableSaveData);
+        }
+
     }
 
 }

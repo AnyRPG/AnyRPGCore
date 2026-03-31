@@ -292,7 +292,7 @@ namespace AnyRPG {
             saveManager.SavePersistentObject(UUID, persistentObjectSaveData, this);
         }
 
-        public PersistentObjectSaveData GetPersistentObject(string UUID) {
+        public PersistentObjectSaveData GetPersistentObjectSaveData(string UUID) {
             return saveManager.GetPersistentObject(UUID, this);
         }
 

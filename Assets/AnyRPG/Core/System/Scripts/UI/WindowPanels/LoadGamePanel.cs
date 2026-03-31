@@ -146,7 +146,7 @@ namespace AnyRPG {
 
             selectedLoadGameButton = loadButton;
 
-            loadGameManager.SetSavedGame(loadButton.PlayerCharacterSaveData);
+            loadGameManager.SetSavedGame(loadButton.SinglePlayerSaveData);
 
             // ensure the correct unit and character model is spawned
             characterPreviewPanel.ReloadUnit();
@@ -194,9 +194,9 @@ namespace AnyRPG {
             ClearLoadButtons();
             characterPreviewPanel.ClearPreviewTarget();
             int count = 0;
-            foreach (PlayerCharacterSaveData playerCharacterSaveData in loadGameManager.CharacterList) {
+            foreach (SinglePlayerSaveData singlePlayerSaveData in loadGameManager.CharacterList) {
                 //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
-                AddLoadButton(playerCharacterSaveData);
+                AddLoadButton(singlePlayerSaveData);
                 count++;
             }
             uINavigationControllers[1].UpdateNavigationList();
@@ -231,11 +231,11 @@ namespace AnyRPG {
             scrollRect.Rebuild(CanvasUpdate.PostLayout);
         }
 
-        private void AddLoadButton(PlayerCharacterSaveData playerCharacterSaveData) {
+        private void AddLoadButton(SinglePlayerSaveData singlePlayerSaveData) {
             GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
             LoadGameButton loadGameButton = go.GetComponent<LoadGameButton>();
             loadGameButton.Configure(systemGameManager);
-            loadGameButton.AddSaveData(this, playerCharacterSaveData);
+            loadGameButton.AddSaveData(this, singlePlayerSaveData);
             loadGameButtons.Add(loadGameButton);
             uINavigationControllers[0].AddActiveButton(loadGameButton);
         }
@@ -290,7 +290,7 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.LoadGame()");
 
             if (selectedLoadGameButton != null) {
-                loadGameManager.LoadGame(selectedLoadGameButton.PlayerCharacterSaveData);
+                loadGameManager.LoadGame(selectedLoadGameButton.SinglePlayerSaveData);
             }
         }
 

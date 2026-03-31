@@ -2014,21 +2014,18 @@ namespace AnyRPG {
             unitController.UnitEventController.NotifyOnEnterInteractableTrigger(triggerInteractable);
         }
 
-        /*
-        public void HandleDespawnClient(UnitController controller) {
-        }
-        */
-
-
         public void HandleDespawn(UnitController controller) {
-            HandleDespawnClient();
+            //HandleDespawnClient();
         }
 
+        /*
         [ObserversRpc]
         public void HandleDespawnClient() {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDespawnClient()");
+
             unitController.Despawn(0, false, true);
         }
-
+        */
 
         [ObserversRpc]
         public void HandleLevelChanged(int newLevel) {

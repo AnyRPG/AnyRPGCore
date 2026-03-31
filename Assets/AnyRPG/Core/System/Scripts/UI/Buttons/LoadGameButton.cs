@@ -19,7 +19,7 @@ namespace AnyRPG {
         [SerializeField]
         protected TextMeshProUGUI description = null;
 
-        protected PlayerCharacterSaveData playerCharacterSaveData;
+        protected SinglePlayerSaveData singlePlayerSaveData;
 
         LoadGamePanel loadGamePanel = null;
 
@@ -30,7 +30,7 @@ namespace AnyRPG {
         // game manager references
         protected SystemDataFactory systemDataFactory = null;
 
-        public PlayerCharacterSaveData PlayerCharacterSaveData { get => playerCharacterSaveData; set => playerCharacterSaveData = value; }
+        public SinglePlayerSaveData SinglePlayerSaveData { get => singlePlayerSaveData; set => singlePlayerSaveData = value; }
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -39,13 +39,13 @@ namespace AnyRPG {
             systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
-        public void AddSaveData(LoadGamePanel loadGamePanel, PlayerCharacterSaveData playerCharacterSaveData) {
+        public void AddSaveData(LoadGamePanel loadGamePanel, SinglePlayerSaveData playerCharacterSaveData) {
             //Debug.Log("LoadGameButton.AddSaveData()");
             this.loadGamePanel = loadGamePanel;
-            this.playerCharacterSaveData = playerCharacterSaveData;
+            this.singlePlayerSaveData = playerCharacterSaveData;
 
             icon.sprite = null;
-            if (playerCharacterSaveData.CharacterSaveData.CharacterFaction != null && PlayerCharacterSaveData.CharacterSaveData.CharacterFaction != string.Empty) {
+            if (playerCharacterSaveData.CharacterSaveData.CharacterFaction != null && SinglePlayerSaveData.CharacterSaveData.CharacterFaction != string.Empty) {
                 Faction playerFaction = systemDataFactory.GetResource<Faction>(playerCharacterSaveData.CharacterSaveData.CharacterFaction);
                 // needs to be checked anyway.  could have invalid faction in save data
                 if (playerFaction != null) {

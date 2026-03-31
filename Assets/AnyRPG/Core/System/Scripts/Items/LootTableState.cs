@@ -1,5 +1,3 @@
-//using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -24,7 +22,6 @@ namespace AnyRPG {
 
         public List<LootDrop> DroppedItems { get => droppedItems; set => droppedItems = value; }
         public bool Rolled { get => rolled; set => rolled = value; }
-        public int LootTableRemainingDrops { get => lootTableRemainingDrops; set => lootTableRemainingDrops = value; }
 
         public LootTableState(SystemGameManager systemGameManager, int accountId) {
             Configure(systemGameManager);
@@ -46,11 +43,13 @@ namespace AnyRPG {
         }
 
         private void AddDroppedItems(List<LootDrop> lootDrops) {
+            //Debug.Log($"LootTableState.AddDroppedItems(lootDrops.Count: {lootDrops.Count})");
+
             droppedItems.AddRange(lootDrops);
         }
 
         private void RollLoot(UnitController sourceUnitController, LootTable lootTable) {
-            //Debug.Log($"LootTableState.RollLoot({sourceUnitController.gameObject.name})");
+            //Debug.Log($"LootTableState.RollLoot({sourceUnitController.gameObject.name}, lootTable: {lootTable.ResourceName})");
 
             int lootTableRemainingDrops = lootTable.DropLimit;
             bool lootTableUnlimitedDrops = (lootTable.DropLimit == 0);
@@ -177,7 +176,7 @@ namespace AnyRPG {
         }
 
         public List<LootDrop> GetLoot(UnitController sourceUnitController, LootTable lootTable, bool rollLoot) {
-            //Debug.Log($"LootTableState.GetLoot({sourceUnitController.gameObject.name}, {rollLoot})");
+            //Debug.Log($"LootTableState.GetLoot({sourceUnitController.gameObject.name}, rollLoot: {rollLoot})");
 
             if (!rolled && rollLoot == true) {
                 //Debug.Log("LootTable.GetLoot() !rolled. rolling...");

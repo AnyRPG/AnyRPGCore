@@ -1,10 +1,6 @@
-using AnyRPG;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
     public abstract class LootableNodeComponent : InteractableOptionComponent, ILootHolder {
@@ -125,9 +121,10 @@ namespace AnyRPG {
             HandleOptionStateChange();
         }
 
-        private void Spawn() {
+        public void Spawn() {
             if (Props.SpawnObject != null && Props.SpawnObject.activeSelf == false) {
                 Props.SpawnObject.SetActive(true);
+                interactable.InteractableEventController.NotifyOnLootableNodeSpawnObjectSetActive(true);
             }
         }
 
@@ -158,39 +155,6 @@ namespace AnyRPG {
             //uIManager.lootWindow.CloseableWindowContents.OnCloseWindow += ClearTakeLootHandler;
             uIManager.lootWindow.OpenWindow();
         }
-
-        /*
-        //public void ClearTakeLootHandler(ICloseableWindowContents windowContents) {
-        public void ClearTakeLootHandler(CloseableWindowContents windowContents) {
-            //Debug.Log($"{gameObject.name}.LootableNode.ClearTakeLootHandler()");
-            CleanupWindowEventSubscriptions();
-        }
-
-        public void CreateWindowEventSubscriptions() {
-            //Debug.Log($"{gameObject.name}.LootableNode.CreateWindowEventSubscriptions()");
-            systemEventManager.OnTakeLoot += HandleTakeLoot;
-        }
-
-        public void CleanupWindowEventSubscriptions() {
-            //Debug.Log($"{gameObject.name}.LootableNode.CleanupWindowEventSubscriptions()");
-            systemEventManager.OnTakeLoot -= HandleTakeLoot;
-            if (uIManager?.lootWindow?.CloseableWindowContents != null) {
-                uIManager.lootWindow.CloseableWindowContents.OnCloseWindow -= ClearTakeLootHandler;
-            }
-        }
-
-        public override void ProcessCleanupEventSubscriptions() {
-            //Debug.Log("GatheringNode.CleanupEventSubscriptions()");
-            base.ProcessCleanupEventSubscriptions();
-            CleanupWindowEventSubscriptions();
-        }
-
-        public void HandleTakeLoot(int accountId) {
-            //Debug.Log($"{interactable.gameObject.name}.LootableNode.HandleTakeLoot({accountId})");
-
-            CheckDropListSize();
-        }
-        */
 
         public void ClearLootTables() {
             Props.LootTables.Clear();
@@ -233,11 +197,12 @@ namespace AnyRPG {
             }
         }
 
-        private void Despawn() {
+        public void Despawn() {
             //Debug.Log($"{interactable.gameObject.name}.LootableNode.Despawn()");
 
             if (Props.SpawnObject != null && Props.SpawnObject.activeSelf == true) {
                 Props.SpawnObject.SetActive(false);
+                interactable.InteractableEventController.NotifyOnLootableNodeSpawnObjectSetActive(false);
             }
         }
 
@@ -259,6 +224,7 @@ namespace AnyRPG {
 
         public override bool CanInteract(UnitController sourceUnitController, bool processRangeCheck, bool passedRangeCheck, bool processNonCombatCheck, bool viaSwitch = false) {
             //Debug.Log(interactable.gameObject.name + ".LootableNode.CanInteract()");
+
             bool returnValue = base.CanInteract(sourceUnitController, processRangeCheck, passedRangeCheck, processNonCombatCheck);
             if (returnValue == false) {
                 return false;
@@ -267,6 +233,46 @@ namespace AnyRPG {
                 return false;
             }
             return (GetCurrentOptionCount(sourceUnitController) == 0 ? false : true);
+        }
+
+        public override void SetSaveData(InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.LootableNodeComponent.SetSaveData() lootDropped: {lootDropped} pickupCount: {pickupCount}");
+
+            base.SetSaveData(interactableSaveData);
+            LootableNodeSaveData lootableNodeSaveData = new LootableNodeSaveData() {
+                    LootDropped = lootDropped,
+                    PickupCount = pickupCount,
+                    SpawnObjectActive = (Props.SpawnObject != null ? Props.SpawnObject.activeSelf : false),
+                    LootHolderSerializedData = lootHolder.GetSerializedData()
+            };
+            if (interactableSaveData.LootableNodeSaveData.Count == 0) {
+                interactableSaveData.LootableNodeSaveData.Add(lootableNodeSaveData);
+            } else {
+                interactableSaveData.LootableNodeSaveData[0] = lootableNodeSaveData;
+            }
+        }
+
+        public override void LoadFromSaveData(InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.LootableNodeComponent.LoadFromSaveData() lootDropped: {interactableSaveData.LootableNodeSaveData.LootDropped} SpawnObjectActive: {interactableSaveData.LootableNodeSaveData.SpawnObjectActive}");
+
+            base.LoadFromSaveData(interactableSaveData);
+            if (interactableSaveData.LootableNodeSaveData.Count == 0) {
+                return;
+            }
+            lootDropped = interactableSaveData.LootableNodeSaveData[0].LootDropped;
+            pickupCount = interactableSaveData.LootableNodeSaveData[0].PickupCount;
+            if (Props.SpawnObject != null) {
+                Props.SpawnObject.SetActive(interactableSaveData.LootableNodeSaveData[0].SpawnObjectActive);
+                if (interactableSaveData.LootableNodeSaveData[0].SpawnObjectActive == false) {
+                    if (spawnCoroutine == null && Props.SpawnTimer >= 0f) {
+                        spawnCoroutine = interactable.StartCoroutine(StartSpawnCountdown());
+                    }
+                }
+            }
+
+            if (lootDropped == true) {
+                lootHolder.LoadFromSerializedData(interactableSaveData.LootableNodeSaveData[0].LootHolderSerializedData);
+            }
         }
     }
 

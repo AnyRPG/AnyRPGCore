@@ -1,9 +1,4 @@
-using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
 
@@ -16,6 +11,9 @@ namespace AnyRPG {
         Transform transform { get; }
         GameObject gameObject { get; }
         PersistentObjectComponent PersistentObjectComponent { get; }
+
+        void PopulatePersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData);
+        void LoadPersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData);
     }
 
 }

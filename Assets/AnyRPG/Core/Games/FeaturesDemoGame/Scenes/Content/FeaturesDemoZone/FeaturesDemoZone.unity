@@ -1085,7 +1085,7 @@ Transform:
   - {fileID: 5488711579404112527}
   - {fileID: 6591610198128357618}
   - {fileID: 4847879129869270000}
-  - {fileID: 5782635185552434104}
+  - {fileID: 1484436294}
   - {fileID: 1632073315936369291}
   - {fileID: 6690422538726243925}
   - {fileID: 4765394317002679730}
@@ -6955,6 +6955,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: WoodHouse2OpenWindows
       objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -6962,7 +6977,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1078900128}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4640400476055155385, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 218869502}
   m_SourcePrefab: {fileID: 100100000, guid: e70d893ffd5d021428a4c000b45f63c4, type: 3}
 --- !u!4 &218869500 stripped
 Transform:
@@ -6970,6 +6989,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 218869499}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &218869501 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4640400476055155385, guid: e70d893ffd5d021428a4c000b45f63c4,
+    type: 3}
+  m_PrefabInstance: {fileID: 218869499}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &218869502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218869501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: f2b568e3-8db8-4d83-89f3-0847716dd265
+  forceUpdateUUID: 0
 --- !u!1001 &220377118
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13074,18 +13113,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 371638876}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &371638879 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: -7627935086868924826, guid: 182e453858cadc34392feb6b095a7fa1,
-    type: 3}
-  m_PrefabInstance: {fileID: 371638876}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 371638878}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edd7d0c5d9a0d6742884fddb97f12685, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &371638880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13716,6 +13743,11 @@ MonoBehaviour:
   interactionMaxRange: 2
   interactionPoints: []
   componentController: {fileID: 0}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!114 &393183661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13780,6 +13812,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 2875940014991222441, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2875940014991222441, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2875940014991222441, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3508439011802585147, guid: e2cff9046c11c454489acee9c72b547b,
         type: 3}
@@ -13878,6 +13925,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 398220994}
+    - targetCorrespondingSourceObject: {fileID: 637662437291012175, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 398220995}
   m_SourcePrefab: {fileID: 100100000, guid: e2cff9046c11c454489acee9c72b547b, type: 3}
 --- !u!4 &398220990 stripped
 Transform:
@@ -13952,6 +14003,20 @@ MonoBehaviour:
     targetRotation: {x: 0, y: 0, z: 0}
     openAudioClip: {fileID: 8300000, guid: e9b121132010f054880abc43a4151873, type: 3}
     closeAudioClip: {fileID: 8300000, guid: e9b121132010f054880abc43a4151873, type: 3}
+--- !u!114 &398220995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 398220991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: a15a5128-9657-41e3-b512-8735353cd305
+  forceUpdateUUID: 0
 --- !u!1001 &399044120
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16769,6 +16834,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1676408245}
     m_Modifications:
+    - target: {fileID: 1703211634420831897, guid: 182e453858cadc34392feb6b095a7fa1,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1703211634420831897, guid: 182e453858cadc34392feb6b095a7fa1,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1703211634420831897, guid: 182e453858cadc34392feb6b095a7fa1,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5114853980853533880, guid: 182e453858cadc34392feb6b095a7fa1,
         type: 3}
       propertyPath: m_RootOrder
@@ -16832,7 +16912,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 393345111013423631, guid: 182e453858cadc34392feb6b095a7fa1,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 489004167}
   m_SourcePrefab: {fileID: 100100000, guid: 182e453858cadc34392feb6b095a7fa1, type: 3}
 --- !u!4 &489004165 stripped
 Transform:
@@ -16840,6 +16924,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 489004164}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &489004166 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 393345111013423631, guid: 182e453858cadc34392feb6b095a7fa1,
+    type: 3}
+  m_PrefabInstance: {fileID: 489004164}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &489004167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489004166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: c7f096ba-0ddc-4a27-8b43-37467f261968
+  forceUpdateUUID: 0
 --- !u!1001 &493848864
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17210,6 +17314,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1676408245}
     m_Modifications:
+    - target: {fileID: 1703211634420831897, guid: 182e453858cadc34392feb6b095a7fa1,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1703211634420831897, guid: 182e453858cadc34392feb6b095a7fa1,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1703211634420831897, guid: 182e453858cadc34392feb6b095a7fa1,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5114853980853533880, guid: 182e453858cadc34392feb6b095a7fa1,
         type: 3}
       propertyPath: m_RootOrder
@@ -17273,7 +17392,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 393345111013423631, guid: 182e453858cadc34392feb6b095a7fa1,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 504467406}
   m_SourcePrefab: {fileID: 100100000, guid: 182e453858cadc34392feb6b095a7fa1, type: 3}
 --- !u!4 &504467404 stripped
 Transform:
@@ -17281,6 +17404,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 504467403}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &504467405 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 393345111013423631, guid: 182e453858cadc34392feb6b095a7fa1,
+    type: 3}
+  m_PrefabInstance: {fileID: 504467403}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &504467406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 504467405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: b92b3c1f-3b65-434c-bf0e-ed48dca19820
+  forceUpdateUUID: 0
 --- !u!1001 &507362491
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20105,6 +20248,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 37058856}
     m_Modifications:
+    - target: {fileID: 245425560069984829, guid: a08496c8a860cb342964d0226945e311,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 245425560069984829, guid: a08496c8a860cb342964d0226945e311,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 245425560069984829, guid: a08496c8a860cb342964d0226945e311,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 502565618688254078, guid: a08496c8a860cb342964d0226945e311,
         type: 3}
       propertyPath: m_Name
@@ -20168,7 +20326,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 502565618688254078, guid: a08496c8a860cb342964d0226945e311,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 591164451}
   m_SourcePrefab: {fileID: 100100000, guid: a08496c8a860cb342964d0226945e311, type: 3}
 --- !u!4 &591164449 stripped
 Transform:
@@ -20176,6 +20338,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 591164448}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &591164450 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 502565618688254078, guid: a08496c8a860cb342964d0226945e311,
+    type: 3}
+  m_PrefabInstance: {fileID: 591164448}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &591164451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591164450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: df596b5c-101a-40c4-8973-6da793113c7b
+  forceUpdateUUID: 0
 --- !u!1001 &592946669
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21644,6 +21826,11 @@ MonoBehaviour:
   interactionMaxRange: 2
   interactionPoints: []
   componentController: {fileID: 0}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!65 &623275583
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -32046,7 +32233,7 @@ MonoBehaviour:
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     controlObjects:
-    - {fileID: 371638879}
+    - {fileID: 0}
     switchGroup:
     - {fileID: 1709763946}
     - {fileID: 1339571315}
@@ -32077,6 +32264,11 @@ MonoBehaviour:
   interactionMaxRange: 2
   interactionPoints: []
   componentController: {fileID: 0}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!4 &902514105
 Transform:
   m_ObjectHideFlags: 0
@@ -33158,6 +33350,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: WoodHouse2OpenWindows
       objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -33165,7 +33372,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1169084234}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4640400476055155385, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 925737333}
   m_SourcePrefab: {fileID: 100100000, guid: e70d893ffd5d021428a4c000b45f63c4, type: 3}
 --- !u!4 &925737331 stripped
 Transform:
@@ -33173,6 +33384,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 925737330}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &925737332 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4640400476055155385, guid: e70d893ffd5d021428a4c000b45f63c4,
+    type: 3}
+  m_PrefabInstance: {fileID: 925737330}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &925737333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 925737332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: 087b7f8c-68b0-4194-b373-77517aa13a3e
+  forceUpdateUUID: 0
 --- !u!1 &926343725
 GameObject:
   m_ObjectHideFlags: 0
@@ -44603,6 +44834,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: WoodHouse2OpenWindows
       objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2096954129943274561, guid: e70d893ffd5d021428a4c000b45f63c4,
         type: 3}
       propertyPath: m_Carve
@@ -44615,7 +44861,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1809061786}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4640400476055155385, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1243431642}
   m_SourcePrefab: {fileID: 100100000, guid: e70d893ffd5d021428a4c000b45f63c4, type: 3}
 --- !u!4 &1243431640 stripped
 Transform:
@@ -44623,6 +44873,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1243431639}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1243431641 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4640400476055155385, guid: e70d893ffd5d021428a4c000b45f63c4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1243431639}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1243431642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243431641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: ab7cbe61-16fb-4ec4-b740-7558bfe72fb0
+  forceUpdateUUID: 0
 --- !u!1001 &1249022323
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -47934,6 +48204,11 @@ MonoBehaviour:
   interactionMaxRange: 2
   interactionPoints: []
   componentController: {fileID: 0}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!65 &1339571317
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -52756,6 +53031,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: WoodHouse2OpenWindows
       objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -52763,7 +53053,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1295486623}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4640400476055155385, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1479372122}
   m_SourcePrefab: {fileID: 100100000, guid: e70d893ffd5d021428a4c000b45f63c4, type: 3}
 --- !u!4 &1479372120 stripped
 Transform:
@@ -52771,6 +53065,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1479372119}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1479372121 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4640400476055155385, guid: e70d893ffd5d021428a4c000b45f63c4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1479372119}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1479372122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1479372121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: 7133fafb-611d-4751-97e8-7aea4390f981
+  forceUpdateUUID: 0
 --- !u!1001 &1480552999
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -53110,6 +53424,119 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1483750752}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1484436293
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 37058856}
+    m_Modifications:
+    - target: {fileID: 4006797846942632777, guid: 15055f5f488b34b4bbf322e0f51ab16d,
+        type: 3}
+      propertyPath: m_Name
+      value: ActivatableCandle
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382233082198004211, guid: 15055f5f488b34b4bbf322e0f51ab16d,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.2786682
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382233082198004211, guid: 15055f5f488b34b4bbf322e0f51ab16d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.0920142
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382233082198004211, guid: 15055f5f488b34b4bbf322e0f51ab16d,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.8924194
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382233082198004211, guid: 15055f5f488b34b4bbf322e0f51ab16d,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.00000035762784
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382233082198004211, guid: 15055f5f488b34b4bbf322e0f51ab16d,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382233082198004211, guid: 15055f5f488b34b4bbf322e0f51ab16d,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382233082198004211, guid: 15055f5f488b34b4bbf322e0f51ab16d,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382233082198004211, guid: 15055f5f488b34b4bbf322e0f51ab16d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382233082198004211, guid: 15055f5f488b34b4bbf322e0f51ab16d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382233082198004211, guid: 15055f5f488b34b4bbf322e0f51ab16d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4535586697035502288, guid: 15055f5f488b34b4bbf322e0f51ab16d,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4535586697035502288, guid: 15055f5f488b34b4bbf322e0f51ab16d,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4535586697035502288, guid: 15055f5f488b34b4bbf322e0f51ab16d,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4006797846942632777, guid: 15055f5f488b34b4bbf322e0f51ab16d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1484436296}
+  m_SourcePrefab: {fileID: 100100000, guid: 15055f5f488b34b4bbf322e0f51ab16d, type: 3}
+--- !u!4 &1484436294 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4382233082198004211, guid: 15055f5f488b34b4bbf322e0f51ab16d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1484436293}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1484436295 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4006797846942632777, guid: 15055f5f488b34b4bbf322e0f51ab16d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1484436293}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1484436296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1484436295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: dfda542c-dbba-495f-b586-2436ac0ec6f5
+  forceUpdateUUID: 0
 --- !u!1001 &1487623110
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -61949,6 +62376,11 @@ MonoBehaviour:
   interactionMaxRange: 2
   interactionPoints: []
   componentController: {fileID: 0}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!65 &1709763948
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -66029,6 +66461,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: WoodHouse2OpenWindows
       objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -66036,7 +66483,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1236827301}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4640400476055155385, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1850184936}
   m_SourcePrefab: {fileID: 100100000, guid: e70d893ffd5d021428a4c000b45f63c4, type: 3}
 --- !u!4 &1850184934 stripped
 Transform:
@@ -66044,6 +66495,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1850184933}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1850184935 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4640400476055155385, guid: e70d893ffd5d021428a4c000b45f63c4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1850184933}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1850184936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850184935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: f57debfe-060b-4941-b8e3-312c3f193a3d
+  forceUpdateUUID: 0
 --- !u!1001 &1852632148
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -67514,6 +67985,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: WoodHouse2OpenWindows
       objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -67521,7 +68007,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 830250577}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4640400476055155385, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1904357675}
   m_SourcePrefab: {fileID: 100100000, guid: e70d893ffd5d021428a4c000b45f63c4, type: 3}
 --- !u!4 &1904357673 stripped
 Transform:
@@ -67529,6 +68019,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1904357672}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1904357674 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4640400476055155385, guid: e70d893ffd5d021428a4c000b45f63c4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1904357672}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1904357675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1904357674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: bf92c40c-8b23-437a-9258-01b9dc26cddf
+  forceUpdateUUID: 0
 --- !u!1001 &1904828576
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -71672,6 +72182,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: WoodHouseOpenWindows
       objectReference: {fileID: 0}
+    - target: {fileID: 4977861564403537719, guid: 22c258d381522a14d9f150ed090d641d,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977861564403537719, guid: 22c258d381522a14d9f150ed090d641d,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977861564403537719, guid: 22c258d381522a14d9f150ed090d641d,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -71679,7 +72204,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1137484093}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6467496067024467342, guid: 22c258d381522a14d9f150ed090d641d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2005233850}
   m_SourcePrefab: {fileID: 100100000, guid: 22c258d381522a14d9f150ed090d641d, type: 3}
 --- !u!4 &2005233848 stripped
 Transform:
@@ -71687,6 +72216,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2005233847}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2005233849 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6467496067024467342, guid: 22c258d381522a14d9f150ed090d641d,
+    type: 3}
+  m_PrefabInstance: {fileID: 2005233847}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2005233850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005233849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: e68d43a9-368e-4fbd-a498-421bcdeeae82
+  forceUpdateUUID: 0
 --- !u!1001 &2012458999
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -73730,6 +74279,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 37058856}
     m_Modifications:
+    - target: {fileID: 245425560069984829, guid: 3b284714e3b3f384e8bbb4ecfd6ebbe2,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 245425560069984829, guid: 3b284714e3b3f384e8bbb4ecfd6ebbe2,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 245425560069984829, guid: 3b284714e3b3f384e8bbb4ecfd6ebbe2,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 502565618688254078, guid: 3b284714e3b3f384e8bbb4ecfd6ebbe2,
         type: 3}
       propertyPath: m_Name
@@ -73793,7 +74357,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 502565618688254078, guid: 3b284714e3b3f384e8bbb4ecfd6ebbe2,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2081966847}
   m_SourcePrefab: {fileID: 100100000, guid: 3b284714e3b3f384e8bbb4ecfd6ebbe2, type: 3}
 --- !u!4 &2081966845 stripped
 Transform:
@@ -73801,6 +74369,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2081966844}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2081966846 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 502565618688254078, guid: 3b284714e3b3f384e8bbb4ecfd6ebbe2,
+    type: 3}
+  m_PrefabInstance: {fileID: 2081966844}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2081966847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2081966846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: 2e8403eb-a3c9-4978-9f9e-1af8819b0713
+  forceUpdateUUID: 0
 --- !u!1 &2090449965
 GameObject:
   m_ObjectHideFlags: 0
@@ -75969,6 +76557,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: WoodHouse2OpenWindows
       objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1304654992610745042, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -75976,7 +76579,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1619820797}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4640400476055155385, guid: e70d893ffd5d021428a4c000b45f63c4,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 457192555260186004}
   m_SourcePrefab: {fileID: 100100000, guid: e70d893ffd5d021428a4c000b45f63c4, type: 3}
 --- !u!4 &457192555260186002 stripped
 Transform:
@@ -75984,6 +76591,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 457192555260186001}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &457192555260186003 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4640400476055155385, guid: e70d893ffd5d021428a4c000b45f63c4,
+    type: 3}
+  m_PrefabInstance: {fileID: 457192555260186001}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &457192555260186004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 457192555260186003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: ceb74b3f-1470-4bcc-9e55-cdd6404f923d
+  forceUpdateUUID: 0
 --- !u!1001 &885560689988974616
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -77323,6 +77950,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: WoodHouseOpenWindows
       objectReference: {fileID: 0}
+    - target: {fileID: 4977861564403537719, guid: 22c258d381522a14d9f150ed090d641d,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977861564403537719, guid: 22c258d381522a14d9f150ed090d641d,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977861564403537719, guid: 22c258d381522a14d9f150ed090d641d,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -77330,7 +77972,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2053060190}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6467496067024467342, guid: 22c258d381522a14d9f150ed090d641d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2764961294048377013}
   m_SourcePrefab: {fileID: 100100000, guid: 22c258d381522a14d9f150ed090d641d, type: 3}
 --- !u!4 &2764961294048377011 stripped
 Transform:
@@ -77338,6 +77984,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2764961294048377010}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2764961294048377012 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6467496067024467342, guid: 22c258d381522a14d9f150ed090d641d,
+    type: 3}
+  m_PrefabInstance: {fileID: 2764961294048377010}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2764961294048377013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2764961294048377012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: 63860223-74b6-4c3a-aa26-e034db7f3086
+  forceUpdateUUID: 0
 --- !u!1001 &3031104793872903616
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -77505,6 +78171,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.x
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 2875940014991222441, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2875940014991222441, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2875940014991222441, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3508439011802585147, guid: e2cff9046c11c454489acee9c72b547b,
         type: 3}
       propertyPath: animatedObjectProps.switchOnly
@@ -77627,6 +78308,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 3066990784318149784}
+    - targetCorrespondingSourceObject: {fileID: 637662437291012175, guid: e2cff9046c11c454489acee9c72b547b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3066990784318149785}
   m_SourcePrefab: {fileID: 100100000, guid: e2cff9046c11c454489acee9c72b547b, type: 3}
 --- !u!4 &3066990784318149780 stripped
 Transform:
@@ -77702,6 +78387,20 @@ MonoBehaviour:
     targetRotation: {x: 0, y: 0, z: -180}
     openAudioClip: {fileID: 8300000, guid: e9b121132010f054880abc43a4151873, type: 3}
     closeAudioClip: {fileID: 8300000, guid: e9b121132010f054880abc43a4151873, type: 3}
+--- !u!114 &3066990784318149785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066990784318149781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: f4c83aa5-1de2-425f-afd6-b1d8e34b44df
+  forceUpdateUUID: 0
 --- !u!4 &3277567088967182993 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7739542548291809346, guid: 714ef0f851dc0ae4e8ccbc7312e40410,
@@ -78327,12 +79026,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c2a3682693e7c540aa97dbef946b85c, type: 3}
---- !u!4 &5782635185552434104 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 107535816584502590, guid: 364b569ec75208346bfeec88c3020809,
-    type: 3}
-  m_PrefabInstance: {fileID: 5854124610649439878}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5831622422216059980
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -78401,6 +79094,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: WoodFenceGate
       objectReference: {fileID: 0}
+    - target: {fileID: 5808050142584798552, guid: 9de0b6dda14a0c048a8098d7c86216d2,
+        type: 3}
+      propertyPath: persistInteractableData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5808050142584798552, guid: 9de0b6dda14a0c048a8098d7c86216d2,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnGameSave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5808050142584798552, guid: 9de0b6dda14a0c048a8098d7c86216d2,
+        type: 3}
+      propertyPath: persistentObjectComponent.saveOnLevelUnload
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8816906696840831293, guid: 9de0b6dda14a0c048a8098d7c86216d2,
         type: 3}
       propertyPath: m_Layer
@@ -78409,7 +79117,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7590289430970203792, guid: 9de0b6dda14a0c048a8098d7c86216d2,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5831622422216059983}
   m_SourcePrefab: {fileID: 100100000, guid: 9de0b6dda14a0c048a8098d7c86216d2, type: 3}
 --- !u!4 &5831622422216059981 stripped
 Transform:
@@ -78417,79 +79129,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5831622422216059980}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &5854124610649439878
-PrefabInstance:
+--- !u!1 &5831622422216059982 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7590289430970203792, guid: 9de0b6dda14a0c048a8098d7c86216d2,
+    type: 3}
+  m_PrefabInstance: {fileID: 5831622422216059980}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5831622422216059983
+MonoBehaviour:
   m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 37058856}
-    m_Modifications:
-    - target: {fileID: 107535816584502590, guid: 364b569ec75208346bfeec88c3020809,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 107535816584502590, guid: 364b569ec75208346bfeec88c3020809,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -3.2786682
-      objectReference: {fileID: 0}
-    - target: {fileID: 107535816584502590, guid: 364b569ec75208346bfeec88c3020809,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.0920142
-      objectReference: {fileID: 0}
-    - target: {fileID: 107535816584502590, guid: 364b569ec75208346bfeec88c3020809,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.8924194
-      objectReference: {fileID: 0}
-    - target: {fileID: 107535816584502590, guid: 364b569ec75208346bfeec88c3020809,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: -0.00000035762784
-      objectReference: {fileID: 0}
-    - target: {fileID: 107535816584502590, guid: 364b569ec75208346bfeec88c3020809,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 107535816584502590, guid: 364b569ec75208346bfeec88c3020809,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 107535816584502590, guid: 364b569ec75208346bfeec88c3020809,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 107535816584502590, guid: 364b569ec75208346bfeec88c3020809,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 107535816584502590, guid: 364b569ec75208346bfeec88c3020809,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 107535816584502590, guid: 364b569ec75208346bfeec88c3020809,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 735735929369970564, guid: 364b569ec75208346bfeec88c3020809,
-        type: 3}
-      propertyPath: m_Name
-      value: candle_plate
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 364b569ec75208346bfeec88c3020809, type: 3}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5831622422216059982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: ca03af69-29c9-4993-831a-2f6d1c6e092e
+  forceUpdateUUID: 0
 --- !u!1001 &5887533097163162154
 PrefabInstance:
   m_ObjectHideFlags: 0
