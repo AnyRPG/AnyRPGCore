@@ -164,6 +164,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         private void HandleActivatableObjectSetActiveClient(bool active) {
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleActivatableObjectSetActiveClient({active})");
 
             Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.Interactables;
             foreach (KeyValuePair<int, InteractableOptionComponent> kvp in currentInteractables) {
