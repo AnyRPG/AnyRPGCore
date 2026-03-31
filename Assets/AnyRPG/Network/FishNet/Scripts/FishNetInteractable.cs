@@ -7,7 +7,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 
 namespace AnyRPG {
@@ -118,6 +117,7 @@ namespace AnyRPG {
             interactable.InteractableEventController.OnPlayVoiceSound += HandlePlayVoiceSound;
             interactable.InteractableEventController.OnMiniMapStatusUpdate += HandleMiniMapStatusUpdate;
             interactable.InteractableEventController.OnSellItemToPlayer += HandleSellItemToPlayer;
+            interactable.InteractableEventController.OnLootableNodeSpawnObjectSetActive += HandleLootableNodeSpawnObjectSetActive;
 
             eventRegistrationComplete = true;
         }
@@ -151,8 +151,28 @@ namespace AnyRPG {
             interactable.InteractableEventController.OnPlayVoiceSound -= HandlePlayVoiceSound;
             interactable.InteractableEventController.OnMiniMapStatusUpdate -= HandleMiniMapStatusUpdate;
             interactable.InteractableEventController.OnSellItemToPlayer -= HandleSellItemToPlayer;
+            interactable.InteractableEventController.OnLootableNodeSpawnObjectSetActive -= HandleLootableNodeSpawnObjectSetActive;
 
             eventRegistrationComplete = false;
+        }
+
+        private void HandleLootableNodeSpawnObjectSetActive(bool active) {
+            HandleLootableNodeSpawnObjectSetActiveClient(active);
+        }
+
+        [ObserversRpc]
+        private void HandleLootableNodeSpawnObjectSetActiveClient(bool active) {
+            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.Interactables;
+            foreach (KeyValuePair<int, InteractableOptionComponent> kvp in currentInteractables) {
+                if (kvp.Value is LootableNodeComponent) {
+                    if (active == true) {
+                        (kvp.Value as LootableNodeComponent).Spawn();
+                    } else {
+                        (kvp.Value as LootableNodeComponent).Despawn();
+                    }
+                    break;
+                }
+            }
         }
 
         private void HandleSellItemToPlayer(VendorItem item, int componentIndex, int collectionIndex, int itemIndex) {

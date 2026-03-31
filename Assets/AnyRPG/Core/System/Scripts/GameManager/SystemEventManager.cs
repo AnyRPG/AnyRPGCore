@@ -287,7 +287,7 @@ namespace AnyRPG {
         }
 
         public void NotifyOnPlayerNameNotAvailable() {
-            Debug.Log("SystemEventManager.NotifyOnPlayerNameNotAvailable()");
+            //Debug.Log("SystemEventManager.NotifyOnPlayerNameNotAvailable()");
 
             OnPlayerNameNotAvailable();
         }

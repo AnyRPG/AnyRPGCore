@@ -121,9 +121,10 @@ namespace AnyRPG {
             HandleOptionStateChange();
         }
 
-        private void Spawn() {
+        public void Spawn() {
             if (Props.SpawnObject != null && Props.SpawnObject.activeSelf == false) {
                 Props.SpawnObject.SetActive(true);
+                interactable.InteractableEventController.NotifyOnLootableNodeSpawnObjectSetActive(true);
             }
         }
 
@@ -196,11 +197,12 @@ namespace AnyRPG {
             }
         }
 
-        private void Despawn() {
+        public void Despawn() {
             //Debug.Log($"{interactable.gameObject.name}.LootableNode.Despawn()");
 
             if (Props.SpawnObject != null && Props.SpawnObject.activeSelf == true) {
                 Props.SpawnObject.SetActive(false);
+                interactable.InteractableEventController.NotifyOnLootableNodeSpawnObjectSetActive(false);
             }
         }
 

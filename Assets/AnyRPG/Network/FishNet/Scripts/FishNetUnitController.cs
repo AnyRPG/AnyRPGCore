@@ -2021,7 +2021,7 @@ namespace AnyRPG {
         /*
         [ObserversRpc]
         public void HandleDespawnClient() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDespawnClient()");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDespawnClient()");
 
             unitController.Despawn(0, false, true);
         }

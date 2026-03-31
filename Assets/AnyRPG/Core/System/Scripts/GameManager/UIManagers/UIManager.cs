@@ -780,14 +780,14 @@ namespace AnyRPG {
         }
 
         private void HandleNameChangeFail() {
-            Debug.Log("UIManager.HandleNameChangeFail()");
+            //Debug.Log("UIManager.HandleNameChangeFail()");
 
             playerNameNotAvailableWindow.OpenWindow();
         }
 
 
         private void HandlePlayerNameNotAvailable() {
-            Debug.Log("UIManager.HandlePlayerNameNotAvailable()");
+            //Debug.Log("UIManager.HandlePlayerNameNotAvailable()");
 
             playerNameNotAvailableWindow.OpenWindow();
         }

@@ -411,7 +411,7 @@ namespace AnyRPG {
 
         /*
         public override void OnStopNetwork() {
-            Debug.Log($"FishNetClientConnector.OnStopNetwork()");
+            //Debug.Log($"FishNetClientConnector.OnStopNetwork()");
             base.OnStopNetwork();
         }
         */
@@ -511,7 +511,7 @@ namespace AnyRPG {
         }
 
         public void LoadNewScene(int accountId, int playerCharacterId, SceneInstanceType sceneInstanceType, SceneNode sceneNode) {
-            Debug.Log($"FishNetClientConnector.LoadNewScene(accountId: {accountId}, playerCharacterId: {playerCharacterId}, sceneInstanceType: {sceneInstanceType.ToString()})");
+            //Debug.Log($"FishNetClientConnector.LoadNewScene(accountId: {accountId}, playerCharacterId: {playerCharacterId}, sceneInstanceType: {sceneInstanceType.ToString()})");
 
             int clientId = networkManagerServer.GetClientIDForAccount(accountId);
             if (clientId == -1) {
@@ -548,7 +548,7 @@ namespace AnyRPG {
         }
 
         public void LoadExistingScene(int accountId, int sceneHandle) {
-            Debug.Log($"FishNetClientConnector.LoadExistingScene(accountId: {accountId}, sceneHandle: {sceneHandle})");
+            //Debug.Log($"FishNetClientConnector.LoadExistingScene(accountId: {accountId}, sceneHandle: {sceneHandle})");
 
             int clientId = networkManagerServer.GetClientIDForAccount(accountId);
             if (clientId == -1) {
@@ -730,7 +730,7 @@ namespace AnyRPG {
                 // which is overriding the manual scene unload timers
                 //SceneUnloadData sceneUnloadData = new SceneUnloadData(networkConnection.Scenes.First());
                 //base.NetworkManager.SceneManager.UnloadConnectionScenes(networkConnection, sceneUnloadData);
-                Debug.Log($"FishNetClientConnector.AdvertiseUnloadSceneServer() unloading current scene {networkConnection.Scenes.First().name}({networkConnection.Scenes.First().handle}) for client {clientId}");
+                //Debug.Log($"FishNetClientConnector.AdvertiseUnloadSceneServer() unloading current scene {networkConnection.Scenes.First().name}({networkConnection.Scenes.First().handle}) for client {clientId}");
 
                 // new hopefully safe code
                 // 1. Define which scenes the client should leave

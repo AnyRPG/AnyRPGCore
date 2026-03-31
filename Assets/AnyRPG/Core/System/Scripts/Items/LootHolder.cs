@@ -102,11 +102,11 @@ namespace AnyRPG {
         }
 
         public void LoadFromSerializedData(LootHolderSerializedData lootHolderSerializedData) {
-            Debug.Log($"LootHolder.LoadFromSerializedData() hashCode: {GetHashCode()} lootTableStateCount: {lootHolderSerializedData.LootTableStateSerializedDataList.Count}");
+            //Debug.Log($"LootHolder.LoadFromSerializedData() hashCode: {GetHashCode()} lootTableStateCount: {lootHolderSerializedData.LootTableStateSerializedDataList.Count}");
 
             lootTableStates = new Dictionary<LootTable, Dictionary<int, LootTableState>>();
             foreach (LootTableStateSerializedData lootTableStateSerializedData in lootHolderSerializedData.LootTableStateSerializedDataList) {
-                Debug.Log($"LootHolder.LoadFromSerializedData() lootTable: {lootTableStateSerializedData.LootTableName} accountId: {lootTableStateSerializedData.AccountId} lootDropCount: {lootTableStateSerializedData.LootDropSerializedDataList.Count}");
+                //Debug.Log($"LootHolder.LoadFromSerializedData() lootTable: {lootTableStateSerializedData.LootTableName} accountId: {lootTableStateSerializedData.AccountId} lootDropCount: {lootTableStateSerializedData.LootDropSerializedDataList.Count}");
                 LootTable lootTable = systemDataFactory.GetResource<LootTable>(lootTableStateSerializedData.LootTableName);
                 if (lootTable == null) {
                     Debug.LogWarning($"LootHolder.LoadFromSerializedData(): loot table {lootTableStateSerializedData.LootTableName} not found");
