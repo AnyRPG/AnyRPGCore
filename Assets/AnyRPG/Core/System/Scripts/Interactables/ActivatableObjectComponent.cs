@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace AnyRPG {
-    public abstract class ActivatableObjectComponent : InteractableOptionComponent {
+    public class ActivatableObjectComponent : InteractableOptionComponent {
 
         public ActivatableObjectProps Props { get => interactableOptionProps as ActivatableObjectProps; }
 
