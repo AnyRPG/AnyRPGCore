@@ -164,6 +164,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         private void HandleActivatableObjectSetActiveClient(bool active) {
+
             Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.Interactables;
             foreach (KeyValuePair<int, InteractableOptionComponent> kvp in currentInteractables) {
                 if (kvp.Value is ActivatableObjectComponent) {

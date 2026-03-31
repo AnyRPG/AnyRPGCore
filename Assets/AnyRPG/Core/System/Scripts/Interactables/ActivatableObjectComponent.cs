@@ -84,7 +84,7 @@ namespace AnyRPG {
         public void Spawn() {
             if (Props.SpawnObject != null && Props.SpawnObject.activeSelf == false) {
                 Props.SpawnObject.SetActive(true);
-                interactable.InteractableEventController.NotifyOnLootableNodeSpawnObjectSetActive(true);
+                interactable.InteractableEventController.NotifyOnActivatableObjectSetActive(true);
             }
         }
 
@@ -93,7 +93,7 @@ namespace AnyRPG {
 
             if (Props.SpawnObject != null && Props.SpawnObject.activeSelf == true) {
                 Props.SpawnObject.SetActive(false);
-                interactable.InteractableEventController.NotifyOnLootableNodeSpawnObjectSetActive(false);
+                interactable.InteractableEventController.NotifyOnActivatableObjectSetActive(false);
             }
         }
 
