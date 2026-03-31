@@ -29,6 +29,7 @@ namespace AnyRPG {
         public event Action OnEnableInteractableRange = delegate { };
         public event Action<UnitController, InteractableOptionComponent, int, int> OnInteractionWithOptionStarted = delegate { };
         public event Action<bool> OnLootableNodeSpawnObjectSetActive = delegate { };
+        public event Action<bool> OnActivatableObjectSetActive = delegate { };
 
         // interactable this controller is attached to
         private Interactable interactable;
@@ -137,6 +138,10 @@ namespace AnyRPG {
 
         public void NotifyOnLootableNodeSpawnObjectSetActive(bool active) {
             OnLootableNodeSpawnObjectSetActive(active);
+        }
+
+        public void NotifyOnActivatableObjectSetActive(bool active) {
+            OnActivatableObjectSetActive(active);
         }
 
 

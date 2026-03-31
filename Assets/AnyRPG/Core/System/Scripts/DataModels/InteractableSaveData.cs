@@ -12,6 +12,7 @@ namespace AnyRPG {
         public ItemInstanceListSaveData ItemInstanceListSaveData = new ItemInstanceListSaveData();
         public List<MoveableObjectSaveData> MoveableObjectSaveData = new List<MoveableObjectSaveData>();
         public List<AnimatedObjectSaveData> AnimatedObjectSaveData = new List<AnimatedObjectSaveData>();
+        public List<ActivatableObjectSaveData> ActivatableObjectSaveData = new List<ActivatableObjectSaveData>();
 
         public void BundleItems(SystemItemManager systemItemManager) {
             // bundle items from lootable character and lootable node into one list to be saved with the interactable
@@ -52,6 +53,11 @@ namespace AnyRPG {
         public bool SpawnObjectActive = false;
         public bool LootDropped = false;
         public int PickupCount = 0;
+    }
+
+    [Serializable]
+    public class ActivatableObjectSaveData {
+        public bool SpawnObjectActive = false;
     }
 
     [Serializable]

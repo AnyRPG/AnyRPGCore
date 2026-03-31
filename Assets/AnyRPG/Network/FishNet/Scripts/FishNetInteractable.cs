@@ -118,6 +118,7 @@ namespace AnyRPG {
             interactable.InteractableEventController.OnMiniMapStatusUpdate += HandleMiniMapStatusUpdate;
             interactable.InteractableEventController.OnSellItemToPlayer += HandleSellItemToPlayer;
             interactable.InteractableEventController.OnLootableNodeSpawnObjectSetActive += HandleLootableNodeSpawnObjectSetActive;
+            interactable.InteractableEventController.OnActivatableObjectSetActive += HandleActivatableObjectSetActive;
 
             eventRegistrationComplete = true;
         }
@@ -152,8 +153,28 @@ namespace AnyRPG {
             interactable.InteractableEventController.OnMiniMapStatusUpdate -= HandleMiniMapStatusUpdate;
             interactable.InteractableEventController.OnSellItemToPlayer -= HandleSellItemToPlayer;
             interactable.InteractableEventController.OnLootableNodeSpawnObjectSetActive -= HandleLootableNodeSpawnObjectSetActive;
+            interactable.InteractableEventController.OnActivatableObjectSetActive -= HandleActivatableObjectSetActive;
 
             eventRegistrationComplete = false;
+        }
+
+        private void HandleActivatableObjectSetActive(bool active) {
+            HandleActivatableObjectSetActiveClient(active);
+        }
+
+        [ObserversRpc]
+        private void HandleActivatableObjectSetActiveClient(bool active) {
+            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.Interactables;
+            foreach (KeyValuePair<int, InteractableOptionComponent> kvp in currentInteractables) {
+                if (kvp.Value is ActivatableObjectComponent) {
+                    if (active == true) {
+                        (kvp.Value as ActivatableObjectComponent).Spawn();
+                    } else {
+                        (kvp.Value as ActivatableObjectComponent).Despawn();
+                    }
+                    break;
+                }
+            }
         }
 
         private void HandleLootableNodeSpawnObjectSetActive(bool active) {

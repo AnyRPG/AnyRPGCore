@@ -718,6 +718,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -40
       objectReference: {fileID: 0}
+    - target: {fileID: 5474809123259556424, guid: b66d8435a633cc642b66fcd97473b3af,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 5695157175881220789, guid: b66d8435a633cc642b66fcd97473b3af,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1121,6 +1126,11 @@ MonoBehaviour:
   - {fileID: 7131734655128502909}
   - {fileID: 7593768696243408862}
   componentController: {fileID: 1758906233339251751}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!114 &1885127048862316154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1219,6 +1229,11 @@ MonoBehaviour:
   - {fileID: 7131734655128502909}
   - {fileID: 7593768696243408862}
   componentController: {fileID: 1526671544560080920}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!114 &4296358538136840100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1320,6 +1335,11 @@ MonoBehaviour:
   interactionMaxRange: 2
   interactionPoints: []
   componentController: {fileID: 3331725939642360069}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!114 &784979906706710583
 MonoBehaviour:
   m_ObjectHideFlags: 0
