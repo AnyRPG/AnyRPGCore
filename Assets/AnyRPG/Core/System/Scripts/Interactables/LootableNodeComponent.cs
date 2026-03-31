@@ -263,6 +263,11 @@ namespace AnyRPG {
             pickupCount = interactableSaveData.LootableNodeSaveData[0].PickupCount;
             if (Props.SpawnObject != null) {
                 Props.SpawnObject.SetActive(interactableSaveData.LootableNodeSaveData[0].SpawnObjectActive);
+                if (interactableSaveData.LootableNodeSaveData[0].SpawnObjectActive == false) {
+                    if (spawnCoroutine == null && Props.SpawnTimer >= 0f) {
+                        spawnCoroutine = interactable.StartCoroutine(StartSpawnCountdown());
+                    }
+                }
             }
 
             if (lootDropped == true) {

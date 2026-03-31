@@ -9,6 +9,7 @@ namespace AnyRPG {
 
         //protected Coroutine spawnCoroutine = null;
 
+        /*
         public override bool BlockTooltip {
             get {
                 if (Props.SpawnObject == null) {
@@ -17,6 +18,7 @@ namespace AnyRPG {
                 return (Props.SpawnObject.activeSelf == false);
             }
         }
+        */
 
         /*
         public override bool PrerequisitesMet(UnitController sourceUnitController) {
