@@ -7494,6 +7494,10 @@ MonoBehaviour:
     type: 3}
   musicPlayerNamePlateImage: {fileID: 21300000, guid: 0ab38e54abb1f744593a22ef6fb515d9,
     type: 3}
+  activatableObjectInteractionPanelImage: {fileID: 21300000, guid: cb19cabc72859994b9ca4fce40b1abdd,
+    type: 3}
+  activatableObjectNamePlateImage: {fileID: 21300000, guid: cb19cabc72859994b9ca4fce40b1abdd,
+    type: 3}
   questLogSize: 25
   timeOfDaySpeed: 1
   defaultSunAngle: 120

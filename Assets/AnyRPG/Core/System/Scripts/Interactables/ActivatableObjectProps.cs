@@ -19,8 +19,8 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject spawnObject = null;
 
-        public override Sprite Icon { get => (systemConfigurationManager.LootableCharacterInteractionPanelImage != null ? systemConfigurationManager.LootableCharacterInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (systemConfigurationManager.LootableCharacterNamePlateImage != null ? systemConfigurationManager.LootableCharacterNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (systemConfigurationManager.ActivatableObjectInteractionPanelImage != null ? systemConfigurationManager.ActivatableObjectInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (systemConfigurationManager.ActivatableObjectNamePlateImage != null ? systemConfigurationManager.ActivatableObjectNamePlateImage : base.NamePlateImage); }
         //public float DespawnTimer { get => despawnTimer; set => despawnTimer = value; }
         public GameObject SpawnObject { get => spawnObject; }
 

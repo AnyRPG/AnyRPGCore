@@ -261,6 +261,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1861592614595905966}
+    - targetCorrespondingSourceObject: {fileID: 735735929369970564, guid: 364b569ec75208346bfeec88c3020809,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2675531615670723976}
   m_SourcePrefab: {fileID: 100100000, guid: 364b569ec75208346bfeec88c3020809, type: 3}
 --- !u!1 &4006797846942632777 stripped
 GameObject:
@@ -281,7 +285,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.Interactable
   showTooltip: 1
-  interactableName: 
+  interactableName: Candle
   glowOnMouseOver: 1
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   interactionTooltipText: 
@@ -386,6 +390,27 @@ MonoBehaviour:
     Rotation: {x: 0, y: 0, z: 0, w: 0}
     Scale: {x: 0, y: 0, z: 0}
     IsValid: 0
+--- !u!65 &2675531615670723976
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4006797846942632777}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.285, y: 0.25671273, z: 0.285}
+  m_Center: {x: 0, y: 0.12438136, z: 0}
 --- !u!4 &4382233082198004211 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 107535816584502590, guid: 364b569ec75208346bfeec88c3020809,
