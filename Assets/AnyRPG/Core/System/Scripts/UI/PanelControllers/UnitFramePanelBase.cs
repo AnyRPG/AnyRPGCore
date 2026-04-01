@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class UnitFramePanelBase : NavigableInterfaceElement, IPointerClickHandler {
+    public class UnitFramePanelBase : NavigableInterfaceElement, IPointerClickHandler, IContextMenuTarget {
 
         [Header("Unit Name")]
 
@@ -89,6 +89,8 @@ namespace AnyRPG {
         protected PlayerManagerClient playerManagerClient = null;
         protected ContextMenuService contextMenuService = null;
         protected CharacterGroupServiceClient characterGroupServiceClient = null;
+        protected InspectCharacterService inspectCharacterService = null;
+        protected TradeServiceClient tradeServiceClient = null;
 
         //public BaseNamePlateController UnitNamePlateController { get => namePlateController; set => namePlateController = value; }
         public UnitController UnitController { get => unitController; set => unitController = value; }
@@ -114,6 +116,8 @@ namespace AnyRPG {
             playerManagerClient = systemGameManager.PlayerManagerClient;
             contextMenuService = systemGameManager.ContextMenuService;
             characterGroupServiceClient = systemGameManager.CharacterGroupServiceClient;
+            inspectCharacterService = systemGameManager.InspectCharacterService;
+            tradeServiceClient = systemGameManager.TradeServiceClient;
         }
 
         public void InitializeController() {
@@ -520,7 +524,7 @@ namespace AnyRPG {
         private void HandleRightClick(Vector2 mousePosition) {
             //Debug.Log($"UnitFrameController.HandleRightClick({mousePosition})");
 
-            contextMenuService.ShowContextMenu(unitController, mousePosition);
+            contextMenuService.ShowContextMenu(this, mousePosition);
         }
 
         protected virtual void HandleLeftClick(Vector2 mousePosition) {
@@ -528,5 +532,302 @@ namespace AnyRPG {
             // nothing here, overridden in derived classes
         }
 
+        public void SetupContextMenu(ContextMenuPanel contextMenuPanel) {
+            SetupInspectButton(contextMenuPanel);
+            SetupInviteButton(contextMenuPanel);
+            SetupKickButton(contextMenuPanel);
+            SetupDisbandButton(contextMenuPanel);
+            SetupLeaveButton(contextMenuPanel);
+            SetupPromoteButton(contextMenuPanel);
+            SetupTradeButton(contextMenuPanel);
+            SetupMessageButton(contextMenuPanel);
+        }
+
+        private void SetupInspectButton(ContextMenuPanel contextMenuPanel) {
+            if (unitController == null) {
+                return;
+            }
+            if (unitController == playerManagerClient.UnitController) {
+                // inspect button should not be available if the target is the player
+                return;
+            }
+
+            contextMenuPanel.EnableInspectButton(true);
+        }
+
+        private void SetupTradeButton(ContextMenuPanel contextMenuPanel) {
+            if (unitController == null) {
+                return;
+            }
+            if (unitController == playerManagerClient.UnitController) {
+                // cannot trade with ourselves
+                //Debug.Log("ContextMenuPanel.SetupMessageButton() target is player, disabling invite button");
+                return;
+            }
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                // can only trade in network mode
+                //Debug.Log("ContextMenuPanel.SetupMessageButton() game mode is local, disabling invite button");
+                return;
+            }
+
+            if (unitController.UnitControllerMode != UnitControllerMode.Player) {
+                // can only trade players
+                //Debug.Log("ContextMenuPanel.SetupMessageButton() target is not player, disabling invite button");
+                return;
+            }
+
+            if (Faction.RelationWith(unitController, playerManagerClient.UnitController) < 0) {
+                // can only trade neutral or better
+                //Debug.Log("ContextMenuPanel.SetupMessageButton() target faction relationship is negative, disabling invite button");
+                return;
+            }
+
+            // all checks passed.  this character can be traded with
+            contextMenuPanel.EnableTradeButton(true);
+        }
+
+        private void SetupMessageButton(ContextMenuPanel contextMenuPanel) {
+            if (unitController == null) {
+                return;
+            }
+
+            if (unitController == playerManagerClient.UnitController) {
+                // cannot message ourselves
+                //Debug.Log("ContextMenuPanel.SetupMessageButton() target is player, disabling invite button");
+                return;
+            }
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                // can only message in network mode
+                //Debug.Log("ContextMenuPanel.SetupMessageButton() game mode is local, disabling invite button");
+                return;
+            }
+
+            if (unitController.UnitControllerMode != UnitControllerMode.Player) {
+                // can only message players
+                //Debug.Log("ContextMenuPanel.SetupMessageButton() target is not player, disabling invite button");
+                return;
+            }
+
+            if (Faction.RelationWith(unitController, playerManagerClient.UnitController) < 0) {
+                // can only message neutral or better
+                //Debug.Log("ContextMenuPanel.SetupMessageButton() target faction relationship is negative, disabling invite button");
+                return;
+            }
+
+            if (systemConfigurationManager.PrivateMessageChatCommand == string.Empty) {
+                // system must have a message command to use
+                return;
+            }
+
+            // all checks passed.  this character can be messaged
+            contextMenuPanel.EnableMessageButton(true);
+        }
+
+        private void SetupInviteButton(ContextMenuPanel contextMenuPanel) {
+                if (unitController == null) {
+                    return;
+            }
+            if (unitController == playerManagerClient.UnitController) {
+                // invite button should not be available if the target is the player
+                //Debug.Log("ContextMenuPanel.SetupInviteButton() target is player, disabling invite button");
+                return;
+            }
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                // can only invite in network mode
+                //Debug.Log("ContextMenuPanel.SetupInviteButton() game mode is local, disabling invite button");
+                return;
+            }
+
+            if (unitController.UnitControllerMode != UnitControllerMode.Player) {
+                // can only invite players
+                //Debug.Log("ContextMenuPanel.SetupInviteButton() target is not player, disabling invite button");
+                return;
+            }
+
+            if (Faction.RelationWith(unitController, playerManagerClient.UnitController) < 0) {
+                // can only invite neutral or better
+                //Debug.Log("ContextMenuPanel.SetupInviteButton() target faction relationship is negative, disabling invite button");
+                return;
+            }
+
+            if (unitController.CharacterGroupManager.IsInGroup()) {
+                // target is already in a group
+                //Debug.Log("ContextMenuPanel.SetupInviteButton() target is already in a group, disabling invite button");
+                return;
+            }
+
+            // all checks passed.  this character can be invited
+            contextMenuPanel.EnableInviteButton(true);
+        }
+
+        private void SetupPromoteButton(ContextMenuPanel contextMenuPanel) {
+            if (unitController == null) {
+                return;
+            }
+
+            // check if the player is in a group
+            CharacterGroup characterGroup = characterGroupServiceClient.CurrentCharacterGroup;
+            if (characterGroup == null) {
+                // player is not in a group
+                return;
+            }
+
+            // check if the player is the leader
+            if (characterGroup.leaderPlayerCharacterId != playerManagerClient.UnitController.CharacterId) {
+                // player is not the leader
+                return;
+            }
+
+            // check that the target is not the player
+            if (unitController == playerManagerClient.UnitController) {
+                // cannot promote yourself
+                return;
+            }
+
+            // check if the target is in the group
+            if (characterGroup.MemberList[UnitControllerMode.Player].ContainsKey(unitController.CharacterId) == false) {
+                // target is not in the group
+                return;
+            }
+
+            // all checks passed.  this character can be promoted
+            contextMenuPanel.EnablePromoteButton(true);
+        }
+
+        private void SetupKickButton(ContextMenuPanel contextMenuPanel) {
+            if (unitController == null) {
+                return;
+            }
+            if (unitController == playerManagerClient.UnitController) {
+                // invite button should not be available if the target is the player
+                return;
+            }
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                // can only invite in network mode
+                return;
+            }
+
+            // check if the player is in a group
+            CharacterGroup characterGroup = characterGroupServiceClient.CurrentCharacterGroup;
+            if (characterGroup == null) {
+                // player is not in a group
+                return;
+            }
+
+            // check if the player is the leader
+            if (characterGroup.leaderPlayerCharacterId != playerManagerClient.UnitController.CharacterId) {
+                // player is not the leader
+                return;
+            }
+
+            // check if the target is in the group
+            if (characterGroup.MemberList[UnitControllerMode.Player].ContainsKey(unitController.CharacterId) == false) {
+                // target is not in the group
+                return;
+            }
+            // all checks passed.  this character can be kicked
+            contextMenuPanel.EnableKickButton(true);
+        }
+
+        private void SetupDisbandButton(ContextMenuPanel contextMenuPanel) {
+            if (unitController == null) {
+                return;
+            }
+            if (unitController != playerManagerClient.UnitController) {
+                // only the leader can disband themselves
+                return;
+            }
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                // can only invite in network mode
+                return;
+            }
+
+            // check if the player is in a group
+            CharacterGroup characterGroup = characterGroupServiceClient.CurrentCharacterGroup;
+            if (characterGroup == null) {
+                // player is not in a group
+                return;
+            }
+
+            // check if the player is the leader
+            if (characterGroup.leaderPlayerCharacterId != playerManagerClient.UnitController.CharacterId) {
+                // player is not the leader
+                return;
+            }
+
+            // all checks passed.  this character can be kicked
+            contextMenuPanel.EnableDisbandButton(true);
+        }
+
+        private void SetupLeaveButton(ContextMenuPanel contextMenuPanel) {
+            if (unitController == null) {
+                return;
+            }
+            if (unitController != playerManagerClient.UnitController) {
+                // only the leader can leave themselves
+                return;
+            }
+
+            if (systemGameManager.GameMode == GameMode.Local) {
+                // can only invite in network mode
+                return;
+            }
+
+            // check if the player is in a group
+            CharacterGroup characterGroup = characterGroupServiceClient.CurrentCharacterGroup;
+            if (characterGroup == null) {
+                // player is not in a group
+                return;
+            }
+
+            // all checks passed.  this character can be kicked
+            contextMenuPanel.EnableLeaveButton(true);
+        }
+
+        public void BeginPrivateMessage() {
+            //Debug.Log($"ContextMenuService.BeginPrivateMessage()");
+
+            if (unitController == null) {
+                return;
+            }
+            contextMenuService.BeginPrivateMessage(unitController);
+        }
+
+
+        public void PerformContextMenuAction(string actionName) {
+            switch (actionName) {
+                case "Inspect":
+                    inspectCharacterService.SetTargetUnitController(unitController);
+                    break;
+                case "Trade":
+                    tradeServiceClient.RequestBeginTrade(unitController.CharacterId);
+                    break;
+                case "Invite":
+                    characterGroupServiceClient.RequestInviteCharacterToGroup(unitController.CharacterId);
+                    break;
+                case "Kick":
+                    characterGroupServiceClient.RequestRemoveCharacterFromGroup(unitController.CharacterId);
+                    break;
+                case "Disband":
+                    characterGroupServiceClient.RequestDisbandGroup();
+                    break;
+                case "Leave":
+                    characterGroupServiceClient.RequestLeaveGroup();
+                    break;
+                case "Promote":
+                    characterGroupServiceClient.RequestPromoteCharacterToLeader(unitController.CharacterId);
+                    break;
+                case "Message":
+                    BeginPrivateMessage();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

@@ -192,6 +192,7 @@ namespace AnyRPG {
         public event Action<Vector3> OnRequestClickToMove = delegate { };
         public event Action<Interactable> OnRequestFollowInteractionTarget = delegate { };
         public event Action<Interactable, float> OnRequestFollowAttackTarget = delegate { };
+        public event Action<int, int> OnRequestSplitStack = delegate { };
 
         //public event System.Action<BaseAbilityProperties, Interactable> OnTargetInAbilityRangeFail = delegate { };
 
@@ -1060,6 +1061,10 @@ namespace AnyRPG {
 
         public void NotifyOnRequestFollowAttackTarget(Interactable target, float attackRange) {
             OnRequestFollowAttackTarget(target, attackRange);
+        }
+
+        public void NotifyOnRequestSplitStack(int inventorySlotIndex, int stackSize) {
+            OnRequestSplitStack(inventorySlotIndex, stackSize);
         }
 
         #endregion

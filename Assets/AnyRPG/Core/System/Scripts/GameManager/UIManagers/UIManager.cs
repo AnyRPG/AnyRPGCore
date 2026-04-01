@@ -194,6 +194,7 @@ namespace AnyRPG {
         public CloseableWindow petSpawnWindow;
         public CloseableWindow unitSpawnWindow;
         public CloseableWindow nameChangeWindow;
+        public CloseableWindow splitStackWindow;
         public CloseableWindow createGuildWindow;
 
 
@@ -422,6 +423,7 @@ namespace AnyRPG {
             mailComposeWindow.Configure(systemGameManager);
             mailViewWindow.Configure(systemGameManager);
             nameChangeWindow.Configure(systemGameManager);
+            splitStackWindow.Configure(systemGameManager);
             petSpawnWindow.Configure(systemGameManager);
             questLogWindow.Configure(systemGameManager);
             questGiverWindow.Configure(systemGameManager);
@@ -993,6 +995,7 @@ namespace AnyRPG {
             mailComposeWindow.CloseWindow();
             mailViewWindow.CloseWindow();
             nameChangeWindow.CloseWindow();
+            splitStackWindow.CloseWindow();
             onScreenKeyboardWindow.CloseWindow();
             petSpawnWindow.CloseWindow();
             questLogWindow.CloseWindow();

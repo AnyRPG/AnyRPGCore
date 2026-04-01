@@ -201,6 +201,9 @@ namespace AnyRPG {
             if (eventData.button == PointerEventData.InputButton.Right) {
                 HandleRightClick();
             }
+            if (eventData.button == PointerEventData.InputButton.Middle) {
+                HandleMiddleClick();
+            }
         }
 
 
@@ -216,6 +219,8 @@ namespace AnyRPG {
         protected virtual void HandleLeftClick() {
         }
 
+        protected virtual void HandleMiddleClick() {
+        }
 
         public virtual void Select() {
             //Debug.Log($"{gameObject.name}.NavigableElement.Select()");
