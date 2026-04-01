@@ -1171,7 +1171,7 @@ namespace AnyRPG {
                 }
             }
             foreach (InstantiatedItem instantiatedItem in splitItems) {
-                fromSlot.InventorySlot.RemoveItem(instantiatedItem);
+                inventorySlot.RemoveItem(instantiatedItem);
             }
             // find an empty slot and place the split stack there
             foreach (InventorySlot searchedInventorySlot in inventorySlots) {
