@@ -205,14 +205,14 @@ namespace AnyRPG {
         }
 
         public void Destroy() {
-            Debug.Log("ContextMenuPanel.Destroy()");
+            //Debug.Log("ContextMenuPanel.Destroy()");
 
             contextMenuService.ContextMenuTarget.PerformContextMenuAction("Destroy");
             contextMenuService.CloseContextMenu();
         }
 
         public void Drop() {
-            Debug.Log("ContextMenuPanel.Drop()");
+            //Debug.Log("ContextMenuPanel.Drop()");
 
             contextMenuService.ContextMenuTarget.PerformContextMenuAction("Drop");
             contextMenuService.CloseContextMenu();
