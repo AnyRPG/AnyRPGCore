@@ -212,6 +212,10 @@ namespace AnyRPG {
         }
 
         public bool StackItem(InstantiatedItem instantiatedItem) {
+            if (IsEmpty) {
+                AddItem(instantiatedItem);
+                return true;
+            }
             if (!IsEmpty && instantiatedItem.Item.ResourceName == InstantiatedItem.Item.ResourceName && InstantiatedItems.Count < InstantiatedItem.Item.MaximumStackSize) {
                 AddItem(instantiatedItem);
                 return true;

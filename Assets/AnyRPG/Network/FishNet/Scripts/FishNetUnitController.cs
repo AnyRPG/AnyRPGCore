@@ -1,15 +1,10 @@
-using FishNet;
 using FishNet.Component.Animating;
-using FishNet.Component.Transforming;
-using FishNet.Component.Transforming.Beta;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Prediction;
 using FishNet.Object.Synchronizing;
 using FishNet.Transporting;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -311,6 +306,7 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestClickToMove += HandleRequestClickToMove;
                 unitController.UnitEventController.OnRequestFollowInteractionTarget += HandleRequestFollowInteractionTarget;
                 unitController.UnitEventController.OnRequestFollowAttackTarget += HandleRequestFollowAttackTarget;
+                unitController.UnitEventController.OnRequestSplitStack += HandleRequestSplitStack;
             }
             // all clients
             //unitController.UnitEventController.OnDespawn += HandleDespawnClient;
@@ -352,6 +348,7 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestClickToMove -= HandleRequestClickToMove;
                 unitController.UnitEventController.OnRequestFollowInteractionTarget -= HandleRequestFollowInteractionTarget;
                 unitController.UnitEventController.OnRequestFollowAttackTarget -= HandleRequestFollowAttackTarget;
+                unitController.UnitEventController.OnRequestSplitStack -= HandleRequestSplitStack;
             }
         }
 
@@ -1597,6 +1594,15 @@ namespace AnyRPG {
             }
         }
 
+        private void HandleRequestSplitStack(int inventorySlotIndex, int stackSize) {
+            RequestSplitStack(inventorySlotIndex, stackSize);
+        }
+
+        [ServerRpc]
+        private void RequestSplitStack(int inventorySlotIndex, int stackSize) {
+            unitController.CharacterInventoryManager.SplitStack(inventorySlotIndex, stackSize);
+        }
+
         public void HandleRequestSwapBags(InstantiatedBag oldBag, InstantiatedBag newBag) {
             RequestSwapBags(oldBag.InstanceId, newBag.InstanceId);
         }
@@ -1711,7 +1717,6 @@ namespace AnyRPG {
         private void RequestDropItemFromInventorySlot(int fromSlotId, int toSlotId, bool fromSlotIsInventory, bool toSlotIsInventory) {
             unitController.CharacterInventoryManager.DropItemFromInventorySlot(fromSlotId, toSlotId, fromSlotIsInventory, toSlotIsInventory);
         }
-
 
         public void HandleRequestEquipToSlot(InstantiatedEquipment equipment, EquipmentSlotProfile profile) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRequestEquipToSlot({equipment.Equipment.ResourceName}, {profile.ResourceName}) instanceId: {equipment.InstanceId}");

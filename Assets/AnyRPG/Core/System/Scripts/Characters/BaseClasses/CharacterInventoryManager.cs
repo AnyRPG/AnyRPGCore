@@ -1138,6 +1138,50 @@ namespace AnyRPG {
             }
             return false;
         }
+
+        public void RequestSplitStack(int stackSize) {
+            if (fromSlot != null) {
+                if (systemGameManager.GameMode == GameMode.Local) {
+                    SplitStack(fromSlot.InventorySlot, stackSize);
+                } else {
+                    unitController.UnitEventController.NotifyOnRequestSplitStack(fromSlot.InventorySlot.GetCurrentInventorySlotIndex(unitController), stackSize);
+                }
+            }
+            fromSlot = null;
+        }
+
+        public void SplitStack(int inventorySlotIndex, int stackSize) {
+            if (inventorySlots.Count > inventorySlotIndex) {
+                SplitStack(inventorySlots[inventorySlotIndex], stackSize);
+            }
+        }
+
+        public void SplitStack(InventorySlot inventorySlot, int stackSize) {
+            // check to ensure we have an empty slot to split into
+            if (EmptySlotCount(false) == 0) {
+                unitController.UnitEventController.NotifyOnWriteMessageFeedMessage("No empty slots to split into!");
+                return;
+            }
+            // remove the items from the old slot, then place them into the new empty slot
+            List<InstantiatedItem> splitItems = new List<InstantiatedItem>();
+            foreach (InstantiatedItem instantiatedItem in inventorySlot.InstantiatedItems.Values) {
+                splitItems.Add(instantiatedItem);
+                if (splitItems.Count == stackSize) {
+                    break;
+                }
+            }
+            foreach (InstantiatedItem instantiatedItem in splitItems) {
+                fromSlot.InventorySlot.RemoveItem(instantiatedItem);
+            }
+            // find an empty slot and place the split stack there
+            foreach (InventorySlot searchedInventorySlot in inventorySlots) {
+                if (searchedInventorySlot.IsEmpty) {
+                    searchedInventorySlot.AddItems(splitItems);
+                    return;
+                }
+            }
+        }
+
     }
 
 }

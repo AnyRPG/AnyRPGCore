@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class SlotScript : DescribableIcon, IPointerClickHandler, IClickable {
+    public class SlotScript : DescribableIcon, IPointerClickHandler, IClickable, IContextMenuTarget {
 
         [Header("Slot Script")]
 
@@ -20,6 +20,7 @@ namespace AnyRPG {
         protected PlayerManagerClient playerManagerClient = null;
         protected ActionBarManager actionBarManager = null;
         protected MessageFeedManager messageFeedManager = null;
+        protected ContextMenuService contextMenuService = null;
 
         /// <summary>
         /// A reference to the bag that this slot belongs to
@@ -54,6 +55,7 @@ namespace AnyRPG {
             playerManagerClient = systemGameManager.PlayerManagerClient;
             actionBarManager = systemGameManager.UIManager.ActionBarManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
+            contextMenuService = systemGameManager.ContextMenuService;
         }
 
         public void SetInventorySlot(InventorySlot inventorySlot) {
@@ -149,8 +151,16 @@ namespace AnyRPG {
 
         protected override void HandleRightClick() {
             //Debug.Log("SlotScript.HandleRightClick()");
+            base.HandleRightClick();
             InteractWithSlot();
             ProcessMouseEnter();
+        }
+
+        protected override void HandleMiddleClick() {
+            //Debug.Log("SlotScript.HandleMiddleClick()");
+
+            base.HandleMiddleClick();
+            contextMenuService.ShowContextMenu(this, Input.mousePosition);
         }
 
         public void InteractWithSlot() {
@@ -494,6 +504,39 @@ namespace AnyRPG {
             base.OnSendObjectToPool();
 
             ClearInventorySlot();
+        }
+
+        public void SetupContextMenu(ContextMenuPanel contextMenuPanel) {
+            //Debug.Log("SlotScript.SetupContextMenu()");
+
+            // there are no actions for an empty slot
+            if (inventorySlot == null || inventorySlot.InstantiatedItem == null) {
+                return;
+            }
+            if (BagPanel is BankPanel) {
+                return;
+            }
+            contextMenuPanel.EnableSplitButton(inventorySlot.InstantiatedItem.Item.MaximumStackSize > 1 && inventorySlot.InstantiatedItems.Count > 1);
+            contextMenuPanel.EnableDestroyButton(true);
+        }
+
+        public void PerformContextMenuAction(string actionName) {
+            //Debug.Log($"SlotScript.PerformContextMenuAction({actionName})");
+
+            switch (actionName) {
+                case "Destroy":
+                    handScript.SetPosition(transform.position);
+                    SendItemToHandScript();
+                    uIManager.confirmDestroyMenuWindow.OpenWindow();
+                    break;
+                case "Split":
+                    if (inventorySlot.InstantiatedItem != null) {
+                        //handScript.TakeMoveable(inventorySlot.InstantiatedItem);
+                        playerManagerClient.UnitController.CharacterInventoryManager.FromSlot = this;
+                        uIManager.splitStackWindow.OpenWindow();
+                    }
+                    break;
+            }
         }
     }
 
