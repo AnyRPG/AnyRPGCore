@@ -700,7 +700,7 @@ namespace AnyRPG {
         */
 
         private void HandleSetParent(Transform parentTransform) {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({(parentTransform == null ? "null" : parentTransform.gameObject.name)})");
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({(parentTransform == null ? "null" : parentTransform.gameObject.name)})");
 
             if (networkObject != null && parentTransform != null) {
                 //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({(parentTransform == null ? "null" : parentTransform.gameObject.name)}) networkObject is not null");

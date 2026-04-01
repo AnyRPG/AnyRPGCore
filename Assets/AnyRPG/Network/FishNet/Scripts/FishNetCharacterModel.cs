@@ -157,6 +157,23 @@ namespace AnyRPG {
         private void HandleSpawnServerClient(NetworkConnection networkConnection) {
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.HandleSpawnServerClient() owner: {base.OwnerId}");
 
+            if (unitController?.RiderUnitController == null) {
+                return;
+            }
+            if (unitController.RiderUnitController.CameraTargetReady == true) {
+                unitController.RiderUnitController.UnitMountManager.HandleMountUnitSpawn();
+            } else {
+                StartCoroutine(WaitForRider());
+            }
+        }
+
+        private IEnumerator WaitForRider() {
+            Debug.Log($"{gameObject.name}.FishNetCharacterModel.WaitForRider() owner: {base.OwnerId} frame: {Time.frameCount}");
+
+            while (unitController?.RiderUnitController != null
+                && (unitController.RiderUnitController.IsInitialized == false || unitController.RiderUnitController.CameraTargetReady == false)) {
+                yield return null;
+            }
             if (unitController?.RiderUnitController != null) {
                 unitController.RiderUnitController.UnitMountManager.HandleMountUnitSpawn();
             }

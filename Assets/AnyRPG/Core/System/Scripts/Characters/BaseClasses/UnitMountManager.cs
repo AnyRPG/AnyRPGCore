@@ -67,7 +67,7 @@ namespace AnyRPG {
         }
 
         public void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SetMountedState({mountUnitController.gameObject.name}, {mountUnitProfile.ResourceName})");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SetMountedState({mountUnitController.gameObject.name}, {mountUnitProfile.ResourceName})");
 
             unitController.CharacterPetManager.DespawnAllPets();
 
@@ -117,7 +117,7 @@ namespace AnyRPG {
 
 
         public void HandleMountUnitSpawn() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn()");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn()");
 
             string originalPrefabSourceBone = mountUnitProfile.UnitPrefabProps.TargetBone;
             // NOTE: mount effects used sheathed position for character position.  do not use regular position to avoid putting mount below ground when spawning
@@ -145,7 +145,7 @@ namespace AnyRPG {
         }
 
         public void ActivateMountedState(bool lateJoin = false) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ActivateMountedState()");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ActivateMountedState()");
 
             unitController?.UnitModelController?.SheathWeapons();
 
@@ -176,7 +176,7 @@ namespace AnyRPG {
         }
 
         public void ConfigureCharacterMountedPhysics() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterMountedPhysics()");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterMountedPhysics()");
 
             unitController.RigidBody.WakeUp();
             //playerManager.UnitController.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.Discrete;
@@ -327,7 +327,7 @@ namespace AnyRPG {
             }
         }
 
-        public void ProcessModelCreated() {
+        public void PostInit() {
             //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ProcessModelCreated()");
 
             if (unitController.CharacterSaveManager.SaveData.IsMounted == false) {

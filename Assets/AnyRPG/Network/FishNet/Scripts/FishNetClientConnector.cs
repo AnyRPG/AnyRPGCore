@@ -244,13 +244,13 @@ namespace AnyRPG {
 
             NetworkConnection networkConnection = null;
             // sending null networkconnection for now to test server owned models again
-            /*
+            // testing client owned models with fishnet 4.7
             if (clientId != -1) {
                 if (fishNetNetworkManager.ServerManager.Clients.ContainsKey(clientId)) {
                     networkConnection = fishNetNetworkManager.ServerManager.Clients[clientId];
                 }
             }
-            */
+            
 
             NetworkObject nob = GetSpawnablePrefab(prefab, parentTransform, position, forward);
             SpawnPrefab(nob, networkConnection, default);

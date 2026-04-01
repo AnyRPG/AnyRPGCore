@@ -579,6 +579,7 @@ namespace AnyRPG {
 
         protected override void PostInit() {
             base.PostInit();
+            unitMountManager.PostInit();
             if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false && levelManagerClient.IsCutscene() == false) {
                 // if this is a client in a network game, don't enable the collider because the server will handle it
                 return;
@@ -587,6 +588,7 @@ namespace AnyRPG {
             // so force it to trigger interactable ranges now that initialization is complete
             DisableCollider();
             EnableCollider();
+
         }
 
         protected override void CheckEnableInteractableRange() {
@@ -815,7 +817,7 @@ namespace AnyRPG {
         /// set this unit to be a mount
         /// </summary>
         private void SetMountMode() {
-            //Debug.Log($"{gameObject.name}.UnitController.SetMountMode()");
+            Debug.Log($"{gameObject.name}.UnitController.SetMountMode()");
 
             // mount namePlates do not need full initialization, only the position to be set
             namePlateController.SetNameplatePosition();
@@ -855,7 +857,7 @@ namespace AnyRPG {
         /// set this unit to be a player
         /// </summary>
         private void EnablePlayer() {
-            //Debug.Log($"{gameObject.name}.UnitController.EnablePlayer()");
+            Debug.Log($"{gameObject.name}.UnitController.EnablePlayer()");
 
             InitializeNamePlateController();
 
@@ -1271,7 +1273,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="unitProfile"></param>
         public void SetCharacterConfiguration() {
-            //Debug.Log($"{gameObject.name}.UnitController.SetCharacterConfiguration({characterRequestData.isServerOwned})");
+            Debug.Log($"{gameObject.name}.UnitController.SetCharacterConfiguration({characterRequestData.isServerOwned})");
 
             CharacterConfigurationRequest characterConfigurationRequest = characterRequestData.characterConfigurationRequest;
 

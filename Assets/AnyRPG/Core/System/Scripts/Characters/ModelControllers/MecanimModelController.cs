@@ -51,6 +51,8 @@ namespace AnyRPG {
         }
 
         public void Initialize() {
+            Debug.Log($"{unitController.gameObject.name}.MecanimModelController.Initialize()");
+
             characterEquipmentManager = unitModelController.CharacterEquipmentManager;
         }
 
@@ -284,9 +286,16 @@ namespace AnyRPG {
         }
 
         public void SheathWeapons() {
+            Debug.Log($"{unitController.gameObject.name}.MecanimModelController.SheathWeapons()");
+
             // loop through all the equipmentslots and check if they have equipment that is of type weapon
             //if they do, run sheathobject on that slot
-
+            if (characterEquipmentManager == null) {
+                Debug.LogWarning($"{unitController.gameObject.name}.MecanimModelController.SheathWeapons() characterEquipmentManager is null");
+            }
+            if (characterEquipmentManager.CurrentEquipment == null) {
+                Debug.LogWarning($"{unitController.gameObject.name}.MecanimModelController.SheathWeapons() characterEquipmentManager.CurrentEquipment is null");
+            }
             foreach (EquipmentSlotProfile equipmentSlotProfile in characterEquipmentManager.CurrentEquipment.Keys) {
                 SheathWeapon(equipmentSlotProfile);
             }
