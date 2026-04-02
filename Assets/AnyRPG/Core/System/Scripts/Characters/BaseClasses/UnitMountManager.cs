@@ -204,7 +204,7 @@ namespace AnyRPG {
         }
 
         public void DeactivateMountedState() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState()");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState()");
 
             lateJoin = false;
             UnsubscribeFromMountModelReady();
@@ -212,10 +212,12 @@ namespace AnyRPG {
 
                 //unitController.transform.parent = playerManager.PlayerUnitParent.transform;
                 unitController.UnitEventController.NotifyOnUnsetParent();
-                if (systemGameManager.GameMode == GameMode.Local || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
+                //if (systemGameManager.GameMode == GameMode.Local || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
                 //if (systemGameManager.GameMode == GameMode.Local) {
+                if (systemGameManager.GameMode == GameMode.Local || (networkManagerServer.ServerModeActive == false)) {
                     unitController.transform.parent = null;
                 }
+                Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState() setting position and rotation to mount {mountUnitController.UnitMotor.MovementBody.GetPosition()}");
                 unitController.transform.position = mountUnitController.UnitMotor.MovementBody.GetPosition();
                 unitController.transform.rotation = mountUnitController.UnitMotor.MovementBody.GetRotation();
 

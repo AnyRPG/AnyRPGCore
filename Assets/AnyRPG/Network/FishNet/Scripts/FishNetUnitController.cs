@@ -93,7 +93,7 @@ namespace AnyRPG {
         }
 
         public override void OnStopClient() {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStopClient()");
+            Debug.Log($"{gameObject.name}.FishNetUnitController.OnStopClient() isMount: {(unitController.RiderUnitController != null)}");
 
             base.OnStopClient();
 

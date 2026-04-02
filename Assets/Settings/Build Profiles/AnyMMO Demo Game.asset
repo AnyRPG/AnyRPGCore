@@ -30,6 +30,7 @@ MonoBehaviour:
     m_path: Assets/AnyRPG/Network/FishNet/Games/AnyMMODemo/Scenes/AnyMMODemoDungeon/AnyMMODemoDungeon.unity
   - m_enabled: 1
     m_path: Assets/AnyRPG/Network/FishNet/Games/AnyMMODemo/Scenes/AnyMMODemoCutsceneZone/AnyMMODemoCutsceneZone.unity
+  m_HasScriptingDefines: 0
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:
     m_Settings: []
@@ -39,10 +40,10 @@ MonoBehaviour:
     - rid: 7715434112375586816
       type: {class: WindowsPlatformSettings, ns: UnityEditor.WindowsStandalone, asm: UnityEditor.WindowsStandalone.Extensions}
       data:
-        m_Development: 0
+        m_Development: 1
         m_ConnectProfiler: 0
         m_BuildWithDeepProfilingSupport: 0
-        m_AllowDebugging: 0
+        m_AllowDebugging: 1
         m_WaitForManagedDebugger: 0
         m_ManagedDebuggerFixedPort: 0
         m_ExplicitNullChecks: 0
@@ -50,6 +51,9 @@ MonoBehaviour:
         m_ExplicitArrayBoundsChecks: 0
         m_CompressionType: 0
         m_InstallInBuildFolder: 0
+        m_InsightsSettingsContainer:
+          m_BuildProfileEngineDiagnosticsState: 2
+        m_AdaptivePerformanceEnabled: 0
         m_WindowsBuildAndRunDeployTarget: 0
         m_Architecture: 0
         m_CreateSolution: 0
