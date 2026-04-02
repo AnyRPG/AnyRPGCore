@@ -128,9 +128,9 @@ namespace AnyRPG {
                 if (mountPoint != null) {
                     unitController.UnitEventController.NotifyOnSetParent(mountPoint);
                     //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
-                    if (systemGameManager.GameMode == GameMode.Local || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
+                    //if (systemGameManager.GameMode == GameMode.Local || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
                         unitController.transform.parent = mountPoint;
-                    }
+                    //}
                     if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
                         unitController.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
                         unitController.transform.localEulerAngles = mountUnitProfile.UnitPrefabProps.Rotation;
@@ -211,9 +211,9 @@ namespace AnyRPG {
 
                 //unitController.transform.parent = playerManager.PlayerUnitParent.transform;
                 unitController.UnitEventController.NotifyOnUnsetParent();
-                if (systemGameManager.GameMode == GameMode.Local || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
+                //if (systemGameManager.GameMode == GameMode.Local || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
                     unitController.transform.parent = null;
-                }
+                //}
                 unitController.transform.position = mountUnitController.UnitMotor.MovementBody.GetPosition();
                 unitController.transform.rotation = mountUnitController.UnitMotor.MovementBody.GetRotation();
 
