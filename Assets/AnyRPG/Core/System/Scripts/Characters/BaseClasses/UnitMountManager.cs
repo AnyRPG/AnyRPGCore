@@ -128,7 +128,7 @@ namespace AnyRPG {
                 if (mountPoint != null) {
                     unitController.UnitEventController.NotifyOnSetParent(mountPoint);
                     //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
-                    if (systemGameManager.GameMode == GameMode.Local) {
+                    if (systemGameManager.GameMode == GameMode.Local || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
                         unitController.transform.parent = mountPoint;
                     }
                     if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
@@ -211,7 +211,7 @@ namespace AnyRPG {
 
                 //unitController.transform.parent = playerManager.PlayerUnitParent.transform;
                 unitController.UnitEventController.NotifyOnUnsetParent();
-                if (systemGameManager.GameMode == GameMode.Local) {
+                if (systemGameManager.GameMode == GameMode.Local || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
                     unitController.transform.parent = null;
                 }
                 unitController.transform.position = mountUnitController.UnitMotor.MovementBody.GetPosition();
