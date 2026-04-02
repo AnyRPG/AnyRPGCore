@@ -133,6 +133,8 @@ namespace AnyRPG {
         }
 
         private void HandleEnableInteractableRange() {
+            Debug.Log($"{transform.parent.gameObject.name}.ComponentController.HandleEnableInteractableRange()");
+
             interactableRange.EnableCollider();
         }
 

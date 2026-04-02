@@ -677,14 +677,14 @@ namespace AnyRPG {
         }
 
         private void HandleDespawnMountUnitServer() {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDespawnMountUnitServer()");
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDespawnMountUnitServer()");
 
             HandleDespawnMountUnitClient();
         }
 
         [ObserversRpc]
         public void HandleDespawnMountUnitClient() {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDespawnMountUnitClient()");
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDespawnMountUnitClient()");
 
             unitController.UnitMountManager.DespawnMountUnit();
         }
