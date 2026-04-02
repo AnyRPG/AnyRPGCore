@@ -1933,6 +1933,7 @@ namespace AnyRPG {
         }
 
         private void HandleEnterInteractableRangeServer(UnitController controller, Interactable interactable) {
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleEnterInteractableRangeServer(controller: {controller?.gameObject.name} interactable: {interactable?.gameObject.name})");
 
             FishNetInteractable networkInteractable = null;
             if (interactable != null) {
@@ -1943,6 +1944,8 @@ namespace AnyRPG {
 
         [ObserversRpc]
         private void HandleEnterInteractableRangeClient(FishNetInteractable networkInteractable) {
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleEnterInteractableRangeClient(networkInteractable: {networkInteractable?.gameObject.name})");
+
             Interactable interactable = null;
             if (networkInteractable != null) {
                 interactable = networkInteractable.Interactable;
