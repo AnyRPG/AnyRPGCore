@@ -324,9 +324,11 @@ namespace AnyRPG {
         }
 
         public void ProcessUnsetParent() {
+            /*
             if (mountUnitController != null) {
                 mountUnitController.gameObject.SetActive(false);
             }
+            */
         }
 
         public void PostInit() {
