@@ -129,12 +129,13 @@ namespace AnyRPG {
                     unitController.UnitEventController.NotifyOnSetParent(mountPoint);
                     //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
                     //if (systemGameManager.GameMode == GameMode.Local || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
+                    if (systemGameManager.GameMode == GameMode.Local) {
                         unitController.transform.parent = mountPoint;
-                    //}
-                    //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                    }
+                    if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
                         unitController.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
                         unitController.transform.localEulerAngles = mountUnitProfile.UnitPrefabProps.Rotation;
-                    //}
+                    }
                     
                     // testing - is there a reason we wouldn't want to activemounted state on all server and clients?
                     //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
@@ -212,14 +213,15 @@ namespace AnyRPG {
                 //unitController.transform.parent = playerManager.PlayerUnitParent.transform;
                 unitController.UnitEventController.NotifyOnUnsetParent();
                 //if (systemGameManager.GameMode == GameMode.Local || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
+                if (systemGameManager.GameMode == GameMode.Local) {
                     unitController.transform.parent = null;
-                //}
+                }
                 unitController.transform.position = mountUnitController.UnitMotor.MovementBody.GetPosition();
                 unitController.transform.rotation = mountUnitController.UnitMotor.MovementBody.GetRotation();
 
                 ConfigureCharacterRegularPhysics();
 
-                //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
                     //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState() setting position and rotation to mount {mountUnitController.UnitMotor.MovementBody.GetPosition()}");
                     unitController.UnitMotor.SetPosition(mountUnitController.UnitMotor.MovementBody.GetPosition());
                     unitController.UnitMotor.FaceDirection(mountUnitController.UnitMotor.MovementBody.GetForward());
@@ -227,7 +229,7 @@ namespace AnyRPG {
                     //unitController.transform.localEulerAngles = mountUnitController.transform.localEulerAngles;
                     // we could skip this and just let the player fall through gravity
                     //unitController.transform.position = mountUnitController.transform.position;
-                //}
+                }
 
 
                 // set player unit to normal state

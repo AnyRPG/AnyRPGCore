@@ -705,11 +705,11 @@ namespace AnyRPG {
 
         private void HandleSetParent(Transform parentTransform) {
             Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({(parentTransform == null ? "null" : parentTransform.gameObject.name)})");
-            /*
+            
             if (networkObject != null && parentTransform != null) {
                 //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({(parentTransform == null ? "null" : parentTransform.gameObject.name)}) networkObject is not null");
-                //NetworkBehaviour nobParent = parentTransform.GetComponent<NetworkBehaviour>();
-                NetworkObject nobParent = parentTransform.GetComponent<NetworkObject>();
+                NetworkBehaviour nobParent = parentTransform.GetComponent<NetworkBehaviour>();
+                //NetworkObject nobParent = parentTransform.GetComponent<NetworkObject>();
                 if (nobParent == null) {
                     Debug.LogWarning($"{gameObject.name}.FishNetUnitController.HandleSetParent({parentTransform.gameObject.name}) No EmptyNetworkBehaviour found on parent.  Please check inspector!");
                 } else {
@@ -717,7 +717,7 @@ namespace AnyRPG {
                     networkObject.SetParent(nobParent);
                 }
             }
-            */
+            
         }
 
         private void HandleUnsetParent() {
