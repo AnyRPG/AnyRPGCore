@@ -101,6 +101,10 @@ namespace AnyRPG {
                 return;
             }
 
+            if (unitController.RiderUnitController != null) {
+                unitController.RiderUnitController.UnitMountManager.DeactivateMountedState();
+            }
+
             UnsubscribeFromClientUnitEvents();
             systemGameManager.NetworkManagerClient.ProcessStopNetworkUnitClient(unitController);
             isFirstReconcile = true;
@@ -303,7 +307,7 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestMoveMouseUseable += HandleRequestMoveMouseUseable;
                 unitController.UnitEventController.OnRequestAssignMouseUseable += HandleRequestAssignMouseUseable;
                 unitController.UnitEventController.OnRequestClearMouseUseable += HandleRequestClearMouseUseable;
-                unitController.UnitEventController.OnDeactivateMountedState += HandleDeactivateMountedStateOwner;
+                //unitController.UnitEventController.OnDeactivateMountedState += HandleDeactivateMountedStateOwner;
                 unitController.UnitEventController.OnRequestAcceptQuestItemQuest += HandleRequestAcceptQuestItemQuest;
                 unitController.UnitEventController.OnRequestCompleteQuestItemQuest += HandleRequestCompleteQuestItemQuest;
                 unitController.UnitEventController.OnRequestDeleteItem += HandleRequestDeleteItem;
@@ -345,7 +349,7 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestMoveMouseUseable -= HandleRequestMoveMouseUseable;
                 unitController.UnitEventController.OnRequestAssignMouseUseable -= HandleRequestAssignMouseUseable;
                 unitController.UnitEventController.OnRequestClearMouseUseable -= HandleRequestClearMouseUseable;
-                unitController.UnitEventController.OnDeactivateMountedState -= HandleDeactivateMountedStateOwner;
+                //unitController.UnitEventController.OnDeactivateMountedState -= HandleDeactivateMountedStateOwner;
                 unitController.UnitEventController.OnRequestAcceptQuestItemQuest -= HandleRequestAcceptQuestItemQuest;
                 unitController.UnitEventController.OnRequestCompleteQuestItemQuest -= HandleRequestCompleteQuestItemQuest;
                 unitController.UnitEventController.OnRequestDeleteItem -= HandleRequestDeleteItem;
@@ -727,6 +731,7 @@ namespace AnyRPG {
             unitController.UnitMountManager.ProcessUnsetParent();
         }
 
+        /*
         private void HandleDeactivateMountedStateOwner() {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateOwner()");
 
@@ -739,6 +744,7 @@ namespace AnyRPG {
 
             unitController.UnitMountManager.DespawnMountUnit();
         }
+        */
 
         private void HandleDeactivateMountedState() {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedState()");
