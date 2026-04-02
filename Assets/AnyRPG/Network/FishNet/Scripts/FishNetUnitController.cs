@@ -93,7 +93,7 @@ namespace AnyRPG {
         }
 
         public override void OnStopClient() {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStopClient()");
+            Debug.Log($"{gameObject.name}.FishNetUnitController.OnStopClient()");
 
             base.OnStopClient();
 
@@ -218,19 +218,23 @@ namespace AnyRPG {
                 }
             }
             HandleSpawnServerUnitClient(connection, fishNetSpawnClientRequest);
+            /*
             if (unitController.UnitControllerMode == UnitControllerMode.Mount && unitController.RiderUnitController != null) {
                 FishNetUnitController riderUnitController = unitController.RiderUnitController.GetComponent<FishNetUnitController>();
                 if (riderUnitController != null) {
                     HandleSpawnMountClient(connection, riderUnitController);
                 }
             }
+            */
         }
-
+        /*
         [TargetRpc]
         private void HandleSpawnMountClient(NetworkConnection networkConnection, FishNetUnitController riderUnitController) {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnMountClient() owner: {base.OwnerId}");
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnMountClient(riderUnitController: {(riderUnitController == null ? "null" : riderUnitController.gameObject.name)}) owner: {base.OwnerId}");
+
             riderUnitController.unitController.UnitMountManager.PostInit(unitController);
         }
+        */
 
         [TargetRpc]
         private void HandleSpawnServerUnitClient(NetworkConnection networkConnection, FishNetSpawnClientRequest fishNetSpawnClientRequest) {
