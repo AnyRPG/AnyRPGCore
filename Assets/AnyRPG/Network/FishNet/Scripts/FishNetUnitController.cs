@@ -5,6 +5,7 @@ using FishNet.Object.Prediction;
 using FishNet.Object.Synchronizing;
 using FishNet.Transporting;
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -712,6 +713,21 @@ namespace AnyRPG {
         private void HandleSetParent(Transform parentTransform) {
             Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({(parentTransform == null ? "null" : parentTransform.gameObject.name)})");
             
+            StartCoroutine(WaitForSetParent(parentTransform));
+        }
+
+        private IEnumerator WaitForSetParent(Transform parentTransform) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.WaitForSetParent() waiting for end of frame to set parent");
+            // get current network time manager tick, then wait until the next tick
+            // to set the parent, to ensure that the parent object has completed any pending spawn processing before we try to set it as a parent
+            uint currentTick = base.TimeManager.Tick;
+            while (base.TimeManager.Tick == currentTick) {
+                yield return null;
+            }
+            SetNetworkParent(parentTransform);
+        }
+
+        private void SetNetworkParent(Transform parentTransform) {
             if (networkObject != null && parentTransform != null) {
                 //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({(parentTransform == null ? "null" : parentTransform.gameObject.name)}) networkObject is not null");
                 NetworkBehaviour nobParent = parentTransform.GetComponent<NetworkBehaviour>();
@@ -723,7 +739,6 @@ namespace AnyRPG {
                     networkObject.SetParent(nobParent);
                 }
             }
-            
         }
 
         private void HandleUnsetParent() {

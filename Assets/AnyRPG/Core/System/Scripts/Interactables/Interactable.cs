@@ -382,7 +382,7 @@ namespace AnyRPG {
         }
 
         public void EnableInteractableRange() {
-            Debug.Log($"{gameObject.name}.Interactable.EnableInteractableRange()");
+            //Debug.Log($"{gameObject.name}.Interactable.EnableInteractableRange()");
 
             // meant to be overwritten in unitcontrollers, as they enable this during SetUnitControllerMode()
             interactableEventController.NotifyOnEnableInteractableRange();
