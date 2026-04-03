@@ -223,15 +223,17 @@ namespace AnyRPG {
 
                 ConfigureCharacterRegularPhysics();
 
-                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
+                //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
                     //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState() setting position and rotation to mount {mountUnitController.UnitMotor.MovementBody.GetPosition()}");
+                    /*
                     unitController.UnitMotor.SetPosition(mountUnitController.UnitMotor.MovementBody.GetPosition());
                     unitController.UnitMotor.FaceDirection(mountUnitController.UnitMotor.MovementBody.GetForward());
+                    */
                     Physics.SyncTransforms();
                     //unitController.transform.localEulerAngles = mountUnitController.transform.localEulerAngles;
                     // we could skip this and just let the player fall through gravity
                     //unitController.transform.position = mountUnitController.transform.position;
-                }
+                //}
 
 
                 // set player unit to normal state
@@ -255,9 +257,9 @@ namespace AnyRPG {
                 unitController.SetTargeted();
                 mountUnitController.SetUnTargeted();
             }
-            if (systemGameManager.GameMode == GameMode.Local) {
+            //if (systemGameManager.GameMode == GameMode.Local) {
                 DespawnMountUnit();
-            }
+            //}
             if (unitController.CharacterCombat.GetInCombat() == true) {
                 unitController.UnitModelController.HoldWeapons();
             }
@@ -265,17 +267,17 @@ namespace AnyRPG {
         }
 
         public void DespawnMountUnit() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountUnit() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DespawnMountUnit() frame: {Time.frameCount} parent: {unitController.transform.parent?.gameObject.name}");
 
             if (mountUnitController != null) {
-                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
                     unitController.StartCoroutine(DespawnMountDelay());
-                } else {
-                    mountUnitController = null;
-                    mountUnitProfile = null;
-                }
+                //} else {
+                    //mountUnitController = null;
+                    //mountUnitProfile = null;
+                //}
             }
-            unitController.UnitEventController.NotifyOnDespawnMountUnit();
+            //unitController.UnitEventController.NotifyOnDespawnMountUnit();
         }
 
         /// <summary>
@@ -299,7 +301,7 @@ namespace AnyRPG {
         }
 
         public void ConfigureCharacterRegularPhysics() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics()");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ConfigureCharacterRegularPhysics() position: {unitController.transform.position} parent: {unitController.transform.parent?.gameObject.name}");
 
             unitController.RigidBody.WakeUp();
             unitController.RigidBody.detectCollisions = true;

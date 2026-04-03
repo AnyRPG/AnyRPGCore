@@ -460,7 +460,7 @@ namespace AnyRPG {
             //unitController.UnitEventController.OnSetMountedState += HandleSetMountedStateServer;
             //unitController.UnitEventController.OnActivateMountedState += HandleActivateMountedStateServer;
             unitController.UnitEventController.OnDeactivateMountedState += HandleDeactivateMountedState;
-            unitController.UnitEventController.OnDespawnMountUnit += HandleDespawnMountUnitServer;
+            //unitController.UnitEventController.OnDespawnMountUnit += HandleDespawnMountUnitServer;
             unitController.UnitEventController.OnWriteMessageFeedMessage += HandleWriteMessageFeedMessageServer;
             unitController.UnitEventController.OnDialogCompleted += HandleDialogCompletedServer;
             unitController.UnitEventController.OnInteractWithQuestStartItem += HandleInteractWithQuestStartItemServer;
@@ -566,7 +566,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnDeactivateMountedState -= HandleDeactivateMountedState;
             unitController.UnitEventController.OnSetParent -= HandleSetParent;
             unitController.UnitEventController.OnUnsetParent -= HandleUnsetParent;
-            unitController.UnitEventController.OnDespawnMountUnit -= HandleDespawnMountUnitServer;
+            //unitController.UnitEventController.OnDespawnMountUnit -= HandleDespawnMountUnitServer;
             unitController.UnitEventController.OnWriteMessageFeedMessage -= HandleWriteMessageFeedMessageServer;
             unitController.UnitEventController.OnDialogCompleted -= HandleDialogCompletedServer;
             unitController.UnitEventController.OnInteractWithQuestStartItem -= HandleInteractWithQuestStartItemServer;
@@ -680,6 +680,7 @@ namespace AnyRPG {
             unitController.UnitEventController.NotifyOnWriteMessageFeedMessage(messageText);
         }
 
+        /*
         private void HandleDespawnMountUnitServer() {
             Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDespawnMountUnitServer()");
 
@@ -692,6 +693,7 @@ namespace AnyRPG {
 
             unitController.UnitMountManager.DespawnMountUnit();
         }
+        */
 
         /*
         private void HandleMountUnitSpawnServer() {
