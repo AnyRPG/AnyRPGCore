@@ -817,7 +817,7 @@ namespace AnyRPG {
         /// set this unit to be a mount
         /// </summary>
         private void SetMountMode() {
-            Debug.Log($"{gameObject.name}.UnitController.SetMountMode()");
+            //Debug.Log($"{gameObject.name}.UnitController.SetMountMode()");
 
             // mount namePlates do not need full initialization, only the position to be set
             namePlateController.SetNameplatePosition();

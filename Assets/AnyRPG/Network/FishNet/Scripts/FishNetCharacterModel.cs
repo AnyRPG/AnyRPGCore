@@ -168,7 +168,7 @@ namespace AnyRPG {
         }
 
         private IEnumerator WaitForRider() {
-            Debug.Log($"{gameObject.name}.FishNetCharacterModel.WaitForRider() owner: {base.OwnerId} frame: {Time.frameCount}");
+            //Debug.Log($"{gameObject.name}.FishNetCharacterModel.WaitForRider() owner: {base.OwnerId} frame: {Time.frameCount}");
 
             while (unitController?.RiderUnitController != null
                 && (unitController.RiderUnitController.IsInitialized == false || unitController.RiderUnitController.CameraTargetReady == false)) {
