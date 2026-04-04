@@ -351,7 +351,7 @@ namespace AnyRPG {
             // if there is a cutscene in the level, the player will spawn after the cutscene so the need to initialize the camera remains
             //if (levelManager.GetActiveSceneNode().SuppressMainCamera != true) {
                 //Debug.Log("CameraManager.ProcessPlayerUnitSpawn(): suppressed by level = false, spawning camera");
-                mainCameraController.InitializeCamera(playerManagerClient.ActiveUnitController.CameraTransform);
+                mainCameraController.InitializeCamera(playerManagerClient.ActiveUnitController.CameraTransform, playerManagerClient.ActiveUnitController.NameplateVector.y);
             //}
         }
 

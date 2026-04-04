@@ -192,6 +192,14 @@ namespace AnyRPG {
             JumpToFollowSpot();
         }
 
+        public void InitializeCamera(Transform newTarget, float newPitch) {
+            Debug.Log($"AnyRPGCameraController.InitializeCamera({newTarget.gameObject.name}, {newPitch})");
+
+            pitch = newPitch;
+            SetTarget(newTarget);
+            JumpToFollowSpot();
+        }
+
         private void LateUpdate() {
             if (target == null) {
                 // camera has nothing to follow so don't calculate movement

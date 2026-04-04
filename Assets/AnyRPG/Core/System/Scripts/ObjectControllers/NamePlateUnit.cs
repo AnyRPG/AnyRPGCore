@@ -35,6 +35,7 @@ namespace AnyRPG {
         }
 
         public virtual bool CameraTargetReady { get => cameraTargetReady; }
+        public Vector3 NameplateVector { get => nameplateVector; }
 
         /// <summary>
         /// initialize a nameplate if it has not been initialied yet
@@ -219,11 +220,19 @@ namespace AnyRPG {
         }
 
         public void SetNameplateVector() {
+            //Debug.Log($"{gameObject.name}.NamePlateUnit.SetNameplateVector()");
+
             if (componentController != null) {
                 //nameplateTransform = componentController.GetNameplateTransform();
                 nameplateVector = componentController.NameplateVector;
-                //Debug.Log($"{gameObject.name}.NamePlateUnit.Configure() nameplateVector: {nameplateVector}");
+                //Debug.Log($"{gameObject.name}.NamePlateUnit.SetNameplateVector() nameplateVector: {nameplateVector} instanceId: {GetInstanceID()}");
             }
+        }
+
+        protected override void PostInit() {
+            //Debug.Log($"{gameObject.name}.NamePlateUnit.PostInit() instanceId: {GetInstanceID()}");
+
+            base.PostInit();
         }
 
         public virtual void OnDisable() {
