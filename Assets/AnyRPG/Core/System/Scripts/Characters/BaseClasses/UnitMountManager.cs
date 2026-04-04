@@ -127,8 +127,8 @@ namespace AnyRPG {
                 Transform mountPoint = mountUnitController.transform.FindChildByRecursive(originalPrefabSourceBone);
                 if (mountPoint != null) {
                     unitController.UnitEventController.NotifyOnSetParent(mountPoint);
-                    //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
-                    if (systemGameManager.GameMode == GameMode.Local || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
+                    if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
+                    //if (systemGameManager.GameMode == GameMode.Local || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
                     //if (systemGameManager.GameMode == GameMode.Local) {
                         unitController.transform.parent = mountPoint;
                     }
