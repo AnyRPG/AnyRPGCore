@@ -1571,7 +1571,7 @@ namespace AnyRPG {
             }
 
             if (unitControllerMode == UnitControllerMode.Player) {
-                Debug.Log($"{gameObject.name}.Update() frame: {Time.frameCount} position: {transform.position} modelPosition: {(UnitModelController?.UnitModel != null ? UnitModelController.UnitModel.transform.position : "null")} parentPosition: {(transform.parent != null ? transform.parent.position : "null")}");
+                Debug.Log($"{gameObject.name}.Update() frame: {Time.frameCount} tPosition: {transform.position} rPosition: {UnitMotor.MovementBody.GetPosition()} modelPosition: {(UnitModelController?.UnitModel != null ? UnitModelController.UnitModel.transform.position : "null")} parentPosition: {(transform.parent != null ? transform.parent.position : "null")}");
             }
 
             if (characterStats.IsAlive == false) {

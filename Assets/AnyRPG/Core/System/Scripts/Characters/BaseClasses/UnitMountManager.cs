@@ -210,6 +210,9 @@ namespace AnyRPG {
             UnsubscribeFromMountModelReady();
             if (mountUnitController != null && unitController != null && unitController.enabled == true) {
 
+                // disable the mount capsule collider to prevent it from bouncing the player when the player dismounts.
+                mountUnitController.DisableCollider();
+
                 //unitController.transform.parent = playerManager.PlayerUnitParent.transform;
                 unitController.UnitEventController.NotifyOnUnsetParent();
                 //if (systemGameManager.GameMode == GameMode.Local || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
@@ -223,8 +226,8 @@ namespace AnyRPG {
                 unitController.transform.rotation = mountUnitController.UnitMotor.MovementBody.GetRotation();
                 unitController.UnitModelController.UnitModel.transform.localPosition = Vector3.zero;
                 unitController.UnitModelController.UnitModel.transform.localRotation = Quaternion.identity;
-                unitController.UnitMotor.MovementBody.SetPosition(mountUnitController.UnitMotor.MovementBody.GetPosition());
-                Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState() frame: {Time.frameCount} position after set: {unitController.transform.position} parent: {unitController.transform.parent?.gameObject.name}");
+                //unitController.UnitMotor.MovementBody.SetPosition(mountUnitController.UnitMotor.MovementBody.GetPosition());
+                Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState() frame: {Time.frameCount} after set: tPosition {unitController.transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position}");
                 Physics.SyncTransforms();
                 ConfigureCharacterRegularPhysics();
 
@@ -234,10 +237,10 @@ namespace AnyRPG {
                     unitController.UnitMotor.SetPosition(mountUnitController.UnitMotor.MovementBody.GetPosition());
                     unitController.UnitMotor.FaceDirection(mountUnitController.UnitMotor.MovementBody.GetForward());
                     */
-                    Physics.SyncTransforms();
-                unitController.UnitMotor.MovementBody.SetPosition(mountUnitController.UnitMotor.MovementBody.GetPosition());
+                    //Physics.SyncTransforms();
+                //unitController.UnitMotor.MovementBody.SetPosition(mountUnitController.UnitMotor.MovementBody.GetPosition());
 
-                Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState() position after sync: {unitController.transform.position} motor: {unitController.UnitMotor.MovementBody.GetPosition()}");
+                Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState() after sync: tPosition: {unitController.transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position}");
                 //unitController.transform.localEulerAngles = mountUnitController.transform.localEulerAngles;
                 // we could skip this and just let the player fall through gravity
                 //unitController.transform.position = mountUnitController.transform.position;

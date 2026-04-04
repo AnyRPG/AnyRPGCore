@@ -751,11 +751,11 @@ namespace AnyRPG {
 
         
         private void HandleDeactivateMountedStateOwner() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateOwner() frame: {Time.frameCount} transformPosition: {transform.position}");
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateOwner() frame: {Time.frameCount} tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position}");
 
             networkObject.UnsetParent();
             networktransform.ClearReplicateCache();
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateOwner() frame: {Time.frameCount} after unsetParent() transformPosition: {transform.position}");
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateOwner() frame: {Time.frameCount} after unsetParent() tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position}");
 
             //HandleDeactivateMountedStateServer();
         }
@@ -2616,6 +2616,7 @@ namespace AnyRPG {
             // this is meant to prevent the reconcile from setting invalid character position by setting (0,0,0) due to the parenting
             // to the saddle.  we will wait until the state is something other than riding to continue reconciles because the position data will be correct by then.
             if (unitController.IsMounted == false && data.CharacterMovementState == CharacterMovementState.Riding) {
+                Debug.Log($"{gameObject.name}.FishNetUnitController.ReconcileState() skipping reconcile tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position} characterMovementState: {data.CharacterMovementState}");
                 return;
             }
 
@@ -2624,7 +2625,10 @@ namespace AnyRPG {
             //RigidbodyConstraints originalConstraints = unitController.RigidBody.constraints;
             //if (transform.parent == null) {
             unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+
+            Debug.Log($"{gameObject.name}.FishNetUnitController.ReconcileState() before reconcile tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position} characterMovementState: {data.CharacterMovementState}");
             predictionRigidbody.Reconcile(data.PredictionRigidbody);
+            Debug.Log($"{gameObject.name}.FishNetUnitController.ReconcileState() after reconcile tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position} characterMovementState: {data.CharacterMovementState}");
             //}
             /*
             if (unitController.IsMounted) {
