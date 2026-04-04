@@ -98,13 +98,11 @@ namespace AnyRPG {
 
             base.OnStopClient();
 
-            if (SystemGameManager.IsShuttingDown == true) {
+            if (SystemGameManager.IsShuttingDown == true || SystemGameManager.DisconnectingNetworkForShutdown == true) {
                 return;
             }
 
-            if (unitController.RiderUnitController != null) {
-                unitController.RiderUnitController.UnitMountManager.DeactivateMountedState();
-            }
+            unitController?.RiderUnitController?.UnitMountManager?.DeactivateMountedState();
 
             UnsubscribeFromClientUnitEvents();
             systemGameManager.NetworkManagerClient.ProcessStopNetworkUnitClient(unitController);

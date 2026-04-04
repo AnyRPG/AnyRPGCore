@@ -146,11 +146,11 @@ namespace AnyRPG {
 
         // application state
         private int spawnCount = 0;
-        private bool disconnectingNetworkForShutdown = false;
+        private static bool disconnectingNetworkForShutdown = false;
         private static bool isShuttingDown = false;
 
         public static bool IsShuttingDown { get => isShuttingDown; }
-        public bool DisconnectingNetworkForShutdown { get => disconnectingNetworkForShutdown; set => disconnectingNetworkForShutdown = value; }
+        public static bool DisconnectingNetworkForShutdown { get => disconnectingNetworkForShutdown; set => disconnectingNetworkForShutdown = value; }
 
         public SystemEventManager SystemEventManager { get => systemEventManager; }
         public AuthenticationService AuthenticationService { get => authenticationService; }
@@ -455,6 +455,7 @@ namespace AnyRPG {
 
         private void OnApplicationQuit() {
             //Debug.Log("SystemGameManager.OnApplicationQuit()");
+
             isShuttingDown = true;
         }
 
