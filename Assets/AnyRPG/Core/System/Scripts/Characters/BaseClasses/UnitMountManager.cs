@@ -221,6 +221,8 @@ namespace AnyRPG {
                 Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState() frame: {Time.frameCount} setting position and rotation to mount {mountUnitController.UnitMotor.MovementBody.GetPosition()}");
                 unitController.transform.position = mountUnitController.UnitMotor.MovementBody.GetPosition();
                 unitController.transform.rotation = mountUnitController.UnitMotor.MovementBody.GetRotation();
+                unitController.UnitModelController.UnitModel.transform.localPosition = Vector3.zero;
+                unitController.UnitModelController.UnitModel.transform.localRotation = Quaternion.identity;
                 unitController.UnitMotor.MovementBody.SetPosition(mountUnitController.UnitMotor.MovementBody.GetPosition());
                 Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState() frame: {Time.frameCount} position after set: {unitController.transform.position} parent: {unitController.transform.parent?.gameObject.name}");
                 Physics.SyncTransforms();
@@ -319,7 +321,10 @@ namespace AnyRPG {
             } else {
                 unitController.RigidBody.useGravity = false;
             }
-            unitController.RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+            if (systemGameManager.GameMode == GameMode.Local) {
+                // in network mode, we never interpolate because it interferes with tick smoother component
+                unitController.RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+            }
             if (systemGameManager.GameMode == GameMode.Local || (systemGameManager.GameMode == GameMode.Network && unitController.IsOwner == true)) {
                 // only local clients or authoritative network clients should unfreeze gravity
                 unitController.FreezePositionXZ();
