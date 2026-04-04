@@ -1024,11 +1024,14 @@ namespace AnyRPG {
         }
 
         public void SubscribeToUnitEvents() {
-            //Debug.Log($"{gameObject.name}.PlayerController.SubscribeToUnitEvents()");
+            Debug.Log($"PlayerController.SubscribeToUnitEvents() activeUnitController: {(playerManagerClient.ActiveUnitController == null ? "null" : playerManagerClient.ActiveUnitController.gameObject.name)}");
 
+            /*
             if (playerManagerClient.ActiveUnitController.UnitProfile.UnitPrefabProps.ForceRotateModelMode == true) {
+                Debug.Log($"PlayerController.SubscribeToUnitEvents() force rotate model mode enabled, disabling strafe mode");
                 strafeModeActive = false;
             }
+            */
 
             // if player was agrod at spawn, they may have a target already since we subscribe on model ready
             playerManagerClient.ActiveUnitController.UnitEventController.OnSetTarget += HandleSetTarget;
@@ -1111,6 +1114,12 @@ namespace AnyRPG {
             ClearInteractables();
         }
 
+        public void ProcessSetActiveUnitController() {
+            if (playerManagerClient.ActiveUnitController.UnitProfile.UnitPrefabProps.ForceRotateModelMode == true) {
+                Debug.Log($"PlayerController.SubscribeToUnitEvents() force rotate model mode enabled, disabling strafe mode");
+                strafeModeActive = false;
+            }
+        }
     }
 
 }

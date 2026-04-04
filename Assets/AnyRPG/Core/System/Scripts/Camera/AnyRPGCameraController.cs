@@ -193,7 +193,7 @@ namespace AnyRPG {
         }
 
         public void InitializeCamera(Transform newTarget, float newPitch) {
-            Debug.Log($"AnyRPGCameraController.InitializeCamera({newTarget.gameObject.name}, {newPitch})");
+            //Debug.Log($"AnyRPGCameraController.InitializeCamera({newTarget.gameObject.name}, {newPitch})");
 
             pitch = newPitch;
             SetTarget(newTarget);
