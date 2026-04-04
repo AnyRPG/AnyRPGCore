@@ -21,7 +21,7 @@ namespace AnyRPG {
         }
 
         public void Update(bool isReplay, double timeInterval) {
-            Debug.Log($"{unitController.gameObject.name}.MovementRidingState.Update(isReplay: {isReplay}) frame: {Time.frameCount} tick: {unitMovementController.CurrentMovementData.SimulatedTick} tposition: {unitController.transform.position}");
+            Debug.Log($"{unitController.gameObject.name}.MovementRidingState.Update(isReplay: {isReplay}) frame: {Time.frameCount} tick: {unitMovementController.CurrentMovementData.SimulatedTick} tposition: {unitController.transform.position} rposition: {unitController.UnitMotor.MovementBody.GetPosition()}");
 
             
             if (unitController.transform.parent == null) {

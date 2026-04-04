@@ -2612,7 +2612,13 @@ namespace AnyRPG {
             if (unitController.IsMounted == true && transform.parent != null) {
                 return;
             }
-            
+
+            // this is meant to prevent the reconcile from setting invalid character position by setting (0,0,0) due to the parenting
+            // to the saddle.  we will wait until the state is something other than riding to continue reconciles because the position data will be correct by then.
+            if (unitController.IsMounted == false && data.CharacterMovementState == CharacterMovementState.Riding) {
+                return;
+            }
+
             // here we are unlocking the constraints because the Reconcile() method will be unable to properly set velocity
             // if the rigidbody is constrained in any way. This is because the constraints will override any changes to velocity that we try to make in the Reconcile() method.
             //RigidbodyConstraints originalConstraints = unitController.RigidBody.constraints;
