@@ -159,6 +159,8 @@ namespace AnyRPG {
         }
 
         public virtual void ConfigurePortrait(Sprite icon) {
+            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.ConfigurePortrait()");
+
             portraitImage.gameObject.SetActive(true);
 
             portraitImage.sprite = icon;

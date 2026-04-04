@@ -201,6 +201,10 @@ namespace AnyRPG {
         }
 
         public void ConfigureSnapshotPortrait() {
+            if (dialogManagerClient.Dialog.Icon != null) {
+                ConfigurePortrait(dialogManagerClient.Dialog.Icon);
+                return;
+            }
             portraitImage.gameObject.SetActive(false);
             portraitSnapshotImage.gameObject.SetActive(true);
             /*

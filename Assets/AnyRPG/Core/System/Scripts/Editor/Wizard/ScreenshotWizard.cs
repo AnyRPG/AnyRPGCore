@@ -14,7 +14,7 @@ namespace AnyRPG {
     public class ScreenshotWizard : ScriptableWizard {
 
         // Will be a subfolder of Application.dataPath and should start with "/"
-        public string parentFolder = "/Screenshots/";
+        public string parentFolder = "/Screenshots";
         public string fileName = string.Empty;
 
         private const string wizardTitle = "Screenshot Wizard";
