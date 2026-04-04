@@ -1639,6 +1639,20 @@ namespace AnyRPG {
             }
         }
 
+        void LateUpdate() {
+            if (isMounted == false || systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                return;
+            }
+            // Manually enforce the local position to ensure it aligns with the 
+            // interpolated graphical parent this frame.
+            //Debug.Log($"{gameObject.name}.LateUpdate(): position: {transform.parent.position} modelPosition: {UnitModelController.UnitModel.transform.position} parentPosition: {transform.parent.position}");
+
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
+            unitModelController.UnitModel.transform.localPosition = Vector3.zero;
+            unitModelController.UnitModel.transform.localRotation = Quaternion.identity;
+        }
+
         public void CalculateVelocityEffects() {
             //Debug.Log($"{gameObject.name}.UnitController.CalculateVelocityEffects() position: ({rigidBody.position.x}, {rigidBody.position.y}, {rigidBody.position.z}) lastFrozenPosition: ({lastFrozenPosition.x}, {lastFrozenPosition.y}, {lastFrozenPosition.z}) apparentVelocity: {apparentVelocity}");
 

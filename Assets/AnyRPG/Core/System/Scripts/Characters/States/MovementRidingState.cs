@@ -27,9 +27,10 @@ namespace AnyRPG {
             if (unitController.transform.parent == null) {
                 return;
             }
+            //Debug.Log($"{unitController.gameObject.name}.MovementRidingState.Update(): position: {unitController.transform.parent.position} modelPosition: {unitController.UnitModelController.UnitModel.transform.position} parentPosition: {unitController.transform.parent.position}");
             //unitController.UnitMotor.SetPosition(unitController.transform.parent.position);
             unitController.transform.position = unitController.transform.parent.position;
-
+            unitController.UnitModelController.UnitModel.transform.position = unitController.transform.parent.position;
         }
     }
 
