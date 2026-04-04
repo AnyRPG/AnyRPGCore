@@ -1392,7 +1392,8 @@ namespace AnyRPG {
         }
 
         private void SetStateSilently(IMovementState newState) {
-            //Debug.Log($"{gameObject.name}: SetStateSilently({newState.ToString()})");
+            Debug.Log($"{unitController.gameObject.name}: SetStateSilently({newState.ToString()})");
+
             if (currentIMovementState != null) {
                 currentIMovementState.Exit(true, true);
             }

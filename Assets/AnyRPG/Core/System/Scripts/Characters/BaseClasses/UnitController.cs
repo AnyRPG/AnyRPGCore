@@ -1570,6 +1570,10 @@ namespace AnyRPG {
                 return;
             }
 
+            if (unitControllerMode == UnitControllerMode.Player) {
+                Debug.Log($"{gameObject.name}.Update() frame: {Time.frameCount} position: {transform.position} modelPosition: {(UnitModelController?.UnitModel != null ? UnitModelController.UnitModel.transform.position : "null")} parentPosition: {(transform.parent != null ? transform.parent.position : "null")}");
+            }
+
             if (characterStats.IsAlive == false) {
                 // can't handle movement when dead
                 return;
@@ -1615,6 +1619,9 @@ namespace AnyRPG {
             if (isInitialized == false || isStateReset == true) {
                 return;
             }
+            if (unitControllerMode == UnitControllerMode.Player) {
+                Debug.Log($"{gameObject.name}.FixedUpdate() frame: {Time.frameCount} position: {transform.position} modelPosition: {(UnitModelController?.UnitModel != null ? UnitModelController.UnitModel.transform.position : "null")} parentPosition: {(transform.parent != null ? transform.parent.position : "null")}");
+            }
             if (target != null) {
                 // prevent distance calculation if no movement has occured
                 if (rigidBody.position != lastPosition || target.transform.position != lastTargetPosition) {
@@ -1641,11 +1648,14 @@ namespace AnyRPG {
 
         void LateUpdate() {
             if (isMounted == false || systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                if (unitControllerMode != UnitControllerMode.Player) {
+                    return;
+                }
+                Debug.Log($"{gameObject.name}.LateUpdate() frame: {Time.frameCount} position: {transform.position} modelPosition: {(UnitModelController?.UnitModel != null ? UnitModelController.UnitModel.transform.position : "null")} parentPosition: {(transform.parent != null ? transform.parent.position : "null")}");
                 return;
             }
             // Manually enforce the local position to ensure it aligns with the 
             // interpolated graphical parent this frame.
-            //Debug.Log($"{gameObject.name}.LateUpdate(): position: {transform.parent.position} modelPosition: {UnitModelController.UnitModel.transform.position} parentPosition: {transform.parent.position}");
 
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;

@@ -1,4 +1,5 @@
 using FishNet.Component.Animating;
+using FishNet.Component.Transforming;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Prediction;
@@ -22,6 +23,7 @@ namespace AnyRPG {
         private UnitController unitController = null;
         private NetworkObject networkObject = null;
         private NetworkAnimator networkAnimator = null;
+        private NetworkTransform networktransform = null;
         private Animator animator = null;
 
         private PredictionRigidbody predictionRigidbody = new PredictionRigidbody();
@@ -50,6 +52,7 @@ namespace AnyRPG {
                 return;
             }
             networkObject = GetComponent<NetworkObject>();
+            networktransform = GetComponent<NetworkTransform>();
 
             Rigidbody = GetComponent<Rigidbody>();
             if (Rigidbody == null) {
@@ -94,7 +97,7 @@ namespace AnyRPG {
         }
 
         public override void OnStopClient() {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStopClient() isMount: {(unitController.RiderUnitController != null)}");
+            Debug.Log($"{gameObject.name}.FishNetUnitController.OnStopClient() Frame: {Time.frameCount} isMount: {(unitController.RiderUnitController != null)}");
 
             base.OnStopClient();
 
@@ -306,7 +309,7 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestMoveMouseUseable += HandleRequestMoveMouseUseable;
                 unitController.UnitEventController.OnRequestAssignMouseUseable += HandleRequestAssignMouseUseable;
                 unitController.UnitEventController.OnRequestClearMouseUseable += HandleRequestClearMouseUseable;
-                //unitController.UnitEventController.OnDeactivateMountedState += HandleDeactivateMountedStateOwner;
+                unitController.UnitEventController.OnDeactivateMountedState += HandleDeactivateMountedStateOwner;
                 unitController.UnitEventController.OnRequestAcceptQuestItemQuest += HandleRequestAcceptQuestItemQuest;
                 unitController.UnitEventController.OnRequestCompleteQuestItemQuest += HandleRequestCompleteQuestItemQuest;
                 unitController.UnitEventController.OnRequestDeleteItem += HandleRequestDeleteItem;
@@ -348,7 +351,7 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestMoveMouseUseable -= HandleRequestMoveMouseUseable;
                 unitController.UnitEventController.OnRequestAssignMouseUseable -= HandleRequestAssignMouseUseable;
                 unitController.UnitEventController.OnRequestClearMouseUseable -= HandleRequestClearMouseUseable;
-                //unitController.UnitEventController.OnDeactivateMountedState -= HandleDeactivateMountedStateOwner;
+                unitController.UnitEventController.OnDeactivateMountedState -= HandleDeactivateMountedStateOwner;
                 unitController.UnitEventController.OnRequestAcceptQuestItemQuest -= HandleRequestAcceptQuestItemQuest;
                 unitController.UnitEventController.OnRequestCompleteQuestItemQuest -= HandleRequestCompleteQuestItemQuest;
                 unitController.UnitEventController.OnRequestDeleteItem -= HandleRequestDeleteItem;
@@ -746,13 +749,17 @@ namespace AnyRPG {
             unitController.UnitMountManager.ProcessUnsetParent();
         }
 
-        /*
+        
         private void HandleDeactivateMountedStateOwner() {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateOwner()");
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateOwner() frame: {Time.frameCount} transformPosition: {transform.position}");
 
-            HandleDeactivateMountedStateServer();
+            networkObject.UnsetParent();
+            networktransform.ClearReplicateCache();
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateOwner() frame: {Time.frameCount} after unsetParent() transformPosition: {transform.position}");
+
+            //HandleDeactivateMountedStateServer();
         }
-
+        /*
         [ServerRpc]
         private void HandleDeactivateMountedStateServer() {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateServer() frame: {Time.frameCount}");

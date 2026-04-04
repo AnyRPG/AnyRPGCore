@@ -12,16 +12,16 @@ namespace AnyRPG {
         }
 
         public void Enter(bool isReplay, bool isSilent) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementRidingState.Enter(isReplay: {isReplay}, isSilent: {isSilent}) frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
+            Debug.Log($"{unitController.gameObject.name}.MovementRidingState.Enter(isReplay: {isReplay}, isSilent: {isSilent}) frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)} tposition: {unitController.transform.position} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
         }
 
 
         public void Exit(bool isReplay, bool isSilent) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementRidingState.Exit(isReplay: {isReplay}, isSilent: {isSilent}) frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
+            Debug.Log($"{unitController.gameObject.name}.MovementRidingState.Exit(isReplay: {isReplay}, isSilent: {isSilent}) frame: {Time.frameCount} tick: {(isSilent ? "N/A" : unitMovementController.CurrentMovementData.SimulatedTick)} tposition: {unitController.transform.position} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
         }
 
         public void Update(bool isReplay, double timeInterval) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementRidingState.Update(isReplay: {isReplay}) frame: {Time.frameCount} tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
+            Debug.Log($"{unitController.gameObject.name}.MovementRidingState.Update(isReplay: {isReplay}) frame: {Time.frameCount} tick: {unitMovementController.CurrentMovementData.SimulatedTick} tposition: {unitController.transform.position}");
 
             
             if (unitController.transform.parent == null) {

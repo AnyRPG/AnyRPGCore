@@ -204,7 +204,7 @@ namespace AnyRPG {
         }
 
         public void DeactivateMountedState() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState()");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState() frame: {Time.frameCount}");
 
             lateJoin = false;
             UnsubscribeFromMountModelReady();
@@ -216,11 +216,14 @@ namespace AnyRPG {
                 //if (systemGameManager.GameMode == GameMode.Local) {
                 if (systemGameManager.GameMode == GameMode.Local || (networkManagerServer.ServerModeActive == false)) {
                     unitController.transform.parent = null;
+                    //Debug.Break();
                 }
-                //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState() setting position and rotation to mount {mountUnitController.UnitMotor.MovementBody.GetPosition()}");
+                Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState() frame: {Time.frameCount} setting position and rotation to mount {mountUnitController.UnitMotor.MovementBody.GetPosition()}");
                 unitController.transform.position = mountUnitController.UnitMotor.MovementBody.GetPosition();
                 unitController.transform.rotation = mountUnitController.UnitMotor.MovementBody.GetRotation();
-
+                unitController.UnitMotor.MovementBody.SetPosition(mountUnitController.UnitMotor.MovementBody.GetPosition());
+                Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState() frame: {Time.frameCount} position after set: {unitController.transform.position} parent: {unitController.transform.parent?.gameObject.name}");
+                Physics.SyncTransforms();
                 ConfigureCharacterRegularPhysics();
 
                 //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
@@ -230,9 +233,12 @@ namespace AnyRPG {
                     unitController.UnitMotor.FaceDirection(mountUnitController.UnitMotor.MovementBody.GetForward());
                     */
                     Physics.SyncTransforms();
-                    //unitController.transform.localEulerAngles = mountUnitController.transform.localEulerAngles;
-                    // we could skip this and just let the player fall through gravity
-                    //unitController.transform.position = mountUnitController.transform.position;
+                unitController.UnitMotor.MovementBody.SetPosition(mountUnitController.UnitMotor.MovementBody.GetPosition());
+
+                Debug.Log($"{unitController.gameObject.name}.UnitMountManager.DeactivateMountedState() position after sync: {unitController.transform.position} motor: {unitController.UnitMotor.MovementBody.GetPosition()}");
+                //unitController.transform.localEulerAngles = mountUnitController.transform.localEulerAngles;
+                // we could skip this and just let the player fall through gravity
+                //unitController.transform.position = mountUnitController.transform.position;
                 //}
 
 
