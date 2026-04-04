@@ -1024,7 +1024,7 @@ namespace AnyRPG {
         }
 
         public void SubscribeToUnitEvents() {
-            Debug.Log($"PlayerController.SubscribeToUnitEvents() activeUnitController: {(playerManagerClient.ActiveUnitController == null ? "null" : playerManagerClient.ActiveUnitController.gameObject.name)}");
+            //Debug.Log($"PlayerController.SubscribeToUnitEvents() activeUnitController: {(playerManagerClient.ActiveUnitController == null ? "null" : playerManagerClient.ActiveUnitController.gameObject.name)}");
 
             /*
             if (playerManagerClient.ActiveUnitController.UnitProfile.UnitPrefabProps.ForceRotateModelMode == true) {
@@ -1115,8 +1115,10 @@ namespace AnyRPG {
         }
 
         public void ProcessSetActiveUnitController() {
+            //Debug.Log($"PlayerController.ProcessSetActiveUnitController() activeUnitController: {(playerManagerClient.ActiveUnitController == null ? "null" : playerManagerClient.ActiveUnitController.gameObject.name)}");
+            
             if (playerManagerClient.ActiveUnitController.UnitProfile.UnitPrefabProps.ForceRotateModelMode == true) {
-                Debug.Log($"PlayerController.SubscribeToUnitEvents() force rotate model mode enabled, disabling strafe mode");
+                //Debug.Log($"PlayerController.ProcessSetActiveUnitController() force rotate model mode enabled, disabling strafe mode");
                 strafeModeActive = false;
             }
         }
