@@ -17,6 +17,8 @@ namespace AnyRPG {
         private NetworkAnimator networkAnimator = null;
         private UnitController unitController = null;
         private Animator animator = null;
+        private OfflineTickSmoother offlineTickSmoother = null;
+        private FishNetUnitController fishNetUnitController = null;
 
         private bool isClient = false;
 
@@ -41,7 +43,10 @@ namespace AnyRPG {
         private void CompleteSharedConfiguration() {
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.CompleteSharedConfiguration(): ownerId: {base.OwnerId}");
 
+            fishNetUnitController = GetComponentInParent<FishNetUnitController>();
             networkAnimator = GetComponentInParent<NetworkAnimator>();
+
+            fishNetUnitController.RegisterTickSmoother(offlineTickSmoother);
 
             unitController.UnitEventController.OnInitializeAnimator += HandleInitializeAnimator;
             //unitController.UnitModelController.OnModelCreated += HandleModelCreated;
@@ -115,20 +120,16 @@ namespace AnyRPG {
             base.OnStartClient();
 
             isClient = true;
+            offlineTickSmoother = GetComponent<OfflineTickSmoother>();
             FindGameManager();
-            if (unitController == null) { 
-                return;
-            }
-            
-            OfflineTickSmoother smoother = GetComponent<OfflineTickSmoother>();
-            if (smoother != null) {
-                smoother.SetTargetTransform(unitController.transform);
-                smoother.Initialize(base.TimeManager);
-            }
         }
 
         private void CompleteClientConfiguration() {
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.CompleteClientConfiguration() owner: {base.OwnerId}");
+            if (offlineTickSmoother != null) {
+                offlineTickSmoother.SetTargetTransform(unitController.transform);
+                offlineTickSmoother.Initialize(base.TimeManager);
+            }
 
             if (unitController.CharacterConfigured == true) {
                 CompleteModelRequest(base.IsOwner);

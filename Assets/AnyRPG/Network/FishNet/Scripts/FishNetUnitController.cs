@@ -1,5 +1,6 @@
 using FishNet.Component.Animating;
 using FishNet.Component.Transforming;
+using FishNet.Component.Transforming.Beta;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Prediction;
@@ -25,6 +26,7 @@ namespace AnyRPG {
         private NetworkAnimator networkAnimator = null;
         private NetworkTransform networktransform = null;
         private Animator animator = null;
+        private OfflineTickSmoother offlineTickSmoother = null;
 
         private PredictionRigidbody predictionRigidbody = new PredictionRigidbody();
         private Rigidbody Rigidbody = null;
@@ -97,7 +99,7 @@ namespace AnyRPG {
         }
 
         public override void OnStopClient() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.OnStopClient() Frame: {Time.frameCount} isMount: {(unitController.RiderUnitController != null)}");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStopClient() Frame: {Time.frameCount} isMount: {(unitController.RiderUnitController != null)}");
 
             base.OnStopClient();
 
@@ -755,6 +757,11 @@ namespace AnyRPG {
 
             networkObject.UnsetParent();
             networktransform.ClearReplicateCache();
+            
+            // reset the offline tick smoother to prevent it from teleporting the model back to the mount seat and trying to interpolate back
+            // since we just teleported the character to the ground intentionally
+            offlineTickSmoother.Initialize(base.TimeManager);
+
             Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateOwner() frame: {Time.frameCount} after unsetParent() tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position}");
 
             //HandleDeactivateMountedStateServer();
@@ -2616,7 +2623,7 @@ namespace AnyRPG {
             // this is meant to prevent the reconcile from setting invalid character position by setting (0,0,0) due to the parenting
             // to the saddle.  we will wait until the state is something other than riding to continue reconciles because the position data will be correct by then.
             if (unitController.IsMounted == false && data.CharacterMovementState == CharacterMovementState.Riding) {
-                Debug.Log($"{gameObject.name}.FishNetUnitController.ReconcileState() skipping reconcile tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position} characterMovementState: {data.CharacterMovementState}");
+                //Debug.Log($"{gameObject.name}.FishNetUnitController.ReconcileState() skipping reconcile tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position} characterMovementState: {data.CharacterMovementState}");
                 return;
             }
 
@@ -2626,9 +2633,9 @@ namespace AnyRPG {
             //if (transform.parent == null) {
             unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
 
-            Debug.Log($"{gameObject.name}.FishNetUnitController.ReconcileState() before reconcile tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position} characterMovementState: {data.CharacterMovementState}");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.ReconcileState() before reconcile tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position} characterMovementState: {data.CharacterMovementState}");
             predictionRigidbody.Reconcile(data.PredictionRigidbody);
-            Debug.Log($"{gameObject.name}.FishNetUnitController.ReconcileState() after reconcile tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position} characterMovementState: {data.CharacterMovementState}");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.ReconcileState() after reconcile tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position} characterMovementState: {data.CharacterMovementState}");
             //}
             /*
             if (unitController.IsMounted) {
@@ -2646,9 +2653,11 @@ namespace AnyRPG {
             unitController.UnitMovementController.ReconciledNavMeshAgentVelocity = data.NavMeshAgentVelocity;
         }
 
+        public void RegisterTickSmoother(OfflineTickSmoother offlineTickSmoother) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.RegisterTickSmoother()");
 
-
-
+            this.offlineTickSmoother = offlineTickSmoother;
+        }
     }
 }
 

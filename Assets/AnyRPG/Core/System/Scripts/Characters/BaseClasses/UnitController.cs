@@ -1571,7 +1571,7 @@ namespace AnyRPG {
             }
 
             if (unitControllerMode == UnitControllerMode.Player) {
-                Debug.Log($"{gameObject.name}.Update() frame: {Time.frameCount} tPosition: {transform.position} rPosition: {UnitMotor.MovementBody.GetPosition()} modelPosition: {(UnitModelController?.UnitModel != null ? UnitModelController.UnitModel.transform.position : "null")} parentPosition: {(transform.parent != null ? transform.parent.position : "null")}");
+                //Debug.Log($"{gameObject.name}.Update() frame: {Time.frameCount} tPosition: {transform.position} rPosition: {UnitMotor.MovementBody.GetPosition()} modelPosition: {(UnitModelController?.UnitModel != null ? UnitModelController.UnitModel.transform.position : "null")} parentPosition: {(transform.parent != null ? transform.parent.position : "null")}");
             }
 
             if (characterStats.IsAlive == false) {
@@ -1620,7 +1620,7 @@ namespace AnyRPG {
                 return;
             }
             if (unitControllerMode == UnitControllerMode.Player) {
-                Debug.Log($"{gameObject.name}.FixedUpdate() frame: {Time.frameCount} position: {transform.position} modelPosition: {(UnitModelController?.UnitModel != null ? UnitModelController.UnitModel.transform.position : "null")} parentPosition: {(transform.parent != null ? transform.parent.position : "null")}");
+                //Debug.Log($"{gameObject.name}.FixedUpdate() frame: {Time.frameCount} position: {transform.position} modelPosition: {(UnitModelController?.UnitModel != null ? UnitModelController.UnitModel.transform.position : "null")} parentPosition: {(transform.parent != null ? transform.parent.position : "null")}");
             }
             if (target != null) {
                 // prevent distance calculation if no movement has occured
@@ -1651,7 +1651,7 @@ namespace AnyRPG {
                 if (unitControllerMode != UnitControllerMode.Player) {
                     return;
                 }
-                Debug.Log($"{gameObject.name}.LateUpdate() frame: {Time.frameCount} position: {transform.position} modelPosition: {(UnitModelController?.UnitModel != null ? UnitModelController.UnitModel.transform.position : "null")} parentPosition: {(transform.parent != null ? transform.parent.position : "null")}");
+                //Debug.Log($"{gameObject.name}.LateUpdate() frame: {Time.frameCount} position: {transform.position} modelPosition: {(UnitModelController?.UnitModel != null ? UnitModelController.UnitModel.transform.position : "null")} parentPosition: {(transform.parent != null ? transform.parent.position : "null")}");
                 return;
             }
             // Manually enforce the local position to ensure it aligns with the 
