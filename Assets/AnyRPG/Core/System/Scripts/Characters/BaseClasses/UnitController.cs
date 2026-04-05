@@ -578,7 +578,7 @@ namespace AnyRPG {
 
         protected override void PostInit() {
             base.PostInit();
-            unitMountManager.PostInit();
+            //unitMountManager.PostInit();
             if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false && levelManagerClient.IsCutscene() == false) {
                 // if this is a client in a network game, don't enable the collider because the server will handle it
                 return;

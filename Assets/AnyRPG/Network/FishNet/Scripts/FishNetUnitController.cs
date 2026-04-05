@@ -2379,11 +2379,11 @@ namespace AnyRPG {
                 */
             } else {
                 if (playerCharacterSaveData != null) {
-                    /*
+                    
                     if (playerCharacterSaveData.CharacterSaveData.IsMounted) {
-                        lateJoinMount = true;
+                        unitController.UnitMountManager.LateJoin = true;
                     }
-                    */
+                    
                     // load items if this came from a character that included saveData
                     systemItemManager.LoadItemInstanceListSaveData(playerCharacterSaveData.ItemInstanceListSaveData);
                 }

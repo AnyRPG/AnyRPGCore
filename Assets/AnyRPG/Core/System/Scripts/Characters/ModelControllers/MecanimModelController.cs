@@ -51,7 +51,8 @@ namespace AnyRPG {
         }
 
         public void Initialize() {
-            Debug.Log($"{unitController.gameObject.name}.MecanimModelController.Initialize()");
+            //Debug.Log($"{unitController.gameObject.name}.MecanimModelController.Initialize()");
+
             if (unitModelController.CharacterEquipmentManager == null) {
                 Debug.Log($"{unitController.gameObject.name}.MecanimModelController.Initialize() characterEquipmentManager is null");
             }

@@ -23,6 +23,7 @@ namespace AnyRPG {
         private CharacterManager characterManager = null;
 
         public UnitController MountUnitController { get => mountUnitController; }
+        public bool LateJoin { get => lateJoin; set => lateJoin = value; }
 
         public UnitMountManager(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
@@ -354,6 +355,7 @@ namespace AnyRPG {
             */
         }
 
+        /*
         public void PostInit() {
             Debug.Log($"{unitController.gameObject.name}.UnitMountManager.PostInit()");
 
@@ -380,6 +382,7 @@ namespace AnyRPG {
                 ActivateMountedState();
             }
         }
+        */
     }
 
 }
