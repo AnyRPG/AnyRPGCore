@@ -893,6 +893,7 @@ namespace AnyRPG {
                 saveData.PlayerRotationZ = unitController.transform.forward.z;
             }
             */
+            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SavePlayerLocation(): transform forward: {unitController.transform.forward}");
             Vector3 worldForward = unitController.transform.forward;
             worldForward.y = 0;
             worldForward.Normalize();
