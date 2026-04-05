@@ -34,7 +34,7 @@ namespace AnyRPG {
         // state tracking for client side prediction reconciliation
         private CharacterMovementState serverStateAtStartOfTick = CharacterMovementState.Idle;
         private bool isFirstReconcile = true;
-        private bool lateJoinMount = false;
+        //private bool lateJoinMount = false;
 
         public UnitController UnitController { get => unitController; }
 
@@ -2361,11 +2361,13 @@ namespace AnyRPG {
                 }
                 */
             } else {
-                if (playerCharacterSaveData.CharacterSaveData.IsMounted) {
-                    lateJoinMount = true;
-                }
-                // first load items if this came from a character that included saveData
                 if (playerCharacterSaveData != null) {
+                    /*
+                    if (playerCharacterSaveData.CharacterSaveData.IsMounted) {
+                        lateJoinMount = true;
+                    }
+                    */
+                    // load items if this came from a character that included saveData
                     systemItemManager.LoadItemInstanceListSaveData(playerCharacterSaveData.ItemInstanceListSaveData);
                 }
                 CharacterConfigurationRequest characterConfigurationRequest;
