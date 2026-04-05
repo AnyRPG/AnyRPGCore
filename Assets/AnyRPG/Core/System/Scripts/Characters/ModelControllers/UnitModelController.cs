@@ -60,7 +60,7 @@ namespace AnyRPG {
 
             characterEquipmentManager = unitController.CharacterEquipmentManager;
             if (characterEquipmentManager == null) {
-                Debug.LogWarning("CharacterEquipmentManager was null");
+                Debug.LogWarning($"{unitController.gameObject.name}.UnitModelController.Initialize() CharacterEquipmentManager was null");
             }
             mecanimModelController.Initialize();
         }
@@ -360,10 +360,6 @@ namespace AnyRPG {
             }
 
             unitController.SetModelReady();
-
-            if (modelWasCreated == false) {
-                unitController.UnitMountManager.ProcessModelCreated();
-            }
         }
 
         public void CalculateFloatHeight() {

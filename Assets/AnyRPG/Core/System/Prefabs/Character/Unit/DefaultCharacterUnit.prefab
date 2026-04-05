@@ -108,8 +108,15 @@ MonoBehaviour:
   interactOnExit: 0
   isTrigger: 0
   suppressInteractionWindow: 0
+  overrideInteractionColliderSize: 0
   interactionMaxRange: 2
+  interactionPoints: []
   componentController: {fileID: 5627543989980708334}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
   namePlateProps:
     displayName: 
     suppressNamePlate: 0
@@ -127,10 +134,6 @@ MonoBehaviour:
   patrolNames: []
   behaviorNames: []
   useBehaviorCopy: 0
-  persistentObjectComponent:
-    persistObjectPosition: 0
-    saveOnLevelUnload: 0
-    saveOnGameSave: 0
 --- !u!114 &7989242567668304555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -143,7 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UUID: 60d2a7f1-f5e5-4ae5-9737-ff6d0619c0e9
+  m_UUID: b1c47fbf-db49-44e3-a599-de4fd9821421
   forceUpdateUUID: 0
 --- !u!136 &581519027303314695
 CapsuleCollider:
@@ -176,16 +179,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2692339740015506124}
     m_Modifications:
-    - target: {fileID: 3033665863657291012, guid: ffef65e2e170bd54a9b915f85d943c90,
-        type: 3}
-      propertyPath: m_Radius
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3033665863657291012, guid: ffef65e2e170bd54a9b915f85d943c90,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4814946152404104989, guid: ffef65e2e170bd54a9b915f85d943c90,
         type: 3}
       propertyPath: m_Name

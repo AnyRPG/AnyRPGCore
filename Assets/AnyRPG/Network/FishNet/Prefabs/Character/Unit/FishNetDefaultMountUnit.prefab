@@ -81,12 +81,12 @@ PrefabInstance:
     - target: {fileID: 5439310620421005911, guid: ba09f14eb0109ba459f4520b82c3fadc,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7989242567668304555, guid: ba09f14eb0109ba459f4520b82c3fadc,
         type: 3}
       propertyPath: m_UUID
-      value: c19b51ae-afbf-4988-bebb-b2b8652d1956
+      value: 2ba6d4ab-0a39-4ffd-a21b-639c5fbef594
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -208,7 +208,10 @@ MonoBehaviour:
   _initializeOrder: -4
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584270975287283496
+  _initializedTimestamp: -8584263366996988213
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 1
   _predictionType: 1

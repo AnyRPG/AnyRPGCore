@@ -568,7 +568,6 @@ namespace AnyRPG {
 
             base.ProcessInit();
 
-
             SetStartPosition();
 
             ActivateUnitControllerMode();
@@ -579,6 +578,7 @@ namespace AnyRPG {
 
         protected override void PostInit() {
             base.PostInit();
+            //unitMountManager.PostInit();
             if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false && levelManagerClient.IsCutscene() == false) {
                 // if this is a client in a network game, don't enable the collider because the server will handle it
                 return;
@@ -587,6 +587,7 @@ namespace AnyRPG {
             // so force it to trigger interactable ranges now that initialization is complete
             DisableCollider();
             EnableCollider();
+
         }
 
         protected override void CheckEnableInteractableRange() {
@@ -1568,6 +1569,10 @@ namespace AnyRPG {
                 return;
             }
 
+            if (unitControllerMode == UnitControllerMode.Player) {
+                //Debug.Log($"{gameObject.name}.Update() frame: {Time.frameCount} tPosition: {transform.position} rPosition: {UnitMotor.MovementBody.GetPosition()} modelPosition: {(UnitModelController?.UnitModel != null ? UnitModelController.UnitModel.transform.position : "null")} parentPosition: {(transform.parent != null ? transform.parent.position : "null")}");
+            }
+
             if (characterStats.IsAlive == false) {
                 // can't handle movement when dead
                 return;
@@ -1613,6 +1618,9 @@ namespace AnyRPG {
             if (isInitialized == false || isStateReset == true) {
                 return;
             }
+            if (unitControllerMode == UnitControllerMode.Player) {
+                //Debug.Log($"{gameObject.name}.FixedUpdate() frame: {Time.frameCount} position: {transform.position} modelPosition: {(UnitModelController?.UnitModel != null ? UnitModelController.UnitModel.transform.position : "null")} parentPosition: {(transform.parent != null ? transform.parent.position : "null")}");
+            }
             if (target != null) {
                 // prevent distance calculation if no movement has occured
                 if (rigidBody.position != lastPosition || target.transform.position != lastTargetPosition) {
@@ -1635,6 +1643,23 @@ namespace AnyRPG {
             if (motorEnabled) {
                 unitMotor?.FixedTick();
             }
+        }
+
+        void LateUpdate() {
+            if (isMounted == false || systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                if (unitControllerMode != UnitControllerMode.Player) {
+                    return;
+                }
+                //Debug.Log($"{gameObject.name}.LateUpdate() frame: {Time.frameCount} position: {transform.position} modelPosition: {(UnitModelController?.UnitModel != null ? UnitModelController.UnitModel.transform.position : "null")} parentPosition: {(transform.parent != null ? transform.parent.position : "null")}");
+                return;
+            }
+            // Manually enforce the local position to ensure it aligns with the 
+            // interpolated graphical parent this frame.
+
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
+            unitModelController.UnitModel.transform.localPosition = Vector3.zero;
+            unitModelController.UnitModel.transform.localRotation = Quaternion.identity;
         }
 
         public void CalculateVelocityEffects() {

@@ -882,10 +882,16 @@ namespace AnyRPG {
             saveData.PlayerLocationX = unitController.transform.position.x;
             saveData.PlayerLocationY = unitController.transform.position.y;
             saveData.PlayerLocationZ = unitController.transform.position.z;
-            saveData.PlayerRotationX = unitController.transform.forward.x;
-            saveData.PlayerRotationY = unitController.transform.forward.y;
-            saveData.PlayerRotationZ = unitController.transform.forward.z;
-
+            if (unitController.IsMounted == true && unitController.UnitMountManager.MountUnitController != null) {
+                saveData.PlayerRotationX = unitController.UnitMountManager.MountUnitController.transform.forward.x;
+                saveData.PlayerRotationY = unitController.UnitMountManager.MountUnitController.transform.forward.y;
+                saveData.PlayerRotationZ = unitController.UnitMountManager.MountUnitController.transform.forward.z;
+            } else {
+                saveData.PlayerRotationX = unitController.transform.forward.x;
+                saveData.PlayerRotationY = unitController.transform.forward.y;
+                saveData.PlayerRotationZ = unitController.transform.forward.z;
+            }
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SavePlayerLocation(): saved location {saveData.PlayerLocationX}, {saveData.PlayerLocationY}, {saveData.PlayerLocationZ} and rotation {saveData.PlayerRotationX}, {saveData.PlayerRotationY}, {saveData.PlayerRotationZ}");
         }
 
         public void SaveResourcePowerData() {

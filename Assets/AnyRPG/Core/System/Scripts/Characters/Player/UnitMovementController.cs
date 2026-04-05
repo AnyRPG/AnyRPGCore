@@ -273,6 +273,7 @@ namespace AnyRPG {
 
         public void ConfigureStateMachine() {
             //Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.ConfigureStateMachine()");
+
             // add a new state for each type of CharacterMovementState
             movementStates.Add(CharacterMovementState.Idle, new MovementIdleState(this, unitController));
             movementStates.Add(CharacterMovementState.Move, new MovementMoveState(this, unitController));
@@ -1391,7 +1392,8 @@ namespace AnyRPG {
         }
 
         private void SetStateSilently(IMovementState newState) {
-            //Debug.Log($"{gameObject.name}: SetStateSilently({newState.ToString()})");
+            //Debug.Log($"{unitController.gameObject.name}: SetStateSilently({newState.ToString()})");
+
             if (currentIMovementState != null) {
                 currentIMovementState.Exit(true, true);
             }

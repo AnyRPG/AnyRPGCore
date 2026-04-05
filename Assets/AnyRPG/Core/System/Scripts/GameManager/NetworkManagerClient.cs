@@ -194,7 +194,7 @@ namespace AnyRPG {
         public void ProcessStopConnection() {
             //Debug.Log($"NetworkManagerClient.ProcessStopConnection()");
 
-            if (systemGameManager.DisconnectingNetworkForShutdown == true) {
+            if (SystemGameManager.DisconnectingNetworkForShutdown == true) {
                 systemGameManager.ExitGame();
                 return;
             }

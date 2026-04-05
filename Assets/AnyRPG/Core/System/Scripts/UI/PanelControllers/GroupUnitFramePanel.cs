@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
@@ -51,6 +50,7 @@ namespace AnyRPG {
             }
             */
             base.SetTarget(unitController);
+            ConfigurePortrait(unitController.UnitProfile.Icon);
         }
 
         public void SetNullTarget(int characterId) {

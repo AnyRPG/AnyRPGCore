@@ -1,10 +1,13 @@
 using FishNet.Component.Animating;
+using FishNet.Component.Transforming;
+using FishNet.Component.Transforming.Beta;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Prediction;
 using FishNet.Object.Synchronizing;
 using FishNet.Transporting;
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -21,7 +24,9 @@ namespace AnyRPG {
         private UnitController unitController = null;
         private NetworkObject networkObject = null;
         private NetworkAnimator networkAnimator = null;
+        private NetworkTransform networktransform = null;
         private Animator animator = null;
+        private OfflineTickSmoother offlineTickSmoother = null;
 
         private PredictionRigidbody predictionRigidbody = new PredictionRigidbody();
         private Rigidbody Rigidbody = null;
@@ -29,6 +34,7 @@ namespace AnyRPG {
         // state tracking for client side prediction reconciliation
         private CharacterMovementState serverStateAtStartOfTick = CharacterMovementState.Idle;
         private bool isFirstReconcile = true;
+        //private bool lateJoinMount = false;
 
         public UnitController UnitController { get => unitController; }
 
@@ -49,6 +55,7 @@ namespace AnyRPG {
                 return;
             }
             networkObject = GetComponent<NetworkObject>();
+            networktransform = GetComponent<NetworkTransform>();
 
             Rigidbody = GetComponent<Rigidbody>();
             if (Rigidbody == null) {
@@ -93,13 +100,16 @@ namespace AnyRPG {
         }
 
         public override void OnStopClient() {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStopClient()");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.OnStopClient() Frame: {Time.frameCount} isMount: {(unitController.RiderUnitController != null)}");
 
             base.OnStopClient();
 
-            if (SystemGameManager.IsShuttingDown == true) {
+            if (SystemGameManager.IsShuttingDown == true || SystemGameManager.DisconnectingNetworkForShutdown == true) {
                 return;
             }
+
+            // this is usually called by an RPC, but this is just a failsafe in case of disconnect
+            unitController?.RiderUnitController?.UnitMountManager?.DeactivateMountedState();
 
             UnsubscribeFromClientUnitEvents();
             systemGameManager.NetworkManagerClient.ProcessStopNetworkUnitClient(unitController);
@@ -218,18 +228,39 @@ namespace AnyRPG {
                 }
             }
             HandleSpawnServerUnitClient(connection, fishNetSpawnClientRequest);
+            
             if (unitController.UnitControllerMode == UnitControllerMode.Mount && unitController.RiderUnitController != null) {
                 FishNetUnitController riderUnitController = unitController.RiderUnitController.GetComponent<FishNetUnitController>();
                 if (riderUnitController != null) {
                     HandleSpawnMountClient(connection, riderUnitController);
                 }
             }
+            
         }
-
+        
         [TargetRpc]
         private void HandleSpawnMountClient(NetworkConnection networkConnection, FishNetUnitController riderUnitController) {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnMountClient() owner: {base.OwnerId}");
-            riderUnitController.unitController.UnitMountManager.PostInit(unitController);
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnMountClient(riderUnitController: {(riderUnitController == null ? "null" : riderUnitController.gameObject.name)}) owner: {base.OwnerId}");
+
+            //if (riderUnitController.unitController.IsInitialized == false ) {
+            //}
+            if (riderUnitController.unitController.CameraTargetReady == true) {
+                riderUnitController.unitController.UnitMountManager.PostInit(unitController);
+            } else {
+                StartCoroutine(WaitForRider(riderUnitController));
+            }
+        }
+
+        private IEnumerator WaitForRider(FishNetUnitController riderUnitController) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.WaitForRider() owner: {base.OwnerId} frame: {Time.frameCount}");
+
+            while (riderUnitController?.UnitController != null
+                && (riderUnitController.UnitController.IsInitialized == false || riderUnitController.UnitController.CameraTargetReady == false)) {
+                yield return null;
+            }
+            if (riderUnitController.UnitController != null) {
+                riderUnitController.unitController.UnitMountManager.PostInit(unitController);
+            }
         }
 
         [TargetRpc]
@@ -452,7 +483,7 @@ namespace AnyRPG {
             //unitController.UnitEventController.OnSetMountedState += HandleSetMountedStateServer;
             //unitController.UnitEventController.OnActivateMountedState += HandleActivateMountedStateServer;
             unitController.UnitEventController.OnDeactivateMountedState += HandleDeactivateMountedState;
-            unitController.UnitEventController.OnDespawnMountUnit += HandleDespawnMountUnitServer;
+            //unitController.UnitEventController.OnDespawnMountUnit += HandleDespawnMountUnitServer;
             unitController.UnitEventController.OnWriteMessageFeedMessage += HandleWriteMessageFeedMessageServer;
             unitController.UnitEventController.OnDialogCompleted += HandleDialogCompletedServer;
             unitController.UnitEventController.OnInteractWithQuestStartItem += HandleInteractWithQuestStartItemServer;
@@ -558,7 +589,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnDeactivateMountedState -= HandleDeactivateMountedState;
             unitController.UnitEventController.OnSetParent -= HandleSetParent;
             unitController.UnitEventController.OnUnsetParent -= HandleUnsetParent;
-            unitController.UnitEventController.OnDespawnMountUnit -= HandleDespawnMountUnitServer;
+            //unitController.UnitEventController.OnDespawnMountUnit -= HandleDespawnMountUnitServer;
             unitController.UnitEventController.OnWriteMessageFeedMessage -= HandleWriteMessageFeedMessageServer;
             unitController.UnitEventController.OnDialogCompleted -= HandleDialogCompletedServer;
             unitController.UnitEventController.OnInteractWithQuestStartItem -= HandleInteractWithQuestStartItemServer;
@@ -672,6 +703,7 @@ namespace AnyRPG {
             unitController.UnitEventController.NotifyOnWriteMessageFeedMessage(messageText);
         }
 
+        /*
         private void HandleDespawnMountUnitServer() {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDespawnMountUnitServer()");
 
@@ -684,6 +716,7 @@ namespace AnyRPG {
 
             unitController.UnitMountManager.DespawnMountUnit();
         }
+        */
 
         /*
         private void HandleMountUnitSpawnServer() {
@@ -701,11 +734,26 @@ namespace AnyRPG {
 
         private void HandleSetParent(Transform parentTransform) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({(parentTransform == null ? "null" : parentTransform.gameObject.name)})");
+            
+            StartCoroutine(WaitForSetParent(parentTransform));
+        }
 
+        private IEnumerator WaitForSetParent(Transform parentTransform) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.WaitForSetParent() waiting for end of frame to set parent");
+            // get current network time manager tick, then wait until the next tick
+            // to set the parent, to ensure that the parent object has completed any pending spawn processing before we try to set it as a parent
+            uint currentTick = base.TimeManager.Tick;
+            while (base.TimeManager.Tick == currentTick) {
+                yield return null;
+            }
+            SetNetworkParent(parentTransform);
+        }
+
+        private void SetNetworkParent(Transform parentTransform) {
             if (networkObject != null && parentTransform != null) {
                 //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSetParent({(parentTransform == null ? "null" : parentTransform.gameObject.name)}) networkObject is not null");
-                //NetworkBehaviour nobParent = parentTransform.GetComponent<NetworkBehaviour>();
-                NetworkObject nobParent = parentTransform.GetComponent<NetworkObject>();
+                NetworkBehaviour nobParent = parentTransform.GetComponent<NetworkBehaviour>();
+                //NetworkObject nobParent = parentTransform.GetComponent<NetworkObject>();
                 if (nobParent == null) {
                     Debug.LogWarning($"{gameObject.name}.FishNetUnitController.HandleSetParent({parentTransform.gameObject.name}) No EmptyNetworkBehaviour found on parent.  Please check inspector!");
                 } else {
@@ -722,18 +770,29 @@ namespace AnyRPG {
             unitController.UnitMountManager.ProcessUnsetParent();
         }
 
+        
         private void HandleDeactivateMountedStateOwner() {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateOwner()");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateOwner() frame: {Time.frameCount} tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position}");
 
-            HandleDeactivateMountedStateServer();
+            networkObject.UnsetParent();
+            networktransform.ClearReplicateCache();
+            
+            // reset the offline tick smoother to prevent it from teleporting the model back to the mount seat and trying to interpolate back
+            // since we just teleported the character to the ground intentionally
+            offlineTickSmoother.Initialize(base.TimeManager);
+
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateOwner() frame: {Time.frameCount} after unsetParent() tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position}");
+
+            //HandleDeactivateMountedStateServer();
         }
-
+        /*
         [ServerRpc]
         private void HandleDeactivateMountedStateServer() {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateServer() frame: {Time.frameCount}");
 
             unitController.UnitMountManager.DespawnMountUnit();
         }
+        */
 
         private void HandleDeactivateMountedState() {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedState()");
@@ -1928,6 +1987,7 @@ namespace AnyRPG {
         }
 
         private void HandleEnterInteractableRangeServer(UnitController controller, Interactable interactable) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleEnterInteractableRangeServer(controller: {controller?.gameObject.name} interactable: {interactable?.gameObject.name})");
 
             FishNetInteractable networkInteractable = null;
             if (interactable != null) {
@@ -1938,6 +1998,8 @@ namespace AnyRPG {
 
         [ObserversRpc]
         private void HandleEnterInteractableRangeClient(FishNetInteractable networkInteractable) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleEnterInteractableRangeClient(networkInteractable: {networkInteractable?.gameObject.name})");
+
             Interactable interactable = null;
             if (networkInteractable != null) {
                 interactable = networkInteractable.Interactable;
@@ -2316,11 +2378,15 @@ namespace AnyRPG {
                 }
                 */
             } else {
-                // first load items if this came from a character that included saveData
                 if (playerCharacterSaveData != null) {
+                    
+                    if (playerCharacterSaveData.CharacterSaveData.IsMounted) {
+                        unitController.UnitMountManager.LateJoin = true;
+                    }
+                    
+                    // load items if this came from a character that included saveData
                     systemItemManager.LoadItemInstanceListSaveData(playerCharacterSaveData.ItemInstanceListSaveData);
                 }
-
                 CharacterConfigurationRequest characterConfigurationRequest;
                 characterConfigurationRequest = new CharacterConfigurationRequest(unitProfile);
                 characterConfigurationRequest.unitControllerMode = unitControllerMode.Value;
@@ -2572,17 +2638,27 @@ namespace AnyRPG {
         private void ReconcileState(ReconcileData data, Channel channel = Channel.Unreliable) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.ReconcileState() channel: {channel} isMounted: {unitController.IsMounted} parent: {(transform.parent == null ? "null" : transform.parent.gameObject.name)}");
 
-            /*
+            
             if (unitController.IsMounted == true && transform.parent != null) {
                 return;
             }
-            */
+
+            // this is meant to prevent the reconcile from setting invalid character position by setting (0,0,0) due to the parenting
+            // to the saddle.  we will wait until the state is something other than riding to continue reconciles because the position data will be correct by then.
+            if (unitController.IsMounted == false && data.CharacterMovementState == CharacterMovementState.Riding) {
+                //Debug.Log($"{gameObject.name}.FishNetUnitController.ReconcileState() skipping reconcile tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position} characterMovementState: {data.CharacterMovementState}");
+                return;
+            }
+
             // here we are unlocking the constraints because the Reconcile() method will be unable to properly set velocity
             // if the rigidbody is constrained in any way. This is because the constraints will override any changes to velocity that we try to make in the Reconcile() method.
             //RigidbodyConstraints originalConstraints = unitController.RigidBody.constraints;
             //if (transform.parent == null) {
             unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.ReconcileState() before reconcile tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position} characterMovementState: {data.CharacterMovementState}");
             predictionRigidbody.Reconcile(data.PredictionRigidbody);
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.ReconcileState() after reconcile tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position} characterMovementState: {data.CharacterMovementState}");
             //}
             /*
             if (unitController.IsMounted) {
@@ -2600,9 +2676,11 @@ namespace AnyRPG {
             unitController.UnitMovementController.ReconciledNavMeshAgentVelocity = data.NavMeshAgentVelocity;
         }
 
+        public void RegisterTickSmoother(OfflineTickSmoother offlineTickSmoother) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.RegisterTickSmoother()");
 
-
-
+            this.offlineTickSmoother = offlineTickSmoother;
+        }
     }
 }
 

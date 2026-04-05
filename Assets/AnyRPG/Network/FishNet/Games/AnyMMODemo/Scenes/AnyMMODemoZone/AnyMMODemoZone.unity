@@ -1552,7 +1552,7 @@ PrefabInstance:
     - target: {fileID: -3125059156913168274, guid: d247683cb8fa56b4984030dba867b9d1,
         type: 3}
       propertyPath: SceneId
-      value: 1039841879
+      value: 935042527
       objectReference: {fileID: 0}
     - target: {fileID: -3125059156913168274, guid: d247683cb8fa56b4984030dba867b9d1,
         type: 3}
@@ -2490,7 +2490,7 @@ PrefabInstance:
     - target: {fileID: 8553593711587574172, guid: 926c62b0500a63241839357e0311c183,
         type: 3}
       propertyPath: SceneId
-      value: 4282375911
+      value: 1010745191
       objectReference: {fileID: 0}
     - target: {fileID: 8553593711587574172, guid: 926c62b0500a63241839357e0311c183,
         type: 3}
@@ -4700,7 +4700,7 @@ PrefabInstance:
     - target: {fileID: 3014260397009104750, guid: e17e1201394399143926fd49431adbb6,
         type: 3}
       propertyPath: SceneId
-      value: 918461047
+      value: 4148156751
       objectReference: {fileID: 0}
     - target: {fileID: 3014260397009104750, guid: e17e1201394399143926fd49431adbb6,
         type: 3}
@@ -5290,7 +5290,7 @@ PrefabInstance:
     - target: {fileID: 4416899225686217091, guid: b59619748da8a184ea069bfda6efc83e,
         type: 3}
       propertyPath: SceneId
-      value: 1073649879
+      value: 1039849551
       objectReference: {fileID: 0}
     - target: {fileID: 4416899225686217091, guid: b59619748da8a184ea069bfda6efc83e,
         type: 3}
@@ -7262,7 +7262,7 @@ PrefabInstance:
     - target: {fileID: -5231210586050711708, guid: 62e865372c50781468fa4f998c8065d2,
         type: 3}
       propertyPath: SceneId
-      value: 2008741999
+      value: 884669303
       objectReference: {fileID: 0}
     - target: {fileID: -5231210586050711708, guid: 62e865372c50781468fa4f998c8065d2,
         type: 3}
@@ -7945,6 +7945,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -7963,7 +7966,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 2101017943
+  SceneId: 2113838151
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -8091,6 +8094,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -8109,7 +8115,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 1052441839
+  SceneId: 905959679
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -8145,6 +8151,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -8163,7 +8172,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 2113927623
+  SceneId: 4273658239
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -9262,7 +9271,7 @@ PrefabInstance:
     - target: {fileID: 8951617997951642530, guid: d9dee16ece02abb47abe066edad212b6,
         type: 3}
       propertyPath: SceneId
-      value: 3028270967
+      value: 2004597999
       objectReference: {fileID: 0}
     - target: {fileID: 8951617997951642530, guid: d9dee16ece02abb47abe066edad212b6,
         type: 3}
@@ -10181,7 +10190,7 @@ PrefabInstance:
     - target: {fileID: 6719637900211664601, guid: 767cf668d9e537044b6b61639b52dfa4,
         type: 3}
       propertyPath: SceneId
-      value: 4143701631
+      value: 2084485887
       objectReference: {fileID: 0}
     - target: {fileID: 6719637900211664601, guid: 767cf668d9e537044b6b61639b52dfa4,
         type: 3}
@@ -11498,7 +11507,7 @@ PrefabInstance:
     - target: {fileID: -773536039326462698, guid: 2cf0fd4c437763549a4bae9e441a323b,
         type: 3}
       propertyPath: SceneId
-      value: 4286241015
+      value: 889190879
       objectReference: {fileID: 0}
     - target: {fileID: -773536039326462698, guid: 2cf0fd4c437763549a4bae9e441a323b,
         type: 3}
@@ -11750,7 +11759,7 @@ PrefabInstance:
     - target: {fileID: -9201532474427386123, guid: a2b0743469c21a24786ea7e12e1983a0,
         type: 3}
       propertyPath: SceneId
-      value: 4269735127
+      value: 1967110367
       objectReference: {fileID: 0}
     - target: {fileID: -9201532474427386123, guid: a2b0743469c21a24786ea7e12e1983a0,
         type: 3}
@@ -14690,6 +14699,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -14708,7 +14720,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 1014676479
+  SceneId: 1987812951
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -14848,6 +14860,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -14866,7 +14881,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 3166420559
+  SceneId: 1073479367
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -14902,6 +14917,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -14920,7 +14938,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 3065954151
+  SceneId: 2097077111
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -14992,7 +15010,7 @@ PrefabInstance:
     - target: {fileID: 8328996868267140269, guid: 02167e5fa37655048a7ade9933db90e6,
         type: 3}
       propertyPath: SceneId
-      value: 4232036223
+      value: 3082788303
       objectReference: {fileID: 0}
     - target: {fileID: 8328996868267140269, guid: 02167e5fa37655048a7ade9933db90e6,
         type: 3}
@@ -15372,7 +15390,7 @@ PrefabInstance:
     - target: {fileID: 830719003859100304, guid: b42510f78e3dc104793a6a5b9e1709ab,
         type: 3}
       propertyPath: SceneId
-      value: 2013182671
+      value: 3082467911
       objectReference: {fileID: 0}
     - target: {fileID: 830719003859100304, guid: b42510f78e3dc104793a6a5b9e1709ab,
         type: 3}
@@ -15595,7 +15613,7 @@ PrefabInstance:
     - target: {fileID: 3683479558203243123, guid: 284b54a43db9d9f448394d038c989ef0,
         type: 3}
       propertyPath: SceneId
-      value: 1044371919
+      value: 3191594591
       objectReference: {fileID: 0}
     - target: {fileID: 3683479558203243123, guid: 284b54a43db9d9f448394d038c989ef0,
         type: 3}
@@ -15995,6 +16013,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -16013,7 +16034,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 1023148023
+  SceneId: 1052507647
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -16294,6 +16315,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -16312,7 +16336,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 3162505039
+  SceneId: 1023327479
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -18163,7 +18187,7 @@ PrefabInstance:
     - target: {fileID: 8553593711587574172, guid: 732d3b9572c7d1b41b5e4886b58a5899,
         type: 3}
       propertyPath: SceneId
-      value: 876330847
+      value: 4256873199
       objectReference: {fileID: 0}
     - target: {fileID: 8553593711587574172, guid: 732d3b9572c7d1b41b5e4886b58a5899,
         type: 3}
@@ -19004,7 +19028,7 @@ PrefabInstance:
     - target: {fileID: -7147815874730718504, guid: f8595e87f4b11ea4c8e68f7d4ca26be6,
         type: 3}
       propertyPath: SceneId
-      value: 3086679655
+      value: 2000330463
       objectReference: {fileID: 0}
     - target: {fileID: -7147815874730718504, guid: f8595e87f4b11ea4c8e68f7d4ca26be6,
         type: 3}
@@ -19458,6 +19482,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -19476,7 +19503,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 1988017527
+  SceneId: 3044980983
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -19512,6 +19539,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -19530,7 +19560,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 1069267799
+  SceneId: 4114529223
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -20099,6 +20129,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -20117,7 +20150,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 2084280703
+  SceneId: 4139687623
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -20153,6 +20186,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -20171,7 +20207,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 1967062127
+  SceneId: 2092867415
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -20207,6 +20243,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -20225,7 +20264,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 1962645631
+  SceneId: 1958714719
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -21173,7 +21212,7 @@ PrefabInstance:
     - target: {fileID: 3014260397009104750, guid: e17e1201394399143926fd49431adbb6,
         type: 3}
       propertyPath: SceneId
-      value: 4269471871
+      value: 3082526279
       objectReference: {fileID: 0}
     - target: {fileID: 3014260397009104750, guid: e17e1201394399143926fd49431adbb6,
         type: 3}
@@ -22003,7 +22042,7 @@ PrefabInstance:
     - target: {fileID: 2991338055145781717, guid: 8005d08b0558d11458e1885f512730a3,
         type: 3}
       propertyPath: SceneId
-      value: 1023129711
+      value: 1954478935
       objectReference: {fileID: 0}
     - target: {fileID: 2991338055145781717, guid: 8005d08b0558d11458e1885f512730a3,
         type: 3}
@@ -24065,7 +24104,7 @@ PrefabInstance:
     - target: {fileID: 8947516073848990361, guid: 22bde41cb2e62014694b22b7f9d92c9b,
         type: 3}
       propertyPath: SceneId
-      value: 2092628975
+      value: 1950268487
       objectReference: {fileID: 0}
     - target: {fileID: 8947516073848990361, guid: 22bde41cb2e62014694b22b7f9d92c9b,
         type: 3}
@@ -24615,6 +24654,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -24633,7 +24675,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 3036601727
+  SceneId: 4240177351
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -24769,7 +24811,7 @@ PrefabInstance:
     - target: {fileID: 1975031271346733603, guid: 82d57c26c688fce4a9fda2f0294a842a,
         type: 3}
       propertyPath: SceneId
-      value: 1014947655
+      value: 3179011671
       objectReference: {fileID: 0}
     - target: {fileID: 1975031271346733603, guid: 82d57c26c688fce4a9fda2f0294a842a,
         type: 3}
@@ -26716,7 +26758,7 @@ PrefabInstance:
     - target: {fileID: 2991338055145781717, guid: 8005d08b0558d11458e1885f512730a3,
         type: 3}
       propertyPath: SceneId
-      value: 1979636975
+      value: 4126841311
       objectReference: {fileID: 0}
     - target: {fileID: 2991338055145781717, guid: 8005d08b0558d11458e1885f512730a3,
         type: 3}
@@ -26908,7 +26950,7 @@ PrefabInstance:
     - target: {fileID: -6054649065494007327, guid: 9807dcd91aa5ca14f8eb15f02393fdd0,
         type: 3}
       propertyPath: SceneId
-      value: 4277836879
+      value: 2096880623
       objectReference: {fileID: 0}
     - target: {fileID: -6054649065494007327, guid: 9807dcd91aa5ca14f8eb15f02393fdd0,
         type: 3}
@@ -27067,7 +27109,7 @@ PrefabInstance:
     - target: {fileID: 8947516073848990361, guid: 22bde41cb2e62014694b22b7f9d92c9b,
         type: 3}
       propertyPath: SceneId
-      value: 3195713871
+      value: 3187579887
       objectReference: {fileID: 0}
     - target: {fileID: 8947516073848990361, guid: 22bde41cb2e62014694b22b7f9d92c9b,
         type: 3}
@@ -27512,7 +27554,7 @@ PrefabInstance:
     - target: {fileID: 8553593711587574172, guid: 732d3b9572c7d1b41b5e4886b58a5899,
         type: 3}
       propertyPath: SceneId
-      value: 4265597527
+      value: 4248755927
       objectReference: {fileID: 0}
     - target: {fileID: 8553593711587574172, guid: 732d3b9572c7d1b41b5e4886b58a5899,
         type: 3}
@@ -28243,7 +28285,7 @@ PrefabInstance:
     - target: {fileID: 4373669341245646739, guid: 700b122d65f6a3144b2798762f0300ea,
         type: 3}
       propertyPath: SceneId
-      value: 3166674039
+      value: 880729463
       objectReference: {fileID: 0}
     - target: {fileID: 4373669341245646739, guid: 700b122d65f6a3144b2798762f0300ea,
         type: 3}
@@ -30617,7 +30659,7 @@ PrefabInstance:
     - target: {fileID: 8553593711587574172, guid: 732d3b9572c7d1b41b5e4886b58a5899,
         type: 3}
       propertyPath: SceneId
-      value: 4131371855
+      value: 4252745463
       objectReference: {fileID: 0}
     - target: {fileID: 8553593711587574172, guid: 732d3b9572c7d1b41b5e4886b58a5899,
         type: 3}
@@ -30923,7 +30965,7 @@ PrefabInstance:
     - target: {fileID: 4416899225686217091, guid: b59619748da8a184ea069bfda6efc83e,
         type: 3}
       propertyPath: SceneId
-      value: 2008784599
+      value: 2143214055
       objectReference: {fileID: 0}
     - target: {fileID: 4416899225686217091, guid: b59619748da8a184ea069bfda6efc83e,
         type: 3}
@@ -33088,7 +33130,7 @@ PrefabInstance:
     - target: {fileID: 8905645701819519299, guid: c9433c8ed603da244a35b1ae5c36e5e0,
         type: 3}
       propertyPath: SceneId
-      value: 2126436591
+      value: 3174997359
       objectReference: {fileID: 0}
     - target: {fileID: 8905645701819519299, guid: c9433c8ed603da244a35b1ae5c36e5e0,
         type: 3}
@@ -34494,7 +34536,7 @@ PrefabInstance:
     - target: {fileID: 8553593711587574172, guid: 732d3b9572c7d1b41b5e4886b58a5899,
         type: 3}
       propertyPath: SceneId
-      value: 1954257479
+      value: 3036594167
       objectReference: {fileID: 0}
     - target: {fileID: 8553593711587574172, guid: 732d3b9572c7d1b41b5e4886b58a5899,
         type: 3}
@@ -35982,6 +36024,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -36000,7 +36045,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 3045056095
+  SceneId: 897580503
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -37280,6 +37325,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -37298,7 +37346,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 3162232959
+  SceneId: 2126511231
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -37334,6 +37382,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -37352,7 +37403,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 2105253071
+  SceneId: 2122301039
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -39339,7 +39390,7 @@ PrefabInstance:
     - target: {fileID: -1929560592445785830, guid: 79a2bbcde2cf7d84d8fd93450717ed49,
         type: 3}
       propertyPath: SceneId
-      value: 3078601087
+      value: 2000338175
       objectReference: {fileID: 0}
     - target: {fileID: -1929560592445785830, guid: 79a2bbcde2cf7d84d8fd93450717ed49,
         type: 3}
@@ -40242,7 +40293,7 @@ PrefabInstance:
     - target: {fileID: -8496429850829941275, guid: d6593bf566211fe458fce64bde54d6d8,
         type: 3}
       propertyPath: SceneId
-      value: 1073454055
+      value: 3065682399
       objectReference: {fileID: 0}
     - target: {fileID: -8496429850829941275, guid: d6593bf566211fe458fce64bde54d6d8,
         type: 3}
@@ -40415,7 +40466,7 @@ PrefabInstance:
     - target: {fileID: -8251018901089376690, guid: 38ee835c5d1f7154381c4061072ef447,
         type: 3}
       propertyPath: SceneId
-      value: 1987811967
+      value: 2134810607
       objectReference: {fileID: 0}
     - target: {fileID: -8251018901089376690, guid: 38ee835c5d1f7154381c4061072ef447,
         type: 3}
@@ -40771,7 +40822,7 @@ PrefabInstance:
     - target: {fileID: 830719003859100304, guid: b42510f78e3dc104793a6a5b9e1709ab,
         type: 3}
       propertyPath: SceneId
-      value: 4135255383
+      value: 2121963591
       objectReference: {fileID: 0}
     - target: {fileID: 830719003859100304, guid: b42510f78e3dc104793a6a5b9e1709ab,
         type: 3}
@@ -41409,7 +41460,7 @@ PrefabInstance:
     - target: {fileID: 3602797889001360707, guid: ab63d075addf5304eaadecca77b6f4f2,
         type: 3}
       propertyPath: SceneId
-      value: 3187333735
+      value: 1056873295
       objectReference: {fileID: 0}
     - target: {fileID: 3602797889001360707, guid: ab63d075addf5304eaadecca77b6f4f2,
         type: 3}
@@ -43189,6 +43240,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -43207,7 +43261,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 3053165415
+  SceneId: 3170631255
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -43289,6 +43343,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -43307,7 +43364,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 4156489039
+  SceneId: 1048575687
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -43814,6 +43871,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -43832,7 +43892,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 1975491015
+  SceneId: 3036339447
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -46514,7 +46574,7 @@ PrefabInstance:
     - target: {fileID: -7305171834497270230, guid: cd43fe8e212122149b5facb2808893b1,
         type: 3}
       propertyPath: SceneId
-      value: 2092931959
+      value: 3166371327
       objectReference: {fileID: 0}
     - target: {fileID: -7305171834497270230, guid: cd43fe8e212122149b5facb2808893b1,
         type: 3}
@@ -47450,6 +47510,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -47468,7 +47531,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 2088746575
+  SceneId: 901708255
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -48517,7 +48580,7 @@ PrefabInstance:
     - target: {fileID: 5589784157357935105, guid: e1353499ed5b5744baddaec96de813ea,
         type: 3}
       propertyPath: SceneId
-      value: 4231961079
+      value: 931053439
       objectReference: {fileID: 0}
     - target: {fileID: 5589784157357935105, guid: e1353499ed5b5744baddaec96de813ea,
         type: 3}
@@ -49957,6 +50020,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -49975,7 +50041,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 4143685207
+  SceneId: 3044784615
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -50011,6 +50077,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -50029,7 +50098,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 3044802503
+  SceneId: 2000329983
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -51334,7 +51403,7 @@ PrefabInstance:
     - target: {fileID: 8553593711587574172, guid: 732d3b9572c7d1b41b5e4886b58a5899,
         type: 3}
       propertyPath: SceneId
-      value: 2004860239
+      value: 1010556535
       objectReference: {fileID: 0}
     - target: {fileID: 8553593711587574172, guid: 732d3b9572c7d1b41b5e4886b58a5899,
         type: 3}
@@ -52158,7 +52227,7 @@ PrefabInstance:
     - target: {fileID: 8669232180503057110, guid: 74be6ee9779394446ab613b4a7d6165b,
         type: 3}
       propertyPath: SceneId
-      value: 3065756487
+      value: 1954527687
       objectReference: {fileID: 0}
     - target: {fileID: 8669232180503057110, guid: 74be6ee9779394446ab613b4a7d6165b,
         type: 3}
@@ -53877,6 +53946,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -53895,7 +53967,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 4160470783
+  SceneId: 2096799615
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -54164,7 +54236,7 @@ PrefabInstance:
     - target: {fileID: -4658021674287739738, guid: 2600cac86817ca2488327b9075e3b761,
         type: 3}
       propertyPath: SceneId
-      value: 3166681295
+      value: 893378559
       objectReference: {fileID: 0}
     - target: {fileID: -4658021674287739738, guid: 2600cac86817ca2488327b9075e3b761,
         type: 3}
@@ -54834,7 +54906,7 @@ PrefabInstance:
     - target: {fileID: -807377925204607938, guid: e4cdc1257e071264381b15d8f7b2b322,
         type: 3}
       propertyPath: SceneId
-      value: 4269449031
+      value: 3049192431
       objectReference: {fileID: 0}
     - target: {fileID: -807377925204607938, guid: e4cdc1257e071264381b15d8f7b2b322,
         type: 3}
@@ -55487,6 +55559,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -55505,7 +55580,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 930855423
+  SceneId: 1962925255
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -56921,7 +56996,7 @@ PrefabInstance:
     - target: {fileID: 4855493212079588181, guid: c1ca76057cbb4374f85e91bca1b5a20a,
         type: 3}
       propertyPath: SceneId
-      value: 4135557463
+      value: 922401735
       objectReference: {fileID: 0}
     - target: {fileID: 4855493212079588181, guid: c1ca76057cbb4374f85e91bca1b5a20a,
         type: 3}
@@ -57417,6 +57492,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -57435,7 +57513,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 4156284663
+  SceneId: 3053182839
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -57536,7 +57614,7 @@ PrefabInstance:
     - target: {fileID: -8255120131623777949, guid: 4289d8151dbdbe1428c9524c92be320d,
         type: 3}
       propertyPath: SceneId
-      value: 1018862847
+      value: 3191577319
       objectReference: {fileID: 0}
     - target: {fileID: -8255120131623777949, guid: 4289d8151dbdbe1428c9524c92be320d,
         type: 3}
@@ -59072,7 +59150,7 @@ PrefabInstance:
     - target: {fileID: 771889671387249097, guid: 3ae2b61cc38fdac4dace7879bf3d4075,
         type: 3}
       propertyPath: SceneId
-      value: 4143897703
+      value: 901709007
       objectReference: {fileID: 0}
     - target: {fileID: 771889671387249097, guid: 3ae2b61cc38fdac4dace7879bf3d4075,
         type: 3}
@@ -59734,6 +59812,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -59752,7 +59833,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 4252933735
+  SceneId: 2000337399
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -59788,6 +59869,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -59806,7 +59890,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 2012977999
+  SceneId: 2000418927
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -62145,7 +62229,7 @@ PrefabInstance:
     - target: {fileID: 5512854817651530124, guid: b501a032b3cb9354f8a0e543424efa3a,
         type: 3}
       propertyPath: SceneId
-      value: 3221224911
+      value: 2122250951
       objectReference: {fileID: 0}
     - target: {fileID: 5512854817651530124, guid: b501a032b3cb9354f8a0e543424efa3a,
         type: 3}
@@ -62516,7 +62600,7 @@ PrefabInstance:
     - target: {fileID: 8951617997951642530, guid: d9dee16ece02abb47abe066edad212b6,
         type: 3}
       propertyPath: SceneId
-      value: 1954258287
+      value: 1039833287
       objectReference: {fileID: 0}
     - target: {fileID: 8951617997951642530, guid: d9dee16ece02abb47abe066edad212b6,
         type: 3}
@@ -66536,7 +66620,7 @@ PrefabInstance:
     - target: {fileID: -6381375893229070887, guid: a82593ee588654341b77c1de152bbe7f,
         type: 3}
       propertyPath: SceneId
-      value: 3196033495
+      value: 1065327943
       objectReference: {fileID: 0}
     - target: {fileID: -6381375893229070887, guid: a82593ee588654341b77c1de152bbe7f,
         type: 3}
@@ -68533,7 +68617,7 @@ PrefabInstance:
     - target: {fileID: -1716813118987885594, guid: 0b5691a0c7fd18b42812a18e1ec9f438,
         type: 3}
       propertyPath: SceneId
-      value: 1962604631
+      value: 1061083591
       objectReference: {fileID: 0}
     - target: {fileID: -1716813118987885594, guid: 0b5691a0c7fd18b42812a18e1ec9f438,
         type: 3}
@@ -68983,7 +69067,7 @@ PrefabInstance:
     - target: {fileID: -5737949669860185077, guid: 6a238b3bae6ac104284e50cbf11e16b4,
         type: 3}
       propertyPath: SceneId
-      value: 3166371303
+      value: 4147878631
       objectReference: {fileID: 0}
     - target: {fileID: -5737949669860185077, guid: 6a238b3bae6ac104284e50cbf11e16b4,
         type: 3}
@@ -69792,6 +69876,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -69810,7 +69897,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 4261076607
+  SceneId: 4261068495
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -70810,7 +70897,7 @@ PrefabInstance:
     - target: {fileID: 5589784157357935105, guid: e1353499ed5b5744baddaec96de813ea,
         type: 3}
       propertyPath: SceneId
-      value: 3065757543
+      value: 4248559191
       objectReference: {fileID: 0}
     - target: {fileID: 5589784157357935105, guid: e1353499ed5b5744baddaec96de813ea,
         type: 3}
@@ -71280,7 +71367,7 @@ PrefabInstance:
     - target: {fileID: 4416899225686217091, guid: b59619748da8a184ea069bfda6efc83e,
         type: 3}
       propertyPath: SceneId
-      value: 4290698327
+      value: 4156555231
       objectReference: {fileID: 0}
     - target: {fileID: 4416899225686217091, guid: b59619748da8a184ea069bfda6efc83e,
         type: 3}
@@ -71990,7 +72077,7 @@ PrefabInstance:
     - target: {fileID: -5371160480096395457, guid: 216b110c3d8d685449e48bf9c4429edf,
         type: 3}
       propertyPath: SceneId
-      value: 4290698103
+      value: 1958648671
       objectReference: {fileID: 0}
     - target: {fileID: -5371160480096395457, guid: 216b110c3d8d685449e48bf9c4429edf,
         type: 3}
@@ -73314,6 +73401,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -73332,7 +73422,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 1962605047
+  SceneId: 2000681951
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -73894,7 +73984,7 @@ PrefabInstance:
     - target: {fileID: 1788713051301854164, guid: 41e222bf8a09c6040bbc3aafc3c61190,
         type: 3}
       propertyPath: SceneId
-      value: 4106206199
+      value: 1992014207
       objectReference: {fileID: 0}
     - target: {fileID: 1788713051301854164, guid: 41e222bf8a09c6040bbc3aafc3c61190,
         type: 3}
@@ -74213,6 +74303,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -74231,7 +74324,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 3204184527
+  SceneId: 2096807879
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -74267,6 +74360,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -74285,7 +74381,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 1010752719
+  SceneId: 4097564231
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -76177,6 +76273,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -76195,7 +76294,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 939433543
+  SceneId: 3049183351
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -76231,6 +76330,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -76249,7 +76351,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 931134159
+  SceneId: 3027941591
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -80382,6 +80484,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -80400,7 +80505,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 901774927
+  SceneId: 2143000943
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -80698,6 +80803,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -80716,7 +80824,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 2134571759
+  SceneId: 4110408423
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -81574,7 +81682,7 @@ PrefabInstance:
     - target: {fileID: 7176147112894277104, guid: 4aa9d5290c47f6d49a8baeb5891b5785,
         type: 3}
       propertyPath: SceneId
-      value: 4105894247
+      value: 3045039999
       objectReference: {fileID: 0}
     - target: {fileID: 7176147112894277104, guid: 4aa9d5290c47f6d49a8baeb5891b5785,
         type: 3}
@@ -82132,7 +82240,7 @@ PrefabInstance:
     - target: {fileID: 8553593711587574172, guid: 732d3b9572c7d1b41b5e4886b58a5899,
         type: 3}
       propertyPath: SceneId
-      value: 2101083351
+      value: 1060822631
       objectReference: {fileID: 0}
     - target: {fileID: 8553593711587574172, guid: 732d3b9572c7d1b41b5e4886b58a5899,
         type: 3}
@@ -84951,7 +85059,7 @@ PrefabInstance:
     - target: {fileID: -2985409812457599765, guid: 5234f0f7755c62447801b9386c395a13,
         type: 3}
       propertyPath: SceneId
-      value: 2092874999
+      value: 4143708527
       objectReference: {fileID: 0}
     - target: {fileID: -2985409812457599765, guid: 5234f0f7755c62447801b9386c395a13,
         type: 3}
@@ -85282,7 +85390,7 @@ PrefabInstance:
     - target: {fileID: 6137077390581251228, guid: d99a56c7cdd4226499f8a6557d430d3f,
         type: 3}
       propertyPath: SceneId
-      value: 4152007791
+      value: 4244347591
       objectReference: {fileID: 0}
     - target: {fileID: 6137077390581251228, guid: d99a56c7cdd4226499f8a6557d430d3f,
         type: 3}
@@ -85595,6 +85703,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -85613,7 +85724,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 1048287703
+  SceneId: 3191782775
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -85649,6 +85760,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -85667,7 +85781,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 4240161351
+  SceneId: 1023139399
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -86034,7 +86148,7 @@ PrefabInstance:
     - target: {fileID: 285581387464044897, guid: a50e13151285ccd40b1390ef9667c671,
         type: 3}
       propertyPath: SceneId
-      value: 4248543103
+      value: 4244561903
       objectReference: {fileID: 0}
     - target: {fileID: 285581387464044897, guid: a50e13151285ccd40b1390ef9667c671,
         type: 3}
@@ -86432,7 +86546,7 @@ PrefabInstance:
     - target: {fileID: 1512811930800759881, guid: 45b68be33d6f9de4ba0fc9430561905f,
         type: 3}
       propertyPath: SceneId
-      value: 2105212751
+      value: 2105253727
       objectReference: {fileID: 0}
     - target: {fileID: 1512811930800759881, guid: 45b68be33d6f9de4ba0fc9430561905f,
         type: 3}
@@ -87295,6 +87409,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -87313,7 +87430,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 2101009495
+  SceneId: 1950341879
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -87745,6 +87862,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -87763,7 +87883,7 @@ MonoBehaviour:
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 0
-  SceneId: 939458047
+  SceneId: 905616247
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -87938,7 +88058,7 @@ PrefabInstance:
     - target: {fileID: 696217125017747896, guid: 4afdc19cd547f9446aade64eb4d2660d,
         type: 3}
       propertyPath: SceneId
-      value: 1044306775
+      value: 3178953543
       objectReference: {fileID: 0}
     - target: {fileID: 696217125017747896, guid: 4afdc19cd547f9446aade64eb4d2660d,
         type: 3}
@@ -88144,7 +88264,7 @@ PrefabInstance:
     - target: {fileID: 3882163201381931932, guid: 3ff1bd2ace8ade24183c39de74c2ae03,
         type: 3}
       propertyPath: SceneId
-      value: 3066011503
+      value: 1048231623
       objectReference: {fileID: 0}
     - target: {fileID: 3882163201381931932, guid: 3ff1bd2ace8ade24183c39de74c2ae03,
         type: 3}
@@ -88401,7 +88521,7 @@ PrefabInstance:
     - target: {fileID: 2737782110881071460, guid: 5059db48806402c40aa8ae0c202f2385,
         type: 3}
       propertyPath: SceneId
-      value: 1044363767
+      value: 4118723031
       objectReference: {fileID: 0}
     - target: {fileID: 2737782110881071460, guid: 5059db48806402c40aa8ae0c202f2385,
         type: 3}
@@ -89186,7 +89306,7 @@ PrefabInstance:
     - target: {fileID: 1861592614595905966, guid: 9c07f178f37df46449a2c9f27a3f235b,
         type: 3}
       propertyPath: SceneId
-      value: 1962670167
+      value: 4253015295
       objectReference: {fileID: 0}
     - target: {fileID: 1861592614595905966, guid: 9c07f178f37df46449a2c9f27a3f235b,
         type: 3}
@@ -89738,7 +89858,7 @@ PrefabInstance:
     - target: {fileID: 3368712449801559042, guid: 18e16b997ce069c41944ea619c8435a5,
         type: 3}
       propertyPath: SceneId
-      value: 3212811775
+      value: 3024067815
       objectReference: {fileID: 0}
     - target: {fileID: 3368712449801559042, guid: 18e16b997ce069c41944ea619c8435a5,
         type: 3}
@@ -89986,7 +90106,7 @@ PrefabInstance:
     - target: {fileID: 2969595355141116181, guid: 870438fd939127b4f942251edae71a3b,
         type: 3}
       propertyPath: SceneId
-      value: 918476887
+      value: 918552159
       objectReference: {fileID: 0}
     - target: {fileID: 2969595355141116181, guid: 870438fd939127b4f942251edae71a3b,
         type: 3}

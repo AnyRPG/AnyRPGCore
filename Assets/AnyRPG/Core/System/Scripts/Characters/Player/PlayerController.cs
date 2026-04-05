@@ -1024,11 +1024,14 @@ namespace AnyRPG {
         }
 
         public void SubscribeToUnitEvents() {
-            //Debug.Log($"{gameObject.name}.PlayerController.SubscribeToUnitEvents()");
+            //Debug.Log($"PlayerController.SubscribeToUnitEvents() activeUnitController: {(playerManagerClient.ActiveUnitController == null ? "null" : playerManagerClient.ActiveUnitController.gameObject.name)}");
 
+            /*
             if (playerManagerClient.ActiveUnitController.UnitProfile.UnitPrefabProps.ForceRotateModelMode == true) {
+                //Debug.Log($"PlayerController.SubscribeToUnitEvents() force rotate model mode enabled, disabling strafe mode");
                 strafeModeActive = false;
             }
+            */
 
             // if player was agrod at spawn, they may have a target already since we subscribe on model ready
             playerManagerClient.ActiveUnitController.UnitEventController.OnSetTarget += HandleSetTarget;
@@ -1096,7 +1099,7 @@ namespace AnyRPG {
             playerManagerClient.SetActiveUnitController(mountUnitController);
 
             cameraManager.SwitchToMainCamera();
-            cameraManager.MainCameraController.InitializeCamera(playerManagerClient.ActiveUnitController.CameraTransform);
+            cameraManager.MainCameraController.InitializeCamera(playerManagerClient.ActiveUnitController.CameraTransform, playerManagerClient.ActiveUnitController.NameplateVector.y);
         }
 
         public void HandleDeactivateMountedState() {
@@ -1104,13 +1107,21 @@ namespace AnyRPG {
             playerManagerClient.SetActiveUnitController(playerManagerClient.UnitController);
 
             cameraManager.ActivateMainCamera();
-            cameraManager.MainCameraController.InitializeCamera(playerManagerClient.UnitController.CameraTransform);
+            cameraManager.MainCameraController.InitializeCamera(playerManagerClient.UnitController.CameraTransform, playerManagerClient.UnitController.NameplateVector.y);
         }
 
         public void OnSendObjectToPool() {
             ClearInteractables();
         }
 
+        public void ProcessSetActiveUnitController() {
+            //Debug.Log($"PlayerController.ProcessSetActiveUnitController() activeUnitController: {(playerManagerClient.ActiveUnitController == null ? "null" : playerManagerClient.ActiveUnitController.gameObject.name)}");
+            
+            if (playerManagerClient.ActiveUnitController.UnitProfile.UnitPrefabProps.ForceRotateModelMode == true) {
+                //Debug.Log($"PlayerController.ProcessSetActiveUnitController() force rotate model mode enabled, disabling strafe mode");
+                strafeModeActive = false;
+            }
+        }
     }
 
 }

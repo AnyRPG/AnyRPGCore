@@ -58,11 +58,15 @@ namespace AnyRPG {
         }
 
         public override void ConfigurePortrait(Sprite icon) {
+            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.ConfigurePortrait()");
+
             base.ConfigurePortrait(icon);
             portraitSnapshotImage.gameObject.SetActive(false);
         }
 
         public void ConfigureSnapshotPortrait() {
+            //Debug.Log($"{gameObject.name}.UnitFramePanelBase.ConfigureSnapshotPortrait()");
+
             portraitImage.gameObject.SetActive(false);
             portraitSnapshotImage.gameObject.SetActive(true);
             if (previewManager.UnitController.CameraTargetReady) {
