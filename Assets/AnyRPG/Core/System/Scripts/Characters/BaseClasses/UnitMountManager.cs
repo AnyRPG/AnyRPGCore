@@ -374,7 +374,7 @@ namespace AnyRPG {
             if (mountUnitController?.UnitModelController != null && mountUnitController.UnitModelController.ModelCreated == false) {
                 SubscribeToMountModelReady();
             } else {
-                ActivateMountedState(true);
+                ActivateMountedState();
             }
         }
     }
