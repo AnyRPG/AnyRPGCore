@@ -56,11 +56,11 @@ namespace AnyRPG {
         }
 
         public void Initialize() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitModelController.Initialize()");
+            Debug.Log($"{unitController.gameObject.name}.UnitModelController.Initialize()");
 
             characterEquipmentManager = unitController.CharacterEquipmentManager;
             if (characterEquipmentManager == null) {
-                Debug.LogWarning("CharacterEquipmentManager was null");
+                Debug.LogWarning($"{unitController.gameObject.name}.UnitModelController.Initialize() CharacterEquipmentManager was null");
             }
             mecanimModelController.Initialize();
         }

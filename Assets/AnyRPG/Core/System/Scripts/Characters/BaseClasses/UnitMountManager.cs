@@ -77,13 +77,13 @@ namespace AnyRPG {
 
             unitController.UnitEventController.NotifyOnSetMountedState(mountUnitController, mountUnitProfile);
 
-            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+            //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
                 if (mountUnitController?.UnitModelController != null && mountUnitController.UnitModelController.ModelCreated == false) {
                     SubscribeToMountModelReady();
                 } else {
                     HandleMountUnitSpawn();
                 }
-            }
+            //}
         }
 
         public void SubscribeToMountModelReady() {

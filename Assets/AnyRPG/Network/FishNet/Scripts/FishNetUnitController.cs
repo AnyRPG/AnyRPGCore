@@ -242,9 +242,26 @@ namespace AnyRPG {
         private void HandleSpawnMountClient(NetworkConnection networkConnection, FishNetUnitController riderUnitController) {
             Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnMountClient(riderUnitController: {(riderUnitController == null ? "null" : riderUnitController.gameObject.name)}) owner: {base.OwnerId}");
 
-            riderUnitController.unitController.UnitMountManager.PostInit(unitController);
+            //if (riderUnitController.unitController.IsInitialized == false ) {
+            //}
+            if (riderUnitController.unitController.CameraTargetReady == true) {
+                riderUnitController.unitController.UnitMountManager.PostInit(unitController);
+            } else {
+                StartCoroutine(WaitForRider(riderUnitController));
+            }
         }
-        
+
+        private IEnumerator WaitForRider(FishNetUnitController riderUnitController) {
+            Debug.Log($"{gameObject.name}.FishNetUnitController.WaitForRider() owner: {base.OwnerId} frame: {Time.frameCount}");
+
+            while (riderUnitController?.UnitController != null
+                && (riderUnitController.UnitController.IsInitialized == false || riderUnitController.UnitController.CameraTargetReady == false)) {
+                yield return null;
+            }
+            if (riderUnitController.UnitController != null) {
+                riderUnitController.unitController.UnitMountManager.PostInit(unitController);
+            }
+        }
 
         [TargetRpc]
         private void HandleSpawnServerUnitClient(NetworkConnection networkConnection, FishNetSpawnClientRequest fishNetSpawnClientRequest) {

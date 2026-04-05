@@ -568,7 +568,6 @@ namespace AnyRPG {
 
             base.ProcessInit();
 
-
             SetStartPosition();
 
             ActivateUnitControllerMode();
