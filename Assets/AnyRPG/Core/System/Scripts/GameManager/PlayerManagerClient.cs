@@ -522,6 +522,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnSetGuildId += HandleSetGuildId;
             unitController.UnitEventController.OnManualMovement += HandleManualMovement;
             unitController.UnitEventController.OnReachDestination += HandleReachDestination;
+            unitController.UnitEventController.OnAddSkillLevel += HandleAddSkillLevel;
         }
 
         public void UnsubscribeFromPlayerEvents() {
@@ -592,6 +593,11 @@ namespace AnyRPG {
             unitController.UnitEventController.OnSetGuildId -= HandleSetGuildId;
             unitController.UnitEventController.OnManualMovement += HandleManualMovement;
             unitController.UnitEventController.OnReachDestination += HandleReachDestination;
+            unitController.UnitEventController.OnAddSkillLevel += HandleAddSkillLevel;
+        }
+
+        private void HandleAddSkillLevel(Skill skill, int addLevel) {
+            combatTextManager.SpawnCombatText(unitController, $"{addLevel} {skill.DisplayName}", CombatTextType.gainSkill);
         }
 
         private void HandleReachDestination() {

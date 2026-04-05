@@ -47,6 +47,16 @@ namespace AnyRPG {
             return searchInteractable.GetFirstInteractableOption(typeof(GatheringNodeComponent)) as GatheringNodeComponent;
         }
 
+        public override string GetSummary(UnitController sourceUnitController) {
+            string returnValue = base.GetSummary(sourceUnitController);
+            string colorstring  = "#ffff00ff";
+            if (GatheringNodeProps.Skill != null && GatheringNodeProps.RequiredSkillLevel > sourceUnitController.CharacterSkillManager.GetSkillLevel(GatheringNodeProps.Skill)) {
+                colorstring = "#ff0000";
+                returnValue += $"\n<color={colorstring}>Requires Skill Level {GatheringNodeProps.RequiredSkillLevel} skill</color>";
+            }
+            return returnValue;
+        }
+
         public override string GetInteractionButtonText(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
             return (GatheringNodeProps.BaseAbility != null ? GatheringNodeProps.BaseAbility.DisplayName : base.GetInteractionButtonText(sourceUnitController, componentIndex, choiceIndex));
         }
@@ -88,21 +98,39 @@ namespace AnyRPG {
             base.ProcessClientNotifications(sourceUnitController, componentIndex, choiceIndex);
         }
 
-        /*
-        public override void DropLoot() {
-            //Debug.Log(gameObject.name + ".GatheringNode.DropLoot()");
-            base.Interact(playerManager.UnitController.CharacterUnit);
-            //base.DropLoot();
-            //PickUp();
+        public override void DropLoot(UnitController sourceUnitController) {
+            base.DropLoot(sourceUnitController);
+            if (lootDropped == true) {
+                return;
+            }
+            if (GatheringNodeProps.Skill == null || GatheringNodeProps.Skill.UseSkillLevels == false) {
+                return;
+            }
+            if (sourceUnitController.CharacterStats.Level > GatheringNodeProps.MaxCharacterExperienceLevel && GatheringNodeProps.MaxCharacterExperienceLevel > 0) {
+                return;
+            }
+            if (sourceUnitController.CharacterSkillManager.GetSkillLevel(GatheringNodeProps.Skill) > GatheringNodeProps.MaxSkillExperienceLevel && GatheringNodeProps.MaxSkillExperienceLevel > 0) {
+                return;
+            }
+            sourceUnitController.CharacterSkillManager.AddSkillLevel(GatheringNodeProps.Skill, 1);
         }
-        */
 
         public override int GetCurrentOptionCount(UnitController sourceUnitController) {
             //Debug.Log($"{gameObject.name}.GatheringNode.GetCurrentOptionCount()");
-            return ((sourceUnitController.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility.AbilityProperties) == true
-                && Props.SpawnObject != null
-                && Props.SpawnObject.activeInHierarchy == true) ? 1 : 0);
 
+            if (Props.SpawnObject == null) {
+                return 0;
+            }
+            if (Props.SpawnObject.activeInHierarchy == false) {
+                return 0;
+            }
+            if (GatheringNodeProps.Skill != null && sourceUnitController.CharacterSkillManager.HasSkill(GatheringNodeProps.Skill) == false) {
+                return 0;
+            }
+            if (sourceUnitController.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility.AbilityProperties) == false) {
+                return 0;
+            }
+            return 1;
         }
 
         /*

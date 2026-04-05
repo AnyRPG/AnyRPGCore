@@ -22,5 +22,11 @@ MonoBehaviour:
   optionalOverride: 0
   requiredLevel: 1
   autoLearn: 0
+  useSkillLevels: 1
+  skillLevelCapList:
+  - CharacterLevel: 1
+    SkillLevelCap: 10
+  - CharacterLevel: 10
+    SkillLevelCap: 20
   abilityNames:
   - Herbalism

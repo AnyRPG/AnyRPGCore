@@ -193,6 +193,7 @@ namespace AnyRPG {
         public event Action<Interactable> OnRequestFollowInteractionTarget = delegate { };
         public event Action<Interactable, float> OnRequestFollowAttackTarget = delegate { };
         public event Action<int, int> OnRequestSplitStack = delegate { };
+        public event Action<Skill, int> OnAddSkillLevel = delegate { };
 
         //public event System.Action<BaseAbilityProperties, Interactable> OnTargetInAbilityRangeFail = delegate { };
 
@@ -1067,6 +1068,10 @@ namespace AnyRPG {
 
         public void NotifyOnRequestSplitStack(int inventorySlotIndex, int stackSize) {
             OnRequestSplitStack(inventorySlotIndex, stackSize);
+        }
+
+        public void NotifyOnAddSkillLevel(Skill skill, int addLevel) {
+            OnAddSkillLevel(skill, addLevel);
         }
 
         #endregion

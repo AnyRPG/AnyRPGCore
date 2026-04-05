@@ -101,6 +101,8 @@ namespace AnyRPG {
                             }
                         }
                     }
+                    // give skill experience for crafting the item if applicable
+                    TryToGiveSkillExperience(craftingQueue[0]);
                     unitController.UnitEventController.NotifyOnCraftItem();
                     RemoveFirstQueueItem();
                     if (craftingQueue.Count > 0) {
@@ -111,10 +113,36 @@ namespace AnyRPG {
                         unitController.CharacterAbilityManager.BeginAbility(craftAbility);
                     }
                 }
+                
             } else {
                 // empty the queue to prevent repeated loop trying to craft something you don't have materials for
                 ClearCraftingQueue();
             }
+        }
+
+        private void TryToGiveSkillExperience(Recipe recipe) {
+            Debug.Log($"{unitController.gameObject.name}.CharacterCraftingManager.TryToGiveSkillExperience({recipe.ResourceName})");
+
+            // ensure there is a skill to compare agains
+            if (recipe.Skill == null) {
+                return;
+            }
+
+            // if the recipe doesn't use skill levels, then don't give any experience
+            if (recipe.Skill.UseSkillLevels == false) {
+                return;
+            }
+
+            // check if character is above the max level for experience gain, if applicable
+            if (unitController.CharacterStats.Level > craftingQueue[0].MaxCharacterExperienceLevel && craftingQueue[0].MaxCharacterExperienceLevel > 0) {
+                return;
+            }
+
+            // check if skill is above the max level for experience gain, if applicable
+            if (unitController.CharacterSkillManager.GetSkillLevel(craftingQueue[0].Skill) > craftingQueue[0].MaxSkillExperienceLevel && craftingQueue[0].MaxSkillExperienceLevel > 0) {
+                return;
+            }
+            unitController.CharacterSkillManager.AddSkillLevel(craftingQueue[0].Skill, 1);
         }
 
         public void RemoveFirstQueueItem() {

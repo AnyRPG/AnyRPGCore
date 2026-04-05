@@ -1,4 +1,5 @@
 using AnyRPG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,15 +9,14 @@ namespace AnyRPG {
 
         UnitController unitController;
 
-        private Dictionary<string, Skill> skillList = new Dictionary<string, Skill>();
+        private Dictionary<string, CharacterSkillData> skillList = new Dictionary<string, CharacterSkillData>();
 
         // game manager references
         protected PlayerManagerClient playerManagerClient = null;
         protected SystemEventManager systemEventManager = null;
 
-        public Dictionary<string, Skill> MySkillList { get => skillList; }
+        public Dictionary<string, CharacterSkillData> SkillList { get => skillList; }
 
-        //public List<string> MySkillList { get => skillList;}
         public CharacterSkillManager(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
             Configure(systemGameManager);
@@ -39,7 +39,7 @@ namespace AnyRPG {
 
         public bool HasSkill(Skill checkSkill) {
             //Debug.Log($"{gameObject.name}.CharacterSkillManager.HasSkill(" + skillName + ")");
-            if (skillList.ContainsValue(checkSkill)) {
+            if (skillList.ContainsKey(checkSkill.ResourceName)) {
                 return true;
             }
             return false;
@@ -48,8 +48,11 @@ namespace AnyRPG {
         public void LearnSkill(Skill newSkill) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSkillManager.LearnSkill({newSkill.ResourceName})");
 
-            if (!skillList.ContainsValue(newSkill)) {
-                skillList[newSkill.ResourceName] = newSkill;
+            if (!skillList.ContainsKey(newSkill.ResourceName)) {
+                skillList[newSkill.ResourceName] = new CharacterSkillData {
+                    Skill = newSkill,
+                    SkillLevel = 1
+                };
                 foreach (AbilityProperties ability in newSkill.AbilityList) {
                     unitController.CharacterAbilityManager.LearnAbility(ability);
                 }
@@ -63,21 +66,26 @@ namespace AnyRPG {
             }
         }
 
-        public void LoadSkill(string skillName) {
+        public void LoadSkill(CharacterSkillSaveData characterSkillSaveData) {
             //Debug.Log("CharacterSkillManager.LoadSkill()");
             
             // don't crash on loading old save Data
-            if (skillName == null || skillName == string.Empty) {
+            if (characterSkillSaveData?.SkillResourceName == null || characterSkillSaveData.SkillResourceName == string.Empty) {
                 return;
             }
-            if (!skillList.ContainsKey(skillName)) {
-                skillList[skillName] = systemDataFactory.GetResource<Skill>(skillName);
+            if (!skillList.ContainsKey(characterSkillSaveData.SkillResourceName)) {
+                Skill skill = systemDataFactory.GetResource<Skill>(characterSkillSaveData.SkillResourceName);
+                CharacterSkillData characterSkillData = new CharacterSkillData {
+                    Skill = skill,
+                    SkillLevel = characterSkillSaveData.SkillLevel
+                };
+                skillList[characterSkillSaveData.SkillResourceName] = characterSkillData;
             }
         }
 
 
         public void UnLearnSkill(Skill oldSkill) {
-            if (skillList.ContainsValue(oldSkill)) {
+            if (skillList.ContainsKey(oldSkill.ResourceName)) {
                 skillList.Remove(oldSkill.ResourceName);
                 foreach (AbilityProperties ability in oldSkill.AbilityList) {
                     unitController.CharacterAbilityManager.UnlearnAbility(ability);
@@ -87,7 +95,25 @@ namespace AnyRPG {
 
         }
 
+        public int GetSkillLevel(Skill skill) {
+            if (skillList.ContainsKey(skill.ResourceName)) {
+                return skillList[skill.ResourceName].SkillLevel;
+            }
+            return 0;
+        }
 
+        public void AddSkillLevel(Skill skill, int addLevel) {
+            if (skillList.ContainsKey(skill.ResourceName)) {
+                CharacterSkillData characterSkillData = skillList[skill.ResourceName];
+                if (characterSkillData.SkillLevel < skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level)) {
+                    characterSkillData.SkillLevel += addLevel;
+                    if (characterSkillData.SkillLevel > skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level)) {
+                        characterSkillData.SkillLevel = skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level);
+                    }
+                    unitController.UnitEventController.NotifyOnAddSkillLevel(skill, addLevel);
+                }
+            }
+        }
     }
 
 }

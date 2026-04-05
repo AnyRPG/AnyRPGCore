@@ -146,6 +146,13 @@ namespace AnyRPG {
                         fontSizeMultiplier *= 2;
                         xDirectionMultiplier = -1;
                         break;
+                    case CombatTextType.gainSkill:
+                        textColor = Color.blue;
+                        preText += "+";
+                        //postText += " XP";
+                        fontSizeMultiplier *= 2;
+                        xDirectionMultiplier = -1;
+                        break;
                     case CombatTextType.gainBuff:
                         textColor = Color.cyan;
                         preText += "+";

@@ -17,6 +17,14 @@ namespace AnyRPG {
         [SerializeField]
         private bool autoLearn = false;
 
+        [Tooltip("If true, the skill will level up with use.")]
+        [SerializeField]
+        private bool useSkillLevels = true;
+
+        [Tooltip("A list of character levels and corresponding skill caps")]
+        [SerializeField]
+        private List<SkillLevelCapNode> skillLevelCapList = new List<SkillLevelCapNode>();
+
         [Tooltip("List of abilities that are learned when this skill is learned")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Ability))]
@@ -27,6 +35,7 @@ namespace AnyRPG {
         public int RequiredLevel { get => requiredLevel; }
         public bool AutoLearn { get => autoLearn; }
         public List<AbilityProperties> AbilityList { get => abilityList; set => abilityList = value; }
+        public bool UseSkillLevels { get => useSkillLevels; set => useSkillLevels = value; }
 
         // game manager references
         //protected PlayerManager playerManager = null;
@@ -49,6 +58,21 @@ namespace AnyRPG {
 
         public bool HasReward(UnitController sourceUnitController) {
             return sourceUnitController.CharacterSkillManager.HasSkill(this);
+        }
+
+        public int GetSkillCapForLevel(int characterLevel) {
+            // find the highest character level that is less than or equal to the input character level, and return the corresponding skill cap
+            int skillCap = 1;
+            SkillLevelCapNode highestLevelNode = null;
+            foreach (SkillLevelCapNode skillLevelCapNode in skillLevelCapList) {
+                if (highestLevelNode == null || skillLevelCapNode.CharacterLevel > highestLevelNode.CharacterLevel) {
+                    highestLevelNode = skillLevelCapNode;
+                }
+            }
+            if (highestLevelNode != null) {
+                skillCap = highestLevelNode.SkillLevelCap;
+            }
+            return skillCap;
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {

@@ -59,12 +59,15 @@ MonoBehaviour:
   interactOnExit: 0
   isTrigger: 0
   suppressInteractionWindow: 0
+  overrideInteractionColliderSize: 0
   interactionMaxRange: 2
-  checkOptionsToSpawn: 1
-  spawnRequiresValidOption: 0
-  despawnRequiresNoValidOption: 0
+  interactionPoints: []
   componentController: {fileID: 2165840926085220776}
-  unitComponentController: {fileID: 0}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!114 &7462701501178914111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87,6 +90,10 @@ MonoBehaviour:
     spawnTimer: 60
     spawnObject: {fileID: 8779630184612667943}
     abilityName: Mining
+    skillName: Mining
+    requiredSkillLevel: 0
+    maxSkillExperienceLevel: 0
+    maxCharacterExperienceLevel: 0
 --- !u!65 &1561864797825501691
 BoxCollider:
   m_ObjectHideFlags: 0

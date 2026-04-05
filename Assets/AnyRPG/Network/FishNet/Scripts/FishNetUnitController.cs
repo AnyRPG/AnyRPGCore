@@ -493,6 +493,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnReachDestination += HandleReachDestinationServer;
             unitController.UnitEventController.OnSetParent += HandleSetParent;
             unitController.UnitEventController.OnUnsetParent += HandleUnsetParent;
+            unitController.UnitEventController.OnAddSkillLevel += HandleAddSkillLevel;
         }
 
         public void UnsubscribeFromServerUnitEvents() {
@@ -597,6 +598,20 @@ namespace AnyRPG {
             unitController.UnitEventController.OnSetGroupId -= HandleSetGroupId;
             unitController.UnitEventController.OnSetGuildId -= HandleSetGuildId;
             unitController.UnitEventController.OnReachDestination -= HandleReachDestinationServer;
+            unitController.UnitEventController.OnAddSkillLevel += HandleAddSkillLevel;
+        }
+
+        private void HandleAddSkillLevel(Skill skill, int addLevel) {
+            HandleAddSkillLevelClient(skill.ResourceName, addLevel);
+        }
+
+        [ObserversRpc]
+        private void HandleAddSkillLevelClient(string skillResourceName, int addLevel) {
+            Skill skill = systemDataFactory.GetResource<Skill>(skillResourceName);
+            if (skill == null) {
+                return;
+            }
+            unitController.CharacterSkillManager.AddSkillLevel(skill, addLevel);
         }
 
         /*

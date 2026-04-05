@@ -161,6 +161,25 @@ namespace AnyRPG {
             }
         }
 
-    }
+        public void SpawnCombatText(Interactable target, string displayText, CombatTextType combatType) {
+            //Debug.Log($"CombatTextManager.SpawnCombatText({target.gameObject.name}, {displayText}, {combatType})");
+            if (PlayerPrefs.GetInt("UseFloatingCombatText") == 0) {
+                return;
+            }
+            //Debug.Log("Combat Text manager Spawning Combat Text attached to: " + target.name);
+            //Debug.Log("About to Set MainTarget on combat text");
+            CombatTextController combatTextController = GetCombatTextController();
+            if (combatTextController != null) {
+                combatTextController.Configure(systemGameManager);
+                inUseCombatTextControllers.Add(combatTextController);
+                combatTextController.InitializeCombatTextController(target,
+                    null,
+                    displayText,
+                    combatType
+                    );
+            }
 
+        }
+
+    }
 }

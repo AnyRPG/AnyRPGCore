@@ -10,7 +10,6 @@ namespace AnyRPG {
         [SerializeField]
         private List<SkillButton> skillButtons = new List<SkillButton>();
 
-
         private PlayerManagerClient playerManagerClient = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -25,8 +24,8 @@ namespace AnyRPG {
         protected override void PopulatePages() {
             //Debug.Log("SkillBookUI.CreatePages()");
             SkillContentList page = new SkillContentList();
-            foreach (Skill playerSkill in playerManagerClient.UnitController.CharacterSkillManager.MySkillList.Values) {
-                page.skills.Add(playerSkill);
+            foreach (CharacterSkillData characterSkillData in playerManagerClient.UnitController.CharacterSkillManager.SkillList.Values) {
+                page.skills.Add(characterSkillData);
                 if (page.skills.Count == pageSize) {
                     pages.Add(page);
                     page = new SkillContentList();
@@ -79,6 +78,6 @@ namespace AnyRPG {
     }
 
     public class SkillContentList : PagedContentList {
-        public List<Skill> skills = new List<Skill>();
+        public List<CharacterSkillData> skills = new List<CharacterSkillData>();
     }
 }
