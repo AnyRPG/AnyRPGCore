@@ -56,7 +56,7 @@ namespace AnyRPG {
         }
 
         public void Initialize() {
-            Debug.Log($"{unitController.gameObject.name}.UnitModelController.Initialize()");
+            //Debug.Log($"{unitController.gameObject.name}.UnitModelController.Initialize()");
 
             characterEquipmentManager = unitController.CharacterEquipmentManager;
             if (characterEquipmentManager == null) {

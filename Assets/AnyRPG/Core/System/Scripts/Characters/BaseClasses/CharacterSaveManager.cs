@@ -882,10 +882,24 @@ namespace AnyRPG {
             saveData.PlayerLocationX = unitController.transform.position.x;
             saveData.PlayerLocationY = unitController.transform.position.y;
             saveData.PlayerLocationZ = unitController.transform.position.z;
-            saveData.PlayerRotationX = unitController.transform.forward.x;
-            saveData.PlayerRotationY = unitController.transform.forward.y;
-            saveData.PlayerRotationZ = unitController.transform.forward.z;
+            /*
+            if (unitController.IsMounted == true && unitController.UnitMountManager.MountUnitController != null) {
+                saveData.PlayerRotationX = unitController.UnitMountManager.MountUnitController.transform.forward.x;
+                saveData.PlayerRotationY = unitController.UnitMountManager.MountUnitController.transform.forward.y;
+                saveData.PlayerRotationZ = unitController.UnitMountManager.MountUnitController.transform.forward.z;
+            } else {
+                saveData.PlayerRotationX = unitController.transform.forward.x;
+                saveData.PlayerRotationY = unitController.transform.forward.y;
+                saveData.PlayerRotationZ = unitController.transform.forward.z;
+            }
+            */
+            Vector3 worldForward = unitController.transform.forward;
+            worldForward.y = 0;
+            worldForward.Normalize();
 
+            saveData.PlayerRotationX = worldForward.x;
+            saveData.PlayerRotationY = 0; // Force flat
+            saveData.PlayerRotationZ = worldForward.z;
         }
 
         public void SaveResourcePowerData() {

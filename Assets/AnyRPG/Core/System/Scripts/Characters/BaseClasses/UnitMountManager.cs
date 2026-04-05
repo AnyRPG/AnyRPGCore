@@ -121,7 +121,7 @@ namespace AnyRPG {
         }
 
         public void HandleMountUnitSpawn() {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn()");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn() lateJoin: {lateJoin}");
 
             string originalPrefabSourceBone = mountUnitProfile.UnitPrefabProps.TargetBone;
             // NOTE: mount effects used sheathed position for character position.  do not use regular position to avoid putting mount below ground when spawning
@@ -130,15 +130,34 @@ namespace AnyRPG {
             if (originalPrefabSourceBone != null && originalPrefabSourceBone != string.Empty) {
                 Transform mountPoint = mountUnitController.transform.FindChildByRecursive(originalPrefabSourceBone);
                 if (mountPoint != null) {
-                    unitController.UnitEventController.NotifyOnSetParent(mountPoint);
-
-                    if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
-                    //if (systemGameManager.GameMode == GameMode.Local || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
-                    //if (systemGameManager.GameMode == GameMode.Local) {
-                        unitController.transform.parent = mountPoint;
+                    /*
+                    if (lateJoin == true) {
+                        unitController.transform.SetParent(null);
+                        unitController.transform.localScale = Vector3.one;
                     }
+                    */
+                    unitController.UnitEventController.NotifyOnSetParent(mountPoint);
+                    // print scale and lossy scale for unit and mount point
+                    Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn() before mounting scale: {unitController.transform.localScale} lossyScale: {unitController.transform.lossyScale} mScale: {mountPoint.localScale} mLossyScale: {mountPoint.lossyScale}");
+                    if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
+                        //if (systemGameManager.GameMode == GameMode.Local || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
+                        //if (systemGameManager.GameMode == GameMode.Local) {
+                        if (lateJoin == false) {
+                            unitController.transform.parent = mountPoint;
+                        } else {
+                            unitController.transform.SetParent(mountPoint, false);
+                            unitController.transform.localScale = new Vector3(
+                                1f / mountPoint.lossyScale.x,
+                                1f / mountPoint.lossyScale.y,
+                                1f / mountPoint.lossyScale.z
+                            );
+                            // recalculate nameplate vector since we are changing scale and it is based on lossy scale
+                            unitController.NamePlateController.SetNameplatePosition();
+                        }
+                    }
+                    Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn() after mounting scale: {unitController.transform.localScale} lossyScale: {unitController.transform.lossyScale} mScale: {mountPoint.localScale} mLossyScale: {mountPoint.lossyScale}");
                     //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
-                        unitController.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
+                    unitController.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
                         //unitController.transform.localEulerAngles = mountUnitProfile.UnitPrefabProps.Rotation;
                         unitController.transform.rotation = Quaternion.identity;
                     //}
