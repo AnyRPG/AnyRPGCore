@@ -96,7 +96,7 @@ namespace AnyRPG {
         }
 
         public void HandleMountModelReady() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountModelReady()");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountModelReady(lateJoin: {lateJoin})");
 
             UnsubscribeFromMountModelReady();
             if (lateJoin == true) {
@@ -115,9 +115,8 @@ namespace AnyRPG {
             }
         }
 
-
         public void HandleMountUnitSpawn() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn()");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn()");
 
             string originalPrefabSourceBone = mountUnitProfile.UnitPrefabProps.TargetBone;
             // NOTE: mount effects used sheathed position for character position.  do not use regular position to avoid putting mount below ground when spawning
@@ -146,7 +145,7 @@ namespace AnyRPG {
         }
 
         public void ActivateMountedState(bool lateJoin = false) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ActivateMountedState()");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ActivateMountedState(lateJoin: {lateJoin})");
 
             unitController?.UnitModelController?.SheathWeapons();
 
