@@ -149,7 +149,11 @@ namespace AnyRPG {
         }
 
         private void SetNameplateVector() {
-            nameplateVector = namePlateTransform.position - interactable.transform.position;
+            //Debug.Log($"{gameObject.name}.ComponentController.SetNameplateVector()");
+            //nameplateVector = namePlateTransform.position - interactable.transform.position;
+            // switched to using InverseTransformPoint so that the nameplate vector is correct even if the interactable is scaled like on a mount
+            nameplateVector = interactable.transform.InverseTransformPoint(namePlateTransform.position);
+            //Debug.Log($"{transform.parent.gameObject.name}.ComponentController.SetNameplateVector() nameplateVector: {nameplateVector} instanceId: {GetInstanceID()}");
         }
 
         public bool MovementSoundIsPlaying(bool ignoreOneShots = true) {
