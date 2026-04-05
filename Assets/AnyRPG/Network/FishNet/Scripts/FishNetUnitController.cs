@@ -240,7 +240,7 @@ namespace AnyRPG {
         
         [TargetRpc]
         private void HandleSpawnMountClient(NetworkConnection networkConnection, FishNetUnitController riderUnitController) {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnMountClient(riderUnitController: {(riderUnitController == null ? "null" : riderUnitController.gameObject.name)}) owner: {base.OwnerId}");
+            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnMountClient(riderUnitController: {(riderUnitController == null ? "null" : riderUnitController.gameObject.name)}) owner: {base.OwnerId}");
 
             riderUnitController.unitController.UnitMountManager.PostInit(unitController);
         }

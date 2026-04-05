@@ -61,13 +61,13 @@ namespace AnyRPG {
         }
 
         public void PostInit(UnitController mountUnitController) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.PostInit(mountUnitController: {mountUnitController.gameObject.name})");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.PostInit(mountUnitController: {mountUnitController.gameObject.name})");
 
             SetMountedState(mountUnitController, mountUnitController.CharacterRequestData.characterConfigurationRequest.unitProfile);
         }
 
         public void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SetMountedState({mountUnitController.gameObject.name}, {mountUnitProfile.ResourceName})");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SetMountedState({mountUnitController.gameObject.name}, {mountUnitProfile.ResourceName})");
 
             unitController.CharacterPetManager.DespawnAllPets();
 
@@ -87,11 +87,13 @@ namespace AnyRPG {
         }
 
         public void SubscribeToMountModelReady() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SubscribeToMountModelReady()");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.SubscribeToMountModelReady()");
 
             if (mountUnitController?.UnitModelController != null) {
                 //mountUnitController.UnitModelController.OnModelUpdated += HandleMountModelReady;
                 mountUnitController.UnitModelController.OnModelCreated += HandleMountModelReady;
+            } else {
+                Debug.LogError($"{unitController.gameObject.name}.UnitMountManager.SubscribeToMountModelReady() mountUnitController or UnitModelController is null");
             }
         }
 
@@ -353,7 +355,7 @@ namespace AnyRPG {
         }
 
         public void PostInit() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ProcessModelCreated()");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.PostInit()");
 
             if (unitController.CharacterSaveManager.SaveData.IsMounted == false) {
                 //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ProcessModelCreated() isMounted = false");
@@ -366,6 +368,7 @@ namespace AnyRPG {
                 mountUnitController = unitController.transform.parent.GetComponentInParent<UnitController>();
             }
             if (mountUnitController == null) {
+                Debug.Log($"{unitController.gameObject.name}.UnitMountManager.PostInit() could not find mount unit controller on parent {unitController.transform.parent?.gameObject.name}");
                 return;
             }
             //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ProcessModelCreated() mountUnitController: {mountUnitController.gameObject.name}");
