@@ -146,6 +146,7 @@ namespace AnyRPG {
             FindGameManager();
         }
 
+        /*
         public override void OnSpawnServer(NetworkConnection connection) {
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.OnSpawnServer() owner: {base.OwnerId}");
 
@@ -179,7 +180,7 @@ namespace AnyRPG {
                 unitController.RiderUnitController.UnitMountManager.HandleMountUnitSpawn();
             }
         }
-
+        */
 
         private void CompleteServerConfiguration() {
             //Debug.Log($"{gameObject.name}.FishNetCharacterModel.CompleteServerConfiguration() owner: {base.OwnerId}");
