@@ -99,11 +99,13 @@ namespace AnyRPG {
             Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountModelReady(lateJoin: {lateJoin})");
 
             UnsubscribeFromMountModelReady();
-            if (lateJoin == true) {
-                ActivateMountedState(true);
-            } else {
+            //if (lateJoin == true) {
+            //    ActivateMountedState();
+            //} else {
+                // for now we are doing this all the time due to FishNet CSP code requiring us to parent the model because
+                // it interferes with the networkTransform parenting
                 HandleMountUnitSpawn();
-            }
+            //}
         }
 
         public void UnsubscribeFromMountModelReady() {
@@ -126,15 +128,17 @@ namespace AnyRPG {
                 Transform mountPoint = mountUnitController.transform.FindChildByRecursive(originalPrefabSourceBone);
                 if (mountPoint != null) {
                     unitController.UnitEventController.NotifyOnSetParent(mountPoint);
+
                     if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
                     //if (systemGameManager.GameMode == GameMode.Local || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
                     //if (systemGameManager.GameMode == GameMode.Local) {
                         unitController.transform.parent = mountPoint;
                     }
-                    if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
+                    //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
                         unitController.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
-                        unitController.transform.localEulerAngles = mountUnitProfile.UnitPrefabProps.Rotation;
-                    }
+                        //unitController.transform.localEulerAngles = mountUnitProfile.UnitPrefabProps.Rotation;
+                        unitController.transform.rotation = Quaternion.identity;
+                    //}
                     
                     // testing - is there a reason we wouldn't want to activemounted state on all server and clients?
                     //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
@@ -144,7 +148,7 @@ namespace AnyRPG {
             }
         }
 
-        public void ActivateMountedState(bool lateJoin = false) {
+        public void ActivateMountedState() {
             Debug.Log($"{unitController.gameObject.name}.UnitMountManager.ActivateMountedState(lateJoin: {lateJoin})");
 
             unitController?.UnitModelController?.SheathWeapons();
