@@ -1028,7 +1028,7 @@ namespace AnyRPG {
 
             /*
             if (playerManagerClient.ActiveUnitController.UnitProfile.UnitPrefabProps.ForceRotateModelMode == true) {
-                Debug.Log($"PlayerController.SubscribeToUnitEvents() force rotate model mode enabled, disabling strafe mode");
+                //Debug.Log($"PlayerController.SubscribeToUnitEvents() force rotate model mode enabled, disabling strafe mode");
                 strafeModeActive = false;
             }
             */

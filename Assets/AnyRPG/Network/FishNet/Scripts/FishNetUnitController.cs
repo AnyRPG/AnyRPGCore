@@ -240,7 +240,7 @@ namespace AnyRPG {
         
         [TargetRpc]
         private void HandleSpawnMountClient(NetworkConnection networkConnection, FishNetUnitController riderUnitController) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnMountClient(riderUnitController: {(riderUnitController == null ? "null" : riderUnitController.gameObject.name)}) owner: {base.OwnerId}");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleSpawnMountClient(riderUnitController: {(riderUnitController == null ? "null" : riderUnitController.gameObject.name)}) owner: {base.OwnerId}");
 
             //if (riderUnitController.unitController.IsInitialized == false ) {
             //}
@@ -252,7 +252,7 @@ namespace AnyRPG {
         }
 
         private IEnumerator WaitForRider(FishNetUnitController riderUnitController) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.WaitForRider() owner: {base.OwnerId} frame: {Time.frameCount}");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.WaitForRider() owner: {base.OwnerId} frame: {Time.frameCount}");
 
             while (riderUnitController?.UnitController != null
                 && (riderUnitController.UnitController.IsInitialized == false || riderUnitController.UnitController.CameraTargetReady == false)) {
@@ -772,7 +772,7 @@ namespace AnyRPG {
 
         
         private void HandleDeactivateMountedStateOwner() {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateOwner() frame: {Time.frameCount} tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position}");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateOwner() frame: {Time.frameCount} tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position}");
 
             networkObject.UnsetParent();
             networktransform.ClearReplicateCache();
@@ -781,7 +781,7 @@ namespace AnyRPG {
             // since we just teleported the character to the ground intentionally
             offlineTickSmoother.Initialize(base.TimeManager);
 
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateOwner() frame: {Time.frameCount} after unsetParent() tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position}");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleDeactivateMountedStateOwner() frame: {Time.frameCount} after unsetParent() tPosition: {transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position}");
 
             //HandleDeactivateMountedStateServer();
         }
