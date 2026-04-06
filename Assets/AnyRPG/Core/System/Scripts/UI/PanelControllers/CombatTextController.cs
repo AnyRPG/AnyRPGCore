@@ -55,6 +55,7 @@ namespace AnyRPG {
         private Interactable mainTarget = null;
         private float alpha;
         private Vector2 targetPos;
+        private Vector3 worldSpawnPos;
         private float fadeOutTimer;
         private float fadeRate;
         private Color textColor;
@@ -115,7 +116,9 @@ namespace AnyRPG {
             //randomY = Random.Range(0, randomYLimit);
             //randomY = 0;
             //Debug.Log("Combat Text spawning: " + textType + "; randomX: " + randomX + "; randomY: " + randomY);
-            targetPos = cameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position);
+            //targetPos = cameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position);
+            targetPos = cameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
+            worldSpawnPos = mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0);
             //alpha = text.color.a;
             alpha = 1f;
             fadeOutTimer = fadeTime;
@@ -283,10 +286,11 @@ namespace AnyRPG {
             //Debug.Log($"CombatTextController.RunCombatTextUpdate() fadeOutTimer: {fadeOutTimer} text: {tmpProtext.text}");
 
             if (mainTarget != null) {
-                targetPos = cameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
+                Vector2 screenPoint = cameraManager.ActiveMainCamera.WorldToScreenPoint(worldSpawnPos);
+                //targetPos = cameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
                 //float finalY = yUIOffset + randomY + pushOffset;
                 float finalY = yUIOffset + (pushOffset * directionMultiplier);
-                transform.position = targetPos + new Vector2((randomX + xUIOffset + (xDirectionMultiplier == 1 ? 0 : textRectTransform.rect.width)) * xDirectionMultiplier, finalY);
+                transform.position = screenPoint + new Vector2((randomX + xUIOffset + (xDirectionMultiplier == 1 ? 0 : textRectTransform.rect.width)) * xDirectionMultiplier, finalY);
             }
             if (fadeOutTimer > 0f) {
                 fadeOutTimer -= Time.deltaTime;
