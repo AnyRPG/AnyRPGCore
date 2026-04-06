@@ -40,9 +40,12 @@ namespace AnyRPG {
                 skillNameText.text = characterSkillData.Skill.DisplayName;
                 string levelString = string.Empty;
                 if (characterSkillData.Skill.UseSkillLevels) {
-                    levelString = $"\nLevel {characterSkillData.SkillLevel}/{characterSkillData.Skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level)}";
+                    levelString = $"Level {characterSkillData.SkillLevel}/{characterSkillData.Skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level)}\n";
+                    if (characterSkillData.Skill.UseSkillExperience) {
+                        levelString += $"Experience ({characterSkillData.SkillExperience}/{characterSkillData.Skill.GetExperienceRequiredForLevel(characterSkillData.SkillLevel)})\n";
+                    }
                 }
-                description.text = $"{characterSkillData.Skill.GetDescription()}{levelString}";
+                description.text = $"{levelString}{characterSkillData.Skill.GetDescription()}";
             } else {
                 //Debug.Log("SkillButton.AddSkill(): failed to get skill!!!");
             }

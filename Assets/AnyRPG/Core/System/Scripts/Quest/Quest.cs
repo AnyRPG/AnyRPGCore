@@ -388,7 +388,7 @@ namespace AnyRPG {
             }
 
             // xp reward
-            sourceUnitController.CharacterStats.GainXP(LevelEquations.GetXPAmountForQuest(sourceUnitController, this, systemConfigurationManager));
+            sourceUnitController.CharacterStats.GainExperience(LevelEquations.GetXPAmountForQuest(sourceUnitController, this, systemConfigurationManager));
 
             //UpdateButtons(currentQuest);
 

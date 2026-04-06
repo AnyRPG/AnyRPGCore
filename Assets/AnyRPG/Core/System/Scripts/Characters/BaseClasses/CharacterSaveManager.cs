@@ -1154,7 +1154,8 @@ namespace AnyRPG {
             foreach (CharacterSkillData characterSkillData in unitController.CharacterSkillManager.SkillList.Values) {
                 CharacterSkillSaveData skillSaveData = new CharacterSkillSaveData() {
                     SkillResourceName = characterSkillData.Skill.ResourceName,
-                    SkillLevel = characterSkillData.SkillLevel
+                    SkillLevel = characterSkillData.SkillLevel,
+                    SkillExperience = characterSkillData.SkillExperience
                 };
                 saveData.SkillSaveData.Add(skillSaveData);
             }

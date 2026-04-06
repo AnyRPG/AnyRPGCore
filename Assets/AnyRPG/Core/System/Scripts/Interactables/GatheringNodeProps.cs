@@ -21,11 +21,23 @@ namespace AnyRPG {
         [SerializeField]
         private int requiredSkillLevel = 0;
 
-        [Tooltip("The maximum skill level at which experience will be granted for this node.  If the character skill is higher than this level, they will get no experience. 0 means this node will never stop giving experience.")]
+        [Tooltip("The chance to gain a skill level when gathering from this node.  1 = 100% chance, 0.5 = 50% chance, etc.  This only applies if skill experience is not in use for this skill.")]
+        [SerializeField]
+        private float chanceToGainLevel = 1f;
+
+        [Tooltip("The amount of skill experience to give when gathering from this node.")]
+        [SerializeField]
+        private int skillExperienceReward = 25;
+
+        [Tooltip("The maximum skill level at which skill experience will be granted for this node.  If the character skill is higher than this level, they will get no skill experience. 0 means this node will never stop giving experience.")]
         [SerializeField]
         private int maxSkillExperienceLevel = 0;
 
-        [Tooltip("The maximum character level at which experience will be granted for this node.  If the character is higher than this level, they will get no experience. 0 means this node will never stop giving experience.")]
+        [Tooltip("The amount of character experience to give when gathering from this node.")]
+        [SerializeField]
+        private int characterExperienceReward = 25;
+
+        [Tooltip("The maximum character level at which character experience will be granted for this node.  If the character is higher than this level, they will get no experience. 0 means this node will never stop giving experience.")]
         [SerializeField]
         private int maxCharacterExperienceLevel = 0;
 
@@ -50,6 +62,9 @@ namespace AnyRPG {
         public Skill Skill { get => skill; set => skill = value; }
         public int MaxSkillExperienceLevel { get => maxSkillExperienceLevel; set => maxSkillExperienceLevel = value; }
         public int MaxCharacterExperienceLevel { get => maxCharacterExperienceLevel; set => maxCharacterExperienceLevel = value; }
+        public int SkillExperienceReward { get => skillExperienceReward; set => skillExperienceReward = value; }
+        public int CharacterExperienceReward { get => characterExperienceReward; set => characterExperienceReward = value; }
+        public float ChanceToGainLevel { get => chanceToGainLevel; set => chanceToGainLevel = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new GatheringNodeComponent(interactable, this, systemGameManager);

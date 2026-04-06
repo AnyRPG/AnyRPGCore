@@ -112,7 +112,10 @@ MonoBehaviour:
     abilityName: Herbalism
     skillName: Herbalism
     requiredSkillLevel: 0
+    chanceToGainLevel: 0.5
+    skillExperienceReward: 25
     maxSkillExperienceLevel: 0
+    characterExperienceReward: 25
     maxCharacterExperienceLevel: 0
 --- !u!1001 &1805774156303538346
 PrefabInstance:

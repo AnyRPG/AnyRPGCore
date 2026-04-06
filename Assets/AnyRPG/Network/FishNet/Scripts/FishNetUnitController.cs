@@ -494,6 +494,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnSetParent += HandleSetParent;
             unitController.UnitEventController.OnUnsetParent += HandleUnsetParent;
             unitController.UnitEventController.OnAddSkillLevel += HandleAddSkillLevel;
+            unitController.UnitEventController.OnAddSkillExperience += HandleAddSkillExperienceServer;
         }
 
         public void UnsubscribeFromServerUnitEvents() {
@@ -598,7 +599,21 @@ namespace AnyRPG {
             unitController.UnitEventController.OnSetGroupId -= HandleSetGroupId;
             unitController.UnitEventController.OnSetGuildId -= HandleSetGuildId;
             unitController.UnitEventController.OnReachDestination -= HandleReachDestinationServer;
-            unitController.UnitEventController.OnAddSkillLevel += HandleAddSkillLevel;
+            unitController.UnitEventController.OnAddSkillLevel -= HandleAddSkillLevel;
+            unitController.UnitEventController.OnAddSkillExperience -= HandleAddSkillExperienceServer;
+        }
+
+        private void HandleAddSkillExperienceServer(Skill skill, int experienceValue) {
+            HandleAddSkillExperienceClient(skill.ResourceName, experienceValue);
+        }
+
+        [ObserversRpc]
+        private void HandleAddSkillExperienceClient(string skillResourceName, int experienceValue) {
+            Skill skill = systemDataFactory.GetResource<Skill>(skillResourceName);
+            if (skill == null) {
+                return;
+            }
+            unitController.CharacterSkillManager.AddSkillExperience(skill, experienceValue);
         }
 
         private void HandleAddSkillLevel(Skill skill, int addLevel) {

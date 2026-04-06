@@ -523,6 +523,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnManualMovement += HandleManualMovement;
             unitController.UnitEventController.OnReachDestination += HandleReachDestination;
             unitController.UnitEventController.OnAddSkillLevel += HandleAddSkillLevel;
+            unitController.UnitEventController.OnAddSkillExperience += HandleAddSkillExperience;
         }
 
         public void UnsubscribeFromPlayerEvents() {
@@ -571,10 +572,10 @@ namespace AnyRPG {
             unitController.UnitEventController.OnTakeFallDamage -= HandleTakeFallDamage;
             unitController.UnitEventController.OnDespawn -= HandleDespawn;
             unitController.UnitEventController.OnCurrencyChange -= HandleCurrencyChange;
-            unitController.UnitEventController.OnSetGamepadActionButton += HandleSetGamepadActionButton;
-            unitController.UnitEventController.OnSetMouseActionButton += HandleSetMouseActionButton;
-            unitController.UnitEventController.OnUnsetMouseActionButton += HandleUnsetMouseActionButton;
-            unitController.UnitEventController.OnUnsetGamepadActionButton += HandleUnsetGamepadActionButton;
+            unitController.UnitEventController.OnSetGamepadActionButton -= HandleSetGamepadActionButton;
+            unitController.UnitEventController.OnSetMouseActionButton -= HandleSetMouseActionButton;
+            unitController.UnitEventController.OnUnsetMouseActionButton -= HandleUnsetMouseActionButton;
+            unitController.UnitEventController.OnUnsetGamepadActionButton -= HandleUnsetGamepadActionButton;
             unitController.UnitEventController.OnNameChange -= HandleNameChange;
             unitController.UnitEventController.OnRemoveActivePet -= HandleRemoveActivePet;
             unitController.UnitEventController.OnMarkAchievementComplete -= HandleMarkAchievementComplete;
@@ -591,13 +592,19 @@ namespace AnyRPG {
             unitController.UnitEventController.OnClassChange -= HandleClassChange;
             unitController.UnitEventController.OnSpecializationChange -= HandleSpecializationChange;
             unitController.UnitEventController.OnSetGuildId -= HandleSetGuildId;
-            unitController.UnitEventController.OnManualMovement += HandleManualMovement;
-            unitController.UnitEventController.OnReachDestination += HandleReachDestination;
-            unitController.UnitEventController.OnAddSkillLevel += HandleAddSkillLevel;
+            unitController.UnitEventController.OnManualMovement -= HandleManualMovement;
+            unitController.UnitEventController.OnReachDestination -= HandleReachDestination;
+            unitController.UnitEventController.OnAddSkillLevel -= HandleAddSkillLevel;
+            unitController.UnitEventController.OnAddSkillExperience -= HandleAddSkillExperience;
+
+        }
+
+        private void HandleAddSkillExperience(Skill skill, int experience) {
+            combatTextManager.SpawnCombatText(unitController, $"{experience} {skill.DisplayName}", CombatTextType.gainSkillExperience);
         }
 
         private void HandleAddSkillLevel(Skill skill, int addLevel) {
-            combatTextManager.SpawnCombatText(unitController, $"{addLevel} {skill.DisplayName}", CombatTextType.gainSkill);
+            combatTextManager.SpawnCombatText(unitController, $"{addLevel} {skill.DisplayName}", CombatTextType.gainSkillLevel);
         }
 
         private void HandleReachDestination() {

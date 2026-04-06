@@ -99,20 +99,63 @@ namespace AnyRPG {
         }
 
         public override void DropLoot(UnitController sourceUnitController) {
+            Debug.Log($"{interactable.gameObject.name}.GatheringNode.DropLoot({sourceUnitController.gameObject.name})");
+
+            bool lootWasDropped = lootDropped;
             base.DropLoot(sourceUnitController);
-            if (lootDropped == true) {
+            if (lootWasDropped == true) {
                 return;
             }
+            AttemptToGiveExperience(sourceUnitController);
+        }
+
+        private void AttemptToGiveExperience(UnitController sourceUnitController) {
+            Debug.Log($"{interactable.gameObject.name}.GatheringNode.AttemptToGiveExperience({sourceUnitController.gameObject.name})");
+
             if (GatheringNodeProps.Skill == null || GatheringNodeProps.Skill.UseSkillLevels == false) {
                 return;
             }
+
+            if (GatheringNodeProps.Skill.UseSkillLevels == true) {
+                AttemptToGiveSkillExperience(sourceUnitController);
+            }
+            if (GatheringNodeProps.Skill.GiveCharacterExperience == true) {
+                AttemptToGiveCharacterExperience(sourceUnitController);
+            }
+        }
+
+        private void AttemptToGiveSkillExperience(UnitController sourceUnitController) {
+            Debug.Log($"{interactable.gameObject.name}.GatheringNode.AttemptToGiveSkillExperience({sourceUnitController.gameObject.name})");
+
+            if (sourceUnitController.CharacterSkillManager.GetSkillLevel(GatheringNodeProps.Skill) > GatheringNodeProps.MaxSkillExperienceLevel && GatheringNodeProps.MaxSkillExperienceLevel > 0) {
+                Debug.Log($"{interactable.gameObject.name}.GatheringNode.AttemptToGiveSkillExperience() character skill level is above max skill experience level, not giving experience");
+                return;
+            }
+            if (GatheringNodeProps.Skill.UseSkillExperience == true) {
+                // experience based calculation
+                if (GatheringNodeProps.SkillExperienceReward > 0) {
+                    sourceUnitController.CharacterSkillManager.AddSkillExperience(GatheringNodeProps.Skill, GatheringNodeProps.SkillExperienceReward);
+                }
+            } else {
+                // chance based calculation
+                float randomValue = UnityEngine.Random.Range(0f, 1f);
+                Debug.Log($"{interactable.gameObject.name}.GatheringNode.AttemptToGiveSkillExperience() randomValue: {randomValue} chanceToGainLevel: {GatheringNodeProps.ChanceToGainLevel}");
+                if (GatheringNodeProps.ChanceToGainLevel >= randomValue) {
+                    sourceUnitController.CharacterSkillManager.AddSkillLevel(GatheringNodeProps.Skill, 1);
+                }
+            }
+        }
+
+        private void AttemptToGiveCharacterExperience(UnitController sourceUnitController) {
+            Debug.Log($"{interactable.gameObject.name}.GatheringNode.AttemptToGiveCharacterExperience({sourceUnitController.gameObject.name})");
+
             if (sourceUnitController.CharacterStats.Level > GatheringNodeProps.MaxCharacterExperienceLevel && GatheringNodeProps.MaxCharacterExperienceLevel > 0) {
                 return;
             }
-            if (sourceUnitController.CharacterSkillManager.GetSkillLevel(GatheringNodeProps.Skill) > GatheringNodeProps.MaxSkillExperienceLevel && GatheringNodeProps.MaxSkillExperienceLevel > 0) {
+            if (GatheringNodeProps.CharacterExperienceReward <= 0) {
                 return;
             }
-            sourceUnitController.CharacterSkillManager.AddSkillLevel(GatheringNodeProps.Skill, 1);
+            sourceUnitController.CharacterStats.GainExperience(GatheringNodeProps.CharacterExperienceReward);
         }
 
         public override int GetCurrentOptionCount(UnitController sourceUnitController) {

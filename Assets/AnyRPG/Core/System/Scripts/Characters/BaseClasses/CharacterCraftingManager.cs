@@ -128,21 +128,41 @@ namespace AnyRPG {
                 return;
             }
 
-            // if the recipe doesn't use skill levels, then don't give any experience
             if (recipe.Skill.UseSkillLevels == false) {
-                return;
+                AttemptToGiveSkillExperience(recipe);
             }
-
-            // check if character is above the max level for experience gain, if applicable
-            if (unitController.CharacterStats.Level > craftingQueue[0].MaxCharacterExperienceLevel && craftingQueue[0].MaxCharacterExperienceLevel > 0) {
-                return;
+            if (recipe.Skill.GiveCharacterExperience == true) {
+                AttemptToGiveCharacterExperience(recipe);
             }
+        }
 
+        private void AttemptToGiveSkillExperience(Recipe recipe) {
             // check if skill is above the max level for experience gain, if applicable
-            if (unitController.CharacterSkillManager.GetSkillLevel(craftingQueue[0].Skill) > craftingQueue[0].MaxSkillExperienceLevel && craftingQueue[0].MaxSkillExperienceLevel > 0) {
+            if (unitController.CharacterSkillManager.GetSkillLevel(recipe.Skill) > recipe.MaxSkillExperienceLevel && recipe.MaxSkillExperienceLevel > 0) {
                 return;
             }
-            unitController.CharacterSkillManager.AddSkillLevel(craftingQueue[0].Skill, 1);
+            if (recipe.Skill.UseSkillExperience == true) {
+                // experience based calculation
+                if (recipe.SkillExperienceReward > 0) {
+                    unitController.CharacterSkillManager.AddSkillExperience(recipe.Skill, recipe.SkillExperienceReward);
+                }
+            } else {
+                // chance based calculation
+                if (recipe.ChanceToGainLevel >= UnityEngine.Random.Range(0f, 1f)) {
+                    unitController.CharacterSkillManager.AddSkillLevel(recipe.Skill, 1);
+                }
+            }
+        }
+
+        private void AttemptToGiveCharacterExperience(Recipe recipe) {
+            // check if character is above the max level for experience gain, if applicable
+            if (unitController.CharacterStats.Level > recipe.MaxCharacterExperienceLevel && recipe.MaxCharacterExperienceLevel > 0) {
+                return;
+            }
+            if (recipe.CharacterExperienceReward <= 0) {
+                return;
+            }
+            unitController.CharacterStats.GainExperience(recipe.CharacterExperienceReward);
         }
 
         public void RemoveFirstQueueItem() {

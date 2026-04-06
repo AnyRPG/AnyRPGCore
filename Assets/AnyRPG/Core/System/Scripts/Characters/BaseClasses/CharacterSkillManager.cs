@@ -68,7 +68,7 @@ namespace AnyRPG {
 
         public void LoadSkill(CharacterSkillSaveData characterSkillSaveData) {
             //Debug.Log("CharacterSkillManager.LoadSkill()");
-            
+
             // don't crash on loading old save Data
             if (characterSkillSaveData?.SkillResourceName == null || characterSkillSaveData.SkillResourceName == string.Empty) {
                 return;
@@ -77,7 +77,8 @@ namespace AnyRPG {
                 Skill skill = systemDataFactory.GetResource<Skill>(characterSkillSaveData.SkillResourceName);
                 CharacterSkillData characterSkillData = new CharacterSkillData {
                     Skill = skill,
-                    SkillLevel = characterSkillSaveData.SkillLevel
+                    SkillLevel = characterSkillSaveData.SkillLevel,
+                    SkillExperience = characterSkillSaveData.SkillExperience
                 };
                 skillList[characterSkillSaveData.SkillResourceName] = characterSkillData;
             }
@@ -103,17 +104,56 @@ namespace AnyRPG {
         }
 
         public void AddSkillLevel(Skill skill, int addLevel) {
-            if (skillList.ContainsKey(skill.ResourceName)) {
-                CharacterSkillData characterSkillData = skillList[skill.ResourceName];
-                if (characterSkillData.SkillLevel < skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level)) {
-                    characterSkillData.SkillLevel += addLevel;
-                    if (characterSkillData.SkillLevel > skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level)) {
-                        characterSkillData.SkillLevel = skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level);
-                    }
-                    unitController.UnitEventController.NotifyOnAddSkillLevel(skill, addLevel);
-                }
+            AddSkillLevel(skill, addLevel, true);
+        }
+
+        public void AddSkillLevel(Skill skill, int addLevel, bool notify) {
+            Debug.Log($"{unitController.gameObject.name}.CharacterSkillManager.AddSkillLevel({skill.ResourceName}, {addLevel})");
+
+            if (skillList.ContainsKey(skill.ResourceName) == false) {
+                return;
+            }
+
+            CharacterSkillData characterSkillData = skillList[skill.ResourceName];
+            if (characterSkillData.SkillLevel >= skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level)) {
+                return;
+            }
+            characterSkillData.SkillLevel += addLevel;
+            if (characterSkillData.SkillLevel > skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level)) {
+                characterSkillData.SkillLevel = skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level);
+            }
+            if (notify == true) {
+                unitController.UnitEventController.NotifyOnAddSkillLevel(skill, addLevel);
             }
         }
-    }
 
+        public void AddSkillExperience(Skill skill, int addExperience) {
+            Debug.Log($"{unitController.gameObject.name}.CharacterSkillManager.AddSkillExperience({skill.ResourceName}, {addExperience})");
+            if (skillList.ContainsKey(skill.ResourceName) == false) {
+                return;
+            }
+            CharacterSkillData characterSkillData = skillList[skill.ResourceName];
+            if (skill.UseSkillExperience == true) {
+                characterSkillData.SkillExperience += addExperience;
+                while (characterSkillData.SkillLevel < skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level) && characterSkillData.SkillExperience >= skill.SkillExperienceChart[characterSkillData.SkillLevel - 1]) {
+                    characterSkillData.SkillExperience -= skill.SkillExperienceChart[characterSkillData.SkillLevel - 1];
+                    // only notify on level up if the server is not active.
+                    AddSkillLevel(skill, 1, networkManagerServer.ServerModeActive == false);
+                }
+            }
+            unitController.UnitEventController.NotifyOnAddSkillExperience(skill, addExperience);
+        }
+
+        /*
+        public void SetSkillExperience(Skill skill, int experienceValue) {
+            Debug.Log($"{unitController.gameObject.name}.CharacterSkillManager.SetSkillExperience({skill.ResourceName}, {experienceValue})");
+
+            if (skillList.ContainsKey(skill.ResourceName) == false) {
+                return;
+            }
+            CharacterSkillData characterSkillData = skillList[skill.ResourceName];
+            characterSkillData.SkillExperience = experienceValue;
+        }
+        */
+    }
 }

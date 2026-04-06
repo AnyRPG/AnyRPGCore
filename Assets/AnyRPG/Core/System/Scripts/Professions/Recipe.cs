@@ -26,9 +26,21 @@ namespace AnyRPG {
         [SerializeField]
         private int requiredSkillLevel = 0;
 
-        [Tooltip("The maximum skill level at which experience will be granted for crafting this recipe.  If the character skill is higher than this level, they will get no experience. 0 means this recipe will never stop giving experience")]
+        [Tooltip("The chance to gain a skill level when crafting this recipe.  1 = 100% chance, 0.5 = 50% chance, etc.  This only applies if skill experience is not in use for this recipe skill.")]
+        [SerializeField]
+        private float chanceToGainLevel = 1f;
+
+        [Tooltip("The amount of skill experience to give when crafting this recipe.")]
+        [SerializeField]
+        private int skillExperienceReward = 25;
+
+        [Tooltip("The maximum skill level at which skill experience will be granted for crafting this recipe.  If the character skill is higher than this level, they will get no skill experience. 0 means this recipe will never stop giving experience")]
         [SerializeField]
         private int maxSkillExperienceLevel = 0;
+
+        [Tooltip("The amount of character experience to give when crafting this recipe.")]
+        [SerializeField]
+        private int characterExperienceReward = 25;
 
         [Tooltip("The maximum character level at which experience will be granted for crafting this recipe.  If the character is higher than this level, they will get no experience. 0 means this recipe will never stop giving experience")]
         [SerializeField]
@@ -76,6 +88,9 @@ namespace AnyRPG {
         public int MaxCharacterExperienceLevel { get => maxCharacterExperienceLevel; set => maxCharacterExperienceLevel = value; }
         public int MaxSkillExperienceLevel { get => maxSkillExperienceLevel; set => maxSkillExperienceLevel = value; }
         public int RequiredSkillLevel { get => requiredSkillLevel; set => requiredSkillLevel = value; }
+        public int SkillExperienceReward { get => skillExperienceReward; set => skillExperienceReward = value; }
+        public int CharacterExperienceReward { get => characterExperienceReward; set => characterExperienceReward = value; }
+        public float ChanceToGainLevel { get => chanceToGainLevel; set => chanceToGainLevel = value; }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);

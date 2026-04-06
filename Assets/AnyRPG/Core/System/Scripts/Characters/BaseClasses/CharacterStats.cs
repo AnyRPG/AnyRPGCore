@@ -1064,7 +1064,7 @@ namespace AnyRPG {
             ProcessStatusEffectChanges(statusEffect);
         }
 
-        public void GainXP(int xp) {
+        public void GainExperience(int xp) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterStats.GainXP({xp})");
             currentXP += xp;
             int overflowXP = 0;

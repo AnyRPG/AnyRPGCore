@@ -6,8 +6,19 @@ using UnityEngine;
 namespace AnyRPG {
     static class LevelEquations {
 
+        public static int fallbackExperienceChartValue = 100;
+
         public static int GetXPNeededForLevel(int _level, SystemConfigurationManager systemConfigurationManager) {
-            return _level * systemConfigurationManager.XpRequiredPerLevel;
+            if (systemConfigurationManager.ExperienceChart.Count == 0) {
+                // give a default fallback amount if no chart is set up
+                return fallbackExperienceChartValue;
+            }
+            // if the level is within the experience chart, return the corresponding value
+            if (_level <= systemConfigurationManager.ExperienceChart.Count) {
+                return systemConfigurationManager.ExperienceChart[_level - 1];
+            }
+            // if the level is higher than the experience chart, use the last value in the chart
+            return systemConfigurationManager.ExperienceChart[systemConfigurationManager.ExperienceChart.Count - 1];
         }
 
         /// <summary>

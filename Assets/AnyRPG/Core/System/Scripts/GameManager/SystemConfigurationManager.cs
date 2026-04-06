@@ -282,9 +282,9 @@ namespace AnyRPG {
         [SerializeField]
         private int maxLevel = 50;
 
-        [Tooltip("Every level, the amount of experience you need for the next level is increased by this amount.")]
+        [Tooltip("A list of experience amounts required to level up the character.  The index of the list is the character level, and the value is the experience required to reach the next level.")]
         [SerializeField]
-        private int xpRequiredPerLevel = 100;
+        private List<int> experienceChart = new List<int>() { 400,900,1400,2100,2800,3600,4500,5400,6500,7600 };
 
         [Header("Currency")]
 
@@ -797,7 +797,6 @@ namespace AnyRPG {
         //public bool UseThirdPartyMovementControl { get => useThirdPartyMovementControl; set => useThirdPartyMovementControl = value; }
         //public bool UseThirdPartyCameraControl { get => useThirdPartyCameraControl; set => useThirdPartyCameraControl = value; }
         public bool AllowAutoAttack { get => allowAutoAttack; set => allowAutoAttack = value; }
-        public int XpRequiredPerLevel { get => xpRequiredPerLevel; set => xpRequiredPerLevel = value; }
         public int BaseQuestXP { get => baseQuestXP; set => baseQuestXP = value; }
         public int QuestXPPerLevel { get => questXPPerLevel; set => questXPPerLevel = value; }
         public bool UseQuestXPLevelMultiplierDemoninator { get => useQuestXPLevelMultiplierDemoninator; set => useQuestXPLevelMultiplierDemoninator = value; }
@@ -939,6 +938,7 @@ namespace AnyRPG {
         public CameraViewMode CameraViewMode { get => cameraViewMode; set => cameraViewMode = value; }
         public Vector3 InitialIsometricVector { get => initialIsometricVector; set => initialIsometricVector = value; }
         public bool AllowFirstPersonCamera { get => allowFirstPersonCamera; set => allowFirstPersonCamera = value; }
+        public List<int> ExperienceChart { get => experienceChart; set => experienceChart = value; }
 
         //public Currency PostageCurrency { get => postageCurrency; set => postageCurrency = value; }
 

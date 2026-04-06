@@ -13032,6 +13032,11 @@ PrefabInstance:
       propertyPath: interactLocations.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2178554594267333769, guid: 182e453858cadc34392feb6b095a7fa1,
+        type: 3}
+      propertyPath: animatedObjectProps.switchOnly
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5114853980853533880, guid: 182e453858cadc34392feb6b095a7fa1,
         type: 3}
       propertyPath: m_RootOrder
@@ -13092,14 +13097,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: WoodGateControlled
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7774598034463850189, guid: 182e453858cadc34392feb6b095a7fa1, type: 3}
+    - {fileID: 776649250393353682, guid: 182e453858cadc34392feb6b095a7fa1, type: 3}
+    - {fileID: 1202853461947427988, guid: 182e453858cadc34392feb6b095a7fa1, type: 3}
+    - {fileID: 8646619113171398421, guid: 182e453858cadc34392feb6b095a7fa1, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5598058123386693122, guid: 182e453858cadc34392feb6b095a7fa1,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 371638880}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 182e453858cadc34392feb6b095a7fa1, type: 3}
 --- !u!4 &371638877 stripped
 Transform:
@@ -13107,22 +13112,16 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 371638876}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &371638878 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5598058123386693122, guid: 182e453858cadc34392feb6b095a7fa1,
+--- !u!114 &371638878 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2178554594267333769, guid: 182e453858cadc34392feb6b095a7fa1,
     type: 3}
   m_PrefabInstance: {fileID: 371638876}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &371638880
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 371638878}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6aec676577200a2479e466caca780896, type: 3}
+  m_Script: {fileID: 11500000, guid: edd7d0c5d9a0d6742884fddb97f12685, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &376421995
@@ -32233,7 +32232,7 @@ MonoBehaviour:
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     controlObjects:
-    - {fileID: 0}
+    - {fileID: 371638878}
     switchGroup:
     - {fileID: 1709763946}
     - {fileID: 1339571315}
