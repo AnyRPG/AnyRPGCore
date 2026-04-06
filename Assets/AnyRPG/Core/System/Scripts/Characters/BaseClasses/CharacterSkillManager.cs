@@ -56,11 +56,16 @@ namespace AnyRPG {
                 foreach (AbilityProperties ability in newSkill.AbilityList) {
                     unitController.CharacterAbilityManager.LearnAbility(ability);
                 }
+
+                /*
                 foreach (Recipe recipe in systemDataFactory.GetResourceList<Recipe>()) {
                     if (unitController.CharacterStats.Level >= recipe.RequiredLevel && recipe.AutoLearn == true && newSkill.AbilityList.Contains(recipe.CraftAbility)) {
                         unitController.CharacterRecipeManager.LearnRecipe(recipe);
                     }
                 }
+                */
+                // use this instead since it has the calculation that includes the skill level and not just the character level
+                unitController.CharacterRecipeManager.UpdateRecipeList(unitController.CharacterStats.Level);
 
                 unitController.UnitEventController.NotifyOnLearnSkill(newSkill);
             }
@@ -145,6 +150,13 @@ namespace AnyRPG {
                 }
             }
             unitController.UnitEventController.NotifyOnAddSkillExperience(skill, addExperience);
+        }
+
+        public CharacterSkillData GetCharacterSkillData(Skill skill) {
+            if (skillList.ContainsKey(skill.ResourceName)) {
+                return skillList[skill.ResourceName];
+            }
+            return null;
         }
 
         /*

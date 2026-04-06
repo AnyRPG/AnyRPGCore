@@ -19,12 +19,35 @@ namespace AnyRPG {
 
         public virtual void UpdateRecipeList(int newLevel) {
             foreach (Recipe recipe in systemDataFactory.GetResourceList<Recipe>()) {
-                foreach (CharacterSkillData characterSkillData in unitController.CharacterSkillManager.SkillList.Values) {
-                    if (!HasRecipe(recipe) && recipe.RequiredLevel <= newLevel && recipe.AutoLearn == true && characterSkillData.Skill.AbilityList.Contains(recipe.CraftAbility)) {
-                        LearnRecipe(recipe);
-                    }
+                if (CanAutoLearnRecipe(recipe, newLevel)) {
+                    LearnRecipe(recipe);
                 }
             }
+        }
+
+        private bool CanAutoLearnRecipe(Recipe recipe, int newLevel) {
+            // recipe cannot be auto learned
+            if (recipe.AutoLearn == false) {
+                return false;
+            }
+            // recipe is already known
+            if (HasRecipe(recipe)) {
+                return false;
+            }
+            // recipe is above the character's level
+            if (recipe.RequiredLevel <= newLevel) {
+                return false;
+            }
+            if (recipe.Skill != null) {
+                if (unitController.CharacterSkillManager.HasSkill(recipe.Skill) == false) {
+                    return false;
+                }
+                CharacterSkillData skillData = unitController.CharacterSkillManager.GetCharacterSkillData(recipe.Skill);
+                if (skillData.SkillLevel < recipe.RequiredSkillLevel) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public bool HasRecipe(Recipe checkRecipe) {

@@ -26,7 +26,7 @@ MonoBehaviour:
   requiredSkillLevel: 0
   chanceToGainLevel: 1
   skillExperienceReward: 25
-  maxSkillExperienceLevel: 0
+  maxSkillExperienceLevel: 1
   characterExperienceReward: 25
   maxCharacterExperienceLevel: 0
   craftingMaterials:

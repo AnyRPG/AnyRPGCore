@@ -125,10 +125,11 @@ namespace AnyRPG {
 
             // ensure there is a skill to compare agains
             if (recipe.Skill == null) {
+                //Debug.Log($"{unitController.gameObject.name}.CharacterCraftingManager.TryToGiveSkillExperience(): recipe {recipe.DisplayName} has no skill, skipping experience gain");
                 return;
             }
 
-            if (recipe.Skill.UseSkillLevels == false) {
+            if (recipe.Skill.UseSkillLevels == true) {
                 AttemptToGiveSkillExperience(recipe);
             }
             if (recipe.Skill.GiveCharacterExperience == true) {
@@ -137,6 +138,8 @@ namespace AnyRPG {
         }
 
         private void AttemptToGiveSkillExperience(Recipe recipe) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCraftingManager.AttemptToGiveSkillExperience({recipe.ResourceName})");
+
             // check if skill is above the max level for experience gain, if applicable
             if (unitController.CharacterSkillManager.GetSkillLevel(recipe.Skill) > recipe.MaxSkillExperienceLevel && recipe.MaxSkillExperienceLevel > 0) {
                 return;
@@ -155,6 +158,8 @@ namespace AnyRPG {
         }
 
         private void AttemptToGiveCharacterExperience(Recipe recipe) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCraftingManager.AttemptToGiveCharacterExperience({recipe.ResourceName})");
+
             // check if character is above the max level for experience gain, if applicable
             if (unitController.CharacterStats.Level > recipe.MaxCharacterExperienceLevel && recipe.MaxCharacterExperienceLevel > 0) {
                 return;
