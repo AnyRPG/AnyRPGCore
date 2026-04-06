@@ -79,10 +79,16 @@ MonoBehaviour:
   interactOnExit: 0
   isTrigger: 0
   suppressInteractionWindow: 0
+  overrideInteractionColliderSize: 0
   interactionMaxRange: 2
-  interactLocations:
+  interactionPoints:
   - {fileID: 7762606665400560288}
   componentController: {fileID: 5893705775157587616}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
   namePlateProps:
     displayName: Alchemy Table
     suppressNamePlate: 0
@@ -205,6 +211,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Center.y
       value: 0.93799925
+      objectReference: {fileID: 0}
+    - target: {fileID: 4653803682729839022, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_Center.z
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4653803682729839022, guid: 37f353160369b234b89e9214e5695cf7,
         type: 3}
