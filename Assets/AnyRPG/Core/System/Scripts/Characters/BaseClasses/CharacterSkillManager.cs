@@ -12,7 +12,6 @@ namespace AnyRPG {
         private Dictionary<string, CharacterSkillData> skillList = new Dictionary<string, CharacterSkillData>();
 
         // game manager references
-        protected PlayerManagerClient playerManagerClient = null;
         protected SystemEventManager systemEventManager = null;
 
         public Dictionary<string, CharacterSkillData> SkillList { get => skillList; }
@@ -24,7 +23,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            playerManagerClient = systemGameManager.PlayerManagerClient;
             systemEventManager = systemGameManager.SystemEventManager;
         }
 
@@ -120,12 +118,12 @@ namespace AnyRPG {
             }
 
             CharacterSkillData characterSkillData = skillList[skill.ResourceName];
-            if (characterSkillData.SkillLevel >= skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level)) {
+            if (characterSkillData.SkillLevel >= skill.GetSkillCapForLevel(unitController.CharacterStats.Level)) {
                 return;
             }
             characterSkillData.SkillLevel += addLevel;
-            if (characterSkillData.SkillLevel > skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level)) {
-                characterSkillData.SkillLevel = skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level);
+            if (characterSkillData.SkillLevel > skill.GetSkillCapForLevel(unitController.CharacterStats.Level)) {
+                characterSkillData.SkillLevel = skill.GetSkillCapForLevel(unitController.CharacterStats.Level);
             }
             if (notify == true) {
                 unitController.UnitEventController.NotifyOnAddSkillLevel(skill, addLevel);
@@ -141,7 +139,7 @@ namespace AnyRPG {
             CharacterSkillData characterSkillData = skillList[skill.ResourceName];
             if (skill.UseSkillExperience == true) {
                 characterSkillData.SkillExperience += addExperience;
-                while (characterSkillData.SkillLevel < skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level) && characterSkillData.SkillExperience >= skill.SkillExperienceChart[characterSkillData.SkillLevel - 1]) {
+                while (characterSkillData.SkillLevel < skill.GetSkillCapForLevel(unitController.CharacterStats.Level) && characterSkillData.SkillExperience >= skill.SkillExperienceChart[characterSkillData.SkillLevel - 1]) {
                     characterSkillData.SkillExperience -= skill.SkillExperienceChart[characterSkillData.SkillLevel - 1];
                     // only notify on level up if the server is not active.
                     // This will prevent the server sending an extra message to the client to update the skill level,
