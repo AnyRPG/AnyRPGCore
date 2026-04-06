@@ -22,6 +22,13 @@ MonoBehaviour:
   optionalOverride: 0
   autoLearn: 0
   requiredLevel: 1
+  skillName: Blacksmithing
+  requiredSkillLevel: 0
+  chanceToGainLevel: 1
+  skillExperienceReward: 25
+  maxSkillExperienceLevel: 0
+  characterExperienceReward: 25
+  maxCharacterExperienceLevel: 0
   craftingMaterials:
   - itemName: Spruce Lumber
     count: 1

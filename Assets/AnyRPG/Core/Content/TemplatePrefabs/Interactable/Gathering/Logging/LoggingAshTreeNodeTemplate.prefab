@@ -58,12 +58,15 @@ MonoBehaviour:
   interactOnExit: 0
   isTrigger: 0
   suppressInteractionWindow: 0
+  overrideInteractionColliderSize: 0
   interactionMaxRange: 2
-  checkOptionsToSpawn: 1
-  spawnRequiresValidOption: 0
-  despawnRequiresNoValidOption: 1
+  interactionPoints: []
   componentController: {fileID: 8401149646931028938}
-  unitComponentController: {fileID: 0}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!114 &8851426205781705841
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,6 +89,13 @@ MonoBehaviour:
     spawnTimer: 60
     spawnObject: {fileID: 8792749986907758086}
     abilityName: Logging
+    skillName: Logging
+    requiredSkillLevel: 0
+    chanceToGainLevel: 1
+    skillExperienceReward: 25
+    maxSkillExperienceLevel: 0
+    characterExperienceReward: 25
+    maxCharacterExperienceLevel: 0
 --- !u!65 &8861613808716838764
 BoxCollider:
   m_ObjectHideFlags: 0

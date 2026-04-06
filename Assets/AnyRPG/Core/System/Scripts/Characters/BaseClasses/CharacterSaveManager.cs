@@ -752,8 +752,8 @@ namespace AnyRPG {
 
         public void LoadSkillData(CharacterSaveData characterSaveData) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadSkillData()");
-            foreach (SkillSaveData skillSaveData in characterSaveData.SkillSaveData) {
-                unitController.CharacterSkillManager.LoadSkill(skillSaveData.SkillName);
+            foreach (CharacterSkillSaveData skillSaveData in characterSaveData.SkillSaveData) {
+                unitController.CharacterSkillManager.LoadSkill(skillSaveData);
             }
         }
 
@@ -1151,9 +1151,12 @@ namespace AnyRPG {
         public void SaveSkillData() {
             //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveSkillData()");
             saveData.SkillSaveData.Clear();
-            foreach (string skillName in unitController.CharacterSkillManager.MySkillList.Keys) {
-                SkillSaveData skillSaveData = new SkillSaveData();
-                skillSaveData.SkillName = skillName;
+            foreach (CharacterSkillData characterSkillData in unitController.CharacterSkillManager.SkillList.Values) {
+                CharacterSkillSaveData skillSaveData = new CharacterSkillSaveData() {
+                    SkillResourceName = characterSkillData.Skill.ResourceName,
+                    SkillLevel = characterSkillData.SkillLevel,
+                    SkillExperience = characterSkillData.SkillExperience
+                };
                 saveData.SkillSaveData.Add(skillSaveData);
             }
         }

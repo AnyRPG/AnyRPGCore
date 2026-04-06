@@ -91,6 +91,13 @@ MonoBehaviour:
     spawnTimer: 60
     spawnObject: {fileID: 6141349620477923513}
     abilityName: Logging
+    skillName: Logging
+    requiredSkillLevel: 0
+    chanceToGainLevel: 1
+    skillExperienceReward: 25
+    maxSkillExperienceLevel: 0
+    characterExperienceReward: 25
+    maxCharacterExperienceLevel: 0
 --- !u!65 &8861613808716838764
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -158,6 +165,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0

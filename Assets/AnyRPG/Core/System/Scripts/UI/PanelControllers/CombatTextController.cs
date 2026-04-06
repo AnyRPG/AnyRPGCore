@@ -1,4 +1,3 @@
-using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -47,13 +46,16 @@ namespace AnyRPG {
         [SerializeField]
         private float randomXLimit = 100f;
 
+        /*
         [SerializeField]
         private float randomYLimit = 25f;
+        */
 
         private string displayText = string.Empty;
         private Interactable mainTarget = null;
         private float alpha;
         private Vector2 targetPos;
+        private Vector3 worldSpawnPos;
         private float fadeOutTimer;
         private float fadeRate;
         private Color textColor;
@@ -62,7 +64,7 @@ namespace AnyRPG {
         private AbilityEffectContext abilityEffectContext = null;
 
         private float randomX;
-        private float randomY;
+        //private float randomY;
 
         // change direction to downward text for hits against player
         private int directionMultiplier = 1;
@@ -76,6 +78,8 @@ namespace AnyRPG {
         // reduce use of local variables for garbage collection
         string preText = string.Empty;
         string postText = string.Empty;
+
+        private float pushOffset = 0f;
 
         // game manager references
         protected CameraManager cameraManager = null;
@@ -109,9 +113,12 @@ namespace AnyRPG {
 
             //Debug.Log("Combat Text spawning: " + textType);
             randomX = Random.Range(0, randomXLimit);
-            randomY = Random.Range(0, randomYLimit);
+            //randomY = Random.Range(0, randomYLimit);
+            //randomY = 0;
             //Debug.Log("Combat Text spawning: " + textType + "; randomX: " + randomX + "; randomY: " + randomY);
-            targetPos = cameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position);
+            //targetPos = cameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position);
+            targetPos = cameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
+            worldSpawnPos = mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0);
             //alpha = text.color.a;
             alpha = 1f;
             fadeOutTimer = fadeTime;
@@ -144,6 +151,20 @@ namespace AnyRPG {
                         preText += "+";
                         postText += " XP";
                         fontSizeMultiplier *= 2;
+                        xDirectionMultiplier = -1;
+                        break;
+                    case CombatTextType.gainSkillExperience:
+                        textColor = Color.cyan;
+                        preText += "+";
+                        postText += " XP";
+                        fontSizeMultiplier *= 2;
+                        xDirectionMultiplier = -1;
+                        break;
+                    case CombatTextType.gainSkillLevel:
+                        textColor = Color.blue;
+                        preText += "+";
+                        //postText += " XP";
+                        //fontSizeMultiplier *= 2;
                         xDirectionMultiplier = -1;
                         break;
                     case CombatTextType.gainBuff:
@@ -225,21 +246,51 @@ namespace AnyRPG {
             tmpProtext.fontSize = defaultFontSize * fontSizeMultiplier;
 
             // make criticals and other large text go farther up and to the right to avoid covering smaller text
-            randomY += (fontSizeMultiplier / 2f) * randomYLimit;
+            //randomY += (fontSizeMultiplier / 2f) * randomYLimit;
             randomX += (fontSizeMultiplier / 2f) * randomXLimit;
 
+            int myQuadrant = GetQuadrantIndex();
             // before running the first combat text update, the layout should be updated, or the rect for the text will still have the old width before the end of the current frame
             LayoutRebuilder.ForceRebuildLayoutImmediate(textRectTransform);
+
+            float textHeight = tmpProtext.preferredHeight;
+            float padding = 5f;
+            float totalPushAmount = textHeight + padding;
+            pushOffset = 0f;
+
+            combatTextManager.RegisterAndPush(mainTarget, this, myQuadrant, totalPushAmount);
             RunCombatTextUpdate();
         }
 
+        private int GetQuadrantIndex() {
+            if (directionMultiplier == 1) // Moving Up
+                return xDirectionMultiplier == 1 ? 0 : 1;
+            else // Moving Down
+                return xDirectionMultiplier == 1 ? 2 : 3;
+        }
+
+        public void PushUp(float amount) {
+            //Debug.Log($"CombatTextController.PushUp(amount: {amount} text: {tmpProtext.text}");
+
+            // When a new text spawns, this one moves up to make room
+            pushOffset += amount;
+        }
+
+        // Inside CombatTextController.cs
+        public float GetCurrentVerticalDisplacement() {
+            // This represents exactly how far from the 'head' the text is right now
+            return yUIOffset + pushOffset;
+        }
+
         public void RunCombatTextUpdate() {
-            //Debug.Log("CombatTextController.RunCombatTextUpdate() fadeOutTimer: " + fadeOutTimer + " " + tmpProtext.text);
+            //Debug.Log($"CombatTextController.RunCombatTextUpdate() fadeOutTimer: {fadeOutTimer} text: {tmpProtext.text}");
+
             if (mainTarget != null) {
-                //Debug.Log("CombatTextController.FixedUpdate(): maintarget is not null");
-                targetPos = cameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
-                //Debug.Log("CombatTextController.FixedUpdate(): targetpos:" + targetPos);
-                transform.position = targetPos + new Vector2((randomX + xUIOffset + (xDirectionMultiplier == 1 ? 0 : textRectTransform.rect.width)) * xDirectionMultiplier, yUIOffset + randomY);
+                Vector2 screenPoint = cameraManager.ActiveMainCamera.WorldToScreenPoint(worldSpawnPos);
+                //targetPos = cameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
+                //float finalY = yUIOffset + randomY + pushOffset;
+                float finalY = yUIOffset + (pushOffset * directionMultiplier);
+                transform.position = screenPoint + new Vector2((randomX + xUIOffset + (xDirectionMultiplier == 1 ? 0 : textRectTransform.rect.width)) * xDirectionMultiplier, finalY);
             }
             if (fadeOutTimer > 0f) {
                 fadeOutTimer -= Time.deltaTime;
@@ -261,6 +312,7 @@ namespace AnyRPG {
                 //randomY += (movementSpeed * directionMultiplier);
                 yUIOffset = distanceToMove * (((fadeOutTimer - fadeTime) * -1) / fadeTime) * directionMultiplier;
             } else {
+                combatTextManager.Unregister(mainTarget, this, GetQuadrantIndex());
                 combatTextManager.RequestReturnControllerToPool(this);
             }
 

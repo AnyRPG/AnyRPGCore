@@ -18,6 +18,8 @@ namespace AnyRPG {
         private List<CombatTextController> inUseCombatTextControllers = new List<CombatTextController>();
         private List<CombatTextController> returnList = new List<CombatTextController>();
 
+        private Dictionary<Interactable, List<CombatTextController>[]> quadrantTracks = new Dictionary<Interactable, List<CombatTextController>[]>();
+
         // game manager references
         private CameraManager cameraManager = null;
         private ObjectPooler objectPooler = null;
@@ -161,6 +163,70 @@ namespace AnyRPG {
             }
         }
 
-    }
+        public void SpawnCombatText(Interactable target, string displayText, CombatTextType combatType) {
+            //Debug.Log($"CombatTextManager.SpawnCombatText({target.gameObject.name}, {displayText}, {combatType})");
+            if (PlayerPrefs.GetInt("UseFloatingCombatText") == 0) {
+                return;
+            }
+            //Debug.Log("Combat Text manager Spawning Combat Text attached to: " + target.name);
+            //Debug.Log("About to Set MainTarget on combat text");
+            CombatTextController combatTextController = GetCombatTextController();
+            if (combatTextController != null) {
+                combatTextController.Configure(systemGameManager);
+                inUseCombatTextControllers.Add(combatTextController);
+                combatTextController.InitializeCombatTextController(target,
+                    null,
+                    displayText,
+                    combatType
+                    );
+            }
+        }
 
+        public void RegisterAndPush(Interactable target, CombatTextController newText, int quadrant, float pushAmount) {
+            //Debug.Log($"CombatTextManager.RegisterAndPush({target.gameObject.name}, text: {newText.gameObject.name}, quadrant: {quadrant}, pushAmount: {pushAmount})");
+
+            if (!quadrantTracks.ContainsKey(target)) {
+                // Initialize 4 lists, one for each quadrant
+                quadrantTracks[target] = new List<CombatTextController>[4] {
+                    new List<CombatTextController>(),
+                    new List<CombatTextController>(),
+                    new List<CombatTextController>(),
+                    new List<CombatTextController>()
+                 };
+            }
+
+            List<CombatTextController> track = quadrantTracks[target][quadrant];
+
+            if (track.Count > 0) {
+                // Get the most recently spawned text (the one closest to the spawn point)
+                CombatTextController lastText = track[track.Count - 1];
+
+                // Check how far it has moved from the origin (0,0)
+                // We use the same 'finalY' logic: yUIOffset + currentVisualPush
+                float currentPos = lastText.GetCurrentVerticalDisplacement();
+
+                // If the last text hasn't cleared enough room for the NEW text's height...
+                if (Mathf.Abs(currentPos) < pushAmount) {
+                    // Calculate how much extra we need to shove the whole stack
+                    float extraShove = pushAmount - Mathf.Abs(currentPos);
+
+                    foreach (var active in track) {
+                        active.PushUp(extraShove);
+                    }
+                }
+            }
+
+            track.Add(newText);
+        }
+
+        public void Unregister(Interactable target, CombatTextController text, int quadrant) {
+            //Debug.Log($"CombatTextManager.Unregister({target.gameObject.name}, {text.gameObject.name}, quadrant: {quadrant})");
+
+            if (quadrantTracks.ContainsKey(target)) {
+                quadrantTracks[target][quadrant].Remove(text);
+            }
+        }
+
+
+    }
 }

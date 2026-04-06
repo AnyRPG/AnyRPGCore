@@ -101,6 +101,8 @@ namespace AnyRPG {
                             }
                         }
                     }
+                    // give skill experience for crafting the item if applicable
+                    TryToGiveSkillExperience(craftingQueue[0]);
                     unitController.UnitEventController.NotifyOnCraftItem();
                     RemoveFirstQueueItem();
                     if (craftingQueue.Count > 0) {
@@ -111,10 +113,61 @@ namespace AnyRPG {
                         unitController.CharacterAbilityManager.BeginAbility(craftAbility);
                     }
                 }
+                
             } else {
                 // empty the queue to prevent repeated loop trying to craft something you don't have materials for
                 ClearCraftingQueue();
             }
+        }
+
+        private void TryToGiveSkillExperience(Recipe recipe) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCraftingManager.TryToGiveSkillExperience({recipe.ResourceName})");
+
+            // ensure there is a skill to compare agains
+            if (recipe.Skill == null) {
+                //Debug.Log($"{unitController.gameObject.name}.CharacterCraftingManager.TryToGiveSkillExperience(): recipe {recipe.DisplayName} has no skill, skipping experience gain");
+                return;
+            }
+
+            if (recipe.Skill.UseSkillLevels == true) {
+                AttemptToGiveSkillExperience(recipe);
+            }
+            if (recipe.Skill.GiveCharacterExperience == true) {
+                AttemptToGiveCharacterExperience(recipe);
+            }
+        }
+
+        private void AttemptToGiveSkillExperience(Recipe recipe) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCraftingManager.AttemptToGiveSkillExperience({recipe.ResourceName})");
+
+            // check if skill is above the max level for experience gain, if applicable
+            if (unitController.CharacterSkillManager.GetSkillLevel(recipe.Skill) > recipe.MaxSkillExperienceLevel && recipe.MaxSkillExperienceLevel > 0) {
+                return;
+            }
+            if (recipe.Skill.UseSkillExperience == true) {
+                // experience based calculation
+                if (recipe.SkillExperienceReward > 0) {
+                    unitController.CharacterSkillManager.AddSkillExperience(recipe.Skill, recipe.SkillExperienceReward);
+                }
+            } else {
+                // chance based calculation
+                if (recipe.ChanceToGainLevel >= UnityEngine.Random.Range(0f, 1f)) {
+                    unitController.CharacterSkillManager.AddSkillLevel(recipe.Skill, 1);
+                }
+            }
+        }
+
+        private void AttemptToGiveCharacterExperience(Recipe recipe) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCraftingManager.AttemptToGiveCharacterExperience({recipe.ResourceName})");
+
+            // check if character is above the max level for experience gain, if applicable
+            if (unitController.CharacterStats.Level > recipe.MaxCharacterExperienceLevel && recipe.MaxCharacterExperienceLevel > 0) {
+                return;
+            }
+            if (recipe.CharacterExperienceReward <= 0) {
+                return;
+            }
+            unitController.CharacterStats.GainExperience(recipe.CharacterExperienceReward);
         }
 
         public void RemoveFirstQueueItem() {

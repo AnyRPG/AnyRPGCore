@@ -112,6 +112,13 @@ namespace AnyRPG {
 
         private void HandleCraftItem() {
             UpdateCraftAmountArea();
+            ResetMaxCraftAmountDisplays();
+        }
+
+        private void ResetMaxCraftAmountDisplays() {
+            foreach (RecipeScript recipeScript in recipeScripts.Values) {
+                recipeScript.UpdateMaxCraftAmount();
+            }
         }
 
         public void SelectRecipe(Recipe recipe) {
@@ -165,7 +172,6 @@ namespace AnyRPG {
                     if (firstScript == null) {
                         firstScript = qs;
                     }
-                    qs.Text.text = recipe.Output.DisplayName;
                     qs.SetRecipe(recipe);
                     recipeScripts.Add(recipe, qs);
                     recipeListNavigationController.AddActiveButton(qs);

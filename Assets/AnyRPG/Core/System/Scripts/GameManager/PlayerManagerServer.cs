@@ -270,7 +270,7 @@ namespace AnyRPG {
         }
 
         public void GainXP(UnitController unitController, int amount) {
-            unitController.CharacterStats.GainXP(amount);
+            unitController.CharacterStats.GainExperience(amount);
         }
 
         public void AddCurrency(Currency currency, int amount, int accountId) {

@@ -79,12 +79,15 @@ MonoBehaviour:
   interactOnExit: 0
   isTrigger: 0
   suppressInteractionWindow: 0
+  overrideInteractionColliderSize: 0
   interactionMaxRange: 5
-  checkOptionsToSpawn: 1
-  spawnRequiresValidOption: 0
-  despawnRequiresNoValidOption: 0
+  interactionPoints: []
   componentController: {fileID: 7026694329721049842}
-  unitComponentController: {fileID: 0}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!114 &-3919165771164659194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107,6 +110,13 @@ MonoBehaviour:
     spawnTimer: 60
     spawnObject: {fileID: 8129940204224326970}
     abilityName: Fishing
+    skillName: Fishing
+    requiredSkillLevel: 0
+    chanceToGainLevel: 1
+    skillExperienceReward: 25
+    maxSkillExperienceLevel: 0
+    characterExperienceReward: 25
+    maxCharacterExperienceLevel: 0
 --- !u!1001 &2594263376965455821
 PrefabInstance:
   m_ObjectHideFlags: 0

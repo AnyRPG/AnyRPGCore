@@ -46,7 +46,7 @@ namespace AnyRPG {
         public List<EquippedBagSaveData> EquippedBagSaveData = new List<EquippedBagSaveData>();
         public List<EquippedBagSaveData> EquippedBankBagSaveData = new List<EquippedBagSaveData>();
         public List<AbilitySaveData> AbilitySaveData = new List<AbilitySaveData>();
-        public List<SkillSaveData> SkillSaveData = new List<SkillSaveData>();
+        public List<CharacterSkillSaveData> SkillSaveData = new List<CharacterSkillSaveData>();
         public List<RecipeSaveData> RecipeSaveData = new List<RecipeSaveData>();
         public List<ReputationSaveData> ReputationSaveData = new List<ReputationSaveData>();
         public List<EquipmentInventorySlotSaveData> EquipmentSaveData = new List<EquipmentInventorySlotSaveData>();
@@ -174,12 +174,6 @@ namespace AnyRPG {
     public class EquipmentInventorySlotSaveData {
         public bool HasItem;
         public long ItemInstanceId;
-    }
-
-    [Serializable]
-    public struct SkillSaveData {
-
-        public string SkillName;
     }
 
     [Serializable]

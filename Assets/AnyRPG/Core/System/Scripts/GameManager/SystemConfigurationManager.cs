@@ -282,9 +282,15 @@ namespace AnyRPG {
         [SerializeField]
         private int maxLevel = 50;
 
-        [Tooltip("Every level, the amount of experience you need for the next level is increased by this amount.")]
+        [Tooltip("A list of experience amounts required to level up the character.  The index of the list is the character level, and the value is the experience required to reach the next level.")]
         [SerializeField]
-        private int xpRequiredPerLevel = 100;
+        private List<int> experienceChart = new List<int>() {
+            500,1000,1500,2000,2500,3500,4500,5500,6500,7500,
+            8500,10000,11500,13000,14500,16000,17500,19000,21000,23000,
+            25000,27000,29000,31500,34000,36500,39000,41500,44000,47000,
+            50000,54000,58000,62000,66000,70000,75000,80000,85000,90000,
+            95000,100000,105000,110000,116000,122000,128000,134000,140000,145000,
+            151000,158000,165000,172000,179500,187000,194500,202000,209500,217000};
 
         [Header("Currency")]
 
@@ -797,7 +803,6 @@ namespace AnyRPG {
         //public bool UseThirdPartyMovementControl { get => useThirdPartyMovementControl; set => useThirdPartyMovementControl = value; }
         //public bool UseThirdPartyCameraControl { get => useThirdPartyCameraControl; set => useThirdPartyCameraControl = value; }
         public bool AllowAutoAttack { get => allowAutoAttack; set => allowAutoAttack = value; }
-        public int XpRequiredPerLevel { get => xpRequiredPerLevel; set => xpRequiredPerLevel = value; }
         public int BaseQuestXP { get => baseQuestXP; set => baseQuestXP = value; }
         public int QuestXPPerLevel { get => questXPPerLevel; set => questXPPerLevel = value; }
         public bool UseQuestXPLevelMultiplierDemoninator { get => useQuestXPLevelMultiplierDemoninator; set => useQuestXPLevelMultiplierDemoninator = value; }
@@ -939,6 +944,7 @@ namespace AnyRPG {
         public CameraViewMode CameraViewMode { get => cameraViewMode; set => cameraViewMode = value; }
         public Vector3 InitialIsometricVector { get => initialIsometricVector; set => initialIsometricVector = value; }
         public bool AllowFirstPersonCamera { get => allowFirstPersonCamera; set => allowFirstPersonCamera = value; }
+        public List<int> ExperienceChart { get => experienceChart; set => experienceChart = value; }
 
         //public Currency PostageCurrency { get => postageCurrency; set => postageCurrency = value; }
 
