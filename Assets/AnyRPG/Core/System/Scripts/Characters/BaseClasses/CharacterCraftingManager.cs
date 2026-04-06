@@ -121,7 +121,7 @@ namespace AnyRPG {
         }
 
         private void TryToGiveSkillExperience(Recipe recipe) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterCraftingManager.TryToGiveSkillExperience({recipe.ResourceName})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCraftingManager.TryToGiveSkillExperience({recipe.ResourceName})");
 
             // ensure there is a skill to compare agains
             if (recipe.Skill == null) {

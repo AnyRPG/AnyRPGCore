@@ -108,7 +108,7 @@ namespace AnyRPG {
         }
 
         public void AddSkillLevel(Skill skill, int addLevel, bool notify) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterSkillManager.AddSkillLevel({skill.ResourceName}, {addLevel})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSkillManager.AddSkillLevel({skill.ResourceName}, {addLevel})");
 
             if (skillList.ContainsKey(skill.ResourceName) == false) {
                 return;
@@ -128,7 +128,8 @@ namespace AnyRPG {
         }
 
         public void AddSkillExperience(Skill skill, int addExperience) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterSkillManager.AddSkillExperience({skill.ResourceName}, {addExperience})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSkillManager.AddSkillExperience({skill.ResourceName}, {addExperience})");
+
             if (skillList.ContainsKey(skill.ResourceName) == false) {
                 return;
             }
@@ -138,6 +139,8 @@ namespace AnyRPG {
                 while (characterSkillData.SkillLevel < skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level) && characterSkillData.SkillExperience >= skill.SkillExperienceChart[characterSkillData.SkillLevel - 1]) {
                     characterSkillData.SkillExperience -= skill.SkillExperienceChart[characterSkillData.SkillLevel - 1];
                     // only notify on level up if the server is not active.
+                    // This will prevent the server sending an extra message to the client to update the skill level,
+                    // since the client will calculate the level up on its own when the experience is added.
                     AddSkillLevel(skill, 1, networkManagerServer.ServerModeActive == false);
                 }
             }
@@ -146,7 +149,7 @@ namespace AnyRPG {
 
         /*
         public void SetSkillExperience(Skill skill, int experienceValue) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterSkillManager.SetSkillExperience({skill.ResourceName}, {experienceValue})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSkillManager.SetSkillExperience({skill.ResourceName}, {experienceValue})");
 
             if (skillList.ContainsKey(skill.ResourceName) == false) {
                 return;

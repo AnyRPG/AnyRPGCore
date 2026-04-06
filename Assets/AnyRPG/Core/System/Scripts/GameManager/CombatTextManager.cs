@@ -183,6 +183,8 @@ namespace AnyRPG {
         }
 
         public void RegisterAndPush(Interactable target, CombatTextController newText, int quadrant, float pushAmount) {
+            //Debug.Log($"CombatTextManager.RegisterAndPush({target.gameObject.name}, text: {newText.gameObject.name}, quadrant: {quadrant}, pushAmount: {pushAmount})");
+
             if (!quadrantTracks.ContainsKey(target)) {
                 // Initialize 4 lists, one for each quadrant
                 quadrantTracks[target] = new List<CombatTextController>[4] {
@@ -193,15 +195,33 @@ namespace AnyRPG {
                  };
             }
 
-            // Push ONLY the texts in the same quadrant
-            foreach (var active in quadrantTracks[target][quadrant]) {
-                active.PushUp(pushAmount); // Push in the direction it's already going
+            List<CombatTextController> track = quadrantTracks[target][quadrant];
+
+            if (track.Count > 0) {
+                // Get the most recently spawned text (the one closest to the spawn point)
+                CombatTextController lastText = track[track.Count - 1];
+
+                // Check how far it has moved from the origin (0,0)
+                // We use the same 'finalY' logic: yUIOffset + currentVisualPush
+                float currentPos = lastText.GetCurrentVerticalDisplacement();
+
+                // If the last text hasn't cleared enough room for the NEW text's height...
+                if (Mathf.Abs(currentPos) < pushAmount) {
+                    // Calculate how much extra we need to shove the whole stack
+                    float extraShove = pushAmount - Mathf.Abs(currentPos);
+
+                    foreach (var active in track) {
+                        active.PushUp(extraShove);
+                    }
+                }
             }
 
-            quadrantTracks[target][quadrant].Add(newText);
+            track.Add(newText);
         }
 
         public void Unregister(Interactable target, CombatTextController text, int quadrant) {
+            //Debug.Log($"CombatTextManager.Unregister({target.gameObject.name}, {text.gameObject.name}, quadrant: {quadrant})");
+
             if (quadrantTracks.ContainsKey(target)) {
                 quadrantTracks[target][quadrant].Remove(text);
             }

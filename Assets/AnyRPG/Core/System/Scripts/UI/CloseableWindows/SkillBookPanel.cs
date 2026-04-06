@@ -19,6 +19,7 @@ namespace AnyRPG {
             foreach (SkillButton skillButton in skillButtons) {
                 skillButton.Configure(systemGameManager);
             }
+            pageSize = skillButtons.Count;
         }
 
         protected override void PopulatePages() {

@@ -39,13 +39,15 @@ namespace AnyRPG {
                 icon.color = Color.white;
                 skillNameText.text = characterSkillData.Skill.DisplayName;
                 string levelString = string.Empty;
+                string extranewline = string.Empty;
                 if (characterSkillData.Skill.UseSkillLevels) {
                     levelString = $"Level {characterSkillData.SkillLevel}/{characterSkillData.Skill.GetSkillCapForLevel(playerManagerClient.UnitController.CharacterStats.Level)}\n";
+                    extranewline = "\n";
                     if (characterSkillData.Skill.UseSkillExperience) {
-                        levelString += $"Experience ({characterSkillData.SkillExperience}/{characterSkillData.Skill.GetExperienceRequiredForLevel(characterSkillData.SkillLevel)})\n";
+                        levelString += $"Experience ({characterSkillData.SkillExperience}/{characterSkillData.Skill.GetExperienceRequiredForLevel(characterSkillData.SkillLevel)})";
                     }
                 }
-                description.text = $"{levelString}{characterSkillData.Skill.GetDescription()}";
+                description.text = $"{levelString}<size=12>{extranewline}<i>{characterSkillData.Skill.GetDescription()}</i></size>";
             } else {
                 //Debug.Log("SkillButton.AddSkill(): failed to get skill!!!");
             }

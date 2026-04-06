@@ -284,7 +284,13 @@ namespace AnyRPG {
 
         [Tooltip("A list of experience amounts required to level up the character.  The index of the list is the character level, and the value is the experience required to reach the next level.")]
         [SerializeField]
-        private List<int> experienceChart = new List<int>() { 400,900,1400,2100,2800,3600,4500,5400,6500,7600 };
+        private List<int> experienceChart = new List<int>() {
+            500,1000,1500,2000,2500,3500,4500,5500,6500,7500,
+            8500,10000,11500,13000,14500,16000,17500,19000,21000,23000,
+            25000,27000,29000,31500,34000,36500,39000,41500,44000,47000,
+            50000,54000,58000,62000,66000,70000,75000,80000,85000,90000,
+            95000,100000,105000,110000,116000,122000,128000,134000,140000,145000,
+            151000,158000,165000,172000,179500,187000,194500,202000,209500,217000};
 
         [Header("Currency")]
 
