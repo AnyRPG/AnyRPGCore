@@ -19,12 +19,20 @@ MonoBehaviour:
   description: A regular size bag
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   autoLearn: 1
   requiredLevel: 1
+  skillName: Tailoring
+  requiredSkillLevel: 0
+  chanceToGainLevel: 1
+  skillExperienceReward: 25
+  maxSkillExperienceLevel: 0
+  characterExperienceReward: 25
+  maxCharacterExperienceLevel: 0
   craftingMaterials:
   - itemName: Linen
     count: 3
   itemOutputName: 12 Slot Bag
   outputCount: 1
   craftAbilityName: Tailoring
-  holdableObjectNames: []
+  holdableObjectList: []

@@ -112,6 +112,13 @@ MonoBehaviour:
     spawnTimer: 30
     spawnObject: {fileID: 4766606354195338389}
     abilityName: Herbalism
+    skillName: Herbalism
+    requiredSkillLevel: 0
+    chanceToGainLevel: 1
+    skillExperienceReward: 25
+    maxSkillExperienceLevel: 0
+    characterExperienceReward: 25
+    maxCharacterExperienceLevel: 0
 --- !u!114 &2095162785866833339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,6 +165,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0

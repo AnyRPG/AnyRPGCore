@@ -19,12 +19,20 @@ MonoBehaviour:
   description: Create a scroll of agility
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   autoLearn: 1
   requiredLevel: 1
+  skillName: Inscription
+  requiredSkillLevel: 0
+  chanceToGainLevel: 1
+  skillExperienceReward: 25
+  maxSkillExperienceLevel: 0
+  characterExperienceReward: 25
+  maxCharacterExperienceLevel: 0
   craftingMaterials:
   - itemName: Parchment Paper
     count: 1
   itemOutputName: Scroll Of Agility
   outputCount: 1
   craftAbilityName: Inscription
-  holdableObjectNames: []
+  holdableObjectList: []

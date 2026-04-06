@@ -79,12 +79,15 @@ MonoBehaviour:
   interactOnExit: 0
   isTrigger: 0
   suppressInteractionWindow: 0
+  overrideInteractionColliderSize: 0
   interactionMaxRange: 2
-  checkOptionsToSpawn: 1
-  spawnRequiresValidOption: 0
-  despawnRequiresNoValidOption: 1
+  interactionPoints: []
   componentController: {fileID: 2529777466101071453}
-  unitComponentController: {fileID: 0}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
 --- !u!114 &410231103204313661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107,6 +110,13 @@ MonoBehaviour:
     spawnTimer: 30
     spawnObject: {fileID: 3573444899828304678}
     abilityName: Herbalism
+    skillName: Herbalism
+    requiredSkillLevel: 0
+    chanceToGainLevel: 1
+    skillExperienceReward: 25
+    maxSkillExperienceLevel: 0
+    characterExperienceReward: 25
+    maxCharacterExperienceLevel: 0
 --- !u!1001 &2475933615922794102
 PrefabInstance:
   m_ObjectHideFlags: 0
