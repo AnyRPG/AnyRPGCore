@@ -18,6 +18,8 @@ namespace AnyRPG {
         private List<CombatTextController> inUseCombatTextControllers = new List<CombatTextController>();
         private List<CombatTextController> returnList = new List<CombatTextController>();
 
+        private Dictionary<Interactable, List<CombatTextController>[]> quadrantTracks = new Dictionary<Interactable, List<CombatTextController>[]>();
+
         // game manager references
         private CameraManager cameraManager = null;
         private ObjectPooler objectPooler = null;
@@ -178,8 +180,33 @@ namespace AnyRPG {
                     combatType
                     );
             }
-
         }
+
+        public void RegisterAndPush(Interactable target, CombatTextController newText, int quadrant, float pushAmount) {
+            if (!quadrantTracks.ContainsKey(target)) {
+                // Initialize 4 lists, one for each quadrant
+                quadrantTracks[target] = new List<CombatTextController>[4] {
+                    new List<CombatTextController>(),
+                    new List<CombatTextController>(),
+                    new List<CombatTextController>(),
+                    new List<CombatTextController>()
+                 };
+            }
+
+            // Push ONLY the texts in the same quadrant
+            foreach (var active in quadrantTracks[target][quadrant]) {
+                active.PushUp(pushAmount); // Push in the direction it's already going
+            }
+
+            quadrantTracks[target][quadrant].Add(newText);
+        }
+
+        public void Unregister(Interactable target, CombatTextController text, int quadrant) {
+            if (quadrantTracks.ContainsKey(target)) {
+                quadrantTracks[target][quadrant].Remove(text);
+            }
+        }
+
 
     }
 }

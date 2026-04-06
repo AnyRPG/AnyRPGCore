@@ -1,4 +1,3 @@
-using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -77,6 +76,8 @@ namespace AnyRPG {
         string preText = string.Empty;
         string postText = string.Empty;
 
+        private float pushOffset = 0f;
+
         // game manager references
         protected CameraManager cameraManager = null;
         protected CombatTextManager combatTextManager = null;
@@ -146,11 +147,18 @@ namespace AnyRPG {
                         fontSizeMultiplier *= 2;
                         xDirectionMultiplier = -1;
                         break;
-                    case CombatTextType.gainSkill:
+                    case CombatTextType.gainSkillExperience:
+                        textColor = Color.cyan;
+                        preText += "+";
+                        postText += " XP";
+                        fontSizeMultiplier *= 2;
+                        xDirectionMultiplier = -1;
+                        break;
+                    case CombatTextType.gainSkillLevel:
                         textColor = Color.blue;
                         preText += "+";
                         //postText += " XP";
-                        fontSizeMultiplier *= 2;
+                        //fontSizeMultiplier *= 2;
                         xDirectionMultiplier = -1;
                         break;
                     case CombatTextType.gainBuff:
@@ -235,9 +243,27 @@ namespace AnyRPG {
             randomY += (fontSizeMultiplier / 2f) * randomYLimit;
             randomX += (fontSizeMultiplier / 2f) * randomXLimit;
 
+            int myQuadrant = GetQuadrantIndex();
             // before running the first combat text update, the layout should be updated, or the rect for the text will still have the old width before the end of the current frame
             LayoutRebuilder.ForceRebuildLayoutImmediate(textRectTransform);
+
+            float textHeight = 30f;
+            pushOffset = 0f;
+
+            combatTextManager.RegisterAndPush(mainTarget, this, myQuadrant, textHeight);
             RunCombatTextUpdate();
+        }
+
+        private int GetQuadrantIndex() {
+            if (directionMultiplier == 1) // Moving Up
+                return xDirectionMultiplier == 1 ? 0 : 1;
+            else // Moving Down
+                return xDirectionMultiplier == 1 ? 2 : 3;
+        }
+
+        public void PushUp(float amount) {
+            // When a new text spawns, this one moves up to make room
+            pushOffset += amount;
         }
 
         public void RunCombatTextUpdate() {
@@ -246,7 +272,8 @@ namespace AnyRPG {
                 //Debug.Log("CombatTextController.FixedUpdate(): maintarget is not null");
                 targetPos = cameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
                 //Debug.Log("CombatTextController.FixedUpdate(): targetpos:" + targetPos);
-                transform.position = targetPos + new Vector2((randomX + xUIOffset + (xDirectionMultiplier == 1 ? 0 : textRectTransform.rect.width)) * xDirectionMultiplier, yUIOffset + randomY);
+                float finalY = yUIOffset + randomY + pushOffset;
+                transform.position = targetPos + new Vector2((randomX + xUIOffset + (xDirectionMultiplier == 1 ? 0 : textRectTransform.rect.width)) * xDirectionMultiplier, finalY);
             }
             if (fadeOutTimer > 0f) {
                 fadeOutTimer -= Time.deltaTime;
@@ -268,6 +295,7 @@ namespace AnyRPG {
                 //randomY += (movementSpeed * directionMultiplier);
                 yUIOffset = distanceToMove * (((fadeOutTimer - fadeTime) * -1) / fadeTime) * directionMultiplier;
             } else {
+                combatTextManager.Unregister(mainTarget, this, GetQuadrantIndex());
                 combatTextManager.RequestReturnControllerToPool(this);
             }
 
