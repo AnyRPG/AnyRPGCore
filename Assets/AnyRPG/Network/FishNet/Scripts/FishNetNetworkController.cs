@@ -4,10 +4,7 @@ using FishNet.Managing.Scened;
 using FishNet.Managing.Server;
 using FishNet.Object;
 using FishNet.Transporting;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,7 +16,10 @@ namespace AnyRPG {
         
         [SerializeField]
         private GameObject networkConnectorSpawnPrefab = null;
-        
+
+        [SerializeField]
+        private GameObject droppedItemPrefab = null;
+
         //private GameObject networkConnectorSpawnReference = null;
 
         /// <summary>
@@ -1212,6 +1212,10 @@ namespace AnyRPG {
 
         public override void LoadNewLobbyGameScene(int accountId, LobbyGame lobbyGame, SceneNode sceneNode) {
             clientConnector.LoadNewLobbyGameScene(accountId, lobbyGame, sceneNode);
+        }
+
+        public override GameObject SpawnDroppedItem(Scene scene, Vector3 position, Quaternion rotation) {
+            return clientConnector.SpawnDroppedItem(scene, droppedItemPrefab, position, rotation);
         }
 
 

@@ -516,6 +516,9 @@ namespace AnyRPG {
             if (BagPanel is BankPanel) {
                 return;
             }
+            if (inventorySlot.InstantiatedItem.Item.ItemPickupPrefabProfile != null) {
+                contextMenuPanel.EnableDropButton(true);
+            }
             contextMenuPanel.EnableSplitButton(inventorySlot.InstantiatedItem.Item.MaximumStackSize > 1 && inventorySlot.InstantiatedItems.Count > 1);
             contextMenuPanel.EnableDestroyButton(true);
         }
@@ -528,6 +531,9 @@ namespace AnyRPG {
                     handScript.SetPosition(transform.position);
                     SendItemToHandScript();
                     uIManager.confirmDestroyMenuWindow.OpenWindow();
+                    break;
+                case "Drop":
+                    playerManagerClient.UnitController.CharacterInventoryManager.RequestDropItemOnGround(inventorySlot);
                     break;
                 case "Split":
                     if (inventorySlot.InstantiatedItem != null) {

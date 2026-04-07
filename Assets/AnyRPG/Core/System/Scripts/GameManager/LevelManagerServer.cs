@@ -57,6 +57,11 @@ namespace AnyRPG {
                     interactable.ProcessPlayerUnitSpawn(sourceUnitController);
                 }
             }
+            foreach (Interactable interactable in sceneData.DroppedItems) {
+                if (interactable != null) {
+                    interactable.ProcessPlayerUnitSpawn(sourceUnitController);
+                }
+            }
             foreach (UnitController unitController in sceneData.UnitControllers) {
                 if (unitController != null && unitController != sourceUnitController) {
                     unitController.ProcessPlayerUnitSpawn(sourceUnitController);
@@ -253,6 +258,15 @@ namespace AnyRPG {
                         interactable.ResetSettings();
                     }
                 }
+                List<Interactable> droppedItems = new List<Interactable>(sceneData.DroppedItems);
+                foreach (Interactable interactable in droppedItems) {
+                    if (interactable != null) {
+                        if (systemGameManager.GameMode == GameMode.Local) {
+                            interactable.PersistentObjectComponent.ProcessBeforeUnloadScene();
+                        }
+                        interactable.ResetSettings();
+                    }
+                }
                 List<UnitController> unitControllers = new List<UnitController>(sceneData.UnitControllers);
                 foreach (UnitController unitController in unitControllers) {
                     if (unitController != null) {
@@ -380,6 +394,30 @@ namespace AnyRPG {
                 return;
             }
             loadedScenes[scene.name][scene.handle].UnregisterPersistentObject(persistentObjectOwner);
+        }
+
+        public void RegisterDroppedItem(Interactable interactable) {
+            Debug.Log($"LevelManagerServer.RegisterDroppedItem({interactable.gameObject.name})");
+
+            Scene scene = interactable.gameObject.scene;
+            if (loadedScenes.ContainsKey(scene.name) == false) {
+                return;
+            }
+            if (loadedScenes[scene.name].ContainsKey(scene.handle) == false) {
+                return;
+            }
+            loadedScenes[scene.name][scene.handle].RegisterDroppedItem(interactable);
+        }
+
+        public void UnregisterDroppedItem(Interactable interactable) {
+            Scene scene = interactable.gameObject.scene;
+            if (loadedScenes.ContainsKey(scene.name) == false) {
+                return;
+            }
+            if (loadedScenes[scene.name].ContainsKey(scene.handle) == false) {
+                return;
+            }
+            loadedScenes[scene.name][scene.handle].UnregisterDroppedItem(interactable);
         }
 
     }

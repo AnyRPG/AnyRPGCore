@@ -26,6 +26,10 @@ namespace AnyRPG {
         [SerializeField]
         private ObjectPooler objectPooler = null;
 
+        [Tooltip("The prefab to use when a character drops an item on the ground.")]
+        [SerializeField]
+        private GameObject droppedItemPrefab = null;
+
         [Header("Monobehavior Managers")]
 
         // sub manager monobehaviors
@@ -245,6 +249,7 @@ namespace AnyRPG {
         //public bool IsServer { get => isServer; set => isServer = value; }
         public ushort CommandLineServerPort { get => commandLineServerPort; set => commandLineServerPort = value; }
         public NetworkServerMode CommandLineServerMode { get => commandLineServerMode; set => commandLineServerMode = value; }
+        public GameObject DroppedItemPrefab { get => droppedItemPrefab; set => droppedItemPrefab = value; }
 
         private void Awake() {
             Init();

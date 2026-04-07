@@ -13,6 +13,7 @@ namespace AnyRPG {
         public List<MoveableObjectSaveData> MoveableObjectSaveData = new List<MoveableObjectSaveData>();
         public List<AnimatedObjectSaveData> AnimatedObjectSaveData = new List<AnimatedObjectSaveData>();
         public List<ActivatableObjectSaveData> ActivatableObjectSaveData = new List<ActivatableObjectSaveData>();
+        public List<DroppedItemSaveData> DroppedItemSaveData = new List<DroppedItemSaveData>();
 
         public void BundleItems(SystemItemManager systemItemManager) {
             // bundle items from lootable character and lootable node into one list to be saved with the interactable
@@ -38,6 +39,16 @@ namespace AnyRPG {
                     }
                 }
             }
+            if (DroppedItemSaveData.Count > 0) {
+                foreach (long itemInstanceId in DroppedItemSaveData[0].InstantiatedItemIds) {
+                    InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemInstanceId);
+                    if (instantiatedItem == null) {
+                        Debug.LogWarning($"InteractableSaveData.BundleItems() Item with instanceId {itemInstanceId} not found!");
+                        continue;
+                    }
+                    ItemInstanceListSaveData.ItemInstances.Add(instantiatedItem.GetItemSaveData());
+                }
+            }
         }
     }
 
@@ -53,6 +64,11 @@ namespace AnyRPG {
         public bool SpawnObjectActive = false;
         public bool LootDropped = false;
         public int PickupCount = 0;
+    }
+
+    [Serializable]
+    public class DroppedItemSaveData {
+        public List<long> InstantiatedItemIds = new List<long>();
     }
 
     [Serializable]

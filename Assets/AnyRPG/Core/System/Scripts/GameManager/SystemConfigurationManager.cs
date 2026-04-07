@@ -111,7 +111,7 @@ namespace AnyRPG {
 
         // reference to the default profile
         private List<UnitProfile> defaultUnitProfileList = new List<UnitProfile>();
-
+        
         [Header("Inventory")]
 
         /*
@@ -945,10 +945,6 @@ namespace AnyRPG {
         public Vector3 InitialIsometricVector { get => initialIsometricVector; set => initialIsometricVector = value; }
         public bool AllowFirstPersonCamera { get => allowFirstPersonCamera; set => allowFirstPersonCamera = value; }
         public List<int> ExperienceChart { get => experienceChart; set => experienceChart = value; }
-
-        //public Currency PostageCurrency { get => postageCurrency; set => postageCurrency = value; }
-
-        //public bool AllowClickToMove { get => allowClickToMove; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

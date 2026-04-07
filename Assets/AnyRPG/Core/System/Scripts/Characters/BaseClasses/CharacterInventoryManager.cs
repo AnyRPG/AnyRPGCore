@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 namespace AnyRPG {
     public class CharacterInventoryManager : ConfiguredClass {
@@ -36,6 +37,8 @@ namespace AnyRPG {
         private LootManager lootManager = null;
         private MessageLogServer messageLogServer = null;
         private ServerDataService serverDataService = null;
+        private ObjectPooler objectPooler = null;
+        private LevelManagerServer levelManagerServer = null;
 
         protected bool eventSubscriptionsInitialized = false;
 
@@ -90,6 +93,8 @@ namespace AnyRPG {
             lootManager = systemGameManager.LootManager;
             messageLogServer = systemGameManager.MessageLogServer;
             serverDataService = systemGameManager.ServerDataService;
+            objectPooler = systemGameManager.ObjectPooler;
+            levelManagerServer = systemGameManager.LevelManagerServer;
         }
 
 
@@ -864,6 +869,61 @@ namespace AnyRPG {
             }
             //unitController.UnitEventController.NotifyOnDeleteItem(instantiatedItem);
             messageLogServer.WriteSystemMessage(unitController, $"Destroyed {instantiatedItem.DisplayName}");
+        }
+
+        public void RequestDropItemOnGround(InventorySlot inventorySlot) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                DropItemOnGround(inventorySlot);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestDropItemOnGround(inventorySlot.GetCurrentInventorySlotIndex(unitController));
+            }
+        }
+
+        public void DropItemOnGround(int inventorySlotIndex) {
+            if (inventorySlots.Count > inventorySlotIndex) {
+                DropItemOnGround(inventorySlots[inventorySlotIndex]);
+            }
+        }
+
+        public void DropItemOnGround(InventorySlot inventorySlot) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemOnGround()");
+            if (inventorySlot.IsEmpty) {
+                return;
+            }
+            if (inventorySlot.InstantiatedItem?.Item?.ItemPickupPrefabProfile == null) {
+                return;
+            }
+            List<InstantiatedItem> itemsToDrop = new List<InstantiatedItem>();
+            foreach (InstantiatedItem instantiatedItem in inventorySlot.InstantiatedItems.Values) {
+                itemsToDrop.Add(instantiatedItem);
+            }
+            inventorySlot.RemoveAllItems();
+
+            GameObject droppedPrefab = null;
+            // spawn the item drop prefab for each item we are dropping
+            if (systemGameManager.GameMode == GameMode.Local) {
+                droppedPrefab = objectPooler.GetPooledObject(systemGameManager.DroppedItemPrefab, unitController.transform.position, Quaternion.identity, null);
+            } else {
+                droppedPrefab = networkManagerServer.SpawnDroppedItem(unitController.gameObject.scene, unitController.transform.position, Quaternion.identity);
+            }
+            if (droppedPrefab == null) {
+                Debug.LogWarning($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemOnGround() could not spawn dropped item prefab");
+                return;
+            }
+            Interactable _interactable = droppedPrefab.GetComponent<Interactable>();
+            if (_interactable == null) {
+                Debug.LogWarning($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemOnGround() could not find interactable component on dropped item prefab");
+                return;
+            }
+            _interactable.Configure(systemGameManager);
+            DroppedItemComponent droppedItemComponent = _interactable.GetFirstInteractableOption(typeof(DroppedItemComponent)) as DroppedItemComponent;
+            if (droppedItemComponent != null) {
+                droppedItemComponent.SetDroppedItems(itemsToDrop);
+            } else {
+                Debug.LogWarning($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemOnGround() could not find DroppedItemComponent on dropped item prefab");
+            }
+            levelManagerServer.RegisterDroppedItem(_interactable);
+            _interactable.Init();
         }
 
         public void RequestDropItemFromInventorySlot(InventorySlot fromSlot, InventorySlot toSlot, bool fromSlotIsInventory, bool toSlotIsInventory) {

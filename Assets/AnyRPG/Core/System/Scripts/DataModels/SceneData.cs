@@ -12,6 +12,7 @@ namespace AnyRPG {
         public List<Interactable> Interactables = new List<Interactable>();
         public List<UnitController> UnitControllers = new List<UnitController>();
         public List<IPersistentObjectOwner> PersistentObjectOwners = new List<IPersistentObjectOwner>();
+        public List<Interactable> DroppedItems = new List<Interactable>();
 
         // the time that this scene became empty of players
         // used for tracking instance unloading timeouts
@@ -60,6 +61,18 @@ namespace AnyRPG {
         public void UnregisterPersistentObject(IPersistentObjectOwner persistentObjectOwner) {
             if (PersistentObjectOwners.Contains(persistentObjectOwner)) {
                 PersistentObjectOwners.Remove(persistentObjectOwner);
+            }
+        }
+
+        public void RegisterDroppedItem(Interactable interactable) {
+            if (!DroppedItems.Contains(interactable)) {
+                DroppedItems.Add(interactable);
+            }
+        }
+
+        public void UnregisterDroppedItem(Interactable interactable) {
+            if (DroppedItems.Contains(interactable)) {
+                DroppedItems.Remove(interactable);
             }
         }
     }
