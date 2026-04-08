@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 0
+  itemPickupPrefabProfileName: 
   equipmentSlotType: Pauldrons
   equipmentSetName: 
-  umaRecipeProfileName: Cyan Leather Shoulders
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Cyan Leather Shoulders

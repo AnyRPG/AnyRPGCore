@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 0
+  itemPickupPrefabProfileName: Cloth Wristband
   equipmentSlotType: Bracers
   equipmentSetName: Legendary Cloth
-  umaRecipeProfileName: Yellow Cloth Bracers
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Yellow Cloth Bracers

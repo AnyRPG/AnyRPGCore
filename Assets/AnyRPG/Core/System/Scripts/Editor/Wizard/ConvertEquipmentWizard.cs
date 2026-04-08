@@ -10,7 +10,7 @@ namespace AnyRPG {
 
         public List<Equipment> equipmentList = new List<Equipment>();
 
-        //[MenuItem("Tools/AnyRPG/Wizard/Convert/Convert Equipment to 0.16")]
+        //[MenuItem("Tools/AnyRPG/Wizard/Convert/Convert equipment for dropped items")]
         public static void CreateWizard() {
             ScriptableWizard.DisplayWizard<ConvertEquipmentWizard>("New Convert Equipment Wizard", "Convert");
         }
@@ -32,25 +32,13 @@ namespace AnyRPG {
             foreach (Equipment equipment in equipmentList) {
                 i++;
                 EditorUtility.DisplayProgressBar("Convert Equipment Wizard", "Beginning Conversion...", (float)i / (float)equipmentList.Count);
-
-                // copy uma recipe profile
-                //equipment.SharedEquipmentModels = equipment.DeprecatedUmaRecipeProfileName;
-
-                // copy uma recipe profile properties
-                /*
-                if (equipment.DeprecatedUMARecipeProfileProperties.UMARecipes.Count > 0 || equipment.DeprecatedUMARecipeProfileProperties.SharedColors.Count > 0) {
-                    UMAEquipmentModel umaEquipmentModel = new UMAEquipmentModel();
-                    umaEquipmentModel.Properties = equipment.DeprecatedUMARecipeProfileProperties;
-                    equipment.InlineEquipmentModels.EquipmentModels.Add(umaEquipmentModel);
+                if (equipment == null) {
+                    continue;
                 }
-                */
-
-                // copy prefab equipment models
-                if (equipment.DeprecatedHoldableObjectList.Count > 0) {
-                    PrefabEquipmentModel prefabEquipmentModel = new PrefabEquipmentModel();
-                    prefabEquipmentModel.Properties.HoldableObjectList = equipment.DeprecatedHoldableObjectList;
-                    equipment.InlineEquipmentModels.EquipmentModels.Add(prefabEquipmentModel);
+                if (equipment.ItemPickupPrefabProfileName != string.Empty) {
+                    continue;
                 }
+                UpdateEquipment(equipment);
 
                 EditorUtility.SetDirty(equipment);
                 AssetDatabase.SaveAssets();
@@ -62,8 +50,34 @@ namespace AnyRPG {
 
         }
 
+        private void UpdateEquipment(Equipment equipment) {
+            // search inline equipment models for the first model with a valid model prefab and assign it to the dropped item pickup model prefab
+            if (equipment.InlineEquipmentModels != null) {
+                foreach (EquipmentModel equipmentModel in equipment.InlineEquipmentModels.EquipmentModels) {
+                    if (equipmentModel is PrefabEquipmentModel) {
+                        PrefabEquipmentModel prefabEquipmentModel = equipmentModel as PrefabEquipmentModel;
+                        if (prefabEquipmentModel.Properties.HoldableObjectList != null && prefabEquipmentModel.Properties.HoldableObjectList.Count > 0) {
+                            foreach (HoldableObjectAttachment attachment in prefabEquipmentModel.Properties.HoldableObjectList) {
+                                if (attachment.AttachmentNodes != null && attachment.AttachmentNodes.Count > 0) {
+                                    foreach (AttachmentNode node in attachment.AttachmentNodes) {
+                                        if (node.HoldableObjectName != string.Empty) {
+                                            equipment.ItemPickupPrefabProfileName = node.HoldableObjectName;
+                                            Debug.Log($"Updated equipment {equipment.ResourceName} with item pickup prefab profile {equipment.ItemPickupPrefabProfileName}");
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+
+                }
+            }
+        }
+
         void OnWizardUpdate() {
-            helpString = "Converts older equipment to 0.16 compatible";
+            helpString = "Converts equipment to have dropped items if the equipment has a prefab model associated with it";
 
             errorString = Validate();
             isValid = (errorString == null || errorString == "");

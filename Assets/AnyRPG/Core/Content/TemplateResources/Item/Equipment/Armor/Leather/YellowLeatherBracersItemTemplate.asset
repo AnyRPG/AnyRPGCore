@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 0
+  itemPickupPrefabProfileName: 
   equipmentSlotType: Bracers
   equipmentSetName: 
-  umaRecipeProfileName: Yellow Leather Bracers
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Yellow Leather Bracers

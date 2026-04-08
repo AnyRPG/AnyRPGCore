@@ -924,6 +924,34 @@ namespace AnyRPG {
             }
             levelManagerServer.RegisterDroppedItem(_interactable);
             _interactable.Init();
+            _interactable.DisplayName = itemsToDrop[0].DisplayName;
+
+            Rigidbody rigidbody = _interactable.GetComponent<Rigidbody>();
+            if (rigidbody != null) {
+                // 1. Reset everything
+                rigidbody.linearVelocity = Vector3.zero;
+                rigidbody.angularVelocity = Vector3.zero;
+
+                // 2. Calculate a random angle within a 45-degree arc to the left or right (-45 to 45)
+                float randomAngle = UnityEngine.Random.Range(-45f, 45f);
+
+                // 3. Rotate the player's forward vector by that random angle
+                // This ensures the spread is always relative to where the player is facing
+                Vector3 spreadDirection = Quaternion.Euler(0, randomAngle, 0) * unitController.transform.forward;
+
+                // 4. Add a smaller upward lift
+                // A 0.4f lift is enough to clear the ground without launching it too high
+                Vector3 jumpDirection = (spreadDirection + Vector3.up * 0.4f).normalized;
+
+                // 5. Set the speed for a ~1 meter landing
+                // Since we lowered the arc, a speed of ~3.2m/s is the "sweet spot" for 1m distance
+                float jumpSpeed = 3.2f;
+                rigidbody.linearVelocity = jumpDirection * jumpSpeed;
+
+                // 6. Gentle spin
+                rigidbody.angularVelocity = UnityEngine.Random.insideUnitSphere * 2f;
+            }
+
         }
 
         public void RequestDropItemFromInventorySlot(InventorySlot fromSlot, InventorySlot toSlot, bool fromSlotIsInventory, bool toSlotIsInventory) {

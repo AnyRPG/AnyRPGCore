@@ -121,6 +121,7 @@ namespace AnyRPG {
         public int BasePrice { get => basePrice; set => basePrice = value; }
         public PrefabProfile ItemPickupPrefabProfile { get => itemPickupPrefabProfile; set => itemPickupPrefabProfile = value; }
         public float Weight { get => weight; set => weight = value; }
+        public string ItemPickupPrefabProfileName { get => itemPickupPrefabProfileName; set => itemPickupPrefabProfileName = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
