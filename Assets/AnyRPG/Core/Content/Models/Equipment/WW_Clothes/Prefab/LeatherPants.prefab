@@ -61,7 +61,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 35132b68ac7c7ad49b9c4d9a511a7d6d,
         type: 3}
       propertyPath: m_Name
-      value: Pants
+      value: LeatherPants
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

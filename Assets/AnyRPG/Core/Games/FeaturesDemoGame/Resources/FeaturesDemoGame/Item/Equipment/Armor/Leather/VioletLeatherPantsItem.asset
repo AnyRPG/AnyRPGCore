@@ -35,7 +35,7 @@ MonoBehaviour:
   uniqueItem: 0
   characterClassRequirementList: []
   weight: 0
-  itemPickupPrefabProfileName: Leather Pants
+  itemPickupPrefabProfileName: Leather Pants Violet
   equipmentSlotType: Pants
   equipmentSetName: 
   deprecatedHoldableObjectList: []

@@ -35,7 +35,7 @@ MonoBehaviour:
   uniqueItem: 0
   characterClassRequirementList: []
   weight: 0
-  itemPickupPrefabProfileName: Cloth Archer Gloves
+  itemPickupPrefabProfileName: Cloth Archer Gloves Blue
   equipmentSlotType: Gloves
   equipmentSetName: 
   deprecatedHoldableObjectList: []

@@ -35,7 +35,7 @@ MonoBehaviour:
   uniqueItem: 0
   characterClassRequirementList: []
   weight: 0
-  itemPickupPrefabProfileName: Cloth Belt
+  itemPickupPrefabProfileName: Cloth Belt Yellow
   equipmentSlotType: Belt
   equipmentSetName: 
   deprecatedHoldableObjectList: []

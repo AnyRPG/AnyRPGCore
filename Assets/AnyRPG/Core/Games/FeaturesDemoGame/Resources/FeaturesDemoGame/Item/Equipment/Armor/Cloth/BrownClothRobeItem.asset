@@ -35,7 +35,7 @@ MonoBehaviour:
   uniqueItem: 0
   characterClassRequirementList: []
   weight: 0
-  itemPickupPrefabProfileName: Cloth Robe
+  itemPickupPrefabProfileName: Cloth Robe Brown
   equipmentSlotType: Armor
   equipmentSetName: 
   deprecatedHoldableObjectList: []

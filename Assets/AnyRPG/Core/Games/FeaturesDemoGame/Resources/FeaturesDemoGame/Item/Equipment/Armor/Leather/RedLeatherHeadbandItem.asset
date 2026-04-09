@@ -35,7 +35,7 @@ MonoBehaviour:
   uniqueItem: 0
   characterClassRequirementList: []
   weight: 0
-  itemPickupPrefabProfileName: Leather Headband
+  itemPickupPrefabProfileName: Leather Headband Red
   equipmentSlotType: Helm
   equipmentSetName: 
   deprecatedHoldableObjectList: []

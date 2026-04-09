@@ -35,7 +35,7 @@ MonoBehaviour:
   uniqueItem: 0
   characterClassRequirementList: []
   weight: 0
-  itemPickupPrefabProfileName: Leather Armor
+  itemPickupPrefabProfileName: Leather Armor Cyan
   equipmentSlotType: Armor
   equipmentSetName: 
   deprecatedHoldableObjectList: []

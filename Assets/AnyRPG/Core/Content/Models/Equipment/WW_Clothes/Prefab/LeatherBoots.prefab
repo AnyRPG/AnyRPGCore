@@ -61,7 +61,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: d91261a0416ebaa4fb7db9c13e3ab3ac,
         type: 3}
       propertyPath: m_Name
-      value: Boots
+      value: LeatherBoots
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
