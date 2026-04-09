@@ -191,6 +191,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -524,6 +525,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -660,6 +662,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1326,79 +1329,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &1519162689513644127
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2405585072525532260}
-  - component: {fileID: 4701348987792112631}
-  m_Layer: 5
-  m_Name: AppearanceCenterPane
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &2405585072525532260
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1519162689513644127}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 111031539096303569}
-  m_Father: {fileID: 5887363405687166825}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 75, y: 0}
-  m_SizeDelta: {x: -950, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &4701348987792112631
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1519162689513644127}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leaveLeftOption: 0
-  leftPanel: {fileID: 0}
-  leftControllers:
-  - {fileID: 178625123129176830}
-  leaveRightOption: 0
-  rightPanel: {fileID: 0}
-  rightControllers:
-  - {fileID: 880780576159345501}
-  - {fileID: 8856936885541816588}
-  - {fileID: 735184424039390267}
-  - {fileID: 6102510421033101868}
-  leaveUpOption: 0
-  upPanel: {fileID: 0}
-  upControllers: []
-  leaveDownOption: 1
-  downPanel: {fileID: 0}
-  downControllers: []
-  acceptController: {fileID: 0}
-  scrollRect: {fileID: 0}
-  updateActiveListOnOpen: 1
-  pruneInactiveElements: 1
-  navigableButtons:
-  - {fileID: 2649998222427623517}
-  - {fileID: 3763782675626566276}
 --- !u!1 &1542950071201807150
 GameObject:
   m_ObjectHideFlags: 0
@@ -1502,6 +1432,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1632,7 +1563,7 @@ MonoBehaviour:
   leaveRightOption: 0
   rightPanel: {fileID: 0}
   rightControllers:
-  - {fileID: 4701348987792112631}
+  - {fileID: 0}
   - {fileID: 880780576159345501}
   - {fileID: 8856936885541816588}
   - {fileID: 735184424039390267}
@@ -1787,7 +1718,7 @@ MonoBehaviour:
   leaveLeftOption: 0
   leftPanel: {fileID: 0}
   leftControllers:
-  - {fileID: 4701348987792112631}
+  - {fileID: 0}
   - {fileID: 178625123129176830}
   leaveRightOption: 0
   rightPanel: {fileID: 0}
@@ -2448,6 +2379,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -2812,6 +2744,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -3110,7 +3043,7 @@ MonoBehaviour:
   leaveLeftOption: 0
   leftPanel: {fileID: 0}
   leftControllers:
-  - {fileID: 4701348987792112631}
+  - {fileID: 0}
   - {fileID: 178625123129176830}
   leaveRightOption: 0
   rightPanel: {fileID: 0}
@@ -3486,6 +3419,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -3987,6 +3921,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -4123,6 +4058,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -4467,6 +4403,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -4603,6 +4540,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -4669,7 +4607,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5938460555959099483}
-  - {fileID: 2405585072525532260}
+  - {fileID: 111031539096303569}
   - {fileID: 5887363406161505773}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4708,16 +4646,16 @@ MonoBehaviour:
   focusActiveSubPanel: 0
   uINavigationControllers:
   - {fileID: 178625123129176830}
-  - {fileID: 4701348987792112631}
+  - {fileID: 7146649064149052724}
   - {fileID: 880780576159345501}
   - {fileID: 8856936885541816588}
   - {fileID: 735184424039390267}
   - {fileID: 6102510421033101868}
   subPanels: []
   hintBarController: {fileID: 0}
-  mainNoOptionsArea: {fileID: 2381497851178924570}
   canvasGroup: {fileID: 4667382650931184534}
-  genderNavigationController: {fileID: 4701348987792112631}
+  mainNoOptionsArea: {fileID: 2381497851178924570}
+  genderNavigationController: {fileID: 7146649064149052724}
   maleButton: {fileID: 2649998222427623517}
   femaleButton: {fileID: 3763782675626566276}
   mainButtonsArea: {fileID: 1602160430657085728}
@@ -4975,6 +4913,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -5199,6 +5138,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -5484,7 +5424,7 @@ MonoBehaviour:
   leaveLeftOption: 0
   leftPanel: {fileID: 0}
   leftControllers:
-  - {fileID: 4701348987792112631}
+  - {fileID: 0}
   - {fileID: 178625123129176830}
   leaveRightOption: 0
   rightPanel: {fileID: 0}
@@ -5835,6 +5775,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -6060,6 +6001,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 111031539096303569}
+  - component: {fileID: 7146649064149052724}
   m_Layer: 5
   m_Name: GenderContainer
   m_TagString: Untagged
@@ -6081,13 +6023,49 @@ RectTransform:
   m_Children:
   - {fileID: 5352457575945971907}
   - {fileID: 5176384847457106132}
-  m_Father: {fileID: 2405585072525532260}
+  m_Father: {fileID: 5887363405687166825}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 20}
+  m_AnchoredPosition: {x: 0, y: 80}
   m_SizeDelta: {x: 500, y: 64}
   m_Pivot: {x: 0.5, y: 0}
+--- !u!114 &7146649064149052724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7307575257874454335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leaveLeftOption: 0
+  leftPanel: {fileID: 0}
+  leftControllers:
+  - {fileID: 178625123129176830}
+  leaveRightOption: 0
+  rightPanel: {fileID: 0}
+  rightControllers:
+  - {fileID: 880780576159345501}
+  - {fileID: 8856936885541816588}
+  - {fileID: 735184424039390267}
+  - {fileID: 6102510421033101868}
+  leaveUpOption: 0
+  upPanel: {fileID: 0}
+  upControllers: []
+  leaveDownOption: 1
+  downPanel: {fileID: 0}
+  downControllers: []
+  acceptController: {fileID: 0}
+  scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 1
+  pruneInactiveElements: 1
+  navigableButtons:
+  - {fileID: 2649998222427623517}
+  - {fileID: 3763782675626566276}
 --- !u!1 &7377859840823049556
 GameObject:
   m_ObjectHideFlags: 0
@@ -6833,7 +6811,7 @@ MonoBehaviour:
   leaveLeftOption: 0
   leftPanel: {fileID: 0}
   leftControllers:
-  - {fileID: 4701348987792112631}
+  - {fileID: 0}
   - {fileID: 178625123129176830}
   leaveRightOption: 0
   rightPanel: {fileID: 0}
@@ -7083,6 +7061,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0

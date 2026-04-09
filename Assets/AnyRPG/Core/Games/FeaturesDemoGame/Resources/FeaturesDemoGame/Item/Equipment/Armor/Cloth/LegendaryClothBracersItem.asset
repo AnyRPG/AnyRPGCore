@@ -35,7 +35,7 @@ MonoBehaviour:
   uniqueItem: 0
   characterClassRequirementList: []
   weight: 0
-  itemPickupPrefabProfileName: Cloth Wristband
+  itemPickupPrefabProfileName: Cloth Wristbands
   equipmentSlotType: Bracers
   equipmentSetName: Legendary Cloth
   deprecatedHoldableObjectList: []

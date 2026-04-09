@@ -35,7 +35,7 @@ MonoBehaviour:
   uniqueItem: 0
   characterClassRequirementList: []
   weight: 0
-  itemPickupPrefabProfileName: 
+  itemPickupPrefabProfileName: 'Plate Belt Blue '
   equipmentSlotType: Belt
   equipmentSetName: 
   deprecatedHoldableObjectList: []

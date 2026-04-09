@@ -35,7 +35,7 @@ MonoBehaviour:
   uniqueItem: 0
   characterClassRequirementList: []
   weight: 0
-  itemPickupPrefabProfileName: 
+  itemPickupPrefabProfileName: Plate Pants
   equipmentSlotType: Pants
   equipmentSetName: Legendary Plate
   deprecatedHoldableObjectList: []

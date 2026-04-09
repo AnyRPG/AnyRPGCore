@@ -35,7 +35,7 @@ MonoBehaviour:
   uniqueItem: 0
   characterClassRequirementList: []
   weight: 0
-  itemPickupPrefabProfileName: 
+  itemPickupPrefabProfileName: Leather Pants
   equipmentSlotType: Pants
   equipmentSetName: Legendary Leather
   deprecatedHoldableObjectList: []

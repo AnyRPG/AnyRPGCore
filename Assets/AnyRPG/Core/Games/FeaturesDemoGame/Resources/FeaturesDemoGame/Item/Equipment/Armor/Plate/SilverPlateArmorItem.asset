@@ -35,7 +35,7 @@ MonoBehaviour:
   uniqueItem: 0
   characterClassRequirementList: []
   weight: 0
-  itemPickupPrefabProfileName: 
+  itemPickupPrefabProfileName: Plate Armor Silver
   equipmentSlotType: Armor
   equipmentSetName: 
   deprecatedHoldableObjectList: []

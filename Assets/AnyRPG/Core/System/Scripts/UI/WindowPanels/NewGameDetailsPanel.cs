@@ -47,9 +47,6 @@ namespace AnyRPG {
         [SerializeField]
         private NewGameDetailsRaceButton raceButton = null;
 
-        [SerializeField]
-        private GameObject playerNameNavigation = null;
-
         private NewGamePanel newGamePanel = null;
 
         private bool isResettingInputText = false;
@@ -73,9 +70,6 @@ namespace AnyRPG {
             //characterClassButton.OnInteract += OpenClassPanel;
             //classSpecializationButton.OnInteract += OpenSpecializationPanel;
 
-            if (systemConfigurationManager.EditPlayerName == false) {
-                playerNameNavigation.SetActive(false);
-            }
         }
 
         public override void SetGameManagerReferences() {
@@ -87,7 +81,6 @@ namespace AnyRPG {
 
         public void SetNewGamePanel(NewGamePanel newGamePanel) {
             this.newGamePanel = newGamePanel;
-            //parentPanel = newGamePanel;
         }
 
         public void OpenFactionPanel() {
