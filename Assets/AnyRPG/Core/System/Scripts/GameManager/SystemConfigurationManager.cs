@@ -146,6 +146,10 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(Item))]
         private List<string> defaultBankContents = new List<string>();
 
+        [Tooltip("If true, the player can drop items on the ground.  If false, they cannot drop items and must sell or destroy them to get rid of them.")]
+        [SerializeField]
+        private bool canDropItems = true;
+
         /*
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Bag))]
@@ -945,6 +949,7 @@ namespace AnyRPG {
         public Vector3 InitialIsometricVector { get => initialIsometricVector; set => initialIsometricVector = value; }
         public bool AllowFirstPersonCamera { get => allowFirstPersonCamera; set => allowFirstPersonCamera = value; }
         public List<int> ExperienceChart { get => experienceChart; set => experienceChart = value; }
+        public bool CanDropItems { get => canDropItems; set => canDropItems = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

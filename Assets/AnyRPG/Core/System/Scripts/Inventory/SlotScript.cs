@@ -516,7 +516,7 @@ namespace AnyRPG {
             if (BagPanel is BankPanel) {
                 return;
             }
-            if (inventorySlot.InstantiatedItem.Item.ItemPickupPrefabProfile != null) {
+            if (inventorySlot.InstantiatedItem.Item.ItemPickupPrefabProfile != null && systemConfigurationManager.CanDropItems == true) {
                 contextMenuPanel.EnableDropButton(true);
             }
             contextMenuPanel.EnableSplitButton(inventorySlot.InstantiatedItem.Item.MaximumStackSize > 1 && inventorySlot.InstantiatedItems.Count > 1);
