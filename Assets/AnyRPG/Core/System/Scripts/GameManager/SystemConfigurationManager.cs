@@ -150,6 +150,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool canDropItems = true;
 
+        [Tooltip("If true, any stacked items will be split when dropped.")]
+        [SerializeField]
+        private bool splitStacksOnDrop = false;
+
         /*
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Bag))]
@@ -950,6 +954,7 @@ namespace AnyRPG {
         public bool AllowFirstPersonCamera { get => allowFirstPersonCamera; set => allowFirstPersonCamera = value; }
         public List<int> ExperienceChart { get => experienceChart; set => experienceChart = value; }
         public bool CanDropItems { get => canDropItems; set => canDropItems = value; }
+        public bool SplitStacksOnDrop { get => splitStacksOnDrop; set => splitStacksOnDrop = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

@@ -872,7 +872,7 @@ namespace AnyRPG {
         }
 
         public void LoadSceneNodeData(SinglePlayerSaveData singlePlayerSaveData) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadSceneNodeData()");
+            //Debug.Log($"Savemanager.LoadSceneNodeData()");
 
             sceneNodeSaveDataDictionary.Clear();
             foreach (SceneNodeSaveData sceneNodeSaveData in singlePlayerSaveData.SceneNodeSaveData) {
@@ -883,7 +883,7 @@ namespace AnyRPG {
         }
 
         public void SaveSceneNodeData(SinglePlayerSaveData singlePlayerSaveData) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveSceneNodeData()");
+            //Debug.Log($"SaveManager.SaveSceneNodeData()");
 
             singlePlayerSaveData.SceneNodeSaveData.Clear();
             foreach (SceneNodeSaveData sceneNodeSaveData in sceneNodeSaveDataDictionary.Values) {
@@ -891,8 +891,30 @@ namespace AnyRPG {
             }
         }
 
+        public List<PersistentObjectSaveData> GetEphemeralObjects(SceneNode sceneNode) {
+            Debug.Log($"SaveManager.GetEphemeralObjects({sceneNode.ResourceName})");
+
+            if (sceneNodeSaveDataDictionary.ContainsKey(sceneNode.ResourceName) == false) {
+                Debug.Log($"SaveManager.GetEphemeralObjects({sceneNode.ResourceName}): no save data found for scene node.  Returning empty list.");
+                return new List<PersistentObjectSaveData>();
+            }
+            return GetSceneNodeSaveData(sceneNode).EphemeralObjects;
+        }
+
+        public void RemoveEphemeralObject(string UUID, SceneNode sceneNode) {
+            Debug.Log($"SaveManager.RemoveEphemeralObject({UUID}, {sceneNode.ResourceName})");
+
+            SceneNodeSaveData saveData = GetSceneNodeSaveData(sceneNode);
+            foreach (PersistentObjectSaveData _persistentObjectSaveData in saveData.EphemeralObjects) {
+                if (_persistentObjectSaveData.UUID == UUID) {
+                    saveData.EphemeralObjects.Remove(_persistentObjectSaveData);
+                    break;
+                }
+            }
+            SaveSceneNodeSaveData(saveData);
+        }
+
         public void SavePersistentObject(string UUID, PersistentObjectSaveData persistentObjectSaveData, SceneNode sceneNode) {
-            //Debug.Log(DisplayName + ".SceneNode.SavePersistentObject(" + UUID + ")");
 
             SceneNodeSaveData saveData = GetSceneNodeSaveData(sceneNode);
             foreach (PersistentObjectSaveData _persistentObjectSaveData in saveData.PersistentObjects) {
@@ -905,8 +927,32 @@ namespace AnyRPG {
             SaveSceneNodeSaveData(saveData);
         }
 
+        public void SaveEphemeralObject(string UUID, PersistentObjectSaveData persistentObjectSaveData, SceneNode sceneNode) {
+            Debug.Log($"SaveManager.SaveEphemeralObject({UUID})");
+
+            SceneNodeSaveData saveData = GetSceneNodeSaveData(sceneNode);
+            foreach (PersistentObjectSaveData _persistentObjectSaveData in saveData.EphemeralObjects) {
+                if (_persistentObjectSaveData.UUID == UUID) {
+                    saveData.EphemeralObjects.Remove(_persistentObjectSaveData);
+                    break;
+                }
+            }
+            saveData.EphemeralObjects.Add(persistentObjectSaveData);
+            SaveSceneNodeSaveData(saveData);
+        }
+
+
         public PersistentObjectSaveData GetPersistentObject(string UUID, SceneNode sceneNode) {
             foreach (PersistentObjectSaveData _persistentObjectSaveData in GetSceneNodeSaveData(sceneNode).PersistentObjects) {
+                if (_persistentObjectSaveData.UUID == UUID) {
+                    return _persistentObjectSaveData;
+                }
+            }
+            return new PersistentObjectSaveData();
+        }
+
+        public PersistentObjectSaveData GetEphemeralObject(string UUID, SceneNode sceneNode) {
+            foreach (PersistentObjectSaveData _persistentObjectSaveData in GetSceneNodeSaveData(sceneNode).EphemeralObjects) {
                 if (_persistentObjectSaveData.UUID == UUID) {
                     return _persistentObjectSaveData;
                 }

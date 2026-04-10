@@ -7,10 +7,10 @@ using UnityEngine.SceneManagement;
 namespace AnyRPG {
     public class LevelManagerServer : ConfiguredClass {
 
-        public event System.Action<int, string> OnRemoveLoadedScene = delegate { };
-        public event System.Action<int, SceneData> OnAddLoadedScene = delegate { };
-        public event System.Action<int, int> OnSetSceneClientCount = delegate { };
-        public event System.Action<int, string> OnBeforeStartUnloadScene = delegate { };
+        public event Action<int, string> OnRemoveLoadedScene = delegate { };
+        public event Action<int, SceneData> OnAddLoadedScene = delegate { };
+        public event Action<int, int> OnSetSceneClientCount = delegate { };
+        public event Action<int, string> OnBeforeStartUnloadScene = delegate { };
 
         // dictionary of loaded scenes, where the key is the scene name and the value is a list of scene handles
         private Dictionary<string, Dictionary<int, SceneData>> loadedScenes = new Dictionary<string, Dictionary<int, SceneData>>();
@@ -26,6 +26,8 @@ namespace AnyRPG {
         private CameraManager cameraManager = null;
         private SceneUtilityService sceneUtilityService = null;
         private SystemEventManager systemEventManager = null;
+        private SaveManager saveManager = null;
+        private ObjectPooler objectPooler = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -41,6 +43,8 @@ namespace AnyRPG {
             cameraManager = systemGameManager.CameraManager;
             sceneUtilityService = systemGameManager.SceneUtilityService;
             systemEventManager = systemGameManager.SystemEventManager;
+            saveManager = systemGameManager.SaveManager;
+            objectPooler = systemGameManager.ObjectPooler;
         }
 
         private void HandlePlayerUnitSpawn(UnitController sourceUnitController) {
@@ -179,7 +183,43 @@ namespace AnyRPG {
 
             systemGameManager.AutoConfigureMonoBehaviours(scene);
 
+            if (systemGameManager.GameMode == GameMode.Local) {
+                SpawnEphemeralObjects(scene);
+            }
+
             OnAddLoadedScene(scene.handle, sceneData);
+        }
+
+        private void SpawnEphemeralObjects(Scene scene) {
+            Debug.Log($"LevelManagerServer.SpawnEphemeralObjects(scene: {scene.name})");
+
+            SceneNode sceneNode = sceneUtilityService.GetSceneNodeBySceneName(scene.name);
+            List <PersistentObjectSaveData> ephemeralObjects = new List<PersistentObjectSaveData>(saveManager.GetEphemeralObjects(sceneNode));
+            foreach (PersistentObjectSaveData persistentObjectSaveData in ephemeralObjects) {
+                Debug.Log($"LevelManagerServer.SpawnEphemeralObjects() - spawning dropped item with UUID {persistentObjectSaveData.UUID} at location ({persistentObjectSaveData.LocationX}, {persistentObjectSaveData.LocationY}, {persistentObjectSaveData.LocationZ})");
+                GameObject droppedPrefab = objectPooler.GetPooledObject(systemGameManager.DroppedItemPrefab,
+                    new Vector3(persistentObjectSaveData.LocationX, persistentObjectSaveData.LocationY, persistentObjectSaveData.LocationZ),
+                    new Quaternion(persistentObjectSaveData.RotationX, persistentObjectSaveData.RotationY, persistentObjectSaveData.RotationZ, persistentObjectSaveData.RotationW),
+                    null);
+                if (droppedPrefab == null) {
+                    Debug.LogWarning($"LevelManagerServer.SpawnEphemeralObjects() could not spawn dropped item prefab");
+                    return;
+                }
+                UUID uuidComponent = droppedPrefab.GetComponent<UUID>();
+                if (uuidComponent == null) {
+                    Debug.LogWarning($"LevelManagerServer.SpawnEphemeralObjects() could not find UUID component on dropped item prefab");
+                    return;
+                }
+                uuidComponent.ID = persistentObjectSaveData.UUID;
+                Interactable _interactable = droppedPrefab.GetComponent<Interactable>();
+                if (_interactable == null) {
+                    Debug.LogWarning($"LevelManagerServer.SpawnEphemeralObjects() could not find interactable component on dropped item prefab");
+                    return;
+                }
+                _interactable.Configure(systemGameManager);
+                RegisterDroppedItem(_interactable);
+                _interactable.Init();
+            }
         }
 
         public void RemoveLoadedScene(int sceneHandle, string sceneName) {
@@ -253,7 +293,7 @@ namespace AnyRPG {
                 foreach (Interactable interactable in interactables) {
                     if (interactable != null) {
                         if (systemGameManager.GameMode == GameMode.Local) {
-                            interactable.PersistentObjectComponent.ProcessBeforeUnloadScene();
+                            interactable.PersistentObjectComponent.ProcessBeforeUnloadScene(false);
                         }
                         interactable.ResetSettings();
                     }
@@ -262,7 +302,7 @@ namespace AnyRPG {
                 foreach (Interactable interactable in droppedItems) {
                     if (interactable != null) {
                         if (systemGameManager.GameMode == GameMode.Local) {
-                            interactable.PersistentObjectComponent.ProcessBeforeUnloadScene();
+                            interactable.PersistentObjectComponent.ProcessBeforeUnloadScene(false);
                         }
                         interactable.ResetSettings();
                     }
@@ -271,7 +311,7 @@ namespace AnyRPG {
                 foreach (UnitController unitController in unitControllers) {
                     if (unitController != null) {
                         if (systemGameManager.GameMode == GameMode.Local) {
-                            unitController.PersistentObjectComponent.ProcessBeforeUnloadScene();
+                            unitController.PersistentObjectComponent.ProcessBeforeUnloadScene(false);
                         }
                         unitController.Despawn(0f, false, true);
                     }
@@ -280,7 +320,14 @@ namespace AnyRPG {
                     List<IPersistentObjectOwner> persistentObjectOwners = new List<IPersistentObjectOwner>(sceneData.PersistentObjectOwners);
                     foreach (IPersistentObjectOwner persistentObjectOwner in persistentObjectOwners) {
                         if (persistentObjectOwner != null && persistentObjectOwner.PersistentObjectComponent.SaveOnLevelUnload == true) {
-                            persistentObjectOwner.PersistentObjectComponent.ProcessBeforeUnloadScene();
+                            persistentObjectOwner.PersistentObjectComponent.ProcessBeforeUnloadScene(false);
+                        }
+                    }
+
+                    List<IPersistentObjectOwner> ephemeralObjectOwners = new List<IPersistentObjectOwner>(sceneData.DroppedItems);
+                    foreach (IPersistentObjectOwner ephemeralObjectOwner in ephemeralObjectOwners) {
+                        if (ephemeralObjectOwner != null && ephemeralObjectOwner.PersistentObjectComponent.SaveOnLevelUnload == true) {
+                            ephemeralObjectOwner.PersistentObjectComponent.ProcessBeforeUnloadScene(true);
                         }
                     }
                 }
@@ -290,6 +337,8 @@ namespace AnyRPG {
         }
 
         public void SavePersistentObjects(Scene scene) {
+            Debug.Log($"LevelManagerServer.SavePersistentObjects({scene.name} ({scene.handle}))");
+
             if (systemGameManager.GameMode != GameMode.Local) {
                 return;
             }
@@ -298,22 +347,30 @@ namespace AnyRPG {
             if (sceneData != null) {
                 foreach (Interactable interactable in sceneData.Interactables) {
                     if (interactable != null && interactable.PersistentObjectComponent.SaveOnGameSave == true) {
-                        interactable.PersistentObjectComponent.ProcessSaveGame();
+                        interactable.PersistentObjectComponent.ProcessSaveGame(false);
                     }
                 }
                 List<UnitController> unitControllers = new List<UnitController>(sceneData.UnitControllers);
                 foreach (UnitController unitController in unitControllers) {
                     if (unitController != null && unitController.UnitControllerMode == UnitControllerMode.AI && unitController.PersistentObjectComponent.SaveOnGameSave == true) {
-                        unitController.PersistentObjectComponent.ProcessSaveGame();
+                        unitController.PersistentObjectComponent.ProcessSaveGame(false);
                     }
                 }
                 if (systemGameManager.GameMode == GameMode.Local) {
                     List<IPersistentObjectOwner> persistentObjectOwners = new List<IPersistentObjectOwner>(sceneData.PersistentObjectOwners);
                     foreach (IPersistentObjectOwner persistentObjectOwner in persistentObjectOwners) {
                         if (persistentObjectOwner != null && persistentObjectOwner.PersistentObjectComponent.SaveOnGameSave == true) {
-                            persistentObjectOwner.PersistentObjectComponent.ProcessSaveGame();
+                            persistentObjectOwner.PersistentObjectComponent.ProcessSaveGame(false);
                         }
                     }
+
+                    List<IPersistentObjectOwner> ephemeralObjectOwners = new List<IPersistentObjectOwner>(sceneData.DroppedItems);
+                    foreach (IPersistentObjectOwner ephemeralObjectOwner in ephemeralObjectOwners) {
+                        if (ephemeralObjectOwner != null && ephemeralObjectOwner.PersistentObjectComponent.SaveOnGameSave == true) {
+                            ephemeralObjectOwner.PersistentObjectComponent.ProcessSaveGame(true);
+                        }
+                    }
+
                 }
             }
         }
@@ -410,6 +467,8 @@ namespace AnyRPG {
         }
 
         public void UnregisterDroppedItem(Interactable interactable) {
+            Debug.Log($"LevelManagerServer.UnregisterDroppedItem({interactable.gameObject.name})");
+
             Scene scene = interactable.gameObject.scene;
             if (loadedScenes.ContainsKey(scene.name) == false) {
                 return;

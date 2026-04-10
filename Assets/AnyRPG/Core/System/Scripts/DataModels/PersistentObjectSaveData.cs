@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace AnyRPG {
     
@@ -11,9 +9,10 @@ namespace AnyRPG {
         public float LocationX;
         public float LocationY;
         public float LocationZ;
-        public float DirectionX;
-        public float DirectionY;
-        public float DirectionZ;
+        public float RotationX;
+        public float RotationY;
+        public float RotationZ;
+        public float RotationW;
 
         //public CharacterSaveData CharacterSaveData = null;
         public InteractableSaveData InteractableSaveData = null;

@@ -100,6 +100,7 @@ namespace AnyRPG {
         public string SceneResourceName;
 
         public List<PersistentObjectSaveData> PersistentObjects = new List<PersistentObjectSaveData>();
+        public List<PersistentObjectSaveData> EphemeralObjects = new List<PersistentObjectSaveData>();
     }
 
     [Serializable]

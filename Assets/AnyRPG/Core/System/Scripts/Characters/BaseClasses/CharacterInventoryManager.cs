@@ -899,6 +899,20 @@ namespace AnyRPG {
             }
             inventorySlot.RemoveAllItems();
 
+            if (systemConfigurationManager.SplitStacksOnDrop == true) {
+                foreach (InstantiatedItem instantiatedItem in itemsToDrop) {
+                    List<InstantiatedItem> singleItemList = new List<InstantiatedItem>();
+                    singleItemList.Add(instantiatedItem);
+                    DropItemsOnGround(singleItemList);
+                }
+            } else {
+                DropItemsOnGround(itemsToDrop);
+            }
+        }
+
+        private void DropItemsOnGround(List<InstantiatedItem> itemsToDrop) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemsOnGround(count: {itemsToDrop.Count})");
+
             GameObject droppedPrefab = null;
             // spawn the item drop prefab for each item we are dropping
             if (systemGameManager.GameMode == GameMode.Local) {
@@ -910,12 +924,19 @@ namespace AnyRPG {
                 Debug.LogWarning($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemOnGround() could not spawn dropped item prefab");
                 return;
             }
+
+            UUID uuidComponent = droppedPrefab.GetComponent<UUID>();
+            if (uuidComponent != null) {
+                // generate a new uuid for this dropped item so it doesn't conflict with the UUID of the prefab it was spawned from
+                uuidComponent.ForceUpdateUUID = true;
+            }
             Interactable _interactable = droppedPrefab.GetComponent<Interactable>();
             if (_interactable == null) {
                 Debug.LogWarning($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemOnGround() could not find interactable component on dropped item prefab");
                 return;
             }
             _interactable.Configure(systemGameManager);
+            _interactable.PersistentObjectComponent.MoveOnStart = false;
             DroppedItemComponent droppedItemComponent = _interactable.GetFirstInteractableOption(typeof(DroppedItemComponent)) as DroppedItemComponent;
             if (droppedItemComponent != null) {
                 droppedItemComponent.SetDroppedItems(itemsToDrop);
@@ -924,11 +945,12 @@ namespace AnyRPG {
             }
             levelManagerServer.RegisterDroppedItem(_interactable);
             _interactable.Init();
-            _interactable.DisplayName = itemsToDrop[0].DisplayName;
 
             Rigidbody rigidbody = _interactable.GetComponent<Rigidbody>();
             if (rigidbody != null) {
                 // 1. Reset everything
+                // move the object up by half the character height so it doesn't drop through the ground, and then reset velocity so it doesn't inherit the player's momentum
+                rigidbody.position += Vector3.up * (unitController.Collider.bounds.extents.y);
                 rigidbody.linearVelocity = Vector3.zero;
                 rigidbody.angularVelocity = Vector3.zero;
 
@@ -938,10 +960,12 @@ namespace AnyRPG {
                 // 3. Rotate the player's forward vector by that random angle
                 // This ensures the spread is always relative to where the player is facing
                 Vector3 spreadDirection = Quaternion.Euler(0, randomAngle, 0) * unitController.transform.forward;
+                //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemOnGround() randomAngle: {randomAngle}, spreadDirection: {spreadDirection} forward: {unitController.transform.forward}");
 
                 // 4. Add a smaller upward lift
                 // A 0.4f lift is enough to clear the ground without launching it too high
                 Vector3 jumpDirection = (spreadDirection + Vector3.up * 0.4f).normalized;
+                //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemOnGround() jumpDirection: {jumpDirection}");
 
                 // 5. Set the speed for a ~1 meter landing
                 // Since we lowered the arc, a speed of ~3.2m/s is the "sweet spot" for 1m distance

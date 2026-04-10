@@ -7256,6 +7256,8 @@ MonoBehaviour:
   maxBankBags: 8
   defaultBackpackItem: 
   defaultBankContents: []
+  canDropItems: 1
+  splitStacksOnDrop: 1
   cameraViewMode: 0
   initialIsometricVector: {x: -4, y: 4, z: -4}
   allowFirstPersonCamera: 0

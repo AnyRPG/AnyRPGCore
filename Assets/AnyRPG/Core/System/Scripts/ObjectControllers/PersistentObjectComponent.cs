@@ -23,7 +23,7 @@ namespace AnyRPG {
 
         private Vector3 storedPosition;
 
-        private Vector3 storedForwardDirection;
+        private Quaternion storedRotation;
 
         private string storedUUID;
 
@@ -34,6 +34,7 @@ namespace AnyRPG {
         // game manager references
         protected LevelManagerClient levelManagerClient = null;
         protected SystemEventManager systemEventManager = null;
+        protected SaveManager saveManager = null;
 
         public bool MoveOnStart { get => moveOnStart; set => moveOnStart = value; }
         public bool PersistObjectPosition { get => persistObjectPosition; set => persistObjectPosition = value; }
@@ -47,6 +48,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             levelManagerClient = systemGameManager.LevelManagerClient;
             systemEventManager = systemGameManager.SystemEventManager;
+            saveManager = systemGameManager.SaveManager;
         }
 
         public void Setup(IPersistentObjectOwner persistentObjectOwner, SystemGameManager systemGameManager) {
@@ -56,7 +58,7 @@ namespace AnyRPG {
         }
 
         public void Init() {
-            //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.Init() UUID is {persistentObjectOwner.UUID.ID}");
+            Debug.Log($"{persistentObjectOwner.gameObject.name}.Init() UUID is {persistentObjectOwner.UUID.ID}");
 
             if (persistObjectPosition == false) {
                 return;
@@ -65,6 +67,7 @@ namespace AnyRPG {
             if (networkManagerServer.ServerModeActive == true) {
                 return;
             }
+
             if (moveOnStart == true) {
                 LoadPersistentState();
             }
@@ -72,60 +75,74 @@ namespace AnyRPG {
 
         public PersistentObjectSaveData GetPersistentObjectSaveData() {
             //Debug.Log(persistentObjectOwner.gameObject.name + "PersistentObjectComponent.GetPersistentState()");
-            if (persistentObjectOwner.UUID != null) {
-                if (levelManagerClient != null) {
-                    SceneNode activeSceneNode = levelManagerClient.GetActiveSceneNode();
-                    if (activeSceneNode != null && activeSceneNode.PersistentObjects != null) {
-                        PersistentObjectSaveData persistentObjectSaveData = activeSceneNode.GetPersistentObjectSaveData(persistentObjectOwner.UUID.ID);
-                        if (persistentObjectSaveData != null) {
-                            storedUUID = persistentObjectSaveData.UUID;
-                            storedPosition = new Vector3(persistentObjectSaveData.LocationX, persistentObjectSaveData.LocationY, persistentObjectSaveData.LocationZ);
-                            storedForwardDirection = new Vector3(persistentObjectSaveData.DirectionX, persistentObjectSaveData.DirectionY, persistentObjectSaveData.DirectionZ);
-                            PersistentState persistentState = new PersistentState();
-                            persistentState.Position = storedPosition;
-                            persistentState.Forward = storedForwardDirection;
-                            return persistentObjectSaveData;
-                        }
-                    }
+            if (persistentObjectOwner.UUID == null) {
+                return null;
+            }
+            SceneNode activeSceneNode = levelManagerClient.GetActiveSceneNode();
+            if (activeSceneNode == null) {
+                return null;
+            }
+            PersistentObjectSaveData persistentObjectSaveData = saveManager.GetEphemeralObject(persistentObjectOwner.UUID.ID, activeSceneNode);
+            if (persistentObjectSaveData == null) {
+                persistentObjectSaveData = saveManager.GetPersistentObject(persistentObjectOwner.UUID.ID, activeSceneNode);
+            }
+            if (persistentObjectSaveData != null) {
+                storedUUID = persistentObjectSaveData.UUID;
+                storedPosition = new Vector3(persistentObjectSaveData.LocationX, persistentObjectSaveData.LocationY, persistentObjectSaveData.LocationZ);
+                storedRotation = new Quaternion(persistentObjectSaveData.RotationX, persistentObjectSaveData.RotationY, persistentObjectSaveData.RotationZ, persistentObjectSaveData.RotationW).normalized;
+                Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.GetPersistentObjectSaveData() found persistent object save data for UUID {persistentObjectOwner.UUID.ID} with position {storedPosition} and rotation {storedRotation}");
+                if (storedRotation.x == 0 && storedRotation.y == 0 && storedRotation.z == 0 && storedRotation.w == 0) {
+                    Debug.LogWarning($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.GetPersistentObjectSaveData() found persistent object save data for UUID {persistentObjectOwner.UUID.ID} with invalid rotation {storedRotation}.  Setting to identity.");
+                    storedRotation = Quaternion.identity;
                 }
+                return persistentObjectSaveData;
             }
             return null;
         }
 
         public void LoadPersistentState() {
-            //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObject.LoadPersistentState()");
+            Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.LoadPersistentState()");
 
             PersistentObjectSaveData persistentObjectSaveData = GetPersistentObjectSaveData();
             if (persistentObjectSaveData == null) {
                 return;
             }
-            if (persistObjectPosition == true) {
-                //Debug.Log($"{(persistentObjectOwner as MonoBehaviour).gameObject.name}.PersistentObject.LoadPersistentState() setting transform.position on UUID {persistentObjectOwner.UUID.ID}");
-                persistentObjectOwner.transform.position = storedPosition;
-                if (storedForwardDirection != Vector3.zero) {
-                    persistentObjectOwner.transform.forward = storedForwardDirection;
+            if (persistObjectPosition == true && moveOnStart == true) {
+                Rigidbody rb = persistentObjectOwner.gameObject.GetComponent<Rigidbody>();
+                if (rb != null) {
+                    Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.LoadPersistentState() setting rigidbody position on UUID {persistentObjectOwner.UUID.ID} to {storedPosition} and rotation to {storedRotation}");
+                    rb.position = storedPosition;
+                    rb.rotation = storedRotation;
+                } else {
+                    Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.LoadPersistentState() setting transform.position on UUID {persistentObjectOwner.UUID.ID} to {storedPosition} and rotation to {storedRotation}");
+                    persistentObjectOwner.transform.position = storedPosition;
+                    //if (storedRotation != Quaternion.identity) {
+                    persistentObjectOwner.transform.rotation = storedRotation;
+                    //}
                 }
+            } else {
+                Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.LoadPersistentState() NOT setting transform.position on UUID {persistentObjectOwner.UUID.ID} because persistObjectPosition is {persistObjectPosition} and moveOnStart is {moveOnStart}");
             }
             persistentObjectOwner.LoadPersistentObjectSaveData(persistentObjectSaveData);
         }
 
-        public void ProcessBeforeUnloadScene() {
+        public void ProcessBeforeUnloadScene(bool ephemeral) {
             //Debug.Log($"PersistentObjectComponent.HandleLevelUnload(sceneHandle: {sceneHandle}, sceneName: {sceneName}) hashcode: {GetHashCode()}");
             if (saveOnLevelUnload == true) {
-                SaveProperties();
+                SaveProperties(ephemeral);
             }
         }
 
-        public void ProcessSaveGame() {
-            //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.ProcessSaveGame()");
+        public void ProcessSaveGame(bool ephemeral) {
+            Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.ProcessSaveGame()");
 
             if (saveOnGameSave == true) {
-                SaveProperties();
+                SaveProperties(ephemeral);
             }
         }
 
-        public void SaveProperties() {
-            //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties()");
+        public void SaveProperties(bool ephemeral) {
+            Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties({ephemeral})");
 
             // since all units automatically have this component, give it a chance to not save based on configuration
             if (systemGameManager.GameMode == GameMode.Network) {
@@ -134,7 +151,7 @@ namespace AnyRPG {
 
             //Debug.Log($"{gameObject.name}PersistentObject.SaveProperties()");
             storedPosition = persistentObjectOwner.transform.position;
-            storedForwardDirection = persistentObjectOwner.transform.forward;
+            storedRotation = persistentObjectOwner.transform.rotation;
             if (persistentObjectOwner.UUID != null) {
                 storedUUID = persistentObjectOwner.UUID.ID;
                 //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties() UUID: {persistentObjectOwner.UUID.ID}");
@@ -145,7 +162,11 @@ namespace AnyRPG {
                 SceneNode currentSceneNode = levelManagerClient.GetActiveSceneNode();
                 if (currentSceneNode != null) {
                     //currentSceneNode.PersistentObjects[storedUUID] = MakeSaveData();
-                    currentSceneNode.SavePersistentObject(storedUUID, MakeSaveData());
+                    if (ephemeral == true) {
+                        currentSceneNode.SaveEphemeralObject(storedUUID, MakeSaveData());
+                    } else {
+                        currentSceneNode.SavePersistentObject(storedUUID, MakeSaveData());
+                    }
                 }
             }
         }
@@ -158,9 +179,10 @@ namespace AnyRPG {
             returnValue.LocationX = storedPosition.x;
             returnValue.LocationY = storedPosition.y;
             returnValue.LocationZ = storedPosition.z;
-            returnValue.DirectionX = storedForwardDirection.x;
-            returnValue.DirectionY = storedForwardDirection.y;
-            returnValue.DirectionZ = storedForwardDirection.z;
+            returnValue.RotationX = storedRotation.x;
+            returnValue.RotationY = storedRotation.y;
+            returnValue.RotationZ = storedRotation.z;
+            returnValue.RotationW = storedRotation.w;
 
             persistentObjectOwner.PopulatePersistentObjectSaveData(returnValue);
 
@@ -170,7 +192,7 @@ namespace AnyRPG {
 
     public class PersistentState {
         public Vector3 Position;
-        public Vector3 Forward;
+        public Quaternion Rotation;
     }
 }
 

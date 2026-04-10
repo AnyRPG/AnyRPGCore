@@ -239,11 +239,6 @@ namespace AnyRPG {
             }
         }
 
-        public List<PersistentObjectSaveData> PersistentObjects {
-            get {
-                return saveManager.GetPersistentObjects(this);
-            }
-        }
         public List<EnvironmentStateProfile> EnvironmentStates { get => environmentStates; set => environmentStates = value; }
         public Cutscene AutoPlayCutscene { get => autoPlayCutscene; set => autoPlayCutscene = value; }
 
@@ -288,8 +283,12 @@ namespace AnyRPG {
         }
 
         public void SavePersistentObject(string UUID, PersistentObjectSaveData persistentObjectSaveData) {
-            //Debug.Log(DisplayName + ".SceneNode.SavePersistentObject(" + UUID + ")");
             saveManager.SavePersistentObject(UUID, persistentObjectSaveData, this);
+        }
+
+        public void SaveEphemeralObject(string UUID, PersistentObjectSaveData persistentObjectSaveData) {
+            Debug.Log($"SceneNode.SaveEphemeralObject({UUID})");
+            saveManager.SaveEphemeralObject(UUID, persistentObjectSaveData, this);
         }
 
         public PersistentObjectSaveData GetPersistentObjectSaveData(string UUID) {

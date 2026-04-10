@@ -374,7 +374,7 @@ namespace AnyRPG {
             //}
             CheckEnableInteractableRange();
 
-            persistentObjectComponent.Init();
+            //persistentObjectComponent.Init();
         }
 
         protected virtual void CheckEnableInteractableRange() {
@@ -1269,6 +1269,7 @@ namespace AnyRPG {
                 return;
             }
             persistentObjectSaveData.InteractableSaveData = GetInteractableSaveData();
+            persistentObjectSaveData.InteractableSaveData.BundleItems(systemItemManager);
         }
 
         public virtual void LoadPersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {

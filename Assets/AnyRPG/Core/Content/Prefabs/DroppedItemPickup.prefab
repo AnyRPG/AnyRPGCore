@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 245425560069984829}
   - component: {fileID: 1832758616663655866}
   - component: {fileID: -1382305404238983587}
-  m_Layer: 25
+  - component: {fileID: 5009206862445062809}
+  m_Layer: 26
   m_Name: DroppedItemPickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,10 +47,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 33554433
+    m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 2180909374
+    m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -132,6 +133,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
+--- !u!114 &5009206862445062809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502565618688254078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
+  m_UUID: 3b51730d-03ae-4b4a-b1a5-37e25e1789be
+  forceUpdateUUID: 0
 --- !u!1001 &7160217055860307744
 PrefabInstance:
   m_ObjectHideFlags: 0
