@@ -213,9 +213,9 @@ namespace AnyRPG {
                     Debug.LogWarning($"LevelManagerServer.SpawnEphemeralObjects() could not find UUID component on dropped item prefab");
                     return;
                 }
-                Debug.Log($"LevelManagerServer.SpawnEphemeralObjects() UUID BEFORE: {uuidComponent.ID}");
+                //Debug.Log($"LevelManagerServer.SpawnEphemeralObjects() UUID BEFORE: {uuidComponent.ID}");
                 uuidComponent.ID = persistentObjectSaveData.UUID;
-                Debug.Log($"LevelManagerServer.SpawnEphemeralObjects() UUID AFTER: {uuidComponent.ID}");
+                //Debug.Log($"LevelManagerServer.SpawnEphemeralObjects() UUID AFTER: {uuidComponent.ID}");
                 Interactable _interactable = droppedPrefab.GetComponent<Interactable>();
                 if (_interactable == null) {
                     Debug.LogWarning($"LevelManagerServer.SpawnEphemeralObjects() could not find interactable component on dropped item prefab");

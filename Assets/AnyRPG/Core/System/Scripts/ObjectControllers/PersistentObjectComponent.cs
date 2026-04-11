@@ -75,6 +75,7 @@ namespace AnyRPG {
 
         public PersistentObjectSaveData GetPersistentObjectSaveData() {
             //Debug.Log(persistentObjectOwner.gameObject.name + "PersistentObjectComponent.GetPersistentState()");
+
             if (persistentObjectOwner.UUID == null) {
                 return null;
             }
@@ -90,7 +91,7 @@ namespace AnyRPG {
                 storedUUID = persistentObjectSaveData.UUID;
                 storedPosition = new Vector3(persistentObjectSaveData.LocationX, persistentObjectSaveData.LocationY, persistentObjectSaveData.LocationZ);
                 storedRotation = new Quaternion(persistentObjectSaveData.RotationX, persistentObjectSaveData.RotationY, persistentObjectSaveData.RotationZ, persistentObjectSaveData.RotationW).normalized;
-                Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.GetPersistentObjectSaveData() found persistent object save data for UUID {persistentObjectOwner.UUID.ID} with position {storedPosition} and rotation {storedRotation}");
+                //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.GetPersistentObjectSaveData() found persistent object save data for UUID {persistentObjectOwner.UUID.ID} with position {storedPosition} and rotation {storedRotation}");
                 if (storedRotation.x == 0 && storedRotation.y == 0 && storedRotation.z == 0 && storedRotation.w == 0) {
                     Debug.LogWarning($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.GetPersistentObjectSaveData() found persistent object save data for UUID {persistentObjectOwner.UUID.ID} with invalid rotation {storedRotation}.  Setting to identity.");
                     storedRotation = Quaternion.identity;
@@ -101,7 +102,7 @@ namespace AnyRPG {
         }
 
         public void LoadPersistentState() {
-            Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.LoadPersistentState()");
+            //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.LoadPersistentState()");
 
             PersistentObjectSaveData persistentObjectSaveData = GetPersistentObjectSaveData();
             if (persistentObjectSaveData == null) {
@@ -110,11 +111,11 @@ namespace AnyRPG {
             if (persistObjectPosition == true && moveOnStart == true) {
                 Rigidbody rb = persistentObjectOwner.gameObject.GetComponent<Rigidbody>();
                 if (rb != null) {
-                    Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.LoadPersistentState() setting rigidbody position on UUID {persistentObjectOwner.UUID.ID} to {storedPosition} and rotation to {storedRotation}");
+                    //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.LoadPersistentState() setting rigidbody position on UUID {persistentObjectOwner.UUID.ID} to {storedPosition} and rotation to {storedRotation}");
                     rb.position = storedPosition;
                     rb.rotation = storedRotation;
                 } else {
-                    Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.LoadPersistentState() setting transform.position on UUID {persistentObjectOwner.UUID.ID} to {storedPosition} and rotation to {storedRotation}");
+                    //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.LoadPersistentState() setting transform.position on UUID {persistentObjectOwner.UUID.ID} to {storedPosition} and rotation to {storedRotation}");
                     persistentObjectOwner.transform.position = storedPosition;
                     //if (storedRotation != Quaternion.identity) {
                     persistentObjectOwner.transform.rotation = storedRotation;

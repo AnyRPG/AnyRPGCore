@@ -812,7 +812,7 @@ namespace AnyRPG {
                 // IT HAS TO BE THIS WAY BECAUSE THE MOUSEOVER WINDOW IS A GAMEOBJECT AND WE NEED TO BE ABLE TO GLOW WHEN A WINDOW IS NOT UP AND WE ARE OVER IT
                 // THIS COULD BE POTENTIALLY FIXED BY BLOCKING MOUSEOVER THE SAME WAY WE BLOCK DRAG IN THE UIMANAGER BY RESTRICTING ON MOUSEENTER ON ANY CLOSEABLEWINDOW IF IT'S TOO DISTRACTING
                 // ANOTHER WAY WOULD BE DETECT NAMEPLATE UNDER MOUSE IN PLAYERCONTROLLER AND REMOVE THE AUTOMATIC MOUSEOVER RECEIVERS FROM ALL INTERACTABLES AND NAMEPLATES
-                Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): should not activate mouseover when windows are in front of things");
+                //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): should not activate mouseover when windows are in front of things");
                 return;
             }
 
@@ -1262,7 +1262,7 @@ namespace AnyRPG {
         }
 
         public void LoadInteractableSaveData(InteractableSaveData interactableSaveData) {
-            Debug.Log($"{gameObject.name}.Interactable.LoadInteractableSaveData()");
+            //Debug.Log($"{gameObject.name}.Interactable.LoadInteractableSaveData()");
 
             _interactableSaveData = interactableSaveData;
             systemItemManager.LoadItemInstanceListSaveData(interactableSaveData.ItemInstanceListSaveData);
@@ -1282,7 +1282,7 @@ namespace AnyRPG {
         }
 
         public virtual void LoadPersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {
-            Debug.Log($"{gameObject.name}.Interactable.LoadPersistentObjectSaveData()");
+            //Debug.Log($"{gameObject.name}.Interactable.LoadPersistentObjectSaveData()");
 
             if (persistInteractableData == false) {
                 //Debug.LogWarning($"{gameObject.name}.Interactable.LoadPersistentObjectSaveData(): persistInteractableData is false, skipping loading interactable data.");

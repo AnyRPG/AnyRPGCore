@@ -183,17 +183,17 @@ namespace AnyRPG {
         }
 
         public override void LoadFromSaveData(InteractableSaveData interactableSaveData) {
-            Debug.Log($"{interactable.gameObject.name}.MoveableObjectComponent.LoadFromSaveData()");
+            //Debug.Log($"{interactable.gameObject.name}.MoveableObjectComponent.LoadFromSaveData()");
             base.LoadFromSaveData(interactableSaveData);
             if (interactableSaveData.MoveableObjectSaveData.Count > 0) {
-                Debug.Log($"{interactable.gameObject.name}.MoveableObjectComponent.LoadFromSaveData(): moveableObjectSaveData found, loading data");
+                //Debug.Log($"{interactable.gameObject.name}.MoveableObjectComponent.LoadFromSaveData(): moveableObjectSaveData found, loading data");
                 MoveableObjectSaveData moveableObjectSaveData = interactableSaveData.MoveableObjectSaveData[0];
                 objectOpen = moveableObjectSaveData.ObjectOpen;
                 Props.MoveableObject.transform.position = new Vector3(moveableObjectSaveData.ObjectPositionX, moveableObjectSaveData.ObjectPositionY, moveableObjectSaveData.ObjectPositionZ);
                 Props.MoveableObject.transform.rotation = new Quaternion(moveableObjectSaveData.ObjectRotationX, moveableObjectSaveData.ObjectRotationY, moveableObjectSaveData.ObjectRotationZ, moveableObjectSaveData.ObjectRotationW);
-            } else {
-                Debug.Log($"{interactable.gameObject.name}.MoveableObjectComponent.LoadFromSaveData(): moveableObjectSaveData not found");
-            }
+            }// else {
+                //Debug.Log($"{interactable.gameObject.name}.MoveableObjectComponent.LoadFromSaveData(): moveableObjectSaveData not found");
+            //}
         }
 
         /*

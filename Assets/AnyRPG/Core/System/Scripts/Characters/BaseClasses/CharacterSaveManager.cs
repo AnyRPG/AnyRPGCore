@@ -93,7 +93,7 @@ namespace AnyRPG {
         }
 
         public void SaveGameData() {
-            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveGameData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveGameData()");
 
             saveData.UnitProfileName = unitController.UnitProfile.ResourceName;
             saveData.CharacterName = unitController.BaseCharacter.CharacterName;
@@ -216,21 +216,21 @@ namespace AnyRPG {
         }
 
         public void HandleAddStatusEffectStack(string effectResourceName) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.HandleAddStatusEffectStack({effectResourceName})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.HandleAddStatusEffectStack({effectResourceName})");
 
             SaveStatusEffectData();
             unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         public void HandleCancelStatusEffect(StatusEffectProperties properties) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.HandleCancelStatusEffect({properties.ResourceName})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.HandleCancelStatusEffect({properties.ResourceName})");
 
             SaveStatusEffectData();
             unitController.UnitEventController.NotifyOnSaveDataUpdated();
         }
 
         public void HandleStatusEffectAdd(UnitController sourceUnitController, StatusEffectNode node) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.HandleStatusEffectAdd({node.StatusEffect.ResourceName})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.HandleStatusEffectAdd({node.StatusEffect.ResourceName})");
 
             SaveStatusEffectData();
             unitController.UnitEventController.NotifyOnSaveDataUpdated();
@@ -652,9 +652,10 @@ namespace AnyRPG {
         }
 
         public void LoadStatusEffectData() {
-            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadStatusEffectData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadStatusEffectData()");
 
             foreach (StatusEffectSaveData statusEffectSaveData in saveData.StatusEffectSaveData) {
+                //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.LoadStatusEffectData(): applying saved status effect {statusEffectSaveData.StatusEffectName} with {statusEffectSaveData.RemainingSeconds} seconds remaining");
                 unitController.CharacterAbilityManager.ApplySavedStatusEffects(statusEffectSaveData);
             }
         }
@@ -976,7 +977,7 @@ namespace AnyRPG {
         }
 
         public void SaveStatusEffectData() {
-            Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveStatusEffectData()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveStatusEffectData()");
 
             saveData.StatusEffectSaveData.Clear();
             foreach (StatusEffectNode statusEffectNode in unitController.CharacterStats.StatusEffects.Values) {
@@ -989,6 +990,7 @@ namespace AnyRPG {
                     saveData.StatusEffectSaveData.Add(statusEffectSaveData);
                 }
             }
+            //Debug.Log($"{unitController.gameObject.name}.CharacterSavemanager.SaveStatusEffectData() count: {saveData.StatusEffectSaveData.Count}");
         }
 
         public void SaveActionBarData() {

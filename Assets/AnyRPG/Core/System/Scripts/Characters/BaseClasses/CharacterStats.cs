@@ -1057,6 +1057,7 @@ namespace AnyRPG {
                 if (statusEffects[statusEffect.ResourceName].MonitorCoroutine != null) {
                     unitController.StopCoroutine(statusEffects[statusEffect.ResourceName].MonitorCoroutine);
                 }
+                //Debug.Log($"{unitController.gameObject.name}.CharacterStats.HandleStatusEffectRemoval(): removing status effect: {statusEffect.DisplayName}");
                 statusEffects.Remove(statusEffect.ResourceName);
             }
 

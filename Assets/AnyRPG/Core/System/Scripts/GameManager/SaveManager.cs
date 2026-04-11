@@ -239,7 +239,7 @@ namespace AnyRPG {
         }
 
         public void InitializeSaveDataResourceLists(CharacterSaveData characterSaveData, bool overWrite) {
-            //Debug.Log("SaveManager.InitializeResourceLists()");
+            //Debug.Log($"SaveManager.InitializeSaveDataResourceLists(overwrite: {overWrite})");
 
             // things that are safe to overwrite any time because we get this data from other sources
             if (characterSaveData.SwappableMeshSaveData == null || overWrite) {
