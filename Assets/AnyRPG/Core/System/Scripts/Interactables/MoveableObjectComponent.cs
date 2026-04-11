@@ -162,7 +162,7 @@ namespace AnyRPG {
         }
 
         public override void SetSaveData(InteractableSaveData interactableSaveData) {
-            Debug.Log($"{interactable.gameObject.name}.MoveableObjectComponent.SetSaveData(): objectOpen = {objectOpen}, position: {Props.MoveableObject.transform.position}, rotation: {Props.MoveableObject.transform.rotation}");
+            //Debug.Log($"{interactable.gameObject.name}.MoveableObjectComponent.SetSaveData(): objectOpen = {objectOpen}, position: {Props.MoveableObject.transform.position}, rotation: {Props.MoveableObject.transform.rotation}");
 
             base.SetSaveData(interactableSaveData);
             MoveableObjectSaveData moveableObjectSaveData = new MoveableObjectSaveData() {

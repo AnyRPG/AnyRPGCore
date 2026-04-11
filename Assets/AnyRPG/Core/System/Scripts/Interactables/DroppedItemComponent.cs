@@ -42,6 +42,11 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
             rigidbody = interactable.GetComponent<Rigidbody>();
             boxCollider = interactable.GetComponent<BoxCollider>();
+            if (rigidbody != null && systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false) {
+                // disable gravity, this will be controlled by network transform
+                rigidbody.useGravity = false;
+                rigidbody.isKinematic = true;
+            }
         }
 
         public override void SetGameManagerReferences() {
@@ -83,7 +88,7 @@ namespace AnyRPG {
         }
 
         public void Spawn() {
-            //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn()");
+            Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn()");
 
             if (instantiatedItems.Count == 0) {
                 Debug.LogWarning($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() no items to spawn");
@@ -239,7 +244,7 @@ namespace AnyRPG {
         }
 
         public override void LoadFromSaveData(InteractableSaveData interactableSaveData) {
-            //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.LoadFromSaveData()");
+            Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.LoadFromSaveData()");
 
             base.LoadFromSaveData(interactableSaveData);
             if (interactableSaveData.DroppedItemSaveData.Count == 0) {
@@ -258,7 +263,8 @@ namespace AnyRPG {
         }
 
         public void SetDroppedItems(List<InstantiatedItem> itemsToDrop) {
-            //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.SetDroppedItems() itemsToDrop.Count: {itemsToDrop.Count}");
+            Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.SetDroppedItems() itemsToDrop.Count: {itemsToDrop.Count}");
+
             if (itemsToDrop.Count == 0) {
                 Debug.LogWarning($"{interactable.gameObject.name}.DroppedItemComponent.LoadFromSaveData() no items to add, despawning!");
                 Despawn();
