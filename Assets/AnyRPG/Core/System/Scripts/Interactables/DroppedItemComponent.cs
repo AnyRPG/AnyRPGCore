@@ -116,17 +116,12 @@ namespace AnyRPG {
             } else {
                 Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() spawned object {spawnObject.name}");
             }
+
+            // since this object is a spawn, and was not active and initialization, populate the materials array for mousover outlining
             interactable.PopulateOriginalMaterials();
+
             // determine spawnObject mesh bounds and set the interactable's collider bounds to match
             // get the first active mesh filter in the object or its children and use that for the bounds
-            /*
-            MeshRenderer meshRenderer = spawnObject.GetComponentInChildren<MeshRenderer>();
-            if (meshRenderer == null) {
-                Debug.LogWarning($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() no mesh filter found on spawn object {spawnObject.name}");
-                return;
-            }
-            Bounds meshBounds = meshRenderer.bounds;
-            */
             MeshFilter meshFilter = spawnObject.GetComponentInChildren<MeshFilter>();
             if (meshFilter == null) return;
             Bounds localBounds = meshFilter.sharedMesh.bounds;
@@ -134,21 +129,11 @@ namespace AnyRPG {
             //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() meshBoundsSize: {meshBounds.size}");
             if (boxCollider != null) {
                 //boxCollider.center = interactable.transform.InverseTransformPoint(meshBounds.center);
-                //boxCollider.center = localBounds.center;
                 boxCollider.center = interactable.transform.InverseTransformPoint(
                         meshFilter.transform.TransformPoint(localBounds.center)
                     );
 
-                // Scale is tricky: if the interactable transform has scale, 
                 // you must divide the world size by the world scale to get local size.
-                /*
-                Vector3 worldScale = interactable.transform.lossyScale;
-                boxCollider.size = new Vector3(
-                    meshBounds.size.x / worldScale.x,
-                    meshBounds.size.y / worldScale.y,
-                    meshBounds.size.z / worldScale.z
-                );
-                */
                 Vector3 meshLocalScale = meshFilter.transform.localScale;
                 boxCollider.size = new Vector3(
                     localBounds.size.x * meshLocalScale.x,
@@ -157,18 +142,8 @@ namespace AnyRPG {
                 );
             }
 
-            /*
-            // move the interactable up so that the bottom of the mesh bounds is at the interactables current y position to prevent falling through the floor when spawned
-            //float yOffset = meshBounds.extents.y;
-            float yOffset = boxCollider.bounds.extents.y;
-            if (rigidbody != null) {
-                rigidbody.position = new Vector3(rigidbody.position.x, rigidbody.position.y + yOffset, rigidbody.position.z);
-                //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() moved interactable rigidbody to {rigidbody.position}");
-            } else {
-                interactable.transform.position = new Vector3(interactable.transform.position.x, interactable.transform.position.y + yOffset, interactable.transform.position.z);
-                //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() moved interactable transform to {interactable.transform.position}");
-            }
-            */
+            // spawn minimap icon
+            HandleOptionStateChange();
         }
 
         public virtual void DropLoot(UnitController sourceUnitController) {

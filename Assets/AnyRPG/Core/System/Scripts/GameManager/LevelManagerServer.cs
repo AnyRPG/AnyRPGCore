@@ -67,7 +67,7 @@ namespace AnyRPG {
                 }
             }
             foreach (UnitController unitController in sceneData.UnitControllers) {
-                if (unitController != null && unitController != sourceUnitController) {
+                if (unitController != null /*&& unitController != sourceUnitController*/) {
                     unitController.ProcessPlayerUnitSpawn(sourceUnitController);
                 }
             }
