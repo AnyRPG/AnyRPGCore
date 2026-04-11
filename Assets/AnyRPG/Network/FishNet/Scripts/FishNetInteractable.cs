@@ -184,7 +184,13 @@ namespace AnyRPG {
                     instantiatedItems.Add(instantiatedItem);
                 }
             }
-            interactable.InteractableEventController.NotifyOnSetDroppedItems(instantiatedItems);
+            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.Interactables;
+            foreach (KeyValuePair<int, InteractableOptionComponent> kvp in currentInteractables) {
+                if (kvp.Value is DroppedItemComponent) {
+                    (kvp.Value as DroppedItemComponent).SetDroppedItems(instantiatedItems);
+                    break;
+                }
+            }
         }
 
         private void HandleActivatableObjectSetActive(bool active) {
