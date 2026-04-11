@@ -226,7 +226,7 @@ namespace AnyRPG {
 
             base.LoadFromSaveData(interactableSaveData);
             if (interactableSaveData.DroppedItemSaveData.Count == 0) {
-                Debug.LogWarning($"{interactable.gameObject.name}.DroppedItemComponent.LoadFromSaveData() no dropped item save data found");
+                //Debug.LogWarning($"{interactable.gameObject.name}.DroppedItemComponent.LoadFromSaveData() no dropped item save data found");
                 return;
             }
             List<InstantiatedItem> instantiatedItemsToAdd = new List<InstantiatedItem>();

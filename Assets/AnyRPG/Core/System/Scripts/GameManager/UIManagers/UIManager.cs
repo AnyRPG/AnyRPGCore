@@ -923,6 +923,10 @@ namespace AnyRPG {
                     }
                     return;
                 } else {
+                    if (contextMenuWindow.IsOpen == true) {
+                        contextMenuWindow.CloseWindow();
+                        return;
+                    }
                     CloseAllPopupWindows();
                 }
             }
