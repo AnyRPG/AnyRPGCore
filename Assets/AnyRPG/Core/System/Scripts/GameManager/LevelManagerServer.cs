@@ -205,12 +205,17 @@ namespace AnyRPG {
                     Debug.LogWarning($"LevelManagerServer.SpawnEphemeralObjects() could not spawn dropped item prefab");
                     return;
                 }
+                if (droppedPrefab.scene != scene) {
+                    SceneManager.MoveGameObjectToScene(droppedPrefab, scene);
+                }
                 UUID uuidComponent = droppedPrefab.GetComponent<UUID>();
                 if (uuidComponent == null) {
                     Debug.LogWarning($"LevelManagerServer.SpawnEphemeralObjects() could not find UUID component on dropped item prefab");
                     return;
                 }
+                Debug.Log($"LevelManagerServer.SpawnEphemeralObjects() UUID BEFORE: {uuidComponent.ID}");
                 uuidComponent.ID = persistentObjectSaveData.UUID;
+                Debug.Log($"LevelManagerServer.SpawnEphemeralObjects() UUID AFTER: {uuidComponent.ID}");
                 Interactable _interactable = droppedPrefab.GetComponent<Interactable>();
                 if (_interactable == null) {
                     Debug.LogWarning($"LevelManagerServer.SpawnEphemeralObjects() could not find interactable component on dropped item prefab");
@@ -454,7 +459,7 @@ namespace AnyRPG {
         }
 
         public void RegisterDroppedItem(Interactable interactable) {
-            Debug.Log($"LevelManagerServer.RegisterDroppedItem({interactable.gameObject.name})");
+            //Debug.Log($"LevelManagerServer.RegisterDroppedItem({interactable.gameObject.name})");
 
             Scene scene = interactable.gameObject.scene;
             if (loadedScenes.ContainsKey(scene.name) == false) {

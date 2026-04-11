@@ -22,7 +22,7 @@ namespace AnyRPG {
         }
 
         public void PopulateOriginalMaterials() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMaterialController.SetupMaterialArrays()");
+            //Debug.Log($"{interactable.gameObject.name}.ObjectMaterialController.PopulateOriginalMaterials()");
 
             // reset original materials
             originalMaterials = new Dictionary<Renderer, Material[]>();

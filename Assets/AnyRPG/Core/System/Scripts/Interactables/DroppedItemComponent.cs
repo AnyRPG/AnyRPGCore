@@ -13,6 +13,7 @@ namespace AnyRPG {
 
         // references
         private Rigidbody rigidbody = null;
+        private BoxCollider boxCollider = null;
 
         // game manager references
         private ObjectPooler objectPooler = null;
@@ -31,12 +32,16 @@ namespace AnyRPG {
             }
         }
 
+        public BoxCollider BoxCollider { get => boxCollider; set => boxCollider = value; }
+        public Rigidbody Rigidbody { get => rigidbody; set => rigidbody = value; }
+
         public DroppedItemComponent(Interactable interactable, DroppedItemProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             rigidbody = interactable.GetComponent<Rigidbody>();
+            boxCollider = interactable.GetComponent<BoxCollider>();
         }
 
         public override void SetGameManagerReferences() {
@@ -78,7 +83,7 @@ namespace AnyRPG {
         }
 
         public void Spawn() {
-            Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn()");
+            //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn()");
 
             if (instantiatedItems.Count == 0) {
                 Debug.LogWarning($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() no items to spawn");
@@ -88,7 +93,7 @@ namespace AnyRPG {
             if (instantiatedItem.Item.ItemPickupPrefabProfile?.Prefab != null) {
                 spawnObject = objectPooler.GetPooledObject(instantiatedItem.Item.ItemPickupPrefabProfile.Prefab,
                                                 interactable.transform.TransformPoint(instantiatedItem.Item.ItemPickupPrefabProfile.PickupPosition),
-                                                interactable.transform.rotation, //Quaternion.identity,
+                                                interactable.transform.rotation,
                                                 interactable.transform);
             } else {
                 Debug.LogWarning($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() no prefab profile or prefab for item {instantiatedItem.Item.ResourceName}");
@@ -96,6 +101,9 @@ namespace AnyRPG {
             if (rigidbody != null) {
                 // prevent zero mass objects
                 rigidbody.mass = (instantiatedItem.Item.Weight > 0f ? instantiatedItem.Item.Weight : 0.1f);
+                rigidbody.solverIterations = 10;
+                rigidbody.solverVelocityIterations = 8;
+                rigidbody.sleepThreshold = 0.1f;
             }
             if (spawnObject == null) {
                 Debug.LogWarning($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() no spawn object");
@@ -103,31 +111,48 @@ namespace AnyRPG {
             } else {
                 Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() spawned object {spawnObject.name}");
             }
+            interactable.PopulateOriginalMaterials();
             // determine spawnObject mesh bounds and set the interactable's collider bounds to match
             // get the first active mesh filter in the object or its children and use that for the bounds
+            /*
             MeshRenderer meshRenderer = spawnObject.GetComponentInChildren<MeshRenderer>();
             if (meshRenderer == null) {
                 Debug.LogWarning($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() no mesh filter found on spawn object {spawnObject.name}");
                 return;
             }
             Bounds meshBounds = meshRenderer.bounds;
+            */
+            MeshFilter meshFilter = spawnObject.GetComponentInChildren<MeshFilter>();
+            if (meshFilter == null) return;
+            Bounds localBounds = meshFilter.sharedMesh.bounds;
+
             //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() meshBoundsSize: {meshBounds.size}");
-            BoxCollider boxCollider = interactable.GetComponent<BoxCollider>();
             if (boxCollider != null) {
-                boxCollider.center = interactable.transform.InverseTransformPoint(meshBounds.center);
+                //boxCollider.center = interactable.transform.InverseTransformPoint(meshBounds.center);
+                boxCollider.center = localBounds.center;
 
                 // Scale is tricky: if the interactable transform has scale, 
                 // you must divide the world size by the world scale to get local size.
+                /*
                 Vector3 worldScale = interactable.transform.lossyScale;
                 boxCollider.size = new Vector3(
                     meshBounds.size.x / worldScale.x,
                     meshBounds.size.y / worldScale.y,
                     meshBounds.size.z / worldScale.z
                 );
+                */
+                Vector3 meshLocalScale = meshFilter.transform.localScale;
+                boxCollider.size = new Vector3(
+                    localBounds.size.x * meshLocalScale.x,
+                    localBounds.size.y * meshLocalScale.y,
+                    localBounds.size.z * meshLocalScale.z
+                );
             }
 
+            /*
             // move the interactable up so that the bottom of the mesh bounds is at the interactables current y position to prevent falling through the floor when spawned
-            float yOffset = meshBounds.extents.y;
+            //float yOffset = meshBounds.extents.y;
+            float yOffset = boxCollider.bounds.extents.y;
             if (rigidbody != null) {
                 rigidbody.position = new Vector3(rigidbody.position.x, rigidbody.position.y + yOffset, rigidbody.position.z);
                 //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() moved interactable rigidbody to {rigidbody.position}");
@@ -135,6 +160,7 @@ namespace AnyRPG {
                 interactable.transform.position = new Vector3(interactable.transform.position.x, interactable.transform.position.y + yOffset, interactable.transform.position.z);
                 //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() moved interactable transform to {interactable.transform.position}");
             }
+            */
         }
 
         public virtual void DropLoot(UnitController sourceUnitController) {
@@ -213,7 +239,7 @@ namespace AnyRPG {
         }
 
         public override void LoadFromSaveData(InteractableSaveData interactableSaveData) {
-            Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.LoadFromSaveData()");
+            //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.LoadFromSaveData()");
 
             base.LoadFromSaveData(interactableSaveData);
             if (interactableSaveData.DroppedItemSaveData.Count == 0) {
@@ -232,7 +258,7 @@ namespace AnyRPG {
         }
 
         public void SetDroppedItems(List<InstantiatedItem> itemsToDrop) {
-            Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.SetDroppedItems() itemsToDrop.Count: {itemsToDrop.Count}");
+            //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.SetDroppedItems() itemsToDrop.Count: {itemsToDrop.Count}");
             if (itemsToDrop.Count == 0) {
                 Debug.LogWarning($"{interactable.gameObject.name}.DroppedItemComponent.LoadFromSaveData() no items to add, despawning!");
                 Despawn();
@@ -241,6 +267,9 @@ namespace AnyRPG {
 
             instantiatedItems = itemsToDrop;
             interactable.DisplayName = itemsToDrop[0].DisplayName;
+            if (itemsToDrop.Count > 1) {
+                interactable.DisplayName += $" ({itemsToDrop.Count})";
+            }
             Spawn();
         }
 

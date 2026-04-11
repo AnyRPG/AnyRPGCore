@@ -1,12 +1,7 @@
-using AnyRPG;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
     public class CharacterInventoryManager : ConfiguredClass {
@@ -924,7 +919,7 @@ namespace AnyRPG {
                 Debug.LogWarning($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemOnGround() could not spawn dropped item prefab");
                 return;
             }
-
+            SceneManager.MoveGameObjectToScene(droppedPrefab, unitController.gameObject.scene);
             UUID uuidComponent = droppedPrefab.GetComponent<UUID>();
             if (uuidComponent != null) {
                 // generate a new uuid for this dropped item so it doesn't conflict with the UUID of the prefab it was spawned from
@@ -946,14 +941,16 @@ namespace AnyRPG {
             levelManagerServer.RegisterDroppedItem(_interactable);
             _interactable.Init();
 
-            Rigidbody rigidbody = _interactable.GetComponent<Rigidbody>();
-            if (rigidbody != null) {
+            if (droppedItemComponent.Rigidbody != null) {
                 // 1. Reset everything
-                // move the object up by half the character height so it doesn't drop through the ground, and then reset velocity so it doesn't inherit the player's momentum
-                rigidbody.position += Vector3.up * (unitController.Collider.bounds.extents.y);
-                rigidbody.linearVelocity = Vector3.zero;
-                rigidbody.angularVelocity = Vector3.zero;
+                // first, move the object up so that the bottom of the object collider bounds is at the player's feet, so it doesn't drop through the ground when spawned
+                float yOffset = droppedItemComponent.BoxCollider.bounds.extents.y;
+                droppedItemComponent.Rigidbody.position = new Vector3(droppedItemComponent.Rigidbody.position.x, droppedItemComponent.Rigidbody.position.y + yOffset, droppedItemComponent.Rigidbody.position.z);
 
+                // move the object up by half the character height so it looks like we are dropping it from the character's hands instead of the ground
+                droppedItemComponent.Rigidbody.position += Vector3.up * (unitController.Collider.bounds.extents.y);
+                droppedItemComponent.Rigidbody.linearVelocity = Vector3.zero;
+                droppedItemComponent.Rigidbody.angularVelocity = Vector3.zero;
                 // 2. Calculate a random angle within a 45-degree arc to the left or right (-45 to 45)
                 float randomAngle = UnityEngine.Random.Range(-45f, 45f);
 
@@ -970,10 +967,10 @@ namespace AnyRPG {
                 // 5. Set the speed for a ~1 meter landing
                 // Since we lowered the arc, a speed of ~3.2m/s is the "sweet spot" for 1m distance
                 float jumpSpeed = 3.2f;
-                rigidbody.linearVelocity = jumpDirection * jumpSpeed;
+                droppedItemComponent.Rigidbody.linearVelocity = jumpDirection * jumpSpeed;
 
                 // 6. Gentle spin
-                rigidbody.angularVelocity = UnityEngine.Random.insideUnitSphere * 2f;
+                droppedItemComponent.Rigidbody.angularVelocity = UnityEngine.Random.insideUnitSphere * 2f;
             }
 
         }

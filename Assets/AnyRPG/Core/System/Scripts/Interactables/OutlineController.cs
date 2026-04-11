@@ -44,7 +44,7 @@ namespace AnyRPG {
         }
 
         protected virtual void ActivateOutline() {
-            //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): hasMeshRenderer && glowOnMouseOver == true");
+            //Debug.Log($"{interactable.gameObject.name}.OutlineController.ActivateOutline()");
 
             if (isOutlined == false) {
                 isOutlined = true;

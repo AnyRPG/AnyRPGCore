@@ -101,7 +101,7 @@ namespace AnyRPG {
         }
 
         public void LoadPersistentState() {
-            Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.LoadPersistentState()");
+            //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.LoadPersistentState()");
 
             PersistentObjectSaveData persistentObjectSaveData = GetPersistentObjectSaveData();
             if (persistentObjectSaveData == null) {
@@ -121,7 +121,7 @@ namespace AnyRPG {
                     //}
                 }
             } else {
-                Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.LoadPersistentState() NOT setting transform.position on UUID {persistentObjectOwner.UUID.ID} because persistObjectPosition is {persistObjectPosition} and moveOnStart is {moveOnStart}");
+                //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.LoadPersistentState() NOT setting transform.position on UUID {persistentObjectOwner.UUID.ID} because persistObjectPosition is {persistObjectPosition} and moveOnStart is {moveOnStart}");
             }
             persistentObjectOwner.LoadPersistentObjectSaveData(persistentObjectSaveData);
         }
@@ -134,7 +134,7 @@ namespace AnyRPG {
         }
 
         public void ProcessSaveGame(bool ephemeral) {
-            Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.ProcessSaveGame()");
+            //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.ProcessSaveGame()");
 
             if (saveOnGameSave == true) {
                 SaveProperties(ephemeral);
@@ -142,7 +142,7 @@ namespace AnyRPG {
         }
 
         public void SaveProperties(bool ephemeral) {
-            Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties({ephemeral})");
+            Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties(ephemeral: {ephemeral})");
 
             // since all units automatically have this component, give it a chance to not save based on configuration
             if (systemGameManager.GameMode == GameMode.Network) {
@@ -163,9 +163,9 @@ namespace AnyRPG {
                 if (currentSceneNode != null) {
                     //currentSceneNode.PersistentObjects[storedUUID] = MakeSaveData();
                     if (ephemeral == true) {
-                        currentSceneNode.SaveEphemeralObject(storedUUID, MakeSaveData());
+                        saveManager.SaveEphemeralObject(storedUUID, MakeSaveData(), currentSceneNode);
                     } else {
-                        currentSceneNode.SavePersistentObject(storedUUID, MakeSaveData());
+                        saveManager.SavePersistentObject(storedUUID, MakeSaveData(), currentSceneNode);
                     }
                 }
             }

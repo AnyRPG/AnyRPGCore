@@ -44,7 +44,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 502565618688254078}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: e5eb38fceb5295743b014eb72b6a1cfc, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -115,7 +115,7 @@ Rigidbody:
   m_GameObject: {fileID: 502565618688254078}
   serializedVersion: 5
   m_Mass: 0.1
-  m_LinearDamping: 0
+  m_LinearDamping: 0.05
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -132,7 +132,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 2
+  m_CollisionDetection: 1
 --- !u!114 &5009206862445062809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,7 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
-  m_UUID: 3b51730d-03ae-4b4a-b1a5-37e25e1789be
+  m_UUID: d1b7e471-a63b-4d1e-9fb7-713630e8042e
   forceUpdateUUID: 0
 --- !u!1001 &7160217055860307744
 PrefabInstance:
