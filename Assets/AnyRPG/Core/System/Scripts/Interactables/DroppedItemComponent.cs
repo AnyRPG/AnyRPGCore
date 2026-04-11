@@ -288,6 +288,10 @@ namespace AnyRPG {
             DespawnSpawnObject();
             levelManagerServer.UnregisterDroppedItem(interactable);
         }
+
+        public override bool ResetOnStopNetwork() {
+            return true;
+        }
     }
 
 }

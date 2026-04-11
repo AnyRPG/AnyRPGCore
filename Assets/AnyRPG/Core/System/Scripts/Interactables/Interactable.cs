@@ -1077,7 +1077,7 @@ namespace AnyRPG {
         }
 
         public virtual void ResetSettings() {
-            //Debug.Log($"{gameObject.name}.Interactable.ResetSettings() {GetInstanceID()}");
+            Debug.Log($"{gameObject.name}.Interactable.ResetSettings() {GetInstanceID()}");
 
             if (glowOnMouseOver) {
                 outlineController.TurnOffOutline();
@@ -1295,6 +1295,24 @@ namespace AnyRPG {
             LoadInteractableSaveData(persistentObjectSaveData.InteractableSaveData);
         }
 
+        public void ProcessStopNetworkClient() {
+            Debug.Log($"{gameObject.name}.Interactable.ProcessStopNetworkClient()");
+
+            bool canReset = false;
+            foreach (InteractableOptionComponent interactableOptionComponent in interactables.Values) {
+                //Debug.Log($"{gameObject.name}.Interactable.Awake(): Found InteractableOptionComponent: " + interactable.ToString());
+                if (interactableOptionComponent != null) {
+                    // in rare cases where a script is missing or has been made abstract, but not updated, this can return a null interactable option
+                    if (interactableOptionComponent.ResetOnStopNetwork()) {
+                        canReset = true;
+                        break;
+                    }
+                }
+            }
+            if (canReset) {
+                ResetSettings();
+            }
+        }
     }
 
 }

@@ -393,6 +393,10 @@ namespace AnyRPG {
             return -1;
         }
 
+        public virtual bool ResetOnStopNetwork() {
+            return false;
+        }
+
         public virtual void SetupScriptableObjects() {
             //Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.SetupScriptableObjects()");
             if (interactableOptionProps.PrerequisiteConditions != null) {
