@@ -119,6 +119,7 @@ namespace AnyRPG {
             interactable.InteractableEventController.OnSellItemToPlayer += HandleSellItemToPlayer;
             interactable.InteractableEventController.OnLootableNodeSpawnObjectSetActive += HandleLootableNodeSpawnObjectSetActive;
             interactable.InteractableEventController.OnActivatableObjectSetActive += HandleActivatableObjectSetActive;
+            interactable.InteractableEventController.OnSetDroppedItems += HandleSetDroppedItems;
 
             eventRegistrationComplete = true;
         }
@@ -154,8 +155,36 @@ namespace AnyRPG {
             interactable.InteractableEventController.OnSellItemToPlayer -= HandleSellItemToPlayer;
             interactable.InteractableEventController.OnLootableNodeSpawnObjectSetActive -= HandleLootableNodeSpawnObjectSetActive;
             interactable.InteractableEventController.OnActivatableObjectSetActive -= HandleActivatableObjectSetActive;
+            interactable.InteractableEventController.OnSetDroppedItems -= HandleSetDroppedItems;
 
             eventRegistrationComplete = false;
+        }
+
+        private void HandleSetDroppedItems(List<InstantiatedItem> list) {
+            Debug.Log($"{gameObject.name}.FishNetInteractable.HandleSetDroppedItems()");
+
+            DroppedItemNetworkData droppedItemNetworkData = new DroppedItemNetworkData();
+            foreach (InstantiatedItem instantiatedItem in list) {
+                droppedItemNetworkData.itemInstanceIds.Add(instantiatedItem.InstanceId);
+            }
+            droppedItemNetworkData.BundleItems(systemItemManager);
+
+            HandleSetDroppedItemsClient(droppedItemNetworkData);
+        }
+
+        [ObserversRpc]
+        private void HandleSetDroppedItemsClient(DroppedItemNetworkData droppedItemNetworkData) {
+            Debug.Log($"{gameObject.name}.FishNetInteractable.HandleSetDroppedItemsClient()");
+
+            systemItemManager.LoadItemInstanceListSaveData(droppedItemNetworkData.ItemInstanceListSaveData);
+            List<InstantiatedItem> instantiatedItems = new List<InstantiatedItem>();
+            foreach (long itemInstanceId in droppedItemNetworkData.itemInstanceIds) {
+                InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemInstanceId);
+                if (instantiatedItem != null) {
+                    instantiatedItems.Add(instantiatedItem);
+                }
+            }
+            interactable.InteractableEventController.NotifyOnSetDroppedItems(instantiatedItems);
         }
 
         private void HandleActivatableObjectSetActive(bool active) {

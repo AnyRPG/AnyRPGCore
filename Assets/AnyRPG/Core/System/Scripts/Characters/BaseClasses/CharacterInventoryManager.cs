@@ -919,6 +919,9 @@ namespace AnyRPG {
                 Debug.LogWarning($"{unitController.gameObject.name}.CharacterInventoryManager.DropItemOnGround() could not spawn dropped item prefab");
                 return;
             }
+            if (systemGameManager.GameMode == GameMode.Local) {
+                droppedPrefab.transform.position = unitController.transform.position;
+            }
             SceneManager.MoveGameObjectToScene(droppedPrefab, unitController.gameObject.scene);
             UUID uuidComponent = droppedPrefab.GetComponent<UUID>();
             if (uuidComponent != null) {

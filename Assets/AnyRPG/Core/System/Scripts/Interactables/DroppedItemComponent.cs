@@ -278,6 +278,7 @@ namespace AnyRPG {
                 interactable.DisplayName += $" ({itemsToDrop.Count})";
             }
             Spawn();
+            interactable.InteractableEventController.NotifyOnSetDroppedItems(itemsToDrop);
         }
 
         public override void Cleanup() {
