@@ -1252,7 +1252,7 @@ namespace AnyRPG {
         }
 
         public InteractableSaveData GetInteractableSaveData() {
-            //Debug.Log($"{gameObject.name}.Interactable.GetInteractableSaveData()");
+            Debug.Log($"{gameObject.name}.Interactable.GetInteractableSaveData()");
 
             InteractableSaveData interactableSaveData = new InteractableSaveData();
             foreach (InteractableOptionComponent interactableOptionComponent in interactables.Values) {
