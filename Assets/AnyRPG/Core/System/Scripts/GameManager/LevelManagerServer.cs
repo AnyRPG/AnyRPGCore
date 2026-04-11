@@ -307,7 +307,7 @@ namespace AnyRPG {
                 foreach (Interactable interactable in droppedItems) {
                     if (interactable != null) {
                         if (systemGameManager.GameMode == GameMode.Local) {
-                            interactable.PersistentObjectComponent.ProcessBeforeUnloadScene(false);
+                            interactable.PersistentObjectComponent.ProcessBeforeUnloadScene(true);
                         }
                         interactable.ResetSettings();
                     }
@@ -329,12 +329,15 @@ namespace AnyRPG {
                         }
                     }
 
+                    // this is already handled above in dropped items
+                    /*
                     List<IPersistentObjectOwner> ephemeralObjectOwners = new List<IPersistentObjectOwner>(sceneData.DroppedItems);
                     foreach (IPersistentObjectOwner ephemeralObjectOwner in ephemeralObjectOwners) {
                         if (ephemeralObjectOwner != null && ephemeralObjectOwner.PersistentObjectComponent.SaveOnLevelUnload == true) {
                             ephemeralObjectOwner.PersistentObjectComponent.ProcessBeforeUnloadScene(true);
                         }
                     }
+                    */
                 }
             }
 

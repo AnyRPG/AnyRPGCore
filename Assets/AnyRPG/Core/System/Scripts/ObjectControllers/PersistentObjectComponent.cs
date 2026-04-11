@@ -101,7 +101,7 @@ namespace AnyRPG {
         }
 
         public void LoadPersistentState() {
-            //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.LoadPersistentState()");
+            Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.LoadPersistentState()");
 
             PersistentObjectSaveData persistentObjectSaveData = GetPersistentObjectSaveData();
             if (persistentObjectSaveData == null) {

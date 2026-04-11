@@ -1262,7 +1262,7 @@ namespace AnyRPG {
         }
 
         public void LoadInteractableSaveData(InteractableSaveData interactableSaveData) {
-            //Debug.Log($"{gameObject.name}.Interactable.LoadInteractableSaveData()");
+            Debug.Log($"{gameObject.name}.Interactable.LoadInteractableSaveData()");
 
             _interactableSaveData = interactableSaveData;
             systemItemManager.LoadItemInstanceListSaveData(interactableSaveData.ItemInstanceListSaveData);
@@ -1282,9 +1282,10 @@ namespace AnyRPG {
         }
 
         public virtual void LoadPersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {
-            //Debug.Log($"{gameObject.name}.Interactable.LoadPersistentObjectSaveData()");
+            Debug.Log($"{gameObject.name}.Interactable.LoadPersistentObjectSaveData()");
 
             if (persistInteractableData == false) {
+                //Debug.LogWarning($"{gameObject.name}.Interactable.LoadPersistentObjectSaveData(): persistInteractableData is false, skipping loading interactable data.");
                 return;
             }
             if (persistentObjectSaveData.InteractableSaveData == null) {

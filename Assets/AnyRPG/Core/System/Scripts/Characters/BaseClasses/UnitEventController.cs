@@ -843,7 +843,7 @@ namespace AnyRPG {
         }
 
         public void NotifyOnCancelStatusEffect(StatusEffectProperties statusEffect) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnCancelStatusEffect({statusEffect.ResourceName})");
+            Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnCancelStatusEffect({statusEffect.ResourceName})");
 
             OnCancelStatusEffect(statusEffect);
         }

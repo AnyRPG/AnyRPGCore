@@ -948,7 +948,7 @@ namespace AnyRPG {
                     return _persistentObjectSaveData;
                 }
             }
-            return new PersistentObjectSaveData();
+            return null;
         }
 
         public PersistentObjectSaveData GetEphemeralObject(string UUID, SceneNode sceneNode) {
@@ -957,7 +957,7 @@ namespace AnyRPG {
                     return _persistentObjectSaveData;
                 }
             }
-            return new PersistentObjectSaveData();
+            return null;
         }
 
         public CutsceneSaveData GetCutsceneSaveData(Cutscene cutscene) {

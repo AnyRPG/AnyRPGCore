@@ -1,4 +1,3 @@
-using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -74,6 +73,8 @@ namespace AnyRPG {
         }
 
         public override void SetSaveData(InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.AnimatedObjectComponent.SetSaveData()");
+
             base.SetSaveData(interactableSaveData);
             AnimatedObjectSaveData animatedObjectSaveData = new AnimatedObjectSaveData() {
                 ObjectOpen = objectOpen
