@@ -134,7 +134,10 @@ namespace AnyRPG {
             //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() meshBoundsSize: {meshBounds.size}");
             if (boxCollider != null) {
                 //boxCollider.center = interactable.transform.InverseTransformPoint(meshBounds.center);
-                boxCollider.center = localBounds.center;
+                //boxCollider.center = localBounds.center;
+                boxCollider.center = interactable.transform.InverseTransformPoint(
+                        meshFilter.transform.TransformPoint(localBounds.center)
+                    );
 
                 // Scale is tricky: if the interactable transform has scale, 
                 // you must divide the world size by the world scale to get local size.
