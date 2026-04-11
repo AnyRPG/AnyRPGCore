@@ -35,7 +35,7 @@ MonoBehaviour:
   uniqueItem: 0
   characterClassRequirementList: []
   weight: 0
-  itemPickupPrefabProfileName: Medieval One Hand Sword
+  itemPickupPrefabProfileName: MedievalOneHandSword
   equipmentSlotType: Main Hand
   equipmentSetName: 
   deprecatedHoldableObjectList:

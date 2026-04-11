@@ -35,7 +35,7 @@ MonoBehaviour:
   uniqueItem: 1
   characterClassRequirementList: []
   weight: 0
-  itemPickupPrefabProfileName: 
+  itemPickupPrefabProfileName: Necklace
   equipmentSlotType: Necklace
   equipmentSetName: 
   deprecatedHoldableObjectList: []
