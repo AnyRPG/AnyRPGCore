@@ -116,8 +116,14 @@ namespace AnyRPG {
                 Debug.LogWarning($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() no spawn object");
                 return;
             }// else {
-                //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() spawned object {spawnObject.name}");
-            //}
+             //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() spawned object {spawnObject.name}");
+             //}
+
+            // recursively set the layer of the spawned object and all children to the same layer as the interactable so that it will be visible to the main camera
+            spawnObject.layer = interactable.gameObject.layer;
+            foreach (Transform child in spawnObject.GetComponentsInChildren<Transform>(true)) {
+                child.gameObject.layer = interactable.gameObject.layer;
+            }
 
             // since this object is a spawn, and was not active and initialization, populate the materials array for mousover outlining
             interactable.PopulateOriginalMaterials();

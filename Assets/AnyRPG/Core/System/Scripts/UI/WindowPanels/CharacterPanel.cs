@@ -319,13 +319,13 @@ namespace AnyRPG {
 
             if (systemConfigurationManager.UseEncumberance == true) {
                 updateString += "Carry Capacity: " +
-                (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryCapacity].CurrentValue +
-                systemConfigurationManager.GlobalCharacterCarryCapacity);
-                if (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryCapacity].CurrentValue != playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryCapacity].BaseValue) {
+                (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue +
+                systemConfigurationManager.BaseCarryWeight);
+                if (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue != playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].BaseValue) {
                     updateString += " ( " +
-                        (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryCapacity].BaseValue) +
-                        (((playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryCapacity].CurrentValue + systemConfigurationManager.GlobalCharacterCarryCapacity) - (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryCapacity].BaseValue + systemConfigurationManager.GlobalCharacterCarryCapacity)) > 0 ? " <color=green>+" : " <color=red>") +
-                        ((playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryCapacity].CurrentValue + systemConfigurationManager.GlobalCharacterCarryCapacity) - (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryCapacity].BaseValue + systemConfigurationManager.GlobalCharacterCarryCapacity)) +
+                        (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].BaseValue) +
+                        (((playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue + systemConfigurationManager.BaseCarryWeight) - (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].BaseValue + systemConfigurationManager.BaseCarryWeight)) > 0 ? " <color=green>+" : " <color=red>") +
+                        ((playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue + systemConfigurationManager.BaseCarryWeight) - (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].BaseValue + systemConfigurationManager.BaseCarryWeight)) +
                         "</color> )";
                 }
                 updateString += "\n";

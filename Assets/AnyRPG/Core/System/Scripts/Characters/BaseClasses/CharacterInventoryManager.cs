@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -27,6 +28,9 @@ namespace AnyRPG {
         //private Dictionary<int, InstantiatedItem> instantiatedItems = new Dictionary<int, InstantiatedItem>();
 
         private UnitController unitController = null;
+        
+        // state tracking
+        private float weight = 0f;
 
         // game manager references
         private LootManager lootManager = null;
@@ -175,16 +179,27 @@ namespace AnyRPG {
 
         private void HandleRemoveItemFromInventorySlot(InventorySlot slot, InstantiatedItem instantiatedItem) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.HandleRemoveItemFromInventorySlot({instantiatedItem.Item.ResourceName})");
-
+            
+            weight -= instantiatedItem.Item.Weight;
             NotifyOnItemCountChanged(instantiatedItem.Item);
             unitController.UnitEventController.NotifyOnRemoveItemFromInventorySlot(slot, instantiatedItem);
         }
 
         private void HandleAddItemToInventorySlot(InventorySlot slot, InstantiatedItem instantiatedItem) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.HandleAddItemToInventorySlot({slot.GetCurrentInventorySlotIndex(unitController)}, {instantiatedItem.Item.ResourceName})");
-
+            
+            weight += instantiatedItem.Item.Weight;
             NotifyOnItemCountChanged(instantiatedItem.Item);
             unitController.UnitEventController.NotifyOnAddItemToInventorySlot(slot, instantiatedItem);
+        }
+
+        public void CalculateEncumbered() {
+            float totalWeight = weight + unitController.CharacterEquipmentManager.EquippedWeight;
+            if (totalWeight > systemConfigurationManager.BaseCarryWeight + unitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue) {
+                unitController.IsEncumbered = true;
+            } else {
+                unitController.IsEncumbered = false;
+            }
         }
 
         private void RemoveInventorySlot(InventorySlot inventorySlot) {

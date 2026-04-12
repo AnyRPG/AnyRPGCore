@@ -208,7 +208,7 @@ namespace AnyRPG {
 
         [Tooltip("The weight limit at which the character will be encumbered. Any value provided by stats be added to this value.")]
         [SerializeField]
-        private float globalCharacterCharacterCapacity = 10f;
+        private float baseCarryWeight = 10f;
 
         [Tooltip("The default character encumbered speed in meters per second.")]
         [SerializeField]
@@ -969,7 +969,7 @@ namespace AnyRPG {
         public bool SplitStacksOnDrop { get => splitStacksOnDrop; set => splitStacksOnDrop = value; }
         public bool UseEncumberance { get => useEncumberance; set => useEncumberance = value; }
         public float EncumberedSpeed { get => encumberedSpeed; set => encumberedSpeed = value; }
-        public float GlobalCharacterCarryCapacity { get => globalCharacterCharacterCapacity; set => globalCharacterCharacterCapacity = value; }
+        public float BaseCarryWeight { get => baseCarryWeight; set => baseCarryWeight = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

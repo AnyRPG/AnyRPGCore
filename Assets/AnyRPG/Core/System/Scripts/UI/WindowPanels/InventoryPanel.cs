@@ -56,10 +56,11 @@ namespace AnyRPG {
             if (playerManagerClient.UnitController == null) {
                 return;
             }
-            if (systemConfigurationManager.DefaultCurrencyGroup?.BaseCurrency == null) {
-                return;
+            if (systemConfigurationManager.DefaultCurrencyGroup?.BaseCurrency != null) {
+                currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, playerManagerClient.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency));
+            } else {
+                currencyBarController.ClearCurrencyAmounts();
             }
-            currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, playerManagerClient.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency));
         }
 
         public void HandlePlayerUnitDespawn(UnitController unitController) {

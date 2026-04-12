@@ -594,6 +594,9 @@ namespace AnyRPG {
             if (secondaryStats.ContainsKey(secondaryStatType)) {
                 secondaryStats[secondaryStatType].CurrentValue = (int)((secondaryStats[secondaryStatType].BaseValue + GetSecondaryAddModifiers(secondaryStatType)) * GetSecondaryMultiplyModifiers(secondaryStatType));
             }
+            if (secondaryStatType == SecondaryStatType.CarryWeight) {
+                unitController.CharacterInventoryManager.CalculateEncumbered();
+            }
         }
 
         public float GetSecondaryAddModifiers(SecondaryStatType secondaryStatType) {
