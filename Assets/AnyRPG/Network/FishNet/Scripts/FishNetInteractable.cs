@@ -162,7 +162,7 @@ namespace AnyRPG {
         }
 
         private void HandleSetDroppedItems(List<InstantiatedItem> list) {
-            Debug.Log($"{gameObject.name}.FishNetInteractable.HandleSetDroppedItems()");
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleSetDroppedItems()");
 
             DroppedItemNetworkData droppedItemNetworkData = new DroppedItemNetworkData();
             foreach (InstantiatedItem instantiatedItem in list) {
@@ -175,7 +175,7 @@ namespace AnyRPG {
 
         [ObserversRpc]
         private void HandleSetDroppedItemsClient(DroppedItemNetworkData droppedItemNetworkData) {
-            Debug.Log($"{gameObject.name}.FishNetInteractable.HandleSetDroppedItemsClient()");
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.HandleSetDroppedItemsClient()");
 
             systemItemManager.LoadItemInstanceListSaveData(droppedItemNetworkData.ItemInstanceListSaveData);
             List<InstantiatedItem> instantiatedItems = new List<InstantiatedItem>();
