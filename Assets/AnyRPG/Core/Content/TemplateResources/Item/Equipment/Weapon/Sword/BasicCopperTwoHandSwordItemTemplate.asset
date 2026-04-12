@@ -34,7 +34,7 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
-  weight: 0
+  weight: 1.1
   itemPickupPrefabProfileName: Basic Copper Two Hand Sword
   equipmentSlotType: Two Hand
   equipmentSetName: 

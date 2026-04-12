@@ -81,7 +81,7 @@ namespace AnyRPG {
 
         [Tooltip("The weight of the item in kilograms.")]
         [SerializeField]
-        private float weight = 0f;
+        private float weight = 0.1f;
 
         [Tooltip("The name of the prefab profile that refers to the physical prefab used when this item is dropped on the ground")]
         [SerializeField]

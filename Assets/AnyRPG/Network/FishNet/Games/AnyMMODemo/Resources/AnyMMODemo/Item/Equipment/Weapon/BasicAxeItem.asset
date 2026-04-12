@@ -34,7 +34,7 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
-  weight: 0
+  weight: 0.6
   itemPickupPrefabProfileName: Basic Axe
   equipmentSlotType: Main Hand
   equipmentSetName: 

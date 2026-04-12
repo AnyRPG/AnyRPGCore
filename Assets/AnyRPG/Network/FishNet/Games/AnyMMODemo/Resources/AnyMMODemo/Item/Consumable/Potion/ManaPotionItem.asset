@@ -34,7 +34,7 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
-  weight: 0
+  weight: 0.1
   itemPickupPrefabProfileName: Blue Potion
   toolTip: Restore 1000 mana
   coolDown: 10

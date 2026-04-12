@@ -34,7 +34,7 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
-  weight: 0
+  weight: 0.2
   itemPickupPrefabProfileName: Sausage
   toolTip: Restore 125 health per second for 6 seconds
   consumptionVerb: 0

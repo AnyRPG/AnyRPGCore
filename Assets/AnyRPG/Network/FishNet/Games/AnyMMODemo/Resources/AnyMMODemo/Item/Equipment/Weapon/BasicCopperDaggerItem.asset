@@ -34,7 +34,7 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
-  weight: 0
+  weight: 0.2
   itemPickupPrefabProfileName: Basic Copper Dagger
   equipmentSlotType: One Hand
   equipmentSetName: 
