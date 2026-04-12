@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Default UMA Player
   displayName: 
-  icon: {fileID: 21300000, guid: 9176b48a2857c364280b4f5b9d620852, type: 3}
+  icon: {fileID: 21300000, guid: 94540527e5fef3841a3dd9112ca48ac8, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: The default UMA player unit configured in the engine.
   useRegionalDescription: 0
@@ -118,7 +118,7 @@ MonoBehaviour:
       swimMoveClip: {fileID: 0}
       flyIdleClip: {fileID: 0}
       flyMoveClip: {fileID: 0}
-    rotateModel: 1
+    forceRotateModelMode: 1
     namePlateProps:
       displayName: 
       suppressNamePlate: 0
