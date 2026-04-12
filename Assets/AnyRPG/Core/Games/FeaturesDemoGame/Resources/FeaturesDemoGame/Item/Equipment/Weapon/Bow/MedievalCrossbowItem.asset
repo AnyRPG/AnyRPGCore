@@ -41,7 +41,7 @@ MonoBehaviour:
   deprecatedHoldableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Main Hand
-      holdableObjectName: Medieval Crossbow
+      holdableObjectName: Medieval Crossbow Handle
       useUniversalAttachment: 1
       primaryAttachmentName: Crossbow Sheathed
       unsheathedAttachmentName: Right Hand

@@ -41,7 +41,7 @@ MonoBehaviour:
   deprecatedHoldableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Off Hand
-      holdableObjectName: Medieval Shield
+      holdableObjectName: Medieval Shield Handle
       useUniversalAttachment: 1
       primaryAttachmentName: Shield Sheathed
       unsheathedAttachmentName: Shield
