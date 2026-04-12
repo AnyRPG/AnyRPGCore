@@ -1077,7 +1077,7 @@ namespace AnyRPG {
         }
 
         public virtual void ResetSettings() {
-            Debug.Log($"{gameObject.name}.Interactable.ResetSettings() {GetInstanceID()}");
+            //Debug.Log($"{gameObject.name}.Interactable.ResetSettings() {GetInstanceID()}");
 
             if (glowOnMouseOver) {
                 outlineController.TurnOffOutline();
@@ -1252,7 +1252,7 @@ namespace AnyRPG {
         }
 
         public InteractableSaveData GetInteractableSaveData() {
-            Debug.Log($"{gameObject.name}.Interactable.GetInteractableSaveData()");
+            //Debug.Log($"{gameObject.name}.Interactable.GetInteractableSaveData()");
 
             InteractableSaveData interactableSaveData = new InteractableSaveData();
             foreach (InteractableOptionComponent interactableOptionComponent in interactables.Values) {

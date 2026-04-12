@@ -88,7 +88,7 @@ namespace AnyRPG {
         }
 
         public void Spawn() {
-            Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn()");
+            //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn()");
 
             if (instantiatedItems.Count == 0) {
                 Debug.LogWarning($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() no items to spawn");
@@ -113,9 +113,9 @@ namespace AnyRPG {
             if (spawnObject == null) {
                 Debug.LogWarning($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() no spawn object");
                 return;
-            } else {
-                Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() spawned object {spawnObject.name}");
-            }
+            }// else {
+                //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Spawn() spawned object {spawnObject.name}");
+            //}
 
             // since this object is a spawn, and was not active and initialization, populate the materials array for mousover outlining
             interactable.PopulateOriginalMaterials();
@@ -167,7 +167,7 @@ namespace AnyRPG {
         }
 
         private void DespawnSpawnObject() {
-            Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.DespawnSpawnObject()");
+            //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.DespawnSpawnObject()");
 
             if (spawnObject != null) {
                 objectPooler.ReturnObjectToPool(spawnObject);
@@ -176,7 +176,7 @@ namespace AnyRPG {
         }
 
         public void Despawn() {
-            Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Despawn()");
+            //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Despawn()");
 
             if (systemGameManager.GameMode == GameMode.Local) {
                 // remove the save data for this object so it doesn't respawn when returning to the scene
@@ -208,7 +208,7 @@ namespace AnyRPG {
         }
 
         public override void SetSaveData(InteractableSaveData interactableSaveData) {
-            Debug.Log($"{interactable.gameObject.name}.LootableNodeComponent.SetSaveData()");
+            //Debug.Log($"{interactable.gameObject.name}.LootableNodeComponent.SetSaveData()");
 
             base.SetSaveData(interactableSaveData);
             DroppedItemSaveData droppedItemSaveData = new DroppedItemSaveData() {
@@ -222,7 +222,7 @@ namespace AnyRPG {
         }
 
         public override void LoadFromSaveData(InteractableSaveData interactableSaveData) {
-            Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.LoadFromSaveData()");
+            //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.LoadFromSaveData()");
 
             base.LoadFromSaveData(interactableSaveData);
             if (interactableSaveData.DroppedItemSaveData.Count == 0) {
@@ -242,7 +242,7 @@ namespace AnyRPG {
         }
 
         public void SetDroppedItems(List<InstantiatedItem> itemsToDrop) {
-            Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.SetDroppedItems() itemsToDrop.Count: {itemsToDrop.Count}");
+            //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.SetDroppedItems() itemsToDrop.Count: {itemsToDrop.Count}");
 
             if (itemsToDrop.Count == 0) {
                 Debug.LogWarning($"{interactable.gameObject.name}.DroppedItemComponent.LoadFromSaveData() no items to add, despawning!");
@@ -260,7 +260,7 @@ namespace AnyRPG {
         }
 
         public override void Cleanup() {
-            Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Cleanup()");
+            //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.Cleanup()");
 
             base.Cleanup();
             DespawnSpawnObject();

@@ -892,17 +892,17 @@ namespace AnyRPG {
         }
 
         public List<PersistentObjectSaveData> GetEphemeralObjects(SceneNode sceneNode) {
-            Debug.Log($"SaveManager.GetEphemeralObjects({sceneNode.ResourceName})");
+            //Debug.Log($"SaveManager.GetEphemeralObjects({sceneNode.ResourceName})");
 
             if (sceneNodeSaveDataDictionary.ContainsKey(sceneNode.ResourceName) == false) {
-                Debug.Log($"SaveManager.GetEphemeralObjects({sceneNode.ResourceName}): no save data found for scene node.  Returning empty list.");
+                //Debug.Log($"SaveManager.GetEphemeralObjects({sceneNode.ResourceName}): no save data found for scene node.  Returning empty list.");
                 return new List<PersistentObjectSaveData>();
             }
             return GetSceneNodeSaveData(sceneNode).EphemeralObjects;
         }
 
         public void RemoveEphemeralObject(string UUID, SceneNode sceneNode) {
-            Debug.Log($"SaveManager.RemoveEphemeralObject({UUID}, {sceneNode.ResourceName})");
+            //Debug.Log($"SaveManager.RemoveEphemeralObject({UUID}, {sceneNode.ResourceName})");
 
             SceneNodeSaveData saveData = GetSceneNodeSaveData(sceneNode);
             foreach (PersistentObjectSaveData _persistentObjectSaveData in saveData.EphemeralObjects) {
@@ -928,7 +928,7 @@ namespace AnyRPG {
         }
 
         public void SaveEphemeralObject(string UUID, PersistentObjectSaveData persistentObjectSaveData, SceneNode sceneNode) {
-            Debug.Log($"SaveManager.SaveEphemeralObject({UUID})");
+            //Debug.Log($"SaveManager.SaveEphemeralObject({UUID})");
 
             SceneNodeSaveData saveData = GetSceneNodeSaveData(sceneNode);
             foreach (PersistentObjectSaveData _persistentObjectSaveData in saveData.EphemeralObjects) {

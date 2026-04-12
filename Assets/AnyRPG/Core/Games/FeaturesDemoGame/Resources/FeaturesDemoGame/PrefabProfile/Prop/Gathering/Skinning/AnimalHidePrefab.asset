@@ -20,7 +20,7 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  prefab: {fileID: 3726282229096581522, guid: c05737aa89959d644b15bbe3460da4cb, type: 3}
+  prefab: {fileID: 3726282229096581522, guid: 25edd58e44a14a3428f11289d9806b69, type: 3}
   position: {x: 0, y: 0, z: 0}
   rotationIsGlobal: 0
   rotation: {x: 0, y: 0, z: 0}

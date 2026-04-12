@@ -63,7 +63,7 @@ namespace AnyRPG {
         }
 
         public override void OnStopClient() {
-            Debug.Log($"{gameObject.name}.FishNetInteractable.OnStopClient()");
+            //Debug.Log($"{gameObject.name}.FishNetInteractable.OnStopClient()");
 
             base.OnStopClient();
             if (SystemGameManager.IsShuttingDown == true) {

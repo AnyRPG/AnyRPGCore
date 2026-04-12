@@ -143,7 +143,7 @@ namespace AnyRPG {
         }
 
         public void SaveProperties(bool ephemeral) {
-            Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties(ephemeral: {ephemeral})");
+            //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties(ephemeral: {ephemeral})");
 
             // since all units automatically have this component, give it a chance to not save based on configuration
             if (systemGameManager.GameMode == GameMode.Network) {

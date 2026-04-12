@@ -191,12 +191,12 @@ namespace AnyRPG {
         }
 
         private void SpawnEphemeralObjects(Scene scene) {
-            Debug.Log($"LevelManagerServer.SpawnEphemeralObjects(scene: {scene.name})");
+            //Debug.Log($"LevelManagerServer.SpawnEphemeralObjects(scene: {scene.name})");
 
             SceneNode sceneNode = sceneUtilityService.GetSceneNodeBySceneName(scene.name);
             List <PersistentObjectSaveData> ephemeralObjects = new List<PersistentObjectSaveData>(saveManager.GetEphemeralObjects(sceneNode));
             foreach (PersistentObjectSaveData persistentObjectSaveData in ephemeralObjects) {
-                Debug.Log($"LevelManagerServer.SpawnEphemeralObjects() - spawning dropped item with UUID {persistentObjectSaveData.UUID} at location ({persistentObjectSaveData.LocationX}, {persistentObjectSaveData.LocationY}, {persistentObjectSaveData.LocationZ})");
+                //Debug.Log($"LevelManagerServer.SpawnEphemeralObjects() - spawning dropped item with UUID {persistentObjectSaveData.UUID} at location ({persistentObjectSaveData.LocationX}, {persistentObjectSaveData.LocationY}, {persistentObjectSaveData.LocationZ})");
                 GameObject droppedPrefab = objectPooler.GetPooledObject(systemGameManager.DroppedItemPrefab,
                     new Vector3(persistentObjectSaveData.LocationX, persistentObjectSaveData.LocationY, persistentObjectSaveData.LocationZ),
                     new Quaternion(persistentObjectSaveData.RotationX, persistentObjectSaveData.RotationY, persistentObjectSaveData.RotationZ, persistentObjectSaveData.RotationW),
@@ -345,7 +345,7 @@ namespace AnyRPG {
         }
 
         public void SavePersistentObjects(Scene scene) {
-            Debug.Log($"LevelManagerServer.SavePersistentObjects({scene.name} ({scene.handle}))");
+            //Debug.Log($"LevelManagerServer.SavePersistentObjects({scene.name} ({scene.handle}))");
 
             if (systemGameManager.GameMode != GameMode.Local) {
                 return;
@@ -475,7 +475,7 @@ namespace AnyRPG {
         }
 
         public void UnregisterDroppedItem(Interactable interactable) {
-            Debug.Log($"LevelManagerServer.UnregisterDroppedItem({interactable.gameObject.name})");
+            //Debug.Log($"LevelManagerServer.UnregisterDroppedItem({interactable.gameObject.name})");
 
             Scene scene = interactable.gameObject.scene;
             if (loadedScenes.ContainsKey(scene.name) == false) {
