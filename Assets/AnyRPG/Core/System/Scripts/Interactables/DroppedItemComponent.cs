@@ -20,6 +20,7 @@ namespace AnyRPG {
         private LevelManagerClient levelManagerClient = null;
         private LevelManagerServer levelManagerServer = null;
         private SaveManager saveManager = null;
+        private ServerDataService serverDataService = null;
 
         public DroppedItemProps Props { get => interactableOptionProps as DroppedItemProps; }
 
@@ -55,6 +56,7 @@ namespace AnyRPG {
             levelManagerClient = systemGameManager.LevelManagerClient;
             levelManagerServer = systemGameManager.LevelManagerServer;
             saveManager = systemGameManager.SaveManager;
+            serverDataService = systemGameManager.ServerDataService;
         }
 
         /*
@@ -265,6 +267,16 @@ namespace AnyRPG {
             base.Cleanup();
             DespawnSpawnObject();
             levelManagerServer.UnregisterDroppedItem(interactable);
+
+            // in network mode, we need to delete any items that are still in the dropped item component when it is cleaned up
+            // otherwise they will pollute the server with orphaned items that are no longer referenced by anything and will never be cleaned up
+            if (instantiatedItems.Count > 0 && networkManagerServer.ServerModeActive == true) {
+                //Debug.LogWarning($"{interactable.gameObject.name}.DroppedItemComponent.Cleanup() there are still {instantiatedItems.Count} items in the dropped item component, these will be lost!");
+                foreach (InstantiatedItem instantiatedItem in instantiatedItems) {
+                    serverDataService.DeleteItemInstance(instantiatedItem);
+                }
+                instantiatedItems.Clear();
+            }
         }
 
         public override bool ResetOnStopNetwork() {
