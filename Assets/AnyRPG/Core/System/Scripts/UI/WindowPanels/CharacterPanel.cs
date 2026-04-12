@@ -317,6 +317,20 @@ namespace AnyRPG {
 
             updateString += "Movement Speed: " + Mathf.Clamp(playerManagerClient.UnitController.CharacterStats.RunSpeed, 0, systemConfigurationManager.MaxMovementSpeed).ToString("F2") + " (m/s)\n\n";
 
+            if (systemConfigurationManager.UseEncumberance == true) {
+                updateString += "Carry Capacity: " +
+                (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryCapacity].CurrentValue +
+                systemConfigurationManager.GlobalCharacterCarryCapacity);
+                if (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryCapacity].CurrentValue != playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryCapacity].BaseValue) {
+                    updateString += " ( " +
+                        (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryCapacity].BaseValue) +
+                        (((playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryCapacity].CurrentValue + systemConfigurationManager.GlobalCharacterCarryCapacity) - (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryCapacity].BaseValue + systemConfigurationManager.GlobalCharacterCarryCapacity)) > 0 ? " <color=green>+" : " <color=red>") +
+                        ((playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryCapacity].CurrentValue + systemConfigurationManager.GlobalCharacterCarryCapacity) - (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryCapacity].BaseValue + systemConfigurationManager.GlobalCharacterCarryCapacity)) +
+                        "</color> )";
+                }
+                updateString += "\n";
+            }
+
             statsDescription.text = updateString;
         }
 

@@ -56,6 +56,9 @@ namespace AnyRPG {
             if (playerManagerClient.UnitController == null) {
                 return;
             }
+            if (systemConfigurationManager.DefaultCurrencyGroup?.BaseCurrency == null) {
+                return;
+            }
             currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, playerManagerClient.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency));
         }
 

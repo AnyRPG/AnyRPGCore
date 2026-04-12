@@ -663,7 +663,7 @@ namespace AnyRPG {
 
     }
 
-    public enum SecondaryStatType { MovementSpeed, Accuracy, CriticalStrike, Speed, Damage, PhysicalDamage, SpellDamage, Armor }
+    public enum SecondaryStatType { MovementSpeed, Accuracy, CriticalStrike, Speed, Damage, PhysicalDamage, SpellDamage, Armor, CarryCapacity }
 
     public enum StatusEffectAlignment { None, Beneficial, Harmful }
 

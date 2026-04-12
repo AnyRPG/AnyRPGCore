@@ -106,6 +106,7 @@ namespace AnyRPG {
         private bool swimming = false;
         private bool flying = false;
         private bool isStealth = false;
+        private bool isEncumbered = false;
 
         private List<WaterBody> currentWater = new List<WaterBody>();
 
@@ -190,6 +191,9 @@ namespace AnyRPG {
             get {
                 if (UnderControl == true && MasterUnit != null) {
                     return MasterUnit.MovementSpeed;
+                }
+                if (systemConfigurationManager.UseEncumberance == true && isEncumbered == true) {
+                    return systemConfigurationManager.EncumberedSpeed;
                 }
                 return (walking == false ? characterStats.RunSpeed : characterStats.WalkSpeed);
             }
