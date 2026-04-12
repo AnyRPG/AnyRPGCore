@@ -80,6 +80,7 @@ namespace AnyRPG {
         public List<InventorySlot> InventorySlots { get => inventorySlots; set => inventorySlots = value; }
         public List<InventorySlot> BankSlots { get => bankSlots; set => bankSlots = value; }
         public List<EquipmentInventorySlot> EquipmentSlots { get => equipmentSlots; set => equipmentSlots = value; }
+        public float Weight { get => weight; }
 
         public CharacterInventoryManager(UnitController unitController, SystemGameManager systemGameManager) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats()");

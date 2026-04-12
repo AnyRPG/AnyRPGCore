@@ -318,9 +318,11 @@ namespace AnyRPG {
             updateString += "Movement Speed: " + Mathf.Clamp(playerManagerClient.UnitController.CharacterStats.RunSpeed, 0, systemConfigurationManager.MaxMovementSpeed).ToString("F2") + " (m/s)\n\n";
 
             if (systemConfigurationManager.UseEncumberance == true) {
-                updateString += "Carry Capacity: " +
-                (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue +
-                systemConfigurationManager.BaseCarryWeight);
+                float currentWeightLoad = playerManagerClient.UnitController.CharacterEquipmentManager.EquippedWeight + playerManagerClient.UnitController.CharacterInventoryManager.Weight;
+                float carryWeight = playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue + systemConfigurationManager.BaseCarryWeight;
+                string colorString = currentWeightLoad > carryWeight ? "red" : "white";
+                // 2 decimals accuracy should be enough for weight, and it looks better in the UI.  do not show decimals if the value is an integer to avoid cluttering the UI with unnecessary decimals.
+                updateString += $"Carry Capacity (kg): <color={colorString}>{(currentWeightLoad % 1 == 0 ? currentWeightLoad.ToString("F0") : currentWeightLoad.ToString("F2"))} / {(carryWeight % 1 == 0 ? carryWeight.ToString("F0") : carryWeight.ToString("F2"))}</color>";
                 if (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue != playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].BaseValue) {
                     updateString += " ( " +
                         (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].BaseValue) +

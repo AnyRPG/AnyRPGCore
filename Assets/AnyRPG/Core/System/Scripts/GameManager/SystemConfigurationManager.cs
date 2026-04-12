@@ -206,7 +206,7 @@ namespace AnyRPG {
         [SerializeField]
         private bool useEncumberance = false;
 
-        [Tooltip("The weight limit at which the character will be encumbered. Any value provided by stats be added to this value.")]
+        [Tooltip("The weight limit (in kilograms) at which the character will be encumbered. Any value provided by stats be added to this value.")]
         [SerializeField]
         private float baseCarryWeight = 10f;
 

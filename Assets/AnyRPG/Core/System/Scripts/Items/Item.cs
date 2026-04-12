@@ -202,8 +202,11 @@ namespace AnyRPG {
         public virtual string GetItemDescription(ItemQuality usedItemQuality, int usedItemLevel) {
             string descriptionString = base.GetDescription();
             if (descriptionString != string.Empty) {
-                descriptionString = string.Format("\n<color=yellow><size=14>{0}</size></color>", descriptionString);
+                descriptionString = $"\n<color=yellow><size=14>{descriptionString}</size></color>";
             }
+            //if (systemConfigurationManager.UseEncumberance == true) {
+            descriptionString += $"\n<color=yellow><size=12>Weight: {weight} kg</size></color>";
+            //}
             if (characterClassRequirementList.Count > 0) {
                 string colorString = "red";
                 if (realCharacterClassRequirementList.Contains(playerManagerClient.UnitController.BaseCharacter.CharacterClass)) {
