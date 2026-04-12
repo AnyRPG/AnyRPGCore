@@ -2471,7 +2471,7 @@ namespace AnyRPG {
         }
 
         public GameObject SpawnDroppedItem(Scene scene, GameObject droppedItemPrefab, Vector3 position, Quaternion rotation) {
-            Debug.Log($"FishNetClientConnector.SpawnDroppedItem(scene: {scene.name}, prefab: {droppedItemPrefab.name}, position: {position}, rotation: {rotation})");
+            //Debug.Log($"FishNetClientConnector.SpawnDroppedItem(scene: {scene.name}, prefab: {droppedItemPrefab.name}, position: {position}, rotation: {rotation})");
 
             NetworkObject nob = GetSpawnablePrefab(droppedItemPrefab, null, position, Vector3.forward);
             SpawnPrefab(nob, null, scene);

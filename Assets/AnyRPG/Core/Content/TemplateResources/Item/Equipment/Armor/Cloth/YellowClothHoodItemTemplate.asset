@@ -35,7 +35,7 @@ MonoBehaviour:
   uniqueItem: 0
   characterClassRequirementList: []
   weight: 0
-  itemPickupPrefabProfileName: 
+  itemPickupPrefabProfileName: Cloth Hood Yellow
   equipmentSlotType: Helm
   equipmentSetName: 
   deprecatedHoldableObjectList: []
