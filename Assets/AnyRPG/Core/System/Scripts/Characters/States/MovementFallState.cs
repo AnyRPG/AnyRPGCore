@@ -43,7 +43,7 @@ namespace AnyRPG {
         public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementFallState.Update(isReplay: {isReplay}) frame: {Time.frameCount} tick: {unitMovementController.CurrentMovementData.SimulatedTick} rposition: {unitController.UnitMotor.MovementBody.GetPosition()} mposition: {unitController.UnitModelController.UnitModel.transform.position} velocity: {unitController.UnitMotor.MovementBody.GetLinearVelocity()}");
 
-            if (unitController.InWater == true) {
+            if (unitController.InWater == true && unitController.IsEncumbered == false) {
                 //Debug.Log($"{unitController.gameObject.name}.MovementFallState.Update() IN WATER = TRUE; CheckForSwimming() == {unitMovementController.CheckForSwimming()}");
                 if (unitMovementController.CheckForSwimming() == true) {
                     unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
@@ -52,12 +52,13 @@ namespace AnyRPG {
             }
 
             if (unitController.CanFly
+                && unitController.IsEncumbered == false
                 && unitMovementController.CurrentMovementData.InputFly) {
                 unitMovementController.ChangeState(CharacterMovementState.Fly, isReplay);
                 return;
             }
 
-            if (unitController.CanGlide) {
+            if (unitController.CanGlide && unitController.IsEncumbered == false) {
                 unitMovementController.ChangeState(CharacterMovementState.Glide, isReplay);
                 return;
             }

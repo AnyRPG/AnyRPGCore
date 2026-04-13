@@ -40,7 +40,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (unitController.InWater == true) {
+            if (unitController.InWater == true && unitController.IsEncumbered == false) {
                 if (unitMovementController.CheckForSwimming() == true) {
                     unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
                     return;

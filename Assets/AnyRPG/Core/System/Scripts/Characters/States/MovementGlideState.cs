@@ -59,7 +59,7 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.MovementGlideState.Update()");
 
             if (unitController.InWater == true) {
-                if (unitMovementController.CheckForSwimming() == true) {
+                if (unitController.IsEncumbered == false && unitMovementController.CheckForSwimming() == true) {
                     //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() swimming");
                     unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
                     return;
@@ -67,6 +67,7 @@ namespace AnyRPG {
             }
 
             if (unitController.CanFly
+                && unitController.IsEncumbered == false
                 && unitMovementController.CurrentMovementData.InputFly) {
                 //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() flying");
                 unitMovementController.ChangeState(CharacterMovementState.Fly, isReplay);
@@ -86,7 +87,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (unitController.CanGlide == false) {
+            if (unitController.CanGlide == false || unitController.IsEncumbered == true) {
                 //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() falling");
                 unitMovementController.ChangeState(CharacterMovementState.Fall, isReplay);
                 return;

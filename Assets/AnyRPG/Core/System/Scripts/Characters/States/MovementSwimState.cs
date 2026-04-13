@@ -42,6 +42,7 @@ namespace AnyRPG {
 
             if (unitController.InWater == true) {
                 if (unitController.CanFly
+                    && unitController.IsEncumbered == false
                     && unitMovementController.CurrentMovementData.InputFly
                     && unitMovementController.CheckForSwimming() == false) {
                     unitMovementController.ChangeState(CharacterMovementState.Fly, isReplay);

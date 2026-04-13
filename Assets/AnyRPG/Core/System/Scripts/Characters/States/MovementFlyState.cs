@@ -45,86 +45,6 @@ namespace AnyRPG {
                 unitController.UnitAnimator.SetBool("Flying", false);
             }
         }
-        /*
-        public void Update(bool isReplay, double timeInterval) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Update()");
-
-            if (unitMovementController.touchingGround == true && unitMovementController.CurrentMovementData.InputFly == false) {
-                if (unitMovementController.CurrentMovementData.HasMoveInput()) {
-                    unitMovementController.ChangeState(CharacterMovementState.Move, isReplay);
-                    return;
-                } else {
-                    unitMovementController.ChangeState(CharacterMovementState.Idle, isReplay);
-                    return;
-                }
-            }
-            if (unitController.InWater == true && unitMovementController.CheckForSwimming() == true) {
-                unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
-                return;
-            }
-            if (unitController.CanFly == false) {
-                unitMovementController.ChangeState(CharacterMovementState.Fall, isReplay);
-                return;
-            }
-
-
-            if (unitMovementController.CurrentMovementData.HasFlyMoveInput() || unitMovementController.CurrentMovementData.HasTurnInput()) {
-
-                // ============ RIGIDBODY CONSTRAINTS ============
-                unitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
-
-                // ============ VELOCITY CALCULATIONS ============
-
-                // set clampValue to default of max movement speed
-                float clampValue = unitMovementController.MaxMovementSpeed;
-
-                // set a clamp value to limit movement speed to walking if going backward
-                
-                //if (currentMoveVelocity.z < 0) {
-                //    clampValue = 1;
-                //}
-
-                // get current movement speed and clamp it to current clamp value
-                float calculatedSpeed = unitController.FlySpeed;
-                calculatedSpeed = Mathf.Clamp(calculatedSpeed, 0, clampValue);
-
-                if (unitMovementController.CurrentMovementData.HasFlyMoveInput()) {
-                    // multiply normalized movement by calculated speed to get actual movement
-                    unitMovementController.intendedLocalMoveVelocity = unitMovementController.LocalNormalizedFlyMovement() * calculatedSpeed;
-                    unitMovementController.adjustedlocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
-                    //Debug.Log($"{unitController.gameObject.name}.PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
-                }
-                unitMovementController.CalculateTurnVelocity();
-
-
-                if (isReplay == false) {
-                    // ============ ANIMATOR PARAMETERS ============
-                    unitController.UnitAnimator.SetMoving(true);
-                    unitController.UnitAnimator.SetTurnVelocity(unitMovementController.currentTurnVelocity.x);
-                }
-
-            } else {
-                // ============ RIGIDBODY CONSTRAINTS ============
-                // prevent constant drifting through air after stop moving
-                unitController.FreezeAll();
-
-                // ============ VELOCITY CALCULATIONS ============
-                unitMovementController.intendedLocalMoveVelocity = Vector3.zero;
-                unitMovementController.adjustedlocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
-                if (isReplay == false) {
-                    // ============ ANIMATOR PARAMETERS ============
-                    unitController.UnitAnimator.SetMoving(false);
-                    unitController.UnitAnimator.SetTurnVelocity(0f);
-                }
-
-            }
-            if (isReplay == false) {
-                unitController.UnitAnimator.SetVelocityFromLocal(unitMovementController.intendedLocalMoveVelocity);
-            }
-
-            unitMovementController.MoveRelative();
-        }
-        */
 
         public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementFlyState.Update()");
@@ -138,11 +58,11 @@ namespace AnyRPG {
                     return;
                 }
             }
-            if (unitController.InWater == true && unitMovementController.CheckForSwimming() == true) {
+            if (unitController.InWater == true && unitController.IsEncumbered == false && unitMovementController.CheckForSwimming() == true) {
                 unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
                 return;
             }
-            if (unitController.CanFly == false) {
+            if (unitController.CanFly == false || unitController.IsEncumbered == true) {
                 unitMovementController.ChangeState(CharacterMovementState.Fall, isReplay);
                 return;
             }
