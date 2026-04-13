@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 1
+  itemPickupPrefabProfileName: Leather Boots Blue
   equipmentSlotType: Boots
   equipmentSetName: 
-  umaRecipeProfileName: Blue Leather Boots
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Blue Leather Boots

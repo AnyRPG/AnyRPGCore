@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 0.4
+  itemPickupPrefabProfileName: Leather Bracers Brown
   equipmentSlotType: Bracers
   equipmentSetName: 
-  umaRecipeProfileName: Brown Leather Bracers
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Brown Leather Bracers

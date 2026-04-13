@@ -34,16 +34,14 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 3
+  itemPickupPrefabProfileName: Medieval Shield
   equipmentSlotType: Off Hand
   equipmentSetName: 
-  umaRecipeProfileName: 
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList:
+  deprecatedHoldableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Off Hand
-      holdableObjectName: Medieval Shield
+      holdableObjectName: Medieval Shield Handle
       useUniversalAttachment: 1
       primaryAttachmentName: Shield Sheathed
       unsheathedAttachmentName: Shield

@@ -1335,6 +1335,8 @@ namespace AnyRPG {
             return true;
         }
 
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+        }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
             //base.SetupScriptableObjects(systemGameManager);

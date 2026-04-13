@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 4
+  itemPickupPrefabProfileName: Plate Pants Steel
   equipmentSlotType: Pants
   equipmentSetName: 
-  umaRecipeProfileName: Steel Plate Legs
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Steel Plate Legs

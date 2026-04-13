@@ -53,18 +53,18 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.MovementIdleState.Update(isReplay: {isReplay}) frame: {Time.frameCount} tick: {unitMovementController.CurrentMovementData.SimulatedTick} tposition: {unitController.transform.position} rPosition: {unitController.UnitMotor.MovementBody.GetPosition()} mPosition: {unitController.UnitModelController.UnitModel.transform.position}");
 
             if (unitController.InWater == true) {
-                if (unitMovementController.CheckForSwimming() == true) {
+                if (unitController.IsEncumbered == false && unitMovementController.CheckForSwimming() == true) {
                     unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
                     return;
                 }
             }
 
-            if (unitMovementController.CurrentMovementData.InputJump) {
+            if (unitMovementController.CurrentMovementData.InputJump && unitController.IsEncumbered == false) {
                 unitMovementController.ChangeState(CharacterMovementState.Jump, isReplay);
                 return;
             }
 
-            if (unitController.CanFly && unitMovementController.CurrentMovementData.InputFly) {
+            if (unitController.CanFly && unitController.IsEncumbered == false && unitMovementController.CurrentMovementData.InputFly) {
                 unitMovementController.ChangeState(CharacterMovementState.Jump, isReplay);
                 return;
             }

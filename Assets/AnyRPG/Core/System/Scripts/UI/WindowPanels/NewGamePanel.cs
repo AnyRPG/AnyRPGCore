@@ -279,14 +279,21 @@ namespace AnyRPG {
                 }
             }
 
-            if (networkManagerClient.ClientMode == NetworkServerMode.Lobby) {
+            if (systemGameManager.GameMode == GameMode.Network && networkManagerClient.ClientMode == NetworkServerMode.Lobby) {
                 if (playerNameInput.activeSelf == true) {
                     playerNameInput.SetActive(false);
                 }
                 playerNameLabel.text = networkManagerClient.Username;
             } else {
-                if (playerNameInput.activeSelf == false) {
-                    playerNameInput.SetActive(true);
+                if (systemConfigurationManager.EditPlayerName == false) {
+                    if (playerNameInput.activeSelf == true) {
+                        playerNameInput.SetActive(false);
+                    }
+                    playerNameLabel.text = newGameManager.PlayerName;
+                } else {
+                    if (playerNameInput.activeSelf == false) {
+                        playerNameInput.SetActive(true);
+                    }
                 }
             }
         }

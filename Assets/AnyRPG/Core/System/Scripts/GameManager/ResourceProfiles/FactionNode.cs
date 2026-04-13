@@ -46,6 +46,9 @@ namespace AnyRPG {
             return false;
         }
 
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+        }
+
         public void SetupScriptableObjects(SystemGameManager systemGamenManager) {
             Configure(systemGamenManager);
 

@@ -75,9 +75,11 @@ namespace AnyRPG {
 
             ClearEffectPrefabs();
             statusEffect.CancelEffect(unitController);
-            unitController.UnitEventController.NotifyOnCancelStatusEffect(statusEffect);
             unitController.CharacterStats.HandleStatusEffectRemoval(statusEffect);
             ClearNodeScripts();
+
+            // notify last or we will save with the status effect still active and it will come back when we load
+            unitController.UnitEventController.NotifyOnCancelStatusEffect(statusEffect);
         }
 
         public void ClearNodeScripts() {

@@ -91,6 +91,12 @@ namespace AnyRPG {
             return item.BuyPrice(sourceUnitController);
         }
 
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+            if (instantiatedItem != null) {
+                tooltipController.UpdateCurrencyAmount(instantiatedItem, "Sell Price: ");
+            }
+        }
+
         public void SetupScriptableObjects(SystemDataFactory systemDataFactory, IDescribable describable) {
 
             if (itemName != string.Empty) {

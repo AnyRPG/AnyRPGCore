@@ -142,7 +142,7 @@ namespace AnyRPG {
             //Debug.Log(aiController.gameObject.name + ".PatrolState.TrySavePersistentData()");
             if (unitController?.PatrolController?.CurrentPatrol != null && unitController.PatrolController.CurrentPatrol.SavePositionAtDestination) {
                 if (unitController.PersistentObjectComponent != null) {
-                    unitController.PersistentObjectComponent.SaveProperties();
+                    unitController.PersistentObjectComponent.SaveProperties(false);
                 }
             }
         }

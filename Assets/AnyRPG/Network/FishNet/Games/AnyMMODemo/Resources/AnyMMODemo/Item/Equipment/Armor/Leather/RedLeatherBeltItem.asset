@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 0.3
+  itemPickupPrefabProfileName: Leather Belt Red
   equipmentSlotType: Belt
   equipmentSetName: 
-  umaRecipeProfileName: Red Leather Belt
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Red Leather Belt

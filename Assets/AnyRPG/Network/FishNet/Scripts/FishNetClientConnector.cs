@@ -2466,6 +2466,19 @@ namespace AnyRPG {
             networkManagerServer.RequestInteractWithInteractable(networkConnection.ClientId, networkInteractable.Interactable);
         }
 
+        public void DespawnPrefab(GameObject gameObjectToDespawn) {
+            
+        }
+
+        public GameObject SpawnDroppedItem(Scene scene, GameObject droppedItemPrefab, Vector3 position, Quaternion rotation) {
+            //Debug.Log($"FishNetClientConnector.SpawnDroppedItem(scene: {scene.name}, prefab: {droppedItemPrefab.name}, position: {position}, rotation: {rotation})");
+
+            NetworkObject nob = GetSpawnablePrefab(droppedItemPrefab, null, position, Vector3.forward);
+            SpawnPrefab(nob, null, scene);
+            
+            return nob.gameObject;
+        }
+
         /*
         public override void OnStartServer() {
             base.OnStartServer();

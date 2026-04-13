@@ -369,12 +369,15 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessInit() {
-            //if (spawnReference != null) {
-            objectMaterialController.PopulateOriginalMaterials();
-            //}
+            PopulateOriginalMaterials();
+
             CheckEnableInteractableRange();
 
-            persistentObjectComponent.Init();
+            //persistentObjectComponent.Init();
+        }
+
+        public void PopulateOriginalMaterials() {
+            objectMaterialController.PopulateOriginalMaterials();
         }
 
         protected virtual void CheckEnableInteractableRange() {
@@ -790,16 +793,17 @@ namespace AnyRPG {
             }
 
             if (notInteractable == true) {
+                //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): notInteractable is true, not showing tooltip or glow.");
                 return;
             }
 
             if (IsMouseOverBlocked()) {
+                //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): Mouse over is blocked, not showing tooltip or glow.");
                 return;
             }
 
-            //playerManager.PlayerController.HandleMouseOver(this);
-
             if (showTooltip == false) {
+                //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): showTooltip is false, not showing tooltip or glow.");
                 return;
             }
 
@@ -814,6 +818,7 @@ namespace AnyRPG {
 
             foreach (InteractableOptionComponent interactableOption in interactables.Values) {
                 if (interactableOption.BlockTooltip == true) {
+                    //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): {interactableOption.GetType()} is blocking tooltip.  Not showing tooltip or glow.");
                     return;
                 }
             }
@@ -828,10 +833,14 @@ namespace AnyRPG {
                 //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): No current Interactables.  Not glowing.");
                 return;
             }
-            if (glowOnMouseOver) {
-                outlineController.TurnOnOutline();
 
-            }
+            if (glowOnMouseOver) {
+                //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): Turning on outline.");
+                outlineController.TurnOnOutline();
+            }// else {
+                //Debug.Log($"{gameObject.name}.Interactable.OnMouseEnter(): glowOnMouseOver is false, not turning on outline.");
+            //}
+
         }
 
 
@@ -1269,12 +1278,14 @@ namespace AnyRPG {
                 return;
             }
             persistentObjectSaveData.InteractableSaveData = GetInteractableSaveData();
+            persistentObjectSaveData.InteractableSaveData.BundleItems(systemItemManager);
         }
 
         public virtual void LoadPersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {
             //Debug.Log($"{gameObject.name}.Interactable.LoadPersistentObjectSaveData()");
 
             if (persistInteractableData == false) {
+                //Debug.LogWarning($"{gameObject.name}.Interactable.LoadPersistentObjectSaveData(): persistInteractableData is false, skipping loading interactable data.");
                 return;
             }
             if (persistentObjectSaveData.InteractableSaveData == null) {
@@ -1282,6 +1293,28 @@ namespace AnyRPG {
                 return;
             }
             LoadInteractableSaveData(persistentObjectSaveData.InteractableSaveData);
+        }
+
+        public void ProcessStopNetworkClient() {
+            //Debug.Log($"{gameObject.name}.Interactable.ProcessStopNetworkClient()");
+
+            bool canReset = false;
+            foreach (InteractableOptionComponent interactableOptionComponent in interactables.Values) {
+                //Debug.Log($"{gameObject.name}.Interactable.Awake(): Found InteractableOptionComponent: " + interactable.ToString());
+                if (interactableOptionComponent != null) {
+                    // in rare cases where a script is missing or has been made abstract, but not updated, this can return a null interactable option
+                    if (interactableOptionComponent.ResetOnStopNetwork()) {
+                        canReset = true;
+                        break;
+                    }
+                }
+            }
+            if (canReset) {
+                ResetSettings();
+            }
+        }
+
+        public void ProcessShowTooltip(TooltipController tooltipController) {
         }
 
     }

@@ -2024,6 +2024,10 @@ namespace AnyRPG {
             }
             interactionManagerServer.InteractWithInteractable(unitController, interactable);
         }
+
+        public GameObject SpawnDroppedItem(Scene scene, Vector3 position, Quaternion rotation) {
+            return networkController.SpawnDroppedItem(scene, position, rotation);
+        }
     }
 
 }

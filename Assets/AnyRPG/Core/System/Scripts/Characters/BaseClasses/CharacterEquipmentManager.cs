@@ -6,6 +6,8 @@ using UnityEngine.TextCore.Text;
 namespace AnyRPG {
     public class CharacterEquipmentManager : EquipmentManager {
 
+        // state tracking
+        private float equippedWeight = 0f;
 
         // component references
         protected UnitController unitController = null;
@@ -22,6 +24,7 @@ namespace AnyRPG {
         public List<AbilityAttachmentNode> WeaponAbilityAnimationObjects { get => weaponAbilityAnimationObjects; }
         public List<AbilityAttachmentNode> WeaponAbilityObjects { get => weaponAbilityObjects; }
         public UnitController UnitController { get => unitController; }
+        public float EquippedWeight { get => equippedWeight; }
 
         public CharacterEquipmentManager(UnitController unitController, SystemGameManager systemGameManager) : base(systemGameManager) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.CharacterEquipmentManager()");
@@ -170,6 +173,8 @@ namespace AnyRPG {
             NotifyEquipmentChanged(instantiatedEquipment, null, -1, equipmentSlotProfile);
             // now that all stats have been recalculated, it's safe to fire this event, so things that listen will show the correct values
             unitController.UnitEventController.NotifyOnAddEquipment(equipmentSlotProfile, instantiatedEquipment);
+            equippedWeight += instantiatedEquipment.Equipment.Weight;
+            unitController.CharacterInventoryManager.CalculateEncumbered();
         }
 
         public override void UnequipEquipment(EquipmentSlotProfile equipmentSlotProfile) {
@@ -278,6 +283,8 @@ namespace AnyRPG {
             NotifyEquipmentChanged(null, instantiatedEquipment, -1, equipmentSlotProfile);
             // now that all stats have been recalculated, it's safe to fire this event, so things that listen will show the correct values
             unitController.UnitEventController.NotifyOnRemoveEquipment(equipmentSlotProfile, instantiatedEquipment);
+            equippedWeight -= instantiatedEquipment.Equipment.Weight;
+            unitController.CharacterInventoryManager.CalculateEncumbered();
         }
 
         public override InstantiatedEquipment UnequipFromList(EquipmentSlotProfile equipmentSlotProfile) {

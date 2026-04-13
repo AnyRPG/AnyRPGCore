@@ -1,11 +1,6 @@
-using AnyRPG;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace AnyRPG {
     public class InventorySlot : ConfiguredClass {
@@ -92,7 +87,10 @@ namespace AnyRPG {
 
         public bool AddItem(InstantiatedItem instantiatedItem) {
             //Debug.Log($"InventorySlot.Additem({instantiatedItem.Item.ResourceName}) (instance: {GetHashCode()})");
-
+            if (InstantiatedItems.ContainsKey(instantiatedItem.InstanceId)) {
+                Debug.LogWarning($"InventorySlot.AddItem(name: {instantiatedItem.ResourceName} id: {instantiatedItem.InstanceId}) attempted to add an item that is already in the slot.");
+                return false;
+            }
             InstantiatedItems.Add(instantiatedItem.InstanceId, instantiatedItem);
             instantiatedItem.Slot = this;
             UpdateSlot();

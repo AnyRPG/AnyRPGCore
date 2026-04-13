@@ -48,16 +48,7 @@ namespace AnyRPG {
             playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
-        public void ShowToolTip(Vector2 pivot, Vector3 position, IDescribable describable) {
-            ShowToolTip(pivot, position, describable, string.Empty);
-        }
-
         public void ShowToolTip(Vector3 position, IDescribable describable) {
-            ShowToolTip(position, describable, string.Empty);
-        }
-
-
-        public void ShowToolTip(Vector3 position, IDescribable describable, string showSellPrice) {
             if (describable == null) {
                 HideToolTip();
                 return;
@@ -74,13 +65,13 @@ namespace AnyRPG {
             } else {
                 pivotY = 1;
             }
-            ShowToolTip(new Vector2(pivotX, pivotY), position, describable, showSellPrice);
+            ShowToolTip(new Vector2(pivotX, pivotY), position, describable);
         }
 
         /// <summary>
         /// Show the tooltip
         /// </summary>
-        public void ShowToolTip(Vector2 pivot, Vector3 position, IDescribable describable, string showSellPrice) {
+        public void ShowToolTip(Vector2 pivot, Vector3 position, IDescribable describable) {
             //Debug.Log($"TooltipController.ShowToolTip({pivot}, {position}, {(describable == null ? "null" : describable.DisplayName)}, {showSellPrice})");
             
             if (describable == null) {
@@ -91,7 +82,7 @@ namespace AnyRPG {
             gameObject.SetActive(true);
 
             transform.position = position;
-            ShowToolTipCommon(describable, showSellPrice);
+            ShowToolTipCommon(describable);
             //toolTipText.text = description.GetDescription();
 
             LayoutRebuilder.ForceRebuildLayoutImmediate(tooltipRect);
@@ -114,7 +105,7 @@ namespace AnyRPG {
 
         }
 
-        public void ShowToolTipCommon(IDescribable describable, string showSellPrice) {
+        public void ShowToolTipCommon(IDescribable describable) {
             //Debug.Log($"TooltopController.ShowToolTipCommon({(describable == null ? "null" : describable.DisplayName)}, {showSellPrice})");
 
             if (describable == null) {
@@ -126,15 +117,18 @@ namespace AnyRPG {
             toolTipText.text = describable.GetSummary();
             if (toolTipCurrencyBarController != null) {
                 toolTipCurrencyBarController.ClearCurrencyAmounts();
-                if (describable is InstantiatedItem && showSellPrice != string.Empty) {
-                    KeyValuePair<Currency, int> sellAmount = (describable as InstantiatedItem).Item.GetSellPrice((describable as InstantiatedItem), playerManagerClient.UnitController);
-                    if (sellAmount.Value == 0 || sellAmount.Key == null) {
-                        // don't print a sell price on things that cannot be sold
-                        return;
-                    }
-                    toolTipCurrencyBarController.UpdateCurrencyAmount(sellAmount.Key, sellAmount.Value, showSellPrice);
-                }
+                describable.ProcessShowTooltip(this);
             }
+        }
+
+        public void UpdateCurrencyAmount(InstantiatedItem instantiatedItem, string sellPriceString) {
+            KeyValuePair<Currency, int> sellAmount = instantiatedItem.Item.GetSellPrice(instantiatedItem, playerManagerClient.UnitController);
+            if (sellAmount.Value == 0 || sellAmount.Key == null) {
+                // don't print a sell price on things that cannot be sold
+                return;
+            }
+            toolTipSellString = sellPriceString;
+            toolTipCurrencyBarController.UpdateCurrencyAmount(sellAmount.Key, sellAmount.Value, sellPriceString);
         }
 
 
@@ -148,27 +142,22 @@ namespace AnyRPG {
             toolTipVisible = false;
         }
 
-        public void RefreshTooltip(IDescribable describable, string showSellPrice) {
+        public void RefreshTooltip(IDescribable describable) {
             if (describable != null && toolTipText != null && toolTipText.text != null) {
-                ShowToolTipCommon(describable, showSellPrice);
+                ShowToolTipCommon(describable);
                 //toolTipText.text = description.GetDescription();
             } else {
                 HideToolTip();
             }
         }
 
-        public void RefreshTooltip(IDescribable describable) {
-            RefreshTooltip(describable, string.Empty);
-        }
-
-        public void ShowGamepadTooltip(RectTransform paneltransform, Transform buttonTransform, IDescribable describable, string sellPriceString) {
+        public void ShowGamepadTooltip(RectTransform paneltransform, Transform buttonTransform, IDescribable describable) {
             //Debug.Log("TooltopController.ShowGamepadTooltip()");
 
             //Rect panelRect = RectTransformToScreenSpace((BagPanel.ContentArea as RectTransform));
             toolTipPanelTransform = paneltransform;
             toolTipButtonTransform = buttonTransform;
             toolTipDescribable = describable;
-            toolTipSellString = sellPriceString;
 
             Vector3[] WorldCorners = new Vector3[4];
             paneltransform.GetWorldCorners(WorldCorners);
@@ -178,10 +167,10 @@ namespace AnyRPG {
 
             if (Mathf.Abs((Screen.width / 2f) - xMin) < Mathf.Abs((Screen.width / 2f) - xMax)) {
                 // left side is closer to center of the screen
-                ShowToolTip(new Vector2(1, 0.5f), new Vector3(xMin, buttonTransform.position.y, 0f), describable, sellPriceString);
+                ShowToolTip(new Vector2(1, 0.5f), new Vector3(xMin, buttonTransform.position.y, 0f), describable);
             } else {
                 // right side is closer to the center of the screen
-                ShowToolTip(new Vector2(0, 0.5f), new Vector3(xMax, buttonTransform.position.y, 0f), describable, sellPriceString);
+                ShowToolTip(new Vector2(0, 0.5f), new Vector3(xMax, buttonTransform.position.y, 0f), describable);
             }
             //uIManager.ShowToolTip(transform.position, inventorySlot.Item, "Sell Price: ");
             toolTipVisible = true;
@@ -191,7 +180,7 @@ namespace AnyRPG {
             if (toolTipVisible == false) {
                 return;
             }
-            ShowGamepadTooltip(toolTipPanelTransform, toolTipButtonTransform, toolTipDescribable, toolTipSellString);
+            ShowGamepadTooltip(toolTipPanelTransform, toolTipButtonTransform, toolTipDescribable);
         }
 
         

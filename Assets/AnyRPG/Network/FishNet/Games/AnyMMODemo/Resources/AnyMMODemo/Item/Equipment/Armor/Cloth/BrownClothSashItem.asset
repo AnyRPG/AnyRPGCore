@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 0.1
+  itemPickupPrefabProfileName: Cloth Belt Brown
   equipmentSlotType: Belt
   equipmentSetName: 
-  umaRecipeProfileName: Brown Cloth Sash
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Brown Cloth Sash

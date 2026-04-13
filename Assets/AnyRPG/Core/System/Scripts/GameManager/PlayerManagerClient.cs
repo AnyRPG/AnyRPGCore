@@ -335,13 +335,13 @@ namespace AnyRPG {
         }
 
         public void SetActiveUnitController(UnitController unitController) {
-            //Debug.Log("PlayerManager.SetActiveUnitController(" + unitController.gameObject.name + ")");
+            //Debug.Log($"PlayerManagerClient.SetActiveUnitController({(unitController == null ? "null" : unitController.gameObject.name)})");
+
             activeUnitController = unitController;
 
-            playerController.ProcessSetActiveUnitController();
-
-            // this should not be needed, baseCharacter should always point to the proper unit
-            //activeCharacter.SetUnitController(activeUnitController);
+            if (activeUnitController != null) {
+                playerController.ProcessSetActiveUnitController();
+            }
         }
 
         public void SetUnitController(UnitController unitController) {
@@ -524,6 +524,9 @@ namespace AnyRPG {
             unitController.UnitEventController.OnReachDestination += HandleReachDestination;
             unitController.UnitEventController.OnAddSkillLevel += HandleAddSkillLevel;
             unitController.UnitEventController.OnAddSkillExperience += HandleAddSkillExperience;
+            unitController.UnitEventController.OnCarryWeightChanged += HandleCarryWeightChanged;
+            unitController.UnitEventController.OnStatChanged += HandleStatChanged;
+            unitController.UnitEventController.OnEncumberedChange += HandleEncumberedChange;
         }
 
         public void UnsubscribeFromPlayerEvents() {
@@ -596,7 +599,21 @@ namespace AnyRPG {
             unitController.UnitEventController.OnReachDestination -= HandleReachDestination;
             unitController.UnitEventController.OnAddSkillLevel -= HandleAddSkillLevel;
             unitController.UnitEventController.OnAddSkillExperience -= HandleAddSkillExperience;
+            unitController.UnitEventController.OnCarryWeightChanged -= HandleCarryWeightChanged;
+            unitController.UnitEventController.OnStatChanged -= HandleStatChanged;
+            unitController.UnitEventController.OnEncumberedChange -= HandleEncumberedChange;
+        }
 
+        private void HandleEncumberedChange(bool encumbered) {
+            messageFeedManager.WriteMessage(encumbered ? "You are encumbered" : "You are no longer encumbered");
+        }
+
+        private void HandleStatChanged() {
+            systemEventManager.NotifyOnStatChanged();
+        }
+
+        private void HandleCarryWeightChanged() {
+            systemEventManager.NotifyOnCarryWeightChanged();
         }
 
         private void HandleAddSkillExperience(Skill skill, int experience) {

@@ -50,6 +50,10 @@ namespace AnyRPG {
         public string GetDescription() {
             return description;
         }
+
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+        }
+
     }
 
 }

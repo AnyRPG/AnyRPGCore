@@ -38,6 +38,6 @@ MonoBehaviour:
   outputCount: 1
   craftAbilityName: WoodWorking
   holdableObjectList:
-  - holdableObjectName: Log
+  - holdableObjectName: Log Handle
     useUniversalAttachment: 1
     attachmentName: Left Hand

@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 1
+  itemPickupPrefabProfileName: Plate Gloves Gold
   equipmentSlotType: Gloves
   equipmentSetName: 
-  umaRecipeProfileName: Gold Plate Gloves
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Gold Plate Gloves

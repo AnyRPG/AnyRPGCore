@@ -111,7 +111,7 @@ namespace AnyRPG {
 
         // reference to the default profile
         private List<UnitProfile> defaultUnitProfileList = new List<UnitProfile>();
-
+        
         [Header("Inventory")]
 
         /*
@@ -145,6 +145,14 @@ namespace AnyRPG {
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Item))]
         private List<string> defaultBankContents = new List<string>();
+
+        [Tooltip("If true, the player can drop items on the ground.  If false, they cannot drop items and must sell or destroy them to get rid of them.")]
+        [SerializeField]
+        private bool canDropItems = true;
+
+        [Tooltip("If true, any stacked items will be split when dropped.")]
+        [SerializeField]
+        private bool splitStacksOnDrop = false;
 
         /*
         [SerializeField]
@@ -193,6 +201,18 @@ namespace AnyRPG {
         [Tooltip("The maximum turn speed in degrees per second.")]
         [SerializeField]
         private float maxTurnSpeed = 360f;
+
+        [Tooltip("If true, the character will have an encumbered speed when carrying too much weight.")]
+        [SerializeField]
+        private bool useEncumberance = false;
+
+        [Tooltip("The weight limit (in kilograms) at which the character will be encumbered. Any value provided by stats be added to this value.")]
+        [SerializeField]
+        private float baseCarryWeight = 10f;
+
+        [Tooltip("The default character encumbered speed in meters per second.")]
+        [SerializeField]
+        private float encumberedSpeed = 1f;
 
         [Tooltip("The default character walk speed in meters per second.")]
         [SerializeField]
@@ -945,10 +965,11 @@ namespace AnyRPG {
         public Vector3 InitialIsometricVector { get => initialIsometricVector; set => initialIsometricVector = value; }
         public bool AllowFirstPersonCamera { get => allowFirstPersonCamera; set => allowFirstPersonCamera = value; }
         public List<int> ExperienceChart { get => experienceChart; set => experienceChart = value; }
-
-        //public Currency PostageCurrency { get => postageCurrency; set => postageCurrency = value; }
-
-        //public bool AllowClickToMove { get => allowClickToMove; }
+        public bool CanDropItems { get => canDropItems; set => canDropItems = value; }
+        public bool SplitStacksOnDrop { get => splitStacksOnDrop; set => splitStacksOnDrop = value; }
+        public bool UseEncumberance { get => useEncumberance; set => useEncumberance = value; }
+        public float EncumberedSpeed { get => encumberedSpeed; set => encumberedSpeed = value; }
+        public float BaseCarryWeight { get => baseCarryWeight; set => baseCarryWeight = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

@@ -495,7 +495,7 @@ namespace AnyRPG {
             //spawnRequests.Remove(characterRequestData.spawnRequestId);
 
             Vector3 newSpawnLocation = Vector3.zero;
-            Vector3 newSpawnForward = Vector3.forward;
+            Quaternion newSpawnRotation = Quaternion.identity;
 
             // lookup persistent position, or use navmesh agent to get a valid position (in case this spawner was not placed on walkable terrain)
             if (unitController.PersistentObjectComponent.PersistObjectPosition == true) {
@@ -506,21 +506,21 @@ namespace AnyRPG {
                     // since we will be using navMeshAgent.warp, do not attempt to move unit manually
                     unitController.PersistentObjectComponent.MoveOnStart = false;
                     newSpawnLocation = new Vector3(persistentObjectSaveData.LocationX, persistentObjectSaveData.LocationY, persistentObjectSaveData.LocationZ);
-                    newSpawnForward = new Vector3(persistentObjectSaveData.DirectionX, persistentObjectSaveData.DirectionY, persistentObjectSaveData.DirectionZ);
+                    newSpawnRotation = new Quaternion(persistentObjectSaveData.RotationX, persistentObjectSaveData.RotationY, persistentObjectSaveData.RotationZ, persistentObjectSaveData.RotationW);
                 } else {
                     newSpawnLocation = GetSpawnLocation();
-                    newSpawnForward = transform.forward;
+                    newSpawnRotation = transform.rotation;
                 }
             } else {
                 newSpawnLocation = GetSpawnLocation();
-                newSpawnForward = transform.forward;
+                newSpawnRotation = transform.rotation;
             }
 
             // now that we have a good final position and rotation, set it
             unitController.StartPosition = newSpawnLocation;
             unitController.NavMeshAgent.Warp(newSpawnLocation);
-            if (newSpawnForward != Vector3.zero) {
-                unitController.transform.forward = newSpawnForward;
+            if (newSpawnRotation != Quaternion.identity) {
+                unitController.transform.rotation = newSpawnRotation;
             }
 
 

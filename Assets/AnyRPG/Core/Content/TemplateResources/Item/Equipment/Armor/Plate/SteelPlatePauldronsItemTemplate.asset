@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 2.5
+  itemPickupPrefabProfileName: Plate Shoulders Steel
   equipmentSlotType: Pauldrons
   equipmentSetName: 
-  umaRecipeProfileName: Steel Plate Pauldrons
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Steel Plate Pauldrons

@@ -594,6 +594,9 @@ namespace AnyRPG {
             if (secondaryStats.ContainsKey(secondaryStatType)) {
                 secondaryStats[secondaryStatType].CurrentValue = (int)((secondaryStats[secondaryStatType].BaseValue + GetSecondaryAddModifiers(secondaryStatType)) * GetSecondaryMultiplyModifiers(secondaryStatType));
             }
+            if (secondaryStatType == SecondaryStatType.CarryWeight) {
+                unitController.CharacterInventoryManager.CalculateEncumbered();
+            }
         }
 
         public float GetSecondaryAddModifiers(SecondaryStatType secondaryStatType) {
@@ -1057,6 +1060,7 @@ namespace AnyRPG {
                 if (statusEffects[statusEffect.ResourceName].MonitorCoroutine != null) {
                     unitController.StopCoroutine(statusEffects[statusEffect.ResourceName].MonitorCoroutine);
                 }
+                //Debug.Log($"{unitController.gameObject.name}.CharacterStats.HandleStatusEffectRemoval(): removing status effect: {statusEffect.DisplayName}");
                 statusEffects.Remove(statusEffect.ResourceName);
             }
 

@@ -31,12 +31,12 @@ namespace AnyRPG {
         public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementNavMeshState.Update()");
 
-            if (unitMovementController.CurrentMovementData.InputJump) {
+            if (unitMovementController.CurrentMovementData.InputJump && unitController.IsEncumbered == false) {
                 unitMovementController.ChangeState(CharacterMovementState.Jump, isReplay);
                 return;
             }
 
-            if (unitController.CanFly && unitMovementController.CurrentMovementData.InputFly) {
+            if (unitController.CanFly && unitController.IsEncumbered == false && unitMovementController.CurrentMovementData.InputFly) {
                 unitMovementController.ChangeState(CharacterMovementState.Jump, isReplay);
                 return;
             }

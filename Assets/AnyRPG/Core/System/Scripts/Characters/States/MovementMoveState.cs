@@ -26,118 +26,24 @@ namespace AnyRPG {
             }
         }
 
-        /*
-        public void Update(bool isReplay, double timeInterval) {
-            //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Update()");
-
-            float calculatedSpeed = 0f;
-
-            if (unitController.InWater == true) {
-                if (unitMovementController.CheckForSwimming() == true) {
-                    unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
-                    return;
-                }
-            }
-
-            if (unitMovementController.CurrentMovementData.InputJump) {
-                unitMovementController.ChangeState(CharacterMovementState.Jump, isReplay);
-                return;
-            }
-
-            if (unitController.CanFly && unitMovementController.CurrentMovementData.InputFly) {
-                unitMovementController.ChangeState(CharacterMovementState.Jump, isReplay);
-                return;
-            }
-
-            // since we are in the move state, reset velocity to zero so we can pick up the new values
-            // allow falling while moving by clamping existing y velocity
-            unitMovementController.intendedLocalMoveVelocity = new Vector3(0, Mathf.Clamp(unitController.RigidBody.linearVelocity.y, -53, 0), 0);
-            unitMovementController.adjustedlocalMoveVelocity = unitMovementController.intendedLocalMoveVelocity;
-
-            // determine direction of travel in world space
-            Vector3 directionOfTravel = unitController.transform.forward;
-
-            if (unitMovementController.CurrentMovementData.HasMoveInput()) {
-
-                // set clampValue to default of max movement speed
-                float clampValue = unitMovementController.MaxMovementSpeed;
-
-                // set a clamp value to limit movement speed to walking if going backward
-                //if (currentMoveVelocity.z < 0) {
-                //    clampValue = 1;
-                //}
-
-                // get current movement speed and clamp it to current clamp value
-                calculatedSpeed = Mathf.Clamp(unitController.MovementSpeed, 0, clampValue);
-
-                // multiply normalized movement by calculated speed to get actual local movement
-                unitMovementController.intendedLocalMoveVelocity = unitMovementController.CurrentMovementData.IntendedLocalDirection * calculatedSpeed;
-
-                if (unitMovementController.intendedLocalMoveVelocity.x != 0 || unitMovementController.intendedLocalMoveVelocity.z != 0) {
-                    directionOfTravel = unitController.transform.TransformDirection(new Vector3(unitMovementController.intendedLocalMoveVelocity.x, 0, unitMovementController.intendedLocalMoveVelocity.z)).normalized;
-                }
-
-                // determine if there is an obstacle in front, and if it is stairs
-                unitMovementController.CheckFrontObstacle(calculatedSpeed, directionOfTravel, timeInterval);
-
-            }
-
-            if (
-                !unitMovementController.MaintainingGround() ||
-                (unitMovementController.groundAngle > unitMovementController.slopeLimit && unitMovementController.nearBottomFrontObstacle == true && unitMovementController.nearLowObstacle == false) ||
-                (unitMovementController.groundAngle > unitMovementController.slopeLimit && unitMovementController.nearBottomFrontObstacle == false && unitMovementController.nearLowObstacle == false && unitMovementController.closestWalkableGroundDistance < -unitMovementController.stepHeight)
-                ) { // closetoGround check for running backward off low obstacle
-                if (unitController.CanFly) {
-                    unitMovementController.ChangeState(CharacterMovementState.Fly, isReplay);
-                    return;
-                } else {
-                    if (unitController.CanGlide) {
-                        unitMovementController.ChangeState(CharacterMovementState.Glide, isReplay);
-                        return;
-                    }
-                    unitMovementController.ChangeState(CharacterMovementState.Fall, isReplay);
-                    return;
-                }
-            }
-
-            if (unitMovementController.CurrentMovementData.HasMoveInput() || unitMovementController.CurrentMovementData.HasTurnInput()) {
-
-                if (unitMovementController.CurrentMovementData.HasMoveInput()) {
-                    unitMovementController.adjustedlocalMoveVelocity = unitMovementController.NormalizedLocalMovement(calculatedSpeed, directionOfTravel, timeInterval) * calculatedSpeed;
-                }
-                unitMovementController.CalculateTurnVelocity();
-            } else {
-                unitMovementController.currentTurnVelocity = Vector3.zero;
-                unitMovementController.ChangeState(CharacterMovementState.Idle, isReplay);
-                return;
-            }
-
-            unitMovementController.MoveRelative();
-            
-            if (isReplay == false) {
-                unitMovementController.AnimatorMoveUpdate();
-            }
-        }
-        */
-
         public void Update(bool isReplay, double timeInterval) {
             //Debug.Log($"{unitController.gameObject.name}.MovementMoveState.Update(isreplay: {isReplay}) frame: {Time.frameCount} tick: {unitMovementController.CurrentMovementData.SimulatedTick}");
 
             float calculatedSpeed = 0f;
 
-            if (unitController.InWater == true) {
+            if (unitController.InWater == true && unitController.IsEncumbered == false) {
                 if (unitMovementController.CheckForSwimming() == true) {
                     unitMovementController.ChangeState(CharacterMovementState.Swim, isReplay);
                     return;
                 }
             }
 
-            if (unitMovementController.CurrentMovementData.InputJump) {
+            if (unitMovementController.CurrentMovementData.InputJump && unitController.IsEncumbered == false) {
                 unitMovementController.ChangeState(CharacterMovementState.Jump, isReplay);
                 return;
             }
 
-            if (unitController.CanFly && unitMovementController.CurrentMovementData.InputFly) {
+            if (unitController.CanFly && unitController.IsEncumbered == false && unitMovementController.CurrentMovementData.InputFly) {
                 unitMovementController.ChangeState(CharacterMovementState.Jump, isReplay);
                 return;
             }
@@ -166,8 +72,14 @@ namespace AnyRPG {
                 (unitMovementController.groundAngle > unitMovementController.slopeLimit && unitMovementController.nearBottomFrontObstacle && !unitMovementController.nearLowObstacle) ||
                 (unitMovementController.groundAngle > unitMovementController.slopeLimit && !unitMovementController.nearBottomFrontObstacle && !unitMovementController.nearLowObstacle && unitMovementController.closestWalkableGroundDistance < -unitMovementController.stepHeight)) {
 
-                if (unitController.CanFly) { unitMovementController.ChangeState(CharacterMovementState.Fly, isReplay); return; }
-                if (unitController.CanGlide) { unitMovementController.ChangeState(CharacterMovementState.Glide, isReplay); return; }
+                if (unitController.CanFly && unitController.IsEncumbered == false) {
+                    unitMovementController.ChangeState(CharacterMovementState.Fly, isReplay);
+                    return;
+                }
+                if (unitController.CanGlide && unitController.IsEncumbered == false) {
+                    unitMovementController.ChangeState(CharacterMovementState.Glide, isReplay);
+                    return;
+                }
                 unitMovementController.ChangeState(CharacterMovementState.Fall, isReplay);
                 return;
             }

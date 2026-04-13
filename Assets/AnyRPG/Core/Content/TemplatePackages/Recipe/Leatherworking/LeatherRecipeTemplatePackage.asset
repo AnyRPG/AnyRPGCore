@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
   m_Name: LeatherRecipeTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: Steel Ingot Recipe
+  resourceName: Leather Recipe
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -22,7 +22,7 @@ MonoBehaviour:
   optionalOverride: 0
   resources:
   - {fileID: 11400000, guid: 8d8e367bc98eaff45898ce9f6bd07bd4, type: 2}
-  - {fileID: 11400000, guid: fc9b498615003da4189fda4059b15206, type: 2}
-  - {fileID: 11400000, guid: ba3e4ee262069a24692c414899f955a9, type: 2}
   prefabs: []
-  dependencies: []
+  dependencies:
+  - {fileID: 11400000, guid: 8e75a435d82384a45bbb343acc2b73af, type: 2}
+  - {fileID: 11400000, guid: 67f8a4fd960bcc24685d552dae78b932, type: 2}

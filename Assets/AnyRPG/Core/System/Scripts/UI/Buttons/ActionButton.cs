@@ -245,7 +245,7 @@ namespace AnyRPG {
             // there was the assumption that these were only being called when a player clicked to add an ability
             if (UIManager.MouseInRect(Icon.rectTransform)) {
                 //uIManager.ShowToolTip(transform.position, useable as IDescribable);
-                uIManager.ShowGamepadTooltip(tooltipTransform, transform, newUseable as IDescribable, "");
+                uIManager.ShowGamepadTooltip(tooltipTransform, transform, newUseable as IDescribable);
 
             }
 
@@ -514,7 +514,7 @@ namespace AnyRPG {
             }
             if (tmp != null) {
                 //uIManager.ShowToolTip(transform.position, tmp);
-                uIManager.ShowGamepadTooltip(tooltipTransform, transform, useable as IDescribable, "");
+                uIManager.ShowGamepadTooltip(tooltipTransform, transform, useable as IDescribable);
 
             }
         }
@@ -570,7 +570,7 @@ namespace AnyRPG {
             if (useable != null) {
                 owner.SetControllerHints("Move", "Clear", "", "", "", "");
                 if (tooltipTransform != null) {
-                    uIManager.ShowGamepadTooltip(tooltipTransform, transform, useable as IDescribable, "");
+                    uIManager.ShowGamepadTooltip(tooltipTransform, transform, useable as IDescribable);
                 }
             } else {
                 owner.HideControllerHints();

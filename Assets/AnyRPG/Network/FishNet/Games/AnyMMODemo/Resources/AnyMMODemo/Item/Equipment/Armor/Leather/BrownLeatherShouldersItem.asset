@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 0.8
+  itemPickupPrefabProfileName: Leather Shoulders Brown
   equipmentSlotType: Pauldrons
   equipmentSetName: 
-  umaRecipeProfileName: Brown Leather Shoulders
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Brown Leather Shoulders

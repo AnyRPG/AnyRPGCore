@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 3
+  itemPickupPrefabProfileName: Leather Armor Brown
   equipmentSlotType: Armor
   equipmentSetName: 
-  umaRecipeProfileName: Brown Leather Armor
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Brown Leather Armor

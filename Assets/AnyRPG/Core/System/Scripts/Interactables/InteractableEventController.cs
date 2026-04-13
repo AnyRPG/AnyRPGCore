@@ -30,6 +30,7 @@ namespace AnyRPG {
         public event Action<UnitController, InteractableOptionComponent, int, int> OnInteractionWithOptionStarted = delegate { };
         public event Action<bool> OnLootableNodeSpawnObjectSetActive = delegate { };
         public event Action<bool> OnActivatableObjectSetActive = delegate { };
+        public event Action<List<InstantiatedItem>> OnSetDroppedItems = delegate { };
 
         // interactable this controller is attached to
         private Interactable interactable;
@@ -142,6 +143,10 @@ namespace AnyRPG {
 
         public void NotifyOnActivatableObjectSetActive(bool active) {
             OnActivatableObjectSetActive(active);
+        }
+
+        public void NotifyOnSetDroppedItems(List<InstantiatedItem> itemsToDrop) {
+            OnSetDroppedItems(itemsToDrop);
         }
 
 

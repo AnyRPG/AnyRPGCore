@@ -23,7 +23,8 @@ namespace AnyRPG {
             RegisterWithLevelManager();
 
             // testing : moved here from start() for object pooling.  monitor for breakage
-            persistentObjectComponent.Init();
+            //persistentObjectComponent.Init();
+            persistentObjectComponent.LoadPersistentState();
         }
 
         public override void SetGameManagerReferences() {

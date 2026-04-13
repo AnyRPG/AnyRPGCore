@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 2
+  itemPickupPrefabProfileName: Plate Helmet Silver
   equipmentSlotType: Helm
   equipmentSetName: 
-  umaRecipeProfileName: Silver Plate Helm
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Silver Plate Helm

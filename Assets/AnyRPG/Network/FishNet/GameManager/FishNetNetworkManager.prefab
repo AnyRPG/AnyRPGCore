@@ -74,6 +74,10 @@ MonoBehaviour:
   _maximumTimedObserversDuration: 10
   _defaultConditions:
   - {fileID: 11400000, guid: 2033f54fd2794464bae08fa5a55c8996, type: 2}
+  _useLevelOfDetail: 0
+  _maximumLevelOfDetailInterval: 2
+  _levelOfDetailUpdateDuration: 1
+  _levelOfDetailDistances: []
 --- !u!114 &4982240435173220523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,6 +107,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkConnectorSpawnPrefab: {fileID: 1478392482824682585, guid: 0f27ab53344f38641a6320a2fda8b096,
+    type: 3}
+  droppedItemPrefab: {fileID: 2142560854350251722, guid: 102915275461d7649847550542c4b098,
     type: 3}
 --- !u!114 &251337143587947253
 MonoBehaviour:

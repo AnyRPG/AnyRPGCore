@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -13,6 +14,9 @@ namespace AnyRPG {
 
         [SerializeField]
         protected BagBarController bagBarController;
+
+        [SerializeField]
+        protected TextMeshProUGUI carryWeightText = null;
 
         [SerializeField]
         protected CurrencyBarController currencyBarController = null;
@@ -36,6 +40,8 @@ namespace AnyRPG {
             systemEventManager.OnAddInventorySlot += HandleAddSlot;
             systemEventManager.OnRemoveInventorySlot += HandleRemoveSlot;
             systemEventManager.OnCurrencyChange += HandleCurrencyChange;
+            systemEventManager.OnCarryWeightChanged += HandleCarryWeightChanged;
+            systemEventManager.OnStatChanged += HandleStatChanged;
         }
 
         protected override void ProcessCleanupEventSubscriptions() {
@@ -46,6 +52,34 @@ namespace AnyRPG {
             systemEventManager.OnAddInventorySlot -= HandleAddSlot;
             systemEventManager.OnRemoveInventorySlot -= HandleRemoveSlot;
             systemEventManager.OnCurrencyChange -= HandleCurrencyChange;
+            systemEventManager.OnCarryWeightChanged -= HandleCarryWeightChanged;
+            systemEventManager.OnStatChanged -= HandleStatChanged;
+        }
+
+        private void HandleStatChanged() {
+            UpdateCarryWeightText();
+        }
+
+        private void HandleCarryWeightChanged() {
+            UpdateCarryWeightText();
+        }
+
+        private void UpdateCarryWeightText() {
+            if (playerManagerClient.UnitController == null) {
+                carryWeightText.text = "0 / 0";
+                return;
+            }
+            float inventoryWeight = playerManagerClient.UnitController.CharacterInventoryManager.Weight;
+            float equippedWeight = playerManagerClient.UnitController.CharacterEquipmentManager.EquippedWeight;
+            float totalWeight = inventoryWeight + equippedWeight;
+            float carryWeight = playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue + systemConfigurationManager.BaseCarryWeight;
+            carryWeightText.text = $"<color={(totalWeight > carryWeight ? "red" : "white")}>Inventory: {Mathf.Ceil(inventoryWeight)} kg\n" +
+                $"Equipped: {Mathf.Ceil(equippedWeight)} kg\n" +
+                $"Total: {Mathf.Ceil(totalWeight)}";
+            if (systemConfigurationManager.UseEncumberance == true) {
+                carryWeightText.text += $" / {Mathf.Ceil(carryWeight)}";
+            }
+            carryWeightText.text += " kg</color>";
         }
 
         private void HandleCurrencyChange() {
@@ -56,7 +90,11 @@ namespace AnyRPG {
             if (playerManagerClient.UnitController == null) {
                 return;
             }
-            currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, playerManagerClient.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency));
+            if (systemConfigurationManager.DefaultCurrencyGroup?.BaseCurrency != null) {
+                currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, playerManagerClient.UnitController.CharacterCurrencyManager.GetBaseCurrencyValue(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency));
+            } else {
+                currencyBarController.ClearCurrencyAmounts();
+            }
         }
 
         public void HandlePlayerUnitDespawn(UnitController unitController) {
@@ -74,6 +112,7 @@ namespace AnyRPG {
 
         public override void ProcessOpenWindowNotification() {
             base.ProcessOpenWindowNotification();
+            UpdateCarryWeightText();
             UpdateCurrencyAmount();
         }
 

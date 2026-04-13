@@ -34,4 +34,6 @@ MonoBehaviour:
   basePrice: 1
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 0.1
+  itemPickupPrefabProfileName: Bag
   slots: 12

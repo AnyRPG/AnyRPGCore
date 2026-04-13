@@ -34,6 +34,8 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 5
+  itemPickupPrefabProfileName: Plate Armor Iron
   equipmentSlotType: Armor
   equipmentSetName: 
   deprecatedHoldableObjectList: []

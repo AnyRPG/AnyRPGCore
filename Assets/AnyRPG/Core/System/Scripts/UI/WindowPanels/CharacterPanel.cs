@@ -114,23 +114,26 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn()");
-            if (playerManagerClient != null && playerManagerClient.UnitController != null && playerManagerClient.UnitController.CharacterStats != null) {
-                //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): subscribing to statChanged event");
+            if (playerManagerClient?.UnitController?.CharacterStats != null) {
                 playerManagerClient.UnitController.UnitEventController.OnStatChanged += UpdateStatsDescription;
-            } else {
-                //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): could not find characterstats");
             }
             systemEventManager.OnAddEquipment += HandleAddEquipment;
             systemEventManager.OnRemoveEquipment += HandleRemoveEquipment;
+            systemEventManager.OnCarryWeightChanged += HandleCarryWeightChanged;
         }
 
         public void HandlePlayerUnitDespawn(UnitController unitController) {
             //Debug.Log("CharacterPanel.HandlePlayerUnitDespawn()");
-            if (playerManagerClient != null && playerManagerClient.UnitController != null && playerManagerClient.UnitController.CharacterStats != null) {
+            if (playerManagerClient?.UnitController?.CharacterStats != null) {
                 playerManagerClient.UnitController.UnitEventController.OnStatChanged -= UpdateStatsDescription;
             }
             systemEventManager.OnAddEquipment -= HandleAddEquipment;
             systemEventManager.OnRemoveEquipment -= HandleRemoveEquipment;
+            systemEventManager.OnCarryWeightChanged -= HandleCarryWeightChanged;
+        }
+
+        private void HandleCarryWeightChanged() {
+            HandleDescriptionChanged();
         }
 
         public void UpdateCharacterButtons() {
@@ -186,21 +189,20 @@ namespace AnyRPG {
         }
         */
 
-        public void HandleEquipmentChanged() {
+        public void HandleDescriptionChanged() {
             //Debug.Log("CharacterPanel.HandleEquipmentChanged()");
 
-            if (uIManager != null && uIManager.characterPanelWindow != null && uIManager.characterPanelWindow.IsOpen) {
-
+            if (uIManager?.characterPanelWindow != null && uIManager.characterPanelWindow.IsOpen) {
                 UpdateStatsDescription();
             }
         }
 
         private void HandleAddEquipment(EquipmentSlotProfile profile, InstantiatedEquipment equipment) {
-            HandleEquipmentChanged();
+            HandleDescriptionChanged();
         }
 
         private void HandleRemoveEquipment(EquipmentSlotProfile profile, InstantiatedEquipment equipment) {
-            HandleEquipmentChanged();
+            HandleDescriptionChanged();
         }
 
         public void UpdateStatsDescription() {
@@ -315,7 +317,23 @@ namespace AnyRPG {
             }
             updateString += "\n";
 
-            updateString += "Movement Speed: " + Mathf.Clamp(playerManagerClient.UnitController.CharacterStats.RunSpeed, 0, systemConfigurationManager.MaxMovementSpeed).ToString("F2") + " (m/s)\n\n";
+            float currentMovementSpeed = (playerManagerClient.UnitController.IsEncumbered ? systemConfigurationManager.EncumberedSpeed : playerManagerClient.UnitController.CharacterStats.RunSpeed);
+            updateString += $"Movement Speed: <color={(playerManagerClient.UnitController.IsEncumbered ? "red" : "white")}>{Mathf.Clamp(currentMovementSpeed, 0, systemConfigurationManager.MaxMovementSpeed).ToString("F1")} (m/s)</color>\n\n";
+
+            if (systemConfigurationManager.UseEncumberance == true) {
+                float currentWeightLoad = playerManagerClient.UnitController.CharacterEquipmentManager.EquippedWeight + playerManagerClient.UnitController.CharacterInventoryManager.Weight;
+                float carryWeight = playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue + systemConfigurationManager.BaseCarryWeight;
+                string colorString = currentWeightLoad > carryWeight ? "red" : "white";
+                updateString += $"Carry Weight: <color={colorString}>{Mathf.Ceil(currentWeightLoad)}/{Mathf.Ceil(carryWeight)} (kg)</color>";
+                if (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue != playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].BaseValue) {
+                    updateString += " ( " +
+                        (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].BaseValue) +
+                        (((playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue + systemConfigurationManager.BaseCarryWeight) - (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].BaseValue + systemConfigurationManager.BaseCarryWeight)) > 0 ? " <color=green>+" : " <color=red>") +
+                        ((playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue + systemConfigurationManager.BaseCarryWeight) - (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].BaseValue + systemConfigurationManager.BaseCarryWeight)) +
+                        "</color> )";
+                }
+                updateString += "\n";
+            }
 
             statsDescription.text = updateString;
         }

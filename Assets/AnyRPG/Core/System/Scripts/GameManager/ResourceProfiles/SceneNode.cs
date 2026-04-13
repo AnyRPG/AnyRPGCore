@@ -188,9 +188,6 @@ namespace AnyRPG {
         [SerializeField]
         private List<WeatherWeightNode> weatherWeights = new List<WeatherWeightNode>();
 
-        // game manager referenes
-        private SaveManager saveManager = null;
-
         private Dictionary<string, PersistentObjectSaveData> persistentObjects = new Dictionary<string, PersistentObjectSaveData>();
 
         public string SceneName { get => resourceName; set => resourceName = value; }
@@ -239,11 +236,6 @@ namespace AnyRPG {
             }
         }
 
-        public List<PersistentObjectSaveData> PersistentObjects {
-            get {
-                return saveManager.GetPersistentObjects(this);
-            }
-        }
         public List<EnvironmentStateProfile> EnvironmentStates { get => environmentStates; set => environmentStates = value; }
         public Cutscene AutoPlayCutscene { get => autoPlayCutscene; set => autoPlayCutscene = value; }
 
@@ -281,29 +273,6 @@ namespace AnyRPG {
         public Sprite LoadingScreenImage { get => loadingScreenImage; set => loadingScreenImage = value; }
         public bool IsCutScene { get => isCutScene; set => isCutScene = value; }
         public bool IsDungeon { get => isDungeon; set => isDungeon = value; }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            saveManager = systemGameManager.SaveManager;
-        }
-
-        public void SavePersistentObject(string UUID, PersistentObjectSaveData persistentObjectSaveData) {
-            //Debug.Log(DisplayName + ".SceneNode.SavePersistentObject(" + UUID + ")");
-            saveManager.SavePersistentObject(UUID, persistentObjectSaveData, this);
-        }
-
-        public PersistentObjectSaveData GetPersistentObjectSaveData(string UUID) {
-            return saveManager.GetPersistentObject(UUID, this);
-        }
-
-        /*
-        public void Visit(UnitController sourceUnitController) {
-            //Debug.Log($"{DisplayName}.SceneNode.Visit({sourceUnitController.gameObject.name})");
-
-            sourceUnitController.CharacterSaveManager.VisitSceneNode(this);
-            OnVisitZone(sourceUnitController);
-        }
-        */
 
         public void PreloadFootStepAudio() {
             foreach (AudioProfile audioProfile in footStepProfileReferences) {

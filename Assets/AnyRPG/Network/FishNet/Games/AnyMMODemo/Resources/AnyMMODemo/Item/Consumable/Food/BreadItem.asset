@@ -34,14 +34,16 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 0.2
+  itemPickupPrefabProfileName: Bread Half
   toolTip: Restore 125 health per second
   consumptionVerb: 0
   holdableObjectList:
   - holdableObjectName: Edible Bread
     useUniversalAttachment: 1
     attachmentName: Right Hand
-  animationClip: {fileID: 0}
-  animationProfileName: Sit
+  animationClip: {fileID: 7400000, guid: 5c76ef72ca820e345a43481e32356f8e, type: 2}
+  animationProfileName: 
   castingAudioClip: {fileID: 8300000, guid: 8534e705f3997f34abeef573b6d39551, type: 3}
   castingAudioProfileName: 
   loopAudio: 1

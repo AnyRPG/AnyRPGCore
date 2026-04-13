@@ -24,6 +24,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2dff0054e928a204a8e7cc6b0013994e, type: 2}
   - {fileID: 11400000, guid: b136d8851b769964997517c4026392d7, type: 2}
   - {fileID: 11400000, guid: 9db718c5359ddb24bb390d548c4ea5cd, type: 2}
+  - {fileID: 11400000, guid: 6f0c0edbe1d5bf14c8842e3fcab776b3, type: 2}
   prefabs: []
   dependencies:
   - {fileID: 11400000, guid: 9f6444816878bcb4caa1a1409675594e, type: 2}

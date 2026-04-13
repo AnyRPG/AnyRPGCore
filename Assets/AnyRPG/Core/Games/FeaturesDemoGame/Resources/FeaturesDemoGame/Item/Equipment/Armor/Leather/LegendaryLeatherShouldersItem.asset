@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 0.8
+  itemPickupPrefabProfileName: Leather Shoulders Yellow
   equipmentSlotType: Pauldrons
   equipmentSetName: Legendary Leather
-  umaRecipeProfileName: Yellow Leather Shoulders
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Yellow Leather Shoulders

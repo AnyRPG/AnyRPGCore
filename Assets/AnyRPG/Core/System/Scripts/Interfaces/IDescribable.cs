@@ -11,6 +11,7 @@ namespace AnyRPG {
         string Description { get; }
         string GetSummary();
         string GetDescription();
+        void ProcessShowTooltip(TooltipController tooltipController);
     }
 
 }

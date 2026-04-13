@@ -34,18 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 0.1
+  itemPickupPrefabProfileName: Red Potion
   toolTip: Restore 1000 health
   coolDown: 10
-  actionType: 1
   actionName: Drink Red Potion
-  actionProperties:
-    animationClip: {fileID: 7400000, guid: 9057664a7d024c041aa282529c8e3ff0, type: 2}
-    animationProfileName: 
-    castingAudioProfileName: 
-    holdableObjectList:
-    - holdableObjectName: Drinkable Red Potion
-      useUniversalAttachment: 1
-      attachmentName: Right Hand
   resourceAmounts:
   - resourceName: Health
     minAmount: 0

@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 2
+  itemPickupPrefabProfileName: Plate Boots Copper
   equipmentSlotType: Boots
   equipmentSetName: 
-  umaRecipeProfileName: Copper Plate Boots
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList: []
+  deprecatedHoldableObjectList: []
   inlineEquipmentModels:
     equipmentModels: []
   sharedEquipmentModels: Copper Plate Boots

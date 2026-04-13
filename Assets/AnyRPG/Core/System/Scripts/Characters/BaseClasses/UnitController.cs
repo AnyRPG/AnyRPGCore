@@ -106,6 +106,7 @@ namespace AnyRPG {
         private bool swimming = false;
         private bool flying = false;
         private bool isStealth = false;
+        private bool isEncumbered = false;
 
         private List<WaterBody> currentWater = new List<WaterBody>();
 
@@ -190,6 +191,9 @@ namespace AnyRPG {
             get {
                 if (UnderControl == true && MasterUnit != null) {
                     return MasterUnit.MovementSpeed;
+                }
+                if (systemConfigurationManager.UseEncumberance == true && isEncumbered == true) {
+                    return systemConfigurationManager.EncumberedSpeed;
                 }
                 return (walking == false ? characterStats.RunSpeed : characterStats.WalkSpeed);
             }
@@ -492,6 +496,7 @@ namespace AnyRPG {
         public int CharacterId { get => characterId; set => characterId = value; }
         public bool AggroEnabled { get => aggroEnabled; }
         public UnitMovementController UnitMovementController { get => unitMovementController; set => unitMovementController = value; }
+        public bool IsEncumbered { get => isEncumbered; }
 
         public override void AutoConfigure(SystemGameManager systemGameManager) {
             // don't do anything here.  Unitcontrollers should never be autoconfigured
@@ -2686,6 +2691,15 @@ namespace AnyRPG {
             }
 
         }
+
+        public void SetEncumbered(bool newValue) {
+            if (isEncumbered == newValue) {
+                return;
+            }
+            isEncumbered = newValue;
+            unitEventController.NotifyOnEncumberedChange(isEncumbered);
+        }
+
 
         /*
         public override void PopulatePersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {

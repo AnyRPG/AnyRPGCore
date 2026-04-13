@@ -77,6 +77,19 @@ namespace AnyRPG {
 
         private List<CharacterClass> realCharacterClassRequirementList = new List<CharacterClass>();
 
+        [Header("Physical Object")]
+
+        [Tooltip("The weight of the item in kilograms.")]
+        [SerializeField]
+        private float weight = 0.1f;
+
+        [Tooltip("The name of the prefab profile that refers to the physical prefab used when this item is dropped on the ground")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(PrefabProfile))]
+        private string itemPickupPrefabProfileName = string.Empty;
+
+        private PrefabProfile itemPickupPrefabProfile = null;
+    
         // a reference to the item quality
         protected ItemQuality itemQualityRef = null;
 
@@ -106,6 +119,9 @@ namespace AnyRPG {
         public Currency Currency { get => currency; set => currency = value; }
         public ItemQuality ItemQuality { get => itemQualityRef; set => itemQualityRef = value; }
         public int BasePrice { get => basePrice; set => basePrice = value; }
+        public PrefabProfile ItemPickupPrefabProfile { get => itemPickupPrefabProfile; set => itemPickupPrefabProfile = value; }
+        public float Weight { get => weight; set => weight = value; }
+        public string ItemPickupPrefabProfileName { get => itemPickupPrefabProfileName; set => itemPickupPrefabProfileName = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -186,8 +202,11 @@ namespace AnyRPG {
         public virtual string GetItemDescription(ItemQuality usedItemQuality, int usedItemLevel) {
             string descriptionString = base.GetDescription();
             if (descriptionString != string.Empty) {
-                descriptionString = string.Format("\n<color=yellow><size=14>{0}</size></color>", descriptionString);
+                descriptionString = $"\n<color=yellow><size=14>{descriptionString}</size></color>";
             }
+            //if (systemConfigurationManager.UseEncumberance == true) {
+            descriptionString += $"\n<color=yellow><size=12>Weight: {weight} kg</size></color>";
+            //}
             if (characterClassRequirementList.Count > 0) {
                 string colorString = "red";
                 if (realCharacterClassRequirementList.Contains(playerManagerClient.UnitController.BaseCharacter.CharacterClass)) {
@@ -378,6 +397,13 @@ namespace AnyRPG {
                     } else {
                         Debug.LogError($"Item.SetupScriptableObjects(): Could not find character class : {characterClassName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                     }
+                }
+            }
+
+            if (itemPickupPrefabProfileName != string.Empty) {
+                itemPickupPrefabProfile = systemDataFactory.GetResource<PrefabProfile>(itemPickupPrefabProfileName);
+                if (itemPickupPrefabProfile == null) {
+                    Debug.LogError($"Item.SetupScriptableObjects(): Could not find holdable object : {itemPickupPrefabProfileName} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                 }
             }
 

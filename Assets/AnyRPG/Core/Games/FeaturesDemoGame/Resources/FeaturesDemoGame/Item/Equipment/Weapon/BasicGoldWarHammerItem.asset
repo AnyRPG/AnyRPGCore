@@ -34,13 +34,11 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  weight: 1.5
+  itemPickupPrefabProfileName: Basic Gold War Hammer
   equipmentSlotType: Main Hand
   equipmentSetName: 
-  umaRecipeProfileName: 
-  uMARecipeProfileProperties:
-    uMARecipes: []
-    sharedColors: []
-  holdableObjectList:
+  deprecatedHoldableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Main Hand
       holdableObjectName: Basic Gold War Hammer

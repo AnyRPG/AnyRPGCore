@@ -1,6 +1,3 @@
-using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -157,7 +154,7 @@ namespace AnyRPG {
         }
 
         private void ShowGamepadTooltip() {
-            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, vendorItem, "Sell Price: ");
+            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, vendorItem);
         }
 
         public override void OnPointerExit(PointerEventData eventData) {
