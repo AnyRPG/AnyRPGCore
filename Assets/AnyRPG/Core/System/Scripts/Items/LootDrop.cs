@@ -90,6 +90,9 @@ namespace AnyRPG {
             return InstantiatedItem.GetDescription();
         }
 
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+        }
+
     }
 
 }

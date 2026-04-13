@@ -111,7 +111,7 @@ namespace AnyRPG {
 
         public void ShowGamepadTooltip() {
             //Rect panelRect = RectTransformToScreenSpace((BagPanel.ContentArea as RectTransform));
-            uIManager.ShowGamepadTooltip(toolTipTransform, transform, describable, "");
+            uIManager.ShowGamepadTooltip(toolTipTransform, transform, describable);
         }
 
     }

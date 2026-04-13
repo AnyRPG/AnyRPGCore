@@ -87,6 +87,9 @@ namespace AnyRPG {
             return string.Format("{0}", description);
         }
 
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+        }
+
         /// <summary>
         /// perform any necessary configuration, such as creating references to other scriptable objects
         /// </summary>

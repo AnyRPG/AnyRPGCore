@@ -35,6 +35,10 @@ namespace AnyRPG {
             // do not call base method.
         }
 
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+        }
+
+
     }
 
 }

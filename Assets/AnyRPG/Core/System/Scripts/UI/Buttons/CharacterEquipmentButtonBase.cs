@@ -202,10 +202,10 @@ namespace AnyRPG {
 
         protected void ShowContextInfo() {
             if (equippedEquipment != null) {
-                uIManager.ShowGamepadTooltip(parentPanel.RectTransform, transform, this, "");
+                uIManager.ShowGamepadTooltip(parentPanel.RectTransform, transform, this);
                 owner.SetControllerHints("Unequip", "", "", "", "", "");
             } else {
-                uIManager.ShowGamepadTooltip(parentPanel.RectTransform, transform, this, "");
+                uIManager.ShowGamepadTooltip(parentPanel.RectTransform, transform, this);
                 owner.HideControllerHints();
             }
         }
@@ -228,6 +228,10 @@ namespace AnyRPG {
             }
             uIManager.HideToolTip();
         }
+
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+        }
+
 
     }
 

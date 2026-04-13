@@ -199,7 +199,7 @@ namespace AnyRPG {
         }
 
         public void ShowGamepadTooltip() {
-            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, this, "");
+            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, this);
         }
 
         public override void Select() {
@@ -219,6 +219,10 @@ namespace AnyRPG {
             items.AddRange(itemList);
             UpdateVisual();
         }
+
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+        }
+
     }
 
 }

@@ -111,7 +111,7 @@ namespace AnyRPG {
         }
 
         public void ShowGamepadTooltip() {
-            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, lootDrop, "");
+            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, lootDrop);
         }
 
         public override void Select() {

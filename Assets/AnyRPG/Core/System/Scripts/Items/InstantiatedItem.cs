@@ -277,6 +277,9 @@ namespace AnyRPG {
             return item.GetItemDescription(ItemQuality, GetItemLevel(playerManagerClient.UnitController.CharacterStats.Level));
         }
 
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+        }
+
 
     }
- }
+}

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 namespace AnyRPG {
-    public class AuctionItemButton : HighlightButton, IPointerClickHandler {
+    public class AuctionItemButton : HighlightButton, IPointerClickHandler, IDescribable {
 
         [Header("Auction Item Button")]
 
@@ -45,13 +45,20 @@ namespace AnyRPG {
 
         public AuctionItemSearchResult AuctionItem { get => auctionItem; set => auctionItem = value; }
 
+        public Sprite Icon => instantiatedItem.Icon;
+
+        public string ResourceName => instantiatedItem.ResourceName;
+
+        public string DisplayName => instantiatedItem.DisplayName;
+
+        public string Description => instantiatedItem.Description;
+
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             buyAuctionButton.Configure(systemGameManager);
             cancelAuctionButton.Configure(systemGameManager);
             priceCurrencyBar.Configure(systemGameManager);
             describableIcon.Configure(systemGameManager);
-            describableIcon.SetSellPriceString("Vendor Price: ");
         }
 
         public override void SetGameManagerReferences() {
@@ -65,7 +72,7 @@ namespace AnyRPG {
 
             this.auctionItem = auctionItem;
             instantiatedItem = GetFirstInstantiatedItem();
-            describableIcon.SetDescribable(instantiatedItem);
+            describableIcon.SetDescribable(this);
             if (instantiatedItem != null) {
                 //attachmentImage.color = Color.white;
                 //attachmentImage.sprite = instantiatedItem.Icon;
@@ -126,41 +133,20 @@ namespace AnyRPG {
             uIManager.confirmBuyAuctionWindow.OpenWindow();
         }
 
-        /*
-        public override void OnPointerEnter(PointerEventData eventData) {
-            //Debug.Log("LootButton.OnPointerEnter(): " + GetInstanceID());
-            base.OnPointerEnter(eventData);
-            if (auctionItem.ItemIds.Count == 0) {
-                return;
+        public string GetSummary() {
+            return instantiatedItem.GetSummary();
+        }
+
+        public string GetDescription() {
+            return instantiatedItem.GetDescription();
+        }
+
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+            if (instantiatedItem != null) {
+                tooltipController.UpdateCurrencyAmount(instantiatedItem, "Vendor Price: ");
             }
-
-            // only show gamepad tooltip if mouse is within image bounds
-            Vector2 localMousePosition = attachmentImage.rectTransform.InverseTransformPoint(eventData.position);
-            if (!attachmentImage.rectTransform.rect.Contains(localMousePosition)) {
-                return;
-            }
-
-            ShowGamepadTooltip();
         }
-
-        public override void OnPointerExit(PointerEventData eventData) {
-            base.OnPointerExit(eventData);
-            uIManager.HideToolTip();
-        }
-
-        public void ShowGamepadTooltip() {
-            uIManager.ShowGamepadTooltip(attachmentImage.rectTransform, transform, instantiatedItem, "Vendor Price:");
-        }
-        */
-
-
-        /*
-        protected override void HandleLeftClick() {
-            base.HandleLeftClick();
-            auctionManagerClient.SetCurrentMailMessageId(auctionItem.MessageId);
-            uIManager.mailViewWindow.OpenWindow();
-        }
-        */
+        
     }
 
 }

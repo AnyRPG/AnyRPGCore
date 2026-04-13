@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class SlotScript : DescribableIcon, IPointerClickHandler, IClickable, IContextMenuTarget {
+    public class SlotScript : DescribableIcon, IPointerClickHandler, IClickable, IContextMenuTarget, IDescribable {
 
         [Header("Slot Script")]
 
@@ -46,6 +46,14 @@ namespace AnyRPG {
                 return base.CaptureCancelButton;
             }
         }
+
+        Sprite IDescribable.Icon => inventorySlot.InstantiatedItem?.Icon;
+
+        public string ResourceName => inventorySlot.InstantiatedItem?.ResourceName;
+
+        public string DisplayName => inventorySlot.InstantiatedItem?.DisplayName;
+
+        public string Description => inventorySlot.InstantiatedItem?.Description;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -494,7 +502,13 @@ namespace AnyRPG {
         public void ShowGamepadTooltip() {
             //Debug.Log($"SlotScript.ShowGamepadTooltip() bagPanel: {(BagPanel == null ? "null" : "not null")} inventoryslot: {(inventorySlot.InstantiatedItem == null ? "null" : "not null")}");
 
-            uIManager.ShowGamepadTooltip((BagPanel.ContentArea as RectTransform), transform, inventorySlot.InstantiatedItem, "Sell Price: ");
+            uIManager.ShowGamepadTooltip((BagPanel.ContentArea as RectTransform), transform, this);
+        }
+
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+            if (inventorySlot.InstantiatedItem != null) {
+                tooltipController.UpdateCurrencyAmount(inventorySlot.InstantiatedItem, "Sell Price: ");
+            }
         }
 
         public override void OnSendObjectToPool() {
@@ -543,6 +557,24 @@ namespace AnyRPG {
                     }
                     break;
             }
+        }
+
+        public string GetSummary() {
+            return inventorySlot.InstantiatedItem?.GetSummary() + GetWeightString();
+        }
+
+        public string GetDescription() {
+            return inventorySlot.InstantiatedItem?.GetDescription() + GetWeightString();
+        }
+
+        public string GetWeightString() {
+            if (inventorySlot.InstantiatedItem == null) {
+                return string.Empty;
+            }
+            if (inventorySlot.InstantiatedItems.Count <= 1) {
+                return string.Empty;
+            }
+            return $"\n<size=12><color=yellow>Stack Weight: {inventorySlot.InstantiatedItem.Item.Weight * inventorySlot.Count} kg</color></size>";
         }
     }
 

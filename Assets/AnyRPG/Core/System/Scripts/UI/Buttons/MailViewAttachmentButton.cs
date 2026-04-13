@@ -179,7 +179,7 @@ namespace AnyRPG {
         }
 
         public void ShowGamepadTooltip() {
-            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, this, "");
+            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, this);
         }
 
         public override void Select() {
@@ -203,6 +203,10 @@ namespace AnyRPG {
         public List<long> GetItemInstanceIds() {
             return items.Select(item => item.InstanceId).ToList();
         }
+
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+        }
+
     }
 
 }

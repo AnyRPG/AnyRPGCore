@@ -130,7 +130,7 @@ namespace AnyRPG {
 
         public void ShowGamepadTooltip() {
             //Debug.Log("StatusEffectNodeScript.ShowGamepadTooltip()");
-            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, statusEffectNode.StatusEffect, "");
+            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, statusEffectNode.StatusEffect);
         }
 
         public override void DeSelect() {

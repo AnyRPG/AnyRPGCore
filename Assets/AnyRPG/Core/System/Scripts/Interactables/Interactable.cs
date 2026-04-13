@@ -1313,6 +1313,10 @@ namespace AnyRPG {
                 ResetSettings();
             }
         }
+
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+        }
+
     }
 
 }

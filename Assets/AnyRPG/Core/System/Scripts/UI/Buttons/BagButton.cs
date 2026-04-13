@@ -197,13 +197,20 @@ namespace AnyRPG {
 
         private void ShowGamepadTooltip() {
             if (bagNode?.InstantiatedBag != null) {
-                uIManager.ShowGamepadTooltip((bagPanel.ContentArea as RectTransform), transform, this, "Sell Price: ");
+                uIManager.ShowGamepadTooltip((bagPanel.ContentArea as RectTransform), transform, this);
                 bagPanel.SetControllerHints("Unequip", "", "", "", "", "");
             } else {
-                uIManager.ShowGamepadTooltip((bagPanel.ContentArea as RectTransform), transform, this, "");
+                uIManager.ShowGamepadTooltip((bagPanel.ContentArea as RectTransform), transform, this);
                 bagPanel.HideControllerHints();
             }
         }
+
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+            if (bagNode?.InstantiatedBag != null) {
+                tooltipController.UpdateCurrencyAmount(bagNode.InstantiatedBag, "Sell Price: ");
+            }
+        }
+
 
         public override void DeSelect() {
             base.DeSelect();

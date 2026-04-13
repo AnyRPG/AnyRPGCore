@@ -320,13 +320,14 @@ namespace AnyRPG {
             }
             updateString += "\n";
 
-            updateString += "Movement Speed: " + Mathf.Clamp(playerManagerClient.UnitController.CharacterStats.RunSpeed, 0, systemConfigurationManager.MaxMovementSpeed).ToString("F2") + " (m/s)\n\n";
+            float currentMovementSpeed = (playerManagerClient.UnitController.IsEncumbered ? systemConfigurationManager.EncumberedSpeed : playerManagerClient.UnitController.CharacterStats.RunSpeed);
+            updateString += $"Movement Speed: <color={(playerManagerClient.UnitController.IsEncumbered ? "red" : "white")}>{Mathf.Clamp(currentMovementSpeed, 0, systemConfigurationManager.MaxMovementSpeed).ToString("F1")} (m/s)</color>\n\n";
 
             if (systemConfigurationManager.UseEncumberance == true) {
                 float currentWeightLoad = playerManagerClient.UnitController.CharacterEquipmentManager.EquippedWeight + playerManagerClient.UnitController.CharacterInventoryManager.Weight;
                 float carryWeight = playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue + systemConfigurationManager.BaseCarryWeight;
                 string colorString = currentWeightLoad > carryWeight ? "red" : "white";
-                updateString += $"Carry Weight (kg): <color={colorString}>{Mathf.Ceil(currentWeightLoad)} / {Mathf.Ceil(carryWeight)}</color>";
+                updateString += $"Carry Weight: <color={colorString}>{Mathf.Ceil(currentWeightLoad)}/{Mathf.Ceil(carryWeight)} (kg)</color>";
                 if (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue != playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].BaseValue) {
                     updateString += " ( " +
                         (playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].BaseValue) +

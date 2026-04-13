@@ -822,15 +822,15 @@ namespace AnyRPG {
         }
 
         public void ShowToolTip(Vector3 position, IDescribable describable) {
-            tooltipController.ShowToolTip(position, describable, string.Empty);
+            tooltipController.ShowToolTip(position, describable);
         }
 
         public void ShowToolTip(Vector2 pivot, Vector3 position, IDescribable describable) {
             tooltipController.ShowToolTip(pivot, position, describable);
         }
 
-        public void ShowGamepadTooltip(RectTransform paneltransform, Transform buttonTransform, IDescribable describable, string sellPriceString) {
-            tooltipController.ShowGamepadTooltip(paneltransform, buttonTransform, describable, sellPriceString);
+        public void ShowGamepadTooltip(RectTransform paneltransform, Transform buttonTransform, IDescribable describable) {
+            tooltipController.ShowGamepadTooltip(paneltransform, buttonTransform, describable);
         }
 
         public void RefreshTooltip(IDescribable describable) {

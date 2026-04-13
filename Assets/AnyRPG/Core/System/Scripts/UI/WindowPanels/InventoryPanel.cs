@@ -64,13 +64,17 @@ namespace AnyRPG {
                 carryWeightText.text = "0 / 0";
                 return;
             }
-            carryWeightText.text = $"Inventory: {Mathf.Ceil(playerManagerClient.UnitController.CharacterInventoryManager.Weight)} kg\n" +
-                $"Equipped: {Mathf.Ceil(playerManagerClient.UnitController.CharacterEquipmentManager.EquippedWeight)} kg\n" +
-                $"Total: {Mathf.Ceil(playerManagerClient.UnitController.CharacterInventoryManager.Weight + playerManagerClient.UnitController.CharacterEquipmentManager.EquippedWeight)}";
+            float inventoryWeight = playerManagerClient.UnitController.CharacterInventoryManager.Weight;
+            float equippedWeight = playerManagerClient.UnitController.CharacterEquipmentManager.EquippedWeight;
+            float totalWeight = inventoryWeight + equippedWeight;
+            float carryWeight = playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue + systemConfigurationManager.BaseCarryWeight;
+            carryWeightText.text = $"<color={(totalWeight > carryWeight ? "red" : "white")}>Inventory: {Mathf.Ceil(inventoryWeight)} kg\n" +
+                $"Equipped: {Mathf.Ceil(equippedWeight)} kg\n" +
+                $"Total: {Mathf.Ceil(totalWeight)}";
             if (systemConfigurationManager.UseEncumberance == true) {
-                carryWeightText.text += $" / {Mathf.Ceil(playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue + systemConfigurationManager.BaseCarryWeight)}";
+                carryWeightText.text += $" / {Mathf.Ceil(carryWeight)}";
             }
-            carryWeightText.text += " kg";
+            carryWeightText.text += " kg</color>";
         }
 
         private void HandleCurrencyChange() {
@@ -103,6 +107,7 @@ namespace AnyRPG {
 
         public override void ProcessOpenWindowNotification() {
             base.ProcessOpenWindowNotification();
+            UpdateCarryWeightText();
             UpdateCurrencyAmount();
         }
 

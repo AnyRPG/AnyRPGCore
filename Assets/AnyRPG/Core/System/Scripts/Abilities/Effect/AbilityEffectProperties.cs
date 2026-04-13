@@ -313,6 +313,9 @@ namespace AnyRPG {
             return abilityEffectContext;
         }
 
+        public void ProcessShowTooltip(TooltipController tooltipController) {
+        }
+
         public virtual void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
             //public virtual void SetupScriptableObjects(SystemGameManager systemGameManager, string displayName) {
             //Debug.Log($"AbilityEffectProperties.SetupScriptableObjects({describable.ResourceName})");
