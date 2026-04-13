@@ -184,6 +184,7 @@ namespace AnyRPG {
             weight -= instantiatedItem.Item.Weight;
             NotifyOnItemCountChanged(instantiatedItem.Item);
             unitController.UnitEventController.NotifyOnRemoveItemFromInventorySlot(slot, instantiatedItem);
+            unitController.UnitEventController.NotifyOnCarryWeightChanged();
         }
 
         private void HandleAddItemToInventorySlot(InventorySlot slot, InstantiatedItem instantiatedItem) {
@@ -192,6 +193,7 @@ namespace AnyRPG {
             weight += instantiatedItem.Item.Weight;
             NotifyOnItemCountChanged(instantiatedItem.Item);
             unitController.UnitEventController.NotifyOnAddItemToInventorySlot(slot, instantiatedItem);
+            unitController.UnitEventController.NotifyOnCarryWeightChanged();
         }
 
         public void CalculateEncumbered() {

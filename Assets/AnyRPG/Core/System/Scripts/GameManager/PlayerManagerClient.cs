@@ -524,6 +524,7 @@ namespace AnyRPG {
             unitController.UnitEventController.OnReachDestination += HandleReachDestination;
             unitController.UnitEventController.OnAddSkillLevel += HandleAddSkillLevel;
             unitController.UnitEventController.OnAddSkillExperience += HandleAddSkillExperience;
+            unitController.UnitEventController.OnCarryWeightChanged += HandleCarryWeightChanged;
         }
 
         public void UnsubscribeFromPlayerEvents() {
@@ -596,7 +597,12 @@ namespace AnyRPG {
             unitController.UnitEventController.OnReachDestination -= HandleReachDestination;
             unitController.UnitEventController.OnAddSkillLevel -= HandleAddSkillLevel;
             unitController.UnitEventController.OnAddSkillExperience -= HandleAddSkillExperience;
+            unitController.UnitEventController.OnCarryWeightChanged -= HandleCarryWeightChanged;
 
+        }
+
+        private void HandleCarryWeightChanged() {
+            systemEventManager.NotifyOnCarryWeightChanged();
         }
 
         private void HandleAddSkillExperience(Skill skill, int experience) {

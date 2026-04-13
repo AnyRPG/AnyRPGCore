@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -13,6 +14,9 @@ namespace AnyRPG {
 
         [SerializeField]
         protected BagBarController bagBarController;
+
+        [SerializeField]
+        protected TextMeshProUGUI carryWeightText = null;
 
         [SerializeField]
         protected CurrencyBarController currencyBarController = null;
@@ -36,6 +40,7 @@ namespace AnyRPG {
             systemEventManager.OnAddInventorySlot += HandleAddSlot;
             systemEventManager.OnRemoveInventorySlot += HandleRemoveSlot;
             systemEventManager.OnCurrencyChange += HandleCurrencyChange;
+            systemEventManager.OnCarryWeightChanged += HandleCarryWeightChanged;
         }
 
         protected override void ProcessCleanupEventSubscriptions() {
@@ -46,6 +51,26 @@ namespace AnyRPG {
             systemEventManager.OnAddInventorySlot -= HandleAddSlot;
             systemEventManager.OnRemoveInventorySlot -= HandleRemoveSlot;
             systemEventManager.OnCurrencyChange -= HandleCurrencyChange;
+            systemEventManager.OnCarryWeightChanged -= HandleCarryWeightChanged;
+        }
+
+
+        private void HandleCarryWeightChanged() {
+            UpdateCarryWeightText();
+        }
+
+        private void UpdateCarryWeightText() {
+            if (playerManagerClient.UnitController == null) {
+                carryWeightText.text = "0 / 0";
+                return;
+            }
+            carryWeightText.text = $"Inventory: {Mathf.Ceil(playerManagerClient.UnitController.CharacterInventoryManager.Weight)} kg\n" +
+                $"Equipped: {Mathf.Ceil(playerManagerClient.UnitController.CharacterEquipmentManager.EquippedWeight)} kg\n" +
+                $"Total: {Mathf.Ceil(playerManagerClient.UnitController.CharacterInventoryManager.Weight + playerManagerClient.UnitController.CharacterEquipmentManager.EquippedWeight)}";
+            if (systemConfigurationManager.UseEncumberance == true) {
+                carryWeightText.text += $" / {Mathf.Ceil(playerManagerClient.UnitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue + systemConfigurationManager.BaseCarryWeight)}";
+            }
+            carryWeightText.text += " kg";
         }
 
         private void HandleCurrencyChange() {
