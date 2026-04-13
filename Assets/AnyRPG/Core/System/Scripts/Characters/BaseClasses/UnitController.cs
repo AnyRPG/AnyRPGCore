@@ -496,7 +496,7 @@ namespace AnyRPG {
         public int CharacterId { get => characterId; set => characterId = value; }
         public bool AggroEnabled { get => aggroEnabled; }
         public UnitMovementController UnitMovementController { get => unitMovementController; set => unitMovementController = value; }
-        public bool IsEncumbered { get => isEncumbered; set => isEncumbered = value; }
+        public bool IsEncumbered { get => isEncumbered; }
 
         public override void AutoConfigure(SystemGameManager systemGameManager) {
             // don't do anything here.  Unitcontrollers should never be autoconfigured
@@ -2691,6 +2691,15 @@ namespace AnyRPG {
             }
 
         }
+
+        public void SetEncumbered(bool newValue) {
+            if (isEncumbered == newValue) {
+                return;
+            }
+            isEncumbered = newValue;
+            unitEventController.NotifyOnEncumberedChange(isEncumbered);
+        }
+
 
         /*
         public override void PopulatePersistentObjectSaveData(PersistentObjectSaveData persistentObjectSaveData) {

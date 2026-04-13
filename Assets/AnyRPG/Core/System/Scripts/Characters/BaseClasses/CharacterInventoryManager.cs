@@ -184,6 +184,7 @@ namespace AnyRPG {
             weight -= instantiatedItem.Item.Weight;
             NotifyOnItemCountChanged(instantiatedItem.Item);
             unitController.UnitEventController.NotifyOnRemoveItemFromInventorySlot(slot, instantiatedItem);
+            CalculateEncumbered();
             unitController.UnitEventController.NotifyOnCarryWeightChanged();
         }
 
@@ -193,15 +194,16 @@ namespace AnyRPG {
             weight += instantiatedItem.Item.Weight;
             NotifyOnItemCountChanged(instantiatedItem.Item);
             unitController.UnitEventController.NotifyOnAddItemToInventorySlot(slot, instantiatedItem);
+            CalculateEncumbered();
             unitController.UnitEventController.NotifyOnCarryWeightChanged();
         }
 
         public void CalculateEncumbered() {
             float totalWeight = weight + unitController.CharacterEquipmentManager.EquippedWeight;
             if (totalWeight > systemConfigurationManager.BaseCarryWeight + unitController.CharacterStats.SecondaryStats[SecondaryStatType.CarryWeight].CurrentValue) {
-                unitController.IsEncumbered = true;
+                unitController.SetEncumbered(true);
             } else {
-                unitController.IsEncumbered = false;
+                unitController.SetEncumbered(false);
             }
         }
 

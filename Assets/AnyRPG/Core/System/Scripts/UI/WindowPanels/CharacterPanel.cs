@@ -114,11 +114,8 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn()");
-            if (playerManagerClient != null && playerManagerClient.UnitController != null && playerManagerClient.UnitController.CharacterStats != null) {
-                //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): subscribing to statChanged event");
+            if (playerManagerClient?.UnitController?.CharacterStats != null) {
                 playerManagerClient.UnitController.UnitEventController.OnStatChanged += UpdateStatsDescription;
-            } else {
-                //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): could not find characterstats");
             }
             systemEventManager.OnAddEquipment += HandleAddEquipment;
             systemEventManager.OnRemoveEquipment += HandleRemoveEquipment;
@@ -127,7 +124,7 @@ namespace AnyRPG {
 
         public void HandlePlayerUnitDespawn(UnitController unitController) {
             //Debug.Log("CharacterPanel.HandlePlayerUnitDespawn()");
-            if (playerManagerClient != null && playerManagerClient.UnitController != null && playerManagerClient.UnitController.CharacterStats != null) {
+            if (playerManagerClient?.UnitController?.CharacterStats != null) {
                 playerManagerClient.UnitController.UnitEventController.OnStatChanged -= UpdateStatsDescription;
             }
             systemEventManager.OnAddEquipment -= HandleAddEquipment;

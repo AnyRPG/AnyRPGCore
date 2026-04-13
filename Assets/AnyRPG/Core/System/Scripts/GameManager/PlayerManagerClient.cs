@@ -525,6 +525,8 @@ namespace AnyRPG {
             unitController.UnitEventController.OnAddSkillLevel += HandleAddSkillLevel;
             unitController.UnitEventController.OnAddSkillExperience += HandleAddSkillExperience;
             unitController.UnitEventController.OnCarryWeightChanged += HandleCarryWeightChanged;
+            unitController.UnitEventController.OnStatChanged += HandleStatChanged;
+            unitController.UnitEventController.OnEncumberedChange += HandleEncumberedChange;
         }
 
         public void UnsubscribeFromPlayerEvents() {
@@ -598,7 +600,16 @@ namespace AnyRPG {
             unitController.UnitEventController.OnAddSkillLevel -= HandleAddSkillLevel;
             unitController.UnitEventController.OnAddSkillExperience -= HandleAddSkillExperience;
             unitController.UnitEventController.OnCarryWeightChanged -= HandleCarryWeightChanged;
+            unitController.UnitEventController.OnStatChanged -= HandleStatChanged;
+            unitController.UnitEventController.OnEncumberedChange -= HandleEncumberedChange;
+        }
 
+        private void HandleEncumberedChange(bool encumbered) {
+            messageFeedManager.WriteMessage(encumbered ? "You are encumbered" : "You are no longer encumbered");
+        }
+
+        private void HandleStatChanged() {
+            systemEventManager.NotifyOnStatChanged();
         }
 
         private void HandleCarryWeightChanged() {

@@ -41,6 +41,7 @@ namespace AnyRPG {
             systemEventManager.OnRemoveInventorySlot += HandleRemoveSlot;
             systemEventManager.OnCurrencyChange += HandleCurrencyChange;
             systemEventManager.OnCarryWeightChanged += HandleCarryWeightChanged;
+            systemEventManager.OnStatChanged += HandleStatChanged;
         }
 
         protected override void ProcessCleanupEventSubscriptions() {
@@ -52,8 +53,12 @@ namespace AnyRPG {
             systemEventManager.OnRemoveInventorySlot -= HandleRemoveSlot;
             systemEventManager.OnCurrencyChange -= HandleCurrencyChange;
             systemEventManager.OnCarryWeightChanged -= HandleCarryWeightChanged;
+            systemEventManager.OnStatChanged -= HandleStatChanged;
         }
 
+        private void HandleStatChanged() {
+            UpdateCarryWeightText();
+        }
 
         private void HandleCarryWeightChanged() {
             UpdateCarryWeightText();

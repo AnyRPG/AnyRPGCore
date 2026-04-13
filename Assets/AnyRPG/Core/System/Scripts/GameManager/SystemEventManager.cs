@@ -54,6 +54,7 @@ namespace AnyRPG {
         public event System.Action OnFactionChange = delegate { };
         public event System.Action<int> OnSetGuildId = delegate { };
         public event System.Action OnCarryWeightChanged = delegate { };
+        public event System.Action OnStatChanged = delegate { };
 
         // equipment manager
         public System.Action<EquipmentSlotProfile, InstantiatedEquipment> OnAddEquipment = delegate { };
@@ -303,6 +304,10 @@ namespace AnyRPG {
 
         public void NotifyOnCarryWeightChanged() {
             OnCarryWeightChanged();
+        }
+
+        public void NotifyOnStatChanged() {
+            OnStatChanged();
         }
     }
 

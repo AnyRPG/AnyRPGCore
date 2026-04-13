@@ -197,6 +197,7 @@ namespace AnyRPG {
         public event Action<Skill, int> OnAddSkillExperience = delegate { };
         public event Action<int> OnRequestDropItemOnGround = delegate { };
         public event Action OnCarryWeightChanged = delegate { };
+        public event Action<bool> OnEncumberedChange = delegate { };
 
         //public event System.Action<BaseAbilityProperties, Interactable> OnTargetInAbilityRangeFail = delegate { };
 
@@ -1087,6 +1088,10 @@ namespace AnyRPG {
 
         public void NotifyOnCarryWeightChanged() {
             OnCarryWeightChanged();
+        }
+
+        public void NotifyOnEncumberedChange(bool isEncumbered) {
+            OnEncumberedChange(isEncumbered);
         }
 
         #endregion
