@@ -170,6 +170,7 @@ namespace AnyRPG {
         public CloseableWindow auctionWindow;
         public CloseableWindow bankWindow;
         public CloseableWindow inventoryWindow;
+        public CloseableWindow storageContainerWindow;
         public CloseableWindow questLogWindow;
         public CloseableWindow questGiverWindow;
         public CloseableWindow skillTrainerWindow;
@@ -416,6 +417,7 @@ namespace AnyRPG {
             inspectCharacterPanelWindow.Configure(systemGameManager);
             interactionWindow.Configure(systemGameManager);
             inventoryWindow.Configure(systemGameManager);
+            storageContainerWindow.Configure(systemGameManager);
             lootWindow.Configure(systemGameManager);
             musicPlayerWindow.Configure(systemGameManager);
             mainMapWindow.Configure(systemGameManager);
@@ -593,6 +595,8 @@ namespace AnyRPG {
             defaultWindowPositions.Add("QuestLogWindowY", questLogWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("AchievementListWindowX", achievementListWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("AchievementListWindowY", achievementListWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("StorageContainerWindowX", storageContainerWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("StorageContainerWindowY", storageContainerWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("QuestGiverWindowX", questGiverWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("QuestGiverWindowY", questGiverWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("SkillTrainerWindowX", skillTrainerWindow.RectTransform.anchoredPosition.x);
@@ -678,6 +682,7 @@ namespace AnyRPG {
             //chestWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["ChestWindowX"], defaultWindowPositions["ChestWindowY"], 0);
             bankWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["BankWindowX"], defaultWindowPositions["BankWindowY"], 0);
             inventoryWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["InventoryWindowX"], defaultWindowPositions["InventoryWindowY"], 0);
+            storageContainerWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["StorageContainerWindowX"], defaultWindowPositions["StorageContainerWindowY"], 0);
             questLogWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["QuestLogWindowX"], defaultWindowPositions["QuestLogWindowY"], 0);
             achievementListWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["AchievementListWindowX"], defaultWindowPositions["AchievementListWindowY"], 0);
             questGiverWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["QuestGiverWindowX"], defaultWindowPositions["QuestGiverWindowY"], 0);
@@ -992,6 +997,7 @@ namespace AnyRPG {
             inspectCharacterPanelWindow.CloseWindow();
             interactionWindow.CloseWindow();
             inventoryWindow.CloseWindow();
+            storageContainerWindow.CloseWindow();
             lootWindow.CloseWindow();
             mainMapWindow.CloseWindow();
             musicPlayerWindow.CloseWindow();
@@ -1608,6 +1614,9 @@ namespace AnyRPG {
             }
             if (inventoryWindow.CloseableWindowContents != null) {
                 inventoryWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            }
+            if (storageContainerWindow.CloseableWindowContents != null) {
+                storageContainerWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             }
 
         }
