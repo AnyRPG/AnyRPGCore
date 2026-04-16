@@ -198,6 +198,9 @@ namespace AnyRPG {
         public event Action<int> OnRequestDropItemOnGround = delegate { };
         public event Action OnCarryWeightChanged = delegate { };
         public event Action<bool> OnEncumberedChange = delegate { };
+        public event Action<Interactable, int, int> OnRequestSwapItemsInStorageContainerSlots = delegate { };
+        public event Action<StorageContainerComponent, int, int, bool> OnRequestMoveItemToStorageContainer = delegate { };
+
 
         //public event System.Action<BaseAbilityProperties, Interactable> OnTargetInAbilityRangeFail = delegate { };
 
@@ -1093,6 +1096,15 @@ namespace AnyRPG {
         public void NotifyOnEncumberedChange(bool isEncumbered) {
             OnEncumberedChange(isEncumbered);
         }
+
+        public void NotifyOnRequestSwapItemsInStorageContainerSlots(Interactable interactable, int fromSlotIndex, int toSlotIndex) {
+            OnRequestSwapItemsInStorageContainerSlots(interactable, fromSlotIndex, toSlotIndex);
+        }
+
+        public void NotifyOnRequestMoveItemToStorageContainer(StorageContainerComponent storageContainerComponent, int toSlotIndex, int fromSlotIndex, bool isBankSlot) {
+            OnRequestMoveItemToStorageContainer(storageContainerComponent, toSlotIndex, fromSlotIndex, isBankSlot);
+        }
+
 
         #endregion
 

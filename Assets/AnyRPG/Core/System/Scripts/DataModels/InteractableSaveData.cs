@@ -14,6 +14,7 @@ namespace AnyRPG {
         public List<AnimatedObjectSaveData> AnimatedObjectSaveData = new List<AnimatedObjectSaveData>();
         public List<ActivatableObjectSaveData> ActivatableObjectSaveData = new List<ActivatableObjectSaveData>();
         public List<DroppedItemSaveData> DroppedItemSaveData = new List<DroppedItemSaveData>();
+        public List<StorageContainerSaveData> StorageContainerSaveData = new List<StorageContainerSaveData>();
 
         public void BundleItems(SystemItemManager systemItemManager) {
             // bundle items from lootable character and lootable node into one list to be saved with the interactable
@@ -49,7 +50,24 @@ namespace AnyRPG {
                     ItemInstanceListSaveData.ItemInstances.Add(instantiatedItem.GetItemSaveData());
                 }
             }
+            if (StorageContainerSaveData.Count > 0) {
+                foreach (InventorySlotSaveData inventorySlotSaveData in StorageContainerSaveData[0].InventorySlotSaveDataList) {
+                    foreach (long itemInstanceId in inventorySlotSaveData.ItemInstanceIds) {
+                        InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemInstanceId);
+                        if (instantiatedItem == null) {
+                            Debug.LogWarning($"InteractableSaveData.BundleItems() Item with instanceId {itemInstanceId} not found!");
+                            continue;
+                        }
+                        ItemInstanceListSaveData.ItemInstances.Add(instantiatedItem.GetItemSaveData());
+                    }
+                }
+            }
         }
+    }
+
+    [Serializable]
+    public class StorageContainerSaveData {
+        public List<InventorySlotSaveData> InventorySlotSaveDataList = new List<InventorySlotSaveData>();
     }
 
     [Serializable]

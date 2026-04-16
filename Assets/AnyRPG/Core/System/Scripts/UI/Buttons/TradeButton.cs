@@ -127,7 +127,7 @@ namespace AnyRPG {
             items.Clear();
             items.AddRange(playerManagerClient.UnitController.CharacterInventoryManager.FromSlot.InventorySlot.InstantiatedItems.Values);
             UpdateVisual();
-            handScript.Drop();
+            handScript.CancelMove();
             if (items.Count > 0) {
                 tradeServiceClient.RequestAddItemsToTradeSlot(buttonIndex, items.Select(item => item.InstanceId).ToList());
             }

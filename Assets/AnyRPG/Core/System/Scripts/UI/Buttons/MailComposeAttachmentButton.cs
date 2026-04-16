@@ -130,7 +130,7 @@ namespace AnyRPG {
             items.Clear();
             items.AddRange(playerManagerClient.UnitController.CharacterInventoryManager.FromSlot.InventorySlot.InstantiatedItems.Values);
             UpdateVisual();
-            handScript.Drop();
+            handScript.CancelMove();
             OnAddAttachment();
         }
 

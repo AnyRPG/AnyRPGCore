@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class ActionButton : NavigableElement, IClickable {
+    public class ActionButton : NavigableElement, IClickable, IMoveableOwner {
 
         // A reference to the useable on the actionbutton
         protected IUseable useable = null;
@@ -71,6 +71,7 @@ namespace AnyRPG {
         public Image BackgroundImage { get => backgroundImage; set => backgroundImage = value; }
         public Image RangeIndicator { get => rangeIndicator; }
         public int ActionButtonIndex { get => actionButtonIndex; }
+        public IMoveable Moveable => useable as IMoveable;
 
         public override void Configure(SystemGameManager systemGameManager) {
             if (configureCount > 0) {
@@ -138,7 +139,7 @@ namespace AnyRPG {
                 if (Input.GetKey(KeyCode.LeftShift)) {
                     return;
                 }
-                if (handScript.Moveable != null) {
+                if (handScript.MoveableOwner != null) {
                     // if we have something in the handscript we are trying to drop an item, not use one
                     return;
                 }
@@ -165,15 +166,15 @@ namespace AnyRPG {
 
             if (Input.GetKey(KeyCode.LeftShift)) {
                 // attempt to pick up - the only valid option when shift is held down
-                if (Useable != null && actionBarManager.FromButton == null && handScript.Moveable == null) {
+                if (Useable != null && actionBarManager.FromButton == null && handScript.MoveableOwner == null) {
                     // left shift down, pick up a useable
                     //Debug.Log("ActionButton: OnPointerClick(): shift clicked and useable is not null. picking up");
-                    handScript.TakeMoveable(Useable as IMoveable);
+                    handScript.TakeMoveable(this);
                     actionBarManager.FromButton = this;
                 }
             } else {
                 // attempt to put down
-                if (handScript.Moveable != null && handScript.Moveable is IUseable) {
+                if (handScript.MoveableOwner != null && handScript.MoveableOwner.Moveable is IUseable) {
                     if (actionBarManager.FromButton != this) {
                         if (actionBarManager.FromButton != null) {
                             //Debug.Log("ActionButton: OnPointerClick(): FROMBUTTON IS NOT NULL, SWAPPING ACTIONBAR ITEMS");
@@ -188,14 +189,14 @@ namespace AnyRPG {
                             */
                             actionBarManager.RequestMoveMouseUseable(actionBarManager.FromButton.actionButtonIndex, actionButtonIndex);
                         } else {
-                            actionBarManager.RequestAssignMouseUseable(handScript.Moveable as IUseable, actionButtonIndex);
+                            actionBarManager.RequestAssignMouseUseable(handScript.MoveableOwner.Moveable as IUseable, actionButtonIndex);
                         }
                         // no matter whether we sent our useable over or not, we can now clear our useable and set whatever is in the handscript
                         //ClearUseable();
                         //SetUseable(handScript.Moveable as IUseable);
                     }
 
-                    handScript.Drop();
+                    handScript.CancelMove();
                 }
             }
         }
@@ -606,6 +607,10 @@ namespace AnyRPG {
             (uIManager.assignToActionBarsWindow.CloseableWindowContents as AssignToActionBarsPanel).CurrentNavigationController.SetCurrentIndex(windowPanel.CurrentNavigationController.CurrentIndex);
 
             uIManager.assignToActionBarsWindow.OpenWindow();
+        }
+
+        public void CancelHandscriptMove() {
+            Debug.Log("ActionButton.CancelHandscriptMove()");
         }
     }
 

@@ -1,4 +1,3 @@
-using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class BagButton : HighlightButton, IDescribable {
+    public class BagButton : HighlightButton, IDescribable, IMoveableOwner {
 
         [Header("Bag Button")]
 
@@ -29,6 +28,8 @@ namespace AnyRPG {
         protected PlayerManagerClient playerManagerClient = null;
         protected HandScript handScript = null;
         protected MessageFeedManager messageFeedManager = null;
+
+        public IMoveable Moveable { get => (BagNode != null ? BagNode.InstantiatedBag : null); }
 
         public BagNode BagNode {
             get {
@@ -124,36 +125,36 @@ namespace AnyRPG {
                 return;
             }
             base.HandleLeftClick();
-            if (handScript.Moveable != null && handScript.Moveable is InstantiatedBag) {
+            if (handScript.MoveableOwner != null && handScript.MoveableOwner.Moveable is InstantiatedBag) {
                 if (bagNode.InstantiatedBag != null) {
                     // there is a bag in this slot already
-                    if ((handScript.Moveable as InstantiatedBag).BagNode != null) {
+                    if ((handScript.MoveableOwner.Moveable as InstantiatedBag).BagNode != null) {
                         // bag was moved from a bag bar slot to another bag bar slot with a bag in it, swap equipped bags
-                        playerManagerClient.UnitController.CharacterInventoryManager.RequestSwapBags(BagNode.InstantiatedBag, handScript.Moveable as InstantiatedBag);
+                        playerManagerClient.UnitController.CharacterInventoryManager.RequestSwapBags(BagNode.InstantiatedBag, handScript.MoveableOwner.Moveable as InstantiatedBag);
                     } else if (playerManagerClient.UnitController.CharacterInventoryManager.FromSlot != null) {
                         // bag was moved from an inventory slot, swap unequipped bag with equipped bag
-                        playerManagerClient.UnitController.CharacterInventoryManager.RequestSwapBags(BagNode.InstantiatedBag, handScript.Moveable as InstantiatedBag);
+                        playerManagerClient.UnitController.CharacterInventoryManager.RequestSwapBags(BagNode.InstantiatedBag, handScript.MoveableOwner.Moveable as InstantiatedBag);
                     }
-                    handScript.Drop();
+                    handScript.CancelMove();
                 } else {
                     // there is no bag in this slot
-                    InstantiatedBag tmpBag = (InstantiatedBag)handScript.Moveable;
+                    InstantiatedBag tmpBag = (InstantiatedBag)handScript.MoveableOwner.Moveable;
                     if (tmpBag.BagNode != null) {
                         // bag was moved from a bag bar slot, to an empty bag bar slot, ensure there is enough space to remove bag from old slot before dropping in this slot
                         if (playerManagerClient.UnitController.CharacterInventoryManager.EmptySlotCount(tmpBag.BagNode.IsBankNode) - tmpBag.Slots >= 0) {
                             playerManagerClient.UnitController.CharacterInventoryManager.RequestMoveBag(tmpBag, bagNode);
-                            handScript.Drop();
+                            handScript.CancelMove();
                         }
                     } else {
                         // bag came from an inventory slot
                         playerManagerClient.UnitController.CharacterInventoryManager.RequestAddBagFromInventory(tmpBag, bagNode);
-                        handScript.Drop();
+                        handScript.CancelMove();
                     }
                 }
             } else if (Input.GetKey(KeyCode.LeftShift)) {
                 //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED WITH SHIFT KEY on bagNode.mybag: " + bagNode.MyBag.GetInstanceID());
                 //Debug.Log("InventoryManager.RemoveBag(): Found matching bag in bagNode: " + bagNode.MyBag.GetInstanceID() + "; " + bag.GetInstanceID());
-                handScript.TakeMoveable(BagNode.InstantiatedBag);
+                handScript.TakeMoveable(this);
             }
         }
 
@@ -254,6 +255,9 @@ namespace AnyRPG {
             }
         }
 
+        public void CancelHandscriptMove() {
+            Debug.Log("BagButton.CancelHandscriptMove()");
+        }
     }
 
 }

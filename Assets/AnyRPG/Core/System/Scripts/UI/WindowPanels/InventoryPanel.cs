@@ -21,6 +21,9 @@ namespace AnyRPG {
         [SerializeField]
         protected CurrencyBarController currencyBarController = null;
 
+        // game manager references
+        private StorageContainerManagerClient storageContainerManagerClient = null;
+
         public BagBarController BagBarController { get => bagBarController; set => bagBarController = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -29,6 +32,11 @@ namespace AnyRPG {
             bagBarController.SetBagButtonCount(systemConfigurationManager.MaxInventoryBags);
             bagBarController.SetBagPanel(this);
             currencyBarController.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            storageContainerManagerClient = systemGameManager.StorageContainerManagerClient;
         }
 
         protected override void ProcessCreateEventSubscriptions() {
@@ -114,6 +122,70 @@ namespace AnyRPG {
             base.ProcessOpenWindowNotification();
             UpdateCarryWeightText();
             UpdateCurrencyAmount();
+        }
+
+        public override void DropItemFromInventorySlot(SlotScript toSlot, SlotScript fromSlot) {
+            Debug.Log($"InventoryPanel.DropFromInventorySlot() toSlot: {toSlot.DisplayName} fromSlot: {fromSlot.DisplayName}");
+
+            base.DropItemFromInventorySlot(toSlot, fromSlot);
+
+            // swap or drop item from a character based panel
+            if (fromSlot.BagPanel == this || fromSlot.BagPanel is BankPanel) {
+                playerManagerClient.UnitController.CharacterInventoryManager.RequestDropItemFromInventorySlot(fromSlot.InventorySlot, toSlot.InventorySlot, fromSlot.BagPanel is InventoryPanel, toSlot.BagPanel is InventoryPanel);
+                return;
+            }
+
+            // swap or drop items from a storage container
+            playerManagerClient.UnitController.CharacterInventoryManager.RequestMoveItemToStorageContainer(storageContainerManagerClient.StorageContainerComponent,
+                            storageContainerManagerClient.StorageContainerComponent.GetCurrentSlotIndex(fromSlot.InventorySlot),
+                            toSlot.InventorySlot,
+                            toSlot.BagPanel is BankPanel);
+        }
+
+        public override void DropItemFromNonInventorySlot(SlotScript slotScript, InstantiatedItem instantiatedItem) {
+            base.DropItemFromNonInventorySlot(slotScript, instantiatedItem);
+            // This slot has nothing in it, and we are not trying to transfer anything to it from another slot in the bag
+            if (instantiatedItem is InstantiatedBag) {
+                //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory.");
+                // the handscript had a bag in it, and therefore we are trying to unequip a bag
+                InstantiatedBag instantiatedBag = (InstantiatedBag)instantiatedItem;
+                if (playerManagerClient.UnitController.CharacterInventoryManager.EmptySlotCount(instantiatedBag.BagNode.IsBankNode) - instantiatedBag.Slots > 0) {
+                    //if (playerManager.UnitController.CharacterInventoryManager.EmptySlotCount() - bag.Slots > 0) {
+                    //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory. There is enough empty space.");
+                    playerManagerClient.UnitController.CharacterInventoryManager.RequestUnequipBagToSlot(instantiatedBag, slotScript.InventorySlot, false);
+                }
+            } else if (instantiatedItem is InstantiatedEquipment) {
+                // the handscript had equipment in it, and therefore we are trying to unequip some equipment
+                playerManagerClient.UnitController.CharacterEquipmentManager.RequestUnequipToSlot(instantiatedItem as InstantiatedEquipment, slotScript.InventorySlot.GetCurrentInventorySlotIndex(playerManagerClient.UnitController));
+            }
+        }
+
+        public override void SwapItemFromNonInventorySlot(SlotScript slotScript, InstantiatedItem instantiatedItem) {
+            base.SwapItemFromNonInventorySlot(slotScript, instantiatedItem);
+
+            if (instantiatedItem is InstantiatedBag) {
+                // the handscript has a bag in it
+                if (slotScript.InventorySlot.InstantiatedItem is InstantiatedBag) {
+                    // This slot also has a bag in it, so swap the 2 bags
+                    playerManagerClient.UnitController.CharacterInventoryManager.RequestSwapBags(instantiatedItem as InstantiatedBag, slotScript.InventorySlot.InstantiatedItem as InstantiatedBag);
+                }
+            } else if (instantiatedItem is InstantiatedEquipment) {
+                // the handscript has equipment in it
+                if (slotScript.InventorySlot.InstantiatedItem is InstantiatedEquipment && (slotScript.InventorySlot.InstantiatedItem as InstantiatedEquipment).Equipment.EquipmentSlotType == (instantiatedItem as InstantiatedEquipment).Equipment.EquipmentSlotType) {
+                    // this slot has equipment in it, and the equipment matches the slot of the item in the handscript.  swap them
+                    playerManagerClient.UnitController.CharacterEquipmentManager.RequestSwapInventoryEquipment(instantiatedItem as InstantiatedEquipment, slotScript.InventorySlot.InstantiatedItem as InstantiatedEquipment);
+                }
+            }
+        }
+
+        public override void SetupContextMenu(ContextMenuPanel contextMenuPanel, InventorySlot inventorySlot) {
+            base.SetupContextMenu(contextMenuPanel, inventorySlot);
+
+            if (inventorySlot.InstantiatedItem.Item.ItemPickupPrefabProfile != null && systemConfigurationManager.CanDropItems == true) {
+                contextMenuPanel.EnableDropButton(true);
+            }
+            contextMenuPanel.EnableSplitButton(inventorySlot.InstantiatedItem.Item.MaximumStackSize > 1 && inventorySlot.InstantiatedItems.Count > 1);
+            contextMenuPanel.EnableDestroyButton(true);
         }
 
 

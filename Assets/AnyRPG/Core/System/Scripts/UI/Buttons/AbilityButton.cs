@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class AbilityButton : TransparencyButton {
+    public class AbilityButton : TransparencyButton, IMoveableOwner {
 
         [Header("Ability Button")]
 
@@ -26,6 +26,8 @@ namespace AnyRPG {
         // game manager references
         protected PlayerManagerClient playerManagerClient = null;
         protected ActionBarManager actionBarManager = null;
+
+        public IMoveable Moveable => ability;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -52,7 +54,7 @@ namespace AnyRPG {
 
         protected override void HandleLeftClick() {
             base.HandleLeftClick();
-            uIManager.HandScript.TakeMoveable(ability);
+            uIManager.HandScript.TakeMoveable(this);
         }
 
         protected override void HandleRightClick() {
@@ -91,6 +93,9 @@ namespace AnyRPG {
             uIManager.assignToActionBarsWindow.OpenWindow();
         }
 
+        public void CancelHandscriptMove() {
+            Debug.Log("AbilityButton.CancelHandscriptMove()");
+        }
     }
 
 }

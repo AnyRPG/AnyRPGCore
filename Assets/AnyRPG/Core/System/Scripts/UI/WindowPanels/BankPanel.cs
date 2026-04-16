@@ -7,11 +7,13 @@ using UnityEngine;
 namespace AnyRPG {
     public class BankPanel : BagPanel {
 
-        //public override event Action<ICloseableWindowContents> OnOpenWindow;
         [Header("Bank Panel")]
 
         [SerializeField]
         protected BagBarController bagBarController;
+
+        // game manager references
+        private StorageContainerManagerClient storageContainerManagerClient = null;
 
         public BagBarController BagBarController { get => bagBarController; set => bagBarController = value; }
 
@@ -20,6 +22,11 @@ namespace AnyRPG {
             bagBarController.Configure(systemGameManager);
             bagBarController.SetBagButtonCount(systemConfigurationManager.MaxBankBags);
             bagBarController.SetBagPanel(this);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            storageContainerManagerClient = systemGameManager.StorageContainerManagerClient;
         }
 
         protected override void ProcessCreateEventSubscriptions() {
@@ -51,6 +58,50 @@ namespace AnyRPG {
             //Debug.Log("BankPanel.HandleAddBankBagNode()");
             bagBarController.AddBagButton(bagNode);
             //bagNode.BagPanel = this;
+        }
+
+        public override void DropItemFromInventorySlot(SlotScript toSlot, SlotScript fromSlot) {
+            Debug.Log($"BankPanel.DropFromInventorySlot() toSlot: {toSlot.DisplayName} fromSlot: {fromSlot.DisplayName}");
+
+            base.DropItemFromInventorySlot(toSlot, fromSlot);
+
+            // swap or drop item from a character based panel
+            if (fromSlot.BagPanel == this || fromSlot.BagPanel is InventoryPanel) {
+                playerManagerClient.UnitController.CharacterInventoryManager.RequestDropItemFromInventorySlot(fromSlot.InventorySlot, toSlot.InventorySlot, fromSlot.BagPanel is InventoryPanel, toSlot.BagPanel is InventoryPanel);
+                return;
+            }
+
+            // swap or drop items from a storage container
+            playerManagerClient.UnitController.CharacterInventoryManager.RequestMoveItemToStorageContainer(storageContainerManagerClient.StorageContainerComponent,
+                            storageContainerManagerClient.StorageContainerComponent.GetCurrentSlotIndex(fromSlot.InventorySlot),
+                            toSlot.InventorySlot,
+                            toSlot.BagPanel is BankPanel);
+        }
+
+        public override void DropItemFromNonInventorySlot(SlotScript slotScript, InstantiatedItem instantiatedItem) {
+            base.DropItemFromNonInventorySlot(slotScript, instantiatedItem);
+            // This slot has nothing in it, and we are not trying to transfer anything to it from another slot in the bag
+            if (instantiatedItem is InstantiatedBag) {
+                //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory.");
+                // the handscript had a bag in it, and therefore we are trying to unequip a bag
+                InstantiatedBag instantiatedBag = (InstantiatedBag)instantiatedItem;
+                if (playerManagerClient.UnitController.CharacterInventoryManager.EmptySlotCount(instantiatedBag.BagNode.IsBankNode) - instantiatedBag.Slots > 0) {
+                    //if (playerManager.UnitController.CharacterInventoryManager.EmptySlotCount() - bag.Slots > 0) {
+                    //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory. There is enough empty space.");
+                    playerManagerClient.UnitController.CharacterInventoryManager.RequestUnequipBagToSlot(instantiatedBag, slotScript.InventorySlot, true);
+                }
+            }
+        }
+
+        public override void SwapItemFromNonInventorySlot(SlotScript slotScript, InstantiatedItem instantiatedItem) {
+            base.SwapItemFromNonInventorySlot(slotScript, instantiatedItem);
+            if (instantiatedItem is InstantiatedBag) {
+                // the handscript has a bag in it
+                if (slotScript.InventorySlot.InstantiatedItem is InstantiatedBag) {
+                    // This slot also has a bag in it, so swap the 2 bags
+                    playerManagerClient.UnitController.CharacterInventoryManager.RequestSwapBags(instantiatedItem as InstantiatedBag, slotScript.InventorySlot.InstantiatedItem as InstantiatedBag);
+                }
+            }
         }
 
 

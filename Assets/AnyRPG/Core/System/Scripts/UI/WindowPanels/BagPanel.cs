@@ -82,6 +82,8 @@ namespace AnyRPG {
         /// Create slots for this bag
         /// </summary>
         /// <param name="slotCount"></param>
+        /// used to be used for old chestScript, can be deleted safely
+        /*
         public virtual List<SlotScript> AddSlots(int slotCount) {
             //Debug.Log($"{gameObject.name}.BagPanel.AddSlots(" + slotCount + ")");
 
@@ -100,6 +102,7 @@ namespace AnyRPG {
 
             return returnList;
         }
+        */
 
         public void HandleAddSlot(InventorySlot inventorySlot) {
             //Debug.Log($"{gameObject.name}.BagPanel.HandleAddSlot()");
@@ -139,7 +142,7 @@ namespace AnyRPG {
         */
 
         public virtual void ClearSlots() {
-            //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.ClearSlots()");
+            Debug.Log($"{gameObject.name}.BagPanel.ClearSlots() instanceId: {GetInstanceID()} slots count: {slots.Count}");
 
             List<SlotScript> removeList = new List<SlotScript>();
             foreach (SlotScript slot in slots) {
@@ -182,7 +185,21 @@ namespace AnyRPG {
             }
         }
 
-       
+        public virtual void DropItemFromInventorySlot(SlotScript toSlot, SlotScript fromSlot) {
+            // meant to be overridden
+        }
+
+        public virtual void SwapItemFromNonInventorySlot(SlotScript slotScript, InstantiatedItem instantiatedItem) {
+            // meant to be overridden
+        }
+
+        public virtual void DropItemFromNonInventorySlot(SlotScript slotScript, InstantiatedItem instantiatedItem) {
+            // meant to be overridden
+        }
+
+        public virtual void SetupContextMenu(ContextMenuPanel contextMenuPanel, InventorySlot inventorySlot) {
+            
+        }
     }
 
 }

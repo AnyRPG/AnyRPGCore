@@ -6,6 +6,8 @@ namespace AnyRPG {
     [System.Serializable]
     public class StorageContainerProps : InteractableOptionProps {
 
+        [Header("Storage Container")]
+
         [SerializeField]
         private int numberOfSlots = 20;
 
@@ -17,6 +19,7 @@ namespace AnyRPG {
         public override Sprite Icon { get => (systemConfigurationManager.StorageContainerInteractionPanelImage != null ? systemConfigurationManager.StorageContainerInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (systemConfigurationManager.StorageContainerNamePlateImage != null ? systemConfigurationManager.StorageContainerNamePlateImage : base.NamePlateImage); }
         public int NumberOfSlots { get => numberOfSlots; }
+        public List<Item> DefaultItems { get => defaultItems; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new StorageContainerComponent(interactable, this, systemGameManager);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,8 @@ namespace AnyRPG {
         private StorageContainerManagerClient storageContainerManagerClient = null;
 
         public StorageContainerProps Props { get => interactableOptionProps as StorageContainerProps; }
+        public List<InventorySlot> InventorySlots { get => inventorySlots; }
+        public float Weight { get => weight; }
 
         public StorageContainerComponent(Interactable interactable, StorageContainerProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if (interactionPanelTitle == string.Empty) {
@@ -33,6 +36,14 @@ namespace AnyRPG {
 
         public void PerformSetupActivities() {
             InitializeDefaultInventorySlots();
+            AddDefaultItems();
+        }
+
+        private void AddDefaultItems() {
+            foreach (Item item in Props.DefaultItems) {
+                InstantiatedItem instantiatedItem = systemItemManager.GetNewInstantiatedItem(item);
+                AddItem(instantiatedItem);
+            }
         }
 
         public override void ProcessCreateEventSubscriptions() {
@@ -100,7 +111,7 @@ namespace AnyRPG {
 
             weight -= instantiatedItem.Item.Weight;
             //NotifyOnItemCountChanged(instantiatedItem.Item);
-            //unitController.UnitEventController.NotifyOnRemoveItemFromInventorySlot(slot, instantiatedItem);
+            interactable.InteractableEventController.NotifyOnRemoveItemFromStorageContainerSlot(GetCurrentSlotIndex(slot), instantiatedItem);
             //unitController.UnitEventController.NotifyOnCarryWeightChanged();
         }
 
@@ -109,7 +120,7 @@ namespace AnyRPG {
 
             weight += instantiatedItem.Item.Weight;
             //NotifyOnItemCountChanged(instantiatedItem.Item);
-            //unitController.UnitEventController.NotifyOnAddItemToInventorySlot(slot, instantiatedItem);
+            interactable.InteractableEventController.NotifyOnAddItemToStorageContainerSlot(GetCurrentSlotIndex(slot), instantiatedItem);
             //unitController.UnitEventController.NotifyOnCarryWeightChanged();
         }
 
@@ -166,12 +177,31 @@ namespace AnyRPG {
             return AddItem(instantiatedItem);
         }
 
+        public bool AddInventoryItem(long itemInstanceId, int slotIndex) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.AddInventoryItem({itemInstanceId}, {slotIndex})");
+            InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemInstanceId);
+            if (instantiatedItem != null) {
+                return AddInventoryItem(instantiatedItem, slotIndex);
+            }
+            return false;
+        }
+
         public void RemoveInventoryItem(InstantiatedItem instantiatedItem) {
             foreach (InventorySlot slot in inventorySlots) {
                 if (!slot.IsEmpty && slot.InstantiatedItem == instantiatedItem) {
                     slot.RemoveItem(instantiatedItem);
                     return;
                 }
+            }
+        }
+
+        public void RemoveInventoryItemFromSlot(int slotIndex, long itemInstanceId) {
+            InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemInstanceId);
+            if (instantiatedItem == null) {
+                return;
+            }
+            if (inventorySlots.Count > slotIndex) {
+                inventorySlots[slotIndex].RemoveItem(instantiatedItem);
             }
         }
 
@@ -237,7 +267,6 @@ namespace AnyRPG {
             }
         }
 
-
         private bool PlaceInStack(InventorySlot inventorySlot, int slotIndex, InstantiatedItem instantiatedItem) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.PlaceInStack({slotIndex}, {instantiatedItem.Item.ResourceName}, {addToBank})");
 
@@ -248,7 +277,73 @@ namespace AnyRPG {
             return false;
         }
 
+        public override void SetSaveData(InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.LootableNodeComponent.SetSaveData()");
 
+            base.SetSaveData(interactableSaveData);
+            StorageContainerSaveData storageContainerSaveData = new StorageContainerSaveData();
+            storageContainerSaveData.InventorySlotSaveDataList = new List<InventorySlotSaveData>();
+            foreach (InventorySlot inventorySlot in inventorySlots) {
+                InventorySlotSaveData inventorySlotSaveData = new InventorySlotSaveData();
+                foreach (InstantiatedItem instantiatedItem in inventorySlot.InstantiatedItems.Values) {
+                    inventorySlotSaveData.ItemInstanceIds.Add(instantiatedItem.InstanceId);
+                }
+                storageContainerSaveData.InventorySlotSaveDataList.Add(inventorySlotSaveData);
+            }
+            if (interactableSaveData.StorageContainerSaveData.Count == 0) {
+                interactableSaveData.StorageContainerSaveData.Add(storageContainerSaveData);
+            } else {
+                interactableSaveData.StorageContainerSaveData[0] = storageContainerSaveData;
+            }
+        }
+
+        public override void LoadFromSaveData(InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.DroppedItemComponent.LoadFromSaveData()");
+
+            base.LoadFromSaveData(interactableSaveData);
+            ClearAllItems();
+            int index = 0;
+            foreach (StorageContainerSaveData storageContainerSaveData in interactableSaveData.StorageContainerSaveData) {
+                foreach (InventorySlotSaveData inventorySlotSaveData in storageContainerSaveData.InventorySlotSaveDataList) {
+                    if (index >= inventorySlots.Count) {
+                        Debug.LogWarning($"StorageContainerComponent.LoadFromSaveData(): index {index} is out of range for inventorySlots list.  This should never happen.  Check the save data and make sure it matches the number of inventory slots on this container.");
+                        continue;
+                    }
+                    foreach (long itemInstanceId in inventorySlotSaveData.ItemInstanceIds) {
+                        InstantiatedItem instantiatedItem = systemItemManager.GetExistingInstantiatedItem(itemInstanceId);
+                        if (instantiatedItem != null) {
+                            inventorySlots[index].AddItem(instantiatedItem);
+                        }
+                    }
+                    index++;
+                }
+            }
+        }
+
+        public void ClearAllItems() {
+            foreach (InventorySlot inventorySlot in inventorySlots) {
+                inventorySlot.RemoveAllItems();
+            }
+        }
+
+        public int GetCurrentSlotIndex(InventorySlot inventorySlot) {
+            if (!inventorySlots.Contains(inventorySlot)) {
+                return -1;
+            }
+            return inventorySlots.IndexOf(inventorySlot);
+        }
+
+        public void SwapItemsInSlots(int fromSlotIndex, int toSlotIndex) {
+            if (fromSlotIndex < 0 || fromSlotIndex >= inventorySlots.Count || toSlotIndex < 0 || toSlotIndex >= inventorySlots.Count) {
+                Debug.LogWarning($"{interactable.gameObject.name}.StorageContainerComponent.SwapItemsInSlots(): invalid slot indices {fromSlotIndex}, {toSlotIndex}");
+                return;
+            }
+            SwapItemsInSlots(inventorySlots[fromSlotIndex], inventorySlots[toSlotIndex]);
+        }
+
+        public void SwapItemsInSlots(InventorySlot fromSlot, InventorySlot toSlot) {
+            fromSlot.SwapItems(toSlot);
+        }
     }
 
 }

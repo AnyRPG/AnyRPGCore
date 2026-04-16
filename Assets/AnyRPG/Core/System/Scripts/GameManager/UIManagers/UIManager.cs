@@ -853,7 +853,7 @@ namespace AnyRPG {
 
         public void ProcessInput() {
 
-            if (handScript.Moveable != null) {
+            if (handScript.MoveableOwner != null) {
                 hadMoveable = true;
             } else {
                 hadMoveable = false;

@@ -8,6 +8,7 @@ using FishNet.Object.Synchronizing;
 using FishNet.Transporting;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -339,6 +340,8 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestFollowAttackTarget += HandleRequestFollowAttackTarget;
                 unitController.UnitEventController.OnRequestSplitStack += HandleRequestSplitStack;
                 unitController.UnitEventController.OnRequestDropItemOnGround += HandleRequestDropItemOnGround;
+                unitController.UnitEventController.OnRequestSwapItemsInStorageContainerSlots += HandleRequestSwapItemsInStorageContainerSlots;
+                unitController.UnitEventController.OnRequestMoveItemToStorageContainer += HandleRequestMoveItemToStorageContainer;
             }
             // all clients
             //unitController.UnitEventController.OnDespawn += HandleDespawnClient;
@@ -382,6 +385,9 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestFollowAttackTarget -= HandleRequestFollowAttackTarget;
                 unitController.UnitEventController.OnRequestSplitStack -= HandleRequestSplitStack;
                 unitController.UnitEventController.OnRequestDropItemOnGround -= HandleRequestDropItemOnGround;
+                unitController.UnitEventController.OnRequestSwapItemsInStorageContainerSlots -= HandleRequestSwapItemsInStorageContainerSlots;
+                unitController.UnitEventController.OnRequestMoveItemToStorageContainer -= HandleRequestMoveItemToStorageContainer;
+
             }
         }
 
@@ -1694,6 +1700,60 @@ namespace AnyRPG {
             unitController.CharacterInventoryManager.DropItemOnGround(inventorySlotIndex);
         }
 
+        private void HandleRequestMoveItemToStorageContainer(StorageContainerComponent component, int toSlotIndex, int fromSlotIndex, bool isBankSlot) {
+            FishNetInteractable fishNetInteractable = component.Interactable.GetComponent<FishNetInteractable>();
+            if (fishNetInteractable != null) {
+                HandleRequestMoveItemToStorageContainerServer(fishNetInteractable, toSlotIndex, fromSlotIndex, isBankSlot);
+            }
+        }
+
+        [ServerRpc]
+        public void HandleRequestMoveItemToStorageContainerServer(FishNetInteractable fishNetInteractable, int toSlotIndex, int fromSlotIndex, bool isBankSlot) {
+            if (fishNetInteractable == null) {
+                Debug.LogWarning($"{gameObject.name}.FishNetUnitController.HandleRequestMoveItemToStorageContainerServer: interactable is null");
+                return;
+            }
+            Interactable interactable = fishNetInteractable.Interactable;
+            if (interactable == null) {
+                Debug.LogWarning($"{gameObject.name}.FishNetUnitController.HandleRequestMoveItemToStorageContainerServer: interactable component is null");
+                return;
+            }
+            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.Interactables;
+            foreach (KeyValuePair<int, InteractableOptionComponent> kvp in currentInteractables) {
+                if (kvp.Value is StorageContainerComponent) {
+                    unitController.CharacterInventoryManager.MoveItemToStorageContainer(kvp.Value as StorageContainerComponent, fromSlotIndex, toSlotIndex, isBankSlot);
+                    break;
+                }
+            }
+        }
+
+
+        private void HandleRequestSwapItemsInStorageContainerSlots(Interactable interactable, int fromSlotIndex, int toSlotIndex) {
+            FishNetInteractable fishNetInteractable = interactable.GetComponent<FishNetInteractable>();
+            if (fishNetInteractable != null) {
+                HandleRequestSwapItemsInStorageContainerSlotsServer(fishNetInteractable, fromSlotIndex, toSlotIndex);
+            }
+        }
+
+        [ServerRpc]
+        public void HandleRequestSwapItemsInStorageContainerSlotsServer(FishNetInteractable fishNetInteractable, int fromSlotIndex, int toSlotIndex) {
+            if (fishNetInteractable == null) {
+                Debug.LogWarning($"{gameObject.name}.FishNetUnitController.HandleRequestSwapItemsInStorageContainerSlotsServer: interactable is null");
+                return;
+            }
+            Interactable interactable = fishNetInteractable.Interactable;
+            if (interactable == null) {
+                Debug.LogWarning($"{gameObject.name}.FishNetUnitController.HandleRequestSwapItemsInStorageContainerSlotsServer: interactable component is null");
+                return;
+            }
+            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.Interactables;
+            foreach (KeyValuePair<int, InteractableOptionComponent> kvp in currentInteractables) {
+                if (kvp.Value is StorageContainerComponent) {
+                    (kvp.Value as StorageContainerComponent).SwapItemsInSlots(fromSlotIndex, toSlotIndex);
+                    break;
+                }
+            }
+        }
 
         private void HandleRequestSplitStack(int inventorySlotIndex, int stackSize) {
             RequestSplitStack(inventorySlotIndex, stackSize);

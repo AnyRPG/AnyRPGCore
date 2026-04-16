@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.ShaderGraph.Internal;
@@ -28,7 +29,7 @@ namespace AnyRPG {
         //private Dictionary<int, InstantiatedItem> instantiatedItems = new Dictionary<int, InstantiatedItem>();
 
         private UnitController unitController = null;
-        
+
         // state tracking
         private float weight = 0f;
 
@@ -145,14 +146,14 @@ namespace AnyRPG {
             //Debug.Log("InventoryManager.LoadEquippedBagData(" + bank + ")");
             int counter = 0;
             foreach (EquippedBagSaveData saveData in equippedBagSaveData) {
-                    InstantiatedBag newBag = GetInstantiatedBagFromSaveData(saveData);
-                    if (newBag != null) {
-                        if (bank == true) {
-                            AddBag(newBag, BankNodes[counter]);
-                        } else {
-                            AddBag(newBag, BagNodes[counter]);
-                        }
+                InstantiatedBag newBag = GetInstantiatedBagFromSaveData(saveData);
+                if (newBag != null) {
+                    if (bank == true) {
+                        AddBag(newBag, BankNodes[counter]);
+                    } else {
+                        AddBag(newBag, BagNodes[counter]);
                     }
+                }
                 counter++;
             }
         }
@@ -180,7 +181,7 @@ namespace AnyRPG {
 
         private void HandleRemoveItemFromInventorySlot(InventorySlot slot, InstantiatedItem instantiatedItem) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.HandleRemoveItemFromInventorySlot({instantiatedItem.Item.ResourceName})");
-            
+
             weight -= instantiatedItem.Item.Weight;
             NotifyOnItemCountChanged(instantiatedItem.Item);
             unitController.UnitEventController.NotifyOnRemoveItemFromInventorySlot(slot, instantiatedItem);
@@ -190,7 +191,7 @@ namespace AnyRPG {
 
         private void HandleAddItemToInventorySlot(InventorySlot slot, InstantiatedItem instantiatedItem) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.HandleAddItemToInventorySlot({slot.GetCurrentInventorySlotIndex(unitController)}, {instantiatedItem.Item.ResourceName})");
-            
+
             weight += instantiatedItem.Item.Weight;
             NotifyOnItemCountChanged(instantiatedItem.Item);
             unitController.UnitEventController.NotifyOnAddItemToInventorySlot(slot, instantiatedItem);
@@ -261,7 +262,7 @@ namespace AnyRPG {
             }
         }
 
-        
+
         public void PerformSetupActivities() {
             InitializeDefaultInventorySlots();
             InitializeDefaultBankSlots();
@@ -308,7 +309,7 @@ namespace AnyRPG {
                 OnAddBankBagNode(bagNode);
             }
         }
-        
+
 
         public void AddInventoryBag(InstantiatedBag instantiatedBag) {
             //Debug.Log("InventoryManager.AddInventoryBag(" + bag.DisplayName + ")");
@@ -731,7 +732,7 @@ namespace AnyRPG {
 
         public InstantiatedItem GetNewInstantiatedItem(string itemName) {
             //Debug.Log(this.GetType().Name + ".GetNewResource(" + resourceName + ")");
-            
+
             return GetNewInstantiatedItem(itemName, null);
         }
 
@@ -835,7 +836,7 @@ namespace AnyRPG {
         }
 
         public void RequestDeleteItem(InstantiatedItem instantiatedItem) {
-            if (systemGameManager.GameMode == GameMode.Local ) {
+            if (systemGameManager.GameMode == GameMode.Local) {
                 // currently this only gets called from the hand script
                 DeleteItem(instantiatedItem);
             } else {
@@ -1314,6 +1315,42 @@ namespace AnyRPG {
             }
         }
 
+        public void RequestMoveItemToStorageContainer(StorageContainerComponent storageContainerComponent, int toSlotIndex, InventorySlot inventorySlot, bool isBankSlot) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                MoveItemToStorageContainer(storageContainerComponent, toSlotIndex, inventorySlot);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestMoveItemToStorageContainer(storageContainerComponent, toSlotIndex, isBankSlot ? inventorySlot.GetCurrentBankSlotIndex(unitController) : inventorySlot.GetCurrentInventorySlotIndex(unitController), isBankSlot);
+            }
+        }
+
+        public void MoveItemToStorageContainer(StorageContainerComponent storageContainerComponent, int toSlotIndex, int fromSlotIndex, bool fromBankSlot) {
+            if (fromBankSlot) {
+                if (bankSlots.Count > fromSlotIndex) {
+                    MoveItemToStorageContainer(storageContainerComponent, toSlotIndex, bankSlots[fromSlotIndex]);
+                }
+            } else {
+                if (inventorySlots.Count > fromSlotIndex) {
+                    MoveItemToStorageContainer(storageContainerComponent, toSlotIndex, inventorySlots[fromSlotIndex]);
+                }
+            }
+        }
+
+        public void MoveItemToStorageContainer(StorageContainerComponent storageContainerComponent, int toSlotIndex, InventorySlot inventorySlot) {
+            if (storageContainerComponent.InventorySlots.Count <= toSlotIndex) {
+                return;
+            }
+            InventorySlot toSlot = storageContainerComponent.InventorySlots[toSlotIndex];
+            toSlot.SwapItems(inventorySlot);
+        }
+
+        public void RequestSwapItemsInStorageContainerSlots(StorageContainerComponent storageContainerComponent, InventorySlot toSlot, InventorySlot fromSlot) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                storageContainerComponent.SwapItemsInSlots(toSlot, fromSlot);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestSwapItemsInStorageContainerSlots(storageContainerComponent.Interactable, storageContainerComponent.GetCurrentSlotIndex(fromSlot), storageContainerComponent.GetCurrentSlotIndex(toSlot));
+            }
+        }
+    
     }
 
 }

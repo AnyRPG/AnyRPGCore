@@ -34,7 +34,7 @@ namespace AnyRPG {
         public void CancelAction() {
             //Debug.Log("NewGameMenuController.CancelAction()");
             uIManager.confirmDestroyMenuWindow.CloseWindow();
-            handScript.Drop();
+            handScript.CancelMove();
         }
 
         public void ConfirmAction() {

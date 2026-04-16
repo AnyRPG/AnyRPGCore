@@ -18,10 +18,13 @@ namespace AnyRPG {
         protected HandScript handScript = null;
         protected PlayerManagerClient playerManagerClient = null;
 
+        /*
         /// <summary>
         /// A referecne to the bag that this slot belongs to
         /// </summary>
+        /// no longer in use, now linked from SlotScript
         public BagPanel BagPanel { get; set; }
+        */
 
         public bool IsEmpty {
             get {
@@ -71,7 +74,7 @@ namespace AnyRPG {
         }
 
         protected virtual void UpdateSlot() {
-            //Debug.Log($"InventorySlot.UpdateSlot()");
+            Debug.Log($"InventorySlot.UpdateSlot()");
 
             SetSlotOnItems();
             OnUpdateSlot();

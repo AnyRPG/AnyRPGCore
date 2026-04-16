@@ -121,6 +121,8 @@ namespace AnyRPG {
             interactable.InteractableEventController.OnLootableNodeSpawnObjectSetActive += HandleLootableNodeSpawnObjectSetActive;
             interactable.InteractableEventController.OnActivatableObjectSetActive += HandleActivatableObjectSetActive;
             interactable.InteractableEventController.OnSetDroppedItems += HandleSetDroppedItems;
+            interactable.InteractableEventController.OnRemoveItemFromStorageContainerSlot += HandleRemoveItemFromStorageContainerSlot;
+            interactable.InteractableEventController.OnAddItemToStorageContainerSlot += HandleAddItemToStorageContainerSlot;
 
             eventRegistrationComplete = true;
         }
@@ -157,8 +159,41 @@ namespace AnyRPG {
             interactable.InteractableEventController.OnLootableNodeSpawnObjectSetActive -= HandleLootableNodeSpawnObjectSetActive;
             interactable.InteractableEventController.OnActivatableObjectSetActive -= HandleActivatableObjectSetActive;
             interactable.InteractableEventController.OnSetDroppedItems -= HandleSetDroppedItems;
+            interactable.InteractableEventController.OnRemoveItemFromStorageContainerSlot -= HandleRemoveItemFromStorageContainerSlot;
+            interactable.InteractableEventController.OnAddItemToStorageContainerSlot -= HandleAddItemToStorageContainerSlot;
+
 
             eventRegistrationComplete = false;
+        }
+
+        private void HandleAddItemToStorageContainerSlot(int slotIndex, long itemInstanceId) {
+            HandleAddItemToStorageContainerSlotClient(slotIndex, itemInstanceId);
+        }
+
+        [ObserversRpc]
+        private void HandleAddItemToStorageContainerSlotClient(int slotIndex, long   itemInstanceId) {
+            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.Interactables;
+            foreach (KeyValuePair<int, InteractableOptionComponent> kvp in currentInteractables) {
+                if (kvp.Value is StorageContainerComponent) {
+                    (kvp.Value as StorageContainerComponent).AddInventoryItem(itemInstanceId, slotIndex);
+                    break;
+                }
+            }
+        }
+
+        private void HandleRemoveItemFromStorageContainerSlot(int slotIndex, long itemInstanceId) {
+            HandleRemoveItemFromStorageContainerSlotClient(slotIndex, itemInstanceId);
+        }
+
+        [ObserversRpc]
+        private void HandleRemoveItemFromStorageContainerSlotClient(int slotIndex, long itemInstanceId) {
+            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.Interactables;
+            foreach (KeyValuePair<int, InteractableOptionComponent> kvp in currentInteractables) {
+                if (kvp.Value is StorageContainerComponent) {
+                    (kvp.Value as StorageContainerComponent).RemoveInventoryItemFromSlot(slotIndex, itemInstanceId);
+                    break;
+                }
+            }
         }
 
         private void HandleSetDroppedItems(List<InstantiatedItem> list) {
@@ -381,7 +416,6 @@ namespace AnyRPG {
                 // something went wrong
                 return;
             }
-
             //unitController.UnitEventController.OnBeginChatMessage += HandleBeginChatMessageServer;
         }
 
