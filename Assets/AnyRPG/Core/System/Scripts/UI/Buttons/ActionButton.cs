@@ -610,7 +610,7 @@ namespace AnyRPG {
         }
 
         public void CancelHandscriptMove() {
-            Debug.Log("ActionButton.CancelHandscriptMove()");
+            //Debug.Log("ActionButton.CancelHandscriptMove()");
         }
     }
 

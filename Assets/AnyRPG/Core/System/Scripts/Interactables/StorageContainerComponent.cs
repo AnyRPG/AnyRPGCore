@@ -1,17 +1,19 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AnyRPG {
     public class StorageContainerComponent : InteractableOptionComponent {
 
         private List<InventorySlot> inventorySlots = new List<InventorySlot>();
-        
+
+        private int lootTableRemainingDrops = 0;
+
         private float weight = 0f;
 
         // game manager references
         private StorageContainerManagerClient storageContainerManagerClient = null;
+        private ServerDataService serverDataService = null;
 
         public StorageContainerProps Props { get => interactableOptionProps as StorageContainerProps; }
         public List<InventorySlot> InventorySlots { get => inventorySlots; }
@@ -25,6 +27,7 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            Props.ContainerLootTable.SetupScriptableObjects(systemGameManager);
             PerformSetupActivities();
         }
 
@@ -32,11 +35,13 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             storageContainerManagerClient = systemGameManager.StorageContainerManagerClient;
+            serverDataService = systemGameManager.ServerDataService;
         }
 
         public void PerformSetupActivities() {
             InitializeDefaultInventorySlots();
             AddDefaultItems();
+            RollLoot();
         }
 
         private void AddDefaultItems() {
@@ -344,6 +349,135 @@ namespace AnyRPG {
         public void SwapItemsInSlots(InventorySlot fromSlot, InventorySlot toSlot) {
             fromSlot.SwapItems(toSlot);
         }
+
+        public override void Cleanup() {
+            base.Cleanup();
+
+            // in network mode, we need to delete any items that are still in the storage container component when it is cleaned up
+            // otherwise they will pollute the server with orphaned items that are no longer referenced by anything and will never be cleaned up
+            if (networkManagerServer.ServerModeActive == true) {
+                foreach (InventorySlot inventorySlot in inventorySlots) {
+                    if (inventorySlot.InstantiatedItems.Count > 0) {
+                        foreach (InstantiatedItem instantiatedItem in inventorySlot.InstantiatedItems.Values) {
+                            serverDataService.DeleteItemInstance(instantiatedItem);
+                        }
+                        inventorySlot.InstantiatedItems.Clear();
+                    }
+                }
+            }
+
+        }
+
+        private void RollLoot() {
+            Debug.Log($"{interactable.gameObject.name}.StorageContainerComponent.RollLoot()");
+
+            lootTableRemainingDrops = Props.ContainerLootTable.DropLimit;
+            bool lootTableUnlimitedDrops = (Props.ContainerLootTable.DropLimit == 0);
+
+            foreach (ContainerLootGroup lootGroup in Props.ContainerLootTable.LootGroups) {
+                Debug.Log($"{interactable.gameObject.name}.StorageContainerComponent.RollLoot(): checking loot group with chance {lootGroup.GroupChance} and drop limit {lootGroup.DropLimit}");
+
+                // check if this group can drop an item
+                float randomInt = UnityEngine.Random.Range(0, 100);
+                if (lootGroup.GroupChance > randomInt) {
+                    Debug.Log($"{interactable.gameObject.name}.StorageContainerComponent.RollLoot(): loot group passed chance check with random int {randomInt}");
+                    // unlimited drops settins for this loot group
+                    int lootGroupRemainingDrops = lootGroup.DropLimit;
+                    bool lootGroupUnlimitedDrops = (lootGroup.DropLimit == 0);
+
+                    // ignore drop limit settings for this loot group
+                    bool ignoreDropLimit = true;
+
+                    // get list of loot that is currenly valid to be rolled so that weights can be properly calculated based on only valid loot
+                    List<ContainerLoot> validLoot = new List<ContainerLoot>(lootGroup.Loot);
+
+                    if (lootGroup.GuaranteedDrop == true) {
+                        Debug.Log($"{interactable.gameObject.name}.StorageContainerComponent.RollLoot(): loot group has guaranteed drop");
+
+                        List<int> randomItemIndexes = new List<int>();
+                        // guaranteed drops can never have a 0 drop limit, but shouldn't be unlimited because the chance is not random per item like non guaranteed drops
+                        int maxCount = (int)Mathf.Min(Mathf.Clamp(lootGroup.DropLimit, 1, Mathf.Infinity), validLoot.Count);
+                        while (randomItemIndexes.Count < maxCount) {
+                            Debug.Log($"{interactable.gameObject.name}.StorageContainerComponent.RollLoot(): rolling for guaranteed drop {randomItemIndexes.Count} of {maxCount}");
+
+                            // pure random
+                            //int randomNumber = UnityEngine.Random.Range(0, lootGroup.Loot.Count);
+
+                            // weighted
+                            int usedIndex = 0;
+                            int sum_of_weight = 0;
+                            int accumulatedWeight = 0;
+
+                            for (int i = 0; i < validLoot.Count; i++) {
+                                sum_of_weight += (int)validLoot[i].DropChance;
+                            }
+                            int rnd = UnityEngine.Random.Range(0, sum_of_weight);
+                            for (int i = 0; i < validLoot.Count; i++) {
+                                accumulatedWeight += (int)validLoot[i].DropChance;
+                                if (rnd < accumulatedWeight) {
+                                    usedIndex = i;
+                                    break;
+                                }
+                            }
+
+                            if (lootGroup.UniqueLimit > 0) {
+                                int foundCount = randomItemIndexes.Where(x => x.Equals(usedIndex)).Count();
+                                if (foundCount < lootGroup.UniqueLimit) {
+                                    randomItemIndexes.Add(usedIndex);
+                                }
+
+                            } else {
+                                randomItemIndexes.Add(usedIndex);
+                            }
+                        }
+                        foreach (int randomItemIndex in randomItemIndexes) {
+                            GetLootDrop(validLoot[randomItemIndex], lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops);
+                        }
+                    } else {
+                        foreach (ContainerLoot item in validLoot) {
+                            int roll = UnityEngine.Random.Range(0, 100);
+                            if (roll <= item.DropChance) {
+                                GetLootDrop(item, lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops);
+                            }
+                            if ((lootGroupUnlimitedDrops == false && lootGroupRemainingDrops <= 0) || (lootTableUnlimitedDrops == false && lootTableRemainingDrops <= 0)) {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (lootTableUnlimitedDrops == false && lootTableRemainingDrops <= 0) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void GetLootDrop(ContainerLoot loot, bool lootGroupUnlimitedDrops, bool ignoreDropLimit, bool lootTableUnlimitedDrops, ref int lootGroupRemainingDrops) {
+            Debug.Log($"LootTableState.GetLootDrop({interactable.gameObject.name}, {loot.Item.ResourceName}, unlimited: {lootGroupUnlimitedDrops}, {ignoreDropLimit}, {lootTableRemainingDrops})");
+
+            List<InstantiatedItem> returnValue = new List<InstantiatedItem>();
+            int itemCount = UnityEngine.Random.Range(loot.MinDrops, loot.MaxDrops + 1);
+            for (int i = 0; i < itemCount; i++) {
+                InstantiatedItem instantiatedItem = systemItemManager.GetNewInstantiatedItem(loot.Item);
+                if (instantiatedItem != null) {
+                    AddItem(instantiatedItem);
+                }
+                if (lootGroupUnlimitedDrops == false && ignoreDropLimit == false) {
+                    lootGroupRemainingDrops = lootGroupRemainingDrops - 1;
+                    if (lootGroupRemainingDrops <= 0) {
+                        break;
+                    }
+                }
+                if (lootTableUnlimitedDrops == false && ignoreDropLimit == false) {
+                    lootTableRemainingDrops -= 1;
+                    if (lootTableRemainingDrops <= 0) {
+                        break;
+                    }
+                }
+            }
+
+        }
+
     }
 
 }

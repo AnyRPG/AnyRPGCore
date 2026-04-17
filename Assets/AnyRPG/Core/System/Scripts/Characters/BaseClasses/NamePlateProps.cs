@@ -11,9 +11,11 @@ namespace AnyRPG {
         [SerializeField]
         private string displayName = string.Empty;
 
+        /*
         [Tooltip("If true, the nameplate is not shown above this unit.")]
         [SerializeField]
         private bool suppressNamePlate = false;
+        */
 
         [Tooltip("If true, the faction will not be shown on the nameplate")]
         [SerializeField]
@@ -58,7 +60,7 @@ namespace AnyRPG {
         private Vector3 unitPreviewCameraPositionOffset = new Vector3(0f, 1f, 2.5f);
 
         public string DisplayName { get => displayName; set => displayName = value; }
-        public bool SuppressNamePlate { get => suppressNamePlate; set => suppressNamePlate = value; }
+        //public bool SuppressNamePlate { get => suppressNamePlate; set => suppressNamePlate = value; }
         public bool SuppressFaction { get => suppressFaction; set => suppressFaction = value; }
         public bool OverrideNameplatePosition { get => overrideNameplatePosition; set => overrideNameplatePosition = value; }
         public Vector3 NameplatePosition { get => namePlatePosition; set => namePlatePosition = value; }

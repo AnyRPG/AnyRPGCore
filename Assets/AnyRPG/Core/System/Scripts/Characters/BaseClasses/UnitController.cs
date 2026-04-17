@@ -2542,6 +2542,8 @@ namespace AnyRPG {
         }
 
         public void HandleMovementSpeedUpdate() {
+            //Debug.Log($"{gameObject.name}.UnitController.HandleMovementSpeedUpdate() new speed: {MovementSpeed}");
+
             if (UnitMotor != null) {
                 UnitMotor.MovementSpeed = MovementSpeed;
             }
@@ -2714,6 +2716,7 @@ namespace AnyRPG {
                 return;
             }
             isEncumbered = newValue;
+            HandleMovementSpeedUpdate();
             unitEventController.NotifyOnEncumberedChange(isEncumbered);
         }
 

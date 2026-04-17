@@ -87,7 +87,8 @@ namespace AnyRPG {
         }
 
         public void CancelMove() {
-            Debug.Log("HandScript.CancelMove()");
+            //Debug.Log("HandScript.CancelMove()");
+
             if (MoveableOwner == null) {
                 return;
             }
@@ -96,12 +97,13 @@ namespace AnyRPG {
         }
 
         public void CompleteMove() {
-            Debug.Log("HandScript.CompleteMove()");
+            //Debug.Log("HandScript.CompleteMove()");
+
             ClearMoveable();
         }
 
         private void ClearMoveable() {
-            Debug.Log("HandScript.ClearMoveable()");
+            //Debug.Log("HandScript.ClearMoveable()");
 
             playerManagerClient.UnitController.CharacterInventoryManager.FromSlot = null;
             actionBarManager.FromButton = null;

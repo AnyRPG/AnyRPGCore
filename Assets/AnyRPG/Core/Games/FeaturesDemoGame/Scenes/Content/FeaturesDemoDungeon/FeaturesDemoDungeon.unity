@@ -11691,7 +11691,6 @@ MonoBehaviour:
   hasNamePlate: 0
   namePlateProps:
     displayName: 
-    suppressNamePlate: 0
     suppressFaction: 1
     overrideNameplatePosition: 0
     namePlatePosition: {x: 0, y: 0, z: 0}
@@ -36920,7 +36919,6 @@ MonoBehaviour:
   hasNamePlate: 1
   namePlateProps:
     displayName: Treasure Chest
-    suppressNamePlate: 0
     suppressFaction: 1
     overrideNameplatePosition: 0
     namePlatePosition: {x: 0, y: 0, z: 0}
@@ -37070,7 +37068,36 @@ MonoBehaviour:
     prerequisiteConditions: []
     numberOfSlots: 10
     defaultItemNames:
-    - Epic Medieval Bow
+    - Epic Medieval Shield
+    containerLootTable:
+      dropLimit: 3
+      lootGroups:
+      - guaranteedDrop: 1
+        groupChance: 100
+        dropLimit: 3
+        uniqueLimit: 1
+        ignoreGlobalDropLimit: 0
+        loot:
+        - itemName: Epic Medieval Bow
+          dropChance: 50
+          minDrops: 1
+          maxDrops: 1
+        - itemName: Epic Medieval Crossbow
+          dropChance: 50
+          minDrops: 1
+          maxDrops: 1
+        - itemName: Epic Medieval Grimoire
+          dropChance: 50
+          minDrops: 1
+          maxDrops: 1
+        - itemName: Epic Medieval Dagger
+          dropChance: 50
+          minDrops: 1
+          maxDrops: 1
+        - itemName: Epic Medieval One Hand Axe
+          dropChance: 50
+          minDrops: 1
+          maxDrops: 1
 --- !u!65 &8820007241906536369
 BoxCollider:
   m_ObjectHideFlags: 0

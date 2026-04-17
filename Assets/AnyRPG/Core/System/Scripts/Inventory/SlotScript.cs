@@ -69,7 +69,7 @@ namespace AnyRPG {
         }
 
         public void SetInventorySlot(InventorySlot inventorySlot) {
-            Debug.Log($"SlotScript.SetInventorySlot() instanceId: {GetInstanceID()}");
+            //Debug.Log($"SlotScript.SetInventorySlot() instanceId: {GetInstanceID()}");
 
             this.inventorySlot = inventorySlot;
             inventorySlot.OnUpdateSlot += UpdateSlot;
@@ -77,7 +77,7 @@ namespace AnyRPG {
 
         
         public void ClearInventorySlot() {
-            Debug.Log($"SlotScript.ClearInventorySlot() instanceId: {GetInstanceID()}");
+            //Debug.Log($"SlotScript.ClearInventorySlot() instanceId: {GetInstanceID()}");
 
             if (inventorySlot != null) {
                 inventorySlot.OnUpdateSlot -= UpdateSlot;
@@ -98,7 +98,7 @@ namespace AnyRPG {
         }
 
         public void SendItemToHandScript() {
-            Debug.Log("SlotScript.SendItemToHandScript()");
+            //Debug.Log("SlotScript.SendItemToHandScript()");
 
             handScript.TakeMoveable(this);
             playerManagerClient.UnitController.CharacterInventoryManager.FromSlot = this;
@@ -446,7 +446,7 @@ namespace AnyRPG {
         }
 
         private void ClearSlot() {
-            Debug.Log($"SlotScript.ClearSlot(): Clear Slot called on slot {GetInstanceID().ToString()}");
+            //Debug.Log($"SlotScript.ClearSlot(): Clear Slot called on slot {GetInstanceID().ToString()}");
 
             inventorySlot = null;
             SetDescribable(null, 0);

@@ -60,11 +60,13 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public virtual bool SuppressNamePlate {
             get {
                 return interactable.NamePlateProps.SuppressNamePlate;
             }
         }
+        */
 
         public virtual bool OverrideNamePlatePosition {
             get {
@@ -138,10 +140,12 @@ namespace AnyRPG {
 
         public virtual bool InitializeNamePlate() {
             //Debug.Log(namePlateUnit.gameObject.name + ".BasenamePlateController.InitializeNamePlate()");
+            /*
             if (SuppressNamePlate == true) {
                 //Debug.Log(namePlateUnit.gameObject.name + ".BasenamePlateController.InitializeNamePlate(): suppressing NamePlate");
                 return false;
             }
+            */
             if (networkManagerServer.ServerModeActive == true) {
                 return false;
             }

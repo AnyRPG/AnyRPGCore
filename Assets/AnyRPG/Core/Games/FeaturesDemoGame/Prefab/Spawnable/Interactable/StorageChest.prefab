@@ -92,6 +92,19 @@ MonoBehaviour:
     saveOnLevelUnload: 1
     saveOnGameSave: 1
   persistInteractableData: 1
+  hasNamePlate: 1
+  namePlateProps:
+    displayName: Storage Chest
+    suppressFaction: 1
+    overrideNameplatePosition: 0
+    namePlatePosition: {x: 0, y: 0, z: 0}
+    useSnapShot: 1
+    unitFrameTarget: 
+    unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
+    unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+    unitPreviewTarget: 
+    unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
+    unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
 --- !u!114 &9064853430609823486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,7 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
-  m_UUID: 79e23f69-4ff7-4da0-8a12-6ce1d3039b92
+  m_UUID: 3bd9459f-07d6-4e09-a1f0-44e5977c1c76
   forceUpdateUUID: 0
 --- !u!114 &8064653460653834927
 MonoBehaviour:
@@ -125,6 +138,9 @@ MonoBehaviour:
     prerequisiteConditions: []
     numberOfSlots: 20
     defaultItemNames: []
+    containerLootTable:
+      dropLimit: 0
+      lootGroups: []
 --- !u!114 &978241942983283623
 MonoBehaviour:
   m_ObjectHideFlags: 0

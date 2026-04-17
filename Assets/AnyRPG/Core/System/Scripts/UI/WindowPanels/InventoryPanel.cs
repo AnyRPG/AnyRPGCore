@@ -125,7 +125,7 @@ namespace AnyRPG {
         }
 
         public override void DropItemFromInventorySlot(SlotScript toSlot, SlotScript fromSlot) {
-            Debug.Log($"InventoryPanel.DropFromInventorySlot() toSlot: {toSlot.DisplayName} fromSlot: {fromSlot.DisplayName}");
+            //Debug.Log($"InventoryPanel.DropFromInventorySlot() toSlot: {toSlot.DisplayName} fromSlot: {fromSlot.DisplayName}");
 
             base.DropItemFromInventorySlot(toSlot, fromSlot);
 

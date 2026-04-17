@@ -51,6 +51,7 @@ namespace AnyRPG {
             base.ProcessOpenWindowNotification();
             AddStorageSlots();
             UpdateWeightText();
+            closeableWindow.SetWindowTitle(storageContainerManagerClient.StorageContainerComponent.Interactable.DisplayName);
         }
 
         public override void ReceiveClosedWindowNotification() {
@@ -77,20 +78,20 @@ namespace AnyRPG {
         }
 
         private void HandleRemoveItem(InventorySlot slot, InstantiatedItem item) {
-            Debug.Log($"StorageContainerPanel.HandleRemoveItem(item: {item.ResourceName})");
+            //Debug.Log($"StorageContainerPanel.HandleRemoveItem(item: {item.ResourceName})");
 
             UpdateWeightText();
         }
 
         private void HandleAddItem(InventorySlot slot, InstantiatedItem item) {
-            Debug.Log($"StorageContainerPanel.HandleAddItem(item: {item.ResourceName})");
+            //Debug.Log($"StorageContainerPanel.HandleAddItem(item: {item.ResourceName})");
             
             UpdateWeightText();
         }
 
 
         public override void DropItemFromInventorySlot(SlotScript toSlot, SlotScript fromSlot) {
-            Debug.Log($"StorageContainerPanel.DropFromInventorySlot() toSlot: {toSlot.DisplayName} fromSlot: {fromSlot.DisplayName}");
+            //Debug.Log($"StorageContainerPanel.DropFromInventorySlot() toSlot: {toSlot.DisplayName} fromSlot: {fromSlot.DisplayName}");
 
             base.DropItemFromInventorySlot(toSlot, fromSlot);
 

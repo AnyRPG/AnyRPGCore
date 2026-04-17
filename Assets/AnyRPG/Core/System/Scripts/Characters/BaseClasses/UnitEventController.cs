@@ -46,7 +46,7 @@ namespace AnyRPG {
         public event System.Action<InteractableOptionComponent> OnStopInteractWithOption = delegate { };
         public event System.Action OnDropCombat = delegate { };
         public event System.Action<UnitController> OnBeginCastOnEnemy = delegate { };
-        public event System.Action<float, float, float, float> OnCalculateRunSpeed = delegate { };
+        //public event System.Action<float, float, float, float> OnCalculateRunSpeed = delegate { };
         public event System.Action<AbilityEffectContext> OnImmuneToEffect = delegate { };
         public event System.Action<UnitController, int, int> OnGainXP = delegate { };
         public event System.Action<PowerResource, int, CombatMagnitude, AbilityEffectContext> OnRecoverResource = delegate { };
@@ -359,9 +359,11 @@ namespace AnyRPG {
             OnImmuneToEffect(abilityEffectContext);
         }
 
+        /*
         public void NotifyOnCalculateRunSpeed(float oldRunSpeed, float currentRunSpeed, float oldSprintSpeed, float currentSprintSpeed) {
             OnCalculateRunSpeed(oldRunSpeed, currentRunSpeed, oldSprintSpeed, currentSprintSpeed);
         }
+        */
 
         public void NotifyOnBeginCastOnEnemy(UnitController unitController) {
             OnBeginCastOnEnemy(unitController);

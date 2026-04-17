@@ -13747,6 +13747,19 @@ MonoBehaviour:
     saveOnLevelUnload: 0
     saveOnGameSave: 0
   persistInteractableData: 0
+  hasNamePlate: 0
+  namePlateProps:
+    displayName: 
+    suppressFaction: 1
+    overrideNameplatePosition: 0
+    namePlatePosition: {x: 0, y: 0, z: 0}
+    useSnapShot: 1
+    unitFrameTarget: 
+    unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
+    unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+    unitPreviewTarget: 
+    unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
+    unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
 --- !u!114 &393183661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21830,6 +21843,19 @@ MonoBehaviour:
     saveOnLevelUnload: 0
     saveOnGameSave: 0
   persistInteractableData: 0
+  hasNamePlate: 0
+  namePlateProps:
+    displayName: 
+    suppressFaction: 1
+    overrideNameplatePosition: 0
+    namePlatePosition: {x: 0, y: 0, z: 0}
+    useSnapShot: 1
+    unitFrameTarget: 
+    unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
+    unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+    unitPreviewTarget: 
+    unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
+    unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
 --- !u!65 &623275583
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -32268,6 +32294,19 @@ MonoBehaviour:
     saveOnLevelUnload: 0
     saveOnGameSave: 0
   persistInteractableData: 0
+  hasNamePlate: 0
+  namePlateProps:
+    displayName: 
+    suppressFaction: 1
+    overrideNameplatePosition: 0
+    namePlatePosition: {x: 0, y: 0, z: 0}
+    useSnapShot: 1
+    unitFrameTarget: 
+    unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
+    unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+    unitPreviewTarget: 
+    unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
+    unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
 --- !u!4 &902514105
 Transform:
   m_ObjectHideFlags: 0
@@ -48114,6 +48153,19 @@ MonoBehaviour:
     saveOnLevelUnload: 0
     saveOnGameSave: 0
   persistInteractableData: 0
+  hasNamePlate: 0
+  namePlateProps:
+    displayName: 
+    suppressFaction: 1
+    overrideNameplatePosition: 0
+    namePlatePosition: {x: 0, y: 0, z: 0}
+    useSnapShot: 1
+    unitFrameTarget: 
+    unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
+    unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+    unitPreviewTarget: 
+    unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
+    unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
 --- !u!65 &1339571317
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -62286,6 +62338,19 @@ MonoBehaviour:
     saveOnLevelUnload: 0
     saveOnGameSave: 0
   persistInteractableData: 0
+  hasNamePlate: 0
+  namePlateProps:
+    displayName: 
+    suppressFaction: 1
+    overrideNameplatePosition: 0
+    namePlatePosition: {x: 0, y: 0, z: 0}
+    useSnapShot: 1
+    unitFrameTarget: 
+    unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
+    unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+    unitPreviewTarget: 
+    unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
+    unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
 --- !u!65 &1709763948
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -78835,6 +78900,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: storageContainerProps.defaultItemNames.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: 'storageContainerProps.defaultItemNames.Array.data[0]'
+      value: Health Potion
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064653460653834927, guid: aca1865effdc6cc4a8508f32084608d5,
+        type: 3}
+      propertyPath: 'storageContainerProps.defaultItemNames.Array.data[1]'
+      value: Mana Potion
       objectReference: {fileID: 0}
     - target: {fileID: 9064853430609823486, guid: aca1865effdc6cc4a8508f32084608d5,
         type: 3}
