@@ -1010,7 +1010,7 @@ namespace AnyRPG {
             if (newTarget is UnitController) {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is not null");
                 uIManager.FocusUnitFramePanel.SetTarget(newTarget as UnitController);
-                namePlateManager.SetFocus(newTarget as UnitController);
+                namePlateManager.SetFocus(newTarget);
             }
             newTarget?.PhysicalTarget.SetTargeted();
         }

@@ -12,6 +12,7 @@ namespace AnyRPG {
         private int numberOfSlots = 20;
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Item))]
         private List<string> defaultItemNames = new List<string>();
 
         private List<Item> defaultItems = new List<Item>();

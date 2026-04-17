@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 2692339740015506125}
   - component: {fileID: 2692339740015506114}
   - component: {fileID: 2692339740015506115}
-  - component: {fileID: 1033119843574938219}
   - component: {fileID: 1751672641666550326}
   - component: {fileID: 6973582095505325909}
   - component: {fileID: 3309121852376907503}
@@ -38,6 +37,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 565477750004378721}
+  - {fileID: 7838930383991176149}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!195 &2692339740015506125
@@ -112,30 +112,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 2
---- !u!114 &1033119843574938219
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2692339740015506113}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df07de734135f834b9ba0098ec4ed914, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showTooltip: 1
-  interactableName: 
-  glowOnMouseOver: 1
-  glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  interactionTooltipText: 
-  notInteractable: 0
-  interactWithAny: 0
-  interactOnExit: 0
-  isTrigger: 0
-  suppressInteractionWindow: 0
-  interactionMaxRange: 2
-  componentController: {fileID: 0}
 --- !u!114 &1751672641666550326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,8 +134,16 @@ MonoBehaviour:
   interactOnExit: 0
   isTrigger: 0
   suppressInteractionWindow: 0
+  overrideInteractionColliderSize: 0
   interactionMaxRange: 2
+  interactionPoints: []
   componentController: {fileID: 5627543989980708334}
+  persistentObjectComponent:
+    persistObjectPosition: 0
+    saveOnLevelUnload: 0
+    saveOnGameSave: 0
+  persistInteractableData: 0
+  hasNamePlate: 0
   namePlateProps:
     displayName: 
     suppressNamePlate: 0
@@ -177,10 +161,6 @@ MonoBehaviour:
   patrolNames: []
   behaviorNames: []
   useBehaviorCopy: 0
-  persistentObjectComponent:
-    persistObjectPosition: 0
-    saveOnLevelUnload: 0
-    saveOnGameSave: 0
 --- !u!114 &6973582095505325909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -484,6 +464,37 @@ MonoBehaviour:
   characterHeight: 2
   characterRadius: 0.25
   characterMass: 50
+--- !u!1 &6567301054380660014
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7838930383991176149}
+  m_Layer: 0
+  m_Name: UMA_MI_Holder
+  m_TagString: UMAIgnore
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &7838930383991176149
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6567301054380660014}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2692339740015506124}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &8260972880229052764
 PrefabInstance:
   m_ObjectHideFlags: 0

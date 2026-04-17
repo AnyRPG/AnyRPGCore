@@ -70,20 +70,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6973582095505325909, guid: 2da13b91748b5f042bdc582eebb82983,
         type: 3}
-      propertyPath: context
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6973582095505325909, guid: 2da13b91748b5f042bdc582eebb82983,
-        type: 3}
       propertyPath: umaData
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 6900189098020621186}
     - target: {fileID: 6973582095505325909, guid: 2da13b91748b5f042bdc582eebb82983,
         type: 3}
       propertyPath: umaRecipe
       value: 
-      objectReference: {fileID: 11400000, guid: 1d97eb041589729479af9716fd5b42b3,
-        type: 2}
+      objectReference: {fileID: 0}
     - target: {fileID: 6973582095505325909, guid: 2da13b91748b5f042bdc582eebb82983,
         type: 3}
       propertyPath: defaultLoadOptions
@@ -114,6 +108,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: -8195572299963524579}
+    - targetCorrespondingSourceObject: {fileID: 2692339740015506113, guid: 2da13b91748b5f042bdc582eebb82983,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6900189098020621186}
   m_SourcePrefab: {fileID: 100100000, guid: 2da13b91748b5f042bdc582eebb82983, type: 3}
 --- !u!1 &3985010815240365227 stripped
 GameObject:
@@ -165,9 +163,9 @@ MonoBehaviour:
   _enableStateForwarding: 1
   _networkTransform: {fileID: 0}
   _ownerInterpolation: 1
-  _ownerSmoothedProperties: 255
+  _ownerSmoothedProperties: 4294967295
   _adaptiveInterpolation: 3
-  _spectatorSmoothedProperties: 255
+  _spectatorSmoothedProperties: 4294967295
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
@@ -265,3 +263,72 @@ MonoBehaviour:
     X: 0
     Y: 0
     Z: 0
+--- !u!114 &6900189098020621186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3985010815240365227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15ee0e75ac30e964b8dcd0ad5f953c15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UMA_Core::UMA.UMAData
+  renderers: []
+  userInformation: 
+  rawAvatar: 0
+  raceChanged: 0
+  hideRenderers: 0
+  umaGenerator: {fileID: 0}
+  OverrideTpose: {fileID: 0}
+  atlasResolutionScale: 1
+  ForceRebindAnimator: 0
+  isMeshDirty: 0
+  isShapeDirty: 0
+  isTextureDirty: 0
+  isAtlasDirty: 0
+  markNotReadable: 1
+  markDynamic: 1
+  animationController: {fileID: 0}
+  CharacterCreated:
+    m_PersistentCalls:
+      m_Calls: []
+  CharacterDestroyed:
+    m_PersistentCalls:
+      m_Calls: []
+  CharacterUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  CharacterBeforeUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  CharacterBeforeDnaUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  CharacterDnaUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  CharacterBegun:
+    m_PersistentCalls:
+      m_Calls: []
+  AnimatorStateSaved:
+    m_PersistentCalls:
+      m_Calls: []
+  AnimatorStateRestored:
+    m_PersistentCalls:
+      m_Calls: []
+  PreUpdateUMABody:
+    m_PersistentCalls:
+      m_Calls: []
+  umaRoot: {fileID: 0}
+  _umaRecipe:
+    raceData: {fileID: 0}
+    dnaValues: []
+    slotDataList: []
+    sharedColors: []
+  animator: {fileID: 0}
+  KeepAvatar: 0
+  characterHeight: 2
+  characterRadius: 0.25
+  characterMass: 50

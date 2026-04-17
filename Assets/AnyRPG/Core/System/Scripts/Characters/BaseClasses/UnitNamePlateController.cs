@@ -61,10 +61,8 @@ namespace AnyRPG {
 
         public UnitController UnitController { get => unitController; set => unitController = value; }
 
-        public UnitNamePlateController(NamePlateUnit namePlateUnit, SystemGameManager systemGameManager) : base(namePlateUnit, systemGameManager) {
-            if ((namePlateUnit as UnitController) is UnitController) {
-                unitController = (namePlateUnit as UnitController);
-            }
+        public UnitNamePlateController(UnitController unitController, SystemGameManager systemGameManager) : base(unitController, systemGameManager) {
+            this.unitController = unitController;
         }
 
         /*
@@ -236,7 +234,7 @@ namespace AnyRPG {
 
             // faction is not null, check for cutscene
             if (uIManager.CutSceneBarController.CurrentCutscene == null) {
-                return Faction.GetFactionColor(playerManagerClient, NamePlateUnit);
+                return Faction.GetFactionColor(playerManagerClient, interactable);
             }
 
             // cutscene is not null, check for faction color setting

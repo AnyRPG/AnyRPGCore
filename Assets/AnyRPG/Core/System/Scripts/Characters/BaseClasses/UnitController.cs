@@ -5,9 +5,9 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace AnyRPG {
-    public class UnitController : NamePlateUnit, IAbilityCaster {
+    public class UnitController : Interactable, IAbilityCaster {
 
-        public override event Action OnCameraTargetReady = delegate { };
+        public event Action OnCameraTargetReady = delegate { };
 
         [Header("Unit Controller")]
 
@@ -416,7 +416,6 @@ namespace AnyRPG {
             }
         }
 
-
         public override float InteractionMaxRange {
             get {
                 //Debug.Log($"{gameObject.name}.UnitController.InteractionMaxRange: unitProfile.InteractionMaxRange: {(unitProfile != null ? unitProfile.InteractionMaxRange.ToString() : "null")} base.InteractionMaxRange: {base.InteractionMaxRange}");
@@ -427,7 +426,7 @@ namespace AnyRPG {
             }
         }
 
-        public override bool CameraTargetReady {
+        public bool CameraTargetReady {
             get {
                 return unitModelController.ModelCreated && unitModelController.IsBuilding() == false;
             }
@@ -595,6 +594,24 @@ namespace AnyRPG {
 
         }
 
+        public override Color GetGlowColor() {
+            return Faction.GetFactionColor(playerManagerClient, this);
+        }
+
+        public override Color GetDescriptionColor() {
+            if (NamePlateController != null && NamePlateController.Faction != null) {
+                return Faction.GetFactionColor(playerManagerClient, this);
+            }
+            return base.GetDescriptionColor();
+        }
+
+        public override string GetTitleString() {
+            if (NamePlateController != null && NamePlateController.Faction != null) {
+                return "\n" + NamePlateController.Faction.DisplayName;
+            }
+            return base.GetTitleString();
+        }
+
         protected override void CheckEnableInteractableRange() {
             // do nothing here, unit controller will handle enabling and disabling the interactable range based on the unit controller mode
         }
@@ -607,7 +624,7 @@ namespace AnyRPG {
             }
         }
 
-        public override void ConfigureUnitFrame(UnitFramePanel unitFramePanelBase, bool previewCameraExists) {
+        public void ConfigureUnitFrame(UnitFramePanel unitFramePanelBase, bool previewCameraExists) {
             //Debug.Log($"{gameObject.name}.UnitController.ConfigureUnitFrame()");
 
             if (unitProfile != null && (unitProfile.UnitPrefabProps.NamePlateProps.UseSnapShot == false || previewCameraExists == false)) {
@@ -615,7 +632,7 @@ namespace AnyRPG {
                 return;
             }
 
-            base.ConfigureUnitFrame(unitFramePanelBase, previewCameraExists);
+            unitFramePanelBase.ConfigureSnapshotPortrait();
         }
 
         public override void ConfigureDialogPanel(DialogPanel dialogPanelController) {
