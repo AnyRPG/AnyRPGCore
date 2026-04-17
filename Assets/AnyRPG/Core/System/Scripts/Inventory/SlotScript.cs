@@ -429,7 +429,7 @@ namespace AnyRPG {
         /// Updates the Stack Size count graphic
         /// </summary>
         public void UpdateSlot() {
-            Debug.Log($"SlotScript.UpdateSlot(): Update Slot called on slot {GetInstanceID().ToString()}");
+            //Debug.Log($"SlotScript.UpdateSlot(): Update Slot called on slot {GetInstanceID().ToString()}");
 
             if (inventorySlot == null) {
                 // the inventory slot that this script was referencing no longer exists

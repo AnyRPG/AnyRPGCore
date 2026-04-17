@@ -74,7 +74,7 @@ namespace AnyRPG {
         }
 
         protected virtual void UpdateSlot() {
-            Debug.Log($"InventorySlot.UpdateSlot()");
+            //Debug.Log($"InventorySlot.UpdateSlot()");
 
             SetSlotOnItems();
             OnUpdateSlot();
