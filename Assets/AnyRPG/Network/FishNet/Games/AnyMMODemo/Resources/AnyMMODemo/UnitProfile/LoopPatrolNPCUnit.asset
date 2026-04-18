@@ -20,6 +20,7 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
+  suppressNameplateFaction: 1
   automaticPrefabProfile: 0
   prefabProfileName: 
   useInlinePrefabProps: 1
@@ -120,10 +121,9 @@ MonoBehaviour:
       swimMoveClip: {fileID: 0}
       flyIdleClip: {fileID: 0}
       flyMoveClip: {fileID: 0}
-    rotateModel: 0
+    forceRotateModelMode: 0
     namePlateProps:
       displayName: 
-      suppressNamePlate: 0
       suppressFaction: 1
       overrideNameplatePosition: 0
       namePlatePosition: {x: 0, y: 0, z: 0}
@@ -131,6 +131,15 @@ MonoBehaviour:
       unitFrameTarget: head
       unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
       unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+      unitPreviewTarget: 
+      unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
+      unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
+    unitFrameProps:
+      useSnapShot: 0
+      unitFrameTarget: head
+      unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
+      unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+    unitPreviewProps:
       unitPreviewTarget: 
       unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
       unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
@@ -218,7 +227,7 @@ MonoBehaviour:
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: 29974bdb-5e5e-493c-a101-5d7e05a5157a
+  m_UUID: cdeb1054-dd85-4ae9-80aa-f0efa5f6b447
   references:
     version: 2
     RefIds:

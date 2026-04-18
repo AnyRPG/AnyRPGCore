@@ -24,6 +24,7 @@ namespace AnyRPG {
 
         public virtual NamePlateController NamePlate { get => namePlate; }
 
+        /*
         public virtual string UnitFrameTarget {
             get {
                 return interactable.NamePlateProps.UnitFrameTarget;
@@ -57,13 +58,6 @@ namespace AnyRPG {
         public virtual bool SuppressFaction {
             get {
                 return interactable.NamePlateProps.SuppressFaction;
-            }
-        }
-
-        /*
-        public virtual bool SuppressNamePlate {
-            get {
-                return interactable.NamePlateProps.SuppressNamePlate;
             }
         }
         */

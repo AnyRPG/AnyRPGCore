@@ -20,6 +20,7 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
+  suppressNameplateFaction: 1
   automaticPrefabProfile: 0
   prefabProfileName: 
   useInlinePrefabProps: 1
@@ -121,7 +122,6 @@ MonoBehaviour:
     forceRotateModelMode: 1
     namePlateProps:
       displayName: 
-      suppressNamePlate: 0
       suppressFaction: 1
       overrideNameplatePosition: 0
       namePlatePosition: {x: 0, y: 0, z: 0}
@@ -129,6 +129,15 @@ MonoBehaviour:
       unitFrameTarget: Head
       unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
       unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+      unitPreviewTarget: 
+      unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
+      unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
+    unitFrameProps:
+      useSnapShot: 1
+      unitFrameTarget: Head
+      unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
+      unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+    unitPreviewProps:
       unitPreviewTarget: 
       unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
       unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
@@ -212,7 +221,7 @@ MonoBehaviour:
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: b67cb72f-ac58-4ad2-95f0-a825d48806cb
+  m_UUID: 1f87a208-fe02-4f20-a441-232109182bd3
   references:
     version: 2
     RefIds:

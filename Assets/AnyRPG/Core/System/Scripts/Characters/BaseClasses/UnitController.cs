@@ -627,7 +627,7 @@ namespace AnyRPG {
         public void ConfigureUnitFrame(UnitFramePanel unitFramePanelBase, bool previewCameraExists) {
             //Debug.Log($"{gameObject.name}.UnitController.ConfigureUnitFrame()");
 
-            if (unitProfile != null && (unitProfile.UnitPrefabProps.NamePlateProps.UseSnapShot == false || previewCameraExists == false)) {
+            if (unitProfile != null && (unitProfile.UnitPrefabProps.UnitFrameProps.UseSnapShot == false || previewCameraExists == false)) {
                 unitFramePanelBase.ConfigurePortrait(unitProfile.Icon);
                 return;
             }
@@ -637,7 +637,7 @@ namespace AnyRPG {
 
         public override void ConfigureDialogPanel(DialogPanel dialogPanelController) {
 
-            if (unitProfile != null && unitProfile.UnitPrefabProps.NamePlateProps.UseSnapShot == false) {
+            if (unitProfile != null && unitProfile.UnitPrefabProps.UnitFrameProps.UseSnapShot == false) {
                 dialogPanelController.ConfigurePortrait(unitProfile.Icon);
                 return;
             }

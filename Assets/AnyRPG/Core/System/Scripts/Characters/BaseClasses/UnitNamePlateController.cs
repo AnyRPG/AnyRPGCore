@@ -258,7 +258,7 @@ namespace AnyRPG {
 
                 // faction is lowest priority
                 if (playerManagerClient.UnitController == null || unitController != playerManagerClient.UnitController || PlayerPrefs.GetInt("ShowPlayerFaction") == 1) {
-                    if (SuppressFaction == false) {
+                    if (unitController.UnitProfile.SuppressNameplateFaction == false) {
                         tagString = $"<{Faction.DisplayName}>";
                     }
                 }

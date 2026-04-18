@@ -179,20 +179,17 @@ namespace AnyRPG {
             if (unitController == null) {
                 //Debug.Log($"{gameObject.name}.UnitFrameController.InitializePosition(): unitController is null");
             }
-            if (unitController.NamePlateController == null) {
-                //Debug.Log($"{gameObject.name}.UnitFrameController.InitializePosition(): unitController.NamePlateController is null");
-            }
 
-            if (unitController.NamePlateController.UnitPreviewCameraPositionOffset != null) {
-                initialCameraPositionOffset = unitController.NamePlateController.UnitPreviewCameraPositionOffset;
+            if (unitController.UnitProfile.UnitPrefabProps.UnitPreviewProps.UnitPreviewCameraPositionOffset != null) {
+                initialCameraPositionOffset = unitController.UnitProfile.UnitPrefabProps.UnitPreviewProps.UnitPreviewCameraPositionOffset;
                 //Debug.Log($"{gameObject.name}.UnitFrameController.InitializePosition(): initialCameraPositionOffset from unitController: " + initialCameraPositionOffset);
             } else {
                 initialCameraPositionOffset = cameraPositionOffsetDefault;
             }
             currentMaxZoom = initialCameraPositionOffset.z + maxZoomDifference;
 
-            if (unitController.NamePlateController.UnitPreviewCameraLookOffset != null) {
-                initialCameraLookOffset = unitController.NamePlateController.UnitPreviewCameraLookOffset;
+            if (unitController.UnitProfile.UnitPrefabProps.UnitPreviewProps.UnitPreviewCameraLookOffset != null) {
+                initialCameraLookOffset = unitController.UnitProfile.UnitPrefabProps.UnitPreviewProps.UnitPreviewCameraLookOffset;
             } else {
                 initialCameraLookOffset = cameraLookOffsetDefault;
             }
@@ -499,11 +496,11 @@ namespace AnyRPG {
                 //Debug.Log("PreviewCameraController.WaitForFollowTarget(): CharacterUnit.GetCharacterUnit(target) is null!!!!");
             } else {
                 //Debug.Log("PreviewCameraController.FindFollowTarget(): unitController is not null");
-                initialTargetString = unitController.NamePlateController.UnitPreviewTarget;
+                initialTargetString = unitController.UnitProfile.UnitPrefabProps.UnitPreviewProps.UnitPreviewTarget;
                 if (initialTargetString != null && initialTargetString != string.Empty) {
                     targetBone = unitController.transform.FindChildByRecursive(initialTargetString);
                 }
-                unitTargetOffset = unitController.NamePlateController.UnitPreviewCameraLookOffset;
+                unitTargetOffset = unitController.UnitProfile.UnitPrefabProps.UnitPreviewProps.UnitPreviewCameraLookOffset;
             }
             currentCameraLookOffset = unitTargetOffset;
 

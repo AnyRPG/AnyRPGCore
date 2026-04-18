@@ -20,6 +20,7 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
+  suppressNameplateFaction: 1
   automaticPrefabProfile: 0
   prefabProfileName: 
   useInlinePrefabProps: 1
@@ -118,10 +119,9 @@ MonoBehaviour:
       swimMoveClip: {fileID: 0}
       flyIdleClip: {fileID: 0}
       flyMoveClip: {fileID: 0}
-    rotateModel: 0
+    forceRotateModelMode: 0
     namePlateProps:
       displayName: 
-      suppressNamePlate: 0
       suppressFaction: 1
       overrideNameplatePosition: 0
       namePlatePosition: {x: 0, y: 0, z: 0}
@@ -129,6 +129,15 @@ MonoBehaviour:
       unitFrameTarget: head
       unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
       unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+      unitPreviewTarget: 
+      unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
+      unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
+    unitFrameProps:
+      useSnapShot: 1
+      unitFrameTarget: head
+      unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
+      unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+    unitPreviewProps:
       unitPreviewTarget: 
       unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
       unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
@@ -212,7 +221,7 @@ MonoBehaviour:
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: 66e263e5-21db-433d-a9e5-62eba6aed2eb
+  m_UUID: f7368e1f-3c76-412e-9701-f0c803c1aedd
   references:
     version: 2
     RefIds:
@@ -227,6 +236,7 @@ MonoBehaviour:
             optional: 0
             displayAs: 1
             hidesGroup: 
+            hideInFirstPerson: 0
             meshes:
             - displayName: Head 1
               icon: {fileID: 21300000, guid: a7e5ee1c2ce46714abc0370deafd55a1, type: 3}
@@ -251,6 +261,7 @@ MonoBehaviour:
             optional: 1
             displayAs: 0
             hidesGroup: 
+            hideInFirstPerson: 0
             meshes:
             - displayName: Hair 1
               icon: {fileID: 21300000, guid: 502ac5c24285d694887cad282319a126, type: 3}
@@ -275,6 +286,7 @@ MonoBehaviour:
             optional: 1
             displayAs: 0
             hidesGroup: 
+            hideInFirstPerson: 0
             meshes:
             - displayName: Heavy Armor
               icon: {fileID: 0}
@@ -299,6 +311,7 @@ MonoBehaviour:
             optional: 1
             displayAs: 0
             hidesGroup: Hair
+            hideInFirstPerson: 0
             meshes:
             - displayName: Heavy Helmet
               icon: {fileID: 0}
@@ -314,6 +327,7 @@ MonoBehaviour:
             optional: 1
             displayAs: 0
             hidesGroup: 
+            hideInFirstPerson: 0
             meshes:
             - displayName: Heavy Gloves
               icon: {fileID: 0}
@@ -332,6 +346,7 @@ MonoBehaviour:
             optional: 1
             displayAs: 0
             hidesGroup: 
+            hideInFirstPerson: 0
             meshes:
             - displayName: Heavy Boots
               icon: {fileID: 0}
