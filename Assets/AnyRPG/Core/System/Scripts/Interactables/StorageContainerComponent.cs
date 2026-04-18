@@ -40,16 +40,18 @@ namespace AnyRPG {
 
         public void PerformSetupActivities() {
             InitializeDefaultInventorySlots();
-            AddDefaultItems();
+            //AddDefaultItems();
             RollLoot();
         }
 
+        /*
         private void AddDefaultItems() {
             foreach (Item item in Props.DefaultItems) {
                 InstantiatedItem instantiatedItem = systemItemManager.GetNewInstantiatedItem(item);
                 AddItem(instantiatedItem);
             }
         }
+        */
 
         public override void ProcessCreateEventSubscriptions() {
             //Debug.Log("GatheringNode.CreateEventSubscriptions()");
