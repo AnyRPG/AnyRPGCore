@@ -311,27 +311,27 @@ namespace AnyRPG {
         }
 
 
-        public bool AddInventoryBag(InstantiatedBag instantiatedBag) {
+        public (bool, BagNode) AddInventoryBag(InstantiatedBag instantiatedBag) {
             Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.AddInventoryBag({instantiatedBag.ResourceName})");
 
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.InstantiatedBag == null) {
                     PopulateBagNode(bagNode, instantiatedBag);
-                    return true;
+                    return (true, bagNode);
                 }
             }
-            return false;
+            return (false, null);
         }
 
-        public bool AddBankBag(InstantiatedBag instantiatedBag) {
+        public (bool, BagNode) AddBankBag(InstantiatedBag instantiatedBag) {
             //Debug.Log("InventoryManager.AddBankBag(" + bag.DisplayName + ")");
             foreach (BagNode bagNode in bankNodes) {
                 if (bagNode.InstantiatedBag == null) {
                     PopulateBagNode(bagNode, instantiatedBag);
-                    return true;
+                    return (true, bagNode);
                 }
             }
-            return false;
+            return (false, null);
         }
 
         public void AddBag(InstantiatedBag instantiatedBag, BagNode bagNode) {
@@ -1267,7 +1267,8 @@ namespace AnyRPG {
         }
 
         public void EquipBagFromSlot(InstantiatedBag instantiatedBag, int slotIndex, bool isBank) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.EquipBagFromSlot({instantiatedBag.DisplayName}, {slotIndex}, {isBank})");
+            Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.EquipBagFromSlot({instantiatedBag.DisplayName}, {slotIndex}, {isBank})");
+
             InventorySlot inventorySlot;
             if (isBank && bankSlots.Count > slotIndex) {
                 inventorySlot = bankSlots[slotIndex];
@@ -1286,14 +1287,18 @@ namespace AnyRPG {
                 return;
             }
             if (isBank) {
-                if (AddBankBag(instantiatedBag)) {
+                (bool success, BagNode bagNode) = AddBankBag(instantiatedBag);
+                if (success) {
                     inventorySlot.RemoveItem(instantiatedBag);
+                    unitController.UnitEventController.NotifyOnAddBag(instantiatedBag, bagNode);
                 } else {
                     unitController.UnitEventController.NotifyOnWriteMessageFeedMessage("There are no free bag slots!");
                 }
             } else {
-                if (AddInventoryBag(instantiatedBag)) {
+                (bool success, BagNode bagNode) = AddInventoryBag(instantiatedBag);
+                if (success) {
                     inventorySlot.RemoveItem(instantiatedBag);
+                    unitController.UnitEventController.NotifyOnAddBag(instantiatedBag, bagNode);
                 } else {
                     unitController.UnitEventController.NotifyOnWriteMessageFeedMessage("There are no free bag slots!");
                 }
