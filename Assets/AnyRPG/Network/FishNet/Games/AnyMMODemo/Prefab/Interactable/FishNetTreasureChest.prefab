@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
-  m_UUID: 41e0b71d-193f-4aae-bcbb-839090de370d
+  m_UUID: 386675bb-5b03-421a-acec-d08518d61686
   forceUpdateUUID: 0
 --- !u!114 &705627323346183316
 MonoBehaviour:
@@ -132,8 +132,62 @@ MonoBehaviour:
     prerequisiteConditions: []
     numberOfSlots: 20
     containerLootTable:
-      dropLimit: 0
-      lootGroups: []
+      dropLimit: 3
+      lootGroups:
+      - guaranteedDrop: 1
+        groupChance: 100
+        dropLimit: 3
+        uniqueLimit: 1
+        ignoreGlobalDropLimit: 0
+        loot:
+        - itemName: Epic Medieval Bow
+          dropChance: 50
+          minDrops: 1
+          maxDrops: 1
+        - itemName: Epic Medieval Crossbow
+          dropChance: 50
+          minDrops: 1
+          maxDrops: 1
+        - itemName: Epic Medieval Grimoire
+          dropChance: 50
+          minDrops: 1
+          maxDrops: 1
+        - itemName: Epic Medieval Dagger
+          dropChance: 50
+          minDrops: 1
+          maxDrops: 1
+        - itemName: Epic Medieval One Hand Axe
+          dropChance: 50
+          minDrops: 1
+          maxDrops: 1
+        - itemName: Epic Medieval One Hand Mace
+          dropChance: 50
+          minDrops: 1
+          maxDrops: 1
+        - itemName: Epic Medieval One Hand Sword
+          dropChance: 50
+          minDrops: 1
+          maxDrops: 1
+        - itemName: Epic Medieval Shield
+          dropChance: 50
+          minDrops: 1
+          maxDrops: 1
+        - itemName: Epic Medieval Two Hand Mace
+          dropChance: 50
+          minDrops: 1
+          maxDrops: 1
+        - itemName: Epic Medieval Two Hand Sword
+          dropChance: 50
+          minDrops: 1
+          maxDrops: 1
+        - itemName: Epic Medieval Two Hand Axe
+          dropChance: 50
+          minDrops: 1
+          maxDrops: 1
+        - itemName: Epic Medieval Wand
+          dropChance: 50
+          minDrops: 1
+          maxDrops: 1
 --- !u!114 &3011178942191514317
 MonoBehaviour:
   m_ObjectHideFlags: 0
