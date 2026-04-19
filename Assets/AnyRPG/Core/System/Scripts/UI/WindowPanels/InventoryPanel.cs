@@ -272,7 +272,7 @@ namespace AnyRPG {
                     mailboxManagerClient.RequestAddAttachment(slotScript.InventorySlot);
                     break;
                 case "Trade":
-                    tradeServiceClient.RequestAddItemsToTrade(slotScript.InventorySlot.InstantiatedItems.Values.Select(item => item.InstanceId).ToList());
+                    tradeServiceClient.RequestAddItemsToTrade(slotScript.InventorySlot);
                     break;
             }
         }
