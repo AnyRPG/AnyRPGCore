@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,12 +8,12 @@ namespace AnyRPG {
     public class CharacterInventoryManager : ConfiguredClass {
 
         //public event System.Action OnClearData = delegate { };
-        public event System.Action<BagNode> OnAddInventoryBagNode = delegate { };
-        public event System.Action<BagNode> OnAddBankBagNode = delegate { };
-        public event System.Action<InventorySlot> OnAddInventorySlot = delegate { };
-        public event System.Action<InventorySlot> OnAddBankSlot = delegate { };
-        public event System.Action<InventorySlot> OnRemoveInventorySlot = delegate { };
-        public event System.Action<InventorySlot> OnRemoveBankSlot = delegate { };
+        public event Action<BagNode> OnAddInventoryBagNode = delegate { };
+        public event Action<BagNode> OnAddBankBagNode = delegate { };
+        public event Action<InventorySlot> OnAddInventorySlot = delegate { };
+        public event Action<InventorySlot> OnAddBankSlot = delegate { };
+        public event Action<InventorySlot> OnRemoveInventorySlot = delegate { };
+        public event Action<InventorySlot> OnRemoveBankSlot = delegate { };
 
         private SlotScript fromSlot;
 
