@@ -1,4 +1,3 @@
-using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -41,6 +40,27 @@ namespace AnyRPG {
 
         [SerializeField]
         private HighlightButton dropButton = null;
+
+        [SerializeField]
+        private HighlightButton takeButton = null;
+
+        [SerializeField]
+        private HighlightButton useButton = null;
+
+        [SerializeField]
+        private HighlightButton equipButton = null;
+
+        [SerializeField]
+        private HighlightButton unequipButton = null;
+
+        [SerializeField]
+        private HighlightButton bankButton = null;
+
+        [SerializeField]
+        private HighlightButton storeButton = null;
+
+        [SerializeField]
+        private HighlightButton sellButton = null;
 
         [SerializeField]
         private UINavigationController uINavigationController = null;
@@ -93,6 +113,13 @@ namespace AnyRPG {
             splitButton.gameObject.SetActive(false);
             destroyButton.gameObject.SetActive(false);
             dropButton.gameObject.SetActive(false);
+            takeButton.gameObject.SetActive(false);
+            useButton.gameObject.SetActive(false);
+            equipButton.gameObject.SetActive(false);
+            unequipButton.gameObject.SetActive(false);
+            bankButton.gameObject.SetActive(false);
+            storeButton.gameObject.SetActive(false);
+            sellButton.gameObject.SetActive(false);
         }
 
         public void EnableInspectButton(bool active) {
@@ -139,6 +166,34 @@ namespace AnyRPG {
 
         public void EnableDropButton(bool active) {
             dropButton.gameObject.SetActive(active);
+        }
+
+        public void EnableTakeButton(bool active) {
+            takeButton.gameObject.SetActive(active);
+        }
+
+        public void EnableUseButton(bool active) {
+            useButton.gameObject.SetActive(active);
+        }
+
+        public void EnableEquipButton(bool active) {
+            equipButton.gameObject.SetActive(active);
+        }
+
+        public void EnableUnequipButton(bool active) {
+            unequipButton.gameObject.SetActive(active);
+        }
+
+        public void EnableBankButton(bool active) {
+            bankButton.gameObject.SetActive(active);
+        }
+
+        public void EnableStoreButton(bool active) {
+            storeButton.gameObject.SetActive(active);
+        }
+
+        public void EnableSellButton(bool active) {
+            sellButton.gameObject.SetActive(active);
         }
 
         public void Inspect() {
@@ -215,6 +270,49 @@ namespace AnyRPG {
             //Debug.Log("ContextMenuPanel.Drop()");
 
             contextMenuService.ContextMenuTarget.PerformContextMenuAction("Drop");
+            contextMenuService.CloseContextMenu();
+        }
+
+        public void Take() {
+            //Debug.Log("ContextMenuPanel.Take()");
+
+            contextMenuService.ContextMenuTarget.PerformContextMenuAction("Take");
+            contextMenuService.CloseContextMenu();
+        }
+
+        public void Use() {
+            //Debug.Log("ContextMenuPanel.Use()");
+            contextMenuService.ContextMenuTarget.PerformContextMenuAction("Use");
+            contextMenuService.CloseContextMenu();
+        }
+
+        public void Equip() {
+            //Debug.Log("ContextMenuPanel.Equip()");
+            contextMenuService.ContextMenuTarget.PerformContextMenuAction("Equip");
+            contextMenuService.CloseContextMenu();
+        }
+
+        public void Unequip() {
+            //Debug.Log("ContextMenuPanel.Unequip()");
+            contextMenuService.ContextMenuTarget.PerformContextMenuAction("Unequip");
+            contextMenuService.CloseContextMenu();
+        }
+
+        public void Bank() {
+            //Debug.Log("ContextMenuPanel.Bank()");
+            contextMenuService.ContextMenuTarget.PerformContextMenuAction("Bank");
+            contextMenuService.CloseContextMenu();
+        }
+
+        public void Store() {
+            //Debug.Log("ContextMenuPanel.Store()");
+            contextMenuService.ContextMenuTarget.PerformContextMenuAction("Store");
+            contextMenuService.CloseContextMenu();
+        }
+
+        public void Sell() {
+            //Debug.Log("ContextMenuPanel.Sell()");
+            contextMenuService.ContextMenuTarget.PerformContextMenuAction("Sell");
             contextMenuService.CloseContextMenu();
         }
 

@@ -12,6 +12,10 @@ namespace AnyRPG {
             this.powerResourcePotion = powerResourcePotion;
         }
 
+        public override bool IsUseable() {
+            return true;
+        }
+
         public override bool Use(UnitController sourceUnitController) {
             //Debug.Log($"{ResourceName}.InstantiatedPowerResourcePotion.Use({sourceUnitController.gameObject.name})");
 

@@ -20,6 +20,10 @@ namespace AnyRPG {
             systemAbilityController = systemGameManager.SystemAbilityController;
         }
 
+        public override bool IsUseable() {
+            return true;
+        }
+
         public override bool Use(UnitController sourceUnitController) {
             //Debug.Log($"{ResourceName}.InstantiatedCastableItem.Use()");
 

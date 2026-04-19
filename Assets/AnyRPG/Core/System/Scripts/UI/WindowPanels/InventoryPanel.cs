@@ -23,6 +23,9 @@ namespace AnyRPG {
 
         // game manager references
         private StorageContainerManagerClient storageContainerManagerClient = null;
+        private VendorManagerClient vendorManagerClient = null;
+        private UIManager uIManager = null;
+        private HandScript handScript = null;
 
         public BagBarController BagBarController { get => bagBarController; set => bagBarController = value; }
 
@@ -37,6 +40,9 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             storageContainerManagerClient = systemGameManager.StorageContainerManagerClient;
+            uIManager = systemGameManager.UIManager;
+            handScript = uIManager.HandScript;
+            vendorManagerClient = systemGameManager.VendorManagerClient;
         }
 
         protected override void ProcessCreateEventSubscriptions() {
@@ -136,7 +142,7 @@ namespace AnyRPG {
             }
 
             // swap or drop items from a storage container
-            playerManagerClient.UnitController.CharacterInventoryManager.RequestMoveItemToStorageContainer(storageContainerManagerClient.StorageContainerComponent,
+            playerManagerClient.UnitController.CharacterInventoryManager.RequestSwapItemToStorageContainer(storageContainerManagerClient.StorageContainerComponent,
                             storageContainerManagerClient.StorageContainerComponent.GetCurrentSlotIndex(fromSlot.InventorySlot),
                             toSlot.InventorySlot,
                             toSlot.BagPanel is BankPanel);
@@ -186,6 +192,84 @@ namespace AnyRPG {
             }
             contextMenuPanel.EnableSplitButton(inventorySlot.InstantiatedItem.Item.MaximumStackSize > 1 && inventorySlot.InstantiatedItems.Count > 1);
             contextMenuPanel.EnableDestroyButton(true);
+            if (inventorySlot.InstantiatedItem.IsUseable()) {
+                contextMenuPanel.EnableUseButton(true);
+            }
+            if (uIManager.bankWindow.IsOpen == true) {
+                contextMenuPanel.EnableBankButton(true);
+            }
+            if (uIManager.storageContainerWindow.IsOpen == true) {
+                contextMenuPanel.EnableStoreButton(true);
+            }
+            if (inventorySlot.InstantiatedItem is InstantiatedBag) {
+                contextMenuPanel.EnableEquipButton(true);
+            }
+            if (inventorySlot.InstantiatedItem is InstantiatedEquipment) {
+                contextMenuPanel.EnableEquipButton(true);
+            }
+        }
+
+        public override void PerformContextMenuAction(SlotScript slotScript, string actionName) {
+            Debug.Log($"InventoryPanel.PerformContextMenuAction() actionName: {actionName}");
+
+            base.PerformContextMenuAction(slotScript, actionName);
+            if (slotScript.InventorySlot.InstantiatedItem == null) {
+                return;
+            }
+            switch (actionName) {
+                case "Destroy":
+                    handScript.SetPosition(slotScript.transform.position);
+                    slotScript.SendItemToHandScript();
+                    uIManager.confirmDestroyMenuWindow.OpenWindow();
+                    break;
+                case "Drop":
+                    playerManagerClient.UnitController.CharacterInventoryManager.RequestDropItemOnGround(slotScript.InventorySlot);
+                    break;
+                case "Split":
+                    if (slotScript.InventorySlot.InstantiatedItem != null) {
+                        playerManagerClient.UnitController.CharacterInventoryManager.FromSlot = slotScript;
+                        uIManager.splitStackWindow.OpenWindow();
+                    }
+                    break;
+                case "Use":
+                    playerManagerClient.UnitController.CharacterInventoryManager.RequestUseItem(slotScript.InventorySlot);
+                    break;
+                case "Equip":
+                    if (slotScript.InventorySlot.InstantiatedItem is InstantiatedEquipment) {
+                        playerManagerClient.UnitController.CharacterEquipmentManager.RequestEquip(slotScript.InventorySlot.InstantiatedItem as InstantiatedEquipment);
+                    } else if (slotScript.InventorySlot.InstantiatedItem is InstantiatedBag) {
+                        playerManagerClient.UnitController.CharacterInventoryManager.RequestEquipBagFromSlot(slotScript.InventorySlot.InstantiatedItem as InstantiatedBag, slotScript.InventorySlot, false);
+                    }
+                    break;
+                case "Bank":
+                    playerManagerClient.UnitController.CharacterInventoryManager.RequestMoveFromInventoryToBank(slotScript.InventorySlot);
+                    break;
+                case "Store":
+                    playerManagerClient.UnitController.CharacterInventoryManager.RequestMoveItemToStorageContainer(storageContainerManagerClient.StorageContainerComponent, slotScript.InventorySlot, false);
+                    break;
+                case "Sell":
+                    if (uIManager.vendorWindow.IsOpen == true) {
+                        if (slotScript.InventorySlot.InstantiatedItem.ItemQuality != null && slotScript.InventorySlot.InstantiatedItem.ItemQuality.RequireSellConfirmation) {
+                            vendorManagerClient.SetSellItem(slotScript.InventorySlot.InstantiatedItem);
+                            uIManager.confirmSellItemMenuWindow.OpenWindow();
+                        } else {
+                            vendorManagerClient.RequestSellItemToVendor(slotScript.InventorySlot.InstantiatedItem);
+                        }
+                    }
+                    break;
+            }
+        }
+
+        public override void PerformContextMenuAction(BagButton bagButton, string actionName) {
+            base.PerformContextMenuAction(bagButton, actionName);
+            if (bagButton.BagNode.InstantiatedBag == null) {
+                return;
+            }
+            switch (actionName) {
+                case "Unequip":
+                    playerManagerClient.UnitController.CharacterInventoryManager.RequestUnequipBag(bagButton.BagNode.InstantiatedBag, false);
+                    break;
+            }
         }
 
 

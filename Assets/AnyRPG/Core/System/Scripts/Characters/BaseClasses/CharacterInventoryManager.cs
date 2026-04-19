@@ -311,24 +311,27 @@ namespace AnyRPG {
         }
 
 
-        public void AddInventoryBag(InstantiatedBag instantiatedBag) {
-            //Debug.Log("InventoryManager.AddInventoryBag(" + bag.DisplayName + ")");
+        public bool AddInventoryBag(InstantiatedBag instantiatedBag) {
+            Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.AddInventoryBag({instantiatedBag.ResourceName})");
+
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.InstantiatedBag == null) {
                     PopulateBagNode(bagNode, instantiatedBag);
-                    break;
+                    return true;
                 }
             }
+            return false;
         }
 
-        public void AddBankBag(InstantiatedBag instantiatedBag) {
+        public bool AddBankBag(InstantiatedBag instantiatedBag) {
             //Debug.Log("InventoryManager.AddBankBag(" + bag.DisplayName + ")");
             foreach (BagNode bagNode in bankNodes) {
                 if (bagNode.InstantiatedBag == null) {
                     PopulateBagNode(bagNode, instantiatedBag);
-                    break;
+                    return true;
                 }
             }
+            return false;
         }
 
         public void AddBag(InstantiatedBag instantiatedBag, BagNode bagNode) {
@@ -338,13 +341,9 @@ namespace AnyRPG {
         }
 
         private void PopulateBagNode(BagNode bagNode, InstantiatedBag instantiatedBag) {
-            //Debug.Log("InventoryManager.PopulateBagNode(" + (bagNode != null ? bagNode.ToString() : "null") + ", " + (bag != null ? bag.DisplayName : "null") + ")");
             if (instantiatedBag != null) {
                 bagNode.AddBag(instantiatedBag);
             }
-
-            //Debug.Log("InventoryManager.PopulateBagNode(): bagNode.MyBag: " + bagNode.MyBag.GetInstanceID() + "; bagNode.MyBag.MyBagPanel: " + bagNode.MyBag.MyBagPanel.GetInstanceID() + "; bag" + bag.GetInstanceID() + "; bag.MyBagPanel: " + bag.MyBagPanel.GetInstanceID());
-
         }
 
         /// <summary>
@@ -587,6 +586,27 @@ namespace AnyRPG {
                 unitController.UnitEventController.NotifyOnWriteMessageFeedMessage($"{(addToBank == false ? "Inventory" : "Bank")} is full!");
             }
             return false;
+        }
+
+        private (int, bool) CanPlaceInStackOrEmpty(InstantiatedItem instantiatedItem, bool addToBank) {
+            int slotIndex = 0;
+            if (addToBank == false) {
+                foreach (InventorySlot inventorySlot in inventorySlots) {
+                    if (inventorySlot.CanStackOrEmptyItem(instantiatedItem) == true) {
+                        return (slotIndex, true);
+                    }
+                    slotIndex++;
+                }
+            } else {
+                foreach (InventorySlot inventorySlot in bankSlots) {
+                    if (inventorySlot.CanStackOrEmptyItem(instantiatedItem) == true) {
+                        return (slotIndex, true);
+                    }
+                    slotIndex++;
+                }
+            }
+
+            return (-1, false);
         }
 
         private bool PlaceInStack(InstantiatedItem instantiatedItem, bool addToBank) {
@@ -1230,6 +1250,56 @@ namespace AnyRPG {
             }
         }
 
+        public void RequestEquipBagFromSlot(InstantiatedBag instantiatedBag, InventorySlot inventorySlot, bool isBankSlot) {
+            Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.RequestEquipBagFromSlot({instantiatedBag.ResourceName}, isBankSlot: {isBankSlot})");
+            
+            if (systemGameManager.GameMode == GameMode.Local) {
+                EquipBagFromSlot(instantiatedBag, inventorySlot, isBankSlot);
+            } else {
+                int slotIndex;
+                if (isBankSlot) {
+                    slotIndex = inventorySlot.GetCurrentBankSlotIndex(unitController);
+                } else {
+                    slotIndex = inventorySlot.GetCurrentInventorySlotIndex(unitController);
+                }
+                unitController.UnitEventController.NotifyOnRequestEquipBagFromSlot(instantiatedBag, slotIndex, isBankSlot);
+            }
+        }
+
+        public void EquipBagFromSlot(InstantiatedBag instantiatedBag, int slotIndex, bool isBank) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.EquipBagFromSlot({instantiatedBag.DisplayName}, {slotIndex}, {isBank})");
+            InventorySlot inventorySlot;
+            if (isBank && bankSlots.Count > slotIndex) {
+                inventorySlot = bankSlots[slotIndex];
+            } else if (isBank == false && inventorySlots.Count > slotIndex) {
+                inventorySlot = inventorySlots[slotIndex];
+            } else {
+                return;
+            }
+            EquipBagFromSlot(instantiatedBag, inventorySlot, isBank);
+        }
+
+        public void EquipBagFromSlot(InstantiatedBag instantiatedBag, InventorySlot inventorySlot, bool isBank) {
+            Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.EquipBagFromSlot({instantiatedBag.ResourceName}, {isBank})");
+
+            if (inventorySlot.InstantiatedItem == null) {
+                return;
+            }
+            if (isBank) {
+                if (AddBankBag(instantiatedBag)) {
+                    inventorySlot.RemoveItem(instantiatedBag);
+                } else {
+                    unitController.UnitEventController.NotifyOnWriteMessageFeedMessage("There are no free bag slots!");
+                }
+            } else {
+                if (AddInventoryBag(instantiatedBag)) {
+                    inventorySlot.RemoveItem(instantiatedBag);
+                } else {
+                    unitController.UnitEventController.NotifyOnWriteMessageFeedMessage("There are no free bag slots!");
+                }
+            }
+        }
+
         public void RequestAddBagFromInventory(InstantiatedBag instantiatedBag, BagNode bagNode) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.RequestAddBagFromInventory({instantiatedBag.DisplayName}, {bagNode})");
 
@@ -1315,11 +1385,102 @@ namespace AnyRPG {
             }
         }
 
-        public void RequestMoveItemToStorageContainer(StorageContainerComponent storageContainerComponent, int toSlotIndex, InventorySlot inventorySlot, bool isBankSlot) {
+        public void RequestMoveItemFromStorageContainer(StorageContainerComponent storageContainerComponent, int toSlotIndex) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                MoveItemFromStorageContainer(storageContainerComponent, toSlotIndex);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestMoveItemFromStorageContainer(storageContainerComponent, toSlotIndex);
+            }
+        }
+
+        public void MoveItemFromStorageContainer(StorageContainerComponent storageContainerComponent, int fromSlotIndex) {
+            if (storageContainerComponent.InventorySlots.Count <= fromSlotIndex) {
+                return;
+            }
+            // If there is only a single item in this slot, we can attempt to merge or swap it into the inventory.
+            // If there are multiple items in this slot, we will just move the entire stack into the inventory and let the player sort it out
+            if (storageContainerComponent.InventorySlots[fromSlotIndex].IsEmpty) {
+                return;
+            }
+            if (storageContainerComponent.InventorySlots[fromSlotIndex].InstantiatedItems.Count > 1) {
+                // get the first empty slot in the inventory and move all items to it
+                InventorySlot emptySlot = inventorySlots.FirstOrDefault(s => s.IsEmpty);
+                if (emptySlot == null) {
+                    unitController.UnitEventController.NotifyOnWriteMessageFeedMessage("Inventory is full");
+                    return;
+                }
+                // this function name may look funny, but it will actually swap the empty stack in the inventory with the full stack in the storage container, effectively moving the stack to the inventory
+                MoveItemToStorageContainer(storageContainerComponent, fromSlotIndex, emptySlot);
+                return;
+            }
+            InstantiatedItem instantiatedItem = storageContainerComponent.InventorySlots[fromSlotIndex].InstantiatedItem;
+            (int toSlotIndex, bool canSpaceInStack) = CanPlaceInStackOrEmpty(instantiatedItem, false);
+            if (canSpaceInStack == false || toSlotIndex == -1) {
+                unitController.UnitEventController.NotifyOnWriteMessageFeedMessage("Inventory is full");
+                return;
+            }
+            storageContainerComponent.InventorySlots[fromSlotIndex].RemoveItem(instantiatedItem);
+            AddInventoryItem(instantiatedItem, toSlotIndex);
+        }
+
+        public void RequestMoveItemToStorageContainer(StorageContainerComponent storageContainerComponent, InventorySlot inventorySlot, bool isBankSlot) {
+            if (systemGameManager.GameMode == GameMode.Local) {
+                MoveItemToStorageContainer(storageContainerComponent, inventorySlot);
+            } else {
+                unitController.UnitEventController.NotifyOnRequestMoveItemToStorageContainer(storageContainerComponent, isBankSlot ? inventorySlot.GetCurrentBankSlotIndex(unitController) : inventorySlot.GetCurrentInventorySlotIndex(unitController), isBankSlot);
+            }
+        }
+
+        public void MoveItemToStorageContainer(StorageContainerComponent storageContainerComponent, int fromSlotIndex, bool fromBankSlot) {
+            if (fromBankSlot) {
+                if (bankSlots.Count > fromSlotIndex) {
+                    MoveItemToStorageContainer(storageContainerComponent, bankSlots[fromSlotIndex]);
+                }
+            } else {
+                if (inventorySlots.Count > fromSlotIndex) {
+                    MoveItemToStorageContainer(storageContainerComponent, inventorySlots[fromSlotIndex]);
+                }
+            }
+        }
+
+        public void MoveItemToStorageContainer(StorageContainerComponent storageContainerComponent, InventorySlot inventorySlot) {
+            
+            // If there is only a single item in this slot, we can attempt to merge or swap it into the container.
+            // If there are multiple items in this slot, we will just move the entire stack into the container and let the player sort it out
+            if (inventorySlot.IsEmpty) {
+                return;
+            }
+            if (inventorySlot.InstantiatedItems.Count > 1) {
+                // get the first empty slot in the container and move all items to it
+                InventorySlot emptySlot = storageContainerComponent.InventorySlots.FirstOrDefault(s => s.IsEmpty);
+                if (emptySlot == null) {
+                    unitController.UnitEventController.NotifyOnWriteMessageFeedMessage("Storage container is full");
+                    return;
+                }
+                // this function name may look funny, but it will actually swap the empty stack in the container with the full stack in the inventory, effectively moving the stack to the container
+                MoveItemToStorageContainer(storageContainerComponent, storageContainerComponent.GetCurrentSlotIndex(emptySlot), inventorySlot);
+                return;
+            }
+            // attempt to stack item into container
+            InstantiatedItem instantiatedItem = inventorySlot.InstantiatedItem;
+            (int toSlotIndex, bool canSpaceInStack) = storageContainerComponent.CanPlaceInStackOrEmpty(instantiatedItem);
+            if (canSpaceInStack == false || toSlotIndex == -1) {
+                unitController.UnitEventController.NotifyOnWriteMessageFeedMessage("Storage container is full");
+                return;
+            }
+            if (instantiatedItem == null) {
+                Debug.LogWarning($"{unitController.gameObject.name}.CharacterInventoryManager.MoveItemToStorageContainer() instantiated item was null");
+                return;
+            }
+            inventorySlot.RemoveItem(instantiatedItem);
+            storageContainerComponent.InventorySlots[toSlotIndex].AddItem(instantiatedItem);
+        }
+
+        public void RequestSwapItemToStorageContainer(StorageContainerComponent storageContainerComponent, int toSlotIndex, InventorySlot inventorySlot, bool isBankSlot) {
             if (systemGameManager.GameMode == GameMode.Local) {
                 MoveItemToStorageContainer(storageContainerComponent, toSlotIndex, inventorySlot);
             } else {
-                unitController.UnitEventController.NotifyOnRequestMoveItemToStorageContainer(storageContainerComponent, toSlotIndex, isBankSlot ? inventorySlot.GetCurrentBankSlotIndex(unitController) : inventorySlot.GetCurrentInventorySlotIndex(unitController), isBankSlot);
+                unitController.UnitEventController.NotifyOnRequestSwapItemToStorageContainer(storageContainerComponent, toSlotIndex, isBankSlot ? inventorySlot.GetCurrentBankSlotIndex(unitController) : inventorySlot.GetCurrentInventorySlotIndex(unitController), isBankSlot);
             }
         }
 

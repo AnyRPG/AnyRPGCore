@@ -34,7 +34,7 @@ namespace AnyRPG {
                     return false;
                 }
                 InventorySlot oldSlot = Slot;
-                if (sourceUnitController.CharacterEquipmentManager.Equip(this) == true) {
+                if (sourceUnitController.CharacterEquipmentManager.Equip(this, null) == true) {
                     RemoveFrom(oldSlot);
                     sourceUnitController.UnitModelController.RebuildModelAppearance();
                     return true;

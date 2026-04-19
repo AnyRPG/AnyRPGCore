@@ -133,6 +133,9 @@ namespace AnyRPG {
             }
         }
 
+        public virtual bool IsUseable() {
+            return false;
+        }
 
         public virtual bool Use(UnitController sourceUnitController) {
             //Debug.Log($"{ResourceName}.InstantiatedItem.Use({sourceUnitController.gameObject.name})");
@@ -247,7 +250,8 @@ namespace AnyRPG {
         /// removes the item from the inventory system
         /// </summary>
         public void Remove() {
-            //Debug.Log("Item " + GetInstanceID().ToString() + " is about to ask the slot to remove itself");
+            Debug.Log($"{ResourceName}.InstantiatedItem.Remove()");
+
             if (Slot != null) {
                 //Debug.Log("The item's myslot is not null");
                 Slot.RemoveItem(this);

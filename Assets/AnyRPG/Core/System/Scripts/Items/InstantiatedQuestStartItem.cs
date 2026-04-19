@@ -24,6 +24,10 @@ namespace AnyRPG {
             this.questStartItem = questStartItem;
         }
 
+        public override bool IsUseable() {
+            return true;
+        }
+
         public override bool Use(UnitController sourceUnitController) {
             //Debug.Log(DisplayName + ".QuestStartItem.Use()");
             // base is currently empty, so doesn't matter if we call it without checking anything

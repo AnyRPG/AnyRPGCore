@@ -480,6 +480,17 @@ namespace AnyRPG {
 
         }
 
+        public (int, bool) CanPlaceInStackOrEmpty(InstantiatedItem instantiatedItem) {
+            int slotIndex = 0;
+            foreach (InventorySlot inventorySlot in inventorySlots) {
+                if (inventorySlot.CanStackOrEmptyItem(instantiatedItem) == true) {
+                    return (slotIndex, true);
+                }
+                slotIndex++;
+            }
+
+            return (-1, false);
+        }
     }
 
 }

@@ -312,14 +312,17 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnSetTarget += HandleSetTargetClient;
                 unitController.UnitEventController.OnClearTarget += HandleClearTargetClient;
                 unitController.UnitEventController.OnRequestEquipToSlot += HandleRequestEquipToSlot;
+                unitController.UnitEventController.OnRequestEquip += HandleRequestEquip;
                 unitController.UnitEventController.OnRequestDropItemFromInventorySlot += HandleRequestDropItemFromInventorySlot;
                 unitController.UnitEventController.OnRequestMoveFromBankToInventory += HandleRequestMoveFromBankToInventory;
                 unitController.UnitEventController.OnRequestMoveFromInventoryToBank += HandleRequestMoveFromInventoryToBank;
                 unitController.UnitEventController.OnRequestUseItem += HandleRequestUseItem;
                 unitController.UnitEventController.OnRequestSwapInventoryEquipment += HandleRequestSwapInventoryEquipment;
                 unitController.UnitEventController.OnRequestUnequipToSlot += HandleRequestUnequipToSlot;
+                unitController.UnitEventController.OnRequestUnequip += HandleRequestUnequip;
                 unitController.UnitEventController.OnRequestSwapBags += HandleRequestSwapBags;
                 unitController.UnitEventController.OnRequestUnequipBagToSlot += HandleRequestUnequipBagToSlot;
+                unitController.UnitEventController.OnRequestEquipBagFromSlot += HandleRequestEquipBagFromSlot;
                 unitController.UnitEventController.OnRequestUnequipBag += HandleRequestUnequipBag;
                 unitController.UnitEventController.OnRequestMoveBag += HandleRequestMoveBag;
                 unitController.UnitEventController.OnRequestAddBag += HandleRequestAddBagFromInventory;
@@ -341,7 +344,9 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestSplitStack += HandleRequestSplitStack;
                 unitController.UnitEventController.OnRequestDropItemOnGround += HandleRequestDropItemOnGround;
                 unitController.UnitEventController.OnRequestSwapItemsInStorageContainerSlots += HandleRequestSwapItemsInStorageContainerSlots;
+                unitController.UnitEventController.OnRequestSwapItemToStorageContainer += HandleRequestSwapItemToStorageContainer;
                 unitController.UnitEventController.OnRequestMoveItemToStorageContainer += HandleRequestMoveItemToStorageContainer;
+                unitController.UnitEventController.OnRequestMoveItemFromStorageContainer += HandleRequestMoveItemFromStorageContainer;
             }
             // all clients
             //unitController.UnitEventController.OnDespawn += HandleDespawnClient;
@@ -357,14 +362,17 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnSetTarget -= HandleSetTargetClient;
                 unitController.UnitEventController.OnClearTarget -= HandleClearTargetClient;
                 unitController.UnitEventController.OnRequestEquipToSlot -= HandleRequestEquipToSlot;
+                unitController.UnitEventController.OnRequestEquip -= HandleRequestEquip;
                 unitController.UnitEventController.OnRequestDropItemFromInventorySlot -= HandleRequestDropItemFromInventorySlot;
                 unitController.UnitEventController.OnRequestMoveFromBankToInventory -= HandleRequestMoveFromBankToInventory;
                 unitController.UnitEventController.OnRequestMoveFromInventoryToBank -= HandleRequestMoveFromInventoryToBank;
                 unitController.UnitEventController.OnRequestUseItem -= HandleRequestUseItem;
                 unitController.UnitEventController.OnRequestSwapInventoryEquipment -= HandleRequestSwapInventoryEquipment;
                 unitController.UnitEventController.OnRequestUnequipToSlot -= HandleRequestUnequipToSlot;
+                unitController.UnitEventController.OnRequestUnequip -= HandleRequestUnequip;
                 unitController.UnitEventController.OnRequestSwapBags -= HandleRequestSwapBags;
                 unitController.UnitEventController.OnRequestUnequipBagToSlot -= HandleRequestUnequipBagToSlot;
+                unitController.UnitEventController.OnRequestEquipBagFromSlot -= HandleRequestEquipBagFromSlot;
                 unitController.UnitEventController.OnRequestUnequipBag -= HandleRequestUnequipBag;
                 unitController.UnitEventController.OnRequestMoveBag -= HandleRequestMoveBag;
                 unitController.UnitEventController.OnRequestAddBag -= HandleRequestAddBagFromInventory;
@@ -386,7 +394,9 @@ namespace AnyRPG {
                 unitController.UnitEventController.OnRequestSplitStack -= HandleRequestSplitStack;
                 unitController.UnitEventController.OnRequestDropItemOnGround -= HandleRequestDropItemOnGround;
                 unitController.UnitEventController.OnRequestSwapItemsInStorageContainerSlots -= HandleRequestSwapItemsInStorageContainerSlots;
+                unitController.UnitEventController.OnRequestSwapItemToStorageContainer -= HandleRequestSwapItemToStorageContainer;
                 unitController.UnitEventController.OnRequestMoveItemToStorageContainer -= HandleRequestMoveItemToStorageContainer;
+                unitController.UnitEventController.OnRequestMoveItemFromStorageContainer -= HandleRequestMoveItemFromStorageContainer;
 
             }
         }
@@ -1691,6 +1701,19 @@ namespace AnyRPG {
             }
         }
 
+        public void HandleRequestUnequip(InstantiatedEquipment instantiatedEquipment) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRequestUnequip({equipment.Equipment.ResourceName}) instanceId: {equipment.InstanceId}");
+            RequestUnequip(instantiatedEquipment.InstanceId);
+        }
+
+        [ServerRpc]
+        public void RequestUnequip(long itemInstanceId) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.RequestUnequip({itemInstanceId})");
+            if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) && systemItemManager.InstantiatedItems[itemInstanceId] is InstantiatedEquipment) {
+                unitController.CharacterEquipmentManager.Unequip(systemItemManager.InstantiatedItems[itemInstanceId] as InstantiatedEquipment);
+            }
+        }
+
         private void HandleRequestDropItemOnGround(int inventorySlotIndex) {
             RequestDropItemOnGround(inventorySlotIndex);
         }
@@ -1700,15 +1723,41 @@ namespace AnyRPG {
             unitController.CharacterInventoryManager.DropItemOnGround(inventorySlotIndex);
         }
 
-        private void HandleRequestMoveItemToStorageContainer(StorageContainerComponent component, int toSlotIndex, int fromSlotIndex, bool isBankSlot) {
+        private void HandleRequestMoveItemToStorageContainer(StorageContainerComponent component, int fromSlotIndex, bool isBankSlot) {
             FishNetInteractable fishNetInteractable = component.Interactable.GetComponent<FishNetInteractable>();
             if (fishNetInteractable != null) {
-                HandleRequestMoveItemToStorageContainerServer(fishNetInteractable, toSlotIndex, fromSlotIndex, isBankSlot);
+                HandleRequestMoveItemToStorageContainerServer(fishNetInteractable, fromSlotIndex, isBankSlot);
             }
         }
 
         [ServerRpc]
-        public void HandleRequestMoveItemToStorageContainerServer(FishNetInteractable fishNetInteractable, int toSlotIndex, int fromSlotIndex, bool isBankSlot) {
+        public void HandleRequestMoveItemToStorageContainerServer(FishNetInteractable fishNetInteractable, int fromSlotIndex, bool isBankSlot) {
+            if (fishNetInteractable == null) {
+                Debug.LogWarning($"{gameObject.name}.FishNetUnitController.HandleRequestMoveItemToStorageContainerServer: interactable is null");
+                return;
+            }
+            Interactable interactable = fishNetInteractable.Interactable;
+            if (interactable == null) {
+                Debug.LogWarning($"{gameObject.name}.FishNetUnitController.HandleRequestMoveItemToStorageContainerServer: interactable component is null");
+                return;
+            }
+            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.Interactables;
+            foreach (KeyValuePair<int, InteractableOptionComponent> kvp in currentInteractables) {
+                if (kvp.Value is StorageContainerComponent) {
+                    unitController.CharacterInventoryManager.MoveItemToStorageContainer(kvp.Value as StorageContainerComponent, fromSlotIndex, isBankSlot);
+                    break;
+                }
+            }
+        }
+        private void HandleRequestSwapItemToStorageContainer(StorageContainerComponent component, int toSlotIndex, int fromSlotIndex, bool isBankSlot) {
+            FishNetInteractable fishNetInteractable = component.Interactable.GetComponent<FishNetInteractable>();
+            if (fishNetInteractable != null) {
+                HandleRequestSwapItemToStorageContainerServer(fishNetInteractable, toSlotIndex, fromSlotIndex, isBankSlot);
+            }
+        }
+
+        [ServerRpc]
+        public void HandleRequestSwapItemToStorageContainerServer(FishNetInteractable fishNetInteractable, int toSlotIndex, int fromSlotIndex, bool isBankSlot) {
             if (fishNetInteractable == null) {
                 Debug.LogWarning($"{gameObject.name}.FishNetUnitController.HandleRequestMoveItemToStorageContainerServer: interactable is null");
                 return;
@@ -1722,6 +1771,33 @@ namespace AnyRPG {
             foreach (KeyValuePair<int, InteractableOptionComponent> kvp in currentInteractables) {
                 if (kvp.Value is StorageContainerComponent) {
                     unitController.CharacterInventoryManager.MoveItemToStorageContainer(kvp.Value as StorageContainerComponent, fromSlotIndex, toSlotIndex, isBankSlot);
+                    break;
+                }
+            }
+        }
+
+        private void HandleRequestMoveItemFromStorageContainer(StorageContainerComponent component, int fromSlotIndex) {
+            FishNetInteractable fishNetInteractable = component.Interactable.GetComponent<FishNetInteractable>();
+            if (fishNetInteractable != null) {
+                HandleRequestMoveItemFromStorageContainerServer(fishNetInteractable, fromSlotIndex);
+            }
+        }
+
+        [ServerRpc]
+        public void HandleRequestMoveItemFromStorageContainerServer(FishNetInteractable fishNetInteractable, int fromSlotIndex) {
+            if (fishNetInteractable == null) {
+                Debug.LogWarning($"{gameObject.name}.FishNetUnitController.HandleRequestMoveItemFromStorageContainerServer: interactable is null");
+                return;
+            }
+            Interactable interactable = fishNetInteractable.Interactable;
+            if (interactable == null) {
+                Debug.LogWarning($"{gameObject.name}.FishNetUnitController.HandleRequestMoveItemFromStorageContainerServer: interactable component is null");
+                return;
+            }
+            Dictionary<int, InteractableOptionComponent> currentInteractables = interactable.Interactables;
+            foreach (KeyValuePair<int, InteractableOptionComponent> kvp in currentInteractables) {
+                if (kvp.Value is StorageContainerComponent) {
+                    unitController.CharacterInventoryManager.MoveItemFromStorageContainer(kvp.Value as StorageContainerComponent, fromSlotIndex);
                     break;
                 }
             }
@@ -1775,6 +1851,17 @@ namespace AnyRPG {
                 && systemItemManager.InstantiatedItems.ContainsKey(newBagInstanceId)
                 && systemItemManager.InstantiatedItems[newBagInstanceId] is InstantiatedBag) {
                 unitController.CharacterInventoryManager.SwapEquippedOrUnequippedBags(systemItemManager.InstantiatedItems[oldBagInstanceId] as InstantiatedBag, systemItemManager.InstantiatedItems[newBagInstanceId] as InstantiatedBag);
+            }
+        }
+
+        public void HandleRequestEquipBagFromSlot(InstantiatedBag bag, int slotIndex, bool isBank) {
+            RequestEquipBagFromSlot(bag.InstanceId, slotIndex, isBank);
+        }
+
+        [ServerRpc]
+        public void RequestEquipBagFromSlot(long itemInstanceId, int slotIndex, bool isBank) {
+            if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) && systemItemManager.InstantiatedItems[itemInstanceId] is InstantiatedBag) {
+                unitController.CharacterInventoryManager.EquipBagFromSlot(systemItemManager.InstantiatedItems[itemInstanceId] as InstantiatedBag, slotIndex, isBank);
             }
         }
 
@@ -1877,6 +1964,21 @@ namespace AnyRPG {
         [ServerRpc]
         private void RequestDropItemFromInventorySlot(int fromSlotId, int toSlotId, bool fromSlotIsInventory, bool toSlotIsInventory) {
             unitController.CharacterInventoryManager.DropItemFromInventorySlot(fromSlotId, toSlotId, fromSlotIsInventory, toSlotIsInventory);
+        }
+
+        public void HandleRequestEquip(InstantiatedEquipment equipment) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRequestEquipToSlot({equipment.Equipment.ResourceName}, {profile.ResourceName}) instanceId: {equipment.InstanceId}");
+
+            RequestEquip(equipment.InstanceId);
+        }
+
+        [ServerRpc]
+        public void RequestEquip(long itemInstanceId) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.RequestEquipToSlot({itemInstanceId}, {equipmentSlotProfileName})");
+
+            if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) && systemItemManager.InstantiatedItems[itemInstanceId] is InstantiatedEquipment) {
+                unitController.CharacterEquipmentManager.Equip(systemItemManager.InstantiatedItems[itemInstanceId] as InstantiatedEquipment);
+            }
         }
 
         public void HandleRequestEquipToSlot(InstantiatedEquipment equipment, EquipmentSlotProfile profile) {

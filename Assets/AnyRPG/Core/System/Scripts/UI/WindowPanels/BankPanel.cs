@@ -1,7 +1,3 @@
-using AnyRPG;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -72,7 +68,7 @@ namespace AnyRPG {
             }
 
             // swap or drop items from a storage container
-            playerManagerClient.UnitController.CharacterInventoryManager.RequestMoveItemToStorageContainer(storageContainerManagerClient.StorageContainerComponent,
+            playerManagerClient.UnitController.CharacterInventoryManager.RequestSwapItemToStorageContainer(storageContainerManagerClient.StorageContainerComponent,
                             storageContainerManagerClient.StorageContainerComponent.GetCurrentSlotIndex(fromSlot.InventorySlot),
                             toSlot.InventorySlot,
                             toSlot.BagPanel is BankPanel);
@@ -103,6 +99,44 @@ namespace AnyRPG {
                 }
             }
         }
+
+        public override void SetupContextMenu(ContextMenuPanel contextMenuPanel, InventorySlot inventorySlot) {
+            base.SetupContextMenu(contextMenuPanel, inventorySlot);
+
+            contextMenuPanel.EnableTakeButton(true);
+            if (inventorySlot.InstantiatedItem is InstantiatedBag) {
+                contextMenuPanel.EnableEquipButton(true);
+            }
+        }
+
+        public override void PerformContextMenuAction(SlotScript slotScript, string actionName) {
+            Debug.Log($"InventoryPanel.PerformContextMenuAction() actionName: {actionName}");
+
+            base.PerformContextMenuAction(slotScript, actionName);
+            switch (actionName) {
+                case "Take":
+                    playerManagerClient.UnitController.CharacterInventoryManager.RequestMoveFromBankToInventory(slotScript.InventorySlot);
+                    break;
+                case "Equip":
+                    if (slotScript.InventorySlot.InstantiatedItem is InstantiatedBag) {
+                        playerManagerClient.UnitController.CharacterInventoryManager.RequestEquipBagFromSlot(slotScript.InventorySlot.InstantiatedItem as InstantiatedBag, slotScript.InventorySlot, true);
+                    }
+                    break;
+            }
+        }
+
+        public override void PerformContextMenuAction(BagButton bagButton, string actionName) {
+            base.PerformContextMenuAction(bagButton, actionName);
+            if (bagButton.BagNode.InstantiatedBag == null) {
+                return;
+            }
+            switch (actionName) {
+                case "Unequip":
+                    playerManagerClient.UnitController.CharacterInventoryManager.RequestUnequipBag(bagButton.BagNode.InstantiatedBag, true);
+                    break;
+            }
+        }
+
 
 
     }

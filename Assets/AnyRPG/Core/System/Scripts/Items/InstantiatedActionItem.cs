@@ -23,6 +23,10 @@ namespace AnyRPG {
             systemAbilityController = systemGameManager.SystemAbilityController;
         }
 
+        public override bool IsUseable() {
+            return true;
+        }
+
         public override bool Use(UnitController sourceUnitController) {
 
             bool returnValue = base.Use(sourceUnitController);

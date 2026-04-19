@@ -2,13 +2,20 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CharacterEquipmentButton : CharacterEquipmentButtonBase, IMoveableOwner {
+    public class CharacterEquipmentButton : CharacterEquipmentButtonBase, IMoveableOwner, IContextMenuTarget {
 
         protected CharacterPanel characterPanel = null;
-        
+
+        // game manager references
+        private ContextMenuService contextMenuService = null;
+
         public IMoveable Moveable { get => equippedEquipment; }
         public CharacterPanel CharacterPanel { get => characterPanel; set => characterPanel = value; }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            contextMenuService = systemGameManager.ContextMenuService;
+        }
 
         protected override void HandleLeftClick() {
             Debug.Log("CharacterEquipmentButton.HandleLeftClick()");
@@ -66,6 +73,23 @@ namespace AnyRPG {
         public void CancelHandscriptMove() {
             Debug.Log("CharacterEquipmentButton.CancelHandscriptMove()");
             UpdateVisual(playerManagerClient.UnitController);
+        }
+
+        protected override void HandleRightClick() {
+            base.HandleRightClick();
+            if (equippedEquipment != null) {
+                contextMenuService.ShowContextMenu(this, Input.mousePosition);
+            }
+        }
+
+        public void SetupContextMenu(ContextMenuPanel contextMenuPanel) {
+            if (equippedEquipment != null) {
+                contextMenuPanel.EnableUnequipButton(true);
+            }
+        }
+
+        public void PerformContextMenuAction(string actionName) {
+            playerManagerClient.UnitController.CharacterEquipmentManager.RequestUnequip(equippedEquipment);
         }
     }
 

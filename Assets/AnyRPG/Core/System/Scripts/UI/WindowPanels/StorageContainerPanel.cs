@@ -105,7 +105,7 @@ namespace AnyRPG {
             }
 
             // swap or drop items from a character
-            playerManagerClient.UnitController.CharacterInventoryManager.RequestMoveItemToStorageContainer(storageContainerManagerClient.StorageContainerComponent,
+            playerManagerClient.UnitController.CharacterInventoryManager.RequestSwapItemToStorageContainer(storageContainerManagerClient.StorageContainerComponent,
                 GetCurrentStorageContainerSlotIndex(toSlot.InventorySlot),
                 fromSlot.InventorySlot,
                 fromSlot.BagPanel is BankPanel);
@@ -122,6 +122,26 @@ namespace AnyRPG {
         public override void SwapItemFromNonInventorySlot(SlotScript slotScript, InstantiatedItem instantiatedItem) {
             // do nothing intentionally, we don't want to allow swapping items from non inventory slots into storage container slots.
         }
+
+        public override void SetupContextMenu(ContextMenuPanel contextMenuPanel, InventorySlot inventorySlot) {
+            base.SetupContextMenu(contextMenuPanel, inventorySlot);
+
+            contextMenuPanel.EnableTakeButton(true);
+        }
+
+        public override void PerformContextMenuAction(SlotScript slotScript, string actionName) {
+            Debug.Log($"InventoryPanel.PerformContextMenuAction() actionName: {actionName}");
+
+            base.PerformContextMenuAction(slotScript, actionName);
+            switch (actionName) {
+                case "Take":
+                    playerManagerClient.UnitController.CharacterInventoryManager.RequestMoveItemFromStorageContainer(
+                        storageContainerManagerClient.StorageContainerComponent,
+                        GetCurrentStorageContainerSlotIndex(slotScript.InventorySlot));
+                    break;
+            }
+        }
+
 
     }
 

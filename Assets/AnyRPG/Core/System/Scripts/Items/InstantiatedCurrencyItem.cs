@@ -60,6 +60,10 @@ namespace AnyRPG {
             RecalculateCurrencyString();
         }
 
+        public override bool IsUseable() {
+            return true;
+        }
+
         public override bool Use(UnitController sourceUnitController) {
             //Debug.Log("CurrencyItem.Use()");
             bool returnValue = base.Use(sourceUnitController);

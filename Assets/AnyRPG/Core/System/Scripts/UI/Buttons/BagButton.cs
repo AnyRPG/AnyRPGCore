@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class BagButton : HighlightButton, IDescribable, IMoveableOwner {
+    public class BagButton : HighlightButton, IDescribable, IMoveableOwner, IContextMenuTarget {
 
         [Header("Bag Button")]
 
@@ -28,6 +26,7 @@ namespace AnyRPG {
         protected PlayerManagerClient playerManagerClient = null;
         protected HandScript handScript = null;
         protected MessageFeedManager messageFeedManager = null;
+        protected ContextMenuService contextMenuService = null;
 
         public IMoveable Moveable { get => (BagNode != null ? BagNode.InstantiatedBag : null); }
 
@@ -73,6 +72,7 @@ namespace AnyRPG {
             handScript = uIManager.HandScript;
             playerManagerClient = systemGameManager.PlayerManagerClient;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
+            contextMenuService = systemGameManager.ContextMenuService;
         }
 
         public void SetBagpanel(BagPanel bagPanel) {
@@ -257,6 +257,21 @@ namespace AnyRPG {
 
         public void CancelHandscriptMove() {
             Debug.Log("BagButton.CancelHandscriptMove()");
+        }
+
+        protected override void HandleRightClick() {
+            base.HandleRightClick();
+            contextMenuService.ShowContextMenu(this, Input.mousePosition);
+        }
+
+        public void SetupContextMenu(ContextMenuPanel contextMenuPanel) {
+            if (bagNode?.InstantiatedBag != null) {
+                contextMenuPanel.EnableUnequipButton(true);
+            }
+        }
+
+        public void PerformContextMenuAction(string actionName) {
+            bagPanel.PerformContextMenuAction(this, actionName);
         }
     }
 

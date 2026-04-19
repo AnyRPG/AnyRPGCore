@@ -119,6 +119,7 @@ namespace AnyRPG {
         public event System.Action<InstantiatedItem> OnRequestDeleteItem = delegate { };
         public event System.Action<InstantiatedItem> OnDeleteItem = delegate { };
         public event System.Action<InstantiatedEquipment, EquipmentSlotProfile> OnRequestEquipToSlot = delegate { };
+        public event System.Action<InstantiatedEquipment> OnRequestEquip = delegate { };
         //public event System.Action<EquipmentSlotProfile> OnRequestUnequipFromList = delegate { };
         public event System.Action<EquipmentSlotProfile, InstantiatedEquipment> OnAddEquipment = delegate { };
         public event System.Action<EquipmentSlotProfile, InstantiatedEquipment> OnRemoveEquipment = delegate { };
@@ -199,8 +200,11 @@ namespace AnyRPG {
         public event Action OnCarryWeightChanged = delegate { };
         public event Action<bool> OnEncumberedChange = delegate { };
         public event Action<Interactable, int, int> OnRequestSwapItemsInStorageContainerSlots = delegate { };
-        public event Action<StorageContainerComponent, int, int, bool> OnRequestMoveItemToStorageContainer = delegate { };
-
+        public event Action<StorageContainerComponent, int, int, bool> OnRequestSwapItemToStorageContainer = delegate { };
+        public event Action<StorageContainerComponent, int, bool> OnRequestMoveItemToStorageContainer = delegate { };
+        public event Action<StorageContainerComponent, int> OnRequestMoveItemFromStorageContainer = delegate { };
+        public event Action<InstantiatedBag, int, bool> OnRequestEquipBagFromSlot = delegate { };
+        public event Action<InstantiatedEquipment> OnRequestUnequip = delegate { };
 
         //public event System.Action<BaseAbilityProperties, Interactable> OnTargetInAbilityRangeFail = delegate { };
 
@@ -729,6 +733,12 @@ namespace AnyRPG {
             OnRequestEquipToSlot(newEquipment, equipmentSlotProfile);
         }
 
+        public void NotifyOnRequestEquip(InstantiatedEquipment newEquipment) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnRequestEquipToSlot({equipmentSlotProfile.ResourceName}, {newEquipment.Item.ResourceName})");
+
+            OnRequestEquip(newEquipment);
+        }
+
         /*
         public void NotifyOnRequestUnequipFromList(EquipmentSlotProfile equipmentSlotProfile) {
             OnRequestUnequipFromList(equipmentSlotProfile);
@@ -1103,8 +1113,24 @@ namespace AnyRPG {
             OnRequestSwapItemsInStorageContainerSlots(interactable, fromSlotIndex, toSlotIndex);
         }
 
-        public void NotifyOnRequestMoveItemToStorageContainer(StorageContainerComponent storageContainerComponent, int toSlotIndex, int fromSlotIndex, bool isBankSlot) {
-            OnRequestMoveItemToStorageContainer(storageContainerComponent, toSlotIndex, fromSlotIndex, isBankSlot);
+        public void NotifyOnRequestSwapItemToStorageContainer(StorageContainerComponent storageContainerComponent, int toSlotIndex, int fromSlotIndex, bool isBankSlot) {
+            OnRequestSwapItemToStorageContainer(storageContainerComponent, toSlotIndex, fromSlotIndex, isBankSlot);
+        }
+
+        public void NotifyOnRequestMoveItemToStorageContainer(StorageContainerComponent storageContainerComponent, int fromSlotIndex, bool isBankSlot) {
+            OnRequestMoveItemToStorageContainer(storageContainerComponent, fromSlotIndex, isBankSlot);
+        }
+
+        public void NotifyOnRequestMoveItemFromStorageContainer(StorageContainerComponent storageContainerComponent, int fromSlotIndex) {
+            OnRequestMoveItemFromStorageContainer(storageContainerComponent, fromSlotIndex);
+        }
+
+        public void NotifyOnRequestEquipBagFromSlot(InstantiatedBag instantiatedBag, int slotIndex, bool isBankSlot) {
+            OnRequestEquipBagFromSlot(instantiatedBag, slotIndex, isBankSlot);
+        }
+
+        public void NotifyOnRequestUnequip(InstantiatedEquipment instantiatedEquipment) {
+            OnRequestUnequip(instantiatedEquipment);
         }
 
 

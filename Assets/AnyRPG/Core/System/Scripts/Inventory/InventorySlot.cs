@@ -212,6 +212,16 @@ namespace AnyRPG {
             }
         }
 
+        public bool CanStackOrEmptyItem(InstantiatedItem instantiatedItem) {
+            if (!IsEmpty && instantiatedItem.Item.ResourceName == InstantiatedItem.Item.ResourceName && InstantiatedItems.Count < InstantiatedItem.Item.MaximumStackSize) {
+                return true;
+            }
+            if (IsEmpty) {
+                return true;
+            }
+            return false;
+        }
+
         public bool StackItem(InstantiatedItem instantiatedItem) {
             if (IsEmpty) {
                 AddItem(instantiatedItem);
