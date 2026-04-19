@@ -50,6 +50,7 @@ namespace AnyRPG {
         protected DialogManagerClient dialogManagerClient = null;
         protected PlayerManagerClient playerManagerClient = null;
         protected MailboxManagerClient mailboxManagerClient = null;
+        protected MessageFeedManager messageFeedManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -86,6 +87,7 @@ namespace AnyRPG {
             dialogManagerClient = systemGameManager.DialogManagerClient;
             playerManagerClient = systemGameManager.PlayerManagerClient;
             mailboxManagerClient = systemGameManager.MailboxManagerClient;
+            messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
         }
 
         private void HandleRemoveAttachment() {
@@ -154,12 +156,24 @@ namespace AnyRPG {
             base.ProcessOpenWindowNotification();
             ClearInputFields();
             RecalculatePostage();
+            mailboxManagerClient.OnRequestAddAttachment += HandleRequestAddAttachment;
         }
 
         public override void ReceiveClosedWindowNotification() {
             base.ReceiveClosedWindowNotification();
+            mailboxManagerClient.OnRequestAddAttachment -= HandleRequestAddAttachment;
         }
 
+        private void HandleRequestAddAttachment(InventorySlot slot) {
+            // find an empty attachment button and add the item to it
+            foreach (MailComposeAttachmentButton button in attachmentButtons) {
+                if (button != null && button.GetItemInstanceIds().Count == 0) {
+                    button.AddItemFromInventorySlot(slot);
+                    return;
+                }
+            }
+            messageFeedManager.WriteMessage("No empty attachment slots available.");
+        }
     }
 
 }

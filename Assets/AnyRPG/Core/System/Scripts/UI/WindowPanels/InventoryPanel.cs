@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -26,6 +27,8 @@ namespace AnyRPG {
         private VendorManagerClient vendorManagerClient = null;
         private UIManager uIManager = null;
         private HandScript handScript = null;
+        private MailboxManagerClient mailboxManagerClient = null;
+        private TradeServiceClient tradeServiceClient = null;
 
         public BagBarController BagBarController { get => bagBarController; set => bagBarController = value; }
 
@@ -43,6 +46,8 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             handScript = uIManager.HandScript;
             vendorManagerClient = systemGameManager.VendorManagerClient;
+            mailboxManagerClient = systemGameManager.MailboxManagerClient;
+            tradeServiceClient = systemGameManager.TradeServiceClient;
         }
 
         protected override void ProcessCreateEventSubscriptions() {
@@ -201,6 +206,12 @@ namespace AnyRPG {
             if (uIManager.storageContainerWindow.IsOpen == true) {
                 contextMenuPanel.EnableStoreButton(true);
             }
+            if (uIManager.mailComposeWindow.IsOpen == true) {
+                contextMenuPanel.EnableMailButton(true);
+            }
+            if (uIManager.tradeWindow.IsOpen == true) {
+                contextMenuPanel.EnableTradeButton(true);
+            }
             if (inventorySlot.InstantiatedItem is InstantiatedBag) {
                 contextMenuPanel.EnableEquipButton(true);
             }
@@ -256,6 +267,12 @@ namespace AnyRPG {
                             vendorManagerClient.RequestSellItemToVendor(slotScript.InventorySlot.InstantiatedItem);
                         }
                     }
+                    break;
+                case "Mail":
+                    mailboxManagerClient.RequestAddAttachment(slotScript.InventorySlot);
+                    break;
+                case "Trade":
+                    tradeServiceClient.RequestAddItemsToTrade(slotScript.InventorySlot.InstantiatedItems.Values.Select(item => item.InstanceId).ToList());
                     break;
             }
         }

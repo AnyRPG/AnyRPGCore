@@ -63,6 +63,9 @@ namespace AnyRPG {
         private HighlightButton sellButton = null;
 
         [SerializeField]
+        private HighlightButton mailButton = null;
+
+        [SerializeField]
         private UINavigationController uINavigationController = null;
 
         // game manager references
@@ -120,6 +123,7 @@ namespace AnyRPG {
             bankButton.gameObject.SetActive(false);
             storeButton.gameObject.SetActive(false);
             sellButton.gameObject.SetActive(false);
+            mailButton.gameObject.SetActive(false);
         }
 
         public void EnableInspectButton(bool active) {
@@ -194,6 +198,10 @@ namespace AnyRPG {
 
         public void EnableSellButton(bool active) {
             sellButton.gameObject.SetActive(active);
+        }
+
+        public void EnableMailButton(bool active) {
+            mailButton.gameObject.SetActive(active);
         }
 
         public void Inspect() {
@@ -313,6 +321,12 @@ namespace AnyRPG {
         public void Sell() {
             //Debug.Log("ContextMenuPanel.Sell()");
             contextMenuService.ContextMenuTarget.PerformContextMenuAction("Sell");
+            contextMenuService.CloseContextMenu();
+        }
+
+        public void Mail() {
+            //Debug.Log("ContextMenuPanel.Mail()");
+            contextMenuService.ContextMenuTarget.PerformContextMenuAction("Mail");
             contextMenuService.CloseContextMenu();
         }
 

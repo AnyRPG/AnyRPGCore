@@ -79,6 +79,13 @@ namespace AnyRPG {
             OnRequestBeginTrade();
         }
 
+        public void RequestAddItemsToTrade(List<long> itemInstanceIdList) {
+            //Debug.Log($"TradeServiceClient.RequestAddItemsToTrade({itemInstanceIdList.Count})");
+
+            networkManagerClient.RequestAddItemsToTrade(itemInstanceIdList);
+            OnRequestAddItemsToTargetTradeSlot();
+        }
+
         public void RequestAddItemsToTradeSlot(int buttonIndex, List<long> itemInstanceIdList) {
             //Debug.Log($"TradeServiceClient.RequestAddItemsToTradeSlot({buttonIndex})");
 

@@ -61,6 +61,48 @@ namespace AnyRPG {
             networkManagerServer.AdvertiseRequestBeginTrade(targetAccountId, sourceCharacterId);
         }
 
+        public void RequestAddItemsToTrade(int accountId, List<long> itemInstanceIdList) {
+            if (tradeSessionLookup.ContainsKey(accountId) == false) {
+                //Debug.Log($"TradeServiceServer.AcceptCharacterGroupInvite({accountId}) trade session not found");
+                return;
+            }
+            TradeSession tradeSession = tradeSessionLookup[accountId];
+            tradeSession.SourceAccountConfirmed = false;
+            tradeSession.TargetAccountConfirmed = false;
+            if (accountId == tradeSession.SourceAccountId) {
+                int buttonIndex = -1;
+                // find empty trade slot
+                foreach (KeyValuePair<int, List<long>> entry in tradeSession.SourceTradeSlots) {
+                    if (entry.Value.Count == 0) {
+                        buttonIndex = entry.Key;
+                        break;
+                    }
+                }
+                if (buttonIndex == -1) {
+                    //Debug.Log($"TradeServiceServer.RequestAddItemsToTrade({accountId}) no empty trade slot found");
+                    return;
+                }
+                tradeSession.SourceTradeSlots[buttonIndex] = itemInstanceIdList;
+                networkManagerServer.AdvertiseAddItemsToTargetTradeSlot(tradeSession.TargetAccountId, buttonIndex, itemInstanceIdList);
+            } else if (accountId == tradeSession.TargetAccountId) {
+                int buttonIndex = -1;
+                // find empty trade slot
+                foreach (KeyValuePair<int, List<long>> entry in tradeSession.TargetTradeSlots) {
+                    if (entry.Value.Count == 0) {
+                        buttonIndex = entry.Key;
+                        break;
+                    }
+                }
+                if (buttonIndex == -1) {
+                    //Debug.Log($"TradeServiceServer.RequestAddItemsToTrade({accountId}) no empty trade slot found");
+                    return;
+                }
+                tradeSession.TargetTradeSlots[buttonIndex] = itemInstanceIdList;
+                networkManagerServer.AdvertiseAddItemsToTargetTradeSlot(tradeSession.SourceAccountId, buttonIndex, itemInstanceIdList);
+            }
+        }
+
+
         public void RequestAddItemsToTradeSlot(int accountId, int buttonIndex, List<long> itemInstanceIdList) {
             if (tradeSessionLookup.ContainsKey(accountId) == false) {
                 //Debug.Log($"TradeServiceServer.AcceptCharacterGroupInvite({accountId}) trade session not found");
@@ -73,7 +115,7 @@ namespace AnyRPG {
                 tradeSession.SourceTradeSlots[buttonIndex] = itemInstanceIdList;
                 networkManagerServer.AdvertiseAddItemsToTargetTradeSlot(tradeSession.TargetAccountId, buttonIndex, itemInstanceIdList);
             } else if (accountId == tradeSession.TargetAccountId) {
-                tradeSession.targetTradeSlots[buttonIndex] = itemInstanceIdList;
+                tradeSession.TargetTradeSlots[buttonIndex] = itemInstanceIdList;
                 networkManagerServer.AdvertiseAddItemsToTargetTradeSlot(tradeSession.SourceAccountId, buttonIndex, itemInstanceIdList);
             }
         }
@@ -158,7 +200,7 @@ namespace AnyRPG {
                 CancelTrade(tradeSession);
                 return;
             }
-            foreach (List<long> itemInstanceIdList in tradeSession.targetTradeSlots.Values) {
+            foreach (List<long> itemInstanceIdList in tradeSession.TargetTradeSlots.Values) {
                 foreach (long itemInstanceId in itemInstanceIdList) {
                     if (targetUnitController.CharacterInventoryManager.HasItem(itemInstanceId) == false) {
                         CancelTrade(tradeSession);
@@ -169,7 +211,7 @@ namespace AnyRPG {
 
             // check that both players have enough room in their inventories
             int sourceSlotCount = tradeSession.SourceTradeSlots.Values.Select(x => x.Count > 0).Count();
-            int targetSlotCount = tradeSession.targetTradeSlots.Values.Select(x => x.Count > 0).Count();
+            int targetSlotCount = tradeSession.TargetTradeSlots.Values.Select(x => x.Count > 0).Count();
             int targetNeeds = sourceSlotCount - targetSlotCount;
             int sourceNeeds = targetSlotCount - sourceSlotCount;
             if (targetNeeds > targetUnitController.CharacterInventoryManager.EmptySlotCount()) {
@@ -197,7 +239,7 @@ namespace AnyRPG {
                 }
             }
 
-            foreach (List<long> itemInstanceIdList in tradeSession.targetTradeSlots.Values) {
+            foreach (List<long> itemInstanceIdList in tradeSession.TargetTradeSlots.Values) {
                 foreach (long itemInstanceId in itemInstanceIdList) {
                     targetItemList.Add(systemItemManager.GetExistingInstantiatedItem(itemInstanceId));
                 }
@@ -254,14 +296,14 @@ namespace AnyRPG {
         public int TargetAccountId = 0;
         public int TargetCurrencyAmount = 0;
         public bool TargetAccountConfirmed = false;
-        public Dictionary<int, List<long>> targetTradeSlots = new Dictionary<int, List<long>>();
+        public Dictionary<int, List<long>> TargetTradeSlots = new Dictionary<int, List<long>>();
 
         public TradeSession(int sourceAccountId, int targetAccountId) {
             this.SourceAccountId = sourceAccountId;
             this.TargetAccountId = targetAccountId;
             for (int i = 0; i < SourceTradeSlots.Count; i++) {
                 SourceTradeSlots[i] = new List<long>();
-                targetTradeSlots[i] = new List<long>();
+                TargetTradeSlots[i] = new List<long>();
             }
         }
     }
