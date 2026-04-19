@@ -64,35 +64,27 @@ namespace AnyRPG {
                 return;
             }
             // if a player enters our sphere, target him (which has the effect of agro because the idle state will follow any target the enemycontroller has)
-            Interactable targetInteractable = collider.gameObject.GetComponent<Interactable>();
-            if (targetInteractable == null) {
-                // whatever entered the sphere was not interactable
-                return;
-            }
-            CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(targetInteractable);
-            if (_characterUnit == null || _characterUnit.UnitController.IsInitialized == false) {
+            UnitController targetUnitController = collider.gameObject.GetComponent<UnitController>();
+            if (targetUnitController == null || targetUnitController.IsInitialized == false) {
                 // this was not a character that entered, and therefore we cannot agro it
                 // or it was a character but it has not finished initializing yet, so we cannot agro it
                 return;
             }
 
-            //Debug.Log($"{(unitController == null ? "null" : unitController.gameObject.name)}.AggroRange.OnTriggerEnter({collider.gameObject.name})");
-
             // cannot agro characters that are stealthed
-            if (_characterUnit.UnitController.CharacterStats.IsStealthed == true) {
+            if (targetUnitController.CharacterStats.IsStealthed == true) {
                 return;
             }
 
-            UnitController otherUnitController = _characterUnit.UnitController;
             // remove requirement for other character to have faction because a neutral character would not get attacked by hostile factions
             //if (otherBaseCharacter != null && otherBaseCharacter.CharacterCombat != null && otherunitController.CharacterStats.IsAlive == true && otherBaseCharacter.Faction != null && baseCharacter != null && baseCharacter.Faction != null) {
-            if (otherUnitController != null
-                && otherUnitController.CharacterStats.IsAlive == true
+            if (targetUnitController != null
+                && targetUnitController.CharacterStats.IsAlive == true
                 && unitController.BaseCharacter.Faction != null) {
-                if (Faction.RelationWith(otherUnitController, UnitController) <= -1f) {
+                if (Faction.RelationWith(targetUnitController, UnitController) <= -1f) {
                     //baseCharacter.CharacterCombat.MyAggroTable.AddToAggroTable(_characterUnit, -1);
                     //baseCharacter.CharacterCombat.EnterCombat(targetInteractable);
-                    unitController.ProximityAggro(_characterUnit);
+                    unitController.ProximityAggro(targetUnitController);
 
                 }
             }

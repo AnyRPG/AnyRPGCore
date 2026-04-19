@@ -56,7 +56,7 @@ namespace AnyRPG {
         public event System.Action OnStatChanged = delegate { };
         public event System.Action<float> OnReviveBegin = delegate { };
         //public event System.Action OnCombatUpdate = delegate { };
-        public event System.Action<Interactable> OnEnterCombat = delegate { };
+        public event System.Action<UnitController> OnEnterCombat = delegate { };
         public event System.Action<UnitController, Interactable> OnHitEvent = delegate { };
         public event System.Action<Interactable, AbilityEffectContext> OnReceiveCombatMiss = delegate { };
         public event System.Action<UnitController, UnitController, float> OnKillEvent = delegate { };
@@ -321,7 +321,7 @@ namespace AnyRPG {
             OnHitEvent(source, target);
         }
 
-        public void NotifyOnEnterCombat(Interactable target) {
+        public void NotifyOnEnterCombat(UnitController target) {
             OnEnterCombat(target);
         }
 

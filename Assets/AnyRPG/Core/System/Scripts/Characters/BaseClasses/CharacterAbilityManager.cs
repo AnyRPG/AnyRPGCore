@@ -1577,7 +1577,7 @@ namespace AnyRPG {
                             // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
                             // ...re-enable this because rangers need to pull out their weapons when doing their animation when clicking on action bar
                             if (unitController.CharacterCombat.GetInCombat() == false) {
-                                unitController.CharacterCombat.EnterCombat(target);
+                                unitController.CharacterCombat.EnterCombat(targetCharacterUnit.UnitController);
                             }
 
                             unitController.CharacterCombat.ActivateAutoAttack();

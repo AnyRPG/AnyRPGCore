@@ -796,7 +796,7 @@ namespace AnyRPG {
                 if (Faction.RelationWith(targetUnitController, (sourceCharacter.AbilityManager as CharacterAbilityManager).UnitController) <= -1) {
                     if (targetUnitController.CharacterCombat != null) {
                         // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
-                        targetUnitController.Aggro((sourceCharacter as UnitController).CharacterUnit);
+                        targetUnitController.Aggro((sourceCharacter as UnitController));
                     }
                 }
             }

@@ -2460,25 +2460,24 @@ namespace AnyRPG {
             unitController.CharacterCombat.DropCombat(true);
         }
 
-        private void HandleEnterCombatServer(Interactable targetInteractable) {
-            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleEnterCombatServer(" + (targetInteractable == null ? "null" : targetInteractable.gameObject.name) + ")");
+        private void HandleEnterCombatServer(UnitController targetUnitController) {
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleEnterCombatServer(" + (targetUnitController == null ? "null" : targetUnitController.gameObject.name) + ")");
 
-            FishNetInteractable networkInteractable = null;
-            if (targetInteractable != null) {
-                networkInteractable = targetInteractable.GetComponent<FishNetInteractable>();
+            FishNetUnitController networkUnitController = null;
+            if (targetUnitController != null) {
+                networkUnitController = targetUnitController.GetComponent<FishNetUnitController>();
             }
-            HandleEnterCombatClient(networkInteractable);
+            HandleEnterCombatClient(networkUnitController);
         }
 
         [ObserversRpc]
-        public void HandleEnterCombatClient(FishNetInteractable networkInteractable) {
+        public void HandleEnterCombatClient(FishNetUnitController networkUnitController) {
             //Debug.Log($"{gameObject.name}.HandleEnterCombatClient()");
             
-            if (networkInteractable != null) {
-                unitController.CharacterCombat.EnterCombat(networkInteractable.Interactable);
+            if (networkUnitController != null) {
+                unitController.CharacterCombat.EnterCombat(networkUnitController.UnitController);
             }
         }
-
 
         private void HandleBeforeDieServer(UnitController targetUnitController) {
             //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleBeforeDieServer(" + (targetUnitController == null ? "null" : targetUnitController.gameObject.name) + ")");

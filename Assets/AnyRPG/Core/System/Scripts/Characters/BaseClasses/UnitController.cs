@@ -1858,13 +1858,13 @@ namespace AnyRPG {
             topNode.aggroValue = Mathf.Clamp(topNode.aggroValue, 0, float.MaxValue);
             if (Target == null) {
                 //Debug.Log($"{gameObject.name}.AIController.UpdateTarget(): target was null.  setting target: " + topNode.aggroTarget.gameObject.name);
-                SetTarget(topNode.aggroTarget.Interactable);
+                SetTarget(topNode.aggroTarget);
                 return;
             }
-            if (Target != topNode.aggroTarget.Interactable) {
+            if (Target != topNode.aggroTarget) {
                 //Debug.Log($"{gameObject.name}.AIController.UpdateTarget(): " + topNode.aggroTarget.gameObject.name + "[" + topNode.aggroValue + "] stole agro from " + MyTarget);
                 ClearTarget();
-                SetTarget(topNode.aggroTarget.Interactable);
+                SetTarget(topNode.aggroTarget);
             }
         }
 
@@ -2159,8 +2159,8 @@ namespace AnyRPG {
         /// This function is called only by entry into an aggro range collider
         /// </summary>
         /// <param name="aggroTarget"></param>
-        public void ProximityAggro(CharacterUnit aggroTarget) {
-            //Debug.Log($"{gameObject.name}.UnitController.ProximityAggro({aggroTarget.UnitController.gameObject.name})");
+        public void ProximityAggro(UnitController aggroTarget) {
+            //Debug.Log($"{gameObject.name}.UnitController.ProximityAggro({aggroTarget.gameObject.name})");
 
             if (characterCombat.GetInCombat() == true) {
                 //Debug.Log($"{gameObject.name}.UnitController.ProximityAggro(): already in combat");
@@ -2177,7 +2177,7 @@ namespace AnyRPG {
 
         }
 
-        public bool Aggro(CharacterUnit aggroTarget) {
+        public bool Aggro(UnitController aggroTarget) {
             //Debug.Log($"{gameObject.name}.UnitController.Aggro({aggroTarget.DisplayName})");
 
             // at this level, we are just pulling both parties into combat.
@@ -2187,7 +2187,7 @@ namespace AnyRPG {
                 return false;
             }
 
-            if (aggroTarget.UnitController.CharacterCombat == null) {
+            if (aggroTarget.CharacterCombat == null) {
                 //Debug.Log("no character combat on target");
                 return false;
             }
@@ -2202,9 +2202,9 @@ namespace AnyRPG {
             }
 
             // moved liveness check into EnterCombat to centralize logic because there are multiple entry points to EnterCombat
-            aggroTarget.UnitController.CharacterCombat.PullIntoCombat(this);
+            aggroTarget.CharacterCombat.PullIntoCombat(this);
 
-            return characterCombat.PullIntoCombat(aggroTarget.UnitController);
+            return characterCombat.PullIntoCombat(aggroTarget);
 
             //return false;
         }

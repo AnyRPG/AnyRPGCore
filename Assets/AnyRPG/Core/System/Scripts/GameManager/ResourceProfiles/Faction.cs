@@ -187,6 +187,10 @@ namespace AnyRPG {
         // return the relationship between the target characters faction and the source characters faction
         public static float RelationWith(UnitController characterToCheck, UnitController myCharacter) {
             //Debug.Log("Faction.RelationWith(" + (characterToCheck == null ? "null" : characterToCheck.gameObject.name) + ", " + (myCharacter != null ? myCharacter.MyCharacterName : "null" ) + ")");
+            if (characterToCheck?.BaseCharacter == null || myCharacter?.BaseCharacter == null) {
+                //Debug.Log("Faction.RelationWith(): one of the characters was null, returning 0");
+                return 0;
+            }
             Faction otherFaction;
             Faction thisFaction;
             otherFaction = characterToCheck.BaseCharacter.Faction;
