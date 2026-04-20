@@ -1,30 +1,55 @@
-using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CharacterEquipmentButton : CharacterEquipmentButtonBase {
+    public class CharacterEquipmentButton : CharacterEquipmentButtonBase, IMoveableOwner, IContextMenuTarget {
 
         protected CharacterPanel characterPanel = null;
-        
+
+        // game manager references
+        private ContextMenuService contextMenuService = null;
+
+        public IMoveable Moveable { get => equippedEquipment; }
         public CharacterPanel CharacterPanel { get => characterPanel; set => characterPanel = value; }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            contextMenuService = systemGameManager.ContextMenuService;
+        }
+
         protected override void HandleLeftClick() {
+            //Debug.Log("CharacterEquipmentButton.HandleLeftClick()");
+
             base.HandleLeftClick();
-            if (handScript.Moveable is InstantiatedEquipment) {
-                InstantiatedEquipment tmp = (InstantiatedEquipment)handScript.Moveable;
-                if (equipmentSlotProfile.EquipmentSlotTypeList.Contains(tmp.Equipment.EquipmentSlotType)) {
-                    playerManagerClient.UnitController.CharacterEquipmentManager.RequestEquipToSlot(tmp, equipmentSlotProfile);
-                    handScript.Drop();
-                    uIManager.RefreshTooltip(tmp);
-                }
-            } else if (handScript.Moveable == null && equippedEquipment != null) {
-                handScript.TakeMoveable(equippedEquipment);
+
+            // pick up equipment case
+            if (handScript.MoveableOwner == null && equippedEquipment != null) {
+                handScript.TakeMoveable(this);
                 characterPanel.SelectedButton = this;
                 icon.color = Color.gray;
+                return;
+            }
+
+            // same item case
+            if (handScript.MoveableOwner != null && handScript.MoveableOwner.Moveable == equippedEquipment) {
+                handScript.CancelMove();
+                return;
+            }
+
+            // did not come from inventory case
+            if (playerManagerClient.UnitController.CharacterInventoryManager.FromSlot != null && (playerManagerClient.UnitController.CharacterInventoryManager.FromSlot.BagPanel is InventoryPanel == false)) {
+                handScript.CancelMove();
+                return;
+            }
+
+            // different item case
+            if (handScript.MoveableOwner.Moveable is InstantiatedEquipment) {
+                InstantiatedEquipment tmp = (InstantiatedEquipment)handScript.MoveableOwner.Moveable;
+                if (equipmentSlotProfile.EquipmentSlotTypeList.Contains(tmp.Equipment.EquipmentSlotType)) {
+                    playerManagerClient.UnitController.CharacterEquipmentManager.RequestEquipToSlot(tmp, equipmentSlotProfile);
+                    handScript.CompleteMove();
+                    uIManager.RefreshTooltip(tmp);
+                }
             }
         }
 
@@ -45,7 +70,28 @@ namespace AnyRPG {
             return returnString;
         }
 
+        public void CancelHandscriptMove() {
+            //Debug.Log("CharacterEquipmentButton.CancelHandscriptMove()");
 
+            UpdateVisual(playerManagerClient.UnitController);
+        }
+
+        protected override void HandleRightClick() {
+            base.HandleRightClick();
+            if (equippedEquipment != null) {
+                contextMenuService.ShowContextMenu(this, Input.mousePosition);
+            }
+        }
+
+        public void SetupContextMenu(ContextMenuPanel contextMenuPanel) {
+            if (equippedEquipment != null) {
+                contextMenuPanel.EnableUnequipButton(true);
+            }
+        }
+
+        public void PerformContextMenuAction(string actionName) {
+            playerManagerClient.UnitController.CharacterEquipmentManager.RequestUnequip(equippedEquipment);
+        }
     }
 
 }

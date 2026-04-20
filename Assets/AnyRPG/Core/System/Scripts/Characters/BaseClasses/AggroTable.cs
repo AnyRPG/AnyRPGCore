@@ -25,11 +25,12 @@ namespace AnyRPG {
                 removeNodes.Clear();
                 // we need to remove stale nodes on each check because we could have aggro'd a target that was already fighting with someone and not got the message it died if we didn't hit it first
                 foreach (AggroNode node in aggroNodes) {
-                    if (node.aggroTarget?.Interactable?.gameObject == null
-                        || node.aggroTarget.Interactable.gameObject.activeInHierarchy == false
-                        || node.aggroTarget.UnitController?.gameObject == null
-                        || Faction.RelationWith(node.aggroTarget.UnitController, unitController) > -1
-                        || node.aggroTarget.UnitController.CharacterStats.IsAlive == false) {
+                    if (node.aggroTarget?.gameObject == null
+                        || node.aggroTarget.gameObject.activeInHierarchy == false
+                        || node.aggroTarget.IsInitialized == false
+                        || node.aggroTarget.CharacterStats.IsAlive == false
+                        || Faction.RelationWith(node.aggroTarget, unitController) > -1) {
+                        //Debug.Log($"AggroTable.TopAgroNode: isInitialized: {node.aggroTarget.IsInitialized}");
                         //Debug.Log(node.aggroTarget.name + ". alive: " + node.aggroTarget.MyCharacter.MyCharacterStats.IsAlive);
                         // we could be in combat with someone who has switched faction from a faction buff mid combat or died
                         removeNodes.Add(node);
@@ -89,13 +90,12 @@ namespace AnyRPG {
         /// RETURN TRUE IF THIS IS A NEW ENTRY, FALSE IF NOT
         /// </summary>
         /// <param name="_aggroTable"></param>
-        /// <param name="targetCharacterUnit"></param>
+        /// <param name="targetUnitController"></param>
         /// <param name="aggroAmount"></param>
         /// return true if new entry to the table
-        public bool AddToAggroTable(CharacterUnit targetCharacterUnit, int aggroAmount) {
-            //Debug.Log($"{unitController.gameObject.name}.AggroTable.AddToAggroTable({(targetCharacterUnit == null ? "null" : targetCharacterUnit.UnitController.gameObject.name)}, {aggroAmount})");
+        public bool AddToAggroTable(UnitController targetUnitController, int aggroAmount) {
 
-            if (targetCharacterUnit.UnitController.CharacterStats.IsAlive == false) {
+            if (targetUnitController.CharacterStats.IsAlive == false) {
                 return false;
             }
 
@@ -108,18 +108,16 @@ namespace AnyRPG {
             if (aggroNodes.Count != 0) {
                 // loop through the table and see if the target is already in it.
                 foreach (AggroNode aggroNode in aggroNodes) {
-                    if (aggroNode.aggroTarget == targetCharacterUnit) {
+                    if (aggroNode.aggroTarget == targetUnitController) {
                         aggroNode.aggroValue += aggroAmount;
                         isAlreadyInAggroTable = true;
-                        //Debug.Log(baseCharacter.gameObject.name + " adding " + aggroAmount.ToString() + " aggro to entry: " + targetCharacterUnit.name + "; total: " + aggroNode.aggroValue.ToString());
                     }
                 }
             }
 
             if (!isAlreadyInAggroTable) {
-                //Debug.Log(baseCharacter.gameObject.name + " adding new entry " + targetCharacterUnit.DisplayName + " to aggro table with amount: " + aggroAmount);
                 AggroNode aggroNode = new AggroNode();
-                aggroNode.aggroTarget = targetCharacterUnit;
+                aggroNode.aggroTarget = targetUnitController;
                 aggroNode.aggroValue = aggroAmount;
                 aggroNodes.Add(aggroNode);
             }
@@ -129,7 +127,7 @@ namespace AnyRPG {
             return !isAlreadyInAggroTable;
         }
 
-        public bool AggroTableContains(CharacterUnit target) {
+        public bool AggroTableContains(UnitController target) {
             // if aggro table is empty, skip the table scan because the target must be added
             if (aggroNodes.Count != 0) {
                 // loop through the table and see if the target is already in it.
@@ -147,13 +145,11 @@ namespace AnyRPG {
         /// <summary>
         /// Meant to be called internally. Remove a single object and broadcast to them to clear us from their aggro table if they have less than 0 agro
         /// </summary>
-        /// <param name="targetCharacterUnit"></param>
-        public void AttemptRemoveAndBroadcast(CharacterUnit targetCharacterUnit) {
-            //Debug.Log((baseCharacter == null ? "null" : baseCharacter.MyCharacterName) + ".AggroTable.AttemptRemoveAndBroadCast(" + targetCharacterUnit + ")");
+        /// <param name="targetUnitController"></param>
+        public void AttemptRemoveAndBroadcast(UnitController targetUnitController) {
             foreach (AggroNode aggroNode in aggroNodes.ToArray()) {
-                if (aggroNode.aggroTarget == targetCharacterUnit && aggroNode.aggroValue < 0) {
-                    //Debug.Log(baseCharacter.name + ": Removing " + targetCharacterUnit.name + " from aggro table");
-                    aggroNode.aggroTarget.UnitController.CharacterCombat.AggroTable.ClearSingleTarget(unitController.CharacterUnit);
+                if (aggroNode.aggroTarget == targetUnitController && aggroNode.aggroValue < 0) {
+                    aggroNode.aggroTarget.CharacterCombat.AggroTable.ClearSingleTarget(unitController);
                     aggroNodes.Remove(aggroNode);
                 }
             }
@@ -163,12 +159,12 @@ namespace AnyRPG {
         /// <summary>
         /// Meant to be called internally. Remove a single object and broadcast to them to clear us from their aggro table.
         /// </summary>
-        /// <param name="target"></param>
-        public void RemoveAndBroadcast(CharacterUnit target) {
+        /// <param name="targetUnitController"></param>
+        public void RemoveAndBroadcast(UnitController targetUnitController) {
             foreach (AggroNode aggroNode in aggroNodes.ToArray()) {
-                if (aggroNode.aggroTarget == target) {
+                if (aggroNode.aggroTarget == targetUnitController) {
                     //Debug.Log(baseCharacter.name + ": Removing " + target.name + " from aggro table");
-                    aggroNode.aggroTarget.UnitController.CharacterCombat.AggroTable.ClearSingleTarget(unitController.CharacterUnit);
+                    aggroNode.aggroTarget.CharacterCombat.AggroTable.ClearSingleTarget(unitController);
                     aggroNodes.Remove(aggroNode);
                 }
             }
@@ -180,9 +176,8 @@ namespace AnyRPG {
         /// </summary>
         public void ClearAndBroadcast() {
             foreach (AggroNode aggroNode in aggroNodes.ToArray()) {
-                //Debug.Log(baseCharacter.name + ": Removing " + aggroNode.aggroTarget.name + " from aggro table");
-                if (aggroNode.aggroTarget.UnitController.CharacterCombat != null) {
-                    aggroNode.aggroTarget.UnitController.CharacterCombat.AggroTable.ClearSingleTarget(unitController.CharacterUnit);
+                if (aggroNode.aggroTarget.CharacterCombat != null) {
+                    aggroNode.aggroTarget.CharacterCombat.AggroTable.ClearSingleTarget(unitController);
                 }
                 aggroNodes.Remove(aggroNode);
             }
@@ -197,9 +192,9 @@ namespace AnyRPG {
         /// <summary>
         /// Called from external objects to drop themselves from our table (ie, they died, evaded, feigned death, vanished, invisible etc
         /// </summary>
-        /// <param name="target"></param>
-        public void ClearSingleTarget(CharacterUnit target) {
-            if (target == null) {
+        /// <param name="targetUnitController"></param>
+        public void ClearSingleTarget(UnitController targetUnitController) {
+            if (targetUnitController == null) {
                 //Debug.Log("ClearSingleTarget(); target is null");
             }
             if (aggroNodes == null) {
@@ -211,7 +206,7 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.name + ": Clearing " + target.name + " from aggro table with size(" + aggroNodes.Count + ") due to external signal");
             foreach (AggroNode aggroNode in aggroNodes.ToArray()) {
                 //Debug.Log(baseCharacter.name + ": Clearing " + target.name + " from aggro table with size(" + aggroNodes.Count + ") due to external signal: looking for target...");
-                if (aggroNode.aggroTarget == target) {
+                if (aggroNode.aggroTarget == targetUnitController) {
                     //Debug.Log(baseCharacter.name + ": Clearing " + target.name + " from aggro table with size(" + aggroNodes.Count + ") due to external signal: found target!");
                     aggroNodes.Remove(aggroNode);
                 }

@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class SlotScript : DescribableIcon, IPointerClickHandler, IClickable, IContextMenuTarget, IDescribable {
+    public class SlotScript : DescribableIcon, IPointerClickHandler, IClickable, IContextMenuTarget, IDescribable, IMoveableOwner {
 
         [Header("Slot Script")]
 
@@ -29,6 +29,8 @@ namespace AnyRPG {
 
         public InventorySlot InventorySlot { get => inventorySlot; }
 
+        public IMoveable Moveable => inventorySlot?.InstantiatedItem;
+
         public override int Count {
             get {
                 if (inventorySlot != null) {
@@ -40,7 +42,7 @@ namespace AnyRPG {
 
         public override bool CaptureCancelButton {
             get {
-                if (handScript.Moveable != null) {
+                if (handScript.MoveableOwner != null) {
                     return true;
                 }
                 return base.CaptureCancelButton;
@@ -67,7 +69,7 @@ namespace AnyRPG {
         }
 
         public void SetInventorySlot(InventorySlot inventorySlot) {
-            //Debug.Log($"{GetInstanceID()}.SlotScript.SetInventorySlot()");
+            //Debug.Log($"SlotScript.SetInventorySlot() instanceId: {GetInstanceID()}");
 
             this.inventorySlot = inventorySlot;
             inventorySlot.OnUpdateSlot += UpdateSlot;
@@ -75,7 +77,7 @@ namespace AnyRPG {
 
         
         public void ClearInventorySlot() {
-            //Debug.Log("SlotScript.ClearInventorySlot()");
+            //Debug.Log($"SlotScript.ClearInventorySlot() instanceId: {GetInstanceID()}");
 
             if (inventorySlot != null) {
                 inventorySlot.OnUpdateSlot -= UpdateSlot;
@@ -83,13 +85,22 @@ namespace AnyRPG {
             }
         }
 
-        private void DropItemFromNonInventorySlot() {
+        private void DropItemFromNonInventorySlot(InstantiatedItem instantiatedItem) {
             // item comes from somewhere else, like bag bar or character panel
+            BagPanel.DropItemFromNonInventorySlot(this, instantiatedItem);
+            handScript.CancelMove();
+        }
+
+        private void SwapItemFromNonInventorySlot(InstantiatedItem instantiatedItem) {
+            // item comes from somewhere else, like bag bar or character panel
+            BagPanel.SwapItemFromNonInventorySlot(this, instantiatedItem);
+            handScript.CompleteMove();
         }
 
         public void SendItemToHandScript() {
-            //Debug.Log("SlotScript.SendItemToHandScript(): setting inventorymanager.myinstance.fromslot to this");
-            handScript.TakeMoveable(inventorySlot.InstantiatedItem);
+            //Debug.Log("SlotScript.SendItemToHandScript()");
+
+            handScript.TakeMoveable(this);
             playerManagerClient.UnitController.CharacterInventoryManager.FromSlot = this;
             if (controlsManager.GamepadModeActive == true) {
                 handScript.SetPosition(transform.position);
@@ -100,9 +111,8 @@ namespace AnyRPG {
             //Debug.Log("SlotScript.DropItemFromInventorySlot()");
 
             //Debug.Log("Dropping an item from an inventory slot");
-            playerManagerClient.UnitController.CharacterInventoryManager.RequestDropItemFromInventorySlot(playerManagerClient.UnitController.CharacterInventoryManager.FromSlot.InventorySlot, inventorySlot, playerManagerClient.UnitController.CharacterInventoryManager.FromSlot.BagPanel is InventoryPanel, BagPanel is InventoryPanel);
-            handScript.Drop();
-
+            BagPanel.DropItemFromInventorySlot(this, playerManagerClient.UnitController.CharacterInventoryManager.FromSlot);
+            handScript.CompleteMove();
         }
 
         protected override void HandleLeftClick() {
@@ -115,46 +125,22 @@ namespace AnyRPG {
 
             if (!inventorySlot.IsEmpty) {
                 // This slot has something in it, and the hand script is empty, so we are trying to pick it up
-                if (handScript.Moveable == null) {
+                if (handScript.MoveableOwner == null) {
                     SendItemToHandScript();
                     return;
                 }
 
                 // the slot has something in it, and the handscript is not empty, so we are trying to swap with something
-                if (handScript.Moveable is InstantiatedBag) {
-                    // the handscript has a bag in it
-                    if (inventorySlot.InstantiatedItem is InstantiatedBag) {
-                        // This slot also has a bag in it, so swap the 2 bags
-                        playerManagerClient.UnitController.CharacterInventoryManager.RequestSwapBags(handScript.Moveable as InstantiatedBag, inventorySlot.InstantiatedItem as InstantiatedBag);
-                        handScript.Drop();
-                    }
-                } else if (handScript.Moveable is InstantiatedEquipment) {
-                    // the handscript has equipment in it
-                    if (inventorySlot.InstantiatedItem is InstantiatedEquipment && (inventorySlot.InstantiatedItem as InstantiatedEquipment).Equipment.EquipmentSlotType == (handScript.Moveable as InstantiatedEquipment).Equipment.EquipmentSlotType) {
-                        // this slot has equipment in it, and the equipment matches the slot of the item in the handscript.  swap them
-                        playerManagerClient.UnitController.CharacterEquipmentManager.RequestSwapInventoryEquipment(handScript.Moveable as InstantiatedEquipment, inventorySlot.InstantiatedItem as InstantiatedEquipment);
-                        handScript.Drop();
-                    }
+                if (handScript.MoveableOwner.Moveable is InstantiatedItem) {
+                    SwapItemFromNonInventorySlot(handScript.MoveableOwner.Moveable as InstantiatedItem);
                 }
-
             } else {
-                // This slot has nothing in it, and we are not trying to transfer anything to it from another slot in the bag
-                if (handScript.Moveable is InstantiatedBag) {
-                    //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory.");
-                    // the handscript had a bag in it, and therefore we are trying to unequip a bag
-                    InstantiatedBag instantiatedBag = (InstantiatedBag)handScript.Moveable;
-                    if (playerManagerClient.UnitController.CharacterInventoryManager.EmptySlotCount(instantiatedBag.BagNode.IsBankNode) - instantiatedBag.Slots > 0) {
-                        //if (playerManager.UnitController.CharacterInventoryManager.EmptySlotCount() - bag.Slots > 0) {
-                        //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory. There is enough empty space.");
-                        playerManagerClient.UnitController.CharacterInventoryManager.RequestUnequipBagToSlot(instantiatedBag, inventorySlot, BagPanel is BankPanel);
-                        handScript.Drop();
-                    }
-                } else if (handScript.Moveable is InstantiatedEquipment) {
-                    // the handscript had equipment in it, and therefore we are trying to unequip some equipment
-                    playerManagerClient.UnitController.CharacterEquipmentManager.RequestUnequipToSlot(handScript.Moveable as InstantiatedEquipment, inventorySlot.GetCurrentInventorySlotIndex(playerManagerClient.UnitController));
-                    handScript.Drop();
+                // this slot has nothing in it
+                if (handScript.MoveableOwner != null && handScript.MoveableOwner.Moveable is InstantiatedItem) {
+                    DropItemFromNonInventorySlot(handScript.MoveableOwner.Moveable as InstantiatedItem);
                 }
             }
+            
         }
 
         protected override void HandleRightClick() {
@@ -164,54 +150,19 @@ namespace AnyRPG {
             ProcessMouseEnter();
         }
 
-        protected override void HandleMiddleClick() {
-            //Debug.Log("SlotScript.HandleMiddleClick()");
-
-            base.HandleMiddleClick();
-            contextMenuService.ShowContextMenu(this, Input.mousePosition);
-        }
-
         public void InteractWithSlot() {
             //Debug.Log("SlotScript.InteractWithSlot()");
 
             // ignore right clicks when something is in the handscript
-            if (handScript.Moveable != null) {
+            if (handScript.MoveableOwner != null) {
                 return;
             }
 
-            // send items back and forth between bank and inventory if they are both open
-            if (BagPanel is BankPanel) {
-                playerManagerClient.UnitController.CharacterInventoryManager.RequestMoveFromBankToInventory(inventorySlot);
+            // show context menu if something is in the slot
+            if (inventorySlot.InstantiatedItem == null) {
                 return;
             }
-
-            // send items back and forth between inventory and bank if they are both open
-            if (uIManager.inventoryWindow.IsOpen == true && uIManager.bankWindow.IsOpen == true) {
-                if (BagPanel is InventoryPanel) {
-                    playerManagerClient.UnitController.CharacterInventoryManager.RequestMoveFromInventoryToBank(inventorySlot);
-                } /*else {
-                    //Debug.Log("SlotScript.InteractWithSlot(): We clicked on something in a chest or bag");
-                }*/
-                return;
-            } else if (uIManager.inventoryWindow.IsOpen == true && uIManager.bankWindow.IsOpen == false && uIManager.vendorWindow.IsOpen) {
-                // SELL THE ITEM
-                if (inventorySlot.InstantiatedItem != null) {
-                    if (inventorySlot.InstantiatedItem.ItemQuality != null && inventorySlot.InstantiatedItem.ItemQuality.RequireSellConfirmation) {
-                        uIManager.confirmSellItemMenuWindow.OpenWindow();
-                        (uIManager.confirmSellItemMenuWindow.CloseableWindowContents as ConfirmSellItemPanel).MyItem = inventorySlot.InstantiatedItem;
-                        return;
-                    }
-                    if ((uIManager.vendorWindow.CloseableWindowContents as VendorPanel).SellItem(inventorySlot.InstantiatedItem)) {
-                        return;
-                    }
-
-                }
-                // default case to prevent using an item when the vendor window is open
-                return;
-            }
-
-            // if we got to here, nothing left to do but use the item
-            playerManagerClient.UnitController.CharacterInventoryManager.RequestUseItem(inventorySlot);
+            contextMenuService.ShowContextMenu(this, Input.mousePosition);
         }
 
         public override void Accept() {
@@ -221,41 +172,22 @@ namespace AnyRPG {
 
         public override void Cancel() {
             base.Cancel();
-            if (handScript.Moveable != null) {
-                handScript.Drop();
+            if (handScript.MoveableOwner != null) {
+                handScript.CancelMove();
                 ShowContextInfo();
             }
         }
 
+        // x button on gamepad
         public override void JoystickButton2() {
             //Debug.Log("SlotScript.JoystickButton2()");
             base.JoystickButton2();
 
-            if (handScript.Moveable != null) {
+            if (handScript.MoveableOwner != null) {
                 return;
             }
 
             if (inventorySlot.InstantiatedItem == null) {
-                return;
-            }
-
-            if (inventorySlot.InstantiatedItem is InstantiatedBag) {
-                if (BagPanel is BankPanel) {
-                    if ((BagPanel as BankPanel).BagBarController.FreeBagSlots == 0) {
-                        messageFeedManager.WriteMessage("There are no free bank bag slots");
-                        return;
-                    }
-                    playerManagerClient.UnitController.CharacterInventoryManager.AddBankBag(inventorySlot.InstantiatedItem as InstantiatedBag);
-                    inventorySlot.InstantiatedItem.Remove();
-                }
-                if (BagPanel is InventoryPanel) {
-                    if ((BagPanel as InventoryPanel).BagBarController.FreeBagSlots == 0) {
-                        messageFeedManager.WriteMessage("There are no free inventory bag slots");
-                        return;
-                    }
-                    playerManagerClient.UnitController.CharacterInventoryManager.AddInventoryBag(inventorySlot.InstantiatedItem as InstantiatedBag);
-                    inventorySlot.InstantiatedItem.Remove();
-                }
                 return;
             }
 
@@ -265,42 +197,15 @@ namespace AnyRPG {
             }
         }
 
+        // y button on gamepad
         public override void JoystickButton3() {
-            //Debug.Log("SlotScript.JoystickButton3()");
             base.JoystickButton3();
-
-            if (handScript.Moveable != null) {
-                return;
-            }
-
-            if (inventorySlot.InstantiatedItem == null) {
-                return;
-            }
-
-            if (BagPanel is BankPanel) {
-                if (inventorySlot.InstantiatedItem is InstantiatedBag) {
-                    // if Y button pressed and this is a bag in the bank, equip in the inventory
-                    if ((uIManager.inventoryWindow.CloseableWindowContents as InventoryPanel).BagBarController.FreeBagSlots == 0) {
-                        messageFeedManager.WriteMessage("There are no free inventory bag slots");
-                        return;
-                    }
-                    playerManagerClient.UnitController.CharacterInventoryManager.AddInventoryBag(inventorySlot.InstantiatedItem as InstantiatedBag);
-                    inventorySlot.InstantiatedItem.Remove();
-                }
-                return;
-            }
-            if (BagPanel is InventoryPanel) {
-                // drop item
-                handScript.SetPosition(transform.position);
-                SendItemToHandScript();
-                uIManager.confirmDestroyMenuWindow.OpenWindow();
-            }
         }
 
         public override void JoystickButton9() {
             base.JoystickButton9();
 
-            if (controlsManager.GamepadModeActive == true && handScript.Moveable != null) {
+            if (controlsManager.GamepadModeActive == true && handScript.MoveableOwner != null) {
                 if (playerManagerClient.UnitController.CharacterInventoryManager.FromSlot != null) {
                     DropItemFromInventorySlot();
                     ShowContextInfo();
@@ -310,7 +215,7 @@ namespace AnyRPG {
 
             if (!inventorySlot.IsEmpty) {
                 // This slot has something in it, and the hand script is empty, so we are trying to pick it up
-                if (handScript.Moveable == null) {
+                if (handScript.MoveableOwner == null) {
                     SendItemToHandScript();
                     ShowContextInfo();
                     return;
@@ -322,7 +227,7 @@ namespace AnyRPG {
             //Debug.Log("SlotScript.Select()");
             base.Select();
 
-            if (controlsManager.GamepadModeActive == true && handScript.Moveable != null) {
+            if (controlsManager.GamepadModeActive == true && handScript.MoveableOwner != null) {
                 handScript.SetPosition(transform.position);
             }
 
@@ -335,7 +240,7 @@ namespace AnyRPG {
         private void ShowContextInfo() {
             if (owner != null) {
 
-                if (handScript.Moveable != null) {
+                if (handScript.MoveableOwner != null) {
                     owner.SetControllerHints("", "", "", "Cancel Reorder", "Move", "Place");
                     return;
                 }
@@ -347,38 +252,10 @@ namespace AnyRPG {
                 }
                 ShowGamepadTooltip();
 
-
-                if (BagPanel is BankPanel) {
-                    if (inventorySlot.InstantiatedItem is InstantiatedBag) {
-                        owner.SetControllerHints("Move To Inventory", "Equip In Bank", "Equip In Inventory", "", "", "Reorder");
-                    } else {
-                        owner.SetControllerHints("Move To Inventory", "", "", "", "", "Reorder");
-                    }
-                    return;
-                }
-
-                if (uIManager.inventoryWindow.IsOpen == true && uIManager.bankWindow.IsOpen == true) {
-                    if (BagPanel is InventoryPanel) {
-                        // move to bank
-                        owner.SetControllerHints("Move To Bank", "", "Drop", "", "", "Reorder");
-                    }
-                    // default case to prevent using an item when the bank window is open but bank was full
-                    return;
-                } else if (uIManager.inventoryWindow.IsOpen == true && uIManager.bankWindow.IsOpen == false && uIManager.vendorWindow.IsOpen) {
-                    // SELL THE ITEM
-                    owner.SetControllerHints("Sell", "", "Drop", "", "", "Reorder");
-                    // default case to prevent using an item when the vendor window is open
-                    return;
-                }
-
-                if (inventorySlot.InstantiatedItem is InstantiatedEquipment) {
-                    owner.SetControllerHints("Equip", "", "Drop", "", "", "Reorder");
-                } else if (inventorySlot.InstantiatedItem is IUseable) {
-                    if (inventorySlot.InstantiatedItem is InstantiatedBag) {
-                        owner.SetControllerHints("Use", "Equip", "Drop", "", "", "Reorder");
-                    } else {
-                        owner.SetControllerHints("Use", "Add To Action Bars", "Drop", "", "", "Reorder");
-                    }
+                if (inventorySlot.InstantiatedItem is IUseable) {
+                    owner.SetControllerHints("Menu", "Add To Action Bars", "", "", "", "Reorder");
+                } else {
+                    owner.SetControllerHints("Menu", "", "", "", "", "Reorder");
                 }
             }
         }
@@ -394,61 +271,16 @@ namespace AnyRPG {
             uIManager.HideToolTip();
         }
 
+        public void CancelHandscriptMove() {
+            //Debug.Log($"SlotScript.CancelHandscriptMove() instanceId: {GetInstanceID()}");
 
-
-        /*
-        public void Clear() {
-            if (Items.Count > 0) {
-                Item tmpItem = Items[0];
-                Items.Clear();
-                playerManager.UnitController.CharacterInventoryManager.OnItemCountChanged(tmpItem);
-                UpdateSlot();
-            }
-        }
-        */
-
-        /*
-        /// <summary>
-        /// Uses the item if it is useable
-        /// </summary>
-        public void UseItem() {
-            //Debug.Log("SlotScript.HandleRightClick()");
-            if (Item is IUseable) {
-                (Item as IUseable).Use();
-            } else if (Item is Equipment) {
-                (Item as Equipment).Use();
-            }
-        }
-        */
-
-        /*
-        public bool StackItem(Item item) {
-            if (!IsEmpty && item.DisplayName == Item.DisplayName && Items.Count < Item.MaximumStackSize) {
-                Items.Add(item);
-                UpdateSlot();
-                item.Slot = this;
-                return true;
-            }
-            return false;
-        }
-        */
-
-        public bool PutItemBack() {
-            //Debug.Log("attempting to put an item back in a slot");
-            if (playerManagerClient.UnitController.CharacterInventoryManager.FromSlot == this) {
-                //Debug.Log("Confirmed that the item came from this slot.  now returning it.");
-                UpdateSlot();
-                return true;
-            } else {
-                //Debug.Log("The item did not come from this slot.");
-            }
-            return false;
+            UpdateSlot();
         }
 
         /// <summary>
         /// Updates the Stack Size count graphic
         /// </summary>
-        private void UpdateSlot() {
+        public void UpdateSlot() {
             //Debug.Log($"SlotScript.UpdateSlot(): Update Slot called on slot {GetInstanceID().ToString()}");
 
             if (inventorySlot == null) {
@@ -466,6 +298,8 @@ namespace AnyRPG {
         }
 
         private void ClearSlot() {
+            //Debug.Log($"SlotScript.ClearSlot(): Clear Slot called on slot {GetInstanceID().ToString()}");
+
             inventorySlot = null;
             SetDescribable(null, 0);
             uIManager.UpdateStackSize(this, Count);
@@ -473,6 +307,8 @@ namespace AnyRPG {
         }
 
         public void SetBackGroundColor() {
+            //Debug.Log($"{gameObject.name}.SlotScript.SetBackGroundColor()");
+
             Color finalColor;
             if (inventorySlot?.InstantiatedItem == null) {
                 int slotOpacityLevel = (int)(PlayerPrefs.GetFloat("InventorySlotOpacity") * 255);
@@ -527,36 +363,12 @@ namespace AnyRPG {
             if (inventorySlot == null || inventorySlot.InstantiatedItem == null) {
                 return;
             }
-            if (BagPanel is BankPanel) {
-                return;
-            }
-            if (inventorySlot.InstantiatedItem.Item.ItemPickupPrefabProfile != null && systemConfigurationManager.CanDropItems == true) {
-                contextMenuPanel.EnableDropButton(true);
-            }
-            contextMenuPanel.EnableSplitButton(inventorySlot.InstantiatedItem.Item.MaximumStackSize > 1 && inventorySlot.InstantiatedItems.Count > 1);
-            contextMenuPanel.EnableDestroyButton(true);
+            BagPanel.SetupContextMenu(contextMenuPanel, inventorySlot);
         }
 
         public void PerformContextMenuAction(string actionName) {
             //Debug.Log($"SlotScript.PerformContextMenuAction({actionName})");
-
-            switch (actionName) {
-                case "Destroy":
-                    handScript.SetPosition(transform.position);
-                    SendItemToHandScript();
-                    uIManager.confirmDestroyMenuWindow.OpenWindow();
-                    break;
-                case "Drop":
-                    playerManagerClient.UnitController.CharacterInventoryManager.RequestDropItemOnGround(inventorySlot);
-                    break;
-                case "Split":
-                    if (inventorySlot.InstantiatedItem != null) {
-                        //handScript.TakeMoveable(inventorySlot.InstantiatedItem);
-                        playerManagerClient.UnitController.CharacterInventoryManager.FromSlot = this;
-                        uIManager.splitStackWindow.OpenWindow();
-                    }
-                    break;
-            }
+            BagPanel.PerformContextMenuAction(this, actionName);
         }
 
         public string GetSummary() {

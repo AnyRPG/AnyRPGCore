@@ -1,6 +1,3 @@
-using AnyRPG;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -33,7 +30,7 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
             playerManagerClient = systemGameManager.PlayerManagerClient;
         }
-        
+
         protected override void ProcessCreateEventSubscriptions() {
             base.ProcessCreateEventSubscriptions();
 
@@ -50,56 +47,12 @@ namespace AnyRPG {
             SetSlotColor();
         }
 
-        /*
-         // moved to BagNode
-        public virtual List<Item> GetItems() {
-            //Debug.Log("BagPanel.GetItems() slots count: " + slots.Count);
-            List<Item> items = new List<Item>();
-
-            foreach (SlotScript slot in slots) {
-                //Debug.Log("BagPanel.GetItems(): found slot");
-                if (!slot.IsEmpty) {
-                    //Debug.Log("BagPanel.GetItems(): found slot and it is not empty");
-                    foreach (Item item in slot.Items) {
-                        items.Add(item);
-                    }
-                } else {
-                    //Debug.Log("BagPanel.GetItems(): found slot and it is empty");
-                }
-            }
-            return items;
-        }
-        */
-
         public void SetSlotColor() {
             foreach (SlotScript slotScript in Slots) {
                 slotScript.SetBackGroundColor();
             }
         }
 
-
-        /// <summary>
-        /// Create slots for this bag
-        /// </summary>
-        /// <param name="slotCount"></param>
-        public virtual List<SlotScript> AddSlots(int slotCount) {
-            //Debug.Log($"{gameObject.name}.BagPanel.AddSlots(" + slotCount + ")");
-
-            List<SlotScript> returnList = new List<SlotScript>();
-            for (int i = 0; i < slotCount; i++) {
-                //Debug.Log(gameObject.GetInstanceID() + ".BagPanel.AddSlots(" + slotCount + "): Adding slot " + i);
-                SlotScript slot = objectPooler.GetPooledObject(slotPrefab, contentArea).GetComponent<SlotScript>();
-                slot.Configure(systemGameManager);
-                slot.BagPanel = this;
-                Slots.Add(slot);
-                returnList.Add(slot);
-                slot.SetBackGroundColor();
-                slotController.AddActiveButton(slot);
-            }
-            //slotController.NumRows = Mathf.CeilToInt((float)slots.Count / 8f);
-
-            return returnList;
-        }
 
         public void HandleAddSlot(InventorySlot inventorySlot) {
             //Debug.Log($"{gameObject.name}.BagPanel.HandleAddSlot()");
@@ -139,7 +92,7 @@ namespace AnyRPG {
         */
 
         public virtual void ClearSlots() {
-            //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.ClearSlots()");
+            //Debug.Log($"{gameObject.name}.BagPanel.ClearSlots() instanceId: {GetInstanceID()} slots count: {slots.Count}");
 
             List<SlotScript> removeList = new List<SlotScript>();
             foreach (SlotScript slot in slots) {
@@ -169,12 +122,6 @@ namespace AnyRPG {
 
         }
 
-        /*
-        public override void ProcessOpenWindowNotification() {
-            base.ProcessOpenWindowNotification();
-        }
-        */
-
         public override void ReceiveClosedWindowNotification() {
             base.ReceiveClosedWindowNotification();
             foreach (SlotScript slotScript in slots) {
@@ -182,7 +129,29 @@ namespace AnyRPG {
             }
         }
 
-       
+        public virtual void DropItemFromInventorySlot(SlotScript toSlot, SlotScript fromSlot) {
+            // meant to be overridden
+        }
+
+        public virtual void SwapItemFromNonInventorySlot(SlotScript slotScript, InstantiatedItem instantiatedItem) {
+            // meant to be overridden
+        }
+
+        public virtual void DropItemFromNonInventorySlot(SlotScript slotScript, InstantiatedItem instantiatedItem) {
+            // meant to be overridden
+        }
+
+        public virtual void SetupContextMenu(ContextMenuPanel contextMenuPanel, InventorySlot inventorySlot) {
+            // meant to be overridden
+        }
+
+        public virtual void PerformContextMenuAction(SlotScript slotScript, string actionName) {
+            // meant to be overridden
+        }
+
+        public virtual void PerformContextMenuAction(BagButton bagButton, string actionName) {
+            // meant to be overridden
+        }
     }
 
 }

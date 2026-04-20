@@ -817,6 +817,10 @@ namespace AnyRPG {
             networkController.RequestAcceptTrade();
         }
 
+        public void RequestAddItemsToTrade(List<long> itemInstanceIdList) {
+            networkController.RequestAddItemsToTrade(itemInstanceIdList);
+        }
+
         public void RequestAddItemsToTradeSlot(int buttonIndex, List<long> itemInstanceIdList) {
             networkController.RequestAddItemsToTradeSlot(buttonIndex, itemInstanceIdList);
         }

@@ -74,6 +74,7 @@ namespace AnyRPG {
         public abstract void RequestBeginTrade(int characterId);
         public abstract void RequestDeclineTrade();
         public abstract void RequestAcceptTrade();
+        public abstract void RequestAddItemsToTrade(List<long> itemInstanceIdList);
         public abstract void RequestAddItemsToTradeSlot(int buttonIndex, List<long> itemInstanceIdList);
         public abstract void RequestAddCurrencyToTrade(CurrencyNode currencyNode);
         public abstract void RequestConfirmTrade();

@@ -597,6 +597,14 @@ namespace AnyRPG {
         [SerializeField]
         private Sprite nameChangeNamePlateImage = null;
 
+        [Tooltip("An image to use beside a storage container option in the interaction UI window.")]
+        [SerializeField]
+        private Sprite storageContainerInteractionPanelImage = null;
+
+        [Tooltip("An image to for a storage container option on a nameplate.")]
+        [SerializeField]
+        private Sprite storageContainerNamePlateImage = null;
+
         [Tooltip("An image to use beside a cutscene option in the interaction UI window.")]
         [SerializeField]
         private Sprite cutSceneInteractionPanelImage = null;
@@ -776,6 +784,8 @@ namespace AnyRPG {
         public Sprite DialogNamePlateImage { get => dialogNamePlateImage; set => dialogNamePlateImage = value; }
         public Sprite NameChangeInteractionPanelImage { get => nameChangeInteractionPanelImage; set => nameChangeInteractionPanelImage = value; }
         public Sprite NameChangeNamePlateImage { get => nameChangeNamePlateImage; set => nameChangeNamePlateImage = value; }
+        public Sprite StorageContainerInteractionPanelImage { get => storageContainerInteractionPanelImage; set => storageContainerInteractionPanelImage = value; }
+        public Sprite StorageContainerNamePlateImage { get => storageContainerNamePlateImage; set => storageContainerNamePlateImage = value; }
         public Sprite CutSceneInteractionPanelImage { get => cutSceneInteractionPanelImage; set => cutSceneInteractionPanelImage = value; }
         public Sprite CutSceneNamePlateImage { get => cutSceneNamePlateImage; set => cutSceneNamePlateImage = value; }
         public Sprite LootableCharacterInteractionPanelImage { get => lootableCharacterInteractionPanelImage; set => lootableCharacterInteractionPanelImage = value; }

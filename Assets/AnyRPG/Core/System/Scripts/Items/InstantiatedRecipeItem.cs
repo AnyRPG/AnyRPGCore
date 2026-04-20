@@ -12,6 +12,10 @@ namespace AnyRPG {
             this.recipeItem = recipeItem;
         }
 
+        public override bool IsUseable() {
+            return true;
+        }
+
         public override bool Use(UnitController sourceUnitController) {
             //Debug.Log(MyDisplayName + ".RecipeItem.Use()");
             if (sourceUnitController.CharacterRecipeManager.RecipeList.ContainsValue(recipeItem.Recipe)) {

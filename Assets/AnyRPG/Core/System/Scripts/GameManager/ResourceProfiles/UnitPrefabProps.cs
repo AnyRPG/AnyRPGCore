@@ -61,6 +61,12 @@ namespace AnyRPG {
         [SerializeField]
         protected NamePlateProps namePlateProps = new NamePlateProps();
 
+        [SerializeField]
+        private UnitFrameProps unitFrameProps = new UnitFrameProps();
+
+        [SerializeField]
+        private UnitPreviewProps unitPreviewProps = new UnitPreviewProps();
+
         [Header("Mount")]
 
         [Tooltip("The transform position of the physical prefab in relation to the target bone")]
@@ -131,6 +137,8 @@ namespace AnyRPG {
         public CharacterModelProvider ModelProvider { get => modelProvider; set => modelProvider = value; }
         public GameObject NetworkModelPrefab { get => networkModelPrefab; set => networkModelPrefab = value; }
         public GameObject NetworkUnitPrefab { get => networkUnitPrefab; set => networkUnitPrefab = value; }
+        public UnitFrameProps UnitFrameProps { get => unitFrameProps; set => unitFrameProps = value; }
+        public UnitPreviewProps UnitPreviewProps { get => unitPreviewProps; set => unitPreviewProps = value; }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
             //Debug.Log($"UnitPrefabProps.SetupScriptableObjects({describable.ResourceName})");

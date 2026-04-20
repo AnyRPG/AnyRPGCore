@@ -6,6 +6,12 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Unit Profile", menuName = "AnyRPG/UnitProfile")]
     public class UnitProfile : DescribableResource, IStatProvider, ICapabilityProvider, ISerializationCallbackReceiver, IUUID {
 
+        [Header("Nameplate")]
+
+        [Tooltip("If true, the nameplate will show the title instead of the faction.  If true, the title will show in the nameplate instead of the faction.  If false, the faction will show in the nameplate instead of the title.  This only applies if a title is set.  If no title is set, the faction will be used regardless of this setting.")]
+        [SerializeField]
+        private bool suppressNameplateFaction = false;
+
         [Header("Unit Prefab")]
 
         [Tooltip("If true, the unit prefab is loaded by searching for a UnitPrefabProfile with the same name as this resource.")]
@@ -365,6 +371,8 @@ namespace AnyRPG {
         public List<string> MovementAudioProfileNames { get => movementAudioProfileNames; set => movementAudioProfileNames = value; }
         public bool FaceInteractionTarget { get => faceInteractionTarget; set => faceInteractionTarget = value; }
         public List<AbilityEffectProperties> DefaultHitEffectList { get => defaultHitEffectList; set => defaultHitEffectList = value; }
+        public bool SuppressNameplateFaction { get => suppressNameplateFaction; set => suppressNameplateFaction = value; }
+
         //public bool PersistCharacterState { get => persistCharacterState; set => persistCharacterState = value; }
 
         public override void SetGameManagerReferences() {

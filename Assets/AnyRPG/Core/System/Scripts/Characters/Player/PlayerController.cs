@@ -1010,7 +1010,7 @@ namespace AnyRPG {
             if (newTarget is UnitController) {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is not null");
                 uIManager.FocusUnitFramePanel.SetTarget(newTarget as UnitController);
-                namePlateManager.SetFocus(newTarget as UnitController);
+                namePlateManager.SetFocus(newTarget);
             }
             newTarget?.PhysicalTarget.SetTargeted();
         }
@@ -1114,7 +1114,7 @@ namespace AnyRPG {
         }
 
         public void ProcessSetActiveUnitController() {
-            Debug.Log($"PlayerController.ProcessSetActiveUnitController() activeUnitController: {(playerManagerClient.ActiveUnitController == null ? "null" : playerManagerClient.ActiveUnitController.gameObject.name)}");
+            //Debug.Log($"PlayerController.ProcessSetActiveUnitController() activeUnitController: {(playerManagerClient.ActiveUnitController == null ? "null" : playerManagerClient.ActiveUnitController.gameObject.name)}");
             
             // this one captures the switch between mounted and normal states
             if (playerManagerClient.ActiveUnitController.UnitProfile.UnitPrefabProps.ForceRotateModelMode == true) {

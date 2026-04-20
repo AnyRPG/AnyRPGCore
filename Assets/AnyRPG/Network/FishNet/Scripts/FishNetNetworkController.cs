@@ -722,6 +722,10 @@ namespace AnyRPG {
             clientConnector.RequestAcceptTrade();
         }
 
+        public override void RequestAddItemsToTrade(List<long> itemInstanceIdList) {
+            clientConnector.RequestAddItemsToTrade(itemInstanceIdList);
+        }
+
         public override void RequestAddItemsToTradeSlot(int buttonIndex, List<long> itemInstanceIdList) {
             clientConnector.RequestAddItemsToTradeSlot(buttonIndex, itemInstanceIdList);
         }

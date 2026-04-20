@@ -206,13 +206,13 @@ namespace AnyRPG.EditorTools {
             unitProfileAsset.UnitPrefabProps.AnimationProps = animations;
 
             // setup nameplate properties
-            unitProfileAsset.UnitPrefabProps.NamePlateProps.UnitFrameTarget = headBone;
+            unitProfileAsset.UnitPrefabProps.UnitFrameProps.UnitFrameTarget = headBone;
             unitProfileAsset.UnitPrefabProps.NamePlateProps.OverrideNameplatePosition = true;
             unitProfileAsset.UnitPrefabProps.NamePlateProps.NameplatePosition = new Vector3(0f, highestYTransform + namePlateHeightAdd, 0f);
             // set the look position at half the height
-            unitProfileAsset.UnitPrefabProps.NamePlateProps.UnitPreviewCameraLookOffset = new Vector3(0f, highestYTransform / 2f, 0f);
+            unitProfileAsset.UnitPrefabProps.UnitPreviewProps.UnitPreviewCameraLookOffset = new Vector3(0f, highestYTransform / 2f, 0f);
             // zoom out to 1.25 times the height
-            unitProfileAsset.UnitPrefabProps.NamePlateProps.UnitPreviewCameraPositionOffset = new Vector3(0f, highestYTransform / 2f, highestYTransform * 1.25f);
+            unitProfileAsset.UnitPrefabProps.UnitPreviewProps.UnitPreviewCameraPositionOffset = new Vector3(0f, highestYTransform / 2f, highestYTransform * 1.25f);
 
             // setup foootstep properties
             unitProfileAsset.MovementAudioProfileNames.Add(defaultFootstepLoop);

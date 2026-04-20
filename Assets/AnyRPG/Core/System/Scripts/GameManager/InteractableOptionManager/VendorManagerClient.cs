@@ -1,9 +1,5 @@
-using AnyRPG;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
     public class VendorManagerClient : InteractableOptionManager {
@@ -11,8 +7,18 @@ namespace AnyRPG {
         private VendorProps vendorProps = null;
         private VendorComponent vendorComponent = null;
 
+        InstantiatedItem instantiatedItem = null;
+
+        // game manager references
+        private PlayerManagerClient playerManagerClient = null;
+
         public VendorProps VendorProps { get => vendorProps; set => vendorProps = value; }
         public VendorComponent VendorComponent { get => vendorComponent; set => vendorComponent = value; }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            playerManagerClient = systemGameManager.PlayerManagerClient;
+        }
 
         public void SetProps(VendorProps vendorProps, VendorComponent vendorComponent, int componentIndex, int choiceIndex) {
             //Debug.Log("VendorManager.SetProps()");
@@ -27,9 +33,14 @@ namespace AnyRPG {
             vendorProps = null;
         }
 
-        public void RequestSellItemToVendor(UnitController sourceUnitController, InstantiatedItem instantiatedItem) {
+        public void SetSellItem(InstantiatedItem instantiatedItem) {
+            //Debug.Log($"VendorManagerClient.SetSellItem({instantiatedItem.DisplayName})");
+            this.instantiatedItem = instantiatedItem;
+        }
+
+        public void RequestSellItemToVendor(InstantiatedItem instantiatedItem) {
             if (systemGameManager.GameMode == GameMode.Local) {
-                vendorComponent.SellItemToVendor(sourceUnitController, componentIndex, instantiatedItem);
+                vendorComponent.SellItemToVendor(playerManagerClient.UnitController, componentIndex, instantiatedItem);
             } else {
                 networkManagerClient.SellItemToVendor(vendorComponent.Interactable, componentIndex, instantiatedItem.InstanceId);
             }
@@ -45,6 +56,9 @@ namespace AnyRPG {
             }
         }
 
+        public void RequestSellItemToVendor() {
+            RequestSellItemToVendor(instantiatedItem);
+        }
     }
 
 }

@@ -1504,6 +1504,12 @@ namespace AnyRPG {
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void RequestAddItemsToTrade(List<long> itemInstanceIdList, NetworkConnection networkConnection = null) {
+
+            networkManagerServer.RequestAddItemsToTrade(networkConnection.ClientId, itemInstanceIdList);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         public void RequestAddItemsToTradeSlot(int buttonIndex, List<long> itemInstanceIdList, NetworkConnection networkConnection = null) {
 
             networkManagerServer.RequestAddItemsToTradeSlot(networkConnection.ClientId, buttonIndex, itemInstanceIdList);

@@ -104,22 +104,22 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public static Color GetFactionColor(PlayerManagerClient playerManager, NamePlateUnit namePlateUnit) {
+        public static Color GetFactionColor(PlayerManagerClient playerManager, Interactable interactable) {
             //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ")");
-            if (playerManager.UnitController != null && (namePlateUnit as MonoBehaviour).gameObject == playerManager.UnitController?.gameObject) {
+            if (playerManager.UnitController != null && (interactable as MonoBehaviour).gameObject == playerManager.UnitController?.gameObject) {
                 // when retrieving the color that should be displayed on the player character, always green even if it has no faction
                 return Color.green;
             }
             // next check custom gained faction for either character
-            if (namePlateUnit.CharacterUnit != null && playerManager.UnitController != null) {
+            if (interactable.CharacterUnit != null && playerManager.UnitController != null) {
                 //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ") : nameplate unit is a character unit AND PLAYER UNIT IS SPAWNED");
-                return GetFactionColor(playerManager, playerManager.UnitController, namePlateUnit.CharacterUnit.UnitController);
+                return GetFactionColor(playerManager, playerManager.UnitController, interactable.CharacterUnit.UnitController);
             } else {
                 //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ") : nameplate unit is NOT a character unit");
             }
 
             // finally, fallback on dispisition dictionaries and defaults
-            return GetFactionColor(playerManager, namePlateUnit.NamePlateController.Faction);
+            return GetFactionColor(playerManager, interactable.NamePlateController.Faction);
         }
 
         public static Color GetFactionColor(PlayerManagerClient playerManager, UnitController characterToCheck, UnitController myCharacter) {
@@ -187,6 +187,10 @@ namespace AnyRPG {
         // return the relationship between the target characters faction and the source characters faction
         public static float RelationWith(UnitController characterToCheck, UnitController myCharacter) {
             //Debug.Log("Faction.RelationWith(" + (characterToCheck == null ? "null" : characterToCheck.gameObject.name) + ", " + (myCharacter != null ? myCharacter.MyCharacterName : "null" ) + ")");
+            if (characterToCheck?.BaseCharacter == null || myCharacter?.BaseCharacter == null) {
+                //Debug.Log("Faction.RelationWith(): one of the characters was null, returning 0");
+                return 0;
+            }
             Faction otherFaction;
             Faction thisFaction;
             otherFaction = characterToCheck.BaseCharacter.Faction;

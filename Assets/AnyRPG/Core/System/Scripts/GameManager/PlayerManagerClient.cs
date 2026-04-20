@@ -371,11 +371,13 @@ namespace AnyRPG {
         public void SubscribeToModelEvents() {
             //Debug.Log("PlayerManager.SubscribeToModelEvents()");
             unitController.UnitEventController.OnStatusEffectAdd += HandleStatusEffectAdd;
+            unitController.UnitEventController.OnEncumberedChange += HandleEncumberedChange;
         }
 
         public void UnsubscribeFromModelEvents() {
             //Debug.Log("PlayerManager.SubscribeToModelEvents()");
             unitController.UnitEventController.OnStatusEffectAdd -= HandleStatusEffectAdd;
+            unitController.UnitEventController.OnEncumberedChange -= HandleEncumberedChange;
         }
 
         private void HandlePlayerUnitSpawn() {
@@ -526,7 +528,6 @@ namespace AnyRPG {
             unitController.UnitEventController.OnAddSkillExperience += HandleAddSkillExperience;
             unitController.UnitEventController.OnCarryWeightChanged += HandleCarryWeightChanged;
             unitController.UnitEventController.OnStatChanged += HandleStatChanged;
-            unitController.UnitEventController.OnEncumberedChange += HandleEncumberedChange;
         }
 
         public void UnsubscribeFromPlayerEvents() {

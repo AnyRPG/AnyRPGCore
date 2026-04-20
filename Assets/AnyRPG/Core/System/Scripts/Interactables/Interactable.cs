@@ -11,9 +11,10 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class Interactable : AutoConfiguredMonoBehaviour, IPersistentObjectOwner, IDescribable {
 
-        public event System.Action OnPrerequisiteUpdates = delegate { };
-        public event System.Action OnInteractableDisable = delegate { };
-        public event System.Action OnInteractableResetSettings = delegate { };
+        public event Action OnPrerequisiteUpdates = delegate { };
+        public event Action OnInteractableDisable = delegate { };
+        public event Action OnInteractableResetSettings = delegate { };
+        public event Action OnInitializeNamePlate = delegate { };
 
         // this field does not do anything, but is needed to satisfy the IDescribable interface
         protected Sprite interactableIcon = null;
@@ -91,6 +92,15 @@ namespace AnyRPG {
         [SerializeField]
         protected bool persistInteractableData = false;
 
+        [Header("Nameplate")]
+
+        [SerializeField]
+        protected bool hasNamePlate = false;
+
+        [SerializeField]
+        protected NamePlateProps namePlateProps = new NamePlateProps();
+
+
         /*
         [Tooltip("Reference to local component controller prefab with nameplate target, speakers, etc.")]
         [SerializeField]
@@ -112,6 +122,8 @@ namespace AnyRPG {
         protected bool startHasRun = false;
         protected bool componentReferencesInitialized = false;
         protected bool eventSubscriptionsInitialized = false;
+        protected bool namePlateReady = false;
+
 
         protected Dictionary<GameObject, UnitController> inRangeUnitControllers = new Dictionary<GameObject, UnitController>();
 
@@ -128,7 +140,10 @@ namespace AnyRPG {
         protected OutlineController outlineController = null;
         protected ObjectMaterialController objectMaterialController = null;
         protected InteractableEventController interactableEventController = new InteractableEventController();
+        protected BaseNamePlateController namePlateController = null;
 
+        protected Transform nameplateTransform = null;
+        protected Vector3 nameplateVector = Vector3.zero;
 
         // game manager references
         protected PlayerManagerClient playerManagerClient = null;
@@ -152,6 +167,9 @@ namespace AnyRPG {
         public string ResourceName { get => DisplayName; }
         public virtual string DisplayName {
             get {
+                if (namePlateProps.DisplayName != string.Empty && hasNamePlate) {
+                    return namePlateProps.DisplayName;
+                }
                 if (interactableName != null && interactableName != string.Empty) {
                     return interactableName;
                 }
@@ -226,6 +244,9 @@ namespace AnyRPG {
             }
         }
         public PersistentObjectComponent PersistentObjectComponent { get => persistentObjectComponent; set => persistentObjectComponent = value; }
+        public virtual BaseNamePlateController NamePlateController { get => namePlateController; }
+        public virtual NamePlateProps NamePlateProps { get => namePlateProps; set => namePlateProps = value; }
+        public Vector3 NameplateVector { get => nameplateVector; }
 
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -239,7 +260,22 @@ namespace AnyRPG {
             ConfigureComponents();
             CreateComponents();
             LateConfigure();
+            if (hasNamePlate) {
+                ConfigureNameplate();
+            }
         }
+
+        private void ConfigureNameplate() {
+            SetNameplateVector();
+
+            nameplateTransform = transform;
+
+            namePlateController = new BaseNamePlateController(this, systemGameManager);
+            if (startHasRun && namePlateController != null) {
+                namePlateController.InitializeNamePlate();
+            }
+        }
+
 
         protected override void PostConfigure() {
             //Debug.Log($"{gameObject.name}.Interactable.PostConfigure()");
@@ -475,6 +511,63 @@ namespace AnyRPG {
                     inRangeUnitController.UnitEventController.NotifyOnExitInteractableRange(this);
                 } else {
                     inRangeUnitController.EnterInteractableRange(this);
+                }
+            }
+
+            if (!playerManagerClient.PlayerUnitSpawned || hasNamePlate == false) {
+                //Debug.Log($"{gameObject.name}.Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");
+                return;
+            }
+            UpdateNamePlateImage();
+
+        }
+
+        public void UpdateNamePlateImage() {
+            //Debug.Log($"{gameObject.name}.NamePlateUnit.UpdateNamePlateImage()");
+
+            if (playerManagerClient.UnitController == null) {
+                //Debug.Log($"{gameObject.name}.Interactable.UpdateNamePlateImage(): player has no character");
+                return;
+            }
+            // if there is a nameplate unit give it a chance to initialize its nameplate.
+            // inanimate units cannot be directly interacted with and are not interactableoptions so they won't receive prerequisite updates directly
+            // this means the only way they can spawn their nameplate is through a direct call
+            if (NamePlateController.NamePlate == null) {
+                InitializeNamePlateController();
+                if (NamePlateController.NamePlate == null) {
+                    return;
+                }
+            }
+
+            Dictionary<int, InteractableOptionComponent> currentInteractables = GetCurrentInteractables(playerManagerClient.UnitController);
+
+            int currentInteractableCount = currentInteractables.Count;
+            //Debug.Log($"{gameObject.name}.Interactable.UpdateDialogStatus(): currentInteractableCount: " + currentInteractableCount);
+
+            // determine if one of our current interactables is a questgiver
+            bool questGiverCurrent = false;
+            foreach (InteractableOptionComponent interactableOption in currentInteractables.Values) {
+                if (interactableOption is QuestGiverComponent) {
+                    questGiverCurrent = true;
+                    (interactableOption as QuestGiverComponent).UpdateQuestStatus(playerManagerClient.UnitController);
+                }
+            }
+
+            if (currentInteractableCount == 0 || questGiverCurrent == true) {
+                // questgiver should override all other nameplate images since it's special and appears separately
+                NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(false);
+            } else {
+                if (currentInteractableCount == 1) {
+                    // there is only one interactable.  set the specific nameplate image for it
+                    InteractableOptionComponent onlyOption = currentInteractables.Values.First<InteractableOptionComponent>();
+                    if (onlyOption.InteractableOptionProps.NamePlateImage != null) {
+                        NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(true);
+                        NamePlateController.NamePlate.GenericIndicatorImage.sprite = onlyOption.InteractableOptionProps.NamePlateImage;
+                    }
+                } else {
+                    // set a generic indicator if there is more than 1 interactable
+                    NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(true);
+                    NamePlateController.NamePlate.GenericIndicatorImage.sprite = systemConfigurationManager.MultipleInteractionNamePlateImage;
                 }
             }
         }
@@ -1015,18 +1108,35 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessBeginDialog() {
+            if (hasNamePlate && NamePlateController != null && NamePlateController.NamePlate != null) {
+                NamePlateController.NamePlate.ShowSpeechBubble();
+            }
         }
 
         public virtual void ProcessEndDialog() {
+            if (hasNamePlate && NamePlateController != null && NamePlateController.NamePlate != null) {
+                NamePlateController.NamePlate.HideSpeechBubble();
+            }
         }
 
         public virtual void ProcessDialogTextUpdate(string newText) {
+            if (hasNamePlate && NamePlateController != null && NamePlateController.NamePlate != null) {
+                NamePlateController.NamePlate.SetSpeechText(newText);
+            }
         }
 
         public virtual void ProcessShowQuestIndicator(string indicatorText, QuestGiverComponent questGiverComponent) {
+            if (hasNamePlate && NamePlateController != null && NamePlateController.NamePlate != null) {
+                NamePlateController.NamePlate.QuestIndicatorBackground.SetActive(true);
+                //Debug.Log($"{gameObject.name}:QuestGiver.UpdateQuestStatus() Indicator is active.  Setting to: " + indicatorType);
+                questGiverComponent.SetIndicatorText(indicatorText, NamePlateController.NamePlate.QuestIndicator);
+            }
         }
 
         public virtual void ProcessHideQuestIndicator() {
+            if (hasNamePlate && NamePlateController != null && NamePlateController.NamePlate != null) {
+                NamePlateController.NamePlate.QuestIndicatorBackground.SetActive(false);
+            }
         }
 
         public virtual void ProcessStatusIndicatorSourceInit() {
@@ -1059,6 +1169,7 @@ namespace AnyRPG {
 
         public virtual void ConfigureDialogPanel(DialogPanel dialogPanelController) {
             // only needed in namePlateUnit and above
+            dialogPanelController.ConfigureSnapshotPortrait();
         }
 
         public virtual bool IsInRange(UnitController sourceUnitController) {
@@ -1076,8 +1187,20 @@ namespace AnyRPG {
             OnInteractableResetSettings();
         }
 
+        public void RemoveNamePlate() {
+            //Debug.Log($"{gameObject.name}.NamePlateUnit.RemoveNamePlate()");
+
+            namePlateController?.RemoveNamePlate();
+            namePlateReady = false;
+        }
+
+
         public virtual void ResetSettings() {
             //Debug.Log($"{gameObject.name}.Interactable.ResetSettings() {GetInstanceID()}");
+
+            if (hasNamePlate) {
+                RemoveNamePlate();
+            }
 
             if (glowOnMouseOver) {
                 outlineController.TurnOffOutline();
@@ -1316,6 +1439,73 @@ namespace AnyRPG {
 
         public void ProcessShowTooltip(TooltipController tooltipController) {
         }
+
+        /// <summary>
+        /// initialize a nameplate if it has not been initialied yet
+        /// </summary>
+        public virtual void InitializeNamePlateController() {
+            //Debug.Log($"{gameObject.name}.UnitController.InitializeNamePlateController()");
+
+            if (namePlateReady == true) {
+                return;
+            }
+            if (InitializeNamePlate()) {
+                namePlateReady = true;
+            }
+        }
+
+        /// <summary>
+        /// directly initialize a nameplate
+        /// </summary>
+        public bool InitializeNamePlate() {
+            //Debug.Log($"{gameObject.name}.NamePlateUnit.InitializenamePlate() namePlateReady: " + namePlateReady);
+            // account for characters that spawn dead 
+            if (namePlateReady == true) {
+                return false;
+            }
+            if (NamePlateController.InitializeNamePlate()) {
+                OnInitializeNamePlate();
+                return true;
+            }
+            return false;
+        }
+
+        public virtual Vector3 GetNameplatePosition() {
+            return transform.position + nameplateVector;
+        }
+
+        // this method needs to exist to allow timeline controlled units to add a nameplate when enabled
+        // TO DO : FIX ME; timelines will have to send some event to the unit controller to initialize the nameplate
+        // this was breaking in network mode
+        /*
+        public void OnEnable() {
+            //Debug.Log($"{gameObject.name}.NamePlateUnit.OnEnable()");
+
+            // characters can get disabled by cutscenes, so need to initialize nameplate on re-enable
+            if (startHasRun && namePlateController != null) {
+                namePlateController.InitializeNamePlate();
+            }
+        }
+        */
+
+        public virtual void OnDisable() {
+            //Debug.Log($"NamePlateUnit.OnDisable() instanceId: {GetInstanceID()}");
+            // characters can get disabled by cutscenes, so need to remove nameplate
+            if (hasNamePlate) {
+                RemoveNamePlate();
+            }
+        }
+
+        public void SetNameplateVector() {
+            //Debug.Log($"{gameObject.name}.NamePlateUnit.SetNameplateVector()");
+
+            if (componentController != null) {
+                //nameplateTransform = componentController.GetNameplateTransform();
+                nameplateVector = componentController.NameplateVector;
+                //Debug.Log($"{gameObject.name}.NamePlateUnit.SetNameplateVector() nameplateVector: {nameplateVector} instanceId: {GetInstanceID()}");
+            }
+        }
+
 
     }
 

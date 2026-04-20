@@ -60,6 +60,8 @@ namespace AnyRPG {
             }
         }
 
+        public List<InstantiatedItem> Items { get => items; }
+
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             UpdateVisual();
@@ -115,19 +117,19 @@ namespace AnyRPG {
             }
             base.HandleLeftClick();
             if (playerManagerClient.UnitController.CharacterInventoryManager.FromSlot != null) {
-                AddItemFromInventorySlot();
+                AddItemFromInventorySlot(playerManagerClient.UnitController.CharacterInventoryManager.FromSlot.InventorySlot);
                 return;
             }
         }
 
-        public void AddItemFromInventorySlot() {
+        public void AddItemFromInventorySlot(InventorySlot inventorySlot) {
             //Debug.Log("SlotScript.DropItemFromInventorySlot()");
 
             //Debug.Log("Dropping an item from an inventory slot");
             items.Clear();
-            items.AddRange(playerManagerClient.UnitController.CharacterInventoryManager.FromSlot.InventorySlot.InstantiatedItems.Values);
+            items.AddRange(inventorySlot.InstantiatedItems.Values);
             UpdateVisual();
-            handScript.Drop();
+            handScript.CancelMove();
             if (items.Count > 0) {
                 tradeServiceClient.RequestAddItemsToTradeSlot(buttonIndex, items.Select(item => item.InstanceId).ToList());
             }

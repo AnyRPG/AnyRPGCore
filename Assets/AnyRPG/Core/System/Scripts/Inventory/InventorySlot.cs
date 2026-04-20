@@ -18,10 +18,13 @@ namespace AnyRPG {
         protected HandScript handScript = null;
         protected PlayerManagerClient playerManagerClient = null;
 
+        /*
         /// <summary>
         /// A referecne to the bag that this slot belongs to
         /// </summary>
+        /// no longer in use, now linked from SlotScript
         public BagPanel BagPanel { get; set; }
+        */
 
         public bool IsEmpty {
             get {
@@ -207,6 +210,16 @@ namespace AnyRPG {
             if (InstantiatedItem != null) {
                 InstantiatedItem.Use(sourceUnitController);
             }
+        }
+
+        public bool CanStackOrEmptyItem(InstantiatedItem instantiatedItem) {
+            if (!IsEmpty && instantiatedItem.Item.ResourceName == InstantiatedItem.Item.ResourceName && InstantiatedItems.Count < InstantiatedItem.Item.MaximumStackSize) {
+                return true;
+            }
+            if (IsEmpty) {
+                return true;
+            }
+            return false;
         }
 
         public bool StackItem(InstantiatedItem instantiatedItem) {

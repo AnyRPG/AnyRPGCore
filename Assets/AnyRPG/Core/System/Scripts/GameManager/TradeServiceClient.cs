@@ -12,6 +12,7 @@ namespace AnyRPG {
         public event Action<int> OnAddCurrencyToTrade = delegate { };
         public event Action OnCompleteTrade = delegate { };
         public event Action OnCancelTrade = delegate { };
+        public event Action<InventorySlot> OnRequestAddItemsToTrade = delegate { };
 
         private int targetCharacterId = 0;
         private UnitController targetUnitController = null;
@@ -77,6 +78,13 @@ namespace AnyRPG {
             this.targetCharacterId = sourceCharacterId;
             targetUnitController = characterManager.GetUnitController(UnitControllerMode.Player, sourceCharacterId);
             OnRequestBeginTrade();
+        }
+
+        public void RequestAddItemsToTrade(InventorySlot inventorySlot) {
+            //Debug.Log($"TradeServiceClient.RequestAddItemsToTrade({inventorySlot.items.Count})");
+
+            //networkManagerClient.RequestAddItemsToTrade(itemInstanceIdList);
+            OnRequestAddItemsToTrade(inventorySlot);
         }
 
         public void RequestAddItemsToTradeSlot(int buttonIndex, List<long> itemInstanceIdList) {

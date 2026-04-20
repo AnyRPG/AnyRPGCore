@@ -15,11 +15,11 @@ namespace AnyRPG {
         /// <summary>
         /// The currently focused nameplate so we can highlight the outline
         /// </summary>
-        private NamePlateUnit focus;
+        private Interactable focus;
 
         private List<NamePlateController> mouseOverList = new List<NamePlateController>();
 
-        private Dictionary<NamePlateUnit, NamePlateController> namePlates = new Dictionary<NamePlateUnit, NamePlateController>();
+        private Dictionary<Interactable, NamePlateController> namePlates = new Dictionary<Interactable, NamePlateController>();
 
         // game manager references
         private ObjectPooler objectPooler = null;
@@ -75,7 +75,7 @@ namespace AnyRPG {
             }
         }
 
-        public void SetFocus(NamePlateUnit newInteractable) {
+        public void SetFocus(Interactable newInteractable) {
             ClearFocus();
             //Debug.Log("NamePlateManager.SetFocus(" + characterUnit.MyCharacter.MyCharacterName + ")");
             if (namePlates.ContainsKey(newInteractable)) {
@@ -96,20 +96,20 @@ namespace AnyRPG {
             focus = null;
         }
 
-        public NamePlateController SpawnNamePlate(NamePlateUnit namePlateUnit, bool usePositionOffset) {
+        public NamePlateController SpawnNamePlate(Interactable interactable, bool usePositionOffset) {
             //Debug.Log($"NamePlateManager.SpawnNamePlate({namePlateUnit.gameObject.name})");
 
             NamePlateController namePlate = objectPooler.GetPooledObject(namePlatePrefab, namePlateContainer).GetComponent<NamePlateController>();
             namePlate.Configure(systemGameManager);
-            namePlates.Add(namePlateUnit, namePlate);
-            namePlate.SetNamePlateUnit(namePlateUnit, usePositionOffset);
+            namePlates.Add(interactable, namePlate);
+            namePlate.SetNamePlateUnit(interactable, usePositionOffset);
 
             // testing - so nameplates spawned after setting target don't end up in front of the target
             namePlate.transform.SetAsFirstSibling();
             return namePlate;
         }
 
-        public NamePlateController AddNamePlate(NamePlateUnit interactable, bool usePositionOffset) {
+        public NamePlateController AddNamePlate(Interactable interactable, bool usePositionOffset) {
             //Debug.Log($"NamePlateManager.AddNamePlate({interactable.gameObject.name})");
 
             if (namePlates.ContainsKey(interactable) == false) {
@@ -119,18 +119,18 @@ namespace AnyRPG {
             return namePlates[interactable];
         }
 
-        public void RemoveNamePlate(NamePlateUnit namePlateUnit) {
+        public void RemoveNamePlate(Interactable interactable) {
             //Debug.Log($"NamePlatemanager.RemoveNamePlate({namePlateUnit?.gameObject?.name})");
 
-            if (namePlates.ContainsKey(namePlateUnit)) {
+            if (namePlates.ContainsKey(interactable)) {
                 //Debug.Log($"NamePlatemanager.RemoveNamePlate({namePlateUnit.gameObject.name}) namePlates contains key");
-                if (namePlates[namePlateUnit] != null && namePlates[namePlateUnit].gameObject != null) {
-                    namePlates[namePlateUnit].OnSendObjectToPoolManual();
-                    objectPooler.ReturnObjectToPool(namePlates[namePlateUnit].gameObject);
+                if (namePlates[interactable] != null && namePlates[interactable].gameObject != null) {
+                    namePlates[interactable].OnSendObjectToPoolManual();
+                    objectPooler.ReturnObjectToPool(namePlates[interactable].gameObject);
                 } else {
                     //Debug.Log($"NamePlatemanager.RemoveNamePlate({namePlateUnit.gameObject.name}) could not find nameplate gameobject");
                 }
-                namePlates.Remove(namePlateUnit);
+                namePlates.Remove(interactable);
             } else {
                 //Debug.Log($"NamePlatemanager.RemoveNamePlate({namePlateUnit.gameObject.name}) namePlates did not contain key");
             }

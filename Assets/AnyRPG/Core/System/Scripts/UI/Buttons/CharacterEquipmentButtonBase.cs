@@ -104,7 +104,7 @@ namespace AnyRPG {
             }
         }
 
-        public void UpdateVisual(UnitController targetUnitController, bool resetDisplay = true) {
+        public void UpdateVisual(UnitController targetUnitController) {
             //Debug.Log($"{gameObject.name}CharacterButton.UpdateVisual()");
 
             InstantiatedEquipment tmpEquipment = equippedEquipment;

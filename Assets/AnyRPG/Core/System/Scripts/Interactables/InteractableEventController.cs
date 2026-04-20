@@ -31,6 +31,8 @@ namespace AnyRPG {
         public event Action<bool> OnLootableNodeSpawnObjectSetActive = delegate { };
         public event Action<bool> OnActivatableObjectSetActive = delegate { };
         public event Action<List<InstantiatedItem>> OnSetDroppedItems = delegate { };
+        public event Action<int, long> OnRemoveItemFromStorageContainerSlot = delegate { };
+        public event Action<int, long> OnAddItemToStorageContainerSlot = delegate { };
 
         // interactable this controller is attached to
         private Interactable interactable;
@@ -147,6 +149,14 @@ namespace AnyRPG {
 
         public void NotifyOnSetDroppedItems(List<InstantiatedItem> itemsToDrop) {
             OnSetDroppedItems(itemsToDrop);
+        }
+
+        public void NotifyOnRemoveItemFromStorageContainerSlot(int slotIndex, InstantiatedItem instantiatedItem) {
+            OnRemoveItemFromStorageContainerSlot(slotIndex, instantiatedItem.InstanceId);
+        }
+
+        public void NotifyOnAddItemToStorageContainerSlot(int slotIndex, InstantiatedItem instantiatedItem) {
+            OnAddItemToStorageContainerSlot(slotIndex, instantiatedItem.InstanceId);
         }
 
 

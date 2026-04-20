@@ -47,6 +47,7 @@ namespace AnyRPG {
         // game manager references
         private TradeServiceClient tradeServiceClient = null;
         private PlayerManagerClient playerManagerClient = null;
+        private MessageFeedManager messageFeedManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -100,6 +101,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             tradeServiceClient = systemGameManager.TradeServiceClient;
             playerManagerClient = systemGameManager.PlayerManagerClient;
+            messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
         }
 
         private void HandleRecalculateBaseCurrency() {
@@ -148,6 +150,7 @@ namespace AnyRPG {
         public override void ProcessOpenWindowNotification() {
             base.ProcessOpenWindowNotification();
             currencyBarController.UpdateCurrencyAmount(systemConfigurationManager.DefaultCurrencyGroup.BaseCurrency, 0);
+            tradeServiceClient.OnRequestAddItemsToTrade += HandleRequestAddItemsToTrade;
         }
 
         public override void ReceiveClosedWindowNotification() {
@@ -157,6 +160,20 @@ namespace AnyRPG {
             tradeServiceClient.RequestCancelTrade();
             currencyEntryBarController.ResetCurrencyAmounts();
             confirmButton.Button.interactable = true;
+            tradeServiceClient.OnRequestAddItemsToTrade -= HandleRequestAddItemsToTrade;
+        }
+
+        private void HandleRequestAddItemsToTrade(InventorySlot inventorySlot) {
+            //Debug.Log($"TradePanel.HandleRequestAddItemsToTrade({inventorySlot})");
+
+            // iterate attachment buttons and find on that is empty, then add the item to that button
+            foreach (TradeButton button in playerTradeButtons) {
+                if (button.Items.Count == 0) {
+                    button.AddItemFromInventorySlot(inventorySlot);
+                    return;
+                }
+            }
+            messageFeedManager.WriteMessage("No more trade slots available");
         }
 
         public void ConfirmAction() {

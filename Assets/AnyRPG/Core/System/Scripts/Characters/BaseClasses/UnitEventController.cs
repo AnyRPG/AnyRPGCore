@@ -46,7 +46,7 @@ namespace AnyRPG {
         public event System.Action<InteractableOptionComponent> OnStopInteractWithOption = delegate { };
         public event System.Action OnDropCombat = delegate { };
         public event System.Action<UnitController> OnBeginCastOnEnemy = delegate { };
-        public event System.Action<float, float, float, float> OnCalculateRunSpeed = delegate { };
+        //public event System.Action<float, float, float, float> OnCalculateRunSpeed = delegate { };
         public event System.Action<AbilityEffectContext> OnImmuneToEffect = delegate { };
         public event System.Action<UnitController, int, int> OnGainXP = delegate { };
         public event System.Action<PowerResource, int, CombatMagnitude, AbilityEffectContext> OnRecoverResource = delegate { };
@@ -56,7 +56,7 @@ namespace AnyRPG {
         public event System.Action OnStatChanged = delegate { };
         public event System.Action<float> OnReviveBegin = delegate { };
         //public event System.Action OnCombatUpdate = delegate { };
-        public event System.Action<Interactable> OnEnterCombat = delegate { };
+        public event System.Action<UnitController> OnEnterCombat = delegate { };
         public event System.Action<UnitController, Interactable> OnHitEvent = delegate { };
         public event System.Action<Interactable, AbilityEffectContext> OnReceiveCombatMiss = delegate { };
         public event System.Action<UnitController, UnitController, float> OnKillEvent = delegate { };
@@ -119,6 +119,7 @@ namespace AnyRPG {
         public event System.Action<InstantiatedItem> OnRequestDeleteItem = delegate { };
         public event System.Action<InstantiatedItem> OnDeleteItem = delegate { };
         public event System.Action<InstantiatedEquipment, EquipmentSlotProfile> OnRequestEquipToSlot = delegate { };
+        public event System.Action<InstantiatedEquipment> OnRequestEquip = delegate { };
         //public event System.Action<EquipmentSlotProfile> OnRequestUnequipFromList = delegate { };
         public event System.Action<EquipmentSlotProfile, InstantiatedEquipment> OnAddEquipment = delegate { };
         public event System.Action<EquipmentSlotProfile, InstantiatedEquipment> OnRemoveEquipment = delegate { };
@@ -198,6 +199,12 @@ namespace AnyRPG {
         public event Action<int> OnRequestDropItemOnGround = delegate { };
         public event Action OnCarryWeightChanged = delegate { };
         public event Action<bool> OnEncumberedChange = delegate { };
+        public event Action<Interactable, int, int> OnRequestSwapItemsInStorageContainerSlots = delegate { };
+        public event Action<StorageContainerComponent, int, int, bool> OnRequestSwapItemToStorageContainer = delegate { };
+        public event Action<StorageContainerComponent, int, bool> OnRequestMoveItemToStorageContainer = delegate { };
+        public event Action<StorageContainerComponent, int> OnRequestMoveItemFromStorageContainer = delegate { };
+        public event Action<InstantiatedBag, int, bool> OnRequestEquipBagFromSlot = delegate { };
+        public event Action<InstantiatedEquipment> OnRequestUnequip = delegate { };
 
         //public event System.Action<BaseAbilityProperties, Interactable> OnTargetInAbilityRangeFail = delegate { };
 
@@ -314,7 +321,7 @@ namespace AnyRPG {
             OnHitEvent(source, target);
         }
 
-        public void NotifyOnEnterCombat(Interactable target) {
+        public void NotifyOnEnterCombat(UnitController target) {
             OnEnterCombat(target);
         }
 
@@ -356,9 +363,11 @@ namespace AnyRPG {
             OnImmuneToEffect(abilityEffectContext);
         }
 
+        /*
         public void NotifyOnCalculateRunSpeed(float oldRunSpeed, float currentRunSpeed, float oldSprintSpeed, float currentSprintSpeed) {
             OnCalculateRunSpeed(oldRunSpeed, currentRunSpeed, oldSprintSpeed, currentSprintSpeed);
         }
+        */
 
         public void NotifyOnBeginCastOnEnemy(UnitController unitController) {
             OnBeginCastOnEnemy(unitController);
@@ -722,6 +731,12 @@ namespace AnyRPG {
             //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnRequestEquipToSlot({equipmentSlotProfile.ResourceName}, {newEquipment.Item.ResourceName})");
 
             OnRequestEquipToSlot(newEquipment, equipmentSlotProfile);
+        }
+
+        public void NotifyOnRequestEquip(InstantiatedEquipment newEquipment) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnRequestEquipToSlot({equipmentSlotProfile.ResourceName}, {newEquipment.Item.ResourceName})");
+
+            OnRequestEquip(newEquipment);
         }
 
         /*
@@ -1093,6 +1108,32 @@ namespace AnyRPG {
         public void NotifyOnEncumberedChange(bool isEncumbered) {
             OnEncumberedChange(isEncumbered);
         }
+
+        public void NotifyOnRequestSwapItemsInStorageContainerSlots(Interactable interactable, int fromSlotIndex, int toSlotIndex) {
+            OnRequestSwapItemsInStorageContainerSlots(interactable, fromSlotIndex, toSlotIndex);
+        }
+
+        public void NotifyOnRequestSwapItemToStorageContainer(StorageContainerComponent storageContainerComponent, int toSlotIndex, int fromSlotIndex, bool isBankSlot) {
+            OnRequestSwapItemToStorageContainer(storageContainerComponent, toSlotIndex, fromSlotIndex, isBankSlot);
+        }
+
+        public void NotifyOnRequestMoveItemToStorageContainer(StorageContainerComponent storageContainerComponent, int fromSlotIndex, bool isBankSlot) {
+            OnRequestMoveItemToStorageContainer(storageContainerComponent, fromSlotIndex, isBankSlot);
+        }
+
+        public void NotifyOnRequestMoveItemFromStorageContainer(StorageContainerComponent storageContainerComponent, int fromSlotIndex) {
+            OnRequestMoveItemFromStorageContainer(storageContainerComponent, fromSlotIndex);
+        }
+
+        public void NotifyOnRequestEquipBagFromSlot(InstantiatedBag instantiatedBag, int slotIndex, bool isBankSlot) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnRequestEquipBagFromSlot({instantiatedBag.Item.ResourceName}, slotIndex: {slotIndex}, isBankSlot: {isBankSlot})");
+            OnRequestEquipBagFromSlot(instantiatedBag, slotIndex, isBankSlot);
+        }
+
+        public void NotifyOnRequestUnequip(InstantiatedEquipment instantiatedEquipment) {
+            OnRequestUnequip(instantiatedEquipment);
+        }
+
 
         #endregion
 

@@ -5,9 +5,9 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace AnyRPG {
-    public class UnitController : NamePlateUnit, IAbilityCaster {
+    public class UnitController : Interactable, IAbilityCaster {
 
-        public override event Action OnCameraTargetReady = delegate { };
+        public event Action OnCameraTargetReady = delegate { };
 
         [Header("Unit Controller")]
 
@@ -416,7 +416,6 @@ namespace AnyRPG {
             }
         }
 
-
         public override float InteractionMaxRange {
             get {
                 //Debug.Log($"{gameObject.name}.UnitController.InteractionMaxRange: unitProfile.InteractionMaxRange: {(unitProfile != null ? unitProfile.InteractionMaxRange.ToString() : "null")} base.InteractionMaxRange: {base.InteractionMaxRange}");
@@ -427,7 +426,7 @@ namespace AnyRPG {
             }
         }
 
-        public override bool CameraTargetReady {
+        public bool CameraTargetReady {
             get {
                 return unitModelController.ModelCreated && unitModelController.IsBuilding() == false;
             }
@@ -595,6 +594,24 @@ namespace AnyRPG {
 
         }
 
+        public override Color GetGlowColor() {
+            return Faction.GetFactionColor(playerManagerClient, this);
+        }
+
+        public override Color GetDescriptionColor() {
+            if (NamePlateController != null && NamePlateController.Faction != null) {
+                return Faction.GetFactionColor(playerManagerClient, this);
+            }
+            return base.GetDescriptionColor();
+        }
+
+        public override string GetTitleString() {
+            if (NamePlateController != null && NamePlateController.Faction != null) {
+                return "\n" + NamePlateController.Faction.DisplayName;
+            }
+            return base.GetTitleString();
+        }
+
         protected override void CheckEnableInteractableRange() {
             // do nothing here, unit controller will handle enabling and disabling the interactable range based on the unit controller mode
         }
@@ -607,20 +624,20 @@ namespace AnyRPG {
             }
         }
 
-        public override void ConfigureUnitFrame(UnitFramePanel unitFramePanelBase, bool previewCameraExists) {
+        public void ConfigureUnitFrame(UnitFramePanel unitFramePanelBase, bool previewCameraExists) {
             //Debug.Log($"{gameObject.name}.UnitController.ConfigureUnitFrame()");
 
-            if (unitProfile != null && (unitProfile.UnitPrefabProps.NamePlateProps.UseSnapShot == false || previewCameraExists == false)) {
+            if (unitProfile != null && (unitProfile.UnitPrefabProps.UnitFrameProps.UseSnapShot == false || previewCameraExists == false)) {
                 unitFramePanelBase.ConfigurePortrait(unitProfile.Icon);
                 return;
             }
 
-            base.ConfigureUnitFrame(unitFramePanelBase, previewCameraExists);
+            unitFramePanelBase.ConfigureSnapshotPortrait();
         }
 
         public override void ConfigureDialogPanel(DialogPanel dialogPanelController) {
 
-            if (unitProfile != null && unitProfile.UnitPrefabProps.NamePlateProps.UseSnapShot == false) {
+            if (unitProfile != null && unitProfile.UnitPrefabProps.UnitFrameProps.UseSnapShot == false) {
                 dialogPanelController.ConfigurePortrait(unitProfile.Icon);
                 return;
             }
@@ -1841,13 +1858,13 @@ namespace AnyRPG {
             topNode.aggroValue = Mathf.Clamp(topNode.aggroValue, 0, float.MaxValue);
             if (Target == null) {
                 //Debug.Log($"{gameObject.name}.AIController.UpdateTarget(): target was null.  setting target: " + topNode.aggroTarget.gameObject.name);
-                SetTarget(topNode.aggroTarget.Interactable);
+                SetTarget(topNode.aggroTarget);
                 return;
             }
-            if (Target != topNode.aggroTarget.Interactable) {
+            if (Target != topNode.aggroTarget) {
                 //Debug.Log($"{gameObject.name}.AIController.UpdateTarget(): " + topNode.aggroTarget.gameObject.name + "[" + topNode.aggroValue + "] stole agro from " + MyTarget);
                 ClearTarget();
-                SetTarget(topNode.aggroTarget.Interactable);
+                SetTarget(topNode.aggroTarget);
             }
         }
 
@@ -2142,8 +2159,8 @@ namespace AnyRPG {
         /// This function is called only by entry into an aggro range collider
         /// </summary>
         /// <param name="aggroTarget"></param>
-        public void ProximityAggro(CharacterUnit aggroTarget) {
-            //Debug.Log($"{gameObject.name}.UnitController.ProximityAggro({aggroTarget.UnitController.gameObject.name})");
+        public void ProximityAggro(UnitController aggroTarget) {
+            //Debug.Log($"{gameObject.name}.UnitController.ProximityAggro({aggroTarget.gameObject.name})");
 
             if (characterCombat.GetInCombat() == true) {
                 //Debug.Log($"{gameObject.name}.UnitController.ProximityAggro(): already in combat");
@@ -2160,7 +2177,7 @@ namespace AnyRPG {
 
         }
 
-        public bool Aggro(CharacterUnit aggroTarget) {
+        public bool Aggro(UnitController aggroTarget) {
             //Debug.Log($"{gameObject.name}.UnitController.Aggro({aggroTarget.DisplayName})");
 
             // at this level, we are just pulling both parties into combat.
@@ -2170,7 +2187,7 @@ namespace AnyRPG {
                 return false;
             }
 
-            if (aggroTarget.UnitController.CharacterCombat == null) {
+            if (aggroTarget.CharacterCombat == null) {
                 //Debug.Log("no character combat on target");
                 return false;
             }
@@ -2185,9 +2202,9 @@ namespace AnyRPG {
             }
 
             // moved liveness check into EnterCombat to centralize logic because there are multiple entry points to EnterCombat
-            aggroTarget.UnitController.CharacterCombat.PullIntoCombat(this);
+            aggroTarget.CharacterCombat.PullIntoCombat(this);
 
-            return characterCombat.PullIntoCombat(aggroTarget.UnitController);
+            return characterCombat.PullIntoCombat(aggroTarget);
 
             //return false;
         }
@@ -2525,6 +2542,8 @@ namespace AnyRPG {
         }
 
         public void HandleMovementSpeedUpdate() {
+            //Debug.Log($"{gameObject.name}.UnitController.HandleMovementSpeedUpdate() new speed: {MovementSpeed}");
+
             if (UnitMotor != null) {
                 UnitMotor.MovementSpeed = MovementSpeed;
             }
@@ -2697,6 +2716,7 @@ namespace AnyRPG {
                 return;
             }
             isEncumbered = newValue;
+            HandleMovementSpeedUpdate();
             unitEventController.NotifyOnEncumberedChange(isEncumbered);
         }
 

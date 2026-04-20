@@ -162,12 +162,12 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.UnitFramePanelBase.InitializePosition()");
 
             if (previewManager.UnitController != null) {
-                cameraPositionOffset = previewManager.UnitController.NamePlateController.UnitFrameCameraPositionOffset;
+                cameraPositionOffset = previewManager.UnitController.UnitProfile.UnitPrefabProps.UnitFrameProps.UnitFrameCameraPositionOffset;
             } else {
                 cameraPositionOffset = cameraPositionOffsetDefault;
             }
-            if (previewManager.UnitController.NamePlateController.UnitFrameCameraLookOffset != null) {
-                cameraLookOffset = previewManager.UnitController.NamePlateController.UnitFrameCameraLookOffset;
+            if (previewManager.UnitController.UnitProfile.UnitPrefabProps.UnitFrameProps.UnitFrameCameraLookOffset != null) {
+                cameraLookOffset = previewManager.UnitController.UnitProfile.UnitPrefabProps.UnitFrameProps.UnitFrameCameraLookOffset;
             } else {
                 cameraLookOffset = cameraLookOffsetDefault;
             }
@@ -207,8 +207,8 @@ namespace AnyRPG {
 
         private void GetFollowTarget() {
             //Debug.Log($"{gameObject.name}.UnitFramePanelBase.WaitForFollowTarget()");
-            Transform targetBone = previewManager.UnitController.NamePlateController.NamePlateUnit.transform;
-            string unitFrameTarget = previewManager.UnitController.NamePlateController.UnitFrameTarget;
+            Transform targetBone = previewManager.UnitController.NamePlateController.Interactable.transform;
+            string unitFrameTarget = previewManager.UnitController.UnitProfile.UnitPrefabProps.UnitFrameProps.UnitFrameTarget;
             //Debug.Log("Unit Frame: Searching for target: " + unitFrameTarget);
             if (unitFrameTarget != string.Empty) {
                 if (previewManager.UnitController.gameObject != null) {

@@ -214,15 +214,15 @@ namespace AnyRPG {
             if (LootHolder.LootTableStates.Count > 0) {
                 foreach (AggroNode aggroNode in characterUnit.UnitController.CharacterCombat.AggroTable.AggroNodes) {
                     // only drop loot for the aggro target if it is a player
-                    if (playerManagerServer.ActiveUnitControllerLookup.ContainsKey(aggroNode.aggroTarget.UnitController)) {
+                    if (playerManagerServer.ActiveUnitControllerLookup.ContainsKey(aggroNode.aggroTarget)) {
                         //lootCount += GetLootCount(aggroNode.aggroTarget.UnitController);
-                        List <LootDrop> lootDrops = DropLoot(aggroNode.aggroTarget.UnitController);
+                        List <LootDrop> lootDrops = DropLoot(aggroNode.aggroTarget);
                         // turn the list of lootDrops into a new list of lootDropIds
                         List<int> lootDropIds = new List<int>();
                         foreach (LootDrop lootDrop in lootDrops) {
                             lootDropIds.Add(lootDrop.LootDropId);
                         }
-                        LootDropIdList lootDropList = new LootDropIdList(playerManagerServer.ActiveUnitControllerLookup[aggroNode.aggroTarget.UnitController], lootDropIds);
+                        LootDropIdList lootDropList = new LootDropIdList(playerManagerServer.ActiveUnitControllerLookup[aggroNode.aggroTarget], lootDropIds);
                         lootDropIdLookup.Add(lootDropList.AccountId, lootDropList);
                         lootCount += lootDropIds.Count;
                     }

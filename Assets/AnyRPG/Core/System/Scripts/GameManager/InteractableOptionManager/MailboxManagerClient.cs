@@ -12,6 +12,7 @@ namespace AnyRPG {
         public event Action OnNewUnreadMail = delegate { };
         public event Action OnAllMailIsRead = delegate { };
         public event Action<int> OnMarkMessageAsRead = delegate { };
+        public event Action<InventorySlot> OnRequestAddAttachment = delegate { };
 
         private MailMessageRequest savedMessageRequest = null;
 
@@ -149,6 +150,10 @@ namespace AnyRPG {
 
         public void AdvertiseMailSend() {
             OnMailSend();
+        }
+
+        public void RequestAddAttachment(InventorySlot inventorySlot) {
+            OnRequestAddAttachment(inventorySlot);
         }
     }
 

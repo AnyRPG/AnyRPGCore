@@ -40,10 +40,9 @@ namespace AnyRPG {
         }
 
         public void AddBag(InstantiatedBag instantiatedBag) {
-            //Debug.Log("BagNode.AddBag()");
+            //Debug.Log($"BagNode.AddBag({instantiatedBag.ResourceName})");
 
             this.instantiatedBag = instantiatedBag;
-            //inventorySlots = bagPanel.AddSlots(bag.Slots);
             if (isBankNode) {
                 inventorySlots = characterInventoryManager.AddBankSlots(instantiatedBag.Slots);
             } else {

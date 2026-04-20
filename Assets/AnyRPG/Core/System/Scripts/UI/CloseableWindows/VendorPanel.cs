@@ -36,7 +36,7 @@ namespace AnyRPG {
         protected UIManager uIManager = null;
         protected MessageFeedManager messageFeedManager = null;
         protected CurrencyConverter currencyConverter = null;
-        protected VendorManagerClient vendorManager = null;
+        protected VendorManagerClient vendorManagerClient = null;
         protected NetworkManagerClient NetworkManagerClient = null;
 
         //protected List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
@@ -67,7 +67,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
             currencyConverter = systemGameManager.CurrencyConverter;
-            vendorManager = systemGameManager.VendorManagerClient;
+            vendorManagerClient = systemGameManager.VendorManagerClient;
             NetworkManagerClient = systemGameManager.NetworkManagerClient;
         }
 
@@ -144,15 +144,15 @@ namespace AnyRPG {
         public override void ReceiveClosedWindowNotification() {
             //Debug.Log("VendorUI.OnCloseWindow()");
             base.ReceiveClosedWindowNotification();
-            if (vendorManager.VendorComponent?.Interactable != null) {
+            if (vendorManagerClient.VendorComponent?.Interactable != null) {
                 // if we got kicked off the server the window can be closed after the vendor despawns
-                vendorManager.VendorComponent.Interactable.InteractableEventController.OnAddToBuyBackCollection -= HandleAddtoBuyBackCollection;
-                vendorManager.VendorComponent.Interactable.InteractableEventController.OnSellItemToPlayer -= HandleBuyItemFromVendor;
+                vendorManagerClient.VendorComponent.Interactable.InteractableEventController.OnAddToBuyBackCollection -= HandleAddtoBuyBackCollection;
+                vendorManagerClient.VendorComponent.Interactable.InteractableEventController.OnSellItemToPlayer -= HandleBuyItemFromVendor;
             }
             ClearButtons();
             ClearPages();
             ClearVendorCollections();
-            vendorManager.EndInteraction();
+            vendorManagerClient.EndInteraction();
         }
 
         public override void ProcessOpenWindowNotification() {
@@ -165,9 +165,9 @@ namespace AnyRPG {
             LoadPage(0);
             OnPageCountUpdate(false);
 
-            PopulateDropDownList(vendorManager.VendorProps.VendorCollections);
-            vendorManager.VendorComponent.Interactable.InteractableEventController.OnAddToBuyBackCollection += HandleAddtoBuyBackCollection;
-            vendorManager.VendorComponent.Interactable.InteractableEventController.OnSellItemToPlayer += HandleBuyItemFromVendor;
+            PopulateDropDownList(vendorManagerClient.VendorProps.VendorCollections);
+            vendorManagerClient.VendorComponent.Interactable.InteractableEventController.OnAddToBuyBackCollection += HandleAddtoBuyBackCollection;
+            vendorManagerClient.VendorComponent.Interactable.InteractableEventController.OnSellItemToPlayer += HandleBuyItemFromVendor;
         }
 
         public void UpdateCurrencyAmount() {
@@ -186,7 +186,7 @@ namespace AnyRPG {
             UpdateCurrencyAmount();
             dropDownIndex = 1;
             this.vendorCollections = new List<VendorCollection>(1 + vendorCollections.Count);
-            this.vendorCollections.Add(vendorManager.VendorComponent.GetBuyBackCollection(NetworkManagerClient.AccountId));
+            this.vendorCollections.Add(vendorManagerClient.VendorComponent.GetBuyBackCollection(NetworkManagerClient.AccountId));
             this.vendorCollections.AddRange(vendorCollections);
             dropdown.ClearOptions();
             List<string> vendorCollectionNames = new List<string>();
@@ -222,20 +222,13 @@ namespace AnyRPG {
             OnPageCountUpdate(false);
         }
 
+        /*
         public bool SellItem(InstantiatedItem instantiatedItem) {
-            vendorManager.RequestSellItemToVendor(playerManagerClient.UnitController, instantiatedItem);
+            vendorManagerClient.RequestSellItemToVendor(playerManagerClient.UnitController, instantiatedItem);
 
-            /*
-            if (systemConfigurationManager.VendorAudioClip != null) {
-                audioManager.PlayEffect(systemConfigurationManager.VendorAudioClip);
-            }
-
-            if (dropDownIndex == 0) {
-                RefreshPage();
-            }
-            */
             return true;
         }
+        */
 
         public void HandleAddtoBuyBackCollection(UnitController controller, InstantiatedItem item) {
             if (systemConfigurationManager.VendorAudioClip != null) {

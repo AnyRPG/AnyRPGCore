@@ -110,16 +110,16 @@ namespace AnyRPG {
 
         protected override void HandleLeftClick() {
             if (playerManagerClient.UnitController.CharacterInventoryManager.FromSlot != null) {
-                AddItemFromInventorySlot();
+                AddItemFromInventorySlot(playerManagerClient.UnitController.CharacterInventoryManager.FromSlot.InventorySlot);
                 return;
             }
         }
 
-        public void AddItemFromInventorySlot() {
+        public void AddItemFromInventorySlot(InventorySlot inventorySlot) {
             //Debug.Log("SlotScript.DropItemFromInventorySlot()");
 
             // check that items do not already exist in the mail message
-            foreach (InstantiatedItem item in playerManagerClient.UnitController.CharacterInventoryManager.FromSlot.InventorySlot.InstantiatedItems.Values) {
+            foreach (InstantiatedItem item in inventorySlot.InstantiatedItems.Values) {
                 if (mailComposePanel.HasItemInstanceId(item.InstanceId)) {
                     //Debug.Log("SlotScript.DropItemFromInventorySlot(): item already exists in mail message");
                     return;
@@ -128,9 +128,9 @@ namespace AnyRPG {
 
             //Debug.Log("Dropping an item from an inventory slot");
             items.Clear();
-            items.AddRange(playerManagerClient.UnitController.CharacterInventoryManager.FromSlot.InventorySlot.InstantiatedItems.Values);
+            items.AddRange(inventorySlot.InstantiatedItems.Values);
             UpdateVisual();
-            handScript.Drop();
+            handScript.CancelMove();
             OnAddAttachment();
         }
 

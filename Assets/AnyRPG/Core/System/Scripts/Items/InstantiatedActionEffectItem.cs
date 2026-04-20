@@ -27,6 +27,10 @@ namespace AnyRPG {
 
         }
 
+        public override bool IsUseable() {
+            return true;
+        }
+
     }
 
 }
