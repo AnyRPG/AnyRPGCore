@@ -329,6 +329,10 @@ namespace AnyRPG {
 
         public void ClearAllItems() {
             foreach (InventorySlot inventorySlot in inventorySlots) {
+                // remove the items from the database
+                foreach (InstantiatedItem instantiatedItem in inventorySlot.InstantiatedItems.Values) {
+                    serverDataService.DeleteItemInstance(instantiatedItem);
+                }
                 inventorySlot.RemoveAllItems();
             }
         }
@@ -463,6 +467,7 @@ namespace AnyRPG {
                 InstantiatedItem instantiatedItem = systemItemManager.GetNewInstantiatedItem(loot.Item);
                 if (instantiatedItem != null) {
                     AddItem(instantiatedItem);
+                    serverDataService.CreateItemInstance(instantiatedItem);
                 }
                 if (lootGroupUnlimitedDrops == false && ignoreDropLimit == false) {
                     lootGroupRemainingDrops = lootGroupRemainingDrops - 1;
