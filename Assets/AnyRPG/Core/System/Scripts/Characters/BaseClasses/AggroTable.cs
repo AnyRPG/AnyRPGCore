@@ -27,8 +27,10 @@ namespace AnyRPG {
                 foreach (AggroNode node in aggroNodes) {
                     if (node.aggroTarget?.gameObject == null
                         || node.aggroTarget.gameObject.activeInHierarchy == false
-                        || Faction.RelationWith(node.aggroTarget, unitController) > -1
-                        || node.aggroTarget.CharacterStats.IsAlive == false) {
+                        || node.aggroTarget.IsInitialized == false
+                        || node.aggroTarget.CharacterStats.IsAlive == false
+                        || Faction.RelationWith(node.aggroTarget, unitController) > -1) {
+                        Debug.Log($"AggroTable.TopAgroNode: isInitialized: {node.aggroTarget.IsInitialized}");
                         //Debug.Log(node.aggroTarget.name + ". alive: " + node.aggroTarget.MyCharacter.MyCharacterStats.IsAlive);
                         // we could be in combat with someone who has switched faction from a faction buff mid combat or died
                         removeNodes.Add(node);
