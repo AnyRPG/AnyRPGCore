@@ -64,6 +64,7 @@ namespace AnyRPG {
         protected TradeServiceServer tradeServiceServer = null;
         protected GuildServiceServer guildServiceServer = null;
         protected SceneUtilityService sceneUtilityService = null;
+        protected ServerDataService serverDataService = null;
 
         /// <summary>
         /// accountId, PlayerCharacterMonitor
@@ -281,6 +282,7 @@ namespace AnyRPG {
 
         }
 
+        // this is only called by gain item command
         public void AddItem(string itemName, int accountId) {
             if (activeUnitControllersByAccountId.ContainsKey(accountId) == false) {
                 return;
@@ -288,7 +290,9 @@ namespace AnyRPG {
 
             InstantiatedItem tmpItem = activeUnitControllersByAccountId[accountId].CharacterInventoryManager.GetNewInstantiatedItem(itemName);
             if (tmpItem != null) {
-                activeUnitControllersByAccountId[accountId].CharacterInventoryManager.AddItem(tmpItem, false);
+                if (activeUnitControllersByAccountId[accountId].CharacterInventoryManager.AddItem(tmpItem, false)) {
+                    serverDataService.CreateItemInstance(tmpItem);
+                }
             }
         }
 
