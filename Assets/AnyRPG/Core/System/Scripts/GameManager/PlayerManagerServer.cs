@@ -291,7 +291,7 @@ namespace AnyRPG {
 
             InstantiatedItem tmpItem = activeUnitControllersByAccountId[accountId].CharacterInventoryManager.GetNewInstantiatedItem(itemName);
             if (tmpItem != null) {
-                if (activeUnitControllersByAccountId[accountId].CharacterInventoryManager.AddItem(tmpItem, false)) {
+                if (activeUnitControllersByAccountId[accountId].CharacterInventoryManager.AddItem(tmpItem, false) && networkManagerServer.ServerModeActive == true) {
                     serverDataService.CreateItemInstance(tmpItem);
                 }
             }

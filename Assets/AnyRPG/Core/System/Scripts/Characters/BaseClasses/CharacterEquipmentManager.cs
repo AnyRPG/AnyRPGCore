@@ -135,7 +135,7 @@ namespace AnyRPG {
         }
 
         public void Equip(InstantiatedEquipment instantiatedEquipment) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.Equip({(instantiatedEquipment != null ? instantiatedEquipment.ResourceName : "null")})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.Equip({(instantiatedEquipment != null ? instantiatedEquipment.ResourceName : "null")})");
 
             if (instantiatedEquipment == null) {
                 Debug.LogWarning("Instructed to Equip a null item!");
@@ -150,7 +150,7 @@ namespace AnyRPG {
         }
 
         public bool Equip(InstantiatedEquipment newItem, EquipmentSlotProfile equipmentSlotProfile) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.Equip({(newItem != null ? newItem.ResourceName : "null")}, {(equipmentSlotProfile == null ? "null" : equipmentSlotProfile.DisplayName)})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.Equip({(newItem != null ? newItem.ResourceName : "null")}, {(equipmentSlotProfile == null ? "null" : equipmentSlotProfile.DisplayName)})");
 
             if (newItem == null) {
                 Debug.LogWarning("Instructed to Equip a null item!");

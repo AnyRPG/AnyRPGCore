@@ -467,7 +467,9 @@ namespace AnyRPG {
                 InstantiatedItem instantiatedItem = systemItemManager.GetNewInstantiatedItem(loot.Item);
                 if (instantiatedItem != null) {
                     AddItem(instantiatedItem);
-                    serverDataService.CreateItemInstance(instantiatedItem);
+                    if (networkManagerServer.ServerModeActive == true) {
+                        serverDataService.CreateItemInstance(instantiatedItem);
+                    }
                 }
                 if (lootGroupUnlimitedDrops == false && ignoreDropLimit == false) {
                     lootGroupRemainingDrops = lootGroupRemainingDrops - 1;
