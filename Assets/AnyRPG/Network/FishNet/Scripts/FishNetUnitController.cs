@@ -1855,14 +1855,14 @@ namespace AnyRPG {
         }
 
         public void HandleRequestEquipBagFromSlot(InstantiatedBag bag, int slotIndex, bool isBank) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRequestEquipBagFromSlot({bag.InstanceId}, {slotIndex}, {isBank})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.HandleRequestEquipBagFromSlot({bag.InstanceId}, {slotIndex}, {isBank})");
 
             RequestEquipBagFromSlot(bag.InstanceId, slotIndex, isBank);
         }
 
         [ServerRpc]
         public void RequestEquipBagFromSlot(long itemInstanceId, int slotIndex, bool isBank) {
-            Debug.Log($"{gameObject.name}.FishNetUnitController.RequestEquipBagFromSlot({itemInstanceId}, {slotIndex}, {isBank})");
+            //Debug.Log($"{gameObject.name}.FishNetUnitController.RequestEquipBagFromSlot({itemInstanceId}, {slotIndex}, {isBank})");
 
             if (systemItemManager.InstantiatedItems.ContainsKey(itemInstanceId) && systemItemManager.InstantiatedItems[itemInstanceId] is InstantiatedBag) {
                 unitController.CharacterInventoryManager.EquipBagFromSlot(systemItemManager.InstantiatedItems[itemInstanceId] as InstantiatedBag, slotIndex, isBank);

@@ -250,7 +250,7 @@ namespace AnyRPG {
         /// removes the item from the inventory system
         /// </summary>
         public void Remove() {
-            Debug.Log($"{ResourceName}.InstantiatedItem.Remove()");
+            //Debug.Log($"{ResourceName}.InstantiatedItem.Remove()");
 
             if (Slot != null) {
                 //Debug.Log("The item's myslot is not null");

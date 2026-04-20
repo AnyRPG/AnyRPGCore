@@ -18,7 +18,7 @@ namespace AnyRPG {
         }
 
         protected override void HandleLeftClick() {
-            Debug.Log("CharacterEquipmentButton.HandleLeftClick()");
+            //Debug.Log("CharacterEquipmentButton.HandleLeftClick()");
 
             base.HandleLeftClick();
 
@@ -71,7 +71,8 @@ namespace AnyRPG {
         }
 
         public void CancelHandscriptMove() {
-            Debug.Log("CharacterEquipmentButton.CancelHandscriptMove()");
+            //Debug.Log("CharacterEquipmentButton.CancelHandscriptMove()");
+
             UpdateVisual(playerManagerClient.UnitController);
         }
 

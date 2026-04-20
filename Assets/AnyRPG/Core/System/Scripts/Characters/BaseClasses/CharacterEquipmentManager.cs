@@ -386,7 +386,7 @@ namespace AnyRPG {
         }
 
         public void RequestEquip(InstantiatedEquipment instantiatedEquipment) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.RequestEquip({instantiatedEquipment.ResourceName})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.RequestEquip({instantiatedEquipment.ResourceName})");
 
             if (systemGameManager.GameMode == GameMode.Local) {
                 Equip(instantiatedEquipment);

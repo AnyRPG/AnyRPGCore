@@ -256,7 +256,7 @@ namespace AnyRPG {
         }
 
         public void CancelHandscriptMove() {
-            Debug.Log("BagButton.CancelHandscriptMove()");
+            //Debug.Log("BagButton.CancelHandscriptMove()");
         }
 
         protected override void HandleRightClick() {

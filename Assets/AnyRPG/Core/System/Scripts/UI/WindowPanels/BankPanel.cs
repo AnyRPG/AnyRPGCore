@@ -57,7 +57,7 @@ namespace AnyRPG {
         }
 
         public override void DropItemFromInventorySlot(SlotScript toSlot, SlotScript fromSlot) {
-            Debug.Log($"BankPanel.DropFromInventorySlot() toSlot: {toSlot.DisplayName} fromSlot: {fromSlot.DisplayName}");
+            //Debug.Log($"BankPanel.DropFromInventorySlot() toSlot: {toSlot.DisplayName} fromSlot: {fromSlot.DisplayName}");
 
             base.DropItemFromInventorySlot(toSlot, fromSlot);
 
@@ -110,7 +110,7 @@ namespace AnyRPG {
         }
 
         public override void PerformContextMenuAction(SlotScript slotScript, string actionName) {
-            Debug.Log($"InventoryPanel.PerformContextMenuAction() actionName: {actionName}");
+            //Debug.Log($"InventoryPanel.PerformContextMenuAction() actionName: {actionName}");
 
             base.PerformContextMenuAction(slotScript, actionName);
             switch (actionName) {

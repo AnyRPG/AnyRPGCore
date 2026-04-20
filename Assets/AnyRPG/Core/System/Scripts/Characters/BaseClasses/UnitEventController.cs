@@ -1126,7 +1126,7 @@ namespace AnyRPG {
         }
 
         public void NotifyOnRequestEquipBagFromSlot(InstantiatedBag instantiatedBag, int slotIndex, bool isBankSlot) {
-            Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnRequestEquipBagFromSlot({instantiatedBag.Item.ResourceName}, slotIndex: {slotIndex}, isBankSlot: {isBankSlot})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnRequestEquipBagFromSlot({instantiatedBag.Item.ResourceName}, slotIndex: {slotIndex}, isBankSlot: {isBankSlot})");
             OnRequestEquipBagFromSlot(instantiatedBag, slotIndex, isBankSlot);
         }
 

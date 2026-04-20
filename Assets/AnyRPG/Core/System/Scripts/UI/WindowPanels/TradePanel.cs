@@ -164,7 +164,8 @@ namespace AnyRPG {
         }
 
         private void HandleRequestAddItemsToTrade(InventorySlot inventorySlot) {
-            Debug.Log($"TradePanel.HandleRequestAddItemsToTrade({inventorySlot})");
+            //Debug.Log($"TradePanel.HandleRequestAddItemsToTrade({inventorySlot})");
+
             // iterate attachment buttons and find on that is empty, then add the item to that button
             foreach (TradeButton button in playerTradeButtons) {
                 if (button.Items.Count == 0) {

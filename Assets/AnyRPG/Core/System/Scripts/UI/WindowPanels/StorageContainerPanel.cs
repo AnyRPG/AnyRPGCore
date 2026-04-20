@@ -130,7 +130,7 @@ namespace AnyRPG {
         }
 
         public override void PerformContextMenuAction(SlotScript slotScript, string actionName) {
-            Debug.Log($"InventoryPanel.PerformContextMenuAction() actionName: {actionName}");
+            //Debug.Log($"InventoryPanel.PerformContextMenuAction() actionName: {actionName}");
 
             base.PerformContextMenuAction(slotScript, actionName);
             switch (actionName) {

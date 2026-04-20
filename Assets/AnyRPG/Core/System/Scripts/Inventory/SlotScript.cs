@@ -272,7 +272,7 @@ namespace AnyRPG {
         }
 
         public void CancelHandscriptMove() {
-            Debug.Log($"SlotScript.CancelHandscriptMove() instanceId: {GetInstanceID()}");
+            //Debug.Log($"SlotScript.CancelHandscriptMove() instanceId: {GetInstanceID()}");
 
             UpdateSlot();
         }

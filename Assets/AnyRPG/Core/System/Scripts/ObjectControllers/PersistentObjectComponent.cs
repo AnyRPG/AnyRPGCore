@@ -58,7 +58,7 @@ namespace AnyRPG {
         }
 
         public void Init() {
-            Debug.Log($"{persistentObjectOwner.gameObject.name}.Init() UUID is {persistentObjectOwner.UUID.ID}");
+            //Debug.Log($"{persistentObjectOwner.gameObject.name}.Init() UUID is {persistentObjectOwner.UUID.ID}");
 
             if (persistObjectPosition == false) {
                 return;

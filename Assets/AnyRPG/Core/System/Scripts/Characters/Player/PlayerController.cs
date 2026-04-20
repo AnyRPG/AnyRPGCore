@@ -1114,7 +1114,7 @@ namespace AnyRPG {
         }
 
         public void ProcessSetActiveUnitController() {
-            Debug.Log($"PlayerController.ProcessSetActiveUnitController() activeUnitController: {(playerManagerClient.ActiveUnitController == null ? "null" : playerManagerClient.ActiveUnitController.gameObject.name)}");
+            //Debug.Log($"PlayerController.ProcessSetActiveUnitController() activeUnitController: {(playerManagerClient.ActiveUnitController == null ? "null" : playerManagerClient.ActiveUnitController.gameObject.name)}");
             
             // this one captures the switch between mounted and normal states
             if (playerManagerClient.ActiveUnitController.UnitProfile.UnitPrefabProps.ForceRotateModelMode == true) {

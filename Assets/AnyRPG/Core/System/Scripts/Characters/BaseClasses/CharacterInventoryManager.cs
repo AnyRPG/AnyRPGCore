@@ -311,7 +311,7 @@ namespace AnyRPG {
 
 
         public (bool, BagNode) AddInventoryBag(InstantiatedBag instantiatedBag) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.AddInventoryBag({instantiatedBag.ResourceName})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.AddInventoryBag({instantiatedBag.ResourceName})");
 
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.InstantiatedBag == null) {
@@ -1250,7 +1250,7 @@ namespace AnyRPG {
         }
 
         public void RequestEquipBagFromSlot(InstantiatedBag instantiatedBag, InventorySlot inventorySlot, bool isBankSlot) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.RequestEquipBagFromSlot({instantiatedBag.ResourceName}, isBankSlot: {isBankSlot})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.RequestEquipBagFromSlot({instantiatedBag.ResourceName}, isBankSlot: {isBankSlot})");
             
             if (systemGameManager.GameMode == GameMode.Local) {
                 EquipBagFromSlot(instantiatedBag, inventorySlot, isBankSlot);
@@ -1266,7 +1266,7 @@ namespace AnyRPG {
         }
 
         public void EquipBagFromSlot(InstantiatedBag instantiatedBag, int slotIndex, bool isBank) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.EquipBagFromSlot({instantiatedBag.DisplayName}, {slotIndex}, {isBank})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.EquipBagFromSlot({instantiatedBag.DisplayName}, {slotIndex}, {isBank})");
 
             InventorySlot inventorySlot;
             if (isBank && bankSlots.Count > slotIndex) {
@@ -1280,7 +1280,7 @@ namespace AnyRPG {
         }
 
         public void EquipBagFromSlot(InstantiatedBag instantiatedBag, InventorySlot inventorySlot, bool isBank) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.EquipBagFromSlot({instantiatedBag.ResourceName}, {isBank})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterInventoryManager.EquipBagFromSlot({instantiatedBag.ResourceName}, {isBank})");
 
             if (inventorySlot.InstantiatedItem == null) {
                 return;

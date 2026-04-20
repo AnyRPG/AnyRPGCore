@@ -94,7 +94,7 @@ namespace AnyRPG {
         }
 
         public void CancelHandscriptMove() {
-            Debug.Log("AbilityButton.CancelHandscriptMove()");
+            //Debug.Log("AbilityButton.CancelHandscriptMove()");
         }
     }
 
