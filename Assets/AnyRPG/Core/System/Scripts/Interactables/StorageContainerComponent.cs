@@ -40,8 +40,11 @@ namespace AnyRPG {
 
         public void PerformSetupActivities() {
             InitializeDefaultInventorySlots();
-            //AddDefaultItems();
-            RollLoot();
+
+            // do not roll loot on network clients
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                RollLoot();
+            }
         }
 
         /*
@@ -375,18 +378,18 @@ namespace AnyRPG {
         }
 
         private void RollLoot() {
-            Debug.Log($"{interactable.gameObject.name}.StorageContainerComponent.RollLoot()");
+            //Debug.Log($"{interactable.gameObject.name}.StorageContainerComponent.RollLoot()");
 
             lootTableRemainingDrops = Props.ContainerLootTable.DropLimit;
             bool lootTableUnlimitedDrops = (Props.ContainerLootTable.DropLimit == 0);
 
             foreach (ContainerLootGroup lootGroup in Props.ContainerLootTable.LootGroups) {
-                Debug.Log($"{interactable.gameObject.name}.StorageContainerComponent.RollLoot(): checking loot group with chance {lootGroup.GroupChance} and drop limit {lootGroup.DropLimit}");
+                //Debug.Log($"{interactable.gameObject.name}.StorageContainerComponent.RollLoot(): checking loot group with chance {lootGroup.GroupChance} and drop limit {lootGroup.DropLimit}");
 
                 // check if this group can drop an item
                 float randomInt = UnityEngine.Random.Range(0, 100);
                 if (lootGroup.GroupChance > randomInt) {
-                    Debug.Log($"{interactable.gameObject.name}.StorageContainerComponent.RollLoot(): loot group passed chance check with random int {randomInt}");
+                    //Debug.Log($"{interactable.gameObject.name}.StorageContainerComponent.RollLoot(): loot group passed chance check with random int {randomInt}");
                     // unlimited drops settins for this loot group
                     int lootGroupRemainingDrops = lootGroup.DropLimit;
                     bool lootGroupUnlimitedDrops = (lootGroup.DropLimit == 0);
@@ -398,13 +401,13 @@ namespace AnyRPG {
                     List<ContainerLoot> validLoot = new List<ContainerLoot>(lootGroup.Loot);
 
                     if (lootGroup.GuaranteedDrop == true) {
-                        Debug.Log($"{interactable.gameObject.name}.StorageContainerComponent.RollLoot(): loot group has guaranteed drop");
+                        //Debug.Log($"{interactable.gameObject.name}.StorageContainerComponent.RollLoot(): loot group has guaranteed drop");
 
                         List<int> randomItemIndexes = new List<int>();
                         // guaranteed drops can never have a 0 drop limit, but shouldn't be unlimited because the chance is not random per item like non guaranteed drops
                         int maxCount = (int)Mathf.Min(Mathf.Clamp(lootGroup.DropLimit, 1, Mathf.Infinity), validLoot.Count);
                         while (randomItemIndexes.Count < maxCount) {
-                            Debug.Log($"{interactable.gameObject.name}.StorageContainerComponent.RollLoot(): rolling for guaranteed drop {randomItemIndexes.Count} of {maxCount}");
+                            //Debug.Log($"{interactable.gameObject.name}.StorageContainerComponent.RollLoot(): rolling for guaranteed drop {randomItemIndexes.Count} of {maxCount}");
 
                             // pure random
                             //int randomNumber = UnityEngine.Random.Range(0, lootGroup.Loot.Count);
@@ -459,7 +462,7 @@ namespace AnyRPG {
         }
 
         private void GetLootDrop(ContainerLoot loot, bool lootGroupUnlimitedDrops, bool ignoreDropLimit, bool lootTableUnlimitedDrops, ref int lootGroupRemainingDrops) {
-            Debug.Log($"LootTableState.GetLootDrop({interactable.gameObject.name}, {loot.Item.ResourceName}, unlimited: {lootGroupUnlimitedDrops}, {ignoreDropLimit}, {lootTableRemainingDrops})");
+            //Debug.Log($"LootTableState.GetLootDrop({interactable.gameObject.name}, {loot.Item.ResourceName}, unlimited: {lootGroupUnlimitedDrops}, {ignoreDropLimit}, {lootTableRemainingDrops})");
 
             List<InstantiatedItem> returnValue = new List<InstantiatedItem>();
             int itemCount = UnityEngine.Random.Range(loot.MinDrops, loot.MaxDrops + 1);
