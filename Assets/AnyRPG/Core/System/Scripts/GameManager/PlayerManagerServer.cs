@@ -113,6 +113,7 @@ namespace AnyRPG {
             tradeServiceServer = systemGameManager.TradeServiceServer;
             guildServiceServer = systemGameManager.GuildServiceServer;
             sceneUtilityService = systemGameManager.SceneUtilityService;
+            serverDataService = systemGameManager.ServerDataService;
         }
 
 
