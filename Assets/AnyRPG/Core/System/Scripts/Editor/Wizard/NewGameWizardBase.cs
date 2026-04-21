@@ -224,7 +224,7 @@ namespace AnyRPG {
 
             // Set default values of game properties just in case they are somehow missing
             if (gameVersion == null || gameVersion.Trim() == "") {
-                gameVersion = "0.1a";
+                gameVersion = "1.0";
                 Debug.Log("Empty game version.  Defaulting to " + gameVersion);
             }
 

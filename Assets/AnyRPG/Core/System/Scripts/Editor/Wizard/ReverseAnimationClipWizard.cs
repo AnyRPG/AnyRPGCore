@@ -44,7 +44,7 @@ namespace AnyRPG.EditorTools {
         private const string wizardTitle = "Reverse Animation Clip Wizard";
 
 
-        [MenuItem("Tools/AnyRPG/Reverse Animation Clip")]
+        [MenuItem("Tools/AnyRPG/Wizard/Reverse Animation Clip")]
         private static void CreateWizard() {
             ScriptableWizard.DisplayWizard<ReverseAnimationClipWizard>("Reverse Animation Clip", "Reverse");
         }

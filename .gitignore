@@ -88,6 +88,8 @@ Assets/UMA*
 Assets/UnusedExternalContent*
 AssetBundles/
 Assets/FishNet*
+Assets/AnyRPG/Addons/anyrpg-uma/
+Assets/AnyRPG/Addons/anymmo-fishnet/
 
 # AnyRPG User Created Game Content
 Assets/Games*

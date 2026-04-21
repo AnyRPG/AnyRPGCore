@@ -14,7 +14,7 @@ namespace AnyRPG {
         private Dictionary<string, Item> sourceItemDictionary = new Dictionary<string, Item>();
         private Dictionary<string, Item> targetItemDictionary = new Dictionary<string, Item>();
 
-        [MenuItem("Tools/AnyRPG/Wizard/Convert/Copy Item Pickup Property")]
+        //[MenuItem("Tools/AnyRPG/Wizard/Convert/Copy Item Pickup Property")]
         public static void CreateWizard() {
             ScriptableWizard.DisplayWizard<CopyItemPickupPropertyWizard>("New Copy Item Pickup Property Wizard", "Populate");
         }
