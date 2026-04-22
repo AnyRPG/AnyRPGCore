@@ -301,12 +301,6 @@ namespace AnyRPG {
 
                 GUILayout.FlexibleSpace();
 
-                // Show a warning if it's missing to remind them about the Asset Store
-                if (!installed) {
-                    GUIStyle warnStyle = new GUIStyle(EditorStyles.miniLabel) { normal = { textColor = new Color(1f, 0.7f, 0f) } };
-                    GUILayout.Label("Ensure it's in 'My Assets' first \u2192", warnStyle);
-                }
-
                 GUI.enabled = enabled;
                 // Changing "Open Store" to "Install Package" logic
                 if (GUILayout.Button("Install Package", GUILayout.MinWidth(120), GUILayout.Height(22))) {
