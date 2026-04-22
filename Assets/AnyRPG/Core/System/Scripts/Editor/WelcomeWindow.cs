@@ -167,9 +167,8 @@ namespace AnyRPG {
             // 1. PREREQUISITES
             GUILayout.BeginVertical("box");
             EditorGUILayout.LabelField("1. Prerequisites", EditorStyles.boldLabel);
-            bool hasTMP = System.Type.GetType("TMPro.TMP_Settings, Unity.TextMeshPro") != null;
 
-            if (hasTMP) {
+            if (IsTextMeshProInstalled()) {
                 DrawCustomInfoBox("TextMesh Pro Essentials are installed and ready.", "console.infoicon");
             } else {
                 DrawCustomInfoBox("AnyRPG requires TextMesh Pro Essentials. Please import them to continue.", "console.warnicon");
@@ -201,6 +200,24 @@ namespace AnyRPG {
             }
             GUILayout.EndVertical();
         }
+
+        private bool IsTextMeshProInstalled() {
+            // 1. Check for the physical "TMP Settings" asset. 
+            // This is the most reliable way to know if "Essentials" were imported.
+            string settingsPath = "Assets/TextMesh Pro/Resources/TMP Settings.asset";
+            bool hasSettings = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(settingsPath) != null;
+
+            // 2. Check for the core Package in the Package Manager list.
+            // We can use the Unity Define as a shortcut if it's available, 
+            // but a manual check for the TMPro namespace in the assembly is more foolproof.
+            bool hasPackage = System.Type.GetType("TMPro.TMP_Settings, Unity.TextMeshPro") != null;
+
+            // If we have the code package but missing the settings file, 
+            // the buttons will appear blank!
+            return hasSettings && hasPackage;
+        }
+
+
 
         private void DrawAddonsTab() {
             EditorGUILayout.LabelField("INSTALL OPTIONAL ADDONS", EditorStyles.boldLabel);
