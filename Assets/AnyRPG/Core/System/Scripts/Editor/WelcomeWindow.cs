@@ -360,7 +360,7 @@ namespace AnyRPG {
             // Step A Sub-Box
             GUILayout.BeginVertical("box");
             EditorGUILayout.LabelField("Step A: Remove Library Filters", EditorStyles.boldLabel);
-            DrawCustomInfoBox("For AnyRPG to see all UMA assets, you must remove all existing Global Library Filters.", "console.infoicon");
+            DrawCustomInfoBox("For UMA to see all AnyRPG assets, you must remove all existing Global Library Filters.", "console.infoicon");
             if (GUILayout.Button("Open Global Library Filters", GUILayout.Height(25))) {
                 EditorApplication.ExecuteMenuItem("UMA/Global Library Filters");
             }
