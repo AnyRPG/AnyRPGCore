@@ -23,12 +23,35 @@ namespace AnyRPG {
             networkManagerServer.OnStopServer += HandleStopServer;
 
             SetupIDGenerator();
+
+            // this doesn't necessarily belong in this class, but I'm not sure I want to create a new class just to call this method
+            AddEquipmentModelsToEquipment();
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             lootManager = systemGameManager.LootManager;
             serverDataService = systemGameManager.ServerDataService;
+        }
+
+        private void AddEquipmentModelsToEquipment() {
+            //Debug.Log("SystemItemManager.AddEquipmentModelsToEquipment()");
+            List<EquipmentModelProfile> equipmentModels = systemDataFactory.GetResourceList<EquipmentModelProfile>();
+            foreach (EquipmentModelProfile equipmentModelProfile in equipmentModels) {
+                if (equipmentModelProfile == null || equipmentModelProfile.Properties.ApplyToEquipmentName == string.Empty) {
+                    continue;
+                }
+                Equipment equipment = systemDataFactory.GetResource<Equipment>(equipmentModelProfile.Properties.ApplyToEquipmentName);
+                if (equipment == null) {
+                    Debug.LogWarning($"SystemItemManager.AddEquipmentModelsToEquipment(): Could not find equipment {equipmentModelProfile.Properties.ApplyToEquipmentName} for equipment model {equipmentModelProfile.ResourceName}.  This equipment model will be skipped.");
+                    continue;
+                }
+                foreach (EquipmentModel equipmentModel in equipmentModelProfile.Properties.EquipmentModels) {
+                    if (equipmentModel != null ) {
+                        equipment.AddEquipmentModel(equipmentModel);
+                    }
+                }
+            }
         }
 
         private void SetupIDGenerator() {
