@@ -209,11 +209,7 @@ namespace AnyRPG {
             // 2. Check for the core Package in the assembly (The "Engine" signal)
             bool hasPackage = System.Type.GetType("TMPro.TMP_Settings, Unity.TextMeshPro") != null;
 
-            // 3. NEW: Check if there are active shader errors (The "Health" signal)
-            // This catches the 'TMPro_Properties.cginc' missing error
-            bool hasShaderErrors = Shader.Find("TextMeshPro/Mobile/Distance Field") == null;
-
-            return hasSettings && hasPackage && !hasShaderErrors;
+            return hasSettings && hasPackage;
         }
 
 
