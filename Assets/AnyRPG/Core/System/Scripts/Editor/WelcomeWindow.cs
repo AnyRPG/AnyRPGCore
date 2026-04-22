@@ -259,7 +259,7 @@ namespace AnyRPG {
 
             // --- STEP 1: BASE PACKAGE ---
             bool hasBase = Directory.Exists(Path.Combine(Application.dataPath, "..", baseFolder));
-            DrawStatusStep($"1. {packageShortName} Unity Package", hasBase, "Installed", "Open Store", () => UnityEditor.PackageManager.UI.Window.Open(packageFullName), storeUrl);
+            DrawStatusStep($"1. {packageShortName} Unity Package", hasBase, "Installed", "Open Package Manager", () => UnityEditor.PackageManager.UI.Window.Open(packageFullName), storeUrl);
 
             GUILayout.Space(5);
 
