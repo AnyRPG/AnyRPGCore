@@ -311,7 +311,7 @@ namespace AnyRPG {
                 // Changing "Open Store" to "Install Package" logic
                 if (GUILayout.Button("Install Package", GUILayout.MinWidth(120), GUILayout.Height(22))) {
                     // This opens the Package Manager and filters for the package
-                    UnityEditor.PackageManager.UI.Window.Open(url.Contains("uma") ? "UMA" : "FishNet");
+                    UnityEditor.PackageManager.UI.Window.Open("UMA 2");
                 }
                 GUI.enabled = true;
             }
