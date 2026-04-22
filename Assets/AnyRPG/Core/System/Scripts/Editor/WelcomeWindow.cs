@@ -212,9 +212,6 @@ namespace AnyRPG {
             return hasSettings && hasPackage;
         }
 
-
-
-
         private void DrawAddonsTab() {
             EditorGUILayout.LabelField("INSTALL OPTIONAL ADDONS", EditorStyles.boldLabel);
 
@@ -287,6 +284,58 @@ namespace AnyRPG {
         private void DrawStatusStep(string label, bool installed, string okText, string btnText, Action onClick, string url, bool enabled = true) {
             GUILayout.BeginVertical(EditorStyles.helpBox);
 
+            // Row 1: Title
+            EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
+
+            // Row 2: Status Line
+            GUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Status:", GUILayout.Width(50));
+            if (installed) {
+                GUI.color = Color.green;
+                GUILayout.Label("\u2714 " + okText);
+                GUI.color = Color.white;
+            } else {
+                GUI.color = new Color(1f, 0.4f, 0.4f);
+                GUILayout.Label("\u2718 Missing", GUILayout.Width(70));
+                GUI.color = Color.white;
+
+                GUILayout.FlexibleSpace();
+
+                // Show a warning if it's missing to remind them about the Asset Store
+                if (!installed) {
+                    GUIStyle warnStyle = new GUIStyle(EditorStyles.miniLabel) { normal = { textColor = new Color(1f, 0.7f, 0f) } };
+                    GUILayout.Label("Ensure it's in 'My Assets' first \u2192", warnStyle);
+                }
+
+                GUI.enabled = enabled;
+                // Changing "Open Store" to "Install Package" logic
+                if (GUILayout.Button("Install Package", GUILayout.MinWidth(120), GUILayout.Height(22))) {
+                    // This opens the Package Manager and filters for the package
+                    UnityEditor.PackageManager.UI.Window.Open(url.Contains("uma") ? "UMA" : "FishNet");
+                }
+                GUI.enabled = true;
+            }
+            GUILayout.EndHorizontal();
+
+            // Row 3: Manual URL Link
+            GUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("URL:", GUILayout.Width(40));
+            GUIStyle linkStyle = new GUIStyle(EditorStyles.label) {
+                normal = { textColor = new Color(0.3f, 0.6f, 1f) },
+                fontStyle = FontStyle.Italic,
+                fontSize = 12
+            };
+            if (GUILayout.Button(url, linkStyle)) Application.OpenURL(url);
+            GUILayout.EndHorizontal();
+
+            GUILayout.EndVertical();
+        }
+
+
+        /*
+        private void DrawStatusStep(string label, bool installed, string okText, string btnText, Action onClick, string url, bool enabled = true) {
+            GUILayout.BeginVertical(EditorStyles.helpBox);
+
             // Row 1: Title (Full Width)
             EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
 
@@ -322,6 +371,7 @@ namespace AnyRPG {
 
             GUILayout.EndVertical();
         }
+        */
 
 
 
