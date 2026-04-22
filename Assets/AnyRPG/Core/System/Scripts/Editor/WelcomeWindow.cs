@@ -229,7 +229,8 @@ namespace AnyRPG {
                 "anyrpg-uma",
                 "https://github.com/AnyRPG/anyrpg-uma",
                 "UMA 2",
-                "AnyRPG UMA Addon"
+                "AnyRPG UMA Addon",
+                "UMA 2"
             );
 
             GUILayout.Space(15);
@@ -243,11 +244,12 @@ namespace AnyRPG {
                 "anymmo-fishnet",
                 "https://github.com/AnyRPG/anymmo-fishnet",
                 "FishNet",
-                "AnyMMO FishNet Addon"
+                "AnyMMO FishNet Addon",
+                "FishNet: Networking Evolved"
             );
         }
 
-        private void DrawTwoStepAddonPanel(string title, string desc, string baseFolder, string storeUrl, string addonFolder, string gitUrl, string packageString, string addonString) {
+        private void DrawTwoStepAddonPanel(string title, string desc, string baseFolder, string storeUrl, string addonFolder, string gitUrl, string packageShortName, string addonString, string packageFullName) {
             GUILayout.BeginVertical(title, "window");
             GUILayout.Space(16);
 
@@ -257,7 +259,7 @@ namespace AnyRPG {
 
             // --- STEP 1: BASE PACKAGE ---
             bool hasBase = Directory.Exists(Path.Combine(Application.dataPath, "..", baseFolder));
-            DrawStatusStep($"1. {packageString} Unity Package", hasBase, "Installed", "Open Store", () => Application.OpenURL(storeUrl), storeUrl, packageString);
+            DrawStatusStep($"1. {packageShortName} Unity Package", hasBase, "Installed", "Open Store", () => UnityEditor.PackageManager.UI.Window.Open(packageFullName), storeUrl);
 
             GUILayout.Space(5);
 
@@ -266,7 +268,7 @@ namespace AnyRPG {
             string fullPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", relPath));
             bool hasAddon = Directory.Exists(fullPath);
 
-            DrawStatusStep($"2. {addonString}", hasAddon, "Installed", "Clone (Requires Git)", () => InstallAddon(addonFolder, gitUrl), gitUrl, packageString, hasBase);
+            DrawStatusStep($"2. {addonString}", hasAddon, "Installed", "Clone (Requires Git)", () => InstallAddon(addonFolder, gitUrl), gitUrl, hasBase);
 
             // Manual Command Block
             if (!hasAddon) {
@@ -281,7 +283,7 @@ namespace AnyRPG {
             GUILayout.EndVertical();
         }
 
-        private void DrawStatusStep(string label, bool installed, string okText, string btnText, Action onClick, string url, string packageString, bool enabled = true) {
+        private void DrawStatusStep(string label, bool installed, string okText, string btnText, Action onClick, string url, bool enabled = true) {
             GUILayout.BeginVertical(EditorStyles.helpBox);
 
             // Row 1: Title
@@ -303,9 +305,9 @@ namespace AnyRPG {
 
                 GUI.enabled = enabled;
                 // Changing "Open Store" to "Install Package" logic
-                if (GUILayout.Button("Install Package", GUILayout.MinWidth(120), GUILayout.Height(22))) {
+                if (GUILayout.Button(btnText, GUILayout.MinWidth(120), GUILayout.Height(22))) {
                     // This opens the Package Manager and filters for the package
-                    UnityEditor.PackageManager.UI.Window.Open(packageString);
+                    onClick?.Invoke();
                 }
                 GUI.enabled = true;
             }
