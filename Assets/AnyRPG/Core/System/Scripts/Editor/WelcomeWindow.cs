@@ -350,10 +350,15 @@ namespace AnyRPG {
         }
 
         private void DrawUMAPostInstall() {
-            EditorGUILayout.LabelField("3. Post Install Configuration", EditorStyles.boldLabel);
-
-            // Step A
+            // Parent container for the entire Step 3 section
             GUILayout.BeginVertical(EditorStyles.helpBox);
+
+            // The main section label is now INSIDE the helpBox
+            EditorGUILayout.LabelField("3. Post Install Configuration", EditorStyles.boldLabel);
+            GUILayout.Space(5);
+
+            // Step A Sub-Box
+            GUILayout.BeginVertical("box");
             EditorGUILayout.LabelField("Step A: Remove Library Filters", EditorStyles.boldLabel);
             DrawCustomInfoBox("For AnyRPG to see all UMA assets, you must remove all existing Global Library Filters.", "console.infoicon");
             if (GUILayout.Button("Open Global Library Filters", GUILayout.Height(25))) {
@@ -363,16 +368,17 @@ namespace AnyRPG {
 
             GUILayout.Space(5);
 
-            // Step B
-            GUILayout.BeginVertical(EditorStyles.helpBox);
+            // Step B Sub-Box
+            GUILayout.BeginVertical("box");
             EditorGUILayout.LabelField("Step B: Rebuild Global Library", EditorStyles.boldLabel);
             DrawCustomInfoBox("After removing filters, rebuild the library via the UMA Welcome Window.", "console.infoicon");
             if (GUILayout.Button("Open UMA Welcome Window", GUILayout.Height(25))) {
                 EditorApplication.ExecuteMenuItem("UMA/Welcome to UMA");
             }
             GUILayout.EndVertical();
-        }
 
+            GUILayout.EndVertical();
+        }
 
 
         private void DrawStatusStep(string label, bool installed, string okText, string btnText, Action onClick, string url, bool enabled = true) {
