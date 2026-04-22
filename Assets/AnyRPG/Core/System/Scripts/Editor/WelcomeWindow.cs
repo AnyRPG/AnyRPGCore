@@ -410,7 +410,13 @@ namespace AnyRPG {
             string addonsRoot = Path.Combine(Application.dataPath, "AnyRPG", "Addons");
             if (!Directory.Exists(addonsRoot)) Directory.CreateDirectory(addonsRoot);
 
-            RunGitCommand($"clone {repoUrl} \"{targetPath}\"");
+            EditorUtility.DisplayProgressBar("AnyRPG Addon Installer", $"Cloning {folderName} from GitHub...", 0.5f);
+            try {
+                RunGitCommand($"clone {repoUrl} \"{targetPath}\"");
+            } finally {
+                // Always clear the progress bar, even if it fails
+                EditorUtility.ClearProgressBar();
+            }
         }
 
         private static void RunGitCommand(string args) {
@@ -437,6 +443,7 @@ namespace AnyRPG {
                         // Force Unity to see the new files immediately
                         AssetDatabase.Refresh();
                     } else {
+                        EditorUtility.DisplayDialog("Git Error", $"Clone failed: {error}", "OK");
                         UnityEngine.Debug.LogError($"[AnyRPG] Git Error (Code {process.ExitCode}): {error}");
                     }
                 }
@@ -444,6 +451,7 @@ namespace AnyRPG {
                 UnityEngine.Debug.LogError("[AnyRPG] Git not found! Please ensure Git is installed and added to your system PATH.");
                 EditorUtility.DisplayDialog("Git Not Found", "Git is required to download addons. Please install Git and restart Unity.", "OK");
             } catch (Exception ex) {
+                EditorUtility.DisplayDialog("Git Error", $"Git not found or command failed: {ex.Message}", "OK");
                 UnityEngine.Debug.LogError($"[AnyRPG] Unexpected Error: {ex.Message}");
             }
         }
