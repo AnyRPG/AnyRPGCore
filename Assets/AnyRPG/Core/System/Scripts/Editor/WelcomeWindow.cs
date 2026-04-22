@@ -342,7 +342,7 @@ namespace AnyRPG {
 
             // --- STEP 3: OPTIONAL EXTRA CONTENT ---
             if (hasBase && hasAddon && extraContent != null) {
-                GUILayout.Space(15);
+                GUILayout.Space(5);
                 extraContent.Invoke();
             }
 
