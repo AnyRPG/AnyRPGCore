@@ -20,23 +20,8 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  uMARecipeProfileProperties:
-    uMARecipes:
-    - {fileID: 11400000, guid: 014d85afc568743a2afd3a4ec429d4ee, type: 2}
-    - {fileID: 11400000, guid: c0ccbf61411463e11b512c033ba1377e, type: 2}
-    sharedColors: []
   properties:
-    equipmentModels:
-    - rid: 5705935833309905278
+    equipmentModels: []
   references:
     version: 2
-    RefIds:
-    - rid: 5705935833309905278
-      type: {class: UMAEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        umaRecipeProfileName: 
-        properties:
-          uMARecipes:
-          - {fileID: 11400000, guid: 014d85afc568743a2afd3a4ec429d4ee, type: 2}
-          - {fileID: 11400000, guid: c0ccbf61411463e11b512c033ba1377e, type: 2}
-          sharedColors: []
+    RefIds: []

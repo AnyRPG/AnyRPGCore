@@ -20,27 +20,8 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  uMARecipeProfileProperties:
-    uMARecipes:
-    - {fileID: 11400000, guid: 5b235fc14f0fcd932917492faddd3682, type: 2}
-    - {fileID: 11400000, guid: 31a1659e41204b81388a7109d8f2af38, type: 2}
-    sharedColors:
-    - sharedColorname: Shoulder Equipment Color 1
-      color: {r: 0.34509805, g: 0.43137255, b: 0.9019608, a: 1}
   properties:
-    equipmentModels:
-    - rid: 5705935833309904959
+    equipmentModels: []
   references:
     version: 2
-    RefIds:
-    - rid: 5705935833309904959
-      type: {class: UMAEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        umaRecipeProfileName: 
-        properties:
-          uMARecipes:
-          - {fileID: 11400000, guid: 5b235fc14f0fcd932917492faddd3682, type: 2}
-          - {fileID: 11400000, guid: 31a1659e41204b81388a7109d8f2af38, type: 2}
-          sharedColors:
-          - sharedColorname: Shoulder Equipment Color 1
-            color: {r: 0.34509805, g: 0.43137255, b: 0.9019608, a: 1}
+    RefIds: []
