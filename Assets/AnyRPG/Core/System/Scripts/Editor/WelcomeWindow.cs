@@ -242,7 +242,7 @@ namespace AnyRPG {
                 "https://assetstore.unity.com/packages/package/207815",
                 "anymmo-fishnet",
                 "https://github.com/AnyRPG/anymmo-fishnet",
-                "Fishnet",
+                "FishNet",
                 "AnyMMO FishNet Addon"
             );
         }
@@ -257,7 +257,7 @@ namespace AnyRPG {
 
             // --- STEP 1: BASE PACKAGE ---
             bool hasBase = Directory.Exists(Path.Combine(Application.dataPath, "..", baseFolder));
-            DrawStatusStep($"1. {packageString} Unity Package", hasBase, "Installed", "Open Store", () => Application.OpenURL(storeUrl), storeUrl);
+            DrawStatusStep($"1. {packageString} Unity Package", hasBase, "Installed", "Open Store", () => Application.OpenURL(storeUrl), storeUrl, packageString);
 
             GUILayout.Space(5);
 
@@ -266,7 +266,7 @@ namespace AnyRPG {
             string fullPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", relPath));
             bool hasAddon = Directory.Exists(fullPath);
 
-            DrawStatusStep($"2. {addonString}", hasAddon, "Installed", "Clone (Requires Git)", () => InstallAddon(addonFolder, gitUrl), gitUrl, hasBase);
+            DrawStatusStep($"2. {addonString}", hasAddon, "Installed", "Clone (Requires Git)", () => InstallAddon(addonFolder, gitUrl), gitUrl, packageString, hasBase);
 
             // Manual Command Block
             if (!hasAddon) {
@@ -281,7 +281,7 @@ namespace AnyRPG {
             GUILayout.EndVertical();
         }
 
-        private void DrawStatusStep(string label, bool installed, string okText, string btnText, Action onClick, string url, bool enabled = true) {
+        private void DrawStatusStep(string label, bool installed, string okText, string btnText, Action onClick, string url, string packageString, bool enabled = true) {
             GUILayout.BeginVertical(EditorStyles.helpBox);
 
             // Row 1: Title
@@ -305,7 +305,7 @@ namespace AnyRPG {
                 // Changing "Open Store" to "Install Package" logic
                 if (GUILayout.Button("Install Package", GUILayout.MinWidth(120), GUILayout.Height(22))) {
                     // This opens the Package Manager and filters for the package
-                    UnityEditor.PackageManager.UI.Window.Open("UMA 2");
+                    UnityEditor.PackageManager.UI.Window.Open(packageString);
                 }
                 GUI.enabled = true;
             }
