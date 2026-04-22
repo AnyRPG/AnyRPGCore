@@ -221,6 +221,7 @@ namespace AnyRPG {
             GUILayout.Space(10);
 
             // UMA PANEL
+            /*
             DrawTwoStepAddonPanel(
                 "UMA 2 Integration",
                 "Adds advanced character customization and runtime mesh combining.",
@@ -231,6 +232,21 @@ namespace AnyRPG {
                 "UMA 2",
                 "AnyRPG UMA Addon",
                 "UMA 2"
+            );
+            */
+            
+            // UMA 2 PANEL (With Step 3)
+            DrawTwoStepAddonPanel(
+                "UMA 2 Integration",
+                "Adds advanced character customization and runtime mesh combining.",
+                "Assets/UMA",
+                "https://assetstore.unity.com/packages/package/35611",
+                "anyrpg-uma",
+                "https://github.com/AnyRPG/anyrpg-uma",
+                "UMA 2",
+                "AnyRPG UMA Addon",
+                "UMA 2",
+                DrawUMAPostInstall // Passing the Step 3 method here
             );
 
             GUILayout.Space(15);
@@ -249,6 +265,23 @@ namespace AnyRPG {
             );
         }
 
+        private void DrawAddonDescription(string desc) {
+            GUIStyle bodyStyle = new GUIStyle(EditorStyles.label) { fontSize = 12, wordWrap = true };
+            EditorGUILayout.LabelField(desc, bodyStyle);
+            GUILayout.Space(10);
+        }
+
+        private void DrawTerminalCommand(string command) {
+            GUILayout.Space(10);
+            GUIStyle term = new GUIStyle(EditorStyles.textArea) {
+                wordWrap = true,
+                normal = { textColor = Color.white, background = MakeTex(2, 2, new Color(0.05f, 0.05f, 0.05f)) }
+            };
+            term.font = Font.CreateDynamicFontFromOSFont(new string[] { "Courier New", "monospace" }, 12);
+            EditorGUILayout.SelectableLabel(command, term, GUILayout.Height(60));
+        }
+
+        /*
         private void DrawTwoStepAddonPanel(string title, string desc, string baseFolder, string storeUrl, string addonFolder, string gitUrl, string packageShortName, string addonString, string packageFullName) {
             GUILayout.BeginVertical(title, "window");
             GUILayout.Space(16);
@@ -282,6 +315,65 @@ namespace AnyRPG {
             }
             GUILayout.EndVertical();
         }
+        */
+
+        private void DrawTwoStepAddonPanel(string title, string desc, string baseFolder, string storeUrl, string addonFolder, string gitUrl, string packageString, string addonString, string pmSearchTerm, Action extraContent = null) {
+            GUILayout.BeginVertical(title, "window");
+            GUILayout.Space(16);
+
+            EditorGUILayout.LabelField(desc, new GUIStyle(EditorStyles.label) { fontSize = 12, wordWrap = true });
+            GUILayout.Space(10);
+
+            // --- STEP 1: BASE PACKAGE ---
+            bool hasBase = Directory.Exists(Path.Combine(Application.dataPath, "..", baseFolder));
+            DrawStatusStep($"1. {packageString} Unity Package", hasBase, "Installed", "Install Package", () => UnityEditor.PackageManager.UI.Window.Open(pmSearchTerm), storeUrl);
+
+            GUILayout.Space(5);
+
+            // --- STEP 2: ANYRPG ADDON ---
+            string relPath = Path.Combine("Assets", "AnyRPG", "Addons", addonFolder);
+            string fullPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", relPath));
+            bool hasAddon = Directory.Exists(fullPath);
+            DrawStatusStep($"2. {addonString}", hasAddon, "Installed", "Clone Addon (Requires Git)", () => InstallAddon(addonFolder, gitUrl), gitUrl, hasBase);
+
+            if (!hasAddon) {
+                DrawTerminalCommand($"git clone {gitUrl} \"{fullPath}\"");
+            }
+
+            // --- STEP 3: OPTIONAL EXTRA CONTENT ---
+            if (hasBase && hasAddon && extraContent != null) {
+                GUILayout.Space(15);
+                extraContent.Invoke();
+            }
+
+            GUILayout.EndVertical();
+        }
+
+        private void DrawUMAPostInstall() {
+            EditorGUILayout.LabelField("3. Post Install Configuration", EditorStyles.boldLabel);
+
+            // Step A
+            GUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.LabelField("Step A: Remove Library Filters", EditorStyles.boldLabel);
+            DrawCustomInfoBox("For AnyRPG to see all UMA assets, you must remove all existing Global Library Filters.", "console.infoicon");
+            if (GUILayout.Button("Open Global Library Filters", GUILayout.Height(25))) {
+                EditorApplication.ExecuteMenuItem("UMA/Global Library Filters");
+            }
+            GUILayout.EndVertical();
+
+            GUILayout.Space(5);
+
+            // Step B
+            GUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.LabelField("Step B: Rebuild Global Library", EditorStyles.boldLabel);
+            DrawCustomInfoBox("After removing filters, rebuild the library via the UMA Welcome Window.", "console.infoicon");
+            if (GUILayout.Button("Open UMA Welcome Window", GUILayout.Height(25))) {
+                EditorApplication.ExecuteMenuItem("UMA/Welcome to UMA");
+            }
+            GUILayout.EndVertical();
+        }
+
+
 
         private void DrawStatusStep(string label, bool installed, string okText, string btnText, Action onClick, string url, bool enabled = true) {
             GUILayout.BeginVertical(EditorStyles.helpBox);
@@ -327,51 +419,6 @@ namespace AnyRPG {
             GUILayout.EndVertical();
         }
 
-
-        /*
-        private void DrawStatusStep(string label, bool installed, string okText, string btnText, Action onClick, string url, bool enabled = true) {
-            GUILayout.BeginVertical(EditorStyles.helpBox);
-
-            // Row 1: Title (Full Width)
-            EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
-
-            // Row 2: Status and Action Button
-            GUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Status:", GUILayout.Width(50));
-            if (installed) {
-                GUI.color = Color.green;
-                GUILayout.Label("\u2714 " + okText);
-                GUI.color = Color.white;
-            } else {
-                GUI.color = new Color(1f, 0.4f, 0.4f);
-                GUILayout.Label("\u2718 Missing", GUILayout.Width(70));
-                GUI.color = Color.white;
-
-                GUILayout.FlexibleSpace();
-                GUI.enabled = enabled;
-                if (GUILayout.Button(btnText, GUILayout.MinWidth(150), GUILayout.Height(22))) onClick();
-                GUI.enabled = true;
-            }
-            GUILayout.EndHorizontal();
-
-            // Row 3: URL Field
-            GUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("URL:", GUILayout.Width(40));
-            GUIStyle linkStyle = new GUIStyle(EditorStyles.label) {
-                normal = { textColor = new Color(0.3f, 0.6f, 1f) },
-                fontStyle = FontStyle.Italic,
-                fontSize = 12
-            };
-            if (GUILayout.Button(url, linkStyle)) Application.OpenURL(url);
-            GUILayout.EndHorizontal();
-
-            GUILayout.EndVertical();
-        }
-        */
-
-
-
-
         private Texture2D MakeTex(int width, int height, Color col) {
             Color[] pix = new Color[width * height];
             for (int i = 0; i < pix.Length; ++i) pix[i] = col;
@@ -379,28 +426,6 @@ namespace AnyRPG {
             result.SetPixels(pix);
             result.Apply();
             return result;
-        }
-
-        private void DrawStatusStep(string label, bool isInstalled, string successText, string buttonText, System.Action onButtonClick) {
-            GUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(label, GUILayout.Width(140));
-
-            if (isInstalled) {
-                GUI.color = Color.green;
-                // \u2714 is the Unicode for the Checkmark
-                GUILayout.Label("\u2714 " + successText);
-                GUI.color = Color.white;
-            } else {
-                // \u2718 is the Unicode for the Heavy Ballot X
-                GUI.color = new Color(1f, 0.5f, 0.5f); // Light Red
-                GUILayout.Label("\u2718 Missing", GUILayout.Width(80));
-                GUI.color = Color.white;
-
-                if (GUILayout.Button(buttonText, GUILayout.Height(22))) {
-                    onButtonClick?.Invoke();
-                }
-            }
-            GUILayout.EndHorizontal();
         }
 
         private void InstallAddon(string folderName, string repoUrl) {
