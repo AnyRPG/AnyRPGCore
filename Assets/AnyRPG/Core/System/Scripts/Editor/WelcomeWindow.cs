@@ -202,20 +202,20 @@ namespace AnyRPG {
         }
 
         private bool IsTextMeshProInstalled() {
-            // 1. Check for the physical "TMP Settings" asset. 
-            // This is the most reliable way to know if "Essentials" were imported.
+            // 1. Check for the physical "TMP Settings" asset (The "Essentials" signal)
             string settingsPath = "Assets/TextMesh Pro/Resources/TMP Settings.asset";
             bool hasSettings = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(settingsPath) != null;
 
-            // 2. Check for the core Package in the Package Manager list.
-            // We can use the Unity Define as a shortcut if it's available, 
-            // but a manual check for the TMPro namespace in the assembly is more foolproof.
+            // 2. Check for the core Package in the assembly (The "Engine" signal)
             bool hasPackage = System.Type.GetType("TMPro.TMP_Settings, Unity.TextMeshPro") != null;
 
-            // If we have the code package but missing the settings file, 
-            // the buttons will appear blank!
-            return hasSettings && hasPackage;
+            // 3. NEW: Check if there are active shader errors (The "Health" signal)
+            // This catches the 'TMPro_Properties.cginc' missing error
+            bool hasShaderErrors = Shader.Find("TextMeshPro/Mobile/Distance Field") == null;
+
+            return hasSettings && hasPackage && !hasShaderErrors;
         }
+
 
 
 
