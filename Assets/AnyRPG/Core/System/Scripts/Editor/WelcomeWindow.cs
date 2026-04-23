@@ -380,7 +380,7 @@ namespace AnyRPG {
             bool hasAddon = Directory.Exists(fullPath);
 
             GUILayout.BeginVertical(EditorStyles.helpBox);
-            DrawStatusStep($"2. {addonString}", hasAddon, "Installed", "Clone Addon (Requires Git)", () => InstallAddon(addonFolder, gitUrl), gitUrl, hasBase);
+            DrawStatusStep($"2. {addonString}", hasAddon, "Installed", "", null, gitUrl, hasBase);
 
             // --- MANAGE SECTION (Thin Outline Box) ---
             GUILayout.BeginVertical(EditorStyles.helpBox);
@@ -568,10 +568,11 @@ namespace AnyRPG {
                 GUILayout.FlexibleSpace();
 
                 GUI.enabled = enabled;
-                // Changing "Open Store" to "Install Package" logic
-                if (GUILayout.Button(btnText, GUILayout.MinWidth(120), GUILayout.Height(22))) {
-                    // This opens the Package Manager and filters for the package
-                    onClick?.Invoke();
+                if (btnText != "") {
+                    if (GUILayout.Button(btnText, GUILayout.MinWidth(120), GUILayout.Height(22))) {
+                        // This opens the Package Manager and filters for the package
+                        onClick?.Invoke();
+                    }
                 }
                 GUI.enabled = true;
             }
