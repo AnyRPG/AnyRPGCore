@@ -30,7 +30,7 @@ namespace AnyRPG {
         }
     }
     */
-
+    /*
     [InitializeOnLoad]
     public class AnyRPGStartup {
 
@@ -62,6 +62,47 @@ namespace AnyRPG {
             EditorApplication.update -= TriggerWelcomeScreen;
         }
     }
+*/
+
+    [InitializeOnLoad]
+    public class AnyRPGStartup {
+
+        static AnyRPGStartup() {
+            // Double delay ensures we stay in the queue during the initial heavy import
+            EditorApplication.delayCall += () => {
+                EditorApplication.delayCall += Initialize;
+            };
+        }
+
+        private static void Initialize() {
+            // Preserving your EditorPrefs keys and logic
+            if (!EditorPrefs.HasKey("AnyRPG_DisplayWelcome")) {
+                EditorPrefs.SetBool("AnyRPG_DisplayWelcome", true);
+            }
+
+            // Removed the < 30f check so it doesn't time out during long imports.
+            // We only subscribe if the user actually wants to see the window.
+            if (EditorPrefs.GetBool("AnyRPG_DisplayWelcome")) {
+                EditorApplication.update -= TriggerWelcomeScreen;
+                EditorApplication.update += TriggerWelcomeScreen;
+            }
+        }
+
+        private static void TriggerWelcomeScreen() {
+            // This is the key for large packages: 
+            // It stays here until the 3-minute import/compilation is 100% finished.
+            if (EditorApplication.isUpdating || EditorApplication.isCompiling) {
+                return;
+            }
+
+            WelcomeWindow.Open();
+
+            // Unsubscribe immediately so it doesn't loop
+            EditorApplication.update -= TriggerWelcomeScreen;
+        }
+    }
+
+
 
 
 }
