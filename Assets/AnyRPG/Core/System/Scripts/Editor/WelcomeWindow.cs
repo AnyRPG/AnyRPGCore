@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using UnityEditor;
@@ -19,6 +20,29 @@ namespace AnyRPG {
         private const string zeroConfigModeGameScenePath = "/AnyRPG/Core/Games/EmptyGame/Scenes/EmptyGame/EmptyGame.unity";
         private const string umaDemoGameScenePath = "/AnyRPG/Addons/anyrpg-uma/Games/UMADemoGame/Scenes/Game/UMADemoGame/UMADemoGame.unity";
         private const string mmoDemoGameScenePath = "/AnyRPG/Addons/anymmo-fishnet/Games/AnyMMODemo/Scenes/AnyMMODemo/AnyMMODemo.unity";
+
+        private const string storyDemoGamePath = "ALostSoul/Games/ALostSoulStoryDemo";
+        private const string characterDemoGamePath = "ALostSoul/Games/ALostSoulCharacterDemo";
+        private const string contentDemoGamePath = "AnyRPG/Engine/Games/ContentDemo";
+        private const string featuresDemoGamePath = "AnyRPG/Core/Games/FeaturesDemoGame";
+        private const string zeroConfigModeGamePath = "AnyRPG/Core/Games/EmptyGame";
+        private const string movementTestGamePath = "AnyRPG/Core/Games/MovementTestGame";
+        private const string umaDemoGamePath = "AnyRPG/Addons/anyrpg-uma/Games/UMADemoGame";
+        private const string mmoDemoGamePath = "AnyRPG/Addons/anymmo-fishnet/Games/AnyMMODemo";
+
+        private const string storyDemoBuildProfilePath = "ALostSoul/Build Profiles/A Lost Soul Story Demo.asset";
+        private const string characterDemoBuildProfilePath = "ALostSoul/Build Profiles/A Lost Soul Character Demo.asset";
+        private const string contentDemoBuildProfilePath = "AnyRPG/Engine/Build Profiles/Content Demo Game.asset";
+        private const string featuresDemoBuildProfilePath = "AnyRPG/Core/Build Profiles/Features Demo Game.asset";
+        private const string zeroConfigModeBuildProfilePath = "AnyRPG/Core/Build Profiles/Empty Game.asset";
+        private const string movementTestGameBuildProfilePath = "AnyRPG/Core/Build Profiles/Movement Test Game.asset";
+        private const string umaDemoBuildProfilePath = "AnyRPG/Addons/anyrpg-uma/Build Profiles/UMA Demo Game.asset";
+        private const string mmoDemoBuildProfilePath = "AnyRPG/Addons/anymmo-fishnet/Build Profiles/AnyMMO Demo Game.asset";
+
+        private const string coreTemplateContentFolder = "AnyRPG/Core/Content";
+        private const string engineTemplateContentFolder = "AnyRPG/Engine/Content";
+        private const string umaTemplateContentFolder = "AnyRPG/Addons/anyrpg-uma/Content";
+        private const string fishNetTemplateContentFolder = "AnyRPG/Addons/anymmo-fishnet/Content";
 
         public static Texture2D welcomeBanner = null;
 
@@ -115,7 +139,7 @@ namespace AnyRPG {
             }
         }
 
-
+        /*
         private void DrawSidebar() {
             // Left-aligned sidebar with a distinct "box" look
             GUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.Width(SidebarWidth), GUILayout.ExpandHeight(true));
@@ -132,6 +156,47 @@ namespace AnyRPG {
 
             GUILayout.EndVertical();
         }
+        */
+
+        private void DrawSidebar() {
+            // Left-aligned sidebar with a distinct "box" look
+            GUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.Width(SidebarWidth), GUILayout.ExpandHeight(true));
+
+            // --- MAIN MENU ---
+            GUILayout.Label("MENU", EditorStyles.boldLabel);
+            GUILayout.Space(5);
+
+            string[] mainTabs = { "Start Here", "Install Optional Addons", "Create Your Game", "Included Demo Games", "Support" };
+
+            // Logic: If selectedTab is 0-4, show it in this grid. Otherwise, show nothing selected (-1).
+            int newMainTab = GUILayout.SelectionGrid(selectedTab < 5 ? selectedTab : -1, mainTabs, 1, GUILayout.Height(mainTabs.Length * 45));
+
+            // If user clicked a button in this first grid, update the global index
+            if (newMainTab != -1) selectedTab = newMainTab;
+
+            GUILayout.Space(20);
+
+            // --- BUILD PREPARATION ---
+            GUIStyle buildHeader = new GUIStyle(EditorStyles.boldLabel);
+            //buildHeader.normal.textColor = new Color(0.4f, 0.7f, 1f); // Professional Blue
+            GUILayout.Label("BUILD PREPARATION", buildHeader);
+            GUILayout.Space(5);
+
+            string[] buildTabs = { "Strip Demo Games", "Strip Template Resources" };
+
+            // Logic: This grid handles indices 5 and 6. 
+            // We pass (selectedTab - 5) to the grid so it sees 0 or 1.
+            int secondaryTab = GUILayout.SelectionGrid(selectedTab >= 5 ? selectedTab - 5 : -1, buildTabs, 1, GUILayout.Height(buildTabs.Length * 45));
+
+            // If user clicked a button in this second grid, offset it by 5 to update the global index
+            if (secondaryTab != -1) {
+                selectedTab = secondaryTab + 5;
+            }
+
+            GUILayout.FlexibleSpace();
+            GUILayout.EndVertical();
+        }
+
 
         private void DrawContentArea() {
             // Scrollview handles pages that grow vertically
@@ -146,6 +211,8 @@ namespace AnyRPG {
                 case 2: DrawCreateYourGameTab(); break;
                 case 3: DrawDemosTab(); break;
                 case 4: DrawSupportTab(); break;
+                case 5: DrawStripDemoGamesTab(); break;
+                case 6: DrawStripTemplateResourcesTab(); break;
             }
 
             GUILayout.EndVertical();
@@ -220,21 +287,6 @@ namespace AnyRPG {
 
             GUILayout.Space(10);
 
-            // UMA PANEL
-            /*
-            DrawTwoStepAddonPanel(
-                "UMA 2 Integration",
-                "Adds advanced character customization and runtime mesh combining.",
-                "Assets/UMA",
-                "https://assetstore.unity.com/packages/package/35611",
-                "anyrpg-uma",
-                "https://github.com/AnyRPG/anyrpg-uma",
-                "UMA 2",
-                "AnyRPG UMA Addon",
-                "UMA 2"
-            );
-            */
-            
             // UMA 2 PANEL (With Step 3)
             DrawTwoStepAddonPanel(
                 "UMA 2 Integration",
@@ -265,12 +317,7 @@ namespace AnyRPG {
             );
         }
 
-        private void DrawAddonDescription(string desc) {
-            GUIStyle bodyStyle = new GUIStyle(EditorStyles.label) { fontSize = 12, wordWrap = true };
-            EditorGUILayout.LabelField(desc, bodyStyle);
-            GUILayout.Space(10);
-        }
-
+        /*
         private void DrawTerminalCommand(string command) {
             GUILayout.Space(10);
             GUIStyle term = new GUIStyle(EditorStyles.textArea) {
@@ -280,43 +327,9 @@ namespace AnyRPG {
             term.font = Font.CreateDynamicFontFromOSFont(new string[] { "Courier New", "monospace" }, 12);
             EditorGUILayout.SelectableLabel(command, term, GUILayout.Height(60));
         }
-
-        /*
-        private void DrawTwoStepAddonPanel(string title, string desc, string baseFolder, string storeUrl, string addonFolder, string gitUrl, string packageShortName, string addonString, string packageFullName) {
-            GUILayout.BeginVertical(title, "window");
-            GUILayout.Space(16);
-
-            GUIStyle bodyStyle = new GUIStyle(EditorStyles.label) { fontSize = 12, wordWrap = true };
-            EditorGUILayout.LabelField(desc, bodyStyle);
-            GUILayout.Space(10);
-
-            // --- STEP 1: BASE PACKAGE ---
-            bool hasBase = Directory.Exists(Path.Combine(Application.dataPath, "..", baseFolder));
-            DrawStatusStep($"1. {packageShortName} Unity Package", hasBase, "Installed", "Open Package Manager", () => UnityEditor.PackageManager.UI.Window.Open(packageFullName), storeUrl);
-
-            GUILayout.Space(5);
-
-            // --- STEP 2: ANYRPG ADDON ---
-            string relPath = Path.Combine("Assets", "AnyRPG", "Addons", addonFolder);
-            string fullPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", relPath));
-            bool hasAddon = Directory.Exists(fullPath);
-
-            DrawStatusStep($"2. {addonString}", hasAddon, "Installed", "Clone (Requires Git)", () => InstallAddon(addonFolder, gitUrl), gitUrl, hasBase);
-
-            // Manual Command Block
-            if (!hasAddon) {
-                GUILayout.Space(10);
-                GUIStyle term = new GUIStyle(EditorStyles.textArea) {
-                    wordWrap = true,
-                    normal = { textColor = Color.white, background = MakeTex(2, 2, new Color(0.05f, 0.05f, 0.05f)) }
-                };
-                term.font = Font.CreateDynamicFontFromOSFont(new string[] { "Courier New", "monospace" }, 12);
-                EditorGUILayout.SelectableLabel($"git clone {gitUrl} \"{fullPath}\"", term, GUILayout.Height(60));
-            }
-            GUILayout.EndVertical();
-        }
         */
 
+        /*
         private void DrawTwoStepAddonPanel(string title, string desc, string baseFolder, string storeUrl, string addonFolder, string gitUrl, string packageString, string addonString, string pmSearchTerm, Action extraContent = null) {
             GUILayout.BeginVertical(title, "window");
             GUILayout.Space(16);
@@ -348,6 +361,159 @@ namespace AnyRPG {
 
             GUILayout.EndVertical();
         }
+        */
+
+        private void DrawTwoStepAddonPanel(string title, string desc, string baseFolder, string storeUrl, string addonFolder, string gitUrl, string packageString, string addonString, string pmSearchTerm, Action extraContent = null) {
+            GUILayout.BeginVertical(title, "window");
+            GUILayout.Space(16);
+
+            EditorGUILayout.LabelField(desc, new GUIStyle(EditorStyles.label) { fontSize = 12, wordWrap = true });
+            GUILayout.Space(10);
+
+            // --- STEP 1: BASE PACKAGE ---
+            bool hasBase = Directory.Exists(Path.Combine(Application.dataPath, "..", baseFolder));
+            DrawStatusStep($"1. {packageString} Unity Package", hasBase, "Installed", "Install Package", () => UnityEditor.PackageManager.UI.Window.Open(pmSearchTerm), storeUrl);
+
+            // --- STEP 2: ANYRPG ADDON ---
+            string relPath = Path.Combine("Assets", "AnyRPG", "Addons", addonFolder);
+            string fullPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", relPath));
+            bool hasAddon = Directory.Exists(fullPath);
+
+            GUILayout.BeginVertical(EditorStyles.helpBox);
+            DrawStatusStep($"2. {addonString}", hasAddon, "Installed", "Clone Addon (Requires Git)", () => InstallAddon(addonFolder, gitUrl), gitUrl, hasBase);
+
+            // --- MANAGE SECTION (Thin Outline Box) ---
+            GUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.LabelField("Manage", EditorStyles.miniBoldLabel);
+
+            if (!hasAddon) {
+                // INSTALL SUB-BOX
+                GUILayout.BeginVertical(EditorStyles.helpBox);
+                GUI.enabled = hasBase;
+                if (GUILayout.Button($"Install {addonString} (Requires Git)", GUILayout.Height(25))) {
+                    InstallAddon(addonFolder, gitUrl);
+                }
+                GUI.enabled = true;
+                DrawTerminalCommand($"git clone {gitUrl} \"{fullPath}\"");
+                GUILayout.EndVertical();
+            } else {
+                // UPDATE SUB-BOX
+                GUILayout.BeginVertical(EditorStyles.helpBox);
+                if (GUILayout.Button("Update Addon (Requires Git)", GUILayout.Height(25))) {
+                    UpdateAddon(fullPath, addonString);
+                }
+                DrawTerminalCommand($"cd \"{fullPath}\" && git pull");
+                GUILayout.EndVertical();
+
+                // CHECK UPDATES SUB-BOX
+                GUILayout.BeginVertical(EditorStyles.helpBox);
+                if (GUILayout.Button("Check for Updates (Requires Git)", GUILayout.Height(25))) {
+                    CheckForUpdates(fullPath, addonString);
+                }
+                DrawTerminalCommand($"cd \"{fullPath}\" && git fetch && git status -uno");
+                GUILayout.EndVertical();
+
+                // REMOVE SUB-BOX
+                GUILayout.BeginVertical(EditorStyles.helpBox);
+                if (GUILayout.Button("Remove Addon", GUILayout.Height(25))) {
+                    if (EditorUtility.DisplayDialog($"Remove {addonString}", $"Are you sure you want to delete the addon folder at {relPath}?", "Delete", "Cancel")) {
+                        FileUtil.DeleteFileOrDirectory(fullPath);
+                        AssetDatabase.Refresh();
+                    }
+                }
+                EditorGUILayout.HelpBox("Removes the addon files from the project.", MessageType.None);
+                GUILayout.EndVertical();
+            }
+
+            GUILayout.EndVertical(); // End Manage Box
+            GUILayout.EndVertical(); // End Step 2 Box
+
+            if (hasBase && hasAddon && extraContent != null) {
+                extraContent.Invoke();
+            }
+
+            GUILayout.EndVertical();
+        }
+
+        private void DrawTerminalCommand(string command) {
+            GUILayout.Space(5);
+            GUIStyle term = new GUIStyle(EditorStyles.textArea) {
+                wordWrap = true,
+                fontSize = 12, // Restored to 12pt for readability
+                normal = { textColor = Color.white, background = MakeTex(2, 2, new Color(0.05f, 0.05f, 0.05f)) },
+                padding = new RectOffset(5, 5, 5, 5)
+            };
+            term.font = Font.CreateDynamicFontFromOSFont(new string[] { "Courier New", "monospace" }, 12);
+
+            // Fixed height for 2 lines of text (approx 42-45 pixels for 12pt font)
+            EditorGUILayout.SelectableLabel(command, term, GUILayout.Height(42));
+        }
+
+
+
+
+        private void CheckForUpdates(string fullPath, string addonName) {
+            EditorUtility.DisplayProgressBar("AnyRPG Addon Checker", $"Checking {addonName} for updates...", 0.5f);
+            try {
+                // Fetch updates and check the status of local vs remote
+                RunGitCommand("fetch", fullPath);
+                // We use 'status -uno' to see if we are behind without showing untracked files
+                RunGitCommand("status -uno", fullPath);
+
+                EditorUtility.DisplayDialog("Update Check", $"Check complete for {addonName}. Check the Console log to see if 'Your branch is behind'.", "OK");
+            } finally {
+                EditorUtility.ClearProgressBar();
+            }
+        }
+
+
+        private void UpdateAddon(string fullPath, string addonName) {
+            EditorUtility.DisplayProgressBar("AnyRPG Addon Updater", $"Updating {addonName}...", 0.5f);
+            try {
+                // We run "pull" and specify the addon folder as the working directory
+                RunGitCommand("pull", fullPath);
+            } finally {
+                EditorUtility.ClearProgressBar();
+            }
+        }
+
+        // Updated to accept an optional working directory (defaults to Assets)
+        private static void RunGitCommand(string args, string workingDir = null) {
+            ProcessStartInfo startInfo = new ProcessStartInfo {
+                FileName = "git",
+                Arguments = args,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                WorkingDirectory = workingDir ?? Application.dataPath
+            };
+
+            try {
+                using (Process process = Process.Start(startInfo)) {
+                    if (process == null) throw new Exception("Could not start Git process.");
+
+                    string output = process.StandardOutput.ReadToEnd();
+                    string error = process.StandardError.ReadToEnd();
+                    process.WaitForExit();
+
+                    if (process.ExitCode == 0) {
+                        UnityEngine.Debug.Log($"[AnyRPG] Git Success: {output}");
+                        AssetDatabase.Refresh();
+                    } else {
+                        // If pull fails because of local changes, this will catch it
+                        EditorUtility.DisplayDialog("Git Error", $"Command failed: {error}", "OK");
+                        UnityEngine.Debug.LogError($"[AnyRPG] Git Error (Code {process.ExitCode}): {error}");
+                    }
+                }
+            } catch (System.ComponentModel.Win32Exception) {
+                EditorUtility.DisplayDialog("Git Not Found", "Git is required. Please install Git and restart Unity.", "OK");
+            } catch (Exception ex) {
+                EditorUtility.DisplayDialog("Git Error", $"Unexpected error: {ex.Message}", "OK");
+            }
+        }
+
+
 
         private void DrawUMAPostInstall() {
             // Parent container for the entire Step 3 section
@@ -676,7 +842,133 @@ namespace AnyRPG {
             GUILayout.Space(8);
         }
 
+        private void DrawStripDemoGamesTab() {
+            EditorGUILayout.LabelField("STRIP DEMO GAMES", EditorStyles.boldLabel);
+            DrawCustomInfoBox("Remove demo content to reduce project size. This will delete the game's source folder and its Build Profile asset.", "console.warnicon");
+            GUILayout.Space(10);
 
+            // --- STRIP ALL BUTTON ---
+            GUI.backgroundColor = new Color(1f, 0.8f, 0.8f);
+            if (GUILayout.Button("STRIP ALL DETECTED DEMO GAMES", GUILayout.Height(35))) {
+                if (EditorUtility.DisplayDialog("Strip All Demo Games", "Delete every detected demo game and build profile?", "Delete All", "Cancel")) {
+                    PerformStripDemo(storyDemoGamePath, storyDemoBuildProfilePath);
+                    PerformStripDemo(characterDemoGamePath, characterDemoBuildProfilePath);
+                    PerformStripDemo(contentDemoGamePath, contentDemoBuildProfilePath);
+                    PerformStripDemo(featuresDemoGamePath, featuresDemoBuildProfilePath);
+                    PerformStripDemo(zeroConfigModeGamePath, zeroConfigModeBuildProfilePath);
+                    PerformStripDemo(movementTestGamePath, movementTestGameBuildProfilePath);
+                    PerformStripDemo(umaDemoGamePath, umaDemoBuildProfilePath);
+                    PerformStripDemo(mmoDemoGamePath, mmoDemoBuildProfilePath);
+                    AssetDatabase.Refresh();
+                    EditorUtility.DisplayDialog("Cleanup Complete", "All detected demo games removed.", "OK");
+                }
+            }
+            GUI.backgroundColor = Color.white;
+            GUILayout.Space(15);
+
+            bool anyDemosFound = false;
+            anyDemosFound |= DrawStripDemoItem("A Lost Soul Story Demo", storyDemoGamePath, storyDemoBuildProfilePath);
+            anyDemosFound |= DrawStripDemoItem("A Lost Soul Character Demo", characterDemoGamePath, characterDemoBuildProfilePath);
+            anyDemosFound |= DrawStripDemoItem("Content Demo Game", contentDemoGamePath, contentDemoBuildProfilePath);
+            anyDemosFound |= DrawStripDemoItem("Features Demo Game", featuresDemoGamePath, featuresDemoBuildProfilePath);
+            anyDemosFound |= DrawStripDemoItem("Empty (Zero Config) Game", zeroConfigModeGamePath, zeroConfigModeBuildProfilePath);
+            anyDemosFound |= DrawStripDemoItem("Movement Test Game", movementTestGamePath, movementTestGameBuildProfilePath);
+            anyDemosFound |= DrawStripDemoItem("UMA Demo Game", umaDemoGamePath, umaDemoBuildProfilePath);
+            anyDemosFound |= DrawStripDemoItem("AnyMMO FishNet Demo Game", mmoDemoGamePath, mmoDemoBuildProfilePath);
+
+            if (!anyDemosFound) EditorGUILayout.HelpBox("No demo games detected.", MessageType.Info);
+        }
+
+        private bool DrawStripDemoItem(string title, string folderPath, string profilePath) {
+            bool folderExists = Directory.Exists(Path.Combine(Application.dataPath, folderPath));
+            bool profileExists = File.Exists(Path.Combine(Application.dataPath, profilePath));
+
+            if (!folderExists && !profileExists) return false;
+
+            GUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
+            GUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Resources detected.", EditorStyles.miniLabel);
+            GUI.color = new Color(1f, 0.4f, 0.4f);
+            if (GUILayout.Button("Strip Assets", GUILayout.Width(100))) {
+                if (EditorUtility.DisplayDialog("Strip", $"Delete assets for {title}?", "Delete", "Cancel")) {
+                    PerformStripDemo(folderPath, profilePath);
+                    AssetDatabase.Refresh();
+                }
+            }
+            GUI.color = Color.white;
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+            return true;
+        }
+
+        private void PerformStripDemo(string folderPath, string profilePath) {
+            string fullFolder = Path.Combine(Application.dataPath, folderPath);
+            string fullProfile = Path.Combine(Application.dataPath, profilePath);
+            if (Directory.Exists(fullFolder)) FileUtil.DeleteFileOrDirectory(fullFolder);
+            if (File.Exists(fullProfile)) FileUtil.DeleteFileOrDirectory(fullProfile);
+        }
+
+
+        private void DrawStripTemplateResourcesTab() {
+            EditorGUILayout.LabelField("STRIP TEMPLATE RESOURCES", EditorStyles.boldLabel);
+            DrawCustomInfoBox("Remove template assets (Packages, Prefabs, Resources).", "console.warnicon");
+            GUILayout.Space(10);
+
+            GUI.backgroundColor = new Color(1f, 0.8f, 0.8f);
+            if (GUILayout.Button("STRIP ALL DETECTED TEMPLATE CONTENT", GUILayout.Height(35))) {
+                if (EditorUtility.DisplayDialog("Strip All", "Remove all template subfolders?", "Delete All", "Cancel")) {
+                    PerformStripTemplate(coreTemplateContentFolder);
+                    PerformStripTemplate(engineTemplateContentFolder);
+                    PerformStripTemplate(umaTemplateContentFolder);
+                    PerformStripTemplate(fishNetTemplateContentFolder);
+                    AssetDatabase.Refresh();
+                    EditorUtility.DisplayDialog("Cleanup Complete", "All template content removed.", "OK");
+                }
+            }
+            GUI.backgroundColor = Color.white;
+            GUILayout.Space(15);
+
+            bool anyFound = false;
+            anyFound |= DrawStripTemplateRow("Core Template Content", coreTemplateContentFolder);
+            anyFound |= DrawStripTemplateRow("Engine Template Content", engineTemplateContentFolder);
+            anyFound |= DrawStripTemplateRow("UMA Template Content", umaTemplateContentFolder);
+            anyFound |= DrawStripTemplateRow("FishNet Template Content", fishNetTemplateContentFolder);
+
+            if (!anyFound) EditorGUILayout.HelpBox("No template resources detected.", MessageType.Info);
+        }
+
+        private bool DrawStripTemplateRow(string title, string parentPath) {
+            string[] subs = { "TemplatePackages", "TemplatePrefabs", "TemplateResources" };
+            bool exists = false;
+            foreach (var s in subs) if (Directory.Exists(Path.Combine(Application.dataPath, parentPath, s))) exists = true;
+
+            if (!exists) return false;
+
+            GUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
+            GUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Subfolders detected.", EditorStyles.miniLabel);
+            GUI.color = new Color(1f, 0.4f, 0.4f);
+            if (GUILayout.Button("Strip Templates", GUILayout.Width(110))) {
+                if (EditorUtility.DisplayDialog("Strip", $"Delete template subfolders in {parentPath}?", "Delete", "Cancel")) {
+                    PerformStripTemplate(parentPath);
+                    AssetDatabase.Refresh();
+                }
+            }
+            GUI.color = Color.white;
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+            return true;
+        }
+
+        private void PerformStripTemplate(string parentPath) {
+            string[] subs = { "TemplatePackages", "TemplatePrefabs", "TemplateResources" };
+            foreach (var s in subs) {
+                string full = Path.Combine(Application.dataPath, parentPath, s);
+                if (Directory.Exists(full)) FileUtil.DeleteFileOrDirectory(full);
+            }
+        }
 
 
 
