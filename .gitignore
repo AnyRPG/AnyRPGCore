@@ -97,8 +97,8 @@ Assets/AnyRPG/Addons/anymmo-fishnet*
 Assets/Games*
 
 # unity created
-Assets/Settings/Build Profiles
-Assets/Settings/Build Profiles.meta
+Assets/Settings
+Assets/Settings*
 
 #Visual Studio
 .leu
