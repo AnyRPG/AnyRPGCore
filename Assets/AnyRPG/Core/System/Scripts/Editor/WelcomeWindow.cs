@@ -61,10 +61,10 @@ namespace AnyRPG {
         private const int windowInitialHeight = 700;
 
         public static bool DisplayWelcomeWindow {
-            get { return PlayerPrefs.GetInt("DisplayWelcomeWindow") == 1 ? true : false; }
+            get { return EditorPrefs.GetInt("AnyRPG_DisplayWelcome") == 1 ? true : false; }
             set {
-                if (value != (PlayerPrefs.GetInt("DisplayWelcomeWindow") == 1 ? true : false)) {
-                    PlayerPrefs.SetInt("DisplayWelcomeWindow", value == true ? 1 : 0);
+                if (value != (EditorPrefs.GetInt("AnyRPG_DisplayWelcome") == 1 ? true : false)) {
+                    EditorPrefs.SetInt("AnyRPG_DisplayWelcome", value == true ? 1 : 0);
                 }
             }
         }
@@ -545,7 +545,6 @@ namespace AnyRPG {
 
             GUILayout.EndVertical();
         }
-
 
         private void DrawStatusStep(string label, bool installed, string okText, string btnText, Action onClick, string url, bool enabled = true) {
             GUILayout.BeginVertical(EditorStyles.helpBox);
