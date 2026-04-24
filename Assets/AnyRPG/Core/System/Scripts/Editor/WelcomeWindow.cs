@@ -136,25 +136,6 @@ namespace AnyRPG {
             }
         }
 
-        /*
-        private void DrawSidebar() {
-            // Left-aligned sidebar with a distinct "box" look
-            GUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.Width(SidebarWidth), GUILayout.ExpandHeight(true));
-
-            GUILayout.Label("MENU", EditorStyles.boldLabel);
-            GUILayout.Space(5);
-
-            string[] tabs = { "Start Here", "Install Optional Addons", "Create Your Game", "Included Demo Games", "Support" };
-
-            // SelectionGrid creates large, clickable buttons for your tabs
-            selectedTab = GUILayout.SelectionGrid(selectedTab, tabs, 1, GUILayout.Height(tabs.Length * 45));
-
-            GUILayout.FlexibleSpace();
-
-            GUILayout.EndVertical();
-        }
-        */
-
         private void DrawSidebar() {
             // Left-aligned sidebar with a distinct "box" look
             GUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.Width(SidebarWidth), GUILayout.ExpandHeight(true));
@@ -414,7 +395,7 @@ namespace AnyRPG {
                 GUILayout.BeginVertical(EditorStyles.helpBox);
                 if (GUILayout.Button("Remove Addon", GUILayout.Height(25))) {
                     if (EditorUtility.DisplayDialog($"Remove {addonString}", $"Are you sure you want to delete the addon folder at {relPath}?", "Delete", "Cancel")) {
-                        FileUtil.DeleteFileOrDirectory(fullPath);
+                        AssetDatabase.DeleteAsset(relPath);
                         AssetDatabase.Refresh();
                     }
                 }
@@ -731,7 +712,6 @@ namespace AnyRPG {
             GUILayout.Space(5);
         }
 
-
         private void DrawBottom() {
             GUILayout.BeginHorizontal("box");
 
@@ -895,10 +875,21 @@ namespace AnyRPG {
         }
 
         private void PerformStripDemo(string folderPath, string profilePath) {
-            string fullFolder = Path.Combine(Application.dataPath, folderPath);
-            string fullProfile = Path.Combine(Application.dataPath, profilePath);
-            if (Directory.Exists(fullFolder)) FileUtil.DeleteFileOrDirectory(fullFolder);
-            if (File.Exists(fullProfile)) FileUtil.DeleteFileOrDirectory(fullProfile);
+            // Ensure the paths start with "Assets/"
+            string assetFolder = "Assets/" + folderPath;
+            string assetProfile = "Assets/" + profilePath;
+
+            // DeleteAsset handles the file/folder AND the .meta file automatically
+            if (AssetDatabase.IsValidFolder(assetFolder)) {
+                AssetDatabase.DeleteAsset(assetFolder);
+            }
+
+            if (System.IO.File.Exists(Path.Combine(Application.dataPath, profilePath))) {
+                AssetDatabase.DeleteAsset(assetProfile);
+            }
+
+            // Force Unity to acknowledge the files are gone immediately
+            AssetDatabase.Refresh();
         }
 
 
@@ -955,11 +946,16 @@ namespace AnyRPG {
         }
 
         private void PerformStripTemplate(string parentPath) {
-            string[] subs = { "TemplatePackages", "TemplatePrefabs", "TemplateResources" };
-            foreach (var s in subs) {
-                string full = Path.Combine(Application.dataPath, parentPath, s);
-                if (Directory.Exists(full)) FileUtil.DeleteFileOrDirectory(full);
+            string[] subFolders = { "TemplatePackages", "TemplatePrefabs", "TemplateResources" };
+            foreach (var subFolder in subFolders) {
+                string relPath = Path.Combine("Assets", parentPath, subFolder);
+
+                // DeleteAsset removes both the folder and the .meta file
+                if (AssetDatabase.IsValidFolder(relPath)) {
+                    AssetDatabase.DeleteAsset(relPath);
+                }
             }
+            AssetDatabase.Refresh();
         }
 
 
