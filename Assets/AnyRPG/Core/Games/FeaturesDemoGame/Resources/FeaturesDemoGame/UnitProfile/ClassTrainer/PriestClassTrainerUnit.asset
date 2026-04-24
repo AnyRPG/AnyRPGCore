@@ -27,12 +27,10 @@ MonoBehaviour:
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    networkUnitPrefab: {fileID: 4649811912837811180, guid: 12c19dd49d989d944a7cfa426bb86594,
-      type: 3}
+    networkUnitPrefab: {fileID: 0}
     modelPrefab: {fileID: 6954704190252621995, guid: aee242495df737442a6f4c531e848358,
       type: 3}
-    networkModelPrefab: {fileID: 5363964578825517284, guid: 91351623174c98e4bb3603225a7c263c,
-      type: 3}
+    networkModelPrefab: {fileID: 0}
     modelProvider:
       rid: -2
     animationProfileName: 
@@ -124,16 +122,8 @@ MonoBehaviour:
     forceRotateModelMode: 0
     namePlateProps:
       displayName: 
-      suppressFaction: 1
       overrideNameplatePosition: 0
       namePlatePosition: {x: 0, y: 0, z: 0}
-      useSnapShot: 0
-      unitFrameTarget: head
-      unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
-      unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
-      unitPreviewTarget: 
-      unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
-      unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
     unitFrameProps:
       useSnapShot: 0
       unitFrameTarget: head
