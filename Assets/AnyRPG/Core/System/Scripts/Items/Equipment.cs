@@ -409,15 +409,9 @@ namespace AnyRPG {
                 if (equipmentModel != null) {
                     equipmentModel.Configure(systemGameManager);
                     equipmentModel.SetupScriptableObjects(this);
-                    equipmentModelDictionary.Add(equipmentModel.GetType(), equipmentModel);
-                }
-            }
-
-            foreach (EquipmentModel equipmentModel in inlineEquipmentModels.EquipmentModels) {
-                if (equipmentModel != null) {
                     equipmentModels.Add(equipmentModel);
                 }
-            }   
+            }
             if (sharedEquipmentModels != string.Empty) {
                 EquipmentModelProfile tmpEquipmentModelProfile = systemDataFactory.GetResource<EquipmentModelProfile>(sharedEquipmentModels);
                 if (tmpEquipmentModelProfile != null) {
@@ -430,7 +424,6 @@ namespace AnyRPG {
                     Debug.LogError($"Equipment.SetupScriptableObjects(): Could not find equipment model profile : {sharedEquipmentModels} while inititalizing {ResourceName}.  CHECK INSPECTOR");
                 }
             }
-
             foreach (EquipmentModel equipmentModel in equipmentModels) {
                 if (equipmentModel != null) {
                     equipmentModelDictionary.Add(equipmentModel.GetType(), equipmentModel);
