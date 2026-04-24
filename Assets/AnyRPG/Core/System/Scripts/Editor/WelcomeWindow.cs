@@ -17,6 +17,7 @@ namespace AnyRPG {
         private const string characterDemoGameScenePath = "ALostSoul/Games/ALostSoulCharacterDemo/Scenes/Game/ALostSoulCharacterDemoGame/ALostSoulCharacterDemoGame.unity";
         private const string contentDemoGameScenePath = "AnyRPG/Engine/Games/ContentDemo/Scenes/Game/ContentDemoGame/ContentDemoGame.unity";
         private const string featuresDemoGameScenePath = "AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity";
+        private const string movementTestGameScenePath = "AnyRPG/Addons/anyrpg-movement-test-game/Scenes/Game/MovementTestGame/MovementTestGame.unity";
         private const string umaDemoGameScenePath = "AnyRPG/Addons/anyrpg-uma/Games/UMADemoGame/Scenes/Game/UMADemoGame/UMADemoGame.unity";
         private const string mmoDemoGameScenePath = "AnyRPG/Addons/anymmo-fishnet/Games/AnyMMODemo/Scenes/AnyMMODemo/AnyMMODemo.unity";
 
@@ -24,7 +25,7 @@ namespace AnyRPG {
         private const string characterDemoGamePath = "ALostSoul/Games/ALostSoulCharacterDemo";
         private const string contentDemoGamePath = "AnyRPG/Engine/Games/ContentDemo";
         private const string featuresDemoGamePath = "AnyRPG/Core/Games/FeaturesDemoGame";
-        private const string movementTestGamePath = "AnyRPG/Core/Games/MovementTestGame";
+        private const string movementTestGamePath = "AnyRPG/Addons/anyrpg-movement-test-game/Games/MovementTestGame";
         private const string umaDemoGamePath = "AnyRPG/Addons/anyrpg-uma/Games/UMADemoGame";
         private const string mmoDemoGamePath = "AnyRPG/Addons/anymmo-fishnet/Games/AnyMMODemo";
 
@@ -701,6 +702,14 @@ namespace AnyRPG {
                 mmoDemoBuildProfilePath,
                 "A copy of the Features Demo Game designed for play over the network with multiple players."
                 );
+
+            DrawDemoButton(
+                "Movement Test Game",
+                movementTestGameScenePath,
+                movementTestGameBuildProfilePath,
+                "A simple one scene game with stairs, ramps, obstacles, and water suitable for testing character controller modifications"
+                );
+
 
         }
 
