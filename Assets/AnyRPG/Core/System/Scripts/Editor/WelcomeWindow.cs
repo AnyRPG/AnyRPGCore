@@ -33,7 +33,7 @@ namespace AnyRPG {
         private const string characterDemoBuildProfilePath = "ALostSoul/Build Profiles/A Lost Soul Character Demo.asset";
         private const string contentDemoBuildProfilePath = "AnyRPG/Engine/Build Profiles/Content Demo Game.asset";
         private const string featuresDemoBuildProfilePath = "AnyRPG/Core/Build Profiles/Features Demo Game.asset";
-        private const string movementTestGameBuildProfilePath = "AnyRPG/Core/Build Profiles/Movement Test Game.asset";
+        private const string movementTestGameBuildProfilePath = "AnyRPG/Addons/anyrpg-movement-test-game/Build Profiles/Movement Test Game.asset";
         private const string umaDemoBuildProfilePath = "AnyRPG/Addons/anyrpg-uma/Build Profiles/UMA Demo Game.asset";
         private const string mmoDemoBuildProfilePath = "AnyRPG/Addons/anymmo-fishnet/Build Profiles/AnyMMO Demo Game.asset";
 
