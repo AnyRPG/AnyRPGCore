@@ -369,30 +369,23 @@ namespace AnyRPG {
 
         private void DrawTerminalCommand(string command) {
             GUILayout.Space(5);
-            GUIStyle term = new GUIStyle(EditorStyles.textArea) {
+            // We use the internal "LogMessage" or "ConsoleLog" style as a template
+            // because it is guaranteed to be monospaced on all platforms.
+            GUIStyle consoleStyle = GUI.skin.GetStyle("LogMessage");
+            if (consoleStyle == null || consoleStyle.font == null) {
+                consoleStyle = EditorStyles.label; // Final safety fallback
+            }
+
+            GUIStyle term = new GUIStyle(consoleStyle) {
                 wordWrap = true,
-                fontSize = 12, // Restored to 12pt for readability
-                normal = { textColor = Color.white, background = MakeTex(2, 2, new Color(0.05f, 0.05f, 0.05f)) },
-                padding = new RectOffset(5, 5, 5, 5)
+                fontSize = 12,
+                normal = {
+                    textColor = Color.white,
+                    background = MakeTex(2, 2, new Color(0.05f, 0.05f, 0.05f))
+                },
+                padding = new RectOffset(10, 10, 10, 10), // Extra padding for terminal feel
+                font = consoleStyle.font // Explicitly use the console's mono font
             };
-            string[] fontNames = { "Courier New", "Liberation Mono", "DejaVu Sans Mono", "monospace" };
-            Font foundFont = null;
-
-            foreach (string fName in fontNames) {
-                foundFont = Font.CreateDynamicFontFromOSFont(fName, 12);
-                if (foundFont != null) break;
-            }
-
-            // if OS fonts fail, use the internal font Unity uses for its own Console Window
-            if (foundFont == null) {
-                // "ConsoleLog" is an internal Unity style that ALWAYS uses the editor's monospace font
-                GUIStyle consoleStyle = GUI.skin.GetStyle("ConsoleLog");
-                if (consoleStyle != null && consoleStyle.font != null) {
-                    foundFont = consoleStyle.font;
-                }
-            }
-
-            term.font = foundFont;
 
             // Fixed height for 2 lines of text (approx 42-45 pixels for 12pt font)
             EditorGUILayout.SelectableLabel(command, term, GUILayout.Height(42));
