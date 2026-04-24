@@ -375,14 +375,24 @@ namespace AnyRPG {
                 normal = { textColor = Color.white, background = MakeTex(2, 2, new Color(0.05f, 0.05f, 0.05f)) },
                 padding = new RectOffset(5, 5, 5, 5)
             };
-            term.font = Font.CreateDynamicFontFromOSFont(new string[] {
-                "Courier New",      // Windows/macOS
-                "Liberation Mono",  // Linux (Direct Courier New replacement)
-                "DejaVu Sans Mono", // Linux (Very common)
-                "Ubuntu Mono",      // Ubuntu default
-                "Courier",          // Generic fallback
-                "monospace"         // System fallback
-            }, 12);
+            string[] fontNames = { "Courier New", "Liberation Mono", "DejaVu Sans Mono", "monospace" };
+            Font foundFont = null;
+
+            foreach (string fName in fontNames) {
+                foundFont = Font.CreateDynamicFontFromOSFont(fName, 12);
+                if (foundFont != null) break;
+            }
+
+            // if OS fonts fail, use the internal font Unity uses for its own Console Window
+            if (foundFont == null) {
+                // "ConsoleLog" is an internal Unity style that ALWAYS uses the editor's monospace font
+                GUIStyle consoleStyle = GUI.skin.GetStyle("ConsoleLog");
+                if (consoleStyle != null && consoleStyle.font != null) {
+                    foundFont = consoleStyle.font;
+                }
+            }
+
+            term.font = foundFont;
 
             // Fixed height for 2 lines of text (approx 42-45 pixels for 12pt font)
             EditorGUILayout.SelectableLabel(command, term, GUILayout.Height(42));
