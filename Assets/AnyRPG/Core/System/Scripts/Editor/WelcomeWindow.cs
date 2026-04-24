@@ -295,52 +295,6 @@ namespace AnyRPG {
             );
         }
 
-        /*
-        private void DrawTerminalCommand(string command) {
-            GUILayout.Space(10);
-            GUIStyle term = new GUIStyle(EditorStyles.textArea) {
-                wordWrap = true,
-                normal = { textColor = Color.white, background = MakeTex(2, 2, new Color(0.05f, 0.05f, 0.05f)) }
-            };
-            term.font = Font.CreateDynamicFontFromOSFont(new string[] { "Courier New", "monospace" }, 12);
-            EditorGUILayout.SelectableLabel(command, term, GUILayout.Height(60));
-        }
-        */
-
-        /*
-        private void DrawTwoStepAddonPanel(string title, string desc, string baseFolder, string storeUrl, string addonFolder, string gitUrl, string packageString, string addonString, string pmSearchTerm, Action extraContent = null) {
-            GUILayout.BeginVertical(title, "window");
-            GUILayout.Space(16);
-
-            EditorGUILayout.LabelField(desc, new GUIStyle(EditorStyles.label) { fontSize = 12, wordWrap = true });
-            GUILayout.Space(10);
-
-            // --- STEP 1: BASE PACKAGE ---
-            bool hasBase = Directory.Exists(Path.Combine(Application.dataPath, "..", baseFolder));
-            DrawStatusStep($"1. {packageString} Unity Package", hasBase, "Installed", "Install Package", () => UnityEditor.PackageManager.UI.Window.Open(pmSearchTerm), storeUrl);
-
-            GUILayout.Space(5);
-
-            // --- STEP 2: ANYRPG ADDON ---
-            string relPath = Path.Combine("Assets", "AnyRPG", "Addons", addonFolder);
-            string fullPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", relPath));
-            bool hasAddon = Directory.Exists(fullPath);
-            DrawStatusStep($"2. {addonString}", hasAddon, "Installed", "Clone Addon (Requires Git)", () => InstallAddon(addonFolder, gitUrl), gitUrl, hasBase);
-
-            if (!hasAddon) {
-                DrawTerminalCommand($"git clone {gitUrl} \"{fullPath}\"");
-            }
-
-            // --- STEP 3: OPTIONAL EXTRA CONTENT ---
-            if (hasBase && hasAddon && extraContent != null) {
-                GUILayout.Space(5);
-                extraContent.Invoke();
-            }
-
-            GUILayout.EndVertical();
-        }
-        */
-
         private void DrawTwoStepAddonPanel(string title, string desc, string baseFolder, string storeUrl, string addonFolder, string gitUrl, string packageString, string addonString, string pmSearchTerm, Action extraContent = null) {
             GUILayout.BeginVertical(title, "window");
             GUILayout.Space(16);
@@ -421,7 +375,14 @@ namespace AnyRPG {
                 normal = { textColor = Color.white, background = MakeTex(2, 2, new Color(0.05f, 0.05f, 0.05f)) },
                 padding = new RectOffset(5, 5, 5, 5)
             };
-            term.font = Font.CreateDynamicFontFromOSFont(new string[] { "Courier New", "monospace" }, 12);
+            term.font = Font.CreateDynamicFontFromOSFont(new string[] {
+                "Courier New",      // Windows/macOS
+                "Liberation Mono",  // Linux (Direct Courier New replacement)
+                "DejaVu Sans Mono", // Linux (Very common)
+                "Ubuntu Mono",      // Ubuntu default
+                "Courier",          // Generic fallback
+                "monospace"         // System fallback
+            }, 12);
 
             // Fixed height for 2 lines of text (approx 42-45 pixels for 12pt font)
             EditorGUILayout.SelectableLabel(command, term, GUILayout.Height(42));
