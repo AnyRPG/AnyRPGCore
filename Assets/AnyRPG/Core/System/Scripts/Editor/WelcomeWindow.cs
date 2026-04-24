@@ -385,8 +385,8 @@ namespace AnyRPG {
                 term.font = EditorStyles.textField.font;
             }
 
-            // 2 lines of text (approx 42 pixels for 12pt font)
-            EditorGUILayout.SelectableLabel(command, term, GUILayout.Height(42));
+            // 2 lines of text (approx 45 pixels for 12pt font)
+            EditorGUILayout.SelectableLabel(command, term, GUILayout.Height(45));
         }
 
 
