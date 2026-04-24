@@ -293,6 +293,39 @@ namespace AnyRPG {
                 "AnyMMO FishNet Addon",
                 "FishNet: Networking Evolved"
             );
+
+            GUILayout.Space(15);
+
+            UnityPackageReq fishNetPackage = new UnityPackageReq {
+                Name = "FishNet",
+                Folder = "Assets/FishNet",
+                SearchTerm = "FishNet: Networking Evolved",
+                StoreUrl = "https://assetstore.unity.com/packages/package/207815"
+            };
+
+            UnityPackageReq umaPackage = new UnityPackageReq {
+                Name = "UMA 2",
+                Folder = "Assets/UMA",
+                SearchTerm = "UMA 2",
+                StoreUrl = "https://assetstore.unity.com/packages/package/35611"
+            };
+
+            DrawModularAddonPanel(
+                "FishNet-UMA Integration",
+                "Adds template content with UMA characters configured for use with FishNet",
+                "anyrpg-fishnet-uma",
+                "https://github.com/AnyRPG/anymmo-fishnet-uma",
+                "AnyMMO FishNet UMA Addon",
+                new List<UnityPackageReq> {
+                    fishNetPackage,
+                    umaPackage
+                },
+                new List<AddonReq> {
+                new AddonReq { Name = "AnyRPG UMA Addon", Folder = "anyrpg-uma", GitUrl = "https://github.com/AnyRPG/anyrpg-uma" },
+                new AddonReq { Name = "AnyMMO FishNet Addon", Folder = "anymmo-fishnet", GitUrl = "https://github.com/AnyRPG/anymmo-fishnet" },
+                }
+            );
+
         }
 
         private void DrawTwoStepAddonPanel(string title, string desc, string baseFolder, string storeUrl, string addonFolder, string gitUrl, string packageString, string addonString, string pmSearchTerm, Action extraContent = null) {
@@ -366,6 +399,153 @@ namespace AnyRPG {
 
             GUILayout.EndVertical();
         }
+
+        private void DrawModularAddonPanel(string title, string desc, string addonFolder, string gitUrl, string addonLabel, List<UnityPackageReq> unityReqs = null, List<AddonReq> addonReqs = null, Action extraContent = null) {
+            GUILayout.BeginVertical(title, "window");
+            GUILayout.Space(16);
+            EditorGUILayout.LabelField(desc, new GUIStyle(EditorStyles.label) { fontSize = 12, wordWrap = true });
+            GUILayout.Space(10);
+
+            bool allReqsMet = true;
+            int stepCounter = 1; // Internal counter for labeling steps
+
+            // --- UNITY PACKAGE DEPENDENCIES ---
+            if (unityReqs != null) {
+                foreach (var req in unityReqs) {
+                    bool installed = Directory.Exists(Path.Combine(Application.dataPath, "..", req.Folder));
+                    if (!installed) allReqsMet = false;
+
+                    DrawStatusStep($"{stepCounter++}. {req.Name} Unity Package", installed, "Installed",
+                        installed ? "Open Package Manager" : "Install Package",
+                        () => UnityEditor.PackageManager.UI.Window.Open(req.SearchTerm), req.StoreUrl);
+                }
+            }
+
+            // --- ANYRPG ADDON DEPENDENCIES ---
+            if (addonReqs != null) {
+                foreach (var req in addonReqs) {
+                    string relPath = Path.Combine("Assets", "AnyRPG", "Addons", req.Folder);
+                    bool installed = Directory.Exists(Path.GetFullPath(Path.Combine(Application.dataPath, "..", relPath)));
+                    if (!installed) allReqsMet = false;
+
+                    // Draws the dependency with full Manage options
+                    DrawFullAddonStep($"{stepCounter++}. {req.Name}", req.Folder, req.GitUrl, installed, true);
+                }
+            }
+
+            // --- THE PRIMARY ADDON ---
+            string mainRelPath = Path.Combine("Assets", "AnyRPG", "Addons", addonFolder);
+            bool mainInstalled = Directory.Exists(Path.GetFullPath(Path.Combine(Application.dataPath, "..", mainRelPath)));
+
+            DrawFullAddonStep($"{stepCounter++}. {addonLabel}", addonFolder, gitUrl, mainInstalled, allReqsMet);
+
+            // --- STEP 3+ (Extra Content) ---
+            if (mainInstalled && allReqsMet && extraContent != null) {
+                extraContent.Invoke();
+            }
+
+            GUILayout.EndVertical();
+        }
+
+        private void DrawFullAddonStep(string stepLabel, string folder, string gitUrl, bool isInstalled, bool requirementsMet) {
+            string relPath = Path.Combine("Assets", "AnyRPG", "Addons", folder);
+            string fullPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", relPath));
+
+            GUILayout.BeginVertical(EditorStyles.helpBox);
+            DrawStatusStep(stepLabel, isInstalled, "Installed", "", null, gitUrl, requirementsMet);
+
+            // --- MANAGE SECTION (Thin Outline Box) ---
+            GUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.LabelField("Manage", EditorStyles.miniBoldLabel);
+
+            if (!isInstalled) {
+                GUILayout.BeginVertical(EditorStyles.helpBox);
+                GUI.enabled = requirementsMet;
+                // Button text remains original, unaffected by the step number
+                if (GUILayout.Button($"Install {stepLabel.Substring(stepLabel.IndexOf('.') + 2)} (Requires Git)", GUILayout.Height(25))) {
+                    InstallAddon(folder, gitUrl);
+                }
+                GUI.enabled = true;
+                DrawTerminalCommand($"git clone {gitUrl} \"{fullPath}\"");
+                GUILayout.EndVertical();
+            } else {
+                // UPDATE
+                GUILayout.BeginVertical(EditorStyles.helpBox);
+                if (GUILayout.Button("Update Addon (Requires Git)", GUILayout.Height(25))) {
+                    UpdateAddon(fullPath, folder);
+                }
+                DrawTerminalCommand($"cd \"{fullPath}\" && git pull");
+                GUILayout.EndVertical();
+
+                // CHECK UPDATES
+                GUILayout.BeginVertical(EditorStyles.helpBox);
+                if (GUILayout.Button("Check for Updates (Requires Git)", GUILayout.Height(25))) {
+                    CheckForUpdates(fullPath, folder);
+                }
+                DrawTerminalCommand($"cd \"{fullPath}\" && git fetch && git status -uno");
+                GUILayout.EndVertical();
+
+                // REMOVE
+                GUILayout.BeginVertical(EditorStyles.helpBox);
+                if (GUILayout.Button("Remove Addon", GUILayout.Height(25))) {
+                    if (EditorUtility.DisplayDialog($"Remove {folder}", $"Are you sure you want to delete the addon folder at {relPath}?", "Delete", "Cancel")) {
+                        AssetDatabase.DeleteAsset(relPath);
+                        AssetDatabase.Refresh();
+                    }
+                }
+                EditorGUILayout.HelpBox("Removes the addon files from the project.", MessageType.None);
+                GUILayout.EndVertical();
+            }
+
+            GUILayout.EndVertical(); // End Manage Box
+            GUILayout.EndVertical(); // End Step Box
+        }
+
+
+        // This helper restores your full Manage/Install/Update/Remove logic
+        private void DrawAddonManagementStep(string label, string folder, string gitUrl, bool isInstalled, bool parentRequirementsMet) {
+            string relPath = Path.Combine("Assets", "AnyRPG", "Addons", folder);
+            string fullPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", relPath));
+
+            GUILayout.BeginVertical(EditorStyles.helpBox);
+            DrawStatusStep(label, isInstalled, "Installed", "", null, gitUrl, parentRequirementsMet);
+
+            // THE MANAGE SECTION (Restored from your original code)
+            GUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.LabelField("Manage", EditorStyles.miniBoldLabel);
+
+            if (!isInstalled) {
+                GUILayout.BeginVertical(EditorStyles.helpBox);
+                GUI.enabled = parentRequirementsMet;
+                if (GUILayout.Button($"Install {label} (Requires Git)", GUILayout.Height(25))) {
+                    InstallAddon(folder, gitUrl);
+                }
+                GUI.enabled = true;
+                DrawTerminalCommand($"git clone {gitUrl} \"{fullPath}\"");
+                GUILayout.EndVertical();
+            } else {
+                // UPDATE SUB-BOX
+                GUILayout.BeginVertical(EditorStyles.helpBox);
+                if (GUILayout.Button("Update (Requires Git)", GUILayout.Height(25))) {
+                    UpdateAddon(fullPath, label);
+                }
+                DrawTerminalCommand($"cd \"{fullPath}\" && git pull");
+                GUILayout.EndVertical();
+
+                // REMOVE SUB-BOX
+                GUILayout.BeginVertical(EditorStyles.helpBox);
+                if (GUILayout.Button("Remove Addon", GUILayout.Height(25))) {
+                    if (EditorUtility.DisplayDialog($"Remove {label}", $"Delete {relPath}?", "Delete", "Cancel")) {
+                        AssetDatabase.DeleteAsset(relPath);
+                        AssetDatabase.Refresh();
+                    }
+                }
+                GUILayout.EndVertical();
+            }
+            GUILayout.EndVertical(); // End Manage
+            GUILayout.EndVertical(); // End Step Box
+        }
+
 
         private void DrawTerminalCommand(string command) {
             GUILayout.Space(5);
@@ -920,8 +1100,35 @@ namespace AnyRPG {
             AssetDatabase.Refresh();
         }
 
-
-
-
     }
+
+    public class UnityPackageReq {
+        public string Name;
+        public string Folder;           // e.g., "Assets/UMA"
+        public string SearchTerm;       // e.g., "UMA 2"
+        public string StoreUrl;
+    }
+
+    public class AddonReq {
+        public string Name;
+        public string Folder;           // e.g., "anyrpg-uma"
+        public string GitUrl;
+    }
+
+    /*
+    public class AddonDefinition {
+        public string Title;
+        public string Description;
+        public string AddonFolder;
+        public string GitUrl;
+        public string AddonLabel;        // e.g., "AnyRPG UMA Addon"
+
+        // Optional dependency lists
+        public List<UnityPackageDependency> RequiredPackages = new List<UnityPackageDependency>();
+        public List<string> RequiredAddonFolders = new List<string>();
+
+        public Action ExtraContent;
+    }
+    */
+
 }
