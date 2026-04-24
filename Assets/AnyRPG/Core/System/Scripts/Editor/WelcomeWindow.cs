@@ -369,25 +369,23 @@ namespace AnyRPG {
 
         private void DrawTerminalCommand(string command) {
             GUILayout.Space(5);
-            // We use the internal "LogMessage" or "ConsoleLog" style as a template
-            // because it is guaranteed to be monospaced on all platforms.
-            GUIStyle consoleStyle = GUI.skin.GetStyle("LogMessage");
-            if (consoleStyle == null || consoleStyle.font == null) {
-                consoleStyle = EditorStyles.label; // Final safety fallback
+            // Start with textArea to get the background/border box
+            GUIStyle term = new GUIStyle(EditorStyles.textArea);
+
+            // Set our custom colors and wrapping
+            term.wordWrap = true;
+            term.fontSize = 12;
+            term.normal.textColor = Color.white;
+            term.normal.background = MakeTex(2, 2, new Color(0.05f, 0.05f, 0.05f));
+            term.padding = new RectOffset(8, 8, 8, 8);
+
+            // In Unity 6, EditorStyles.textField.font is the most reliable 
+            // way to get the internal monospaced font used for code/data input.
+            if (EditorStyles.textField.font != null) {
+                term.font = EditorStyles.textField.font;
             }
 
-            GUIStyle term = new GUIStyle(consoleStyle) {
-                wordWrap = true,
-                fontSize = 12,
-                normal = {
-                    textColor = Color.white,
-                    background = MakeTex(2, 2, new Color(0.05f, 0.05f, 0.05f))
-                },
-                padding = new RectOffset(10, 10, 10, 10), // Extra padding for terminal feel
-                font = consoleStyle.font // Explicitly use the console's mono font
-            };
-
-            // Fixed height for 2 lines of text (approx 42-45 pixels for 12pt font)
+            // 2 lines of text (approx 42 pixels for 12pt font)
             EditorGUILayout.SelectableLabel(command, term, GUILayout.Height(42));
         }
 
