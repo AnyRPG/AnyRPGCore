@@ -195,7 +195,7 @@ namespace AnyRPG {
 
             SceneNode sceneNode = sceneUtilityService.GetSceneNodeBySceneName(scene.name);
             if (sceneNode == null) {
-                // in zero config mode, there are no scene nodes, so this is expected. just return and don't spawn anything.
+                Debug.LogWarning($"LevelManagerServer.SpawnEphemeralObjects(scene: {scene.name}) could not find scene node for scene");
                 return;
             }
             List <PersistentObjectSaveData> ephemeralObjects = new List<PersistentObjectSaveData>(saveManager.GetEphemeralObjects(sceneNode));

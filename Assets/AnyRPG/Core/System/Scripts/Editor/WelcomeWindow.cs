@@ -17,7 +17,6 @@ namespace AnyRPG {
         private const string characterDemoGameScenePath = "/ALostSoul/Games/ALostSoulCharacterDemo/Scenes/Game/ALostSoulCharacterDemoGame/ALostSoulCharacterDemoGame.unity";
         private const string contentDemoGameScenePath = "/AnyRPG/Engine/Games/ContentDemo/Scenes/Game/ContentDemoGame/ContentDemoGame.unity";
         private const string featuresDemoGameScenePath = "/AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity";
-        private const string zeroConfigModeGameScenePath = "/AnyRPG/Core/Games/EmptyGame/Scenes/EmptyGame/EmptyGame.unity";
         private const string umaDemoGameScenePath = "/AnyRPG/Addons/anyrpg-uma/Games/UMADemoGame/Scenes/Game/UMADemoGame/UMADemoGame.unity";
         private const string mmoDemoGameScenePath = "/AnyRPG/Addons/anymmo-fishnet/Games/AnyMMODemo/Scenes/AnyMMODemo/AnyMMODemo.unity";
 
@@ -25,7 +24,6 @@ namespace AnyRPG {
         private const string characterDemoGamePath = "ALostSoul/Games/ALostSoulCharacterDemo";
         private const string contentDemoGamePath = "AnyRPG/Engine/Games/ContentDemo";
         private const string featuresDemoGamePath = "AnyRPG/Core/Games/FeaturesDemoGame";
-        private const string zeroConfigModeGamePath = "AnyRPG/Core/Games/EmptyGame";
         private const string movementTestGamePath = "AnyRPG/Core/Games/MovementTestGame";
         private const string umaDemoGamePath = "AnyRPG/Addons/anyrpg-uma/Games/UMADemoGame";
         private const string mmoDemoGamePath = "AnyRPG/Addons/anymmo-fishnet/Games/AnyMMODemo";
@@ -686,13 +684,6 @@ namespace AnyRPG {
                 );
 
             DrawDemoButton(
-                "Empty (Zero Config Mode) Game",
-                zeroConfigModeGameScenePath,
-                "Assets/Settings/Build Profiles/Empty Game.asset",
-                "A bare bones single scene with no main menu that demonstrates how to use AnyRPG in Zero Config (Controller Only) mode by including an unconfigured GameManager into any scene"
-                );
-
-            DrawDemoButton(
                 "UMA Demo Game",
                 umaDemoGameScenePath,
                 "Assets/Settings/Build Profiles/UMA Demo Game.asset",
@@ -855,7 +846,6 @@ namespace AnyRPG {
                     PerformStripDemo(characterDemoGamePath, characterDemoBuildProfilePath);
                     PerformStripDemo(contentDemoGamePath, contentDemoBuildProfilePath);
                     PerformStripDemo(featuresDemoGamePath, featuresDemoBuildProfilePath);
-                    PerformStripDemo(zeroConfigModeGamePath, zeroConfigModeBuildProfilePath);
                     PerformStripDemo(movementTestGamePath, movementTestGameBuildProfilePath);
                     PerformStripDemo(umaDemoGamePath, umaDemoBuildProfilePath);
                     PerformStripDemo(mmoDemoGamePath, mmoDemoBuildProfilePath);
@@ -871,7 +861,6 @@ namespace AnyRPG {
             anyDemosFound |= DrawStripDemoItem("A Lost Soul Character Demo", characterDemoGamePath, characterDemoBuildProfilePath);
             anyDemosFound |= DrawStripDemoItem("Content Demo Game", contentDemoGamePath, contentDemoBuildProfilePath);
             anyDemosFound |= DrawStripDemoItem("Features Demo Game", featuresDemoGamePath, featuresDemoBuildProfilePath);
-            anyDemosFound |= DrawStripDemoItem("Empty (Zero Config) Game", zeroConfigModeGamePath, zeroConfigModeBuildProfilePath);
             anyDemosFound |= DrawStripDemoItem("Movement Test Game", movementTestGamePath, movementTestGameBuildProfilePath);
             anyDemosFound |= DrawStripDemoItem("UMA Demo Game", umaDemoGamePath, umaDemoBuildProfilePath);
             anyDemosFound |= DrawStripDemoItem("AnyMMO FishNet Demo Game", mmoDemoGamePath, mmoDemoBuildProfilePath);
