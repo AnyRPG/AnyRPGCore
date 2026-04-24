@@ -602,8 +602,8 @@ namespace AnyRPG {
         }
 
         public void DeleteItemInstance(InstantiatedItem itemToRemove) {
-            if (networkManagerServer.ServerMode == NetworkServerMode.Lobby) {
-                // no persistent data is saved in Lobby mode
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerMode == NetworkServerMode.Lobby) {
+                // no persistent data is saved in Lobby mode or Local mode
                 return;
             }
             if (systemConfigurationManager.ServerBackend == ServerBackend.APIServer) {
