@@ -304,7 +304,7 @@ namespace AnyRPG {
 
             // --- STEP 1: BASE PACKAGE ---
             bool hasBase = Directory.Exists(Path.Combine(Application.dataPath, "..", baseFolder));
-            DrawStatusStep($"1. {packageString} Unity Package", hasBase, "Installed", "Install Package", () => UnityEditor.PackageManager.UI.Window.Open(pmSearchTerm), storeUrl);
+            DrawStatusStep($"1. {packageString} Unity Package", hasBase, "Installed", hasBase ? "Open Package Manager" : "Install Package", () => UnityEditor.PackageManager.UI.Window.Open(pmSearchTerm), storeUrl);
 
             // --- STEP 2: ANYRPG ADDON ---
             string relPath = Path.Combine("Assets", "AnyRPG", "Addons", addonFolder);
@@ -503,7 +503,7 @@ namespace AnyRPG {
                 GUI.color = new Color(1f, 0.4f, 0.4f);
                 GUILayout.Label("\u2718 Missing", GUILayout.Width(70));
                 GUI.color = Color.white;
-
+            }
                 GUILayout.FlexibleSpace();
 
                 GUI.enabled = enabled;
@@ -514,7 +514,7 @@ namespace AnyRPG {
                     }
                 }
                 GUI.enabled = true;
-            }
+
             GUILayout.EndHorizontal();
 
             // Row 3: Manual URL Link
