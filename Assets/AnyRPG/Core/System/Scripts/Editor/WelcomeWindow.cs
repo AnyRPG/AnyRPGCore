@@ -265,37 +265,6 @@ namespace AnyRPG {
 
             GUILayout.Space(10);
 
-            // UMA 2 PANEL (With Step 3)
-            DrawTwoStepAddonPanel(
-                "UMA 2 Integration",
-                "Adds advanced character customization and runtime mesh combining.",
-                "Assets/UMA",
-                "https://assetstore.unity.com/packages/package/35611",
-                "anyrpg-uma",
-                "https://github.com/AnyRPG/anyrpg-uma",
-                "UMA 2",
-                "AnyRPG UMA Addon",
-                "UMA 2",
-                DrawUMAPostInstall // Passing the Step 3 method here
-            );
-
-            GUILayout.Space(15);
-
-            // FISHNET PANEL
-            DrawTwoStepAddonPanel(
-                "FishNet (MMO) Networking",
-                "Enables multiplayer capabilities using the FishNet library.",
-                "Assets/FishNet",
-                "https://assetstore.unity.com/packages/package/207815",
-                "anymmo-fishnet",
-                "https://github.com/AnyRPG/anymmo-fishnet",
-                "FishNet",
-                "AnyMMO FishNet Addon",
-                "FishNet: Networking Evolved"
-            );
-
-            GUILayout.Space(15);
-
             UnityPackageReq fishNetPackage = new UnityPackageReq {
                 Name = "FishNet",
                 Folder = "Assets/FishNet",
@@ -311,9 +280,34 @@ namespace AnyRPG {
             };
 
             DrawModularAddonPanel(
+                "UMA 2 Integration",
+                "Adds advanced runtime character customization",
+                "anyrpg-uma",
+                "https://github.com/AnyRPG/anyrpg-uma",
+                "AnyRPG UMA Addon",
+                new List<UnityPackageReq> { umaPackage, },
+                new List<AddonReq>(),
+                DrawUMAPostInstall
+            );
+
+            GUILayout.Space(15);
+
+            DrawModularAddonPanel(
+                "FishNet (MMO) Networking",
+                "Enables online play using the FishNet library",
+                "anymmo-fishnet",
+                "https://github.com/AnyRPG/anymmo-fishnet",
+                "AnyMMO FishNet Addon",
+                new List<UnityPackageReq> { fishNetPackage },
+                new List<AddonReq>()
+            );
+
+            GUILayout.Space(15);
+
+            DrawModularAddonPanel(
                 "FishNet-UMA Integration",
                 "Adds template content with UMA characters configured for use with FishNet",
-                "anyrpg-fishnet-uma",
+                "anymmo-fishnet-uma",
                 "https://github.com/AnyRPG/anymmo-fishnet-uma",
                 "AnyMMO FishNet UMA Addon",
                 new List<UnityPackageReq> {
@@ -326,78 +320,18 @@ namespace AnyRPG {
                 }
             );
 
-        }
+            GUILayout.Space(15);
 
-        private void DrawTwoStepAddonPanel(string title, string desc, string baseFolder, string storeUrl, string addonFolder, string gitUrl, string packageString, string addonString, string pmSearchTerm, Action extraContent = null) {
-            GUILayout.BeginVertical(title, "window");
-            GUILayout.Space(16);
+            DrawModularAddonPanel(
+                "Movement Test Game",
+                "A simple one scene game with stairs, ramps, obstacles, and water suitable for testing character controller modifications",
+                "anyrpg-movement-test-game",
+                "https://github.com/AnyRPG/anyrpg-movement-test-game",
+                "AnyRPG Movement Test Game",
+                new List<UnityPackageReq>(),
+                new List<AddonReq>()
+            );
 
-            EditorGUILayout.LabelField(desc, new GUIStyle(EditorStyles.label) { fontSize = 12, wordWrap = true });
-            GUILayout.Space(10);
-
-            // --- STEP 1: BASE PACKAGE ---
-            bool hasBase = Directory.Exists(Path.Combine(Application.dataPath, "..", baseFolder));
-            DrawStatusStep($"1. {packageString} Unity Package", hasBase, "Installed", hasBase ? "Open Package Manager" : "Install Package", () => UnityEditor.PackageManager.UI.Window.Open(pmSearchTerm), storeUrl);
-
-            // --- STEP 2: ANYRPG ADDON ---
-            string relPath = Path.Combine("Assets", "AnyRPG", "Addons", addonFolder);
-            string fullPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", relPath));
-            bool hasAddon = Directory.Exists(fullPath);
-
-            GUILayout.BeginVertical(EditorStyles.helpBox);
-            DrawStatusStep($"2. {addonString}", hasAddon, "Installed", "", null, gitUrl, hasBase);
-
-            // --- MANAGE SECTION (Thin Outline Box) ---
-            GUILayout.BeginVertical(EditorStyles.helpBox);
-            EditorGUILayout.LabelField("Manage", EditorStyles.miniBoldLabel);
-
-            if (!hasAddon) {
-                // INSTALL SUB-BOX
-                GUILayout.BeginVertical(EditorStyles.helpBox);
-                GUI.enabled = hasBase;
-                if (GUILayout.Button($"Install {addonString} (Requires Git)", GUILayout.Height(25))) {
-                    InstallAddon(addonFolder, gitUrl);
-                }
-                GUI.enabled = true;
-                DrawTerminalCommand($"git clone {gitUrl} \"{fullPath}\"");
-                GUILayout.EndVertical();
-            } else {
-                // UPDATE SUB-BOX
-                GUILayout.BeginVertical(EditorStyles.helpBox);
-                if (GUILayout.Button("Update Addon (Requires Git)", GUILayout.Height(25))) {
-                    UpdateAddon(fullPath, addonString);
-                }
-                DrawTerminalCommand($"cd \"{fullPath}\" && git pull");
-                GUILayout.EndVertical();
-
-                // CHECK UPDATES SUB-BOX
-                GUILayout.BeginVertical(EditorStyles.helpBox);
-                if (GUILayout.Button("Check for Updates (Requires Git)", GUILayout.Height(25))) {
-                    CheckForUpdates(fullPath, addonString);
-                }
-                DrawTerminalCommand($"cd \"{fullPath}\" && git fetch && git status -uno");
-                GUILayout.EndVertical();
-
-                // REMOVE SUB-BOX
-                GUILayout.BeginVertical(EditorStyles.helpBox);
-                if (GUILayout.Button("Remove Addon", GUILayout.Height(25))) {
-                    if (EditorUtility.DisplayDialog($"Remove {addonString}", $"Are you sure you want to delete the addon folder at {relPath}?", "Delete", "Cancel")) {
-                        AssetDatabase.DeleteAsset(relPath);
-                        AssetDatabase.Refresh();
-                    }
-                }
-                EditorGUILayout.HelpBox("Removes the addon files from the project.", MessageType.None);
-                GUILayout.EndVertical();
-            }
-
-            GUILayout.EndVertical(); // End Manage Box
-            GUILayout.EndVertical(); // End Step 2 Box
-
-            if (hasBase && hasAddon && extraContent != null) {
-                extraContent.Invoke();
-            }
-
-            GUILayout.EndVertical();
         }
 
         private void DrawModularAddonPanel(string title, string desc, string addonFolder, string gitUrl, string addonLabel, List<UnityPackageReq> unityReqs = null, List<AddonReq> addonReqs = null, Action extraContent = null) {
@@ -502,51 +436,6 @@ namespace AnyRPG {
         }
 
 
-        // This helper restores your full Manage/Install/Update/Remove logic
-        private void DrawAddonManagementStep(string label, string folder, string gitUrl, bool isInstalled, bool parentRequirementsMet) {
-            string relPath = Path.Combine("Assets", "AnyRPG", "Addons", folder);
-            string fullPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", relPath));
-
-            GUILayout.BeginVertical(EditorStyles.helpBox);
-            DrawStatusStep(label, isInstalled, "Installed", "", null, gitUrl, parentRequirementsMet);
-
-            // THE MANAGE SECTION (Restored from your original code)
-            GUILayout.BeginVertical(EditorStyles.helpBox);
-            EditorGUILayout.LabelField("Manage", EditorStyles.miniBoldLabel);
-
-            if (!isInstalled) {
-                GUILayout.BeginVertical(EditorStyles.helpBox);
-                GUI.enabled = parentRequirementsMet;
-                if (GUILayout.Button($"Install {label} (Requires Git)", GUILayout.Height(25))) {
-                    InstallAddon(folder, gitUrl);
-                }
-                GUI.enabled = true;
-                DrawTerminalCommand($"git clone {gitUrl} \"{fullPath}\"");
-                GUILayout.EndVertical();
-            } else {
-                // UPDATE SUB-BOX
-                GUILayout.BeginVertical(EditorStyles.helpBox);
-                if (GUILayout.Button("Update (Requires Git)", GUILayout.Height(25))) {
-                    UpdateAddon(fullPath, label);
-                }
-                DrawTerminalCommand($"cd \"{fullPath}\" && git pull");
-                GUILayout.EndVertical();
-
-                // REMOVE SUB-BOX
-                GUILayout.BeginVertical(EditorStyles.helpBox);
-                if (GUILayout.Button("Remove Addon", GUILayout.Height(25))) {
-                    if (EditorUtility.DisplayDialog($"Remove {label}", $"Delete {relPath}?", "Delete", "Cancel")) {
-                        AssetDatabase.DeleteAsset(relPath);
-                        AssetDatabase.Refresh();
-                    }
-                }
-                GUILayout.EndVertical();
-            }
-            GUILayout.EndVertical(); // End Manage
-            GUILayout.EndVertical(); // End Step Box
-        }
-
-
         private void DrawTerminalCommand(string command) {
             GUILayout.Space(5);
             // Start with textArea to get the background/border box
@@ -569,9 +458,6 @@ namespace AnyRPG {
             EditorGUILayout.SelectableLabel(command, term, GUILayout.Height(45));
         }
 
-
-
-
         private void CheckForUpdates(string fullPath, string addonName) {
             EditorUtility.DisplayProgressBar("AnyRPG Addon Checker", $"Checking {addonName} for updates...", 0.5f);
             try {
@@ -585,7 +471,6 @@ namespace AnyRPG {
                 EditorUtility.ClearProgressBar();
             }
         }
-
 
         private void UpdateAddon(string fullPath, string addonName) {
             EditorUtility.DisplayProgressBar("AnyRPG Addon Updater", $"Updating {addonName}...", 0.5f);
@@ -632,8 +517,6 @@ namespace AnyRPG {
                 EditorUtility.DisplayDialog("Git Error", $"Unexpected error: {ex.Message}", "OK");
             }
         }
-
-
 
         private void DrawUMAPostInstall() {
             // Parent container for the entire Step 3 section
@@ -1034,7 +917,6 @@ namespace AnyRPG {
             AssetDatabase.Refresh();
         }
 
-
         private void DrawStripTemplateResourcesTab() {
             EditorGUILayout.LabelField("STRIP TEMPLATE RESOURCES", EditorStyles.boldLabel);
             DrawCustomInfoBox("Remove template assets (Packages, Prefabs, Resources).", "console.warnicon");
@@ -1114,21 +996,5 @@ namespace AnyRPG {
         public string Folder;           // e.g., "anyrpg-uma"
         public string GitUrl;
     }
-
-    /*
-    public class AddonDefinition {
-        public string Title;
-        public string Description;
-        public string AddonFolder;
-        public string GitUrl;
-        public string AddonLabel;        // e.g., "AnyRPG UMA Addon"
-
-        // Optional dependency lists
-        public List<UnityPackageDependency> RequiredPackages = new List<UnityPackageDependency>();
-        public List<string> RequiredAddonFolders = new List<string>();
-
-        public Action ExtraContent;
-    }
-    */
 
 }
