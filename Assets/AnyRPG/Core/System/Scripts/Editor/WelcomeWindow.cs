@@ -13,12 +13,12 @@ namespace AnyRPG {
 
         public const string installedVersion = "1.0";
 
-        private const string storyDemoGameScenePath = "/ALostSoul/Games/ALostSoulStoryDemo/Scenes/Game/ALostSoulStoryDemoGame/ALostSoulStoryDemoGame.unity";
-        private const string characterDemoGameScenePath = "/ALostSoul/Games/ALostSoulCharacterDemo/Scenes/Game/ALostSoulCharacterDemoGame/ALostSoulCharacterDemoGame.unity";
-        private const string contentDemoGameScenePath = "/AnyRPG/Engine/Games/ContentDemo/Scenes/Game/ContentDemoGame/ContentDemoGame.unity";
-        private const string featuresDemoGameScenePath = "/AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity";
-        private const string umaDemoGameScenePath = "/AnyRPG/Addons/anyrpg-uma/Games/UMADemoGame/Scenes/Game/UMADemoGame/UMADemoGame.unity";
-        private const string mmoDemoGameScenePath = "/AnyRPG/Addons/anymmo-fishnet/Games/AnyMMODemo/Scenes/AnyMMODemo/AnyMMODemo.unity";
+        private const string storyDemoGameScenePath = "ALostSoul/Games/ALostSoulStoryDemo/Scenes/Game/ALostSoulStoryDemoGame/ALostSoulStoryDemoGame.unity";
+        private const string characterDemoGameScenePath = "ALostSoul/Games/ALostSoulCharacterDemo/Scenes/Game/ALostSoulCharacterDemoGame/ALostSoulCharacterDemoGame.unity";
+        private const string contentDemoGameScenePath = "AnyRPG/Engine/Games/ContentDemo/Scenes/Game/ContentDemoGame/ContentDemoGame.unity";
+        private const string featuresDemoGameScenePath = "AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity";
+        private const string umaDemoGameScenePath = "AnyRPG/Addons/anyrpg-uma/Games/UMADemoGame/Scenes/Game/UMADemoGame/UMADemoGame.unity";
+        private const string mmoDemoGameScenePath = "AnyRPG/Addons/anymmo-fishnet/Games/AnyMMODemo/Scenes/AnyMMODemo/AnyMMODemo.unity";
 
         private const string storyDemoGamePath = "ALostSoul/Games/ALostSoulStoryDemo";
         private const string characterDemoGamePath = "ALostSoul/Games/ALostSoulCharacterDemo";
@@ -657,57 +657,62 @@ namespace AnyRPG {
             DrawDemoButton(
                     "A Lost Soul Story Demo Game",
                     storyDemoGameScenePath,
-                    "Assets/Settings/Build Profiles/A Lost Soul Story Demo.asset",
+                    storyDemoBuildProfilePath,
                     "The first 2 chapters of the game, 'A Lost Soul', re-created using the open source assets included in AnyRPG"
                 );
 
             DrawDemoButton(
                    "A Lost Soul Character Demo Game",
                    characterDemoGameScenePath,
-                   "Assets/Settings/Build Profiles/A Lost Soul Character Demo.asset",
+                   characterDemoBuildProfilePath,
                    "Explore the game world of A Lost Soul by starting as any character model and faction included in the game"
                );
 
             DrawDemoButton(
                 "Content Demo Game",
                 contentDemoGameScenePath,
-                "Assets/Settings/Build Profiles/Content Demo Game.asset",
+                contentDemoBuildProfilePath,
                 "A simple demo of all 3d and audio content including\n -Clothing\n -Characters\n -Buildings\n -Props\n -Weapons"
                 );
 
             DrawDemoButton(
                 "Features Demo Game",
                 featuresDemoGameScenePath,
-                "Assets/Settings/Build Profiles/Features Demo Game.asset",
+                featuresDemoBuildProfilePath,
                 "A simple 2 level game that provides examples of the most common features and interactables included in AnyRPG for quick reference when implementing them in your own game"
                 );
 
             DrawDemoButton(
                 "UMA Demo Game",
                 umaDemoGameScenePath,
-                "Assets/Settings/Build Profiles/UMA Demo Game.asset",
+                umaDemoBuildProfilePath,
                 "A copy of the Features Demo Game using UMA characters."
                 );
 
             DrawDemoButton(
                 "AnyMMO FishNet Demo Game",
                 mmoDemoGameScenePath,
-                "Assets/Settings/Build Profiles/AnyMMO Demo Game.asset",
+                mmoDemoBuildProfilePath,
                 "A copy of the Features Demo Game designed for play over the network with multiple players."
                 );
 
         }
 
         private void DrawDemoButton(string title, string scenePath, string profilePath, string description) {
-            if (!System.IO.File.Exists(Application.dataPath + scenePath)) return;
+            if (!System.IO.File.Exists(System.IO.Path.Combine(Application.dataPath, scenePath))) return;
 
             GUILayout.BeginVertical("box");
             if (GUILayout.Button(title, GUILayout.Height(30))) {
-                var buildProfile = AssetDatabase.LoadAssetAtPath<BuildProfile>(profilePath);
+                string fullPath = "Assets/" + profilePath;
+
+                var buildProfile = AssetDatabase.LoadAssetAtPath<BuildProfile>(fullPath);
+
                 if (buildProfile != null) {
                     BuildProfile.SetActiveBuildProfile(buildProfile);
+                } else {
+                    UnityEngine.Debug.LogError($"[AnyRPG] BuildProfile not found at: {fullPath}");
                 }
-                UnityEditor.SceneManagement.EditorSceneManager.OpenScene("Assets" + scenePath);
+                UnityEditor.SceneManagement.EditorSceneManager.OpenScene("Assets/" + scenePath);
             }
 
             // This reproduces the "HelpBox" background and border style exactly
@@ -715,8 +720,7 @@ namespace AnyRPG {
 
             GUIStyle helpBoxTextStyle = new GUIStyle(EditorStyles.label);
             helpBoxTextStyle.wordWrap = true;
-            helpBoxTextStyle.fontSize = 12; // Your requested +2 points
-                                            // Keep standard label colors so it looks native
+            helpBoxTextStyle.fontSize = 12; 
             helpBoxTextStyle.normal.textColor = EditorStyles.label.normal.textColor;
 
             EditorGUILayout.LabelField(description, helpBoxTextStyle);

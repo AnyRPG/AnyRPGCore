@@ -425,7 +425,7 @@ namespace AnyRPG {
                 }
             }
             foreach (EquipmentModel equipmentModel in equipmentModels) {
-                if (equipmentModel != null) {
+                if (equipmentModel != null && equipmentModelDictionary.ContainsKey(equipmentModel.GetType()) == false)  {
                     equipmentModelDictionary.Add(equipmentModel.GetType(), equipmentModel);
                 }
             }
