@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -6,11 +7,16 @@ namespace AnyRPG {
 
         [Header("Don't Destroy On Load")]
 
-        [Tooltip("A prefab that will be instantiated and set to DontDestroyOnLoad when the game starts.")]
+        [Tooltip("A list of prefabs that will be instantiated and set to DontDestroyOnLoad when the game starts.")]
         [SerializeField]
-        private GameObject dontDestroyOnLoadPrefabs = null;
+        private List<GameObject> dontDestroyOnLoadPrefabsList = new List<GameObject>();
 
-        public GameObject Prefab { get => dontDestroyOnLoadPrefabs; set => dontDestroyOnLoadPrefabs = value; }
+        [ResourceSelector(resourceType = typeof(GameExtension))]
+        [SerializeField]
+        private string overrideExtension = string.Empty;
+
+        public List<GameObject> PrefabList { get => dontDestroyOnLoadPrefabsList; set => dontDestroyOnLoadPrefabsList = value; }
+        public string OverrideExtension { get => overrideExtension; set => overrideExtension = value; }
 
     }
 

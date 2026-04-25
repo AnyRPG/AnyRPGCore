@@ -464,10 +464,24 @@ namespace AnyRPG {
         private void SetupExtensions() {
             //Debug.Log("SystemGameManager.SetupExtensions()");
             List<GameExtension> gameExtensions = systemDataFactory.GetResourceList<GameExtension>();
+            List<GameExtension> removeList = new List<GameExtension>();
             foreach (GameExtension gameExtension in gameExtensions) {
-                if (gameExtension.Prefab != null) {
-                    GameObject instance = Instantiate(gameExtension.Prefab);
-                    DontDestroyOnLoad(instance);
+                if (gameExtension.OverrideExtension != string.Empty) {
+                    GameExtension overrideExtension = systemDataFactory.GetResource<GameExtension>(gameExtension.OverrideExtension);
+                    if (overrideExtension == null) {
+                        Debug.LogError($"SystemGameManager.SetupExtensions(): GameExtension {gameExtension.name} is set to override {gameExtension.OverrideExtension} but it could not be found.  This extension will be ignored.");
+                        continue;
+                    }
+                    removeList.Add(overrideExtension);
+                }
+            }
+            gameExtensions.RemoveAll(x => removeList.Contains(x));
+            foreach (GameExtension gameExtension in gameExtensions) {
+                foreach (GameObject prefab in gameExtension.PrefabList) {
+                    if (prefab != null) {
+                        GameObject instance = Instantiate(prefab);
+                        DontDestroyOnLoad(instance);
+                    }
                 }
             }
         }
