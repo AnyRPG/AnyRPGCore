@@ -41,7 +41,7 @@ namespace AnyRPG {
                 if (equipmentModelProfile == null || equipmentModelProfile.Properties.ApplyToEquipmentName == string.Empty) {
                     continue;
                 }
-                Equipment equipment = systemDataFactory.GetResource<Equipment>(equipmentModelProfile.Properties.ApplyToEquipmentName);
+                Equipment equipment = systemDataFactory.GetResource<Item>(equipmentModelProfile.Properties.ApplyToEquipmentName) as Equipment;
                 if (equipment == null) {
                     Debug.LogWarning($"SystemItemManager.AddEquipmentModelsToEquipment(): Could not find equipment {equipmentModelProfile.Properties.ApplyToEquipmentName} for equipment model {equipmentModelProfile.ResourceName}.  This equipment model will be skipped.");
                     continue;

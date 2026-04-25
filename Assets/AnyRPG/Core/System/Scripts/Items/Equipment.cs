@@ -354,6 +354,11 @@ namespace AnyRPG {
             if (equipmentModel == null) {
                 return;
             }
+            if (equipmentModelDictionary.ContainsKey(equipmentModel.GetType())) {
+                Debug.LogWarning($"Equipment.AddEquipmentModel(): Equipment model of type {equipmentModel.GetType()} already exists on equipment {ResourceName}.  Cannot add duplicate.  CHECK INSPECTOR");
+                return;
+            }
+            //Debug.Log($"Adding equipment model of type {equipmentModel.GetType()} to equipment {ResourceName}");
             equipmentModels.Add(equipmentModel);
             equipmentModelDictionary.Add(equipmentModel.GetType(), equipmentModel);
         }
@@ -426,6 +431,7 @@ namespace AnyRPG {
             }
             foreach (EquipmentModel equipmentModel in equipmentModels) {
                 if (equipmentModel != null && equipmentModelDictionary.ContainsKey(equipmentModel.GetType()) == false)  {
+                    //Debug.Log($"Adding equipment model of type {equipmentModel.GetType()} to equipment {ResourceName}");
                     equipmentModelDictionary.Add(equipmentModel.GetType(), equipmentModel);
                 }
             }

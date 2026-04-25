@@ -315,6 +315,8 @@ namespace AnyRPG {
             // configuration manager next because it will need access to resources from the factory
             systemConfigurationManager.Configure(this);
 
+            SetupExtensions();
+
             // then everything else that relies on system configuration and data resources
             objectPooler.Configure(this);
 
@@ -456,6 +458,17 @@ namespace AnyRPG {
                 //Debug.Log("SystemGameManager.SetupPermanentObjects(): Neither UMA_GLIB nor UMA_DCS prefab could be found in the scene. UMA will be unavailable");
             } else {
                 DontDestroyOnLoad(umaDCS);
+            }
+        }
+
+        private void SetupExtensions() {
+            //Debug.Log("SystemGameManager.SetupExtensions()");
+            List<GameExtension> gameExtensions = systemDataFactory.GetResourceList<GameExtension>();
+            foreach (GameExtension gameExtension in gameExtensions) {
+                if (gameExtension.Prefab != null) {
+                    GameObject instance = Instantiate(gameExtension.Prefab);
+                    DontDestroyOnLoad(instance);
+                }
             }
         }
 
