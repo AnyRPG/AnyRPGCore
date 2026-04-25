@@ -17,7 +17,7 @@ namespace AnyRPG {
         public event Action OnBeforeStopServer = delegate { };
         public event Action OnStopServer = delegate { };
 
-        [SerializeField]
+        //[SerializeField]
         private NetworkController networkController = null;
 
         // list of lobby games
@@ -134,11 +134,13 @@ namespace AnyRPG {
         public NetworkController NetworkController { get => networkController; set => networkController = value; }
         //public RemoteGameServerClient GameServerClient { get => remoteGameServerClient; set => remoteGameServerClient = value; }
 
+        /*
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            networkController?.Configure(systemGameManager);
+            //networkController?.Configure(systemGameManager);
         }
+        */
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

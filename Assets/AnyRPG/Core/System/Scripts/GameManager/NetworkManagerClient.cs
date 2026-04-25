@@ -24,7 +24,7 @@ namespace AnyRPG {
         public event Action OnClientConnectionStopped = delegate { };
         public event Action OnClientConnectionStarted = delegate { };
 
-        [SerializeField]
+        //[SerializeField]
         private NetworkController networkController = null;
 
         private string username = string.Empty;
