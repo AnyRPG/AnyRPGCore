@@ -824,7 +824,7 @@ namespace AnyRPG {
         }
 
         public void NotifyOnRequestUnequipToSlot(InstantiatedEquipment instantiatedEquipment, int inventorySlotId) {
-            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnRequestUnequipToSlot({instantiatedEquipment.Item.ResourceName}, {inventorySlotId})");
+            Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnRequestUnequipToSlot({instantiatedEquipment.Item.ResourceName}, {inventorySlotId})");
 
             OnRequestUnequipToSlot(instantiatedEquipment, inventorySlotId);
         }
@@ -1131,6 +1131,8 @@ namespace AnyRPG {
         }
 
         public void NotifyOnRequestUnequip(InstantiatedEquipment instantiatedEquipment) {
+            Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnRequestUnequip({instantiatedEquipment.Item.ResourceName})");
+
             OnRequestUnequip(instantiatedEquipment);
         }
 

@@ -266,6 +266,7 @@ namespace AnyRPG {
 
         public void UnequipToInventory(InstantiatedEquipment instantiatedEquipment) {
             Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.UnequipToInventory({(instantiatedEquipment != null ? instantiatedEquipment.ResourceName : "null")})");
+            
             Unequip(instantiatedEquipment);
             unitController.UnitModelController.RebuildModelAppearance();
         }
@@ -365,7 +366,8 @@ namespace AnyRPG {
         }
 
         public void RequestUnequip(InstantiatedEquipment instantiatedEquipment) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.RequestUnequip({instantiatedEquipment.ResourceName})");
+            Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.RequestUnequip({instantiatedEquipment.ResourceName})");
+
             if (systemGameManager.GameMode == GameMode.Local) {
                 UnequipToInventory(instantiatedEquipment);
             }
@@ -373,7 +375,7 @@ namespace AnyRPG {
         }
 
         public void RequestUnequipToSlot(InstantiatedEquipment instantiatedEquipment, int inventorySlotId) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.RequestUnequipToSlot({instantiatedEquipment.ResourceName}, {inventorySlotId})");
+            Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.RequestUnequipToSlot({instantiatedEquipment.ResourceName}, {inventorySlotId})");
 
             if (systemGameManager.GameMode == GameMode.Local) {
                 UnequipToSlot(instantiatedEquipment, inventorySlotId);
@@ -382,7 +384,7 @@ namespace AnyRPG {
         }
 
         public void UnequipToSlot(InstantiatedEquipment instantiatedEquipment, int inventorySlotId) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.UnequipToSlot({instantiatedEquipment.ResourceName}, {inventorySlotId})");
+            Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.UnequipToSlot({instantiatedEquipment.ResourceName}, {inventorySlotId})");
 
             EquipmentSlotProfile equipmentSlotProfile = FindEquipmentSlotForEquipment(instantiatedEquipment);
             if (equipmentSlotProfile != null) {
