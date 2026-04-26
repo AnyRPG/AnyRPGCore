@@ -18,7 +18,6 @@ namespace AnyRPG {
         private const string contentDemoGameScenePath = "AnyRPG/Engine/Games/ContentDemo/Scenes/Game/ContentDemoGame/ContentDemoGame.unity";
         private const string featuresDemoGameScenePath = "AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity";
         private const string movementTestGameScenePath = "AnyRPG/Addons/anyrpg-movement-test-game/Scenes/Game/MovementTestGame/MovementTestGame.unity";
-        private const string umaDemoGameScenePath = "AnyRPG/Addons/anyrpg-uma/Games/UMADemoGame/Scenes/Game/UMADemoGame/UMADemoGame.unity";
         private const string mmoDemoGameScenePath = "AnyRPG/Addons/anymmo-fishnet/Games/AnyMMODemo/Scenes/AnyMMODemo/AnyMMODemo.unity";
 
         private const string storyDemoGamePath = "ALostSoul/Games/ALostSoulStoryDemo";
@@ -26,7 +25,6 @@ namespace AnyRPG {
         private const string contentDemoGamePath = "AnyRPG/Engine/Games/ContentDemo";
         private const string featuresDemoGamePath = "AnyRPG/Core/Games/FeaturesDemoGame";
         private const string movementTestGamePath = "AnyRPG/Addons/anyrpg-movement-test-game/Games/MovementTestGame";
-        private const string umaDemoGamePath = "AnyRPG/Addons/anyrpg-uma/Games/UMADemoGame";
         private const string mmoDemoGamePath = "AnyRPG/Addons/anymmo-fishnet/Games/AnyMMODemo";
 
         private const string storyDemoBuildProfilePath = "ALostSoul/Build Profiles/A Lost Soul Story Demo.asset";
@@ -34,7 +32,6 @@ namespace AnyRPG {
         private const string contentDemoBuildProfilePath = "AnyRPG/Engine/Build Profiles/Content Demo Game.asset";
         private const string featuresDemoBuildProfilePath = "AnyRPG/Core/Build Profiles/Features Demo Game.asset";
         private const string movementTestGameBuildProfilePath = "AnyRPG/Addons/anyrpg-movement-test-game/Build Profiles/Movement Test Game.asset";
-        private const string umaDemoBuildProfilePath = "AnyRPG/Addons/anyrpg-uma/Build Profiles/UMA Demo Game.asset";
         private const string mmoDemoBuildProfilePath = "AnyRPG/Addons/anymmo-fishnet/Build Profiles/AnyMMO Demo Game.asset";
 
         private const string coreTemplateContentFolder = "AnyRPG/Core/Content";
@@ -690,13 +687,6 @@ namespace AnyRPG {
                 );
 
             DrawDemoButton(
-                "UMA Demo Game",
-                umaDemoGameScenePath,
-                umaDemoBuildProfilePath,
-                "A copy of the Features Demo Game using UMA characters."
-                );
-
-            DrawDemoButton(
                 "AnyMMO FishNet Demo Game",
                 mmoDemoGameScenePath,
                 mmoDemoBuildProfilePath,
@@ -864,7 +854,6 @@ namespace AnyRPG {
                     PerformStripDemo(contentDemoGamePath, contentDemoBuildProfilePath);
                     PerformStripDemo(featuresDemoGamePath, featuresDemoBuildProfilePath);
                     PerformStripDemo(movementTestGamePath, movementTestGameBuildProfilePath);
-                    PerformStripDemo(umaDemoGamePath, umaDemoBuildProfilePath);
                     PerformStripDemo(mmoDemoGamePath, mmoDemoBuildProfilePath);
                     AssetDatabase.Refresh();
                     EditorUtility.DisplayDialog("Cleanup Complete", "All detected demo games removed.", "OK");
@@ -879,7 +868,6 @@ namespace AnyRPG {
             anyDemosFound |= DrawStripDemoItem("Content Demo Game", contentDemoGamePath, contentDemoBuildProfilePath);
             anyDemosFound |= DrawStripDemoItem("Features Demo Game", featuresDemoGamePath, featuresDemoBuildProfilePath);
             anyDemosFound |= DrawStripDemoItem("Movement Test Game", movementTestGamePath, movementTestGameBuildProfilePath);
-            anyDemosFound |= DrawStripDemoItem("UMA Demo Game", umaDemoGamePath, umaDemoBuildProfilePath);
             anyDemosFound |= DrawStripDemoItem("AnyMMO FishNet Demo Game", mmoDemoGamePath, mmoDemoBuildProfilePath);
 
             if (!anyDemosFound) EditorGUILayout.HelpBox("No demo games detected.", MessageType.Info);
