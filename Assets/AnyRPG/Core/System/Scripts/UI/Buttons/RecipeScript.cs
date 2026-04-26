@@ -37,6 +37,10 @@ namespace AnyRPG {
         }
 
         public string GetColorString() {
+            if (recipe.Skill == null) {
+                // default to white if recipe doesn't give any experience
+                return "#ffffff";
+            }
             if (recipe.Skill.UseSkillExperience == false && recipe.Skill.GiveCharacterExperience == false) {
                 // default to white if recipe doesn't give any experience
                 return "#ffffff";
