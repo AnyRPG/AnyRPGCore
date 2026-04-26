@@ -59,6 +59,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private LoadGameManager loadGameManager = null;
         private NetworkManagerClient networkManager = null;
+        private SystemDataFactory systemDataFactory = null;
 
         public LoadGameButton SelectedLoadGameButton { get => selectedLoadGameButton; }
 
@@ -81,6 +82,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             loadGameManager = systemGameManager.LoadGameManager;
             networkManager = systemGameManager.NetworkManagerClient;
+            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         public override void ReceiveClosedWindowNotification() {
@@ -196,6 +198,15 @@ namespace AnyRPG {
             int count = 0;
             foreach (SinglePlayerSaveData singlePlayerSaveData in loadGameManager.CharacterList) {
                 //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
+                // only load buttons if they unit profile can be found
+                if (singlePlayerSaveData.CharacterSaveData.UnitProfileName == string.Empty) {
+                    continue;
+                }
+                UnitProfile unitProfile = systemDataFactory.GetResource<UnitProfile>(singlePlayerSaveData.CharacterSaveData.UnitProfileName);
+                if (unitProfile == null) {
+                    Debug.LogWarning($"LoadGamePanel.ShowLoadButtonsCommon() unable to find unit profile {singlePlayerSaveData.CharacterSaveData.UnitProfileName} for saved game, skipping load button");
+                    continue;
+                }
                 AddLoadButton(singlePlayerSaveData);
                 count++;
             }
