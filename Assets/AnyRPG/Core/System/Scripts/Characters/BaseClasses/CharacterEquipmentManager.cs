@@ -264,6 +264,11 @@ namespace AnyRPG {
         }
         */
 
+        public void UnequipToInventory(InstantiatedEquipment instantiatedEquipment) {
+            Unequip(instantiatedEquipment);
+            unitController.UnitModelController.RebuildModelAppearance();
+        }
+
         public InstantiatedEquipment Unequip(InstantiatedEquipment instantiatedEquipment) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.Unequip({(instantiatedEquipment != null ? instantiatedEquipment.ResourceName : "null")})");
 
