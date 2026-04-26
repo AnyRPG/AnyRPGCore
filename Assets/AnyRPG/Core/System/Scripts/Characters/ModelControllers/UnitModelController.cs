@@ -135,7 +135,7 @@ namespace AnyRPG {
         }
 
         public void RebuildModelAppearance() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitModelController.RebuildModelAppearance()");
+            Debug.Log($"{unitController.gameObject.name}.UnitModelController.RebuildModelAppearance()");
 
             modelAppearanceController.RebuildModelAppearance();
             mecanimModelController.RebuildModelAppearance();
