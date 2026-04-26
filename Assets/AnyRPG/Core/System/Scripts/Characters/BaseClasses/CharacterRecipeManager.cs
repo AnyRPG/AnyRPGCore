@@ -35,7 +35,7 @@ namespace AnyRPG {
                 return false;
             }
             // recipe is above the character's level
-            if (recipe.RequiredLevel <= newLevel) {
+            if (recipe.RequiredLevel > newLevel) {
                 return false;
             }
             if (recipe.Skill != null) {

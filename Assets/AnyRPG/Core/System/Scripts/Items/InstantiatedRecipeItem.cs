@@ -38,7 +38,7 @@ namespace AnyRPG {
                 return false;
             }
             // check if the character has the required skill level
-            if (recipeItem.Recipe.Skill != null && sourceUnitController.CharacterSkillManager.GetSkillLevel(recipeItem.Recipe.Skill) < recipeItem.Recipe.RequiredLevel) {
+            if (recipeItem.Recipe.Skill != null && sourceUnitController.CharacterSkillManager.GetSkillLevel(recipeItem.Recipe.Skill) < recipeItem.Recipe.RequiredSkillLevel) {
                 sourceUnitController.WriteMessageFeedMessage($"Your skill level is not high enough");
                 return false;
             }
