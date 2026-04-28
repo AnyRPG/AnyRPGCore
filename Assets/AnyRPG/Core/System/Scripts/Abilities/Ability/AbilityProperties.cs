@@ -975,6 +975,7 @@ namespace AnyRPG {
             }
             if (weaponAffinityNames.Count == 0) {
                 // no restrictions, automatically true
+                //Debug.Log($"{ResourceName}.AbilityProperties.CanCast(): no weapon affinity requirements, automatically true");
                 return true;
             } else {
                 return sourceCharacter.AbilityManager.PerformWeaponAffinityCheck(this, playerInitiated);
@@ -1153,8 +1154,9 @@ namespace AnyRPG {
                     return false;
                 }
             }
-            return true;
 
+            //Debug.Log($"{ResourceName}.AbilityProperties.CanUseOn({(target != null ? target.name : "null")}, {(sourceCharacter != null ? sourceCharacter.AbilityManager.Name : "null")}, {performCooldownChecks}): passed all checks");
+            return true;
         }
 
         // to be used at the end of ability hit because it doesn't perform in progress check

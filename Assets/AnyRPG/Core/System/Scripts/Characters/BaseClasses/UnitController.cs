@@ -1565,10 +1565,9 @@ namespace AnyRPG {
             lastPosition = rigidBody.position;
         }
 
-
-
         public void FollowAttackTarget(Interactable target, float minAttackRange) {
-            //Debug.Log($"{gameObject.name}.AIController.FollowTarget(" + (target == null ? "null" : target.name) + ", " + minAttackRange + ")");
+            //Debug.Log($"{gameObject.name}.UnitController.FollowAttackTarget() target: {(target != null ? target.gameObject.name : "null")} minAttackRange: {minAttackRange}");
+
             if (!(currentState is DeathState)) {
                 UnitMotor.FollowAttackTarget(target, minAttackRange);
             }

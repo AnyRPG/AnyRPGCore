@@ -456,12 +456,12 @@ namespace AnyRPG {
         }
 
         public AbilityProperties GetValidAttackAbility() {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.GetValidAttackAbility()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.GetValidAttackAbility()");
 
             List<AbilityProperties> returnList = new List<AbilityProperties>();
 
             foreach (AbilityProperties baseAbility in unitController.CharacterAbilityManager.AbilityList.Values) {
-                //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.GetValidAttackAbility(): Checking ability: " + baseAbility.DisplayName);
+                //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.GetValidAttackAbility(): Checking ability: {baseAbility.DisplayName}");
                 if (baseAbility.GetTargetOptions(unitController).CanCastOnEnemy &&
                     unitController.CharacterAbilityManager.CanCastAbility(baseAbility) &&
                     baseAbility.CanUseOn(unitController.Target, unitController) &&
@@ -478,7 +478,8 @@ namespace AnyRPG {
                 //Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): returnList.Count: " + returnList.Count + "; randomIndex: " + randomIndex);
                 return returnList[randomIndex];
             }
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.GetValidAttackAbility(): ABOUT TO RETURN NULL!");
+
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.GetValidAttackAbility(): ABOUT TO RETURN NULL!");
             return null;
         }
 
@@ -505,7 +506,8 @@ namespace AnyRPG {
             foreach (AbilityProperties baseAbility in baseAbilityList) {
                 if (baseAbility.GetTargetOptions(unitController).CanCastOnEnemy
                     && baseAbility.GetTargetOptions(unitController).UseMeleeRange == false
-                    && baseAbility.GetTargetOptions(unitController).MaxRange > 0f) {
+                    && baseAbility.GetTargetOptions(unitController).MaxRange > 0f
+                    && unitController.CharacterAbilityManager.CanCastAbility(baseAbility)) {
                     float returnedMaxRange = baseAbility.GetLOSMaxRange(unitController, unitController.Target);
                     if (returnValue == 0f || returnedMaxRange < returnValue) {
                         returnValue = returnedMaxRange;

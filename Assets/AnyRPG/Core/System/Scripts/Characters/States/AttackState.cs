@@ -1,6 +1,3 @@
-using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -15,12 +12,11 @@ namespace AnyRPG {
         }
 
         public void Exit() {
-            //Debug.Log(baseController.gameObject.name + ".AttackState.Exit()");
+            //Debug.Log($"{unitController.gameObject.name}.AttackState.Exit()");
         }
 
         public void Update() {
-            //Debug.Log($"{baseUnitController.gameObject.name}.AttackState.Update()");
-
+            //Debug.Log($"{unitController.gameObject.name}.AttackState.Update()");
 
             unitController.UpdateTarget();
 
@@ -31,7 +27,7 @@ namespace AnyRPG {
             }
 
             if (unitController.CharacterAbilityManager.PerformingAnyAbility() == true) {
-                //Debug.Log(baseController.gameObject.name + ".AttackState.Update() WaitingForAnimatedAbility is true");
+                //Debug.Log($"{unitController.gameObject.name}.AttackState.Update() WaitingForAnimatedAbility is true");
                 // nothing to do, other attack or ability in progress
                 return;
             }

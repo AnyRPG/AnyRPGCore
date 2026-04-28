@@ -1,9 +1,6 @@
-using AnyRPG;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 namespace AnyRPG {
     public class CharacterAbilityManager : AbilityManager {
@@ -519,7 +516,7 @@ namespace AnyRPG {
         }
 
         public override bool PerformLOSCheck(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.PerformLOSCheck()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.PerformLOSCheck({(target == null ? "null" : target.DisplayName)}, {targetable.DisplayName})");
 
             if (targetable.GetTargetOptions(unitController).RequireLineOfSight == false) {
                 return true;
@@ -558,11 +555,11 @@ namespace AnyRPG {
                 //Debug.Log("hit: " + wallHit.transform.name);
                 Debug.DrawRay(wallHit.point, wallHit.point - targetPosition, Color.red);
                 if (wallHit.collider.gameObject != target.gameObject) {
-                    //Debug.Log("return false; hit: " + wallHit.collider.gameObject + "; target: " + target);
+                    //Debug.Log($"return false; hit: {wallHit.collider.gameObject.name}; target: {target.DisplayName}");
                     return false;
                 }
             }
-
+            //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.PerformLOSCheck({(target == null ? "null" : target.DisplayName)}, {targetable.DisplayName}): return true");
             return base.PerformLOSCheck(target, targetable, abilityEffectContext);
         }
 
