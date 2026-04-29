@@ -642,7 +642,9 @@ namespace AnyRPG {
                 return;
             }
 
-            base.ConfigureDialogPanel(dialogPanelController);
+            dialogPanelController.ConfigureSnapshotPortrait();
+
+            //base.ConfigureDialogPanel(dialogPanelController);
         }
 
         private void SetUnitFootstepAudioProfile() {

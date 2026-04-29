@@ -11,7 +11,7 @@ namespace AnyRPG {
         public List<ScriptableContentTemplate> targetList = new List<ScriptableContentTemplate>();
         public List<DescribableResource> sourceList = new List<DescribableResource>();
 
-        [MenuItem("Tools/AnyRPG/Wizard/Convert/Populate Template Package")]
+        //[MenuItem("Tools/AnyRPG/Wizard/Convert/Populate Template Package")]
         public static void CreateWizard() {
             ScriptableWizard.DisplayWizard<ConvertTemplatePackageWizard>("New Convert ScriptableContentTemplate Wizard", "Convert");
         }

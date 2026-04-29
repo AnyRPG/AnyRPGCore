@@ -10,7 +10,7 @@ namespace AnyRPG {
 
         public List<EquipmentModelProfile> equipmentList = new List<EquipmentModelProfile>();
 
-        [MenuItem("Tools/AnyRPG/Wizard/Convert/Convert Equipment Model Profile")]
+        //[MenuItem("Tools/AnyRPG/Wizard/Convert/Convert Equipment Model Profile")]
         public static void CreateWizard() {
             ScriptableWizard.DisplayWizard<ConvertEquipmentModelProfileWizard>("New Convert EquipmentModelProfile Wizard", "Convert");
         }

@@ -1168,8 +1168,11 @@ namespace AnyRPG {
         }
 
         public virtual void ConfigureDialogPanel(DialogPanel dialogPanelController) {
-            // only needed in namePlateUnit and above
-            dialogPanelController.ConfigureSnapshotPortrait();
+            Debug.Log($"{gameObject.name}.Interactable.ConfigureDialogPanel()");
+
+            dialogPanelController.ConfigurePortrait(null);
+
+            //dialogPanelController.ConfigureSnapshotPortrait();
         }
 
         public virtual bool IsInRange(UnitController sourceUnitController) {
