@@ -1168,7 +1168,7 @@ namespace AnyRPG {
         }
 
         public virtual void ConfigureDialogPanel(DialogPanel dialogPanelController) {
-            Debug.Log($"{gameObject.name}.Interactable.ConfigureDialogPanel()");
+            //Debug.Log($"{gameObject.name}.Interactable.ConfigureDialogPanel()");
 
             dialogPanelController.ConfigurePortrait(null);
 

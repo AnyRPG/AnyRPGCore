@@ -218,6 +218,9 @@ namespace AnyRPG {
             if (inventorySlot.InstantiatedItem is InstantiatedEquipment) {
                 contextMenuPanel.EnableEquipButton(true);
             }
+            if (uIManager.vendorWindow.IsOpen == true) {
+                contextMenuPanel.EnableSellButton(true);
+            }
         }
 
         public override void PerformContextMenuAction(SlotScript slotScript, string actionName) {

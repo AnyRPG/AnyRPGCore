@@ -98,7 +98,11 @@ namespace AnyRPG {
             if (timer > 0f) {
                 foreach (List<GameObject> gameObjectList in abilityEffectObjects.Values) {
                     foreach (GameObject go in gameObjectList) {
-                        coroutineLookup.Add(go, coroutine);
+                        if (coroutineLookup.ContainsKey(go) == false) {
+                            coroutineLookup.Add(go, coroutine);
+                        } else {
+                            Debug.LogWarning($"SystemAbilityController.BeginDestroyAbilityEffectObject: coroutineLookup already contains {go.name} ({go.GetInstanceID()}) caster: {source?.AbilityManager?.UnitGameObject?.name}");
+                        }
                     }
                 }
             }

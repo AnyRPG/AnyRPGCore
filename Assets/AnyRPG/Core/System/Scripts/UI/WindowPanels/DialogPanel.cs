@@ -213,7 +213,7 @@ namespace AnyRPG {
         }
 
         public void ConfigureSnapshotPortrait() {
-            Debug.Log("DialogPanelController.ConfigureSnapshotPortrait()");
+            //Debug.Log("DialogPanelController.ConfigureSnapshotPortrait()");
 
             portraitImage.gameObject.SetActive(false);
             portraitSnapshotImage.gameObject.SetActive(true);
