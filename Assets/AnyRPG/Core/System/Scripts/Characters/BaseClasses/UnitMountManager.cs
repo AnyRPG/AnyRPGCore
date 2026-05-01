@@ -121,7 +121,7 @@ namespace AnyRPG {
         }
 
         public void HandleMountUnitSpawn() {
-            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn() lateJoin: {lateJoin}");
+            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn() lateJoin: {lateJoin}");
 
             string originalPrefabSourceBone = mountUnitProfile.UnitPrefabProps.TargetBone;
             // NOTE: mount effects used sheathed position for character position.  do not use regular position to avoid putting mount below ground when spawning
@@ -158,13 +158,14 @@ namespace AnyRPG {
                     //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn() after mounting scale: {unitController.transform.localScale} lossyScale: {unitController.transform.lossyScale} mScale: {mountPoint.localScale} mLossyScale: {mountPoint.lossyScale}");
                     //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || (unitController.IsOwner == true && networkManagerServer.ServerModeActive == false)) {
                     unitController.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
-                        //unitController.transform.localEulerAngles = mountUnitProfile.UnitPrefabProps.Rotation;
-                        unitController.transform.rotation = Quaternion.identity;
+                    //unitController.transform.localEulerAngles = mountUnitProfile.UnitPrefabProps.Rotation;
+                    //unitController.transform.rotation = Quaternion.identity;
+                    unitController.transform.localRotation = Quaternion.identity;
                     //}
-                    
+
                     // testing - is there a reason we wouldn't want to activemounted state on all server and clients?
                     //if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
-                        ActivateMountedState();
+                    ActivateMountedState();
                     //}
                 }
             }
