@@ -87,6 +87,9 @@ namespace AnyRPG {
         }
         public virtual string UnitDisplayName {
             get {
+                if (interactable.NamePlateProps.DisplayName == string.Empty) {
+                    return interactable.DisplayName;
+                }
                 return interactable.NamePlateProps.DisplayName;
             }
         }

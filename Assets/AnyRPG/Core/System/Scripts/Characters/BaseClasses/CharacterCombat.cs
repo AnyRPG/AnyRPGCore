@@ -425,7 +425,7 @@ namespace AnyRPG {
         /// <param name="target"></param>
         /// return true if this is a new entry, false if not
         public virtual bool EnterCombat(UnitController target) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.EnterCombat({(target == null ? "null" : target.gameObject.name)})");
+            Debug.Log($"{unitController.gameObject.name}.CharacterCombat.EnterCombat({(target == null ? "null" : target.gameObject.name)})");
 
             if (target == null || target.CharacterStats.IsAlive == false || unitController.CharacterStats.IsAlive == false) {
                 return false;
