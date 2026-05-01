@@ -82,9 +82,13 @@ namespace AnyRPG {
                 if (jobHandle.IsCompleted) {
                     jobHandle.Complete();
                     for (int i = 0; i < raycastCandidates.Count; i++) {
-                        // In this API, if collider is null, nothing was hit (not blocked)
-                        bool isBlocked = results[i].collider != null;
-                        raycastCandidates[i].FinalizeVisibility(!isBlocked);
+                        var controller = raycastCandidates[i];
+
+                        // Safety check: Did this object get destroyed while the job was running?
+                        if (controller?.UnitNamePlateController != null) {
+                            bool isBlocked = results[i].collider != null;
+                            controller.FinalizeVisibility(!isBlocked);
+                        }
                     }
                     CleanupNative();
                     isJobRunning = false;
@@ -140,6 +144,12 @@ namespace AnyRPG {
 
         public void HandleLevelUnload(int sceneHandle, string sceneName) {
             mouseOverList.Clear();
+            if (isJobRunning) {
+                jobHandle.Complete(); // Force finish immediately
+                CleanupNative();      // Free the memory buffers
+                isJobRunning = false;
+                raycastCandidates.Clear(); // Clear the stale references
+            }
         }
         /*
         public void LateUpdate() {
