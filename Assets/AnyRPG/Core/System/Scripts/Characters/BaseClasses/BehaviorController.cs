@@ -63,7 +63,8 @@ namespace AnyRPG {
 
 
         public void Cleanup() {
-            //Debug.Log("BehaviourController.Cleanup()");
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.Cleanup()");
+
             CleanupBehavior();
             CleanupScriptableObjects();
         }
@@ -258,7 +259,10 @@ namespace AnyRPG {
         }
 
         public void CleanupScriptableObjects() {
+            //Debug.Log($"{unitController.gameObject.name}.BehaviorController.CleanupScriptableObjects()");
+
             foreach (BehaviorProfile behaviorProfile in behaviorList.Keys) {
+                //Debug.Log($"{unitController.gameObject.name}.BehaviorController.CleanupScriptableObjects() unsubscribing from {behaviorProfile.ResourceName}");
                 behaviorProfile.OnPrerequisiteUpdates -= HandlePrerequisiteUpdates;
                 behaviorProfile.OnEventTriggered -= HandleEventTrigger;
             }
