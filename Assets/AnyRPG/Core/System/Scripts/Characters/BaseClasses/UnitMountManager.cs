@@ -121,7 +121,7 @@ namespace AnyRPG {
         }
 
         public void HandleMountUnitSpawn() {
-            Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn() lateJoin: {lateJoin}");
+            //Debug.Log($"{unitController.gameObject.name}.UnitMountManager.HandleMountUnitSpawn() lateJoin: {lateJoin}");
 
             string originalPrefabSourceBone = mountUnitProfile.UnitPrefabProps.TargetBone;
             // NOTE: mount effects used sheathed position for character position.  do not use regular position to avoid putting mount below ground when spawning
