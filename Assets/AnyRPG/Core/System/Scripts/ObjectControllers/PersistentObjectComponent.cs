@@ -135,7 +135,7 @@ namespace AnyRPG {
         }
 
         public void ProcessSaveGame(bool ephemeral) {
-            //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.ProcessSaveGame()");
+            Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.ProcessSaveGame()");
 
             if (saveOnGameSave == true) {
                 SaveProperties(ephemeral);
@@ -143,7 +143,7 @@ namespace AnyRPG {
         }
 
         public void SaveProperties(bool ephemeral) {
-            //Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties(ephemeral: {ephemeral})");
+            Debug.Log($"{persistentObjectOwner.gameObject.name}.PersistentObjectComponent.SaveProperties(ephemeral: {ephemeral})");
 
             // since all units automatically have this component, give it a chance to not save based on configuration
             if (systemGameManager.GameMode == GameMode.Network) {
@@ -173,7 +173,7 @@ namespace AnyRPG {
         }
 
         public PersistentObjectSaveData MakeSaveData() {
-            //Debug.Log($"{ persistentObjectOwner.gameObject.name}.PersistentObjectComponent.MakeSaveData() storedUUID: {storedUUID}");
+            Debug.Log($"{ persistentObjectOwner.gameObject.name}.PersistentObjectComponent.MakeSaveData() storedUUID: {storedUUID}");
 
             PersistentObjectSaveData returnValue = new PersistentObjectSaveData();
             returnValue.UUID = storedUUID;

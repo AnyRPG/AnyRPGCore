@@ -15,6 +15,7 @@ namespace AnyRPG {
         public List<ActivatableObjectSaveData> ActivatableObjectSaveData = new List<ActivatableObjectSaveData>();
         public List<DroppedItemSaveData> DroppedItemSaveData = new List<DroppedItemSaveData>();
         public List<StorageContainerSaveData> StorageContainerSaveData = new List<StorageContainerSaveData>();
+        public List<ControlSwitchSaveData> ControlSwitchSaveData = new List<ControlSwitchSaveData>();
 
         public void BundleItems(SystemItemManager systemItemManager) {
             // bundle items from lootable character and lootable node into one list to be saved with the interactable
@@ -121,6 +122,12 @@ namespace AnyRPG {
     [Serializable]
     public class AnimatedObjectSaveData { 
         public bool ObjectOpen;
+    }
+
+    [Serializable]
+    public class  ControlSwitchSaveData {
+        public bool OnState;
+        public int ActivationCount;
     }
 
 }
