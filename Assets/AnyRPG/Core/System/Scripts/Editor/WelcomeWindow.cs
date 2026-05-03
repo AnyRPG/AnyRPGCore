@@ -15,21 +15,18 @@ namespace AnyRPG {
 
         private const string storyDemoGameScenePath = "ALostSoul/Games/ALostSoulStoryDemo/Scenes/Game/ALostSoulStoryDemoGame/ALostSoulStoryDemoGame.unity";
         private const string characterDemoGameScenePath = "ALostSoul/Games/ALostSoulCharacterDemo/Scenes/Game/ALostSoulCharacterDemoGame/ALostSoulCharacterDemoGame.unity";
-        private const string contentDemoGameScenePath = "AnyRPG/Engine/Games/ContentDemo/Scenes/Game/ContentDemoGame/ContentDemoGame.unity";
         private const string featuresDemoGameScenePath = "AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity";
         private const string movementTestGameScenePath = "AnyRPG/Addons/anyrpg-movement-test-game/Scenes/Game/MovementTestGame/MovementTestGame.unity";
         private const string mmoDemoGameScenePath = "AnyRPG/Addons/anymmo-fishnet/Games/AnyMMODemo/Scenes/AnyMMODemo/AnyMMODemo.unity";
 
         private const string storyDemoGamePath = "ALostSoul/Games/ALostSoulStoryDemo";
         private const string characterDemoGamePath = "ALostSoul/Games/ALostSoulCharacterDemo";
-        private const string contentDemoGamePath = "AnyRPG/Engine/Games/ContentDemo";
         private const string featuresDemoGamePath = "AnyRPG/Core/Games/FeaturesDemoGame";
         private const string movementTestGamePath = "AnyRPG/Addons/anyrpg-movement-test-game/Games/MovementTestGame";
         private const string mmoDemoGamePath = "AnyRPG/Addons/anymmo-fishnet/Games/AnyMMODemo";
 
         private const string storyDemoBuildProfilePath = "ALostSoul/Build Profiles/A Lost Soul Story Demo.asset";
         private const string characterDemoBuildProfilePath = "ALostSoul/Build Profiles/A Lost Soul Character Demo.asset";
-        private const string contentDemoBuildProfilePath = "AnyRPG/Engine/Build Profiles/Content Demo Game.asset";
         private const string featuresDemoBuildProfilePath = "AnyRPG/Core/Build Profiles/Features Demo Game.asset";
         private const string movementTestGameBuildProfilePath = "AnyRPG/Addons/anyrpg-movement-test-game/Build Profiles/Movement Test Game.asset";
         private const string mmoDemoBuildProfilePath = "AnyRPG/Addons/anymmo-fishnet/Build Profiles/AnyMMO Demo Game.asset";
@@ -282,6 +279,7 @@ namespace AnyRPG {
                 "Adds advanced runtime character customization",
                 "anyrpg-uma",
                 "https://github.com/AnyRPG/anyrpg-uma",
+                "",
                 "AnyRPG UMA Addon",
                 new List<UnityPackageReq> { umaPackage, },
                 new List<AddonReq>(),
@@ -295,6 +293,7 @@ namespace AnyRPG {
                 "Enables online play using the FishNet library",
                 "anymmo-fishnet",
                 "https://github.com/AnyRPG/anymmo-fishnet",
+                "",
                 "AnyMMO FishNet Addon",
                 new List<UnityPackageReq> { fishNetPackage },
                 new List<AddonReq>()
@@ -307,6 +306,7 @@ namespace AnyRPG {
                 "Adds template content with UMA characters configured for use with FishNet",
                 "anymmo-fishnet-uma",
                 "https://github.com/AnyRPG/anymmo-fishnet-uma",
+                "",
                 "AnyMMO FishNet UMA Addon",
                 new List<UnityPackageReq> {
                     fishNetPackage,
@@ -325,14 +325,47 @@ namespace AnyRPG {
                 "A simple one scene game with stairs, ramps, obstacles, and water suitable for testing character controller modifications",
                 "anyrpg-movement-test-game",
                 "https://github.com/AnyRPG/anyrpg-movement-test-game",
+                "",
                 "AnyRPG Movement Test Game",
                 new List<UnityPackageReq>(),
                 new List<AddonReq>()
             );
 
+            GUILayout.Space(15);
+
+            DrawModularAddonPanel(
+                "CC0 Fantasy Content Pack",
+                "A collection of fantasy assets released under the CC0 license, suitable for use in any project",
+                "anyrpg-cc0-fantasy-content-pack",
+                "",
+                "https://www.anyrpg.org/download/anyrpg-cc0-fantasy-content-pack/",
+                "AnyRPG CC0 Fantasy Content Pack",
+                new List<UnityPackageReq>(),
+                new List<AddonReq>()
+            );
+
+            GUILayout.Space(15);
+
+            DrawModularAddonPanel(
+                "A Lost Soul Demo Games",
+                "Demos of the game, A Lost Soul, created using the anyrpg-cc0-fantasy-content-pack assets",
+                "a-lost-soul-demo-games",
+                "https://github.com/AnyRPG/a-lost-soul-demo-games",
+                "",
+                "A Lost Soul Demo Games",
+                new List<UnityPackageReq> {
+                    umaPackage
+                },
+                new List<AddonReq> {
+                new AddonReq { Name = "AnyRPG UMA Addon", Folder = "anyrpg-uma", GitUrl = "https://github.com/AnyRPG/anyrpg-uma" },
+                new AddonReq { Name = "CC0 Fantasy Content Pack", Folder = "anyrpg-cc0-fantasy-content-pack", GitUrl = "", WebUrl = "https://www.anyrpg.org/download/anyrpg-cc0-fantasy-content-pack/" },
+                }
+            );
+
+
         }
 
-        private void DrawModularAddonPanel(string title, string desc, string addonFolder, string gitUrl, string addonLabel, List<UnityPackageReq> unityReqs = null, List<AddonReq> addonReqs = null, Action extraContent = null) {
+        private void DrawModularAddonPanel(string title, string desc, string addonFolder, string gitUrl, string webUrl, string addonLabel, List<UnityPackageReq> unityReqs = null, List<AddonReq> addonReqs = null, Action extraContent = null) {
             GUILayout.BeginVertical(title, "window");
             GUILayout.Space(16);
             EditorGUILayout.LabelField(desc, new GUIStyle(EditorStyles.label) { fontSize = 12, wordWrap = true });
@@ -361,7 +394,7 @@ namespace AnyRPG {
                     if (!installed) allReqsMet = false;
 
                     // Draws the dependency with full Manage options
-                    DrawFullAddonStep($"{stepCounter++}. {req.Name}", req.Folder, req.GitUrl, installed, true);
+                    DrawFullAddonStep($"{stepCounter++}. {req.Name}", req.Folder, req.GitUrl, req.WebUrl, installed, true);
                 }
             }
 
@@ -369,7 +402,7 @@ namespace AnyRPG {
             string mainRelPath = Path.Combine("Assets", "AnyRPG", "Addons", addonFolder);
             bool mainInstalled = Directory.Exists(Path.GetFullPath(Path.Combine(Application.dataPath, "..", mainRelPath)));
 
-            DrawFullAddonStep($"{stepCounter++}. {addonLabel}", addonFolder, gitUrl, mainInstalled, allReqsMet);
+            DrawFullAddonStep($"{stepCounter++}. {addonLabel}", addonFolder, gitUrl, webUrl, mainInstalled, allReqsMet);
 
             // --- STEP 3+ (Extra Content) ---
             if (mainInstalled && allReqsMet && extraContent != null) {
@@ -379,12 +412,12 @@ namespace AnyRPG {
             GUILayout.EndVertical();
         }
 
-        private void DrawFullAddonStep(string stepLabel, string folder, string gitUrl, bool isInstalled, bool requirementsMet) {
+        private void DrawFullAddonStep(string stepLabel, string folder, string gitUrl, string webUrl, bool isInstalled, bool requirementsMet) {
             string relPath = Path.Combine("Assets", "AnyRPG", "Addons", folder);
             string fullPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", relPath));
 
             GUILayout.BeginVertical(EditorStyles.helpBox);
-            DrawStatusStep(stepLabel, isInstalled, "Installed", "", null, gitUrl, requirementsMet);
+            DrawStatusStep(stepLabel, isInstalled, "Installed", "", null, gitUrl != string.Empty ? gitUrl : webUrl, requirementsMet);
 
             // --- MANAGE SECTION (Thin Outline Box) ---
             GUILayout.BeginVertical(EditorStyles.helpBox);
@@ -402,20 +435,29 @@ namespace AnyRPG {
                 GUILayout.EndVertical();
             } else {
                 // UPDATE
-                GUILayout.BeginVertical(EditorStyles.helpBox);
-                if (GUILayout.Button("Update Addon (Requires Git)", GUILayout.Height(25))) {
-                    UpdateAddon(fullPath, folder);
-                }
-                DrawTerminalCommand($"cd \"{fullPath}\" && git pull");
-                GUILayout.EndVertical();
+                if (gitUrl != "") {
+                    GUILayout.BeginVertical(EditorStyles.helpBox);
+                    if (GUILayout.Button("Update Addon (Requires Git)", GUILayout.Height(25))) {
+                        UpdateAddon(fullPath, folder);
+                    }
+                    DrawTerminalCommand($"cd \"{fullPath}\" && git pull");
+                    GUILayout.EndVertical();
 
-                // CHECK UPDATES
-                GUILayout.BeginVertical(EditorStyles.helpBox);
-                if (GUILayout.Button("Check for Updates (Requires Git)", GUILayout.Height(25))) {
-                    CheckForUpdates(fullPath, folder);
+                    // CHECK UPDATES
+                    GUILayout.BeginVertical(EditorStyles.helpBox);
+                    if (GUILayout.Button("Check for Updates (Requires Git)", GUILayout.Height(25))) {
+                        CheckForUpdates(fullPath, folder);
+                    }
+                    DrawTerminalCommand($"cd \"{fullPath}\" && git fetch && git status -uno");
+                    GUILayout.EndVertical();
                 }
-                DrawTerminalCommand($"cd \"{fullPath}\" && git fetch && git status -uno");
-                GUILayout.EndVertical();
+                if (webUrl != "") {
+                    GUILayout.BeginVertical(EditorStyles.helpBox);
+                    if (GUILayout.Button("Web Download", GUILayout.Height(25))) {
+                        Application.OpenURL(webUrl);
+                    }
+                    GUILayout.EndVertical();
+                }
 
                 // REMOVE
                 GUILayout.BeginVertical(EditorStyles.helpBox);
@@ -673,13 +715,6 @@ namespace AnyRPG {
                );
 
             DrawDemoButton(
-                "Content Demo Game",
-                contentDemoGameScenePath,
-                contentDemoBuildProfilePath,
-                "A simple demo of all 3d and audio content including\n -Clothing\n -Characters\n -Buildings\n -Props\n -Weapons"
-                );
-
-            DrawDemoButton(
                 "Features Demo Game",
                 featuresDemoGameScenePath,
                 featuresDemoBuildProfilePath,
@@ -851,7 +886,6 @@ namespace AnyRPG {
                 if (EditorUtility.DisplayDialog("Strip All Demo Games", "Delete every detected demo game and build profile?", "Delete All", "Cancel")) {
                     PerformStripDemo(storyDemoGamePath, storyDemoBuildProfilePath);
                     PerformStripDemo(characterDemoGamePath, characterDemoBuildProfilePath);
-                    PerformStripDemo(contentDemoGamePath, contentDemoBuildProfilePath);
                     PerformStripDemo(featuresDemoGamePath, featuresDemoBuildProfilePath);
                     PerformStripDemo(movementTestGamePath, movementTestGameBuildProfilePath);
                     PerformStripDemo(mmoDemoGamePath, mmoDemoBuildProfilePath);
@@ -865,7 +899,6 @@ namespace AnyRPG {
             bool anyDemosFound = false;
             anyDemosFound |= DrawStripDemoItem("A Lost Soul Story Demo", storyDemoGamePath, storyDemoBuildProfilePath);
             anyDemosFound |= DrawStripDemoItem("A Lost Soul Character Demo", characterDemoGamePath, characterDemoBuildProfilePath);
-            anyDemosFound |= DrawStripDemoItem("Content Demo Game", contentDemoGamePath, contentDemoBuildProfilePath);
             anyDemosFound |= DrawStripDemoItem("Features Demo Game", featuresDemoGamePath, featuresDemoBuildProfilePath);
             anyDemosFound |= DrawStripDemoItem("Movement Test Game", movementTestGamePath, movementTestGameBuildProfilePath);
             anyDemosFound |= DrawStripDemoItem("AnyMMO FishNet Demo Game", mmoDemoGamePath, mmoDemoBuildProfilePath);
@@ -989,9 +1022,10 @@ namespace AnyRPG {
     }
 
     public class AddonReq {
-        public string Name;
-        public string Folder;           // e.g., "anyrpg-uma"
-        public string GitUrl;
+        public string Name = string.Empty;
+        public string Folder = string.Empty;           // e.g., "anyrpg-uma"
+        public string GitUrl = string.Empty;
+        public string WebUrl = string.Empty;
     }
 
 }
