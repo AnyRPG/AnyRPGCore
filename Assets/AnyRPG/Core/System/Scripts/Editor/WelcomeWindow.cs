@@ -424,15 +424,24 @@ namespace AnyRPG {
             EditorGUILayout.LabelField("Manage", EditorStyles.miniBoldLabel);
 
             if (!isInstalled) {
-                GUILayout.BeginVertical(EditorStyles.helpBox);
-                GUI.enabled = requirementsMet;
-                // Button text remains original, unaffected by the step number
-                if (GUILayout.Button($"Install {stepLabel.Substring(stepLabel.IndexOf('.') + 2)} (Requires Git)", GUILayout.Height(25))) {
-                    InstallAddon(folder, gitUrl);
+                if (gitUrl != "") {
+                    GUILayout.BeginVertical(EditorStyles.helpBox);
+                    GUI.enabled = requirementsMet;
+                    // Button text remains original, unaffected by the step number
+                    if (GUILayout.Button($"Install {stepLabel.Substring(stepLabel.IndexOf('.') + 2)} (Requires Git)", GUILayout.Height(25))) {
+                        InstallAddon(folder, gitUrl);
+                    }
+                    GUI.enabled = true;
+                    DrawTerminalCommand($"git clone {gitUrl} \"{fullPath}\"");
+                    GUILayout.EndVertical();
                 }
-                GUI.enabled = true;
-                DrawTerminalCommand($"git clone {gitUrl} \"{fullPath}\"");
-                GUILayout.EndVertical();
+                if (webUrl != "") {
+                    GUILayout.BeginVertical(EditorStyles.helpBox);
+                    if (GUILayout.Button("Web Download", GUILayout.Height(25))) {
+                        Application.OpenURL(webUrl);
+                    }
+                    GUILayout.EndVertical();
+                }
             } else {
                 // UPDATE
                 if (gitUrl != "") {
