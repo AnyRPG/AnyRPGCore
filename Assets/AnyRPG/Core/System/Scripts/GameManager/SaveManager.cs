@@ -915,7 +915,7 @@ namespace AnyRPG {
         }
 
         public void SavePersistentObject(string UUID, PersistentObjectSaveData persistentObjectSaveData, SceneNode sceneNode) {
-            Debug.Log($"SaveManager.SavePersistentObject({UUID}, {sceneNode.ResourceName})");
+            //Debug.Log($"SaveManager.SavePersistentObject({UUID}, {sceneNode.ResourceName})");
 
             SceneNodeSaveData saveData = GetSceneNodeSaveData(sceneNode);
             foreach (PersistentObjectSaveData _persistentObjectSaveData in saveData.PersistentObjects) {

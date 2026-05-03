@@ -8,6 +8,10 @@ namespace AnyRPG {
 
         [Header("Nameplate")]
 
+        [Tooltip("If true, this unit will have a nameplate over its head.")]
+        [SerializeField]
+        private bool hasNameplate = true;
+
         [Tooltip("If true, the nameplate will show the title instead of the faction.  If true, the title will show in the nameplate instead of the faction.  If false, the faction will show in the nameplate instead of the title.  This only applies if a title is set.  If no title is set, the faction will be used regardless of this setting.")]
         [SerializeField]
         private bool suppressNameplateFaction = false;
@@ -372,6 +376,7 @@ namespace AnyRPG {
         public bool FaceInteractionTarget { get => faceInteractionTarget; set => faceInteractionTarget = value; }
         public List<AbilityEffectProperties> DefaultHitEffectList { get => defaultHitEffectList; set => defaultHitEffectList = value; }
         public bool SuppressNameplateFaction { get => suppressNameplateFaction; set => suppressNameplateFaction = value; }
+        public bool HasNameplate { get => hasNameplate; set => hasNameplate = value; }
 
         //public bool PersistCharacterState { get => persistCharacterState; set => persistCharacterState = value; }
 

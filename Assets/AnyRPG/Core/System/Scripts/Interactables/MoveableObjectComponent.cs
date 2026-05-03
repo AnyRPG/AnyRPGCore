@@ -57,7 +57,7 @@ namespace AnyRPG {
         }
 
         public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
-            Debug.Log($"{interactable.gameObject.name}.AnimatedObject.Interact({(sourceUnitController == null ? "null" : sourceUnitController.name)})");
+            //Debug.Log($"{interactable.gameObject.name}.AnimatedObject.Interact({(sourceUnitController == null ? "null" : sourceUnitController.name)})");
 
             base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
 
@@ -87,7 +87,7 @@ namespace AnyRPG {
         }
 
         private void ChooseMovement() {
-            Debug.Log("MoveableObjectComponent.ChooseMovement()");
+            //Debug.Log("MoveableObjectComponent.ChooseMovement()");
 
             if (objectOpen == true) {
                 moveCoroutine = interactable.StartCoroutine(AnimateObject(originalRotation, originalPosition, Props.CloseAudioClip));

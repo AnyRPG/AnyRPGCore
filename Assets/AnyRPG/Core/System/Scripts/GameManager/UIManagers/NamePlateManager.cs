@@ -66,7 +66,7 @@ namespace AnyRPG {
         }
 
         public void HandleAfterCameraUpdate(string eventName, EventParamProperties eventParamProperties) {
-            UpdateNamePlates();
+            UpdateNameplates();
         }
 
         /*
@@ -77,7 +77,7 @@ namespace AnyRPG {
         }
         */
 
-        private void UpdateNamePlates() {
+        private void UpdateNameplates() {
             if (isJobRunning) {
                 if (jobHandle.IsCompleted) {
                     jobHandle.Complete();

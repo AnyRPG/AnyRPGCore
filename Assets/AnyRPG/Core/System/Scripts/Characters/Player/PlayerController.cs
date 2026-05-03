@@ -1122,6 +1122,15 @@ namespace AnyRPG {
                 strafeModeActive = false;
             }
         }
+
+        public void ResetMoveInput() {
+            //Debug.Log($"PlayerController.ResetMoveInput()");
+
+            movementData.ResetMoveInput();
+            if (playerManagerClient.ActiveUnitController != null) {
+                playerManagerClient.ActiveUnitController.UnitMovementController.AddMovementData(movementData);
+            }
+        }
     }
 
 }
