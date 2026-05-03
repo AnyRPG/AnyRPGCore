@@ -13,26 +13,26 @@ namespace AnyRPG {
 
         public const string installedVersion = "1.0";
 
-        private const string storyDemoGameScenePath = "ALostSoul/Games/ALostSoulStoryDemo/Scenes/Game/ALostSoulStoryDemoGame/ALostSoulStoryDemoGame.unity";
-        private const string characterDemoGameScenePath = "ALostSoul/Games/ALostSoulCharacterDemo/Scenes/Game/ALostSoulCharacterDemoGame/ALostSoulCharacterDemoGame.unity";
+        private const string storyDemoGameScenePath = "AnyRPG/Addons/a-lost-soul-demo-games/Games/ALostSoulStoryDemo/Scenes/Game/ALostSoulStoryDemoGame/ALostSoulStoryDemoGame.unity";
+        private const string characterDemoGameScenePath = "AnyRPG/Addons/a-lost-soul-demo-games/Games/ALostSoulCharacterDemo/Scenes/Game/ALostSoulCharacterDemoGame/ALostSoulCharacterDemoGame.unity";
         private const string featuresDemoGameScenePath = "AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity";
         private const string movementTestGameScenePath = "AnyRPG/Addons/anyrpg-movement-test-game/Scenes/Game/MovementTestGame/MovementTestGame.unity";
         private const string mmoDemoGameScenePath = "AnyRPG/Addons/anymmo-fishnet/Games/AnyMMODemo/Scenes/AnyMMODemo/AnyMMODemo.unity";
 
-        private const string storyDemoGamePath = "ALostSoul/Games/ALostSoulStoryDemo";
-        private const string characterDemoGamePath = "ALostSoul/Games/ALostSoulCharacterDemo";
+        private const string storyDemoGamePath = "AnyRPG/Addons/a-lost-soul-demo-games/Games/ALostSoulStoryDemo";
+        private const string characterDemoGamePath = "AnyRPG/Addons/a-lost-soul-demo-games/Games/ALostSoulCharacterDemo";
         private const string featuresDemoGamePath = "AnyRPG/Core/Games/FeaturesDemoGame";
         private const string movementTestGamePath = "AnyRPG/Addons/anyrpg-movement-test-game/Games/MovementTestGame";
         private const string mmoDemoGamePath = "AnyRPG/Addons/anymmo-fishnet/Games/AnyMMODemo";
 
-        private const string storyDemoBuildProfilePath = "ALostSoul/Build Profiles/A Lost Soul Story Demo.asset";
-        private const string characterDemoBuildProfilePath = "ALostSoul/Build Profiles/A Lost Soul Character Demo.asset";
+        private const string storyDemoBuildProfilePath = "AnyRPG/Addons/a-lost-soul-demo-games/Build Profiles/A Lost Soul Story Demo.asset";
+        private const string characterDemoBuildProfilePath = "AnyRPG/Addons/a-lost-soul-demo-games/Build Profiles/A Lost Soul Character Demo.asset";
         private const string featuresDemoBuildProfilePath = "AnyRPG/Core/Build Profiles/Features Demo Game.asset";
         private const string movementTestGameBuildProfilePath = "AnyRPG/Addons/anyrpg-movement-test-game/Build Profiles/Movement Test Game.asset";
         private const string mmoDemoBuildProfilePath = "AnyRPG/Addons/anymmo-fishnet/Build Profiles/AnyMMO Demo Game.asset";
 
         private const string coreTemplateContentFolder = "AnyRPG/Core/Content";
-        private const string engineTemplateContentFolder = "AnyRPG/Engine/Content";
+        private const string cc0FantasyContentPackContentFolder = "AnyRPG/Addons/anyrpg-cc0-fantasy-content-pack/Content";
         private const string umaTemplateContentFolder = "AnyRPG/Addons/anyrpg-uma/Content";
         private const string fishNetTemplateContentFolder = "AnyRPG/Addons/anymmo-fishnet/Content";
 
@@ -965,7 +965,7 @@ namespace AnyRPG {
             if (GUILayout.Button("STRIP ALL DETECTED TEMPLATE CONTENT", GUILayout.Height(35))) {
                 if (EditorUtility.DisplayDialog("Strip All", "Remove all template subfolders?", "Delete All", "Cancel")) {
                     PerformStripTemplate(coreTemplateContentFolder);
-                    PerformStripTemplate(engineTemplateContentFolder);
+                    PerformStripTemplate(cc0FantasyContentPackContentFolder);
                     PerformStripTemplate(umaTemplateContentFolder);
                     PerformStripTemplate(fishNetTemplateContentFolder);
                     AssetDatabase.Refresh();
@@ -977,7 +977,7 @@ namespace AnyRPG {
 
             bool anyFound = false;
             anyFound |= DrawStripTemplateRow("Core Template Content", coreTemplateContentFolder);
-            anyFound |= DrawStripTemplateRow("Engine Template Content", engineTemplateContentFolder);
+            anyFound |= DrawStripTemplateRow("CC0 Fantasy Content Pack Template Content", cc0FantasyContentPackContentFolder);
             anyFound |= DrawStripTemplateRow("UMA Template Content", umaTemplateContentFolder);
             anyFound |= DrawStripTemplateRow("FishNet Template Content", fishNetTemplateContentFolder);
 
