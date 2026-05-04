@@ -286,11 +286,31 @@ namespace AnyRPG {
             //Debug.Log($"CombatTextController.RunCombatTextUpdate() fadeOutTimer: {fadeOutTimer} text: {tmpProtext.text}");
 
             if (mainTarget != null) {
+                /*
                 Vector2 screenPoint = cameraManager.ActiveMainCamera.WorldToScreenPoint(worldSpawnPos);
                 //targetPos = cameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
                 //float finalY = yUIOffset + randomY + pushOffset;
                 float finalY = yUIOffset + (pushOffset * directionMultiplier);
                 transform.position = screenPoint + new Vector2((randomX + xUIOffset + (xDirectionMultiplier == 1 ? 0 : textRectTransform.rect.width)) * xDirectionMultiplier, finalY);
+                */
+
+                Vector3 screenPoint = cameraManager.ActiveMainCamera.WorldToScreenPoint(worldSpawnPos);
+
+                // 1. CHECK FOR BEHIND CAMERA
+                if (screenPoint.z < 0) {
+                    // The hit is behind us. We should hide it or kill it.
+                    // Option: Immediately return to pool to avoid the "flicker"
+                    combatTextManager.Unregister(mainTarget, this, GetQuadrantIndex());
+                    combatTextManager.RequestReturnControllerToPool(this);
+                    return;
+                }
+
+                // 2. POSITIONING (Only runs if screenPoint.z >= 0)
+                float finalY = yUIOffset + (pushOffset * directionMultiplier);
+                transform.position = (Vector2)screenPoint + new Vector2(
+                    (randomX + xUIOffset + (xDirectionMultiplier == 1 ? 0 : textRectTransform.rect.width)) * xDirectionMultiplier,
+                    finalY
+                );
             }
             if (fadeOutTimer > 0f) {
                 fadeOutTimer -= Time.deltaTime;
