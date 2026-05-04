@@ -531,6 +531,8 @@ namespace AnyRPG {
                     } else {
                         playerManagerClient.ActiveUnitController.UnitEventController.NotifyOnRequestFollowInteractionTarget(interactable);
                     }
+                } else {
+                    messageFeedManager.WriteMessage($"{interactable.DisplayName} is out of range");
                 }
                 return;
             }
