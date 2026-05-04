@@ -97,7 +97,7 @@ MonoBehaviour:
       useUniversalAttachment: 1
       attachmentName: Left Hand
     despawnPrefabsOnCastEnd: 1
-    abilityPrefabSource: 0
+    abilityPrefabSource: 1
     animatorCreatePrefabs: 0
     prefabDestroyDelay: 0
     animationProfileName: Fishing
