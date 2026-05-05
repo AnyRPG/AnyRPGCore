@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2232754343567841329}
   - component: {fileID: 2088754196902026917}
   m_Layer: 25
-  m_Name: DefaultInteractableUnit
+  m_Name: Interactable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,7 +70,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showTooltip: 1
-  interactableName: Mailbox
+  interactableName: Mail
   glowOnMouseOver: 1
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   interactionTooltipText: 

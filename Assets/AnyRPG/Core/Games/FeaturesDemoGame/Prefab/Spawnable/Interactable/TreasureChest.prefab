@@ -92,9 +92,9 @@ MonoBehaviour:
     saveOnLevelUnload: 1
     saveOnGameSave: 1
   persistInteractableData: 1
-  hasNamePlate: 1
+  hasNameplate: 0
   namePlateProps:
-    displayName: Treasure Chest
+    displayName: 
     overrideNameplatePosition: 0
     namePlatePosition: {x: 0, y: 0, z: 0}
 --- !u!114 &444387701397511732
@@ -109,7 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnyRPG.UUID
-  m_UUID: f3d21c7e-5aa4-497e-adbb-588876f4d915
+  m_UUID: e64c54d4-f526-4769-912f-9097ff815df1
   forceUpdateUUID: 0
 --- !u!114 &699580187205835215
 MonoBehaviour:

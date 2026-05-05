@@ -70,7 +70,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showTooltip: 1
-  interactableName: Mailbox
+  interactableName: Mail
   glowOnMouseOver: 1
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   interactionTooltipText: 
