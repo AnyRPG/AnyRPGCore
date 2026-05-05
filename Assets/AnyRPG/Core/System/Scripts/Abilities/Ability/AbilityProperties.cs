@@ -45,7 +45,7 @@ namespace AnyRPG {
 
         [Tooltip("Ability to use ability prefabs, both to use Weapon and ability prefabs, weapon to use only weapon prefabs")]
         [SerializeField]
-        protected AbilityPrefabSource abilityPrefabSource = AbilityPrefabSource.Both;
+        protected AbilityPrefabSource abilityPrefabSource = AbilityPrefabSource.Ability;
 
         [Tooltip("holdable object prefabs are created by the animator from an animation event, not from the ability manager during cast start")]
         [SerializeField]
