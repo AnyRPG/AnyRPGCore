@@ -38,8 +38,12 @@ namespace AnyRPG {
         public void SetRotation(Quaternion targetRotation) {
             //Debug.Log($"StandardMovementBody.SetRotation({targetRotation})");
 
-            rigidBody.rotation = targetRotation;
-            //rigidBody.MoveRotation(targetRotation);
+            //rigidBody.rotation = targetRotation;
+
+            // to prevent nameplate jitter, use MoveRotation instead of setting the rotation directly.
+            // This ensures that the rotation is applied smoothly during the physics update
+            // and prevent jitter when the rotation is not actually changing
+            rigidBody.MoveRotation(targetRotation);
 
             //Physics.SyncTransforms();
         }
