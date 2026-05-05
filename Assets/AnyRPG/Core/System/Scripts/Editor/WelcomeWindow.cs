@@ -139,7 +139,7 @@ namespace AnyRPG {
             GUILayout.Label("MENU", EditorStyles.boldLabel);
             GUILayout.Space(5);
 
-            string[] mainTabs = { "Start Here", "Install Optional Addons", "Create Your Game", "Included Demo Games", "Support" };
+            string[] mainTabs = { "Start Here", "Install Optional Addons", "Create Your Game", "Play Demo Games", "Support" };
 
             // Logic: If selectedTab is 0-4, show it in this grid. Otherwise, show nothing selected (-1).
             int newMainTab = GUILayout.SelectionGrid(selectedTab < 5 ? selectedTab : -1, mainTabs, 1, GUILayout.Height(mainTabs.Length * 45));
@@ -706,7 +706,7 @@ namespace AnyRPG {
         }
 
         private void DrawDemosTab() {
-            EditorGUILayout.LabelField("INCLUDED DEMO GAMES", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("PLAY DEMO GAMES", EditorStyles.boldLabel);
             GUILayout.Space(10);
 
             DrawDemoButton(
