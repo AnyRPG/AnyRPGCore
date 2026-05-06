@@ -700,13 +700,17 @@ namespace AnyRPG {
             systemEventManager.NotifyOnTakeDamage(sourceCaster, unitController, amount, abilityName);
         }
 
-        public void HandleTakeFallDamage(int damageAmount) {
-            combatTextManager.SpawnCombatText(unitController, damageAmount, CombatTextType.normal, CombatMagnitude.normal, null);
+        public void HandleTakeFallDamage(UnitController targetUnitController, int damageAmount) {
+            combatTextManager.SpawnCombatText(targetUnitController, damageAmount, CombatTextType.normal, CombatMagnitude.normal, null);
             OnTakeFallDamage(unitController, damageAmount);
         }
 
-        public void HandleReceiveCombatTextEvent(UnitController targetUnitController, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
-            combatTextManager.SpawnCombatText(targetUnitController, amount, combatTextType, combatMagnitude, abilityEffectContext);
+        public void HandleReceiveCombatTextEvent(Interactable targetInteractable, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
+            combatTextManager.SpawnCombatText(targetInteractable, amount, combatTextType, combatMagnitude, abilityEffectContext);
+        }
+
+        public void HandleReceiveStatusEffectCombatTextEvent(UnitController targetUnitController, StatusEffectProperties statusEffect, bool addEffect) {
+            combatTextManager.SpawnCombatText(targetUnitController, statusEffect, addEffect);
         }
 
         public void HandleFactionChange(Faction newFaction, Faction oldFaction) {
@@ -880,7 +884,7 @@ namespace AnyRPG {
             systemEventManager.NotifyOnRemoveEquipment(profile, equipment);
         }
 
-        public void HandleRecoverResource(PowerResource powerResource, int amount, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
+        public void HandleRecoverResource(UnitController targetUnitController, PowerResource powerResource, int amount, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
             if (messageLogClient != null) {
                 messageLogClient.WriteCombatMessage($"You gain {amount} {powerResource.DisplayName}");
             }
@@ -935,7 +939,7 @@ namespace AnyRPG {
         public void HandleAfterDie(CharacterStats deadCharacterStats) {
         }
 
-        public void HandleImmuneToEffect(AbilityEffectContext abilityEffectContext) {
+        public void HandleImmuneToEffect(UnitController targetUnitController, AbilityEffectContext abilityEffectContext) {
             combatTextManager.SpawnCombatText(activeUnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
         }
 

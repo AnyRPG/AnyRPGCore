@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -135,7 +136,9 @@ namespace AnyRPG {
             } else {
                 image.color = Color.white;
             }
-            if (mainTarget.InteractableGameObject == playerManagerClient.ActiveUnitController.gameObject) {
+            // check if this is a player or its pet
+            if (mainTarget.InteractableGameObject == playerManagerClient.ActiveUnitController.gameObject
+                || playerManagerClient.ActiveUnitController.CharacterPetManager.ActiveUnitProfiles.Values.Select(x => x.InteractableGameObject).Contains(mainTarget.InteractableGameObject)) {
                 directionMultiplier = -1;
                 switch (textType) {
                     case CombatTextType.normal:
