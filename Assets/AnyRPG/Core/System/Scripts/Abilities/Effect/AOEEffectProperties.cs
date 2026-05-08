@@ -36,6 +36,7 @@ namespace AnyRPG {
             if (abilityEffectContext == null) {
                 abilityEffectContext = new AbilityEffectContext(source);
             }
+            abilityEffectContext.AbilityEffect = this;
             Dictionary<PrefabProfile, List<GameObject>> returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
             TargetAOEHit(source, target, abilityEffectContext);
 
@@ -115,7 +116,7 @@ namespace AnyRPG {
                 aoeSpawnCenter += aoeSpawnRotation * aoeProperties.AoeCenter;
             } else if (prefabSpawnLocation == PrefabSpawnLocation.GroundTarget) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to groundTarget at: " + abilityEffectInput.prefabLocation);
-                aoeSpawnCenter = abilityEffectContext.groundTargetLocation;
+                aoeSpawnCenter = abilityEffectContext.GroundTargetLocation;
                 aoeSpawnCenter += aoeProperties.AoeCenter;
             } else {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to vector3.zero!!! was prefab spawn location not set or target despawned?");

@@ -40,6 +40,7 @@ namespace AnyRPG {
             if (abilityEffectContext == null) {
                 abilityEffectContext = new AbilityEffectContext(source);
             }
+            abilityEffectContext.AbilityEffect = this;
             Dictionary<PrefabProfile, List<GameObject>> returnObjects = source.AbilityManager.SpawnChanneledEffectPrefabs(target, originalTarget, this, abilityEffectContext);
             
             return returnObjects;

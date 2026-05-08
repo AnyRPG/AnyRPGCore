@@ -444,7 +444,7 @@ namespace AnyRPG {
                         Vector3 nodeRotation = abilityAttachmentNode.HoldableObject.Rotation;
                         Vector3 nodeScale = abilityAttachmentNode.HoldableObject.Scale;
                         if (fixedLengthEffectProperties.PrefabSpawnLocation == PrefabSpawnLocation.GroundTarget) {
-                            spawnLocation = abilityEffectInput.groundTargetLocation;
+                            spawnLocation = abilityEffectInput.GroundTargetLocation;
                             prefabParent = null;
                         }
                         if (fixedLengthEffectProperties.PrefabSpawnLocation == PrefabSpawnLocation.TargetPoint && target != null) {
@@ -615,8 +615,8 @@ namespace AnyRPG {
                         if (channeledObjectScript != null) {
                             Vector3 endPosition = Vector3.zero;
                             Interactable usedTarget = target;
-                            if (abilityEffectContext.baseAbility != null && abilityEffectContext.baseAbility.GetTargetOptions(abilityCaster).RequiresGroundTarget == true) {
-                                endPosition = abilityEffectContext.groundTargetLocation;
+                            if (abilityEffectContext.BaseAbility != null && abilityEffectContext.BaseAbility.GetTargetOptions(abilityCaster).RequiresGroundTarget == true) {
+                                endPosition = abilityEffectContext.GroundTargetLocation;
                                 usedTarget = null;
                                 //Debug.Log(DisplayName + "ChanneledEffect.Cast() abilityEffectInput.prefabLocation: " + abilityEffectInput.prefabLocation);
                             } else {

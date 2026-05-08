@@ -187,7 +187,7 @@ namespace AnyRPG {
             }
             // 0 to allow playing this effect for different reasons than levelup
             if (newLevel == 0 || newLevel != 1) {
-                AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
+                AbilityEffectContext abilityEffectContext = new AbilityEffectContext(systemConfigurationManager.LevelUpEffect.AbilityEffectProperties);
 
                 systemConfigurationManager.LevelUpEffect.AbilityEffectProperties.Cast(systemAbilityController, sourceUnitController, sourceUnitController, abilityEffectContext);
             }
@@ -198,7 +198,7 @@ namespace AnyRPG {
             if (PlayerUnitSpawned == false || systemConfigurationManager.DeathEffect == null) {
                 return;
             }
-            AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
+            AbilityEffectContext abilityEffectContext = new AbilityEffectContext(systemConfigurationManager.DeathEffect.AbilityEffectProperties);
             systemConfigurationManager.DeathEffect.AbilityEffectProperties.Cast(systemAbilityController, unitController, unitController, abilityEffectContext);
         }
 
@@ -707,6 +707,32 @@ namespace AnyRPG {
 
         public void HandleReceiveCombatTextEvent(Interactable targetInteractable, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
             combatTextManager.SpawnCombatText(targetInteractable, amount, combatTextType, combatMagnitude, abilityEffectContext);
+
+            // convert the combat text event into a combat message for the message log
+            string verb = string.Empty;
+            if (combatTextType == CombatTextType.normal || combatTextType == CombatTextType.ability) {
+                verb = "hit";
+            } else if (combatTextType == CombatTextType.gainHealth) {
+                verb = "healed";
+            } else {
+                // only logs heals and hits for now, possibly expand this later if wanted
+                return;
+            }
+            string sourceName = string.Empty;
+            if (abilityEffectContext.AbilityCaster != null) {
+                sourceName = $"{abilityEffectContext.AbilityCaster.AbilityManager.Name}'s ";
+            }
+            if (abilityEffectContext.AbilityCaster != null && abilityEffectContext.AbilityCaster.gameObject == unitController.gameObject) {
+                sourceName = "Your ";
+            }
+            string abilityName = "Unknown Ability";
+            if (abilityEffectContext.BaseAbility != null) {
+                abilityName = abilityEffectContext.BaseAbility.DisplayName;
+            } else if (abilityEffectContext.AbilityEffect != null) {
+                abilityName = abilityEffectContext.AbilityEffect.DisplayName;
+            }
+            string messageText = $"{sourceName}{abilityName} {verb} {targetInteractable.DisplayName} for {amount}";
+            messageLogClient.WriteCombatMessage(messageText);
         }
 
         public void HandleReceiveStatusEffectCombatTextEvent(UnitController targetUnitController, StatusEffectProperties statusEffect, bool addEffect) {
@@ -722,7 +748,6 @@ namespace AnyRPG {
         public void HandleAddBag(InstantiatedBag bag, BagNode node) {
             systemEventManager.NotifyOnAddBag();
         }
-
 
         public void HandleCraftItem() {
             systemEventManager.NotifyOnCraftItem();
@@ -869,11 +894,11 @@ namespace AnyRPG {
         }
 
         public void HandlePowerResourceCheckFail(AbilityProperties ability, IAbilityCaster abilityCaster) {
-            messageLogClient.WriteCombatMessage("Not enough " + ability.PowerResource.DisplayName + " to perform " + ability.DisplayName + " at a cost of " + ability.GetResourceCost(abilityCaster));
+            messageLogClient.WriteCombatMessage($"Not enough {ability.PowerResource.DisplayName} to perform {ability.DisplayName} at a cost of {ability.GetResourceCost(abilityCaster)}");
         }
 
         public void HandleLearnedCheckFail(AbilityProperties ability) {
-            messageLogClient.WriteCombatMessage("You have not learned the ability " + ability.DisplayName + " yet");
+            messageLogClient.WriteCombatMessage($"You have not learned the ability {ability.DisplayName} yet");
         }
 
         private void HandleAddEquipment(EquipmentSlotProfile profile, InstantiatedEquipment equipment) {

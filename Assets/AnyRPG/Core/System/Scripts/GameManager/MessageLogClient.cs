@@ -97,7 +97,7 @@ namespace AnyRPG {
         }
 
         public void WriteCombatMessage(string newMessage) {
-            //Debug.Log("MessageLogClient.WriteCombatMessage(" + newMessage + ")");
+            Debug.Log($"MessageLogClient.WriteCombatMessage({newMessage})");
 
             OnWriteCombatMessage(newMessage);
         }

@@ -227,9 +227,9 @@ namespace AnyRPG {
                     //text.fontSize = text.fontSize * 2;
                     break;
                 case CombatTextType.gainResource:
-                    if (abilityEffectContext?.powerResource != null) {
-                        textColor = abilityEffectContext.powerResource.DisplayColor;
-                        postText += " " + abilityEffectContext.powerResource.DisplayName;
+                    if (abilityEffectContext?.PowerResource != null) {
+                        textColor = abilityEffectContext.PowerResource.DisplayColor;
+                        postText += " " + abilityEffectContext.PowerResource.DisplayName;
                     } else {
                         textColor = Color.blue;
                     }

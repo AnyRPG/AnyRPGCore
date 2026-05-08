@@ -1,4 +1,3 @@
-using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,23 +12,26 @@ namespace AnyRPG {
         public int overrideDuration = 0;
         public bool savedEffect = false;
         public float castTimeMultiplier = 1f;
-        public float spellDamageMultiplier = 1f;
+        public float SpellDamageMultiplier = 1f;
 
         // was this damage caused by a reflect?  Needed to stop infinite reflect loops
-        public bool reflectDamage = false;
+        public bool ReflectDamage = false;
 
-        public Vector3 groundTargetLocation = Vector3.zero;
+        public Vector3 GroundTargetLocation = Vector3.zero;
 
-        public Interactable originalTarget;
+        public Interactable OriginalTarget;
 
         // track the ability that was originally cast that resulted in this effect
-        public AbilityProperties baseAbility = null;
+        public AbilityProperties BaseAbility = null;
+
+        // track the ability effect that caused this effect
+        public AbilityEffectProperties AbilityEffect = null;
 
         // the last power resource affected
-        public PowerResource powerResource = null;
+        public PowerResource PowerResource = null;
 
         // prevent multiple onHit effects from casting each other
-        public bool weaponHitHasCast = false;
+        public bool WeaponHitHasCast = false;
 
         // information about the original caster
         private IAbilityCaster abilityCaster = null;
@@ -47,6 +49,10 @@ namespace AnyRPG {
         public AbilityEffectContext() {
         }
 
+        public AbilityEffectContext(AbilityEffectProperties abilityEffectProperties) {
+            this.AbilityEffect = abilityEffectProperties;
+        }
+
         public AbilityEffectContext(IAbilityCaster abilityCaster) {
             this.abilityCaster = abilityCaster;
             abilityCasterLocation = abilityCaster.transform.position;
@@ -60,13 +66,14 @@ namespace AnyRPG {
             overrideDuration = serializableAbilityEffectContext.overrideDuration;
             savedEffect = serializableAbilityEffectContext.savedEffect;
             castTimeMultiplier = serializableAbilityEffectContext.castTimeMultiplier;
-            spellDamageMultiplier = serializableAbilityEffectContext.spellDamageMultiplier;
-            reflectDamage = serializableAbilityEffectContext.reflectDamage;
-            groundTargetLocation = serializableAbilityEffectContext.groundTargetLocation;
-            this.originalTarget = originalTarget;
-            baseAbility = serializableAbilityEffectContext.baseAbilityName == string.Empty ? null : systemGameManager.SystemDataFactory.GetResource<Ability>(serializableAbilityEffectContext.baseAbilityName)?.AbilityProperties;
-            powerResource = serializableAbilityEffectContext.powerResourceName == string.Empty ? null : systemGameManager.SystemDataFactory.GetResource<PowerResource>(serializableAbilityEffectContext.powerResourceName);
-            weaponHitHasCast = serializableAbilityEffectContext.weaponHitHasCast;
+            SpellDamageMultiplier = serializableAbilityEffectContext.spellDamageMultiplier;
+            ReflectDamage = serializableAbilityEffectContext.reflectDamage;
+            GroundTargetLocation = serializableAbilityEffectContext.groundTargetLocation;
+            this.OriginalTarget = originalTarget;
+            BaseAbility = serializableAbilityEffectContext.baseAbilityName == string.Empty ? null : systemGameManager.SystemDataFactory.GetResource<Ability>(serializableAbilityEffectContext.baseAbilityName)?.AbilityProperties;
+            PowerResource = serializableAbilityEffectContext.powerResourceName == string.Empty ? null : systemGameManager.SystemDataFactory.GetResource<PowerResource>(serializableAbilityEffectContext.powerResourceName);
+            WeaponHitHasCast = serializableAbilityEffectContext.weaponHitHasCast;
+            AbilityEffect = serializableAbilityEffectContext.sourceAbilityEffectName == string.Empty ? null : systemGameManager.SystemDataFactory.GetResource<AbilityEffect>(serializableAbilityEffectContext.sourceAbilityEffectName).AbilityEffectProperties;
         }
 
         public AbilityEffectContext GetCopy() {
@@ -78,15 +85,16 @@ namespace AnyRPG {
             returnValue.overrideDuration = overrideDuration;
             returnValue.savedEffect = savedEffect;
             returnValue.castTimeMultiplier = castTimeMultiplier;
-            returnValue.spellDamageMultiplier = spellDamageMultiplier;
-            returnValue.reflectDamage = reflectDamage;
-            returnValue.groundTargetLocation = groundTargetLocation;
-            returnValue.originalTarget = originalTarget;
-            returnValue.baseAbility = baseAbility;
-            returnValue.powerResource = powerResource;
-            returnValue.weaponHitHasCast = weaponHitHasCast;
+            returnValue.SpellDamageMultiplier = SpellDamageMultiplier;
+            returnValue.ReflectDamage = ReflectDamage;
+            returnValue.GroundTargetLocation = GroundTargetLocation;
+            returnValue.OriginalTarget = OriginalTarget;
+            returnValue.BaseAbility = BaseAbility;
+            returnValue.PowerResource = PowerResource;
+            returnValue.WeaponHitHasCast = WeaponHitHasCast;
             returnValue.abilityCasterLocation = abilityCasterLocation;
             returnValue.abilityCasterRotation = abilityCasterRotation;
+            returnValue.AbilityEffect = AbilityEffect;
 
             // resource amounts must be copied.  ToList() or other methods don't work because you end up with a new list of references to the same old nodes
             returnValue.resourceAmounts = new List<ResourceInputAmountNode>();
@@ -106,14 +114,15 @@ namespace AnyRPG {
             returnValue.overrideDuration = overrideDuration;
             returnValue.savedEffect = savedEffect;
             returnValue.castTimeMultiplier = castTimeMultiplier;
-            returnValue.spellDamageMultiplier = spellDamageMultiplier;
-            returnValue.reflectDamage = reflectDamage;
-            returnValue.groundTargetLocation = groundTargetLocation;
-            returnValue.baseAbilityName = (baseAbility != null ? baseAbility.ResourceName : string.Empty);
-            returnValue.powerResourceName = (powerResource != null ? powerResource.ResourceName : string.Empty);
-            returnValue.weaponHitHasCast = weaponHitHasCast;
+            returnValue.spellDamageMultiplier = SpellDamageMultiplier;
+            returnValue.reflectDamage = ReflectDamage;
+            returnValue.groundTargetLocation = GroundTargetLocation;
+            returnValue.baseAbilityName = (BaseAbility != null ? BaseAbility.ResourceName : string.Empty);
+            returnValue.powerResourceName = (PowerResource != null ? PowerResource.ResourceName : string.Empty);
+            returnValue.weaponHitHasCast = WeaponHitHasCast;
             returnValue.abilityCasterLocation = abilityCasterLocation;
             returnValue.abilityCasterRotation = abilityCasterRotation;
+            returnValue.sourceAbilityEffectName = (AbilityEffect != null ? AbilityEffect.ResourceName : string.Empty);
 
             // return the new object
             return returnValue;

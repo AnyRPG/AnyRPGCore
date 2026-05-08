@@ -932,7 +932,7 @@ namespace AnyRPG {
             statusEffects.Add(statusEffectProperties.ResourceName, newStatusEffectNode);
 
             // set base ability to null so that all damage taken by a status effect tick is considered ability damage for combat text purposes
-            abilityEffectContext.baseAbility = null;
+            abilityEffectContext.BaseAbility = null;
 
             newStatusEffectNode.Setup(unitController, statusEffectProperties, abilityEffectContext);
             Coroutine newCoroutine = unitController.StartCoroutine(Tick(sourceCharacter, abilityEffectContext, statusEffectProperties, newStatusEffectNode));

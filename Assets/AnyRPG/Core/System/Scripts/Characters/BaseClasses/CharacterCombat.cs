@@ -218,11 +218,11 @@ namespace AnyRPG {
                 abilityEffectContext.AbilityCaster = source;
             }
             */
-            abilityEffectContext.powerResource = powerResource;
+            abilityEffectContext.PowerResource = powerResource;
             abilityEffectContext.SetResourceAmount(powerResource.ResourceName, damage);
 
             // prevent infinite reflect loops
-            if (abilityEffectContext.reflectDamage == false) {
+            if (abilityEffectContext.ReflectDamage == false) {
                 foreach (StatusEffectNode statusEffectNode in unitController.CharacterStats.StatusEffects.Values) {
                     //Debug.Log("Casting Reflection On Take Damage");
                     // this could maybe be done better through an event subscription
@@ -237,8 +237,8 @@ namespace AnyRPG {
             }
 
             CombatTextType combatTextType = CombatTextType.normal;
-            if (abilityEffectContext.baseAbility != null
-                && abilityEffectContext.baseAbility.IsAutoAttack
+            if (abilityEffectContext.BaseAbility != null
+                && abilityEffectContext.BaseAbility.IsAutoAttack
                 && (abilityEffect as AttackEffectProperties).DamageType == DamageType.physical) {
                 combatTextType = CombatTextType.normal;
             } else {
@@ -551,9 +551,9 @@ namespace AnyRPG {
             }
 
             if ((unitController.Target != null && targetCharacterUnit != null)
-                || usedAbilityEffectContext.baseAbility.GetTargetOptions(unitController).RequireTarget == false) {
+                || usedAbilityEffectContext.BaseAbility.GetTargetOptions(unitController).RequireTarget == false) {
 
-                usedAbilityEffectContext.baseAbility.HandleAbilityHit(
+                usedAbilityEffectContext.BaseAbility.HandleAbilityHit(
                     unitController,
                     unitController.Target,
                     usedAbilityEffectContext);
@@ -563,7 +563,7 @@ namespace AnyRPG {
                 //Debug.Log("Processing hit on null target");
                 // OnHitEvent is responsible for performing ability effects for animated abilities, and needs to fire no matter what because those effects may not require targets
                 if (usedAbilityEffectContext != null) {
-                    if (usedAbilityEffectContext.baseAbility.GetTargetOptions(unitController).RequireTarget == false) {
+                    if (usedAbilityEffectContext.BaseAbility.GetTargetOptions(unitController).RequireTarget == false) {
                         unitController.UnitEventController.NotifyOnHitEvent(unitController, unitController.Target);
                         return;
                     }
