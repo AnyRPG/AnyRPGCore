@@ -1293,6 +1293,8 @@ namespace AnyRPG {
                 source.AbilityManager.ReceiveCombatTextEvent(unitController, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
             }
             unitController.UnitEventController.NotifyOnRecoverResource(powerResource, amount, combatMagnitude, abilityEffectContext);
+            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
+
             return true;
         }
 

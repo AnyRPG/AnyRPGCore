@@ -1679,7 +1679,8 @@ namespace AnyRPG {
             // check if the ability is on cooldown
             if (!PerformCooldownCheck(ability)) {
                 //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.CanCastAbility({ability.ResourceName}): ability is on cooldown!");
-                unitController.UnitEventController.NotifyOnCombatMessage($"Cannot cast {ability.DisplayName}: ability is on cooldown!");
+                // hmmm, this could get spammy if the player is trying to use an ability on cooldown, disable for now
+                //unitController.UnitEventController.NotifyOnCombatMessage($"Cannot cast {ability.DisplayName}: ability is on cooldown!");
                 return false;
             }
 

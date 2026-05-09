@@ -582,7 +582,7 @@ namespace AnyRPG {
         }
 
         public virtual void ReceiveCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.ReceiveCombatMiss()");
+            Debug.Log($"{unitController.gameObject.name}.CharacterCombat.ReceiveCombatMiss(caster: {abilityEffectContext.AbilityCaster.AbilityManager.Name})");
 
             lastCombatEvent = Time.time;
             unitController.UnitEventController.NotifyOnReceiveCombatMiss(targetObject, abilityEffectContext);

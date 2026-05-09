@@ -29,7 +29,7 @@ namespace AnyRPG {
             if (target == null) {
                 // capture pet effect requires a target under all circumstances
                 if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". Target required");
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage($"Cannot cast {DisplayName}. Target required");
                 }
                 return false;
             }

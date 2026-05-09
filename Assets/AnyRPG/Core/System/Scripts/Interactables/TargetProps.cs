@@ -109,7 +109,7 @@ namespace AnyRPG {
             // if we got here, we require a target, therefore if we don't have one, we can't cast
             if (target == null) {
                 if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " requires a target!");
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage($"{targetable.DisplayName} requires a target!");
                 }
                 return false;
             }
@@ -123,7 +123,7 @@ namespace AnyRPG {
             if (targetIsSelf == true) {
                 if (targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf == false) {
                     if (playerInitiated) {
-                        sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " cannot be cast on self!");
+                        sourceCharacter.AbilityManager.ReceiveCombatMessage($"{targetable.DisplayName} cannot be cast on self!");
                     }
                     return false;
                 }
@@ -139,7 +139,7 @@ namespace AnyRPG {
                 // if crafting or gathering, just checking requires target should be enough and the ability will take care of any other checks
                 if (targetable.GetTargetOptions(sourceCharacter).CanCastOnOthers == false && targetIsSelf == false) {
                     if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
-                        sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " cannot be cast on others");
+                        sourceCharacter.AbilityManager.ReceiveCombatMessage($"{targetable.DisplayName} cannot be cast on others");
                     }
                     return false;
                 }
@@ -147,20 +147,20 @@ namespace AnyRPG {
                 // liveness checks
                 if (targetCharacterUnit.UnitController.CharacterStats.IsAlive == false && targetable.GetTargetOptions(sourceCharacter).RequireLiveTarget == true && targetable.GetTargetOptions(sourceCharacter).RequireDeadTarget == false) {
                     if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
-                        sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " requires a live target!");
+                        sourceCharacter.AbilityManager.ReceiveCombatMessage($"{targetable.DisplayName} requires a live target!");
                     }
                     return false;
                 }
                 if (targetCharacterUnit.UnitController.CharacterStats.IsAlive == true && targetable.GetTargetOptions(sourceCharacter).RequireDeadTarget == true && targetable.GetTargetOptions(sourceCharacter).RequireLiveTarget == false) {
                     if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
-                        sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " requires a dead target!");
+                        sourceCharacter.AbilityManager.ReceiveCombatMessage($"{targetable.DisplayName} requires a dead target!");
                     }
                     return false;
                 }
 
                 if (targetIsSelf == false && !sourceCharacter.AbilityManager.PerformFactionCheck(targetable, targetCharacterUnit, targetIsSelf)) {
                     if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
-                        sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + targetable.DisplayName + " on target. Faction reputation requirement not met!");
+                        sourceCharacter.AbilityManager.ReceiveCombatMessage($"Cannot cast {targetable.DisplayName} on target. Faction reputation requirement not met!");
                     }
                     return false;
                 }
@@ -170,7 +170,7 @@ namespace AnyRPG {
                     if (targetCharacterUnit.UnitController.BaseCharacter.UnitType == null || !unitTypeRestrictions.Contains(targetCharacterUnit.UnitController.BaseCharacter.UnitType.ResourceName)) {
                         //Debug.Log(MyDisplayName + ".CapturePetEffect.CanUseOn(): pet was not allowed by your restrictions ");
                         if (playerInitiated) {
-                            sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + targetable.DisplayName + " on target. Pet type was not allowed");
+                            sourceCharacter.AbilityManager.ReceiveCombatMessage($"Cannot cast {targetable.DisplayName} on target. Pet type was not allowed");
                         }
                         return false;
                     }
@@ -180,14 +180,14 @@ namespace AnyRPG {
                 if (targetable.GetTargetOptions(sourceCharacter).RequireLiveTarget == true || targetable.GetTargetOptions(sourceCharacter).RequireDeadTarget == true) {
                     // something that is not a character unit cannot satisfy the alive or dead conditions because it is inanimate
                     if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
-                        sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " requires an animate target!");
+                        sourceCharacter.AbilityManager.ReceiveCombatMessage($"{targetable.DisplayName} requires an animate target!");
                     }
                     return false;
                 }
                 if (targetable.GetTargetOptions(sourceCharacter).CanCastOnFriendly == true || targetable.GetTargetOptions(sourceCharacter).CanCastOnNeutral == true || targetable.GetTargetOptions(sourceCharacter).CanCastOnEnemy == true) {
                     // something that is not a character unit cannot satisfy the relationship conditions because it is inanimate
                     if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
-                        sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " requires an animate target!");
+                        sourceCharacter.AbilityManager.ReceiveCombatMessage($"{targetable.DisplayName} requires an animate target!");
                     }
                     return false;
                 }
@@ -202,7 +202,7 @@ namespace AnyRPG {
 
             if (targetIsSelf == false && performRangeCheck == true && !sourceCharacter.AbilityManager.IsTargetInRange(target, targetable, abilityEffectContext)) {
                 if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + targetable.DisplayName + ". target is not in range!");
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage($"Cannot cast {targetable.DisplayName}. target is not in range!");
                 }
                 return false;
             }

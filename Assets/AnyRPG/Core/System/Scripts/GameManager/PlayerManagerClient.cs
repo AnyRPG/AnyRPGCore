@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -464,7 +465,7 @@ namespace AnyRPG {
             //unitController.UnitEventController.OnAfterDie += HandleAfterDie;
             unitController.UnitEventController.OnLevelChanged += HandleLevelChanged;
             unitController.UnitEventController.OnGainXP += HandleGainXP;
-            unitController.UnitEventController.OnRecoverResource += HandleRecoverResource;
+            //unitController.UnitEventController.OnRecoverResource += HandleRecoverResource;
             unitController.UnitEventController.OnResourceAmountChanged += HandleResourceAmountChanged;
             unitController.UnitEventController.OnEnterCombat += HandleEnterCombat;
             unitController.UnitEventController.OnDropCombat += HandleDropCombat;
@@ -538,7 +539,7 @@ namespace AnyRPG {
             //unitController.UnitEventController.OnAfterDie -= HandleAfterDie;
             unitController.UnitEventController.OnLevelChanged -= HandleLevelChanged;
             unitController.UnitEventController.OnGainXP -= HandleGainXP;
-            unitController.UnitEventController.OnRecoverResource -= HandleRecoverResource;
+            //unitController.UnitEventController.OnRecoverResource -= HandleRecoverResource;
             unitController.UnitEventController.OnResourceAmountChanged -= HandleResourceAmountChanged;
             unitController.UnitEventController.OnEnterCombat -= HandleEnterCombat;
             unitController.UnitEventController.OnDropCombat -= HandleDropCombat;
@@ -708,17 +709,11 @@ namespace AnyRPG {
         public void HandleReceiveCombatTextEvent(Interactable targetInteractable, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
             combatTextManager.SpawnCombatText(targetInteractable, amount, combatTextType, combatMagnitude, abilityEffectContext);
 
-            // convert the combat text event into a combat message for the message log
-            string verb = string.Empty;
-            if (combatTextType == CombatTextType.normal || combatTextType == CombatTextType.ability) {
-                verb = "hit";
-            } else if (combatTextType == CombatTextType.gainHealth) {
-                verb = "healed";
-            } else {
-                // only logs heals and hits for now, possibly expand this later if wanted
-                return;
-            }
+            string textColor = ColorUtility.ToHtmlStringRGB(Color.white);
+            string messageText = string.Empty;
             string sourceName = string.Empty;
+            string targetName = targetInteractable.DisplayName;
+
             if (abilityEffectContext.AbilityCaster != null) {
                 sourceName = $"{abilityEffectContext.AbilityCaster.AbilityManager.Name}'s ";
             }
@@ -731,7 +726,50 @@ namespace AnyRPG {
             } else if (abilityEffectContext.AbilityEffect != null) {
                 abilityName = abilityEffectContext.AbilityEffect.DisplayName;
             }
-            string messageText = $"{sourceName}{abilityName} {verb} {targetInteractable.DisplayName} for {amount}";
+            if (targetInteractable.gameObject == unitController.gameObject) {
+                targetName = "You";
+            }
+
+            // convert the combat text event into a combat message for the message log
+            string verb = string.Empty;
+            if (combatTextType == CombatTextType.normal || combatTextType == CombatTextType.ability) {
+                // turn text red if the target is the player or its pet
+                if (targetInteractable.gameObject == unitController.gameObject
+                    || unitController.CharacterPetManager.ActiveUnitProfiles.Values.Select(x => x.gameObject).Contains(targetInteractable.gameObject)) {
+                    textColor = ColorUtility.ToHtmlStringRGB(Color.red);
+                }
+                verb = "hit";
+                messageText = $"{sourceName}{abilityName} {verb} {targetName} for {amount}";
+            } else if (combatTextType == CombatTextType.gainHealth) {
+                verb = "healed";
+                messageText = $"{sourceName}{abilityName} {verb} {targetName} for {amount}";
+            } else if (combatTextType == CombatTextType.gainResource) {
+                if (abilityEffectContext.AbilityCaster != null && abilityEffectContext.AbilityCaster.gameObject == unitController.gameObject) {
+                    sourceName = "your ";
+                    verb = "gain";
+                    targetName = "You";
+                } else {
+                    verb = "gained";
+                    targetName = $"{targetName}'s";
+                }
+                messageText = $"{targetName} {verb} {amount} {abilityEffectContext.PowerResource.DisplayName} from {sourceName}{abilityName}";
+            } else if (combatTextType == CombatTextType.gainBuff) {
+                verb = "gained";
+                messageText = $"{targetName} {verb} {abilityName}";
+            } else if (combatTextType == CombatTextType.loseBuff) {
+                verb = "lost";
+                messageText = $"{targetName} {verb} {abilityName}";
+            } else if (combatTextType == CombatTextType.miss) {
+                verb = "missed";
+                messageText = $"{sourceName}{abilityName} {verb} {targetName}";
+            } else if (combatTextType == CombatTextType.immune) {
+                verb = "was immune to";
+                messageText = $"{targetName} {verb} {sourceName}{abilityName}";
+            } else {
+                // only logs heals and hits for now, possibly expand this later if wanted
+                return;
+            }
+            messageText = $"<color=#{textColor}>{messageText}</color>";
             messageLogClient.WriteCombatMessage(messageText);
         }
 
@@ -909,12 +947,14 @@ namespace AnyRPG {
             systemEventManager.NotifyOnRemoveEquipment(profile, equipment);
         }
 
+        /*
         public void HandleRecoverResource(UnitController targetUnitController, PowerResource powerResource, int amount, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
             if (messageLogClient != null) {
                 messageLogClient.WriteCombatMessage($"You gain {amount} {powerResource.DisplayName}");
             }
             combatTextManager.SpawnCombatText(activeUnitController, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
         }
+        */
 
         public void HandleResourceAmountChanged(PowerResource powerResource, int maxAmount, int currentAmount) {
             actionBarManager.UpdateVisuals();
