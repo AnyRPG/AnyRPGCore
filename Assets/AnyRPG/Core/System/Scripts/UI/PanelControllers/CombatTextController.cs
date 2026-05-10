@@ -178,7 +178,7 @@ namespace AnyRPG {
                         break;
                     case CombatTextType.loseBuff:
                         textColor = Color.cyan;
-                        preText += "+";
+                        preText += "-";
                         //text.fontSize = text.fontSize * 2;
                         xDirectionMultiplier = -1;
                         break;

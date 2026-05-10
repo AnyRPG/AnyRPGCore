@@ -162,9 +162,11 @@ namespace AnyRPG {
             OnSpecializationChange(sourceUnitController, newClassSpecialization, oldClassSpecialization);
         }
 
+        /*
         public void NotifyOnTakeDamage(IAbilityCaster source, UnitController target, int damage, string abilityName) {
             OnTakeDamage(source, target, damage, abilityName);
         }
+        */
 
         public void NotifyOnLevelChanged(UnitController sourceUnitController, int newLevel) {
             OnLevelChanged(sourceUnitController, newLevel);

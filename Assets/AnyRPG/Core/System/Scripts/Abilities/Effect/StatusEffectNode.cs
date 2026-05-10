@@ -80,6 +80,11 @@ namespace AnyRPG {
 
             // notify last or we will save with the status effect still active and it will come back when we load
             unitController.UnitEventController.NotifyOnCancelStatusEffect(statusEffect);
+
+            if (statusEffect.ClassTrait == false) {
+                unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, 0, CombatTextType.loseBuff, CombatMagnitude.normal, abilityEffectContext);
+            }
+
         }
 
         public void ClearNodeScripts() {

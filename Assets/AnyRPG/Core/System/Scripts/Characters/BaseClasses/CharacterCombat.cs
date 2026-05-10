@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using UMA.Controls;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -221,6 +222,7 @@ namespace AnyRPG {
             abilityEffectContext.PowerResource = powerResource;
             abilityEffectContext.SetResourceAmount(powerResource.ResourceName, damage);
 
+            /*
             // prevent infinite reflect loops
             if (abilityEffectContext.ReflectDamage == false) {
                 foreach (StatusEffectNode statusEffectNode in unitController.CharacterStats.StatusEffects.Values) {
@@ -235,6 +237,7 @@ namespace AnyRPG {
                     }
                 }
             }
+            */
 
             CombatTextType combatTextType = CombatTextType.normal;
             if (abilityEffectContext.BaseAbility != null
@@ -263,7 +266,25 @@ namespace AnyRPG {
                 }
             }
 
+            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, damage, combatTextType, combatMagnitude, abilityEffectContext);
+
             unitController?.UnitEventController.NotifyOnTakeDamage(sourceCaster, unitController, damage, combatTextType, combatMagnitude, abilityEffect.DisplayName, abilityEffectContext);
+
+            // reflect damage after above notifications so that the order shows properly in combat logs
+            if (abilityEffectContext.ReflectDamage == false) {
+                // prevent infinite reflect loops ^
+                foreach (StatusEffectNode statusEffectNode in unitController.CharacterStats.StatusEffects.Values) {
+                    //Debug.Log("Casting Reflection On Take Damage");
+                    // this could maybe be done better through an event subscription
+                    if (statusEffectNode.StatusEffect.ReflectAbilityEffectList.Count > 0) {
+                        // we can't reflect on system attackers, so check if this is an interactable
+                        Interactable targetInteractable = sourceCaster.AbilityManager.UnitGameObject.GetComponent<Interactable>();
+                        if (targetInteractable != null) {
+                            statusEffectNode.StatusEffect.CastReflect(unitController, targetInteractable, abilityEffectContext);
+                        }
+                    }
+                }
+            }
 
         }
 
@@ -582,11 +603,13 @@ namespace AnyRPG {
         }
 
         public virtual void ReceiveCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterCombat.ReceiveCombatMiss(caster: {abilityEffectContext.AbilityCaster.AbilityManager.Name})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.ReceiveCombatMiss(caster: {abilityEffectContext.AbilityCaster.AbilityManager.Name})");
 
             lastCombatEvent = Time.time;
-            unitController.UnitEventController.NotifyOnReceiveCombatMiss(targetObject, abilityEffectContext);
-            
+            //unitController.UnitEventController.NotifyOnReceiveCombatMiss(targetObject, abilityEffectContext);
+            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(targetObject, 0, CombatTextType.miss, CombatMagnitude.normal, abilityEffectContext);
+
+
             // miss sound should only be played on attacking unit
             if (targetObject != unitController) {
                 unitController.UnitEventController.NotifyOnCombatMiss();

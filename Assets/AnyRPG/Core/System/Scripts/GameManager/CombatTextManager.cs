@@ -106,6 +106,16 @@ namespace AnyRPG {
             objectPooler.ReturnObjectToPool(combatTextController.gameObject);
         }
 
+        private string GetDisplayText(CombatTextType combatType, int damage) {
+            if (combatType == CombatTextType.miss) {
+                return "(Miss)";
+            } else if (combatType == CombatTextType.immune) {
+                return "(Immune)";
+            } else {
+                return damage.ToString();
+            }
+        }
+
         public void SpawnCombatText(Interactable target, int damage, CombatTextType combatType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
             //Debug.Log($"CombatTextManager.SpawnCombatText({target.gameObject.name}, {damage}, {combatType}, {combatMagnitude})");
 
@@ -124,8 +134,8 @@ namespace AnyRPG {
                 */
                 combatTextController.RectTransform.rect.Set(combatTextController.RectTransform.rect.x, combatTextController.RectTransform.rect.y, 0, 0);
                 combatTextController.InitializeCombatTextController(target,
-                    null,
-                    GetDisplayText(combatType, damage),
+                    (combatType == CombatTextType.gainBuff || combatType == CombatTextType.loseBuff) ? abilityEffectContext.AbilityEffect.Icon : null,
+                    (combatType == CombatTextType.gainBuff || combatType == CombatTextType.loseBuff) ? abilityEffectContext.AbilityEffect.DisplayName : GetDisplayText(combatType, damage),
                     combatType,
                     combatMagnitude,
                     abilityEffectContext
@@ -133,16 +143,7 @@ namespace AnyRPG {
             }
         }
 
-        private string GetDisplayText(CombatTextType combatType, int damage) {
-            if (combatType == CombatTextType.miss) {
-                return "(Miss)";
-            } else if (combatType == CombatTextType.immune) {
-                return "(Immune)";
-            } else {
-                return damage.ToString();
-            }
-        }
-
+        /*
         public void SpawnCombatText(Interactable target, StatusEffectProperties statusEffect, bool gainEffect) {
             //Debug.Log($"CombatTextManager.SpawnCombatText({target.gameObject.name}, {statusEffect.ResourceName}, {gainEffect})");
 
@@ -162,6 +163,7 @@ namespace AnyRPG {
                     );
             }
         }
+        */
 
         public void SpawnCombatText(Interactable target, string displayText, CombatTextType combatType) {
             //Debug.Log($"CombatTextManager.SpawnCombatText({target.gameObject.name}, {displayText}, {combatType})");

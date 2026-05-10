@@ -461,8 +461,11 @@ namespace AnyRPG {
 
         public virtual void PerformAbilityReflectEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityReflectEffects(" + source.AbilityManager.UnitGameObject.name + ", " + (target == null ? "null" : target.gameObject.name) + ")");
-            abilityEffectContext.ReflectDamage = true;
-            PerformAbilityEffects(source, target, abilityEffectContext, reflectAbilityEffectList);
+            AbilityEffectContext reflectContext = abilityEffectContext.GetCopy();
+            reflectContext.ReflectDamage = true;
+            // null the original ability name so the status effect name shows in the combat log instead of the original ability that caused the reflect
+            reflectContext.BaseAbility = null;
+            PerformAbilityEffects(source, target, reflectContext, reflectAbilityEffectList);
         }
 
         public override string GetDescription() {

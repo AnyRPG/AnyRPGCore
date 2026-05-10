@@ -97,7 +97,7 @@ namespace AnyRPG {
         }
 
         public void WriteCombatMessage(string newMessage) {
-            Debug.Log($"MessageLogClient.WriteCombatMessage({newMessage})");
+            //Debug.Log($"MessageLogClient.WriteCombatMessage({newMessage})");
 
             OnWriteCombatMessage(newMessage);
         }
@@ -114,8 +114,8 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            systemEventManager.OnTakeDamage += HandleTakeDamage;
-            playerManagerClient.OnTakeFallDamage += HandleTakeFallDamage;
+            //systemEventManager.OnTakeDamage += HandleTakeDamage;
+            //playerManagerClient.OnTakeFallDamage += HandleTakeFallDamage;
             SystemEventManager.StartListening("OnPlayerConnectionSpawn", handlePlayerConnectionSpawn);
             SystemEventManager.StartListening("OnPlayerConnectionDespawn", handlePlayerConnectionDespawn);
             eventSubscriptionsInitialized = true;
@@ -127,8 +127,8 @@ namespace AnyRPG {
                 return;
             }
             if (systemEventManager != null) {
-                systemEventManager.OnTakeDamage -= HandleTakeDamage;
-                playerManagerClient.OnTakeFallDamage -= HandleTakeFallDamage;
+                //systemEventManager.OnTakeDamage -= HandleTakeDamage;
+                //playerManagerClient.OnTakeFallDamage -= HandleTakeFallDamage;
                 SystemEventManager.StopListening("OnPlayerConnectionSpawn", handlePlayerConnectionSpawn);
                 SystemEventManager.StopListening("OnPlayerConnectionDespawn", handlePlayerConnectionDespawn);
             }
@@ -143,7 +143,7 @@ namespace AnyRPG {
             ClearLog();
         }
 
-
+        /*
         public void HandleTakeDamage(IAbilityCaster source, UnitController targetUnitController, int damage, string abilityName) {
             //Debug.Log("MessageLogClient.HandleTakeDamage()");
             Color textColor = Color.white;
@@ -154,7 +154,9 @@ namespace AnyRPG {
 
             WriteCombatMessage(combatMessage);
         }
+        */
 
+        /*
         public void HandleTakeFallDamage(UnitController targetUnitController, int damage) {
             //Debug.Log("MessageLogClient.HandleTakeFallDamage()");
             Color textColor = Color.white;
@@ -164,6 +166,7 @@ namespace AnyRPG {
             string combatMessage = $"<color=#{ColorUtility.ToHtmlStringRGB(textColor)}>You take {damage} fall damage</color>";
             WriteCombatMessage(combatMessage);
         }
+        */
 
         public void ClearLog() {
             //Debug.Log("MessageLogClient.ClearLog()");

@@ -401,7 +401,7 @@ namespace AnyRPG {
             base.GeneratePower(ability);
             if (unitController != null && unitController.CharacterStats != null) {
                 //Debug.Log($"{gameObject.name}.GeneratePower({ability.DisplayName}): name " + ability.GeneratePowerResource.DisplayName  + "; " + ability.GetResourceGain(this));
-                unitController.CharacterStats.AddResourceAmount(ability.GeneratePowerResource.ResourceName, ability.GetResourceGain(unitController));
+                unitController.CharacterStats.AddResourceAmount(ability.GeneratePowerResource, ability.GetResourceGain(unitController));
             }
         }
 
@@ -692,7 +692,8 @@ namespace AnyRPG {
         /// </summary>
         /// <returns></returns>
         public override bool DidAbilityHit(Interactable target, AbilityEffectContext abilityEffectContext) {
-            if (unitController.CharacterCombat.DidAttackMiss() == true) {
+            // reflected attacks cannot miss
+            if (abilityEffectContext.ReflectDamage == false && unitController.CharacterCombat.DidAttackMiss() == true) {
                 //Debug.Log(DisplayName + ".BaseAbility.PerformAbilityHit(" + source.name + ", " + target.name + "): attack missed");
                 unitController.CharacterCombat.ReceiveCombatMiss(target, abilityEffectContext);
                 if (target?.CharacterUnit != null) {
