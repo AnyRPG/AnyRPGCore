@@ -1326,6 +1326,13 @@ namespace AnyRPG {
             if (playerManagerServer.PlayerCharacterMonitors.ContainsKey(accountId) == false) {
                 // no existing monitor, so this is a fresh login
                 CharacterSaveData characterSaveData = playerCharacterService.GetPlayerCharacterSaveData(accountId, playerCharacterId);
+                UnitProfile unitProfile = systemDataFactory.GetResource<UnitProfile>(characterSaveData.UnitProfileName);
+                if (unitProfile == null) {
+                    Debug.LogWarning($"NetworkManagerServer.RequestLoadPlayerCharacter() could not find unit profile {characterSaveData.UnitProfileName} for character {characterSaveData.CharacterName}");
+                    // kick the player out since we can't load their character
+                    KickPlayer(accountId);
+                    return;
+                }
                 sceneName = characterSaveData.CurrentScene;
                 playerManagerServer.AddPlayerMonitor(accountId, characterSaveData);
                 // configure location and rotation overrides
@@ -1344,7 +1351,7 @@ namespace AnyRPG {
             } else {
                 // there is an existing monitor, so the player must have been disconnected
                 CharacterSaveData saveData = playerManagerServer.PlayerCharacterMonitors[accountId].characterSaveData;
-                sceneName = playerManagerServer.PlayerCharacterMonitors[accountId].characterSaveData.CurrentScene;
+                sceneName = saveData.CurrentScene;
                 // that code led to a bug where scene was not found later due to spaces in name
                 /*
                 if (levelManager.SceneDictionary.ContainsKey(sceneName)) {

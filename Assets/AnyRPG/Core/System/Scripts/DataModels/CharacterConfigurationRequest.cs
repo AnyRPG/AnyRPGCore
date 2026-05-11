@@ -36,7 +36,12 @@ namespace AnyRPG {
         public CharacterConfigurationRequest(SystemDataFactory systemDataFactory, CharacterSaveData saveData) {
             //Debug.Log($"CharacterConfigurationRequest.CharacterConfigurationRequest() faction: {saveData.playerFaction}");
 
-            SetUnitProfileProperties(systemDataFactory.GetResource<UnitProfile>(saveData.UnitProfileName));
+            UnitProfile unitProfile = systemDataFactory.GetResource<UnitProfile>(saveData.UnitProfileName);
+            if (unitProfile == null) {
+                Debug.LogWarning($"CharacterConfigurationRequest.CharacterConfigurationRequest() could not find unit profile {saveData.UnitProfileName} for character {saveData.CharacterName}");
+                return;
+            }
+            SetUnitProfileProperties(unitProfile);
             characterName = saveData.CharacterName;
             characterClass = systemDataFactory.GetResource<CharacterClass>(saveData.CharacterClass);
             classSpecialization = systemDataFactory.GetResource<ClassSpecialization>(saveData.ClassSpecialization);
@@ -53,6 +58,7 @@ namespace AnyRPG {
             this.unitProfile = unitProfile;
             if (unitProfile == null) {
                 // this could potentially happen if loading old save data after an upgrade where a unit profile is renamed
+                Debug.LogWarning($"CharacterConfigurationRequest.SetUnitProfileProperties() received a null UnitProfile");
                 return;
             }
             characterName = unitProfile.CharacterName;
