@@ -259,20 +259,24 @@ namespace AnyRPG {
             ConfigureComponents();
             CreateComponents();
             LateConfigure();
-            if (hasNameplate) {
-                ConfigureNameplate();
-            }
         }
 
         private void ConfigureNameplate() {
+            //Debug.Log($"{gameObject.name}.Interactable.ConfigureNameplate()");
+
             SetNameplateVector();
 
             nameplateTransform = transform;
 
-            nameplateController = new BaseNamePlateController(this, systemGameManager);
+            //nameplateController = new BaseNamePlateController(this, systemGameManager);
+            CreateNameplateController();
             if (startHasRun && nameplateController != null) {
                 nameplateController.InitializeNamePlate();
             }
+        }
+
+        protected virtual void CreateNameplateController() {
+            nameplateController = new BaseNamePlateController(this, systemGameManager);
         }
 
         protected override void PostConfigure() {
@@ -292,6 +296,12 @@ namespace AnyRPG {
                 Debug.LogWarning($"{gameObject.name}.Interactable.Init(): already initialized.  Returning.");
                 return;
             }
+            if (hasNameplate) {
+                ConfigureNameplate();
+            }// else {
+                ///Debug.Log($"{gameObject.name}.Interactable.Configure(): hasNameplate is false, skipping ConfigureNameplate()");
+            //}
+
             ProcessInit();
 
             // moved here from CreateEventSubscriptions.  Init should have time to occur before processing this
@@ -516,11 +526,11 @@ namespace AnyRPG {
                 //Debug.Log($"{gameObject.name}.Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");
                 return;
             }
-            UpdateNamePlateImage();
+            UpdateNameplateImage();
 
         }
 
-        public void UpdateNamePlateImage() {
+        public void UpdateNameplateImage() {
             //Debug.Log($"{gameObject.name}.NamePlateUnit.UpdateNamePlateImage()");
 
             if (playerManagerClient.UnitController == null) {
@@ -531,10 +541,11 @@ namespace AnyRPG {
             // inanimate units cannot be directly interacted with and are not interactableoptions so they won't receive prerequisite updates directly
             // this means the only way they can spawn their nameplate is through a direct call
             if (NamePlateController.NamePlate == null) {
-                InitializeNameplateController();
-                if (NamePlateController.NamePlate == null) {
-                    return;
-                }
+                // returning for now.  This code was causing nameplates to spawn before the character unit was fully initialized
+                //InitializeNameplateController();
+                //if (NamePlateController.NamePlate == null) {
+                return;
+                //}
             }
 
             Dictionary<int, InteractableOptionComponent> currentInteractables = GetCurrentInteractables(playerManagerClient.UnitController);
@@ -1498,13 +1509,15 @@ namespace AnyRPG {
         }
 
         public void SetNameplateVector() {
-            //Debug.Log($"{gameObject.name}.NamePlateUnit.SetNameplateVector()");
+            //Debug.Log($"{gameObject.name}.Interactable.SetNameplateVector()");
 
             if (componentController != null) {
                 //nameplateTransform = componentController.GetNameplateTransform();
                 nameplateVector = componentController.NameplateVector;
                 //Debug.Log($"{gameObject.name}.NamePlateUnit.SetNameplateVector() nameplateVector: {nameplateVector} instanceId: {GetInstanceID()}");
-            }
+            }// else {
+                //Debug.LogWarning($"{gameObject.name}.NamePlateUnit.SetNameplateVector() could not find component controller to set nameplate vector.  Using default value of {nameplateVector}");
+            //}
         }
 
 

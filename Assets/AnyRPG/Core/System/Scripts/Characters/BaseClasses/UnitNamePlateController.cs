@@ -1,4 +1,3 @@
-using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -193,7 +192,8 @@ namespace AnyRPG {
         }
 
         public override bool HasHealth() {
-            //Debug.Log($"{gameObject.name}.CharacterUnit.HasHealth(): return true");
+            //Debug.Log($"UnitNamePlateController.HasHealth()");
+
             if (unitController == null) {
                 Debug.LogWarning("UnitNamePlateController.HasHealth(): unitcontroller is null");
             }
@@ -202,6 +202,8 @@ namespace AnyRPG {
             }
             if (unitController.BaseCharacter != null && unitController.CharacterStats != null) {
                 return unitController.CharacterStats.HasHealthResource;
+            } else {
+                Debug.LogWarning($"{unitController.gameObject.name}.UnitNamePlateController.HasHealth(): unitcontroller.BaseCharacter or CharacterStats is null");
             }
             return base.HasHealth();
         }
@@ -221,6 +223,7 @@ namespace AnyRPG {
         }
 
         public Color32 GetTextColor() {
+            //Debug.Log($"{unitController.gameObject.name}.UnitNamePlateController.GetTextColor()");
 
             // player is always green
             if (playerManagerClient.UnitController != null && unitController == playerManagerClient.UnitController) {
@@ -245,7 +248,8 @@ namespace AnyRPG {
             return Color.white;
         }
 
-        public override string GetNamePlateString() {
+        public override string GetNameplateString() {
+            //Debug.Log($"{unitController.gameObject.name}.UnitNamePlateController.GetNamePlateString()");
 
             Color textColor = GetTextColor();
 

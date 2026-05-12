@@ -210,7 +210,7 @@ namespace AnyRPG {
         }
 
         private void SetCharacterName() {
-            //Debug.Log($"{unitNamePlateController.NamePlateUnit.DisplayName}.NamePlateController.SetCharacterName()");
+            //Debug.Log($"{unitNamePlateController.Interactable.DisplayName}.NamePlateController.SetCharacterName()");
 
             if (CharacterName == null) {
                 return;
@@ -226,11 +226,11 @@ namespace AnyRPG {
                 return;
             }
 
-            CharacterName.text = unitNamePlateController.GetNamePlateString();
+            CharacterName.text = unitNamePlateController.GetNameplateString();
         }
 
         public void SetNamePlateUnit(Interactable interactable, bool usePositionOffset) {
-            //Debug.Log($"NamePlateController.SetNamePlateUnit({namePlateUnit.gameObject.name}) setting namePlateUnit on nameplate in instanceid {GetInstanceID()}");
+            //Debug.Log($"NamePlateController.SetNamePlateUnit({interactable.gameObject.name}) setting namePlateUnit on nameplate in instanceid {GetInstanceID()}");
 
             unitNamePlateController = interactable.NamePlateController;
 
@@ -448,17 +448,16 @@ namespace AnyRPG {
             if (!visible) namePlateCanvasGroup.blocksRaycasts = false;
         }
 
-
         private void SetFactionColor() {
-            //Debug.Log($"{unitNamePlateController.NamePlateUnit.gameObject.name}.NamePlateController.SetFactionColor()");
+            //Debug.Log($"{unitNamePlateController.Interactable.gameObject.name}.NamePlateController.SetFactionColor()");
 
             if (playerManagerClient.PlayerUnitSpawned == false && uIManager.CutSceneBarController.CurrentCutscene == null) {
-                //Debug.Log($"{unitNamePlateController.NamePlateUnit.gameObject.name}.NamePlateController.SetFactionColor(): player unit not spawned yet and this is not a cutscene");
+                //Debug.Log($"{unitNamePlateController.Interactable.gameObject.name}.NamePlateController.SetFactionColor(): player unit not spawned yet and this is not a cutscene");
                 return;
             }
             // the last condition was preventing inanimate units from setting their nameplate name color properly
             if (unitNamePlateController == null || (playerManagerClient.UnitController == null && uIManager.CutSceneBarController.CurrentCutscene == null)) {
-                //Debug.Log(namePlateUnit.DisplayName + "NamePlateController.SetFactionColor() characterunit or player instance is null. returning!");
+                //Debug.Log($"NamePlateController.SetFactionColor(): unitNamePlateController or player unit controller is null, exiting");
                 return;
             }
             //CheckForPlayerOwnerShip();
@@ -485,14 +484,13 @@ namespace AnyRPG {
                         HealthSlider.color = Color.yellow;
                     }
                 } else {
-                    //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: USING UNIT");
+                    //Debug.Log($"{unitNamePlateController.Interactable.gameObject.name}.NamePlateController.SetFactionColor(): getting color for faction: {unitNamePlateController.Faction.DisplayName} isplayerUnitNamePlate: {isPlayerUnitNamePlate}; name: {unitNamePlateController.Interactable.gameObject.name}; color: USING UNIT");
                     HealthSlider.color = Faction.GetFactionColor(playerManagerClient, (unitNamePlateController as UnitNamePlateController).UnitController);
                 }
-                //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor(): nameplateUnit has health, set faction color: " + MyHealthSlider.color);
-                //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: " + ColorUtility.ToHtmlStringRGB(MyHealthSlider.color));
+            }// else {
+                //Debug.Log($"{unitNamePlateController.Interactable.gameObject.name}.NamePlateController.SetFactionColor(): nameplateUnit does not have health.  not setting faction color");
+            //}
 
-            }
-            //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor(): setting character name");
             SetCharacterName();
             CheckForDisabledHealthBar();
         }

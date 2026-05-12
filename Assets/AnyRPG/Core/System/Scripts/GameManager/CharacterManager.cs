@@ -148,6 +148,8 @@ namespace AnyRPG {
         */
 
         public void BeginCharacterRequest(UnitController unitController) {
+            //Debug.Log($"CharacterManager.BeginCharacterRequest({unitController.gameObject.name})");
+
             ConfigureUnitController(unitController);
         }
 

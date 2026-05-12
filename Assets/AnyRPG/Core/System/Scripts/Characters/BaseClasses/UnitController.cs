@@ -503,13 +503,13 @@ namespace AnyRPG {
         }
 
         public override void Configure(SystemGameManager systemGameManager) {
-            //Debug.Log($"{gameObject.name}.UnitController.Configure() scene: {gameObject.scene.name} default physics scene: {(gameObject.scene.GetPhysicsScene() == Physics.defaultPhysicsScene)}");
+            //Debug.Log($"{gameObject.name}.UnitController.Configure()");
 
             base.Configure(systemGameManager);
             isStateReset = false;
             // create components here instead?  which ones rely on other things like unit profile being set before start?
             unitEventController.Configure(this, systemGameManager);
-            nameplateController = new UnitNamePlateController(this, systemGameManager);
+            //nameplateController = new UnitNamePlateController(this, systemGameManager);
             unitMotor = new UnitMotor(this, systemGameManager);
             unitAnimator = new UnitAnimator(this, systemGameManager);
             patrolController = new PatrolController(this, systemGameManager);
@@ -553,11 +553,15 @@ namespace AnyRPG {
         }
 
         public void SetCharacterRequestData(CharacterRequestData characterRequestData) {
-            //Debug.Log($"{gameObject.name}.UnitController.SetCharacterRequestData() characterId: {characterRequestData.characterId}");
+            //Debug.Log($"{gameObject.name}.UnitController.SetCharacterRequestData(characterId: {characterRequestData.characterId})");
 
             this.characterRequestData = characterRequestData;
             hasNameplate = characterRequestData.characterConfigurationRequest.unitProfile.HasNameplate;
             this.characterId = characterRequestData.characterId;
+        }
+
+        protected override void CreateNameplateController() {
+            nameplateController = new UnitNamePlateController(this, systemGameManager);
         }
 
         protected override void CreateMaterialController() {
@@ -2670,7 +2674,12 @@ namespace AnyRPG {
 
         public override Vector3 GetNameplatePosition() {
             //Debug.Log($"{gameObject.name}.UnitController.GetNameplatePosition()");
-            
+
+            if (nameplateTransform == null) {
+                //Debug.Log($"{gameObject.name}.UnitController.GetNameplatePosition() nameplateTransform was null, returning transform position: {transform.position}");
+                Debug.LogWarning($"{gameObject.name}.UnitController.GetNameplatePosition() nameplateTransform was null, returning transform position: {transform.position}");
+                return transform.position + nameplateVector;
+            }
             Vector3 returnValue = nameplateTransform.position + nameplateVector;
             //Debug.Log($"{gameObject.name}.UnitController.GetNameplatePosition() nameplateTransform.position: {nameplateTransform.position} nameplateVector: {nameplateVector} returnValue: {returnValue}");
             return returnValue;

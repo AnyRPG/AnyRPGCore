@@ -97,6 +97,7 @@ namespace AnyRPG {
                         }
                     }
                 }
+                Debug.LogWarning($"{unitController.gameObject.name}.CharacterStats.HasHealthResource(): no health resource found for character");
                 return false;
             }
         }

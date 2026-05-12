@@ -213,7 +213,8 @@ namespace AnyRPG {
         }
 
         public virtual bool HasHealth() {
-            //Debug.Log($"{gameObject.name}.CharacterUnit.HasHealth(): return true");
+            //Debug.Log($"BaseNamePlateController.HasHealth(): return false");
+
             return false;
         }
 
@@ -225,7 +226,7 @@ namespace AnyRPG {
             return 0f;
         }
 
-        public virtual string GetNamePlateString() {
+        public virtual string GetNameplateString() {
 
             return $"<color=white>{UnitDisplayName}</color>";
         }
