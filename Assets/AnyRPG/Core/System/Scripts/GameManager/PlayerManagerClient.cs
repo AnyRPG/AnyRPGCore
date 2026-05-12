@@ -370,7 +370,7 @@ namespace AnyRPG {
         }
 
         public void SubscribeToModelEvents() {
-            //Debug.Log("PlayerManager.SubscribeToModelEvents()");
+            Debug.Log("PlayerManagerClient.SubscribeToModelEvents()");
             //unitController.UnitEventController.OnStatusEffectAdd += HandleStatusEffectAdd;
             unitController.UnitEventController.OnReceiveCombatTextEvent += HandleReceiveCombatTextEvent;
             unitController.UnitEventController.OnEncumberedChange += HandleEncumberedChange;
