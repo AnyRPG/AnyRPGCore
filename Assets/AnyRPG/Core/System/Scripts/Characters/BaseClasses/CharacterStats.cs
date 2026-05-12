@@ -1012,7 +1012,9 @@ namespace AnyRPG {
             ProcessStatusEffectChanges(statusEffectNode.StatusEffect);
             unitController.UnitEventController.NotifyOnStatusEffectAdd(statusEffectNode);
 
-            if (statusEffectNode.StatusEffect.ClassTrait == false && statusEffectNode.AbilityEffectContext.savedEffect == false) {
+            if (statusEffectNode.StatusEffect.ClassTrait == false
+                && statusEffectNode.AbilityEffectContext.savedEffect == false
+                && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true)) {
                 unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, 0, CombatTextType.gainBuff, CombatMagnitude.normal, statusEffectNode.AbilityEffectContext);
             }
 
