@@ -59,7 +59,7 @@ namespace AnyRPG {
                 activeUnitProfiles.Add(unitProfile, petUnitController);
                 petUnitController.SetPetMode(unitController);
                 petUnitController.UnitEventController.OnUnitDestroy += HandleUnitDestroy;
-                if (networkManagerServer.ServerModeActive == false) {
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
                     petUnitController.UnitEventController.OnReceiveCombatTextEvent += HandleReceiveCombatTextEvent;
                     //petUnitController.UnitEventController.OnImmuneToEffect += HandleImmuneToEffect;
                     //petUnitController.UnitEventController.OnStatusEffectAdd += HandleStatusEffectAdd;
