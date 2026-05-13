@@ -79,7 +79,7 @@ MonoBehaviour:
       autoSelfCast: 0
       unitTypeRestrictions: []
       useMeleeRange: 0
-      maxRange: 0
+      maxRange: 30
       requireFacingTarget: 1
       maxAngle: 10
       requireBehindTarget: 0
