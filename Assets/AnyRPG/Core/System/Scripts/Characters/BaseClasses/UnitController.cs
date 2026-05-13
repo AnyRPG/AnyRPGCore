@@ -1227,7 +1227,7 @@ namespace AnyRPG {
             evadeSpeed = 5f;
             leashDistance = 40f;
             maxDistanceFromMasterOnMove = 3f;
-            maxCombatDistanceFromMasterOnMove = 15f;
+            maxCombatDistanceFromMasterOnMove = 80f;
 
             apparentVelocity = 0f;
             lastPosition = Vector3.zero;
