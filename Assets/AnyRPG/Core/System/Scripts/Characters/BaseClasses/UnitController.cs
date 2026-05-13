@@ -119,9 +119,9 @@ namespace AnyRPG {
         private bool useAgent = false;
         private Vector3 startPosition = Vector3.zero;
         private float evadeSpeed = 5f;
-        private float leashDistance = 40f;
+        private float leashDistance = 80f;
         private float maxDistanceFromMasterOnMove = 3f;
-        private float maxCombatDistanceFromMasterOnMove = 15f;
+        private float maxCombatDistanceFromMasterOnMove = 80f;
         private bool enableLeashing = false;
 
         // track the current movement sound overrides
@@ -1225,7 +1225,7 @@ namespace AnyRPG {
             useAgent = false;
             startPosition = Vector3.zero;
             evadeSpeed = 5f;
-            leashDistance = 40f;
+            leashDistance = 80f;
             maxDistanceFromMasterOnMove = 3f;
             maxCombatDistanceFromMasterOnMove = 80f;
 
