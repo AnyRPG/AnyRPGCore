@@ -540,7 +540,7 @@ namespace AnyRPG {
             // if there is a nameplate unit give it a chance to initialize its nameplate.
             // inanimate units cannot be directly interacted with and are not interactableoptions so they won't receive prerequisite updates directly
             // this means the only way they can spawn their nameplate is through a direct call
-            if (NamePlateController.NamePlate == null) {
+            if (NamePlateController?.NamePlate == null) {
                 // returning for now.  This code was causing nameplates to spawn before the character unit was fully initialized
                 //InitializeNameplateController();
                 //if (NamePlateController.NamePlate == null) {
