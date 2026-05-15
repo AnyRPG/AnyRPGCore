@@ -89,7 +89,7 @@ MonoBehaviour:
     saveOnLevelUnload: 0
     saveOnGameSave: 0
   persistInteractableData: 0
-  hasNameplate: 0
+  hasNameplate: 1
   namePlateProps:
     displayName: 
     overrideNameplatePosition: 0

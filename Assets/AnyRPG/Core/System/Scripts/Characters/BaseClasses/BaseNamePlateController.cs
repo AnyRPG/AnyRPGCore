@@ -136,13 +136,8 @@ namespace AnyRPG {
         }
 
         public virtual bool InitializeNamePlate() {
-            //Debug.Log(namePlateUnit.gameObject.name + ".BasenamePlateController.InitializeNamePlate()");
-            /*
-            if (SuppressNamePlate == true) {
-                //Debug.Log(namePlateUnit.gameObject.name + ".BasenamePlateController.InitializeNamePlate(): suppressing NamePlate");
-                return false;
-            }
-            */
+            Debug.Log("BasenamePlateController.InitializeNamePlate()");
+
             if (networkManagerServer.ServerModeActive == true) {
                 return false;
             }

@@ -2547,6 +2547,10 @@ namespace AnyRPG {
             base.ProcessPlayerUnitSpawn(sourceUnitController);
         }
 
+        protected override void SpawnInteractableNameplate() {
+            // do nothing intentionally
+        }
+
         public void HandleMovementSpeedUpdate() {
             //Debug.Log($"{gameObject.name}.UnitController.HandleMovementSpeedUpdate() new speed: {MovementSpeed}");
 

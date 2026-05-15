@@ -900,7 +900,7 @@ namespace AnyRPG {
             //Debug.Log("statuseffects count: " + statusEffects.Count);
 
             // check if another effect from the same status effect group already exists on the target
-            if (statusEffect.StatusEffectGroup != null) {
+            if (statusEffects.ContainsKey(statusEffect.ResourceName) == false && statusEffect.StatusEffectGroup != null) {
 
                 // keep a list of status effects to overwrite
                 List<StatusEffectNode> removeNodes = new List<StatusEffectNode>();

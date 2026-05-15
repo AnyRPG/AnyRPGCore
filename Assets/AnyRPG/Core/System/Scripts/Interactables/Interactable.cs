@@ -262,7 +262,7 @@ namespace AnyRPG {
         }
 
         private void ConfigureNameplate() {
-            //Debug.Log($"{gameObject.name}.Interactable.ConfigureNameplate()");
+            Debug.Log($"{gameObject.name}.Interactable.ConfigureNameplate() instanceId: {GetInstanceID()}");
 
             SetNameplateVector();
 
@@ -270,12 +270,19 @@ namespace AnyRPG {
 
             //nameplateController = new BaseNamePlateController(this, systemGameManager);
             CreateNameplateController();
-            if (startHasRun && nameplateController != null) {
+            //if (startHasRun && nameplateController != null) {
+            /*
+            if (nameplateController != null) {
                 nameplateController.InitializeNamePlate();
+            } else {
+                Debug.Log($"{gameObject.name}.Interactable.ConfigureNameplate(): nameplateController {(nameplateController == null ? "null" : "not null")} instanceid: {GetInstanceID()}");
             }
+            */
         }
 
         protected virtual void CreateNameplateController() {
+            Debug.Log($"{gameObject.name}.Interactable.CreateNameplateController() instanceId: {GetInstanceID()}");
+            
             nameplateController = new BaseNamePlateController(this, systemGameManager);
         }
 
@@ -290,7 +297,7 @@ namespace AnyRPG {
         }
 
         public virtual void Init() {
-            //Debug.Log($"{gameObject.name}.Interactable.Init()");
+            Debug.Log($"{gameObject.name}.Interactable.Init() instanceId: {GetInstanceID()}");
 
             if (isInitialized == true) {
                 Debug.LogWarning($"{gameObject.name}.Interactable.Init(): already initialized.  Returning.");
@@ -338,7 +345,18 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessPlayerUnitSpawn(UnitController sourceUnitController) {
+            Debug.Log($"{gameObject.name}.Interactable.ProcessPlayerUnitSpawn()");
+
+            if (hasNameplate) {
+                //Debug.Log($"{gameObject.name}.Interactable.ProcessPlayerUnitSpawn(): hasNameplate is true, configuring nameplate");
+                SpawnInteractableNameplate();
+            }
+
             UpdateOnPlayerUnitSpawn(sourceUnitController);
+        }
+
+        protected virtual void SpawnInteractableNameplate() {
+            InitializeNameplateController();
         }
 
         protected virtual void ConfigureComponents() {
@@ -481,7 +499,7 @@ namespace AnyRPG {
         */
 
         public virtual bool UpdateOnPlayerUnitSpawn(UnitController sourceUnitController) {
-            //Debug.Log($"{gameObject.name}.Interactable.UpdateOnPlayerUnitSpawn()");
+            Debug.Log($"{gameObject.name}.Interactable.UpdateOnPlayerUnitSpawn()");
 
             foreach (InteractableOptionComponent _interactable in interactables.Values) {
                 _interactable.HandlePlayerUnitSpawn(sourceUnitController);
@@ -503,7 +521,7 @@ namespace AnyRPG {
         }
 
         public virtual void HandlePrerequisiteUpdates() {
-            //Debug.Log($"{gameObject.name}.Interactable.HandlePrerequisiteUpdates()");
+            Debug.Log($"{gameObject.name}.Interactable.HandlePrerequisiteUpdates()");
 
             if (!playerManagerClient.PlayerUnitSpawned) {
                 return;
@@ -531,7 +549,7 @@ namespace AnyRPG {
         }
 
         public void UpdateNameplateImage() {
-            //Debug.Log($"{gameObject.name}.NamePlateUnit.UpdateNamePlateImage()");
+            Debug.Log($"{gameObject.name}.NamePlateUnit.UpdateNamePlateImage()");
 
             if (playerManagerClient.UnitController == null) {
                 //Debug.Log($"{gameObject.name}.Interactable.UpdateNamePlateImage(): player has no character");
