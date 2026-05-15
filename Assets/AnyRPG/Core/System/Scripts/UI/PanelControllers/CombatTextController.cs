@@ -17,6 +17,9 @@ namespace AnyRPG {
         private Image image = null;
 
         [SerializeField]
+        private Image backgroundImage = null;
+
+        [SerializeField]
         private RectTransform rectTransform = null;
 
         [SerializeField]
@@ -133,8 +136,10 @@ namespace AnyRPG {
 
             if (image.sprite == null) {
                 image.color = new Color32(0, 0, 0, 0);
+                backgroundImage.color = new Color32(0, 0, 0, 0);
             } else {
                 image.color = Color.white;
+                backgroundImage.color = Color.black;
             }
             // check if this is a player or its pet
             if (mainTarget.InteractableGameObject == playerManagerClient.ActiveUnitController.gameObject
@@ -330,6 +335,9 @@ namespace AnyRPG {
                     Color imageColor = image.color;
                     imageColor.a = alpha;
                     image.color = imageColor;
+                    Color backgroundImageColor = backgroundImage.color;
+                    backgroundImageColor.a = alpha;
+                    backgroundImage.color = backgroundImageColor;
                 }
 
                 //randomY += (movementSpeed * directionMultiplier);
