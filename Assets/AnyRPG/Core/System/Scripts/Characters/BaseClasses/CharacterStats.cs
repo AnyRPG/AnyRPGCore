@@ -97,7 +97,8 @@ namespace AnyRPG {
                         }
                     }
                 }
-                Debug.LogWarning($"{unitController.gameObject.name}.CharacterStats.HasHealthResource(): no health resource found for character");
+                // this is normal in characters with no actual health resource, such as spirits
+                //Debug.LogWarning($"{unitController.gameObject.name}.CharacterStats.HasHealthResource(): no health resource found for character");
                 return false;
             }
         }
@@ -1211,7 +1212,7 @@ namespace AnyRPG {
                     ReducePowerResource(powerResource, damageAmount);
                 }
             }
-            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, damageAmount, CombatTextType.normal, CombatMagnitude.normal, null);
+            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, damageAmount, CombatTextType.normal, CombatMagnitude.normal, new AbilityEffectContext());
 
             unitController.UnitEventController.NotifyOnTakeFallDamage(damageAmount);
         }
