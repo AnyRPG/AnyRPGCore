@@ -2087,11 +2087,12 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override void ReceiveCombatTextEvent(UnitController targetUnitController, int damage, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
+        public override void ReceiveCombatTextEvent(UnitController targetUnitController, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
+            Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.ReceiveCombatTextEvent({targetUnitController.gameObject.name}, {amount}, {combatTextType}, {combatMagnitude})");
+
+            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(targetUnitController, amount, combatTextType, combatMagnitude, abilityEffectContext);
             
-            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(targetUnitController, damage, combatTextType, combatMagnitude, abilityEffectContext);
-            
-            base.ReceiveCombatTextEvent(targetUnitController, damage, combatTextType, combatMagnitude, abilityEffectContext);
+            base.ReceiveCombatTextEvent(targetUnitController, amount, combatTextType, combatMagnitude, abilityEffectContext);
         }
 
         public override void ProcessAbilityEffectPooled(GameObject go) {

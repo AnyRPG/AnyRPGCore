@@ -262,7 +262,7 @@ namespace AnyRPG {
         }
 
         private void ConfigureNameplate() {
-            Debug.Log($"{gameObject.name}.Interactable.ConfigureNameplate() instanceId: {GetInstanceID()}");
+            //Debug.Log($"{gameObject.name}.Interactable.ConfigureNameplate() instanceId: {GetInstanceID()}");
 
             SetNameplateVector();
 
@@ -549,7 +549,7 @@ namespace AnyRPG {
         }
 
         public void UpdateNameplateImage() {
-            Debug.Log($"{gameObject.name}.NamePlateUnit.UpdateNamePlateImage()");
+            //Debug.Log($"{gameObject.name}.NamePlateUnit.UpdateNamePlateImage()");
 
             if (playerManagerClient.UnitController == null) {
                 //Debug.Log($"{gameObject.name}.Interactable.UpdateNamePlateImage(): player has no character");
