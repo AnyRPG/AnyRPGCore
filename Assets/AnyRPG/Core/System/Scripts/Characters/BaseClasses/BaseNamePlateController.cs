@@ -136,7 +136,7 @@ namespace AnyRPG {
         }
 
         public virtual bool InitializeNamePlate() {
-            Debug.Log("BasenamePlateController.InitializeNamePlate()");
+            //Debug.Log("BasenamePlateController.InitializeNamePlate()");
 
             if (networkManagerServer.ServerModeActive == true) {
                 return false;

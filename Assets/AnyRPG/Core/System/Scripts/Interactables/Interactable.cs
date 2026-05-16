@@ -281,7 +281,7 @@ namespace AnyRPG {
         }
 
         protected virtual void CreateNameplateController() {
-            Debug.Log($"{gameObject.name}.Interactable.CreateNameplateController() instanceId: {GetInstanceID()}");
+            //Debug.Log($"{gameObject.name}.Interactable.CreateNameplateController() instanceId: {GetInstanceID()}");
             
             nameplateController = new BaseNamePlateController(this, systemGameManager);
         }
@@ -297,7 +297,7 @@ namespace AnyRPG {
         }
 
         public virtual void Init() {
-            Debug.Log($"{gameObject.name}.Interactable.Init() instanceId: {GetInstanceID()}");
+            //Debug.Log($"{gameObject.name}.Interactable.Init() instanceId: {GetInstanceID()}");
 
             if (isInitialized == true) {
                 Debug.LogWarning($"{gameObject.name}.Interactable.Init(): already initialized.  Returning.");
@@ -345,7 +345,7 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessPlayerUnitSpawn(UnitController sourceUnitController) {
-            Debug.Log($"{gameObject.name}.Interactable.ProcessPlayerUnitSpawn()");
+            //Debug.Log($"{gameObject.name}.Interactable.ProcessPlayerUnitSpawn()");
 
             if (hasNameplate) {
                 //Debug.Log($"{gameObject.name}.Interactable.ProcessPlayerUnitSpawn(): hasNameplate is true, configuring nameplate");
@@ -499,7 +499,7 @@ namespace AnyRPG {
         */
 
         public virtual bool UpdateOnPlayerUnitSpawn(UnitController sourceUnitController) {
-            Debug.Log($"{gameObject.name}.Interactable.UpdateOnPlayerUnitSpawn()");
+            //Debug.Log($"{gameObject.name}.Interactable.UpdateOnPlayerUnitSpawn()");
 
             foreach (InteractableOptionComponent _interactable in interactables.Values) {
                 _interactable.HandlePlayerUnitSpawn(sourceUnitController);
@@ -521,7 +521,7 @@ namespace AnyRPG {
         }
 
         public virtual void HandlePrerequisiteUpdates() {
-            Debug.Log($"{gameObject.name}.Interactable.HandlePrerequisiteUpdates()");
+            //Debug.Log($"{gameObject.name}.Interactable.HandlePrerequisiteUpdates()");
 
             if (!playerManagerClient.PlayerUnitSpawned) {
                 return;
