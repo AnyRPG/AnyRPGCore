@@ -887,7 +887,7 @@ namespace AnyRPG {
         }
 
         public void NotifyOnReceiveCombatTextEvent(Interactable targetInteractable, int damage, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
-            Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnReceiveCombatTextEvent({targetInteractable.gameObject.name}, {damage}, {combatTextType}, {combatMagnitude})");
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnReceiveCombatTextEvent({targetInteractable.gameObject.name}, {damage}, {combatTextType}, {combatMagnitude})");
             
             OnReceiveCombatTextEvent(targetInteractable, damage, combatTextType, combatMagnitude, abilityEffectContext);
         }

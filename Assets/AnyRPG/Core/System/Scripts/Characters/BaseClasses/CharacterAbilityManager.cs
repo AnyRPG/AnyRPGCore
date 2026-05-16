@@ -2088,7 +2088,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveCombatTextEvent(UnitController targetUnitController, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
-            Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.ReceiveCombatTextEvent({targetUnitController.gameObject.name}, {amount}, {combatTextType}, {combatMagnitude})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.ReceiveCombatTextEvent({targetUnitController.gameObject.name}, {amount}, {combatTextType}, {combatMagnitude})");
 
             unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(targetUnitController, amount, combatTextType, combatMagnitude, abilityEffectContext);
             
