@@ -254,6 +254,7 @@ namespace AnyRPG {
 
             //if (attackTarget != null && unitController.IsTargetInHitBox(target)) {
             if (attackTarget != null && Vector3.Distance(movementBody.GetPosition(), attackTarget.transform.position) <= attackRange) {
+                //Debug.Log($"{unitController.gameObject.name}.UnitMotor.FollowTargetTick(): target is within attack range.  Stopping movement.  current location: {unitController.transform.position}; target position: {target.transform.position}; attack range: {attackRange}");
                 StopFollowingTarget();
                 return;
             }

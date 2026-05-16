@@ -32,7 +32,7 @@ namespace AnyRPG {
                 aoeSpawnCenter = source.AbilityManager.UnitGameObject.transform.position;
             } else if (prefabSpawnLocation == PrefabSpawnLocation.GroundTarget) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to groundTarget at: " + abilityEffectInput.prefabLocation);
-                aoeSpawnCenter = abilityEffectInput.groundTargetLocation;
+                aoeSpawnCenter = abilityEffectInput.GroundTargetLocation;
             } else {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to vector3.zero!!! was prefab spawn location not set or target despawned?");
             }
@@ -61,7 +61,7 @@ namespace AnyRPG {
                 //validTargetNode.abilityEffectInput = abilityEffectInput;
                 validTargetNode.abilityEffectInput.groundTargetLocation = new Vector3(aoeSpawnCenter.x + Random.Range(-aoeRadius, aoeRadius), aoeSpawnCenter.y + aoeCenter.y, aoeSpawnCenter.z + Random.Range(-aoeRadius, aoeRadius));
                 */
-                validTargetNode.abilityEffectInput.groundTargetLocation = new Vector3(aoeSpawnCenter.x + Random.Range(-aoeProperties.AoeRadius, aoeProperties.AoeRadius), aoeSpawnCenter.y + aoeProperties.AoeCenter.y, aoeSpawnCenter.z + Random.Range(-aoeProperties.AoeRadius, aoeProperties.AoeRadius));
+                validTargetNode.abilityEffectInput.GroundTargetLocation = new Vector3(aoeSpawnCenter.x + Random.Range(-aoeProperties.AoeRadius, aoeProperties.AoeRadius), aoeSpawnCenter.y + aoeProperties.AoeCenter.y, aoeSpawnCenter.z + Random.Range(-aoeProperties.AoeRadius, aoeProperties.AoeRadius));
 
                 //Debug.Log(DisplayName + ".RainEffect.GetValidTargets(). prefabLocation: " + validTargetNode.abilityEffectInput.prefabLocation);
                 validTargets.Add(validTargetNode);

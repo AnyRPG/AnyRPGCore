@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,9 @@ namespace AnyRPG {
 
         [SerializeField]
         private Image image = null;
+
+        [SerializeField]
+        private Image backgroundImage = null;
 
         [SerializeField]
         private RectTransform rectTransform = null;
@@ -132,10 +136,14 @@ namespace AnyRPG {
 
             if (image.sprite == null) {
                 image.color = new Color32(0, 0, 0, 0);
+                backgroundImage.color = new Color32(0, 0, 0, 0);
             } else {
                 image.color = Color.white;
+                backgroundImage.color = Color.black;
             }
-            if (mainTarget.InteractableGameObject == playerManagerClient.ActiveUnitController.gameObject) {
+            // check if this is a player or its pet
+            if (mainTarget.InteractableGameObject == playerManagerClient.ActiveUnitController.gameObject
+                || playerManagerClient.ActiveUnitController.CharacterPetManager.ActiveUnitProfiles.Values.Select(x => x.InteractableGameObject).Contains(mainTarget.InteractableGameObject)) {
                 directionMultiplier = -1;
                 switch (textType) {
                     case CombatTextType.normal:
@@ -175,7 +183,7 @@ namespace AnyRPG {
                         break;
                     case CombatTextType.loseBuff:
                         textColor = Color.cyan;
-                        preText += "+";
+                        preText += "-";
                         //text.fontSize = text.fontSize * 2;
                         xDirectionMultiplier = -1;
                         break;
@@ -224,9 +232,9 @@ namespace AnyRPG {
                     //text.fontSize = text.fontSize * 2;
                     break;
                 case CombatTextType.gainResource:
-                    if (abilityEffectContext?.powerResource != null) {
-                        textColor = abilityEffectContext.powerResource.DisplayColor;
-                        postText += " " + abilityEffectContext.powerResource.DisplayName;
+                    if (abilityEffectContext?.PowerResource != null) {
+                        textColor = abilityEffectContext.PowerResource.DisplayColor;
+                        postText += " " + abilityEffectContext.PowerResource.DisplayName;
                     } else {
                         textColor = Color.blue;
                     }
@@ -286,11 +294,31 @@ namespace AnyRPG {
             //Debug.Log($"CombatTextController.RunCombatTextUpdate() fadeOutTimer: {fadeOutTimer} text: {tmpProtext.text}");
 
             if (mainTarget != null) {
+                /*
                 Vector2 screenPoint = cameraManager.ActiveMainCamera.WorldToScreenPoint(worldSpawnPos);
                 //targetPos = cameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
                 //float finalY = yUIOffset + randomY + pushOffset;
                 float finalY = yUIOffset + (pushOffset * directionMultiplier);
                 transform.position = screenPoint + new Vector2((randomX + xUIOffset + (xDirectionMultiplier == 1 ? 0 : textRectTransform.rect.width)) * xDirectionMultiplier, finalY);
+                */
+
+                Vector3 screenPoint = cameraManager.ActiveMainCamera.WorldToScreenPoint(worldSpawnPos);
+
+                // 1. CHECK FOR BEHIND CAMERA
+                if (screenPoint.z < 0) {
+                    // The hit is behind us. We should hide it or kill it.
+                    // Option: Immediately return to pool to avoid the "flicker"
+                    combatTextManager.Unregister(mainTarget, this, GetQuadrantIndex());
+                    combatTextManager.RequestReturnControllerToPool(this);
+                    return;
+                }
+
+                // 2. POSITIONING (Only runs if screenPoint.z >= 0)
+                float finalY = yUIOffset + (pushOffset * directionMultiplier);
+                transform.position = (Vector2)screenPoint + new Vector2(
+                    (randomX + xUIOffset + (xDirectionMultiplier == 1 ? 0 : textRectTransform.rect.width)) * xDirectionMultiplier,
+                    finalY
+                );
             }
             if (fadeOutTimer > 0f) {
                 fadeOutTimer -= Time.deltaTime;
@@ -307,6 +335,9 @@ namespace AnyRPG {
                     Color imageColor = image.color;
                     imageColor.a = alpha;
                     image.color = imageColor;
+                    Color backgroundImageColor = backgroundImage.color;
+                    backgroundImageColor.a = alpha;
+                    backgroundImage.color = backgroundImageColor;
                 }
 
                 //randomY += (movementSpeed * directionMultiplier);

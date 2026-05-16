@@ -57,7 +57,7 @@ namespace AnyRPG {
         }
 
         public override bool ProcessInteract(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
-            //Debug.Log($"{gameObject.name}.AnimatedObject.Interact(" + (source == null ? "null" : source.name) +")");
+            //Debug.Log($"{interactable.gameObject.name}.AnimatedObject.Interact({(sourceUnitController == null ? "null" : sourceUnitController.name)})");
 
             base.ProcessInteract(sourceUnitController, componentIndex, choiceIndex);
 
@@ -184,6 +184,7 @@ namespace AnyRPG {
 
         public override void LoadFromSaveData(InteractableSaveData interactableSaveData) {
             //Debug.Log($"{interactable.gameObject.name}.MoveableObjectComponent.LoadFromSaveData()");
+
             base.LoadFromSaveData(interactableSaveData);
             if (interactableSaveData.MoveableObjectSaveData.Count > 0) {
                 //Debug.Log($"{interactable.gameObject.name}.MoveableObjectComponent.LoadFromSaveData(): moveableObjectSaveData found, loading data");

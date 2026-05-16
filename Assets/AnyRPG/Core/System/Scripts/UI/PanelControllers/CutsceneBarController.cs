@@ -53,6 +53,7 @@ namespace AnyRPG {
         LevelManagerClient levelManagerClient = null;
         AudioManager audioManager = null;
         InputManager inputManager = null;
+        PlayerManagerClient playerManagerClient = null;
 
         public Cutscene CurrentCutscene { get => currentCutscene; set => currentCutscene = value; }
 
@@ -64,6 +65,7 @@ namespace AnyRPG {
             levelManagerClient = systemGameManager.LevelManagerClient;
             audioManager = systemGameManager.AudioManager;
             inputManager = systemGameManager.InputManager;
+            playerManagerClient = systemGameManager.PlayerManagerClient;
         }
 
         public void ClearCoRoutine() {
@@ -96,6 +98,9 @@ namespace AnyRPG {
 
         public void StartCutScene(Cutscene cutscene) {
             //Debug.Log($"CutSceneBarController.StartCutScene({cutscene.ResourceName})");
+
+            // prevent sending the last input to the player controller when the cutscene starts
+            playerManagerClient.PlayerController.ResetMoveInput();
 
             if (cutscene.TimelineName != null
                 && cutscene.TimelineName != string.Empty

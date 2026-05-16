@@ -10,7 +10,7 @@ namespace AnyRPG {
         public event System.Action OnAggroTarget = delegate { };
         public event System.Action OnAttack = delegate { };
         public event System.Action<IAbilityCaster, UnitController, int, CombatTextType, CombatMagnitude, string, AbilityEffectContext> OnTakeDamage = delegate { };
-        public event System.Action<int> OnTakeFallDamage = delegate { };
+        public event System.Action<UnitController, int> OnTakeFallDamage = delegate { };
         public event System.Action OnKillTarget = delegate { };
         public event System.Action OnInteract = delegate { };
         public event System.Action OnMovement = delegate { };
@@ -47,9 +47,9 @@ namespace AnyRPG {
         public event System.Action OnDropCombat = delegate { };
         public event System.Action<UnitController> OnBeginCastOnEnemy = delegate { };
         //public event System.Action<float, float, float, float> OnCalculateRunSpeed = delegate { };
-        public event System.Action<AbilityEffectContext> OnImmuneToEffect = delegate { };
+        //public event System.Action<UnitController, AbilityEffectContext> OnImmuneToEffect = delegate { };
         public event System.Action<UnitController, int, int> OnGainXP = delegate { };
-        public event System.Action<PowerResource, int, CombatMagnitude, AbilityEffectContext> OnRecoverResource = delegate { };
+        //public event System.Action<UnitController, PowerResource, int, CombatMagnitude, AbilityEffectContext> OnRecoverResource = delegate { };
         public event System.Action<int, int> OnPrimaryResourceAmountChanged = delegate { };
         public event System.Action OnEnterStealth = delegate { };
         public event System.Action OnLeaveStealth = delegate { };
@@ -58,7 +58,7 @@ namespace AnyRPG {
         //public event System.Action OnCombatUpdate = delegate { };
         public event System.Action<UnitController> OnEnterCombat = delegate { };
         public event System.Action<UnitController, Interactable> OnHitEvent = delegate { };
-        public event System.Action<Interactable, AbilityEffectContext> OnReceiveCombatMiss = delegate { };
+        //public event System.Action<Interactable, AbilityEffectContext> OnReceiveCombatMiss = delegate { };
         public event System.Action<UnitController, UnitController, float> OnKillEvent = delegate { };
         //public event System.Action<InstantiatedEquipment, InstantiatedEquipment, int> OnEquipmentChanged = delegate { };
         public event System.Action<AbilityProperties> OnAbilityActionCheckFail = delegate { };
@@ -147,7 +147,8 @@ namespace AnyRPG {
         public event System.Action<InstantiatedBag, int, bool> OnRequestMoveBag = delegate { };
         public event System.Action<InstantiatedBag, int, bool> OnRequestAddBag = delegate { };
         public event System.Action<Vector3> OnSetGroundTarget = delegate { };
-        public event System.Action<UnitController, int, CombatTextType, CombatMagnitude, AbilityEffectContext> OnReceiveCombatTextEvent = delegate {};
+        public event System.Action<Interactable, int, CombatTextType, CombatMagnitude, AbilityEffectContext> OnReceiveCombatTextEvent = delegate {};
+        //public event System.Action<UnitController, StatusEffectProperties, bool> OnReceiveStatusEffectCombatTextEvent = delegate { };
         public event System.Action<Recipe> OnLearnRecipe = delegate { };
         public event System.Action<Recipe> OnUnlearnRecipe = delegate { };
         public event System.Action<string, int> OnCurrencyChange = delegate { };
@@ -313,9 +314,11 @@ namespace AnyRPG {
             OnKillEvent(unitController, killedCharacter, creditPercent);
         }
 
+        /*
         public void NotifyOnReceiveCombatMiss(Interactable target, AbilityEffectContext abilityEffectContext) {
             OnReceiveCombatMiss(target, abilityEffectContext);
         }
+        */
 
         public void NotifyOnHitEvent(UnitController source, Interactable target) {
             OnHitEvent(source, target);
@@ -351,17 +354,21 @@ namespace AnyRPG {
             OnPrimaryResourceAmountChanged(maxAmount, currentAmount);
         }
 
+        /*
         public void NotifyOnRecoverResource(PowerResource powerResource, int amount, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
-            OnRecoverResource(powerResource, amount, combatMagnitude, abilityEffectContext);
+            OnRecoverResource(unitController, powerResource, amount, combatMagnitude, abilityEffectContext);
         }
+        */
 
         public void NotifyOnGainXP(int gainedXP, int currentXP) {
             OnGainXP(unitController, gainedXP, currentXP);
         }
 
+        /*
         public void NotifyOnImmuneToEffect(AbilityEffectContext abilityEffectContext) {
-            OnImmuneToEffect(abilityEffectContext);
+            OnImmuneToEffect(unitController, abilityEffectContext);
         }
+        */
 
         /*
         public void NotifyOnCalculateRunSpeed(float oldRunSpeed, float currentRunSpeed, float oldSprintSpeed, float currentSprintSpeed) {
@@ -415,7 +422,7 @@ namespace AnyRPG {
         public void NotifyOnTakeFallDamage(int damageAmount) {
             //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnTakeFallDamage({damageAmount})");
 
-            OnTakeFallDamage(damageAmount);
+            OnTakeFallDamage(unitController, damageAmount);
         }
 
         public void NotifyOnKillTarget() {
@@ -879,9 +886,17 @@ namespace AnyRPG {
             OnSetGroundTarget(newGroundTarget);
         }
 
-        public void NotifyOnReceiveCombatTextEvent(UnitController targetUnitController, int damage, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
-            OnReceiveCombatTextEvent(targetUnitController, damage, combatTextType, combatMagnitude, abilityEffectContext);
+        public void NotifyOnReceiveCombatTextEvent(Interactable targetInteractable, int damage, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnReceiveCombatTextEvent({targetInteractable.gameObject.name}, {damage}, {combatTextType}, {combatMagnitude})");
+            
+            OnReceiveCombatTextEvent(targetInteractable, damage, combatTextType, combatMagnitude, abilityEffectContext);
         }
+
+        /*
+        public void NotifyOnReceiveStatusEffectCombatTextEvent(UnitController targetUnitController, StatusEffectProperties statusEffect, bool addEffect) {
+            OnReceiveStatusEffectCombatTextEvent(targetUnitController, statusEffect, addEffect);
+        }
+        */
 
         public void NotifyOnRequestCancelStatusEffect(StatusEffectProperties statusEffect) {
             //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnRequestCancelStatusEffect({statusEffect.ResourceName})");
@@ -1131,6 +1146,8 @@ namespace AnyRPG {
         }
 
         public void NotifyOnRequestUnequip(InstantiatedEquipment instantiatedEquipment) {
+            //Debug.Log($"{unitController.gameObject.name}.UnitEventController.NotifyOnRequestUnequip({instantiatedEquipment.Item.ResourceName})");
+
             OnRequestUnequip(instantiatedEquipment);
         }
 

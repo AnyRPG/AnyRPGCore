@@ -50,6 +50,7 @@ namespace AnyRPG {
             SetupFactoryDataAccess<EquipmentSlotProfile>();
             SetupFactoryDataAccess<EquipmentSlotType>();
             SetupFactoryDataAccess<Faction>();
+            SetupFactoryDataAccess<GameExtension>();
             SetupFactoryDataAccess<InteractableOptionConfig>();
             SetupFactoryDataAccess<Item>();
             SetupFactoryDataAccess<ItemQuality>();

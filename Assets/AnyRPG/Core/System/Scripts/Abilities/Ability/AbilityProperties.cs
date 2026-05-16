@@ -45,7 +45,7 @@ namespace AnyRPG {
 
         [Tooltip("Ability to use ability prefabs, both to use Weapon and ability prefabs, weapon to use only weapon prefabs")]
         [SerializeField]
-        protected AbilityPrefabSource abilityPrefabSource = AbilityPrefabSource.Both;
+        protected AbilityPrefabSource abilityPrefabSource = AbilityPrefabSource.Ability;
 
         [Tooltip("holdable object prefabs are created by the animator from an animation event, not from the ability manager during cast start")]
         [SerializeField]
@@ -975,6 +975,7 @@ namespace AnyRPG {
             }
             if (weaponAffinityNames.Count == 0) {
                 // no restrictions, automatically true
+                //Debug.Log($"{ResourceName}.AbilityProperties.CanCast(): no weapon affinity requirements, automatically true");
                 return true;
             } else {
                 return sourceCharacter.AbilityManager.PerformWeaponAffinityCheck(this, playerInitiated);
@@ -1081,7 +1082,7 @@ namespace AnyRPG {
 
             // since ability and effects can have their own individual range and LOS requirements, check if the effects are allowed to hit
             // as long as only the LOS and range check failed from the ability (meaning no faction, liveness etc violations)
-            if (deactivateAutoAttack == false || abilityEffectContext.baseAbility.GetTargetOptions(source).RequireTarget == false) {
+            if (deactivateAutoAttack == false || abilityEffectContext.BaseAbility.GetTargetOptions(source).RequireTarget == false) {
                 bool missResult = PerformAbilityEffects(source, target, abilityEffectContext, abilityEffectProperties);
             }
         }
@@ -1153,8 +1154,9 @@ namespace AnyRPG {
                     return false;
                 }
             }
-            return true;
 
+            //Debug.Log($"{ResourceName}.AbilityProperties.CanUseOn({(target != null ? target.name : "null")}, {(sourceCharacter != null ? sourceCharacter.AbilityManager.Name : "null")}, {performCooldownChecks}): passed all checks");
+            return true;
         }
 
         // to be used at the end of ability hit because it doesn't perform in progress check

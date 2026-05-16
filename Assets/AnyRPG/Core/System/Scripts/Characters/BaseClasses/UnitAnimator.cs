@@ -1,10 +1,4 @@
-using AnyRPG;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UMA.CharacterSystem;
-using Unity.Profiling;
 using UnityEngine;
 
 namespace AnyRPG {

@@ -137,8 +137,9 @@ namespace AnyRPG {
         /// </summary>
         public void HideToolTip() {
             //Debug.Log("TooltipController.HideToolTip()");
-
-            gameObject.SetActive(false);
+            if (gameObject.activeSelf == true) {
+                gameObject.SetActive(false);
+            }
             toolTipVisible = false;
         }
 

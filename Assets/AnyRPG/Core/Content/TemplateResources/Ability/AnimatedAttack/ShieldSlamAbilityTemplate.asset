@@ -27,10 +27,9 @@ MonoBehaviour:
     - Shield
     holdableObjectList: []
     despawnPrefabsOnCastEnd: 0
-    abilityPrefabSource: 0
+    abilityPrefabSource: 1
     animatorCreatePrefabs: 0
     prefabDestroyDelay: 0
-    animationClip: {fileID: 0}
     animationProfileName: Shield Slam
     useUnitCastAnimations: 0
     isAutoAttack: 0

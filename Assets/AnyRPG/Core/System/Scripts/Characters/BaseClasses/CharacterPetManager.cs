@@ -59,9 +59,57 @@ namespace AnyRPG {
                 activeUnitProfiles.Add(unitProfile, petUnitController);
                 petUnitController.SetPetMode(unitController);
                 petUnitController.UnitEventController.OnUnitDestroy += HandleUnitDestroy;
+                if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true) {
+                    petUnitController.UnitEventController.OnReceiveCombatTextEvent += HandleReceiveCombatTextEvent;
+                    //petUnitController.UnitEventController.OnImmuneToEffect += HandleImmuneToEffect;
+                    //petUnitController.UnitEventController.OnStatusEffectAdd += HandleStatusEffectAdd;
+                    //petUnitController.UnitEventController.OnRecoverResource += HandleRecoverResource;
+                    //petUnitController.UnitEventController.OnReceiveCombatMiss += HandleReceiveCombatMiss;
+                    //petUnitController.UnitEventController.OnTakeDamage += HandleTakeDamage;
+                    //petUnitController.UnitEventController.OnTakeFallDamage += HandleTakeFallDamage;
+                }
                 unitController.UnitEventController.NotifyOnAddActivePet(unitProfile, petUnitController);
             }
         }
+        /*
+        private void HandleTakeFallDamage(UnitController targetUnitController, int amount) {
+            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(targetUnitController, amount, CombatTextType.normal, CombatMagnitude.normal, null);
+        }
+        */
+
+        /*
+        private void HandleTakeDamage(IAbilityCaster caster, UnitController targetUnitController, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, string abilityName, AbilityEffectContext abilityEffectContext) {
+            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(targetUnitController, amount, combatTextType, combatMagnitude, abilityEffectContext);
+        }
+        */
+
+        /*
+        private void HandleRecoverResource(UnitController targetUnitController, PowerResource resource, int amount, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
+            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(targetUnitController, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
+        }
+        */
+
+        /*
+        private void HandleImmuneToEffect(UnitController targetUnitController, AbilityEffectContext abilityEffectContext) {
+            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(targetUnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+        }
+        */
+
+        private void HandleReceiveCombatTextEvent(Interactable targetInteractable, int amount, CombatTextType type, CombatMagnitude magnitude, AbilityEffectContext context) {
+            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(targetInteractable, amount, type, magnitude, context);
+        }
+
+        /*
+        private void HandleStatusEffectAdd(UnitController targetUnitController, StatusEffectNode statusEffectNode) {
+            unitController.UnitEventController.NotifyOnReceiveStatusEffectCombatTextEvent(targetUnitController, statusEffectNode.StatusEffect, true);
+        }
+        */
+
+        /*
+        private void HandleReceiveCombatMiss(Interactable targetInteractable, AbilityEffectContext abilityEffectContext) {
+            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(targetInteractable, 0, CombatTextType.miss, CombatMagnitude.normal, abilityEffectContext);
+        }
+        */
 
         public void CapturePet(UnitProfile unitProfile, UnitController petUnitController) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterPetManager.CapturePet({unitProfile.DisplayName}, {petUnitController.gameObject.name})");
@@ -124,6 +172,15 @@ namespace AnyRPG {
 
             if (activeUnitProfiles.ContainsKey(unitProfile)) {
                 activeUnitProfiles[unitProfile].UnitEventController.OnUnitDestroy -= HandleUnitDestroy;
+
+                activeUnitProfiles[unitProfile].UnitEventController.OnReceiveCombatTextEvent -= HandleReceiveCombatTextEvent;
+                //activeUnitProfiles[unitProfile].UnitEventController.OnImmuneToEffect -= HandleImmuneToEffect;
+                //activeUnitProfiles[unitProfile].UnitEventController.OnStatusEffectAdd -= HandleStatusEffectAdd;
+                //activeUnitProfiles[unitProfile].UnitEventController.OnRecoverResource -= HandleRecoverResource;
+                //activeUnitProfiles[unitProfile].UnitEventController.OnReceiveCombatMiss -= HandleReceiveCombatMiss;
+                //activeUnitProfiles[unitProfile].UnitEventController.OnTakeDamage -= HandleTakeDamage;
+                //activeUnitProfiles[unitProfile].UnitEventController.OnTakeFallDamage -= HandleTakeFallDamage;
+
                 activeUnitProfiles.Remove(unitProfile);
                 unitController.UnitEventController.NotifyOnRemoveActivePet(unitProfile);
             }

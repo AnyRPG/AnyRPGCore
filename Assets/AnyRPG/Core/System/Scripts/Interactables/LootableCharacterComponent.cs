@@ -232,7 +232,7 @@ namespace AnyRPG {
             if (lootCount > 0 && systemConfigurationManager.LootSparkleEffect != null) {
                 interactable.InteractableEventController.NotifyOnDropLoot(lootDropIdLookup);
                 //Debug.Log($"{interactable.gameObject.name}.LootableCharacterComponent.HandleBeforeDie(): casting loot sparkle effect; loot count = {lootCount}");
-                systemConfigurationManager.LootSparkleEffect.AbilityEffectProperties.Cast(systemAbilityController, interactable, interactable, new AbilityEffectContext());
+                systemConfigurationManager.LootSparkleEffect.AbilityEffectProperties.Cast(systemAbilityController, interactable, interactable, new AbilityEffectContext(systemConfigurationManager.LootSparkleEffect.AbilityEffectProperties));
             }
             TryToDespawn();
         }

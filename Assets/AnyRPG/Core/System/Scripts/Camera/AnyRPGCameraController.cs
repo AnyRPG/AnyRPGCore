@@ -31,6 +31,8 @@ namespace AnyRPG {
         private float currentMaxVerticalPan = 45;
         private float currentMinVerticalPan = -45;
 
+        private bool focusJustRegained = false;
+
         public float initialYDegrees = 0f;
         public float initialXDegrees = 0f;
         public float initialZoomDistance = 4f;
@@ -200,6 +202,16 @@ namespace AnyRPG {
             JumpToFollowSpot();
         }
 
+        private void OnApplicationFocus(bool hasFocus) {
+            //Debug.Log($"AnyRPGCameraController.OnApplicationFocus({hasFocus})");
+
+            if (hasFocus) {
+                // Mark that we just came back to the window
+                //Debug.Log("Camera just regained focus.  Setting focusJustRegained to true to prevent camera from jumping due to input changes while we were unfocused.");
+                focusJustRegained = true;
+            }
+        }
+
         private void LateUpdate() {
             if (target == null) {
                 // camera has nothing to follow so don't calculate movement
@@ -216,9 +228,11 @@ namespace AnyRPG {
 
             // ====MOUSE ZOOM====
             // added code at end to check if over nameplate and allow scrolling
-            if (inputManager.mouseScrolled
+            if (focusJustRegained == false
+                && inputManager.mouseScrolled
                 && (!EventSystem.current.IsPointerOverGameObject() || namePlateManager.MouseOverNamePlate())) {
                 currentZoomDistance += (Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * -1);
+                //currentZoomDistance += (Input.mouseScrollDelta.y * zoomSpeed * -1);
                 currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, maxZoom);
                 cameraZoom = true;
                 if (systemConfigurationManager.AllowFirstPersonCamera) {
@@ -243,7 +257,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (systemConfigurationManager.CameraViewMode == CameraViewMode.Free) {
+            if (focusJustRegained == false && systemConfigurationManager.CameraViewMode == CameraViewMode.Free) {
                 // ====MOUSE PAN====
                 // pan with the left or turn with the right mouse button
                 if (IsMousePanning()) {
@@ -305,6 +319,11 @@ namespace AnyRPG {
                 if (cameraPan || (currentZoomDistance == minZoom && wasMinZoom == false)) {
                     currentYDegrees = Mathf.Clamp(currentYDegrees, currentMinVerticalPan, currentMaxVerticalPan);
                 }
+            }
+
+            if (focusJustRegained) {
+                //Debug.Log("Camera was just refocused.  Ignoring input changes from last frame and unsetting focusJustRegained.");
+                focusJustRegained = false;
             }
 
             // follow the player

@@ -194,17 +194,27 @@ namespace AnyRPG {
         }
 
         public void ConfigurePortrait(Sprite icon) {
+            //Debug.Log($"DialogPanelController.ConfigurePortrait(): icon: {icon.name}");
+
             portraitSnapshotImage.gameObject.SetActive(false);
             portraitImage.gameObject.SetActive(true);
 
-            portraitImage.sprite = icon;
+            if (icon == null && dialogManagerClient.Dialog.Icon != null) {
+                portraitImage.sprite = dialogManagerClient.Dialog.Icon;
+            } else {
+                portraitImage.sprite = icon;
+            }
+
+            if (portraitImage.sprite == null) {
+                portraitImage.color = Color.black;
+            } else {
+                portraitImage.color = Color.white;
+            }
         }
 
         public void ConfigureSnapshotPortrait() {
-            if (dialogManagerClient.Dialog.Icon != null) {
-                ConfigurePortrait(dialogManagerClient.Dialog.Icon);
-                return;
-            }
+            //Debug.Log("DialogPanelController.ConfigureSnapshotPortrait()");
+
             portraitImage.gameObject.SetActive(false);
             portraitSnapshotImage.gameObject.SetActive(true);
             /*

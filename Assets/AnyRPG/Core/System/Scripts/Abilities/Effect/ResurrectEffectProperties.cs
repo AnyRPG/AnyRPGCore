@@ -57,12 +57,12 @@ namespace AnyRPG {
             }
             if (characterUnit.UnitController.CharacterStats.IsAlive == true) {
                 if (playerInitiated) {
-                    source.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". Target is already alive");
+                    source.AbilityManager.ReceiveCombatMessage($"Cannot cast {DisplayName}. Target is already alive");
                 }
             }
             if (characterUnit.UnitController.CharacterStats.IsReviving == true) {
                 if (playerInitiated) {
-                    source.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". Target is already reviving");
+                    source.AbilityManager.ReceiveCombatMessage($"Cannot cast {DisplayName}. Target is already reviving");
                 }
             }
             return false;

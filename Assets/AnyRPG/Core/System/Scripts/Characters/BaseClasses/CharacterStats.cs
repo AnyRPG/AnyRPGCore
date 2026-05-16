@@ -97,6 +97,8 @@ namespace AnyRPG {
                         }
                     }
                 }
+                // this is normal in characters with no actual health resource, such as spirits
+                //Debug.LogWarning($"{unitController.gameObject.name}.CharacterStats.HasHealthResource(): no health resource found for character");
                 return false;
             }
         }
@@ -807,7 +809,9 @@ namespace AnyRPG {
                 if (sourceCharacter.gameObject != unitController.gameObject) {
                     sourceCharacter.AbilityManager.ReceiveCombatTextEvent(unitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
-                unitController.UnitEventController.NotifyOnImmuneToEffect(abilityEffectContext);
+                unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+
+                //unitController.UnitEventController.NotifyOnImmuneToEffect(abilityEffectContext);
                 return true;
             }
             return false;
@@ -818,7 +822,9 @@ namespace AnyRPG {
                 if (sourceCharacter.gameObject != unitController.gameObject) {
                     sourceCharacter.AbilityManager.ReceiveCombatTextEvent(unitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
-                unitController.UnitEventController.NotifyOnImmuneToEffect(abilityEffectContext);
+                unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+
+                //unitController.UnitEventController.NotifyOnImmuneToEffect(abilityEffectContext);
                 return true;
             }
             return false;
@@ -830,7 +836,9 @@ namespace AnyRPG {
                 if (sourceCharacter.gameObject != unitController.gameObject) {
                     sourceCharacter.AbilityManager.ReceiveCombatTextEvent(unitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
-                unitController.UnitEventController.NotifyOnImmuneToEffect(abilityEffectContext);
+                unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+
+                //unitController.UnitEventController.NotifyOnImmuneToEffect(abilityEffectContext);
                 return true;
             }
             return false;
@@ -842,7 +850,9 @@ namespace AnyRPG {
                 if (sourceCharacter.gameObject != unitController.gameObject) {
                     sourceCharacter.AbilityManager.ReceiveCombatTextEvent(unitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
-                unitController.UnitEventController.NotifyOnImmuneToEffect(abilityEffectContext);
+                unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+
+                //unitController.UnitEventController.NotifyOnImmuneToEffect(abilityEffectContext);
                 return true;
             }
             return false;
@@ -891,7 +901,7 @@ namespace AnyRPG {
             //Debug.Log("statuseffects count: " + statusEffects.Count);
 
             // check if another effect from the same status effect group already exists on the target
-            if (statusEffect.StatusEffectGroup != null) {
+            if (statusEffects.ContainsKey(statusEffect.ResourceName) == false && statusEffect.StatusEffectGroup != null) {
 
                 // keep a list of status effects to overwrite
                 List<StatusEffectNode> removeNodes = new List<StatusEffectNode>();
@@ -932,7 +942,7 @@ namespace AnyRPG {
             statusEffects.Add(statusEffectProperties.ResourceName, newStatusEffectNode);
 
             // set base ability to null so that all damage taken by a status effect tick is considered ability damage for combat text purposes
-            abilityEffectContext.baseAbility = null;
+            abilityEffectContext.BaseAbility = null;
 
             newStatusEffectNode.Setup(unitController, statusEffectProperties, abilityEffectContext);
             Coroutine newCoroutine = unitController.StartCoroutine(Tick(sourceCharacter, abilityEffectContext, statusEffectProperties, newStatusEffectNode));
@@ -1002,6 +1012,13 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.HandleChangedNotifications(" + statusEffectNode.StatusEffect.DisplayName + "): NOTIFYING STATUS EFFECT UPDATE");
             ProcessStatusEffectChanges(statusEffectNode.StatusEffect);
             unitController.UnitEventController.NotifyOnStatusEffectAdd(statusEffectNode);
+
+            if (statusEffectNode.StatusEffect.ClassTrait == false
+                && statusEffectNode.AbilityEffectContext.savedEffect == false
+                && (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true)) {
+                unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, 0, CombatTextType.gainBuff, CombatMagnitude.normal, statusEffectNode.AbilityEffectContext);
+            }
+
         }
 
         public void ProcessStatusEffectChanges(StatusEffectProperties statusEffect) {
@@ -1195,6 +1212,8 @@ namespace AnyRPG {
                     ReducePowerResource(powerResource, damageAmount);
                 }
             }
+            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, damageAmount, CombatTextType.normal, CombatMagnitude.normal, new AbilityEffectContext());
+
             unitController.UnitEventController.NotifyOnTakeFallDamage(damageAmount);
         }
 
@@ -1256,43 +1275,67 @@ namespace AnyRPG {
             }
         }
 
-
+        /*
         /// <summary>
         /// return true if resource could be added, false if not
         /// </summary>
         /// <param name="resourceName"></param>
         /// <param name="newAmount"></param>
         /// <returns></returns>
-        public bool AddResourceAmount(string resourceName, float newAmount) {
+        public (bool, int) AddResourceAmount(string resourceName, float newAmount) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.AddResourceAmount(" + resourceName + ", " + newAmount + ")");
             newAmount = Mathf.Clamp(newAmount, 0, int.MaxValue);
             PowerResource tmpPowerResource = systemDataFactory.GetResource<PowerResource>(resourceName);
 
-            bool returnValue = false;
-            if (tmpPowerResource != null && powerResourceDictionary.ContainsKey(tmpPowerResource)) {
-                powerResourceDictionary[tmpPowerResource].currentValue += newAmount;
-                powerResourceDictionary[tmpPowerResource].currentValue = Mathf.Clamp(
-                    powerResourceDictionary[tmpPowerResource].currentValue,
-                    0,
-                    (int)GetPowerResourceMaxAmount(tmpPowerResource));
-                NotifyOnResourceAmountChanged(tmpPowerResource, (int)GetPowerResourceMaxAmount(tmpPowerResource), (int)powerResourceDictionary[tmpPowerResource].currentValue);
-                returnValue = true;
-                //Debug.Log($"{gameObject.name}.CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
+            if (tmpPowerResource == null) {
+                return (false, 0);
             }
-            return returnValue;
+
+            return AddResourceAmount(tmpPowerResource, newAmount);
+        }
+        */
+
+        public (bool, int) AddResourceAmount(PowerResource powerResource, float newAmount) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.AddResourceAmount(" + resourceName + ", " + newAmount + ")");
+            newAmount = Mathf.Clamp(newAmount, 0, int.MaxValue);
+
+            if (powerResource == null) {
+                return (false, 0);
+            }
+
+            if (powerResourceDictionary.ContainsKey(powerResource) == false) {
+                return (false, 0);
+            }
+
+            int actualAmount = 0;
+            int maxAmount = (int)GetPowerResourceMaxAmount(powerResource);
+            // determine the actual amount of resource to be recovered based on the difference between current and max values and the requested amount to be added
+            if (powerResourceDictionary[powerResource].currentValue + newAmount > maxAmount) {
+                actualAmount = (int)(maxAmount - powerResourceDictionary[powerResource].currentValue);
+            } else {
+                actualAmount = (int)newAmount;
+            }
+            powerResourceDictionary[powerResource].currentValue += actualAmount;
+            //powerResourceDictionary[powerResource].currentValue = Mathf.Clamp(powerResourceDictionary[powerResource].currentValue, 0, maxAmount);
+            NotifyOnResourceAmountChanged(powerResource, maxAmount, (int)powerResourceDictionary[powerResource].currentValue);
+
+            return (true, actualAmount);
         }
 
         public bool RecoverResource(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int amount, IAbilityCaster source, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.RecoverResource({powerResource.ResourceName}, {amount})");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterStats.RecoverResource({powerResource.ResourceName}, {amount}, {combatMagnitude})");
 
-            bool returnValue = AddResourceAmount(powerResource.ResourceName, amount);
-            if (returnValue == false) {
+            (bool returnValue, int actualAmount) = AddResourceAmount(powerResource, amount);
+            if (returnValue == false || actualAmount == 0) {
+                // for now we will not spam logs and combat text with zero value resource gains if the health was already full
                 return false;
             }
             if (source.gameObject != unitController.gameObject) {
                 source.AbilityManager.ReceiveCombatTextEvent(unitController, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
             }
-            unitController.UnitEventController.NotifyOnRecoverResource(powerResource, amount, combatMagnitude, abilityEffectContext);
+            //unitController.UnitEventController.NotifyOnRecoverResource(powerResource, amount, combatMagnitude, abilityEffectContext);
+            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
+
             return true;
         }
 

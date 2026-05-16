@@ -20,30 +20,12 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  deprecatedUMARecipeProfileProperties:
-    uMARecipes:
-    - {fileID: 11400000, guid: f73b5cfc987514dd8bd9cdb1a92844ab, type: 2}
-    - {fileID: 11400000, guid: ab1698c8031c3754ba89de90301915f2, type: 2}
-    sharedColors:
-    - sharedColorname: Foot Equipment Color 1
-      color: {r: 0, g: 0.8301887, b: 0.8301887, a: 1}
   properties:
     equipmentModels:
-    - rid: 5705935833309905116
     - rid: 5705935844403576850
   references:
     version: 2
     RefIds:
-    - rid: 5705935833309905116
-      type: {class: UMAEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        properties:
-          uMARecipes:
-          - {fileID: 11400000, guid: f73b5cfc987514dd8bd9cdb1a92844ab, type: 2}
-          - {fileID: 11400000, guid: ab1698c8031c3754ba89de90301915f2, type: 2}
-          sharedColors:
-          - sharedColorname: Foot Equipment Color 1
-            color: {r: 0, g: 0.8301887, b: 0.8301887, a: 1}
     - rid: 5705935844403576850
       type: {class: SwappableMeshEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
       data:

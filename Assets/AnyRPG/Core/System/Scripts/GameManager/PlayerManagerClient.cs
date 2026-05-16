@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -187,7 +188,7 @@ namespace AnyRPG {
             }
             // 0 to allow playing this effect for different reasons than levelup
             if (newLevel == 0 || newLevel != 1) {
-                AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
+                AbilityEffectContext abilityEffectContext = new AbilityEffectContext(systemConfigurationManager.LevelUpEffect.AbilityEffectProperties);
 
                 systemConfigurationManager.LevelUpEffect.AbilityEffectProperties.Cast(systemAbilityController, sourceUnitController, sourceUnitController, abilityEffectContext);
             }
@@ -198,7 +199,7 @@ namespace AnyRPG {
             if (PlayerUnitSpawned == false || systemConfigurationManager.DeathEffect == null) {
                 return;
             }
-            AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
+            AbilityEffectContext abilityEffectContext = new AbilityEffectContext(systemConfigurationManager.DeathEffect.AbilityEffectProperties);
             systemConfigurationManager.DeathEffect.AbilityEffectProperties.Cast(systemAbilityController, unitController, unitController, abilityEffectContext);
         }
 
@@ -314,7 +315,8 @@ namespace AnyRPG {
                 SubscribeToModelReady();
             } else {
                 // handle spawn immediately since this is a non UMA unit and waiting should not be necessary
-                HandlePlayerUnitSpawn();
+                //HandlePlayerUnitSpawn();
+                HandleModelReady();
             }
 
             /*
@@ -361,7 +363,8 @@ namespace AnyRPG {
         }
 
         public void HandleModelReady() {
-            //Debug.Log("PlayerManager.HandleModelReady()");
+            //Debug.Log("PlayerManagerClient.HandleModelReady()");
+
             SubscribeToModelEvents();
             UnsubscribeFromModelReady();
 
@@ -369,19 +372,22 @@ namespace AnyRPG {
         }
 
         public void SubscribeToModelEvents() {
-            //Debug.Log("PlayerManager.SubscribeToModelEvents()");
-            unitController.UnitEventController.OnStatusEffectAdd += HandleStatusEffectAdd;
+            //Debug.Log("PlayerManagerClient.SubscribeToModelEvents()");
+
+            //unitController.UnitEventController.OnStatusEffectAdd += HandleStatusEffectAdd;
+            unitController.UnitEventController.OnReceiveCombatTextEvent += HandleReceiveCombatTextEvent;
             unitController.UnitEventController.OnEncumberedChange += HandleEncumberedChange;
         }
 
         public void UnsubscribeFromModelEvents() {
-            //Debug.Log("PlayerManager.SubscribeToModelEvents()");
-            unitController.UnitEventController.OnStatusEffectAdd -= HandleStatusEffectAdd;
+            //unitController.UnitEventController.OnStatusEffectAdd -= HandleStatusEffectAdd;
+            unitController.UnitEventController.OnReceiveCombatTextEvent -= HandleReceiveCombatTextEvent;
             unitController.UnitEventController.OnEncumberedChange -= HandleEncumberedChange;
         }
 
         private void HandlePlayerUnitSpawn() {
-            //Debug.Log("PlayerManager.HandlePlayerUnitSpawn()");
+            //Debug.Log("PlayerManagerClient.HandlePlayerUnitSpawn()");
+
             playerUnitSpawned = true;
 
             // inform any subscribers that we just spawned a player unit
@@ -399,7 +405,7 @@ namespace AnyRPG {
         }
 
         public void SubscribeToModelReady() {
-            //Debug.Log("PlayerManager.SubscribeToModelReady()");
+            //Debug.Log("PlayerManagerClient.SubscribeToModelReady()");
 
             //activeUnitController.UnitModelController.OnModelUpdated += HandleModelReady;
             activeUnitController.UnitModelController.OnModelCreated += HandleModelReady;
@@ -459,17 +465,17 @@ namespace AnyRPG {
         public void SubscribeToPlayerEvents() {
             //Debug.Log("PlayerManager.SubscribeToPlayerEvents()");
 
-            unitController.UnitEventController.OnImmuneToEffect += HandleImmuneToEffect;
+            //unitController.UnitEventController.OnImmuneToEffect += HandleImmuneToEffect;
             unitController.UnitEventController.OnBeforeDie += HandleBeforeDie;
             //unitController.UnitEventController.OnAfterDie += HandleAfterDie;
             unitController.UnitEventController.OnLevelChanged += HandleLevelChanged;
             unitController.UnitEventController.OnGainXP += HandleGainXP;
-            unitController.UnitEventController.OnRecoverResource += HandleRecoverResource;
+            //unitController.UnitEventController.OnRecoverResource += HandleRecoverResource;
             unitController.UnitEventController.OnResourceAmountChanged += HandleResourceAmountChanged;
             unitController.UnitEventController.OnEnterCombat += HandleEnterCombat;
             unitController.UnitEventController.OnDropCombat += HandleDropCombat;
             //unitController.UnitEventController.OnCombatUpdate += HandleCombatUpdate;
-            unitController.UnitEventController.OnReceiveCombatMiss += HandleCombatMiss;
+            //unitController.UnitEventController.OnReceiveCombatMiss += HandleCombatMiss;
             unitController.UnitEventController.OnAddEquipment += HandleAddEquipment;
             unitController.UnitEventController.OnRemoveEquipment += HandleRemoveEquipment;
             //unitController.UnitEventController.OnUnlearnAbilities += HandleUnlearnClassAbilities;
@@ -497,9 +503,8 @@ namespace AnyRPG {
             unitController.UnitEventController.OnSetCraftAbility += HandleSetCraftAbility;
             unitController.UnitEventController.OnCraftItem += HandleCraftItem;
             unitController.UnitEventController.OnFactionChange += HandleFactionChange;
-            unitController.UnitEventController.OnReceiveCombatTextEvent += HandleReceiveCombatTextEvent;
-            unitController.UnitEventController.OnTakeDamage += HandleTakeDamage;
-            unitController.UnitEventController.OnTakeFallDamage += HandleTakeFallDamage;
+            //unitController.UnitEventController.OnTakeDamage += HandleTakeDamage;
+            //unitController.UnitEventController.OnTakeFallDamage += HandleTakeFallDamage;
             unitController.UnitEventController.OnDespawn += HandleDespawn;
             unitController.UnitEventController.OnCurrencyChange += HandleCurrencyChange;
             unitController.UnitEventController.OnSetGamepadActionButton += HandleSetGamepadActionButton;
@@ -533,17 +538,17 @@ namespace AnyRPG {
         public void UnsubscribeFromPlayerEvents() {
             //Debug.Log("PlayerManager.UnsubscribeFromPlayerEvents()");
 
-            unitController.UnitEventController.OnImmuneToEffect -= HandleImmuneToEffect;
+            //unitController.UnitEventController.OnImmuneToEffect -= HandleImmuneToEffect;
             unitController.UnitEventController.OnBeforeDie -= HandleBeforeDie;
             //unitController.UnitEventController.OnAfterDie -= HandleAfterDie;
             unitController.UnitEventController.OnLevelChanged -= HandleLevelChanged;
             unitController.UnitEventController.OnGainXP -= HandleGainXP;
-            unitController.UnitEventController.OnRecoverResource -= HandleRecoverResource;
+            //unitController.UnitEventController.OnRecoverResource -= HandleRecoverResource;
             unitController.UnitEventController.OnResourceAmountChanged -= HandleResourceAmountChanged;
             unitController.UnitEventController.OnEnterCombat -= HandleEnterCombat;
             unitController.UnitEventController.OnDropCombat -= HandleDropCombat;
             //unitController.UnitEventController.OnCombatUpdate -= HandleCombatUpdate;
-            unitController.UnitEventController.OnReceiveCombatMiss -= HandleCombatMiss;
+            //unitController.UnitEventController.OnReceiveCombatMiss -= HandleCombatMiss;
             unitController.UnitEventController.OnAddEquipment -= HandleAddEquipment;
             unitController.UnitEventController.OnRemoveEquipment -= HandleRemoveEquipment;
             //unitController.UnitEventController.OnUnlearnAbilities -= HandleUnlearnClassAbilities;
@@ -571,9 +576,8 @@ namespace AnyRPG {
             unitController.UnitEventController.OnSetCraftAbility -= HandleSetCraftAbility;
             unitController.UnitEventController.OnCraftItem -= HandleCraftItem;
             unitController.UnitEventController.OnFactionChange -= HandleFactionChange;
-            unitController.UnitEventController.OnReceiveCombatTextEvent -= HandleReceiveCombatTextEvent;
-            unitController.UnitEventController.OnTakeDamage -= HandleTakeDamage;
-            unitController.UnitEventController.OnTakeFallDamage -= HandleTakeFallDamage;
+            //unitController.UnitEventController.OnTakeDamage -= HandleTakeDamage;
+            //unitController.UnitEventController.OnTakeFallDamage -= HandleTakeFallDamage;
             unitController.UnitEventController.OnDespawn -= HandleDespawn;
             unitController.UnitEventController.OnCurrencyChange -= HandleCurrencyChange;
             unitController.UnitEventController.OnSetGamepadActionButton -= HandleSetGamepadActionButton;
@@ -694,20 +698,127 @@ namespace AnyRPG {
             SetUnitController(null);
         }
 
+        /*
         public void HandleTakeDamage(IAbilityCaster sourceCaster, UnitController targetUnitController, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, string abilityName, AbilityEffectContext abilityEffectContext) {
 
             combatTextManager.SpawnCombatText(targetUnitController, amount, combatTextType, combatMagnitude, abilityEffectContext);
-            systemEventManager.NotifyOnTakeDamage(sourceCaster, unitController, amount, abilityName);
+            //systemEventManager.NotifyOnTakeDamage(sourceCaster, unitController, amount, abilityName);
+        }
+        */
+
+        /*
+        public void HandleTakeFallDamage(UnitController targetUnitController, int damageAmount) {
+            combatTextManager.SpawnCombatText(targetUnitController, damageAmount, CombatTextType.normal, CombatMagnitude.normal, null);
+            //OnTakeFallDamage(unitController, damageAmount);
+        }
+        */
+
+        public void HandleReceiveCombatTextEvent(Interactable targetInteractable, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log($"PlayerManagerClient.HandleReceiveCombatTextEvent({targetInteractable?.gameObject.name}, {amount}, {combatTextType}, {combatMagnitude})");
+
+            combatTextManager.SpawnCombatText(targetInteractable, amount, combatTextType, combatMagnitude, abilityEffectContext);
+
+            string textColor = ColorUtility.ToHtmlStringRGB(Color.white);
+            string messageText = string.Empty;
+            string sourceName = string.Empty;
+            string targetName = targetInteractable.DisplayName;
+            string reflectedString = abilityEffectContext.ReflectDamage ? " (Reflected)" : string.Empty;
+            string criticalString = combatMagnitude == CombatMagnitude.critical ? " (Critical)" : string.Empty;
+
+            if (abilityEffectContext.ReflectDamage == false && abilityEffectContext.AbilityCaster?.AbilityManager != null) {
+                if (abilityEffectContext.AbilityCaster.gameObject == unitController.gameObject) {
+                    sourceName = "Your ";
+                } else {
+                    sourceName = $"{abilityEffectContext.AbilityCaster.AbilityManager.Name}'s ";
+                }
+            }
+
+            string abilityName = "Unknown Ability";
+            if (abilityEffectContext.BaseAbility != null) {
+                abilityName = abilityEffectContext.BaseAbility.DisplayName;
+            } else if (abilityEffectContext.AbilityEffect != null) {
+                abilityName = abilityEffectContext.AbilityEffect.DisplayName;
+            }
+            if (targetInteractable.gameObject == unitController.gameObject) {
+                targetName = "You";
+            }
+
+            // convert the combat text event into a combat message for the message log
+            string verb = string.Empty;
+            if (combatTextType == CombatTextType.normal || combatTextType == CombatTextType.ability) {
+                // turn text red if the target is the player or its pet
+                if (targetInteractable.gameObject == unitController.gameObject
+                    || unitController.CharacterPetManager.ActiveUnitProfiles.Values.Select(x => x.gameObject).Contains(targetInteractable.gameObject)) {
+                    textColor = ColorUtility.ToHtmlStringRGB(Color.red);
+                }
+                verb = "hit";
+                messageText = $"{sourceName}{abilityName} {verb} {targetName} for {amount}{reflectedString}{criticalString}";
+            } else if (combatTextType == CombatTextType.fallDamage) {
+                if (targetInteractable.gameObject == unitController.gameObject
+                    || unitController.CharacterPetManager.ActiveUnitProfiles.Values.Select(x => x.gameObject).Contains(targetInteractable.gameObject)) {
+                    textColor = ColorUtility.ToHtmlStringRGB(Color.red);
+                }
+                if (targetInteractable.gameObject == unitController.gameObject) {
+                    verb = "take";
+                } else {
+                    verb = "takes";
+                }
+                messageText = $"{targetName} {verb} {amount} fall damage";
+            } else if (combatTextType == CombatTextType.gainHealth) {
+                if (targetInteractable.gameObject == unitController.gameObject
+                    || unitController.CharacterPetManager.ActiveUnitProfiles.Values.Select(x => x.gameObject).Contains(targetInteractable.gameObject)) {
+                    textColor = ColorUtility.ToHtmlStringRGB(Color.green);
+                }
+                verb = "healed";
+                messageText = $"{sourceName}{abilityName} {verb} {targetName} for {amount}{reflectedString}{criticalString}";
+            } else if (combatTextType == CombatTextType.gainResource) {
+                if (targetInteractable.gameObject == unitController.gameObject
+                    || unitController.CharacterPetManager.ActiveUnitProfiles.Values.Select(x => x.gameObject).Contains(targetInteractable.gameObject)) {
+                    textColor = ColorUtility.ToHtmlStringRGB(Color.green);
+                }
+                if (abilityEffectContext.AbilityCaster != null && abilityEffectContext.AbilityCaster.gameObject == unitController.gameObject) {
+                    if (abilityEffectContext.ReflectDamage == false) {
+                        sourceName = "your ";
+                    }
+                    verb = "gain";
+                    targetName = "You";
+                } else {
+                    verb = "gained";
+                }
+                messageText = $"{targetName} {verb} {amount} {abilityEffectContext.PowerResource.DisplayName} from {sourceName}{abilityName}{reflectedString}{criticalString}";
+            } else if (combatTextType == CombatTextType.gainBuff) {
+                if (targetInteractable.gameObject == unitController.gameObject
+                    || unitController.CharacterPetManager.ActiveUnitProfiles.Values.Select(x => x.gameObject).Contains(targetInteractable.gameObject)) {
+                    textColor = ColorUtility.ToHtmlStringRGB(Color.cyan);
+                }
+                verb = "gained";
+                messageText = $"{targetName} {verb} {abilityName}";
+            } else if (combatTextType == CombatTextType.loseBuff) {
+                if (targetInteractable.gameObject == unitController.gameObject
+                    || unitController.CharacterPetManager.ActiveUnitProfiles.Values.Select(x => x.gameObject).Contains(targetInteractable.gameObject)) {
+                    textColor = ColorUtility.ToHtmlStringRGB(Color.cyan);
+                }
+                verb = "lost";
+                messageText = $"{targetName} {verb} {abilityName}";
+            } else if (combatTextType == CombatTextType.miss) {
+                verb = "missed";
+                messageText = $"{sourceName}{abilityName} {verb} {targetName}";
+            } else if (combatTextType == CombatTextType.immune) {
+                verb = "was immune to";
+                messageText = $"{targetName} {verb} {sourceName}{abilityName}";
+            } else {
+                // only log heals and hits for now, possibly expand this later if wanted
+                return;
+            }
+            messageText = $"<color=#{textColor}>{messageText}</color>";
+            messageLogClient.WriteCombatMessage(messageText);
         }
 
-        public void HandleTakeFallDamage(int damageAmount) {
-            combatTextManager.SpawnCombatText(unitController, damageAmount, CombatTextType.normal, CombatMagnitude.normal, null);
-            OnTakeFallDamage(unitController, damageAmount);
+        /*
+        public void HandleReceiveStatusEffectCombatTextEvent(UnitController targetUnitController, StatusEffectProperties statusEffect, bool addEffect) {
+            combatTextManager.SpawnCombatText(targetUnitController, statusEffect, addEffect);
         }
-
-        public void HandleReceiveCombatTextEvent(UnitController targetUnitController, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
-            combatTextManager.SpawnCombatText(targetUnitController, amount, combatTextType, combatMagnitude, abilityEffectContext);
-        }
+        */
 
         public void HandleFactionChange(Faction newFaction, Faction oldFaction) {
             systemEventManager.NotifyOnFactionChange();
@@ -718,7 +829,6 @@ namespace AnyRPG {
         public void HandleAddBag(InstantiatedBag bag, BagNode node) {
             systemEventManager.NotifyOnAddBag();
         }
-
 
         public void HandleCraftItem() {
             systemEventManager.NotifyOnCraftItem();
@@ -800,9 +910,11 @@ namespace AnyRPG {
             messageLogClient.WriteCombatMessage(messageText);
         }
 
+        /*
         public void HandleCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {
             combatTextManager.SpawnCombatText(targetObject, 0, CombatTextType.miss, CombatMagnitude.normal, abilityEffectContext);
         }
+        */
 
         public void HandleActivateTargetingMode(AbilityProperties baseAbility) {
             castTargettingManager.EnableProjector(baseAbility);
@@ -840,7 +952,7 @@ namespace AnyRPG {
 
         public void HandleEnterCombat(Interactable interactable) {
             if (messageLogClient != null) {
-                messageLogClient.WriteCombatMessage("Entered combat with " + interactable.DisplayName);
+                messageLogClient.WriteCombatMessage($"Entered combat with {interactable.DisplayName}");
             }
         }
 
@@ -852,24 +964,24 @@ namespace AnyRPG {
 
         public void HandleTargetInAbilityRangeFail(AbilityProperties baseAbility, Interactable target) {
             if (baseAbility != null && messageLogClient != null) {
-                messageLogClient.WriteCombatMessage(target.name + " is out of range of " + (baseAbility.DisplayName == null ? "null" : baseAbility.DisplayName));
+                messageLogClient.WriteCombatMessage($"{target.name} is out of range of {(baseAbility.DisplayName == null ? "null" : baseAbility.DisplayName)}");
             }
         }
 
         public void HandleCombatCheckFail(AbilityProperties ability) {
-            messageLogClient.WriteCombatMessage("The ability " + ability.DisplayName + " can only be cast while out of combat");
+            messageLogClient.WriteCombatMessage($"The ability {ability.DisplayName} can only be cast while out of combat");
         }
 
         public void HandleStealthCheckFail(AbilityProperties ability) {
-            messageLogClient.WriteCombatMessage("The ability " + ability.DisplayName + " can only be cast while while stealthed");
+            messageLogClient.WriteCombatMessage($"The ability {ability.DisplayName} can only be cast while while stealthed");
         }
 
         public void HandlePowerResourceCheckFail(AbilityProperties ability, IAbilityCaster abilityCaster) {
-            messageLogClient.WriteCombatMessage("Not enough " + ability.PowerResource.DisplayName + " to perform " + ability.DisplayName + " at a cost of " + ability.GetResourceCost(abilityCaster));
+            messageLogClient.WriteCombatMessage($"Not enough {ability.PowerResource.DisplayName} to perform {ability.DisplayName} at a cost of {ability.GetResourceCost(abilityCaster)}");
         }
 
         public void HandleLearnedCheckFail(AbilityProperties ability) {
-            messageLogClient.WriteCombatMessage("You have not learned the ability " + ability.DisplayName + " yet");
+            messageLogClient.WriteCombatMessage($"You have not learned the ability {ability.DisplayName} yet");
         }
 
         private void HandleAddEquipment(EquipmentSlotProfile profile, InstantiatedEquipment equipment) {
@@ -880,32 +992,8 @@ namespace AnyRPG {
             systemEventManager.NotifyOnRemoveEquipment(profile, equipment);
         }
 
-        public void HandleRecoverResource(PowerResource powerResource, int amount, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
-            if (messageLogClient != null) {
-                messageLogClient.WriteCombatMessage($"You gain {amount} {powerResource.DisplayName}");
-            }
-            combatTextManager.SpawnCombatText(activeUnitController, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
-        }
-
         public void HandleResourceAmountChanged(PowerResource powerResource, int maxAmount, int currentAmount) {
             actionBarManager.UpdateVisuals();
-        }
-
-        public void HandleStatusEffectAdd(UnitController sourceUnitController, StatusEffectNode statusEffectNode) {
-            //Debug.Log("PlayerManager.HandleStatusEffectAdd()");
-
-            if (statusEffectNode == null) {
-                return;
-            }
-
-            if (statusEffectNode.StatusEffect.ClassTrait == false && activeUnitController != null) {
-                if (statusEffectNode.AbilityEffectContext.savedEffect == false) {
-                    if (activeUnitController.CharacterUnit != null) {
-                        combatTextManager.SpawnCombatText(activeUnitController, statusEffectNode.StatusEffect, true);
-                    }
-                }
-            }
-
         }
 
         public void HandleGainXP(UnitController unitController, int gainedXP, int currentXP) {
@@ -934,11 +1022,7 @@ namespace AnyRPG {
 
         public void HandleAfterDie(CharacterStats deadCharacterStats) {
         }
-
-        public void HandleImmuneToEffect(AbilityEffectContext abilityEffectContext) {
-            combatTextManager.SpawnCombatText(activeUnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
-        }
-
+        
         public void HandleClassChange(UnitController sourceUnitController, CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
             systemEventManager.NotifyOnClassChange(sourceUnitController, newCharacterClass, oldCharacterClass);
             messageFeedManager.WriteMessage("Changed class to " + newCharacterClass.DisplayName);

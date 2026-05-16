@@ -88,9 +88,26 @@ Assets/UMA*
 Assets/UnusedExternalContent*
 AssetBundles/
 Assets/FishNet*
+Assets/AnyRPG/Addons/anyrpg-uma
+Assets/AnyRPG/Addons/anyrpg-uma*
+Assets/AnyRPG/Addons/anymmo-fishnet
+Assets/AnyRPG/Addons/anymmo-fishnet*
+Assets/AnyRPG/Addons/anymmo-fishnet-uma
+Assets/AnyRPG/Addons/anymmo-fishnet-uma*
+Assets/AnyRPG/Addons/anyrpg-movement-test-game
+Assets/AnyRPG/Addons/anyrpg-movement-test-game*
+Assets/AnyRPG/Addons/anyrpg-cc0-fantasy-content-pack
+Assets/AnyRPG/Addons/anyrpg-cc0-fantasy-content-pack*
+Assets/AnyRPG/Addons/a-lost-soul-demo-games
+Assets/AnyRPG/Addons/a-lost-soul-demo-games*
+
 
 # AnyRPG User Created Game Content
 Assets/Games*
+
+# unity created
+Assets/Settings
+Assets/Settings*
 
 #Visual Studio
 .leu

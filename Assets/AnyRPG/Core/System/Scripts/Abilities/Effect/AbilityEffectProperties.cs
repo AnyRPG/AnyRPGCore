@@ -176,7 +176,7 @@ namespace AnyRPG {
                         Debug.LogError(DisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                     } else {
                         if (!(abilityEffect is AmountEffectProperties)) {
-                            abilityEffectOutput.spellDamageMultiplier = 1f;
+                            abilityEffectOutput.SpellDamageMultiplier = 1f;
                         }
                         Dictionary<PrefabProfile, List<GameObject>> tmpObjects = PerformAbilityEffect(source, target, abilityEffectOutput, abilityEffect);
                         if (tmpObjects != null) {

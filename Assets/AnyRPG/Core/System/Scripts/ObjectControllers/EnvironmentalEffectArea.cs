@@ -81,7 +81,7 @@ namespace AnyRPG {
             List<AOETargetNode> validTargets = GetValidTargets();
             foreach (AOETargetNode validTarget in validTargets) {
                 foreach (AbilityEffect abilityEffect in abilityEffects) {
-                    abilityEffect.AbilityEffectProperties.Cast(this, validTarget.targetGameObject, null, new AbilityEffectContext());
+                    abilityEffect.AbilityEffectProperties.Cast(this, validTarget.targetGameObject, null, new AbilityEffectContext(abilityEffect.AbilityEffectProperties));
                 }
             }
         }

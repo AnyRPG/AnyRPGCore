@@ -531,6 +531,8 @@ namespace AnyRPG {
                     } else {
                         playerManagerClient.ActiveUnitController.UnitEventController.NotifyOnRequestFollowInteractionTarget(interactable);
                     }
+                } else {
+                    messageFeedManager.WriteMessage($"{interactable.DisplayName} is out of range");
                 }
                 return;
             }
@@ -1120,6 +1122,15 @@ namespace AnyRPG {
             if (playerManagerClient.ActiveUnitController.UnitProfile.UnitPrefabProps.ForceRotateModelMode == true) {
                 //Debug.Log($"PlayerController.ProcessSetActiveUnitController() force rotate model mode enabled, disabling strafe mode");
                 strafeModeActive = false;
+            }
+        }
+
+        public void ResetMoveInput() {
+            //Debug.Log($"PlayerController.ResetMoveInput()");
+
+            movementData.ResetMoveInput();
+            if (playerManagerClient.ActiveUnitController != null) {
+                playerManagerClient.ActiveUnitController.UnitMovementController.AddMovementData(movementData);
             }
         }
     }

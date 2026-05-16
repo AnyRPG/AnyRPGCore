@@ -87,6 +87,9 @@ namespace AnyRPG {
         }
         public virtual string UnitDisplayName {
             get {
+                if (interactable.NamePlateProps.DisplayName == string.Empty) {
+                    return interactable.DisplayName;
+                }
                 return interactable.NamePlateProps.DisplayName;
             }
         }
@@ -133,13 +136,8 @@ namespace AnyRPG {
         }
 
         public virtual bool InitializeNamePlate() {
-            //Debug.Log(namePlateUnit.gameObject.name + ".BasenamePlateController.InitializeNamePlate()");
-            /*
-            if (SuppressNamePlate == true) {
-                //Debug.Log(namePlateUnit.gameObject.name + ".BasenamePlateController.InitializeNamePlate(): suppressing NamePlate");
-                return false;
-            }
-            */
+            //Debug.Log("BasenamePlateController.InitializeNamePlate()");
+
             if (networkManagerServer.ServerModeActive == true) {
                 return false;
             }
@@ -210,7 +208,8 @@ namespace AnyRPG {
         }
 
         public virtual bool HasHealth() {
-            //Debug.Log($"{gameObject.name}.CharacterUnit.HasHealth(): return true");
+            //Debug.Log($"BaseNamePlateController.HasHealth(): return false");
+
             return false;
         }
 
@@ -222,7 +221,7 @@ namespace AnyRPG {
             return 0f;
         }
 
-        public virtual string GetNamePlateString() {
+        public virtual string GetNameplateString() {
 
             return $"<color=white>{UnitDisplayName}</color>";
         }

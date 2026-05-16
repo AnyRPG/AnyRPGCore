@@ -40,9 +40,9 @@ MonoBehaviour:
   equipmentSetName: 
   deprecatedHoldableObjectList: []
   inlineEquipmentModels:
-    equipmentModels:
-    - rid: 5705935833309905704
-  sharedEquipmentModels: 
+    applyToEquipmentName: 
+    equipmentModels: []
+  sharedEquipmentModels: Blue Plate Armor
   useArmorModifier: 1
   useManualArmor: 0
   manualValueIsScale: 0
@@ -62,16 +62,4 @@ MonoBehaviour:
   armorClassName: Plate
   references:
     version: 2
-    RefIds:
-    - rid: 5705935833309905704
-      type: {class: UMAEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        properties:
-          uMARecipes:
-          - {fileID: 11400000, guid: a65921d16fb80a9358ddecf221c3c893, type: 2}
-          - {fileID: 11400000, guid: 70da2360ebb16df51a6f95334f1d3524, type: 2}
-          sharedColors:
-          - sharedColorname: Chest Equipment Color 1
-            color: {r: 0.34509805, g: 0.43137255, b: 0.9019608, a: 1}
-          - sharedColorname: Chest Equipment Color 2
-            color: {r: 0.78431374, g: 0.6627451, b: 0.34509805, a: 1}
+    RefIds: []

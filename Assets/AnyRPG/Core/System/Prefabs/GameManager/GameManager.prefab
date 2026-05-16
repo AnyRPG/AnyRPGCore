@@ -7230,7 +7230,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameName: AnyRPG Engine
-  gameVersion: v1.0
+  gameVersion: 1.0
   loadResourcesFolders: []
   allowOfflinePlay: 1
   allowOnlinePlay: 0

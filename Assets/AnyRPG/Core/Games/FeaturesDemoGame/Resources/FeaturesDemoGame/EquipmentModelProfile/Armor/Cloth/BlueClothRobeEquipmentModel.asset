@@ -20,30 +20,12 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  deprecatedUMARecipeProfileProperties:
-    uMARecipes:
-    - {fileID: 11400000, guid: 89cf124f1c76f90448eff90b4ce38a8b, type: 2}
-    - {fileID: 11400000, guid: 8e9d6279950e2fb03b91c2ff675cb13c, type: 2}
-    sharedColors:
-    - sharedColorname: Chest Equipment Color 1
-      color: {r: 0.34509805, g: 0.43137255, b: 0.9019608, a: 1}
   properties:
     equipmentModels:
-    - rid: 5705935833309904965
     - rid: 5705935844403576840
   references:
     version: 2
     RefIds:
-    - rid: 5705935833309904965
-      type: {class: UMAEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        properties:
-          uMARecipes:
-          - {fileID: 11400000, guid: 89cf124f1c76f90448eff90b4ce38a8b, type: 2}
-          - {fileID: 11400000, guid: 8e9d6279950e2fb03b91c2ff675cb13c, type: 2}
-          sharedColors:
-          - sharedColorname: Chest Equipment Color 1
-            color: {r: 0.34509805, g: 0.43137255, b: 0.9019608, a: 1}
     - rid: 5705935844403576840
       type: {class: SwappableMeshEquipmentModel, ns: AnyRPG, asm: Assembly-CSharp}
       data:

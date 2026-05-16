@@ -129,7 +129,7 @@ namespace AnyRPG {
             unitController.InteractableEventController.NotifyOnPlayVoiceSound(audioClip);
         }
 
-        public void HandleTakeFallDamage(int damageAmount) {
+        public void HandleTakeFallDamage(UnitController targetUnitController, int damageAmount) {
             //Debug.Log($"{unitController.gameObject.name}.UnitVoiceController.HandleTakeFallDamage({damageAmount})");
 
             if (unitController.UnitProfile == null) {

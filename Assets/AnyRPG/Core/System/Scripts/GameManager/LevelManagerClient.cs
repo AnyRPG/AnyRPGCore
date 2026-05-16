@@ -253,6 +253,7 @@ namespace AnyRPG {
 
             OnLevelLoad();
 
+            // check for server mode and start server if we're in batch mode and on the main menu, which is where the server should start in that case.
             if (IsMainMenu(newScene.name) == true && Application.isBatchMode) {
                 networkManagerServer.SetServerMode(systemGameManager.CommandLineServerMode);
                 networkManagerServer.StartServer(systemGameManager.CommandLineServerPort);
@@ -331,7 +332,7 @@ namespace AnyRPG {
         }
 
         public void EndCutscene(Cutscene cutscene) {
-            //Debug.Log($"LevelManagerClient.EndCutscene()");
+            //Debug.Log($"LevelManagerClient.EndCutscene({cutscene?.ResourceName})");
 
             if (cutscene != null && cutscene.UnloadSceneOnEnd == true) {
                 //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene bars");
@@ -387,9 +388,11 @@ namespace AnyRPG {
             }
 
             ProcessBeforeLevelUnload();
+            /*
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
                 levelManagerServer.ProcessBeforeUnloadScene(SceneManager.GetActiveScene());
             }
+            */
 
             loadingSceneNode = systemDataFactory.GetResource<SceneNode>(levelName);
 
@@ -416,6 +419,10 @@ namespace AnyRPG {
             uIManager.DeactivatePlayerUI();
             uIManager.DeactivateInGameUI();
             uIManager.DeactivateSystemMenuUI();
+
+            if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == false) {
+                levelManagerServer.ProcessBeforeUnloadScene(SceneManager.GetActiveScene());
+            }
         }
 
         private void StartLoadAsync(SceneNode loadSceneNode) {

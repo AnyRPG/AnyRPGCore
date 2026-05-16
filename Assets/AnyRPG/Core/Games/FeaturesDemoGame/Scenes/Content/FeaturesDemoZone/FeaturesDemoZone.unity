@@ -13750,16 +13750,8 @@ MonoBehaviour:
   hasNamePlate: 0
   namePlateProps:
     displayName: 
-    suppressFaction: 1
     overrideNameplatePosition: 0
     namePlatePosition: {x: 0, y: 0, z: 0}
-    useSnapShot: 1
-    unitFrameTarget: 
-    unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
-    unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
-    unitPreviewTarget: 
-    unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
-    unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
 --- !u!114 &393183661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21846,16 +21838,8 @@ MonoBehaviour:
   hasNamePlate: 0
   namePlateProps:
     displayName: 
-    suppressFaction: 1
     overrideNameplatePosition: 0
     namePlatePosition: {x: 0, y: 0, z: 0}
-    useSnapShot: 1
-    unitFrameTarget: 
-    unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
-    unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
-    unitPreviewTarget: 
-    unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
-    unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
 --- !u!65 &623275583
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -27042,7 +27026,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 8a41c20d381b40f4fad8b03f4e8c5c4d, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 51fad2258d5323f4891c21115594918b, type: 2}
   m_BuildHeightMesh: 0
 --- !u!4 &784599040
 Transform:
@@ -32297,16 +32281,8 @@ MonoBehaviour:
   hasNamePlate: 0
   namePlateProps:
     displayName: 
-    suppressFaction: 1
     overrideNameplatePosition: 0
     namePlatePosition: {x: 0, y: 0, z: 0}
-    useSnapShot: 1
-    unitFrameTarget: 
-    unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
-    unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
-    unitPreviewTarget: 
-    unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
-    unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
 --- !u!4 &902514105
 Transform:
   m_ObjectHideFlags: 0
@@ -48156,16 +48132,8 @@ MonoBehaviour:
   hasNamePlate: 0
   namePlateProps:
     displayName: 
-    suppressFaction: 1
     overrideNameplatePosition: 0
     namePlatePosition: {x: 0, y: 0, z: 0}
-    useSnapShot: 1
-    unitFrameTarget: 
-    unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
-    unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
-    unitPreviewTarget: 
-    unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
-    unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
 --- !u!65 &1339571317
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -62341,16 +62309,8 @@ MonoBehaviour:
   hasNamePlate: 0
   namePlateProps:
     displayName: 
-    suppressFaction: 1
     overrideNameplatePosition: 0
     namePlatePosition: {x: 0, y: 0, z: 0}
-    useSnapShot: 1
-    unitFrameTarget: 
-    unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
-    unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
-    unitPreviewTarget: 
-    unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
-    unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
 --- !u!65 &1709763948
 BoxCollider:
   m_ObjectHideFlags: 0

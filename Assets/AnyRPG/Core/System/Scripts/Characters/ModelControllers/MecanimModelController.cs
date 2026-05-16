@@ -42,7 +42,8 @@ namespace AnyRPG {
 
             int spellMask = 1 << LayerMask.NameToLayer("SpellEffects");
             int raycastmask = 1 << LayerMask.NameToLayer("Ignore Raycast");
-            setLayerIgnoreMask = (spellMask | raycastmask);
+            //int equipmentMask = 1 << equipmentLayer;
+            setLayerIgnoreMask = (spellMask | raycastmask /*| equipmentMask*/);
         }
 
         public override void SetGameManagerReferences() {
@@ -144,11 +145,13 @@ namespace AnyRPG {
                         GameObject newEquipmentPrefab = objectPooler.GetPooledObject(attachmentNode.HoldableObject.Prefab, targetBone);
                         holdableObjects.Add(attachmentNode, newEquipmentPrefab);
 
-                        if (unitController.UnitControllerMode == UnitControllerMode.Preview) {
-                            LayerUtility.SetMeshRendererLayerRecursive(newEquipmentPrefab, unitPreviewLayer, setLayerIgnoreMask);
-                        } else {
+                        // this was resulting in pooled objects that were re-used for abilities appearing on the wrong layer, so we will leave everything on equipment
+                        // fow now to avoid this
+                        //if (unitController.UnitControllerMode == UnitControllerMode.Preview) {
+                        //    LayerUtility.SetMeshRendererLayerRecursive(newEquipmentPrefab, unitPreviewLayer, setLayerIgnoreMask);
+                        //} else {
                             LayerUtility.SetMeshRendererLayerRecursive(newEquipmentPrefab, equipmentLayer, setLayerIgnoreMask);
-                        }
+                        //}
                         newEquipmentPrefab.transform.localScale = attachmentNode.HoldableObject.Scale;
                         if (unitController.CharacterCombat.GetInCombat() == true) {
                             HoldObject(newEquipmentPrefab, attachmentNode, unitController.gameObject);

@@ -71,6 +71,15 @@ namespace AnyRPG {
                 return;
             }
 
+            if (targetUnitController.UnitControllerMode == UnitControllerMode.Mount) {
+                // mounts should not be agroed, but we want to check if the mount has a rider and agro the rider if they do
+                if (targetUnitController.RiderUnitController != null) {
+                    targetUnitController = targetUnitController.RiderUnitController;
+                } else {
+                    return;
+                }
+            }
+
             // cannot agro characters that are stealthed
             if (targetUnitController.CharacterStats.IsStealthed == true) {
                 return;

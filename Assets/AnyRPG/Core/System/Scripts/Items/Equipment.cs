@@ -44,6 +44,8 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(EquipmentModelProfile))]
         private string sharedEquipmentModels = string.Empty;
 
+        private List<EquipmentModel> equipmentModels = new List<EquipmentModel>();
+
         [Header("Base Armor")]
 
         [Tooltip("If true, this item will provide the wearer with armor")]
@@ -348,6 +350,19 @@ namespace AnyRPG {
             return new InstantiatedEquipment(systemGameManager, itemId, item as Equipment, usedItemQuality);
         }
 
+        public void AddEquipmentModel(EquipmentModel equipmentModel) {
+            if (equipmentModel == null) {
+                return;
+            }
+            if (equipmentModelDictionary.ContainsKey(equipmentModel.GetType())) {
+                Debug.LogWarning($"Equipment.AddEquipmentModel(): Equipment model of type {equipmentModel.GetType()} already exists on equipment {ResourceName}.  Cannot add duplicate.  CHECK INSPECTOR");
+                return;
+            }
+            //Debug.Log($"Adding equipment model of type {equipmentModel.GetType()} to equipment {ResourceName}");
+            equipmentModels.Add(equipmentModel);
+            equipmentModelDictionary.Add(equipmentModel.GetType(), equipmentModel);
+        }
+
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
 
@@ -395,20 +410,28 @@ namespace AnyRPG {
                 }
             }
 
-            if (sharedEquipmentModels != string.Empty) {
-                EquipmentModelProfile tmpEquipmentModelProfile = systemDataFactory.GetResource<EquipmentModelProfile>(sharedEquipmentModels);
-                if (tmpEquipmentModelProfile != null) {
-                    inlineEquipmentModels = tmpEquipmentModelProfile.Properties;
-                } else {
-                    Debug.LogError($"Equipment.SetupScriptableObjects(): Could not find equipment model profile : {sharedEquipmentModels} while inititalizing {ResourceName}.  CHECK INSPECTOR");
-                }
-            }
-
             foreach (EquipmentModel equipmentModel in inlineEquipmentModels.EquipmentModels) {
                 if (equipmentModel != null) {
                     equipmentModel.Configure(systemGameManager);
                     equipmentModel.SetupScriptableObjects(this);
-                    //Debug.Log($"Equipment.SetupScriptableObjects(): adding type {equipmentModel.GetType().Name} for {ResourceName}");
+                    equipmentModels.Add(equipmentModel);
+                }
+            }
+            if (sharedEquipmentModels != string.Empty) {
+                EquipmentModelProfile tmpEquipmentModelProfile = systemDataFactory.GetResource<EquipmentModelProfile>(sharedEquipmentModels);
+                if (tmpEquipmentModelProfile != null) {
+                    foreach (EquipmentModel equipmentModel in tmpEquipmentModelProfile.Properties.EquipmentModels) {
+                        if (equipmentModel != null) {
+                            equipmentModels.Add(equipmentModel);
+                        }
+                    }
+                } else {
+                    Debug.LogError($"Equipment.SetupScriptableObjects(): Could not find equipment model profile : {sharedEquipmentModels} while inititalizing {ResourceName}.  CHECK INSPECTOR");
+                }
+            }
+            foreach (EquipmentModel equipmentModel in equipmentModels) {
+                if (equipmentModel != null && equipmentModelDictionary.ContainsKey(equipmentModel.GetType()) == false)  {
+                    //Debug.Log($"Adding equipment model of type {equipmentModel.GetType()} to equipment {ResourceName}");
                     equipmentModelDictionary.Add(equipmentModel.GetType(), equipmentModel);
                 }
             }

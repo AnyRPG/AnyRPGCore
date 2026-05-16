@@ -1,4 +1,3 @@
-using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -61,6 +60,29 @@ namespace AnyRPG {
         public override void ClientInteraction(UnitController sourceUnitController, int componentIndex, int choiceIndex) {
             base.ClientInteraction(sourceUnitController, componentIndex, choiceIndex);
             uIManager.interactionWindow.CloseWindow();
+        }
+
+        public override void LoadFromSaveData(InteractableSaveData interactableSaveData) {
+            base.LoadFromSaveData(interactableSaveData);
+            if (interactableSaveData.ControlSwitchSaveData.Count > 0) {
+                onState = interactableSaveData.ControlSwitchSaveData[0].OnState;
+                activationCount = interactableSaveData.ControlSwitchSaveData[0].ActivationCount;
+            }
+        }
+
+        public override void SetSaveData(InteractableSaveData interactableSaveData) {
+            //Debug.Log($"{interactable.gameObject.name}.ControlSwitchComponent.SetSaveData()");
+
+            base.SetSaveData(interactableSaveData);
+            ControlSwitchSaveData controlSwitchSaveData = new ControlSwitchSaveData() {
+                OnState = onState,
+                ActivationCount = activationCount
+            };
+            if (interactableSaveData.ControlSwitchSaveData.Count > 0) {
+                interactableSaveData.ControlSwitchSaveData[0] = controlSwitchSaveData;
+            } else {
+                interactableSaveData.ControlSwitchSaveData.Add(controlSwitchSaveData);
+            }
         }
 
     }

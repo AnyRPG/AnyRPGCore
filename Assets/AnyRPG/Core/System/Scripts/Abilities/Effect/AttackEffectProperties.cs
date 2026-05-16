@@ -55,7 +55,7 @@ namespace AnyRPG {
         public override AbilityEffectContext ProcessAbilityEffectContext(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AttackEffect.ProcessAbilityEffectContext(" + source.AbilityManager.Name + ", " + target.name + ")");
 
-            if (abilityEffectContext.weaponHitHasCast == true) {
+            if (abilityEffectContext.WeaponHitHasCast == true) {
                 // can't cast weapon hit effects more than once
                 return base.ProcessAbilityEffectContext(source, target, abilityEffectContext);
             }
@@ -63,7 +63,7 @@ namespace AnyRPG {
             // this will also limit cast time multipliers on future effects.
             // This should be ok because the primary hit of a fireball would be regular damage, and any hit after that is likely
             // on hit, burn effect, etc, which should not be multiplied by cast time
-            abilityEffectContext.weaponHitHasCast = true;
+            abilityEffectContext.WeaponHitHasCast = true;
 
             if (weaponAttack == true) {
                 source.AbilityManager.ProcessWeaponHitEffects(this, target, abilityEffectContext);

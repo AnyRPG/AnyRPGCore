@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -23,6 +20,9 @@ namespace AnyRPG {
 
         // track the ability that was originally cast that resulted in this effect
         public string baseAbilityName = string.Empty;
+
+        // track the ability effect that caused this effect
+        public string sourceAbilityEffectName = string.Empty;
 
         // the last power resource affected
         public string powerResourceName = string.Empty;

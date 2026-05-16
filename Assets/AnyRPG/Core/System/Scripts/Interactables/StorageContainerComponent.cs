@@ -332,9 +332,11 @@ namespace AnyRPG {
 
         public void ClearAllItems() {
             foreach (InventorySlot inventorySlot in inventorySlots) {
-                // remove the items from the database
-                foreach (InstantiatedItem instantiatedItem in inventorySlot.InstantiatedItems.Values) {
-                    serverDataService.DeleteItemInstance(instantiatedItem);
+                // remove the items from the database in network mode, otherwise they will be orphaned and never cleaned up
+                if (networkManagerServer.ServerModeActive == true) {
+                    foreach (InstantiatedItem instantiatedItem in inventorySlot.InstantiatedItems.Values) {
+                        serverDataService.DeleteItemInstance(instantiatedItem);
+                    }
                 }
                 inventorySlot.RemoveAllItems();
             }

@@ -35,7 +35,7 @@ namespace AnyRPG {
 
             if (target == null) {
                 if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + describableData.DisplayName + ". Gathering requires a target.");
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage($"Cannot cast {describableData.DisplayName}. Gathering requires a target.");
                 }
                 return false;
             }
@@ -44,7 +44,7 @@ namespace AnyRPG {
             if (gatheringNodeComponent == null) {
                 //Debug.Log("You cannot use " + DisplayName + " on: " + target.name);
                 if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + describableData.DisplayName + ". This ability must target a gathering node");
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage($"Cannot cast {describableData.DisplayName}. This ability must target a gathering node");
                 }
                 return false;
             }
@@ -54,7 +54,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(target.name + " requires ability: " + _gatheringNode.MyAbility);
                 if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + describableData.DisplayName + ". This gathering node requires the skill : " + gatheringNodeComponent.GatheringNodeProps.BaseAbility.DisplayName);
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage($"Cannot cast {describableData.DisplayName}. This gathering node requires the skill : {gatheringNodeComponent.GatheringNodeProps.BaseAbility.DisplayName}");
                 }
                 return false;
             }

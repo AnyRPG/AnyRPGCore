@@ -1,6 +1,7 @@
 using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using UMA.Controls;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -218,11 +219,12 @@ namespace AnyRPG {
                 abilityEffectContext.AbilityCaster = source;
             }
             */
-            abilityEffectContext.powerResource = powerResource;
+            abilityEffectContext.PowerResource = powerResource;
             abilityEffectContext.SetResourceAmount(powerResource.ResourceName, damage);
 
+            /*
             // prevent infinite reflect loops
-            if (abilityEffectContext.reflectDamage == false) {
+            if (abilityEffectContext.ReflectDamage == false) {
                 foreach (StatusEffectNode statusEffectNode in unitController.CharacterStats.StatusEffects.Values) {
                     //Debug.Log("Casting Reflection On Take Damage");
                     // this could maybe be done better through an event subscription
@@ -235,10 +237,11 @@ namespace AnyRPG {
                     }
                 }
             }
+            */
 
             CombatTextType combatTextType = CombatTextType.normal;
-            if (abilityEffectContext.baseAbility != null
-                && abilityEffectContext.baseAbility.IsAutoAttack
+            if (abilityEffectContext.BaseAbility != null
+                && abilityEffectContext.BaseAbility.IsAutoAttack
                 && (abilityEffect as AttackEffectProperties).DamageType == DamageType.physical) {
                 combatTextType = CombatTextType.normal;
             } else {
@@ -263,7 +266,25 @@ namespace AnyRPG {
                 }
             }
 
+            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(unitController, damage, combatTextType, combatMagnitude, abilityEffectContext);
+
             unitController?.UnitEventController.NotifyOnTakeDamage(sourceCaster, unitController, damage, combatTextType, combatMagnitude, abilityEffect.DisplayName, abilityEffectContext);
+
+            // reflect damage after above notifications so that the order shows properly in combat logs
+            if (abilityEffectContext.ReflectDamage == false) {
+                // prevent infinite reflect loops ^
+                foreach (StatusEffectNode statusEffectNode in unitController.CharacterStats.StatusEffects.Values) {
+                    //Debug.Log("Casting Reflection On Take Damage");
+                    // this could maybe be done better through an event subscription
+                    if (statusEffectNode.StatusEffect.ReflectAbilityEffectList.Count > 0) {
+                        // we can't reflect on system attackers, so check if this is an interactable
+                        Interactable targetInteractable = sourceCaster.AbilityManager.UnitGameObject.GetComponent<Interactable>();
+                        if (targetInteractable != null) {
+                            statusEffectNode.StatusEffect.CastReflect(unitController, targetInteractable, abilityEffectContext);
+                        }
+                    }
+                }
+            }
 
         }
 
@@ -456,12 +477,12 @@ namespace AnyRPG {
         }
 
         public AbilityProperties GetValidAttackAbility() {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.GetValidAttackAbility()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.GetValidAttackAbility()");
 
             List<AbilityProperties> returnList = new List<AbilityProperties>();
 
             foreach (AbilityProperties baseAbility in unitController.CharacterAbilityManager.AbilityList.Values) {
-                //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.GetValidAttackAbility(): Checking ability: " + baseAbility.DisplayName);
+                //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.GetValidAttackAbility(): Checking ability: {baseAbility.DisplayName}");
                 if (baseAbility.GetTargetOptions(unitController).CanCastOnEnemy &&
                     unitController.CharacterAbilityManager.CanCastAbility(baseAbility) &&
                     baseAbility.CanUseOn(unitController.Target, unitController) &&
@@ -478,7 +499,8 @@ namespace AnyRPG {
                 //Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): returnList.Count: " + returnList.Count + "; randomIndex: " + randomIndex);
                 return returnList[randomIndex];
             }
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.GetValidAttackAbility(): ABOUT TO RETURN NULL!");
+
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.GetValidAttackAbility(): ABOUT TO RETURN NULL!");
             return null;
         }
 
@@ -505,7 +527,8 @@ namespace AnyRPG {
             foreach (AbilityProperties baseAbility in baseAbilityList) {
                 if (baseAbility.GetTargetOptions(unitController).CanCastOnEnemy
                     && baseAbility.GetTargetOptions(unitController).UseMeleeRange == false
-                    && baseAbility.GetTargetOptions(unitController).MaxRange > 0f) {
+                    && baseAbility.GetTargetOptions(unitController).MaxRange > 0f
+                    && unitController.CharacterAbilityManager.CanCastAbility(baseAbility)) {
                     float returnedMaxRange = baseAbility.GetLOSMaxRange(unitController, unitController.Target);
                     if (returnValue == 0f || returnedMaxRange < returnValue) {
                         returnValue = returnedMaxRange;
@@ -549,9 +572,9 @@ namespace AnyRPG {
             }
 
             if ((unitController.Target != null && targetCharacterUnit != null)
-                || usedAbilityEffectContext.baseAbility.GetTargetOptions(unitController).RequireTarget == false) {
+                || usedAbilityEffectContext.BaseAbility.GetTargetOptions(unitController).RequireTarget == false) {
 
-                usedAbilityEffectContext.baseAbility.HandleAbilityHit(
+                usedAbilityEffectContext.BaseAbility.HandleAbilityHit(
                     unitController,
                     unitController.Target,
                     usedAbilityEffectContext);
@@ -561,7 +584,7 @@ namespace AnyRPG {
                 //Debug.Log("Processing hit on null target");
                 // OnHitEvent is responsible for performing ability effects for animated abilities, and needs to fire no matter what because those effects may not require targets
                 if (usedAbilityEffectContext != null) {
-                    if (usedAbilityEffectContext.baseAbility.GetTargetOptions(unitController).RequireTarget == false) {
+                    if (usedAbilityEffectContext.BaseAbility.GetTargetOptions(unitController).RequireTarget == false) {
                         unitController.UnitEventController.NotifyOnHitEvent(unitController, unitController.Target);
                         return;
                     }
@@ -580,11 +603,13 @@ namespace AnyRPG {
         }
 
         public virtual void ReceiveCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.ReceiveCombatMiss()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterCombat.ReceiveCombatMiss(caster: {abilityEffectContext.AbilityCaster.AbilityManager.Name})");
 
             lastCombatEvent = Time.time;
-            unitController.UnitEventController.NotifyOnReceiveCombatMiss(targetObject, abilityEffectContext);
-            
+            //unitController.UnitEventController.NotifyOnReceiveCombatMiss(targetObject, abilityEffectContext);
+            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(targetObject, 0, CombatTextType.miss, CombatMagnitude.normal, abilityEffectContext);
+
+
             // miss sound should only be played on attacking unit
             if (targetObject != unitController) {
                 unitController.UnitEventController.NotifyOnCombatMiss();

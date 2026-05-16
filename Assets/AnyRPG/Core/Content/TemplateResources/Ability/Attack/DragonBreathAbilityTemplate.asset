@@ -29,7 +29,7 @@ MonoBehaviour:
       useUniversalAttachment: 1
       attachmentName: SpellSource
     despawnPrefabsOnCastEnd: 0
-    abilityPrefabSource: 0
+    abilityPrefabSource: 1
     animatorCreatePrefabs: 0
     prefabDestroyDelay: 0
     animationProfileName: 
@@ -79,7 +79,7 @@ MonoBehaviour:
       autoSelfCast: 0
       unitTypeRestrictions: []
       useMeleeRange: 0
-      maxRange: 0
+      maxRange: 30
       requireFacingTarget: 1
       maxAngle: 10
       requireBehindTarget: 0

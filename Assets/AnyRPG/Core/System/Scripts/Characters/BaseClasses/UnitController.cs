@@ -119,9 +119,9 @@ namespace AnyRPG {
         private bool useAgent = false;
         private Vector3 startPosition = Vector3.zero;
         private float evadeSpeed = 5f;
-        private float leashDistance = 40f;
+        private float leashDistance = 80f;
         private float maxDistanceFromMasterOnMove = 3f;
-        private float maxCombatDistanceFromMasterOnMove = 15f;
+        private float maxCombatDistanceFromMasterOnMove = 80f;
         private bool enableLeashing = false;
 
         // track the current movement sound overrides
@@ -503,13 +503,13 @@ namespace AnyRPG {
         }
 
         public override void Configure(SystemGameManager systemGameManager) {
-            //Debug.Log($"{gameObject.name}.UnitController.Configure() scene: {gameObject.scene.name} default physics scene: {(gameObject.scene.GetPhysicsScene() == Physics.defaultPhysicsScene)}");
+            //Debug.Log($"{gameObject.name}.UnitController.Configure()");
 
             base.Configure(systemGameManager);
             isStateReset = false;
             // create components here instead?  which ones rely on other things like unit profile being set before start?
             unitEventController.Configure(this, systemGameManager);
-            namePlateController = new UnitNamePlateController(this, systemGameManager);
+            //nameplateController = new UnitNamePlateController(this, systemGameManager);
             unitMotor = new UnitMotor(this, systemGameManager);
             unitAnimator = new UnitAnimator(this, systemGameManager);
             patrolController = new PatrolController(this, systemGameManager);
@@ -553,10 +553,15 @@ namespace AnyRPG {
         }
 
         public void SetCharacterRequestData(CharacterRequestData characterRequestData) {
-            //Debug.Log($"{gameObject.name}.UnitController.SetCharacterRequestData() characterId: {characterRequestData.characterId}");
+            //Debug.Log($"{gameObject.name}.UnitController.SetCharacterRequestData(characterId: {characterRequestData.characterId})");
 
             this.characterRequestData = characterRequestData;
+            hasNameplate = characterRequestData.characterConfigurationRequest.unitProfile.HasNameplate;
             this.characterId = characterRequestData.characterId;
+        }
+
+        protected override void CreateNameplateController() {
+            nameplateController = new UnitNamePlateController(this, systemGameManager);
         }
 
         protected override void CreateMaterialController() {
@@ -616,11 +621,11 @@ namespace AnyRPG {
             // do nothing here, unit controller will handle enabling and disabling the interactable range based on the unit controller mode
         }
 
-        public override void InitializeNamePlateController() {
+        public override void InitializeNameplateController() {
             //Debug.Log($"{gameObject.name}.UnitController.InitializeNamePlateController()");
             // mounts and preview units shouldn't have a namePlateController active
-            if (unitControllerMode != UnitControllerMode.Mount && unitControllerMode != UnitControllerMode.Preview) {
-                base.InitializeNamePlateController();
+            if (hasNameplate && unitControllerMode != UnitControllerMode.Mount && unitControllerMode != UnitControllerMode.Preview) {
+                base.InitializeNameplateController();
             }
         }
 
@@ -642,7 +647,9 @@ namespace AnyRPG {
                 return;
             }
 
-            base.ConfigureDialogPanel(dialogPanelController);
+            dialogPanelController.ConfigureSnapshotPortrait();
+
+            //base.ConfigureDialogPanel(dialogPanelController);
         }
 
         private void SetUnitFootstepAudioProfile() {
@@ -820,7 +827,7 @@ namespace AnyRPG {
         private void EnablePetMode() {
             //Debug.Log($"{gameObject.name}.UnitController.EnablePetMode()");
 
-            InitializeNamePlateController();
+            InitializeNameplateController();
             EnableAICommon();
 
             // it is necessary to keep track of leash position because it was already set as destination by setting pet mode
@@ -841,7 +848,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.UnitController.SetMountMode()");
 
             // mount namePlates do not need full initialization, only the position to be set
-            namePlateController.SetNameplatePosition();
+            nameplateController.SetNameplatePosition();
 
             SetUnitControllerMode(UnitControllerMode.Mount);
             unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultCharacterUnitLayer);
@@ -880,7 +887,7 @@ namespace AnyRPG {
         private void EnablePlayer() {
             //Debug.Log($"{gameObject.name}.UnitController.EnablePlayer()");
 
-            InitializeNamePlateController();
+            InitializeNameplateController();
 
             if (systemGameManager.GameMode == GameMode.Local || (networkManagerServer.ServerModeActive == false && isOwner == true)) {
                 // to allow the player to click on objects through their model, the player unit on authoritative clients
@@ -933,7 +940,7 @@ namespace AnyRPG {
             //Debug.Log($"{gameObject.name}.UnitController.EnableAI()");
 
             EnableInteractableRange();
-            InitializeNamePlateController();
+            InitializeNameplateController();
             EnableAICommon();
 
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {
@@ -1218,9 +1225,9 @@ namespace AnyRPG {
             useAgent = false;
             startPosition = Vector3.zero;
             evadeSpeed = 5f;
-            leashDistance = 40f;
+            leashDistance = 80f;
             maxDistanceFromMasterOnMove = 3f;
-            maxCombatDistanceFromMasterOnMove = 15f;
+            maxCombatDistanceFromMasterOnMove = 80f;
 
             apparentVelocity = 0f;
             lastPosition = Vector3.zero;
@@ -1565,10 +1572,9 @@ namespace AnyRPG {
             lastPosition = rigidBody.position;
         }
 
-
-
         public void FollowAttackTarget(Interactable target, float minAttackRange) {
-            //Debug.Log($"{gameObject.name}.AIController.FollowTarget(" + (target == null ? "null" : target.name) + ", " + minAttackRange + ")");
+            //Debug.Log($"{gameObject.name}.UnitController.FollowAttackTarget() target: {(target != null ? target.gameObject.name : "null")} minAttackRange: {minAttackRange}");
+
             if (!(currentState is DeathState)) {
                 UnitMotor.FollowAttackTarget(target, minAttackRange);
             }
@@ -2541,6 +2547,10 @@ namespace AnyRPG {
             base.ProcessPlayerUnitSpawn(sourceUnitController);
         }
 
+        protected override void SpawnInteractableNameplate() {
+            // do nothing intentionally
+        }
+
         public void HandleMovementSpeedUpdate() {
             //Debug.Log($"{gameObject.name}.UnitController.HandleMovementSpeedUpdate() new speed: {MovementSpeed}");
 
@@ -2620,7 +2630,7 @@ namespace AnyRPG {
             isStealth = true;
             if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false && isOwner == false) {
                 characterStats.ClearStatusEffectPrefabs();
-                namePlateController.RemoveNamePlate();
+                nameplateController.RemoveNamePlate();
                 CleanupMiniMapIndicator();
             }
             unitMaterialController.ActivateStealth();
@@ -2634,7 +2644,7 @@ namespace AnyRPG {
             isStealth = false;
             unitMaterialController.DeactivateStealth();
             if (systemGameManager.GameMode == GameMode.Network && networkManagerServer.ServerModeActive == false && isOwner == false) {
-                namePlateController.AddNamePlate();
+                nameplateController.AddNamePlate();
                 characterStats.SpawnStatusEffectPrefabs();
                 InstantiateMiniMapIndicator();
             }
@@ -2668,7 +2678,12 @@ namespace AnyRPG {
 
         public override Vector3 GetNameplatePosition() {
             //Debug.Log($"{gameObject.name}.UnitController.GetNameplatePosition()");
-            
+
+            if (nameplateTransform == null) {
+                //Debug.Log($"{gameObject.name}.UnitController.GetNameplatePosition() nameplateTransform was null, returning transform position: {transform.position}");
+                Debug.LogWarning($"{gameObject.name}.UnitController.GetNameplatePosition() nameplateTransform was null, returning transform position: {transform.position}");
+                return transform.position + nameplateVector;
+            }
             Vector3 returnValue = nameplateTransform.position + nameplateVector;
             //Debug.Log($"{gameObject.name}.UnitController.GetNameplatePosition() nameplateTransform.position: {nameplateTransform.position} nameplateVector: {nameplateVector} returnValue: {returnValue}");
             return returnValue;

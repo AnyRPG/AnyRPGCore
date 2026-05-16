@@ -27,6 +27,7 @@ namespace AnyRPG {
             typeof(EnvironmentStateProfile).Name,
             typeof(EquipmentSet).Name,
             typeof(Faction).Name,
+            typeof(GameExtension).Name,
             typeof(InteractableOptionConfig).Name,
             typeof(Item).Name,
             typeof(ItemQuality).Name,

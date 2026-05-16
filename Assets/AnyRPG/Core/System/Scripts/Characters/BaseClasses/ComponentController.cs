@@ -149,9 +149,8 @@ namespace AnyRPG {
         }
 
         private void SetNameplateVector() {
-            //Debug.Log($"{gameObject.name}.ComponentController.SetNameplateVector()");
-            //nameplateVector = namePlateTransform.position - interactable.transform.position;
-            // switched to using InverseTransformPoint so that the nameplate vector is correct even if the interactable is scaled like on a mount
+            //Debug.Log($"{transform.parent.gameObject.name}.ComponentController.SetNameplateVector()");
+
             nameplateVector = interactable.transform.InverseTransformPoint(namePlateTransform.position);
             //Debug.Log($"{transform.parent.gameObject.name}.ComponentController.SetNameplateVector() nameplateVector: {nameplateVector} instanceId: {GetInstanceID()}");
         }

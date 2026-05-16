@@ -194,6 +194,10 @@ namespace AnyRPG {
             //Debug.Log($"LevelManagerServer.SpawnEphemeralObjects(scene: {scene.name})");
 
             SceneNode sceneNode = sceneUtilityService.GetSceneNodeBySceneName(scene.name);
+            if (sceneNode == null) {
+                Debug.LogWarning($"LevelManagerServer.SpawnEphemeralObjects(scene: {scene.name}) could not find scene node for scene");
+                return;
+            }
             List <PersistentObjectSaveData> ephemeralObjects = new List<PersistentObjectSaveData>(saveManager.GetEphemeralObjects(sceneNode));
             foreach (PersistentObjectSaveData persistentObjectSaveData in ephemeralObjects) {
                 //Debug.Log($"LevelManagerServer.SpawnEphemeralObjects() - spawning dropped item with UUID {persistentObjectSaveData.UUID} at location ({persistentObjectSaveData.LocationX}, {persistentObjectSaveData.LocationY}, {persistentObjectSaveData.LocationZ})");
@@ -216,14 +220,14 @@ namespace AnyRPG {
                 //Debug.Log($"LevelManagerServer.SpawnEphemeralObjects() UUID BEFORE: {uuidComponent.ID}");
                 uuidComponent.ID = persistentObjectSaveData.UUID;
                 //Debug.Log($"LevelManagerServer.SpawnEphemeralObjects() UUID AFTER: {uuidComponent.ID}");
-                Interactable _interactable = droppedPrefab.GetComponent<Interactable>();
-                if (_interactable == null) {
+                Interactable interactable = droppedPrefab.GetComponent<Interactable>();
+                if (interactable == null) {
                     Debug.LogWarning($"LevelManagerServer.SpawnEphemeralObjects() could not find interactable component on dropped item prefab");
                     return;
                 }
-                _interactable.Configure(systemGameManager);
-                RegisterDroppedItem(_interactable);
-                _interactable.Init();
+                interactable.Configure(systemGameManager);
+                RegisterDroppedItem(interactable);
+                interactable.Init();
             }
         }
 
@@ -385,8 +389,10 @@ namespace AnyRPG {
 
         public void RegisterInteractable(Interactable interactable) {
             //Debug.Log($"LevelManagerServer.RegisterInteractable({interactable.gameObject.name})");
+
             Scene scene = interactable.gameObject.scene;
             if (loadedScenes.ContainsKey(scene.name) == false) {
+                //Debug.Log($"LevelManagerServer.RegisterInteractable({interactable.gameObject.name}): Scene {scene.name} not found in loadedScenes");
                 return;
             }
             if (loadedScenes[scene.name].ContainsKey(scene.handle) == false) {

@@ -37,7 +37,7 @@ namespace AnyRPG {
         public override bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
             //Debug.Log($"{ResourceName}.HealEffectProperties.ProcessAbilityHit({(target == null ? "null" : target.gameObject.name)}, {finalAmount}, {source.AbilityManager.UnitGameObject.name}, {powerResource.ResourceName})");
 
-            abilityEffectContext.powerResource = powerResource;
+            abilityEffectContext.PowerResource = powerResource;
             bool returnValue = CharacterUnit.GetCharacterUnit(target).UnitController.CharacterStats.RecoverResource(abilityEffectContext, powerResource, finalAmount, source, combatMagnitude);
             if (returnValue == false) {
                 return false;

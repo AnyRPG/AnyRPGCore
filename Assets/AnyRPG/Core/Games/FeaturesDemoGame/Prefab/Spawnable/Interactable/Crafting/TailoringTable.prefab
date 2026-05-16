@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2232754343567841329}
   - component: {fileID: 7597174214274749554}
   m_Layer: 25
-  m_Name: DefaultInteractableUnit
+  m_Name: Interactable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,7 +70,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showTooltip: 1
-  interactableName: 
+  interactableName: Crafting Table
   glowOnMouseOver: 1
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   interactionTooltipText: 
@@ -89,20 +89,11 @@ MonoBehaviour:
     saveOnLevelUnload: 0
     saveOnGameSave: 0
   persistInteractableData: 0
-  hasNamePlate: 1
+  hasNameplate: 1
   namePlateProps:
-    displayName: Crafting Table
-    suppressNamePlate: 0
-    suppressFaction: 1
+    displayName: 
     overrideNameplatePosition: 0
     namePlatePosition: {x: 0, y: 0, z: 0}
-    useSnapShot: 1
-    unitFrameTarget: 
-    unitFrameCameraLookOffset: {x: 0, y: 0.5, z: 0}
-    unitFrameCameraPositionOffset: {x: 0, y: 2, z: 2}
-    unitPreviewTarget: 
-    unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
-    unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
 --- !u!114 &7597174214274749554
 MonoBehaviour:
   m_ObjectHideFlags: 0

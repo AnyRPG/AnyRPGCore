@@ -365,6 +365,7 @@ namespace AnyRPG {
             if (abilityEffectContext == null) {
                 abilityEffectContext = new AbilityEffectContext(source);
             }
+            abilityEffectContext.AbilityEffect = this;
 
             if (abilityEffectContext.savedEffect == false && !CanUseOn(target, source)) {
                 return null;
@@ -422,7 +423,7 @@ namespace AnyRPG {
         // THESE TWO EXIST IN DIRECTEFFECT ALSO BUT I COULD NOT FIND A GOOD WAY TO SHARE THEM
         public override void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(abilityEffectName + ".StatusEffect.CastTick()");
-            abilityEffectContext.spellDamageMultiplier = tickRate / Duration;
+            abilityEffectContext.SpellDamageMultiplier = tickRate / Duration;
             base.CastTick(source, target, abilityEffectContext);
             PerformAbilityTick(source, target, abilityEffectContext);
         }
@@ -460,8 +461,11 @@ namespace AnyRPG {
 
         public virtual void PerformAbilityReflectEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityReflectEffects(" + source.AbilityManager.UnitGameObject.name + ", " + (target == null ? "null" : target.gameObject.name) + ")");
-            abilityEffectContext.reflectDamage = true;
-            PerformAbilityEffects(source, target, abilityEffectContext, reflectAbilityEffectList);
+            AbilityEffectContext reflectContext = abilityEffectContext.GetCopy();
+            reflectContext.ReflectDamage = true;
+            // null the original ability name so the status effect name shows in the combat log instead of the original ability that caused the reflect
+            reflectContext.BaseAbility = null;
+            PerformAbilityEffects(source, target, reflectContext, reflectAbilityEffectList);
         }
 
         public override string GetDescription() {

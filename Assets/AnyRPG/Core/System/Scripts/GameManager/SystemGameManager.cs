@@ -315,6 +315,8 @@ namespace AnyRPG {
             // configuration manager next because it will need access to resources from the factory
             systemConfigurationManager.Configure(this);
 
+            SetupExtensions();
+
             // then everything else that relies on system configuration and data resources
             objectPooler.Configure(this);
 
@@ -456,6 +458,31 @@ namespace AnyRPG {
                 //Debug.Log("SystemGameManager.SetupPermanentObjects(): Neither UMA_GLIB nor UMA_DCS prefab could be found in the scene. UMA will be unavailable");
             } else {
                 DontDestroyOnLoad(umaDCS);
+            }
+        }
+
+        private void SetupExtensions() {
+            //Debug.Log("SystemGameManager.SetupExtensions()");
+            List<GameExtension> gameExtensions = systemDataFactory.GetResourceList<GameExtension>();
+            List<GameExtension> removeList = new List<GameExtension>();
+            foreach (GameExtension gameExtension in gameExtensions) {
+                if (gameExtension.OverrideExtension != string.Empty) {
+                    GameExtension overrideExtension = systemDataFactory.GetResource<GameExtension>(gameExtension.OverrideExtension);
+                    if (overrideExtension == null) {
+                        Debug.LogError($"SystemGameManager.SetupExtensions(): GameExtension {gameExtension.name} is set to override {gameExtension.OverrideExtension} but it could not be found.  This extension will be ignored.");
+                        continue;
+                    }
+                    removeList.Add(overrideExtension);
+                }
+            }
+            gameExtensions.RemoveAll(x => removeList.Contains(x));
+            foreach (GameExtension gameExtension in gameExtensions) {
+                foreach (GameObject prefab in gameExtension.PrefabList) {
+                    if (prefab != null) {
+                        GameObject instance = Instantiate(prefab);
+                        DontDestroyOnLoad(instance);
+                    }
+                }
             }
         }
 

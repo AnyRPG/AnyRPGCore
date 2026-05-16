@@ -1,9 +1,6 @@
-using AnyRPG;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 namespace AnyRPG {
     public class CharacterAbilityManager : AbilityManager {
@@ -246,7 +243,7 @@ namespace AnyRPG {
 
             AbilityProperties usedBaseAbility = null;
             if (currentAbilityEffectContext != null) {
-                usedBaseAbility = currentAbilityEffectContext.baseAbility;
+                usedBaseAbility = currentAbilityEffectContext.BaseAbility;
             }
             if (usedBaseAbility == null) {
                 usedBaseAbility = currentCastAbility;
@@ -404,7 +401,7 @@ namespace AnyRPG {
             base.GeneratePower(ability);
             if (unitController != null && unitController.CharacterStats != null) {
                 //Debug.Log($"{gameObject.name}.GeneratePower({ability.DisplayName}): name " + ability.GeneratePowerResource.DisplayName  + "; " + ability.GetResourceGain(this));
-                unitController.CharacterStats.AddResourceAmount(ability.GeneratePowerResource.ResourceName, ability.GetResourceGain(unitController));
+                unitController.CharacterStats.AddResourceAmount(ability.GeneratePowerResource, ability.GetResourceGain(unitController));
             }
         }
 
@@ -519,7 +516,7 @@ namespace AnyRPG {
         }
 
         public override bool PerformLOSCheck(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.PerformLOSCheck()");
+            //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.PerformLOSCheck({(target == null ? "null" : target.DisplayName)}, {targetable.DisplayName})");
 
             if (targetable.GetTargetOptions(unitController).RequireLineOfSight == false) {
                 return true;
@@ -534,9 +531,9 @@ namespace AnyRPG {
                     sourcePosition = sourceCollider.bounds.center;
                 }
             } else if (targetable.GetTargetOptions(unitController).LineOfSightSourceLocation == LineOfSightSourceLocation.GroundTarget && abilityEffectContext != null) {
-                sourcePosition = abilityEffectContext.groundTargetLocation;
+                sourcePosition = abilityEffectContext.GroundTargetLocation;
             } else if (targetable.GetTargetOptions(unitController).LineOfSightSourceLocation == LineOfSightSourceLocation.OriginalTarget && abilityEffectContext != null) {
-                sourcePosition = abilityEffectContext.originalTarget.transform.position;
+                sourcePosition = abilityEffectContext.OriginalTarget.transform.position;
             }
 
             Vector3 targetPosition = target.transform.position;
@@ -558,11 +555,11 @@ namespace AnyRPG {
                 //Debug.Log("hit: " + wallHit.transform.name);
                 Debug.DrawRay(wallHit.point, wallHit.point - targetPosition, Color.red);
                 if (wallHit.collider.gameObject != target.gameObject) {
-                    //Debug.Log("return false; hit: " + wallHit.collider.gameObject + "; target: " + target);
+                    //Debug.Log($"return false; hit: {wallHit.collider.gameObject.name}; target: {target.DisplayName}");
                     return false;
                 }
             }
-
+            //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.PerformLOSCheck({(target == null ? "null" : target.DisplayName)}, {targetable.DisplayName}): return true");
             return base.PerformLOSCheck(target, targetable, abilityEffectContext);
         }
 
@@ -595,9 +592,9 @@ namespace AnyRPG {
             }
             Vector3 sourcePosition = UnitGameObject.transform.position;
             if (targetable.GetTargetOptions(unitController).TargetRangeSourceLocation == TargetRangeSourceLocation.GroundTarget && abilityEffectContext != null) {
-                sourcePosition = abilityEffectContext.groundTargetLocation;
+                sourcePosition = abilityEffectContext.GroundTargetLocation;
             } else if (targetable.GetTargetOptions(unitController).TargetRangeSourceLocation == TargetRangeSourceLocation.OriginalTarget && abilityEffectContext != null) {
-                sourcePosition = abilityEffectContext.originalTarget.transform.position;
+                sourcePosition = abilityEffectContext.OriginalTarget.transform.position;
             }
             //Debug.Log(target.name + " range(" + maxRange + ": " + Vector3.Distance(UnitGameObject.transform.position, target.transform.position));
             if (maxRange > 0 && Vector3.Distance(sourcePosition, target.InteractableGameObject.transform.position) > maxRange) {
@@ -682,7 +679,7 @@ namespace AnyRPG {
                 }
             }
 
-            abilityEffectContext.baseAbility.HandleAbilityEndHit(
+            abilityEffectContext.BaseAbility.HandleAbilityEndHit(
                 unitController,
                 targetUnitController,
                 abilityEffectContext);
@@ -695,7 +692,8 @@ namespace AnyRPG {
         /// </summary>
         /// <returns></returns>
         public override bool DidAbilityHit(Interactable target, AbilityEffectContext abilityEffectContext) {
-            if (unitController.CharacterCombat.DidAttackMiss() == true) {
+            // reflected attacks cannot miss
+            if (abilityEffectContext.ReflectDamage == false && unitController.CharacterCombat.DidAttackMiss() == true) {
                 //Debug.Log(DisplayName + ".BaseAbility.PerformAbilityHit(" + source.name + ", " + target.name + "): attack missed");
                 unitController.CharacterCombat.ReceiveCombatMiss(target, abilityEffectContext);
                 if (target?.CharacterUnit != null) {
@@ -1008,20 +1006,20 @@ namespace AnyRPG {
         }
 
         public void ApplyStatusEffect(AbilityEffectProperties statusEffect, int overrideDuration = 0) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.ApplyStatusEffect(" + statusEffect.DisplayName + ")");
-            if (unitController.CharacterStats != null) {
-                AbilityEffectContext abilityEffectContext = new AbilityEffectContext(unitController);
-                abilityEffectContext.overrideDuration = overrideDuration;
-                // rememeber this method is meant for saved status effects
-                // and traits
-                abilityEffectContext.savedEffect = true;
-                if (statusEffect != null) {
-                    // testing : to allow npcs to get their visuals from traits, send in unit controller if it exists
-                    //_abilityEffect.Cast(baseCharacter, baseCharacter?.UnitController, null, abilityEffectContext);
-                    // testing prevent spawn of object since unitController now handles notifications that do that for all characters, not just the player
-                    statusEffect.Cast(unitController, null, null, abilityEffectContext);
-                }
+            if (statusEffect == null || unitController?.CharacterStats == null) {
+                return;
             }
+            // rememeber this method is meant for saved status effects and traits
+            AbilityEffectContext abilityEffectContext = new AbilityEffectContext(unitController) {
+                AbilityEffect = statusEffect,
+                overrideDuration = overrideDuration,
+                savedEffect = true
+            };
+            // testing : to allow npcs to get their visuals from traits, send in unit controller if it exists
+            //_abilityEffect.Cast(baseCharacter, baseCharacter?.UnitController, null, abilityEffectContext);
+            // testing prevent spawn of object since unitController now handles notifications that do that for all characters, not just the player
+            statusEffect.Cast(unitController, null, null, abilityEffectContext);
+
         }
 
         public override bool IsPlayerControlled() {
@@ -1305,7 +1303,7 @@ namespace AnyRPG {
             float startTime = Time.time;
             //Debug.Log($"{unitController.gameObject.name}.CharacterAbilitymanager.PerformAbilityCast({ability.ResourceName}, {(target == null ? "null" : target.name)}) Enter Ienumerator with start time: {startTime}");
 
-            abilityEffectContext.originalTarget = target;
+            abilityEffectContext.OriginalTarget = target;
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast({ability.DisplayName}): cancast is true");
             if (!ability.CanSimultaneousCast) {
                 //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() ability: {ability.DisplayName} can simultaneous cast is false, setting casting to true");
@@ -1446,9 +1444,10 @@ namespace AnyRPG {
             unitController.UnitEventController.NotifyOnBeginAbility(ability, target, playerInitiated);
 
             if (systemGameManager.GameMode == GameMode.Local || networkManagerServer.ServerModeActive == true || levelManagerClient.IsCutscene()) {
-                AbilityEffectContext abilityEffectContext = new AbilityEffectContext(unitController);
-                abilityEffectContext.baseAbility = ability;
-                abilityEffectContext.groundTargetLocation = GetGroundTarget();
+                AbilityEffectContext abilityEffectContext = new AbilityEffectContext(unitController) {
+                    BaseAbility = ability,
+                    GroundTargetLocation = GetGroundTarget()
+                };
                 return BeginAbilityInternal(ability, target, abilityEffectContext, playerInitiated);
             }
 
@@ -1477,8 +1476,8 @@ namespace AnyRPG {
             base.ProcessWeaponHitEffects(attackEffect, target, abilityEffectContext);
 
             // perform default weapon hit sound
-            if (abilityEffectContext.baseAbility != null) {
-                AudioClip audioClip = abilityEffectContext.baseAbility.GetHitSound(unitController);
+            if (abilityEffectContext.BaseAbility != null) {
+                AudioClip audioClip = abilityEffectContext.BaseAbility.GetHitSound(unitController);
                 if (audioClip != null) {
                     unitController.InteractableEventController.NotifyOnPlayEffectSound(audioClip, false);
                 }
@@ -1681,7 +1680,8 @@ namespace AnyRPG {
             // check if the ability is on cooldown
             if (!PerformCooldownCheck(ability)) {
                 //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.CanCastAbility({ability.ResourceName}): ability is on cooldown!");
-                unitController.UnitEventController.NotifyOnCombatMessage($"Cannot cast {ability.DisplayName}: ability is on cooldown!");
+                // hmmm, this could get spammy if the player is trying to use an ability on cooldown, disable for now
+                //unitController.UnitEventController.NotifyOnCombatMessage($"Cannot cast {ability.DisplayName}: ability is on cooldown!");
                 return false;
             }
 
@@ -1807,9 +1807,9 @@ namespace AnyRPG {
 
             if (abilityEffectContext == null) {
                 abilityEffectContext = new AbilityEffectContext(unitController);
-                abilityEffectContext.baseAbility = ability;
             }
-            abilityEffectContext.originalTarget = target;
+            abilityEffectContext.BaseAbility = ability;
+            abilityEffectContext.OriginalTarget = target;
             Interactable finalTarget = target;
 
             if (!PerformPowerResourceCheck(ability)) {
@@ -1998,9 +1998,9 @@ namespace AnyRPG {
             // here character combat is sent in because currentAbilityEffectContext is only used for animated abilities
             // which requires considering the weapon skill
             if (currentAbilityEffectContext != null) {
-                AudioClip audioClip = currentAbilityEffectContext.baseAbility.GetAnimationEventSound(unitController.CharacterCombat);
+                AudioClip audioClip = currentAbilityEffectContext.BaseAbility.GetAnimationEventSound(unitController.CharacterCombat);
                 if (audioClip != null) {
-                    unitController.InteractableEventController.NotifyOnPlayEffectSound(audioClip, currentAbilityEffectContext.baseAbility.LoopAudio);
+                    unitController.InteractableEventController.NotifyOnPlayEffectSound(audioClip, currentAbilityEffectContext.BaseAbility.LoopAudio);
                 }
                 return;
             }
@@ -2087,9 +2087,12 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override void ReceiveCombatTextEvent(UnitController targetUnitController, int damage, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
-            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(targetUnitController, damage, combatTextType, combatMagnitude, abilityEffectContext);
-            base.ReceiveCombatTextEvent(targetUnitController, damage, combatTextType, combatMagnitude, abilityEffectContext);
+        public override void ReceiveCombatTextEvent(UnitController targetUnitController, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterAbilityManager.ReceiveCombatTextEvent({targetUnitController.gameObject.name}, {amount}, {combatTextType}, {combatMagnitude})");
+
+            unitController.UnitEventController.NotifyOnReceiveCombatTextEvent(targetUnitController, amount, combatTextType, combatMagnitude, abilityEffectContext);
+            
+            base.ReceiveCombatTextEvent(targetUnitController, amount, combatTextType, combatMagnitude, abilityEffectContext);
         }
 
         public override void ProcessAbilityEffectPooled(GameObject go) {

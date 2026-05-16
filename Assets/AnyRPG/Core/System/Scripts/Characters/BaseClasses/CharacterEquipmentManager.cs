@@ -264,6 +264,13 @@ namespace AnyRPG {
         }
         */
 
+        public void UnequipToInventory(InstantiatedEquipment instantiatedEquipment) {
+            //Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.UnequipToInventory({(instantiatedEquipment != null ? instantiatedEquipment.ResourceName : "null")})");
+            
+            Unequip(instantiatedEquipment);
+            unitController.UnitModelController.RebuildModelAppearance();
+        }
+
         public InstantiatedEquipment Unequip(InstantiatedEquipment instantiatedEquipment) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.Unequip({(instantiatedEquipment != null ? instantiatedEquipment.ResourceName : "null")})");
 
@@ -360,8 +367,9 @@ namespace AnyRPG {
 
         public void RequestUnequip(InstantiatedEquipment instantiatedEquipment) {
             //Debug.Log($"{unitController.gameObject.name}.CharacterEquipmentManager.RequestUnequip({instantiatedEquipment.ResourceName})");
+
             if (systemGameManager.GameMode == GameMode.Local) {
-                Unequip(instantiatedEquipment);
+                UnequipToInventory(instantiatedEquipment);
             }
             unitController.UnitEventController.NotifyOnRequestUnequip(instantiatedEquipment);
         }

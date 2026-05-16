@@ -1,10 +1,7 @@
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI;
 using TMPro;
-using System;
-using FishNet.Serializing;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace AnyRPG {
     public class ClientLobbyGamePanel : WindowPanel {
