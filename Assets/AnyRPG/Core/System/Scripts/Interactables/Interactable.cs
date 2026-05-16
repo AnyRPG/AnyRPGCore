@@ -275,7 +275,7 @@ namespace AnyRPG {
             if (nameplateController != null) {
                 nameplateController.InitializeNamePlate();
             } else {
-                Debug.Log($"{gameObject.name}.Interactable.ConfigureNameplate(): nameplateController {(nameplateController == null ? "null" : "not null")} instanceid: {GetInstanceID()}");
+                //Debug.Log($"{gameObject.name}.Interactable.ConfigureNameplate(): nameplateController {(nameplateController == null ? "null" : "not null")} instanceid: {GetInstanceID()}");
             }
             */
         }

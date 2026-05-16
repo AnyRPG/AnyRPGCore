@@ -308,7 +308,7 @@ namespace AnyRPG {
         }
 
         public void PostInit(UnitController unitController) {
-            Debug.Log($"PlayerManagerClient.PostInit({unitController.gameObject.name})");
+            //Debug.Log($"PlayerManagerClient.PostInit({unitController.gameObject.name})");
 
             if (unitController.UnitModelController.ModelCreated == false) {
                 // do UMA spawn stuff to wait for UMA to spawn
@@ -363,7 +363,7 @@ namespace AnyRPG {
         }
 
         public void HandleModelReady() {
-            Debug.Log("PlayerManagerClient.HandleModelReady()");
+            //Debug.Log("PlayerManagerClient.HandleModelReady()");
 
             SubscribeToModelEvents();
             UnsubscribeFromModelReady();
@@ -372,7 +372,8 @@ namespace AnyRPG {
         }
 
         public void SubscribeToModelEvents() {
-            Debug.Log("PlayerManagerClient.SubscribeToModelEvents()");
+            //Debug.Log("PlayerManagerClient.SubscribeToModelEvents()");
+
             //unitController.UnitEventController.OnStatusEffectAdd += HandleStatusEffectAdd;
             unitController.UnitEventController.OnReceiveCombatTextEvent += HandleReceiveCombatTextEvent;
             unitController.UnitEventController.OnEncumberedChange += HandleEncumberedChange;
@@ -385,7 +386,7 @@ namespace AnyRPG {
         }
 
         private void HandlePlayerUnitSpawn() {
-            Debug.Log("PlayerManagerClient.HandlePlayerUnitSpawn()");
+            //Debug.Log("PlayerManagerClient.HandlePlayerUnitSpawn()");
 
             playerUnitSpawned = true;
 
@@ -404,7 +405,7 @@ namespace AnyRPG {
         }
 
         public void SubscribeToModelReady() {
-            Debug.Log("PlayerManagerClient.SubscribeToModelReady()");
+            //Debug.Log("PlayerManagerClient.SubscribeToModelReady()");
 
             //activeUnitController.UnitModelController.OnModelUpdated += HandleModelReady;
             activeUnitController.UnitModelController.OnModelCreated += HandleModelReady;
@@ -713,7 +714,8 @@ namespace AnyRPG {
         */
 
         public void HandleReceiveCombatTextEvent(Interactable targetInteractable, int amount, CombatTextType combatTextType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
-            Debug.Log($"PlayerManagerClient.HandleReceiveCombatTextEvent({targetInteractable?.gameObject.name}, {amount}, {combatTextType}, {combatMagnitude})");
+            //Debug.Log($"PlayerManagerClient.HandleReceiveCombatTextEvent({targetInteractable?.gameObject.name}, {amount}, {combatTextType}, {combatMagnitude})");
+
             combatTextManager.SpawnCombatText(targetInteractable, amount, combatTextType, combatMagnitude, abilityEffectContext);
 
             string textColor = ColorUtility.ToHtmlStringRGB(Color.white);
